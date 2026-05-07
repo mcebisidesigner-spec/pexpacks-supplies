@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ordersEmail, ordersEmailHref } from "@/data/contact";
 import { schools } from "@/data/schools";
 import { Button } from "@/components/ui/Button";
 import { OrderProgress } from "./OrderProgress";
@@ -112,7 +113,8 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
             <div className={styles.confirmPack}>
               <h2>Confirm order</h2>
               <p>
-                Your order request is ready. Pexpacks Supplies will confirm availability, delivery details and payment options.
+                Your order request is ready. Pexpacks Supplies will confirm availability, delivery details and payment
+                options. Order support is available at <a href={ordersEmailHref}>{ordersEmail}</a>.
               </p>
             </div>
           ) : null}

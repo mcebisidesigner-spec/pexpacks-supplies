@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OrderForm } from "@/components/order/OrderForm";
+import { ordersEmail, ordersEmailHref } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
@@ -28,7 +29,10 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
         <div className={page.pageHeroNarrow}>
           <p>Order Now</p>
           <h1>Order your ready-to-use pack</h1>
-          <p className={page.pageHeroText}>Select school, choose grade, confirm the pack and send your order details.</p>
+          <p className={page.pageHeroText}>
+            Select school, choose grade, confirm the pack and send your order details. For order support, email{" "}
+            <a href={ordersEmailHref}>{ordersEmail}</a>.
+          </p>
         </div>
       </section>
       <section className={page.section}>

@@ -1,3 +1,4 @@
+import { ordersEmail, ordersEmailHref } from "@/data/contact";
 import { schools } from "@/data/schools";
 import { formatCurrency } from "@/lib/formatCurrency";
 import styles from "./Order.module.css";
@@ -25,7 +26,10 @@ export function OrderSummary({ schoolSlug, gradeSlug }: OrderSummaryProps) {
           <dd>{grade ? formatCurrency(grade.price) : "Pending"}</dd>
         </div>
       </dl>
-      <span>No payment is taken on this mock flow. Pexpacks Supplies will confirm your order details.</span>
+      <span>
+        No payment is taken on this mock flow. Pexpacks Supplies will confirm your order details from{" "}
+        <a href={ordersEmailHref}>{ordersEmail}</a>.
+      </span>
     </aside>
   );
 }

@@ -22,7 +22,7 @@ export default function HomePage() {
         <div className={styles.heroInner}>
           <div>
             <p className={styles.eyebrow}>Save time. Pex it.</p>
-            <h1 className={styles.heroTitle}>Start School Ready</h1>
+            <h1 className={styles.heroTitle}>Start School<br className={styles.mobileBreak} /> Ready</h1>
             <p className={styles.heroLead}>
               Everything your child needs for day one is already packed and ready.
             </p>
