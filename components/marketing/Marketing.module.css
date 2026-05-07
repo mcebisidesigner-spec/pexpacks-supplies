@@ -928,13 +928,20 @@
   .textLink {
     justify-content: center;
   }
+
+  .heroTitle {
+    font-size: clamp(50px, 9vw, 62px);
+  }
 }
 
 @media (max-width: 420px) {
 
-  .heroTitle,
   .pageTitle {
     font-size: 46px;
+  }
+
+  .heroTitle {
+    font-size: clamp(52px, 14vw, 56px);
   }
 
   .mobileBreak {
