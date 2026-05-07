@@ -1,0 +1,70 @@
+:root {
+  --pex-navy: #123945;
+  --pex-gold: #CD9134;
+  --pex-green: #4caf50;
+  --pex-cream: #fff8ec;
+  --pex-light: #f8fafc;
+  --pex-text: #1f2937;
+  --pex-muted: #64748b;
+
+  --color-navy: var(--pex-navy);
+  --color-orange: var(--pex-gold);
+  --color-bg: var(--pex-light);
+  --color-white: #ffffff;
+  --color-border: #d8e0ea;
+  --color-muted: var(--pex-muted);
+  --color-soft-blue: #dfe8f6;
+  --color-shadow: rgba(25, 42, 62, 0.18);
+
+  --radius-pill: 999px;
+  --radius-card: 18px;
+  --radius-image: 20px;
+  --radius-section: 24px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  --shadow-soft: 0 14px 32px rgba(25, 42, 62, 0.14);
+  --shadow-pill: 0 9px 18px rgba(25, 42, 62, 0.22);
+  --shadow-card: 0 12px 28px rgba(25, 42, 62, 0.11);
+
+  --font-button: "Pexpacks Sans", "Pexpacks Sans Alt", Arial, sans-serif;
+  --button-hover-scale: 1.015;
+  --button-icon-hover-scale: 1.15;
+  --button-hover-transform: translateY(-2px) scale(var(--button-hover-scale));
+  --button-active-transform: translateY(0) scale(0.99);
+  --button-hover-shadow: 0 14px 24px rgba(25, 42, 62, 0.16);
+  --button-transition: transform 0.4s cubic-bezier(0, 0, 0.3642, 1),
+    filter 0.4s cubic-bezier(0, 0, 0.3642, 1), box-shadow 0.4s cubic-bezier(0, 0, 0.3642, 1),
+    background 0.4s cubic-bezier(0, 0, 0.3642, 1), color 0.4s cubic-bezier(0, 0, 0.3642, 1),
+    border-color 0.4s cubic-bezier(0, 0, 0.3642, 1);
+
+  --layout-max-width: 1280px;
+
+  --gutter-mobile: clamp(16px, 4vw, 24px);
+  --gutter-tablet: clamp(24px, 5vw, 40px);
+  --gutter-desktop: clamp(40px, 5vw, 64px);
+
+  --header-height-mobile: 88px;
+  --header-height-desktop: 88px;
+
+  --logo-width-mobile: 95px;
+  --logo-width-desktop: 103px;
+
+  --cta-height-mobile: 48px;
+  --cta-height-desktop: 52px;
+  --cta-padding-x: 24px;
+
+  --section-padding-mobile: 64px;
+  --section-padding-desktop: 112px;
+
+  --hero-copy-max-width: 760px;
+  --hero-copy-max-width-mobile: 100%;
+}

@@ -1,0 +1,208 @@
+.pageHero {
+  padding: 76px 0 58px;
+  text-align: center;
+}
+
+.pageHeroNarrow {
+  width: 100%;
+  max-width: 840px;
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
+.pageHero p:first-child,
+.kicker {
+  margin: 0 0 16px;
+  color: var(--color-orange);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.pageHero h1 {
+  margin: 0;
+  font-size: clamp(48px, 7vw, 86px);
+  line-height: 0.98;
+  letter-spacing: 0;
+  font-weight: 800;
+}
+
+.pageHeroText {
+  max-width: 680px;
+  margin: 24px auto 0;
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+.section {
+  padding: 24px 0 86px;
+}
+
+.sectionInner {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.infoCard,
+.packCard,
+.formCard {
+  padding: 28px;
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+}
+
+.infoCard h2,
+.packCard h2,
+.formCard h2 {
+  margin: 0 0 16px;
+  font-size: 30px;
+  line-height: 1.05;
+}
+
+.infoCard p,
+.packCard p {
+  margin: 0 0 18px;
+  color: var(--color-navy);
+}
+
+.infoCard ul,
+.packCard ul,
+.stepList {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.infoCard li,
+.packCard li,
+.stepList li {
+  margin-bottom: 10px;
+}
+
+.packPrice {
+  margin: 18px 0;
+  color: var(--color-orange);
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.darkBand {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto 86px;
+  padding: 46px var(--gutter-desktop);
+  border-radius: var(--radius-section);
+  background: var(--color-navy);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.darkBand h2,
+.darkBand p {
+  margin: 0;
+}
+
+.darkBand h2 {
+  margin-top: 8px;
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 0.98;
+}
+
+.formStack {
+  display: grid;
+  gap: 16px;
+}
+
+.formStack label {
+  display: grid;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.formStack input,
+.formStack textarea,
+.formStack select {
+  min-height: 52px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 12px 16px;
+  background: var(--color-white);
+  color: var(--color-navy);
+}
+
+.formStack textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.imageCard {
+  overflow: hidden;
+  border-radius: var(--radius-section);
+}
+
+.imageCard img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 0.98;
+  object-fit: cover;
+}
+
+.faqList {
+  display: grid;
+  gap: 16px;
+}
+
+.faqItem {
+  padding: 24px 28px;
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+}
+
+.faqItem h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.faqItem p {
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .pageHero {
+    padding: 54px 0 40px;
+  }
+
+  .twoColumn,
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .darkBand {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--section-padding-mobile) var(--gutter-mobile);
+  }
+
+  .pageHeroNarrow,
+  .sectionInner {
+    padding-inline: var(--gutter-mobile);
+  }
+}

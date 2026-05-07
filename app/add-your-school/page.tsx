@@ -1,0 +1,121 @@
+import type { Metadata } from "next";
+import { Button } from "@/components/ui/Button";
+import { PageHero } from "@/components/marketing/PageHero";
+import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { standardSchoolPacks } from "@/data/standardSchoolPacks";
+import { buildMetadata } from "@/lib/seo";
+import styles from "@/components/marketing/Marketing.module.css";
+
+export const metadata: Metadata = buildMetadata(
+  "Add Your School",
+  "Submit your school details so Pexpacks Supplies can prepare a school stationery pack page for your grade lists.",
+  "/add-your-school"
+);
+
+export default function AddYourSchoolPage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="Add your school"
+        title="Can’t find your school? Send us the details."
+        text="Share the school name, location and grade list information. Pexpacks will review it and help prepare the correct stationery pack path."
+        panelText="Need a pack today?"
+        panelTitle="Use a standard grade combo while your school list is being reviewed."
+      >
+        <div className={styles.buttonRow}>
+          <Button href="/standard-school-packs">View Standard School Packs</Button>
+          <Button href="/contact" variant="white">
+            Contact Us
+          </Button>
+        </div>
+      </PageHero>
+
+      <section className={styles.section}>
+        <div className={styles.inner}>
+          <div className={styles.infoGrid}>
+            <article className={styles.formCard}>
+              <h2>Submit school details</h2>
+              <form className={styles.formGrid} action="/contact" method="get">
+                <label className={styles.field}>
+                  <span>School name</span>
+                  <input name="school" type="text" placeholder="e.g. Parktown Primary" required />
+                </label>
+                <label className={styles.field}>
+                  <span>City or area</span>
+                  <input name="city" type="text" placeholder="e.g. Johannesburg" required />
+                </label>
+                <label className={styles.field}>
+                  <span>Province</span>
+                  <input name="province" type="text" placeholder="e.g. Gauteng" required />
+                </label>
+                <label className={styles.field}>
+                  <span>Grade needed</span>
+                  <input name="grade" type="text" placeholder="e.g. Grade R" required />
+                </label>
+                <label className={[styles.field, styles.formWide].join(" ")}>
+                  <span>Stationery list notes</span>
+                  <textarea name="notes" placeholder="Tell us what grade lists, books or special pack requirements you have." />
+                </label>
+                <input name="type" type="hidden" value="add-school" />
+                <div className={styles.formWide}>
+                  <Button type="submit">Submit School Details</Button>
+                </div>
+              </form>
+            </article>
+
+            <article className={styles.infoCard}>
+              <SectionHeader
+                title="What happens next?"
+                text="Pexpacks checks whether the school can be added and whether a standard pack can help while the official list is prepared."
+              />
+              <ul className={styles.checkList}>
+                <li>We confirm the school name and location.</li>
+                <li>We review the grade or stationery list requirement.</li>
+                <li>We recommend a school-specific or standard grade pack.</li>
+                <li>We help you move to an order or enquiry path.</li>
+              </ul>
+              <div className={styles.buttonRow}>
+                <Button href="/standard-school-packs" variant="white">
+                  Standard Pack List
+                </Button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.sectionAlt}>
+        <div className={styles.inner}>
+          <SectionHeader
+            title="Standard grade combo packs"
+            text="Use these per-grade combos when a school-specific pack has not been added yet."
+          />
+          <div className={styles.packGrid}>
+            {standardSchoolPacks.slice(0, 6).map((pack) => (
+              <article className={styles.packCard} key={pack.id}>
+                <div className={[styles.packMedia, styles.packMediaBlue].join(" ")} aria-hidden="true">
+                  <span>{pack.phase}</span>
+                </div>
+                <div className={styles.packBody}>
+                  <p className={styles.packMeta}>{pack.priceLabel}</p>
+                  <h3>{pack.grade} Combo Pack</h3>
+                  <p>{pack.description}</p>
+                  <ul className={styles.packList}>
+                    {pack.includes.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                  <div className={styles.packFooter}>
+                    <Button href="/standard-school-packs" size="sm">
+                      View All Grades
+                    </Button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

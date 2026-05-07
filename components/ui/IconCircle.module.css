@@ -1,0 +1,39 @@
+.iconCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-pill);
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  transform-origin: center;
+  transition: var(--button-transition);
+}
+
+.iconCircle svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.orange {
+  background: var(--color-orange);
+  color: var(--color-white);
+}
+
+.navy {
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+
+.white {
+  background: var(--color-white);
+  color: var(--color-orange);
+}
+
+.left svg {
+  transform: rotate(180deg);
+}

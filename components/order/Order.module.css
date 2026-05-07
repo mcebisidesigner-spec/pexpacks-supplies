@@ -1,0 +1,209 @@
+.orderShell {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding-inline: var(--gutter-desktop);
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+.orderPanel,
+.summary {
+  border-radius: var(--radius-section);
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+}
+
+.orderPanel {
+  padding: 32px;
+}
+
+.progress {
+  margin: 0 0 34px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.progress li {
+  min-height: 76px;
+  padding: 10px;
+  border-radius: 16px;
+  background: var(--color-bg);
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 800;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: 7px;
+}
+
+.progress span {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-pill);
+  display: grid;
+  place-items: center;
+  background: var(--color-white);
+}
+
+.progressActive {
+  background: var(--color-navy) !important;
+  color: var(--color-white) !important;
+}
+
+.form {
+  display: grid;
+  gap: 26px;
+}
+
+.form label,
+.detailGrid label {
+  display: grid;
+  gap: 8px;
+}
+
+.form label span,
+.detailGrid span {
+  font-weight: 800;
+}
+
+.form input,
+.form select {
+  min-height: 52px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 0 20px;
+  background: var(--color-white);
+  color: var(--color-navy);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.confirmPack {
+  padding: 28px;
+  border-radius: var(--radius-card);
+  background: var(--color-bg);
+}
+
+.confirmPack h2 {
+  margin: 0 0 12px;
+  font-size: 34px;
+}
+
+.confirmPack p {
+  margin: 0 0 16px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.formActions > button:first-child {
+  min-height: 44px;
+  min-width: 110px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  color: var(--color-navy);
+  font-family: var(--font-button);
+  font-weight: 800;
+  transform-origin: center;
+  transition: var(--button-transition);
+}
+
+.formActions > button:first-child:not(:disabled):hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
+}
+
+.formActions > button:first-child:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.summary {
+  padding: 28px;
+  position: sticky;
+  top: 110px;
+}
+
+.summary p {
+  margin: 0 0 10px;
+  color: var(--color-orange);
+  font-weight: 800;
+}
+
+.summary h2 {
+  margin: 0 0 22px;
+  font-size: 30px;
+  line-height: 1.05;
+}
+
+.summary dl {
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.summary div {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.summary dt {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.summary dd {
+  margin: 2px 0 0;
+  font-weight: 800;
+}
+
+.summary span {
+  display: block;
+  margin-top: 24px;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .orderShell,
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .orderShell {
+    padding-inline: var(--gutter-mobile);
+  }
+
+  .progress {
+    grid-template-columns: 1fr;
+  }
+
+  .progress li {
+    min-height: 50px;
+    grid-template-columns: 30px 1fr;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .summary {
+    position: static;
+  }
+}
