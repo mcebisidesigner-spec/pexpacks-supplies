@@ -12,10 +12,7 @@ export function buildMetadata(title: string, description: string, path = "/"): M
 
   return {
     metadataBase: new URL(siteUrl),
-    title: {
-      default: `${title} | ${siteName}`,
-      template: `%s | ${siteName}`,
-    },
+    title,
     description,
     keywords: [
       "Pexpacks Supplies",

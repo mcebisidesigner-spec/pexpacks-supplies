@@ -18,8 +18,8 @@ export default function AboutPage() {
           <p>About Pexpacks Supplies</p>
           <h1>A simple digital office for stationery packs</h1>
           <p className={page.pageHeroText}>
-            Pexpacks Supplies helps parents, learners, schools, teachers, offices and small businesses order practical stationery
-            packs without the last-minute rush.
+            Pexpacks Supplies helps parents, learners, schools, teachers, offices and small businesses order practical
+            stationery packs without the last-minute rush.
           </p>
         </div>
       </section>

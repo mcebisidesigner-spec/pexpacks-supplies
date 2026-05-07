@@ -35,7 +35,7 @@ export function HeaderMenu() {
       setIconClosing(true);
 
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const closeIconDelay = prefersReducedMotion ? 0 : 180;
+      const closeIconDelay = prefersReducedMotion ? 0 : 220;
 
       closingTimerRef.current = setTimeout(() => {
         setIconClosing(false);
@@ -102,7 +102,6 @@ export function HeaderMenu() {
         ref={menuButtonRef}
         className={[
           styles.menuButton,
-          mobileOpen ? styles.menuButtonRotated : "",
           showCloseIcon ? styles.menuButtonOpen : "",
           iconClosing ? styles.menuButtonClosing : "",
         ]

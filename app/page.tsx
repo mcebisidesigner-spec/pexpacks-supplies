@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
@@ -25,24 +24,10 @@ export default function HomePage() {
             <p className={styles.eyebrow}>Save time. Pex it.</p>
             <h1 className={styles.heroTitle}>Start School Ready</h1>
             <p className={styles.heroLead}>
-              Everything your child needs for day one <br />— already packed and
-              ready.
+              Everything your child needs for day one is already packed and ready.
             </p>
             <HeroSearch />
-            {/* <div className={styles.heroActions}>
-              <Button href="/school" size="lg">
-                Find Your School Pack
-              </Button>
-              <Button href="/copex" variant="white" size="lg">
-                Explore Pexpacks
-              </Button>
-              <Link className={styles.textLink} href="/office">
-                Office Packs for SMEs
-              </Link>
-            </div> */}
-            <ul
-              className={styles.trustBadges}
-              aria-label="Pexpacks Supplies trust points">
+            <ul className={styles.trustBadges} aria-label="Pexpacks Supplies trust points">
               {trustBadges.map((badge) => (
                 <li key={badge}>{badge}</li>
               ))}
@@ -62,20 +47,12 @@ export default function HomePage() {
             <div className={styles.productScene}>
               <div className={styles.brandBox}>
                 <div>
-                  <span>Copex Supplies</span>
+                  <span>Pexpacks Supplies</span>
                   <br />
                   <strong>Convenience Packs</strong>
                 </div>
-                <p>
-                  School lists, office basics and household essentials prepared
-                  in one ready pack.
-                </p>
+                <p>School lists, office basics and household essentials prepared in one ready pack.</p>
               </div>
-              {/* <div className={styles.visualTags} aria-hidden="true">
-                <span>School packs</span>
-                <span>Office packs</span>
-                <span>Pexpacks</span>
-              </div> */}
             </div>
           </div>
         </div>
@@ -148,14 +125,13 @@ export default function HomePage() {
               <p className={styles.eyebrow}>School partnerships</p>
               <h2>A smarter way for schools to support parents</h2>
               <p>
-                Pexpacks partners with schools to simplify stationery ordering
-                and provide free standardised school websites for approved
-                partner schools. Each website can support school communication,
-                stationery pack links, sponsor pages and parent information.
+                Pexpacks partners with schools to simplify stationery ordering and provide free standardised school
+                websites for approved partner schools. Each website can support school communication, stationery pack
+                links, sponsor pages and parent information.
               </p>
               <p>
-                Pexpacks provides and manages the website platform, while
-                schools approve their official content and communication.
+                Pexpacks provides and manages the website platform, while schools approve their official content and
+                communication.
               </p>
               <div className={styles.buttonRow}>
                 <Button href="/partner">Partner With Pexpacks</Button>
@@ -183,9 +159,8 @@ export default function HomePage() {
               <p className={styles.eyebrow}>Sponsors and donors</p>
               <h2>A safer way for sponsors to support schools</h2>
               <p>
-                Pexpacks helps local businesses, donors and community sponsors
-                support schools through structured packs, visible sponsorship
-                pages and transparent school support campaigns.
+                Pexpacks helps local businesses, donors and community sponsors support schools through structured packs,
+                visible sponsorship pages and transparent school support campaigns.
               </p>
               <div className={styles.buttonRow}>
                 <Button href="/partner#sponsor" variant="white">

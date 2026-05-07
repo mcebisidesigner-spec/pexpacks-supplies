@@ -33,6 +33,23 @@
   line-height: 1.35;
 }
 
+.notFoundText {
+  max-width: 720px;
+  margin: 24px auto 0;
+  color: var(--color-navy);
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+.notFoundActions {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .section {
   padding: 24px 0 86px;
 }
@@ -204,5 +221,11 @@
   .pageHeroNarrow,
   .sectionInner {
     padding-inline: var(--gutter-mobile);
+  }
+
+  .notFoundActions {
+    margin-top: 30px;
+    display: grid;
+    justify-items: center;
   }
 }

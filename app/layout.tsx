@@ -12,10 +12,16 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-export const metadata: Metadata = buildMetadata(
-  "Convenience Packs for School, Home and Office",
-  "Pexpacks Supplies provides ready-packed school stationery, SME office supplies and household convenience packs for busy South African families, schools and businesses."
-);
+export const metadata: Metadata = {
+  ...buildMetadata(
+    "Convenience Packs for School, Home and Office",
+    "Pexpacks Supplies provides ready-packed school stationery, SME office supplies and household convenience packs for busy South African families, schools and businesses."
+  ),
+  title: {
+    default: "Convenience Packs for School, Home and Office | Pexpacks Supplies",
+    template: "%s | Pexpacks Supplies",
+  },
+};
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
