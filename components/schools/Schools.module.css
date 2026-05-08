@@ -44,7 +44,7 @@
 .searchExperience h2 {
   margin: 0;
   color: var(--color-navy);
-  font-family: "Pexpacks Sans Alt", "Pexpacks Sans", Arial, sans-serif;
+  font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
   font-weight: 800;
   letter-spacing: 0;
 }
@@ -91,6 +91,7 @@
 
 .searchExperience {
   width: min(100%, 1120px);
+  margin-top: 26px;
 }
 
 .searchExperience h2 {
@@ -616,8 +617,11 @@
 
 .gradeDetails h1 {
   margin: 0;
-  font-size: clamp(46px, 7vw, 76px);
+  font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
+  font-size: clamp(42px, 6.4vw, 76px);
+  font-weight: 800;
   line-height: 0.98;
+  letter-spacing: 0;
 }
 
 .gradeDetails p {

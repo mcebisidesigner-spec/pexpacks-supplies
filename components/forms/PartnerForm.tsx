@@ -1,5 +1,5 @@
-import { PexPacksEnquiryForm } from "./PexPacksEnquiryForm";
+import { PexpacksEnquiryForm } from "./PexpacksEnquiryForm";
 
 export function PartnerForm() {
-  return <PexPacksEnquiryForm mode="partner" title="Partnership enquiry" submitLabel="Send partnership enquiry" />;
+  return <PexpacksEnquiryForm mode="partner" title="Partnership enquiry" submitLabel="Send partnership enquiry" />;
 }

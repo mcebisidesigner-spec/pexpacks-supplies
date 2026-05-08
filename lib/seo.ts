@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const siteName = "PexPacks";
+export const siteName = "Pexpacks";
 export const siteUrl = "https://pexpacks.co.za";
 const defaultOgImage = "/opengraph-image.jpg";
 
@@ -13,7 +13,7 @@ export function buildMetadata(title: string, description: string, path = "/"): M
     title: normalizedTitle,
     description,
     keywords: [
-      "PexPacks",
+      "Pexpacks",
       "convenience packs",
       "school stationery packs",
       "office supply packs",
@@ -32,7 +32,7 @@ export function buildMetadata(title: string, description: string, path = "/"): M
           url: defaultOgImage,
           width: 1200,
           height: 630,
-          alt: "PexPacks stationery supplies prepared for school and office packs"
+          alt: "Pexpacks stationery supplies prepared for school and office packs"
         }
       ],
       locale: "en_ZA",

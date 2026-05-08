@@ -51,7 +51,7 @@
 .pageTitle {
   margin: 0;
   color: var(--color-navy);
-  font-family: "Grato Sans Alt", "Grota Sans Alt", Arial, sans-serif;
+  font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
   font-size: clamp(42px, 6.4vw, 76px);
   font-weight: 800;
   line-height: 0.98;

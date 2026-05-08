@@ -1,4 +1,4 @@
-# PexPacks
+# Pexpacks
 
 Convenience packs for school, home and office - built for busy South African families, schools and businesses.
 
@@ -7,7 +7,7 @@ Convenience packs for school, home and office - built for busy South African fam
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript
 - **Styling:** CSS Modules + design tokens
-- **Fonts:** PexPacks Sans / PexPacks Sans Alt (custom WOFF2)
+- **Fonts:** Pexpacks Sans / Pexpacks Sans Alt (custom WOFF2)
 
 ## Getting Started
 
@@ -29,7 +29,7 @@ npm start
 
 The site submits contact, partnership and order enquiries to `POST /api/forms/submit`.
 
-The current handler uses Nodemailer with Gmail SMTP. It validates and sanitises submissions, requires consent, blocks honeypot spam, and emails the PexPacks notification inbox.
+The current handler uses Nodemailer with Gmail SMTP. It validates and sanitises submissions, requires consent, blocks honeypot spam, and emails the Pexpacks notification inbox.
 
 Required production environment variables:
 
@@ -76,7 +76,7 @@ styles/           -> Global CSS, design tokens, shared page styles
 | `/schools/[schoolSlug]` | School detail page |
 | `/schools/[schoolSlug]/[gradeSlug]` | Grade pack detail page |
 | `/office-packs` | Office supply packs |
-| `/partner-with-schools` | Partner with PexPacks |
+| `/partner-with-schools` | Partner with Pexpacks |
 | `/contact` | Contact form |
 | `/order` | Order flow |
 | `/school`, `/office`, `/partner`, `/copex` | Legacy redirects |

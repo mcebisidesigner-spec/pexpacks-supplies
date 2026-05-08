@@ -35,7 +35,7 @@ function buildHtml(data: FormSubmission) {
     )
     .join("");
 
-  return `<div style="font-family:Arial,sans-serif;color:#192a3e"><h2 style="margin:0 0 12px">New PexPacks enquiry</h2><table cellspacing="0" style="border-collapse:collapse;width:100%;max-width:700px">${htmlRows}</table></div>`;
+  return `<div style="font-family:Arial,sans-serif;color:#192a3e"><h2 style="margin:0 0 12px">New Pexpacks enquiry</h2><table cellspacing="0" style="border-collapse:collapse;width:100%;max-width:700px">${htmlRows}</table></div>`;
 }
 
 function buildText(data: FormSubmission) {
@@ -70,9 +70,9 @@ export async function sendEmail(data: FormSubmission) {
 
   try {
     await transporter.sendMail({
-      from: `PexPacks <${user}>`,
+      from: `Pexpacks <${user}>`,
       to,
-      subject: `[PexPacks] New ${formTypeLabel(data.formType)} from ${data.fullName}`,
+      subject: `[Pexpacks] New ${formTypeLabel(data.formType)} from ${data.fullName}`,
       html: buildHtml(data),
       text: buildText(data)
     });

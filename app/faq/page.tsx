@@ -7,7 +7,7 @@ import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Frequently Asked Questions",
-  "Answers to common questions about PexPacks school stationery packs, office packs, delivery, payment and partnerships.",
+  "Answers to common questions about Pexpacks school stationery packs, office packs, delivery, payment and partnerships.",
   "/faq"
 );
 

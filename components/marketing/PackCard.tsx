@@ -7,7 +7,7 @@ function mediaClass(pack: Pack) {
     return styles.packMediaBlue;
   }
 
-  if (pack.category === "PexPacks") {
+  if (pack.category === "Pexpacks") {
     return styles.packMediaGreen;
   }
 

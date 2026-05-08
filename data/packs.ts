@@ -9,7 +9,7 @@ export type MainCategory = {
 export type Pack = {
   id: string;
   name: string;
-  category: "School" | "Office" | "PexPacks";
+  category: "School" | "Office" | "Pexpacks";
   subcategory?: string;
   description: string;
   bestFor: string;
@@ -37,7 +37,7 @@ export const mainCategories: MainCategory[] = [
   },
   {
     title: "Order a Pack",
-    description: "Send a school, office or household pack enquiry and let PexPacks confirm the details.",
+    description: "Send a school, office or household pack enquiry and let Pexpacks confirm the details.",
     href: "/order",
     cta: "Start an Order Enquiry",
     icon: "package"
@@ -77,11 +77,11 @@ export const homeProcessSteps = [
   },
   {
     title: "We pack it",
-    text: "PexPacks prepares the essentials and confirms collection or delivery."
+    text: "Pexpacks prepares the essentials and confirms collection or delivery."
   }
 ];
 
-export const whyChoosePexPacks = [
+export const whyChoosePexpacks = [
   {
     title: "Ready-packed convenience",
     text: "We prepare complete packs so you do not need to buy items one by one."
@@ -100,7 +100,7 @@ export const whyChoosePexPacks = [
   },
   {
     title: "School and community impact",
-    text: "PexPacks supports partner schools with digital visibility and sponsor access."
+    text: "Pexpacks supports partner schools with digital visibility and sponsor access."
   }
 ];
 
@@ -156,7 +156,7 @@ export const featuredPacks: Pack[] = [
   {
     id: "breakfast-pack",
     name: "Breakfast Pack",
-    category: "PexPacks",
+    category: "Pexpacks",
     subcategory: "Breakfast",
     description: "A practical morning convenience pack that helps families and learners start prepared.",
     bestFor: "Families and learners",
@@ -168,7 +168,7 @@ export const featuredPacks: Pack[] = [
   {
     id: "hygiene-pack",
     name: "Hygiene Pack",
-    category: "PexPacks",
+    category: "Pexpacks",
     subcategory: "Hygiene",
     description: "Everyday hygiene essentials packed for school, home, sponsorship and emergency support.",
     bestFor: "Learners, families and sponsors",

@@ -30,4 +30,4 @@ export function buildWhatsAppHref(message: string) {
   return `https://wa.me/${normalizedNumber}?text=${encodeURIComponent(message)}`;
 }
 
-export const orderWhatsAppHref = buildWhatsAppHref("Hi PexPacks, I would like to order a stationery pack.");
+export const orderWhatsAppHref = buildWhatsAppHref("Hi Pexpacks, I would like to order a stationery pack.");

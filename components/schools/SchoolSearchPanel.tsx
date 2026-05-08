@@ -97,7 +97,7 @@ export function SchoolSearchPanel({
           return;
         }
 
-        setError("We couldn't load the school list. Please refresh or contact PexPacks.");
+        setError("We couldn't load the school list. Please refresh or contact Pexpacks.");
       } finally {
         if (activeRequest.current === controller) {
           setIsLoading(false);
@@ -149,7 +149,9 @@ export function SchoolSearchPanel({
 
   return (
     <section className={styles.searchExperience} aria-labelledby="school-search-heading">
-      <h2 id="school-search-heading">Search by School, Grade or Region</h2>
+      <h2 id="school-search-heading" className="sr-only">
+        Search by School, Grade or Region
+      </h2>
       <form
         className={styles.searchForm}
         onSubmit={handleSubmit}

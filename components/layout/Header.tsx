@@ -9,8 +9,8 @@ export function Header() {
   return (
     <header className={styles.siteHeader}>
       <div className={styles.headerInner}>
-        <Link className={styles.logoLink} href="/" aria-label="PexPacks home" data-mobile-menu-close>
-          <Image src="/images/logo.svg" width={167} height={70} alt="PexPacks" priority />
+        <Link className={styles.logoLink} href="/" aria-label="Pexpacks home" data-mobile-menu-close>
+          <Image src="/images/logo.svg" width={167} height={70} alt="Pexpacks" priority />
         </Link>
 
         <nav className={styles.desktopNav} aria-label="Main navigation">
@@ -19,7 +19,7 @@ export function Header() {
           ))}
         </nav>
 
-        <Link className={styles.desktopOrder} href="/order" aria-label="Order a PexPacks pack">
+        <Link className={styles.desktopOrder} href="/order" aria-label="Order a Pexpacks pack">
           <span>Order a Pack</span>
           <span className={styles.orderIcon} aria-hidden="true">
             <svg viewBox="0 0 24 24" focusable="false">

@@ -19,7 +19,7 @@ type FormType =
   | "contact"
   | "track-order-interest";
 
-type PexPacksEnquiryFormProps = {
+type PexpacksEnquiryFormProps = {
   mode: "contact" | "partner";
   title: string;
   submitLabel: string;
@@ -38,7 +38,7 @@ const contactOptions = [
 const partnerOptions = ["School", "Sponsor", "Supplier", "Community partner"];
 
 const consentText =
-  "I agree that PexPacks may use my information to contact me about this enquiry, prepare my stationery pack request, and provide related support.";
+  "I agree that Pexpacks may use my information to contact me about this enquiry, prepare my stationery pack request, and provide related support.";
 
 function resolveContactFormType(enquiryType: string): FormType {
   if (enquiryType === "Parent order") return "school-pack-enquiry";
@@ -53,7 +53,7 @@ function val(data: FormData, key: string) {
   return typeof v === "string" ? v : "";
 }
 
-export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquiryFormProps) {
+export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquiryFormProps) {
   const [enquiryType, setEnquiryType] = useState(contactOptions[0]);
   const [partnerType, setPartnerType] = useState(partnerOptions[0]);
   const [pending, setPending] = useState(false);

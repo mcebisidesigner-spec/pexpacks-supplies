@@ -27,7 +27,7 @@ export function OrderSummary({ schoolSlug, gradeSlug }: OrderSummaryProps) {
         </div>
       </dl>
       <span>
-        No online payment is taken here. PexPacks will confirm your enquiry order details from{" "}
+        No online payment is taken here. Pexpacks will confirm your enquiry order details from{" "}
         <a href={ordersEmailHref}>{ordersEmail}</a> or <a href={phoneHref}>{phoneNumber}</a>.
       </span>
     </aside>

@@ -8,7 +8,7 @@ export const faqs: FAQ[] = [
   {
     id: "school-list-accuracy",
     question: "Are school packs aligned to official stationery lists?",
-    answer: "Yes. PexPacks structures school packs around the approved stationery requirements for the relevant school and grade."
+    answer: "Yes. Pexpacks structures school packs around the approved stationery requirements for the relevant school and grade."
   },
   {
     id: "pack-contents",
@@ -18,7 +18,7 @@ export const faqs: FAQ[] = [
   {
     id: "missing-school",
     question: "Can I order if my school is not listed yet?",
-    answer: "Yes. Use the order or contact form and include the school name and grade. PexPacks can follow up on availability or onboarding."
+    answer: "Yes. Use the order or contact form and include the school name and grade. Pexpacks can follow up on availability or onboarding."
   },
   {
     id: "delivery-timing",
@@ -33,11 +33,11 @@ export const faqs: FAQ[] = [
   {
     id: "office-packs",
     question: "Do you supply small businesses and home offices?",
-    answer: "Yes. PexPacks supplies curated office packs for SMEs, teachers, tutors and home-office buyers."
+    answer: "Yes. Pexpacks supplies curated office packs for SMEs, teachers, tutors and home-office buyers."
   },
   {
     id: "school-partnerships",
-    question: "How can a school partner with PexPacks?",
+    question: "How can a school partner with Pexpacks?",
     answer: "Schools can use the partnership enquiry form to share school details, role information and stationery list requirements."
   }
 ];

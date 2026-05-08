@@ -231,13 +231,13 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
                   onChange={(event) => setConsent(event.target.checked)}
                 />
                 <span>
-                  I agree that PexPacks may use my information to contact me about this enquiry, prepare my stationery
+                  I agree that Pexpacks may use my information to contact me about this enquiry, prepare my stationery
                   pack request, and provide related support.
                 </span>
               </label>
               <p className={styles.privacyNotice}>
                 We only use your details to respond to your enquiry and manage your stationery pack request. We collect
-                only the information needed to assist you. You may contact PexPacks to update, correct, or request
+                only the information needed to assist you. You may contact Pexpacks to update, correct, or request
                 deletion of your information.
               </p>
 
@@ -248,7 +248,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
             <div className={styles.confirmPack}>
               <h2>Confirm order</h2>
               <p>
-                This is an enquiry order. No online payment is taken here. PexPacks will confirm availability, delivery
+                This is an enquiry order. No online payment is taken here. Pexpacks will confirm availability, delivery
                 details and payment options. Order support is available at <a href={ordersEmailHref}>{ordersEmail}</a>.
               </p>
               {submitStatus ? (

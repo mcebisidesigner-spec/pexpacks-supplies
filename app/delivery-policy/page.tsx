@@ -4,7 +4,7 @@ import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Delivery Policy",
-  "Read the PexPacks delivery policy for school stationery packs and office stationery packs.",
+  "Read the Pexpacks delivery policy for school stationery packs and office stationery packs.",
   "/delivery-policy"
 );
 
@@ -16,7 +16,7 @@ export default function DeliveryPolicyPage() {
           <p>Delivery Policy</p>
           <h1>Delivery and collection guidance</h1>
           <p className={page.pageHeroText}>
-            PexPacks confirms delivery and collection details after receiving the selected school, grade, pack, and
+            Pexpacks confirms delivery and collection details after receiving the selected school, grade, pack, and
             customer information.
           </p>
         </div>

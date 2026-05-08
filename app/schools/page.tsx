@@ -8,8 +8,8 @@ import { getFeaturedSchoolRecords, getSchoolSearchOptions } from "@/lib/schools/
 import styles from "@/components/schools/Schools.module.css";
 
 export const metadata: Metadata = buildMetadata(
-  "PexPacks School Stationery Packs | Find Your School Pack",
-  "Search your school and order complete stationery packs by grade. PexPacks helps parents find affordable school-ready stationery packs.",
+  "Pexpacks School Stationery Packs | Find Your School Pack",
+  "Search your school and order complete stationery packs by grade. Pexpacks helps parents find affordable school-ready stationery packs.",
   "/schools"
 );
 
@@ -44,7 +44,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
           <p>School-ready support</p>
           <h2 id="school-support-heading">Search first, then choose the correct pack</h2>
           <span>
-            PexPacks keeps the school list searchable so parents do not need to scroll through hundreds of schools.
+            Pexpacks keeps the school list searchable so parents do not need to scroll through hundreds of schools.
             Search by school name, grade or region, open the school page, and continue with the correct grade pack.
           </span>
         </div>

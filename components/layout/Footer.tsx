@@ -47,8 +47,8 @@ export function Footer() {
   return (
     <footer className={styles.footer} id="site-footer">
       <div className={styles.footerInner}>        <div className={styles.topSection}>
-          <Link href="/" className={styles.logoLink} aria-label="PexPacks home">
-            <Image src="/images/logo.svg" width={148} height={62} alt="PexPacks" priority={false} />
+          <Link href="/" className={styles.logoLink} aria-label="Pexpacks home">
+            <Image src="/images/logo.svg" width={148} height={62} alt="Pexpacks" priority={false} />
           </Link>
 
           <div className={styles.navGroup}>
@@ -85,7 +85,7 @@ export function Footer() {
           </div>
         </div>        <hr className={styles.divider} />        <div className={styles.bottomSection}>
           <p className={styles.copyright}>
-            &copy; 2026 PexPacks. Design:{"  "}
+            &copy; 2026 Pexpacks. Design:{"  "}
             <a href="https://mcebisih.co.za/" target="_blank" rel="noreferrer" className={styles.designerLink}>
               McebisiH
             </a>

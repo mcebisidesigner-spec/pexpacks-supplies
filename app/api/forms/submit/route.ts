@@ -5,7 +5,7 @@ import { sendEmail } from "@/lib/forms/sendEmail";
 
 export const runtime = "nodejs";
 
-const OK_MSG = "Thank you. Your enquiry has been received. The PexPacks team will contact you soon.";
+const OK_MSG = "Thank you. Your enquiry has been received. The Pexpacks team will contact you soon.";
 
 function json(body: unknown, status: number) {
   return NextResponse.json(body, { status });

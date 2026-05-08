@@ -18,7 +18,7 @@ import styles from "@/components/marketing/Marketing.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Contact",
-  "Contact PexPacks for school stationery orders, office pack enquiries, partnerships, sponsorships and supplier enquiries.",
+  "Contact Pexpacks for school stationery orders, office pack enquiries, partnerships, sponsorships and supplier enquiries.",
   "/contact"
 );
 
@@ -27,7 +27,7 @@ export default function ContactPage() {
     <>
       <PageHero
         eyebrow="Contact"
-        title="Talk to PexPacks"
+        title="Talk to Pexpacks"
         text="Send an enquiry about parent orders, school partnerships, office packs, sponsorships or supplier opportunities."
         panelText="Service area"
         panelTitle="Gauteng pilot province"
@@ -35,7 +35,7 @@ export default function ContactPage() {
         <div className={styles.buttonRow}>
           {hasWhatsAppNumber ? (
             <Button href={orderWhatsAppHref} variant="white">
-              WhatsApp PexPacks
+              WhatsApp Pexpacks
             </Button>
           ) : null}
           <Button href="/order">Order a Pack</Button>

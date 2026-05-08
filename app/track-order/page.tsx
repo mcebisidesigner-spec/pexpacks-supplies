@@ -5,7 +5,7 @@ import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Track Order",
-  "Track your PexPacks stationery order by order number, phone number or email address.",
+  "Track your Pexpacks stationery order by order number, phone number or email address.",
   "/track-order"
 );
 
