@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { CaptchaField } from "./CaptchaField";
 import styles from "@/components/marketing/Marketing.module.css";
 
 type ApiResponse = {
@@ -40,6 +41,7 @@ const partnerOptions = ["School", "Sponsor", "Supplier", "Community partner"];
 
 const consentText =
   "I agree that PexPacks may use my information to contact me about this enquiry, prepare my stationery pack request, and provide related support.";
+const captchaSiteKey = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY;
 
 function resolveContactFormType(enquiryType: string): FormType {
   if (enquiryType === "Parent order") {
@@ -69,6 +71,7 @@ function formValue(data: FormData, key: string) {
 export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquiryFormProps) {
   const [enquiryType, setEnquiryType] = useState(contactOptions[0]);
   const [partnerType, setPartnerType] = useState(partnerOptions[0]);
+  const [captchaToken, setCaptchaToken] = useState("");
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -99,6 +102,7 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
       message: formValue(formData, "message"),
       consent: formData.get("consent") === "on",
       companyWebsite: formValue(formData, "companyWebsite"),
+      captchaToken,
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
       submittedAt: new Date().toISOString()
@@ -136,7 +140,9 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
       <form onSubmit={handleSubmit} noValidate>
         <h2>{title}</h2>
         <p className={styles.privacyNotice}>
-          We only use your details to respond to your enquiry and manage your stationery pack request.
+          We only use your details to respond to your enquiry and manage your stationery pack request. We collect only
+          the information needed to assist you. You may contact PexPacks to update, correct, or request deletion of your
+          information.
         </p>
         <div className={styles.formGrid}>
           <label className={styles.field}>
@@ -233,6 +239,13 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
           <span>{consentText}</span>
         </label>
         {errors.consent ? <p className={styles.fieldError}>{errors.consent}</p> : null}
+
+        <CaptchaField
+          siteKey={captchaSiteKey}
+          token={captchaToken}
+          callbackName="onPexPacksEnquiryCaptcha"
+          onTokenChange={setCaptchaToken}
+        />
 
         <label className={styles.honeypot} aria-hidden="true">
           Company website

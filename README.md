@@ -29,6 +29,8 @@ npm start
 
 The site submits contact, partnership and order enquiries to `POST /api/forms/submit`.
 
+Full deployment notes are in [`docs/form-deployment.md`](docs/form-deployment.md).
+
 Required production environment variables:
 
 ```text
@@ -43,11 +45,13 @@ GOOGLE_SHEETS_SHEET_NAME=Submissions
 
 CAPTCHA_ENABLED=false
 HCAPTCHA_SECRET_KEY=
+NEXT_PUBLIC_HCAPTCHA_SITE_KEY=
 
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
 
 NEXT_PUBLIC_SITE_URL=https://pexpacks.co.za
+NODE_ENV=production
 ```
 
 Resend setup:
@@ -69,7 +73,7 @@ Spam protection:
 
 - A hidden `companyWebsite` honeypot blocks common bot submissions.
 - Upstash Redis rate limiting is used when `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are configured.
-- hCaptcha is only enforced when `CAPTCHA_ENABLED=true`.
+- hCaptcha is only enforced when `CAPTCHA_ENABLED=true`. Add `NEXT_PUBLIC_HCAPTCHA_SITE_KEY` before enabling it.
 - Do not add secret values with `NEXT_PUBLIC_`; those are exposed to the browser.
 
 ## Project Structure

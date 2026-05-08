@@ -91,7 +91,8 @@
 }
 
 .consentField,
-.privacyNotice {
+.privacyNotice,
+.captchaField {
   grid-column: 1 / -1;
 }
 
@@ -124,6 +125,10 @@
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+.captchaField {
+  min-height: 78px;
 }
 
 .confirmPack {

@@ -7275,16 +7275,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-morningside-primary",
+    "id": "school-sandton-morningside-primary",
     "name": "Morningside Primary",
-    "slug": "morningside-primary",
+    "slug": "sandton-morningside-primary",
     "city": "Sandton",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "morningside-primary-grade-2",
+        "id": "sandton-morningside-primary-grade-2",
         "grade": "Grade 2",
         "gradeSlug": "grade-2",
         "price": 709,
@@ -7300,7 +7300,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "morningside-primary-grade-5",
+        "id": "sandton-morningside-primary-grade-5",
         "grade": "Grade 5",
         "gradeSlug": "grade-5",
         "price": 829,
@@ -7318,16 +7318,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-atholl-primary",
+    "id": "school-sandton-atholl-primary",
     "name": "Atholl Primary",
-    "slug": "atholl-primary",
+    "slug": "sandton-atholl-primary",
     "city": "Sandton",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "atholl-primary-grade-7",
+        "id": "sandton-atholl-primary-grade-7",
         "grade": "Grade 7",
         "gradeSlug": "grade-7",
         "price": 869,
@@ -7343,7 +7343,7 @@ export const schools: School[] = [
         "availability": "in-stock"
       },
       {
-        "id": "atholl-primary-grade-r",
+        "id": "sandton-atholl-primary-grade-r",
         "grade": "Grade R",
         "gradeSlug": "grade-r",
         "price": 669,
@@ -7359,7 +7359,7 @@ export const schools: School[] = [
         "availability": "in-stock"
       },
       {
-        "id": "atholl-primary-grade-5",
+        "id": "sandton-atholl-primary-grade-5",
         "grade": "Grade 5",
         "gradeSlug": "grade-5",
         "price": 799,
@@ -7377,16 +7377,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-rivonia-primary",
+    "id": "school-sandton-rivonia-primary",
     "name": "Rivonia Primary",
-    "slug": "rivonia-primary",
+    "slug": "sandton-rivonia-primary",
     "city": "Sandton",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "rivonia-primary-grade-2",
+        "id": "sandton-rivonia-primary-grade-2",
         "grade": "Grade 2",
         "gradeSlug": "grade-2",
         "price": 719,
@@ -7402,7 +7402,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "rivonia-primary-grade-1",
+        "id": "sandton-rivonia-primary-grade-1",
         "grade": "Grade 1",
         "gradeSlug": "grade-1",
         "price": 699,
@@ -7418,7 +7418,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "rivonia-primary-grade-3",
+        "id": "sandton-rivonia-primary-grade-3",
         "grade": "Grade 3",
         "gradeSlug": "grade-3",
         "price": 779,
@@ -7933,16 +7933,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-sandown-high",
+    "id": "school-sandton-sandown-high",
     "name": "Sandown High",
-    "slug": "sandown-high",
+    "slug": "sandton-sandown-high",
     "city": "Sandton",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "sandown-high-grade-9",
+        "id": "sandton-sandown-high-grade-9",
         "grade": "Grade 9",
         "gradeSlug": "grade-9",
         "price": 949,
@@ -7959,7 +7959,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "sandown-high-grade-12",
+        "id": "sandton-sandown-high-grade-12",
         "grade": "Grade 12",
         "gradeSlug": "grade-12",
         "price": 999,
@@ -7977,7 +7977,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "sandown-high-grade-10",
+        "id": "sandton-sandown-high-grade-10",
         "grade": "Grade 10",
         "gradeSlug": "grade-10",
         "price": 939,
@@ -8059,16 +8059,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-bryanston-high",
+    "id": "school-sandton-bryanston-high",
     "name": "Bryanston High",
-    "slug": "bryanston-high",
+    "slug": "sandton-bryanston-high",
     "city": "Sandton",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "bryanston-high-grade-10",
+        "id": "sandton-bryanston-high-grade-10",
         "grade": "Grade 10",
         "gradeSlug": "grade-10",
         "price": 949,
@@ -8085,7 +8085,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "bryanston-high-grade-11",
+        "id": "sandton-bryanston-high-grade-11",
         "grade": "Grade 11",
         "gradeSlug": "grade-11",
         "price": 969,
@@ -8102,7 +8102,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "bryanston-high-grade-8",
+        "id": "sandton-bryanston-high-grade-8",
         "grade": "Grade 8",
         "gradeSlug": "grade-8",
         "price": 899,
@@ -16598,16 +16598,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-bredell-primary",
+    "id": "school-edenvale-bredell-primary",
     "name": "Bredell Primary",
-    "slug": "bredell-primary",
+    "slug": "edenvale-bredell-primary",
     "city": "Edenvale",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "bredell-primary-grade-1",
+        "id": "edenvale-bredell-primary-grade-1",
         "grade": "Grade 1",
         "gradeSlug": "grade-1",
         "price": 699,
@@ -16623,7 +16623,7 @@ export const schools: School[] = [
         "availability": "in-stock"
       },
       {
-        "id": "bredell-primary-grade-2",
+        "id": "edenvale-bredell-primary-grade-2",
         "grade": "Grade 2",
         "gradeSlug": "grade-2",
         "price": 749,
@@ -16639,7 +16639,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "bredell-primary-grade-r",
+        "id": "edenvale-bredell-primary-grade-r",
         "grade": "Grade R",
         "gradeSlug": "grade-r",
         "price": 669,
@@ -17852,16 +17852,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-eden-park-primary",
+    "id": "school-alberton-eden-park-primary",
     "name": "Eden Park Primary",
-    "slug": "eden-park-primary",
+    "slug": "alberton-eden-park-primary",
     "city": "Alberton",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": true,
     "grades": [
       {
-        "id": "eden-park-primary-grade-1",
+        "id": "alberton-eden-park-primary-grade-1",
         "grade": "Grade 1",
         "gradeSlug": "grade-1",
         "price": 699,
@@ -17877,7 +17877,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "eden-park-primary-grade-2",
+        "id": "alberton-eden-park-primary-grade-2",
         "grade": "Grade 2",
         "gradeSlug": "grade-2",
         "price": 699,
@@ -26712,16 +26712,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-centurion-high",
+    "id": "school-centurion-centurion-high",
     "name": "Centurion High",
-    "slug": "centurion-high",
+    "slug": "centurion-centurion-high",
     "city": "Centurion",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "centurion-high-grade-11",
+        "id": "centurion-centurion-high-grade-11",
         "grade": "Grade 11",
         "gradeSlug": "grade-11",
         "price": 979,
@@ -26738,7 +26738,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "centurion-high-grade-10",
+        "id": "centurion-centurion-high-grade-10",
         "grade": "Grade 10",
         "gradeSlug": "grade-10",
         "price": 939,
@@ -26755,7 +26755,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "centurion-high-grade-8",
+        "id": "centurion-centurion-high-grade-8",
         "grade": "Grade 8",
         "gradeSlug": "grade-8",
         "price": 919,
@@ -26773,16 +26773,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-zwartkop-high",
+    "id": "school-centurion-zwartkop-high",
     "name": "Zwartkop High",
-    "slug": "zwartkop-high",
+    "slug": "centurion-zwartkop-high",
     "city": "Centurion",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "zwartkop-high-grade-8",
+        "id": "centurion-zwartkop-high-grade-8",
         "grade": "Grade 8",
         "gradeSlug": "grade-8",
         "price": 899,
@@ -26798,7 +26798,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "zwartkop-high-grade-12",
+        "id": "centurion-zwartkop-high-grade-12",
         "grade": "Grade 12",
         "gradeSlug": "grade-12",
         "price": 1019,
@@ -26816,7 +26816,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "zwartkop-high-grade-11",
+        "id": "centurion-zwartkop-high-grade-11",
         "grade": "Grade 11",
         "gradeSlug": "grade-11",
         "price": 979,
@@ -26835,16 +26835,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-eldoraigne-high",
+    "id": "school-centurion-eldoraigne-high",
     "name": "Eldoraigne High",
-    "slug": "eldoraigne-high",
+    "slug": "centurion-eldoraigne-high",
     "city": "Centurion",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "eldoraigne-high-grade-12",
+        "id": "centurion-eldoraigne-high-grade-12",
         "grade": "Grade 12",
         "gradeSlug": "grade-12",
         "price": 979,
@@ -26862,7 +26862,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "eldoraigne-high-grade-9",
+        "id": "centurion-eldoraigne-high-grade-9",
         "grade": "Grade 9",
         "gradeSlug": "grade-9",
         "price": 929,
@@ -26879,7 +26879,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "eldoraigne-high-grade-10",
+        "id": "centurion-eldoraigne-high-grade-10",
         "grade": "Grade 10",
         "gradeSlug": "grade-10",
         "price": 979,
@@ -26898,16 +26898,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-lyttelton-manor-high",
+    "id": "school-centurion-lyttelton-manor-high",
     "name": "Lyttelton Manor High",
-    "slug": "lyttelton-manor-high",
+    "slug": "centurion-lyttelton-manor-high",
     "city": "Centurion",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "lyttelton-manor-high-grade-10",
+        "id": "centurion-lyttelton-manor-high-grade-10",
         "grade": "Grade 10",
         "gradeSlug": "grade-10",
         "price": 969,
@@ -26924,7 +26924,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "lyttelton-manor-high-grade-11",
+        "id": "centurion-lyttelton-manor-high-grade-11",
         "grade": "Grade 11",
         "gradeSlug": "grade-11",
         "price": 969,
@@ -26943,16 +26943,16 @@ export const schools: School[] = [
     ]
   },
   {
-    "id": "school-sutherland-high",
+    "id": "school-centurion-sutherland-high",
     "name": "Sutherland High",
-    "slug": "sutherland-high",
+    "slug": "centurion-sutherland-high",
     "city": "Centurion",
     "province": "Gauteng",
     "logo": "/images/school-logo-placeholder.svg",
     "isPartnerSchool": false,
     "grades": [
       {
-        "id": "sutherland-high-grade-10",
+        "id": "centurion-sutherland-high-grade-10",
         "grade": "Grade 10",
         "gradeSlug": "grade-10",
         "price": 959,
@@ -26969,7 +26969,7 @@ export const schools: School[] = [
         "availability": "pre-order"
       },
       {
-        "id": "sutherland-high-grade-9",
+        "id": "centurion-sutherland-high-grade-9",
         "grade": "Grade 9",
         "gradeSlug": "grade-9",
         "price": 909,

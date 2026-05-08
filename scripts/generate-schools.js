@@ -338,12 +338,22 @@ function pickGradesSeeded(gradePool, count) {
 }
 
 const allSchools = [];
+const usedSlugs = new Set();
 
 for (const [city, types] of Object.entries(gautengSchools)) {
+  const citySlug = slugify(city);
+
+  function uniqueSlug(name) {
+    let slug = slugify(name);
+    if (usedSlugs.has(slug)) slug = `${citySlug}-${slug}`;
+    usedSlugs.add(slug);
+    return slug;
+  }
+
   // Primary schools
   for (const name of types.primary) {
-    const slug = slugify(name);
-    const gradeCount = 2 + Math.floor(seededRandom() * 2); // 2-3 grades
+    const slug = uniqueSlug(name);
+    const gradeCount = 2 + Math.floor(seededRandom() * 2);
     const grades = pickGradesSeeded(primaryGrades, gradeCount);
     
     allSchools.push({
@@ -353,12 +363,12 @@ for (const [city, types] of Object.entries(gautengSchools)) {
       city,
       province: "Gauteng",
       logo: "/images/school-logo-placeholder.svg",
-      isPartnerSchool: seededRandom() < 0.08, // ~8% partner schools
+      isPartnerSchool: seededRandom() < 0.08,
       grades: grades.map(g => ({
         id: `${slug}-${slugify(g.grade)}`,
         grade: g.grade,
         gradeSlug: slugify(g.grade),
-        price: g.price + Math.floor(seededRandom() * 6) * 10 - 20, // ±20 price variation
+        price: g.price + Math.floor(seededRandom() * 6) * 10 - 20,
         contents: g.contents,
         deliveryNote: seededRandom() < 0.3
           ? "Prepared for delivery before school starts."
@@ -370,7 +380,7 @@ for (const [city, types] of Object.entries(gautengSchools)) {
   
   // High schools
   for (const name of types.high) {
-    const slug = slugify(name);
+    const slug = uniqueSlug(name);
     const gradeCount = 2 + Math.floor(seededRandom() * 2);
     const grades = pickGradesSeeded(highGrades, gradeCount);
     

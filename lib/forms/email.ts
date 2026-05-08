@@ -45,6 +45,7 @@ function rows(submission: SanitisedFormSubmission, submissionId: string, ipHash:
     ["Province", submission.province],
     ["Message", submission.message],
     ["Consent", submission.consent ? "Yes" : "No"],
+    ["Consent recorded at", submission.submittedAt],
     ["Page URL", submission.pageUrl],
     ["User agent", submission.userAgent],
     ["IP hash", ipHash]

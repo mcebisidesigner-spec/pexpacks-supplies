@@ -9,7 +9,7 @@ import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 
-const successMessage = "Thank you. Your enquiry has been received.";
+const successMessage = "Thank you. Your enquiry has been received. The PexPacks team will contact you soon.";
 
 function jsonResponse(body: unknown, status: number) {
   return NextResponse.json(body, { status });
@@ -42,20 +42,8 @@ export async function POST(request: NextRequest) {
   const submissionId = createSubmissionId();
   const submittedAt = new Date().toISOString();
   const ip = getClientIp(request);
-  const rateLimit = await checkRateLimit(ip);
-
-  if (!rateLimit.allowed) {
-    logger.warn("Form submission rate limited", { submissionId, ipHash: rateLimit.identifier, submittedAt });
-    return jsonResponse(
-      {
-        success: false,
-        message: "Too many submissions. Please wait a few minutes and try again."
-      },
-      429
-    );
-  }
-
   const body = await readJson(request);
+
   if (!body) {
     return jsonResponse(
       {
@@ -67,8 +55,21 @@ export async function POST(request: NextRequest) {
   }
 
   if (hasFilledHoneypot(body)) {
-    logger.info("Honeypot submission blocked", { submissionId, ipHash: rateLimit.identifier, submittedAt });
+    logger.info("Honeypot submission blocked", { submissionId, submittedAt });
     return jsonResponse({ success: true, message: successMessage, submissionId }, 200);
+  }
+
+  const rateLimit = await checkRateLimit(ip);
+
+  if (!rateLimit.allowed) {
+    logger.warn("Form submission rate limited", { submissionId, ipHash: rateLimit.identifier, submittedAt });
+    return jsonResponse(
+      {
+        success: false,
+        message: "Too many submissions. Please wait a few minutes and try again."
+      },
+      429
+    );
   }
 
   const captcha = await verifyCaptcha(typeof body.captchaToken === "string" ? body.captchaToken : undefined, ip);

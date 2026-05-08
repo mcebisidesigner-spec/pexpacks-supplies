@@ -875,6 +875,10 @@
   overflow: hidden;
 }
 
+.captchaField {
+  min-height: 78px;
+}
+
 .faqList {
   display: grid;
   gap: 12px;

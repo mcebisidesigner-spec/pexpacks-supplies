@@ -4,11 +4,13 @@ import { useMemo, useRef, useState } from "react";
 import { ordersEmail, ordersEmailHref } from "@/data/contact";
 import { schools } from "@/data/schools";
 import { Button } from "@/components/ui/Button";
+import { CaptchaField } from "@/components/forms/CaptchaField";
 import { OrderProgress } from "./OrderProgress";
 import { OrderSummary } from "./OrderSummary";
 import styles from "./Order.module.css";
 
 const steps = ["Select school", "Select grade", "Confirm pack", "Enter details", "Confirm order"];
+const captchaSiteKey = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY;
 
 type ApiResponse = {
   success: boolean;
@@ -33,6 +35,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
   const [deliveryPreference, setDeliveryPreference] = useState("School collection");
   const [preferredContactMethod, setPreferredContactMethod] = useState("whatsapp");
   const [consent, setConsent] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<ApiResponse | null>(null);
 
@@ -86,6 +89,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
       preferredContactMethod,
       message: `Delivery preference: ${deliveryPreference}. Please confirm availability, delivery or collection options, and payment instructions.`,
       consent,
+      captchaToken,
       companyWebsite: typeof formData.get("companyWebsite") === "string" ? formData.get("companyWebsite") : "",
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
@@ -232,8 +236,16 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
                 </span>
               </label>
               <p className={styles.privacyNotice}>
-                We only use your details to respond to your enquiry and manage your stationery pack request.
+                We only use your details to respond to your enquiry and manage your stationery pack request. We collect
+                only the information needed to assist you. You may contact PexPacks to update, correct, or request
+                deletion of your information.
               </p>
+              <CaptchaField
+                siteKey={captchaSiteKey}
+                token={captchaToken}
+                callbackName="onPexPacksOrderCaptcha"
+                onTokenChange={setCaptchaToken}
+              />
             </div>
           ) : null}
 
