@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { OrderForm } from "@/components/order/OrderForm";
-import { ordersEmail, ordersEmailHref } from "@/data/contact";
+import { ordersEmail, ordersEmailHref, phoneHref, phoneNumber } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Order Stationery",
-  "Start a Pexpacks Supplies stationery order by selecting your school, grade, pack and delivery details.",
+  "Start a PexPacks stationery order enquiry by selecting your school, grade, pack and delivery details.",
   "/order"
 );
 
@@ -31,7 +31,7 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
           <h1>Order your ready-to-use pack</h1>
           <p className={page.pageHeroText}>
             Select school, choose grade, confirm the pack and send your order details. For order support, email{" "}
-            <a href={ordersEmailHref}>{ordersEmail}</a>.
+            <a href={ordersEmailHref}>{ordersEmail}</a> or call <a href={phoneHref}>{phoneNumber}</a>.
           </p>
         </div>
       </section>

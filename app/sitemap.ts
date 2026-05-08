@@ -5,11 +5,11 @@ import { siteUrl } from "@/lib/seo";
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     "",
-    "/school",
-    "/office",
-    "/copex",
-    "/partner",
     "/schools",
+    "/office-packs",
+    "/partner-with-schools",
+    "/order",
+    "/track-order",
     "/add-your-school",
     "/standard-school-packs",
     "/how-it-works",

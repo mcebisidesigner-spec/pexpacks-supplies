@@ -105,6 +105,24 @@
   margin: 0 0 16px;
 }
 
+.formStatusSuccess,
+.formStatusError {
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.formStatusSuccess {
+  background: rgba(76, 175, 80, 0.12);
+  color: #1f5d24;
+}
+
+.formStatusError {
+  background: rgba(235, 104, 38, 0.12);
+  color: var(--color-navy);
+}
+
 .formActions {
   display: flex;
   justify-content: space-between;

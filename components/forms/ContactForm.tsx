@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { generalEmail } from "@/data/contact";
 import styles from "@/components/marketing/Marketing.module.css";
 
 export function ContactForm() {
@@ -10,7 +11,21 @@ export function ContactForm() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const subject = encodeURIComponent(`PexPacks enquiry: ${formData.get("type") ?? "General enquiry"}`);
+    const body = encodeURIComponent(
+      [
+        `Name: ${formData.get("name") ?? ""}`,
+        `Email: ${formData.get("email") ?? ""}`,
+        `Phone: ${formData.get("phone") ?? ""}`,
+        `Enquiry type: ${formData.get("type") ?? ""}`,
+        "",
+        `${formData.get("message") ?? ""}`
+      ].join("\n")
+    );
+
     setSubmitted(true);
+    window.location.href = `mailto:${generalEmail}?subject=${subject}&body=${body}`;
   }
 
   return (
@@ -39,7 +54,7 @@ export function ContactForm() {
               <option>Parent order</option>
               <option>School partnership</option>
               <option>Office pack</option>
-              <option>Pexpacks</option>
+              <option>PexPacks</option>
               <option>Sponsorship</option>
               <option>Supplier partnership</option>
               <option>General enquiry</option>
@@ -51,7 +66,11 @@ export function ContactForm() {
           </label>
         </div>
         <Button type="submit">Send enquiry</Button>
-        {submitted ? <p className={styles.statusMessage}>Thank you. This form is ready to connect to the backend.</p> : null}
+        {submitted ? (
+          <p className={styles.statusMessage} role="status" aria-live="polite">
+            Opening your email app so you can send this enquiry to PexPacks.
+          </p>
+        ) : null}
       </form>
     </div>
   );

@@ -24,9 +24,9 @@ const officeBenefits = [
 ];
 
 export const metadata: Metadata = buildMetadata(
-  "Office Supply Packs for SMEs",
-  "Pexpacks prepares practical stationery and office packs so SMEs and home offices can stay stocked without wasting time on small purchases.",
-  "/office"
+  "Office Stationery Packs for SMEs",
+  "PexPacks prepares practical stationery and office packs so SMEs and home offices can stay stocked without wasting time on small purchases.",
+  "/office-packs"
 );
 
 export default function OfficePage() {
@@ -35,7 +35,7 @@ export default function OfficePage() {
       <PageHero
         eyebrow="Office"
         title="Office supplies packed for busy SMEs"
-        text="Pexpacks prepares practical stationery and office packs so your team can stay stocked without wasting time on small purchases."
+        text="PexPacks prepares practical stationery and office packs so your team can stay stocked without wasting time on small purchases."
         panelText="Core message"
         panelTitle="Office essentials packed and delivered, so your business keeps moving."
       >
@@ -108,12 +108,12 @@ export default function OfficePage() {
 
       <section className={styles.section}>
         <div className={styles.inner}>
-          <SectionHeader title="Built for practical business types" text="Pexpacks office packs are structured around real admin needs, not cluttered catalogue browsing." />
+          <SectionHeader title="Built for practical business types" text="PexPacks office packs are structured around real admin needs, not cluttered catalogue browsing." />
           <div className={styles.gridThree}>
             {businessUseCases.map((useCase) => (
               <article className={styles.infoCard} key={useCase}>
                 <h3>{useCase}</h3>
-                <p>Choose a pack, request a quote, and let Pexpacks prepare the essentials your team needs.</p>
+                <p>Choose a pack, request a quote, and let PexPacks prepare the essentials your team needs.</p>
               </article>
             ))}
           </div>

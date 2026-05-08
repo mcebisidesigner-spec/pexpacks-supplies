@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { generalEmail } from "@/data/contact";
 import styles from "@/components/marketing/Marketing.module.css";
 
 export function PartnerForm() {
@@ -10,7 +11,21 @@ export function PartnerForm() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const subject = encodeURIComponent(`PexPacks partnership enquiry: ${formData.get("partnerType") ?? "Partner"}`);
+    const body = encodeURIComponent(
+      [
+        `Name: ${formData.get("name") ?? ""}`,
+        `Organisation: ${formData.get("organisation") ?? ""}`,
+        `Email: ${formData.get("email") ?? ""}`,
+        `Partner type: ${formData.get("partnerType") ?? ""}`,
+        "",
+        `${formData.get("message") ?? ""}`
+      ].join("\n")
+    );
+
     setSubmitted(true);
+    window.location.href = `mailto:${generalEmail}?subject=${subject}&body=${body}`;
   }
 
   return (
@@ -43,12 +58,16 @@ export function PartnerForm() {
             </select>
           </label>
           <label className={`${styles.field} ${styles.formWide}`}>
-            <span>How can Pexpacks help?</span>
+            <span>How can PexPacks help?</span>
             <textarea name="message" placeholder="Share the school, sponsor or supplier opportunity" required />
           </label>
         </div>
         <Button type="submit">Send partnership enquiry</Button>
-        {submitted ? <p className={styles.statusMessage}>Thank you. This form is ready to connect to the backend.</p> : null}
+        {submitted ? (
+          <p className={styles.statusMessage} role="status" aria-live="polite">
+            Opening your email app so you can send this partnership enquiry to PexPacks.
+          </p>
+        ) : null}
       </form>
     </div>
   );

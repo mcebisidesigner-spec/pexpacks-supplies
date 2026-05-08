@@ -37,7 +37,7 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
         })}
       </nav>
 
-      <Link href="/order" className={styles.mobileMenuCta} onClick={onClose} aria-label="Order a Pexpacks pack">
+      <Link href="/order" className={styles.mobileMenuCta} onClick={onClose} aria-label="Order a PexPacks pack">
         <span>Order a Pack</span>
         <IconCircle className={styles.mobileMenuCtaIcon} />
       </Link>

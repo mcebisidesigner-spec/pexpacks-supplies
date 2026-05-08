@@ -3,14 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { hasWhatsAppNumber, orderWhatsAppHref } from "@/data/contact";
 import { footerNavLinks, footerLinks } from "@/data/navigation";
 import { isActivePath } from "@/lib/isActivePath";
 import styles from "./Footer.module.css";
 
 const socialLinks = [
-  { label: "Facebook", href: "#", icon: "facebook" },
-  { label: "Instagram", href: "#", icon: "instagram" },
-  { label: "WhatsApp", href: "#", icon: "whatsapp" },
+  { label: "Facebook", href: "https://www.facebook.com/pexpacks", icon: "facebook" },
+  { label: "Instagram", href: "https://www.instagram.com/pexpacks/", icon: "instagram" },
+  ...(hasWhatsAppNumber ? [{ label: "WhatsApp", href: orderWhatsAppHref, icon: "whatsapp" } as const] : []),
 ] as const;
 
 function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
@@ -45,11 +46,9 @@ export function Footer() {
 
   return (
     <footer className={styles.footer} id="site-footer">
-      <div className={styles.footerInner}>
-        {/* ── Top section ── */}
-        <div className={styles.topSection}>
-          <Link href="/" className={styles.logoLink} aria-label="Pexpacks Supplies home">
-            <Image src="/images/logo.svg" width={148} height={62} alt="Pexpacks Supplies" priority={false} />
+      <div className={styles.footerInner}>        <div className={styles.topSection}>
+          <Link href="/" className={styles.logoLink} aria-label="PexPacks home">
+            <Image src="/images/logo.svg" width={148} height={62} alt="PexPacks" priority={false} />
           </Link>
 
           <div className={styles.navGroup}>
@@ -84,15 +83,9 @@ export function Footer() {
               ))}
             </nav>
           </div>
-        </div>
-
-        {/* ── Divider ── */}
-        <hr className={styles.divider} />
-
-        {/* ── Bottom section ── */}
-        <div className={styles.bottomSection}>
+        </div>        <hr className={styles.divider} />        <div className={styles.bottomSection}>
           <p className={styles.copyright}>
-            &copy; 2026 Pexpacks Supplies. Design:{"  "}
+            &copy; 2026 PexPacks. Design:{"  "}
             <a href="https://mcebisih.co.za/" target="_blank" rel="noreferrer" className={styles.designerLink}>
               McebisiH
             </a>

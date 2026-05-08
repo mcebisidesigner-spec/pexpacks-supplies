@@ -10,7 +10,7 @@ import {
   homeProcessSteps,
   sponsorshipExamples,
   trustBadges,
-  whyChoosePexpacks,
+  whyChoosePexPacks,
 } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import styles from "@/components/marketing/Marketing.module.css";
@@ -27,7 +27,7 @@ export default function HomePage() {
               Everything your child needs for day one is already packed and ready.
             </p>
             <HeroSearch />
-            <ul className={styles.trustBadges} aria-label="Pexpacks Supplies trust points">
+            <ul className={styles.trustBadges} aria-label="PexPacks trust points">
               {trustBadges.map((badge) => (
                 <li key={badge}>{badge}</li>
               ))}
@@ -38,7 +38,7 @@ export default function HomePage() {
             <span className={styles.heroVisualImage}>
               <Image
                 src="/images/hero-school-delivery.webp"
-                alt="Pexpacks Supplies stationery and convenience pack items arranged neatly"
+                alt="PexPacks stationery and convenience pack items arranged neatly"
                 fill
                 priority
                 sizes="(min-width: 1024px) 44vw, 100vw"
@@ -47,7 +47,7 @@ export default function HomePage() {
             <div className={styles.productScene}>
               <div className={styles.brandBox}>
                 <div>
-                  <span>Pexpacks Supplies</span>
+                  <span>PexPacks</span>
                   <br />
                   <strong>Convenience Packs</strong>
                 </div>
@@ -90,11 +90,11 @@ export default function HomePage() {
       <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
-            title="Why choose Pexpacks Supplies?"
+            title="Why choose PexPacks?"
             text="Because convenience should save you time, reduce stress and help you stay prepared."
           />
           <div className={styles.benefitGrid}>
-            {whyChoosePexpacks.map((benefit) => (
+            {whyChoosePexPacks.map((benefit) => (
               <article className={styles.benefitCard} key={benefit.title}>
                 <h3>{benefit.title}</h3>
                 <p>{benefit.text}</p>
@@ -108,7 +108,7 @@ export default function HomePage() {
         <div className={styles.inner}>
           <SectionHeader
             title="Featured packs"
-            text="Sample pack options that show how Pexpacks covers school, office and home needs."
+            text="Sample pack options that show how PexPacks covers school, office and home needs."
           />
           <div className={styles.packGrid}>
             {featuredPacks.map((pack) => (
@@ -125,17 +125,17 @@ export default function HomePage() {
               <p className={styles.eyebrow}>School partnerships</p>
               <h2>A smarter way for schools to support parents</h2>
               <p>
-                Pexpacks partners with schools to simplify stationery ordering and provide free standardised school
+                PexPacks partners with schools to simplify stationery ordering and provide free standardised school
                 websites for approved partner schools. Each website can support school communication, stationery pack
                 links, sponsor pages and parent information.
               </p>
               <p>
-                Pexpacks provides and manages the website platform, while schools approve their official content and
+                PexPacks provides and manages the website platform, while schools approve their official content and
                 communication.
               </p>
               <div className={styles.buttonRow}>
-                <Button href="/partner">Partner With Pexpacks</Button>
-                <Button href="/partner#sponsor" variant="white">
+                <Button href="/partner-with-schools">Partner With PexPacks</Button>
+                <Button href="/partner-with-schools#sponsor" variant="white">
                   Sponsor a School
                 </Button>
               </div>
@@ -159,11 +159,11 @@ export default function HomePage() {
               <p className={styles.eyebrow}>Sponsors and donors</p>
               <h2>A safer way for sponsors to support schools</h2>
               <p>
-                Pexpacks helps local businesses, donors and community sponsors support schools through structured packs,
+                PexPacks helps local businesses, donors and community sponsors support schools through structured packs,
                 visible sponsorship pages and transparent school support campaigns.
               </p>
               <div className={styles.buttonRow}>
-                <Button href="/partner#sponsor" variant="white">
+                <Button href="/partner-with-schools#sponsor" variant="white">
                   Become a Sponsor
                 </Button>
               </div>
@@ -181,7 +181,7 @@ export default function HomePage() {
         <div className={styles.inner}>
           <SectionHeader
             centered
-            title="What Pexpacks should feel like"
+            title="What PexPacks should feel like"
             text="Short proof points for parents, schools and SMEs."
           />
           <div className={styles.testimonialsGrid}>
@@ -197,12 +197,12 @@ export default function HomePage() {
       </section>
 
       <CTASection
-        title="Ready to save time? Pexpacks it."
-        text="Choose your school, office or household pack and let Pexpacks prepare the essentials for you."
-        primaryHref="/school"
+        title="Ready to save time? PexPacks it."
+        text="Choose your school, office or household pack and let PexPacks prepare the essentials for you."
+        primaryHref="/schools"
         primaryLabel="Find Your School Pack"
-        secondaryHref="/copex"
-        secondaryLabel="Explore Pexpacks"
+        secondaryHref="/office-packs"
+        secondaryLabel="View Office Packs"
       />
     </>
   );

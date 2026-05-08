@@ -16,15 +16,15 @@ const schoolBenefits = [
 
 const supplierBenefits = [
   "Supply pack-ready stationery, food or household essentials",
-  "Support school, office and Pexpacks fulfilment",
-  "Help Pexpacks build reliable Gauteng pilot operations",
+  "Support school, office and PexPacks fulfilment",
+  "Help PexPacks build reliable Gauteng pilot operations",
   "Quote into practical, repeatable pack categories"
 ];
 
 export const metadata: Metadata = buildMetadata(
-  "Partner With Pexpacks Supplies",
-  "Partner with Pexpacks Supplies as a school, sponsor or supplier and help simplify school, office and household convenience packs.",
-  "/partner"
+  "Partner With PexPacks",
+  "Partner with PexPacks as a school, sponsor or supplier and help simplify school, office and household convenience packs.",
+  "/partner-with-schools"
 );
 
 export default function PartnerPage() {
@@ -32,8 +32,8 @@ export default function PartnerPage() {
     <>
       <PageHero
         eyebrow="Partner With Us"
-        title="Partner with Pexpacks and make essentials easier to access"
-        text="Schools, sponsors and suppliers can work with Pexpacks Supplies to simplify stationery ordering, support learners and build reliable convenience pack channels."
+        title="Partner with PexPacks and make essentials easier to access"
+        text="Schools, sponsors and suppliers can work with PexPacks to simplify stationery ordering, support learners and build reliable convenience pack channels."
         panelText="Built for"
         panelTitle="Schools, sponsors and suppliers"
       >
@@ -52,7 +52,7 @@ export default function PartnerPage() {
             <div>
               <h2>Free school website programme</h2>
               <p>
-                Pexpacks provides and manages the website platform, while schools approve their official content and
+                PexPacks provides and manages the website platform, while schools approve their official content and
                 communication. Approved partner schools can use the platform for parent updates, stationery pack links,
                 sponsor pages and school information.
               </p>
@@ -74,7 +74,7 @@ export default function PartnerPage() {
           <div className={styles.darkBand}>
             <div>
               <p className={styles.eyebrow}>Sponsors and donors</p>
-              <h2>Support schools through Pexpacks</h2>
+              <h2>Support schools through PexPacks</h2>
               <p>
                 Local businesses and donors can sponsor learner packs, classroom supplies, breakfast packs, hygiene packs
                 or school website visibility through a structured support channel.
@@ -96,12 +96,12 @@ export default function PartnerPage() {
 
       <section className={styles.sectionCream}>
         <div className={styles.inner}>
-          <SectionHeader title="Become a supplier" text="Pexpacks needs dependable suppliers for school, office and household pack categories." />
+          <SectionHeader title="Become a supplier" text="PexPacks needs dependable suppliers for school, office and household pack categories." />
           <div className={styles.infoGrid}>
             {supplierBenefits.map((benefit) => (
               <article className={styles.infoCard} key={benefit}>
                 <h3>{benefit}</h3>
-                <p>Use the partnership form and select supplier partnership so Pexpacks can review the opportunity.</p>
+                <p>Use the partnership form and select supplier partnership so PexPacks can review the opportunity.</p>
               </article>
             ))}
           </div>
@@ -110,7 +110,7 @@ export default function PartnerPage() {
 
       <section className={styles.section} id="partner-form">
         <div className={styles.inner}>
-          <SectionHeader title="Contact Pexpacks partnerships" text="Share the school, sponsor or supplier opportunity. This form is ready for backend connection." />
+          <SectionHeader title="Contact PexPacks partnerships" text="Share the school, sponsor or supplier opportunity. The form opens a prepared email enquiry so PexPacks can follow up." />
           <PartnerForm />
         </div>
       </section>

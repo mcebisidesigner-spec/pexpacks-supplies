@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { generalEmail, generalEmailHref, phoneHref, phoneNumber } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Privacy Policy",
-  "Read the Pexpacks Supplies privacy policy for school and office stationery pack enquiries and orders.",
+  "Read the PexPacks privacy policy for school and office stationery pack enquiries, orders, delivery details and customer support.",
   "/privacy-policy"
 );
 
@@ -14,7 +15,7 @@ export default function PrivacyPolicyPage() {
       <section className={page.pageHero}>
         <div className={page.pageHeroNarrow}>
           <p>Privacy Policy</p>
-          <h1>How Pexpacks Supplies handles your information</h1>
+          <h1>How PexPacks handles your information</h1>
           <p className={page.pageHeroText}>
             We use order and enquiry details to prepare stationery packs, confirm delivery or collection options, and
             respond to customer support requests.
@@ -26,7 +27,7 @@ export default function PrivacyPolicyPage() {
           <article className={page.infoCard}>
             <h2>Information we collect</h2>
             <p>
-              Pexpacks Supplies may collect contact details, school and grade selections, delivery preferences, and order notes
+              PexPacks may collect contact details, school and grade selections, delivery preferences, and order notes
               submitted through the website.
             </p>
             <h2>How we use it</h2>
@@ -34,8 +35,21 @@ export default function PrivacyPolicyPage() {
               We use this information to process enquiries, prepare stationery packs, arrange delivery or collection,
               and communicate order updates.
             </p>
+            <h2>How long we keep it</h2>
+            <p>
+              Enquiry and order details are kept only for as long as needed to respond, confirm pack availability,
+              support delivery or collection, handle follow-up questions, and meet reasonable record-keeping needs.
+            </p>
+            <h2>POPIA-conscious handling</h2>
+            <p>
+              PexPacks aims to collect only the information needed for the requested service and to keep customer
+              details protected from unnecessary access, sharing, or reuse.
+            </p>
             <h2>Support</h2>
-            <p>For privacy questions, contact Pexpacks Supplies through the contact page.</p>
+            <p>
+              For privacy questions, email <a href={generalEmailHref}>{generalEmail}</a>, call{" "}
+              <a href={phoneHref}>{phoneNumber}</a>, or use the contact page.
+            </p>
           </article>
         </div>
       </section>

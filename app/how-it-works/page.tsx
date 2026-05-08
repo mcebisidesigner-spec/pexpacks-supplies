@@ -6,7 +6,7 @@ import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "How It Works",
-  "Find your school, choose your grade, confirm your pack and order online with Pexpacks Supplies.",
+  "Find your school, choose your grade, confirm your pack and send an order enquiry with PexPacks.",
   "/how-it-works"
 );
 

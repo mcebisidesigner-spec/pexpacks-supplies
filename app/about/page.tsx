@@ -5,8 +5,8 @@ import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
-  "About Pexpacks Supplies",
-  "Pexpacks Supplies helps South African families, schools and businesses order ready-to-use stationery packs.",
+  "About",
+  "PexPacks helps South African families, schools and businesses order ready-to-use school and office stationery packs.",
   "/about"
 );
 
@@ -15,10 +15,10 @@ export default function AboutPage() {
     <>
       <section className={page.pageHero}>
         <div className={page.pageHeroNarrow}>
-          <p>About Pexpacks Supplies</p>
+          <p>About PexPacks</p>
           <h1>A simple digital office for stationery packs</h1>
           <p className={page.pageHeroText}>
-            Pexpacks Supplies helps parents, learners, schools, teachers, offices and small businesses order practical
+            PexPacks helps parents, learners, schools, teachers, offices and small businesses order practical
             stationery packs without the last-minute rush.
           </p>
         </div>
@@ -39,7 +39,7 @@ export default function AboutPage() {
           <div className={page.imageCard}>
             <Image
               src="/images/stationery-brand.webp"
-              alt="Pexpacks Supplies stationery products arranged on a desk"
+              alt="PexPacks stationery products arranged on a desk"
               width={1536}
               height={768}
               sizes="(max-width: 860px) 100vw, 45vw"

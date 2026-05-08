@@ -1,4 +1,4 @@
-import { ordersEmail, ordersEmailHref } from "@/data/contact";
+import { ordersEmail, ordersEmailHref, phoneHref, phoneNumber } from "@/data/contact";
 import { schools } from "@/data/schools";
 import { formatCurrency } from "@/lib/formatCurrency";
 import styles from "./Order.module.css";
@@ -27,8 +27,8 @@ export function OrderSummary({ schoolSlug, gradeSlug }: OrderSummaryProps) {
         </div>
       </dl>
       <span>
-        No payment is taken on this mock flow. Pexpacks Supplies will confirm your order details from{" "}
-        <a href={ordersEmailHref}>{ordersEmail}</a>.
+        No online payment is taken here. PexPacks will confirm your enquiry order details from{" "}
+        <a href={ordersEmailHref}>{ordersEmail}</a> or <a href={phoneHref}>{phoneNumber}</a>.
       </span>
     </aside>
   );

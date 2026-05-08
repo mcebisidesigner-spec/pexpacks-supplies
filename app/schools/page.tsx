@@ -5,8 +5,8 @@ import { buildMetadata } from "@/lib/seo";
 import styles from "@/components/marketing/Marketing.module.css";
 
 export const metadata: Metadata = buildMetadata(
-  "Find Your School Pack",
-  "Search Pexpacks Supplies school stationery packs by school, city and grade.",
+  "Find Your School Stationery Pack",
+  "Search PexPacks school stationery packs by school, city and grade, then choose the correct ready-packed stationery pack.",
   "/schools"
 );
 

@@ -20,7 +20,7 @@ export default function StandardSchoolPacksPage() {
         title="Per-grade stationery combos for quick ordering."
         text="Choose a standard Grade R to Grade 12 combo when your school-specific pack is not listed yet."
         panelText="Useful when"
-        panelTitle="Your school is still being added to the Pexpacks database."
+        panelTitle="Your school is still being added to the PexPacks database."
       >
         <div className={styles.buttonRow}>
           <Button href="/order">Order a Standard Pack</Button>

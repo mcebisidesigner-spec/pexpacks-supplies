@@ -1,5 +1,1 @@
-import { redirect } from "next/navigation";
-
-export default function PartnerWithSchoolsRedirectPage() {
-  redirect("/partner");
-}
+export { metadata, default } from "../partner/page";

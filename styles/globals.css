@@ -142,7 +142,7 @@ button:disabled {
 
 /* ── Focus ring (uses brand orange token) ── */
 :focus-visible {
-  outline: 3px solid rgba(253, 111, 0, 0.48);
+  outline: var(--focus-ring);
   outline-offset: 4px;
 }
 

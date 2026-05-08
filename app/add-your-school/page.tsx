@@ -8,7 +8,7 @@ import styles from "@/components/marketing/Marketing.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Add Your School",
-  "Submit your school details so Pexpacks Supplies can prepare a school stationery pack page for your grade lists.",
+  "Submit your school details so PexPacks can prepare a school stationery pack page for your grade lists.",
   "/add-your-school"
 );
 
@@ -18,7 +18,7 @@ export default function AddYourSchoolPage() {
       <PageHero
         eyebrow="Add your school"
         title="Can’t find your school? Send us the details."
-        text="Share the school name, location and grade list information. Pexpacks will review it and help prepare the correct stationery pack path."
+        text="Share the school name, location and grade list information. PexPacks will review it and help prepare the correct stationery pack path."
         panelText="Need a pack today?"
         panelTitle="Use a standard grade combo while your school list is being reviewed."
       >
@@ -66,7 +66,7 @@ export default function AddYourSchoolPage() {
             <article className={styles.infoCard}>
               <SectionHeader
                 title="What happens next?"
-                text="Pexpacks checks whether the school can be added and whether a standard pack can help while the official list is prepared."
+                text="PexPacks checks whether the school can be added and whether a standard pack can help while the official list is prepared."
               />
               <ul className={styles.checkList}>
                 <li>We confirm the school name and location.</li>

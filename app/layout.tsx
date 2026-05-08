@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { buildMetadata, organizationJsonLd } from "@/lib/seo";
+import { buildMetadata } from "@/lib/seo";
+import { localBusinessSchema, organizationSchema, websiteSchema } from "@/lib/schema";
 import "@/styles/globals.css";
 
 export const viewport: Viewport = {
@@ -14,12 +15,15 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   ...buildMetadata(
-    "Convenience Packs for School, Home and Office",
-    "Pexpacks Supplies provides ready-packed school stationery, SME office supplies and household convenience packs for busy South African families, schools and businesses."
+    "PexPacks | School & Office Stationery Packs",
+    "PexPacks provides ready-packed school stationery, SME office supplies and household convenience packs for busy South African families, schools and businesses."
   ),
   title: {
-    default: "Convenience Packs for School, Home and Office | Pexpacks Supplies",
-    template: "%s | Pexpacks Supplies",
+    default: "PexPacks | School & Office Stationery Packs",
+    template: "%s",
+  },
+  verification: {
+    google: "Rfa_la0VOcRlIrVQFE8xh5wiubIR3IbOO6HQKsq1zw0",
   },
 };
 
@@ -30,7 +34,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a href="#site-main" className="skip-link">
           Skip to content
         </a>
-        <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={organizationSchema()} />
+        <JsonLd data={localBusinessSchema()} />
+        <JsonLd data={websiteSchema()} />
         <div className="site-shell">
           <Header />
           <main id="site-main" className="site-main">{children}</main>

@@ -3,8 +3,8 @@ export function isActivePath(href: string, pathname: string) {
     return pathname === "/";
   }
 
-  if (href === "/school") {
-    return pathname === "/school" || pathname.startsWith("/schools") || pathname.startsWith("/school-packs");
+  if (href === "/schools") {
+    return pathname === "/schools" || pathname.startsWith("/schools/") || pathname.startsWith("/school-packs");
   }
 
   return pathname === href || pathname.startsWith(`${href}/`);

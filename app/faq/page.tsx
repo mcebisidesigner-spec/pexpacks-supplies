@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { faqs } from "@/data/faqs";
-import { buildMetadata, faqJsonLd } from "@/lib/seo";
+import { buildMetadata } from "@/lib/seo";
+import { faqPageSchema } from "@/lib/schema";
 import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
-  "FAQ",
-  "Answers to common questions about Pexpacks Supplies school and office stationery packs.",
+  "Frequently Asked Questions",
+  "Answers to common questions about PexPacks school stationery packs, office packs, delivery, payment and partnerships.",
   "/faq"
 );
 
 export default function FAQPage() {
   return (
     <>
-      <JsonLd data={faqJsonLd(faqs)} />
+      <JsonLd data={faqPageSchema(faqs)} />
       <section className={page.pageHero}>
         <div className={page.pageHeroNarrow}>
           <p>Questions</p>

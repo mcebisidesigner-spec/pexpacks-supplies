@@ -19,6 +19,8 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
   const [activeStep, setActiveStep] = useState(0);
   const [schoolSlug, setSchoolSlug] = useState(initialSchool || schools[0]?.slug || "");
   const [gradeSlug, setGradeSlug] = useState(initialGrade || schools[0]?.grades[0]?.gradeSlug || "");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
   const selectedSchool = useMemo(() => schools.find((school) => school.slug === schoolSlug) ?? schools[0], [schoolSlug]);
   const selectedGrade = useMemo(
@@ -32,6 +34,34 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
 
   function previousStep() {
     setActiveStep((step) => Math.max(step - 1, 0));
+  }
+
+  function submitOrder() {
+    if (!selectedSchool || !selectedGrade) {
+      setSubmitStatus("error");
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitStatus("idle");
+
+    const subject = encodeURIComponent(`PexPacks order enquiry: ${selectedSchool.name} ${selectedGrade.grade}`);
+    const body = encodeURIComponent(
+      [
+        `School: ${selectedSchool.name}`,
+        `Grade: ${selectedGrade.grade}`,
+        `Pack price: ${selectedGrade.price}`,
+        `Delivery note: ${selectedGrade.deliveryNote}`,
+        "",
+        "Please confirm availability, delivery or collection options, and payment instructions."
+      ].join("\n")
+    );
+
+    window.location.href = `mailto:${ordersEmail}?subject=${subject}&body=${body}`;
+    window.setTimeout(() => {
+      setSubmitting(false);
+      setSubmitStatus("success");
+    }, 450);
   }
 
   return (
@@ -113,9 +143,19 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
             <div className={styles.confirmPack}>
               <h2>Confirm order</h2>
               <p>
-                Your order request is ready. Pexpacks Supplies will confirm availability, delivery details and payment
-                options. Order support is available at <a href={ordersEmailHref}>{ordersEmail}</a>.
+                This is an enquiry order. No online payment is taken here. PexPacks will confirm availability, delivery
+                details and payment options. Order support is available at <a href={ordersEmailHref}>{ordersEmail}</a>.
               </p>
+              {submitStatus === "error" ? (
+                <p className={styles.formStatusError} role="alert">
+                  Please select a school and grade before submitting your order enquiry.
+                </p>
+              ) : null}
+              {submitStatus === "success" ? (
+                <p className={styles.formStatusSuccess} role="status" aria-live="polite">
+                  Opening your email app so you can send this order enquiry to PexPacks.
+                </p>
+              ) : null}
             </div>
           ) : null}
 
@@ -123,8 +163,8 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
             <button type="button" onClick={previousStep} disabled={activeStep === 0}>
               Back
             </button>
-            <Button type="button" onClick={activeStep === steps.length - 1 ? undefined : nextStep}>
-              {activeStep === steps.length - 1 ? "Submit order" : "Continue"}
+            <Button type="button" onClick={activeStep === steps.length - 1 ? submitOrder : nextStep} disabled={submitting}>
+              {activeStep === steps.length - 1 ? (submitting ? "Preparing email" : "Submit order enquiry") : "Continue"}
             </Button>
           </div>
         </form>

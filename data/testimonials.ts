@@ -12,7 +12,7 @@ export const testimonials: Testimonial[] = [
     name: "Sarah Nkosi",
     role: "Parent",
     quote:
-      "Pexpacks made back-to-school shopping simple. Everything was packed and ready, and I did not have to run around looking for each item.",
+      "PexPacks made back-to-school shopping simple. Everything was packed and ready, and I did not have to run around looking for each item.",
     avatar: "/images/avatars/avatar-1.png"
   },
   {
@@ -20,14 +20,14 @@ export const testimonials: Testimonial[] = [
     name: "Lebo Maseko",
     role: "Teacher",
     quote:
-      "When learners arrive with the right stationery, teaching starts faster. Pexpacks helps make the first day smoother.",
+      "When learners arrive with the right stationery, teaching starts faster. PexPacks helps make the first day smoother.",
     avatar: "/images/avatars/avatar-2.png"
   },
   {
     id: "office-owner",
     name: "Thabo Dlamini",
     role: "SME Owner",
-    quote: "Our office supplies are now easier to manage. Pexpacks packs the essentials so we do not waste time shopping.",
+    quote: "Our office supplies are now easier to manage. PexPacks packs the essentials so we do not waste time shopping.",
     avatar: "/images/avatars/avatar-3.png"
   }
 ];

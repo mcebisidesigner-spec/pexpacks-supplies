@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { GradePackDetails } from "@/components/schools/GradePackDetails";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { schools } from "@/data/schools";
-import { breadcrumbJsonLd, buildMetadata, productJsonLd } from "@/lib/seo";
+import { buildMetadata } from "@/lib/seo";
+import { breadcrumbSchema, productSchema } from "@/lib/schema";
 import { getGradeBySlug, getSchoolBySlug } from "@/lib/school-utils";
 import page from "@/styles/Page.module.css";
 
@@ -30,8 +31,8 @@ export async function generateMetadata({ params }: GradePageProps): Promise<Meta
   }
 
   return buildMetadata(
-    `${school.name} ${grade.grade} Pack`,
-    `Order the ${school.name} ${grade.grade} stationery pack prepared by Pexpacks Supplies.`,
+    `${grade.grade} Stationery Pack for ${school.name}`,
+    `Order a ready-to-use ${grade.grade} stationery pack for ${school.name}, prepared according to school stationery requirements and delivery planning.`,
     `/schools/${school.slug}/${grade.gradeSlug}`
   );
 }
@@ -47,9 +48,9 @@ export default async function GradePackPage({ params }: GradePageProps) {
 
   return (
     <>
-      <JsonLd data={productJsonLd(school, grade)} />
+      <JsonLd data={productSchema(school, grade)} />
       <JsonLd
-        data={breadcrumbJsonLd([
+        data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Schools", path: "/schools" },
           { name: school.name, path: `/schools/${school.slug}` },

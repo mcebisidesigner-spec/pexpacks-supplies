@@ -8,12 +8,13 @@ export default function NotFound() {
         <p>404 - Not found</p>
         <h1>Page not found</h1>
         <p className={page.notFoundText}>
-The page or personal excellent pack you requested is not available.        </p>
+          The page or stationery pack you requested is not available.
+        </p>
         <div className={page.notFoundActions}>
           <Button href="/">Go to homepage</Button>
-          {<Button href="/schools" variant="white">
+          <Button href="/schools" variant="white">
             Find your school pack
-          </Button>}
+          </Button>
         </div>
       </div>
     </section>

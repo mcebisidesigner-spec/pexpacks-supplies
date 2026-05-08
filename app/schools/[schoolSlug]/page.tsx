@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { GradeSelector } from "@/components/schools/GradeSelector";
 import { Button } from "@/components/ui/Button";
 import { schools } from "@/data/schools";
-import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
+import { buildMetadata } from "@/lib/seo";
+import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
 import page from "@/styles/Page.module.css";
@@ -25,8 +26,8 @@ export async function generateMetadata({ params }: SchoolPageProps): Promise<Met
   }
 
   return buildMetadata(
-    `${school.name} Stationery Packs`,
-    `Official stationery packs prepared according to the ${school.name} stationery list.`,
+    `${school.name} School Stationery Packs`,
+    `View ready-to-use stationery packs for ${school.name}, prepared by grade and matched to school stationery requirements.`,
     `/schools/${school.slug}`
   );
 }
@@ -42,7 +43,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   return (
     <>
       <JsonLd
-        data={breadcrumbJsonLd([
+        data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Schools", path: "/schools" },
           { name: school.name, path: `/schools/${school.slug}` }

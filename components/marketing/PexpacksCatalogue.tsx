@@ -15,7 +15,7 @@ export function PexpacksCatalogue() {
 
   return (
     <>
-      <div className={styles.filterBar} role="list" aria-label="Filter Pexpacks by category">
+      <div className={styles.filterBar} role="list" aria-label="Filter PexPacks by category">
         {pexpacksCategories.map((category) => (
           <button
             className={[styles.filterChip, activeCategory === category ? styles.filterChipActive : ""].filter(Boolean).join(" ")}

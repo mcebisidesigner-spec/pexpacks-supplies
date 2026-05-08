@@ -9,7 +9,7 @@ export type MainCategory = {
 export type Pack = {
   id: string;
   name: string;
-  category: "School" | "Office" | "Pexpacks";
+  category: "School" | "Office" | "PexPacks";
   subcategory?: string;
   description: string;
   bestFor: string;
@@ -24,22 +24,22 @@ export const mainCategories: MainCategory[] = [
   {
     title: "School Packs",
     description: "Stationery packs prepared around school lists, grade needs and learner readiness.",
-    href: "/school",
-    cta: "Shop School Packs",
+    href: "/schools",
+    cta: "Find Your School Pack",
     icon: "school"
   },
   {
     title: "Office Packs",
     description: "Monthly stationery and admin packs for SMEs, teams and home offices.",
-    href: "/office",
-    cta: "Shop Office Packs",
+    href: "/office-packs",
+    cta: "View Office Stationery Packs",
     icon: "office"
   },
   {
-    title: "Pexpacks",
-    description: "Breakfast, lunch, hygiene and home essentials packed for busy households.",
-    href: "/copex",
-    cta: "Explore Pexpacks",
+    title: "Order a Pack",
+    description: "Send a school, office or household pack enquiry and let PexPacks confirm the details.",
+    href: "/order",
+    cta: "Start an Order Enquiry",
     icon: "package"
   }
 ];
@@ -77,11 +77,11 @@ export const homeProcessSteps = [
   },
   {
     title: "We pack it",
-    text: "Pexpacks prepares the essentials and confirms collection or delivery."
+    text: "PexPacks prepares the essentials and confirms collection or delivery."
   }
 ];
 
-export const whyChoosePexpacks = [
+export const whyChoosePexPacks = [
   {
     title: "Ready-packed convenience",
     text: "We prepare complete packs so you do not need to buy items one by one."
@@ -100,7 +100,7 @@ export const whyChoosePexpacks = [
   },
   {
     title: "School and community impact",
-    text: "Pexpacks supports partner schools with digital visibility and sponsor access."
+    text: "PexPacks supports partner schools with digital visibility and sponsor access."
   }
 ];
 
@@ -114,8 +114,8 @@ export const featuredPacks: Pack[] = [
     bestFor: "Grade R learners",
     includes: ["Exercise books", "Wax crayons", "Glue stick", "Safety scissors", "Scrapbook"],
     priceLabel: "Request price",
-    cta: "View Pack",
-    href: "/school"
+    cta: "View Grade R Stationery Packs",
+    href: "/schools"
   },
   {
     id: "grade-4-school-pack",
@@ -126,8 +126,8 @@ export const featuredPacks: Pack[] = [
     bestFor: "Primary school learners",
     includes: ["Exercise books", "Pens", "Pencils", "Ruler", "Eraser", "Sharpener"],
     priceLabel: "Request price",
-    cta: "View Pack",
-    href: "/school"
+    cta: "View Grade 4 Stationery Packs",
+    href: "/schools"
   },
   {
     id: "high-school-pack",
@@ -138,8 +138,8 @@ export const featuredPacks: Pack[] = [
     bestFor: "Grade 8 to Matric learners",
     includes: ["Subject books", "Pens", "Pencils", "Highlighters", "Files", "Exam pad"],
     priceLabel: "Request price",
-    cta: "View Pack",
-    href: "/school"
+    cta: "View High School Stationery Packs",
+    href: "/schools"
   },
   {
     id: "home-office-starter-pack",
@@ -150,32 +150,32 @@ export const featuredPacks: Pack[] = [
     bestFor: "Freelancers and home offices",
     includes: ["Notebooks", "Pens", "Sticky notes", "Folders", "Correction tape", "Desk basics"],
     priceLabel: "Request quote",
-    cta: "View Pack",
-    href: "/office"
+    cta: "View Home Office Pack",
+    href: "/office-packs"
   },
   {
     id: "breakfast-pack",
     name: "Breakfast Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Breakfast",
     description: "A practical morning convenience pack that helps families and learners start prepared.",
     bestFor: "Families and learners",
     includes: ["Cereal option", "Long-life milk", "Fruit option", "Snack", "Serviette"],
     priceLabel: "Request price",
-    cta: "View Pack",
-    href: "/copex"
+    cta: "Enquire About Breakfast Packs",
+    href: "/contact?type=pexpacks"
   },
   {
     id: "hygiene-pack",
     name: "Hygiene Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Hygiene",
     description: "Everyday hygiene essentials packed for school, home, sponsorship and emergency support.",
     bestFor: "Learners, families and sponsors",
     includes: ["Soap", "Toothpaste", "Toothbrush", "Sanitary items", "Tissues"],
     priceLabel: "Request price",
-    cta: "View Pack",
-    href: "/copex"
+    cta: "Enquire About Hygiene Packs",
+    href: "/contact?type=pexpacks"
   }
 ];
 
@@ -183,7 +183,7 @@ export const pexpacks: Pack[] = [
   {
     id: "breakfast-family-pack",
     name: "Breakfast Family Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Breakfast",
     description: "A simple breakfast pack for busy school mornings and weekly household planning.",
     bestFor: "Families with learners",
@@ -196,7 +196,7 @@ export const pexpacks: Pack[] = [
   {
     id: "lunch-pack",
     name: "Lunch Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Lunch",
     description: "Packed lunch basics for school, work, community drives and sponsored learner support.",
     bestFor: "Learners and working households",
@@ -209,7 +209,7 @@ export const pexpacks: Pack[] = [
   {
     id: "hygiene-essentials-pack",
     name: "Hygiene Essentials Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Hygiene",
     description: "Personal care basics prepared for homes, learners, donors and community support.",
     bestFor: "Learners and family support",
@@ -222,7 +222,7 @@ export const pexpacks: Pack[] = [
   {
     id: "home-basics-pack",
     name: "Home Basics Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Home Basics",
     description: "Household essentials packed for monthly convenience and emergency top-ups.",
     bestFor: "Busy households",
@@ -235,7 +235,7 @@ export const pexpacks: Pack[] = [
   {
     id: "learner-care-pack",
     name: "Learner Care Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Learner Care",
     description: "A support pack for learners who need school-day essentials beyond stationery.",
     bestFor: "Sponsored learner programmes",
@@ -243,12 +243,12 @@ export const pexpacks: Pack[] = [
     benefits: ["Learner support", "Visible impact", "School campaign ready"],
     priceLabel: "Request price",
     cta: "Sponsor",
-    href: "/partner#sponsor"
+    href: "/partner-with-schools#sponsor"
   },
   {
     id: "baby-care-pack",
     name: "Baby Care Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Baby Care",
     description: "Helpful baby-care basics for family support drives and everyday home convenience.",
     bestFor: "Young families and donors",
@@ -261,7 +261,7 @@ export const pexpacks: Pack[] = [
   {
     id: "study-pack",
     name: "Study Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Study Packs",
     description: "Study-session essentials for learners preparing for tests, exams and projects.",
     bestFor: "Senior learners and students",
@@ -274,7 +274,7 @@ export const pexpacks: Pack[] = [
   {
     id: "emergency-home-pack",
     name: "Emergency Home Pack",
-    category: "Pexpacks",
+    category: "PexPacks",
     subcategory: "Emergency Packs",
     description: "A practical essentials pack for urgent household support and community relief.",
     bestFor: "Families and community donors",
