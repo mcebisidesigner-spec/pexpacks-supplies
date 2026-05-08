@@ -62,7 +62,6 @@ export const formSubmissionSchema = z.object({
   province: optionalText(120),
   companyWebsite: optionalText(200),
   honeypot: optionalText(200),
-  captchaToken: optionalText(2000),
   pageUrl: optionalText(500),
   userAgent: optionalText(500),
   submittedAt: optionalText(80)

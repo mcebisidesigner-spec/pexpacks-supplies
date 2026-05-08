@@ -29,52 +29,32 @@ npm start
 
 The site submits contact, partnership and order enquiries to `POST /api/forms/submit`.
 
-Full deployment notes are in [`docs/form-deployment.md`](docs/form-deployment.md).
+The current handler uses Nodemailer with Gmail SMTP. It validates and sanitises submissions, requires consent, blocks honeypot spam, and emails the PexPacks notification inbox.
 
 Required production environment variables:
 
 ```text
-RESEND_API_KEY=
+GMAIL_USER=pexpacks@gmail.com
+GMAIL_APP_PASSWORD=
 PEXPACKS_NOTIFICATION_EMAIL=pexpacks@gmail.com
-PEXPACKS_FROM_EMAIL=PexPacks <no-reply@pexpacks.co.za>
-
-GOOGLE_SHEETS_CLIENT_EMAIL=
-GOOGLE_SHEETS_PRIVATE_KEY=
-GOOGLE_SHEETS_SPREADSHEET_ID=
-GOOGLE_SHEETS_SHEET_NAME=Submissions
-
-CAPTCHA_ENABLED=false
-HCAPTCHA_SECRET_KEY=
-NEXT_PUBLIC_HCAPTCHA_SITE_KEY=
-
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
 
 NEXT_PUBLIC_SITE_URL=https://pexpacks.co.za
 NODE_ENV=production
 ```
 
-Resend setup:
+Gmail SMTP setup:
 
-1. Create a Resend API key.
-2. Add `RESEND_API_KEY` to Vercel or the hosting environment.
-3. Set `PEXPACKS_NOTIFICATION_EMAIL` to `pexpacks@gmail.com`.
-4. Set `PEXPACKS_FROM_EMAIL` to a verified sender, for example `PexPacks <no-reply@pexpacks.co.za>`.
-
-Google Sheets setup:
-
-1. Create a Google Cloud service account with Google Sheets API enabled.
-2. Create a spreadsheet with a sheet tab named `Submissions`.
-3. Share the spreadsheet with the service account email.
-4. Add `GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`, `GOOGLE_SHEETS_SPREADSHEET_ID` and `GOOGLE_SHEETS_SHEET_NAME` to the hosting environment.
-5. Store private keys with escaped newlines (`\n`) if your host requires a single-line value.
+1. Enable 2-Step Verification on the Gmail account.
+2. Create a Gmail app password.
+3. Set `GMAIL_USER` to the Gmail address.
+4. Set `GMAIL_APP_PASSWORD` to the app password.
+5. Set `PEXPACKS_NOTIFICATION_EMAIL` to the inbox that should receive enquiries.
 
 Spam protection:
 
 - A hidden `companyWebsite` honeypot blocks common bot submissions.
-- Upstash Redis rate limiting is used when `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are configured.
-- hCaptcha is only enforced when `CAPTCHA_ENABLED=true`. Add `NEXT_PUBLIC_HCAPTCHA_SITE_KEY` before enabling it.
-- Do not add secret values with `NEXT_PUBLIC_`; those are exposed to the browser.
+- Consent is required before a form can submit.
+- Do not add Gmail passwords or app passwords with `NEXT_PUBLIC_`; those are exposed to the browser.
 
 ## Project Structure
 
