@@ -90,6 +90,42 @@
   gap: 18px;
 }
 
+.consentField,
+.privacyNotice {
+  grid-column: 1 / -1;
+}
+
+.consentField {
+  display: grid !important;
+  grid-template-columns: 20px 1fr;
+  gap: 10px !important;
+  align-items: start;
+  color: var(--color-navy);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.consentField input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--color-orange);
+}
+
+.privacyNotice {
+  margin: -4px 0 0;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .confirmPack {
   padding: 28px;
   border-radius: var(--radius-card);

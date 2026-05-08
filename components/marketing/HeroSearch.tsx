@@ -65,11 +65,11 @@ export function HeroSearch() {
           We do not have a {selectedGrade} pack listed for {school.name} yet.{" "}
           <Link
             href="/standard-school-packs"
-            style={{ textDecoration: "underline" }}>
+            className={styles.inlineTextLink}>
             Explore our standard packs
           </Link>{" "}
           or{" "}
-          <Link href="/contact" style={{ textDecoration: "underline" }}>
+          <Link href="/contact" className={styles.inlineTextLink}>
             contact us
           </Link>
           .

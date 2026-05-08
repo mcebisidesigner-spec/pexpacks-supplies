@@ -50,6 +50,26 @@
   gap: 12px;
 }
 
+.loadingState {
+  text-align: center;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 24px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-navy);
+  border-radius: 50%;
+  animation: pexSpin 0.8s linear infinite;
+}
+
+.loadingState p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 15px;
+}
+
 .section {
   padding: 24px 0 86px;
 }
@@ -59,6 +79,12 @@
   max-width: var(--layout-max-width);
   margin-inline: auto;
   padding-inline: var(--gutter-desktop);
+}
+
+@keyframes pexSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .twoColumn {

@@ -23,7 +23,7 @@ export function buildMetadata(title: string, description: string, path = "/"): M
     authors: [{ name: siteName, url: siteUrl }],
     creator: siteName,
     openGraph: {
-      title,
+      title: normalizedTitle,
       description,
       url: absoluteUrl,
       siteName,
@@ -40,7 +40,7 @@ export function buildMetadata(title: string, description: string, path = "/"): M
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: normalizedTitle,
       description,
       images: ["/twitter-image.jpg"],
       creator: "@pexpacks",

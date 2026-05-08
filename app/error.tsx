@@ -12,22 +12,11 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
         <p className={page.pageHeroText}>
           We could not load this page. Please try again or return to the homepage.
         </p>
-        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+        <div className={page.notFoundActions}>
           <Button href="/">Go to homepage</Button>
-          <button
-            onClick={() => reset()}
-            style={{
-              padding: "12px 24px",
-              borderRadius: "999px",
-              border: "2px solid var(--color-navy)",
-              background: "transparent",
-              color: "var(--color-navy)",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
+          <Button type="button" onClick={() => reset()} variant="white">
             Try again
-          </button>
+          </Button>
         </div>
       </div>
     </section>
