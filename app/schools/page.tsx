@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/marketing/PageHero";
-import { SchoolSearch } from "@/components/schools/SchoolSearch";
+import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
+import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
+import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
+import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
 import { buildMetadata } from "@/lib/seo";
-import styles from "@/components/marketing/Marketing.module.css";
+import { getFeaturedSchoolRecords, getSchoolSearchOptions } from "@/lib/schools/schoolSearchData";
+import styles from "@/components/schools/Schools.module.css";
 
 export const metadata: Metadata = buildMetadata(
-  "Find Your School Stationery Pack",
-  "Search PexPacks school stationery packs by school, city and grade, then choose the correct ready-packed stationery pack.",
+  "PexPacks School Stationery Packs | Find Your School Pack",
+  "Search your school and order complete stationery packs by grade. PexPacks helps parents find affordable school-ready stationery packs.",
   "/schools"
 );
 
@@ -20,22 +23,31 @@ function firstValue(value: string | string[] | undefined) {
 
 export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
   const params = searchParams ? await searchParams : {};
+  const { grades, regions } = getSchoolSearchOptions();
+  const featuredSchools = getFeaturedSchoolRecords();
 
   return (
     <>
-      <PageHero
-        eyebrow="Find your school"
-        title="Find Your School Pack"
-        text="Search by school, city or grade and choose the correct ready-packed stationery pack."
-        panelText="School pack flow"
-        panelTitle="Search. Select grade. Order."
-      />
-      <section className={styles.section}>
-        <SchoolSearch
+      <SchoolsPageHero>
+        <SchoolSearchPanel
+          grades={grades}
+          regions={regions}
           initialQuery={firstValue(params.q) ?? ""}
-          initialCity={firstValue(params.city) ?? "all"}
+          initialRegion={firstValue(params.region) ?? firstValue(params.city) ?? "all"}
           initialGrade={firstValue(params.grade) ?? "all"}
         />
+      </SchoolsPageHero>
+      <FeaturedSchoolsBanner schools={featuredSchools} />
+      <RequestSchoolCTA />
+      <section className={styles.supportSection} aria-labelledby="school-support-heading">
+        <div>
+          <p>School-ready support</p>
+          <h2 id="school-support-heading">Search first, then choose the correct pack</h2>
+          <span>
+            PexPacks keeps the school list searchable so parents do not need to scroll through hundreds of schools.
+            Search by school name, grade or region, open the school page, and continue with the correct grade pack.
+          </span>
+        </div>
       </section>
     </>
   );

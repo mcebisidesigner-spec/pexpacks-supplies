@@ -1,4 +1,4 @@
-import { google } from "googleapis";
+import { createSign } from "crypto";
 import type { IntegrationResult } from "./email";
 import type { SanitisedFormSubmission } from "./sanitise";
 
@@ -40,6 +40,51 @@ function rowValue(submission: SanitisedFormSubmission, submissionId: string, col
   return value ?? "";
 }
 
+function base64Url(value: string | Buffer) {
+  return Buffer.from(value)
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+async function getGoogleAccessToken(clientEmail: string, privateKey: string) {
+  const issuedAt = Math.floor(Date.now() / 1000);
+  const header = { alg: "RS256", typ: "JWT" };
+  const claimSet = {
+    iss: clientEmail,
+    scope: "https://www.googleapis.com/auth/spreadsheets",
+    aud: "https://oauth2.googleapis.com/token",
+    exp: issuedAt + 3600,
+    iat: issuedAt
+  };
+  const unsignedToken = `${base64Url(JSON.stringify(header))}.${base64Url(JSON.stringify(claimSet))}`;
+  const signature = createSign("RSA-SHA256").update(unsignedToken).sign(privateKey);
+  const jwt = `${unsignedToken}.${base64Url(signature)}`;
+
+  const response = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: new URLSearchParams({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      assertion: jwt
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`google_oauth_${response.status}`);
+  }
+
+  const data = (await response.json()) as { access_token?: string };
+  if (!data.access_token) {
+    throw new Error("google_oauth_missing_access_token");
+  }
+
+  return data.access_token;
+}
+
 export async function appendSubmissionToGoogleSheet(
   submission: SanitisedFormSubmission,
   submissionId: string
@@ -54,20 +99,24 @@ export async function appendSubmissionToGoogleSheet(
   }
 
   try {
-    const auth = new google.auth.JWT({
-      email: clientEmail,
-      key: privateKey,
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"]
-    });
-    const sheets = google.sheets({ version: "v4", auth });
+    const accessToken = await getGoogleAccessToken(clientEmail, privateKey);
     const values = [columns.map((column) => rowValue(submission, submissionId, column))];
+    const range = encodeURIComponent(`${sheetName}!A:V`);
+    const response = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?valueInputOption=USER_ENTERED`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ values })
+      }
+    );
 
-    await sheets.spreadsheets.values.append({
-      spreadsheetId,
-      range: `${sheetName}!A:V`,
-      valueInputOption: "USER_ENTERED",
-      requestBody: { values }
-    });
+    if (!response.ok) {
+      throw new Error(`google_sheets_${response.status}`);
+    }
 
     return { ok: true };
   } catch (error) {
