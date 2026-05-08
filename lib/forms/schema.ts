@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { normaliseSouthAfricanPhone } from "./sanitise";
 
 export const formTypes = [
   "school-pack-enquiry",
@@ -19,8 +18,12 @@ const optionalText = (max: number) =>
   );
 
 function isValidSouthAfricanPhone(value: string) {
-  const normalised = normaliseSouthAfricanPhone(value);
-  return /^\+27\d{9}$/.test(normalised);
+  const digits = value.replace(/\D/g, "");
+  return (
+    (digits.startsWith("0") && digits.length === 10) ||
+    (digits.startsWith("27") && digits.length === 11) ||
+    (digits.startsWith("0027") && digits.length === 13)
+  );
 }
 
 const consentSchema = z.preprocess(
@@ -45,7 +48,7 @@ export const formSubmissionSchema = z.object({
   fullName: z.string().trim().min(2, "Full name must be at least 2 characters.").max(120, "Full name is too long."),
   phone: z.string().trim().refine(isValidSouthAfricanPhone, "Please enter a valid South African phone number."),
   consent: consentSchema,
-  email: optionalText(160).refine((value) => !value || z.email().safeParse(value).success, "Please enter a valid email address."),
+  email: optionalText(160).refine((value) => !value || z.string().email().safeParse(value).success, "Please enter a valid email address."),
   schoolName: optionalText(160),
   grade: optionalText(40),
   learnerName: optionalText(120),
@@ -66,6 +69,7 @@ export const formSubmissionSchema = z.object({
 });
 
 export type ValidatedFormSubmission = z.infer<typeof formSubmissionSchema>;
+export type FormSubmission = ValidatedFormSubmission;
 export type FormType = ValidatedFormSubmission["formType"];
 
 export function flattenValidationErrors(error: z.ZodError) {
@@ -81,9 +85,13 @@ export function flattenValidationErrors(error: z.ZodError) {
   return errors;
 }
 
+export const flattenErrors = flattenValidationErrors;
+
 export function getFormTypeLabel(formType: FormType) {
   return formType
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
+
+export const formTypeLabel = getFormTypeLabel;

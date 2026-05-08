@@ -46,6 +46,13 @@ export function HeaderMenu() {
     setMobileOpen(false);
   }, [clearClosingTimer]);
 
+  const resetMobileMenu = useCallback(() => {
+    clearClosingTimer();
+    mobileOpenRef.current = false;
+    setMobileOpen(false);
+    setIconClosing(false);
+  }, [clearClosingTimer]);
+
   useEffect(() => {
     mobileOpenRef.current = mobileOpen;
     document.body.classList.toggle("menu-open", mobileOpen);
@@ -53,8 +60,8 @@ export function HeaderMenu() {
   }, [mobileOpen]);
 
   useEffect(() => {
-    closeMobileMenu();
-  }, [pathname, closeMobileMenu]);
+    resetMobileMenu();
+  }, [pathname, resetMobileMenu]);
 
   useEffect(() => {
     return () => clearClosingTimer();

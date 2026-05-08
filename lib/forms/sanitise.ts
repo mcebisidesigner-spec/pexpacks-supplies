@@ -1,52 +1,8 @@
-import type { ValidatedFormSubmission } from "./schema";
+import type { FormSubmission } from "./schema";
 
-export type SanitisedFormSubmission = ValidatedFormSubmission & {
-  phone: string;
-  submittedAt: string;
-  status: "new";
-  source: "website";
-};
-
-const textFields: Array<keyof ValidatedFormSubmission> = [
-  "fullName",
-  "email",
-  "schoolName",
-  "grade",
-  "learnerName",
-  "businessName",
-  "preferredContactMethod",
-  "message",
-  "packType",
-  "suburb",
-  "city",
-  "province",
-  "pageUrl",
-  "userAgent"
-];
-
-export function normaliseSouthAfricanPhone(value: string) {
-  const digits = value.replace(/\D/g, "");
-
-  if (digits.startsWith("0027") && digits.length === 13) {
-    return `+27${digits.slice(4)}`;
-  }
-
-  if (digits.startsWith("27") && digits.length === 11) {
-    return `+${digits}`;
-  }
-
-  if (digits.startsWith("0") && digits.length === 10) {
-    return `+27${digits.slice(1)}`;
-  }
-
-  return value.trim();
-}
-
-function cleanText(value: unknown) {
-  if (typeof value !== "string") {
-    return value;
-  }
-
+/* ── Strip HTML / scripts from user input ── */
+function clean(value: unknown) {
+  if (typeof value !== "string") return value;
   return value
     .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
     .replace(/<[^>]*>/g, "")
@@ -54,29 +10,36 @@ function cleanText(value: unknown) {
     .trim();
 }
 
-export function sanitiseSubmission(data: ValidatedFormSubmission, submittedAt: string): SanitisedFormSubmission {
-  const cleaned: Record<string, unknown> = { ...data };
-
-  for (const key of textFields) {
-    cleaned[key] = cleanText(data[key]);
-  }
-
-  cleaned.phone = normaliseSouthAfricanPhone(data.phone);
-  cleaned.submittedAt = submittedAt;
-  cleaned.status = "new";
-  cleaned.source = "website";
-
-  return cleaned as SanitisedFormSubmission;
+/* ── Normalise SA phone to +27 format ── */
+export function normalisePhone(value: string) {
+  const d = value.replace(/\D/g, "");
+  if (d.startsWith("0") && d.length === 10) return `+27${d.slice(1)}`;
+  if (d.startsWith("27") && d.length === 11) return `+${d}`;
+  return value.trim();
 }
 
-export function hasSuspiciousContent(data: ValidatedFormSubmission) {
-  const searchable = [data.message, data.pageUrl, data.userAgent, data.schoolName, data.businessName]
-    .filter(Boolean)
-    .join(" ");
+/* ── Clean all text fields ── */
+export function sanitise(data: FormSubmission) {
+  return {
+    ...data,
+    fullName: clean(data.fullName) as string,
+    email: clean(data.email) as string | undefined,
+    message: clean(data.message) as string | undefined,
+    schoolName: clean(data.schoolName) as string | undefined,
+    businessName: clean(data.businessName) as string | undefined,
+    phone: normalisePhone(data.phone)
+  };
+}
 
-  const urlMatches = searchable.match(/https?:\/\/|www\./gi) ?? [];
-  const hasScript = /<\s*script|javascript:/i.test(searchable);
-  const hasRepeatedCharacters = /(.)\1{39,}/.test(searchable);
+/* ── Basic spam detection (honeypot + link spam) ── */
+export function isSpam(data: FormSubmission) {
+  const hp1 = typeof data.companyWebsite === "string" ? data.companyWebsite.trim() : "";
+  const hp2 = typeof data.honeypot === "string" ? data.honeypot.trim() : "";
+  if (hp1 || hp2) return true;
 
-  return hasScript || hasRepeatedCharacters || urlMatches.length > 4;
+  const text = [data.message, data.schoolName, data.businessName].filter(Boolean).join(" ");
+  if (/<\s*script|javascript:/i.test(text)) return true;
+  if ((text.match(/https?:\/\/|www\./gi) ?? []).length > 4) return true;
+
+  return false;
 }

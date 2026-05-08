@@ -3,13 +3,11 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { CaptchaField } from "./CaptchaField";
 import styles from "@/components/marketing/Marketing.module.css";
 
 type ApiResponse = {
   success: boolean;
   message: string;
-  submissionId?: string;
   errors?: Record<string, string>;
 };
 
@@ -41,37 +39,23 @@ const partnerOptions = ["School", "Sponsor", "Supplier", "Community partner"];
 
 const consentText =
   "I agree that PexPacks may use my information to contact me about this enquiry, prepare my stationery pack request, and provide related support.";
-const captchaSiteKey = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY;
 
 function resolveContactFormType(enquiryType: string): FormType {
-  if (enquiryType === "Parent order") {
-    return "school-pack-enquiry";
-  }
-
-  if (enquiryType === "Office pack") {
-    return "office-pack-enquiry";
-  }
-
-  if (enquiryType === "Bulk order") {
-    return "bulk-order";
-  }
-
-  if (enquiryType === "School partnership") {
-    return "school-partnership";
-  }
-
+  if (enquiryType === "Parent order") return "school-pack-enquiry";
+  if (enquiryType === "Office pack") return "office-pack-enquiry";
+  if (enquiryType === "Bulk order") return "bulk-order";
+  if (enquiryType === "School partnership") return "school-partnership";
   return "contact";
 }
 
-function formValue(data: FormData, key: string) {
-  const value = data.get(key);
-  return typeof value === "string" ? value : "";
+function val(data: FormData, key: string) {
+  const v = data.get(key);
+  return typeof v === "string" ? v : "";
 }
 
 export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquiryFormProps) {
   const [enquiryType, setEnquiryType] = useState(contactOptions[0]);
   const [partnerType, setPartnerType] = useState(partnerOptions[0]);
-  const [captchaToken, setCaptchaToken] = useState("");
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -83,45 +67,42 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    const formData = new FormData(form);
+    const fd = new FormData(form);
     setPending(true);
     setStatus(null);
     setErrors({});
 
     const payload = {
       formType: isContact ? resolveContactFormType(enquiryType) : "school-partnership",
-      fullName: formValue(formData, "fullName"),
-      phone: formValue(formData, "phone"),
-      email: formValue(formData, "email"),
-      preferredContactMethod: formValue(formData, "preferredContactMethod") || undefined,
-      schoolName: formValue(formData, "schoolName") || undefined,
-      grade: formValue(formData, "grade") || undefined,
-      businessName: formValue(formData, "businessName") || undefined,
-      orderQuantity: formValue(formData, "orderQuantity") || undefined,
+      fullName: val(fd, "fullName"),
+      phone: val(fd, "phone"),
+      email: val(fd, "email") || undefined,
+      preferredContactMethod: val(fd, "preferredContactMethod") || undefined,
+      schoolName: val(fd, "schoolName") || undefined,
+      grade: val(fd, "grade") || undefined,
+      businessName: val(fd, "businessName") || undefined,
+      orderQuantity: val(fd, "orderQuantity") || undefined,
       packType: isContact ? enquiryType : partnerType,
-      message: formValue(formData, "message"),
-      consent: formData.get("consent") === "on",
-      companyWebsite: formValue(formData, "companyWebsite"),
-      captchaToken,
+      message: val(fd, "message"),
+      consent: fd.get("consent") === "on",
+      companyWebsite: val(fd, "companyWebsite"),
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
       submittedAt: new Date().toISOString()
     };
 
     try {
-      const response = await fetch("/api/forms/submit", {
+      const res = await fetch("/api/forms/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
-      const result = (await response.json()) as ApiResponse;
-
+      const result = (await res.json()) as ApiResponse;
       setStatus(result);
       if (!result.success) {
         setErrors(result.errors ?? {});
         return;
       }
-
       form.reset();
       setEnquiryType(contactOptions[0]);
       setPartnerType(partnerOptions[0]);
@@ -140,9 +121,7 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
       <form onSubmit={handleSubmit} noValidate>
         <h2>{title}</h2>
         <p className={styles.privacyNotice}>
-          We only use your details to respond to your enquiry and manage your stationery pack request. We collect only
-          the information needed to assist you. You may contact PexPacks to update, correct, or request deletion of your
-          information.
+          We only use your details to respond to your enquiry and manage your stationery pack request.
         </p>
         <div className={styles.formGrid}>
           <label className={styles.field}>
@@ -167,15 +146,14 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
               <option value="phone">Phone</option>
               <option value="email">Email</option>
             </select>
-            {errors.preferredContactMethod ? <span className={styles.fieldError}>{errors.preferredContactMethod}</span> : null}
           </label>
 
           {isContact ? (
             <label className={styles.field}>
               <span>Enquiry type</span>
-              <select name="enquiryType" value={enquiryType} onChange={(event) => setEnquiryType(event.target.value)}>
-                {contactOptions.map((option) => (
-                  <option key={option}>{option}</option>
+              <select name="enquiryType" value={enquiryType} onChange={(e) => setEnquiryType(e.target.value)}>
+                {contactOptions.map((opt) => (
+                  <option key={opt}>{opt}</option>
                 ))}
               </select>
             </label>
@@ -188,9 +166,9 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
               </label>
               <label className={styles.field}>
                 <span>Partner type</span>
-                <select name="partnerType" value={partnerType} onChange={(event) => setPartnerType(event.target.value)}>
-                  {partnerOptions.map((option) => (
-                    <option key={option}>{option}</option>
+                <select name="partnerType" value={partnerType} onChange={(e) => setPartnerType(e.target.value)}>
+                  {partnerOptions.map((opt) => (
+                    <option key={opt}>{opt}</option>
                   ))}
                 </select>
               </label>
@@ -202,12 +180,10 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
               <label className={styles.field}>
                 <span>School name</span>
                 <input name="schoolName" placeholder="School name" autoComplete="organization" />
-                {errors.schoolName ? <span className={styles.fieldError}>{errors.schoolName}</span> : null}
               </label>
               <label className={styles.field}>
                 <span>Grade</span>
                 <input name="grade" placeholder="Grade R, Grade 4..." />
-                {errors.grade ? <span className={styles.fieldError}>{errors.grade}</span> : null}
               </label>
             </>
           ) : null}
@@ -217,12 +193,10 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
               <label className={styles.field}>
                 <span>Business name</span>
                 <input name="businessName" placeholder="Business name" autoComplete="organization" />
-                {errors.businessName ? <span className={styles.fieldError}>{errors.businessName}</span> : null}
               </label>
               <label className={styles.field}>
                 <span>Order quantity</span>
                 <input name="orderQuantity" type="number" min="1" placeholder="10" />
-                {errors.orderQuantity ? <span className={styles.fieldError}>{errors.orderQuantity}</span> : null}
               </label>
             </>
           ) : null}
@@ -240,13 +214,7 @@ export function PexPacksEnquiryForm({ mode, title, submitLabel }: PexPacksEnquir
         </label>
         {errors.consent ? <p className={styles.fieldError}>{errors.consent}</p> : null}
 
-        <CaptchaField
-          siteKey={captchaSiteKey}
-          token={captchaToken}
-          callbackName="onPexPacksEnquiryCaptcha"
-          onTokenChange={setCaptchaToken}
-        />
-
+        {/* Honeypot — hidden from real users */}
         <label className={styles.honeypot} aria-hidden="true">
           Company website
           <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
