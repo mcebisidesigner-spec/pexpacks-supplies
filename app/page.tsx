@@ -114,7 +114,7 @@ export default function HomePage() {
         <div className={styles.inner}>
           <div className={styles.splitBand}>
             <div>
-              <p className={styles.eyebrow}>The Pexpacks box</p>
+              <p className={styles.eyebrow}>The unboxing experience</p>
               <h2>What's inside your stationery pack?</h2>
               <p>
                 Every PexPacks box is carefully packed with exactly what is on your school's list. No more driving around to different stores to find specific brands or items.
