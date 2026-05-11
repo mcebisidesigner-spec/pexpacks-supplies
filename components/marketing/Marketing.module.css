@@ -1250,3 +1250,58 @@
     transform: none;
   }
 }
+
+.guaranteeBox {
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  border-radius: var(--radius-section);
+  padding: clamp(34px, 6vw, 64px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4)), var(--pex-gold);
+  text-align: center;
+  box-shadow: 0 22px 44px rgba(245, 166, 35, 0.12);
+}
+
+.guaranteeContent {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.guaranteeContent h2 {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.guaranteeContent p {
+  margin: 16px 0 0;
+  color: var(--color-navy);
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.partnerBanner {
+  background: var(--color-bg);
+  padding: 16px 24px;
+  text-align: center;
+  border-top: 1px solid var(--color-border);
+}
+
+.partnerBanner p {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.partnerBanner a {
+  color: var(--color-orange);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.partnerBanner a:hover {
+  text-decoration: none;
+}

@@ -173,61 +173,38 @@ export default function HomePage() {
       <section className={styles.section}>
         <div className={styles.inner}>
           <div className={styles.splitBand}>
+            <div className={styles.unboxingImageWrap}>
+              <Image 
+                src="/images/hero-school-delivery.webp" 
+                alt="PexPacks Office Stationery" 
+                fill
+                style={{objectFit: "cover"}}
+              />
+            </div>
             <div>
-              <p className={styles.eyebrow}>School partnerships</p>
-              <h2>A smarter way for schools to support parents</h2>
+              <p className={styles.eyebrow}>Office & SME Solutions</p>
+              <h2>Not just for schools. Premium Office Packs.</h2>
               <p>
-                Pexpacks school partnership programme provides schools with a
-                free standardised school website. We design and personalise the
-                website template with the school's branding and logo. We also
-                provide free hosting and maintenance for all partner schools.
+                Keep your business running smoothly with our curated home office and corporate stationery packs. We handle the supplies so you can focus on the work.
               </p>
-              <p>
-                Pexpacks provides and manages the website platform, while
-                schools approve their official content and communication.
-              </p>
-              <div className={styles.buttonRow}>
-                <Button href="/partner-with-schools">
-                  Partner With Pexpacks
-                </Button>
+              <div className={styles.buttonRow} style={{marginTop: "24px"}}>
+                <Button href="/office-packs">View Office Packs</Button>
               </div>
             </div>
-            <ul className={styles.checkList}>
-              <li>Free school website template</li>
-              <li>School stationery list pages</li>
-              <li>Parent order links</li>
-              <li>Sponsor visibility pages</li>
-              <li>Improved communication</li>
-              <li>Community support channel</li>
-            </ul>
           </div>
         </div>
       </section>
 
-      <section className={styles.section}>
+      <section className={styles.sectionCream}>
         <div className={styles.inner}>
-          <div className={styles.darkBand}>
-            <div>
-              <p className={styles.eyebrow}>Sponsors and donors</p>
-              <h2>A safer way for sponsors to support schools</h2>
+          <div className={styles.guaranteeBox}>
+            <div className={styles.guaranteeContent}>
+              <h2>The PexPacks Quality Guarantee</h2>
               <p>
-                Pexpacks helps local businesses, donors and community sponsors
-                support schools through structured packs, visible sponsorship
-                pages and transparent school support campaigns.
+                We only pack trusted, premium brands. If a product is faulty or doesn't meet the school's requirements, we replace it. No questions asked.
               </p>
-              <div className={styles.buttonRow}>
-                <Button href="/partner-with-schools#sponsor" variant="white">
-                  Become a Sponsor
-                </Button>
-              </div>
             </div>
-            <ul className={styles.checkList}>
-              {sponsorshipExamples.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
           </div>
-
         </div>
       </section>
 
@@ -266,6 +243,10 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <div className={styles.partnerBanner}>
+        <p>Are you a school administrator? <a href="/partner-with-schools">See how PexPacks can simplify your school's stationery process &rarr;</a></p>
+      </div>
 
       <CTASection
         title="PexPacks gets stationery packed right."

@@ -80,7 +80,7 @@ export default function OfficePacksPage() {
         </div>
       </section>
 
-      <section className={styles.sectionAlt}>
+      <section className={styles.sectionCream}>
         <div className={styles.inner}>
           <div className={styles.splitBand}>
             <div>

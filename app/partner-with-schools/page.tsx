@@ -69,9 +69,9 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={styles.sectionAlt} id="sponsor">
+      <section className={styles.sectionCream} id="sponsor">
         <div className={styles.inner}>
-          <div className={styles.darkBand}>
+          <div className={styles.splitBand}>
             <div>
               <p className={styles.eyebrow}>Sponsors and donors</p>
               <h2>Support schools through Pexpacks</h2>
@@ -79,7 +79,7 @@ export default function PartnerWithSchoolsPage() {
                 Local businesses and donors can sponsor learner stationery packs, classroom supplies, or school website visibility through a structured support channel.
               </p>
               <div className={styles.buttonRow}>
-                <Button href="#partner-form" variant="white">
+                <Button href="#partner-form">
                   Become a Sponsor
                 </Button>
               </div>
