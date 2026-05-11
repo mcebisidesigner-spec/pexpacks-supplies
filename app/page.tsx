@@ -47,8 +47,8 @@ export default function HomePage() {
           <div className={styles.heroVisual}>
             <span className={styles.heroVisualImage}>
               <Image
-                src="/images/unboxing-G7.webp"
-                alt="PexPacks Grade 7 stationery pack unboxing"
+                src="/images/hero-school-delivery.webp"
+                alt="PexPacks stationery pack items arranged neatly"
                 fill
                 priority
                 sizes="(min-width: 1024px) 44vw, 100vw"
