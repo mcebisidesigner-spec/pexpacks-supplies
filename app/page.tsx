@@ -6,16 +6,14 @@ import { PackCard } from "@/components/marketing/PackCard";
 import { PackCardSlider } from "@/components/marketing/PackCardSlider";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { LogoMarquee } from "@/components/shared/LogoMarquee";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
+import { faqs } from "@/data/faqs";
 import {
   homepagePacks,
   homeProcessSteps,
-  sponsorshipExamples,
   trustBadges,
   whyChoosePexpacks,
 } from "@/data/packs";
-import { partnerLogos } from "@/data/partners";
 import { testimonials } from "@/data/testimonials";
 import styles from "@/components/marketing/Marketing.module.css";
 
@@ -25,14 +23,13 @@ export default function HomePage() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div>
-            <p className={styles.eyebrow}>Save time. Pex it.</p>
+            <p className={styles.eyebrow}>School and office stationery</p>
             <h1 className={styles.heroTitle}>
-              Start School
-              <br className={styles.mobileBreak} /> Ready
+              School and office
+              <br className={styles.mobileBreak} /> stationery made simple.
             </h1>
             <p className={styles.heroLead}>
-              Everything your child needs for the first day is already packed
-              and ready.
+              No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
             <ul
@@ -48,7 +45,7 @@ export default function HomePage() {
             <span className={styles.heroVisualImage}>
               <Image
                 src="/images/hero-school-delivery.webp"
-                alt="PexPacks stationery pack items arranged neatly"
+                alt="Pexpacks stationery pack items arranged neatly"
                 fill
                 priority
                 sizes="(min-width: 1024px) 44vw, 100vw"
@@ -57,26 +54,18 @@ export default function HomePage() {
             <div className={styles.productScene}>
               <div className={styles.brandBox}>
                 <div>
-                  <span>School & Office Supply</span>
+                  <span>Pexpacks Supplies</span>
                   <br />
-                  <strong>Stationery Packs</strong>
+                  <strong>Ready-packed stationery</strong>
                 </div>
                 <p>
                   Complete school stationery packs prepared according to your
-                  child’s school list and grade requirements. Pexpacks also
-                  supplies practical office stationery packs for SMEs and home
-                  offices.
+                  child's school list and grade requirements. Practical office
+                  stationery packs are available for SMEs and home offices.
                 </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className={styles.logoMarqueeSection}>
-        <div className={styles.inner}>
-           <p className={styles.miniTrust} style={{textAlign: "center", marginBottom: "16px"}}>Trusted by schools and suppliers</p>
-           <LogoMarquee partners={partnerLogos} />
         </div>
       </section>
 
@@ -85,7 +74,7 @@ export default function HomePage() {
           <SectionHeader
             eyebrow="Pack options"
             title="Choose the pack that fits you"
-            text="Whether you’re a parent, school, or office administrator, you can start with what you need right now."
+            text="Whether you are a parent, school, or office administrator, you can start with what you need right now."
           />
           <PathwayCards />
         </div>
@@ -114,24 +103,32 @@ export default function HomePage() {
         <div className={styles.inner}>
           <div className={styles.splitBand}>
             <div>
-              <p className={styles.eyebrow}>The unboxing experience</p>
-              <h2>What's inside your stationery pack?</h2>
+              <p className={styles.eyebrow}>The Pexpacks box</p>
+              <h2>What's in the Box?</h2>
               <p>
-                Every PexPacks box is carefully packed with exactly what is on your school's list. No more driving around to different stores to find specific brands or items.
+                Each Pexpacks stationery pack is prepared to help learners start
+                ready, with essential school supplies according to school lists.
               </p>
-              <ul className={styles.checkList} style={{marginTop: "24px"}}>
-                <li>Premium quality stationery brands</li>
-                <li>Labelled with your child's grade</li>
-                <li>Securely packed in a sturdy box</li>
-                <li>Ready for the first day of school</li>
+              <ul
+                className={[styles.checkList, styles.checkListSpaced].join(
+                  " ",
+                )}>
+                <li>Exercise books, pens, pencils and rulers</li>
+                <li>Glue, files, crayons or colour pencils where required</li>
+                <li>Grade-specific school-list items packed with care</li>
+                <li>Ready for the first day of school or collection</li>
               </ul>
+              <div
+                className={[styles.buttonRow, styles.splitActions].join(" ")}>
+                <Button href="/schools">Find Your School Pack</Button>
+              </div>
             </div>
             <div className={styles.unboxingImageWrap}>
-              <Image 
-                src="/images/unboxing.webp" 
-                alt="PexPacks open box showing premium stationery inside" 
+              <Image
+                src="/images/unboxing-G7.webp"
+                alt="Open Pexpacks stationery box showing school supplies packed inside"
                 fill
-                style={{objectFit: "cover"}}
+                className={styles.mediaImage}
                 sizes="(min-width: 1024px) 50vw, 100vw"
               />
             </div>
@@ -143,7 +140,7 @@ export default function HomePage() {
         <div className={styles.inner}>
           <SectionHeader
             eyebrow="Why Pexpacks"
-            title="Why choose Pexpacks?"
+            title="The Pexpacks Difference"
             text="Because we promise to save you time, reduce stress and help you stay prepared."
           />
           <div className={styles.benefitGrid}>
@@ -162,9 +159,9 @@ export default function HomePage() {
         aria-labelledby="pack-section-heading">
         <div className={styles.inner}>
           <SectionHeader
-            eyebrow="School stationery packs"
-            title="Choose Your Pack"
-            text="Ready-packed stationery for every learner, grade, and school."
+            eyebrow="Prepacked packs"
+            title="Our most popular packs"
+            text="Ready-to-go stationery for every learner and school."
             headingId="pack-section-heading"
           />
           <PackCardSlider>
@@ -179,20 +176,23 @@ export default function HomePage() {
         <div className={styles.inner}>
           <div className={styles.splitBand}>
             <div className={styles.unboxingImageWrap}>
-              <Image 
-                src="/images/office-packs.png" 
-                alt="PexPacks premium office stationery packs" 
+              <Image
+                src="/images/office-packs.png"
+                alt="Pexpacks premium office stationery packs"
                 fill
-                style={{objectFit: "cover"}}
+                className={styles.mediaImage}
+                sizes="(min-width: 1024px) 42vw, 100vw"
               />
             </div>
             <div>
               <p className={styles.eyebrow}>Office and SME solutions</p>
-              <h2>Not just for schools. Premium Office Packs.</h2>
+              <h2>Office stationery, packed for work.</h2>
               <p>
-                Keep your business running smoothly with our curated home office and corporate stationery packs. We handle the supplies so you can focus on the work.
+                Keep your business stocked with curated office stationery packs.
+                We handle the supplies so your team can focus on the work.
               </p>
-              <div className={styles.buttonRow} style={{marginTop: "24px"}}>
+              <div
+                className={[styles.buttonRow, styles.splitActions].join(" ")}>
                 <Button href="/office-packs">View Office Packs</Button>
               </div>
             </div>
@@ -205,9 +205,11 @@ export default function HomePage() {
           <div className={styles.guaranteeBox}>
             <div className={styles.guaranteeContent}>
               <p className={styles.eyebrow}>Quality promise</p>
-              <h2>The PexPacks Quality Guarantee</h2>
+              <h2>The Pexpacks quality guarantee</h2>
               <p>
-                We only pack trusted, premium brands. If a product is faulty or doesn't meet the school's requirements, we replace it. No questions asked.
+                We pack trusted stationery items clearly and carefully. If a
+                supplied item is faulty or does not match the agreed school-list
+                requirement, we will help put it right.
               </p>
             </div>
           </div>
@@ -219,8 +221,8 @@ export default function HomePage() {
         aria-labelledby="home-testimonials-heading">
         <div className={styles.inner}>
           <SectionHeader
-            eyebrow="Real parents. Real schools. Real results."
-            title="What South African Parents Say"
+            eyebrow="Trusted by parents and schools"
+            title="How Pexpacks will feel"
             headingId="home-testimonials-heading"
           />
           <TestimonialMarquee items={testimonials} />
@@ -232,33 +234,33 @@ export default function HomePage() {
           <SectionHeader
             eyebrow="Questions and answers"
             title="Frequently Asked Questions"
-            text="Got questions? We've got answers."
+            text="Answers for parents, schools and office buyers."
           />
           <div className={styles.faqList}>
-            <details className={styles.faqItem}>
-              <summary>What if my child's school isn't listed?</summary>
-              <p>You can still order a standard grade-specific pack, or contact us to have your school added to our database.</p>
-            </details>
-            <details className={styles.faqItem}>
-              <summary>How long does delivery take?</summary>
-              <p>Orders are typically processed and delivered within 3-5 business days across Gauteng.</p>
-            </details>
-            <details className={styles.faqItem}>
-              <summary>Are the stationery brands high quality?</summary>
-              <p>Yes, we only use trusted, premium brands that meet or exceed school requirements to ensure they last the entire year.</p>
-            </details>
+            {faqs.map((faq) => (
+              <details className={styles.faqItem} key={faq.id}>
+                <summary>{faq.question}</summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
 
       <div className={styles.partnerBanner}>
-        <p>Are you a school administrator? <a href="/partner-with-schools">See how PexPacks can simplify your school's stationery process &rarr;</a></p>
+        <p>
+          For schools:{" "}
+          <a href="/partner-with-schools">
+            Help parents order the correct stationery from your school list
+            &rarr;
+          </a>
+        </p>
       </div>
 
       <CTASection
         eyebrow="Ready to order"
-        title="PexPacks gets stationery packed right."
-        text="Choose your school or office pack and let PexPacks prepare your stationery for you."
+        title="Pexpacks gets stationery packed right."
+        text="Choose your school or office pack and let Pexpacks prepare your stationery for you."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
         secondaryHref="/office-packs"

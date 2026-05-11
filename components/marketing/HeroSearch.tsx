@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, ReactNode, useEffect, useId, useState } from "react";
 import { normaliseSchoolQuery } from "@/lib/schools/normaliseSchoolQuery";
-import styles from "./Marketing.module.css";
+import styles from "./HeroSearch.module.css";
 
 const gradeOptions = [
   "Grade R",

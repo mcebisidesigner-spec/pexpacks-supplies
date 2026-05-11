@@ -1,0 +1,28 @@
+.sectionHeader {
+  max-width: 760px;
+  margin: 0 0 34px;
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  color: var(--pex-gold-text);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: var(--color-navy);
+  font-family: var(--font-heading);
+  font-size: clamp(34px, 4.8vw, 58px);
+  font-weight: var(--font-weight-heading);
+  line-height: 1;
+}
+
+.sectionHeader p {
+  margin: 14px 0 0;
+  color: var(--pex-muted);
+  font-size: 18px;
+  line-height: 1.45;
+}

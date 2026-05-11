@@ -26,28 +26,28 @@ export const mainCategories: MainCategory[] = [
     description: "Stationery packs prepared according to school lists and grade requirements.",
     href: "/schools",
     cta: "Find Your School Pack",
-    icon: "school"
+    icon: "school",
   },
   {
     title: "Office Packs",
     description: "Practical office stationery packs for SMEs, home offices, and small businesses.",
     href: "/office-packs",
     cta: "View Office Stationery",
-    icon: "office"
+    icon: "office",
   },
   {
     title: "Order a Pack",
     description: "Submit a stationery pack order enquiry and our team will confirm the details.",
     href: "/order",
     cta: "Start an Order Enquiry",
-    icon: "package"
-  }
+    icon: "package",
+  },
 ];
 
 export const trustBadges = [
-  "Save time & money",
+  "Save time and money",
   "Packed for your school list",
-  "Delivered or ready for collection"
+  "Delivered or ready for collection",
 ];
 
 export const schoolPackBenefits = [
@@ -55,7 +55,7 @@ export const schoolPackBenefits = [
   "Exercise books included per learner",
   "Grade-specific items checked before packing",
   "Delivery or collection options",
-  "Parent prepayment options supported"
+  "Parent prepayment options supported",
 ];
 
 export const processSteps = [
@@ -63,45 +63,45 @@ export const processSteps = [
   "Choose your grade",
   "Confirm your pack",
   "Order online",
-  "Start school ready"
+  "Start school ready",
 ];
 
 export const homeProcessSteps = [
   {
     title: "Find your school or office",
-    text: "Search for your school or choose the office stationery pack you need."
+    text: "Search for your school or choose the office stationery pack you need.",
   },
   {
     title: "Choose your pack",
-    text: "Pick the grade-specific school pack or SME office pack."
+    text: "Pick the grade-specific school pack or SME office pack.",
   },
   {
     title: "We pack it",
-    text: "PexPacks prepares your stationery and confirms collection or delivery."
-  }
+    text: "Pexpacks prepares your stationery and confirms collection or delivery.",
+  },
 ];
 
 export const whyChoosePexpacks = [
   {
-    title: "Ready-packed convenience",
-    text: "We prepare complete stationery packs so you do not need to buy items one by one."
+    title: "Ready-packed stationery",
+    text: "We prepare complete stationery packs so you do not need to buy items one by one.",
   },
   {
     title: "School-list accuracy",
-    text: "School packs are prepared according to official stationery lists and grade requirements."
+    text: "School packs are prepared according to official stationery lists and grade requirements.",
   },
   {
     title: "Exercise books included",
-    text: "Where required by the school, correct exercise books are packed ready for learners."
+    text: "Where required by the school, correct exercise books are packed ready for learners.",
   },
   {
     title: "SME office support",
-    text: "Office packs provide practical stationery for small businesses without wasting time."
+    text: "Office packs provide practical stationery for small businesses without wasting time.",
   },
   {
     title: "School partnerships",
-    text: "We work with schools to simplify ordering for parents and reduce admin pressure."
-  }
+    text: "We work with schools to simplify ordering for parents and reduce admin pressure.",
+  },
 ];
 
 export const featuredPacks: Pack[] = [
@@ -110,57 +110,55 @@ export const featuredPacks: Pack[] = [
     name: "Foundation Phase Pack",
     category: "School",
     subcategory: "Foundation",
-    description: "For Grade R–3 learners who need creative and foundation learning stationery, exercise books, pencils, glue, crayons, and classroom basics.",
+    description:
+      "For Grade R-3 learners who need creative and foundation learning stationery, exercise books, pencils, glue, crayons, and classroom basics.",
     bestFor: "Grade R to Grade 3 learners",
     includes: ["Exercise books", "Wax crayons", "Glue stick", "Safety scissors", "Scrapbook"],
     priceLabel: "From R 659",
     cta: "View Foundation Phase Packs",
-    href: "/schools"
+    href: "/schools",
   },
   {
     id: "primary-school-pack",
     name: "Primary School Pack",
     category: "School",
     subcategory: "Primary",
-    description: "For Grade 4–7 learners who need complete school stationery, exercise books, writing tools, files, and subject-ready supplies.",
+    description:
+      "For Grade 4-7 learners who need complete school stationery, exercise books, writing tools, files, and subject-ready supplies.",
     bestFor: "Grade 4 to Grade 7 learners",
     includes: ["Exercise books", "Pens", "Pencils", "Ruler", "Eraser", "Sharpener"],
     priceLabel: "From R 779",
     cta: "View Primary School Packs",
-    href: "/schools"
+    href: "/schools",
   },
   {
     id: "high-school-pack",
     name: "High School Pack",
     category: "School",
     subcategory: "High School",
-    description: "For Grade 8–12 learners who need pens, exercise books, files, calculator-ready items, exam basics, and study stationery.",
+    description:
+      "For Grade 8-12 learners who need pens, exercise books, files, calculator-ready items, exam basics, and study stationery.",
     bestFor: "Grade 8 to Matric learners",
     includes: ["Subject books", "Pens", "Pencils", "Highlighters", "Files", "Exam pad"],
     priceLabel: "From R 879",
     cta: "View High School Stationery Packs",
-    href: "/schools"
+    href: "/schools",
   },
   {
     id: "office-stationery-pack",
     name: "Office Stationery Pack",
     category: "Office",
     subcategory: "Office",
-    description: "For SMEs and home offices that need reliable stationery, admin supplies, files, paper, pens, and monthly restock support.",
+    description:
+      "For SMEs and home offices that need reliable stationery, admin supplies, files, paper, pens, and monthly restock support.",
     bestFor: "SMEs and home offices",
     includes: ["Notebooks", "Pens", "Sticky notes", "Folders", "Correction tape", "Desk basics"],
     priceLabel: "Request quote",
     cta: "View Office Stationery",
-    href: "/office-packs"
-  }
+    href: "/office-packs",
+  },
 ];
 
 export const homepagePacks = featuredPacks.filter((pack) =>
   ["foundation-phase-pack", "primary-school-pack", "high-school-pack"].includes(pack.id)
 );
-
-export const sponsorshipExamples = [
-  "Sponsor a learner stationery pack",
-  "Sponsor a classroom stationery pack",
-  "Sponsor a school website"
-];

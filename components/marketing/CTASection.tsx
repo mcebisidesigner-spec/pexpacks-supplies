@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/Button";
-import styles from "./Marketing.module.css";
+import styles from "./CTASection.module.css";
 
 type CTASectionProps = {
   eyebrow?: string;

@@ -8,7 +8,7 @@ import { getFeaturedSchoolRecords, getSchoolSearchOptions } from "@/lib/schools/
 import styles from "@/components/schools/Schools.module.css";
 
 export const metadata: Metadata = buildMetadata(
-  "Find Your School Stationery Pack | PexPacks",
+  "Find Your School Stationery Pack | Pexpacks",
   "Search for your school and grade to order a ready-packed stationery pack prepared according to the school stationery list.",
   "/schools"
 );

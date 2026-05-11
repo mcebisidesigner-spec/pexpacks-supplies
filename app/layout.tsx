@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { StickyMobileCTA } from "@/components/shared/StickyMobileCTA";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildMetadata } from "@/lib/seo";
 import { localBusinessSchema, organizationSchema, websiteSchema } from "@/lib/schema";
@@ -15,11 +16,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   ...buildMetadata(
-    "PexPacks | School & Office Stationery Packs",
-    "Ready-packed stationery packs for schools, parents, learners, teachers, SMEs, and home offices. Find your school pack, choose your grade, or request office stationery."
+    "Pexpacks | School & Office Stationery Packs",
+    "School and office stationery made simple. Find your school pack, choose your grade, or request office stationery for your SME or home office."
   ),
   title: {
-    default: "PexPacks | School & Office Stationery Packs",
+    default: "Pexpacks | School & Office Stationery Packs",
     template: "%s",
   },
   verification: {
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Header />
           <main id="site-main" className="site-main">{children}</main>
           <Footer />
+          <StickyMobileCTA />
         </div>
       </body>
     </html>

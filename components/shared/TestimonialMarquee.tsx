@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { type TouchEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { Testimonial } from "@/data/testimonials";
+import { debounce } from "@/lib/debounce";
 import styles from "./Marquee.module.css";
 
 type TestimonialMarqueeProps = {
@@ -54,16 +55,18 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
   }, []);
 
   useEffect(() => {
-    measureStep();
-    window.addEventListener("resize", measureStep);
+    const debouncedMeasureStep = debounce(measureStep, 150);
 
-    const resizeObserver = new ResizeObserver(measureStep);
+    measureStep();
+    window.addEventListener("resize", debouncedMeasureStep);
+
+    const resizeObserver = new ResizeObserver(debouncedMeasureStep);
     if (trackRef.current) {
       resizeObserver.observe(trackRef.current);
     }
 
     return () => {
-      window.removeEventListener("resize", measureStep);
+      window.removeEventListener("resize", debouncedMeasureStep);
       resizeObserver.disconnect();
     };
   }, [measureStep]);

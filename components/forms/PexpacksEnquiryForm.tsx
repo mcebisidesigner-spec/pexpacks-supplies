@@ -31,12 +31,11 @@ const contactOptions = [
   "School partnership",
   "Office pack",
   "Bulk order",
-  "Sponsorship",
   "Supplier partnership",
   "General enquiry"
 ];
 
-const partnerOptions = ["School", "Sponsor", "Supplier", "Community partner"];
+const partnerOptions = ["School", "Supplier", "Office stationery partner"];
 
 const consentText = "I consent to Pexpacks using my information to contact me about this enquiry and provide related support.";
 
@@ -122,7 +121,8 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
         <p className={styles.eyebrow}>{isContact ? "Contact enquiry" : "Partnership enquiry"}</p>
         <h2>{title}</h2>
         <p className={styles.privacyNotice}>
-          We only use your details to respond to your enquiry and manage your stationery pack request.
+          We only use your details to respond to your enquiry and manage your stationery pack request. We collect
+          only the information needed to assist you.
         </p>
         <div className={styles.formGrid}>
           <label className={styles.field}>

@@ -1,7 +1,8 @@
 "use client";
 
 import { Children, type ReactNode, type TouchEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import styles from "./Marketing.module.css";
+import { debounce } from "@/lib/debounce";
+import styles from "./PackCardSlider.module.css";
 
 type PackCardSliderProps = {
   children: ReactNode;
@@ -69,17 +70,19 @@ export function PackCardSlider({ children }: PackCardSliderProps) {
       setCardsPerView(getCardsPerView());
       window.requestAnimationFrame(measureStep);
     };
+    const debouncedUpdateLayout = debounce(updateLayout, 150);
+    const debouncedMeasureStep = debounce(measureStep, 150);
 
     updateLayout();
-    window.addEventListener("resize", updateLayout);
+    window.addEventListener("resize", debouncedUpdateLayout);
 
-    const resizeObserver = new ResizeObserver(measureStep);
+    const resizeObserver = new ResizeObserver(debouncedMeasureStep);
     if (trackRef.current) {
       resizeObserver.observe(trackRef.current);
     }
 
     return () => {
-      window.removeEventListener("resize", updateLayout);
+      window.removeEventListener("resize", debouncedUpdateLayout);
       resizeObserver.disconnect();
     };
   }, [measureStep]);

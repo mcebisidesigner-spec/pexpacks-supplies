@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GradeSelector } from "@/components/schools/GradeSelector";
 import { Button } from "@/components/ui/Button";
-import { schools } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
@@ -13,9 +12,7 @@ type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
 };
 
-export function generateStaticParams() {
-  return schools.map((school) => ({ schoolSlug: school.slug }));
-}
+export const dynamicParams = true;
 
 export async function generateMetadata({ params }: SchoolPageProps): Promise<Metadata> {
   const { schoolSlug } = await params;

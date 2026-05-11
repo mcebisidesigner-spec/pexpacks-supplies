@@ -1,4 +1,4 @@
-import styles from "./Marketing.module.css";
+import styles from "./SectionHeader.module.css";
 
 type SectionHeaderProps = {
   eyebrow?: string;

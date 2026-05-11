@@ -4,6 +4,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: var(--touch-target-min);
   gap: 10px;
   font-weight: 800;
   font-family: var(--font-button);
@@ -87,17 +88,17 @@
 
 @media (max-width: 520px) {
   .sm {
-    min-height: 42px;
+    min-height: var(--touch-target-min);
   }
 
   .md {
-    min-height: 44px;
+    min-height: var(--touch-target-min);
     padding-left: 16px;
     font-size: 14px;
   }
 
   .lg {
-    min-height: 50px;
+    min-height: var(--touch-target-min);
     padding-left: 20px;
     font-size: 16px;
   }

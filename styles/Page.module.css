@@ -13,7 +13,7 @@
 .pageHero p:first-child,
 .kicker {
   margin: 0 0 16px;
-  color: var(--color-orange);
+  color: var(--color-orange-dark);
   font-size: 15px;
   font-weight: 800;
 }
@@ -23,7 +23,7 @@
 .formCard .kicker,
 .faqItem .kicker {
   margin: 24px 0 10px;
-  color: var(--color-orange);
+  color: var(--color-orange-dark);
   font-size: 14px;
   font-weight: 800;
 }
@@ -122,9 +122,10 @@
 .packCard,
 .formCard {
   padding: 28px;
+  border: var(--card-border);
   border-radius: var(--radius-card);
-  background: var(--color-white);
-  box-shadow: var(--shadow-card);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
 }
 
 .infoCard h2,
@@ -156,7 +157,7 @@
 
 .packPrice {
   margin: 18px 0;
-  color: var(--color-orange);
+  color: var(--color-orange-dark);
   font-size: 28px;
   font-weight: 800;
 }
@@ -232,9 +233,10 @@
 
 .faqItem {
   padding: 24px 28px;
+  border: var(--card-border);
   border-radius: var(--radius-card);
-  background: var(--color-white);
-  box-shadow: var(--shadow-card);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
 }
 
 .faqItem h2 {

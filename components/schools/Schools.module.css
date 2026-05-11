@@ -31,7 +31,7 @@
 .requestCta p,
 .supportSection p {
   margin: 0 0 12px;
-  color: var(--pex-gold);
+  color: var(--color-orange-dark);
   font-size: 14px;
   font-weight: 800;
 }
@@ -62,16 +62,16 @@
 }
 
 .schoolsHeroPanel {
-  border: 1px solid rgba(15, 37, 55, 0.08);
+  border: var(--card-border);
   border-radius: var(--radius-section);
   padding: 26px;
   background: rgba(255, 255, 255, 0.78);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--card-shadow);
 }
 
 .schoolsHeroPanel p {
   margin: 0 0 10px;
-  color: var(--pex-gold);
+  color: var(--color-orange-dark);
   font-size: 14px;
   font-weight: 800;
 }
@@ -229,7 +229,7 @@
   padding: 6px 10px;
   border-radius: var(--radius-pill);
   background: var(--color-white);
-  color: var(--color-orange);
+  color: var(--color-orange-dark);
   font-size: 12px;
   font-weight: 800;
 }
@@ -330,10 +330,10 @@
 .featuredCard {
   min-height: 280px;
   padding: 24px;
-  border: 1px solid rgba(18, 57, 69, 0.1);
-  border-radius: 28px;
-  background: var(--color-white);
-  box-shadow: var(--shadow-card);
+  border: var(--card-border);
+  border-radius: var(--radius-card);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
   display: grid;
   align-content: start;
   gap: 12px;
@@ -494,7 +494,7 @@
 
 .resultHeader .schoolEyebrow {
   margin: 0 0 10px;
-  color: var(--pex-gold);
+  color: var(--color-orange-dark);
   font-size: 14px;
 }
 
@@ -506,9 +506,10 @@
 
 .schoolCard {
   padding: 22px;
+  border: var(--card-border);
   border-radius: var(--radius-card);
-  background: var(--color-white);
-  box-shadow: var(--shadow-card);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
   display: grid;
   grid-template-columns: 82px 1fr;
   gap: 20px;
@@ -526,7 +527,7 @@
 
 .schoolCardBody p {
   margin: 0 0 8px;
-  color: var(--color-orange);
+  color: var(--color-orange-dark);
   font-size: 13px;
   font-weight: 800;
 }
@@ -582,9 +583,10 @@
 .gradeCard {
   min-height: 128px;
   padding: 24px;
+  border: var(--card-border);
   border-radius: var(--radius-card);
-  background: var(--color-white);
-  box-shadow: var(--shadow-card);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
   display: grid;
   align-content: space-between;
   font-family: var(--font-button);
@@ -605,7 +607,7 @@
 }
 
 .gradeCard strong {
-  color: var(--color-orange);
+  color: var(--color-orange-dark);
 }
 
 .gradeDetails {
@@ -635,13 +637,13 @@
 
 .kicker {
   margin: 0 0 20px;
-  color: var(--color-orange);
+  color: var(--color-orange-dark);
   font-weight: 800;
 }
 
 .contentsCard .kicker {
   margin: 0 0 10px;
-  color: var(--color-orange);
+  color: var(--color-orange-dark);
   font-size: 14px;
   line-height: 1.2;
 }
@@ -654,9 +656,10 @@
 
 .contentsCard {
   padding: 34px;
+  border: var(--card-border);
   border-radius: var(--radius-section);
-  background: var(--color-white);
-  box-shadow: var(--shadow-card);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
 }
 
 .contentsCard h2 {

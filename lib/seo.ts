@@ -20,7 +20,7 @@ export function buildMetadata(title: string, description: string, path = "/"): M
     title: normalizedTitle,
     description,
     keywords: [
-      "PexPacks",
+      "Pexpacks",
       "school stationery packs",
       "office supply packs",
       "South Africa"

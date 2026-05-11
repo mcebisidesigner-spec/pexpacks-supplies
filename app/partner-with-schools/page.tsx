@@ -3,27 +3,26 @@ import { PartnerForm } from "@/components/forms/PartnerForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { sponsorshipExamples } from "@/data/packs";
 import { buildMetadata } from "@/lib/seo";
 import styles from "@/components/marketing/Marketing.module.css";
 
 const schoolBenefits = [
-  "Free standardised school website programme for approved partner schools",
   "School stationery list and grade pack pages",
   "Parent order links and clear stationery communication",
-  "Sponsor visibility pages and community support channels"
+  "Grade-specific stationery packs prepared from approved lists",
+  "A simpler enquiry channel for stationery list support",
 ];
 
 const supplierBenefits = [
   "Supply pack-ready stationery for schools and offices",
-  "Support school, office and PexPacks fulfilment",
-  "Help PexPacks build reliable Gauteng pilot operations",
-  "Quote into practical, repeatable stationery pack categories"
+  "Support school and office stationery fulfilment",
+  "Help Pexpacks build reliable Gauteng pilot operations",
+  "Quote into practical, repeatable stationery pack categories",
 ];
 
 export const metadata: Metadata = buildMetadata(
-  "Partner With PexPacks | School Stationery Supply",
-  "PexPacks helps schools simplify stationery ordering with grade-specific packs prepared according to school lists.",
+  "Partner With Pexpacks | School Stationery Supply",
+  "Pexpacks helps schools simplify stationery ordering with grade-specific packs prepared according to school lists.",
   "/partner-with-schools"
 );
 
@@ -32,15 +31,15 @@ export default function PartnerWithSchoolsPage() {
     <>
       <PageHero
         eyebrow="Partner with us"
-        title="Partner with Pexpacks and make essentials easier to access"
-        text="Schools, sponsors and suppliers can work with PexPacks to simplify stationery ordering, support learners and build reliable school and office stationery channels."
+        title="Help parents order the correct stationery"
+        text="Schools and stationery suppliers can work with Pexpacks to simplify school-list ordering and keep grade-specific packs clear for parents."
         panelText="Built for"
-        panelTitle="Schools, sponsors and suppliers"
+        panelTitle="Schools and suppliers"
       >
         <div className={styles.buttonRow}>
           <Button href="#partner-form">Start Partnership</Button>
-          <Button href="#sponsor" variant="white">
-            Become a Sponsor
+          <Button href="/contact" variant="white">
+            Contact Pexpacks
           </Button>
         </div>
       </PageHero>
@@ -54,12 +53,11 @@ export default function PartnerWithSchoolsPage() {
           />
           <div className={styles.splitBand}>
             <div>
-              <p className={styles.eyebrow}>School website programme</p>
-              <h2>Free school website programme</h2>
+              <p className={styles.eyebrow}>School-list support</p>
+              <h2>Grade-specific stationery made clearer</h2>
               <p>
-                Pexpacks provides and manages the website platform, while schools approve their official content and
-                communication. Approved partner schools can use the platform for parent updates, stationery pack links,
-                sponsor pages and school information.
+                Pexpacks helps schools turn approved stationery lists into clear grade pack pages so parents know what
+                to order and learners can start prepared.
               </p>
               <div className={styles.buttonRow}>
                 <Button href="#partner-form">Partner Your School</Button>
@@ -74,35 +72,11 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={styles.sectionCream} id="sponsor">
-        <div className={styles.inner}>
-          <div className={styles.splitBand}>
-            <div>
-              <p className={styles.eyebrow}>Sponsors and donors</p>
-              <h2>Support schools through Pexpacks</h2>
-              <p>
-                Local businesses and donors can sponsor learner stationery packs, classroom supplies, or school website visibility through a structured support channel.
-              </p>
-              <div className={styles.buttonRow}>
-                <Button href="#partner-form">
-                  Become a Sponsor
-                </Button>
-              </div>
-            </div>
-            <ul className={styles.checkList}>
-              {sponsorshipExamples.map((example) => (
-                <li key={example}>{example}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
       <section className={styles.sectionCream}>
         <div className={styles.inner}>
           <SectionHeader
             eyebrow="Supplier network"
-            title="Become a supplier"
+            title="Become a stationery supplier"
             text="Pexpacks needs dependable suppliers for school and office stationery pack categories."
           />
           <div className={styles.infoGrid}>
@@ -121,7 +95,7 @@ export default function PartnerWithSchoolsPage() {
           <SectionHeader
             eyebrow="Partnership enquiry"
             title="Contact Pexpacks partnerships"
-            text="Share the school, sponsor or supplier opportunity. The form opens a prepared email enquiry so Pexpacks can follow up."
+            text="Share the school or supplier opportunity so Pexpacks can follow up."
           />
           <PartnerForm />
         </div>

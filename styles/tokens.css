@@ -6,21 +6,35 @@
   --pex-light: #f8fafc;
   --pex-text: #1f2937;
   --pex-muted: #64748b;
+  --pex-gold-text: #9a5f12;
 
   --color-navy: var(--pex-navy);
   --color-orange: var(--pex-gold);
+  --color-orange-dark: var(--pex-gold-text);
+  --color-text: var(--pex-text);
+  --color-text-muted: #4d5b68;
   --color-bg: var(--pex-light);
+  --color-bg-soft: #f7f4ef;
+  --section-bg-white: #ffffff;
+  --section-bg-soft: var(--color-bg-soft);
+  --section-bg-navy: var(--color-navy);
   --color-white: #ffffff;
   --color-border: #d8e0ea;
   --color-muted: var(--pex-muted);
   --color-soft-blue: #dfe8f6;
   --color-shadow: rgba(25, 42, 62, 0.18);
-  --focus-ring: 3px solid rgba(205, 145, 52, 0.52);
+  --color-focus: #0b5fff;
+  --focus-ring: 3px solid rgba(11, 95, 255, 0.5);
 
   --radius-pill: 999px;
-  --radius-card: 18px;
+  --radius-card: 20px;
   --radius-image: 20px;
   --radius-section: 24px;
+
+  --card-bg: var(--color-white);
+  --card-border: 1px solid rgba(18, 57, 69, 0.1);
+  --card-shadow: 0 16px 40px rgba(18, 57, 69, 0.1);
+  --card-shadow-hover: 0 20px 52px rgba(18, 57, 69, 0.14);
 
   --space-1: 4px;
   --space-2: 8px;
@@ -34,7 +48,25 @@
 
   --shadow-soft: 0 14px 32px rgba(25, 42, 62, 0.14);
   --shadow-pill: 0 9px 18px rgba(25, 42, 62, 0.22);
-  --shadow-card: 0 12px 28px rgba(25, 42, 62, 0.11);
+  --shadow-card: var(--card-shadow);
+
+  --font-heading: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
+  --font-body: "Pexpacks Sans", Arial, sans-serif;
+  --font-weight-heading: 800;
+  --font-weight-body: 400;
+  --font-weight-medium: 500;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: clamp(1.5rem, 3vw, 2rem);
+  --text-3xl: clamp(2rem, 5vw, 3.25rem);
+  --text-hero: clamp(2.4rem, 8vw, 5.5rem);
+  --line-tight: 1.05;
+  --line-heading: 1.12;
+  --line-body: 1.6;
 
   --font-button: "Pexpacks Sans", "Pexpacks Sans Alt", Arial, sans-serif;
   --button-hover-scale: 1.015;
@@ -49,6 +81,8 @@
 
   --layout-max-width: 1280px;
   --container-max: var(--layout-max-width);
+  --container-padding-mobile: 20px;
+  --container-padding-desktop: 40px;
 
   --gutter-mobile: clamp(16px, 4vw, 24px);
   --gutter-tablet: clamp(24px, 5vw, 40px);
@@ -62,11 +96,15 @@
 
   --cta-height-mobile: 48px;
   --cta-height-desktop: 52px;
+  --touch-target-min: 48px;
   --button-height-mobile: var(--cta-height-mobile);
   --button-height-desktop: var(--cta-height-desktop);
   --cta-padding-x: 24px;
 
   --section-padding-mobile: 64px;
+  --section-padding-y-mobile: 56px;
+  --section-padding-y-tablet: 72px;
+  --section-padding-y-desktop: 96px;
   --section-padding-desktop: 112px;
 
   --hero-copy-max-width: 760px;

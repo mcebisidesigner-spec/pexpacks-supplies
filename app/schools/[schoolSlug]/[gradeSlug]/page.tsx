@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GradePackDetails } from "@/components/schools/GradePackDetails";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { schools } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema, productSchema } from "@/lib/schema";
 import { getGradeBySlug, getSchoolBySlug } from "@/lib/school-utils";
@@ -12,14 +11,7 @@ type GradePageProps = {
   params: Promise<{ schoolSlug: string; gradeSlug: string }>;
 };
 
-export function generateStaticParams() {
-  return schools.flatMap((school) =>
-    school.grades.map((grade) => ({
-      schoolSlug: school.slug,
-      gradeSlug: grade.gradeSlug
-    }))
-  );
-}
+export const dynamicParams = true;
 
 export async function generateMetadata({ params }: GradePageProps): Promise<Metadata> {
   const { schoolSlug, gradeSlug } = await params;

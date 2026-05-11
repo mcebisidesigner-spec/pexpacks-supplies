@@ -18,7 +18,7 @@ import styles from "@/components/marketing/Marketing.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Contact",
-  "Contact Pexpacks for school stationery orders, office pack enquiries, partnerships, sponsorships and supplier enquiries.",
+  "Contact Pexpacks for school stationery orders, office pack enquiries, school partnerships and supplier enquiries.",
   "/contact"
 );
 
@@ -28,7 +28,7 @@ export default function ContactPage() {
       <PageHero
         eyebrow="Contact"
         title="Talk to Pexpacks"
-        text="Send an enquiry about parent orders, school partnerships, office packs, sponsorships or supplier opportunities."
+        text="Send an enquiry about parent orders, school partnerships, office packs or supplier opportunities."
         panelText="Service area"
         panelTitle="Gauteng pilot province"
       >

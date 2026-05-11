@@ -20,7 +20,7 @@
 }
 
 .orange {
-  background: var(--color-orange);
+  background: var(--color-orange-dark);
   color: var(--color-white);
 }
 
@@ -31,7 +31,7 @@
 
 .white {
   background: var(--color-white);
-  color: var(--color-orange);
+  color: var(--color-orange-dark);
 }
 
 .left svg {
