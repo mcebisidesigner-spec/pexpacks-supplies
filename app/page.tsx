@@ -6,7 +6,6 @@ import { PackCard } from "@/components/marketing/PackCard";
 import { PackCardSlider } from "@/components/marketing/PackCardSlider";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { LogoMarquee } from "@/components/shared/LogoMarquee";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import {
   homepagePacks,
@@ -15,7 +14,6 @@ import {
   trustBadges,
   whyChoosePexpacks,
 } from "@/data/packs";
-import { partnerLogos } from "@/data/partners";
 import { testimonials } from "@/data/testimonials";
 import styles from "@/components/marketing/Marketing.module.css";
 
@@ -192,16 +190,7 @@ export default function HomePage() {
               ))}
             </ul>
           </div>
-          <div className={styles.logoMarqueeWrap}>
-            <div>
-              <h3>Partner logo banner</h3>
-              <p>
-                Placeholder partner spaces ready for real school, supplier and
-                donor logos.
-              </p>
-            </div>
-            <LogoMarquee partners={partnerLogos} />
-          </div>
+
         </div>
       </section>
 

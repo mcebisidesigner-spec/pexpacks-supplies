@@ -1,20 +1,66 @@
-.marquee {
-  width: 100%;
+.slider {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 14px;
+}
+
+.viewport {
+  min-width: 0;
   overflow: hidden;
-  padding: 6px 0;
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  padding: 10px 0;
+  margin: -10px 0;
 }
 
 .track {
-  width: max-content;
   display: flex;
   gap: 18px;
-  animation: marqueeLeft 52s linear infinite;
+  touch-action: pan-y;
+  will-change: transform;
+  transition: transform 400ms ease;
+  width: max-content;
 }
 
-.marquee:hover .track,
-.marquee:focus-within .track {
-  animation-play-state: paused;
+.arrow {
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(25, 42, 62, 0.12);
+  border-radius: var(--radius-pill);
+  background: var(--color-navy);
+  color: var(--color-white);
+  box-shadow: var(--shadow-card);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transform-origin: center;
+  transition: var(--button-transition);
+}
+
+.arrow svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.arrow:not(:disabled):hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
+}
+
+.arrow:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.arrow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 4px;
 }
 
 .testimonialCard {
@@ -70,70 +116,42 @@
   line-height: 1.5;
 }
 
-.logoIntro {
-  margin-top: 32px;
-  display: grid;
-  gap: 6px;
-}
 
-.logoIntro h3 {
-  margin: 0;
-  color: var(--color-white);
-  font-size: clamp(24px, 3vw, 34px);
-  line-height: 1;
-}
 
-.logoIntro p {
-  max-width: 560px;
-}
-
-.logoCard {
-  width: 190px;
-  min-height: 112px;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: var(--radius-card);
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--color-white);
-  display: grid;
-  place-items: center;
-  gap: 8px;
-  text-align: center;
-}
-
-.logoCard img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-  filter: grayscale(1) brightness(0) invert(1);
-  opacity: 0.9;
-}
-
-.logoCard span {
-  font-size: 13px;
-  font-weight: 800;
-}
-
-@keyframes marqueeLeft {
-  from {
-    transform: translateX(0);
+@media (max-width: 767px) {
+  .slider {
+    grid-template-columns: 1fr 1fr;
+    gap: 0 12px;
   }
-
-  to {
-    transform: translateX(-50%);
+  
+  .viewport {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    margin: -10px -14px;
+    padding: 10px 14px;
+  }
+  
+  .arrow {
+    width: 44px;
+    height: 44px;
+    margin-top: 18px;
+  }
+  
+  .arrowPrevious {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: end;
+  }
+  
+  .arrowNext {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .track {
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: none;
-  }
-
-  .marquee {
-    overflow: visible;
-    mask-image: none;
+    transition: none;
   }
 }
