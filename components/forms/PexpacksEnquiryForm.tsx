@@ -119,6 +119,7 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
   return (
     <div className={styles.formCard}>
       <form onSubmit={handleSubmit} noValidate>
+        <p className={styles.eyebrow}>{isContact ? "Contact enquiry" : "Partnership enquiry"}</p>
         <h2>{title}</h2>
         <p className={styles.privacyNotice}>
           We only use your details to respond to your enquiry and manage your stationery pack request.

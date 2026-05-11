@@ -47,7 +47,11 @@ export default function ContactPage() {
           <div className={styles.infoGrid}>
             <ContactForm />
             <div className={styles.infoCard}>
-              <SectionHeader title="Contact details" text="Use the form for structured enquiries or WhatsApp for quick order follow-ups." />
+              <SectionHeader
+                eyebrow="Contact channels"
+                title="Contact details"
+                text="Use the form for structured enquiries or WhatsApp for quick order follow-ups."
+              />
               <p>
                 <strong>Email:</strong> <a href={generalEmailHref}>{generalEmail}</a>
               </p>

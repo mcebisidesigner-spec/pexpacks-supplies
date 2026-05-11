@@ -22,6 +22,7 @@ export default function TrackOrderPage() {
       <section className={page.section}>
         <div className={page.sectionInner}>
           <form className={`${page.formCard} ${page.formStack}`}>
+            <p className={page.kicker}>Order tracking</p>
             <h2>Tracking form</h2>
             <label>
               Order number

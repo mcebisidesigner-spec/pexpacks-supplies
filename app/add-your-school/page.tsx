@@ -34,6 +34,7 @@ export default function AddYourSchoolPage() {
         <div className={styles.inner}>
           <div className={styles.infoGrid}>
             <article className={styles.formCard}>
+              <p className={styles.eyebrow}>School request</p>
               <h2>Submit school details</h2>
               <form className={styles.formGrid} action="/contact" method="get">
                 <label className={styles.field}>
@@ -65,6 +66,7 @@ export default function AddYourSchoolPage() {
 
             <article className={styles.infoCard}>
               <SectionHeader
+                eyebrow="Review process"
                 title="What happens next?"
                 text="Pexpacks checks whether the school can be added and whether a standard pack can help while the official list is prepared."
               />
@@ -87,6 +89,7 @@ export default function AddYourSchoolPage() {
       <section className={styles.sectionAlt}>
         <div className={styles.inner}>
           <SectionHeader
+            eyebrow="Grade packs"
             title="Standard grade combo packs"
             text="Use these per-grade combos when a school-specific pack has not been added yet."
           />

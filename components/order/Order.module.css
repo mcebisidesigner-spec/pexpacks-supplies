@@ -211,6 +211,13 @@
   font-size: 34px;
 }
 
+.confirmKicker {
+  margin: 0 0 10px !important;
+  color: var(--color-orange);
+  font-size: 14px;
+  font-weight: 800;
+}
+
 .confirmPack p {
   margin: 0 0 16px;
 }

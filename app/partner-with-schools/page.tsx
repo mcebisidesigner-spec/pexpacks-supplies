@@ -31,7 +31,7 @@ export default function PartnerWithSchoolsPage() {
   return (
     <>
       <PageHero
-        eyebrow="Partner With Us"
+        eyebrow="Partner with us"
         title="Partner with Pexpacks and make essentials easier to access"
         text="Schools, sponsors and suppliers can work with PexPacks to simplify stationery ordering, support learners and build reliable school and office stationery channels."
         panelText="Built for"
@@ -47,9 +47,14 @@ export default function PartnerWithSchoolsPage() {
 
       <section className={styles.section}>
         <div className={styles.inner}>
-          <SectionHeader title="Partner as a school" text="A practical way to reduce stationery admin and improve parent communication." />
+          <SectionHeader
+            eyebrow="School partnerships"
+            title="Partner as a school"
+            text="A practical way to reduce stationery admin and improve parent communication."
+          />
           <div className={styles.splitBand}>
             <div>
+              <p className={styles.eyebrow}>School website programme</p>
               <h2>Free school website programme</h2>
               <p>
                 Pexpacks provides and manages the website platform, while schools approve their official content and
@@ -95,7 +100,11 @@ export default function PartnerWithSchoolsPage() {
 
       <section className={styles.sectionCream}>
         <div className={styles.inner}>
-          <SectionHeader title="Become a supplier" text="PexPacks needs dependable suppliers for school and office stationery pack categories." />
+          <SectionHeader
+            eyebrow="Supplier network"
+            title="Become a supplier"
+            text="Pexpacks needs dependable suppliers for school and office stationery pack categories."
+          />
           <div className={styles.infoGrid}>
             {supplierBenefits.map((benefit) => (
               <article className={styles.infoCard} key={benefit}>
@@ -109,7 +118,11 @@ export default function PartnerWithSchoolsPage() {
 
       <section className={styles.section} id="partner-form">
         <div className={styles.inner}>
-          <SectionHeader title="Contact Pexpacks partnerships" text="Share the school, sponsor or supplier opportunity. The form opens a prepared email enquiry so Pexpacks can follow up." />
+          <SectionHeader
+            eyebrow="Partnership enquiry"
+            title="Contact Pexpacks partnerships"
+            text="Share the school, sponsor or supplier opportunity. The form opens a prepared email enquiry so Pexpacks can follow up."
+          />
           <PartnerForm />
         </div>
       </section>

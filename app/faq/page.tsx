@@ -26,6 +26,7 @@ export default function FAQPage() {
         <div className={`${page.sectionInner} ${page.faqList}`}>
           {faqs.map((faq) => (
             <article className={page.faqItem} key={faq.id}>
+              <p className={page.kicker}>Question</p>
               <h2>{faq.question}</h2>
               <p>{faq.answer}</p>
             </article>

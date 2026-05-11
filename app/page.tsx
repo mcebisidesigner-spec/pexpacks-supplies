@@ -83,6 +83,7 @@ export default function HomePage() {
       <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
+            eyebrow="Pack options"
             title="Choose the pack that fits you"
             text="Whether you’re a parent, school, or office administrator, you can start with what you need right now."
           />
@@ -93,6 +94,7 @@ export default function HomePage() {
       <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
+            eyebrow="Ordering process"
             title="How it works"
             text="We keep the process simple, so you can focus on other important things."
           />
@@ -112,7 +114,7 @@ export default function HomePage() {
         <div className={styles.inner}>
           <div className={styles.splitBand}>
             <div>
-              <p className={styles.eyebrow}>The PexPacks Box</p>
+              <p className={styles.eyebrow}>The Pexpacks box</p>
               <h2>What's inside your stationery pack?</h2>
               <p>
                 Every PexPacks box is carefully packed with exactly what is on your school's list. No more driving around to different stores to find specific brands or items.
@@ -140,6 +142,7 @@ export default function HomePage() {
       <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
+            eyebrow="Why Pexpacks"
             title="Why choose Pexpacks?"
             text="Because we promise to save you time, reduce stress and help you stay prepared."
           />
@@ -159,6 +162,7 @@ export default function HomePage() {
         aria-labelledby="pack-section-heading">
         <div className={styles.inner}>
           <SectionHeader
+            eyebrow="School stationery packs"
             title="Choose Your Pack"
             text="Ready-packed stationery for every learner, grade, and school."
             headingId="pack-section-heading"
@@ -183,7 +187,7 @@ export default function HomePage() {
               />
             </div>
             <div>
-              <p className={styles.eyebrow}>Office & SME Solutions</p>
+              <p className={styles.eyebrow}>Office and SME solutions</p>
               <h2>Not just for schools. Premium Office Packs.</h2>
               <p>
                 Keep your business running smoothly with our curated home office and corporate stationery packs. We handle the supplies so you can focus on the work.
@@ -200,6 +204,7 @@ export default function HomePage() {
         <div className={styles.inner}>
           <div className={styles.guaranteeBox}>
             <div className={styles.guaranteeContent}>
+              <p className={styles.eyebrow}>Quality promise</p>
               <h2>The PexPacks Quality Guarantee</h2>
               <p>
                 We only pack trusted, premium brands. If a product is faulty or doesn't meet the school's requirements, we replace it. No questions asked.
@@ -225,6 +230,7 @@ export default function HomePage() {
       <section className={styles.sectionCream}>
         <div className={styles.inner}>
           <SectionHeader
+            eyebrow="Questions and answers"
             title="Frequently Asked Questions"
             text="Got questions? We've got answers."
           />
@@ -250,6 +256,7 @@ export default function HomePage() {
       </div>
 
       <CTASection
+        eyebrow="Ready to order"
         title="PexPacks gets stationery packed right."
         text="Choose your school or office pack and let PexPacks prepare your stationery for you."
         primaryHref="/schools"

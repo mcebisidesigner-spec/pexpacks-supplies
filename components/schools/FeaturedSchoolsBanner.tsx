@@ -23,7 +23,7 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
     <section className={styles.featuredSection} aria-labelledby="featured-schools-heading">
       <div className={styles.sectionIntro}>
         <p>Quick start</p>
-        <h2 id="featured-schools-heading">Featured Schools</h2>
+        <h2 id="featured-schools-heading">Featured schools</h2>
         <span>Start with one of our highlighted school pack pages, or search for your school above.</span>
       </div>
       <div className={styles.featuredScroller}>

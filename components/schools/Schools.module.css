@@ -34,7 +34,6 @@
   color: var(--pex-gold);
   font-size: 14px;
   font-weight: 800;
-  text-transform: uppercase;
 }
 
 .schoolsHeroCopy h1,
@@ -75,7 +74,6 @@
   color: var(--pex-gold);
   font-size: 14px;
   font-weight: 800;
-  text-transform: uppercase;
 }
 
 .schoolsHeroPanel strong {
@@ -494,6 +492,12 @@
   font-weight: 800;
 }
 
+.resultHeader .schoolEyebrow {
+  margin: 0 0 10px;
+  color: var(--pex-gold);
+  font-size: 14px;
+}
+
 .schoolGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -633,6 +637,13 @@
   margin: 0 0 20px;
   color: var(--color-orange);
   font-weight: 800;
+}
+
+.contentsCard .kicker {
+  margin: 0 0 10px;
+  color: var(--color-orange);
+  font-size: 14px;
+  line-height: 1.2;
 }
 
 .price {

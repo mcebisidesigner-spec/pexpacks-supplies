@@ -33,6 +33,7 @@ export default function StandardSchoolPacksPage() {
       <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
+            eyebrow="Grade combos"
             title="Standard combos by grade"
             text="Each pack is a practical baseline. School-specific items can be confirmed before final packing."
           />

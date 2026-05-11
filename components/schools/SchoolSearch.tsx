@@ -21,7 +21,10 @@ export function SchoolSearch({ initialQuery = "", initialCity = "all", initialGr
   return (
     <section className={styles.searchPanel} aria-labelledby="school-results-title">
       <div className={styles.resultHeader}>
-        <h2 id="school-results-title">Find your school pack</h2>
+        <div>
+          <p className={styles.schoolEyebrow}>Search results</p>
+          <h2 id="school-results-title">Find your school pack</h2>
+        </div>
         <p>{results.length} school pack matches</p>
       </div>
       <div className={styles.schoolGrid}>

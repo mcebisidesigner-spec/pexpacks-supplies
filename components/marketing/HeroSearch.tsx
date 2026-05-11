@@ -322,6 +322,7 @@ export function HeroSearch() {
             aria-labelledby={modalTitleId}
             aria-describedby={modalDescriptionId}
           >
+            <p className={styles.eyebrow}>Search support</p>
             <h2 id={modalTitleId}>School not found</h2>
             <p id={modalDescriptionId}>Your school is not in our database. Would you like to add your school?</p>
             <div className={styles.modalActions}>

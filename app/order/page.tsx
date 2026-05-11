@@ -27,7 +27,7 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
     <>
       <section className={page.pageHero}>
         <div className={page.pageHeroNarrow}>
-          <p>Order Now</p>
+          <p>Order now</p>
           <h1>Order your ready-to-use pack</h1>
           <p className={page.pageHeroText}>
             Select school, choose grade, confirm the pack and send your order details. For order support, email{" "}

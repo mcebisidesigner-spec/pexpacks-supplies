@@ -13,7 +13,7 @@ export default function CookieNoticePage() {
     <>
       <section className={page.pageHero}>
         <div className={page.pageHeroNarrow}>
-          <p>Cookie Notice</p>
+          <p>Cookie notice</p>
           <h1>Cookies and website functionality</h1>
           <p className={page.pageHeroText}>
             Cookies may be used to support basic website functionality, improve browsing, and understand how visitors
@@ -24,13 +24,16 @@ export default function CookieNoticePage() {
       <section className={page.section}>
         <div className={page.sectionInner}>
           <article className={page.infoCard}>
+            <p className={page.kicker}>Website functionality</p>
             <h2>Functional cookies</h2>
             <p>Functional cookies help the website remember basic preferences and keep forms working correctly.</p>
+            <p className={page.kicker}>Usage insight</p>
             <h2>Analytics</h2>
             <p>
               Basic analytics may help Pexpacks understand which pages customers use when finding school or office
               stationery packs.
             </p>
+            <p className={page.kicker}>Browser settings</p>
             <h2>Control</h2>
             <p>You can manage cookies through your browser settings.</p>
           </article>

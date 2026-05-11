@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/Button";
 import styles from "./Marketing.module.css";
 
 type CTASectionProps = {
+  eyebrow?: string;
   title: string;
   text: string;
   primaryHref: string;
@@ -10,11 +11,12 @@ type CTASectionProps = {
   secondaryLabel?: string;
 };
 
-export function CTASection({ title, text, primaryHref, primaryLabel, secondaryHref, secondaryLabel }: CTASectionProps) {
+export function CTASection({ eyebrow, title, text, primaryHref, primaryLabel, secondaryHref, secondaryLabel }: CTASectionProps) {
   return (
     <section className={styles.ctaSection}>
       <div className={styles.ctaInner}>
         <div>
+          {eyebrow ? <p className={styles.eyebrow}>{eyebrow}</p> : null}
           <h2>{title}</h2>
           <p>{text}</p>
         </div>

@@ -342,6 +342,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
 
           {activeStep === 2 ? (
             <div className={styles.confirmPack}>
+              <p className={styles.confirmKicker}>Selected pack</p>
               <h2>{selectedGrade?.grade} stationery pack</h2>
               <p>{selectedGrade?.deliveryNote}</p>
               <ul>
@@ -436,6 +437,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
 
           {activeStep === 4 ? (
             <div className={styles.confirmPack}>
+              <p className={styles.confirmKicker}>Final check</p>
               <h2>Confirm order</h2>
               <p>
                 This is an enquiry order. No online payment is taken here. Pexpacks will confirm availability, delivery

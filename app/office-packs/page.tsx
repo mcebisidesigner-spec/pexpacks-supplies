@@ -49,7 +49,11 @@ export default function OfficePacksPage() {
 
       <section className={styles.section}>
         <div className={styles.inner}>
-          <SectionHeader title="Office pack options" text="Ready-to-quote packs for small teams, home offices and recurring admin needs." />
+          <SectionHeader
+            eyebrow="Office pack types"
+            title="Office pack options"
+            text="Ready-to-quote packs for small teams, home offices and recurring admin needs."
+          />
           <div className={styles.officeGrid}>
             {officePacks.map((pack) => (
               <article className={styles.packCard} key={pack.id}>
@@ -108,7 +112,11 @@ export default function OfficePacksPage() {
 
       <section className={styles.section}>
         <div className={styles.inner}>
-          <SectionHeader title="Built for practical business types" text="Pexpacks office packs are structured around real admin needs, not cluttered catalogue browsing." />
+          <SectionHeader
+            eyebrow="Business stationery"
+            title="Built for practical business types"
+            text="Pexpacks office packs are structured around real admin needs, not cluttered catalogue browsing."
+          />
           <div className={styles.gridThree}>
             {businessUseCases.map((useCase) => (
               <article className={styles.infoCard} key={useCase}>
