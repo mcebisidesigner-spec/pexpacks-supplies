@@ -2,54 +2,56 @@ export type Testimonial = {
   id: string;
   name: string;
   role: string;
-  schoolOrBusiness: string;
+  context: string;
   quote: string;
-  avatar: string;
+  avatar?: string;
 };
 
+// TODO: Replace with confirmed real testimonials and written permission before public marketing use.
 export const testimonials: Testimonial[] = [
   {
     id: "sarah-nkosi",
     name: "Sarah Nkosi",
-    role: "Parent of a Grade 3 learner",
-    schoolOrBusiness: "Parktown Primary",
+    role: "Parent",
+    context: "Grade 3 learner",
     quote:
-      "Pexpacks made back-to-school shopping simple. Everything was packed and ready, and I did not have to run around looking for each item.",
+      "Pexpacks made back-to-school preparation simple. Everything was packed clearly and ready before the first day of school.",
     avatar: "/images/avatars/avatar-1.png"
   },
   {
-    id: "school-admin",
+    id: "lebo-maseko",
     name: "Lebo Maseko",
-    role: "School administrator",
-    schoolOrBusiness: "Johannesburg Primary School",
+    role: "Teacher",
+    context: "Primary school educator",
     quote:
-      "The pack process gives parents a clearer route. Fewer missing items means the first week of school starts with less admin pressure.",
+      "When learners arrive with the correct stationery, teaching can begin immediately. Pexpacks helps remove that first-week stress.",
     avatar: "/images/avatars/avatar-2.png"
   },
   {
-    id: "office-owner",
-    name: "Thabo Dlamini",
-    role: "SME owner",
-    schoolOrBusiness: "Small business in Gauteng",
-    quote: "Our office supplies are now easier to manage. Pexpacks packs the essentials so we do not waste time shopping.",
+    id: "zanele-khumalo",
+    name: "Zanele Khumalo",
+    role: "Parent",
+    context: "Grade 7 learner",
+    quote:
+      "I did not have to run around comparing stationery lists and shops. The pack was simple to understand and easy to order.",
     avatar: "/images/avatars/avatar-3.png"
   },
   {
-    id: "nomsa-grade-seven",
-    name: "Nomsa Khumalo",
-    role: "Parent of a Grade 7 learner",
-    schoolOrBusiness: "Germiston Primary",
+    id: "thabo-dlamini",
+    name: "Thabo Dlamini",
+    role: "SME Owner",
+    context: "Home office supplies",
     quote:
-      "The grade pack helped us budget early and avoid the January rush. It was clear what we were ordering and what would be included.",
+      "The office stationery pack helped me restock quickly without wasting time searching for individual items.",
     avatar: "/images/avatars/avatar-4.png"
   },
   {
-    id: "zanele-office",
-    name: "Zanele Mokoena",
-    role: "Office manager",
-    schoolOrBusiness: "Pretoria admin team",
+    id: "mpho-sithole",
+    name: "Mpho Sithole",
+    role: "School Administrator",
+    context: "School support team",
     quote:
-      "Having a ready office pack keeps small things from becoming disruptions. The team knows what to expect and when to reorder.",
+      "A structured stationery pack system reduces confusion for parents and helps learners start the year prepared.",
     avatar: "/images/avatars/avatar-5.png"
   }
 ];

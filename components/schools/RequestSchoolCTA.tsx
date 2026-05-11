@@ -7,9 +7,13 @@ export function RequestSchoolCTA() {
       <div>
         <p>Need help?</p>
         <h2 id="request-school-heading">Can&apos;t find your school?</h2>
-        <span>Send us the school name and grade. We&apos;ll help prepare the correct stationery pack.</span>
+        <span className={styles.requestCtaText}>
+          Send us the school name and grade. We&apos;ll help prepare the correct stationery pack.
+        </span>
       </div>
-      <Button href="/add-your-school">Request a School Pack</Button>
+      <Button href="/add-your-school" variant="white">
+        Request a School Pack
+      </Button>
     </section>
   );
 }

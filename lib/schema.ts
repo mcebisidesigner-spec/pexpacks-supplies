@@ -43,7 +43,7 @@ export function localBusinessSchema() {
     email: generalEmail,
     areaServed: "South Africa",
     description:
-      "Ready-packed school stationery, SME office supplies and household convenience packs for South African families, schools and businesses."
+      "Ready-packed school stationery and SME office supplies for South African families, schools and businesses."
   };
 }
 

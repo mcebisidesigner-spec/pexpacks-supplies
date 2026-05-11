@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -37,8 +38,7 @@ const contactOptions = [
 
 const partnerOptions = ["School", "Sponsor", "Supplier", "Community partner"];
 
-const consentText =
-  "I agree that Pexpacks may use my information to contact me about this enquiry, prepare my stationery pack request, and provide related support.";
+const consentText = "I consent to Pexpacks using my information to contact me about this enquiry and provide related support.";
 
 function resolveContactFormType(enquiryType: string): FormType {
   if (enquiryType === "Parent order") return "school-pack-enquiry";
@@ -210,7 +210,12 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
 
         <label className={styles.consentField}>
           <input name="consent" type="checkbox" required />
-          <span>{consentText}</span>
+          <span>
+            {consentText}{" "}
+            <Link href="/privacy-policy" className={styles.inlineTextLink}>
+              privacy-policy
+            </Link>
+          </span>
         </label>
         {errors.consent ? <p className={styles.fieldError}>{errors.consent}</p> : null}
 

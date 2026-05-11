@@ -23,21 +23,21 @@ export type Pack = {
 export const mainCategories: MainCategory[] = [
   {
     title: "School Packs",
-    description: "Stationery packs prepared around school lists, grade needs and learner readiness.",
+    description: "Stationery packs prepared according to school lists and grade requirements.",
     href: "/schools",
     cta: "Find Your School Pack",
     icon: "school"
   },
   {
-    title: "Office",
-    description: "Monthly stationery and admin packs for SMEs, teams and home offices.",
+    title: "Office Packs",
+    description: "Practical office stationery packs for SMEs, home offices, and small businesses.",
     href: "/office-packs",
     cta: "View Office Stationery",
     icon: "office"
   },
   {
     title: "Order a Pack",
-    description: "Send a school, office or household pack enquiry and let Pexpacks confirm the details.",
+    description: "Submit a stationery pack order enquiry and our team will confirm the details.",
     href: "/order",
     cta: "Start an Order Enquiry",
     icon: "package"
@@ -68,39 +68,39 @@ export const processSteps = [
 
 export const homeProcessSteps = [
   {
-    title: "Find your school",
-    text: "Search for a school or choose the pack category that fits your need."
+    title: "Find your school or office",
+    text: "Search for your school or choose the office stationery pack you need."
   },
   {
-    title: "Choose the grade or pack",
-    text: "Pick the stationery, office or household pack that matches the situation."
+    title: "Choose your pack",
+    text: "Pick the grade-specific school pack or SME office pack."
   },
   {
     title: "We pack it",
-    text: "Pexpacks prepares the essentials and confirms collection or delivery."
+    text: "PexPacks prepares your stationery and confirms collection or delivery."
   }
 ];
 
 export const whyChoosePexpacks = [
   {
     title: "Ready-packed convenience",
-    text: "We prepare complete packs so you do not need to buy items one by one."
+    text: "We prepare complete stationery packs so you do not need to buy items one by one."
   },
   {
     title: "School-list accuracy",
-    text: "School packs are built around grade needs and official stationery lists where available."
+    text: "School packs are prepared according to official stationery lists and grade requirements."
   },
   {
-    title: "Built for busy households",
-    text: "Breakfast, lunch, hygiene and home packs help families stay prepared."
+    title: "Exercise books included",
+    text: "Where required by the school, correct exercise books are packed ready for learners."
   },
   {
     title: "SME office support",
-    text: "Office packs keep small teams stocked without wasting time on small purchases."
+    text: "Office packs provide practical stationery for small businesses without wasting time."
   },
   {
-    title: "School and community impact",
-    text: "Pexpacks supports partner schools with digital visibility and sponsor access."
+    title: "School partnerships",
+    text: "We work with schools to simplify ordering for parents and reduce admin pressure."
   }
 ];
 
@@ -110,7 +110,7 @@ export const featuredPacks: Pack[] = [
     name: "Foundation Phase Pack",
     category: "School",
     subcategory: "Foundation",
-    description: "A ready school stationery pack for Grade R to Grade 3 learners and early classroom activities.",
+    description: "For Grade R–3 learners who need creative and foundation learning stationery, exercise books, pencils, glue, crayons, and classroom basics.",
     bestFor: "Grade R to Grade 3 learners",
     includes: ["Exercise books", "Wax crayons", "Glue stick", "Safety scissors", "Scrapbook"],
     priceLabel: "From R 659",
@@ -122,7 +122,7 @@ export const featuredPacks: Pack[] = [
     name: "Primary School Pack",
     category: "School",
     subcategory: "Primary",
-    description: "Exercise books, pens, pencils and classroom basics for intermediate primary learners.",
+    description: "For Grade 4–7 learners who need complete school stationery, exercise books, writing tools, files, and subject-ready supplies.",
     bestFor: "Grade 4 to Grade 7 learners",
     includes: ["Exercise books", "Pens", "Pencils", "Ruler", "Eraser", "Sharpener"],
     priceLabel: "From R 779",
@@ -134,7 +134,7 @@ export const featuredPacks: Pack[] = [
     name: "High School Pack",
     category: "School",
     subcategory: "High School",
-    description: "A practical pack for subject notebooks, writing tools, exam pads and senior learner needs.",
+    description: "For Grade 8–12 learners who need pens, exercise books, files, calculator-ready items, exam basics, and study stationery.",
     bestFor: "Grade 8 to Matric learners",
     includes: ["Subject books", "Pens", "Pencils", "Highlighters", "Files", "Exam pad"],
     priceLabel: "From R 879",
@@ -142,40 +142,16 @@ export const featuredPacks: Pack[] = [
     href: "/schools"
   },
   {
-    id: "home-office-starter-pack",
-    name: "Home Office Starter Pack",
+    id: "office-stationery-pack",
+    name: "Office Stationery Pack",
     category: "Office",
     subcategory: "Office",
-    description: "A clean desk setup with stationery and admin basics for work-from-home routines.",
-    bestFor: "Freelancers and home offices",
+    description: "For SMEs and home offices that need reliable stationery, admin supplies, files, paper, pens, and monthly restock support.",
+    bestFor: "SMEs and home offices",
     includes: ["Notebooks", "Pens", "Sticky notes", "Folders", "Correction tape", "Desk basics"],
     priceLabel: "Request quote",
-    cta: "View Home Office Pack",
+    cta: "View Office Stationery",
     href: "/office-packs"
-  },
-  {
-    id: "breakfast-pack",
-    name: "Breakfast Pack",
-    category: "Pexpacks",
-    subcategory: "Breakfast",
-    description: "A practical morning convenience pack that helps families and learners start prepared.",
-    bestFor: "Families and learners",
-    includes: ["Cereal option", "Long-life milk", "Fruit option", "Snack", "Serviette"],
-    priceLabel: "Request price",
-    cta: "Enquire About Breakfast Packs",
-    href: "/contact?type=pexpacks"
-  },
-  {
-    id: "hygiene-pack",
-    name: "Hygiene Pack",
-    category: "Pexpacks",
-    subcategory: "Hygiene",
-    description: "Everyday hygiene essentials packed for school, home, sponsorship and emergency support.",
-    bestFor: "Learners, families and sponsors",
-    includes: ["Soap", "Toothpaste", "Toothbrush", "Sanitary items", "Tissues"],
-    priceLabel: "Request price",
-    cta: "Enquire About Hygiene Packs",
-    href: "/contact?type=pexpacks"
   }
 ];
 
@@ -184,9 +160,7 @@ export const homepagePacks = featuredPacks.filter((pack) =>
 );
 
 export const sponsorshipExamples = [
-  "Sponsor a learner pack",
-  "Sponsor a breakfast pack",
-  "Sponsor a classroom pack",
-  "Sponsor a school website",
-  "Sponsor a hygiene pack"
+  "Sponsor a learner stationery pack",
+  "Sponsor a classroom stationery pack",
+  "Sponsor a school website"
 ];

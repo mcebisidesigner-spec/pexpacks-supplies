@@ -309,7 +309,7 @@
 
 .sectionIntro span,
 .supportSection span,
-.requestCta span {
+.requestCtaText {
   display: block;
   max-width: 680px;
   margin-top: 12px;
@@ -406,11 +406,11 @@
 }
 
 .requestCta h2,
-.requestCta span {
+.requestCtaText {
   color: var(--color-white);
 }
 
-.requestCta span {
+.requestCtaText {
   max-width: 580px;
   opacity: 0.82;
 }

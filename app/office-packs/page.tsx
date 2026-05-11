@@ -24,8 +24,8 @@ const officeBenefits = [
 ];
 
 export const metadata: Metadata = buildMetadata(
-  "Office Stationery Packs for SMEs",
-  "Pexpacks prepares practical stationery and office packs so SMEs and home offices can stay stocked without wasting time on small purchases.",
+  "Office Stationery Packs for SMEs | PexPacks",
+  "Practical office stationery packs for SMEs, home offices, freelancers, admin teams, shops, and small businesses.",
   "/office-packs"
 );
 

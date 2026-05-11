@@ -47,13 +47,5 @@ export const officePacks: OfficePack[] = [
     description: "Paper, folders and filing essentials for admin teams, tutors and small offices.",
     priceFrom: 0,
     contents: ["Printer paper", "Lever arch files", "Dividers", "Labels", "Plastic sleeves", "Sticky notes"]
-  },
-  {
-    id: "office-refreshment",
-    name: "Office Refreshment Pack",
-    slug: "office-refreshment-pack",
-    description: "A convenience pack for small teams that need basic refreshment items in one order.",
-    priceFrom: 0,
-    contents: ["Coffee option", "Tea option", "Sugar", "Long-life milk", "Biscuits", "Napkins"]
   }
 ];

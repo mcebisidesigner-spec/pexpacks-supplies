@@ -20,11 +20,9 @@ export function buildMetadata(title: string, description: string, path = "/"): M
     title: normalizedTitle,
     description,
     keywords: [
-      "Pexpacks",
-      "convenience packs",
+      "PexPacks",
       "school stationery packs",
       "office supply packs",
-      "household essentials",
       "South Africa"
     ],
     authors: [{ name: siteName, url: siteUrl }],

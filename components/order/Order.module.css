@@ -181,6 +181,13 @@
   font-size: 14px;
 }
 
+.privacyLink {
+  color: var(--color-orange);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .honeypot {
   position: absolute;
   left: -10000px;

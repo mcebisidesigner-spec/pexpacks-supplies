@@ -15,11 +15,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   ...buildMetadata(
-    "Pexpacks | School & Office Stationery Packs",
-    "Pexpacks provides ready-packed school stationery, SME office supplies and household convenience packs for busy South African families, schools and businesses."
+    "PexPacks | School & Office Stationery Packs",
+    "Ready-packed stationery packs for schools, parents, learners, teachers, SMEs, and home offices. Find your school pack, choose your grade, or request office stationery."
   ),
   title: {
-    default: "Pexpacks | School & Office Stationery Packs",
+    default: "PexPacks | School & Office Stationery Packs",
     template: "%s",
   },
   verification: {

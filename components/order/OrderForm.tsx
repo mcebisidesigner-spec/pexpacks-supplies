@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ordersEmail, ordersEmailHref } from "@/data/contact";
 import { Button } from "@/components/ui/Button";
@@ -418,8 +419,11 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
                   onChange={(event) => setConsent(event.target.checked)}
                 />
                 <span>
-                  I agree that Pexpacks may use my information to contact me about this enquiry, prepare my stationery
-                  pack request, and provide related support.
+                  I consent to Pexpacks using my information to contact me about this enquiry and provide related
+                  support.{" "}
+                  <Link href="/privacy-policy" className={styles.privacyLink}>
+                    privacy-policy
+                  </Link>
                 </span>
               </label>
               <p className={styles.privacyNotice}>

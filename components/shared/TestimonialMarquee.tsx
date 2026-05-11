@@ -23,18 +23,20 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
               aria-hidden={duplicate}
             >
               <div className={styles.testimonialTop}>
-                <Image
-                  src={item.avatar}
-                  width={54}
-                  height={54}
-                  alt=""
-                  className={styles.avatar}
-                  loading="lazy"
-                />
+                {item.avatar ? (
+                  <Image
+                    src={item.avatar}
+                    width={54}
+                    height={54}
+                    alt=""
+                    className={styles.avatar}
+                    loading="lazy"
+                  />
+                ) : null}
                 <div>
                   <h3 className={styles.testimonialName}>{item.name}</h3>
                   <span className={styles.testimonialRole}>{item.role}</span>
-                  <span className={styles.testimonialContext}>{item.schoolOrBusiness}</span>
+                  <span className={styles.testimonialContext}>{item.context}</span>
                 </div>
               </div>
               <p className={styles.quote}>&ldquo;{item.quote}&rdquo;</p>

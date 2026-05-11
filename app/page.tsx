@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PackCard } from "@/components/marketing/PackCard";
+import { PackCardSlider } from "@/components/marketing/PackCardSlider";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { LogoMarquee } from "@/components/shared/LogoMarquee";
@@ -24,14 +25,14 @@ export default function HomePage() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div>
-            <p className={styles.eyebrow}>Save time. Pexpacks.</p>
+            <p className={styles.eyebrow}>Save time. Pex it.</p>
             <h1 className={styles.heroTitle}>
               Start School
               <br className={styles.mobileBreak} /> Ready
             </h1>
             <p className={styles.heroLead}>
-              Everything your child needs for day one is already packed and
-              ready.
+              Everything your child needs for the first day is already packed
+              and ready.
             </p>
             <HeroSearch />
             <ul
@@ -47,7 +48,7 @@ export default function HomePage() {
             <span className={styles.heroVisualImage}>
               <Image
                 src="/images/hero-school-delivery.webp"
-                alt="Pexpacks stationery and convenience pack items arranged neatly"
+                alt="PexPacks stationery pack items arranged neatly"
                 fill
                 priority
                 sizes="(min-width: 1024px) 44vw, 100vw"
@@ -56,13 +57,15 @@ export default function HomePage() {
             <div className={styles.productScene}>
               <div className={styles.brandBox}>
                 <div>
-                  <span>Pexpacks</span>
+                  <span>Personal Convenience Packs</span>
                   <br />
-                  <strong>Convenience Packs</strong>
+                  <strong>Stationery Packs</strong>
                 </div>
                 <p>
-                  School lists, office basics and household essentials prepared
-                  in one ready pack.
+                  Complete school stationery packs prepared according to your
+                  child’s school list and grade requirements. Pexpacks also
+                  supplies practical office stationery packs for SMEs and home
+                  offices.
                 </p>
               </div>
             </div>
@@ -73,9 +76,8 @@ export default function HomePage() {
       <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
-            centered
-            title="Choose the pack journey that fits you"
-            text="Parents, schools, offices and households can move straight to the pack category they need."
+            title="Choose the pack that fits you"
+            text="Whether you’re a parent, school, or office administrator, you can start with what you need right now."
           />
           <PathwayCards />
         </div>
@@ -85,7 +87,7 @@ export default function HomePage() {
         <div className={styles.inner}>
           <SectionHeader
             title="How it works"
-            text="A simple process built for school mornings, office admin and home routines."
+            text="We keep the process simple, so you can focus on other important things."
           />
           <div className={styles.stepsGrid}>
             {homeProcessSteps.map((step, index) => (
@@ -103,7 +105,7 @@ export default function HomePage() {
         <div className={styles.inner}>
           <SectionHeader
             title="Why choose Pexpacks?"
-            text="Because convenience should save you time, reduce stress and help you stay prepared."
+            text="Because we promise to save you time, reduce stress and help you stay prepared."
           />
           <div className={styles.benefitGrid}>
             {whyChoosePexpacks.map((benefit) => (
@@ -116,17 +118,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.sectionCream}>
+      <section
+        className={styles.homePackSection}
+        aria-labelledby="pack-section-heading">
         <div className={styles.inner}>
           <SectionHeader
-            title="Featured packs"
-            text="Sample pack options that show how Pexpacks covers school, office and home needs."
+            title="Choose Your Pack"
+            text="Ready-packed stationery for every learner, grade, and school."
+            headingId="pack-section-heading"
           />
-          <div className={styles.packGrid}>
+          <PackCardSlider>
             {homepagePacks.map((pack) => (
               <PackCard pack={pack} key={pack.id} />
             ))}
-          </div>
+          </PackCardSlider>
         </div>
       </section>
 
@@ -137,10 +142,10 @@ export default function HomePage() {
               <p className={styles.eyebrow}>School partnerships</p>
               <h2>A smarter way for schools to support parents</h2>
               <p>
-                Pexpacks partners with schools to simplify stationery ordering
-                and provide free standardised school websites for approved
-                partner schools. Each website can support school communication,
-                stationery pack links, sponsor pages and parent information.
+                Pexpacks school partnership programme provides schools with a
+                free standardised school website. We design and personalise the
+                website template with the school's branding and logo. We also
+                provide free hosting and maintenance for all partner schools.
               </p>
               <p>
                 Pexpacks provides and manages the website platform, while
@@ -190,31 +195,36 @@ export default function HomePage() {
           <div className={styles.logoMarqueeWrap}>
             <div>
               <h3>Partner logo banner</h3>
-              <p>Placeholder partner spaces ready for real school, supplier and donor logos.</p>
+              <p>
+                Placeholder partner spaces ready for real school, supplier and
+                donor logos.
+              </p>
             </div>
             <LogoMarquee partners={partnerLogos} />
           </div>
         </div>
       </section>
 
-      <section className={styles.section}>
+      <section
+        className={styles.section}
+        aria-labelledby="home-testimonials-heading">
         <div className={styles.inner}>
           <SectionHeader
-            centered
-            title="What Pexpacks should feel like"
-            text="Short proof points for parents, schools and SMEs."
+            eyebrow="Real parents. Real schools. Real results."
+            title="What South African Parents Say"
+            headingId="home-testimonials-heading"
           />
           <TestimonialMarquee items={testimonials} />
         </div>
       </section>
 
       <CTASection
-        title="Ready to save time? Pexpacks."
-        text="Choose your school, office or household pack and let Pexpacks prepare the essentials for you."
+        title="PexPacks gets stationery packed right."
+        text="Choose your school or office pack and let PexPacks prepare your stationery for you."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
         secondaryHref="/office-packs"
-        secondaryLabel="View Office"
+        secondaryLabel="Order Office Stationery"
       />
     </>
   );
