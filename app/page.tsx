@@ -57,7 +57,7 @@ export default function HomePage() {
             <div className={styles.productScene}>
               <div className={styles.brandBox}>
                 <div>
-                  <span>Personal Convenience Packs</span>
+                  <span>School & Office Supply</span>
                   <br />
                   <strong>Stationery Packs</strong>
                 </div>
