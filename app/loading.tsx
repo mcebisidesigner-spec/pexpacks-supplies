@@ -5,7 +5,7 @@ export default function Loading() {
     <section className={page.pageHero}>
       <div className={`${page.pageHeroNarrow} ${page.loadingState}`}>
         <div aria-label="Loading" role="status" className={page.loadingSpinner} />
-        <p>Loading...</p>
+        <span className="sr-only">Loading page</span>
       </div>
     </section>
   );

@@ -13,7 +13,7 @@ export function Header() {
           <Image src="/images/logo.svg" width={167} height={70} alt="Pexpacks" priority />
         </Link>
 
-        <nav className={styles.desktopNav} aria-label="Main navigation">
+        <nav className={styles.desktopNav} aria-label="Primary navigation">
           {mainNavLinks.map((link) => (
             <HeaderActiveLink href={link.href} label={link.label} key={link.href} />
           ))}

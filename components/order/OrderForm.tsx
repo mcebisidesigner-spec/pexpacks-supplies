@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ordersEmail, ordersEmailHref } from "@/data/contact";
-import { schools } from "@/data/schools";
 import { Button } from "@/components/ui/Button";
 
 import { OrderProgress } from "./OrderProgress";
@@ -11,7 +10,6 @@ import styles from "./Order.module.css";
 
 const steps = ["Select school", "Select grade", "Confirm pack", "Enter details", "Confirm order"];
 
-
 type ApiResponse = {
   success: boolean;
   message: string;
@@ -19,16 +17,53 @@ type ApiResponse = {
   errors?: Record<string, string>;
 };
 
+type GradeOption = {
+  id: string;
+  grade: string;
+  gradeSlug: string;
+  price: number;
+  contents: string[];
+  deliveryNote: string;
+};
+
+type SchoolSearchResult = {
+  id: string;
+  name: string;
+  slug: string;
+  city: string;
+  province: string;
+};
+
+type SchoolDetails = SchoolSearchResult & {
+  grades: GradeOption[];
+};
+
 type OrderFormProps = {
   initialSchool?: string;
   initialGrade?: string;
 };
 
+async function fetchSchoolDetails(slug: string) {
+  const response = await fetch(`/api/schools/${encodeURIComponent(slug)}`);
+
+  if (!response.ok) {
+    throw new Error("School not found");
+  }
+
+  return (await response.json()) as { success: true; school: SchoolDetails };
+}
+
 export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [activeStep, setActiveStep] = useState(0);
-  const [schoolSlug, setSchoolSlug] = useState(initialSchool || schools[0]?.slug || "");
-  const [gradeSlug, setGradeSlug] = useState(initialGrade || schools[0]?.grades[0]?.gradeSlug || "");
+  const [selectedSchool, setSelectedSchool] = useState<SchoolDetails | null>(null);
+  const [schoolQuery, setSchoolQuery] = useState("");
+  const [schoolResults, setSchoolResults] = useState<SchoolSearchResult[]>([]);
+  const [schoolOpen, setSchoolOpen] = useState(false);
+  const [schoolTouched, setSchoolTouched] = useState(Boolean(initialSchool));
+  const [schoolLoading, setSchoolLoading] = useState(false);
+  const [schoolError, setSchoolError] = useState("");
+  const [gradeSlug, setGradeSlug] = useState(initialGrade);
   const [buyerName, setBuyerName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
@@ -39,11 +74,85 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<ApiResponse | null>(null);
 
-  const selectedSchool = useMemo(() => schools.find((school) => school.slug === schoolSlug) ?? schools[0], [schoolSlug]);
   const selectedGrade = useMemo(
-    () => selectedSchool?.grades.find((grade) => grade.gradeSlug === gradeSlug) ?? selectedSchool?.grades[0],
+    () => selectedSchool?.grades.find((grade) => grade.gradeSlug === gradeSlug) ?? null,
     [gradeSlug, selectedSchool]
   );
+
+  useEffect(() => {
+    if (!initialSchool) {
+      return;
+    }
+
+    let cancelled = false;
+    setSchoolLoading(true);
+    fetchSchoolDetails(initialSchool)
+      .then(({ school }) => {
+        if (cancelled) {
+          return;
+        }
+        setSelectedSchool(school);
+        setSchoolQuery(school.name);
+        setGradeSlug(initialGrade || school.grades[0]?.gradeSlug || "");
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setSchoolError("We could not load that school. Search for it below.");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setSchoolLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialGrade, initialSchool]);
+
+  useEffect(() => {
+    if (!schoolTouched) {
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(async () => {
+      setSchoolLoading(true);
+      setSchoolError("");
+
+      try {
+        const params = new URLSearchParams({
+          q: schoolQuery.trim(),
+          limit: "10"
+        });
+        const response = await fetch(`/api/schools/search?${params.toString()}`, {
+          signal: controller.signal
+        });
+
+        if (!response.ok) {
+          throw new Error("Search failed");
+        }
+
+        const data = (await response.json()) as { success: true; results: SchoolSearchResult[] };
+        setSchoolResults(data.results);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          setSchoolResults([]);
+          setSchoolError("We could not search schools right now. Please try again.");
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setSchoolLoading(false);
+        }
+      }
+    }, 250);
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeout);
+    };
+  }, [schoolQuery, schoolTouched]);
 
   function nextStep() {
     setActiveStep((step) => Math.min(step + 1, steps.length - 1));
@@ -53,11 +162,39 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
     setActiveStep((step) => Math.max(step - 1, 0));
   }
 
+  async function selectSchool(result: SchoolSearchResult) {
+    setSchoolLoading(true);
+    setSchoolError("");
+
+    try {
+      const { school } = await fetchSchoolDetails(result.slug);
+      setSelectedSchool(school);
+      setSchoolQuery(school.name);
+      setSchoolOpen(false);
+      setGradeSlug(school.grades[0]?.gradeSlug || "");
+    } catch {
+      setSchoolError("We could not load that school. Please search again.");
+    } finally {
+      setSchoolLoading(false);
+    }
+  }
+
   function continueOrder() {
+    if (activeStep === 0 && !selectedSchool) {
+      setSchoolError("Please search and select a school before continuing.");
+      return;
+    }
+
+    if (activeStep === 1 && !selectedGrade) {
+      setSchoolError("Please select a grade before continuing.");
+      return;
+    }
+
     if (activeStep === 3 && !formRef.current?.reportValidity()) {
       return;
     }
 
+    setSchoolError("");
     nextStep();
   }
 
@@ -89,7 +226,6 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
       preferredContactMethod,
       message: `Delivery preference: ${deliveryPreference}. Please confirm availability, delivery or collection options, and payment instructions.`,
       consent,
-
       companyWebsite: typeof formData.get("companyWebsite") === "string" ? formData.get("companyWebsite") : "",
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
@@ -120,29 +256,80 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
         <OrderProgress steps={steps} activeStep={activeStep} />
         <form className={styles.form} ref={formRef}>
           {activeStep === 0 ? (
-            <label>
-              <span>Select school</span>
-              <select
-                value={schoolSlug}
-                onChange={(event) => {
-                  const nextSchool = schools.find((school) => school.slug === event.target.value);
-                  setSchoolSlug(event.target.value);
-                  setGradeSlug(nextSchool?.grades[0]?.gradeSlug ?? "");
+            <div className={styles.schoolSearch}>
+              <label htmlFor="order-school-search">
+                <span>Select school</span>
+              </label>
+              <input
+                id="order-school-search"
+                type="search"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded={schoolOpen}
+                aria-controls="order-school-results"
+                autoComplete="off"
+                placeholder="Start typing your school name"
+                value={schoolQuery}
+                onFocus={() => {
+                  setSchoolTouched(true);
+                  setSchoolOpen(true);
                 }}
-              >
-                {schools.map((school) => (
-                  <option value={school.slug} key={school.id}>
-                    {school.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+                onChange={(event) => {
+                  setSchoolQuery(event.target.value);
+                  setSelectedSchool(null);
+                  setGradeSlug("");
+                  setSchoolTouched(true);
+                  setSchoolOpen(true);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    setSchoolOpen(false);
+                  }
+                }}
+              />
+              {schoolOpen ? (
+                <div className={styles.schoolResults} id="order-school-results" role="listbox">
+                  {schoolLoading ? <p className={styles.schoolEmpty}>Searching schools...</p> : null}
+                  {!schoolLoading && schoolResults.length ? (
+                    schoolResults.map((result) => (
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={selectedSchool?.slug === result.slug}
+                        className={styles.schoolResult}
+                        key={result.id}
+                        onClick={() => selectSchool(result)}
+                      >
+                        <strong>{result.name}</strong>
+                        <span>
+                          {result.city}, {result.province}
+                        </span>
+                      </button>
+                    ))
+                  ) : null}
+                  {!schoolLoading && !schoolResults.length ? (
+                    <p className={styles.schoolEmpty}>No matching schools found. Try a different name.</p>
+                  ) : null}
+                </div>
+              ) : null}
+              {selectedSchool ? (
+                <p className={styles.selectedSchool}>
+                  Selected: <strong>{selectedSchool.name}</strong>
+                </p>
+              ) : null}
+              {schoolError ? (
+                <p className={styles.formStatusError} role="alert">
+                  {schoolError}
+                </p>
+              ) : null}
+            </div>
           ) : null}
 
           {activeStep === 1 ? (
             <label>
               <span>Select grade</span>
-              <select value={gradeSlug} onChange={(event) => setGradeSlug(event.target.value)}>
+              <select value={gradeSlug} onChange={(event) => setGradeSlug(event.target.value)} required>
+                <option value="">Choose a grade</option>
                 {selectedSchool?.grades.map((grade) => (
                   <option value={grade.gradeSlug} key={grade.id}>
                     {grade.grade}
@@ -240,7 +427,6 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
                 only the information needed to assist you. You may contact Pexpacks to update, correct, or request
                 deletion of your information.
               </p>
-
             </div>
           ) : null}
 
@@ -275,14 +461,18 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
             <Button
               type="button"
               onClick={activeStep === steps.length - 1 ? submitOrder : continueOrder}
-              disabled={submitting}
+              disabled={submitting || (activeStep === 0 && schoolLoading)}
             >
-              {activeStep === steps.length - 1 ? (submitting ? "Preparing email" : "Submit order enquiry") : "Continue"}
+              {activeStep === steps.length - 1 ? (submitting ? "Submitting enquiry" : "Submit order enquiry") : "Continue"}
             </Button>
           </div>
         </form>
       </div>
-      <OrderSummary schoolSlug={schoolSlug} gradeSlug={selectedGrade?.gradeSlug ?? gradeSlug} />
+      <OrderSummary
+        schoolName={selectedSchool?.name}
+        gradeName={selectedGrade?.grade}
+        gradePrice={selectedGrade?.price}
+      />
     </section>
   );
 }

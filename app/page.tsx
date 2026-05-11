@@ -5,13 +5,16 @@ import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PackCard } from "@/components/marketing/PackCard";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { LogoMarquee } from "@/components/shared/LogoMarquee";
+import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import {
-  featuredPacks,
+  homepagePacks,
   homeProcessSteps,
   sponsorshipExamples,
   trustBadges,
   whyChoosePexpacks,
 } from "@/data/packs";
+import { partnerLogos } from "@/data/partners";
 import { testimonials } from "@/data/testimonials";
 import styles from "@/components/marketing/Marketing.module.css";
 
@@ -22,12 +25,18 @@ export default function HomePage() {
         <div className={styles.heroInner}>
           <div>
             <p className={styles.eyebrow}>Save time. Pexpacks.</p>
-            <h1 className={styles.heroTitle}>Start School<br className={styles.mobileBreak} /> Ready</h1>
+            <h1 className={styles.heroTitle}>
+              Start School
+              <br className={styles.mobileBreak} /> Ready
+            </h1>
             <p className={styles.heroLead}>
-              Everything your child needs for day one is already packed and ready.
+              Everything your child needs for day one is already packed and
+              ready.
             </p>
             <HeroSearch />
-            <ul className={styles.trustBadges} aria-label="Pexpacks trust points">
+            <ul
+              className={styles.trustBadges}
+              aria-label="Pexpacks trust points">
               {trustBadges.map((badge) => (
                 <li key={badge}>{badge}</li>
               ))}
@@ -51,7 +60,10 @@ export default function HomePage() {
                   <br />
                   <strong>Convenience Packs</strong>
                 </div>
-                <p>School lists, office basics and household essentials prepared in one ready pack.</p>
+                <p>
+                  School lists, office basics and household essentials prepared
+                  in one ready pack.
+                </p>
               </div>
             </div>
           </div>
@@ -111,7 +123,7 @@ export default function HomePage() {
             text="Sample pack options that show how Pexpacks covers school, office and home needs."
           />
           <div className={styles.packGrid}>
-            {featuredPacks.map((pack) => (
+            {homepagePacks.map((pack) => (
               <PackCard pack={pack} key={pack.id} />
             ))}
           </div>
@@ -125,18 +137,18 @@ export default function HomePage() {
               <p className={styles.eyebrow}>School partnerships</p>
               <h2>A smarter way for schools to support parents</h2>
               <p>
-                Pexpacks partners with schools to simplify stationery ordering and provide free standardised school
-                websites for approved partner schools. Each website can support school communication, stationery pack
-                links, sponsor pages and parent information.
+                Pexpacks partners with schools to simplify stationery ordering
+                and provide free standardised school websites for approved
+                partner schools. Each website can support school communication,
+                stationery pack links, sponsor pages and parent information.
               </p>
               <p>
-                Pexpacks provides and manages the website platform, while schools approve their official content and
-                communication.
+                Pexpacks provides and manages the website platform, while
+                schools approve their official content and communication.
               </p>
               <div className={styles.buttonRow}>
-                <Button href="/partner-with-schools">Partner With Pexpacks</Button>
-                <Button href="/partner-with-schools#sponsor" variant="white">
-                  Sponsor a School
+                <Button href="/partner-with-schools">
+                  Partner With Pexpacks
                 </Button>
               </div>
             </div>
@@ -159,8 +171,9 @@ export default function HomePage() {
               <p className={styles.eyebrow}>Sponsors and donors</p>
               <h2>A safer way for sponsors to support schools</h2>
               <p>
-                Pexpacks helps local businesses, donors and community sponsors support schools through structured packs,
-                visible sponsorship pages and transparent school support campaigns.
+                Pexpacks helps local businesses, donors and community sponsors
+                support schools through structured packs, visible sponsorship
+                pages and transparent school support campaigns.
               </p>
               <div className={styles.buttonRow}>
                 <Button href="/partner-with-schools#sponsor" variant="white">
@@ -174,6 +187,13 @@ export default function HomePage() {
               ))}
             </ul>
           </div>
+          <div className={styles.logoMarqueeWrap}>
+            <div>
+              <h3>Partner logo banner</h3>
+              <p>Placeholder partner spaces ready for real school, supplier and donor logos.</p>
+            </div>
+            <LogoMarquee partners={partnerLogos} />
+          </div>
         </div>
       </section>
 
@@ -184,25 +204,17 @@ export default function HomePage() {
             title="What Pexpacks should feel like"
             text="Short proof points for parents, schools and SMEs."
           />
-          <div className={styles.testimonialsGrid}>
-            {testimonials.slice(0, 3).map((item) => (
-              <article className={styles.testimonialCard} key={item.name}>
-                <h3>{item.name}</h3>
-                <p>{item.quote}</p>
-                <span className={styles.role}>{item.role}</span>
-              </article>
-            ))}
-          </div>
+          <TestimonialMarquee items={testimonials} />
         </div>
       </section>
 
       <CTASection
-        title="Ready to save time? Pexpacks it."
+        title="Ready to save time? Pexpacks."
         text="Choose your school, office or household pack and let Pexpacks prepare the essentials for you."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
         secondaryHref="/office-packs"
-        secondaryLabel="View Office Packs"
+        secondaryLabel="View Office"
       />
     </>
   );

@@ -2,10 +2,17 @@ import type { Metadata } from "next";
 
 export const siteName = "Pexpacks";
 export const siteUrl = "https://pexpacks.co.za";
-const defaultOgImage = "/opengraph-image.jpg";
+export const defaultOgImage = `${siteUrl}/opengraph-image.jpg`;
+export const defaultTwitterImage = `${siteUrl}/twitter-image.jpg`;
+export const defaultImageAlt = "Pexpacks school and office stationery packs";
+
+function canonicalUrl(path = "/") {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return new URL(normalizedPath, siteUrl).toString();
+}
 
 export function buildMetadata(title: string, description: string, path = "/"): Metadata {
-  const absoluteUrl = `${siteUrl}${path}`;
+  const absoluteUrl = canonicalUrl(path);
   const normalizedTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 
   return {
@@ -27,23 +34,28 @@ export function buildMetadata(title: string, description: string, path = "/"): M
       description,
       url: absoluteUrl,
       siteName,
+      locale: "en_ZA",
+      type: "website",
       images: [
         {
           url: defaultOgImage,
           width: 1200,
           height: 630,
-          alt: "Pexpacks stationery supplies prepared for school and office packs"
+          alt: defaultImageAlt
         }
-      ],
-      locale: "en_ZA",
-      type: "website"
+      ]
     },
     twitter: {
       card: "summary_large_image",
       title: normalizedTitle,
       description,
-      images: ["/twitter-image.jpg"],
       creator: "@pexpacks",
+      images: [
+        {
+          url: defaultTwitterImage,
+          alt: defaultImageAlt
+        }
+      ]
     },
     robots: {
       index: true,

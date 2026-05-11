@@ -29,10 +29,10 @@ export const mainCategories: MainCategory[] = [
     icon: "school"
   },
   {
-    title: "Office Packs",
+    title: "Office",
     description: "Monthly stationery and admin packs for SMEs, teams and home offices.",
     href: "/office-packs",
-    cta: "View Office Stationery Packs",
+    cta: "View Office Stationery",
     icon: "office"
   },
   {
@@ -106,27 +106,27 @@ export const whyChoosePexpacks = [
 
 export const featuredPacks: Pack[] = [
   {
-    id: "grade-r-school-pack",
-    name: "Grade R School Pack",
+    id: "foundation-phase-pack",
+    name: "Foundation Phase Pack",
     category: "School",
     subcategory: "Foundation",
-    description: "A starter stationery kit for early learning, class activities and daily school readiness.",
-    bestFor: "Grade R learners",
+    description: "A ready school stationery pack for Grade R to Grade 3 learners and early classroom activities.",
+    bestFor: "Grade R to Grade 3 learners",
     includes: ["Exercise books", "Wax crayons", "Glue stick", "Safety scissors", "Scrapbook"],
-    priceLabel: "Request price",
-    cta: "View Grade R Stationery Packs",
+    priceLabel: "From R 659",
+    cta: "View Foundation Phase Packs",
     href: "/schools"
   },
   {
-    id: "grade-4-school-pack",
-    name: "Grade 4 School Pack",
+    id: "primary-school-pack",
+    name: "Primary School Pack",
     category: "School",
     subcategory: "Primary",
-    description: "Exercise books, pens, pencils, ruler and classroom basics for primary school learners.",
-    bestFor: "Primary school learners",
+    description: "Exercise books, pens, pencils and classroom basics for intermediate primary learners.",
+    bestFor: "Grade 4 to Grade 7 learners",
     includes: ["Exercise books", "Pens", "Pencils", "Ruler", "Eraser", "Sharpener"],
-    priceLabel: "Request price",
-    cta: "View Grade 4 Stationery Packs",
+    priceLabel: "From R 779",
+    cta: "View Primary School Packs",
     href: "/schools"
   },
   {
@@ -137,7 +137,7 @@ export const featuredPacks: Pack[] = [
     description: "A practical pack for subject notebooks, writing tools, exam pads and senior learner needs.",
     bestFor: "Grade 8 to Matric learners",
     includes: ["Subject books", "Pens", "Pencils", "Highlighters", "Files", "Exam pad"],
-    priceLabel: "Request price",
+    priceLabel: "From R 879",
     cta: "View High School Stationery Packs",
     href: "/schools"
   },
@@ -178,6 +178,10 @@ export const featuredPacks: Pack[] = [
     href: "/contact?type=pexpacks"
   }
 ];
+
+export const homepagePacks = featuredPacks.filter((pack) =>
+  ["foundation-phase-pack", "primary-school-pack", "high-school-pack"].includes(pack.id)
+);
 
 export const sponsorshipExamples = [
   "Sponsor a learner pack",

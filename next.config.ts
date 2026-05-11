@@ -12,8 +12,28 @@ const nextConfig: NextConfig = {
         permanent: true
       },
       {
+        source: "/school-packs",
+        destination: "/schools",
+        permanent: true
+      },
+      {
+        source: "/how-it-works",
+        destination: "/",
+        permanent: true
+      },
+      {
         source: "/office",
         destination: "/office-packs",
+        permanent: true
+      },
+      {
+        source: "/deliveries",
+        destination: "/delivery-policy",
+        permanent: true
+      },
+      {
+        source: "/about",
+        destination: "/",
         permanent: true
       },
       {

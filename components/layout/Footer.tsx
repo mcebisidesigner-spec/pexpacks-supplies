@@ -9,9 +9,9 @@ import { isActivePath } from "@/lib/isActivePath";
 import styles from "./Footer.module.css";
 
 const socialLinks = [
-  { label: "Facebook", href: "https://www.facebook.com/pexpacks", icon: "facebook" },
-  { label: "Instagram", href: "https://www.instagram.com/pexpacks/", icon: "instagram" },
-  ...(hasWhatsAppNumber ? [{ label: "WhatsApp", href: orderWhatsAppHref, icon: "whatsapp" } as const] : []),
+  { label: "Visit Pexpacks on Facebook", href: "https://www.facebook.com/pexpacks", icon: "facebook" },
+  { label: "Visit Pexpacks on Instagram", href: "https://www.instagram.com/pexpacks/", icon: "instagram" },
+  ...(hasWhatsAppNumber ? [{ label: "Chat to Pexpacks on WhatsApp", href: orderWhatsAppHref, icon: "whatsapp" } as const] : []),
 ] as const;
 
 function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
@@ -86,7 +86,7 @@ export function Footer() {
         </div>        <hr className={styles.divider} />        <div className={styles.bottomSection}>
           <p className={styles.copyright}>
             &copy; 2026 Pexpacks. Design:{"  "}
-            <a href="https://mcebisih.co.za/" target="_blank" rel="noreferrer" className={styles.designerLink}>
+            <a href="https://mcebisih.co.za/" target="_blank" rel="noopener noreferrer" className={styles.designerLink}>
               McebisiH
             </a>
           </p>
@@ -99,7 +99,7 @@ export function Footer() {
                 className={styles.socialLink}
                 aria-label={link.label}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 <SocialIcon icon={link.icon} />
               </a>

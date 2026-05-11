@@ -1,29 +1,26 @@
 import { ordersEmail, ordersEmailHref, phoneHref, phoneNumber } from "@/data/contact";
-import { schools } from "@/data/schools";
 import { formatCurrency } from "@/lib/formatCurrency";
 import styles from "./Order.module.css";
 
 type OrderSummaryProps = {
-  schoolSlug: string;
-  gradeSlug: string;
+  schoolName?: string;
+  gradeName?: string;
+  gradePrice?: number;
 };
 
-export function OrderSummary({ schoolSlug, gradeSlug }: OrderSummaryProps) {
-  const school = schools.find((item) => item.slug === schoolSlug);
-  const grade = school?.grades.find((item) => item.gradeSlug === gradeSlug);
-
+export function OrderSummary({ schoolName, gradeName, gradePrice }: OrderSummaryProps) {
   return (
     <aside className={styles.summary} aria-label="Order summary">
       <p>Order summary</p>
-      <h2>{school?.name ?? "Select a school"}</h2>
+      <h2>{schoolName ?? "Select a school"}</h2>
       <dl>
         <div>
           <dt>Grade</dt>
-          <dd>{grade?.grade ?? "Select grade"}</dd>
+          <dd>{gradeName ?? "Select grade"}</dd>
         </div>
         <div>
           <dt>Pack price</dt>
-          <dd>{grade ? formatCurrency(grade.price) : "Pending"}</dd>
+          <dd>{typeof gradePrice === "number" ? formatCurrency(gradePrice) : "Pending"}</dd>
         </div>
       </dl>
       <span>
