@@ -47,8 +47,8 @@ export default function HomePage() {
           <div className={styles.heroVisual}>
             <span className={styles.heroVisualImage}>
               <Image
-                src="/images/hero-school-delivery.webp"
-                alt="PexPacks stationery pack items arranged neatly"
+                src="/images/unboxing-G7.webp"
+                alt="PexPacks Grade 7 stationery pack unboxing"
                 fill
                 priority
                 sizes="(min-width: 1024px) 44vw, 100vw"
@@ -126,10 +126,11 @@ export default function HomePage() {
             </div>
             <div className={styles.unboxingImageWrap}>
               <Image 
-                src="/images/hero-school-delivery.webp" 
-                alt="PexPacks open box showing stationery inside" 
+                src="/images/unboxing.webp" 
+                alt="PexPacks open box showing premium stationery inside" 
                 fill
                 style={{objectFit: "cover"}}
+                sizes="(min-width: 1024px) 50vw, 100vw"
               />
             </div>
           </div>
@@ -175,8 +176,8 @@ export default function HomePage() {
           <div className={styles.splitBand}>
             <div className={styles.unboxingImageWrap}>
               <Image 
-                src="/images/hero-school-delivery.webp" 
-                alt="PexPacks Office Stationery" 
+                src="/images/office-packs.png" 
+                alt="PexPacks premium office stationery packs" 
                 fill
                 style={{objectFit: "cover"}}
               />
