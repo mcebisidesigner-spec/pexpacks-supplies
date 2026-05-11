@@ -150,6 +150,43 @@
   }
 }
 
+.logoMarquee {
+  width: 100%;
+  overflow: hidden;
+  padding: 12px 0;
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.logoTrack {
+  width: max-content;
+  display: flex;
+  gap: 48px;
+  animation: logoMarqueeLeft 40s linear infinite;
+  align-items: center;
+}
+
+.logoCard {
+  width: 140px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.logoCard:hover {
+  opacity: 1;
+}
+
+@keyframes logoMarqueeLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.33%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .track {
     transition: none;

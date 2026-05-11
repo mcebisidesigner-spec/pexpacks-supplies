@@ -6,6 +6,7 @@ import { PackCard } from "@/components/marketing/PackCard";
 import { PackCardSlider } from "@/components/marketing/PackCardSlider";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { LogoMarquee } from "@/components/shared/LogoMarquee";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import {
   homepagePacks,
@@ -14,6 +15,7 @@ import {
   trustBadges,
   whyChoosePexpacks,
 } from "@/data/packs";
+import { partnerLogos } from "@/data/partners";
 import { testimonials } from "@/data/testimonials";
 import styles from "@/components/marketing/Marketing.module.css";
 
@@ -71,6 +73,13 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className={styles.logoMarqueeSection}>
+        <div className={styles.inner}>
+           <p className={styles.miniTrust} style={{textAlign: "center", marginBottom: "16px"}}>Trusted by schools and suppliers</p>
+           <LogoMarquee partners={partnerLogos} />
+        </div>
+      </section>
+
       <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
@@ -81,7 +90,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.sectionAlt}>
+      <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
             title="How it works"
@@ -95,6 +104,34 @@ export default function HomePage() {
                 <p>{step.text}</p>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.sectionCream}>
+        <div className={styles.inner}>
+          <div className={styles.splitBand}>
+            <div>
+              <p className={styles.eyebrow}>The PexPacks Box</p>
+              <h2>What's inside your stationery pack?</h2>
+              <p>
+                Every PexPacks box is carefully packed with exactly what is on your school's list. No more driving around to different stores to find specific brands or items.
+              </p>
+              <ul className={styles.checkList} style={{marginTop: "24px"}}>
+                <li>Premium quality stationery brands</li>
+                <li>Labelled with your child's grade</li>
+                <li>Securely packed in a sturdy box</li>
+                <li>Ready for the first day of school</li>
+              </ul>
+            </div>
+            <div className={styles.unboxingImageWrap}>
+              <Image 
+                src="/images/hero-school-delivery.webp" 
+                alt="PexPacks open box showing stationery inside" 
+                fill
+                style={{objectFit: "cover"}}
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -167,7 +204,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.sectionAlt}>
+      <section className={styles.section}>
         <div className={styles.inner}>
           <div className={styles.darkBand}>
             <div>
@@ -204,6 +241,29 @@ export default function HomePage() {
             headingId="home-testimonials-heading"
           />
           <TestimonialMarquee items={testimonials} />
+        </div>
+      </section>
+
+      <section className={styles.sectionCream}>
+        <div className={styles.inner}>
+          <SectionHeader
+            title="Frequently Asked Questions"
+            text="Got questions? We've got answers."
+          />
+          <div className={styles.faqList}>
+            <details className={styles.faqItem}>
+              <summary>What if my child's school isn't listed?</summary>
+              <p>You can still order a standard grade-specific pack, or contact us to have your school added to our database.</p>
+            </details>
+            <details className={styles.faqItem}>
+              <summary>How long does delivery take?</summary>
+              <p>Orders are typically processed and delivered within 3-5 business days across Gauteng.</p>
+            </details>
+            <details className={styles.faqItem}>
+              <summary>Are the stationery brands high quality?</summary>
+              <p>Yes, we only use trusted, premium brands that meet or exceed school requirements to ensure they last the entire year.</p>
+            </details>
+          </div>
         </div>
       </section>
 
