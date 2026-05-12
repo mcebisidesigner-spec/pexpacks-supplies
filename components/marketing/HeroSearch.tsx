@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, ReactNode, useEffect, useId, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useId, useRef, useState } from "react";
 import { normaliseSchoolQuery } from "@/lib/schools/normaliseSchoolQuery";
 import styles from "./HeroSearch.module.css";
 
@@ -86,6 +86,7 @@ export function HeroSearch() {
   const [schoolName, setSchoolName] = useState("");
   const [grade, setGrade] = useState("");
   const [error, setError] = useState<ReactNode>("");
+  const modalRef = useRef<HTMLDivElement>(null);
   const [showMissingSchoolDialog, setShowMissingSchoolDialog] = useState(false);
   const [resultsOpen, setResultsOpen] = useState(false);
   const [schoolTouched, setSchoolTouched] = useState(false);
@@ -133,6 +134,40 @@ export function HeroSearch() {
       window.clearTimeout(timeout);
     };
   }, [schoolName, schoolTouched]);
+
+  useEffect(() => {
+    if (!showMissingSchoolDialog || !modalRef.current) return;
+
+    const modal = modalRef.current;
+    const focusableElements = modal.querySelectorAll<HTMLElement>(
+      'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
+    );
+    
+    if (focusableElements.length === 0) return;
+    
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    firstElement.focus();
+    modal.addEventListener("keydown", handleTabKey);
+    return () => modal.removeEventListener("keydown", handleTabKey);
+  }, [showMissingSchoolDialog]);
 
   async function resolveSchoolForSubmit(trimmedSchoolName: string) {
     if (selectedSchool && normaliseSchoolQuery(selectedSchool.name) === normaliseSchoolQuery(trimmedSchoolName)) {
@@ -282,7 +317,12 @@ export function HeroSearch() {
               ))
             ) : null}
             {!schoolLoading && !schoolResults.length ? (
-              <p className={styles.heroSearchState}>No matching schools found.</p>
+              <div className={styles.noResultsState}>
+                <p className={styles.heroSearchState}>No matching schools found.</p>
+                <Link href="/add-your-school" className={styles.addSchoolLink}>
+                  Add your school
+                </Link>
+              </div>
             ) : null}
           </div>
         ) : null}
@@ -316,6 +356,7 @@ export function HeroSearch() {
       {showMissingSchoolDialog ? (
         <div className={styles.modalOverlay} role="presentation">
           <div
+            ref={modalRef}
             className={styles.modalCard}
             role="dialog"
             aria-modal="true"

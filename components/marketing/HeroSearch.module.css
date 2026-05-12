@@ -123,6 +123,35 @@
   font-weight: 700;
 }
 
+.noResultsState {
+  padding: 12px;
+  text-align: center;
+}
+
+.noResultsState p {
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.addSchoolLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  background: var(--color-navy);
+  color: var(--color-white);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: filter 0.2s;
+}
+
+.addSchoolLink:hover {
+  filter: brightness(110%);
+}
+
 .searchError {
   grid-column: 1 / -1;
   margin: 0;
