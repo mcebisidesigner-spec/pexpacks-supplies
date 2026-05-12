@@ -35,6 +35,7 @@ export default function BlogIndex() {
                 })}
               </time>
             </div>
+            <span className={styles.readMore}>Read more</span>
           </Link>
         ))}
       </div>

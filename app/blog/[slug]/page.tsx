@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { blogPosts, getPostBySlug } from "@/data/blog";
 import styles from "../Blog.module.css";
@@ -63,6 +64,19 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             </time>
           </div>
         </header>
+
+        {post.image && (
+          <div className={styles.postHeroImage}>
+            <Image
+              src={post.image}
+              alt={post.title}
+              width={800}
+              height={450}
+              className={styles.postImage}
+              priority
+            />
+          </div>
+        )}
 
         <div className={styles.postContent}>
           {post.content.map((paragraph, index) => (

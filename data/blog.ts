@@ -7,6 +7,7 @@ export type BlogPost = {
   date: string;
   author: string;
   category: string;
+  image: string;
 };
 
 export const blogPosts: BlogPost[] = [
@@ -29,6 +30,7 @@ export const blogPosts: BlogPost[] = [
     date: "2023-10-15",
     author: "PexPacks Team",
     category: "Parenting Tips",
+    image: "/images/hero-school-delivery.webp",
   },
   {
     id: "2",
@@ -47,6 +49,7 @@ export const blogPosts: BlogPost[] = [
     date: "2023-11-02",
     author: "PexPacks Team",
     category: "Guides",
+    image: "/images/unboxing-G7.webp",
   },
   {
     id: "3",
@@ -65,6 +68,7 @@ export const blogPosts: BlogPost[] = [
     date: "2023-11-20",
     author: "PexPacks Team",
     category: "Education",
+    image: "/images/office-packs.png",
   }
 ];
 
