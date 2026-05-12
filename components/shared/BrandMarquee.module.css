@@ -1,0 +1,77 @@
+.marqueeContainer {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 40px 0 20px;
+  background: transparent;
+  display: flex;
+}
+
+.marqueeContainer::before,
+.marqueeContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 15%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marqueeContainer::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-bg) 0%, transparent 100%);
+}
+
+.marqueeContainer::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-bg) 0%, transparent 100%);
+}
+
+.marqueeTrack {
+  display: flex;
+  width: fit-content;
+  gap: 40px;
+  animation: slide 30s linear infinite;
+}
+
+.marqueeTrack:hover {
+  animation-play-state: paused;
+}
+
+.brandCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  height: 64px;
+  padding: 0 24px;
+  border-radius: 12px;
+  background: var(--color-white);
+  box-shadow: 0 4px 12px rgba(15, 37, 55, 0.05);
+  border: 1px solid rgba(15, 37, 55, 0.04);
+}
+
+.brandLogo {
+  width: 100%;
+  height: auto;
+  max-width: 100px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  filter: grayscale(100%);
+}
+
+.brandCard:hover .brandLogo {
+  opacity: 0.9;
+  filter: grayscale(0%);
+}
+
+@keyframes slide {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    /* Translate left by exactly half the track width (the duplicated items) plus one gap */
+    transform: translate3d(calc(-50% - 20px), 0, 0);
+  }
+}

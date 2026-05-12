@@ -1,0 +1,133 @@
+.comparisonSection {
+  padding: 72px 0;
+  background: var(--color-white);
+  border-top: 1px solid rgba(15, 37, 55, 0.04);
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
+.tableWrapper {
+  margin-top: 48px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 24px;
+  box-shadow: 0 16px 48px rgba(15, 37, 55, 0.06);
+  border: 1px solid rgba(15, 37, 55, 0.08);
+}
+
+.table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  background: var(--color-white);
+}
+
+.table th {
+  padding: 24px;
+  text-align: left;
+  font-family: var(--font-button);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-navy);
+  border-bottom: 2px solid rgba(15, 37, 55, 0.08);
+}
+
+.table td {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(15, 37, 55, 0.04);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.featureCol {
+  width: 30%;
+}
+
+.retailCol {
+  width: 35%;
+  background: rgba(15, 37, 55, 0.02);
+}
+
+.pexpacksCol {
+  width: 35%;
+  background: rgba(205, 145, 52, 0.06); /* Soft orange tint */
+  color: var(--color-navy);
+}
+
+.featureCell {
+  font-weight: 700;
+  color: var(--color-navy);
+  font-size: 16px;
+}
+
+.retailCell {
+  background: rgba(15, 37, 55, 0.02);
+}
+
+.pexpacksCell {
+  background: rgba(205, 145, 52, 0.06);
+}
+
+.cellContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--pex-text);
+  line-height: 1.4;
+}
+
+.pexpacksCell .cellContent {
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.iconCheck {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--color-orange);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iconCross {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: #9d2f16;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 768px) {
+  .comparisonSection {
+    padding: 56px 0;
+  }
+
+  .tableWrapper {
+    margin-top: 32px;
+    border-radius: 16px;
+  }
+
+  .table th {
+    font-size: 18px;
+    padding: 16px;
+  }
+
+  .table td {
+    padding: 16px;
+  }
+}

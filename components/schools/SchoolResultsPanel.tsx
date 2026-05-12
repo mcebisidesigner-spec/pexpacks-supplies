@@ -1,4 +1,5 @@
 import type { SchoolSearchRecord } from "@/lib/schools/types";
+import Link from "next/link";
 import { SchoolResultCard } from "./SchoolResultCard";
 import styles from "./Schools.module.css";
 
@@ -52,7 +53,7 @@ export function SchoolResultsPanel({
             <div className={styles.noResults}>
               <h3>No matching schools found.</h3>
               <p>Request your school pack and we&apos;ll help you.</p>
-              <a href="/add-your-school">Request a School Pack</a>
+              <Link href="/add-your-school">Add Your School</Link>
             </div>
           )}
           {hasMore ? (

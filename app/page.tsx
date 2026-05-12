@@ -1,12 +1,14 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
+import { ComparisonMatrix } from "@/components/marketing/ComparisonMatrix";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PackCard } from "@/components/marketing/PackCard";
 import { PackCardSlider } from "@/components/marketing/PackCardSlider";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { BrandMotif } from "@/components/shared/BrandMotif";
+import { BrandMarquee } from "@/components/shared/BrandMarquee";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { faqs } from "@/data/faqs";
 import {
@@ -69,6 +71,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <BrandMarquee />
 
       <section className={styles.section}>
         <div className={styles.inner}>
