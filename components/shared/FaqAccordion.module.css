@@ -1,0 +1,141 @@
+.accordionContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.accordionHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.accordionHeader h2 {
+  color: var(--color-navy);
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 800;
+  margin: 0 0 12px;
+}
+
+.accordionHeader p {
+  color: var(--pex-text);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.accordionList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.accordionItem {
+  background: var(--color-white);
+  border-radius: 16px;
+  border: 1px solid rgba(15, 37, 55, 0.06);
+  box-shadow: 0 4px 12px rgba(15, 37, 55, 0.02);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.accordionItem:hover {
+  border-color: rgba(15, 37, 55, 0.1);
+  box-shadow: 0 8px 24px rgba(15, 37, 55, 0.04);
+}
+
+.accordionItem.open {
+  border-color: var(--color-orange);
+  box-shadow: 0 12px 32px rgba(205, 145, 52, 0.08);
+}
+
+.accordionButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.questionText {
+  color: var(--color-navy);
+  font-size: 18px;
+  font-weight: 800;
+  padding-right: 24px;
+}
+
+.iconContainer {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(15, 37, 55, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+
+.accordionItem.open .iconContainer {
+  background: rgba(205, 145, 52, 0.1);
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  color: var(--color-navy);
+  transition: transform 0.3s ease;
+}
+
+.accordionItem.open .icon {
+  transform: rotate(180deg);
+  color: var(--color-orange);
+}
+
+.accordionContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.accordionItem.open .accordionContent {
+  grid-template-rows: 1fr;
+}
+
+.accordionContent[hidden] {
+  display: none;
+}
+
+/* Allow JS-toggled layout if standard transition unsupported */
+.accordionItem:not(.open) .accordionContent {
+  display: none;
+}
+.accordionItem.open .accordionContent {
+  display: block;
+}
+
+.answerInner {
+  padding: 0 24px 24px;
+  color: var(--pex-text);
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .accordionButton {
+    padding: 20px;
+  }
+  
+  .questionText {
+    font-size: 16px;
+  }
+  
+  .answerInner {
+    padding: 0 20px 20px;
+  }
+}

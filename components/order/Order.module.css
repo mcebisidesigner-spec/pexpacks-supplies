@@ -343,3 +343,32 @@
     position: static;
   }
 }
+
+.deliveryNotice {
+  background: rgba(205, 145, 52, 0.1);
+  border: 1px solid rgba(205, 145, 52, 0.3);
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: -12px;
+  margin-bottom: 24px;
+}
+
+.deliveryNotice p {
+  color: var(--color-navy);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 500;
+}
+
+.deliveryPolicyLink {
+  color: var(--color-orange);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: opacity 0.2s;
+}
+
+.deliveryPolicyLink:hover {
+  opacity: 0.8;
+}

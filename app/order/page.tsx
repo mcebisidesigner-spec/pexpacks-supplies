@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { OrderForm } from "@/components/order/OrderForm";
 import { ordersEmail, ordersEmailHref, phoneHref, phoneNumber } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
+import { FaqAccordion } from "@/components/shared/FaqAccordion";
+import { faqs } from "@/data/faqs";
 import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
@@ -37,6 +39,15 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
       </section>
       <section className={page.section}>
         <OrderForm initialSchool={school} initialGrade={grade} />
+      </section>
+      <section className={`${page.section} ${page.bgAlt}`}>
+        <div className={page.sectionInner}>
+          <FaqAccordion 
+            title="Ordering FAQs" 
+            subtitle="Everything you need to know about placing your stationery order."
+            faqs={faqs.filter(faq => ["delivery-timing", "payment-flow", "multiple-learners", "exercise-books"].includes(faq.id))} 
+          />
+        </div>
       </section>
     </>
   );

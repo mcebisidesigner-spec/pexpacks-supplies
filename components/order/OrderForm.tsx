@@ -400,6 +400,17 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
                   <option>Office delivery</option>
                 </select>
               </label>
+              {deliveryPreference === "Home delivery" && (
+                <div className={styles.deliveryNotice}>
+                  <p>
+                    Home delivery incurs an additional delivery fee based on your location. Please{" "}
+                    <Link href="/delivery-policy" className={styles.deliveryPolicyLink} target="_blank" rel="noopener noreferrer">
+                      Read our Delivery Policy
+                    </Link>{" "}
+                    for more details on pricing and schedules.
+                  </p>
+                </div>
+              )}
               <label>
                 <span>Preferred contact method</span>
                 <select
