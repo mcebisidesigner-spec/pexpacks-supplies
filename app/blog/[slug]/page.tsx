@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogPosts, getPostBySlug } from "@/data/blog";
-import { blogPosts, getPostBySlug } from "@/data/blog";
 import styles from "../Blog.module.css";
 import { CTASection } from "@/components/marketing/CTASection";
 

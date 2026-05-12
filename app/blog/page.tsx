@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { blogPosts } from "@/data/blog";
-import { blogPosts } from "@/data/blog";
 import styles from "./Blog.module.css";
 
 export const metadata: Metadata = {
