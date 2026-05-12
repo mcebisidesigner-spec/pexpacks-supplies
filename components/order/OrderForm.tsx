@@ -9,7 +9,7 @@ import { OrderProgress } from "./OrderProgress";
 import { OrderSummary } from "./OrderSummary";
 import styles from "./Order.module.css";
 
-const steps = ["Select school", "Select grade", "Confirm pack", "Enter details", "Confirm order"];
+const steps = ["Select school", "Select grade", "Confirm pack", "Add-ons", "Enter details", "Confirm order"];
 
 type ApiResponse = {
   success: boolean;
@@ -71,6 +71,13 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
   const [deliveryPreference, setDeliveryPreference] = useState("School collection");
   const [preferredContactMethod, setPreferredContactMethod] = useState("whatsapp");
   const [consent, setConsent] = useState(false);
+  
+  // Pexcover state
+  const [hasPexcover, setHasPexcover] = useState(false);
+  const [pexcoverName, setPexcoverName] = useState("");
+  const [pexcoverSubjects, setPexcoverSubjects] = useState("");
+  const [pexcoverLabelFormat, setPexcoverLabelFormat] = useState("First Name + Surname");
+  const [pexcoverNotes, setPexcoverNotes] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<ApiResponse | null>(null);
@@ -191,7 +198,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
       return;
     }
 
-    if (activeStep === 3 && !formRef.current?.reportValidity()) {
+    if (activeStep === 4 && !formRef.current?.reportValidity()) {
       return;
     }
 
@@ -225,7 +232,11 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
       grade: selectedGrade.grade,
       packType: `${selectedGrade.grade} stationery pack`,
       preferredContactMethod,
-      message: `Delivery preference: ${deliveryPreference}. Please confirm availability, delivery or collection options, and payment instructions.`,
+      message: `Delivery preference: ${deliveryPreference}. Please confirm availability, delivery or collection options, and payment instructions. ${
+        hasPexcover 
+          ? `\n\n--- PEXCOVER ADD-ON REQUESTED ---\nLearner: ${pexcoverName || buyerName}\nSubjects: ${pexcoverSubjects || "Standard"}\nLabel Format: ${pexcoverLabelFormat}\nNotes: ${pexcoverNotes || "None"}`
+          : ""
+      }`,
       consent,
       companyWebsite: typeof formData.get("companyWebsite") === "string" ? formData.get("companyWebsite") : "",
       pageUrl: window.location.href,
@@ -355,6 +366,79 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
           ) : null}
 
           {activeStep === 3 ? (
+            <div className={styles.addonSection}>
+              <p className={styles.confirmKicker}>Optional Add-On Services</p>
+              
+              <div className={`${styles.addonCard} ${hasPexcover ? styles.addonCardActive : ""}`}>
+                <div className={styles.addonHeader}>
+                  <div className={styles.addonTitle}>
+                    <h3>Add Pexcover</h3>
+                    <span className={styles.addonPrice}>+R120 per pack</span>
+                  </div>
+                  <p>Exercise books covered, labelled, and ready from day one.</p>
+                  <p className={styles.addonSubtext}>Save time, protect schoolwork, and help your child start organised.</p>
+                </div>
+                
+                <label className={styles.addonCheckbox}>
+                  <input 
+                    type="checkbox" 
+                    checked={hasPexcover} 
+                    onChange={(e) => setHasPexcover(e.target.checked)} 
+                  />
+                  <span>Yes, add Pexcover to this pack</span>
+                </label>
+                
+                <p className={styles.addonNote}>Pexcover applies to exercise books included in the selected school pack.</p>
+
+                {hasPexcover && (
+                  <div className={styles.addonDetails} aria-expanded={hasPexcover}>
+                    <p className={styles.addonDetailsHelper}>
+                      Only complete these fields if you want specific name or subject details written on the books.
+                    </p>
+                    <div className={styles.detailGrid}>
+                      <label>
+                        <span>Learner name to write on books</span>
+                        <input
+                          placeholder="e.g. John Doe"
+                          value={pexcoverName}
+                          onChange={(e) => setPexcoverName(e.target.value)}
+                        />
+                      </label>
+                      <label>
+                        <span>Preferred label format</span>
+                        <select 
+                          value={pexcoverLabelFormat}
+                          onChange={(e) => setPexcoverLabelFormat(e.target.value)}
+                        >
+                          <option>First Name + Surname</option>
+                          <option>First Name + Initial</option>
+                          <option>Initials + Surname</option>
+                        </select>
+                      </label>
+                      <label className={styles.fullWidthField}>
+                        <span>Subject names (if required by school)</span>
+                        <input
+                          placeholder="e.g. English, Maths, Life Skills"
+                          value={pexcoverSubjects}
+                          onChange={(e) => setPexcoverSubjects(e.target.value)}
+                        />
+                      </label>
+                      <label className={styles.fullWidthField}>
+                        <span>Special notes</span>
+                        <input
+                          placeholder="Any specific covering instructions?"
+                          value={pexcoverNotes}
+                          onChange={(e) => setPexcoverNotes(e.target.value)}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : null}
+
+          {activeStep === 4 ? (
             <div className={styles.detailGrid}>
               <label>
                 <span>Parent or buyer name</span>
@@ -447,7 +531,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
             </div>
           ) : null}
 
-          {activeStep === 4 ? (
+          {activeStep === 5 ? (
             <div className={styles.confirmPack}>
               <p className={styles.confirmKicker}>Final check</p>
               <h2>Confirm order</h2>
@@ -490,6 +574,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
         schoolName={selectedSchool?.name}
         gradeName={selectedGrade?.grade}
         gradePrice={selectedGrade?.price}
+        hasPexcover={hasPexcover}
       />
     </section>
   );
