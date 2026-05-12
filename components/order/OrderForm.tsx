@@ -263,6 +263,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
               </label>
               <input
                 id="order-school-search"
+                name="orderSchoolSearch"
                 type="search"
                 role="combobox"
                 aria-autocomplete="list"
@@ -327,9 +328,9 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
           ) : null}
 
           {activeStep === 1 ? (
-            <label>
+            <label htmlFor="order-grade-select">
               <span>Select grade</span>
-              <select value={gradeSlug} onChange={(event) => setGradeSlug(event.target.value)} required>
+              <select id="order-grade-select" name="orderGrade" value={gradeSlug} onChange={(event) => setGradeSlug(event.target.value)} required>
                 <option value="">Choose a grade</option>
                 {selectedSchool?.grades.map((grade) => (
                   <option value={grade.gradeSlug} key={grade.id}>

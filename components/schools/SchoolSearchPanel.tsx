@@ -162,9 +162,11 @@ export function SchoolSearchPanel({
         }}
         aria-controls="school-search-results"
       >
-        <label className={styles.searchField}>
+        <label className={styles.searchField} htmlFor="schoolQuery">
           <span>School Name</span>
           <input
+            id="schoolQuery"
+            name="schoolQuery"
             value={query}
             onChange={(event) => updateQuery(event.target.value)}
             placeholder="e.g. Parktown Primary"
