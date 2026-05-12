@@ -43,9 +43,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 160px;
-  height: 64px;
-  padding: 0 24px;
+  min-width: 120px;
+  width: 120px;
+  height: 120px;
+  padding: 16px;
   border-radius: 12px;
   background: var(--color-white);
   box-shadow: 0 4px 12px rgba(15, 37, 55, 0.05);
@@ -55,7 +56,7 @@
 .brandLogo {
   width: 100%;
   height: auto;
-  max-width: 100px;
+  max-width: 80px;
   opacity: 0.5;
   transition: opacity 0.3s ease;
   filter: grayscale(100%);

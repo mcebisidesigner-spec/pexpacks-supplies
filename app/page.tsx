@@ -61,11 +61,6 @@ export default function HomePage() {
                   <br />
                   <strong>Ready-packed stationery</strong>
                 </div>
-                <p>
-                  Complete school stationery packs prepared according to your
-                  child's school list and grade requirements. Practical office
-                  stationery packs are available for SMEs and home offices.
-                </p>
               </div>
             </div>
           </div>
