@@ -166,38 +166,6 @@
   font-weight: 800;
 }
 
-.heroVisual {
-  position: relative;
-  min-height: 560px;
-  border-radius: 30px;
-  overflow: hidden;
-  background:
-    linear-gradient(135deg, rgba(15, 37, 55, 0.94), rgba(30, 90, 168, 0.88)),
-    var(--color-navy);
-  box-shadow: 0 28px 70px rgba(15, 37, 55, 0.18);
-}
-
-.heroVisualImage {
-  position: absolute;
-  inset: 0;
-  opacity: 0.52;
-}
-
-.heroVisualImage img {
-  object-fit: cover;
-}
-
-.productScene {
-  position: absolute;
-  inset: 32px;
-  border: 1px solid rgba(30, 90, 168, 0.14);
-  border-radius: var(--radius-pill);
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.78);
-  color: var(--color-navy);
-  font-size: 13px;
-  font-weight: 800;
-}
 
 .heroVisual {
   position: relative;

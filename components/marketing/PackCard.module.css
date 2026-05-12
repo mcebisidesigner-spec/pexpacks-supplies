@@ -1,0 +1,94 @@
+.packCard {
+  border: 1px solid rgba(15, 37, 55, 0.06);
+  border-radius: 20px;
+  background: var(--color-white);
+  box-shadow: 0 4px 12px rgba(15, 37, 55, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.packCard h3 {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: 24px;
+  line-height: 1.08;
+  font-weight: 800;
+}
+
+.packCard p {
+  margin: 12px 0 0;
+  color: var(--color-navy);
+  opacity: 0.75;
+  line-height: 1.45;
+}
+
+.packMedia {
+  min-height: 156px;
+  padding: 18px;
+  background:
+    linear-gradient(135deg, rgba(245, 166, 35, 0.88), rgba(76, 175, 80, 0.72)),
+    var(--color-bg);
+  display: flex;
+  align-items: flex-end;
+}
+
+.packMediaBlue {
+  background:
+    linear-gradient(135deg, rgba(30, 90, 168, 0.86), rgba(15, 37, 55, 0.86)),
+    var(--color-bg);
+}
+
+.packMediaGreen {
+  background:
+    linear-gradient(135deg, rgba(76, 175, 80, 0.82), rgba(245, 166, 35, 0.68)),
+    var(--color-bg);
+}
+
+.packMedia span {
+  border-radius: 40px;
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-navy);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.packBody {
+  padding: 22px;
+  display: grid;
+  gap: 14px;
+  flex: 1;
+}
+
+.packMeta {
+  margin: 0 !important;
+  color: var(--color-orange);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.packList {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--color-navy);
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.packList li {
+  margin-bottom: 6px;
+}
+
+.packFooter {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.priceLabel {
+  color: var(--color-navy);
+  font-weight: 800;
+}

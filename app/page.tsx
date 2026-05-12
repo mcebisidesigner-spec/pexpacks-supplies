@@ -26,10 +26,10 @@ export default function HomePage() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div>
-            <p className={styles.eyebrow}>School and office stationery</p>
+            <p className={styles.eyebrow}>Save time, Pex it.</p>
             <h1 className={styles.heroTitle}>
-              School and office
-              <br className={styles.mobileBreak} /> stationery made simple.
+              Start School
+              <br className={styles.mobileBreak} /> Ready
             </h1>
             <p className={styles.heroLead}>
               No queues. No confusion. No missing items.
@@ -180,7 +180,7 @@ export default function HomePage() {
           <div className={styles.splitBand}>
             <div className={styles.unboxingImageWrap}>
               <Image
-                src="/images/office-packs.png"
+                src="/images/office-packs.webp"
                 alt="Pexpacks premium office stationery packs"
                 fill
                 className={styles.mediaImage}

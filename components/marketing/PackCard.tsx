@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import type { Pack } from "@/data/packs";
-import styles from "./Marketing.module.css";
+import styles from "./PackCard.module.css";
 
 function mediaClass(pack: Pack) {
   if (pack.category === "School") {
