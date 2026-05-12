@@ -6,6 +6,7 @@ import { PackCard } from "@/components/marketing/PackCard";
 import { PackCardSlider } from "@/components/marketing/PackCardSlider";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { BrandMotif } from "@/components/shared/BrandMotif";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { faqs } from "@/data/faqs";
 import {
@@ -157,6 +158,7 @@ export default function HomePage() {
       <section
         className={styles.homePackSection}
         aria-labelledby="pack-section-heading">
+        <BrandMotif position="topRight" />
         <div className={styles.inner}>
           <SectionHeader
             eyebrow="Prepacked packs"

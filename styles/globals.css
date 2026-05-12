@@ -33,6 +33,38 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Grota Sans";
+  src: url("/fonts/PexSans Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Grota Sans";
+  src: url("/fonts/PexSans Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Grota Sans";
+  src: url("/fonts/PexSans Bold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Grota Sans";
+  src: url("/fonts/PexSans Bold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── Pexpacks Sans Alt — alternate/display variant ── */
 @font-face {
   font-family: "Pexpacks Sans Alt";
@@ -104,9 +136,9 @@ body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-navy);
-  font-family: "Pexpacks Sans", "Pexpacks Sans Alt", Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
-  line-height: 1.45;
+  line-height: var(--line-body);
   text-rendering: optimizeLegibility;
 }
 
@@ -122,8 +154,8 @@ a {
 h1,
 h2,
 h3 {
-  font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
-  font-weight: 800;
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
   letter-spacing: 0;
 }
 
@@ -137,6 +169,17 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+button,
+a.button,
+[role="button"],
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="search"],
+select {
+  min-height: var(--touch-target-min, 48px);
 }
 
 button {

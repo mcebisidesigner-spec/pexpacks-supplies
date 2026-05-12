@@ -1,0 +1,20 @@
+.motif {
+  position: absolute;
+  width: clamp(180px, 24vw, 360px);
+  height: clamp(180px, 24vw, 360px);
+  border-radius: 999px;
+  border: clamp(18px, 2.6vw, 32px) solid rgba(235, 104, 38, 0.055);
+  transform: rotate(-18deg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.topRight {
+  top: clamp(18px, 4vw, 48px);
+  right: max(-120px, -8vw);
+}
+
+.bottomLeft {
+  bottom: clamp(18px, 4vw, 48px);
+  left: max(-120px, -8vw);
+}

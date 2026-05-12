@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./StickyMobileCTA.module.css";
 
-const hiddenRoutes = ["/schools", "/order"];
+const hiddenRoutes = ["/schools", "/order", "/contact"];
 
 export function StickyMobileCTA() {
   const pathname = usePathname();

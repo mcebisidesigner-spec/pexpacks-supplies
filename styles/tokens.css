@@ -51,7 +51,7 @@
   --shadow-card: var(--card-shadow);
 
   --font-heading: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
-  --font-body: "Pexpacks Sans", Arial, sans-serif;
+  --font-body: "Grota Sans", "Pexpacks Sans", Arial, sans-serif;
   --font-weight-heading: 800;
   --font-weight-body: 400;
   --font-weight-medium: 500;
@@ -68,7 +68,7 @@
   --line-heading: 1.12;
   --line-body: 1.6;
 
-  --font-button: "Pexpacks Sans", "Pexpacks Sans Alt", Arial, sans-serif;
+  --font-button: "Grota Sans", "Pexpacks Sans", Arial, sans-serif;
   --button-hover-scale: 1.015;
   --button-icon-hover-scale: 1.15;
   --button-hover-transform: translateY(-2px) scale(var(--button-hover-scale));
