@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
 import { HeaderActiveLink } from "./HeaderActiveLink";
 import { HeaderMenu } from "./HeaderMenu";
 import { mainNavLinks } from "@/data/navigation";
@@ -10,7 +10,7 @@ export function Header() {
     <header className={styles.siteHeader}>
       <div className={styles.headerInner}>
         <Link className={styles.logoLink} href="/" aria-label="Pexpacks home" data-mobile-menu-close>
-          <Image src="/images/logo.svg" width={167} height={70} alt="Pexpacks" priority />
+          <Logo />
         </Link>
 
         <nav className={styles.desktopNav} aria-label="Primary navigation">

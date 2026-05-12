@@ -27,7 +27,7 @@
   width: fit-content;
 }
 
-.logoLink img {
+.logoLink svg {
   width: var(--logo-width-desktop);
   height: auto;
 }

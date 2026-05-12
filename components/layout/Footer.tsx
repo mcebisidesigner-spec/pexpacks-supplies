@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import { hasWhatsAppNumber, orderWhatsAppHref } from "@/data/contact";
 import { footerNavLinks, footerLinks } from "@/data/navigation";
@@ -48,7 +48,7 @@ export function Footer() {
     <footer className={styles.footer} id="site-footer">
       <div className={styles.footerInner}>        <div className={styles.topSection}>
           <Link href="/" className={styles.logoLink} aria-label="Pexpacks home">
-            <Image src="/images/logo.svg" width={148} height={62} alt="Pexpacks" priority={false} />
+            <Logo />
           </Link>
 
           <div className={styles.navGroup}>
