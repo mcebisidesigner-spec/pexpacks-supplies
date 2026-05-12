@@ -319,7 +319,7 @@ export function HeroSearch() {
             {!schoolLoading && !schoolResults.length ? (
               <div className={styles.noResultsState}>
                 <p className={styles.heroSearchState}>No matching schools found.</p>
-                <Link href="/add-your-school" className={styles.addSchoolLink}>
+                <Link href="/add-your-school#school-request-form" className={styles.addSchoolLink}>
                   Add your school
                 </Link>
               </div>
@@ -367,7 +367,7 @@ export function HeroSearch() {
             <h2 id={modalTitleId}>School not found</h2>
             <p id={modalDescriptionId}>Your school is not in our database. Would you like to add your school?</p>
             <div className={styles.modalActions}>
-              <Link className={styles.modalPrimaryAction} href="/add-your-school">
+              <Link className={styles.modalPrimaryAction} href="/add-your-school#school-request-form">
                 Yes
               </Link>
               <Link className={styles.modalSecondaryAction} href="/contact">

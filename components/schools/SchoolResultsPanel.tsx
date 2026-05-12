@@ -53,7 +53,7 @@ export function SchoolResultsPanel({
             <div className={styles.noResults}>
               <h3>No matching schools found.</h3>
               <p>Request your school pack and we&apos;ll help you.</p>
-              <Link href="/add-your-school">Add Your School</Link>
+              <Link href="/add-your-school#school-request-form">Add Your School</Link>
             </div>
           )}
           {hasMore ? (

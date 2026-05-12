@@ -24,7 +24,7 @@ export default function StandardSchoolPacksPage() {
       >
         <div className={styles.buttonRow}>
           <Button href="/order">Order a Standard Pack</Button>
-          <Button href="/add-your-school" variant="white">
+          <Button href="/add-your-school#school-request-form" variant="white">
             Add Your School
           </Button>
         </div>
@@ -76,7 +76,7 @@ export default function StandardSchoolPacksPage() {
                 prepare a school-specific pack path or recommend the closest standard combo.
               </p>
               <div className={styles.buttonRow}>
-                <Button href="/add-your-school">Add Your School</Button>
+                <Button href="/add-your-school#school-request-form">Add Your School</Button>
                 <Button href="/contact" variant="white">
                   Contact Us
                 </Button>

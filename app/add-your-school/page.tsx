@@ -33,7 +33,7 @@ export default function AddYourSchoolPage() {
       <section className={styles.section}>
         <div className={styles.inner}>
           <div className={styles.infoGrid}>
-            <article className={styles.formCard}>
+            <article className={styles.formCard} id="school-request-form">
               <p className={styles.eyebrow}>School request</p>
               <h2>Submit school details</h2>
               <form className={styles.formGrid} action="/contact" method="get">

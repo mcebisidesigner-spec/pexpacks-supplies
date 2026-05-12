@@ -76,7 +76,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         text="Don't spend hours hunting for these items. Let PexPacks deliver your exact school list straight to your door."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
-        secondaryHref="/add-your-school"
+        secondaryHref="/add-your-school#school-request-form"
         secondaryLabel="My school isn't listed"
       />
     </>
