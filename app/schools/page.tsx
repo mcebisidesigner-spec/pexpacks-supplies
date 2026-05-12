@@ -48,6 +48,9 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
 
   return (
     <>
+      <div className={styles.urgencyAlert}>
+        <p>🚨 <strong>Back-to-school deadline approaching:</strong> Order before December 15th for guaranteed January delivery before term starts.</p>
+      </div>
       <SchoolsPageHero>
         <SchoolSearchPanel
           grades={grades}
@@ -73,7 +76,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
             <h2 id="how-it-works-heading">How ordering works</h2>
             <span>
               Pexpacks keeps the school list searchable so parents do not need
-              to scroll through hundreds of schools.
+              to scroll through hundreds of schools. <strong>The average parent saves 4 hours of driving, queuing, and crossing off lists.</strong>
             </span>
           </div>
           <div className={styles.howItWorksGrid}>

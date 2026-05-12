@@ -29,7 +29,10 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
       <div className={styles.featuredScroller}>
         {schools.map((school) => (
           <Link href={`/schools/${school.slug}`} className={styles.featuredCard} key={school.id}>
-            <span className={styles.featuredIcon}>{school.name.charAt(0)}</span>
+            <div className={styles.featuredHeader}>
+              <span className={styles.featuredIcon}>{school.name.charAt(0)}</span>
+              {school.isPartner && <span className={styles.partnerBadge}>★ Official Partner</span>}
+            </div>
             <span className={styles.featuredMeta}>{school.region}</span>
             <h3>{school.name}</h3>
             <p>{gradeRangeLabel(school.grades)}</p>

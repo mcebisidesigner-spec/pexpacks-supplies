@@ -11,9 +11,14 @@ export function RequestSchoolCTA() {
           Send us the school name and grade. We&apos;ll help prepare the correct stationery pack.
         </span>
       </div>
-      <Button href="/add-your-school#school-request-form" variant="white">
-        Request a School Pack
-      </Button>
+      <div className={styles.requestCtaActions}>
+        <Button href="/add-your-school#school-request-form" variant="white">
+          Request a School Pack
+        </Button>
+        <Button href="/standard-packs" variant="outline" className={styles.fallbackBtn}>
+          Buy Standard Pack
+        </Button>
+      </div>
     </section>
   );
 }

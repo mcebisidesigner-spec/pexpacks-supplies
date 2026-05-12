@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { blogPosts } from "@/data/blog";
 import styles from "./Blog.module.css";
+import pageStyles from "@/styles/Page.module.css";
 
 export const metadata: Metadata = {
   title: "Back to School Resource Hub | PexPacks",
@@ -11,12 +12,15 @@ export const metadata: Metadata = {
 export default function BlogIndex() {
   return (
     <>
-      <header className={styles.blogHeader}>
-        <div className={styles.blogHeaderInner}>
-          <h1>Back to School Resource Hub</h1>
-          <p>Practical advice, stationery checklists, and survival guides to help parents prepare for the new school year without the stress.</p>
+      <section className={pageStyles.pageHero}>
+        <div className={pageStyles.pageHeroNarrow}>
+          <p>Resources</p>
+          <h1>Back to School Hub</h1>
+          <p className={pageStyles.pageHeroText}>
+            Practical advice, stationery checklists, and survival guides to help parents prepare for the new school year without the stress.
+          </p>
         </div>
-      </header>
+      </section>
       
       <div className={styles.blogGrid}>
         {blogPosts.map((post) => (
