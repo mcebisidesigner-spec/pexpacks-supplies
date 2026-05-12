@@ -1,15 +1,24 @@
+import Link from "next/link";
+import { ReactNode } from "react";
+
 export type FAQ = {
   id: string;
   question: string;
-  answer: string;
+  answer: ReactNode;
 };
 
 export const faqs: FAQ[] = [
   {
     id: "school-not-listed",
     question: "What if my child's school is not listed?",
-    answer:
-      "You can request the school and grade through the enquiry flow. Pexpacks will follow up and help prepare the closest correct stationery pack option.",
+    answer: (
+      <>
+        You can request the school and grade through the enquiry flow. Pexpacks will follow up and help prepare the closest correct stationery pack option.{" "}
+        <Link href="/add-your-school" style={{ color: "var(--color-navy)", fontWeight: 800, textDecoration: "underline", marginLeft: "4px" }}>
+          Add Your School
+        </Link>
+      </>
+    ),
   },
   {
     id: "delivery-timing",
