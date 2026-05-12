@@ -389,3 +389,107 @@
   color: var(--color-orange);
   font-size: 20px;
 }
+
+/* Addon Styles */
+.addonSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.addonCard {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  background: var(--color-white);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.addonCardActive {
+  border-color: var(--color-orange);
+  box-shadow: 0 4px 16px rgba(205, 145, 52, 0.1);
+  background: rgba(205, 145, 52, 0.02);
+}
+
+.addonHeader {
+  margin-bottom: 20px;
+}
+
+.addonTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.addonTitle h3 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--color-navy);
+}
+
+.addonPrice {
+  color: var(--color-orange);
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.addonHeader p {
+  margin: 0;
+  color: var(--pex-text);
+  font-size: 16px;
+}
+
+.addonSubtext {
+  font-size: 14px !important;
+  color: var(--color-muted) !important;
+  margin-top: 4px !important;
+}
+
+.addonCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-bg);
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.addonCheckbox input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-orange);
+}
+
+.addonCheckbox span {
+  font-weight: 800;
+  color: var(--color-navy);
+  font-size: 16px;
+}
+
+.addonNote {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin: 0 0 24px;
+}
+
+.addonDetails {
+  border-top: 1px solid var(--color-border);
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.addonDetailsHelper {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin: 0;
+  font-style: italic;
+}
+
+.fullWidthField {
+  grid-column: 1 / -1;
+}

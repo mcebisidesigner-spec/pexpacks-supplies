@@ -11,7 +11,7 @@ type OrderSummaryProps = {
 
 const PEXCOVER_PRICE = 120;
 
-export function OrderSummary({ schoolName, gradeName, gradePrice }: OrderSummaryProps) {
+export function OrderSummary({ schoolName, gradeName, gradePrice, hasPexcover }: OrderSummaryProps) {
   return (
     <aside className={styles.summary} aria-label="Order summary">
       <p>Order summary</p>
