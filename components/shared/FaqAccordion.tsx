@@ -19,10 +19,12 @@ export function FaqAccordion({ faqs, title = "Frequently Asked Questions", subti
 
   return (
     <div className={styles.accordionContainer}>
-      <div className={styles.accordionHeader}>
-        <h2>{title}</h2>
-        <p>{subtitle}</p>
-      </div>
+      {(title || subtitle) && (
+        <div className={styles.accordionHeader}>
+          {title && <h2>{title}</h2>}
+          {subtitle && <p>{subtitle}</p>}
+        </div>
+      )}
       <div className={styles.accordionList}>
         {faqs.map((faq, index) => {
           const isOpen = openIndex === index;

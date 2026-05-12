@@ -63,7 +63,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       {featuredSchools.length > 0 && (
         <FeaturedSchoolsBanner schools={featuredSchools} />
       )}
-
+      <BookCoveringBanner />
       <section
         className={styles.howItWorksSection}
         aria-labelledby="how-it-works-heading">
@@ -98,7 +98,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         </div>
       </section>
 
-      <BookCoveringBanner />
+
 
       <section
         className={pageStyles.section}
@@ -110,21 +110,14 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
             text="Read what other parents are saying about the Pexpacks experience."
             headingId="school-testimonials"
           />
-          <TestimonialMarquee
-            items={testimonials.filter(
-              (t) =>
-                t.role.includes("Parent") ||
-                t.role.includes("Mother") ||
-                t.role.includes("Father"),
-            )}
-          />
+          <TestimonialMarquee items={testimonials} />
         </div>
       </section>
 
       <RequestSchoolCTA />
 
       <section
-        className={pageStyles.sectionCream}
+        className={pageStyles.section}
         aria-labelledby="school-faqs">
         <div className={pageStyles.sectionInner}>
           <SectionHeader
@@ -135,7 +128,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
           />
           <div
             style={{ maxWidth: "800px", margin: "0 auto", marginTop: "32px" }}>
-            <FaqAccordion faqs={schoolFaqs} />
+            <FaqAccordion faqs={schoolFaqs} title="" subtitle="" />
           </div>
         </div>
       </section>
