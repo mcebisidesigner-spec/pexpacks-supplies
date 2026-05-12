@@ -52,8 +52,11 @@ export function SchoolResultsPanel({
           ) : (
             <div className={styles.noResults}>
               <h3>No matching schools found.</h3>
-              <p>Request your school pack and we&apos;ll help you.</p>
-              <Link href="/add-your-school#school-request-form">Add Your School</Link>
+              <p>You can request your school, or skip the wait and buy a Standard Pack.</p>
+              <div style={{ display: "flex", gap: "12px", justifyContent: "center", marginTop: "16px" }}>
+                <Link href="/add-your-school#school-request-form">Request School</Link>
+                <Link href="/standard-packs" className={styles.noResultsSecondary}>Buy Standard Pack</Link>
+              </div>
             </div>
           )}
           {hasMore ? (

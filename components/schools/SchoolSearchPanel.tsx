@@ -179,6 +179,10 @@ export function SchoolSearchPanel({
           Search
         </button>
       </form>
+      <div className={styles.searchSocialProof}>
+        <span>✓ 500+ schools supported</span>
+        <span>✓ 10,000+ parents trust Pexpacks</span>
+      </div>
       <SchoolResultsPanel
         isOpen={panelOpen}
         isLoading={isLoading}

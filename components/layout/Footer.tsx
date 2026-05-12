@@ -5,12 +5,13 @@ import { Logo } from "@/components/ui/Logo";
 import { usePathname } from "next/navigation";
 import { hasWhatsAppNumber, orderWhatsAppHref } from "@/data/contact";
 import { footerNavLinks, footerLinks } from "@/data/navigation";
+import { officialSocialLinks } from "@/data/social";
 import { isActivePath } from "@/lib/isActivePath";
 import styles from "./Footer.module.css";
 
 const socialLinks = [
-  { label: "Visit Pexpacks on Facebook", href: "https://www.facebook.com/pexpacks", icon: "facebook" },
-  { label: "Visit Pexpacks on Instagram", href: "https://www.instagram.com/pexpacks/", icon: "instagram" },
+  { label: "Visit Pexpacks on Facebook", href: officialSocialLinks.facebook, icon: "facebook" },
+  { label: "Visit Pexpacks on Instagram", href: officialSocialLinks.instagram, icon: "instagram" },
   ...(hasWhatsAppNumber ? [{ label: "Chat to Pexpacks on WhatsApp", href: orderWhatsAppHref, icon: "whatsapp" } as const] : []),
 ] as const;
 
