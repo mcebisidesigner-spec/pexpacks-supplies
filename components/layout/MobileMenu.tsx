@@ -17,7 +17,7 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
     <div
       id="mobile-menu"
       className={[styles.mobileMenu, open ? styles.mobileMenuOpen : ""].filter(Boolean).join(" ")}
-      aria-hidden={!open}
+      inert={!open ? true : undefined}
     >
       <nav className={styles.mobileMenuNav} aria-label="Mobile navigation">
         {mainNavLinks.map((link) => {
