@@ -3,8 +3,6 @@ import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { ComparisonMatrix } from "@/components/marketing/ComparisonMatrix";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
-import { PackCard } from "@/components/marketing/PackCard";
-import { PackCardSlider } from "@/components/marketing/PackCardSlider";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { BrandMotif } from "@/components/shared/BrandMotif";
@@ -12,7 +10,6 @@ import { BrandMarquee } from "@/components/shared/BrandMarquee";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { faqs } from "@/data/faqs";
 import {
-  homepagePacks,
   homeProcessSteps,
   trustBadges,
   whyChoosePexpacks,
@@ -35,6 +32,10 @@ export default function HomePage() {
               No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
+            <div className={styles.searchSocialProof}>
+              <span>✓ 500+ schools supported</span>
+              <span>✓ 10,000+ parents trust Pexpacks</span>
+            </div>
             <ul
               className={styles.trustBadges}
               aria-label="Pexpacks trust points">
@@ -116,6 +117,7 @@ export default function HomePage() {
                 <li>Exercise books, pens, pencils and rulers</li>
                 <li>Glue, files, crayons or colour pencils where required</li>
                 <li>Grade-specific school-list items packed with care</li>
+                <li>Optional: Books pre-covered and labelled via Pexcover</li>
                 <li>Ready for the first day of school or collection</li>
               </ul>
               <div
@@ -156,24 +158,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section
-        className={styles.homePackSection}
-        aria-labelledby="pack-section-heading">
-        <BrandMotif position="topRight" />
-        <div className={styles.inner}>
-          <SectionHeader
-            eyebrow="Prepacked packs"
-            title="Our most popular packs"
-            text="Ready-to-go stationery for every learner and school."
-            headingId="pack-section-heading"
-          />
-          <PackCardSlider>
-            {homepagePacks.map((pack) => (
-              <PackCard pack={pack} key={pack.id} />
-            ))}
-          </PackCardSlider>
-        </div>
-      </section>
+
 
       <section className={styles.section}>
         <div className={styles.inner}>

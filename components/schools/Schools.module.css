@@ -261,6 +261,8 @@
   font-weight: 800;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  transition: var(--button-transition);
   text-decoration: none;
 }
 
@@ -278,9 +280,6 @@
   color: rgba(15, 37, 55, 0.6);
   font-size: 14px;
   font-weight: 600;
-}
-  justify-content: center;
-  transition: var(--button-transition);
 }
 
 .resultLink:hover,
