@@ -6,7 +6,10 @@ type OrderSummaryProps = {
   schoolName?: string;
   gradeName?: string;
   gradePrice?: number;
+  hasPexcover?: boolean;
 };
+
+const PEXCOVER_PRICE = 120;
 
 export function OrderSummary({ schoolName, gradeName, gradePrice }: OrderSummaryProps) {
   return (
@@ -22,6 +25,18 @@ export function OrderSummary({ schoolName, gradeName, gradePrice }: OrderSummary
           <dt>Pack price</dt>
           <dd>{typeof gradePrice === "number" ? formatCurrency(gradePrice) : "Pending"}</dd>
         </div>
+        {hasPexcover && (
+          <div>
+            <dt>Pexcover Add-On</dt>
+            <dd>{formatCurrency(PEXCOVER_PRICE)}</dd>
+          </div>
+        )}
+        {typeof gradePrice === "number" && (
+          <div className={styles.summaryTotal}>
+            <dt>Total</dt>
+            <dd>{formatCurrency(gradePrice + (hasPexcover ? PEXCOVER_PRICE : 0))}</dd>
+          </div>
+        )}
       </dl>
       <span>
         No online payment is taken here. Pexpacks will confirm your enquiry order details from{" "}

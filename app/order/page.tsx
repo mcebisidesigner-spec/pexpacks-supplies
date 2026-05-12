@@ -3,6 +3,7 @@ import { OrderForm } from "@/components/order/OrderForm";
 import { ordersEmail, ordersEmailHref, phoneHref, phoneNumber } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
+import { PexcoverMarquee } from "@/components/order/PexcoverMarquee";
 import { faqs } from "@/data/faqs";
 import page from "@/styles/Page.module.css";
 
@@ -38,6 +39,9 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
         </div>
       </section>
       <section className={page.section}>
+        <div style={{ maxWidth: "var(--layout-max-width)", margin: "0 auto", paddingInline: "var(--gutter-desktop)" }}>
+          <PexcoverMarquee />
+        </div>
         <OrderForm initialSchool={school} initialGrade={grade} />
       </section>
       <section className={`${page.section} ${page.bgAlt}`}>
