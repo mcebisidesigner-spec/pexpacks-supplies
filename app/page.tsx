@@ -141,6 +141,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <ComparisonMatrix />
+
       <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
