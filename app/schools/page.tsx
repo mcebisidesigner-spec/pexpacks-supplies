@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
+import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
@@ -24,7 +24,6 @@ function firstValue(value: string | string[] | undefined) {
 export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
   const params = searchParams ? await searchParams : {};
   const { grades, regions } = getSchoolSearchOptions();
-  const featuredSchools = getFeaturedSchoolRecords();
 
   return (
     <>
@@ -37,7 +36,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
           initialGrade={firstValue(params.grade) ?? "all"}
         />
       </SchoolsPageHero>
-      <FeaturedSchoolsBanner schools={featuredSchools} />
+      <BookCoveringBanner />
       <RequestSchoolCTA />
       <section className={styles.supportSection} aria-labelledby="school-support-heading">
         <div>
