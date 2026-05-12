@@ -7,6 +7,7 @@ export const mainNavLinks: NavLink[] = [
   { label: "Schools", href: "/schools" },
   { label: "Office", href: "/office-packs" },
   { label: "Partner", href: "/partner-with-schools" },
+  { label: "Resources", href: "/blog" },
   { label: "Contact", href: "/contact" }
 ];
 
@@ -14,6 +15,7 @@ export const footerNavLinks: NavLink[] = [
   { label: "Schools", href: "/schools" },
   { label: "Office", href: "/office-packs" },
   { label: "Partner", href: "/partner-with-schools" },
+  { label: "Resources", href: "/blog" },
   { label: "Contact", href: "/contact" }
 ];
 

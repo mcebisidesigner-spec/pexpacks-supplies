@@ -57,35 +57,29 @@ export function ComparisonMatrix() {
           text="See how much time and effort you save when we pack the stationery for you."
         />
 
-        <div className={styles.tableWrapper}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th scope="col" className={styles.featureCol}></th>
-                <th scope="col" className={styles.retailCol}>Retail Shopping</th>
-                <th scope="col" className={styles.pexpacksCol}>PexPacks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {comparisonData.map((row, index) => (
-                <tr key={index}>
-                  <td className={styles.featureCell}>{row.feature}</td>
-                  <td className={styles.retailCell}>
-                    <div className={styles.cellContent}>
-                      <CrossIcon />
-                      <span>{row.retail}</span>
-                    </div>
-                  </td>
-                  <td className={styles.pexpacksCell}>
-                    <div className={styles.cellContent}>
-                      <CheckIcon />
-                      <span>{row.pexpacks}</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className={styles.cardsGrid}>
+          {comparisonData.map((row, index) => (
+            <div className={styles.featureCard} key={index}>
+              <h3 className={styles.featureTitle}>{row.feature}</h3>
+              <div className={styles.compareContainer}>
+                <div className={`${styles.compareItem} ${styles.retailItem}`}>
+                  <span className={styles.itemLabel}>Retail</span>
+                  <div className={styles.itemContent}>
+                    <CrossIcon />
+                    <span>{row.retail}</span>
+                  </div>
+                </div>
+                <div className={styles.vsBadge}>VS</div>
+                <div className={`${styles.compareItem} ${styles.pexpacksItem}`}>
+                  <span className={styles.itemLabel}>PexPacks</span>
+                  <div className={styles.itemContent}>
+                    <CheckIcon />
+                    <span>{row.pexpacks}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
