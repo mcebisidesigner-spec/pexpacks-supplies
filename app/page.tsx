@@ -1,19 +1,12 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
-import { ComparisonMatrix } from "@/components/marketing/ComparisonMatrix";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { BrandMotif } from "@/components/shared/BrandMotif";
 import { BrandMarquee } from "@/components/shared/BrandMarquee";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
-import { faqs } from "@/data/faqs";
-import {
-  homeProcessSteps,
-  trustBadges,
-  whyChoosePexpacks,
-} from "@/data/packs";
+import { whyChoosePexpacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import styles from "@/components/marketing/Marketing.module.css";
 
@@ -32,17 +25,6 @@ export default function HomePage() {
               No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
-            <div className={styles.searchSocialProof}>
-              <span>✓ 500+ schools supported</span>
-              <span>✓ 10,000+ parents trust Pexpacks</span>
-            </div>
-            <ul
-              className={styles.trustBadges}
-              aria-label="Pexpacks trust points">
-              {trustBadges.map((badge) => (
-                <li key={badge}>{badge}</li>
-              ))}
-            </ul>
           </div>
 
           <div className={styles.heroVisual}>
@@ -68,8 +50,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <BrandMarquee />
-
       <section className={styles.section}>
         <div className={styles.inner}>
           <SectionHeader
@@ -78,25 +58,6 @@ export default function HomePage() {
             text="Whether you are a parent, school, or office administrator, you can start with what you need right now."
           />
           <PathwayCards />
-        </div>
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.inner}>
-          <SectionHeader
-            eyebrow="Ordering process"
-            title="How it works"
-            text="We keep the process simple, so you can focus on other important things."
-          />
-          <div className={styles.stepsGrid}>
-            {homeProcessSteps.map((step, index) => (
-              <article className={styles.stepCard} key={step.title}>
-                <span className={styles.stepNumber}>{index + 1}</span>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -138,28 +99,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <ComparisonMatrix />
-
-      <section className={styles.section}>
-        <div className={styles.inner}>
-          <SectionHeader
-            eyebrow="Why Pexpacks"
-            title="The Pexpacks Difference"
-            text="Because we promise to save you time, reduce stress and help you stay prepared."
-          />
-          <div className={styles.benefitGrid}>
-            {whyChoosePexpacks.map((benefit) => (
-              <article className={styles.benefitCard} key={benefit.title}>
-                <h3>{benefit.title}</h3>
-                <p>{benefit.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-
       <section className={styles.section}>
         <div className={styles.inner}>
           <div className={styles.splitBand}>
@@ -181,7 +120,7 @@ export default function HomePage() {
               </p>
               <div
                 className={[styles.buttonRow, styles.splitActions].join(" ")}>
-                <Button href="/office-packs">View Office Packs</Button>
+                <Button href="/office-packs" variant="secondary">View Office Packs</Button>
               </div>
             </div>
           </div>
@@ -190,16 +129,18 @@ export default function HomePage() {
 
       <section className={styles.sectionCream}>
         <div className={styles.inner}>
-          <div className={styles.guaranteeBox}>
-            <div className={styles.guaranteeContent}>
-              <p className={styles.eyebrow}>Quality promise</p>
-              <h2>The Pexpacks quality guarantee</h2>
-              <p>
-                We pack trusted stationery items clearly and carefully. If a
-                supplied item is faulty or does not match the agreed school-list
-                requirement, we will help put it right.
-              </p>
-            </div>
+          <SectionHeader
+            eyebrow="Why Pexpacks"
+            title="The Pexpacks Promise"
+            text="We save you time, reduce stress, and guarantee quality you can trust."
+          />
+          <div className={styles.benefitGrid}>
+            {whyChoosePexpacks.map((benefit) => (
+              <article className={styles.benefitCard} key={benefit.title}>
+                <h3>{benefit.title}</h3>
+                <p>{benefit.text}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -217,33 +158,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.sectionCream}>
-        <div className={styles.inner}>
-          <SectionHeader
-            eyebrow="Questions and answers"
-            title="Frequently Asked Questions"
-            text="Answers for parents, schools and office buyers."
-          />
-          <div className={styles.faqList}>
-            {faqs.map((faq) => (
-              <details className={styles.faqItem} key={faq.id}>
-                <summary>{faq.question}</summary>
-                <p>{faq.answer}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className={styles.partnerBanner}>
-        <p>
-          For schools:{" "}
-          <a href="/partner-with-schools">
-            Help parents order the correct stationery from your school list
-            &rarr;
-          </a>
-        </p>
-      </div>
+      <BrandMarquee />
 
       <CTASection
         eyebrow="Ready to order"

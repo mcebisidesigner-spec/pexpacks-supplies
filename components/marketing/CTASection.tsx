@@ -25,7 +25,7 @@ export function CTASection({ eyebrow, title, text, primaryHref, primaryLabel, se
             {primaryLabel}
           </Button>
           {secondaryHref && secondaryLabel ? (
-            <Button href={secondaryHref} variant="outline" size="lg">
+            <Button href={secondaryHref} variant="primary" size="lg">
               {secondaryLabel}
             </Button>
           ) : null}
