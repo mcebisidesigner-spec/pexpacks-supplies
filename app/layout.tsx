@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { StickyMobileCTA } from "@/components/shared/StickyMobileCTA";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildMetadata } from "@/lib/seo";
-import { localBusinessSchema, organizationSchema, websiteSchema } from "@/lib/schema";
+import { onlineStoreSchema, organizationSchema, websiteSchema } from "@/lib/schema";
 import "@/styles/globals.css";
 
 export const viewport: Viewport = {
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         <JsonLd data={organizationSchema()} />
-        <JsonLd data={localBusinessSchema()} />
+        <JsonLd data={onlineStoreSchema()} />
         <JsonLd data={websiteSchema()} />
         <div className="site-shell">
           <Header />
