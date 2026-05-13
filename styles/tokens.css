@@ -1,7 +1,7 @@
 :root {
   --pex-navy: #306266;
   --pex-gold: #e1702d;
-  --pex-green: #4caf50;
+  --pex-green: #02b8bc;
   --pex-cream: #fff8ec;
   --pex-light: #f8fafc;
   --pex-text: #032b2e;
@@ -12,7 +12,7 @@
   --color-orange: var(--pex-gold);
   --color-orange-dark: var(--pex-gold-text);
   --color-text: var(--pex-text);
-  --color-text-muted: #4d5b68;
+  --color-text-muted: #647a7a;
   --color-bg: var(--pex-light);
   --color-bg-soft: #f7f4ef;
   --section-bg-white: #ffffff;
