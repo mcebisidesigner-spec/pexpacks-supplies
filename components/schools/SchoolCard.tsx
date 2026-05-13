@@ -9,10 +9,20 @@ type SchoolCardProps = {
 };
 
 export function SchoolCard({ school }: SchoolCardProps) {
+  const isPlaceholder = !school.logo || school.logo.includes('placeholder');
+  const initial = school.name.charAt(0).toUpperCase();
+
   return (
     <article className={styles.schoolCard}>
-      <div className={styles.schoolLogo}>
-        <Image src={school.logo} alt={`${school.name} crest`} width={78} height={78} />
+      <div 
+        className={styles.schoolLogo} 
+        style={isPlaceholder ? { background: 'var(--pex-illustration-soft)', color: 'var(--pex-primary)', fontSize: '2rem', fontWeight: 'bold' } : {}}
+      >
+        {!isPlaceholder ? (
+          <Image src={school.logo} alt={`${school.name} crest`} width={78} height={78} />
+        ) : (
+          <span>{initial}</span>
+        )}
       </div>
       <div className={styles.schoolCardBody}>
         <p>{school.isPartnerSchool ? "Partner school" : "Available pack"}</p>

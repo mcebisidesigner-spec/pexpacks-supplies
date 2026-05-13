@@ -158,8 +158,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <BrandMarquee />
-
       <CTASection
         eyebrow="Ready to order"
         title="Pexpacks gets stationery packed right."
