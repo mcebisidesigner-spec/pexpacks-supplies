@@ -10,7 +10,9 @@
 
   --color-navy: var(--pex-navy);
   --color-orange: var(--pex-gold);
-  --color-orange-dark: var(--pex-gold-text);
+  --color-teal: var(--pex-green);
+  --color-cream: var(--pex-cream);
+  --color-light: var(--pex-light);
   --color-text: var(--pex-text);
   --color-text-muted: #3b5050;
   --color-bg: var(--pex-light);
