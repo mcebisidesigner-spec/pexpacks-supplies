@@ -1,11 +1,11 @@
 :root {
-  --pex-navy: #123945;
-  --pex-gold: #CD9134;
+  --pex-navy: #306266;
+  --pex-gold: #e1702d;
   --pex-green: #4caf50;
   --pex-cream: #fff8ec;
   --pex-light: #f8fafc;
   --pex-text: #1f2937;
-  --pex-muted: #64748b;
+  --pex-muted: #d6e5e5;
   --pex-gold-text: #9a5f12;
 
   --color-navy: var(--pex-navy);
