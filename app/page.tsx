@@ -4,7 +4,6 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { BrandMarquee } from "@/components/shared/BrandMarquee";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { whyChoosePexpacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
@@ -120,7 +119,9 @@ export default function HomePage() {
               </p>
               <div
                 className={[styles.buttonRow, styles.splitActions].join(" ")}>
-                <Button href="/office-packs" variant="secondary">View Office Packs</Button>
+                <Button href="/office-packs" variant="secondary">
+                  View Office Packs
+                </Button>
               </div>
             </div>
           </div>
