@@ -34,8 +34,8 @@
   min-height: 76px;
   padding: 10px;
   border-radius: 16px;
-  background: var(--color-bg);
-  color: var(--color-muted);
+  background: var(--pex-bg);
+  color: var(--pex-text-muted);
   font-size: 13px;
   font-weight: 800;
   display: grid;
@@ -51,12 +51,12 @@
   border-radius: var(--radius-pill);
   display: grid;
   place-items: center;
-  background: var(--color-white);
+  background: var(--pex-bg);
 }
 
 .progressActive {
-  background: var(--color-navy) !important;
-  color: var(--color-white) !important;
+  background: var(--pex-primary) !important;
+  color: var(--pex-bg) !important;
 }
 
 .form {
@@ -78,11 +78,11 @@
 .form input,
 .form select {
   min-height: 52px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--pex-illustration-soft);
   border-radius: var(--radius-pill);
   padding: 0 20px;
-  background: var(--color-white);
-  color: var(--color-navy);
+  background: var(--pex-bg);
+  color: var(--pex-primary);
 }
 
 .schoolSearch {
@@ -102,9 +102,9 @@
   max-height: 320px;
   overflow-y: auto;
   padding: 8px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--pex-illustration-soft);
   border-radius: var(--radius-card);
-  background: var(--color-white);
+  background: var(--pex-bg);
   box-shadow: var(--card-shadow);
 }
 
@@ -115,7 +115,7 @@
   border: 0;
   border-radius: 14px;
   background: transparent;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   text-align: left;
   display: grid;
   gap: 3px;
@@ -125,21 +125,21 @@
 
 .schoolResult:hover,
 .schoolResult:focus-visible {
-  background: var(--color-bg);
+  background: var(--pex-bg);
   transform: translateY(-1px);
   outline: none;
 }
 
 .schoolResult span,
 .selectedSchool {
-  color: var(--color-muted);
+  color: var(--pex-text-muted);
   font-size: 14px;
 }
 
 .schoolEmpty {
   margin: 0;
   padding: 12px 14px;
-  color: var(--color-muted);
+  color: var(--pex-text-muted);
   font-size: 14px;
 }
 
@@ -164,7 +164,7 @@
   grid-template-columns: 20px 1fr;
   gap: 10px !important;
   align-items: start;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 14px;
   line-height: 1.4;
 }
@@ -173,17 +173,17 @@
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  accent-color: var(--color-orange);
+  accent-color: var(--pex-accent);
 }
 
 .privacyNotice {
   margin: -4px 0 0;
-  color: var(--color-muted);
+  color: var(--pex-text-muted);
   font-size: 14px;
 }
 
 .privacyLink {
-  color: var(--color-orange-dark);
+  color: var(--pex-accent-hover);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -204,7 +204,7 @@
 .confirmPack {
   padding: 28px;
   border-radius: var(--radius-card);
-  background: var(--color-bg);
+  background: var(--pex-bg);
 }
 
 .confirmPack h2 {
@@ -214,7 +214,7 @@
 
 .confirmKicker {
   margin: 0 0 10px !important;
-  color: var(--color-orange-dark);
+  color: var(--pex-accent-hover);
   font-size: 14px;
   font-weight: 800;
 }
@@ -233,12 +233,12 @@
 
 .formStatusSuccess {
   background: rgba(76, 175, 80, 0.12);
-  color: #1f5d24;
+  color: var(--pex-success);
 }
 
 .formStatusError {
   background: rgba(235, 104, 38, 0.12);
-  color: var(--color-navy);
+  color: var(--pex-primary);
 }
 
 .formActions {
@@ -251,10 +251,10 @@
 .formActions > button:first-child {
   min-height: 44px;
   min-width: 110px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--pex-illustration-soft);
   border-radius: var(--radius-pill);
-  background: var(--color-white);
-  color: var(--color-navy);
+  background: var(--pex-bg);
+  color: var(--pex-primary);
   font-family: var(--font-button);
   font-weight: 800;
   transform-origin: center;
@@ -280,7 +280,7 @@
 
 .summary p {
   margin: 0 0 10px;
-  color: var(--color-orange-dark);
+  color: var(--pex-accent-hover);
   font-weight: 800;
 }
 
@@ -298,11 +298,11 @@
 
 .summary div {
   padding-bottom: 14px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--pex-illustration-soft);
 }
 
 .summary dt {
-  color: var(--color-muted);
+  color: var(--pex-text-muted);
   font-size: 13px;
 }
 
@@ -314,7 +314,7 @@
 .summary span {
   display: block;
   margin-top: 24px;
-  color: var(--color-muted);
+  color: var(--pex-text-muted);
   font-size: 14px;
 }
 
@@ -354,7 +354,7 @@
 }
 
 .deliveryNotice p {
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 14px;
   line-height: 1.5;
   margin: 0;
@@ -362,7 +362,7 @@
 }
 
 .deliveryPolicyLink {
-  color: var(--color-orange);
+  color: var(--pex-accent);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -376,17 +376,17 @@
 .summaryTotal {
   margin-top: 8px;
   padding-top: 14px;
-  border-top: 2px solid var(--color-navy) !important;
+  border-top: 2px solid var(--pex-primary) !important;
 }
 
 .summaryTotal dt {
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 16px;
   font-weight: 800;
 }
 
 .summaryTotal dd {
-  color: var(--color-orange);
+  color: var(--pex-accent);
   font-size: 20px;
 }
 
@@ -398,15 +398,15 @@
 }
 
 .addonCard {
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--pex-illustration-soft);
   border-radius: var(--radius-card);
   padding: 24px;
-  background: var(--color-white);
+  background: var(--pex-bg);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .addonCardActive {
-  border-color: var(--color-orange);
+  border-color: var(--pex-accent);
   box-shadow: 0 4px 16px rgba(205, 145, 52, 0.1);
   background: rgba(205, 145, 52, 0.02);
 }
@@ -425,11 +425,11 @@
 .addonTitle h3 {
   margin: 0;
   font-size: 20px;
-  color: var(--color-navy);
+  color: var(--pex-primary);
 }
 
 .addonPrice {
-  color: var(--color-orange);
+  color: var(--pex-accent);
   font-weight: 800;
   font-size: 16px;
 }
@@ -442,7 +442,7 @@
 
 .addonSubtext {
   font-size: 14px !important;
-  color: var(--color-muted) !important;
+  color: var(--pex-text-muted) !important;
   margin-top: 4px !important;
 }
 
@@ -451,7 +451,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px;
-  background: var(--color-bg);
+  background: var(--pex-bg);
   border-radius: 12px;
   cursor: pointer;
   margin-bottom: 12px;
@@ -460,23 +460,23 @@
 .addonCheckbox input {
   width: 20px;
   height: 20px;
-  accent-color: var(--color-orange);
+  accent-color: var(--pex-accent);
 }
 
 .addonCheckbox span {
   font-weight: 800;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 16px;
 }
 
 .addonNote {
   font-size: 13px;
-  color: var(--color-muted);
+  color: var(--pex-text-muted);
   margin: 0 0 24px;
 }
 
 .addonDetails {
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--pex-illustration-soft);
   padding-top: 24px;
   display: flex;
   flex-direction: column;
@@ -485,7 +485,7 @@
 
 .addonDetailsHelper {
   font-size: 14px;
-  color: var(--color-muted);
+  color: var(--pex-text-muted);
   margin: 0;
   font-style: italic;
 }

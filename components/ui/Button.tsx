@@ -5,7 +5,7 @@ import styles from "./Button.module.css";
 
 type BaseProps = {
   children: ReactNode;
-  variant?: "navy" | "white" | "outline";
+  variant?: "primary" | "secondary" | "navy" | "white" | "outline";
   size?: "sm" | "md" | "lg";
   className?: string;
   ariaLabel?: string;
@@ -23,7 +23,7 @@ type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 export function Button({
   children,
-  variant = "navy",
+  variant = "primary",
   size = "md",
   className = "",
   ariaLabel,

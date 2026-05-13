@@ -37,8 +37,8 @@
   min-height: var(--touch-target-min);
   border: 1px solid rgba(25, 42, 62, 0.12);
   border-radius: var(--radius-pill);
-  background: var(--color-navy);
-  color: var(--color-white);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
   box-shadow: var(--shadow-card);
   display: grid;
   place-items: center;

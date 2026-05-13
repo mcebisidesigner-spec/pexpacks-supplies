@@ -1,6 +1,6 @@
 .comparisonSection {
   padding: 72px 0;
-  background: var(--color-white);
+  background: var(--pex-bg);
   border-top: 1px solid rgba(15, 37, 55, 0.04);
 }
 
@@ -19,7 +19,7 @@
 }
 
 .featureCard {
-  background: var(--color-white);
+  background: var(--pex-bg);
   border-radius: 20px;
   padding: 32px 24px;
   box-shadow: 0 12px 32px rgba(15, 37, 55, 0.05);
@@ -39,7 +39,7 @@
   font-family: var(--font-button);
   font-size: 20px;
   font-weight: 800;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   margin: 0 0 24px 0;
   text-align: center;
 }
@@ -76,12 +76,12 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 800;
-  color: var(--color-muted);
+  color: var(--pex-text-muted);
   margin-bottom: 12px;
 }
 
 .pexpacksItem .itemLabel {
-  color: var(--color-orange);
+  color: var(--pex-accent);
 }
 
 .itemContent {
@@ -91,7 +91,7 @@
   gap: 8px;
   font-size: 15px;
   font-weight: 500;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   line-height: 1.4;
 }
 
@@ -102,7 +102,7 @@
 .iconCheck {
   width: 28px;
   height: 28px;
-  stroke: var(--color-orange);
+  stroke: var(--pex-accent);
   stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -112,7 +112,7 @@
 .iconCross {
   width: 28px;
   height: 28px;
-  stroke: #d0492c;
+  stroke: var(--pex-error);
   stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -126,8 +126,8 @@
   transform: translate(-50%, -50%);
   width: 36px;
   height: 36px;
-  background: var(--color-navy);
-  color: var(--color-white);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -136,7 +136,7 @@
   font-weight: 800;
   z-index: 2;
   box-shadow: 0 4px 12px rgba(15, 37, 55, 0.15);
-  border: 4px solid var(--color-white);
+  border: 4px solid var(--pex-bg);
 }
 
 @media (max-width: 768px) {

@@ -14,7 +14,7 @@ export const faqs: FAQ[] = [
     answer: (
       <>
         You can request the school and grade through the enquiry flow. Pexpacks will follow up and help prepare the closest correct stationery pack option.{" "}
-        <Link href="/add-your-school#school-request-form" style={{ color: "var(--color-navy)", fontWeight: 800, textDecoration: "underline", marginLeft: "4px" }}>
+        <Link href="/add-your-school#school-request-form" style={{ color: "var(--pex-primary)", fontWeight: 800, textDecoration: "underline", marginLeft: "4px" }}>
           Add Your School
         </Link>
       </>

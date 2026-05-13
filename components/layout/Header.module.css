@@ -41,7 +41,7 @@
 }
 
 .navLink {
-  color: var(--color-navy);
+  color: var(--pex-primary);
   border-bottom: 2px solid transparent;
   padding: 7px 0 6px;
   font-family: "Grota Sans", "Pexpacks Sans", Arial, sans-serif;
@@ -54,8 +54,8 @@
 
 .navLink:hover,
 .navLinkActive {
-  color: var(--color-orange);
-  border-bottom-color: var(--color-orange);
+  color: var(--pex-accent);
+  border-bottom-color: var(--pex-accent);
 }
 
 .desktopOrder {
@@ -67,8 +67,8 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: var(--color-navy);
-  color: var(--color-white);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
   font-family: "Grota Sans", "Pexpacks Sans", Arial, sans-serif;
   font-size: 15px;
   font-weight: 700;
@@ -93,8 +93,8 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--color-orange);
-  color: var(--color-white);
+  background: var(--pex-accent);
+  color: var(--pex-bg);
   display: inline-grid;
   place-items: center;
   flex-shrink: 0;
@@ -126,7 +126,7 @@
   z-index: 1;
   inset: var(--mobile-header-height) 0 0;
   background: #ffffff;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   transform: translateX(100%);
   opacity: 0.98;
   visibility: hidden;
@@ -156,7 +156,7 @@
 
 .mobileMenuLink {
   width: fit-content;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   border-bottom: 2px solid transparent;
   padding-bottom: 5px;
   font-family: var(--font-button);
@@ -172,8 +172,8 @@
 
 .mobileMenuLink:hover,
 .mobileMenuLinkActive {
-  color: var(--color-orange);
-  border-bottom-color: var(--color-orange);
+  color: var(--pex-accent);
+  border-bottom-color: var(--pex-accent);
 }
 
 .mobileMenuCta {
@@ -185,8 +185,8 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: var(--color-navy);
-  color: var(--color-white);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
   font-family: var(--font-button);
   font-size: 16px;
   font-weight: 800;
@@ -302,7 +302,7 @@
     background: transparent;
     border-radius: var(--radius-pill);
     box-shadow: none;
-    color: var(--color-navy);
+    color: var(--pex-primary);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     transition: background-color 160ms ease-out;

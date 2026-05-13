@@ -1,23 +1,23 @@
 .section {
   padding: var(--section-padding-y-desktop) 0;
-  background: var(--section-bg-white);
+  background: var(--pex-bg);
 }
 
 .sectionAlt {
   padding: var(--section-padding-y-desktop) 0;
-  background: var(--section-bg-soft);
+  background: var(--pex-bg-warm);
 }
 
 .sectionCream {
   padding: var(--section-padding-y-desktop) 0;
-  background: var(--section-bg-soft);
+  background: var(--pex-bg-warm);
 }
 
 .homePackSection {
   position: relative;
   overflow: hidden;
   padding: var(--section-padding-y-desktop) 0;
-  background: var(--section-bg-white);
+  background: var(--pex-bg);
 }
 
 
@@ -46,7 +46,7 @@
 .hero {
   background:
     radial-gradient(circle at 92% 12%, rgba(76, 175, 80, 0.13), transparent 28%),
-    linear-gradient(180deg, #ffffff 0%, var(--pex-light) 100%);
+    linear-gradient(180deg, #ffffff 0%, var(--pex-bg) 100%);
   padding: clamp(34px, 6vw, 78px) 0 clamp(58px, 8vw, 108px);
 }
 
@@ -63,7 +63,7 @@
 
 .eyebrow {
   margin: 0 0 16px;
-  color: var(--pex-gold-text);
+  color: var(--pex-accent-hover);
   font-weight: 800;
   font-size: 14px;
   letter-spacing: 0;
@@ -72,7 +72,7 @@
 .heroTitle,
 .pageTitle {
   margin: 0;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
   font-size: clamp(42px, 6.4vw, 76px);
   font-weight: 800;
@@ -106,7 +106,7 @@
 }
 
 .inlineTextLink {
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-weight: 800;
   text-decoration: underline;
   text-decoration-thickness: 2px;
@@ -118,13 +118,13 @@
   display: grid;
   gap: 7px;
   padding: 12px 14px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--pex-illustration-soft);
   border-radius: 18px;
-  background: var(--color-white);
+  background: var(--pex-bg);
 }
 
 .field span {
-  color: var(--pex-muted);
+  color: var(--pex-text-muted);
   font-size: 12px;
   font-weight: 800;
   line-height: 1;
@@ -138,7 +138,7 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 15px;
 }
 
@@ -161,7 +161,7 @@
   border-radius: var(--radius-pill);
   padding: 8px 12px;
   background: rgba(255, 255, 255, 0.78);
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 13px;
   font-weight: 800;
 }
@@ -174,7 +174,7 @@
   overflow: hidden;
   background:
     linear-gradient(135deg, rgba(15, 37, 55, 0.94), rgba(30, 90, 168, 0.88)),
-    var(--color-navy);
+    var(--pex-primary);
   box-shadow: 0 28px 70px rgba(15, 37, 55, 0.18);
 }
 
@@ -194,7 +194,7 @@
   display: grid;
   align-content: end;
   gap: 18px;
-  color: var(--color-white);
+  color: var(--pex-bg);
 }
 
 .brandBox {
@@ -203,7 +203,7 @@
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.92);
-  color: var(--color-navy);
+  color: var(--pex-primary);
   box-shadow: 0 22px 44px rgba(0, 0, 0, 0.18);
   display: grid;
 }
@@ -214,7 +214,7 @@
 }
 
 .brandBox span {
-  color: var(--color-orange-dark);
+  color: var(--pex-accent-hover);
   font-weight: 800;
 }
 
@@ -282,8 +282,8 @@
   border-radius: 16px;
   display: grid;
   place-items: center;
-  background: var(--pex-cream);
-  color: var(--color-navy);
+  background: var(--pex-bg-warm);
+  color: var(--pex-primary);
 }
 
 .iconBadge svg {
@@ -301,7 +301,7 @@
 .infoCard h3,
 .benefitCard h3 {
   margin: 0;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 24px;
   line-height: 1.08;
   font-weight: 800;
@@ -318,7 +318,7 @@
 
 .cardLink {
   margin-top: 24px;
-  color: var(--pex-gold-text);
+  color: var(--pex-accent-hover);
   font-weight: 800;
 }
 
@@ -337,8 +337,8 @@
   height: 42px;
   margin-bottom: 22px;
   border-radius: var(--radius-pill);
-  background: var(--color-navy);
-  color: var(--color-white);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
   display: grid;
   place-items: center;
   font-weight: 800;
@@ -353,7 +353,7 @@
 }
 
 .benefitCard p {
-  color: var(--pex-muted);
+  color: var(--pex-text-muted);
   font-size: 15px;
 }
 
@@ -374,7 +374,7 @@
   padding: 18px;
   background:
     linear-gradient(135deg, rgba(245, 166, 35, 0.88), rgba(76, 175, 80, 0.72)),
-    var(--pex-cream);
+    var(--pex-bg-warm);
   display: flex;
   align-items: flex-end;
 }
@@ -382,20 +382,20 @@
 .packMediaBlue {
   background:
     linear-gradient(135deg, rgba(30, 90, 168, 0.86), rgba(15, 37, 55, 0.86)),
-    var(--pex-gold);
+    var(--pex-accent);
 }
 
 .packMediaGreen {
   background:
     linear-gradient(135deg, rgba(76, 175, 80, 0.82), rgba(245, 166, 35, 0.68)),
-    var(--pex-green);
+    var(--pex-success);
 }
 
 .packMedia span {
   border-radius: var(--radius-pill);
   padding: 9px 12px;
   background: rgba(255, 255, 255, 0.9);
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 13px;
   font-weight: 800;
 }
@@ -409,7 +409,7 @@
 
 .packMeta {
   margin: 0;
-  color: var(--pex-gold-text);
+  color: var(--pex-accent-hover);
   font-size: 13px;
   font-weight: 800;
 }
@@ -417,7 +417,7 @@
 .packList {
   margin: 0;
   padding-left: 18px;
-  color: var(--pex-muted);
+  color: var(--pex-text-muted);
   font-size: 14px;
 }
 
@@ -434,7 +434,7 @@
 }
 
 .priceLabel {
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-weight: 800;
 }
 
@@ -495,14 +495,14 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--color-orange);
+  background: var(--pex-accent);
 }
 
 .pageHero {
   padding: clamp(54px, 8vw, 96px) 0 clamp(42px, 6vw, 72px);
   background:
     radial-gradient(circle at 82% 10%, rgba(245, 166, 35, 0.18), transparent 28%),
-    linear-gradient(180deg, #ffffff, var(--pex-light));
+    linear-gradient(180deg, #ffffff, var(--pex-bg));
 }
 
 .pageHeroInner {
@@ -530,14 +530,14 @@
 
 .heroPanel p {
   margin: 0;
-  color: var(--pex-muted);
+  color: var(--pex-text-muted);
   line-height: 1.45;
 }
 
 .heroPanel strong {
   display: block;
   margin-top: 14px;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 28px;
   line-height: 1;
 }
@@ -569,7 +569,7 @@
 
 .formCard h2 {
   margin: 0 0 8px;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 30px;
   line-height: 1;
 }
@@ -583,7 +583,7 @@
   border-radius: 16px;
   padding: 12px 14px;
   background: rgba(76, 175, 80, 0.12);
-  color: #1f5d24;
+  color: var(--pex-success);
   font-weight: 800;
 }
 
@@ -592,13 +592,13 @@
   border-radius: 16px;
   padding: 12px 14px;
   background: rgba(235, 104, 38, 0.12);
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-weight: 800;
 }
 
 .privacyNotice {
   margin: 0;
-  color: var(--pex-muted);
+  color: var(--pex-text-muted);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -608,7 +608,7 @@
   grid-template-columns: 20px 1fr;
   gap: 10px;
   align-items: start;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 14px;
   font-weight: 700;
   line-height: 1.4;
@@ -618,11 +618,11 @@
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  accent-color: var(--color-orange);
+  accent-color: var(--pex-accent);
 }
 
 .fieldError {
-  color: #9d2f16 !important;
+  color: var(--pex-error) !important;
   font-size: 12px !important;
   font-weight: 800 !important;
   line-height: 1.3 !important;
@@ -651,14 +651,14 @@
 .faqItem summary {
   cursor: pointer;
   padding: 20px 24px;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-weight: 800;
 }
 
 .faqItem p {
   margin: 0;
   padding: 0 24px 22px;
-  color: var(--pex-muted);
+  color: var(--pex-text-muted);
   line-height: 1.45;
 }
 
@@ -785,7 +785,7 @@
   border: 1px solid rgba(245, 166, 35, 0.3);
   border-radius: var(--radius-section);
   padding: clamp(34px, 6vw, 64px);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4)), var(--pex-gold);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4)), var(--pex-accent);
   text-align: center;
   box-shadow: 0 22px 44px rgba(245, 166, 35, 0.12);
 }
@@ -797,7 +797,7 @@
 
 .guaranteeContent h2 {
   margin: 0;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: clamp(28px, 4vw, 42px);
   line-height: 1.1;
   font-weight: 800;
@@ -805,28 +805,28 @@
 
 .guaranteeContent p {
   margin: 16px 0 0;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 18px;
   line-height: 1.5;
   font-weight: 700;
 }
 
 .partnerBanner {
-  background: var(--color-bg);
+  background: var(--pex-bg);
   padding: 16px 24px;
   text-align: center;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--pex-illustration-soft);
 }
 
 .partnerBanner p {
   margin: 0;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 15px;
   font-weight: 700;
 }
 
 .partnerBanner a {
-  color: var(--color-orange-dark);
+  color: var(--pex-accent-hover);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 4px;

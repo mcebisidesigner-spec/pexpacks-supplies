@@ -31,11 +31,11 @@ function buildHtml(data: FormSubmission) {
   const htmlRows = rows
     .map(
       ([label, value]) =>
-        `<tr><th align="left" style="padding:6px 10px;border-bottom:1px solid #dde2e6">${escape(label)}</th><td style="padding:6px 10px;border-bottom:1px solid #dde2e6">${escape(value)}</td></tr>`
+        `<tr><th align="left" style="padding:6px 10px;border-bottom:1px solid var(--pex-illustration-soft)">${escape(label)}</th><td style="padding:6px 10px;border-bottom:1px solid var(--pex-illustration-soft)">${escape(value)}</td></tr>`
     )
     .join("");
 
-  return `<div style="font-family:Arial,sans-serif;color:#192a3e"><h2 style="margin:0 0 12px">New Pexpacks enquiry</h2><table cellspacing="0" style="border-collapse:collapse;width:100%;max-width:700px">${htmlRows}</table></div>`;
+  return `<div style="font-family:Arial,sans-serif;color:var(--pex-primary-dark)"><h2 style="margin:0 0 12px">New Pexpacks enquiry</h2><table cellspacing="0" style="border-collapse:collapse;width:100%;max-width:700px">${htmlRows}</table></div>`;
 }
 
 function buildText(data: FormSubmission) {

@@ -10,7 +10,7 @@
 }
 
 .accordionHeader h2 {
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: clamp(24px, 4vw, 32px);
   font-weight: 800;
   margin: 0 0 12px;
@@ -30,7 +30,7 @@
 }
 
 .accordionItem {
-  background: var(--color-white);
+  background: var(--pex-bg);
   border-radius: 16px;
   border: 1px solid rgba(15, 37, 55, 0.06);
   box-shadow: 0 4px 12px rgba(15, 37, 55, 0.02);
@@ -44,7 +44,7 @@
 }
 
 .accordionItem.open {
-  border-color: var(--color-orange);
+  border-color: var(--pex-accent);
   box-shadow: 0 12px 32px rgba(205, 145, 52, 0.08);
 }
 
@@ -62,7 +62,7 @@
 }
 
 .questionText {
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 18px;
   font-weight: 800;
   padding-right: 24px;
@@ -87,13 +87,13 @@
 .icon {
   width: 18px;
   height: 18px;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   transition: transform 0.3s ease;
 }
 
 .accordionItem.open .icon {
   transform: rotate(180deg);
-  color: var(--color-orange);
+  color: var(--pex-accent);
 }
 
 .accordionContent {

@@ -1,6 +1,6 @@
 .ctaSection {
-  background: var(--section-bg-navy);
-  color: var(--color-white);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
   padding: clamp(52px, 8vw, 92px) 0;
 }
 
@@ -18,7 +18,7 @@
 .eyebrow {
   max-width: none;
   margin: 0 0 16px;
-  color: var(--pex-gold);
+  color: var(--pex-accent);
   font-size: 14px;
   font-weight: 800;
 }

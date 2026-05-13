@@ -1,39 +1,27 @@
 :root {
-  --pex-navy: #306266;
-  --pex-gold: #e1702d;
-  --pex-green: #02b8bc;
-  --pex-cream: #fff8ec;
-  --pex-light: #f8fafc;
-  --pex-text: #032b2e;
-  --pex-muted: #4c7271;
-  --pex-gold-text: #bb5e22;
+  --pex-primary: #306266;
+  --pex-primary-dark: #1f3437;
+  --pex-accent: #e1702d;
+  --pex-accent-hover: #c95f24;
+  --pex-illustration-soft: #d6e5e5;
+  --pex-premium: #c49a4a;
+  --pex-soft-gold: #f3d6b8;
+  --pex-bg: #ffffff;
+  --pex-bg-warm: #f8f3ec;
+  --pex-text: #172326;
+  --pex-text-muted: #66777a;
+  --pex-success: #2f855a;
+  --pex-error: #b91c1c;
 
-  --color-navy: var(--pex-navy);
-  --color-orange: var(--pex-gold);
-  --color-teal: var(--pex-green);
-  --color-cream: var(--pex-cream);
-  --color-light: var(--pex-light);
-  --color-text: var(--pex-text);
-  --color-text-muted: #3b5050;
-  --color-bg: var(--pex-light);
-  --color-bg-soft: #f7f4ef;
-  --section-bg-white: #ffffff;
-  --section-bg-soft: var(--color-bg-soft);
-  --section-bg-navy: var(--color-navy);
-  --color-white: #ffffff;
-  --color-border: #d8e0ea;
-  --color-muted: var(--pex-muted);
-  --color-soft-blue: #dfe8f6;
-  --color-shadow: rgba(25, 42, 62, 0.18);
-  --color-focus: #0b5fff;
-  --focus-ring: 3px solid rgba(11, 95, 255, 0.5);
+  --color-shadow: rgba(31, 52, 55, 0.18);
+  --focus-ring: 3px solid rgba(225, 112, 45, 0.5);
 
   --radius-pill: 999px;
   --radius-card: 20px;
   --radius-image: 20px;
   --radius-section: 24px;
 
-  --card-bg: var(--color-white);
+  --card-bg: var(--pex-bg);
   --card-border: 1px solid rgba(18, 57, 69, 0.1);
   --card-shadow: 0 16px 40px rgba(18, 57, 69, 0.1);
   --card-shadow-hover: 0 20px 52px rgba(18, 57, 69, 0.14);

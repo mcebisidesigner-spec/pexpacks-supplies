@@ -20,14 +20,14 @@
   align-items: center;
   gap: 16px;
   padding: 0 40px;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 15px;
   font-weight: 500;
 }
 
 .highlight {
-  background: var(--color-orange);
-  color: var(--color-white);
+  background: var(--pex-accent);
+  color: var(--pex-bg);
   padding: 4px 10px;
   border-radius: 6px;
   font-family: var(--font-button);
@@ -38,7 +38,7 @@
 }
 
 .readMoreLink {
-  color: var(--color-orange);
+  color: var(--pex-accent);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 3px;

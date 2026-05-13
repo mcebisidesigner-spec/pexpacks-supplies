@@ -86,10 +86,10 @@ export default function OfficePacksPage() {
 
       <section className={styles.sectionCream} aria-labelledby="brand-package-heading">
         <div className={styles.inner}>
-          <div className={styles.splitBand} style={{ background: "var(--color-navy)", color: "var(--color-white)", borderRadius: "var(--radius-section)", padding: "clamp(32px, 6vw, 64px)" }}>
+          <div className={styles.splitBand} style={{ background: "var(--pex-primary)", color: "var(--pex-bg)", borderRadius: "var(--radius-section)", padding: "clamp(32px, 6vw, 64px)" }}>
             <div>
-              <p className={styles.eyebrow} style={{ color: "var(--color-orange)" }}>Special Offer</p>
-              <h2 id="brand-package-heading" style={{ color: "var(--color-white)", fontSize: "clamp(32px, 4vw, 42px)", marginBottom: "16px" }}>Business Starter Brand Package</h2>
+              <p className={styles.eyebrow} style={{ color: "var(--pex-accent)" }}>Special Offer</p>
+              <h2 id="brand-package-heading" style={{ color: "var(--pex-bg)", fontSize: "clamp(32px, 4vw, 42px)", marginBottom: "16px" }}>Business Starter Brand Package</h2>
               <p style={{ fontSize: "18px", opacity: 0.9, marginBottom: "24px", maxWidth: "480px", lineHeight: 1.5 }}>
                 Launch your business with a professional identity. Get your complete physical and digital branding sorted in one comprehensive package for only <strong>R3,500.00</strong>.
               </p>
@@ -98,8 +98,8 @@ export default function OfficePacksPage() {
               </div>
             </div>
             <div style={{ background: "rgba(255,255,255,0.05)", padding: "32px", borderRadius: "24px", border: "1px solid rgba(255,255,255,0.1)" }}>
-              <h3 style={{ color: "var(--color-white)", marginBottom: "20px", fontSize: "20px" }}>What's Included:</h3>
-              <ul className={styles.checkList} style={{ color: "var(--color-white)", '--check-color': 'var(--color-orange)' } as React.CSSProperties}>
+              <h3 style={{ color: "var(--pex-bg)", marginBottom: "20px", fontSize: "20px" }}>What's Included:</h3>
+              <ul className={styles.checkList} style={{ color: "var(--pex-bg)", '--check-color': 'var(--pex-accent)' } as React.CSSProperties}>
                 <li>Professional Logo Design</li>
                 <li>Custom Business Cards</li>
                 <li>Marketing Flyers</li>

@@ -3,7 +3,7 @@
    ───────────────────────────────────────────── */
 
 .footer {
-  background: var(--color-white);
+  background: var(--pex-bg);
   border-top: 1px solid rgba(25, 42, 62, 0.08);
 }
 
@@ -56,7 +56,7 @@
 
 .navLink {
   position: relative;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-family: var(--font-button);
   font-size: 16px;
   font-weight: 700;
@@ -69,13 +69,13 @@
 
 .navLink:hover,
 .navLinkActive {
-  color: var(--color-orange);
-  border-bottom-color: var(--color-orange);
+  color: var(--pex-accent);
+  border-bottom-color: var(--pex-accent);
 }
 
 .separator {
   margin: 0 14px;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   opacity: 0.25;
   font-weight: 300;
   font-size: 16px;
@@ -100,7 +100,7 @@
 }
 
 .legalLink:hover {
-  color: var(--color-navy);
+  color: var(--pex-primary);
 }
 
 /* ── Divider ── */
@@ -121,7 +121,7 @@
 /* ── Copyright ── */
 .copyright {
   margin: 0;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-size: 13px;
   font-weight: 500;
   line-height: 1.3;
@@ -129,14 +129,14 @@
 
 .designerLink {
   position: relative;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-weight: 600;
   text-decoration: none;
   transition: opacity 0.25s ease;
 }
 
 .designerLink:hover {
-  color: var(--color-orange);
+  color: var(--pex-accent);
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -155,8 +155,8 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: var(--color-navy);
-  color: var(--color-white);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
   display: grid;
   place-items: center;
   transform-origin: center;
@@ -164,7 +164,7 @@
 }
 
 .socialLink:hover {
-  background: var(--color-orange);
+  background: var(--pex-accent);
   filter: brightness(110%);
   transform: translateY(-2px) scale(1.08);
   box-shadow: var(--button-hover-shadow);

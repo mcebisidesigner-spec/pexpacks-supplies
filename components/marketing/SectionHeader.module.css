@@ -5,7 +5,7 @@
 
 .eyebrow {
   margin: 0 0 16px;
-  color: var(--pex-gold-text);
+  color: var(--pex-accent-hover);
   font-weight: 800;
   font-size: 14px;
   letter-spacing: 0;
@@ -13,7 +13,7 @@
 
 .sectionHeader h2 {
   margin: 0;
-  color: var(--color-navy);
+  color: var(--pex-primary);
   font-family: var(--font-heading);
   font-size: clamp(34px, 4.8vw, 58px);
   font-weight: var(--font-weight-heading);
@@ -22,7 +22,7 @@
 
 .sectionHeader p {
   margin: 14px 0 0;
-  color: var(--pex-muted);
+  color: var(--pex-text-muted);
   font-size: 18px;
   line-height: 1.45;
 }

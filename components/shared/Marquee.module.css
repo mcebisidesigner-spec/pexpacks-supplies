@@ -26,8 +26,8 @@
   height: 46px;
   border: 1px solid rgba(25, 42, 62, 0.12);
   border-radius: var(--radius-pill);
-  background: var(--color-navy);
-  color: var(--color-white);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
   box-shadow: var(--shadow-card);
   display: grid;
   place-items: center;
@@ -69,9 +69,9 @@
   padding: 24px;
   border: 1px solid rgba(15, 37, 55, 0.08);
   border-radius: var(--radius-card);
-  background: var(--color-white);
+  background: var(--pex-bg);
   box-shadow: var(--shadow-card);
-  color: var(--color-navy);
+  color: var(--pex-primary);
   display: grid;
   align-content: start;
   gap: 14px;
@@ -88,7 +88,7 @@
   height: 54px;
   border-radius: var(--radius-pill);
   object-fit: cover;
-  border: 2px solid var(--color-orange);
+  border: 2px solid var(--pex-accent);
 }
 
 .testimonialName {
@@ -100,13 +100,13 @@
 .testimonialRole,
 .testimonialContext {
   display: block;
-  color: var(--color-muted);
+  color: var(--pex-text-muted);
   font-size: 13px;
   line-height: 1.35;
 }
 
 .testimonialContext {
-  color: var(--color-orange-dark);
+  color: var(--pex-accent-hover);
   font-weight: 800;
 }
 

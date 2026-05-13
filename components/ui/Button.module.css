@@ -68,22 +68,37 @@
   font-size: 20px;
 }
 
-.navy {
-  background: var(--color-navy);
-  color: var(--color-white);
+.primary {
+  background: var(--pex-accent);
+  color: var(--pex-bg);
+  box-shadow: 0 10px 20px rgba(225, 112, 45, 0.2);
+}
+.primary:hover {
+  background: var(--pex-accent-hover);
+}
+
+.secondary, .navy {
+  background: var(--pex-primary);
+  color: var(--pex-bg);
   box-shadow: 0 10px 20px rgba(25, 42, 62, 0.12);
+}
+.secondary:hover, .navy:hover {
+  background: #274f52;
 }
 
 .white {
-  background: var(--color-white);
-  color: var(--color-navy);
+  background: var(--pex-bg);
+  color: var(--pex-primary);
   box-shadow: 0 10px 20px rgba(25, 42, 62, 0.12);
 }
 
 .outline {
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.62);
-  color: var(--color-white);
+  border-color: var(--pex-primary);
+  color: var(--pex-primary);
+}
+.outline:hover {
+  background: var(--pex-bg-warm);
 }
 
 @media (max-width: 520px) {

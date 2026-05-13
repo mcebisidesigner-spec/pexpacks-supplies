@@ -98,7 +98,7 @@ export default function StandardPacksPage() {
 
       <section
         className={pageStyles.section}
-        style={{ background: "var(--section-bg-white)" }}
+        style={{ background: "var(--pex-bg)" }}
         aria-labelledby="school-faqs">
         <div className={pageStyles.sectionInner}>
           <SectionHeader

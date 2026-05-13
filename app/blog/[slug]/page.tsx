@@ -98,7 +98,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               );
             }
             if (paragraph.startsWith("## ")) {
-              return <h2 key={index} style={{ marginTop: "32px", marginBottom: "16px", fontSize: "24px", color: "var(--color-navy)" }}>{paragraph.replace("## ", "")}</h2>;
+              return <h2 key={index} style={{ marginTop: "32px", marginBottom: "16px", fontSize: "24px", color: "var(--pex-primary)" }}>{paragraph.replace("## ", "")}</h2>;
             }
             return <p key={index}>{paragraph}</p>;
           })}

@@ -20,18 +20,18 @@
 }
 
 .orange {
-  background: var(--color-orange);
-  color: var(--color-white);
+  background: var(--pex-accent);
+  color: var(--pex-bg);
 }
 
 .navy {
-  background: var(--color-navy);
-  color: var(--color-white);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
 }
 
 .white {
-  background: var(--color-white);
-  color: var(--color-orange);
+  background: var(--pex-bg);
+  color: var(--pex-accent);
 }
 
 .left svg {
