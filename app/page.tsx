@@ -4,6 +4,8 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { WhatsInTheBoxList } from "@/components/marketing/WhatsInTheBoxList";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
+import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
+import { getFeaturedSchoolRecords } from "@/lib/schools/schoolSearchData";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { whyChoosePexpacks } from "@/data/packs";
@@ -50,6 +52,8 @@ const ShieldCheckIcon = () => (
 const benefitIcons = [PackageIcon, ClipboardCheckIcon, BookIcon, BriefcaseIcon, ShieldCheckIcon];
 
 export default function HomePage() {
+  const featuredSchools = getFeaturedSchoolRecords();
+
   return (
     <>
       <section className={styles.hero}>
@@ -88,6 +92,10 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {featuredSchools.length > 0 && (
+        <FeaturedSchoolsBanner schools={featuredSchools} />
+      )}
 
       <section className={styles.section}>
         <div className={styles.inner}>
