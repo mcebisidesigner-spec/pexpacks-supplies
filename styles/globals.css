@@ -128,13 +128,13 @@
 }
 
 html {
-  background: var(--pex-bg);
+  background: var(--pex-body-bg);
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: var(--pex-bg);
+  background: var(--pex-body-bg);
   color: var(--pex-text);
   font-family: var(--font-body);
   font-size: 16px;

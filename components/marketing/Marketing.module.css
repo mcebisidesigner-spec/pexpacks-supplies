@@ -1,23 +1,23 @@
 .section {
   padding: var(--section-padding-y-desktop) 0;
-  background: var(--pex-bg);
+  background: transparent;
 }
 
 .sectionAlt {
   padding: var(--section-padding-y-desktop) 0;
-  background: var(--pex-bg-soft);
+  background: var(--pex-bg);
 }
 
 .sectionCream {
   padding: var(--section-padding-y-desktop) 0;
-  background: var(--pex-bg-soft);
+  background: var(--pex-bg);
 }
 
 .homePackSection {
   position: relative;
   overflow: hidden;
   padding: var(--section-padding-y-desktop) 0;
-  background: var(--pex-bg);
+  background: transparent;
 }
 
 

@@ -6,6 +6,7 @@
   --pex-coral-hover: #E85E4B;
 
   --pex-bg: #FFFFFF;
+  --pex-body-bg: #F8F9FA;
   --pex-bg-soft: #F4F5F7;
   --pex-text: #172326;
   --pex-muted: #66777A;
@@ -48,9 +49,9 @@
 
   /* ── Cards ── */
   --card-bg: var(--pex-bg);
-  --card-border: 1px solid var(--pex-border);
-  --card-shadow: 0 16px 40px rgba(26, 42, 64, 0.1);
-  --card-shadow-hover: 0 20px 52px rgba(26, 42, 64, 0.14);
+  --card-border: 1px solid rgba(225, 231, 234, 0.6);
+  --card-shadow: 0 12px 32px rgba(26, 42, 64, 0.05);
+  --card-shadow-hover: 0 20px 48px rgba(26, 42, 64, 0.12);
 
   /* ── Spacing scale ── */
   --space-1: 4px;
