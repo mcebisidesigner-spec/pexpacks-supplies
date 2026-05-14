@@ -103,7 +103,7 @@ export default function StandardPacksPage() {
         <div className={pageStyles.sectionInner}>
           <SectionHeader
             eyebrow="Questions and answers"
-            title="Frequently Asked Questions"
+            title="Frequently asked questions"
             text="Answers for parents and schools."
             headingId="school-faqs"
           />

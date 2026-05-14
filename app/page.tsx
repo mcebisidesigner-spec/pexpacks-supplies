@@ -5,14 +5,26 @@ import { WhatsInTheBoxList } from "@/components/marketing/WhatsInTheBoxList";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { whyChoosePexpacks, homeProcessSteps, homepagePacks } from "@/data/packs";
+import {
+  whyChoosePexpacks,
+  homeProcessSteps,
+  homepagePacks,
+} from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import Link from "next/link";
 import styles from "@/components/marketing/Marketing.module.css";
 
 const PackageIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
     <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
     <line x1="12" y1="22.08" x2="12" y2="12"></line>
@@ -20,7 +32,15 @@ const PackageIcon = () => (
 );
 
 const ClipboardCheckIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
     <path d="M9 14l2 2 4-4"></path>
@@ -28,30 +48,59 @@ const ClipboardCheckIcon = () => (
 );
 
 const BookIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
   </svg>
 );
 
 const BriefcaseIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
   </svg>
 );
 
 const ShieldCheckIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
     <path d="M9 12l2 2 4-4"></path>
   </svg>
 );
 
-const benefitIcons = [PackageIcon, ClipboardCheckIcon, BookIcon, BriefcaseIcon, ShieldCheckIcon];
+const benefitIcons = [
+  PackageIcon,
+  ClipboardCheckIcon,
+  BookIcon,
+  BriefcaseIcon,
+  ShieldCheckIcon,
+];
 
 export default function HomePage() {
-
   return (
     <>
       <section className={styles.hero}>
@@ -59,8 +108,10 @@ export default function HomePage() {
           <div>
             <p className={styles.eyebrow}>Save time, Pex it.</p>
             <h1 className={styles.heroTitle}>
-              Start School
-              <br className={styles.mobileBreak} /> Ready
+              Everything <br />
+              packed.
+              <br className={styles.mobileBreak} /> Everything <br />
+              ready
             </h1>
             <p className={styles.heroLead}>
               No queues. No confusion. No missing items.
@@ -96,7 +147,11 @@ export default function HomePage() {
           <div className={styles.guaranteeBox}>
             <div className={styles.guaranteeContent}>
               <h2>100% Exact List Match Guarantee</h2>
-              <p>We pack exactly what is on your school's official stationery list. No missing items, no incorrect brands. If it's on the list, it's in the box.</p>
+              <p>
+                We pack exactly what is on your school's official stationery
+                list. No missing items, no incorrect brands. If it's on the
+                list, it's in the box.
+              </p>
             </div>
           </div>
         </div>
@@ -131,14 +186,28 @@ export default function HomePage() {
           <div className={styles.packGrid}>
             {homepagePacks.map((pack) => (
               <div className={styles.packCard} key={pack.id}>
-                <div style={{ padding: '24px', flexGrow: 1 }}>
+                <div style={{ padding: "24px", flexGrow: 1 }}>
                   <span className={styles.eyebrow}>{pack.category}</span>
                   <h3>{pack.name}</h3>
-                  <p style={{ color: 'var(--pex-text-muted)', marginBottom: '16px', fontSize: '15px' }}>{pack.description}</p>
-                  <p style={{ fontWeight: 800, color: 'var(--pex-keppel)' }}>{pack.priceLabel}</p>
+                  <p
+                    style={{
+                      color: "var(--pex-text-muted)",
+                      marginBottom: "16px",
+                      fontSize: "15px",
+                    }}>
+                    {pack.description}
+                  </p>
+                  <p style={{ fontWeight: 800, color: "var(--pex-keppel)" }}>
+                    {pack.priceLabel}
+                  </p>
                 </div>
-                <div style={{ padding: '0 24px 24px' }}>
-                  <Button href={pack.href} variant="outline" style={{ width: '100%' }}>{pack.cta}</Button>
+                <div style={{ padding: "0 24px 24px" }}>
+                  <Button
+                    href={pack.href}
+                    variant="outline"
+                    style={{ width: "100%" }}>
+                    {pack.cta}
+                  </Button>
                 </div>
               </div>
             ))}
@@ -220,7 +289,7 @@ export default function HomePage() {
         <div className={styles.inner}>
           <SectionHeader
             eyebrow="Why Pexpacks"
-            title="The Pexpacks Promise"
+            title="The Pexpacks promise"
             text="We save you time, reduce stress, and guarantee quality you can trust."
           />
           <div className={styles.benefitGrid}>

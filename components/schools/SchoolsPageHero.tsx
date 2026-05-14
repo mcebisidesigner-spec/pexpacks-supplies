@@ -9,7 +9,7 @@ export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {
   return (
     <PageHero
       eyebrow="School packs"
-      title="Find Your School Pack"
+      title="Find your school pack"
       text="Search your child's school, choose the grade, and get the correct stationery pack."
       panelText="School pack flow"
       panelTitle="Search. Select grade. Order."
