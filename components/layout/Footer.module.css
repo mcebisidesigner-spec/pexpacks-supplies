@@ -210,21 +210,21 @@
 
   .topSection {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 36px;
   }
 
   .navGroup {
-    align-items: center;
+    align-items: flex-start;
     gap: 20px;
   }
 
   .mainNav {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .legalNav {
-    justify-content: center;
+    justify-content: flex-start;
     gap: 20px;
   }
 
@@ -233,8 +233,9 @@
   }
 
   .bottomSection {
-    flex-direction: column-reverse;
+    flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     gap: 24px;
   }
 
@@ -253,7 +254,7 @@
   }
 
   .copyright {
-    text-align: center;
+    text-align: left;
   }
 }
 
