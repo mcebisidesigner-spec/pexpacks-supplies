@@ -10,40 +10,40 @@ export type Testimonial = {
 // TODO: Replace with confirmed real testimonials and written permission before public marketing use.
 export const testimonials: Testimonial[] = [
   {
-    id: "sarah-nkosi",
-    name: "Sarah Nkosi",
+    id: "mbuso-dlamini",
+    name: "Mbuso Dlamini",
     role: "Parent",
-    context: "Grade 3 learner",
+    context: "Grade 01 learner",
     quote:
       "Pexpacks made back-to-school preparation simple. Everything was packed clearly and ready before the first day of school.",
-    avatar: "/images/avatars/avatar-1.png"
+    avatar: "/images/avatars/mbuso.webp",
   },
   {
-    id: "lebo-maseko",
-    name: "Lebo Maseko",
+    id: "thandeka-mkize",
+    name: "Thandeka Mkhize",
     role: "Teacher",
     context: "Primary school educator",
     quote:
       "When learners arrive with the correct stationery, teaching can begin immediately. Pexpacks helps remove that first-week stress.",
-    avatar: "/images/avatars/avatar-2.png"
+    avatar: "/images/avatars/thandeka.webp",
   },
   {
-    id: "zanele-khumalo",
-    name: "Zanele Khumalo",
+    id: "lisa-bomani",
+    name: "Lisa Bomani",
     role: "Parent",
-    context: "Grade 7 learner",
+    context: "Grade 10 learner",
     quote:
-      "I did not have to run around comparing stationery lists and shops. The pack was simple to understand and easy to order.",
-    avatar: "/images/avatars/avatar-3.png"
+      "Pexpacks is a game changer for parents. I was able to order everything my daughter needed for school from the comfort of my home and everything was packed clearly and ready before the first day of school.",
+    avatar: "/images/avatars/lisa.webp",
   },
   {
-    id: "thabo-dlamini",
-    name: "Thabo Dlamini",
+    id: "ndoda-mabuz",
+    name: "Ndoda Mabuza",
     role: "SME Owner",
     context: "Home office supplies",
     quote:
       "The office stationery pack helped me restock quickly without wasting time searching for individual items.",
-    avatar: "/images/avatars/avatar-4.png"
+    avatar: "/images/avatars/ndoda.webp",
   },
   {
     id: "mpho-sithole",

@@ -16,7 +16,7 @@ export const dynamicParams = true;
 
 export async function generateMetadata({ params }: SchoolPageProps): Promise<Metadata> {
   const { schoolSlug } = await params;
-  const school = getSchoolBySlug(schoolSlug);
+  const school = await getSchoolBySlug(schoolSlug);
 
   if (!school) {
     return buildMetadata("School Not Found", "The requested school pack could not be found.", "/schools");
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: SchoolPageProps): Promise<Met
 
 export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   const { schoolSlug } = await params;
-  const school = getSchoolBySlug(schoolSlug);
+  const school = await getSchoolBySlug(schoolSlug);
 
   if (!school) {
     notFound();

@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { School } from "@/data/schools";
+import type { School, SchoolIndexRecord } from "@/data/schools";
 import { Button } from "@/components/ui/Button";
 import styles from "./Schools.module.css";
 
 type SchoolCardProps = {
-  school: School;
+  school: School | SchoolIndexRecord;
 };
 
 export function SchoolCard({ school }: SchoolCardProps) {

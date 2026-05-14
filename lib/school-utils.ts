@@ -1,11 +1,12 @@
-import { schools, type GradePack, type School } from "@/data/schools";
+import { getSchoolIndex, getFullSchoolRecords, type GradePack, type School } from "@/data/schools";
 
-export function getSchoolBySlug(slug: string) {
-  return schools.find((school) => school.slug === slug);
+export async function getSchoolBySlug(slug: string) {
+  const records = await getFullSchoolRecords();
+  return records.find((school) => school.slug === slug);
 }
 
-export function getGradeBySlug(schoolSlug: string, gradeSlug: string) {
-  const school = getSchoolBySlug(schoolSlug);
+export async function getGradeBySlug(schoolSlug: string, gradeSlug: string) {
+  const school = await getSchoolBySlug(schoolSlug);
 
   if (!school) {
     return undefined;
@@ -16,6 +17,7 @@ export function getGradeBySlug(schoolSlug: string, gradeSlug: string) {
 
 export function filterSchools(query: string, city: string, grade: string) {
   const normalizedQuery = query.trim().toLowerCase();
+  const schools = getSchoolIndex();
 
   return schools.filter((school) => {
     const matchesQuery =
@@ -23,7 +25,7 @@ export function filterSchools(query: string, city: string, grade: string) {
       school.name.toLowerCase().includes(normalizedQuery) ||
       school.city.toLowerCase().includes(normalizedQuery);
     const matchesCity = city === "all" || school.city === city;
-    const matchesGrade = grade === "all" || school.grades.some((item) => item.grade === grade);
+    const matchesGrade = grade === "all" || school.grades.some((g) => g.grade === grade);
 
     return matchesQuery && matchesCity && matchesGrade;
   });
@@ -40,12 +42,14 @@ export function normalizeSchoolSearchValue(value: string) {
     .trim();
 }
 
-export function resolveSchoolSearch(value: string): { school?: School; ambiguous: boolean } {
+export async function resolveSchoolSearch(value: string): Promise<{ school?: School; ambiguous: boolean }> {
   const normalizedValue = normalizeSchoolSearchValue(value);
 
   if (!normalizedValue) {
     return { ambiguous: false };
   }
+
+  const schools = await getFullSchoolRecords();
 
   const exactMatch = schools.find((school) => normalizeSchoolSearchValue(school.name) === normalizedValue);
 

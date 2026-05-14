@@ -15,8 +15,8 @@ export const dynamicParams = true;
 
 export async function generateMetadata({ params }: GradePageProps): Promise<Metadata> {
   const { schoolSlug, gradeSlug } = await params;
-  const school = getSchoolBySlug(schoolSlug);
-  const grade = getGradeBySlug(schoolSlug, gradeSlug);
+  const school = await getSchoolBySlug(schoolSlug);
+  const grade = await getGradeBySlug(schoolSlug, gradeSlug);
 
   if (!school || !grade) {
     return buildMetadata("Pack Not Found", "The requested grade stationery pack could not be found.", "/schools");
@@ -31,8 +31,8 @@ export async function generateMetadata({ params }: GradePageProps): Promise<Meta
 
 export default async function GradePackPage({ params }: GradePageProps) {
   const { schoolSlug, gradeSlug } = await params;
-  const school = getSchoolBySlug(schoolSlug);
-  const grade = getGradeBySlug(schoolSlug, gradeSlug);
+  const school = await getSchoolBySlug(schoolSlug);
+  const grade = await getGradeBySlug(schoolSlug, gradeSlug);
 
   if (!school || !grade) {
     notFound();

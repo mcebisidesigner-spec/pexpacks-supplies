@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
-import { schools } from "@/data/schools";
+import { getFullSchoolRecords } from "@/data/schools";
 import { siteUrl } from "@/lib/seo";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "",
     "/schools",
@@ -19,6 +19,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/cookie-notice",
     "/delivery-policy"
   ];
+
+  const schools = await getFullSchoolRecords();
 
   const schoolRoutes = schools.flatMap((school) => [
     `/schools/${school.slug}`,

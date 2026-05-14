@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { schools } from "@/data/schools";
+import { getSchoolBySlug } from "@/data/schools";
 
 export const runtime = "nodejs";
 
@@ -11,7 +11,7 @@ type RouteContext = {
 
 export async function GET(_request: NextRequest, { params }: RouteContext) {
   const { schoolSlug } = await params;
-  const school = schools.find((item) => item.slug === schoolSlug);
+  const school = await getSchoolBySlug(schoolSlug);
 
   if (!school) {
     return NextResponse.json({ success: false, message: "School not found." }, { status: 404 });

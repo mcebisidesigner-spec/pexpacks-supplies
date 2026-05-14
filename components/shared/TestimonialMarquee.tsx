@@ -1,7 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { type TouchEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  type TouchEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { Testimonial } from "@/data/testimonials";
 import { debounce } from "@/lib/debounce";
 import styles from "./Marquee.module.css";
@@ -32,7 +38,7 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [stepSize, setStepSize] = useState(0);
   const [visibleCards, setVisibleCards] = useState(1);
-  
+
   const maxIndex = Math.max(0, items.length - visibleCards);
   const previousDisabled = activeIndex <= 0;
   const nextDisabled = activeIndex >= maxIndex;
@@ -46,11 +52,15 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
     }
 
     const computed = window.getComputedStyle(track);
-    const gap = Number.parseFloat(computed.columnGap || computed.gap || "0") || 0;
+    const gap =
+      Number.parseFloat(computed.columnGap || computed.gap || "0") || 0;
     setStepSize(firstSlide.getBoundingClientRect().width + gap);
 
-    const viewportWidth = track.parentElement?.getBoundingClientRect().width || 0;
-    const cards = Math.floor(viewportWidth / (firstSlide.getBoundingClientRect().width + gap));
+    const viewportWidth =
+      track.parentElement?.getBoundingClientRect().width || 0;
+    const cards = Math.floor(
+      viewportWidth / (firstSlide.getBoundingClientRect().width + gap),
+    );
     setVisibleCards(Math.max(1, cards));
   }, []);
 
@@ -119,8 +129,7 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
         onClick={goPrevious}
         disabled={previousDisabled}
         aria-disabled={previousDisabled}
-        aria-label="Previous testimonial"
-      >
+        aria-label="Previous testimonial">
         <ChevronLeftIcon />
       </button>
 
@@ -128,33 +137,32 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
         className={styles.viewport}
         aria-live="polite"
         onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
+        onTouchEnd={handleTouchEnd}>
         <div
           className={styles.track}
           ref={trackRef}
-          style={{ transform: `translate3d(-${activeIndex * stepSize}px, 0, 0)` }}
-        >
+          style={{
+            transform: `translate3d(-${activeIndex * stepSize}px, 0, 0)`,
+          }}>
           {items.map((item) => (
-            <article
-              className={styles.testimonialCard}
-              key={item.id}
-            >
+            <article className={styles.testimonialCard} key={item.id}>
               <div className={styles.testimonialTop}>
-                {item.avatar ? (
+                {item.avatar ?
                   <Image
                     src={item.avatar}
                     width={54}
                     height={54}
-                    alt=""
+                    alt="testmonials"
                     className={styles.avatar}
                     loading="lazy"
                   />
-                ) : null}
+                : null}
                 <div>
                   <h3 className={styles.testimonialName}>{item.name}</h3>
                   <span className={styles.testimonialRole}>{item.role}</span>
-                  <span className={styles.testimonialContext}>{item.context}</span>
+                  <span className={styles.testimonialContext}>
+                    {item.context}
+                  </span>
                 </div>
               </div>
               <p className={styles.quote}>&ldquo;{item.quote}&rdquo;</p>
@@ -169,15 +177,19 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
         onClick={goNext}
         disabled={nextDisabled}
         aria-disabled={nextDisabled}
-        aria-label="Next testimonial"
-      >
+        aria-label="Next testimonial">
         <ChevronRightIcon />
       </button>
       <div className={styles.trackingBar} aria-hidden="true">
         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <div
             key={i}
-            className={[styles.trackingDot, i === activeIndex ? styles.trackingDotActive : ""].filter(Boolean).join(" ")}
+            className={[
+              styles.trackingDot,
+              i === activeIndex ? styles.trackingDotActive : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
             onClick={() => setActiveIndex(i)}
           />
         ))}

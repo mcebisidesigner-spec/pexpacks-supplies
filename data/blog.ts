@@ -68,7 +68,7 @@ export const blogPosts: BlogPost[] = [
     date: "2023-11-20",
     author: "PexPacks Team",
     category: "Education",
-    image: "/images/office-packs.png",
+    image: "/images/office-packs.webp",
   },
   {
     id: "4",
