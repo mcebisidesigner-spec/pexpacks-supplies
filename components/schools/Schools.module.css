@@ -424,20 +424,24 @@
 .featuredCard {
   min-height: 280px;
   padding: 24px;
-  border: var(--card-border);
+  border: 1px solid rgba(26, 42, 64, 0.08);
   border-radius: var(--radius-card);
-  background: var(--card-bg);
-  box-shadow: var(--card-shadow);
+  background: var(--pex-bg);
+  box-shadow: 0 12px 32px rgba(26, 42, 64, 0.08);
   display: grid;
   align-content: start;
   gap: 12px;
   transform-origin: center;
-  transition: var(--button-transition);
+  transition: all 0.3s ease;
 }
 
 .featuredCard:hover {
-  transform: var(--button-hover-transform);
-  box-shadow: var(--button-hover-shadow);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(26, 42, 64, 0.12);
+}
+
+.trackingBar {
+  display: none;
 }
 
 .featuredIcon {
@@ -924,6 +928,29 @@
 
   .featuredScroller::-webkit-scrollbar {
     display: none;
+  }
+
+  .trackingBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .trackingDot {
+    width: 24px;
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: rgba(26, 42, 64, 0.12);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .trackingDotActive {
+    width: 48px;
+    background: var(--pex-keppel);
   }
 
   .featuredCard {
