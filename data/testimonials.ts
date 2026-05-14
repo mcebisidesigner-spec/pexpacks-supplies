@@ -46,12 +46,12 @@ export const testimonials: Testimonial[] = [
     avatar: "/images/avatars/ndoda.webp",
   },
   {
-    id: "mpho-sithole",
-    name: "Mpho Sithole",
+    id: "mpoh-pitso",
+    name: "Mpoh Pitso",
     role: "School Administrator",
-    context: "School support team",
+    context: "School Support Team",
     quote:
       "A structured stationery pack system reduces confusion for parents and helps learners start the year prepared.",
-    avatar: "/images/avatars/avatar-5.png"
+    avatar: "/images/avatars/mpoh.webp"
   }
 ];
