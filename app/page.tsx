@@ -4,8 +4,6 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { WhatsInTheBoxList } from "@/components/marketing/WhatsInTheBoxList";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
-import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
-import { getFeaturedSchoolRecords } from "@/lib/schools/schoolSearchData";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { whyChoosePexpacks } from "@/data/packs";
@@ -52,7 +50,6 @@ const ShieldCheckIcon = () => (
 const benefitIcons = [PackageIcon, ClipboardCheckIcon, BookIcon, BriefcaseIcon, ShieldCheckIcon];
 
 export default function HomePage() {
-  const featuredSchools = getFeaturedSchoolRecords();
 
   return (
     <>
@@ -93,9 +90,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {featuredSchools.length > 0 && (
-        <FeaturedSchoolsBanner schools={featuredSchools} />
-      )}
+      <section className={styles.section} style={{ paddingBottom: "0" }}>
+        <div className={styles.inner}>
+          <div className={styles.guaranteeBox}>
+            <div className={styles.guaranteeContent}>
+              <h2>100% Exact List Match Guarantee</h2>
+              <p>We pack exactly what is on your school's official stationery list. No missing items, no incorrect brands. If it's on the list, it's in the box.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className={styles.section}>
         <div className={styles.inner}>
