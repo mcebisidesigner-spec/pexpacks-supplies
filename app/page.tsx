@@ -5,9 +5,10 @@ import { WhatsInTheBoxList } from "@/components/marketing/WhatsInTheBoxList";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
-import { whyChoosePexpacks } from "@/data/packs";
+import { whyChoosePexpacks, homeProcessSteps, homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
+import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
+import Link from "next/link";
 import styles from "@/components/marketing/Marketing.module.css";
 
 const PackageIcon = () => (
@@ -101,7 +102,51 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className={styles.sectionCream}>
+        <div className={styles.inner}>
+          <SectionHeader
+            eyebrow="Simple process"
+            title="How ordering works"
+            text="Get your stationery sorted in three easy steps without leaving your home."
+          />
+          <div className={styles.gridThree}>
+            {homeProcessSteps.map((step, idx) => (
+              <div className={styles.stepCard} key={step.title}>
+                <div className={styles.stepNumber}>{idx + 1}</div>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className={styles.section}>
+        <div className={styles.inner}>
+          <SectionHeader
+            eyebrow="Top choices"
+            title="Most popular packs"
+            text="See what other parents are ordering right now."
+          />
+          <div className={styles.packGrid}>
+            {homepagePacks.map((pack) => (
+              <div className={styles.packCard} key={pack.id}>
+                <div style={{ padding: '24px', flexGrow: 1 }}>
+                  <span className={styles.eyebrow}>{pack.category}</span>
+                  <h3>{pack.name}</h3>
+                  <p style={{ color: 'var(--pex-text-muted)', marginBottom: '16px', fontSize: '15px' }}>{pack.description}</p>
+                  <p style={{ fontWeight: 800, color: 'var(--pex-keppel)' }}>{pack.priceLabel}</p>
+                </div>
+                <div style={{ padding: '0 24px 24px' }}>
+                  <Button href={pack.href} variant="outline" style={{ width: '100%' }}>{pack.cta}</Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.sectionCream}>
         <div className={styles.inner}>
           <SectionHeader
             eyebrow="Pack options"
