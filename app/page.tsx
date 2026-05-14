@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
+import { WhatsInTheBoxList } from "@/components/marketing/WhatsInTheBoxList";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PathwayCards } from "@/components/marketing/PathwayCards";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
@@ -109,16 +110,7 @@ export default function HomePage() {
                 Each Pexpacks stationery pack is prepared to help learners start
                 ready, with essential school supplies according to school lists.
               </p>
-              <ul
-                className={[styles.checkList, styles.checkListSpaced].join(
-                  " ",
-                )}>
-                <li>Exercise books, pens, pencils and rulers</li>
-                <li>Glue, files, crayons or colour pencils where required</li>
-                <li>Grade-specific school-list items packed with care</li>
-                <li>Optional: Books pre-covered and labelled via Pexcover</li>
-                <li>Ready for the first day of school or collection</li>
-              </ul>
+              <WhatsInTheBoxList />
               <div
                 className={[styles.buttonRow, styles.splitActions].join(" ")}>
                 <Button href="/schools">Find Your School Pack</Button>
