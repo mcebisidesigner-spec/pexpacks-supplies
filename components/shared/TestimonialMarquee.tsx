@@ -173,6 +173,15 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
       >
         <ChevronRightIcon />
       </button>
+      <div className={styles.trackingBar} aria-hidden="true">
+        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+          <div
+            key={i}
+            className={[styles.trackingDot, i === activeIndex ? styles.trackingDotActive : ""].filter(Boolean).join(" ")}
+            onClick={() => setActiveIndex(i)}
+          />
+        ))}
+      </div>
     </div>
   );
 }

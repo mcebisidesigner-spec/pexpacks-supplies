@@ -117,36 +117,48 @@
 }
 
 
+.trackingBar {
+  display: none;
+}
 
 @media (max-width: 767px) {
   .slider {
-    grid-template-columns: 1fr 1fr;
-    gap: 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
   
   .viewport {
-    grid-column: 1 / -1;
-    grid-row: 1;
+    width: calc(100% + 28px);
     margin: -10px -14px;
     padding: 10px 14px;
   }
   
   .arrow {
-    width: 44px;
-    height: 44px;
-    margin-top: 18px;
+    display: none;
   }
-  
-  .arrowPrevious {
-    grid-column: 1;
-    grid-row: 2;
-    justify-self: end;
+
+  .trackingBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
   }
-  
-  .arrowNext {
-    grid-column: 2;
-    grid-row: 2;
-    justify-self: start;
+
+  .trackingDot {
+    width: 24px;
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: rgba(26, 42, 64, 0.12);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .trackingDotActive {
+    width: 48px;
+    background: var(--pex-keppel);
   }
 }
 
