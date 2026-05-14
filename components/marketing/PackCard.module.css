@@ -27,7 +27,7 @@
   min-height: 156px;
   padding: 18px;
   background:
-    linear-gradient(135deg, rgba(245, 166, 35, 0.88), rgba(76, 175, 80, 0.72)),
+    linear-gradient(135deg, rgba(33, 158, 154, 0.82), rgba(26, 42, 64, 0.72)),
     var(--pex-bg);
   display: flex;
   align-items: flex-end;
@@ -35,13 +35,13 @@
 
 .packMediaBlue {
   background:
-    linear-gradient(135deg, rgba(30, 90, 168, 0.86), rgba(15, 37, 55, 0.86)),
+    linear-gradient(135deg, rgba(21, 34, 56, 0.88), rgba(26, 42, 64, 0.86)),
     var(--pex-bg);
 }
 
 .packMediaGreen {
   background:
-    linear-gradient(135deg, rgba(76, 175, 80, 0.82), rgba(245, 166, 35, 0.68)),
+    linear-gradient(135deg, rgba(33, 158, 154, 0.78), rgba(26, 42, 64, 0.62)),
     var(--pex-bg);
 }
 
@@ -63,7 +63,7 @@
 
 .packMeta {
   margin: 0 !important;
-  color: var(--pex-accent);
+  color: var(--pex-keppel);
   font-size: 13px;
   font-weight: 800;
 }

@@ -24,9 +24,9 @@
 .arrow {
   width: 46px;
   height: 46px;
-  border: 1px solid rgba(25, 42, 62, 0.12);
+  border: 1px solid rgba(26, 42, 64, 0.12);
   border-radius: var(--radius-pill);
-  background: var(--pex-primary);
+  background: var(--pex-navy);
   color: var(--pex-bg);
   box-shadow: var(--shadow-card);
   display: grid;
@@ -88,7 +88,7 @@
   height: 54px;
   border-radius: var(--radius-pill);
   object-fit: cover;
-  border: 2px solid var(--pex-accent);
+  border: 2px solid var(--pex-keppel);
 }
 
 .testimonialName {
@@ -106,7 +106,7 @@
 }
 
 .testimonialContext {
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-weight: 800;
 }
 

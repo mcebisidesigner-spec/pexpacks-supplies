@@ -5,9 +5,9 @@
   min-height: var(--touch-target-min);
   border-radius: var(--radius-pill);
   padding: 0 18px;
-  background: var(--pex-primary);
+  background: var(--pex-navy);
   color: var(--pex-bg);
-  box-shadow: 0 18px 42px rgba(18, 57, 69, 0.24);
+  box-shadow: 0 18px 42px rgba(26, 42, 64, 0.24);
   display: none;
   align-items: center;
   justify-content: center;
@@ -37,7 +37,7 @@
   width: 28px;
   height: 28px;
   border-radius: var(--radius-pill);
-  background: var(--pex-accent-hover);
+  background: var(--pex-coral);
   color: var(--pex-bg);
   display: grid;
   place-items: center;

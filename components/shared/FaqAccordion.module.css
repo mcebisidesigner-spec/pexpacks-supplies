@@ -44,8 +44,8 @@
 }
 
 .accordionItem.open {
-  border-color: var(--pex-accent);
-  box-shadow: 0 12px 32px rgba(205, 145, 52, 0.08);
+  border-color: var(--pex-keppel);
+  box-shadow: 0 12px 32px rgba(33, 158, 154, 0.08);
 }
 
 .accordionButton {
@@ -81,7 +81,7 @@
 }
 
 .accordionItem.open .iconContainer {
-  background: rgba(205, 145, 52, 0.1);
+  background: rgba(33, 158, 154, 0.1);
 }
 
 .icon {
@@ -93,7 +93,7 @@
 
 .accordionItem.open .icon {
   transform: rotate(180deg);
-  color: var(--pex-accent);
+  color: var(--pex-keppel);
 }
 
 .accordionContent {

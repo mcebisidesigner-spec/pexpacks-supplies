@@ -69,36 +69,36 @@
 }
 
 .primary {
-  background: var(--pex-accent);
+  background: var(--pex-coral);
   color: var(--pex-bg);
-  box-shadow: 0 10px 20px rgba(225, 112, 45, 0.2);
+  box-shadow: 0 10px 20px rgba(255, 111, 89, 0.22);
 }
 .primary:hover {
-  background: var(--pex-accent-hover);
+  background: var(--pex-coral-hover);
 }
 
 .secondary, .navy {
-  background: var(--pex-primary);
+  background: var(--pex-navy);
   color: var(--pex-bg);
-  box-shadow: 0 10px 20px rgba(25, 42, 62, 0.12);
+  box-shadow: 0 10px 20px rgba(26, 42, 64, 0.12);
 }
 .secondary:hover, .navy:hover {
-  background: #274f52;
+  background: var(--pex-sme-navy);
 }
 
 .white {
   background: var(--pex-bg);
-  color: var(--pex-primary);
-  box-shadow: 0 10px 20px rgba(25, 42, 62, 0.12);
+  color: var(--pex-navy);
+  box-shadow: 0 10px 20px rgba(26, 42, 64, 0.12);
 }
 
 .outline {
   background: transparent;
-  border-color: var(--pex-primary);
-  color: var(--pex-primary);
+  border-color: var(--pex-navy);
+  color: var(--pex-navy);
 }
 .outline:hover {
-  background: var(--pex-bg-warm);
+  background: var(--pex-bg-soft);
 }
 
 @media (max-width: 520px) {

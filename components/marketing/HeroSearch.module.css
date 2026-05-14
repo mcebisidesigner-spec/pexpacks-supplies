@@ -49,8 +49,8 @@
   min-width: 140px;
   border: 0;
   border-radius: 18px;
-  background: var(--pex-accent);
-  color: var(--pex-text);
+  background: var(--pex-coral);
+  color: var(--pex-bg);
   font-weight: 800;
   cursor: pointer;
   transition: var(--button-transition);
@@ -177,7 +177,7 @@
   z-index: 80;
   inset: 0;
   padding: 20px;
-  background: rgba(25, 42, 62, 0.48);
+  background: rgba(26, 42, 64, 0.48);
   display: grid;
   place-items: center;
 }
@@ -193,7 +193,7 @@
 
 .eyebrow {
   margin: 0 0 16px;
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-size: 14px;
   font-weight: 800;
 }

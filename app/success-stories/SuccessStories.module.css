@@ -40,7 +40,7 @@
 }
 
 .location {
-  color: var(--pex-accent);
+  color: var(--pex-keppel);
   font-size: 14px;
   font-weight: 800;
   text-transform: uppercase;
@@ -90,7 +90,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  color: var(--pex-accent);
+  color: var(--pex-keppel);
   font-weight: 800;
 }
 
@@ -133,7 +133,7 @@
 }
 
 .authorName {
-  color: var(--pex-accent);
+  color: var(--pex-keppel);
   font-weight: 800;
   font-size: 18px;
 }

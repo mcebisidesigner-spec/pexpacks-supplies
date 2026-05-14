@@ -135,7 +135,7 @@ html {
 body {
   margin: 0;
   background: var(--pex-bg);
-  color: var(--pex-primary);
+  color: var(--pex-text);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: var(--line-body);
@@ -215,7 +215,7 @@ button:disabled {
   }
 }
 
-/* ── Focus ring (uses brand orange token) ── */
+/* ── Focus ring (uses brand keppel token) ── */
 :focus-visible {
   outline: var(--focus-ring);
   outline-offset: 4px;

@@ -1,20 +1,20 @@
 .urgencyAlert {
-  background: rgba(245, 166, 35, 0.15);
-  border-bottom: 1px solid rgba(245, 166, 35, 0.3);
+  background: rgba(33, 158, 154, 0.1);
+  border-bottom: 1px solid rgba(33, 158, 154, 0.2);
   text-align: center;
   padding: 12px 24px;
 }
 
 .urgencyAlert p {
   margin: 0;
-  color: var(--pex-premium);
+  color: var(--pex-keppel);
   font-size: 14px;
 }
 
 .schoolsHero {
   padding: clamp(54px, 8vw, 96px) 0 clamp(42px, 6vw, 72px);
   background:
-    radial-gradient(circle at 82% 10%, rgba(245, 166, 35, 0.18), transparent 28%),
+    radial-gradient(circle at 82% 10%, rgba(33, 158, 154, 0.12), transparent 28%),
     linear-gradient(180deg, #ffffff, var(--pex-bg));
 }
 
@@ -44,7 +44,7 @@
 .requestCta p,
 .supportSection p {
   margin: 0 0 12px;
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-size: 14px;
   font-weight: 800;
 }
@@ -55,7 +55,7 @@
 .supportSection h2,
 .searchExperience h2 {
   margin: 0;
-  color: var(--pex-primary);
+  color: var(--pex-navy);
   font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
   font-weight: 800;
   letter-spacing: 0;
@@ -84,7 +84,7 @@
 
 .schoolsHeroPanel p {
   margin: 0 0 10px;
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-size: 14px;
   font-weight: 800;
 }
@@ -156,7 +156,7 @@
   min-height: 68px;
   border: 0;
   border-radius: var(--radius-pill);
-  background: var(--pex-accent);
+  background: var(--pex-coral);
   color: var(--pex-bg);
   font-weight: 800;
 }
@@ -185,8 +185,8 @@
 }
 
 .resultsError {
-  border: 1px solid rgba(205, 145, 52, 0.28);
-  background: rgba(205, 145, 52, 0.12);
+  border: 1px solid rgba(185, 28, 28, 0.2);
+  background: rgba(185, 28, 28, 0.08);
 }
 
 .resultsCount {
@@ -242,7 +242,7 @@
   padding: 6px 10px;
   border-radius: var(--radius-pill);
   background: var(--pex-bg);
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-size: 12px;
   font-weight: 800;
 }
@@ -356,7 +356,7 @@
   width: 48px;
   height: 48px;
   border-radius: var(--radius-pill);
-  background: var(--pex-primary);
+  background: var(--pex-keppel);
   color: var(--pex-bg);
   display: grid;
   place-items: center;
@@ -445,7 +445,7 @@
   height: 54px;
   border-radius: 18px;
   background: var(--pex-bg);
-  color: var(--pex-accent);
+  color: var(--pex-keppel);
   display: grid;
   place-items: center;
   font-size: 28px;
@@ -453,7 +453,7 @@
 }
 
 .featuredMeta {
-  color: var(--pex-accent);
+  color: var(--pex-keppel);
   font-size: 13px;
   font-weight: 800;
 }
@@ -497,8 +497,8 @@
 }
 
 .partnerBadge {
-  background: rgba(245, 166, 35, 0.15);
-  color: var(--pex-premium);
+  background: rgba(33, 158, 154, 0.12);
+  color: var(--pex-keppel);
   padding: 4px 10px;
   border-radius: var(--radius-pill);
   font-size: 11px;
@@ -630,7 +630,7 @@
 
 .resultHeader .schoolEyebrow {
   margin: 0 0 10px;
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-size: 14px;
 }
 
@@ -663,7 +663,7 @@
 
 .schoolCardBody p {
   margin: 0 0 8px;
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-size: 13px;
   font-weight: 800;
 }
@@ -743,7 +743,7 @@
 }
 
 .gradeCard strong {
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
 }
 
 .gradeDetails {
@@ -773,13 +773,13 @@
 
 .kicker {
   margin: 0 0 20px;
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-weight: 800;
 }
 
 .contentsCard .kicker {
   margin: 0 0 10px;
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-size: 14px;
   line-height: 1.2;
 }
@@ -1028,7 +1028,7 @@
 }
 
 .bookCoveringEyebrow {
-  color: var(--pex-accent);
+  color: var(--pex-coral);
   font-family: var(--font-button);
   font-size: 14px;
   font-weight: 800;
@@ -1053,7 +1053,7 @@
 }
 
 .bookCoveringLead strong {
-  color: var(--pex-accent);
+  color: var(--pex-coral);
 }
 
 .bookCoveringList {
@@ -1077,7 +1077,7 @@
 .bookCoveringList svg {
   width: 24px;
   height: 24px;
-  color: var(--pex-accent);
+  color: var(--pex-coral);
   flex-shrink: 0;
 }
 
@@ -1100,14 +1100,14 @@
   position: absolute;
   top: 32px;
   right: 32px;
-  background: var(--pex-accent);
+  background: var(--pex-coral);
   color: var(--pex-bg);
   font-family: var(--font-button);
   font-size: 14px;
   font-weight: 800;
   padding: 12px 24px;
   border-radius: var(--radius-pill);
-  box-shadow: 0 12px 24px rgba(205, 145, 52, 0.4);
+  box-shadow: 0 12px 24px rgba(255, 111, 89, 0.3);
   z-index: 10;
   transform: rotate(3deg);
 }

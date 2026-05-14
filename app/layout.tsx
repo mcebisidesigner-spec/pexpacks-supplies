@@ -8,7 +8,7 @@ import { onlineStoreSchema, organizationSchema, websiteSchema } from "@/lib/sche
 import "@/styles/globals.css";
 
 export const viewport: Viewport = {
-  themeColor: "var(--pex-text)",
+  themeColor: "#1A2A40",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,

@@ -68,7 +68,7 @@
 }
 
 .pexpacksItem {
-  background: rgba(205, 145, 52, 0.08);
+  background: rgba(33, 158, 154, 0.08);
 }
 
 .itemLabel {
@@ -81,7 +81,7 @@
 }
 
 .pexpacksItem .itemLabel {
-  color: var(--pex-accent);
+  color: var(--pex-keppel);
 }
 
 .itemContent {
@@ -102,7 +102,7 @@
 .iconCheck {
   width: 28px;
   height: 28px;
-  stroke: var(--pex-accent);
+  stroke: var(--pex-keppel);
   stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;

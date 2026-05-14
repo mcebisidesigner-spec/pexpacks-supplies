@@ -1,7 +1,7 @@
 .marqueeWrapper {
   overflow: hidden;
-  background: rgba(205, 145, 52, 0.1);
-  border: 1px solid rgba(205, 145, 52, 0.2);
+  background: rgba(177, 156, 217, 0.1);
+  border: 1px solid rgba(177, 156, 217, 0.2);
   border-radius: 12px;
   padding: 12px 0;
   margin-bottom: 24px;
@@ -26,7 +26,7 @@
 }
 
 .highlight {
-  background: var(--pex-accent);
+  background: var(--pexcover-lavender);
   color: var(--pex-bg);
   padding: 4px 10px;
   border-radius: 6px;
@@ -38,7 +38,7 @@
 }
 
 .readMoreLink {
-  color: var(--pex-accent);
+  color: var(--pexcover-lavender);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 3px;

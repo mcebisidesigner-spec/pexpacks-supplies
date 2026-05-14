@@ -55,7 +55,7 @@
 }
 
 .progressActive {
-  background: var(--pex-primary) !important;
+  background: var(--pex-keppel) !important;
   color: var(--pex-bg) !important;
 }
 
@@ -173,7 +173,7 @@
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  accent-color: var(--pex-accent);
+  accent-color: var(--pex-keppel);
 }
 
 .privacyNotice {
@@ -183,7 +183,7 @@
 }
 
 .privacyLink {
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -214,7 +214,7 @@
 
 .confirmKicker {
   margin: 0 0 10px !important;
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-size: 14px;
   font-weight: 800;
 }
@@ -232,13 +232,13 @@
 }
 
 .formStatusSuccess {
-  background: rgba(76, 175, 80, 0.12);
+  background: rgba(47, 133, 90, 0.12);
   color: var(--pex-success);
 }
 
 .formStatusError {
-  background: rgba(235, 104, 38, 0.12);
-  color: var(--pex-primary);
+  background: rgba(185, 28, 28, 0.1);
+  color: var(--pex-error);
 }
 
 .formActions {
@@ -280,7 +280,7 @@
 
 .summary p {
   margin: 0 0 10px;
-  color: var(--pex-accent-hover);
+  color: var(--pex-keppel);
   font-weight: 800;
 }
 
@@ -345,8 +345,8 @@
 }
 
 .deliveryNotice {
-  background: rgba(205, 145, 52, 0.1);
-  border: 1px solid rgba(205, 145, 52, 0.3);
+  background: rgba(33, 158, 154, 0.08);
+  border: 1px solid rgba(33, 158, 154, 0.2);
   padding: 16px;
   border-radius: 12px;
   margin-top: -12px;
@@ -362,7 +362,7 @@
 }
 
 .deliveryPolicyLink {
-  color: var(--pex-accent);
+  color: var(--pex-keppel);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -386,7 +386,7 @@
 }
 
 .summaryTotal dd {
-  color: var(--pex-accent);
+  color: var(--pex-coral);
   font-size: 20px;
 }
 
@@ -406,9 +406,9 @@
 }
 
 .addonCardActive {
-  border-color: var(--pex-accent);
-  box-shadow: 0 4px 16px rgba(205, 145, 52, 0.1);
-  background: rgba(205, 145, 52, 0.02);
+  border-color: var(--pex-keppel);
+  box-shadow: 0 4px 16px rgba(33, 158, 154, 0.1);
+  background: rgba(33, 158, 154, 0.02);
 }
 
 .addonHeader {
@@ -429,7 +429,7 @@
 }
 
 .addonPrice {
-  color: var(--pex-accent);
+  color: var(--pex-coral);
   font-weight: 800;
   font-size: 16px;
 }
@@ -460,7 +460,7 @@
 .addonCheckbox input {
   width: 20px;
   height: 20px;
-  accent-color: var(--pex-accent);
+  accent-color: var(--pex-keppel);
 }
 
 .addonCheckbox span {
