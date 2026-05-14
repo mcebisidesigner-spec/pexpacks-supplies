@@ -29,7 +29,8 @@
   flex-shrink: 0;
 }
 
-.logoLink svg {
+.logoImage {
+  display: block;
   width: var(--logo-width-desktop);
   height: auto;
 }
@@ -268,7 +269,7 @@
     gap: 28px;
   }
 
-  .logoLink img {
+  .logoImage {
     width: var(--logo-width-mobile);
   }
 

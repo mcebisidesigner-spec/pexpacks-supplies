@@ -49,7 +49,7 @@ export function Footer() {
     <footer className={styles.footer} id="site-footer">
       <div className={styles.footerInner}>        <div className={styles.topSection}>
           <Link href="/" className={styles.logoLink} aria-label="Pexpacks home">
-            <Logo />
+            <Logo variant="white" className={styles.logoImage} />
           </Link>
 
           <div className={styles.navGroup}>

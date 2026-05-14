@@ -3,6 +3,7 @@ import type { GradePack, School } from "@/data/schools";
 import { generalEmail, internationalPhoneNumber, ordersEmail } from "@/data/contact";
 import { officePacks } from "@/data/officePacks";
 import { featuredPacks } from "@/data/packs";
+import { brandLogoUrls } from "@/lib/brand-assets";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { siteName, siteUrl } from "@/lib/seo";
 
@@ -28,7 +29,7 @@ export function organizationSchema() {
     name: siteName,
     legalName: "Pexpacks Supplies",
     url: siteUrl,
-    logo: `${siteUrl}/images/logo.svg`,
+    logo: brandLogoUrls.default,
     image: schoolPackImage,
     slogan: "Save time, Pex it.",
     description:
@@ -120,7 +121,7 @@ export function onlineStoreSchema() {
     "@id": storeId,
     name: siteName,
     url: siteUrl,
-    logo: `${siteUrl}/images/logo.svg`,
+    logo: brandLogoUrls.default,
     image: [schoolPackImage, productPackImage, officePackImage],
     telephone: `+${internationalPhoneNumber}`,
     email: generalEmail,
