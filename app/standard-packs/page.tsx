@@ -61,12 +61,12 @@ export default function StandardPacksPage() {
           <div className={styles.howItWorksGrid}>
             <div className={styles.howItWorksStep}>
               <div className={styles.stepCircle}>1</div>
-              <h3>Choose a Phase</h3>
+              <h3>Choose a phase</h3>
               <p>Select Foundation, Primary, or High School based on your child's age.</p>
             </div>
             <div className={styles.howItWorksStep}>
               <div className={styles.stepCircle}>2</div>
-              <h3>We Pack the Basics</h3>
+              <h3>We pack the basics</h3>
               <p>
                 Each box is packed with standard curriculum-approved pens, pencils, glue, and books.
               </p>
