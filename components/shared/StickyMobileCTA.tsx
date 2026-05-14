@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./StickyMobileCTA.module.css";
 
-const hiddenRoutes = ["/schools", "/order", "/contact"];
+const hiddenRoutes = ["/schools", "/order", "/contact", "/office-packs"];
 
 export function StickyMobileCTA() {
   const pathname = usePathname();
@@ -21,11 +21,25 @@ export function StickyMobileCTA() {
     }
 
     let frame = 0;
+    let isFooterVisible = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isFooterVisible = entries[0].isIntersecting;
+        updateVisibility();
+      },
+      { rootMargin: "0px" }
+    );
+
+    const footer = document.getElementById("site-footer");
+    if (footer) {
+      observer.observe(footer);
+    }
 
     function updateVisibility() {
       window.cancelAnimationFrame(frame);
       frame = window.requestAnimationFrame(() => {
-        setVisible(window.scrollY > 420);
+        setVisible(window.scrollY > 420 && !isFooterVisible);
       });
     }
 
@@ -34,6 +48,7 @@ export function StickyMobileCTA() {
     return () => {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", updateVisibility);
+      observer.disconnect();
     };
   }, [hiddenOnRoute]);
 
