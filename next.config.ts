@@ -17,6 +17,16 @@ const nextConfig: NextConfig = {
         permanent: true
       },
       {
+        source: "/standard-packs",
+        destination: "/foundation-phase",
+        permanent: true
+      },
+      {
+        source: "/standard-school-packs",
+        destination: "/foundation-phase",
+        permanent: true
+      },
+      {
         source: "/how-it-works",
         destination: "/",
         permanent: true

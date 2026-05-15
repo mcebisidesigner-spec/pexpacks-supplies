@@ -1,0 +1,140 @@
+.bannerContainer {
+  background: white;
+  border-radius: var(--radius-card);
+  box-shadow: 0 12px 32px rgba(26, 42, 64, 0.06);
+  padding: clamp(32px, 5vw, 48px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 992px) {
+  .bannerContainer {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+}
+
+.bannerContent h2 {
+  color: var(--pex-primary);
+  margin-top: 12px;
+  margin-bottom: 16px;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.bannerContent p {
+  color: var(--pex-text);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.incentiveBox {
+  background: rgba(33, 158, 154, 0.1);
+  border: 1px solid rgba(33, 158, 154, 0.2);
+  border-left: 4px solid var(--pex-keppel);
+  padding: 16px;
+  border-radius: var(--radius-button);
+  margin-bottom: 32px;
+}
+
+.incentiveBox p {
+  margin: 0;
+  color: var(--pex-primary);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.interactionPanel {
+  background: var(--pex-bg);
+  border-radius: var(--radius-section);
+  padding: clamp(24px, 4vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: inset 0 2px 12px rgba(0,0,0,0.02);
+}
+
+.panelTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--pex-primary);
+  margin: 0;
+}
+
+.searchForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.searchForm label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pex-primary);
+}
+
+.searchForm input,
+.searchForm textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-button);
+  font-family: inherit;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.searchForm input:focus,
+.searchForm textarea:focus {
+  outline: none;
+  border-color: var(--pex-keppel);
+  box-shadow: 0 0 0 3px rgba(33, 158, 154, 0.1);
+}
+
+.searchForm textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.fileUpload {
+  border: 2px dashed rgba(0, 0, 0, 0.2);
+  padding: 32px 24px;
+  border-radius: var(--radius-button);
+  text-align: center;
+  font-size: 14px;
+  color: var(--pex-text-muted);
+  cursor: pointer;
+  background: white;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.fileUpload svg {
+  color: var(--pex-primary);
+  opacity: 0.5;
+}
+
+.fileUpload input {
+  display: none;
+}
+
+.fileUpload:hover {
+  border-color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.02);
+}
+
+.fileUpload:hover svg {
+  color: var(--pex-keppel);
+  opacity: 1;
+}
