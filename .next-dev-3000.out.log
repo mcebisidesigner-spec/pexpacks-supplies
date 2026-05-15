@@ -6,51 +6,23 @@
 - Local:         http://localhost:3000
 - Network:       http://192.168.1.26:3000
 - Environments: .env.local
-✓ Ready in 564ms
+✓ Ready in 7.4s
 Creating turbopack project {
   dir: 'E:\\WORK-FOLDER\\WEB-DESIGN-PROJECTS\\pexpacks-supplies',
   testMode: true
 }
 
- GET / 200 in 734ms (next.js: 221ms, application-code: 514ms)
- GET / 200 in 280ms (next.js: 5ms, application-code: 275ms)
- GET / 200 in 196ms (next.js: 6ms, application-code: 190ms)
- GET /office-packs 200 in 107ms (next.js: 27ms, application-code: 81ms)
- GET / 200 in 52ms (next.js: 3ms, application-code: 49ms)
- GET /foundation-phase 200 in 142ms (next.js: 70ms, application-code: 72ms)
- GET /foundation-phase 200 in 34ms (next.js: 3ms, application-code: 31ms)
- GET / 200 in 132ms (next.js: 4ms, application-code: 128ms)
- GET /schools 200 in 122ms (next.js: 51ms, application-code: 71ms)
- GET /api/schools/search?q=park&limit=12&offset=0 200 in 558ms (next.js: 551ms, application-code: 7ms)
- GET /schools/constantia-park-primary 200 in 1179ms (next.js: 1112ms, application-code: 67ms)
- GET /schools/constantia-park-primary/grade-7 200 in 1442ms (next.js: 1385ms, application-code: 56ms)
-✓ Finished filesystem cache database compaction in 38.4s
- GET /blog 200 in 71ms (next.js: 29ms, application-code: 43ms)
- GET /blog/why-teachers-prefer-specific-brands 200 in 527ms (next.js: 481ms, generate-params: 445ms, application-code: 46ms)
-✓ Compiled in 104ms
- GET /foundation-phase 200 in 762ms (next.js: 137ms, application-code: 625ms)
- GET /foundation-phase 200 in 302ms (next.js: 6ms, application-code: 295ms)
- GET /schools/constantia-park-primary/grade-7 200 in 305ms (next.js: 62ms, application-code: 243ms)
- GET /foundation-phase 200 in 176ms (next.js: 5ms, application-code: 171ms)
- GET / 200 in 997ms (next.js: 325ms, application-code: 672ms)
- GET / 200 in 495ms (next.js: 105ms, application-code: 390ms)
- GET /foundation-phase 200 in 387ms (next.js: 7ms, application-code: 380ms)
- GET /foundation-phase 200 in 389ms (next.js: 66ms, application-code: 323ms)
- GET /foundation-phase 200 in 331ms (next.js: 47ms, application-code: 284ms)
- GET /schools/constantia-park-primary/grade-7 200 in 404ms (next.js: 5ms, application-code: 399ms)
- GET /schools/constantia-park-primary/grade-7 200 in 201ms (next.js: 12ms, application-code: 189ms)
- GET / 200 in 546ms (next.js: 7ms, application-code: 539ms)
- GET / 200 in 455ms (next.js: 5ms, application-code: 451ms)
- GET /schools/constantia-park-primary/grade-7 200 in 174ms (next.js: 6ms, application-code: 168ms)
- GET / 200 in 535ms (next.js: 8ms, application-code: 526ms)
- GET / 200 in 461ms (next.js: 6ms, application-code: 455ms)
- GET /schools/constantia-park-primary/grade-7 200 in 167ms (next.js: 6ms, application-code: 161ms)
- GET /schools/constantia-park-primary/grade-7 200 in 114ms (next.js: 9ms, application-code: 105ms)
- GET / 200 in 67ms (next.js: 4ms, application-code: 64ms)
- GET /schools 200 in 105ms (next.js: 22ms, application-code: 83ms)
- GET /api/schools/search?q=pa&limit=12&offset=0 200 in 78ms (next.js: 54ms, application-code: 24ms)
- GET /api/schools/search?q=par&limit=12&offset=0 200 in 10ms (next.js: 2ms, application-code: 8ms)
- GET /api/schools/search?q=park&limit=12&offset=0 200 in 8ms (next.js: 2ms, application-code: 5ms)
- GET /schools/constantia-park-primary 200 in 63ms (next.js: 25ms, application-code: 37ms)
- GET /order 200 in 643ms (next.js: 596ms, application-code: 47ms)
- GET /foundation-phase 200 in 38ms (next.js: 5ms, application-code: 34ms)
+○ Compiling / ...
+ GET / 200 in 10.3s (next.js: 10.1s, application-code: 190ms)
+ GET / 200 in 748ms (next.js: 16ms, application-code: 732ms)
+ GET / 200 in 14.1s (next.js: 13.0s, application-code: 1065ms)
+ GET / 200 in 435ms (next.js: 42ms, application-code: 393ms)
+ GET / 200 in 175ms (next.js: 6ms, application-code: 169ms)
+ GET /foundation-phase 200 in 115ms (next.js: 81ms, application-code: 33ms)
+ GET / 200 in 62ms (next.js: 3ms, application-code: 59ms)
+ GET /schools 200 in 175ms (next.js: 102ms, application-code: 74ms)
+ GET /office-packs 200 in 222ms (next.js: 139ms, application-code: 83ms)
+ GET / 200 in 61ms (next.js: 4ms, application-code: 58ms)
+ GET /schools 200 in 66ms (next.js: 4ms, application-code: 62ms)
+ GET /schools/greenside-primary 200 in 903ms (next.js: 814ms, application-code: 89ms)
+ GET /schools/greenside-primary/grade-1 200 in 633ms (next.js: 583ms, application-code: 50ms)
