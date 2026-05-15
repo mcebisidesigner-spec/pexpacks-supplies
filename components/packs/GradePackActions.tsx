@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
@@ -61,6 +61,7 @@ export function GradePackActions({
 }: GradePackActionsProps) {
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selection, setSelection] = useState<PackSelectionItem[]>(() =>
     createCustomPackSelection(pack.items)
@@ -81,6 +82,13 @@ export function GradePackActions({
     listText
   )}`;
 
+  const closeCustomiser = useCallback(() => {
+    setIsOpen(false);
+    window.setTimeout(() => {
+      triggerButtonRef.current?.focus();
+    }, 0);
+  }, []);
+
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -90,7 +98,7 @@ export function GradePackActions({
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setIsOpen(false);
+        closeCustomiser();
       }
     }
 
@@ -100,9 +108,8 @@ export function GradePackActions({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
-      document.getElementById(`customise-${pack.id}`)?.focus();
     };
-  }, [isOpen, pack.id]);
+  }, [closeCustomiser, isOpen]);
 
   useEffect(() => {
     setSelection(createCustomPackSelection(pack.items));
@@ -167,7 +174,10 @@ export function GradePackActions({
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => setIsOpen(true)}
+          onClick={(event) => {
+            triggerButtonRef.current = event.currentTarget;
+            setIsOpen(true);
+          }}
         >
           Customise This Pack
         </Button>
@@ -188,7 +198,7 @@ export function GradePackActions({
           role="presentation"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) {
-              setIsOpen(false);
+              closeCustomiser();
             }
           }}
         >
@@ -209,11 +219,11 @@ export function GradePackActions({
               <button
                 type="button"
                 className={styles.closeButton}
-                onClick={() => setIsOpen(false)}
+                onClick={closeCustomiser}
                 aria-label="Close custom pack builder"
                 ref={closeButtonRef}
               >
-                ×
+                &times;
               </button>
             </div>
 
