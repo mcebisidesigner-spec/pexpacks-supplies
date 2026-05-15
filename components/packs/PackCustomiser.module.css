@@ -1,16 +1,16 @@
 .actions {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .actionRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: grid;
+  gap: 10px;
 }
 
 .actionRow > * {
-  min-height: 52px;
+  width: 100%;
+  min-height: 40px;
 }
 
 .microcopy {
@@ -38,7 +38,7 @@
 }
 
 .drawer {
-  width: min(720px, 100%);
+  width: min(620px, 100%);
   height: 100%;
   overflow-y: auto;
   background: var(--pex-bg);
@@ -51,7 +51,7 @@
   position: sticky;
   top: 0;
   z-index: 3;
-  padding: clamp(22px, 4vw, 34px);
+  padding: clamp(20px, 3.4vw, 30px);
   border-bottom: 1px solid var(--pex-border);
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(12px);
@@ -74,14 +74,16 @@
   margin: 0;
   color: var(--pex-primary);
   font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
-  font-size: clamp(30px, 5vw, 46px);
+  font-size: clamp(28px, 4vw, 40px);
   line-height: 1;
 }
 
 .header span {
   display: block;
-  margin-top: 12px;
+  margin-top: 10px;
   color: var(--pex-text);
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 800;
   line-height: 1.45;
 }
 
@@ -105,9 +107,9 @@
 }
 
 .content {
-  padding: clamp(20px, 4vw, 34px);
+  padding: clamp(18px, 3.4vw, 28px);
   display: grid;
-  gap: 20px;
+  gap: 16px;
 }
 
 .summaryCard,
@@ -119,34 +121,33 @@
 }
 
 .summaryCard {
-  padding: 20px;
+  padding: 18px 20px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 8px;
 }
 
 .summaryValue {
   display: block;
   color: var(--pex-primary);
-  font-size: 24px;
+  font-size: clamp(26px, 4vw, 36px);
   font-weight: 800;
   line-height: 1;
 }
 
 .quoteNote {
-  grid-column: 1 / -1;
   margin: 0;
   color: var(--pex-text-muted);
+  font-size: 14px;
   line-height: 1.45;
 }
 
 .itemList {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .itemRow {
-  padding: 16px;
+  padding: 14px;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 14px;
@@ -172,6 +173,7 @@
   display: block;
   color: var(--pex-primary);
   font-weight: 800;
+  font-size: 16px;
   line-height: 1.2;
 }
 
@@ -203,7 +205,7 @@
   bottom: 0;
   z-index: 4;
   margin-top: auto;
-  padding: 18px clamp(20px, 4vw, 34px);
+  padding: 16px clamp(18px, 3.4vw, 28px);
   border-top: 1px solid var(--pex-border);
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 -16px 34px rgba(15, 37, 55, 0.08);
@@ -232,7 +234,7 @@
 
 .resetButton,
 .submitButton {
-  min-height: 52px;
+  min-height: 46px;
   border-radius: var(--radius-pill);
   padding: 0 20px;
   font: inherit;
@@ -258,14 +260,6 @@
 }
 
 @media (max-width: 760px) {
-  .actionRow {
-    display: grid;
-  }
-
-  .actionRow > * {
-    width: 100%;
-  }
-
   .overlay {
     align-items: flex-end;
     justify-content: center;
@@ -281,7 +275,6 @@
     padding-top: max(20px, env(safe-area-inset-top));
   }
 
-  .summaryCard,
   .itemRow,
   .footer {
     grid-template-columns: 1fr;

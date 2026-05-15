@@ -1,7 +1,7 @@
 import type { GradePack, School } from "@/data/schools";
 import type { GradePackForCustomisation, PackItem } from "./types";
 
-const quantityPattern = /^(\d+)\s*(?:x|X|×)\s+(.+)$/;
+const quantityPattern = /^(\d+)\s*(?:x|X)\s+(.+)$/;
 
 function slugify(value: string) {
   return value
@@ -33,6 +33,60 @@ function inferCategory(name: string) {
   return "Stationery";
 }
 
+function inferIcon(name: string) {
+  const value = name.toLowerCase();
+
+  if (/(book|scrapbook)/.test(value)) {
+    return "notebook";
+  }
+
+  if (/(pad|paper)/.test(value)) {
+    return "pad";
+  }
+
+  if (/(file|sleeve|folder)/.test(value)) {
+    return "file";
+  }
+
+  if (/(pen|marker)/.test(value)) {
+    return "pen";
+  }
+
+  if (/(pencil|crayon|colour|color)/.test(value)) {
+    return "pencil";
+  }
+
+  if (/glue/.test(value)) {
+    return "glue";
+  }
+
+  if (/scissor/.test(value)) {
+    return "scissors";
+  }
+
+  if (/ruler/.test(value)) {
+    return "ruler";
+  }
+
+  if (/eraser/.test(value)) {
+    return "eraser";
+  }
+
+  if (/sharpener/.test(value)) {
+    return "sharpener";
+  }
+
+  if (/highlighter/.test(value)) {
+    return "highlighter";
+  }
+
+  if (/calculator/.test(value)) {
+    return "calculator";
+  }
+
+  return "notebook";
+}
+
 export function normalisePackItems(
   contents: string[],
   packId: string
@@ -47,6 +101,7 @@ export function normalisePackItems(
       id: `${packId}-${slugify(name) || index}`,
       name,
       category: inferCategory(name),
+      icon: inferIcon(name),
       requiredQuantity: Number.isFinite(requiredQuantity)
         ? requiredQuantity
         : 1,
@@ -59,6 +114,14 @@ export function createSchoolGradePack(
   school: School,
   grade: GradePack
 ): GradePackForCustomisation {
+  const items = normalisePackItems(grade.contents, grade.id);
+  const totalRequiredQuantity = items.reduce(
+    (total, item) => total + item.requiredQuantity,
+    0
+  );
+  const estimatedUnitPrice =
+    grade.price && totalRequiredQuantity ? grade.price / totalRequiredQuantity : 0;
+
   return {
     id: grade.id,
     schoolId: school.id,
@@ -68,7 +131,10 @@ export function createSchoolGradePack(
     gradeSlug: grade.gradeSlug,
     packName: `${grade.grade} Stationery Pack`,
     slug: `${school.slug}/${grade.gradeSlug}`,
-    items: normalisePackItems(grade.contents, grade.id),
+    items: items.map((item) => ({
+      ...item,
+      unitPrice: estimatedUnitPrice,
+    })),
     fullPackPrice: grade.price,
     deliveryNote: grade.deliveryNote,
     isCustomisable: true,

@@ -21,6 +21,7 @@ import styles from "./PackCustomiser.module.css";
 type GradePackActionsProps = {
   pack: GradePackForCustomisation;
   showDownloadLink?: boolean;
+  showMicrocopy?: boolean;
 };
 
 function buildFullPackHref(pack: GradePackForCustomisation) {
@@ -56,6 +57,7 @@ function buildCustomPackHref(
 export function GradePackActions({
   pack,
   showDownloadLink = true,
+  showMicrocopy = true,
 }: GradePackActionsProps) {
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -67,8 +69,8 @@ export function GradePackActions({
   const selectedItems = selection.filter(
     (item) => item.selected && item.selectedQuantity > 0
   );
-  const total = useMemo(() => calculatePackTotal(selection), [selection]);
-  const hasPrices = typeof total === "number";
+  const total = useMemo(() => calculatePackTotal(selection) ?? 0, [selection]);
+  const displayedTotal = total > 0 ? formatCurrency(total) : "R 0";
   const selectedCount = selectedItems.length;
   const listText = [
     `${pack.schoolName} ${pack.grade} Stationery Pack`,
@@ -150,16 +152,21 @@ export function GradePackActions({
 
   return (
     <div className={styles.actions}>
-      <p className={styles.microcopy}>
-        Buy the full pack for convenience, or customise it and only order what
-        your child still needs.
-      </p>
+      {showMicrocopy ? (
+        <p className={styles.microcopy}>
+          Buy the full pack for convenience, or customise it and only order what
+          your child still needs.
+        </p>
+      ) : null}
       <div className={styles.actionRow}>
-        <Button href={buildFullPackHref(pack)}>Buy Full Pack</Button>
+        <Button href={buildFullPackHref(pack)} size="sm">
+          Buy Full Pack
+        </Button>
         <Button
           id={`customise-${pack.id}`}
           type="button"
           variant="outline"
+          size="sm"
           onClick={() => setIsOpen(true)}
         >
           Customise This Pack
@@ -194,7 +201,7 @@ export function GradePackActions({
             <div className={styles.header}>
               <div>
                 <p>
-                  {pack.schoolName} · {pack.grade}
+                  {pack.schoolName} - {pack.grade}
                 </p>
                 <h2 id="pack-customiser-title">Customise This Pack</h2>
                 <span>Untick what you already have and order the rest.</span>
@@ -213,23 +220,13 @@ export function GradePackActions({
             <div className={styles.content}>
               <div className={styles.summaryCard} aria-live="polite">
                 <div>
-                  <span className={styles.summaryLabel}>Selected items</span>
+                  <span className={styles.summaryLabel}>Estimated total</span>
                   <strong className={styles.summaryValue}>
-                    {selectedCount} of {selection.length}
-                  </strong>
-                </div>
-                <div>
-                  <span className={styles.summaryLabel}>
-                    {hasPrices ? "Estimated total" : "Quote mode"}
-                  </span>
-                  <strong className={styles.summaryValue}>
-                    {hasPrices ? formatCurrency(total) : "Quote required"}
+                    {displayedTotal}
                   </strong>
                 </div>
                 <p className={styles.quoteNote}>
-                  {hasPrices
-                    ? "Your estimated total updates as quantities change."
-                    : "Custom quote will be prepared after you select your items."}
+                  Updates as you untick items or adjust quantities.
                 </p>
               </div>
 
@@ -237,6 +234,7 @@ export function GradePackActions({
                 <div className={styles.itemList}>
                   {selection.map((item) => {
                     const itemTotal =
+                      item.selectedQuantity > 0 &&
                       typeof item.unitPrice === "number"
                         ? item.unitPrice * item.selectedQuantity
                         : undefined;
@@ -261,7 +259,7 @@ export function GradePackActions({
                             <span className={styles.itemMeta}>
                               Required quantity: {item.requiredQuantity}
                               {typeof item.unitPrice === "number"
-                                ? ` · ${formatCurrency(item.unitPrice)} each`
+                                ? ` - ${formatCurrency(item.unitPrice)} each`
                                 : ""}
                             </span>
                             {typeof itemTotal === "number" ? (
@@ -292,12 +290,7 @@ export function GradePackActions({
 
             <div className={styles.footer}>
               <div className={styles.footerSummary} aria-live="polite">
-                <strong>{selectedCount} items selected</strong>
-                <span>
-                  {hasPrices
-                    ? `Estimated total: ${formatCurrency(total)}`
-                    : "Custom quote will be prepared"}
-                </span>
+                <strong>Estimated total: {displayedTotal}</strong>
                 {selectedCount === 0 ? (
                   <span>Select at least one item to continue.</span>
                 ) : null}
@@ -315,7 +308,7 @@ export function GradePackActions({
                 onClick={requestCustomPack}
                 disabled={selectedCount === 0}
               >
-                {hasPrices ? "Add Selected Items" : "Request Custom Quote"}
+                Continue to checkout
               </button>
             </div>
           </section>

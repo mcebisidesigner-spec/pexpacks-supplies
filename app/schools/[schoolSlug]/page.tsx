@@ -69,15 +69,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <GradeSelector school={school} />
         </div>
       </section>
-      <div className={page.darkBand}>
-        <div>
-          <p>Start school ready</p>
-          <h2>Select the correct grade pack</h2>
-        </div>
-        <Button href="/order" variant="white">
-          Order Now
-        </Button>
-      </div>
+
     </>
   );
 }

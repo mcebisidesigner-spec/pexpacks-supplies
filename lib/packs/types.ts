@@ -5,6 +5,7 @@ export type PackItem = {
   requiredQuantity: number;
   selectedQuantity?: number;
   unitPrice?: number;
+  icon?: string;
   isRequired?: boolean;
   notes?: string;
 };
