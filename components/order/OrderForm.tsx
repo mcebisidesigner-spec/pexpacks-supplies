@@ -397,7 +397,7 @@ export function OrderForm({
 
   return (
     <section className={styles.orderShell}>
-      <div className={styles.orderPanel}>
+      <div className={styles.orderPanel} id="checkout-form">
         <OrderProgress steps={steps} activeStep={activeStep} />
         <form className={styles.form} ref={formRef}>
           {currentStep === "school" ? (

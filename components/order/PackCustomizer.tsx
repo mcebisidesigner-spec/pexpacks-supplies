@@ -138,7 +138,7 @@ export function PackCustomizer({ phaseSlug, gradePack, onCancel }: PackCustomize
     [quantities]
   );
 
-  const standardCanvasItems = useMemo(
+  const standardListItems = useMemo(
     () => [...selectedAddOnItems, ...gradePack.items],
     [gradePack.items, selectedAddOnItems]
   );
@@ -235,14 +235,14 @@ export function PackCustomizer({ phaseSlug, gradePack, onCancel }: PackCustomize
               <p>Preloaded standard list</p>
               <h3 id="standard-items-title">Standard items in your {gradePack.grade} pack</h3>
             </div>
-            <div className={styles.standardCanvas}>
-              {standardCanvasItems.map((item) => {
+            <div className={styles.standardListGrid}>
+              {standardListItems.map((item) => {
                 const isAddedExtra = item.id.startsWith("addon-");
 
                 return (
                   <div
                     key={item.id}
-                    className={`${styles.itemRow} ${styles.canvasItem} ${isAddedExtra ? styles.addedExtraRow : ""}`}
+                    className={`${styles.itemRow} ${styles.standardListItem} ${isAddedExtra ? styles.addedExtraRow : ""}`}
                   >
                     <div className={styles.itemInfoWrap}>
                       <div className={styles.itemIconBox}>

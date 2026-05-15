@@ -180,14 +180,14 @@
   background: var(--pex-bg-soft);
 }
 
-.bannerSection,
-.faqSection {
+.bannerSection {
   padding: clamp(56px, 8vw, 96px) 0;
   background: var(--pex-bg);
 }
 
 .faqSection {
-  padding-top: 0;
+  padding: 0 0 clamp(56px, 8vw, 96px);
+  background: linear-gradient(180deg, var(--pex-bg-soft), var(--pex-bg));
 }
 
 .faqGrid {

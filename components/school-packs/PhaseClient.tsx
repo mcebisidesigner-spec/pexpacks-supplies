@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PackCustomizer } from "@/components/order/PackCustomizer";
-import { AddMySchoolBanner } from "@/components/sections/AddMySchoolBanner";
 import type { PhasePack, GradePackTemplate } from "@/data/phasePacks";
 import { homepagePacks } from "@/data/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -55,7 +54,7 @@ function buildStandardOrderHref(phaseSlug: string, pack: GradePackTemplate) {
     type: "standard",
   });
 
-  return `/order?${params.toString()}`;
+  return `/order?${params.toString()}#checkout-form`;
 }
 
 export function PhaseClient({ phaseData }: PhaseClientProps) {
@@ -174,11 +173,7 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
         </div>
       ) : null}
 
-      <section className={styles.bannerSection}>
-        <div className={styles.sectionInner}>
-          <AddMySchoolBanner />
-        </div>
-      </section>
+
 
       {faqs.length > 0 ? (
         <section className={styles.faqSection}>
