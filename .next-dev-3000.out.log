@@ -454,3 +454,13 @@ Creating turbopack project {
  GET /primary-school 200 in 774ms (next.js: 372ms, application-code: 402ms)
  GET /schools/constantia-park-primary 200 in 368ms (next.js: 163ms, application-code: 205ms)
 ✓ Compiled in 1130ms
+ GET /foundation-phase 200 in 70ms (next.js: 7ms, application-code: 63ms)
+ GET /order?phase=foundation-phase&pack=grade-r-pack&grade=Grade+R&type=custom&total=659&items=4+x+A4+Unruled+Exercise+Book%3B+1+x+Jumbo+Wax+Crayons%3B+2+x+Glue+Stick%3B+1+x+Safety+Scissors%3B+2+x+A4+Blank+Scrapbook%3B+4+x+HB+Pencils+%28Beginner%29 200 in 35ms (next.js: 4ms, application-code: 31ms)
+ GET / 200 in 128ms (next.js: 58ms, application-code: 70ms)
+ GET /schools 200 in 98ms (next.js: 44ms, application-code: 54ms)
+ GET /api/schools/search?q=par&limit=12&offset=0 200 in 16ms (next.js: 4ms, application-code: 12ms)
+ GET /schools/constantia-park-primary 200 in 74ms (next.js: 12ms, application-code: 63ms)
+ GET /order?school=constantia-park-primary&grade=grade-7&type=custom-school&items=1+x+Exercise+books%3B+1+x+Pens%3B+1+x+Pencils%3B+1+x+Mathematical+set%3B+1+x+Colour+pencils%3B+1+x+Files&removed=&total=879 200 in 42ms (next.js: 5ms, application-code: 37ms)
+ GET /api/schools/constantia-park-primary 200 in 21ms (next.js: 14ms, application-code: 6ms)
+ GET /api/schools/constantia-park-primary 200 in 7ms (next.js: 3ms, application-code: 4ms)
+ GET /api/schools/search?q=Constantia+Park+Primary&limit=10 200 in 8ms (next.js: 3ms, application-code: 5ms)
