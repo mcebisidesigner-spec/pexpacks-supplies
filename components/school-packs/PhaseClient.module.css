@@ -335,72 +335,7 @@
   border-color: rgba(33, 158, 154, 0.3);
 }
 
-.drawerOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 9999;
-  display: flex;
-  justify-content: flex-end;
-  animation: fadeIn 0.3s ease-out forwards;
-}
 
-.drawerContent {
-  width: 100%;
-  max-width: 680px;
-  background: var(--pex-bg);
-  height: 100vh;
-  height: 100dvh;
-  overflow-y: auto;
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
-  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  display: block;
-  position: relative;
-}
-
-.closeDrawerBtn {
-  position: sticky;
-  top: 16px;
-  float: right;
-  margin-right: 16px;
-  margin-top: 16px;
-  background: white;
-  border: 1px solid var(--pex-border);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s;
-}
-
-.closeDrawerBtn:hover {
-  transform: scale(1.05);
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 .progressStepper {
   display: flex;

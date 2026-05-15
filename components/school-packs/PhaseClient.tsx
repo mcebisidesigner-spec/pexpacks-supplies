@@ -89,28 +89,11 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
   );
 
   const drawerContent = selectedCustomPack ? (
-    <div
-      className={styles.drawerOverlay}
-      onClick={() => setSelectedCustomPack(null)}
-    >
-      <div
-        className={styles.drawerContent}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          className={styles.closeDrawerBtn}
-          onClick={() => setSelectedCustomPack(null)}
-          aria-label="Close customiser"
-        >
-          ✕
-        </button>
-        <PackCustomizer
-          phaseSlug={phaseData.slug}
-          gradePack={selectedCustomPack}
-          onCancel={() => setSelectedCustomPack(null)}
-        />
-      </div>
-    </div>
+    <PackCustomizer
+      phaseSlug={phaseData.slug}
+      gradePack={selectedCustomPack}
+      onCancel={() => setSelectedCustomPack(null)}
+    />
   ) : null;
 
   return (
