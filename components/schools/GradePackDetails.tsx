@@ -36,7 +36,7 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
           <p>{grade.deliveryNote}</p>
         </div>
       </div>
-      <div className={styles.contentsCard}>
+      <div className={styles.contentsCard} id={`pack-list-${grade.id}`}>
         <p className={styles.kicker}>Pack list</p>
         <h2>What&apos;s Included</h2>
         {grade.contents.length ? (

@@ -66,6 +66,7 @@ type OrderFormProps = {
   initialPackId?: string;
   initialPackType?: string;
   initialCustomItems?: string;
+  initialRemovedItems?: string;
   initialEstimatedTotal?: string;
 };
 
@@ -158,6 +159,7 @@ export function OrderForm({
   initialPackId = "",
   initialPackType = "",
   initialCustomItems = "",
+  initialRemovedItems = "",
   initialEstimatedTotal = "",
 }: OrderFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -183,8 +185,12 @@ export function OrderForm({
 
   const stepFlow = standardSelection ? standardOrderSteps : schoolOrderSteps;
   const steps = stepFlow.map((step) => step.label);
+  const hasPreselectedSchoolPack =
+    !standardSelection &&
+    Boolean(initialSchool && initialGrade) &&
+    (initialPackType === "custom-school" || initialPackType === "full-school");
 
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(hasPreselectedSchoolPack ? 2 : 0);
   const [selectedSchool, setSelectedSchool] = useState<SchoolDetails | null>(
     null
   );
@@ -229,8 +235,13 @@ export function OrderForm({
   const selectedPackTitle = standardSelection
     ? standardSelection.pack.title
     : `${selectedGrade?.grade ?? "Selected"} stationery pack`;
+  const isCustomSchoolPack =
+    !standardSelection && initialPackType === "custom-school";
+  const isFullSchoolPack =
+    !standardSelection && initialPackType === "full-school";
   const selectedPackPrice =
     standardSelection?.estimatedTotal ??
+    (isCustomSchoolPack ? parseEstimatedTotal(initialEstimatedTotal) : undefined) ??
     standardSelection?.pack.priceFrom ??
     selectedGrade?.price;
   const selectedPackItems = standardSelection
@@ -239,11 +250,17 @@ export function OrderForm({
       : standardSelection.pack.items.map(
           (item) => `${item.quantity} x ${item.name}`
         )
+    : isCustomSchoolPack && initialCustomItems
+      ? initialCustomItems.split("; ").filter(Boolean)
     : (selectedGrade?.contents ?? []);
   const selectedPackNote = standardSelection
     ? standardSelection.mode === "custom"
       ? "Your customised pack has been prepared for checkout. The adjusted items below will be included in the enquiry."
       : "Your standard grade pack is already selected. Continue to add optional services and complete checkout details."
+    : isCustomSchoolPack
+      ? "Your customised school pack has been prepared. Continue to add optional services and send your custom quote request."
+      : isFullSchoolPack
+        ? "Your full school pack is selected. Every item on the official list will be included in the enquiry."
     : (selectedGrade?.deliveryNote ?? "");
 
   useEffect(() => {
@@ -392,6 +409,10 @@ export function OrderForm({
       : new FormData();
     const packType = standardSelection
       ? `${standardSelection.mode === "custom" ? "Customised" : "Standard"} ${standardSelection.pack.title}`
+      : isCustomSchoolPack
+        ? `Custom ${selectedGrade?.grade} stationery pack`
+        : isFullSchoolPack
+          ? `Full ${selectedGrade?.grade} stationery pack`
       : `${selectedGrade?.grade} stationery pack`;
     const standardPackMessage = standardSelection
       ? [
@@ -408,6 +429,13 @@ export function OrderForm({
           .filter(Boolean)
           .join(" ")
       : "Please confirm availability, delivery or collection options, and payment instructions.";
+    const selectedItemsMessage = selectedPackItems.length
+      ? `Selected items: ${selectedPackItems.join("; ")}.`
+      : "";
+    const removedItemsMessage =
+      isCustomSchoolPack && initialRemovedItems
+        ? `Removed items: ${initialRemovedItems}.`
+        : "";
     const pexcoverMessage = hasPexcover
       ? `\n\n--- PEXCOVER ADD-ON REQUESTED ---\nLearner: ${pexcoverName || buyerName}\nSubjects: ${
           pexcoverSubjects || "Standard"
@@ -415,10 +443,15 @@ export function OrderForm({
       : "";
 
     const payload = {
-      formType: "school-pack-enquiry",
+      formType: isCustomSchoolPack
+        ? "custom-pack-enquiry"
+        : isFullSchoolPack
+          ? "full-pack-enquiry"
+          : "school-pack-enquiry",
       fullName: buyerName,
       phone: buyerPhone,
       email: buyerEmail,
+      schoolId: selectedSchool?.id ?? "",
       schoolName: standardSelection
         ? "Standard school phase pack"
         : (selectedSchool?.name ?? ""),
@@ -426,8 +459,12 @@ export function OrderForm({
         ? standardSelection.pack.grade
         : (selectedGrade?.grade ?? ""),
       packType,
+      selectedItems: selectedPackItems.join("; "),
+      removedItems: initialRemovedItems,
+      estimatedTotal:
+        typeof selectedPackPrice === "number" ? selectedPackPrice : undefined,
       preferredContactMethod,
-      message: `Delivery preference: ${deliveryPreference}. ${standardPackMessage}${pexcoverMessage}`,
+      message: `Delivery preference: ${deliveryPreference}. ${standardPackMessage} ${selectedItemsMessage} ${removedItemsMessage}${pexcoverMessage}`,
       consent,
       companyWebsite:
         typeof formData.get("companyWebsite") === "string"

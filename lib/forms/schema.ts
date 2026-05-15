@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export const formTypes = [
   "school-pack-enquiry",
+  "full-pack-enquiry",
+  "custom-pack-enquiry",
   "office-pack-enquiry",
   "bulk-order",
   "school-partnership",
@@ -65,6 +67,7 @@ export const formSubmissionSchema = z.object({
     "Please enter a valid email address."
   ),
   schoolName: optionalText(160),
+  schoolId: optionalText(120),
   grade: optionalText(40),
   learnerName: optionalText(120),
   businessName: optionalText(160),
@@ -72,6 +75,9 @@ export const formSubmissionSchema = z.object({
   preferredContactMethod: z.enum(preferredContactMethods).optional(),
   message: optionalText(1500),
   packType: optionalText(120),
+  selectedItems: optionalText(3000),
+  removedItems: optionalText(2000),
+  estimatedTotal: z.number().nonnegative().optional(),
   suburb: optionalText(120),
   city: optionalText(120),
   province: optionalText(120),

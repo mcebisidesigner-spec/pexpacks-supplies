@@ -1,7 +1,7 @@
 import type { GradePack, School } from "@/data/schools";
 import type { GradePackForCustomisation, PackItem } from "./types";
 
-const quantityPattern = /^(\d+)\s*(?:x|X|×)?\s+(.+)$/;
+const quantityPattern = /^(\d+)\s*(?:x|X|×)\s+(.+)$/;
 
 function slugify(value: string) {
   return value

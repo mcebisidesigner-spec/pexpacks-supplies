@@ -34,6 +34,7 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
   const pack = firstValue(params.pack);
   const type = firstValue(params.type);
   const items = firstValue(params.items);
+  const removed = firstValue(params.removed);
   const total = firstValue(params.total);
 
   return (
@@ -67,6 +68,7 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
           initialPackId={pack}
           initialPackType={type}
           initialCustomItems={items}
+          initialRemovedItems={removed}
           initialEstimatedTotal={total}
         />
       </section>

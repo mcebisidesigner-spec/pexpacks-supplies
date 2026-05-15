@@ -160,7 +160,7 @@ export function GradePackActions({
       {showDownloadLink ? (
         <a
           className={styles.downloadLink}
-          href={`/order?school=${pack.schoolSlug}&grade=${pack.gradeSlug}#checkout-form`}
+          href={`#pack-list-${pack.id}`}
         >
           Download List
         </a>

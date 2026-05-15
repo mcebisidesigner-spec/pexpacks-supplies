@@ -731,7 +731,7 @@
 }
 
 .gradeCard {
-  min-height: 128px;
+  min-height: 100%;
   padding: 24px;
   border: var(--card-border);
   border-radius: var(--radius-card);
@@ -739,24 +739,35 @@
   box-shadow: var(--card-shadow);
   display: grid;
   align-content: space-between;
+  gap: 22px;
   font-family: var(--font-button);
-  transform-origin: center;
-  transition: var(--button-transition);
-}
-
-.gradeCard:hover {
-  filter: brightness(110%);
-  transform: var(--button-hover-transform);
-  box-shadow: var(--button-hover-shadow);
 }
 
 .gradeCard span {
+  display: block;
+  margin-bottom: 12px;
   font-size: 32px;
   line-height: 1;
   font-weight: 800;
 }
 
+.gradeCard h3 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.gradeCard p {
+  margin: 10px 0 14px;
+  color: var(--pex-text-muted);
+  font-family: "Pexpacks Sans", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
 .gradeCard strong {
+  display: block;
   color: var(--pex-keppel);
 }
 
@@ -785,6 +796,22 @@
   line-height: 1.35;
 }
 
+.gradeActionPanel {
+  margin-top: 26px;
+}
+
+.deliveryPanel {
+  margin-top: 24px;
+  padding: 18px 20px;
+  border: 1px solid rgba(33, 158, 154, 0.2);
+  border-radius: var(--radius-card);
+  background: rgba(33, 158, 154, 0.07);
+}
+
+.deliveryPanel p:last-child {
+  margin: 0;
+}
+
 .kicker {
   margin: 0 0 20px;
   color: var(--pex-keppel);
@@ -805,6 +832,7 @@
 }
 
 .contentsCard {
+  scroll-margin-top: 96px;
   padding: 34px;
   border: var(--card-border);
   border-radius: var(--radius-section);
@@ -847,13 +875,11 @@
     transform: none;
   }
 
-  .gradeChips a,
-  .gradeCard {
+  .gradeChips a {
     transition: none;
   }
 
-  .gradeChips a:hover,
-  .gradeCard:hover {
+  .gradeChips a:hover {
     transform: none;
   }
 }
