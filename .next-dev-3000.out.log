@@ -258,3 +258,14 @@ Creating turbopack project {
  GET /schools/houghton-primary 200 in 60ms (next.js: 9ms, application-code: 51ms)
  GET / 200 in 58ms (next.js: 2ms, application-code: 56ms)
  GET / 200 in 134ms (next.js: 4ms, application-code: 130ms)
+✓ Compiled in 491ms
+ GET /order?school=parktown-primary&grade=grade-3&type=custom-school&items=1+x+HB+pencils%3B+1+x+Colour+pencils%3B+1+x+Glue+stick%3B+1+x+30+cm+ruler%3B+1+x+Eraser&removed=Exercise+books&total=615.8333333333334 200 in 673ms (next.js: 118ms, application-code: 555ms)
+ GET /order?school=parktown-primary&grade=grade-3&type=custom-school&items=1+x+HB+pencils%3B+1+x+Colour+pencils%3B+1+x+Glue+stick%3B+1+x+30+cm+ruler%3B+1+x+Eraser&removed=Exercise+books&total=615.8333333333334 200 in 306ms (next.js: 9ms, application-code: 298ms)
+ GET /order?school=parktown-primary&grade=grade-3&type=custom-school&items=1+x+HB+pencils%3B+1+x+Colour+pencils%3B+1+x+Glue+stick%3B+1+x+30+cm+ruler%3B+1+x+Eraser&removed=Exercise+books&total=615.8333333333334 200 in 113ms (next.js: 19ms, application-code: 95ms)
+ GET / 200 in 1120ms (next.js: 197ms, application-code: 923ms)
+ GET / 200 in 508ms (next.js: 43ms, application-code: 465ms)
+ GET / 200 in 315ms (next.js: 74ms, application-code: 241ms)
+✓ Compiled in 84ms
+ GET /order?school=parktown-primary&grade=grade-3&type=custom-school&items=1+x+HB+pencils%3B+1+x+Colour+pencils%3B+1+x+Glue+stick%3B+1+x+30+cm+ruler%3B+1+x+Eraser&removed=Exercise+books&total=615.8333333333334 200 in 405ms (next.js: 172ms, application-code: 233ms)
+ GET / 200 in 412ms (next.js: 299ms, application-code: 112ms)
+✓ Compiled in 36ms

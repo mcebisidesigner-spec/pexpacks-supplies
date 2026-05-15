@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
@@ -63,6 +64,15 @@ export function GradePackActions({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const triggerButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Stabilise the items reference to prevent infinite re-render loops.
+  // Only recalculate when the serialised item list actually changes.
+  const itemsKey = useMemo(
+    () => pack.items.map((i) => `${i.id}:${i.requiredQuantity}`).join(","),
+    [pack.items]
+  );
+
   const [selection, setSelection] = useState<PackSelectionItem[]>(() =>
     createCustomPackSelection(pack.items)
   );
@@ -89,6 +99,11 @@ export function GradePackActions({
     }, 0);
   }, []);
 
+  // Mount check for portal rendering
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -111,9 +126,11 @@ export function GradePackActions({
     };
   }, [closeCustomiser, isOpen]);
 
+  // Only reset selection when the actual items content changes, not on every render
   useEffect(() => {
     setSelection(createCustomPackSelection(pack.items));
-  }, [pack.items]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemsKey]);
 
   function setItemSelected(id: string, selected: boolean) {
     setSelection((items) =>
@@ -157,6 +174,139 @@ export function GradePackActions({
     router.push(buildCustomPackHref(pack, selection, total));
   }
 
+  const drawerContent = isOpen ? (
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          closeCustomiser();
+        }
+      }}
+    >
+      <section
+        className={styles.drawer}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pack-customiser-title"
+      >
+        <div className={styles.header}>
+          <div>
+            <p>
+              {pack.schoolName} &ndash; {pack.grade}
+            </p>
+            <h2 id="pack-customiser-title">Customise This Pack</h2>
+            <span>Untick what you already have and order the rest.</span>
+          </div>
+          <button
+            type="button"
+            className={styles.closeButton}
+            onClick={closeCustomiser}
+            aria-label="Close custom pack builder"
+            ref={closeButtonRef}
+          >
+            &times;
+          </button>
+        </div>
+
+        <div className={styles.content}>
+          <div className={styles.summaryCard} aria-live="polite">
+            <div>
+              <span className={styles.summaryLabel}>Estimated total</span>
+              <strong className={styles.summaryValue}>
+                {displayedTotal}
+              </strong>
+            </div>
+            <p className={styles.quoteNote}>
+              Updates as you untick items or adjust quantities.
+            </p>
+          </div>
+
+          {selection.length ? (
+            <div className={styles.itemList}>
+              {selection.map((item) => {
+                const itemTotal =
+                  item.selectedQuantity > 0 &&
+                  typeof item.unitPrice === "number"
+                    ? item.unitPrice * item.selectedQuantity
+                    : undefined;
+
+                return (
+                  <article className={styles.itemRow} key={item.id}>
+                    <label className={styles.itemCheckbox}>
+                      <input
+                        type="checkbox"
+                        checked={item.selected}
+                        onChange={(event) =>
+                          setItemSelected(item.id, event.target.checked)
+                        }
+                      />
+                      <span>
+                        <span className={styles.itemCategory}>
+                          {item.category}
+                        </span>
+                        <span className={styles.itemName}>
+                          {item.name}
+                        </span>
+                        <span className={styles.itemMeta}>
+                          Required quantity: {item.requiredQuantity}
+                          {typeof item.unitPrice === "number"
+                            ? ` - ${formatCurrency(item.unitPrice)} each`
+                            : ""}
+                        </span>
+                        {typeof itemTotal === "number" ? (
+                          <span className={styles.lineTotal}>
+                            Line total: {formatCurrency(itemTotal)}
+                          </span>
+                        ) : null}
+                      </span>
+                    </label>
+                    <QuantityStepper
+                      value={item.selectedQuantity}
+                      onChange={(value) => setItemQuantity(item.id, value)}
+                      ariaLabel={`quantity for ${item.name}`}
+                    />
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className={styles.emptyState}>
+              <p>Pack details are being finalised.</p>
+              <strong>
+                Request this pack and we will confirm the list with you.
+              </strong>
+            </div>
+          )}
+        </div>
+
+        <div className={styles.footer}>
+          <div className={styles.footerSummary} aria-live="polite">
+            <strong>Estimated total: {displayedTotal}</strong>
+            {selectedCount === 0 ? (
+              <span>Select at least one item to continue.</span>
+            ) : null}
+          </div>
+          <button
+            type="button"
+            className={styles.resetButton}
+            onClick={resetToFullPack}
+          >
+            Reset to Full Pack
+          </button>
+          <button
+            type="button"
+            className={styles.submitButton}
+            onClick={requestCustomPack}
+            disabled={selectedCount === 0}
+          >
+            Continue to checkout
+          </button>
+        </div>
+      </section>
+    </div>
+  ) : null;
+
   return (
     <div className={styles.actions}>
       {showMicrocopy ? (
@@ -192,138 +342,9 @@ export function GradePackActions({
         </a>
       ) : null}
 
-      {isOpen ? (
-        <div
-          className={styles.overlay}
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              closeCustomiser();
-            }
-          }}
-        >
-          <section
-            className={styles.drawer}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="pack-customiser-title"
-          >
-            <div className={styles.header}>
-              <div>
-                <p>
-                  {pack.schoolName} - {pack.grade}
-                </p>
-                <h2 id="pack-customiser-title">Customise This Pack</h2>
-                <span>Untick what you already have and order the rest.</span>
-              </div>
-              <button
-                type="button"
-                className={styles.closeButton}
-                onClick={closeCustomiser}
-                aria-label="Close custom pack builder"
-                ref={closeButtonRef}
-              >
-                &times;
-              </button>
-            </div>
-
-            <div className={styles.content}>
-              <div className={styles.summaryCard} aria-live="polite">
-                <div>
-                  <span className={styles.summaryLabel}>Estimated total</span>
-                  <strong className={styles.summaryValue}>
-                    {displayedTotal}
-                  </strong>
-                </div>
-                <p className={styles.quoteNote}>
-                  Updates as you untick items or adjust quantities.
-                </p>
-              </div>
-
-              {selection.length ? (
-                <div className={styles.itemList}>
-                  {selection.map((item) => {
-                    const itemTotal =
-                      item.selectedQuantity > 0 &&
-                      typeof item.unitPrice === "number"
-                        ? item.unitPrice * item.selectedQuantity
-                        : undefined;
-
-                    return (
-                      <article className={styles.itemRow} key={item.id}>
-                        <label className={styles.itemCheckbox}>
-                          <input
-                            type="checkbox"
-                            checked={item.selected}
-                            onChange={(event) =>
-                              setItemSelected(item.id, event.target.checked)
-                            }
-                          />
-                          <span>
-                            <span className={styles.itemCategory}>
-                              {item.category}
-                            </span>
-                            <span className={styles.itemName}>
-                              {item.name}
-                            </span>
-                            <span className={styles.itemMeta}>
-                              Required quantity: {item.requiredQuantity}
-                              {typeof item.unitPrice === "number"
-                                ? ` - ${formatCurrency(item.unitPrice)} each`
-                                : ""}
-                            </span>
-                            {typeof itemTotal === "number" ? (
-                              <span className={styles.lineTotal}>
-                                Line total: {formatCurrency(itemTotal)}
-                              </span>
-                            ) : null}
-                          </span>
-                        </label>
-                        <QuantityStepper
-                          value={item.selectedQuantity}
-                          onChange={(value) => setItemQuantity(item.id, value)}
-                          ariaLabel={`quantity for ${item.name}`}
-                        />
-                      </article>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className={styles.emptyState}>
-                  <p>Pack details are being finalised.</p>
-                  <strong>
-                    Request this pack and we will confirm the list with you.
-                  </strong>
-                </div>
-              )}
-            </div>
-
-            <div className={styles.footer}>
-              <div className={styles.footerSummary} aria-live="polite">
-                <strong>Estimated total: {displayedTotal}</strong>
-                {selectedCount === 0 ? (
-                  <span>Select at least one item to continue.</span>
-                ) : null}
-              </div>
-              <button
-                type="button"
-                className={styles.resetButton}
-                onClick={resetToFullPack}
-              >
-                Reset to Full Pack
-              </button>
-              <button
-                type="button"
-                className={styles.submitButton}
-                onClick={requestCustomPack}
-                disabled={selectedCount === 0}
-              >
-                Continue to checkout
-              </button>
-            </div>
-          </section>
-        </div>
-      ) : null}
+      {isMounted && drawerContent
+        ? createPortal(drawerContent, document.body)
+        : null}
     </div>
   );
 }
