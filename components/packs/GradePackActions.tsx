@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { saveOrderDraft } from "@/lib/order/orderDraft";
 import { calculatePackTotal } from "@/lib/packs/calculatePackTotal";
 import {
   createCustomPackSelection,
@@ -13,6 +14,7 @@ import {
   serialiseRemovedItems,
   serialiseSelectedItems,
 } from "@/lib/packs/createPackSelection";
+import { useDialogFocusTrap } from "./useDialogFocusTrap";
 import type {
   GradePackForCustomisation,
   PackSelectionItem,
@@ -35,22 +37,13 @@ function buildFullPackHref(pack: GradePackForCustomisation) {
   return `/order?${params.toString()}#checkout-form`;
 }
 
-function buildCustomPackHref(
-  pack: GradePackForCustomisation,
-  items: PackSelectionItem[],
-  total?: number
-) {
+function buildCustomPackHref(pack: GradePackForCustomisation, draftId: string) {
   const params = new URLSearchParams({
     school: pack.schoolSlug,
     grade: pack.gradeSlug,
     type: "custom-school",
-    items: serialiseSelectedItems(items),
-    removed: serialiseRemovedItems(items),
+    draft: draftId,
   });
-
-  if (typeof total === "number") {
-    params.set("total", String(total));
-  }
 
   return `/order?${params.toString()}#checkout-form`;
 }
@@ -62,6 +55,7 @@ export function GradePackActions({
 }: GradePackActionsProps) {
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
   const triggerButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -104,27 +98,12 @@ export function GradePackActions({
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    closeButtonRef.current?.focus();
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        closeCustomiser();
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
-    };
-  }, [closeCustomiser, isOpen]);
+  useDialogFocusTrap({
+    isOpen,
+    dialogRef: drawerRef,
+    initialFocusRef: closeButtonRef,
+    onClose: closeCustomiser,
+  });
 
   // Only reset selection when the actual items content changes, not on every render
   useEffect(() => {
@@ -171,7 +150,17 @@ export function GradePackActions({
       return;
     }
 
-    router.push(buildCustomPackHref(pack, selection, total));
+    const draft = saveOrderDraft({
+      schoolSlug: pack.schoolSlug,
+      gradeSlug: pack.gradeSlug,
+      grade: pack.grade,
+      type: "custom-school",
+      selectedItems: serialiseSelectedItems(selection),
+      removedItems: serialiseRemovedItems(selection),
+      estimatedTotal: total,
+    });
+
+    router.push(buildCustomPackHref(pack, draft.id));
   }
 
   const drawerContent = isOpen ? (
@@ -189,6 +178,9 @@ export function GradePackActions({
         role="dialog"
         aria-modal="true"
         aria-labelledby="pack-customiser-title"
+        aria-describedby="pack-customiser-instructions"
+        ref={drawerRef}
+        tabIndex={-1}
       >
         <div className={styles.header}>
           <div>
@@ -196,7 +188,9 @@ export function GradePackActions({
               {pack.schoolName} &ndash; {pack.grade}
             </p>
             <h2 id="pack-customiser-title">Customise This Pack</h2>
-            <span>Untick what you already have and order the rest.</span>
+            <span id="pack-customiser-instructions">
+              Untick what you already have and order the rest.
+            </span>
           </div>
           <button
             type="button"
@@ -338,6 +332,21 @@ export function GradePackActions({
           href={downloadHref}
           download={`${pack.schoolSlug}-${pack.gradeSlug}-stationery-list.txt`}
         >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
           Download List
         </a>
       ) : null}

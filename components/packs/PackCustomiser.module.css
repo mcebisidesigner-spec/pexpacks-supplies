@@ -21,11 +21,21 @@
 }
 
 .downloadLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   width: fit-content;
-  color: var(--pex-keppel);
-  font-weight: 800;
+  color: var(--pex-text-muted);
+  font-size: 13px;
+  font-weight: 600;
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-underline-offset: 3px;
+  transition: color 180ms ease;
+}
+
+.downloadLink:hover,
+.downloadLink:focus-visible {
+  color: var(--pex-keppel);
 }
 
 .overlay {

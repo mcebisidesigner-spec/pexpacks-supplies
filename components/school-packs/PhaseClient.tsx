@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { ItemIcon } from "@/components/ui/ItemIcon";
@@ -62,6 +62,7 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
   const [selectedCustomPack, setSelectedCustomPack] =
     useState<GradePackTemplate | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const customiseTriggerRef = useRef<HTMLButtonElement | null>(null);
   
   useEffect(() => {
     setIsMounted(true);
@@ -69,9 +70,20 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
   
   const faqs = phaseFaqs[phaseData.slug] || [];
 
-  const handleCustomise = (pack: GradePackTemplate) => {
+  const handleCustomise = (
+    pack: GradePackTemplate,
+    event: MouseEvent<HTMLButtonElement>
+  ) => {
+    customiseTriggerRef.current = event.currentTarget;
     setSelectedCustomPack(pack);
   };
+
+  const closeCustomiser = useCallback(() => {
+    setSelectedCustomPack(null);
+    window.setTimeout(() => {
+      customiseTriggerRef.current?.focus();
+    }, 0);
+  }, []);
 
   useEffect(() => {
     if (selectedCustomPack) {
@@ -92,7 +104,7 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
     <PackCustomizer
       phaseSlug={phaseData.slug}
       gradePack={selectedCustomPack}
-      onCancel={() => setSelectedCustomPack(null)}
+      onCancel={closeCustomiser}
     />
   ) : null;
 
@@ -194,11 +206,47 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleCustomise(pack)}
+                      onClick={(event) => handleCustomise(pack, event)}
                     >
                       Customise this pack
                     </Button>
                   </div>
+                  <a
+                    className={styles.downloadLink}
+                    href={`data:text/plain;charset=utf-8,${encodeURIComponent(
+                      [
+                        `${pack.title} — Stationery List`,
+                        `Phase: ${phaseData.title}`,
+                        "",
+                        ...pack.items.map(
+                          (item) =>
+                            `- ${item.quantity} x ${item.name}${item.specification ? ` (${item.specification})` : ""}`
+                        ),
+                        "",
+                        `Estimated price from: R ${pack.priceFrom}`,
+                        "",
+                        "Prepared by Pexpacks — pexpacks.co.za",
+                      ].join("\n")
+                    )}`}
+                    download={`${phaseData.slug}-${pack.grade.toLowerCase().replace(/\s+/g, "-")}-stationery-list.txt`}
+                  >
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Download List
+                  </a>
                 </div>
               </article>
             ))}

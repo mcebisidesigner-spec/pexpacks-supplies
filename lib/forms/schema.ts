@@ -78,6 +78,8 @@ export const formSubmissionSchema = z.object({
   selectedItems: optionalText(3000),
   removedItems: optionalText(2000),
   estimatedTotal: z.number().nonnegative().optional(),
+  orderReference: optionalText(80),
+  orderDraftId: optionalText(120),
   suburb: optionalText(120),
   city: optionalText(120),
   province: optionalText(120),

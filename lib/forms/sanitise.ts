@@ -26,7 +26,17 @@ export function sanitise(data: FormSubmission) {
     email: clean(data.email) as string | undefined,
     message: clean(data.message) as string | undefined,
     schoolName: clean(data.schoolName) as string | undefined,
+    schoolId: clean(data.schoolId) as string | undefined,
+    grade: clean(data.grade) as string | undefined,
+    learnerName: clean(data.learnerName) as string | undefined,
     businessName: clean(data.businessName) as string | undefined,
+    packType: clean(data.packType) as string | undefined,
+    selectedItems: clean(data.selectedItems) as string | undefined,
+    removedItems: clean(data.removedItems) as string | undefined,
+    orderReference: clean(data.orderReference) as string | undefined,
+    orderDraftId: clean(data.orderDraftId) as string | undefined,
+    pageUrl: clean(data.pageUrl) as string | undefined,
+    userAgent: clean(data.userAgent) as string | undefined,
     phone: normalisePhone(data.phone),
   };
 }

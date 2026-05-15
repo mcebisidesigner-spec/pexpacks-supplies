@@ -6,6 +6,7 @@ import { ordersEmail, ordersEmailHref } from "@/data/contact";
 import { phasePacks, type GradePackTemplate } from "@/data/phasePacks";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { readOrderDraft, type OrderDraft } from "@/lib/order/orderDraft";
 import { OrderProgress } from "./OrderProgress";
 import styles from "./Order.module.css";
 
@@ -68,6 +69,7 @@ type OrderFormProps = {
   initialCustomItems?: string;
   initialRemovedItems?: string;
   initialEstimatedTotal?: string;
+  initialDraftId?: string;
 };
 
 const schoolOrderSteps: OrderStep[] = [
@@ -87,6 +89,13 @@ const standardOrderSteps: OrderStep[] = [
 ];
 
 const PEXCOVER_PRICE = 120;
+
+function createOrderReference() {
+  return `PEX-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${Math.random()
+    .toString(36)
+    .slice(2, 7)
+    .toUpperCase()}`;
+}
 
 async function fetchSchoolDetails(slug: string) {
   const response = await fetch(`/api/schools/${encodeURIComponent(slug)}`);
@@ -161,25 +170,42 @@ export function OrderForm({
   initialCustomItems = "",
   initialRemovedItems = "",
   initialEstimatedTotal = "",
+  initialDraftId = "",
 }: OrderFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const [orderDraft, setOrderDraft] = useState<OrderDraft | null>(null);
+  const [draftStatus, setDraftStatus] = useState("");
+  const effectiveInitialSchool = orderDraft?.schoolSlug ?? initialSchool;
+  const effectiveInitialGrade =
+    orderDraft?.gradeSlug ?? orderDraft?.grade ?? initialGrade;
+  const effectiveInitialPhase = orderDraft?.phaseSlug ?? initialPhase;
+  const effectiveInitialPackId = orderDraft?.packId ?? initialPackId;
+  const effectiveInitialPackType = orderDraft?.type ?? initialPackType;
+  const effectiveInitialCustomItems =
+    orderDraft?.selectedItems ?? initialCustomItems;
+  const effectiveInitialRemovedItems =
+    orderDraft?.removedItems ?? initialRemovedItems;
+  const effectiveInitialEstimatedTotal =
+    typeof orderDraft?.estimatedTotal === "number"
+      ? String(orderDraft.estimatedTotal)
+      : initialEstimatedTotal;
   const standardSelection = useMemo(
     () =>
       resolveStandardSelection({
-        initialPhase,
-        initialPackId,
-        initialGrade,
-        initialPackType,
-        initialCustomItems,
-        initialEstimatedTotal,
+        initialPhase: effectiveInitialPhase,
+        initialPackId: effectiveInitialPackId,
+        initialGrade: effectiveInitialGrade,
+        initialPackType: effectiveInitialPackType,
+        initialCustomItems: effectiveInitialCustomItems,
+        initialEstimatedTotal: effectiveInitialEstimatedTotal,
       }),
     [
-      initialCustomItems,
-      initialEstimatedTotal,
-      initialGrade,
-      initialPackId,
-      initialPackType,
-      initialPhase,
+      effectiveInitialCustomItems,
+      effectiveInitialEstimatedTotal,
+      effectiveInitialGrade,
+      effectiveInitialPackId,
+      effectiveInitialPackType,
+      effectiveInitialPhase,
     ]
   );
 
@@ -187,8 +213,9 @@ export function OrderForm({
   const steps = stepFlow.map((step) => step.label);
   const hasPreselectedSchoolPack =
     !standardSelection &&
-    Boolean(initialSchool && initialGrade) &&
-    (initialPackType === "custom-school" || initialPackType === "full-school");
+    Boolean(effectiveInitialSchool && effectiveInitialGrade) &&
+    (effectiveInitialPackType === "custom-school" ||
+      effectiveInitialPackType === "full-school");
 
   const [activeStep, setActiveStep] = useState(hasPreselectedSchoolPack ? 2 : 0);
   const [selectedSchool, setSelectedSchool] = useState<SchoolDetails | null>(
@@ -198,12 +225,12 @@ export function OrderForm({
   const [schoolResults, setSchoolResults] = useState<SchoolSearchResult[]>([]);
   const [schoolOpen, setSchoolOpen] = useState(false);
   const [schoolTouched, setSchoolTouched] = useState(
-    Boolean(initialSchool) && !standardSelection
+    Boolean(effectiveInitialSchool) && !standardSelection
   );
   const [schoolLoading, setSchoolLoading] = useState(false);
   const [schoolError, setSchoolError] = useState("");
   const [gradeSlug, setGradeSlug] = useState(
-    standardSelection ? "" : initialGrade
+    standardSelection ? "" : effectiveInitialGrade
   );
   const [buyerName, setBuyerName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
@@ -222,6 +249,49 @@ export function OrderForm({
   const [pexcoverNotes, setPexcoverNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<ApiResponse | null>(null);
+  const [orderReference, setOrderReference] = useState("");
+
+  useEffect(() => {
+    setOrderReference(createOrderReference());
+  }, []);
+
+  useEffect(() => {
+    if (!initialDraftId) {
+      return;
+    }
+
+    const draft = readOrderDraft(initialDraftId);
+
+    if (!draft) {
+      setDraftStatus(
+        "Your saved custom pack could not be restored. Please confirm the pack details before submitting."
+      );
+      return;
+    }
+
+    setOrderDraft(draft);
+    setDraftStatus("");
+  }, [initialDraftId]);
+
+  useEffect(() => {
+    if (!orderDraft) {
+      return;
+    }
+
+    if (
+      !standardSelection &&
+      (effectiveInitialPackType === "custom-school" ||
+        effectiveInitialPackType === "full-school")
+    ) {
+      setActiveStep(2);
+      setGradeSlug(effectiveInitialGrade);
+    }
+  }, [
+    effectiveInitialGrade,
+    effectiveInitialPackType,
+    orderDraft,
+    standardSelection,
+  ]);
 
   const currentStep = stepFlow[activeStep]?.id ?? "confirm";
 
@@ -236,12 +306,14 @@ export function OrderForm({
     ? standardSelection.pack.title
     : `${selectedGrade?.grade ?? "Selected"} stationery pack`;
   const isCustomSchoolPack =
-    !standardSelection && initialPackType === "custom-school";
+    !standardSelection && effectiveInitialPackType === "custom-school";
   const isFullSchoolPack =
-    !standardSelection && initialPackType === "full-school";
+    !standardSelection && effectiveInitialPackType === "full-school";
   const selectedPackPrice =
     standardSelection?.estimatedTotal ??
-    (isCustomSchoolPack ? parseEstimatedTotal(initialEstimatedTotal) : undefined) ??
+    (isCustomSchoolPack
+      ? parseEstimatedTotal(effectiveInitialEstimatedTotal)
+      : undefined) ??
     standardSelection?.pack.priceFrom ??
     selectedGrade?.price;
   const selectedPackItems = standardSelection
@@ -250,34 +322,34 @@ export function OrderForm({
       : standardSelection.pack.items.map(
           (item) => `${item.quantity} x ${item.name}`
         )
-    : isCustomSchoolPack && initialCustomItems
-      ? initialCustomItems.split("; ").filter(Boolean)
+    : isCustomSchoolPack && effectiveInitialCustomItems
+      ? effectiveInitialCustomItems.split("; ").filter(Boolean)
     : (selectedGrade?.contents ?? []);
   const selectedPackNote = standardSelection
     ? standardSelection.mode === "custom"
       ? "Your customised pack has been prepared for checkout. The adjusted items below will be included in the enquiry."
       : "Your standard grade pack is already selected. Continue to add optional services and complete checkout details."
     : isCustomSchoolPack
-      ? "Your customised school pack has been prepared. Continue to add optional services and send your custom quote request."
+      ? "Your customised school pack has been prepared. Continue to add optional services and complete checkout details."
       : isFullSchoolPack
         ? "Your full school pack is selected. Every item on the official list will be included in the enquiry."
     : (selectedGrade?.deliveryNote ?? "");
 
   useEffect(() => {
-    if (standardSelection || !initialSchool) {
+    if (standardSelection || !effectiveInitialSchool) {
       return;
     }
 
     let cancelled = false;
     setSchoolLoading(true);
-    fetchSchoolDetails(initialSchool)
+    fetchSchoolDetails(effectiveInitialSchool)
       .then(({ school }) => {
         if (cancelled) {
           return;
         }
         setSelectedSchool(school);
         setSchoolQuery(school.name);
-        setGradeSlug(initialGrade || school.grades[0]?.gradeSlug || "");
+        setGradeSlug(effectiveInitialGrade || school.grades[0]?.gradeSlug || "");
       })
       .catch(() => {
         if (!cancelled) {
@@ -293,7 +365,7 @@ export function OrderForm({
     return () => {
       cancelled = true;
     };
-  }, [initialGrade, initialSchool, standardSelection]);
+  }, [effectiveInitialGrade, effectiveInitialSchool, standardSelection]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -447,9 +519,15 @@ export function OrderForm({
       ? `Selected items: ${selectedPackItems.join("; ")}.`
       : "";
     const removedItemsMessage =
-      isCustomSchoolPack && initialRemovedItems
-        ? `Removed items: ${initialRemovedItems}.`
+      isCustomSchoolPack && effectiveInitialRemovedItems
+        ? `Removed items: ${effectiveInitialRemovedItems}.`
         : "";
+    const submittedOrderReference = orderReference || createOrderReference();
+
+    if (!orderReference) {
+      setOrderReference(submittedOrderReference);
+    }
+
     const pexcoverMessage = hasPexcover
       ? `\n\n--- PEXCOVER ADD-ON REQUESTED ---\nLearner: ${pexcoverName || buyerName}\nSubjects: ${
           pexcoverSubjects || "Standard"
@@ -474,11 +552,13 @@ export function OrderForm({
         : (selectedGrade?.grade ?? ""),
       packType,
       selectedItems: selectedPackItems.join("; "),
-      removedItems: initialRemovedItems,
+      removedItems: effectiveInitialRemovedItems,
       estimatedTotal:
         typeof selectedPackPrice === "number" ? selectedPackPrice : undefined,
+      orderReference: submittedOrderReference,
+      orderDraftId: initialDraftId,
       preferredContactMethod,
-      message: `Delivery preference: ${deliveryPreference}. ${standardPackMessage} ${selectedItemsMessage} ${removedItemsMessage}${pexcoverMessage}`,
+      message: `Order reference: ${submittedOrderReference}. Delivery preference: ${deliveryPreference}. ${standardPackMessage} ${selectedItemsMessage} ${removedItemsMessage}${pexcoverMessage}`,
       consent,
       companyWebsite:
         typeof formData.get("companyWebsite") === "string"
@@ -512,6 +592,28 @@ export function OrderForm({
     <section className={styles.orderShell}>
       <div className={styles.orderPanel}>
         <OrderProgress steps={steps} activeStep={activeStep} />
+        <div className={styles.checkoutSummary} aria-label="Checkout summary">
+          <div>
+            <span>Pack</span>
+            <strong>{selectedPackTitle}</strong>
+          </div>
+          <div>
+            <span>Items</span>
+            <strong>{selectedPackItems.length || "Confirming"}</strong>
+          </div>
+          <div>
+            <span>Estimated total</span>
+            <strong>
+              {typeof selectedPackPrice === "number"
+                ? formatCurrency(selectedPackPrice + (hasPexcover ? PEXCOVER_PRICE : 0))
+                : "To be confirmed"}
+            </strong>
+          </div>
+          <div>
+            <span>Reference</span>
+            <strong>{orderReference || "Preparing"}</strong>
+          </div>
+        </div>
         <form className={styles.form} ref={formRef}>
           {currentStep === "school" ? (
             <div className={styles.schoolSearch}>
@@ -616,6 +718,11 @@ export function OrderForm({
             <div className={styles.confirmPack} id="checkout-form">
               <p className={styles.confirmKicker}>Selected pack</p>
               <h2>{selectedPackTitle}</h2>
+              {draftStatus ? (
+                <p className={styles.formStatusError} role="alert">
+                  {draftStatus}
+                </p>
+              ) : null}
               <p>{selectedPackNote}</p>
               {typeof selectedPackPrice === "number" ? (
                 <p className={styles.priceNote}>
@@ -848,15 +955,19 @@ export function OrderForm({
                   </dd>
                 </div>
                 {typeof selectedPackPrice === "number" ? (
-                  <div>
-                    <dt>Estimated total</dt>
-                    <dd>
+                <div>
+                  <dt>Estimated total</dt>
+                  <dd>
                       {formatCurrency(
                         selectedPackPrice + (hasPexcover ? PEXCOVER_PRICE : 0)
                       )}
-                    </dd>
-                  </div>
-                ) : null}
+                  </dd>
+                </div>
+              ) : null}
+                <div>
+                  <dt>Reference</dt>
+                  <dd>{orderReference || "Preparing"}</dd>
+                </div>
               </dl>
               <p>
                 This is an enquiry order. No online payment is taken here.

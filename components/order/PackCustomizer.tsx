@@ -1,10 +1,20 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState, useRef } from "react";
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
 import { useRouter } from "next/navigation";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
+import { useDialogFocusTrap } from "@/components/packs/useDialogFocusTrap";
+import { customPackAddOns } from "@/data/packAddOns";
 import { formatCurrency } from "@/lib/formatCurrency";
-import type { GradePackTemplate, StationeryItem } from "@/data/phasePacks";
+import { saveOrderDraft } from "@/lib/order/orderDraft";
+import type { GradePackTemplate } from "@/data/phasePacks";
 import styles from "../packs/PackCustomiser.module.css";
 
 type PackCustomizerProps = {
@@ -12,80 +22,6 @@ type PackCustomizerProps = {
   gradePack: GradePackTemplate;
   onCancel?: () => void;
 };
-
-const addOnStationeryItems: StationeryItem[] = [
-  {
-    id: "addon-coloured-pencils",
-    name: "Coloured Pencils",
-    quantity: 1, // Treat base as 1 so checkbox works logically
-    specification: "12 Pack",
-    category: "Brand Upgrades",
-    icon: "pencil",
-    unitPrice: 55,
-  },
-  {
-    id: "addon-black-pens",
-    name: "Black Ballpoint Pens",
-    quantity: 1,
-    specification: "Pack of 4",
-    category: "Brand Upgrades",
-    icon: "pen",
-    unitPrice: 45,
-  },
-  {
-    id: "addon-highlighters",
-    name: "Highlighters",
-    quantity: 1,
-    specification: "Assorted Colours",
-    category: "Brand Upgrades",
-    icon: "highlighter",
-    unitPrice: 25,
-  },
-  {
-    id: "addon-exam-pad",
-    name: "A4 Exam Pad",
-    quantity: 1,
-    specification: "100 page punched",
-    category: "Core Essentials",
-    icon: "pad",
-    unitPrice: 35,
-  },
-  {
-    id: "addon-plastic-sleeves",
-    name: "Plastic Sleeves",
-    quantity: 1,
-    specification: "Pack of 10",
-    category: "Durables",
-    icon: "file",
-    unitPrice: 35,
-  },
-  {
-    id: "addon-lever-arch-file",
-    name: "Lever Arch File",
-    quantity: 1,
-    specification: "A4",
-    category: "Durables",
-    icon: "file",
-    unitPrice: 60,
-  },
-  {
-    id: "addon-calculator",
-    name: "Scientific Calculator",
-    quantity: 1,
-    category: "Durables",
-    icon: "calculator",
-    unitPrice: 350,
-  },
-  {
-    id: "addon-glue-stick",
-    name: "Glue Stick",
-    quantity: 1,
-    specification: "40g",
-    category: "Core Essentials",
-    icon: "glue",
-    unitPrice: 35,
-  },
-];
 
 function buildInitialQuantities(gradePack: GradePackTemplate) {
   // Only standard items start populated
@@ -102,26 +38,22 @@ export function PackCustomizer({
 }: PackCustomizerProps) {
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>(() =>
     buildInitialQuantities(gradePack)
   );
+  const closeCustomiser = useCallback(() => onCancel?.(), [onCancel]);
 
   useEffect(() => {
     setQuantities(buildInitialQuantities(gradePack));
   }, [gradePack]);
 
-  useEffect(() => {
-    closeButtonRef.current?.focus();
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        onCancel?.();
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onCancel]);
+  useDialogFocusTrap({
+    isOpen: true,
+    dialogRef: drawerRef,
+    initialFocusRef: closeButtonRef,
+    onClose: closeCustomiser,
+  });
 
   const handleQuantityChange = (id: string, value: number) => {
     setQuantities((prev) => ({ ...prev, [id]: Math.max(0, value) }));
@@ -145,7 +77,7 @@ export function PackCustomizer({
       total += diff * price;
     });
 
-    addOnStationeryItems.forEach((item) => {
+    customPackAddOns.forEach((item) => {
       const currentQty = quantities[item.id] || 0;
       const price = item.unitPrice || 0;
       total += currentQty * price;
@@ -171,7 +103,7 @@ export function PackCustomizer({
         quantity: quantities[item.id] || 0,
       }))
       .filter((item) => item.quantity > 0);
-    const addOnItems = addOnStationeryItems
+    const addOnItems = customPackAddOns
       .map((item) => ({
         name: item.name,
         quantity: quantities[item.id] || 0,
@@ -181,17 +113,22 @@ export function PackCustomizer({
       .map((item) => `${item.quantity} x ${item.name}`)
       .join("; ");
 
+    const draft = saveOrderDraft({
+      phaseSlug,
+      packId: gradePack.id,
+      grade: gradePack.grade,
+      type: "custom",
+      selectedItems: customItems,
+      estimatedTotal: totalPrice,
+    });
+
     const params = new URLSearchParams({
       phase: phaseSlug,
       pack: gradePack.id,
       grade: gradePack.grade,
       type: "custom",
-      total: String(totalPrice),
+      draft: draft.id,
     });
-
-    if (customItems) {
-      params.set("items", customItems);
-    }
 
     router.push(`/order?${params.toString()}#checkout-form`);
   };
@@ -211,6 +148,9 @@ export function PackCustomizer({
         role="dialog"
         aria-modal="true"
         aria-labelledby="pack-customiser-title"
+        aria-describedby="pack-customiser-instructions"
+        ref={drawerRef}
+        tabIndex={-1}
       >
         <div className={styles.header}>
           <div>
@@ -218,12 +158,14 @@ export function PackCustomizer({
               {gradePack.title}
             </p>
             <h2 id="pack-customiser-title">Customise This Pack</h2>
-            <span>Untick what you already have and order the rest.</span>
+            <span id="pack-customiser-instructions">
+              Untick what you already have and order the rest.
+            </span>
           </div>
           <button
             type="button"
             className={styles.closeButton}
-            onClick={onCancel}
+            onClick={closeCustomiser}
             aria-label="Close custom pack builder"
             ref={closeButtonRef}
           >
@@ -282,11 +224,11 @@ export function PackCustomizer({
             })}
 
             {/* Optional Add-Ons Section */}
-            {addOnStationeryItems.length > 0 && (
+            {customPackAddOns.length > 0 && (
               <div style={{ marginTop: 20 }}>
                 <p style={{ margin: "0 0 12px", color: "var(--pex-keppel)", fontSize: 13, fontWeight: 800 }}>Optional extras</p>
                 <div style={{ display: "grid", gap: 10 }}>
-                  {addOnStationeryItems.map((item) => {
+                  {customPackAddOns.map((item) => {
                     const currentQty = quantities[item.id] || 0;
                     const isSelected = currentQty > 0;
                     const itemTotal = isSelected && item.unitPrice ? item.unitPrice * currentQty : 0;

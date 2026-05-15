@@ -177,6 +177,23 @@
   gap: 10px;
 }
 
+.downloadLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pex-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 180ms ease;
+}
+
+.downloadLink:hover,
+.downloadLink:focus-visible {
+  color: var(--pex-keppel);
+}
+
 .customizerSection {
   padding: 0 0 clamp(56px, 8vw, 96px);
   background: var(--pex-bg-soft);
