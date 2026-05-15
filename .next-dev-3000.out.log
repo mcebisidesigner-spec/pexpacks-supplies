@@ -837,3 +837,8 @@ Creating turbopack project {
  GET /foundation-phase 200 in 485ms (next.js: 39ms, application-code: 447ms)
  GET /primary-school 200 in 117ms (next.js: 8ms, application-code: 109ms)
  GET /schools/constantia-park-primary 200 in 171ms (next.js: 22ms, application-code: 149ms)
+ GET /order?phase=foundation-phase&pack=grade-r-pack&grade=Grade%20R&type=standard 200 in 231ms (next.js: 21ms, application-code: 210ms)
+ GET /api/schools/search?q=park&limit=3 200 in 452ms (next.js: 434ms, application-code: 18ms)
+ GET / 200 in 479ms (next.js: 32ms, application-code: 448ms)
+ GET / 200 in 71ms (next.js: 3ms, application-code: 68ms)
+ GET /foundation-phase 200 in 65ms (next.js: 5ms, application-code: 60ms)
