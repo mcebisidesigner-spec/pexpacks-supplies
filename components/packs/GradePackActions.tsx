@@ -70,6 +70,14 @@ export function GradePackActions({
   const total = useMemo(() => calculatePackTotal(selection), [selection]);
   const hasPrices = typeof total === "number";
   const selectedCount = selectedItems.length;
+  const listText = [
+    `${pack.schoolName} ${pack.grade} Stationery Pack`,
+    "",
+    ...pack.items.map((item) => `- ${item.requiredQuantity} x ${item.name}`),
+  ].join("\n");
+  const downloadHref = `data:text/plain;charset=utf-8,${encodeURIComponent(
+    listText
+  )}`;
 
   useEffect(() => {
     if (!isOpen) {
@@ -160,7 +168,8 @@ export function GradePackActions({
       {showDownloadLink ? (
         <a
           className={styles.downloadLink}
-          href={`#pack-list-${pack.id}`}
+          href={downloadHref}
+          download={`${pack.schoolSlug}-${pack.gradeSlug}-stationery-list.txt`}
         >
           Download List
         </a>

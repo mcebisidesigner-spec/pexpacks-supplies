@@ -93,3 +93,7 @@ Creating turbopack project {
  GET /api/schools/parktown-primary 200 in 17ms (next.js: 9ms, application-code: 8ms)
  GET /api/schools/search?q=&limit=10 200 in 8ms (next.js: 2ms, application-code: 6ms)
  GET /api/schools/search?q=Parktown+Primary&limit=10 200 in 14ms (next.js: 4ms, application-code: 10ms)
+✓ Compiled in 59ms
+ GET /order?school=parktown-primary&grade=grade-3&type=full-school 200 in 607ms (next.js: 190ms, application-code: 417ms)
+ GET / 200 in 359ms (next.js: 30ms, application-code: 329ms)
+ GET / 200 in 698ms (next.js: 5ms, application-code: 692ms)
