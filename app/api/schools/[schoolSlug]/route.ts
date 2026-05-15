@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSchoolBySlug } from "@/data/schools";
+import { rateLimitRequest } from "@/lib/security/requestGuards";
 
 export const runtime = "nodejs";
 
@@ -10,6 +11,25 @@ type RouteContext = {
 };
 
 export async function GET(_request: NextRequest, { params }: RouteContext) {
+  const limitStatus = rateLimitRequest(_request, {
+    keyPrefix: "school-detail",
+    windowMs: 60 * 1000,
+    max: 90,
+  });
+
+  if (!limitStatus.allowed) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Too many school detail requests. Please try again shortly.",
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limitStatus.retryAfter) },
+      }
+    );
+  }
+
   const { schoolSlug } = await params;
   const school = await getSchoolBySlug(schoolSlug);
 

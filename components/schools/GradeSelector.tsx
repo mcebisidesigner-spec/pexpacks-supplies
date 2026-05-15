@@ -53,7 +53,7 @@ export function GradeSelector({ school }: GradeSelectorProps) {
               <strong>From {formatCurrency(grade.price)}</strong>
               <GradePackActions
                 pack={pack}
-                showDownloadLink={false}
+                showDownloadLink={true}
                 showMicrocopy={false}
               />
             </div>

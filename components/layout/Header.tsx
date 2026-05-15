@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { HeaderActiveLink } from "./HeaderActiveLink";
 import { HeaderMenu } from "./HeaderMenu";
@@ -9,10 +10,17 @@ import { mainNavLinks } from "@/data/navigation";
 import styles from "./Header.module.css";
 
 export function Header() {
+  const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const shouldPinHeader = pathname === "/order" || pathname === "/track-order";
 
   useEffect(() => {
+    if (shouldPinHeader) {
+      setIsVisible(true);
+      return;
+    }
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -32,7 +40,7 @@ export function Header() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [shouldPinHeader]);
 
   return (
     <header

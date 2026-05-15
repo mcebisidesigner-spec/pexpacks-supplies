@@ -36,6 +36,7 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
   const items = firstValue(params.items);
   const removed = firstValue(params.removed);
   const total = firstValue(params.total);
+  const draft = firstValue(params.draft);
 
   return (
     <>
@@ -70,6 +71,7 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
           initialCustomItems={items}
           initialRemovedItems={removed}
           initialEstimatedTotal={total}
+          initialDraftId={draft}
         />
       </section>
       <section className={`${page.section} ${page.bgAlt}`}>

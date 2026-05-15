@@ -207,9 +207,7 @@ export function GradePackActions({
           <div className={styles.summaryCard} aria-live="polite">
             <div>
               <span className={styles.summaryLabel}>Estimated total</span>
-              <strong className={styles.summaryValue}>
-                {displayedTotal}
-              </strong>
+              <strong className={styles.summaryValue}>{displayedTotal}</strong>
             </div>
             <p className={styles.quoteNote}>
               Updates as you untick items or adjust quantities.
@@ -239,9 +237,7 @@ export function GradePackActions({
                         <span className={styles.itemCategory}>
                           {item.category}
                         </span>
-                        <span className={styles.itemName}>
-                          {item.name}
-                        </span>
+                        <span className={styles.itemName}>{item.name}</span>
                         <span className={styles.itemMeta}>
                           Required quantity: {item.requiredQuantity}
                           {typeof item.unitPrice === "number"

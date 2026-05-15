@@ -4,6 +4,8 @@ import { getFullSchoolRecords } from "@/data/schools";
 import { normalisePackItems } from "@/lib/packs/normalisePackItems";
 import type { FormSubmission } from "@/lib/forms/schema";
 
+const PEXCOVER_ADDON_PRICE = 120;
+
 type ParsedLineItem = {
   name: string;
   quantity: number;
@@ -115,7 +117,10 @@ function calculateStandardPackTotal(data: FormSubmission) {
     return total + (effectiveQuantity - item.quantity) * (item.unitPrice ?? 0);
   }, pack.priceFrom);
   const addOnsTotal = customPackAddOns.reduce((total, item) => {
-    const quantity = selected.get(normaliseName(item.name)) ?? 0;
+    const quantity =
+      selected.get(normaliseName(`Add-on: ${item.name}`)) ??
+      selected.get(normaliseName(item.name)) ??
+      0;
     return total + quantity * (item.unitPrice ?? 0);
   }, 0);
 
@@ -137,12 +142,17 @@ export async function normaliseSubmittedTotal(data: FormSubmission) {
     };
   }
 
+  const addOnsTotal = /pexcover add-on requested/i.test(data.message ?? "")
+    ? PEXCOVER_ADDON_PRICE
+    : 0;
+  const estimatedTotal = roundCurrency(calculated + addOnsTotal);
+
   return {
-    estimatedTotal: calculated,
+    estimatedTotal,
     source: "server",
     changed:
       typeof data.estimatedTotal === "number"
-        ? Math.abs(data.estimatedTotal - calculated) > 0.01
+        ? Math.abs(data.estimatedTotal - estimatedTotal) > 0.01
         : false,
   };
 }

@@ -51,14 +51,26 @@ export async function sendToWeb3Forms({
     body[key] = String(value);
   }
 
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
   try {
+    const controller = new AbortController();
+    timeout = setTimeout(() => controller.abort(), 10000);
     const response = await fetch(WEB3FORMS_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify(body),
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
 
-    const result = (await response.json()) as { success?: boolean; message?: string };
+    const result = (await response.json()) as {
+      success?: boolean;
+      message?: string;
+    };
 
     if (!response.ok || !result.success) {
       console.error("[Web3Forms] Submission rejected:", result.message);
@@ -81,5 +93,9 @@ export async function sendToWeb3Forms({
       message:
         "We could not submit your enquiry right now. Please try again or contact PexPacks directly.",
     };
+  } finally {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
   }
 }

@@ -63,11 +63,11 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
     useState<GradePackTemplate | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const customiseTriggerRef = useRef<HTMLButtonElement | null>(null);
-  
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  
+
   const faqs = phaseFaqs[phaseData.slug] || [];
 
   const handleCustomise = (
@@ -84,17 +84,6 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
       customiseTriggerRef.current?.focus();
     }, 0);
   }, []);
-
-  useEffect(() => {
-    if (selectedCustomPack) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [selectedCustomPack]);
 
   const otherPhases = homepagePacks.filter(
     (pack) => pack.href !== `/${phaseData.slug}`
@@ -254,7 +243,9 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
         </div>
       </section>
 
-      {isMounted && drawerContent ? createPortal(drawerContent, document.body) : null}
+      {isMounted && drawerContent
+        ? createPortal(drawerContent, document.body)
+        : null}
 
       {faqs.length > 0 ? (
         <section className={styles.faqSection}>

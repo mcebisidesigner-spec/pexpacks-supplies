@@ -217,7 +217,9 @@ export function OrderForm({
     (effectiveInitialPackType === "custom-school" ||
       effectiveInitialPackType === "full-school");
 
-  const [activeStep, setActiveStep] = useState(hasPreselectedSchoolPack ? 2 : 0);
+  const [activeStep, setActiveStep] = useState(
+    hasPreselectedSchoolPack ? 2 : 0
+  );
   const [selectedSchool, setSelectedSchool] = useState<SchoolDetails | null>(
     null
   );
@@ -324,7 +326,7 @@ export function OrderForm({
         )
     : isCustomSchoolPack && effectiveInitialCustomItems
       ? effectiveInitialCustomItems.split("; ").filter(Boolean)
-    : (selectedGrade?.contents ?? []);
+      : (selectedGrade?.contents ?? []);
   const selectedPackNote = standardSelection
     ? standardSelection.mode === "custom"
       ? "Your customised pack has been prepared for checkout. The adjusted items below will be included in the enquiry."
@@ -333,7 +335,7 @@ export function OrderForm({
       ? "Your customised school pack has been prepared. Continue to add optional services and complete checkout details."
       : isFullSchoolPack
         ? "Your full school pack is selected. Every item on the official list will be included in the enquiry."
-    : (selectedGrade?.deliveryNote ?? "");
+        : (selectedGrade?.deliveryNote ?? "");
 
   useEffect(() => {
     if (standardSelection || !effectiveInitialSchool) {
@@ -349,7 +351,9 @@ export function OrderForm({
         }
         setSelectedSchool(school);
         setSchoolQuery(school.name);
-        setGradeSlug(effectiveInitialGrade || school.grades[0]?.gradeSlug || "");
+        setGradeSlug(
+          effectiveInitialGrade || school.grades[0]?.gradeSlug || ""
+        );
       })
       .catch(() => {
         if (!cancelled) {
@@ -499,7 +503,7 @@ export function OrderForm({
         ? `Custom ${selectedGrade?.grade} stationery pack`
         : isFullSchoolPack
           ? `Full ${selectedGrade?.grade} stationery pack`
-      : `${selectedGrade?.grade} stationery pack`;
+          : `${selectedGrade?.grade} stationery pack`;
     const standardPackMessage = standardSelection
       ? [
           `Selected route: ${standardSelection.mode === "custom" ? "customised standard pack" : "standard pack"}.`,
@@ -533,6 +537,10 @@ export function OrderForm({
           pexcoverSubjects || "Standard"
         }\nLabel Format: ${pexcoverLabelFormat}\nNotes: ${pexcoverNotes || "None"}`
       : "";
+    const orderEstimatedTotal =
+      typeof selectedPackPrice === "number"
+        ? selectedPackPrice + (hasPexcover ? PEXCOVER_PRICE : 0)
+        : undefined;
 
     const payload = {
       formType: isCustomSchoolPack
@@ -553,8 +561,7 @@ export function OrderForm({
       packType,
       selectedItems: selectedPackItems.join("; "),
       removedItems: effectiveInitialRemovedItems,
-      estimatedTotal:
-        typeof selectedPackPrice === "number" ? selectedPackPrice : undefined,
+      estimatedTotal: orderEstimatedTotal,
       orderReference: submittedOrderReference,
       orderDraftId: initialDraftId,
       preferredContactMethod,
@@ -605,7 +612,9 @@ export function OrderForm({
             <span>Estimated total</span>
             <strong>
               {typeof selectedPackPrice === "number"
-                ? formatCurrency(selectedPackPrice + (hasPexcover ? PEXCOVER_PRICE : 0))
+                ? formatCurrency(
+                    selectedPackPrice + (hasPexcover ? PEXCOVER_PRICE : 0)
+                  )
                 : "To be confirmed"}
             </strong>
           </div>
@@ -955,15 +964,15 @@ export function OrderForm({
                   </dd>
                 </div>
                 {typeof selectedPackPrice === "number" ? (
-                <div>
-                  <dt>Estimated total</dt>
-                  <dd>
+                  <div>
+                    <dt>Estimated total</dt>
+                    <dd>
                       {formatCurrency(
                         selectedPackPrice + (hasPexcover ? PEXCOVER_PRICE : 0)
                       )}
-                  </dd>
-                </div>
-              ) : null}
+                    </dd>
+                  </div>
+                ) : null}
                 <div>
                   <dt>Reference</dt>
                   <dd>{orderReference || "Preparing"}</dd>

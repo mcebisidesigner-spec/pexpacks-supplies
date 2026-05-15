@@ -59,7 +59,11 @@ export function PackCustomizer({
     setQuantities((prev) => ({ ...prev, [id]: Math.max(0, value) }));
   };
 
-  const setItemSelected = (id: string, selected: boolean, baseQuantity: number) => {
+  const setItemSelected = (
+    id: string,
+    selected: boolean,
+    baseQuantity: number
+  ) => {
     setQuantities((prev) => ({
       ...prev,
       [id]: selected ? (prev[id] > 0 ? prev[id] : baseQuantity) : 0,
@@ -86,10 +90,7 @@ export function PackCustomizer({
     return Math.max(0, total);
   }, [gradePack, quantities]);
 
-  const standardListItems = useMemo(
-    () => gradePack.items,
-    [gradePack.items]
-  );
+  const standardListItems = useMemo(() => gradePack.items, [gradePack.items]);
 
   const selectedCount = Object.values(quantities).reduce((a, b) => a + b, 0);
 
@@ -105,7 +106,7 @@ export function PackCustomizer({
       .filter((item) => item.quantity > 0);
     const addOnItems = customPackAddOns
       .map((item) => ({
-        name: item.name,
+        name: `Add-on: ${item.name}`,
         quantity: quantities[item.id] || 0,
       }))
       .filter((item) => item.quantity > 0);
@@ -154,9 +155,7 @@ export function PackCustomizer({
       >
         <div className={styles.header}>
           <div>
-            <p>
-              {gradePack.title}
-            </p>
+            <p>{gradePack.title}</p>
             <h2 id="pack-customiser-title">Customise This Pack</h2>
             <span id="pack-customiser-instructions">
               Untick what you already have and order the rest.
@@ -190,7 +189,8 @@ export function PackCustomizer({
             {standardListItems.map((item) => {
               const currentQty = quantities[item.id] || 0;
               const isSelected = currentQty > 0;
-              const itemTotal = isSelected && item.unitPrice ? item.unitPrice * currentQty : 0;
+              const itemTotal =
+                isSelected && item.unitPrice ? item.unitPrice * currentQty : 0;
 
               return (
                 <article className={styles.itemRow} key={item.id}>
@@ -198,14 +198,24 @@ export function PackCustomizer({
                     <input
                       type="checkbox"
                       checked={isSelected}
-                      onChange={(event) => setItemSelected(item.id, event.target.checked, item.quantity)}
+                      onChange={(event) =>
+                        setItemSelected(
+                          item.id,
+                          event.target.checked,
+                          item.quantity
+                        )
+                      }
                     />
                     <span>
-                      <span className={styles.itemCategory}>{item.category || "Stationery"}</span>
+                      <span className={styles.itemCategory}>
+                        {item.category || "Stationery"}
+                      </span>
                       <span className={styles.itemName}>{item.name}</span>
                       <span className={styles.itemMeta}>
                         Required quantity: {item.quantity}
-                        {item.unitPrice ? ` - ${formatCurrency(item.unitPrice)} each` : ""}
+                        {item.unitPrice
+                          ? ` - ${formatCurrency(item.unitPrice)} each`
+                          : ""}
                       </span>
                       {itemTotal > 0 ? (
                         <span className={styles.lineTotal}>
@@ -226,12 +236,24 @@ export function PackCustomizer({
             {/* Optional Add-Ons Section */}
             {customPackAddOns.length > 0 && (
               <div style={{ marginTop: 20 }}>
-                <p style={{ margin: "0 0 12px", color: "var(--pex-keppel)", fontSize: 13, fontWeight: 800 }}>Optional extras</p>
+                <p
+                  style={{
+                    margin: "0 0 12px",
+                    color: "var(--pex-keppel)",
+                    fontSize: 13,
+                    fontWeight: 800,
+                  }}
+                >
+                  Optional extras
+                </p>
                 <div style={{ display: "grid", gap: 10 }}>
                   {customPackAddOns.map((item) => {
                     const currentQty = quantities[item.id] || 0;
                     const isSelected = currentQty > 0;
-                    const itemTotal = isSelected && item.unitPrice ? item.unitPrice * currentQty : 0;
+                    const itemTotal =
+                      isSelected && item.unitPrice
+                        ? item.unitPrice * currentQty
+                        : 0;
 
                     return (
                       <article className={styles.itemRow} key={item.id}>
@@ -239,14 +261,22 @@ export function PackCustomizer({
                           <input
                             type="checkbox"
                             checked={isSelected}
-                            onChange={(event) => setItemSelected(item.id, event.target.checked, 1)}
+                            onChange={(event) =>
+                              setItemSelected(item.id, event.target.checked, 1)
+                            }
                           />
                           <span>
-                            <span className={styles.itemCategory}>{item.category}</span>
+                            <span className={styles.itemCategory}>
+                              {item.category}
+                            </span>
                             <span className={styles.itemName}>{item.name}</span>
                             <span className={styles.itemMeta}>
-                              {item.specification ? `${item.specification} - ` : ""}
-                              {item.unitPrice ? `${formatCurrency(item.unitPrice)} each` : ""}
+                              {item.specification
+                                ? `${item.specification} - `
+                                : ""}
+                              {item.unitPrice
+                                ? `${formatCurrency(item.unitPrice)} each`
+                                : ""}
                             </span>
                             {itemTotal > 0 ? (
                               <span className={styles.lineTotal}>
@@ -257,7 +287,9 @@ export function PackCustomizer({
                         </label>
                         <QuantityStepper
                           value={currentQty}
-                          onChange={(value) => handleQuantityChange(item.id, value)}
+                          onChange={(value) =>
+                            handleQuantityChange(item.id, value)
+                          }
                           ariaLabel={`quantity for ${item.name}`}
                         />
                       </article>
