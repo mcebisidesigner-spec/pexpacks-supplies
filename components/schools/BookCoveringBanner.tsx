@@ -69,8 +69,8 @@ export function BookCoveringBanner() {
         <div className={styles.bookCoveringVisual}>
           <div className={styles.visualBadge}>Saves you 5+ hours!</div>
           <Image
-            src="/images/unboxing-G7.webp"
-            alt="Perfectly covered school books"
+            src="/images/pexcover-banner.webp"
+            alt="Pexcover book covering service banner"
             fill
             className={styles.bookCoveringImage}
             sizes="(max-width: 768px) 100vw, 50vw"

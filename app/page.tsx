@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
-import { WhatsInTheBoxList } from "@/components/marketing/WhatsInTheBoxList";
+import { InteractiveUnboxing } from "@/components/marketing/InteractiveUnboxing";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
@@ -224,35 +224,7 @@ export default function HomePage() {
 
       <BookCoveringBanner />
 
-      <section className={styles.sectionCream}>
-        <div className={styles.inner}>
-          <div className={styles.splitBand}>
-            <div>
-              <p className={styles.eyebrow}>The unboxing experience</p>
-              <h2>What's in the box?</h2>
-              <p>
-                Each Pexpacks stationery pack is prepared to help learners start
-                ready, with essential school supplies according to school lists.
-              </p>
-              <WhatsInTheBoxList />
-              <div
-                className={[styles.buttonRow, styles.splitActions].join(" ")}
-              >
-                <Button href="/schools">Find Your School Pack</Button>
-              </div>
-            </div>
-            <div className={styles.unboxingImageWrap}>
-              <Image
-                src="/images/unboxing-G7.webp"
-                alt="Open Pexpacks stationery box showing school supplies packed inside"
-                fill
-                className={styles.mediaImage}
-                sizes="(min-width: 1024px) 50vw, 100vw"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <InteractiveUnboxing />
 
       <section className={styles.section}>
         <div className={styles.inner}>
