@@ -296,6 +296,20 @@ export function OrderForm({
   }, [initialGrade, initialSchool, standardSelection]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash;
+    if (hash === "#checkout-form") {
+      const timer = setTimeout(() => {
+        const el = document.getElementById("checkout-form");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  useEffect(() => {
     if (standardSelection || !schoolTouched) {
       return;
     }
@@ -496,7 +510,7 @@ export function OrderForm({
 
   return (
     <section className={styles.orderShell}>
-      <div className={styles.orderPanel} id="checkout-form">
+      <div className={styles.orderPanel}>
         <OrderProgress steps={steps} activeStep={activeStep} />
         <form className={styles.form} ref={formRef}>
           {currentStep === "school" ? (
@@ -599,7 +613,7 @@ export function OrderForm({
           ) : null}
 
           {currentStep === "pack" ? (
-            <div className={styles.confirmPack}>
+            <div className={styles.confirmPack} id="checkout-form">
               <p className={styles.confirmKicker}>Selected pack</p>
               <h2>{selectedPackTitle}</h2>
               <p>{selectedPackNote}</p>
