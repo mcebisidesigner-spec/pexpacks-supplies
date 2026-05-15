@@ -17,13 +17,18 @@ const nextConfig: NextConfig = {
         permanent: true
       },
       {
-        source: "/standard-packs",
+        source: "/school-packs/foundation-phase",
         destination: "/foundation-phase",
         permanent: true
       },
       {
-        source: "/standard-school-packs",
-        destination: "/foundation-phase",
+        source: "/school-packs/primary-school",
+        destination: "/primary-school",
+        permanent: true
+      },
+      {
+        source: "/school-packs/high-school",
+        destination: "/high-school",
         permanent: true
       },
       {

@@ -116,7 +116,7 @@ export const featuredPacks: Pack[] = [
     includes: ["Exercise books", "Wax crayons", "Glue stick", "Safety scissors", "Scrapbook"],
     priceLabel: "From R 659",
     cta: "View Foundation Phase Packs",
-    href: "/standard-packs",
+    href: "/foundation-phase",
   },
   {
     id: "primary-school-pack",
@@ -129,7 +129,7 @@ export const featuredPacks: Pack[] = [
     includes: ["Exercise books", "Pens", "Pencils", "Ruler", "Eraser", "Sharpener"],
     priceLabel: "From R 779",
     cta: "View Primary School Packs",
-    href: "/standard-packs",
+    href: "/primary-school",
   },
   {
     id: "high-school-pack",
@@ -142,7 +142,7 @@ export const featuredPacks: Pack[] = [
     includes: ["Subject books", "Pens", "Pencils", "Highlighters", "Files", "Exam pad"],
     priceLabel: "From R 879",
     cta: "View High School Stationery Packs",
-    href: "/standard-packs",
+    href: "/high-school",
   },
   {
     id: "office-stationery-pack",
