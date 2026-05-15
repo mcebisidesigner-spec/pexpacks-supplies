@@ -18,12 +18,12 @@
 }
 
 .bannerContent h2 {
+  margin: 0;
   color: var(--pex-primary);
-  margin-top: 12px;
-  margin-bottom: 16px;
-  font-size: clamp(24px, 3vw, 32px);
-  line-height: 1.1;
+  font-size: clamp(32px, 4.2vw, 54px);
+  line-height: 1;
   font-weight: 800;
+  margin-bottom: 16px;
 }
 
 .bannerContent p {
@@ -138,3 +138,13 @@
   color: var(--pex-keppel);
   opacity: 1;
 }
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--pex-keppel);
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: normal;
+}
+

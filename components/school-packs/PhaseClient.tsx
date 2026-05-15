@@ -6,6 +6,7 @@ import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PackCustomizer } from "@/components/order/PackCustomizer";
 import { AddMySchoolBanner } from "@/components/sections/AddMySchoolBanner";
 import type { PhasePack, GradePackTemplate } from "@/data/phasePacks";
+import { homepagePacks } from "@/data/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
 import styles from "./PhaseClient.module.css";
 
@@ -63,13 +64,34 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
 
   const handleCustomise = (pack: GradePackTemplate) => {
     setSelectedCustomPack(pack);
-    window.setTimeout(() => {
-      document.getElementById("pack-customizer")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 80);
   };
+
+  const otherPhases = homepagePacks.filter((pack) => pack.href !== `/${phaseData.slug}`);
 
   return (
     <div className={styles.phaseContainer} data-phase={phaseData.slug}>
+      <div className={styles.progressStepper}>
+        <div className={`${styles.step} ${styles.stepActive}`}>
+          <div className={styles.stepIcon}>1</div>
+          <span>Choose Phase</span>
+        </div>
+        <div className={styles.stepSeparator} />
+        <div className={`${styles.step} ${styles.stepActive}`}>
+          <div className={styles.stepIcon}>2</div>
+          <span>Select Pack</span>
+        </div>
+        <div className={styles.stepSeparator} />
+        <div className={`${styles.step} ${selectedCustomPack ? styles.stepActive : ""}`}>
+          <div className={styles.stepIcon}>3</div>
+          <span>Customise</span>
+        </div>
+        <div className={styles.stepSeparator} />
+        <div className={styles.step}>
+          <div className={styles.stepIcon}>4</div>
+          <span>Review Order</span>
+        </div>
+      </div>
+
       <section className={styles.trustSection} aria-label="Pack benefits">
         <div className={styles.sectionInner}>
           <div className={styles.trustBadges}>
@@ -88,8 +110,12 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
           </div>
 
           <div className={styles.cardsGrid}>
-            {phaseData.gradePacks.map((pack) => (
-              <article key={pack.id} className={styles.gradeCard}>
+            {phaseData.gradePacks.map((pack, i) => (
+              <article 
+                key={pack.id} 
+                className={`${styles.gradeCard} ${styles.animateFadeInUp}`}
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
                 <div className={styles.cardMedia}>
                   <span>{pack.grade}</span>
                 </div>
@@ -130,15 +156,22 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
       </section>
 
       {selectedCustomPack ? (
-        <section className={styles.customizerSection}>
-          <div className={styles.sectionInner}>
+        <div className={styles.drawerOverlay} onClick={() => setSelectedCustomPack(null)}>
+          <div className={styles.drawerContent} onClick={(e) => e.stopPropagation()}>
+            <button 
+              className={styles.closeDrawerBtn} 
+              onClick={() => setSelectedCustomPack(null)}
+              aria-label="Close customiser"
+            >
+              ✕
+            </button>
             <PackCustomizer
               phaseSlug={phaseData.slug}
               gradePack={selectedCustomPack}
               onCancel={() => setSelectedCustomPack(null)}
             />
           </div>
-        </section>
+        </div>
       ) : null}
 
       <section className={styles.bannerSection}>
@@ -160,6 +193,34 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
                   <h3>{faq.q}</h3>
                   <p>{faq.a}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {otherPhases.length > 0 ? (
+        <section className={styles.faqSection} style={{ paddingTop: "clamp(56px, 8vw, 96px)", borderTop: "1px solid var(--pex-border)" }}>
+          <div className={styles.sectionInner}>
+            <div className={styles.sectionHeader}>
+              <p>Explore more</p>
+              <h2>Other school phases</h2>
+            </div>
+            <div className={styles.cardsGrid}>
+              {otherPhases.map((pack) => (
+                <article className={styles.gradeCard} key={pack.id}>
+                  <div className={styles.cardBody}>
+                    <p className={styles.bestFor}>{pack.category}</p>
+                    <h3>{pack.name}</h3>
+                    <p className={styles.summary}>{pack.description}</p>
+                    <p className={styles.priceFrom} style={{ marginTop: "12px" }}>{pack.priceLabel}</p>
+                  </div>
+                  <div className={styles.cardFooter}>
+                    <Button href={pack.href} variant="outline" style={{ width: "100%" }}>
+                      {pack.cta}
+                    </Button>
+                  </div>
+                </article>
               ))}
             </div>
           </div>

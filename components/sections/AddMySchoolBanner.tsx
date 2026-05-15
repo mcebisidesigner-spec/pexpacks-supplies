@@ -10,7 +10,7 @@ export function AddMySchoolBanner() {
   return (
     <div className={styles.bannerContainer}>
       <div className={styles.bannerContent}>
-        <p className="eyebrow">School-specific lists</p>
+        <p className={styles.eyebrow}>School-specific lists</p>
         <h2>Need your exact school stationery list?</h2>
         <p>
           If your school is not in the database yet, send us the school name, city and grade list. We can help prepare a school-specific pack path or recommend the closest standard combo.

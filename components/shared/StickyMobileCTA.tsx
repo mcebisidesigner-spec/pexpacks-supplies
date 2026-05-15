@@ -5,14 +5,28 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./StickyMobileCTA.module.css";
 
-const hiddenRoutes = ["/schools", "/order", "/contact", "/office-packs"];
+const hiddenRoutes = [
+  "/schools",
+  "/order",
+  "/contact",
+  "/office-packs",
+  "/foundation-phase",
+  "/primary-school",
+  "/high-school",
+];
 
 export function StickyMobileCTA() {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+  const currentPath = pathname ?? "";
   const hiddenOnRoute = hiddenRoutes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
+    (route) => currentPath === route || currentPath.startsWith(`${route}/`)
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (hiddenOnRoute) {
@@ -52,7 +66,7 @@ export function StickyMobileCTA() {
     };
   }, [hiddenOnRoute]);
 
-  if (hiddenOnRoute) {
+  if (!mounted || hiddenOnRoute) {
     return null;
   }
 

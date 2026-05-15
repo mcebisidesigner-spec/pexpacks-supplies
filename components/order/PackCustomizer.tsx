@@ -128,24 +128,24 @@ export function PackCustomizer({ phaseSlug, gradePack, onCancel }: PackCustomize
     return Math.max(0, total);
   }, [gradePack, quantities]);
 
-  const groupedItems = useMemo(() => {
-    const groups: Record<string, StationeryItem[]> = {
-      "Core Essentials": [],
-      Durables: [],
-      "Brand Upgrades": [],
-    };
+  const availableAddOnItems = useMemo(
+    () => addOnStationeryItems.filter((item) => (quantities[item.id] || 0) === 0),
+    [quantities]
+  );
 
-    gradePack.items.forEach((item) => {
-      const category = item.category || "Core Essentials";
-      if (groups[category]) {
-        groups[category].push(item);
-      } else {
-        groups[category] = [item];
-      }
-    });
+  const selectedAddOnItems = useMemo(
+    () => addOnStationeryItems.filter((item) => (quantities[item.id] || 0) > 0),
+    [quantities]
+  );
 
-    return groups;
-  }, [gradePack]);
+  const standardCanvasItems = useMemo(
+    () => [...selectedAddOnItems, ...gradePack.items],
+    [gradePack.items, selectedAddOnItems]
+  );
+
+  const handleAddOptionalItem = (id: string) => {
+    setQuantities((prev) => ({ ...prev, [id]: Math.max(prev[id] || 0, 1) }));
+  };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -207,7 +207,7 @@ export function PackCustomizer({ phaseSlug, gradePack, onCancel }: PackCustomize
               <h3 id="custom-add-ons-title">Add more stationery to this pack</h3>
             </div>
             <div className={styles.addOnGrid}>
-              {addOnStationeryItems.map((item) => (
+              {availableAddOnItems.map((item) => (
                 <div key={item.id} className={`${styles.itemRow} ${styles.addOnRow}`}>
                   <div className={styles.itemInfoWrap}>
                     <div className={styles.itemIconBox}>
@@ -219,13 +219,14 @@ export function PackCustomizer({ phaseSlug, gradePack, onCancel }: PackCustomize
                       {item.unitPrice ? <span className={styles.itemPrice}>{formatCurrency(item.unitPrice)} each</span> : null}
                     </div>
                   </div>
-                  <QuantityStepper
-                    value={quantities[item.id] || 0}
-                    onChange={(value) => handleQuantityChange(item.id, value)}
-                    ariaLabel={`Quantity for ${item.name}`}
-                  />
+                  <button type="button" className={styles.addItemButton} onClick={() => handleAddOptionalItem(item.id)}>
+                    Add
+                  </button>
                 </div>
               ))}
+              {availableAddOnItems.length === 0 ? (
+                <p className={styles.emptyAddOns}>All optional extras are now in your preloaded list.</p>
+              ) : null}
             </div>
           </section>
 
@@ -234,35 +235,32 @@ export function PackCustomizer({ phaseSlug, gradePack, onCancel }: PackCustomize
               <p>Preloaded standard list</p>
               <h3 id="standard-items-title">Standard items in your {gradePack.grade} pack</h3>
             </div>
-            <div className={styles.standardGrid}>
-              {Object.entries(groupedItems).map(([category, items]) => {
-                if (items.length === 0) {
-                  return null;
-                }
+            <div className={styles.standardCanvas}>
+              {standardCanvasItems.map((item) => {
+                const isAddedExtra = item.id.startsWith("addon-");
 
                 return (
-                  <div key={category} className={styles.itemGroup}>
-                    <h3 className={styles.itemGroupTitle}>{category}</h3>
-                    <div className={styles.itemList}>
-                      {items.map((item) => (
-                        <div key={item.id} className={styles.itemRow}>
-                          <div className={styles.itemInfoWrap}>
-                            <div className={styles.itemIconBox}>
-                              <ItemIcon name={item.icon} size={24} />
-                            </div>
-                            <div className={styles.itemInfo}>
-                              <span className={styles.itemName}>{item.name}</span>
-                              {item.specification ? <span className={styles.itemSpec}>{item.specification}</span> : null}
-                            </div>
-                          </div>
-                          <QuantityStepper
-                            value={quantities[item.id] || 0}
-                            onChange={(value) => handleQuantityChange(item.id, value)}
-                            ariaLabel={`Quantity for ${item.name}`}
-                          />
-                        </div>
-                      ))}
+                  <div
+                    key={item.id}
+                    className={`${styles.itemRow} ${styles.canvasItem} ${isAddedExtra ? styles.addedExtraRow : ""}`}
+                  >
+                    <div className={styles.itemInfoWrap}>
+                      <div className={styles.itemIconBox}>
+                        <ItemIcon name={item.icon} size={24} />
+                      </div>
+                      <div className={styles.itemInfo}>
+                        <span className={styles.itemName}>{item.name}</span>
+                        {item.specification ? <span className={styles.itemSpec}>{item.specification}</span> : null}
+                        {isAddedExtra && item.unitPrice ? (
+                          <span className={styles.itemPrice}>{formatCurrency(item.unitPrice)} each</span>
+                        ) : null}
+                      </div>
                     </div>
+                    <QuantityStepper
+                      value={quantities[item.id] || 0}
+                      onChange={(value) => handleQuantityChange(item.id, value)}
+                      ariaLabel={`Quantity for ${item.name}`}
+                    />
                   </div>
                 );
               })}
