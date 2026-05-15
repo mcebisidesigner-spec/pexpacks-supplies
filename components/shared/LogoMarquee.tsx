@@ -19,7 +19,10 @@ export function LogoMarquee({ partners }: LogoMarqueeProps) {
               width={120}
               height={40}
               alt={partner.name}
-              style={{ objectFit: "contain", filter: "grayscale(1) brightness(0.4)" }}
+              style={{
+                objectFit: "contain",
+                filter: "grayscale(1) brightness(0.4)",
+              }}
             />
           </div>
         ))}

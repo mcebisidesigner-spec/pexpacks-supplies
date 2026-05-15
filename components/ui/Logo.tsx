@@ -6,5 +6,13 @@ type LogoProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
 };
 
 export function Logo({ variant = "default", alt = "", ...props }: LogoProps) {
-  return <img src={brandLogoPaths[variant]} alt={alt} width={219} height={86} {...props} />;
+  return (
+    <img
+      src={brandLogoPaths[variant]}
+      alt={alt}
+      width={219}
+      height={86}
+      {...props}
+    />
+  );
 }

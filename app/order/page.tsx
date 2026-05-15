@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { OrderForm } from "@/components/order/OrderForm";
-import { ordersEmail, ordersEmailHref, phoneHref, phoneNumber } from "@/data/contact";
+import {
+  ordersEmail,
+  ordersEmailHref,
+  phoneHref,
+  phoneNumber,
+} from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { PexcoverMarquee } from "@/components/order/PexcoverMarquee";
@@ -38,13 +43,21 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
           <p>Order now</p>
           <h1>Order your ready-to-use pack</h1>
           <p className={page.pageHeroText}>
-            Select school, choose grade, confirm the pack and send your order details. For order support, email{" "}
-            <a href={ordersEmailHref}>{ordersEmail}</a> or call <a href={phoneHref}>{phoneNumber}</a>.
+            Select school, choose grade, confirm the pack and send your order
+            details. For order support, email{" "}
+            <a href={ordersEmailHref}>{ordersEmail}</a> or call{" "}
+            <a href={phoneHref}>{phoneNumber}</a>.
           </p>
         </div>
       </section>
       <section className={page.section}>
-        <div style={{ maxWidth: "var(--layout-max-width)", margin: "0 auto", paddingInline: "var(--gutter-desktop)" }}>
+        <div
+          style={{
+            maxWidth: "var(--layout-max-width)",
+            margin: "0 auto",
+            paddingInline: "var(--gutter-desktop)",
+          }}
+        >
           <PexcoverMarquee />
         </div>
         <OrderForm
@@ -59,10 +72,17 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
       </section>
       <section className={`${page.section} ${page.bgAlt}`}>
         <div className={page.sectionInner}>
-          <FaqAccordion 
-            title="Ordering FAQs" 
+          <FaqAccordion
+            title="Ordering FAQs"
             subtitle="Everything you need to know about placing your stationery order."
-            faqs={faqs.filter(faq => ["delivery-timing", "payment-flow", "multiple-learners", "exercise-books"].includes(faq.id))} 
+            faqs={faqs.filter((faq) =>
+              [
+                "delivery-timing",
+                "payment-flow",
+                "multiple-learners",
+                "exercise-books",
+              ].includes(faq.id)
+            )}
           />
         </div>
       </section>

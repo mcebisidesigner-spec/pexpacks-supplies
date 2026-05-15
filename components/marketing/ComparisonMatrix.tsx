@@ -31,7 +31,12 @@ const comparisonData = [
 
 function CheckIcon() {
   return (
-    <svg viewBox="0 0 24 24" className={styles.iconCheck} focusable="false" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      className={styles.iconCheck}
+      focusable="false"
+      aria-hidden="true"
+    >
       <circle cx="12" cy="12" r="10" />
       <path d="M8 12.5l3 3 5-6" />
     </svg>
@@ -40,7 +45,12 @@ function CheckIcon() {
 
 function CrossIcon() {
   return (
-    <svg viewBox="0 0 24 24" className={styles.iconCross} focusable="false" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      className={styles.iconCross}
+      focusable="false"
+      aria-hidden="true"
+    >
       <circle cx="12" cy="12" r="10" />
       <path d="M15 9l-6 6M9 9l6 6" />
     </svg>

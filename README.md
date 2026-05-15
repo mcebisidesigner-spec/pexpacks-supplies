@@ -69,17 +69,17 @@ styles/           -> Global CSS, design tokens, shared page styles
 
 ## Key Pages
 
-| Route | Description |
-|---|---|
-| `/` | Homepage with hero search, trust badges, featured packs |
-| `/schools` | Find your school + grade packs |
-| `/schools/[schoolSlug]` | School detail page |
-| `/schools/[schoolSlug]/[gradeSlug]` | Grade pack detail page |
-| `/office-packs` | Office supply packs |
-| `/partner-with-schools` | Partner with Pexpacks |
-| `/contact` | Contact form |
-| `/order` | Order flow |
-| `/school`, `/office`, `/partner`, `/copex` | Legacy redirects |
+| Route                                      | Description                                             |
+| ------------------------------------------ | ------------------------------------------------------- |
+| `/`                                        | Homepage with hero search, trust badges, featured packs |
+| `/schools`                                 | Find your school + grade packs                          |
+| `/schools/[schoolSlug]`                    | School detail page                                      |
+| `/schools/[schoolSlug]/[gradeSlug]`        | Grade pack detail page                                  |
+| `/office-packs`                            | Office supply packs                                     |
+| `/partner-with-schools`                    | Partner with Pexpacks                                   |
+| `/contact`                                 | Contact form                                            |
+| `/order`                                   | Order flow                                              |
+| `/school`, `/office`, `/partner`, `/copex` | Legacy redirects                                        |
 
 ## License
 

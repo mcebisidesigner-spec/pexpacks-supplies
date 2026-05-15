@@ -8,7 +8,12 @@ export function PartnerLogoStrip() {
     <div className={styles.logoStrip} aria-label="Partner school logos">
       {logos.map((name, index) => (
         <div className={styles.logoItem} key={`${name}-${index}`}>
-          <Image src="/images/school-logo-placeholder.svg" alt={`${name} partner school crest`} width={100} height={100} />
+          <Image
+            src="/images/school-logo-placeholder.svg"
+            alt={`${name} partner school crest`}
+            width={100}
+            height={100}
+          />
         </div>
       ))}
     </div>

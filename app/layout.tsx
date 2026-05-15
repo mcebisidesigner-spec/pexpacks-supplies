@@ -4,7 +4,11 @@ import { Footer } from "@/components/layout/Footer";
 import { StickyMobileCTA } from "@/components/shared/StickyMobileCTA";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildMetadata } from "@/lib/seo";
-import { onlineStoreSchema, organizationSchema, websiteSchema } from "@/lib/schema";
+import {
+  onlineStoreSchema,
+  organizationSchema,
+  websiteSchema,
+} from "@/lib/schema";
 import "@/styles/globals.css";
 
 export const viewport: Viewport = {
@@ -28,7 +32,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-ZA" data-scroll-behavior="smooth">
       <body suppressHydrationWarning>
@@ -40,7 +46,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <JsonLd data={websiteSchema()} />
         <div className="site-shell">
           <Header />
-          <main id="site-main" className="site-main">{children}</main>
+          <main id="site-main" className="site-main">
+            {children}
+          </main>
           <Footer />
           <StickyMobileCTA />
         </div>

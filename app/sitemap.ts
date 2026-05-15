@@ -24,14 +24,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/privacy-policy",
     "/terms",
     "/cookie-notice",
-    "/delivery-policy"
+    "/delivery-policy",
   ];
 
   const schools = await getFullSchoolRecords();
 
   const schoolRoutes = schools.flatMap((school) => [
     `/schools/${school.slug}`,
-    ...school.grades.map((grade) => `/schools/${school.slug}/${grade.gradeSlug}`)
+    ...school.grades.map(
+      (grade) => `/schools/${school.slug}/${grade.gradeSlug}`
+    ),
   ]);
 
   const blogRoutes = blogPosts.map((post) => `/blog/${post.slug}`);
@@ -40,6 +42,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${siteUrl}${route}`,
     lastModified: new Date("2026-05-01"),
     changeFrequency: "weekly",
-    priority: route === "" ? 1 : 0.7
+    priority: route === "" ? 1 : 0.7,
   }));
 }

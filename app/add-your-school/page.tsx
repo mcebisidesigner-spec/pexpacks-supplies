@@ -23,7 +23,9 @@ export default function AddYourSchoolPage() {
         panelTitle="Use a standard grade combo while your school list is being reviewed."
       >
         <div className={styles.buttonRow}>
-          <Button href="/standard-school-packs">View Standard School Packs</Button>
+          <Button href="/standard-school-packs">
+            View Standard School Packs
+          </Button>
           <Button href="/contact" variant="white">
             Contact Us
           </Button>
@@ -39,23 +41,46 @@ export default function AddYourSchoolPage() {
               <form className={styles.formGrid} action="/contact" method="get">
                 <label className={styles.field}>
                   <span>School name</span>
-                  <input name="school" type="text" placeholder="e.g. Parktown Primary" required />
+                  <input
+                    name="school"
+                    type="text"
+                    placeholder="e.g. Parktown Primary"
+                    required
+                  />
                 </label>
                 <label className={styles.field}>
                   <span>City or area</span>
-                  <input name="city" type="text" placeholder="e.g. Johannesburg" required />
+                  <input
+                    name="city"
+                    type="text"
+                    placeholder="e.g. Johannesburg"
+                    required
+                  />
                 </label>
                 <label className={styles.field}>
                   <span>Province</span>
-                  <input name="province" type="text" placeholder="e.g. Gauteng" required />
+                  <input
+                    name="province"
+                    type="text"
+                    placeholder="e.g. Gauteng"
+                    required
+                  />
                 </label>
                 <label className={styles.field}>
                   <span>Grade needed</span>
-                  <input name="grade" type="text" placeholder="e.g. Grade R" required />
+                  <input
+                    name="grade"
+                    type="text"
+                    placeholder="e.g. Grade R"
+                    required
+                  />
                 </label>
                 <label className={[styles.field, styles.formWide].join(" ")}>
                   <span>Stationery list notes</span>
-                  <textarea name="notes" placeholder="Tell us what grade lists, books or special pack requirements you have." />
+                  <textarea
+                    name="notes"
+                    placeholder="Tell us what grade lists, books or special pack requirements you have."
+                  />
                 </label>
                 <input name="type" type="hidden" value="add-school" />
                 <div className={styles.formWide}>
@@ -96,7 +121,10 @@ export default function AddYourSchoolPage() {
           <div className={styles.packGrid}>
             {standardSchoolPacks.slice(0, 6).map((pack) => (
               <article className={styles.packCard} key={pack.id}>
-                <div className={[styles.packMedia, styles.packMediaBlue].join(" ")} aria-hidden="true">
+                <div
+                  className={[styles.packMedia, styles.packMediaBlue].join(" ")}
+                  aria-hidden="true"
+                >
                   <span>{pack.phase}</span>
                 </div>
                 <div className={styles.packBody}>

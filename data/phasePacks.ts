@@ -5,7 +5,20 @@ export type StationeryItem = {
   unit?: string;
   specification?: string;
   category: "Core Essentials" | "Durables" | "Brand Upgrades";
-  icon?: "notebook" | "crayon" | "glue" | "scissors" | "pencil" | "pen" | "ruler" | "eraser" | "sharpener" | "highlighter" | "pad" | "calculator" | "file";
+  icon?:
+    | "notebook"
+    | "crayon"
+    | "glue"
+    | "scissors"
+    | "pencil"
+    | "pen"
+    | "ruler"
+    | "eraser"
+    | "sharpener"
+    | "highlighter"
+    | "pad"
+    | "calculator"
+    | "file";
   unitPrice?: number;
 };
 
@@ -32,32 +45,181 @@ export type PhasePack = {
 
 // TODO: confirm final pricing before launch
 const foundationItems: StationeryItem[] = [
-  { id: "fp-1", name: "A4 Unruled Exercise Book", quantity: 4, specification: "72 page", category: "Core Essentials", icon: "notebook", unitPrice: 20 },
-  { id: "fp-2", name: "Jumbo Wax Crayons", quantity: 1, specification: "12 Pack", category: "Core Essentials", icon: "crayon", unitPrice: 45 },
-  { id: "fp-3", name: "Glue Stick", quantity: 2, specification: "40g", category: "Core Essentials", icon: "glue", unitPrice: 35 },
-  { id: "fp-4", name: "Safety Scissors", quantity: 1, category: "Durables", icon: "scissors", unitPrice: 25 },
-  { id: "fp-5", name: "A4 Blank Scrapbook", quantity: 2, category: "Core Essentials", icon: "notebook", unitPrice: 30 },
-  { id: "fp-6", name: "HB Pencils (Beginner)", quantity: 4, category: "Core Essentials", icon: "pencil", unitPrice: 10 },
+  {
+    id: "fp-1",
+    name: "A4 Unruled Exercise Book",
+    quantity: 4,
+    specification: "72 page",
+    category: "Core Essentials",
+    icon: "notebook",
+    unitPrice: 20,
+  },
+  {
+    id: "fp-2",
+    name: "Jumbo Wax Crayons",
+    quantity: 1,
+    specification: "12 Pack",
+    category: "Core Essentials",
+    icon: "crayon",
+    unitPrice: 45,
+  },
+  {
+    id: "fp-3",
+    name: "Glue Stick",
+    quantity: 2,
+    specification: "40g",
+    category: "Core Essentials",
+    icon: "glue",
+    unitPrice: 35,
+  },
+  {
+    id: "fp-4",
+    name: "Safety Scissors",
+    quantity: 1,
+    category: "Durables",
+    icon: "scissors",
+    unitPrice: 25,
+  },
+  {
+    id: "fp-5",
+    name: "A4 Blank Scrapbook",
+    quantity: 2,
+    category: "Core Essentials",
+    icon: "notebook",
+    unitPrice: 30,
+  },
+  {
+    id: "fp-6",
+    name: "HB Pencils (Beginner)",
+    quantity: 4,
+    category: "Core Essentials",
+    icon: "pencil",
+    unitPrice: 10,
+  },
 ];
 
 const primaryItems: StationeryItem[] = [
-  { id: "ps-1", name: "A4 Feint & Margin Exercise Book", quantity: 8, specification: "72 page", category: "Core Essentials", icon: "notebook", unitPrice: 20 },
-  { id: "ps-2", name: "Blue Ballpoint Pens", quantity: 4, category: "Core Essentials", icon: "pen", unitPrice: 15 },
-  { id: "ps-3", name: "HB Pencils", quantity: 4, category: "Core Essentials", icon: "pencil", unitPrice: 10 },
-  { id: "ps-4", name: "Ruler", quantity: 1, specification: "30cm Clear", category: "Durables", icon: "ruler", unitPrice: 12 },
-  { id: "ps-5", name: "Eraser", quantity: 2, category: "Core Essentials", icon: "eraser", unitPrice: 10 },
-  { id: "ps-6", name: "Metal Sharpener", quantity: 1, category: "Durables", icon: "sharpener", unitPrice: 25 },
-  { id: "ps-7", name: "Glue Stick", quantity: 2, specification: "40g", category: "Core Essentials", icon: "glue", unitPrice: 35 },
+  {
+    id: "ps-1",
+    name: "A4 Feint & Margin Exercise Book",
+    quantity: 8,
+    specification: "72 page",
+    category: "Core Essentials",
+    icon: "notebook",
+    unitPrice: 20,
+  },
+  {
+    id: "ps-2",
+    name: "Blue Ballpoint Pens",
+    quantity: 4,
+    category: "Core Essentials",
+    icon: "pen",
+    unitPrice: 15,
+  },
+  {
+    id: "ps-3",
+    name: "HB Pencils",
+    quantity: 4,
+    category: "Core Essentials",
+    icon: "pencil",
+    unitPrice: 10,
+  },
+  {
+    id: "ps-4",
+    name: "Ruler",
+    quantity: 1,
+    specification: "30cm Clear",
+    category: "Durables",
+    icon: "ruler",
+    unitPrice: 12,
+  },
+  {
+    id: "ps-5",
+    name: "Eraser",
+    quantity: 2,
+    category: "Core Essentials",
+    icon: "eraser",
+    unitPrice: 10,
+  },
+  {
+    id: "ps-6",
+    name: "Metal Sharpener",
+    quantity: 1,
+    category: "Durables",
+    icon: "sharpener",
+    unitPrice: 25,
+  },
+  {
+    id: "ps-7",
+    name: "Glue Stick",
+    quantity: 2,
+    specification: "40g",
+    category: "Core Essentials",
+    icon: "glue",
+    unitPrice: 35,
+  },
 ];
 
 const highSchoolItems: StationeryItem[] = [
-  { id: "hs-1", name: "A4 Feint & Margin Exercise Book", quantity: 10, specification: "72 page", category: "Core Essentials", icon: "notebook", unitPrice: 20 },
-  { id: "hs-2", name: "Blue Ballpoint Pens", quantity: 6, category: "Core Essentials", icon: "pen", unitPrice: 15 },
-  { id: "hs-3", name: "HB Pencils", quantity: 4, category: "Core Essentials", icon: "pencil", unitPrice: 10 },
-  { id: "hs-4", name: "Highlighters", quantity: 4, specification: "Assorted Colours", category: "Core Essentials", icon: "highlighter", unitPrice: 25 },
-  { id: "hs-5", name: "A4 Exam Pad", quantity: 2, specification: "100 page punched", category: "Core Essentials", icon: "pad", unitPrice: 35 },
-  { id: "hs-6", name: "Scientific Calculator", quantity: 1, category: "Durables", icon: "calculator", unitPrice: 350 },
-  { id: "hs-7", name: "Ring Binder File", quantity: 2, category: "Durables", icon: "file", unitPrice: 45 },
+  {
+    id: "hs-1",
+    name: "A4 Feint & Margin Exercise Book",
+    quantity: 10,
+    specification: "72 page",
+    category: "Core Essentials",
+    icon: "notebook",
+    unitPrice: 20,
+  },
+  {
+    id: "hs-2",
+    name: "Blue Ballpoint Pens",
+    quantity: 6,
+    category: "Core Essentials",
+    icon: "pen",
+    unitPrice: 15,
+  },
+  {
+    id: "hs-3",
+    name: "HB Pencils",
+    quantity: 4,
+    category: "Core Essentials",
+    icon: "pencil",
+    unitPrice: 10,
+  },
+  {
+    id: "hs-4",
+    name: "Highlighters",
+    quantity: 4,
+    specification: "Assorted Colours",
+    category: "Core Essentials",
+    icon: "highlighter",
+    unitPrice: 25,
+  },
+  {
+    id: "hs-5",
+    name: "A4 Exam Pad",
+    quantity: 2,
+    specification: "100 page punched",
+    category: "Core Essentials",
+    icon: "pad",
+    unitPrice: 35,
+  },
+  {
+    id: "hs-6",
+    name: "Scientific Calculator",
+    quantity: 1,
+    category: "Durables",
+    icon: "calculator",
+    unitPrice: 350,
+  },
+  {
+    id: "hs-7",
+    name: "Ring Binder File",
+    quantity: 2,
+    category: "Durables",
+    icon: "file",
+    unitPrice: 45,
+  },
 ];
 
 export const phasePacks: PhasePack[] = [
@@ -67,7 +229,8 @@ export const phasePacks: PhasePack[] = [
     slug: "foundation-phase",
     eyebrow: "Foundation Phase Packs",
     phaseRange: "Grade R to Grade 3",
-    description: "Ready-packed stationery for Grade R to Grade 3 learners, prepared around common school stationery needs and easy to customise for your child.",
+    description:
+      "Ready-packed stationery for Grade R to Grade 3 learners, prepared around common school stationery needs and easy to customise for your child.",
     heroBullets: [
       "Grade R to Grade 3 baseline combos",
       "Exercise books and creative basics",
@@ -81,7 +244,8 @@ export const phasePacks: PhasePack[] = [
         title: "Grade R Baseline Pack",
         priceFrom: 659,
         bestFor: "Grade R learners",
-        summary: "Essential creative tools and learning basics for the first year.",
+        summary:
+          "Essential creative tools and learning basics for the first year.",
         items: foundationItems,
       },
       {
@@ -119,7 +283,8 @@ export const phasePacks: PhasePack[] = [
     slug: "primary-school",
     eyebrow: "Primary School Packs",
     phaseRange: "Grade 4 to Grade 7",
-    description: "Ready-packed stationery for Grade 4 to Grade 7 learners, including school essentials, exercise books and writing supplies.",
+    description:
+      "Ready-packed stationery for Grade 4 to Grade 7 learners, including school essentials, exercise books and writing supplies.",
     heroBullets: [
       "Grade 4 to Grade 7 baseline combos",
       "Exercise books and writing basics",
@@ -171,7 +336,8 @@ export const phasePacks: PhasePack[] = [
     slug: "high-school",
     eyebrow: "High School Packs",
     phaseRange: "Grade 8 to Matric",
-    description: "Ready-packed stationery for Grade 8 to Grade 12 learners, including exercise books, pens, files, calculator-ready items and exam basics.",
+    description:
+      "Ready-packed stationery for Grade 8 to Grade 12 learners, including exercise books, pens, files, calculator-ready items and exam basics.",
     heroBullets: [
       "Grade 8 to Matric baseline combos",
       "Subject books and exam basics",

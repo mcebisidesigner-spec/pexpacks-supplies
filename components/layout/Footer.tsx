@@ -10,9 +10,25 @@ import { isActivePath } from "@/lib/isActivePath";
 import styles from "./Footer.module.css";
 
 const socialLinks = [
-  { label: "Visit Pexpacks on Facebook", href: officialSocialLinks.facebook, icon: "facebook" },
-  { label: "Visit Pexpacks on Instagram", href: officialSocialLinks.instagram, icon: "instagram" },
-  ...(hasWhatsAppNumber ? [{ label: "Chat to Pexpacks on WhatsApp", href: orderWhatsAppHref, icon: "whatsapp" } as const] : []),
+  {
+    label: "Visit Pexpacks on Facebook",
+    href: officialSocialLinks.facebook,
+    icon: "facebook",
+  },
+  {
+    label: "Visit Pexpacks on Instagram",
+    href: officialSocialLinks.instagram,
+    icon: "instagram",
+  },
+  ...(hasWhatsAppNumber
+    ? [
+        {
+          label: "Chat to Pexpacks on WhatsApp",
+          href: orderWhatsAppHref,
+          icon: "whatsapp",
+        } as const,
+      ]
+    : []),
 ] as const;
 
 function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
@@ -47,7 +63,9 @@ export function Footer() {
 
   return (
     <footer className={styles.footer} id="site-footer">
-      <div className={styles.footerInner}>        <div className={styles.topSection}>
+      <div className={styles.footerInner}>
+        {" "}
+        <div className={styles.topSection}>
           <Link href="/" className={styles.logoLink} aria-label="Pexpacks home">
             <Logo variant="white" className={styles.logoImage} />
           </Link>
@@ -61,7 +79,12 @@ export function Footer() {
                   <span key={link.label} className={styles.navItem}>
                     <Link
                       href={link.href}
-                      className={[styles.navLink, active ? styles.navLinkActive : ""].filter(Boolean).join(" ")}
+                      className={[
+                        styles.navLink,
+                        active ? styles.navLinkActive : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                       aria-current={active ? "page" : undefined}
                     >
                       {link.label}
@@ -78,16 +101,27 @@ export function Footer() {
 
             <nav className={styles.legalNav} aria-label="Legal links">
               {footerLinks.map((link) => (
-                <Link key={link.label} href={link.href} className={styles.legalLink}>
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={styles.legalLink}
+                >
                   {link.label}
                 </Link>
               ))}
             </nav>
           </div>
-        </div>        <hr className={styles.divider} />        <div className={styles.bottomSection}>
+        </div>{" "}
+        <hr className={styles.divider} />{" "}
+        <div className={styles.bottomSection}>
           <p className={styles.copyright}>
             &copy; 2026 Pexpacks. Design:{"  "}
-            <a href="https://mcebisih.co.za/" target="_blank" rel="noopener noreferrer" className={styles.designerLink}>
+            <a
+              href="https://mcebisih.co.za/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.designerLink}
+            >
               McebisiH
             </a>
           </p>

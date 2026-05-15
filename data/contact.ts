@@ -15,10 +15,12 @@ export function normalizeSouthAfricanPhoneNumber(value: string) {
   return digits;
 }
 
-export const internationalPhoneNumber = normalizeSouthAfricanPhoneNumber(phoneNumber);
+export const internationalPhoneNumber =
+  normalizeSouthAfricanPhoneNumber(phoneNumber);
 export const phoneHref = `tel:+${internationalPhoneNumber}`;
 
-export const whatsappNumber = process.env.NEXT_PUBLIC_PEXPACKS_WHATSAPP_NUMBER ?? phoneNumber;
+export const whatsappNumber =
+  process.env.NEXT_PUBLIC_PEXPACKS_WHATSAPP_NUMBER ?? phoneNumber;
 export const hasWhatsAppNumber = whatsappNumber.trim().length > 0;
 
 export function buildWhatsAppHref(message: string) {
@@ -30,4 +32,6 @@ export function buildWhatsAppHref(message: string) {
   return `https://wa.me/${normalizedNumber}?text=${encodeURIComponent(message)}`;
 }
 
-export const orderWhatsAppHref = buildWhatsAppHref("Hi Pexpacks, I would like to order a stationery pack.");
+export const orderWhatsAppHref = buildWhatsAppHref(
+  "Hi Pexpacks, I would like to order a stationery pack."
+);

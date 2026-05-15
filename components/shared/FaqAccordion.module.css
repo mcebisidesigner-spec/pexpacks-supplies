@@ -35,7 +35,9 @@
   border: 1px solid rgba(15, 37, 55, 0.06);
   box-shadow: 0 4px 12px rgba(15, 37, 55, 0.02);
   overflow: hidden;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .accordionItem:hover {
@@ -130,11 +132,11 @@
   .accordionButton {
     padding: 20px;
   }
-  
+
   .questionText {
     font-size: 16px;
   }
-  
+
   .answerInner {
     padding: 0 20px 20px;
   }

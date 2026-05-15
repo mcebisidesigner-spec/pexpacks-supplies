@@ -16,7 +16,7 @@ export function GET(request: NextRequest) {
     {
       query: params.get("q") ?? "",
       grade: params.get("grade") ?? "",
-      region: params.get("region") ?? ""
+      region: params.get("region") ?? "",
     },
     limit,
     offset
@@ -26,6 +26,6 @@ export function GET(request: NextRequest) {
     success: true,
     ...results,
     limit,
-    offset
+    offset,
   });
 }

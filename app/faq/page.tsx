@@ -19,7 +19,10 @@ export default function FAQPage() {
         <div className={page.pageHeroNarrow}>
           <p>Questions</p>
           <h1>Frequently asked questions</h1>
-          <p className={page.pageHeroText}>Common questions about school lists, delivery, payment and partnerships.</p>
+          <p className={page.pageHeroText}>
+            Common questions about school lists, delivery, payment and
+            partnerships.
+          </p>
         </div>
       </section>
       <section className={page.section}>

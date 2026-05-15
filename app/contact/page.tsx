@@ -11,7 +11,7 @@ import {
   ordersEmail,
   ordersEmailHref,
   phoneHref,
-  phoneNumber
+  phoneNumber,
 } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import styles from "@/components/marketing/Marketing.module.css";
@@ -53,18 +53,23 @@ export default function ContactPage() {
                 text="Use the form for structured enquiries or WhatsApp for quick order follow-ups."
               />
               <p>
-                <strong>Email:</strong> <a href={generalEmailHref}>{generalEmail}</a>
+                <strong>Email:</strong>{" "}
+                <a href={generalEmailHref}>{generalEmail}</a>
               </p>
               <p>
-                <strong>Orders:</strong> <a href={ordersEmailHref}>{ordersEmail}</a>
+                <strong>Orders:</strong>{" "}
+                <a href={ordersEmailHref}>{ordersEmail}</a>
               </p>
               <p>
-                <strong>Telephone:</strong> <a href={phoneHref}>{phoneNumber}</a>
+                <strong>Telephone:</strong>{" "}
+                <a href={phoneHref}>{phoneNumber}</a>
               </p>
               <p>
                 <strong>WhatsApp:</strong>{" "}
                 {hasWhatsAppNumber ? (
-                  <a href={orderWhatsAppHref}>Start a prefilled WhatsApp order chat</a>
+                  <a href={orderWhatsAppHref}>
+                    Start a prefilled WhatsApp order chat
+                  </a>
                 ) : (
                   "WhatsApp chat is currently unavailable."
                 )}

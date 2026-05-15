@@ -58,14 +58,17 @@ function buildStandardOrderHref(phaseSlug: string, pack: GradePackTemplate) {
 }
 
 export function PhaseClient({ phaseData }: PhaseClientProps) {
-  const [selectedCustomPack, setSelectedCustomPack] = useState<GradePackTemplate | null>(null);
+  const [selectedCustomPack, setSelectedCustomPack] =
+    useState<GradePackTemplate | null>(null);
   const faqs = phaseFaqs[phaseData.slug] || [];
 
   const handleCustomise = (pack: GradePackTemplate) => {
     setSelectedCustomPack(pack);
   };
 
-  const otherPhases = homepagePacks.filter((pack) => pack.href !== `/${phaseData.slug}`);
+  const otherPhases = homepagePacks.filter(
+    (pack) => pack.href !== `/${phaseData.slug}`
+  );
 
   return (
     <div className={styles.phaseContainer} data-phase={phaseData.slug}>
@@ -80,7 +83,9 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
           <span>Select Pack</span>
         </div>
         <div className={styles.stepSeparator} />
-        <div className={`${styles.step} ${selectedCustomPack ? styles.stepActive : ""}`}>
+        <div
+          className={`${styles.step} ${selectedCustomPack ? styles.stepActive : ""}`}
+        >
           <div className={styles.stepIcon}>3</div>
           <span>Customise</span>
         </div>
@@ -101,7 +106,10 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
         </div>
       </section>
 
-      <section className={styles.cardsSection} aria-label={`${phaseData.phaseRange} pack options`}>
+      <section
+        className={styles.cardsSection}
+        aria-label={`${phaseData.phaseRange} pack options`}
+      >
         <div className={styles.sectionInner}>
           <div className={styles.sectionHeader}>
             <p>{phaseData.phaseRange}</p>
@@ -110,8 +118,8 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
 
           <div className={styles.cardsGrid}>
             {phaseData.gradePacks.map((pack, i) => (
-              <article 
-                key={pack.id} 
+              <article
+                key={pack.id}
                 className={`${styles.gradeCard} ${styles.animateFadeInUp}`}
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
@@ -124,26 +132,44 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
                   <h3>{pack.title}</h3>
                   <p className={styles.summary}>{pack.summary}</p>
 
-                  <ul className={styles.itemList} aria-label={`${pack.title} includes`}>
+                  <ul
+                    className={styles.itemList}
+                    aria-label={`${pack.title} includes`}
+                  >
                     {pack.items.slice(0, 5).map((item) => (
                       <li key={item.id}>
-                        <ItemIcon name={item.icon} size={16} className={styles.itemIcon} />
+                        <ItemIcon
+                          name={item.icon}
+                          size={16}
+                          className={styles.itemIcon}
+                        />
                         {item.name}
                       </li>
                     ))}
                     {pack.items.length > 5 ? (
-                      <li className={styles.moreItems}>+ {pack.items.length - 5} more essentials</li>
+                      <li className={styles.moreItems}>
+                        + {pack.items.length - 5} more essentials
+                      </li>
                     ) : null}
                   </ul>
                 </div>
 
                 <div className={styles.cardFooter}>
-                  <p className={styles.priceFrom}>From {formatCurrency(pack.priceFrom)}</p>
+                  <p className={styles.priceFrom}>
+                    From {formatCurrency(pack.priceFrom)}
+                  </p>
                   <div className={styles.cardActions}>
-                    <Button href={buildStandardOrderHref(phaseData.slug, pack)} size="sm">
+                    <Button
+                      href={buildStandardOrderHref(phaseData.slug, pack)}
+                      size="sm"
+                    >
                       Buy standard pack
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => handleCustomise(pack)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCustomise(pack)}
+                    >
                       Customise this pack
                     </Button>
                   </div>
@@ -155,10 +181,16 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
       </section>
 
       {selectedCustomPack ? (
-        <div className={styles.drawerOverlay} onClick={() => setSelectedCustomPack(null)}>
-          <div className={styles.drawerContent} onClick={(e) => e.stopPropagation()}>
-            <button 
-              className={styles.closeDrawerBtn} 
+        <div
+          className={styles.drawerOverlay}
+          onClick={() => setSelectedCustomPack(null)}
+        >
+          <div
+            className={styles.drawerContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className={styles.closeDrawerBtn}
               onClick={() => setSelectedCustomPack(null)}
               aria-label="Close customiser"
             >
@@ -172,8 +204,6 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
           </div>
         </div>
       ) : null}
-
-
 
       {faqs.length > 0 ? (
         <section className={styles.faqSection}>
@@ -195,7 +225,13 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
       ) : null}
 
       {otherPhases.length > 0 ? (
-        <section className={styles.faqSection} style={{ paddingTop: "clamp(56px, 8vw, 96px)", borderTop: "1px solid var(--pex-border)" }}>
+        <section
+          className={styles.faqSection}
+          style={{
+            paddingTop: "clamp(56px, 8vw, 96px)",
+            borderTop: "1px solid var(--pex-border)",
+          }}
+        >
           <div className={styles.sectionInner}>
             <div className={styles.sectionHeader}>
               <p>Explore more</p>
@@ -208,10 +244,19 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
                     <p className={styles.bestFor}>{pack.category}</p>
                     <h3>{pack.name}</h3>
                     <p className={styles.summary}>{pack.description}</p>
-                    <p className={styles.priceFrom} style={{ marginTop: "12px" }}>{pack.priceLabel}</p>
+                    <p
+                      className={styles.priceFrom}
+                      style={{ marginTop: "12px" }}
+                    >
+                      {pack.priceLabel}
+                    </p>
                   </div>
                   <div className={styles.cardFooter}>
-                    <Button href={pack.href} variant="outline" style={{ width: "100%" }}>
+                    <Button
+                      href={pack.href}
+                      variant="outline"
+                      style={{ width: "100%" }}
+                    >
                       {pack.cta}
                     </Button>
                   </div>
@@ -221,7 +266,6 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
           </div>
         </section>
       ) : null}
-
     </div>
   );
 }

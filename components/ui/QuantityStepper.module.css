@@ -1,7 +1,7 @@
 .stepperContainer {
   display: inline-flex;
   align-items: center;
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: var(--radius-button);
   overflow: hidden;
   height: 48px;

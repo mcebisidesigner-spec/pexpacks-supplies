@@ -14,12 +14,18 @@ type SchoolPageProps = {
 
 export const dynamicParams = true;
 
-export async function generateMetadata({ params }: SchoolPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: SchoolPageProps): Promise<Metadata> {
   const { schoolSlug } = await params;
   const school = await getSchoolBySlug(schoolSlug);
 
   if (!school) {
-    return buildMetadata("School Not Found", "The requested school pack could not be found.", "/schools");
+    return buildMetadata(
+      "School Not Found",
+      "The requested school pack could not be found.",
+      "/schools"
+    );
   }
 
   return buildMetadata(
@@ -43,7 +49,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Schools", path: "/schools" },
-          { name: school.name, path: `/schools/${school.slug}` }
+          { name: school.name, path: `/schools/${school.slug}` },
         ])}
       />
       <section className={page.pageHero}>
@@ -53,7 +59,8 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           </p>
           <h1>{school.name}</h1>
           <p className={page.pageHeroText}>
-            Official stationery packs prepared according to the school stationery list.
+            Official stationery packs prepared according to the school
+            stationery list.
           </p>
         </div>
       </section>

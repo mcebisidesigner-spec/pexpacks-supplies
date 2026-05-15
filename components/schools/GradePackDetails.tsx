@@ -12,7 +12,9 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
   return (
     <article className={styles.gradeDetails}>
       <div>
-        <p className={styles.kicker}>Skip the January rush. Order your ready-to-use pack today.</p>
+        <p className={styles.kicker}>
+          Skip the January rush. Order your ready-to-use pack today.
+        </p>
         <h1>
           {school.name}
           <br />
@@ -29,7 +31,9 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
             <li key={item}>{item}</li>
           ))}
         </ul>
-        <Button href={`/order?school=${school.slug}&grade=${grade.gradeSlug}`}>Order This Pack</Button>
+        <Button href={`/order?school=${school.slug}&grade=${grade.gradeSlug}`}>
+          Order This Pack
+        </Button>
       </div>
     </article>
   );

@@ -116,7 +116,6 @@
   line-height: 1.5;
 }
 
-
 .trackingBar {
   display: none;
 }
@@ -127,13 +126,13 @@
     flex-direction: column;
     gap: 16px;
   }
-  
+
   .viewport {
     width: calc(100% + 28px);
     margin: -10px -14px;
     padding: 10px 14px;
   }
-  
+
   .arrow {
     display: none;
   }

@@ -27,17 +27,20 @@ export function sanitise(data: FormSubmission) {
     message: clean(data.message) as string | undefined,
     schoolName: clean(data.schoolName) as string | undefined,
     businessName: clean(data.businessName) as string | undefined,
-    phone: normalisePhone(data.phone)
+    phone: normalisePhone(data.phone),
   };
 }
 
 /* ── Basic spam detection (honeypot + link spam) ── */
 export function isSpam(data: FormSubmission) {
-  const hp1 = typeof data.companyWebsite === "string" ? data.companyWebsite.trim() : "";
+  const hp1 =
+    typeof data.companyWebsite === "string" ? data.companyWebsite.trim() : "";
   const hp2 = typeof data.honeypot === "string" ? data.honeypot.trim() : "";
   if (hp1 || hp2) return true;
 
-  const text = [data.message, data.schoolName, data.businessName].filter(Boolean).join(" ");
+  const text = [data.message, data.schoolName, data.businessName]
+    .filter(Boolean)
+    .join(" ");
   if (/<\s*script|javascript:/i.test(text)) return true;
   if ((text.match(/https?:\/\/|www\./gi) ?? []).length > 4) return true;
 

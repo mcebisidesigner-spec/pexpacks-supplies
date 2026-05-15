@@ -56,8 +56,9 @@ export default function PartnerWithSchoolsPage() {
               <p className={styles.eyebrow}>School-list support</p>
               <h2>Grade-specific stationery made clearer</h2>
               <p>
-                Pexpacks helps schools turn approved stationery lists into clear grade pack pages so parents know what
-                to order and learners can start prepared.
+                Pexpacks helps schools turn approved stationery lists into clear
+                grade pack pages so parents know what to order and learners can
+                start prepared.
               </p>
               <div className={styles.buttonRow}>
                 <Button href="#partner-form">Partner Your School</Button>
@@ -83,7 +84,10 @@ export default function PartnerWithSchoolsPage() {
             {supplierBenefits.map((benefit) => (
               <article className={styles.infoCard} key={benefit}>
                 <h3>{benefit}</h3>
-                <p>Use the partnership form and select supplier partnership so Pexpacks can review the opportunity.</p>
+                <p>
+                  Use the partnership form and select supplier partnership so
+                  Pexpacks can review the opportunity.
+                </p>
               </article>
             ))}
           </div>

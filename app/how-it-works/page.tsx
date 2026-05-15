@@ -17,7 +17,9 @@ export default function HowItWorksPage() {
         <div className={page.pageHeroNarrow}>
           <p>A five easy step process</p>
           <h1>From school stationery list to ready-to-use pack</h1>
-          <p className={page.pageHeroText}>Simple ordering that helps learners start school ready.</p>
+          <p className={page.pageHeroText}>
+            Simple ordering that helps learners start school ready.
+          </p>
         </div>
       </section>
       <section className={page.section}>

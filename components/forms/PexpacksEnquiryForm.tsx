@@ -32,12 +32,13 @@ const contactOptions = [
   "Office pack",
   "Bulk order",
   "Supplier partnership",
-  "General enquiry"
+  "General enquiry",
 ];
 
 const partnerOptions = ["School", "Supplier", "Office stationery partner"];
 
-const consentText = "I consent to Pexpacks using my information to contact me about this enquiry and provide related support.";
+const consentText =
+  "I consent to Pexpacks using my information to contact me about this enquiry and provide related support.";
 
 function resolveContactFormType(enquiryType: string): FormType {
   if (enquiryType === "Parent order") return "school-pack-enquiry";
@@ -52,7 +53,11 @@ function val(data: FormData, key: string) {
   return typeof v === "string" ? v : "";
 }
 
-export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquiryFormProps) {
+export function PexpacksEnquiryForm({
+  mode,
+  title,
+  submitLabel,
+}: PexpacksEnquiryFormProps) {
   const [enquiryType, setEnquiryType] = useState(contactOptions[0]);
   const [partnerType, setPartnerType] = useState(partnerOptions[0]);
   const [pending, setPending] = useState(false);
@@ -60,8 +65,10 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const isContact = mode === "contact";
-  const showSchoolFields = isContact && ["Parent order", "School partnership"].includes(enquiryType);
-  const showOfficeFields = isContact && ["Office pack", "Bulk order"].includes(enquiryType);
+  const showSchoolFields =
+    isContact && ["Parent order", "School partnership"].includes(enquiryType);
+  const showOfficeFields =
+    isContact && ["Office pack", "Bulk order"].includes(enquiryType);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -72,7 +79,9 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
     setErrors({});
 
     const payload = {
-      formType: isContact ? resolveContactFormType(enquiryType) : "school-partnership",
+      formType: isContact
+        ? resolveContactFormType(enquiryType)
+        : "school-partnership",
       fullName: val(fd, "fullName"),
       phone: val(fd, "phone"),
       email: val(fd, "email") || undefined,
@@ -87,14 +96,14 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
       companyWebsite: val(fd, "companyWebsite"),
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
-      submittedAt: new Date().toISOString()
+      submittedAt: new Date().toISOString(),
     };
 
     try {
       const res = await fetch("/api/forms/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
       const result = (await res.json()) as ApiResponse;
       setStatus(result);
@@ -108,7 +117,8 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
     } catch {
       setStatus({
         success: false,
-        message: "We could not submit your enquiry right now. Please try again or contact us directly."
+        message:
+          "We could not submit your enquiry right now. Please try again or contact us directly.",
       });
     } finally {
       setPending(false);
@@ -118,27 +128,52 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
   return (
     <div className={styles.formCard}>
       <form onSubmit={handleSubmit} noValidate>
-        <p className={styles.eyebrow}>{isContact ? "Contact enquiry" : "Partnership enquiry"}</p>
+        <p className={styles.eyebrow}>
+          {isContact ? "Contact enquiry" : "Partnership enquiry"}
+        </p>
         <h2>{title}</h2>
         <p className={styles.privacyNotice}>
-          We only use your details to respond to your enquiry and manage your stationery pack request. We collect
-          only the information needed to assist you.
+          We only use your details to respond to your enquiry and manage your
+          stationery pack request. We collect only the information needed to
+          assist you.
         </p>
         <div className={styles.formGrid}>
           <label className={styles.field}>
             <span>Full name</span>
-            <input name="fullName" placeholder="Your name" autoComplete="name" required />
-            {errors.fullName ? <span className={styles.fieldError}>{errors.fullName}</span> : null}
+            <input
+              name="fullName"
+              placeholder="Your name"
+              autoComplete="name"
+              required
+            />
+            {errors.fullName ? (
+              <span className={styles.fieldError}>{errors.fullName}</span>
+            ) : null}
           </label>
           <label className={styles.field}>
             <span>Phone</span>
-            <input name="phone" type="tel" placeholder="078 003 6048" autoComplete="tel" required />
-            {errors.phone ? <span className={styles.fieldError}>{errors.phone}</span> : null}
+            <input
+              name="phone"
+              type="tel"
+              placeholder="078 003 6048"
+              autoComplete="tel"
+              required
+            />
+            {errors.phone ? (
+              <span className={styles.fieldError}>{errors.phone}</span>
+            ) : null}
           </label>
           <label className={styles.field}>
             <span>Email</span>
-            <input name="email" type="email" placeholder="name@example.com" autoComplete="email" />
-            {errors.email ? <span className={styles.fieldError}>{errors.email}</span> : null}
+            <input
+              name="email"
+              type="email"
+              placeholder="name@example.com"
+              autoComplete="email"
+            />
+            {errors.email ? (
+              <span className={styles.fieldError}>{errors.email}</span>
+            ) : null}
           </label>
           <label className={styles.field}>
             <span>Preferred contact method</span>
@@ -152,7 +187,11 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
           {isContact ? (
             <label className={styles.field}>
               <span>Enquiry type</span>
-              <select name="enquiryType" value={enquiryType} onChange={(e) => setEnquiryType(e.target.value)}>
+              <select
+                name="enquiryType"
+                value={enquiryType}
+                onChange={(e) => setEnquiryType(e.target.value)}
+              >
                 {contactOptions.map((opt) => (
                   <option key={opt}>{opt}</option>
                 ))}
@@ -162,12 +201,25 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
             <>
               <label className={styles.field}>
                 <span>Organisation</span>
-                <input name="businessName" placeholder="School, business or supplier name" autoComplete="organization" required />
-                {errors.businessName ? <span className={styles.fieldError}>{errors.businessName}</span> : null}
+                <input
+                  name="businessName"
+                  placeholder="School, business or supplier name"
+                  autoComplete="organization"
+                  required
+                />
+                {errors.businessName ? (
+                  <span className={styles.fieldError}>
+                    {errors.businessName}
+                  </span>
+                ) : null}
               </label>
               <label className={styles.field}>
                 <span>Partner type</span>
-                <select name="partnerType" value={partnerType} onChange={(e) => setPartnerType(e.target.value)}>
+                <select
+                  name="partnerType"
+                  value={partnerType}
+                  onChange={(e) => setPartnerType(e.target.value)}
+                >
                   {partnerOptions.map((opt) => (
                     <option key={opt}>{opt}</option>
                   ))}
@@ -180,7 +232,11 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
             <>
               <label className={styles.field}>
                 <span>School name</span>
-                <input name="schoolName" placeholder="School name" autoComplete="organization" />
+                <input
+                  name="schoolName"
+                  placeholder="School name"
+                  autoComplete="organization"
+                />
               </label>
               <label className={styles.field}>
                 <span>Grade</span>
@@ -193,19 +249,34 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
             <>
               <label className={styles.field}>
                 <span>Business name</span>
-                <input name="businessName" placeholder="Business name" autoComplete="organization" />
+                <input
+                  name="businessName"
+                  placeholder="Business name"
+                  autoComplete="organization"
+                />
               </label>
               <label className={styles.field}>
                 <span>Order quantity</span>
-                <input name="orderQuantity" type="number" min="1" placeholder="10" />
+                <input
+                  name="orderQuantity"
+                  type="number"
+                  min="1"
+                  placeholder="10"
+                />
               </label>
             </>
           ) : null}
 
           <label className={`${styles.field} ${styles.formWide}`}>
             <span>Message</span>
-            <textarea name="message" placeholder="Tell us what you need" required />
-            {errors.message ? <span className={styles.fieldError}>{errors.message}</span> : null}
+            <textarea
+              name="message"
+              placeholder="Tell us what you need"
+              required
+            />
+            {errors.message ? (
+              <span className={styles.fieldError}>{errors.message}</span>
+            ) : null}
           </label>
         </div>
 
@@ -218,7 +289,9 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
             </Link>
           </span>
         </label>
-        {errors.consent ? <p className={styles.fieldError}>{errors.consent}</p> : null}
+        {errors.consent ? (
+          <p className={styles.fieldError}>{errors.consent}</p>
+        ) : null}
 
         {/* Honeypot — hidden from real users */}
         <label className={styles.honeypot} aria-hidden="true">
@@ -231,7 +304,9 @@ export function PexpacksEnquiryForm({ mode, title, submitLabel }: PexpacksEnquir
         </Button>
         {status ? (
           <p
-            className={status.success ? styles.statusMessage : styles.statusError}
+            className={
+              status.success ? styles.statusMessage : styles.statusError
+            }
             role={status.success ? "status" : "alert"}
             aria-live="polite"
           >

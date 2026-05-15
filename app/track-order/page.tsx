@@ -16,7 +16,9 @@ export default function TrackOrderPage() {
         <div className={page.pageHeroNarrow}>
           <p>Track order</p>
           <h1>Check your stationery pack status</h1>
-          <p className={page.pageHeroText}>Enter your order reference and contact detail to request an update.</p>
+          <p className={page.pageHeroText}>
+            Enter your order reference and contact detail to request an update.
+          </p>
         </div>
       </section>
       <section className={page.section}>
@@ -30,7 +32,10 @@ export default function TrackOrderPage() {
             </label>
             <label>
               Phone or email
-              <input name="contact" placeholder="Phone number or email address" />
+              <input
+                name="contact"
+                placeholder="Phone number or email address"
+              />
             </label>
             <Button type="submit">Track order</Button>
           </form>

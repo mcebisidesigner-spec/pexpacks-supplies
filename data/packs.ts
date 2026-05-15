@@ -23,21 +23,24 @@ export type Pack = {
 export const mainCategories: MainCategory[] = [
   {
     title: "School Packs",
-    description: "Stationery packs prepared according to school lists and grade requirements.",
+    description:
+      "Stationery packs prepared according to school lists and grade requirements.",
     href: "/schools",
     cta: "Find Your School Pack",
     icon: "school",
   },
   {
     title: "Office Packs",
-    description: "Practical office stationery packs for SMEs, home offices, and small businesses.",
+    description:
+      "Practical office stationery packs for SMEs, home offices, and small businesses.",
     href: "/office-packs",
     cta: "View Office Stationery",
     icon: "office",
   },
   {
     title: "Order a Pack",
-    description: "Submit a stationery pack order enquiry and our team will confirm the details.",
+    description:
+      "Submit a stationery pack order enquiry and our team will confirm the details.",
     href: "/order",
     cta: "Start an Order Enquiry",
     icon: "package",
@@ -113,7 +116,13 @@ export const featuredPacks: Pack[] = [
     description:
       "For Grade R-3 learners who need creative and foundation learning stationery, exercise books, pencils, glue, crayons, and classroom basics.",
     bestFor: "Grade R to Grade 3 learners",
-    includes: ["Exercise books", "Wax crayons", "Glue stick", "Safety scissors", "Scrapbook"],
+    includes: [
+      "Exercise books",
+      "Wax crayons",
+      "Glue stick",
+      "Safety scissors",
+      "Scrapbook",
+    ],
     priceLabel: "From R 659",
     cta: "View Foundation Phase Packs",
     href: "/foundation-phase",
@@ -126,7 +135,14 @@ export const featuredPacks: Pack[] = [
     description:
       "For Grade 4-7 learners who need complete school stationery, exercise books, writing tools, files, and subject-ready supplies.",
     bestFor: "Grade 4 to Grade 7 learners",
-    includes: ["Exercise books", "Pens", "Pencils", "Ruler", "Eraser", "Sharpener"],
+    includes: [
+      "Exercise books",
+      "Pens",
+      "Pencils",
+      "Ruler",
+      "Eraser",
+      "Sharpener",
+    ],
     priceLabel: "From R 779",
     cta: "View Primary School Packs",
     href: "/primary-school",
@@ -139,7 +155,14 @@ export const featuredPacks: Pack[] = [
     description:
       "For Grade 8-12 learners who need pens, exercise books, files, calculator-ready items, exam basics, and study stationery.",
     bestFor: "Grade 8 to Matric learners",
-    includes: ["Subject books", "Pens", "Pencils", "Highlighters", "Files", "Exam pad"],
+    includes: [
+      "Subject books",
+      "Pens",
+      "Pencils",
+      "Highlighters",
+      "Files",
+      "Exam pad",
+    ],
     priceLabel: "From R 879",
     cta: "View High School Stationery Packs",
     href: "/high-school",
@@ -152,7 +175,14 @@ export const featuredPacks: Pack[] = [
     description:
       "For SMEs and home offices that need reliable stationery, admin supplies, files, paper, pens, and monthly restock support.",
     bestFor: "SMEs and home offices",
-    includes: ["Notebooks", "Pens", "Sticky notes", "Folders", "Correction tape", "Desk basics"],
+    includes: [
+      "Notebooks",
+      "Pens",
+      "Sticky notes",
+      "Folders",
+      "Correction tape",
+      "Desk basics",
+    ],
     priceLabel: "Request quote",
     cta: "View Office Stationery",
     href: "/office-packs",
@@ -160,5 +190,7 @@ export const featuredPacks: Pack[] = [
 ];
 
 export const homepagePacks = featuredPacks.filter((pack) =>
-  ["foundation-phase-pack", "primary-school-pack", "high-school-pack"].includes(pack.id)
+  ["foundation-phase-pack", "primary-school-pack", "high-school-pack"].includes(
+    pack.id
+  )
 );

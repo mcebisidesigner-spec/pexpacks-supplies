@@ -19,7 +19,9 @@
   transform: translateY(18px);
   opacity: 0;
   pointer-events: none;
-  transition: var(--button-transition), opacity 220ms ease;
+  transition:
+    var(--button-transition),
+    opacity 220ms ease;
 }
 
 .stickyCtaVisible {

@@ -24,7 +24,7 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
     if (touchStartX.current === null) return;
     const touchEndX = e.changedTouches[0].clientX;
     const deltaX = touchEndX - touchStartX.current;
-    
+
     // If swiped right by more than 50px, close the menu
     if (deltaX > 50) {
       onClose();
@@ -35,7 +35,9 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
   return (
     <div
       id="mobile-menu"
-      className={[styles.mobileMenu, open ? styles.mobileMenuOpen : ""].filter(Boolean).join(" ")}
+      className={[styles.mobileMenu, open ? styles.mobileMenuOpen : ""]
+        .filter(Boolean)
+        .join(" ")}
       inert={!open ? true : undefined}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -49,7 +51,12 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
               href={link.href}
               key={link.href}
               onClick={onClose}
-              className={[styles.mobileMenuLink, active ? styles.mobileMenuLinkActive : ""].filter(Boolean).join(" ")}
+              className={[
+                styles.mobileMenuLink,
+                active ? styles.mobileMenuLinkActive : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
               aria-current={active ? "page" : undefined}
             >
               {link.label}
@@ -58,7 +65,12 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
         })}
       </nav>
 
-      <Link href="/order" className={styles.mobileMenuCta} onClick={onClose} aria-label="Order a Pexpacks pack">
+      <Link
+        href="/order"
+        className={styles.mobileMenuCta}
+        onClick={onClose}
+        aria-label="Order a Pexpacks pack"
+      >
         <span>Order a Pack</span>
         <IconCircle className={styles.mobileMenuCtaIcon} />
       </Link>

@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, ReactNode, useEffect, useId, useRef, useState } from "react";
+import {
+  FormEvent,
+  ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { normaliseSchoolQuery } from "@/lib/schools/normaliseSchoolQuery";
 import styles from "./HeroSearch.module.css";
 
@@ -19,7 +26,7 @@ const gradeOptions = [
   "Grade 9",
   "Grade 10",
   "Grade 11",
-  "Grade 12"
+  "Grade 12",
 ];
 
 type SchoolSearchResult = {
@@ -41,7 +48,7 @@ type SchoolDetails = SchoolSearchResult & {
 async function fetchSchoolSearch(query: string, limit = 8) {
   const params = new URLSearchParams({
     q: query.trim(),
-    limit: String(limit)
+    limit: String(limit),
   });
 
   const response = await fetch(`/api/schools/search?${params.toString()}`);
@@ -73,7 +80,9 @@ async function fetchSchoolDetails(slug: string) {
 function findGradeBySearchValue(school: SchoolDetails, gradeValue: string) {
   const normalizedGrade = gradeValue.trim().toLowerCase();
   return school.grades.find(
-    (grade) => grade.grade.toLowerCase() === normalizedGrade || grade.gradeSlug.toLowerCase() === normalizedGrade
+    (grade) =>
+      grade.grade.toLowerCase() === normalizedGrade ||
+      grade.gradeSlug.toLowerCase() === normalizedGrade
   );
 }
 
@@ -92,7 +101,8 @@ export function HeroSearch() {
   const [schoolTouched, setSchoolTouched] = useState(false);
   const [schoolLoading, setSchoolLoading] = useState(false);
   const [schoolResults, setSchoolResults] = useState<SchoolSearchResult[]>([]);
-  const [selectedSchool, setSelectedSchool] = useState<SchoolSearchResult | null>(null);
+  const [selectedSchool, setSelectedSchool] =
+    useState<SchoolSearchResult | null>(null);
 
   useEffect(() => {
     if (!schoolTouched) {
@@ -106,17 +116,23 @@ export function HeroSearch() {
       try {
         const params = new URLSearchParams({
           q: schoolName.trim(),
-          limit: "8"
+          limit: "8",
         });
-        const response = await fetch(`/api/schools/search?${params.toString()}`, {
-          signal: controller.signal
-        });
+        const response = await fetch(
+          `/api/schools/search?${params.toString()}`,
+          {
+            signal: controller.signal,
+          }
+        );
 
         if (!response.ok) {
           throw new Error("school_search_failed");
         }
 
-        const data = (await response.json()) as { success: true; results: SchoolSearchResult[] };
+        const data = (await response.json()) as {
+          success: true;
+          results: SchoolSearchResult[];
+        };
         setSchoolResults(data.results);
       } catch {
         if (!controller.signal.aborted) {
@@ -142,9 +158,9 @@ export function HeroSearch() {
     const focusableElements = modal.querySelectorAll<HTMLElement>(
       'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
     );
-    
+
     if (focusableElements.length === 0) return;
-    
+
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
@@ -170,13 +186,19 @@ export function HeroSearch() {
   }, [showMissingSchoolDialog]);
 
   async function resolveSchoolForSubmit(trimmedSchoolName: string) {
-    if (selectedSchool && normaliseSchoolQuery(selectedSchool.name) === normaliseSchoolQuery(trimmedSchoolName)) {
+    if (
+      selectedSchool &&
+      normaliseSchoolQuery(selectedSchool.name) ===
+        normaliseSchoolQuery(trimmedSchoolName)
+    ) {
       return { school: selectedSchool, ambiguous: false };
     }
 
     const data = await fetchSchoolSearch(trimmedSchoolName, 8);
     const normalizedQuery = normaliseSchoolQuery(trimmedSchoolName);
-    const exactMatches = data.results.filter((school) => normaliseSchoolQuery(school.name) === normalizedQuery);
+    const exactMatches = data.results.filter(
+      (school) => normaliseSchoolQuery(school.name) === normalizedQuery
+    );
 
     if (exactMatches.length === 1) {
       return { school: exactMatches[0], ambiguous: false };
@@ -188,7 +210,7 @@ export function HeroSearch() {
 
     return {
       school: null,
-      ambiguous: data.total > 1 || data.results.length > 1
+      ambiguous: data.total > 1 || data.results.length > 1,
     };
   }
 
@@ -201,7 +223,9 @@ export function HeroSearch() {
     setShowMissingSchoolDialog(false);
 
     if (!trimmedSchoolName && !selectedGrade) {
-      setError("Please enter your school name and select a grade before finding your pack.");
+      setError(
+        "Please enter your school name and select a grade before finding your pack."
+      );
       return;
     }
 
@@ -218,10 +242,13 @@ export function HeroSearch() {
     setSchoolLoading(true);
 
     try {
-      const { school, ambiguous } = await resolveSchoolForSubmit(trimmedSchoolName);
+      const { school, ambiguous } =
+        await resolveSchoolForSubmit(trimmedSchoolName);
 
       if (ambiguous) {
-        setError("Please enter the full school name so we can find the correct pack.");
+        setError(
+          "Please enter the full school name so we can find the correct pack."
+        );
         return;
       }
 
@@ -237,8 +264,12 @@ export function HeroSearch() {
       if (!gradePack) {
         setError(
           <>
-            We do not have a {selectedGrade} pack listed for {details.school.name} yet.{" "}
-            <Link href="/standard-school-packs" className={styles.inlineTextLink}>
+            We do not have a {selectedGrade} pack listed for{" "}
+            {details.school.name} yet.{" "}
+            <Link
+              href="/standard-school-packs"
+              className={styles.inlineTextLink}
+            >
               Explore our standard packs
             </Link>{" "}
             or{" "}
@@ -261,7 +292,12 @@ export function HeroSearch() {
   }
 
   return (
-    <form className={styles.heroSearch} onSubmit={handleSubmit} role="search" noValidate>
+    <form
+      className={styles.heroSearch}
+      onSubmit={handleSubmit}
+      role="search"
+      noValidate
+    >
       <label className={[styles.field, styles.schoolSearchField].join(" ")}>
         <span>Find your school</span>
         <input
@@ -292,34 +328,45 @@ export function HeroSearch() {
           aria-describedby={error ? errorId : undefined}
         />
         {resultsOpen ? (
-          <div className={styles.heroSearchResults} id={resultsId} role="listbox">
-            {schoolLoading ? <p className={styles.heroSearchState}>Searching schools...</p> : null}
-            {!schoolLoading && schoolResults.length ? (
-              schoolResults.map((school) => (
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={selectedSchool?.slug === school.slug}
-                  className={styles.heroSearchResult}
-                  key={school.id}
-                  onClick={() => {
-                    setSelectedSchool(school);
-                    setSchoolName(school.name);
-                    setResultsOpen(false);
-                    setError("");
-                  }}
-                >
-                  <strong>{school.name}</strong>
-                  <span>
-                    {school.city}, {school.province}
-                  </span>
-                </button>
-              ))
+          <div
+            className={styles.heroSearchResults}
+            id={resultsId}
+            role="listbox"
+          >
+            {schoolLoading ? (
+              <p className={styles.heroSearchState}>Searching schools...</p>
             ) : null}
+            {!schoolLoading && schoolResults.length
+              ? schoolResults.map((school) => (
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={selectedSchool?.slug === school.slug}
+                    className={styles.heroSearchResult}
+                    key={school.id}
+                    onClick={() => {
+                      setSelectedSchool(school);
+                      setSchoolName(school.name);
+                      setResultsOpen(false);
+                      setError("");
+                    }}
+                  >
+                    <strong>{school.name}</strong>
+                    <span>
+                      {school.city}, {school.province}
+                    </span>
+                  </button>
+                ))
+              : null}
             {!schoolLoading && !schoolResults.length ? (
               <div className={styles.noResultsState}>
-                <p className={styles.heroSearchState}>No matching schools found.</p>
-                <Link href="/add-your-school#school-request-form" className={styles.addSchoolLink}>
+                <p className={styles.heroSearchState}>
+                  No matching schools found.
+                </p>
+                <Link
+                  href="/add-your-school#school-request-form"
+                  className={styles.addSchoolLink}
+                >
                   Add your school
                 </Link>
               </div>
@@ -345,7 +392,11 @@ export function HeroSearch() {
           ))}
         </select>
       </label>
-      <button className={styles.searchButton} type="submit" disabled={schoolLoading}>
+      <button
+        className={styles.searchButton}
+        type="submit"
+        disabled={schoolLoading}
+      >
         {schoolLoading ? "Searching..." : "Find My Pack"}
       </button>
       {error ? (
@@ -365,9 +416,15 @@ export function HeroSearch() {
           >
             <p className={styles.eyebrow}>Search support</p>
             <h2 id={modalTitleId}>School not found</h2>
-            <p id={modalDescriptionId}>Your school is not in our database. Would you like to add your school?</p>
+            <p id={modalDescriptionId}>
+              Your school is not in our database. Would you like to add your
+              school?
+            </p>
             <div className={styles.modalActions}>
-              <Link className={styles.modalPrimaryAction} href="/add-your-school#school-request-form">
+              <Link
+                className={styles.modalPrimaryAction}
+                href="/add-your-school#school-request-form"
+              >
                 Yes
               </Link>
               <Link className={styles.modalSecondaryAction} href="/contact">

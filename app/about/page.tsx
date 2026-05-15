@@ -18,8 +18,9 @@ export default function AboutPage() {
           <p>About Pexpacks</p>
           <h1>A simple digital office for stationery packs</h1>
           <p className={page.pageHeroText}>
-            Pexpacks helps parents, learners, schools, teachers, offices and small businesses order practical
-            stationery packs without the last-minute rush.
+            Pexpacks helps parents, learners, schools, teachers, offices and
+            small businesses order practical stationery packs without the
+            last-minute rush.
           </p>
         </div>
       </section>
@@ -28,11 +29,12 @@ export default function AboutPage() {
           <div className={page.infoCard}>
             <h2>Everything they need to start learning</h2>
             <p>
-              We prepare school stationery packs from Grade R to Grade 12 according to the relevant school list and grade
-              requirements.
+              We prepare school stationery packs from Grade R to Grade 12
+              according to the relevant school list and grade requirements.
             </p>
             <p>
-              We also support home offices and SMEs with ready-to-order office stationery packs for recurring supply needs.
+              We also support home offices and SMEs with ready-to-order office
+              stationery packs for recurring supply needs.
             </p>
             <Button href="/schools">Find your school pack</Button>
           </div>

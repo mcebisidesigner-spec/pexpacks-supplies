@@ -17,7 +17,8 @@ export default function DeliveriesPage() {
           <p>Deliveries</p>
           <h1>Simple delivery and collection options</h1>
           <p className={page.pageHeroText}>
-            Choose school collection, home delivery, or office delivery when you place your stationery pack order.
+            Choose school collection, home delivery, or office delivery when you
+            place your stationery pack order.
           </p>
         </div>
       </section>
@@ -26,15 +27,24 @@ export default function DeliveriesPage() {
         <div className={`${page.sectionInner} ${page.cardGrid}`}>
           <article className={page.infoCard}>
             <h2>School collection</h2>
-            <p>Collect packed and labelled school stationery from participating schools on the confirmed collection date.</p>
+            <p>
+              Collect packed and labelled school stationery from participating
+              schools on the confirmed collection date.
+            </p>
           </article>
           <article className={page.infoCard}>
             <h2>Home delivery</h2>
-            <p>Have your learner&apos;s pack delivered to your home address where the option is available.</p>
+            <p>
+              Have your learner&apos;s pack delivered to your home address where
+              the option is available.
+            </p>
           </article>
           <article className={page.infoCard}>
             <h2>Office delivery</h2>
-            <p>Office and SME packs can be delivered to your workplace for monthly or once-off stationery needs.</p>
+            <p>
+              Office and SME packs can be delivered to your workplace for
+              monthly or once-off stationery needs.
+            </p>
           </article>
         </div>
       </section>

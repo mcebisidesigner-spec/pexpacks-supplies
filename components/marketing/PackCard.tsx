@@ -17,7 +17,12 @@ function mediaClass(pack: Pack) {
 export function PackCard({ pack }: { pack: Pack }) {
   return (
     <article className={styles.packCard}>
-      <div className={[styles.packMedia, mediaClass(pack)].filter(Boolean).join(" ")} aria-hidden="true">
+      <div
+        className={[styles.packMedia, mediaClass(pack)]
+          .filter(Boolean)
+          .join(" ")}
+        aria-hidden="true"
+      >
         <span>{pack.subcategory ?? pack.category}</span>
       </div>
       <div className={styles.packBody}>

@@ -59,7 +59,7 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
     const viewportWidth =
       track.parentElement?.getBoundingClientRect().width || 0;
     const cards = Math.floor(
-      viewportWidth / (firstSlide.getBoundingClientRect().width + gap),
+      viewportWidth / (firstSlide.getBoundingClientRect().width + gap)
     );
     setVisibleCards(Math.max(1, cards));
   }, []);
@@ -129,7 +129,8 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
         onClick={goPrevious}
         disabled={previousDisabled}
         aria-disabled={previousDisabled}
-        aria-label="Previous testimonial">
+        aria-label="Previous testimonial"
+      >
         <ChevronLeftIcon />
       </button>
 
@@ -137,17 +138,19 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
         className={styles.viewport}
         aria-live="polite"
         onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}>
+        onTouchEnd={handleTouchEnd}
+      >
         <div
           className={styles.track}
           ref={trackRef}
           style={{
             transform: `translate3d(-${activeIndex * stepSize}px, 0, 0)`,
-          }}>
+          }}
+        >
           {items.map((item) => (
             <article className={styles.testimonialCard} key={item.id}>
               <div className={styles.testimonialTop}>
-                {item.avatar ?
+                {item.avatar ? (
                   <Image
                     src={item.avatar}
                     width={54}
@@ -156,7 +159,7 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
                     className={styles.avatar}
                     loading="lazy"
                   />
-                : null}
+                ) : null}
                 <div>
                   <h3 className={styles.testimonialName}>{item.name}</h3>
                   <span className={styles.testimonialRole}>{item.role}</span>
@@ -177,7 +180,8 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
         onClick={goNext}
         disabled={nextDisabled}
         aria-disabled={nextDisabled}
-        aria-label="Next testimonial">
+        aria-label="Next testimonial"
+      >
         <ChevronRightIcon />
       </button>
       <div className={styles.trackingBar} aria-hidden="true">

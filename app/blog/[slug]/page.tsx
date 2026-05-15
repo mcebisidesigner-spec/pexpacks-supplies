@@ -13,10 +13,14 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const resolvedParams = await params;
   const post = getPostBySlug(resolvedParams.slug);
-  
+
   if (!post) {
     return {
       title: "Post Not Found | PexPacks",
@@ -36,7 +40,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const resolvedParams = await params;
   const post = getPostBySlug(resolvedParams.slug);
 
@@ -50,7 +58,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <Link href="/blog" className={styles.backLink}>
           &larr; Back to Resource Hub
         </Link>
-        
+
         <header className={styles.postHeader}>
           <span className={styles.blogCategory}>{post.category}</span>
           <h1>{post.title}</h1>
@@ -86,19 +94,38 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             if (imageMatch) {
               return (
                 <div key={index} className={styles.postInlineImage}>
-                  <Image 
-                    src={imageMatch[2]} 
-                    alt={imageMatch[1]} 
-                    width={800} 
-                    height={450} 
-                    className={styles.postImage} 
-                    style={{ width: "100%", height: "auto", borderRadius: "16px", marginTop: "24px", marginBottom: "32px", border: "1px solid rgba(0,0,0,0.05)" }}
+                  <Image
+                    src={imageMatch[2]}
+                    alt={imageMatch[1]}
+                    width={800}
+                    height={450}
+                    className={styles.postImage}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "16px",
+                      marginTop: "24px",
+                      marginBottom: "32px",
+                      border: "1px solid rgba(0,0,0,0.05)",
+                    }}
                   />
                 </div>
               );
             }
             if (paragraph.startsWith("## ")) {
-              return <h2 key={index} style={{ marginTop: "32px", marginBottom: "16px", fontSize: "24px", color: "var(--pex-primary)" }}>{paragraph.replace("## ", "")}</h2>;
+              return (
+                <h2
+                  key={index}
+                  style={{
+                    marginTop: "32px",
+                    marginBottom: "16px",
+                    fontSize: "24px",
+                    color: "var(--pex-primary)",
+                  }}
+                >
+                  {paragraph.replace("## ", "")}
+                </h2>
+              );
             }
             return <p key={index}>{paragraph}</p>;
           })}

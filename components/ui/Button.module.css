@@ -77,12 +77,14 @@
   background: var(--pex-coral-hover);
 }
 
-.secondary, .navy {
+.secondary,
+.navy {
   background: var(--pex-navy);
   color: var(--pex-bg);
   box-shadow: 0 10px 20px rgba(26, 42, 64, 0.12);
 }
-.secondary:hover, .navy:hover {
+.secondary:hover,
+.navy:hover {
   background: var(--pex-sme-navy);
 }
 

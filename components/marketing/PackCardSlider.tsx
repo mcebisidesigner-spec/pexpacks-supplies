@@ -1,6 +1,15 @@
 "use client";
 
-import { Children, type ReactNode, type TouchEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Children,
+  type ReactNode,
+  type TouchEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { debounce } from "@/lib/debounce";
 import styles from "./PackCardSlider.module.css";
 
@@ -61,7 +70,8 @@ export function PackCardSlider({ children }: PackCardSliderProps) {
     }
 
     const computed = window.getComputedStyle(track);
-    const gap = Number.parseFloat(computed.columnGap || computed.gap || "0") || 0;
+    const gap =
+      Number.parseFloat(computed.columnGap || computed.gap || "0") || 0;
     setStepSize(firstSlide.getBoundingClientRect().width + gap);
   }, []);
 
@@ -128,10 +138,17 @@ export function PackCardSlider({ children }: PackCardSliderProps) {
   }
 
   return (
-    <div className={[styles.packSlider, isStatic ? styles.packSliderStatic : ""].filter(Boolean).join(" ")}>
+    <div
+      className={[styles.packSlider, isStatic ? styles.packSliderStatic : ""]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <button
         type="button"
-        className={[styles.packSliderArrow, styles.packSliderArrowPrevious].join(" ")}
+        className={[
+          styles.packSliderArrow,
+          styles.packSliderArrowPrevious,
+        ].join(" ")}
         onClick={goPrevious}
         disabled={previousDisabled}
         aria-disabled={previousDisabled}
@@ -147,12 +164,15 @@ export function PackCardSlider({ children }: PackCardSliderProps) {
         onTouchEnd={handleTouchEnd}
       >
         <span className="sr-only">
-          Showing pack {Math.min(activeIndex + 1, slides.length)} of {slides.length}
+          Showing pack {Math.min(activeIndex + 1, slides.length)} of{" "}
+          {slides.length}
         </span>
         <div
           className={styles.packSliderTrack}
           ref={trackRef}
-          style={{ transform: `translate3d(-${activeIndex * stepSize}px, 0, 0)` }}
+          style={{
+            transform: `translate3d(-${activeIndex * stepSize}px, 0, 0)`,
+          }}
         >
           {slides.map((slide, index) => (
             <div className={styles.packSlide} data-pack-slide key={index}>
@@ -164,7 +184,9 @@ export function PackCardSlider({ children }: PackCardSliderProps) {
 
       <button
         type="button"
-        className={[styles.packSliderArrow, styles.packSliderArrowNext].join(" ")}
+        className={[styles.packSliderArrow, styles.packSliderArrowNext].join(
+          " "
+        )}
         onClick={goNext}
         disabled={nextDisabled}
         aria-disabled={nextDisabled}

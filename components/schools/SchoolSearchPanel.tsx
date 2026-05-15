@@ -2,7 +2,10 @@
 
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { PaginatedSchoolResults, SchoolSearchRecord } from "@/lib/schools/types";
+import type {
+  PaginatedSchoolResults,
+  SchoolSearchRecord,
+} from "@/lib/schools/types";
 import { GradeSelect } from "./GradeSelect";
 import { RegionSelect } from "./RegionSelect";
 import { SchoolResultsPanel } from "./SchoolResultsPanel";
@@ -27,7 +30,7 @@ export function SchoolSearchPanel({
   regions,
   initialQuery = "",
   initialGrade = "all",
-  initialRegion = "all"
+  initialRegion = "all",
 }: SchoolSearchPanelProps) {
   const [query, setQuery] = useState(initialQuery);
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
@@ -37,12 +40,17 @@ export function SchoolSearchPanel({
   const [total, setTotal] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(shouldSearch(initialQuery, initialGrade, initialRegion));
+  const [panelOpen, setPanelOpen] = useState(
+    shouldSearch(initialQuery, initialGrade, initialRegion)
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const activeRequest = useRef<AbortController | null>(null);
 
-  const queryReady = useMemo(() => shouldSearch(debouncedQuery, grade, region), [debouncedQuery, grade, region]);
+  const queryReady = useMemo(
+    () => shouldSearch(debouncedQuery, grade, region),
+    [debouncedQuery, grade, region]
+  );
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedQuery(query), 275);
@@ -67,7 +75,7 @@ export function SchoolSearchPanel({
       const params = new URLSearchParams({
         q: debouncedQuery.trim(),
         limit: String(resultLimit),
-        offset: String(nextOffset)
+        offset: String(nextOffset),
       });
 
       if (grade !== "all") {
@@ -79,25 +87,37 @@ export function SchoolSearchPanel({
       }
 
       try {
-        const response = await fetch(`/api/schools/search?${params.toString()}`, {
-          signal: controller.signal
-        });
+        const response = await fetch(
+          `/api/schools/search?${params.toString()}`,
+          {
+            signal: controller.signal,
+          }
+        );
 
         if (!response.ok) {
           throw new Error("school_search_failed");
         }
 
-        const data = (await response.json()) as PaginatedSchoolResults & { success: boolean };
-        setResults((current) => (mode === "append" ? [...current, ...data.results] : data.results));
+        const data = (await response.json()) as PaginatedSchoolResults & {
+          success: boolean;
+        };
+        setResults((current) =>
+          mode === "append" ? [...current, ...data.results] : data.results
+        );
         setTotal(data.total);
         setHasMore(data.hasMore);
         setHasSearched(true);
       } catch (fetchError) {
-        if (fetchError instanceof DOMException && fetchError.name === "AbortError") {
+        if (
+          fetchError instanceof DOMException &&
+          fetchError.name === "AbortError"
+        ) {
           return;
         }
 
-        setError("We couldn't load the school list. Please refresh or contact Pexpacks.");
+        setError(
+          "We couldn't load the school list. Please refresh or contact Pexpacks."
+        );
       } finally {
         if (activeRequest.current === controller) {
           setIsLoading(false);
@@ -148,7 +168,10 @@ export function SchoolSearchPanel({
   }
 
   return (
-    <section className={styles.searchExperience} aria-labelledby="school-search-heading">
+    <section
+      className={styles.searchExperience}
+      aria-labelledby="school-search-heading"
+    >
       <h2 id="school-search-heading" className="sr-only">
         Search by School, Grade or Region
       </h2>
@@ -174,8 +197,16 @@ export function SchoolSearchPanel({
           />
         </label>
         <GradeSelect grades={grades} value={grade} onChange={updateGrade} />
-        <RegionSelect regions={regions} value={region} onChange={updateRegion} />
-        <button className={styles.schoolSearchButton} type="submit" aria-label="Search schools">
+        <RegionSelect
+          regions={regions}
+          value={region}
+          onChange={updateRegion}
+        />
+        <button
+          className={styles.schoolSearchButton}
+          type="submit"
+          aria-label="Search schools"
+        >
           Search
         </button>
       </form>

@@ -10,5 +10,7 @@ function gradeRank(grade: string) {
 }
 
 export function getGrades(records: SchoolSearchRecord[]) {
-  return Array.from(new Set(records.flatMap((school) => school.grades))).sort((a, b) => gradeRank(a) - gradeRank(b));
+  return Array.from(new Set(records.flatMap((school) => school.grades))).sort(
+    (a, b) => gradeRank(a) - gradeRank(b)
+  );
 }

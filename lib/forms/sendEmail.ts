@@ -19,7 +19,7 @@ function buildHtml(data: FormSubmission) {
     ["Message", data.message],
     ["Consent", data.consent ? "Yes" : "No"],
     ["Page URL", data.pageUrl],
-    ["Submitted at", data.submittedAt]
+    ["Submitted at", data.submittedAt],
   ];
 
   const escape = (v: unknown) =>
@@ -48,7 +48,7 @@ function buildText(data: FormSubmission) {
     `Grade: ${data.grade ?? "-"}`,
     `Business: ${data.businessName ?? "-"}`,
     `Message: ${data.message ?? "-"}`,
-    `Submitted: ${data.submittedAt ?? "-"}`
+    `Submitted: ${data.submittedAt ?? "-"}`,
   ].join("\n");
 }
 
@@ -65,7 +65,7 @@ export async function sendEmail(data: FormSubmission) {
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
-    auth: { user, pass }
+    auth: { user, pass },
   });
 
   try {
@@ -74,7 +74,7 @@ export async function sendEmail(data: FormSubmission) {
       to,
       subject: `[Pexpacks] New ${formTypeLabel(data.formType)} from ${data.fullName}`,
       html: buildHtml(data),
-      text: buildText(data)
+      text: buildText(data),
     });
     return { ok: true };
   } catch (error) {

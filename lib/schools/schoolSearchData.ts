@@ -22,16 +22,18 @@ export const searchableSchools = getSchoolIndex().map((school) => ({
   region: school.city,
   city: school.city,
   province: school.province,
-  grades: school.grades.map((g) => g.grade).sort((a, b) => gradeRank(a) - gradeRank(b)),
+  grades: school.grades
+    .map((g) => g.grade)
+    .sort((a, b) => gradeRank(a) - gradeRank(b)),
   isFeatured: Boolean("isFeatured" in school && school.isFeatured),
   isPartner: school.isPartnerSchool,
-  image: school.logo
+  image: school.logo,
 }));
 
 export function getSchoolSearchOptions() {
   return {
     grades: getGrades(searchableSchools),
-    regions: getRegions(searchableSchools)
+    regions: getRegions(searchableSchools),
   };
 }
 
@@ -39,6 +41,14 @@ export function getFeaturedSchoolRecords() {
   return getFeaturedSchools(searchableSchools, 4);
 }
 
-export function searchSchoolRecords(filters: SchoolSearchFilters, limit = 12, offset = 0) {
-  return paginateSchools(filterSchools(searchableSchools, filters), limit, offset);
+export function searchSchoolRecords(
+  filters: SchoolSearchFilters,
+  limit = 12,
+  offset = 0
+) {
+  return paginateSchools(
+    filterSchools(searchableSchools, filters),
+    limit,
+    offset
+  );
 }

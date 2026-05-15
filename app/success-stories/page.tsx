@@ -24,13 +24,16 @@ export default function SuccessStoriesPage() {
     <>
       <PageHero
         eyebrow="Success Stories"
-        title="Trusted by schools across the country."
+        title="Trusted by schools across the country"
         text="See how PexPacks helps principals and teachers streamline their back-to-school logistics so they can focus on what matters: teaching."
         panelTitle="Ready to simplify your school's stationery?"
         panelText="Contact us today to set up a custom portal for your parents."
       />
 
-      <section className={styles.section} aria-labelledby="case-studies-heading">
+      <section
+        className={styles.section}
+        aria-labelledby="case-studies-heading"
+      >
         <h2 id="case-studies-heading" className="sr-only">
           School Case Studies
         </h2>
@@ -70,7 +73,9 @@ export default function SuccessStoriesPage() {
                     "{story.quote}"
                   </blockquote>
                   <div className={styles.quoteAuthor}>
-                    <span className={styles.authorName}>{story.quoteAuthor}</span>
+                    <span className={styles.authorName}>
+                      {story.quoteAuthor}
+                    </span>
                     <span className={styles.authorRole}>{story.role}</span>
                   </div>
                 </div>

@@ -11,13 +11,15 @@ type BaseProps = {
   ariaLabel?: string;
 };
 
-type ButtonAsButtonProps = BaseProps & ButtonHTMLAttributes<HTMLButtonElement> & {
-  href?: never;
-};
+type ButtonAsButtonProps = BaseProps &
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    href?: never;
+  };
 
-type ButtonAsLinkProps = BaseProps & React.AnchorHTMLAttributes<HTMLAnchorElement> & {
-  href: string;
-};
+type ButtonAsLinkProps = BaseProps &
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    href: string;
+  };
 
 type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
@@ -29,7 +31,9 @@ export function Button({
   ariaLabel,
   ...props
 }: ButtonProps) {
-  const classNames = [styles.button, styles[variant], styles[size], className].filter(Boolean).join(" ");
+  const classNames = [styles.button, styles[variant], styles[size], className]
+    .filter(Boolean)
+    .join(" ");
   const content = (
     <>
       <span>{children}</span>
@@ -40,7 +44,12 @@ export function Button({
   if (props.href) {
     const { href, ...anchorProps } = props as ButtonAsLinkProps;
     return (
-      <Link className={classNames} href={href} aria-label={ariaLabel} {...anchorProps}>
+      <Link
+        className={classNames}
+        href={href}
+        aria-label={ariaLabel}
+        {...anchorProps}
+      >
         {content}
       </Link>
     );
@@ -48,7 +57,12 @@ export function Button({
 
   const { type = "button", ...buttonProps } = props as ButtonAsButtonProps;
   return (
-    <button className={classNames} type={type} aria-label={ariaLabel} {...buttonProps}>
+    <button
+      className={classNames}
+      type={type}
+      aria-label={ariaLabel}
+      {...buttonProps}
+    >
       {content}
     </button>
   );

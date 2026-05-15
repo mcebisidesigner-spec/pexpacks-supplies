@@ -29,7 +29,7 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
     if (!scrollerRef.current) return;
     const { scrollLeft } = scrollerRef.current;
     const children = Array.from(scrollerRef.current.children) as HTMLElement[];
-    
+
     let closestIndex = 0;
     let minDiff = Number.POSITIVE_INFINITY;
 
@@ -58,23 +58,39 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
   };
 
   return (
-    <section className={styles.featuredSection} aria-labelledby="featured-schools-heading">
+    <section
+      className={styles.featuredSection}
+      aria-labelledby="featured-schools-heading"
+    >
       <div className={styles.sectionIntro}>
         <p>Quick start</p>
         <h2 id="featured-schools-heading">Featured schools</h2>
-        <span>Start with one of our highlighted school pack pages, or search for your school above.</span>
+        <span>
+          Start with one of our highlighted school pack pages, or search for
+          your school above.
+        </span>
       </div>
       <div>
-        <div 
+        <div
           className={styles.featuredScroller}
           ref={scrollerRef}
           onScroll={handleScroll}
         >
           {schools.map((school) => (
-            <Link href={`/schools/${school.slug}`} className={styles.featuredCard} key={school.id}>
+            <Link
+              href={`/schools/${school.slug}`}
+              className={styles.featuredCard}
+              key={school.id}
+            >
               <div className={styles.featuredHeader}>
-                <span className={styles.featuredIcon}>{school.name.charAt(0)}</span>
-                {school.isPartner && <span className={styles.partnerBadge}>★ Official Partner</span>}
+                <span className={styles.featuredIcon}>
+                  {school.name.charAt(0)}
+                </span>
+                {school.isPartner && (
+                  <span className={styles.partnerBadge}>
+                    ★ Official Partner
+                  </span>
+                )}
               </div>
               <span className={styles.featuredMeta}>{school.region}</span>
               <h3>{school.name}</h3>

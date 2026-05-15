@@ -23,7 +23,11 @@ export default function FoundationPhasePage() {
 
   return (
     <>
-      <PageHero eyebrow={phaseData.eyebrow} title={phaseData.title} text={phaseData.description}>
+      <PageHero
+        eyebrow={phaseData.eyebrow}
+        title={phaseData.title}
+        text={phaseData.description}
+      >
         <ul className={`${heroStyles.checkList} ${heroStyles.checkListSpaced}`}>
           {phaseData.heroBullets.map((bullet) => (
             <li key={bullet}>{bullet}</li>

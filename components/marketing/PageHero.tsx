@@ -10,7 +10,14 @@ type PageHeroProps = {
   children?: ReactNode;
 };
 
-export function PageHero({ eyebrow, title, text, panelTitle, panelText, children }: PageHeroProps) {
+export function PageHero({
+  eyebrow,
+  title,
+  text,
+  panelTitle,
+  panelText,
+  children,
+}: PageHeroProps) {
   return (
     <section className={styles.pageHero}>
       <div className={styles.pageHeroInner}>

@@ -16,8 +16,8 @@ export default function CookieNoticePage() {
           <p>Cookie notice</p>
           <h1>Cookies and website functionality</h1>
           <p className={page.pageHeroText}>
-            Cookies may be used to support basic website functionality, improve browsing, and understand how visitors
-            use the Pexpacks website.
+            Cookies may be used to support basic website functionality, improve
+            browsing, and understand how visitors use the Pexpacks website.
           </p>
         </div>
       </section>
@@ -26,12 +26,15 @@ export default function CookieNoticePage() {
           <article className={page.infoCard}>
             <p className={page.kicker}>Website functionality</p>
             <h2>Functional cookies</h2>
-            <p>Functional cookies help the website remember basic preferences and keep forms working correctly.</p>
+            <p>
+              Functional cookies help the website remember basic preferences and
+              keep forms working correctly.
+            </p>
             <p className={page.kicker}>Usage insight</p>
             <h2>Analytics</h2>
             <p>
-              Basic analytics may help Pexpacks understand which pages customers use when finding school or office
-              stationery packs.
+              Basic analytics may help Pexpacks understand which pages customers
+              use when finding school or office stationery packs.
             </p>
             <p className={page.kicker}>Browser settings</p>
             <h2>Control</h2>

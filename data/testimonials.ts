@@ -52,6 +52,6 @@ export const testimonials: Testimonial[] = [
     context: "School Support Team",
     quote:
       "A structured stationery pack system reduces confusion for parents and helps learners start the year prepared.",
-    avatar: "/images/avatars/mpoh.webp"
-  }
+    avatar: "/images/avatars/mpoh.webp",
+  },
 ];

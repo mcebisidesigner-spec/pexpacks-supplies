@@ -14,7 +14,10 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
   const school = await getSchoolBySlug(schoolSlug);
 
   if (!school) {
-    return NextResponse.json({ success: false, message: "School not found." }, { status: 404 });
+    return NextResponse.json(
+      { success: false, message: "School not found." },
+      { status: 404 }
+    );
   }
 
   return NextResponse.json({
@@ -31,8 +34,8 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
         gradeSlug: grade.gradeSlug,
         price: grade.price,
         contents: grade.contents,
-        deliveryNote: grade.deliveryNote
-      }))
-    }
+        deliveryNote: grade.deliveryNote,
+      })),
+    },
   });
 }

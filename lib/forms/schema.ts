@@ -6,14 +6,15 @@ export const formTypes = [
   "bulk-order",
   "school-partnership",
   "contact",
-  "track-order-interest"
+  "track-order-interest",
 ] as const;
 
 export const preferredContactMethods = ["phone", "whatsapp", "email"] as const;
 
 const optionalText = (max: number) =>
   z.preprocess(
-    (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+    (value) =>
+      typeof value === "string" && value.trim() === "" ? undefined : value,
     z.string().trim().max(max).optional()
   );
 
@@ -27,7 +28,8 @@ function isValidSouthAfricanPhone(value: string) {
 }
 
 const consentSchema = z.preprocess(
-  (value) => value === true || value === "true" || value === "on" || value === "1",
+  (value) =>
+    value === true || value === "true" || value === "on" || value === "1",
   z.boolean().refine((value) => value === true, "Consent is required.")
 );
 
@@ -45,10 +47,23 @@ const quantitySchema = z.preprocess((value) => {
 
 export const formSubmissionSchema = z.object({
   formType: z.enum(formTypes, "Please choose a valid enquiry type."),
-  fullName: z.string().trim().min(2, "Full name must be at least 2 characters.").max(120, "Full name is too long."),
-  phone: z.string().trim().refine(isValidSouthAfricanPhone, "Please enter a valid South African phone number."),
+  fullName: z
+    .string()
+    .trim()
+    .min(2, "Full name must be at least 2 characters.")
+    .max(120, "Full name is too long."),
+  phone: z
+    .string()
+    .trim()
+    .refine(
+      isValidSouthAfricanPhone,
+      "Please enter a valid South African phone number."
+    ),
   consent: consentSchema,
-  email: optionalText(160).refine((value) => !value || z.string().email().safeParse(value).success, "Please enter a valid email address."),
+  email: optionalText(160).refine(
+    (value) => !value || z.string().email().safeParse(value).success,
+    "Please enter a valid email address."
+  ),
   schoolName: optionalText(160),
   grade: optionalText(40),
   learnerName: optionalText(120),
@@ -64,7 +79,7 @@ export const formSubmissionSchema = z.object({
   honeypot: optionalText(200),
   pageUrl: optionalText(500),
   userAgent: optionalText(500),
-  submittedAt: optionalText(80)
+  submittedAt: optionalText(80),
 });
 
 export type ValidatedFormSubmission = z.infer<typeof formSubmissionSchema>;

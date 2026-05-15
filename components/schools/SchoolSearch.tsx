@@ -11,15 +11,25 @@ type SchoolSearchProps = {
   initialGrade?: string;
 };
 
-export function SchoolSearch({ initialQuery = "", initialCity = "all", initialGrade = "all" }: SchoolSearchProps) {
+export function SchoolSearch({
+  initialQuery = "",
+  initialCity = "all",
+  initialGrade = "all",
+}: SchoolSearchProps) {
   const [query] = useState(initialQuery);
   const [city] = useState(initialCity);
   const [grade] = useState(initialGrade);
 
-  const results = useMemo(() => filterSchools(query, city, grade), [query, city, grade]);
+  const results = useMemo(
+    () => filterSchools(query, city, grade),
+    [query, city, grade]
+  );
 
   return (
-    <section className={styles.searchPanel} aria-labelledby="school-results-title">
+    <section
+      className={styles.searchPanel}
+      aria-labelledby="school-results-title"
+    >
       <div className={styles.resultHeader}>
         <div>
           <p className={styles.schoolEyebrow}>Search results</p>

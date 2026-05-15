@@ -16,7 +16,9 @@ export function HeaderActiveLink({ href, label }: HeaderActiveLinkProps) {
 
   return (
     <Link
-      className={[styles.navLink, active ? styles.navLinkActive : ""].filter(Boolean).join(" ")}
+      className={[styles.navLink, active ? styles.navLinkActive : ""]
+        .filter(Boolean)
+        .join(" ")}
       href={href}
       aria-current={active ? "page" : undefined}
     >

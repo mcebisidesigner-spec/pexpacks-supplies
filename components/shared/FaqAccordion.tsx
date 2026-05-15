@@ -10,7 +10,11 @@ type FaqAccordionProps = {
   subtitle?: string;
 };
 
-export function FaqAccordion({ faqs, title = "Frequently Asked Questions", subtitle = "Got a question? We've got answers." }: FaqAccordionProps) {
+export function FaqAccordion({
+  faqs,
+  title = "Frequently Asked Questions",
+  subtitle = "Got a question? We've got answers.",
+}: FaqAccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleAccordion = (index: number) => {
@@ -29,8 +33,8 @@ export function FaqAccordion({ faqs, title = "Frequently Asked Questions", subti
         {faqs.map((faq, index) => {
           const isOpen = openIndex === index;
           return (
-            <div 
-              key={faq.id} 
+            <div
+              key={faq.id}
               className={`${styles.accordionItem} ${isOpen ? styles.open : ""}`}
             >
               <button
@@ -41,12 +45,12 @@ export function FaqAccordion({ faqs, title = "Frequently Asked Questions", subti
               >
                 <span className={styles.questionText}>{faq.question}</span>
                 <span className={styles.iconContainer}>
-                  <svg 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2.5" 
-                    strokeLinecap="round" 
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
                     strokeLinejoin="round"
                     className={`${styles.icon} ${isOpen ? styles.iconOpen : ""}`}
                   >
@@ -54,14 +58,12 @@ export function FaqAccordion({ faqs, title = "Frequently Asked Questions", subti
                   </svg>
                 </span>
               </button>
-              <div 
+              <div
                 id={`faq-content-${faq.id}`}
                 className={styles.accordionContent}
                 hidden={!isOpen}
               >
-                <div className={styles.answerInner}>
-                  {faq.answer}
-                </div>
+                <div className={styles.answerInner}>{faq.answer}</div>
               </div>
             </div>
           );

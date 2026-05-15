@@ -34,18 +34,21 @@ export type SchoolIndexRecord = {
   }[];
 };
 
-import schoolIndexData from './school-index.json';
+import schoolIndexData from "./school-index.json";
 
-export const schoolIndex: SchoolIndexRecord[] = schoolIndexData as SchoolIndexRecord[];
+export const schoolIndex: SchoolIndexRecord[] =
+  schoolIndexData as SchoolIndexRecord[];
 
 export const getSchoolIndex = (): SchoolIndexRecord[] => schoolIndex;
 
 export const getFullSchoolRecords = async (): Promise<School[]> => {
-  const records = await import('./school-records.json');
+  const records = await import("./school-records.json");
   return records.default as School[];
 };
 
-export const getSchoolBySlug = async (slug: string): Promise<School | undefined> => {
+export const getSchoolBySlug = async (
+  slug: string
+): Promise<School | undefined> => {
   const records = await getFullSchoolRecords();
   return records.find((s) => s.slug === slug);
 };

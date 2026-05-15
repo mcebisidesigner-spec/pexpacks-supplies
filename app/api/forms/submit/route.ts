@@ -5,7 +5,8 @@ import { sendEmail } from "@/lib/forms/sendEmail";
 
 export const runtime = "nodejs";
 
-const OK_MSG = "Thank you. Your enquiry has been received. The Pexpacks team will contact you soon.";
+const OK_MSG =
+  "Thank you. Your enquiry has been received. The Pexpacks team will contact you soon.";
 
 function json(body: unknown, status: number) {
   return NextResponse.json(body, { status });
@@ -37,15 +38,18 @@ export async function POST(req: NextRequest) {
     ...body,
     pageUrl: body.pageUrl || req.headers.get("referer") || undefined,
     userAgent: body.userAgent || req.headers.get("user-agent") || undefined,
-    submittedAt: body.submittedAt || new Date().toISOString()
+    submittedAt: body.submittedAt || new Date().toISOString(),
   });
 
   if (!parsed.success) {
-    return json({
-      success: false,
-      message: "Please check the highlighted fields and try again.",
-      errors: flattenErrors(parsed.error)
-    }, 400);
+    return json(
+      {
+        success: false,
+        message: "Please check the highlighted fields and try again.",
+        errors: flattenErrors(parsed.error),
+      },
+      400
+    );
   }
 
   /* Sanitise & send */
@@ -53,17 +57,29 @@ export async function POST(req: NextRequest) {
   const result = await sendEmail(clean);
 
   if (!result.ok) {
-    return json({
-      success: false,
-      message: "We could not submit your enquiry right now. Please try again or contact us directly."
-    }, 500);
+    return json(
+      {
+        success: false,
+        message:
+          "We could not submit your enquiry right now. Please try again or contact us directly.",
+      },
+      500
+    );
   }
 
   return json({ success: true, message: OK_MSG }, 200);
 }
 
 /* Block other methods */
-export function GET() { return json({ success: false, message: "Method not allowed." }, 405); }
-export function PUT() { return json({ success: false, message: "Method not allowed." }, 405); }
-export function DELETE() { return json({ success: false, message: "Method not allowed." }, 405); }
-export function PATCH() { return json({ success: false, message: "Method not allowed." }, 405); }
+export function GET() {
+  return json({ success: false, message: "Method not allowed." }, 405);
+}
+export function PUT() {
+  return json({ success: false, message: "Method not allowed." }, 405);
+}
+export function DELETE() {
+  return json({ success: false, message: "Method not allowed." }, 405);
+}
+export function PATCH() {
+  return json({ success: false, message: "Method not allowed." }, 405);
+}

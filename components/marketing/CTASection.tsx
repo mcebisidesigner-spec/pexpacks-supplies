@@ -11,7 +11,15 @@ type CTASectionProps = {
   secondaryLabel?: string;
 };
 
-export function CTASection({ eyebrow, title, text, primaryHref, primaryLabel, secondaryHref, secondaryLabel }: CTASectionProps) {
+export function CTASection({
+  eyebrow,
+  title,
+  text,
+  primaryHref,
+  primaryLabel,
+  secondaryHref,
+  secondaryLabel,
+}: CTASectionProps) {
   return (
     <section className={styles.ctaSection}>
       <div className={styles.ctaInner}>

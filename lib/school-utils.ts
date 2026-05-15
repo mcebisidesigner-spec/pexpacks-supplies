@@ -1,4 +1,9 @@
-import { getSchoolIndex, getFullSchoolRecords, type GradePack, type School } from "@/data/schools";
+import {
+  getSchoolIndex,
+  getFullSchoolRecords,
+  type GradePack,
+  type School,
+} from "@/data/schools";
 
 export async function getSchoolBySlug(slug: string) {
   const records = await getFullSchoolRecords();
@@ -25,7 +30,8 @@ export function filterSchools(query: string, city: string, grade: string) {
       school.name.toLowerCase().includes(normalizedQuery) ||
       school.city.toLowerCase().includes(normalizedQuery);
     const matchesCity = city === "all" || school.city === city;
-    const matchesGrade = grade === "all" || school.grades.some((g) => g.grade === grade);
+    const matchesGrade =
+      grade === "all" || school.grades.some((g) => g.grade === grade);
 
     return matchesQuery && matchesCity && matchesGrade;
   });
@@ -42,7 +48,9 @@ export function normalizeSchoolSearchValue(value: string) {
     .trim();
 }
 
-export async function resolveSchoolSearch(value: string): Promise<{ school?: School; ambiguous: boolean }> {
+export async function resolveSchoolSearch(
+  value: string
+): Promise<{ school?: School; ambiguous: boolean }> {
   const normalizedValue = normalizeSchoolSearchValue(value);
 
   if (!normalizedValue) {
@@ -51,7 +59,9 @@ export async function resolveSchoolSearch(value: string): Promise<{ school?: Sch
 
   const schools = await getFullSchoolRecords();
 
-  const exactMatch = schools.find((school) => normalizeSchoolSearchValue(school.name) === normalizedValue);
+  const exactMatch = schools.find(
+    (school) => normalizeSchoolSearchValue(school.name) === normalizedValue
+  );
 
   if (exactMatch) {
     return { school: exactMatch, ambiguous: false };
@@ -60,7 +70,10 @@ export async function resolveSchoolSearch(value: string): Promise<{ school?: Sch
   const partialMatches = schools.filter((school) => {
     const normalizedSchoolName = normalizeSchoolSearchValue(school.name);
 
-    return normalizedSchoolName.includes(normalizedValue) || normalizedValue.includes(normalizedSchoolName);
+    return (
+      normalizedSchoolName.includes(normalizedValue) ||
+      normalizedValue.includes(normalizedSchoolName)
+    );
   });
 
   if (partialMatches.length === 1) {
@@ -70,10 +83,15 @@ export async function resolveSchoolSearch(value: string): Promise<{ school?: Sch
   return { ambiguous: partialMatches.length > 1 };
 }
 
-export function getGradeBySearchValue(school: School, value: string): GradePack | undefined {
+export function getGradeBySearchValue(
+  school: School,
+  value: string
+): GradePack | undefined {
   const normalizedGrade = value.trim().toLowerCase();
 
   return school.grades.find(
-    (grade) => grade.grade.toLowerCase() === normalizedGrade || grade.gradeSlug.toLowerCase() === normalizedGrade
+    (grade) =>
+      grade.grade.toLowerCase() === normalizedGrade ||
+      grade.gradeSlug.toLowerCase() === normalizedGrade
   );
 }

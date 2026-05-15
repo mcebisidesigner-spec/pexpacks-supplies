@@ -55,7 +55,9 @@
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
-  transition: color 0.25s ease, border-color 0.25s ease;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .navLink:hover,
@@ -176,7 +178,9 @@
   min-height: 48px;
   display: flex;
   align-items: center;
-  transition: color 0.25s ease, border-color 0.25s ease;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .mobileMenuLink:hover,
@@ -418,7 +422,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .desktopOrder,
   .menuButton,
   .mobileMenu,

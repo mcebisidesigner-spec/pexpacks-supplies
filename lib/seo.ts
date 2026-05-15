@@ -11,9 +11,15 @@ function canonicalUrl(path = "/") {
   return new URL(normalizedPath, siteUrl).toString();
 }
 
-export function buildMetadata(title: string, description: string, path = "/"): Metadata {
+export function buildMetadata(
+  title: string,
+  description: string,
+  path = "/"
+): Metadata {
   const absoluteUrl = canonicalUrl(path);
-  const normalizedTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+  const normalizedTitle = title.includes(siteName)
+    ? title
+    : `${title} | ${siteName}`;
 
   return {
     metadataBase: new URL(siteUrl),
@@ -23,7 +29,7 @@ export function buildMetadata(title: string, description: string, path = "/"): M
       "Pexpacks",
       "school stationery packs",
       "office supply packs",
-      "South Africa"
+      "South Africa",
     ],
     authors: [{ name: siteName, url: siteUrl }],
     creator: siteName,
@@ -39,9 +45,9 @@ export function buildMetadata(title: string, description: string, path = "/"): M
           url: defaultOgImage,
           width: 1200,
           height: 630,
-          alt: defaultImageAlt
-        }
-      ]
+          alt: defaultImageAlt,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -51,9 +57,9 @@ export function buildMetadata(title: string, description: string, path = "/"): M
       images: [
         {
           url: defaultTwitterImage,
-          alt: defaultImageAlt
-        }
-      ]
+          alt: defaultImageAlt,
+        },
+      ],
     },
     robots: {
       index: true,
@@ -68,7 +74,7 @@ export function buildMetadata(title: string, description: string, path = "/"): M
     },
 
     alternates: {
-      canonical: absoluteUrl
-    }
+      canonical: absoluteUrl,
+    },
   };
 }

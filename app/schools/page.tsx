@@ -20,7 +20,7 @@ import pageStyles from "@/styles/Page.module.css";
 export const metadata: Metadata = buildMetadata(
   "Find Your School Stationery Pack | Pexpacks",
   "Search for your school and grade to order a ready-packed stationery pack prepared according to the school stationery list.",
-  "/schools",
+  "/schools"
 );
 
 type SchoolsPageProps = {
@@ -43,7 +43,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       "exercise-books",
       "multiple-learners",
       "school-list-submission",
-    ].includes(faq.id),
+    ].includes(faq.id)
   );
 
   return (
@@ -72,7 +72,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       <BookCoveringBanner />
       <section
         className={styles.howItWorksSection}
-        aria-labelledby="how-it-works-heading">
+        aria-labelledby="how-it-works-heading"
+      >
         <div className={styles.howItWorksInner}>
           <div className={styles.sectionIntro}>
             <p>School-ready support</p>
@@ -110,7 +111,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
 
       <section
         className={pageStyles.section}
-        aria-labelledby="school-testimonials">
+        aria-labelledby="school-testimonials"
+      >
         <div className={pageStyles.sectionInner}>
           <SectionHeader
             eyebrow="Trusted by parents"
@@ -133,7 +135,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
             headingId="school-faqs"
           />
           <div
-            style={{ maxWidth: "800px", margin: "0 auto", marginTop: "32px" }}>
+            style={{ maxWidth: "800px", margin: "0 auto", marginTop: "32px" }}
+          >
             <FaqAccordion faqs={schoolFaqs} title="" subtitle="" />
           </div>
         </div>

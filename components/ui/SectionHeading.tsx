@@ -9,9 +9,19 @@ type SectionHeadingProps = {
   className?: string;
 };
 
-export function SectionHeading({ eyebrow, title, text, align = "left", className = "" }: SectionHeadingProps) {
+export function SectionHeading({
+  eyebrow,
+  title,
+  text,
+  align = "left",
+  className = "",
+}: SectionHeadingProps) {
   return (
-    <div className={[styles.heading, styles[align], className].filter(Boolean).join(" ")}>
+    <div
+      className={[styles.heading, styles[align], className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {eyebrow ? <p className={styles.eyebrow}>{eyebrow}</p> : null}
       <h2>{title}</h2>
       {text ? <p className={styles.text}>{text}</p> : null}

@@ -14,7 +14,11 @@
 .schoolsHero {
   padding: clamp(54px, 8vw, 96px) 0 clamp(42px, 6vw, 72px);
   background:
-    radial-gradient(circle at 82% 10%, rgba(33, 158, 154, 0.12), transparent 28%),
+    radial-gradient(
+      circle at 82% 10%,
+      rgba(33, 158, 154, 0.12),
+      transparent 28%
+    ),
     linear-gradient(180deg, #ffffff, var(--pex-bg));
 }
 
@@ -212,7 +216,9 @@
   padding: 16px 18px;
   border-radius: 18px;
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(160px, 1fr) minmax(120px, 0.8fr) auto;
+  grid-template-columns:
+    minmax(0, 1.5fr) minmax(160px, 1fr) minmax(120px, 0.8fr)
+    auto;
   align-items: center;
   gap: 16px;
   background: var(--pex-bg);
@@ -344,7 +350,9 @@
   border-radius: var(--radius-card);
   padding: 32px;
   border: 1px solid rgba(15, 37, 55, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .howItWorksStep:hover {
@@ -485,7 +493,9 @@
   background: var(--pex-bg);
   color: var(--pex-primary);
   box-shadow: inset 0 0 0 1px rgba(18, 57, 69, 0.16);
-  transition: background 0.3s ease, color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
 }
 
 .featuredCard:hover .featuredCta {
@@ -1143,16 +1153,16 @@
   .bookCoveringInner {
     grid-template-columns: 1fr;
   }
-  
+
   .bookCoveringVisual {
     min-height: 300px;
     order: -1;
   }
-  
+
   .bookCoveringContent {
     padding: 40px 32px;
   }
-  
+
   .visualBadge {
     top: 24px;
     right: 24px;
@@ -1163,7 +1173,7 @@
   .bookCoveringBanner {
     padding: 40px var(--gutter-mobile);
   }
-  
+
   .bookCoveringContent {
     padding: 32px 24px;
   }

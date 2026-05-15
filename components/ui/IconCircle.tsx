@@ -6,8 +6,19 @@ type IconCircleProps = {
   className?: string;
 };
 
-export function IconCircle({ tone = "orange", direction = "right", className = "" }: IconCircleProps) {
-  const classNames = [styles.iconCircle, styles[tone], styles[direction], className].filter(Boolean).join(" ");
+export function IconCircle({
+  tone = "orange",
+  direction = "right",
+  className = "",
+}: IconCircleProps) {
+  const classNames = [
+    styles.iconCircle,
+    styles[tone],
+    styles[direction],
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   if (direction === "search") {
     return (

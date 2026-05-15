@@ -16,7 +16,7 @@ export function ItemIcon({ name, className = "", size = 24 }: ItemIconProps) {
     strokeWidth: "2",
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
-    className
+    className,
   };
 
   switch (name) {

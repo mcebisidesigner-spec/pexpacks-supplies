@@ -48,7 +48,11 @@
   border-radius: var(--radius-section);
   padding: clamp(20px, 3vw, 28px);
   background:
-    linear-gradient(135deg, rgba(33, 158, 154, 0.08), rgba(255, 255, 255, 0.92)),
+    linear-gradient(
+      135deg,
+      rgba(33, 158, 154, 0.08),
+      rgba(255, 255, 255, 0.92)
+    ),
     var(--pex-bg);
   box-shadow: 0 14px 34px rgba(26, 42, 64, 0.05);
   display: flex;
@@ -108,8 +112,16 @@
   border-radius: var(--radius-section);
   padding: clamp(18px, 3vw, 28px);
   background:
-    radial-gradient(circle at 12% 18%, rgba(33, 158, 154, 0.06), transparent 28%),
-    radial-gradient(circle at 88% 72%, rgba(255, 111, 89, 0.05), transparent 26%),
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(33, 158, 154, 0.06),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 88% 72%,
+      rgba(255, 111, 89, 0.05),
+      transparent 26%
+    ),
     var(--pex-bg-soft);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -34,7 +34,9 @@ export function HeaderMenu() {
       mobileOpenRef.current = false;
       setIconClosing(true);
 
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
       const closeIconDelay = prefersReducedMotion ? 0 : 220;
 
       closingTimerRef.current = setTimeout(() => {
@@ -75,7 +77,10 @@ export function HeaderMenu() {
     function onDocumentClick(event: MouseEvent) {
       const target = event.target;
 
-      if (target instanceof Element && target.closest("[data-mobile-menu-close]")) {
+      if (
+        target instanceof Element &&
+        target.closest("[data-mobile-menu-close]")
+      ) {
         closeMobileMenu();
       }
     }
@@ -124,7 +129,11 @@ export function HeaderMenu() {
         <span />
         <span />
       </button>
-      <MobileMenu open={mobileOpen} onClose={closeMobileMenu} pathname={pathname} />
+      <MobileMenu
+        open={mobileOpen}
+        onClose={closeMobileMenu}
+        pathname={pathname}
+      />
     </>
   );
 }

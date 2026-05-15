@@ -13,13 +13,19 @@ type GradePageProps = {
 
 export const dynamicParams = true;
 
-export async function generateMetadata({ params }: GradePageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: GradePageProps): Promise<Metadata> {
   const { schoolSlug, gradeSlug } = await params;
   const school = await getSchoolBySlug(schoolSlug);
   const grade = await getGradeBySlug(schoolSlug, gradeSlug);
 
   if (!school || !grade) {
-    return buildMetadata("Pack Not Found", "The requested grade stationery pack could not be found.", "/schools");
+    return buildMetadata(
+      "Pack Not Found",
+      "The requested grade stationery pack could not be found.",
+      "/schools"
+    );
   }
 
   return buildMetadata(
@@ -46,7 +52,10 @@ export default async function GradePackPage({ params }: GradePageProps) {
           { name: "Home", path: "/" },
           { name: "Schools", path: "/schools" },
           { name: school.name, path: `/schools/${school.slug}` },
-          { name: grade.grade, path: `/schools/${school.slug}/${grade.gradeSlug}` }
+          {
+            name: grade.grade,
+            path: `/schools/${school.slug}/${grade.gradeSlug}`,
+          },
         ])}
       />
       <section className={page.section}>

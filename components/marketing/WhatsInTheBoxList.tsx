@@ -8,7 +8,7 @@ const items = [
   "Glue, files, crayons or colour pencils where required",
   "Grade-specific school-list items packed with care",
   "Optional: Books pre-covered and labelled via Pexcover",
-  "Ready for the first day of school or collection"
+  "Ready for the first day of school or collection",
 ];
 
 export function WhatsInTheBoxList() {

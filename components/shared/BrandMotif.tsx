@@ -5,10 +5,15 @@ type BrandMotifProps = {
   className?: string;
 };
 
-export function BrandMotif({ position = "topRight", className }: BrandMotifProps) {
+export function BrandMotif({
+  position = "topRight",
+  className,
+}: BrandMotifProps) {
   return (
     <div
-      className={[styles.motif, styles[position], className].filter(Boolean).join(" ")}
+      className={[styles.motif, styles[position], className]
+        .filter(Boolean)
+        .join(" ")}
       aria-hidden="true"
     />
   );

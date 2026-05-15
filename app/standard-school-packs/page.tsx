@@ -40,7 +40,10 @@ export default function StandardSchoolPacksPage() {
           <div className={styles.packGrid}>
             {standardSchoolPacks.map((pack) => (
               <article className={styles.packCard} key={pack.id}>
-                <div className={[styles.packMedia, styles.packMediaBlue].join(" ")} aria-hidden="true">
+                <div
+                  className={[styles.packMedia, styles.packMediaBlue].join(" ")}
+                  aria-hidden="true"
+                >
                   <span>{pack.phase}</span>
                 </div>
                 <div className={styles.packBody}>
@@ -72,11 +75,14 @@ export default function StandardSchoolPacksPage() {
               <p className={styles.eyebrow}>School-specific lists</p>
               <h2>Need your exact school stationery list?</h2>
               <p>
-                If your school is not in the database yet, send us the school name, city and grade list. We can help
-                prepare a school-specific pack path or recommend the closest standard combo.
+                If your school is not in the database yet, send us the school
+                name, city and grade list. We can help prepare a school-specific
+                pack path or recommend the closest standard combo.
               </p>
               <div className={styles.buttonRow}>
-                <Button href="/add-your-school#school-request-form">Add Your School</Button>
+                <Button href="/add-your-school#school-request-form">
+                  Add Your School
+                </Button>
                 <Button href="/contact" variant="white">
                   Contact Us
                 </Button>

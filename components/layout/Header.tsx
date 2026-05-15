@@ -15,7 +15,7 @@ export function Header() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // If we're near the top, always show the header
       if (currentScrollY < 60) {
         setIsVisible(true);
@@ -26,7 +26,7 @@ export function Header() {
         // Scrolling up
         setIsVisible(true);
       }
-      
+
       lastScrollY.current = currentScrollY;
     };
 
@@ -35,19 +35,34 @@ export function Header() {
   }, []);
 
   return (
-    <header className={`${styles.siteHeader} ${isVisible ? "" : styles.headerHidden}`}>
+    <header
+      className={`${styles.siteHeader} ${isVisible ? "" : styles.headerHidden}`}
+    >
       <div className={styles.headerInner}>
-        <Link className={styles.logoLink} href="/" aria-label="Pexpacks home" data-mobile-menu-close>
+        <Link
+          className={styles.logoLink}
+          href="/"
+          aria-label="Pexpacks home"
+          data-mobile-menu-close
+        >
           <Logo />
         </Link>
 
         <nav className={styles.desktopNav} aria-label="Primary navigation">
           {mainNavLinks.map((link) => (
-            <HeaderActiveLink href={link.href} label={link.label} key={link.href} />
+            <HeaderActiveLink
+              href={link.href}
+              label={link.label}
+              key={link.href}
+            />
           ))}
         </nav>
 
-        <Link className={styles.desktopOrder} href="/order" aria-label="Order a Pexpacks pack">
+        <Link
+          className={styles.desktopOrder}
+          href="/order"
+          aria-label="Order a Pexpacks pack"
+        >
           <span>Order a Pack</span>
           <span className={styles.orderIcon} aria-hidden="true">
             <svg viewBox="0 0 24 24" focusable="false">

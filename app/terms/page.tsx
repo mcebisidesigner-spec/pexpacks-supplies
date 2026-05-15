@@ -16,8 +16,8 @@ export default function TermsPage() {
           <p>Terms of use</p>
           <h1>Using the Pexpacks website</h1>
           <p className={page.pageHeroText}>
-            These terms explain the basic conditions for browsing the website and submitting stationery pack enquiries
-            or order requests.
+            These terms explain the basic conditions for browsing the website
+            and submitting stationery pack enquiries or order requests.
           </p>
         </div>
       </section>
@@ -27,25 +27,30 @@ export default function TermsPage() {
             <p className={page.kicker}>Website guidance</p>
             <h2>Website information</h2>
             <p>
-              Website content is provided to help customers understand Pexpacks school, office, delivery, and collection
-              services.
+              Website content is provided to help customers understand Pexpacks
+              school, office, delivery, and collection services.
             </p>
             <p className={page.kicker}>Order enquiries</p>
             <h2>Orders and enquiries</h2>
             <p>
-              Submitted order details are treated as enquiry requests until Pexpacks confirms pack availability, pricing,
-              delivery details, collection options, and payment instructions. No online payment is taken through the
-              current enquiry flow.
+              Submitted order details are treated as enquiry requests until
+              Pexpacks confirms pack availability, pricing, delivery details,
+              collection options, and payment instructions. No online payment is
+              taken through the current enquiry flow.
             </p>
             <p className={page.kicker}>Customer details</p>
             <h2>Customer responsibility</h2>
             <p>
-              Customers should check school names, grades, contact details, delivery preferences, and pack requirements
-              before submitting an enquiry or order request.
+              Customers should check school names, grades, contact details,
+              delivery preferences, and pack requirements before submitting an
+              enquiry or order request.
             </p>
             <p className={page.kicker}>Content updates</p>
             <h2>Updates</h2>
-            <p>Pexpacks may update website content, pack details, and service information when needed.</p>
+            <p>
+              Pexpacks may update website content, pack details, and service
+              information when needed.
+            </p>
           </article>
         </div>
       </section>
