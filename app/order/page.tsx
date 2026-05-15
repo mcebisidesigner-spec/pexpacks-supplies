@@ -25,6 +25,11 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
   const params = searchParams ? await searchParams : {};
   const school = firstValue(params.school);
   const grade = firstValue(params.grade);
+  const phase = firstValue(params.phase);
+  const pack = firstValue(params.pack);
+  const type = firstValue(params.type);
+  const items = firstValue(params.items);
+  const total = firstValue(params.total);
 
   return (
     <>
@@ -42,7 +47,15 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
         <div style={{ maxWidth: "var(--layout-max-width)", margin: "0 auto", paddingInline: "var(--gutter-desktop)" }}>
           <PexcoverMarquee />
         </div>
-        <OrderForm initialSchool={school} initialGrade={grade} />
+        <OrderForm
+          initialSchool={school}
+          initialGrade={grade}
+          initialPhase={phase}
+          initialPackId={pack}
+          initialPackType={type}
+          initialCustomItems={items}
+          initialEstimatedTotal={total}
+        />
       </section>
       <section className={`${page.section} ${page.bgAlt}`}>
         <div className={page.sectionInner}>

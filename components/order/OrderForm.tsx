@@ -3,13 +3,11 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ordersEmail, ordersEmailHref } from "@/data/contact";
+import { phasePacks, type GradePackTemplate } from "@/data/phasePacks";
 import { Button } from "@/components/ui/Button";
-
+import { formatCurrency } from "@/lib/formatCurrency";
 import { OrderProgress } from "./OrderProgress";
-import { OrderSummary } from "./OrderSummary";
 import styles from "./Order.module.css";
-
-const steps = ["Select school", "Select grade", "Confirm pack", "Add-ons", "Enter details", "Confirm order"];
 
 type ApiResponse = {
   success: boolean;
@@ -39,10 +37,49 @@ type SchoolDetails = SchoolSearchResult & {
   grades: GradeOption[];
 };
 
+type OrderStepId = "school" | "grade" | "pack" | "addons" | "details" | "confirm";
+
+type OrderStep = {
+  id: OrderStepId;
+  label: string;
+};
+
+type StandardSelection = {
+  mode: "standard" | "custom";
+  phaseTitle: string;
+  phaseSlug: string;
+  pack: GradePackTemplate;
+  customItems?: string;
+  estimatedTotal?: number;
+};
+
 type OrderFormProps = {
   initialSchool?: string;
   initialGrade?: string;
+  initialPhase?: string;
+  initialPackId?: string;
+  initialPackType?: string;
+  initialCustomItems?: string;
+  initialEstimatedTotal?: string;
 };
+
+const schoolOrderSteps: OrderStep[] = [
+  { id: "school", label: "Select school" },
+  { id: "grade", label: "Select grade" },
+  { id: "pack", label: "Confirm pack" },
+  { id: "addons", label: "Add-ons" },
+  { id: "details", label: "Enter details" },
+  { id: "confirm", label: "Confirm order" },
+];
+
+const standardOrderSteps: OrderStep[] = [
+  { id: "pack", label: "Confirm pack" },
+  { id: "addons", label: "Add-ons" },
+  { id: "details", label: "Enter details" },
+  { id: "confirm", label: "Confirm order" },
+];
+
+const PEXCOVER_PRICE = 120;
 
 async function fetchSchoolDetails(slug: string) {
   const response = await fetch(`/api/schools/${encodeURIComponent(slug)}`);
@@ -54,41 +91,124 @@ async function fetchSchoolDetails(slug: string) {
   return (await response.json()) as { success: true; school: SchoolDetails };
 }
 
-export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormProps) {
+function parseEstimatedTotal(value?: string) {
+  if (!value) {
+    return undefined;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : undefined;
+}
+
+function resolveStandardSelection({
+  initialPhase,
+  initialPackId,
+  initialGrade,
+  initialPackType,
+  initialCustomItems,
+  initialEstimatedTotal,
+}: Pick<
+  OrderFormProps,
+  "initialPhase" | "initialPackId" | "initialGrade" | "initialPackType" | "initialCustomItems" | "initialEstimatedTotal"
+>): StandardSelection | null {
+  if (!initialPhase) {
+    return null;
+  }
+
+  const phase = phasePacks.find((pack) => pack.slug === initialPhase);
+  if (!phase) {
+    return null;
+  }
+
+  const selectedPack =
+    phase.gradePacks.find((pack) => pack.id === initialPackId) ||
+    phase.gradePacks.find((pack) => pack.grade.toLowerCase() === initialGrade?.toLowerCase());
+
+  if (!selectedPack) {
+    return null;
+  }
+
+  return {
+    mode: initialPackType === "custom" ? "custom" : "standard",
+    phaseTitle: phase.title,
+    phaseSlug: phase.slug,
+    pack: selectedPack,
+    customItems: initialCustomItems,
+    estimatedTotal: parseEstimatedTotal(initialEstimatedTotal),
+  };
+}
+
+export function OrderForm({
+  initialSchool = "",
+  initialGrade = "",
+  initialPhase = "",
+  initialPackId = "",
+  initialPackType = "",
+  initialCustomItems = "",
+  initialEstimatedTotal = "",
+}: OrderFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const standardSelection = useMemo(
+    () =>
+      resolveStandardSelection({
+        initialPhase,
+        initialPackId,
+        initialGrade,
+        initialPackType,
+        initialCustomItems,
+        initialEstimatedTotal,
+      }),
+    [initialCustomItems, initialEstimatedTotal, initialGrade, initialPackId, initialPackType, initialPhase]
+  );
+
+  const stepFlow = standardSelection ? standardOrderSteps : schoolOrderSteps;
+  const steps = stepFlow.map((step) => step.label);
+
   const [activeStep, setActiveStep] = useState(0);
   const [selectedSchool, setSelectedSchool] = useState<SchoolDetails | null>(null);
   const [schoolQuery, setSchoolQuery] = useState("");
   const [schoolResults, setSchoolResults] = useState<SchoolSearchResult[]>([]);
   const [schoolOpen, setSchoolOpen] = useState(false);
-  const [schoolTouched, setSchoolTouched] = useState(Boolean(initialSchool));
+  const [schoolTouched, setSchoolTouched] = useState(Boolean(initialSchool) && !standardSelection);
   const [schoolLoading, setSchoolLoading] = useState(false);
   const [schoolError, setSchoolError] = useState("");
-  const [gradeSlug, setGradeSlug] = useState(initialGrade);
+  const [gradeSlug, setGradeSlug] = useState(standardSelection ? "" : initialGrade);
   const [buyerName, setBuyerName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
   const [deliveryPreference, setDeliveryPreference] = useState("School collection");
   const [preferredContactMethod, setPreferredContactMethod] = useState("whatsapp");
   const [consent, setConsent] = useState(false);
-  
-  // Pexcover state
   const [hasPexcover, setHasPexcover] = useState(false);
   const [pexcoverName, setPexcoverName] = useState("");
   const [pexcoverSubjects, setPexcoverSubjects] = useState("");
   const [pexcoverLabelFormat, setPexcoverLabelFormat] = useState("First Name + Surname");
   const [pexcoverNotes, setPexcoverNotes] = useState("");
-
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<ApiResponse | null>(null);
+
+  const currentStep = stepFlow[activeStep]?.id ?? "confirm";
 
   const selectedGrade = useMemo(
     () => selectedSchool?.grades.find((grade) => grade.gradeSlug === gradeSlug) ?? null,
     [gradeSlug, selectedSchool]
   );
 
+  const selectedPackTitle = standardSelection ? standardSelection.pack.title : `${selectedGrade?.grade ?? "Selected"} stationery pack`;
+  const selectedPackPrice = standardSelection?.estimatedTotal ?? standardSelection?.pack.priceFrom ?? selectedGrade?.price;
+  const selectedPackItems = standardSelection
+    ? standardSelection.customItems
+      ? standardSelection.customItems.split("; ").filter(Boolean)
+      : standardSelection.pack.items.map((item) => `${item.quantity} x ${item.name}`)
+    : selectedGrade?.contents ?? [];
+  const selectedPackNote = standardSelection
+    ? standardSelection.mode === "custom"
+      ? "Your customised pack has been prepared for checkout. The adjusted items below will be included in the enquiry."
+      : "Your standard grade pack is already selected. Continue to add optional services and complete checkout details."
+    : selectedGrade?.deliveryNote ?? "";
+
   useEffect(() => {
-    if (!initialSchool) {
+    if (standardSelection || !initialSchool) {
       return;
     }
 
@@ -117,10 +237,10 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
     return () => {
       cancelled = true;
     };
-  }, [initialGrade, initialSchool]);
+  }, [initialGrade, initialSchool, standardSelection]);
 
   useEffect(() => {
-    if (!schoolTouched) {
+    if (standardSelection || !schoolTouched) {
       return;
     }
 
@@ -132,10 +252,10 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
       try {
         const params = new URLSearchParams({
           q: schoolQuery.trim(),
-          limit: "10"
+          limit: "10",
         });
         const response = await fetch(`/api/schools/search?${params.toString()}`, {
-          signal: controller.signal
+          signal: controller.signal,
         });
 
         if (!response.ok) {
@@ -144,7 +264,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
 
         const data = (await response.json()) as { success: true; results: SchoolSearchResult[] };
         setSchoolResults(data.results);
-      } catch (error) {
+      } catch {
         if (!controller.signal.aborted) {
           setSchoolResults([]);
           setSchoolError("We could not search schools right now. Please try again.");
@@ -160,10 +280,10 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
       controller.abort();
       window.clearTimeout(timeout);
     };
-  }, [schoolQuery, schoolTouched]);
+  }, [schoolQuery, schoolTouched, standardSelection]);
 
   function nextStep() {
-    setActiveStep((step) => Math.min(step + 1, steps.length - 1));
+    setActiveStep((step) => Math.min(step + 1, stepFlow.length - 1));
   }
 
   function previousStep() {
@@ -188,33 +308,30 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
   }
 
   function continueOrder() {
-    if (activeStep === 0 && !selectedSchool) {
+    if (currentStep === "school" && !selectedSchool) {
       setSchoolError("Please search and select a school before continuing.");
       return;
     }
 
-    if (activeStep === 1 && !selectedGrade) {
+    if (currentStep === "grade" && !selectedGrade) {
       setSchoolError("Please select a grade before continuing.");
       return;
     }
 
-    if (activeStep === 4 && !formRef.current?.reportValidity()) {
+    if (currentStep === "details" && !formRef.current?.reportValidity()) {
       return;
     }
 
     setSchoolError("");
+    setSubmitStatus(null);
     nextStep();
   }
 
   async function submitOrder() {
-    if (!formRef.current?.reportValidity()) {
-      return;
-    }
-
-    if (!selectedSchool || !selectedGrade) {
+    if (!standardSelection && (!selectedSchool || !selectedGrade)) {
       setSubmitStatus({
         success: false,
-        message: "Please select a school and grade before submitting your order enquiry."
+        message: "Please select a school and grade before submitting your order enquiry.",
       });
       return;
     }
@@ -222,40 +339,56 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
     setSubmitting(true);
     setSubmitStatus(null);
 
-    const formData = new FormData(formRef.current);
+    const formData = formRef.current ? new FormData(formRef.current) : new FormData();
+    const packType = standardSelection
+      ? `${standardSelection.mode === "custom" ? "Customised" : "Standard"} ${standardSelection.pack.title}`
+      : `${selectedGrade?.grade} stationery pack`;
+    const standardPackMessage = standardSelection
+      ? [
+          `Selected route: ${standardSelection.mode === "custom" ? "customised standard pack" : "standard pack"}.`,
+          `Phase: ${standardSelection.phaseTitle}.`,
+          `Pack: ${standardSelection.pack.title}.`,
+          typeof selectedPackPrice === "number" ? `Estimated pack total: ${formatCurrency(selectedPackPrice)}.` : null,
+          standardSelection.customItems ? `Custom items: ${standardSelection.customItems}.` : null,
+        ]
+          .filter(Boolean)
+          .join(" ")
+      : "Please confirm availability, delivery or collection options, and payment instructions.";
+    const pexcoverMessage = hasPexcover
+      ? `\n\n--- PEXCOVER ADD-ON REQUESTED ---\nLearner: ${pexcoverName || buyerName}\nSubjects: ${
+          pexcoverSubjects || "Standard"
+        }\nLabel Format: ${pexcoverLabelFormat}\nNotes: ${pexcoverNotes || "None"}`
+      : "";
+
     const payload = {
       formType: "school-pack-enquiry",
       fullName: buyerName,
       phone: buyerPhone,
       email: buyerEmail,
-      schoolName: selectedSchool.name,
-      grade: selectedGrade.grade,
-      packType: `${selectedGrade.grade} stationery pack`,
+      schoolName: standardSelection ? "Standard school phase pack" : selectedSchool?.name ?? "",
+      grade: standardSelection ? standardSelection.pack.grade : selectedGrade?.grade ?? "",
+      packType,
       preferredContactMethod,
-      message: `Delivery preference: ${deliveryPreference}. Please confirm availability, delivery or collection options, and payment instructions. ${
-        hasPexcover 
-          ? `\n\n--- PEXCOVER ADD-ON REQUESTED ---\nLearner: ${pexcoverName || buyerName}\nSubjects: ${pexcoverSubjects || "Standard"}\nLabel Format: ${pexcoverLabelFormat}\nNotes: ${pexcoverNotes || "None"}`
-          : ""
-      }`,
+      message: `Delivery preference: ${deliveryPreference}. ${standardPackMessage}${pexcoverMessage}`,
       consent,
       companyWebsite: typeof formData.get("companyWebsite") === "string" ? formData.get("companyWebsite") : "",
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
-      submittedAt: new Date().toISOString()
+      submittedAt: new Date().toISOString(),
     };
 
     try {
       const response = await fetch("/api/forms/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
       const result = (await response.json()) as ApiResponse;
       setSubmitStatus(result);
     } catch {
       setSubmitStatus({
         success: false,
-        message: "We could not submit your enquiry right now. Please try again or contact us directly."
+        message: "We could not submit your enquiry right now. Please try again or contact us directly.",
       });
     } finally {
       setSubmitting(false);
@@ -267,7 +400,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
       <div className={styles.orderPanel}>
         <OrderProgress steps={steps} activeStep={activeStep} />
         <form className={styles.form} ref={formRef}>
-          {activeStep === 0 ? (
+          {currentStep === "school" ? (
             <div className={styles.schoolSearch}>
               <label htmlFor="order-school-search">
                 <span>Select school</span>
@@ -303,23 +436,23 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
               {schoolOpen ? (
                 <div className={styles.schoolResults} id="order-school-results" role="listbox">
                   {schoolLoading ? <p className={styles.schoolEmpty}>Searching schools...</p> : null}
-                  {!schoolLoading && schoolResults.length ? (
-                    schoolResults.map((result) => (
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={selectedSchool?.slug === result.slug}
-                        className={styles.schoolResult}
-                        key={result.id}
-                        onClick={() => selectSchool(result)}
-                      >
-                        <strong>{result.name}</strong>
-                        <span>
-                          {result.city}, {result.province}
-                        </span>
-                      </button>
-                    ))
-                  ) : null}
+                  {!schoolLoading && schoolResults.length
+                    ? schoolResults.map((result) => (
+                        <button
+                          type="button"
+                          role="option"
+                          aria-selected={selectedSchool?.slug === result.slug}
+                          className={styles.schoolResult}
+                          key={result.id}
+                          onClick={() => selectSchool(result)}
+                        >
+                          <strong>{result.name}</strong>
+                          <span>
+                            {result.city}, {result.province}
+                          </span>
+                        </button>
+                      ))
+                    : null}
                   {!schoolLoading && !schoolResults.length ? (
                     <p className={styles.schoolEmpty}>No matching schools found. Try a different name.</p>
                   ) : null}
@@ -338,7 +471,7 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
             </div>
           ) : null}
 
-          {activeStep === 1 ? (
+          {currentStep === "grade" ? (
             <label htmlFor="order-grade-select">
               <span>Select grade</span>
               <select id="order-grade-select" name="orderGrade" value={gradeSlug} onChange={(event) => setGradeSlug(event.target.value)} required>
@@ -352,45 +485,44 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
             </label>
           ) : null}
 
-          {activeStep === 2 ? (
+          {currentStep === "pack" ? (
             <div className={styles.confirmPack}>
               <p className={styles.confirmKicker}>Selected pack</p>
-              <h2>{selectedGrade?.grade} stationery pack</h2>
-              <p>{selectedGrade?.deliveryNote}</p>
+              <h2>{selectedPackTitle}</h2>
+              <p>{selectedPackNote}</p>
+              {typeof selectedPackPrice === "number" ? (
+                <p className={styles.priceNote}>Estimated pack price: {formatCurrency(selectedPackPrice)}</p>
+              ) : null}
               <ul>
-                {selectedGrade?.contents.slice(0, 5).map((item) => (
+                {selectedPackItems.slice(0, 8).map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
             </div>
           ) : null}
 
-          {activeStep === 3 ? (
+          {currentStep === "addons" ? (
             <div className={styles.addonSection}>
-              <p className={styles.confirmKicker}>Optional Add-On Services</p>
-              
+              <p className={styles.confirmKicker}>Optional add-on services</p>
+
               <div className={`${styles.addonCard} ${hasPexcover ? styles.addonCardActive : ""}`}>
                 <div className={styles.addonHeader}>
                   <div className={styles.addonTitle}>
                     <h3>Add Pexcover</h3>
-                    <span className={styles.addonPrice}>+R120 per pack</span>
+                    <span className={styles.addonPrice}>+{formatCurrency(PEXCOVER_PRICE)} per pack</span>
                   </div>
                   <p>Exercise books covered, labelled, and ready from day one.</p>
                   <p className={styles.addonSubtext}>Save time, protect schoolwork, and help your child start organised.</p>
                 </div>
-                
+
                 <label className={styles.addonCheckbox}>
-                  <input 
-                    type="checkbox" 
-                    checked={hasPexcover} 
-                    onChange={(e) => setHasPexcover(e.target.checked)} 
-                  />
+                  <input type="checkbox" checked={hasPexcover} onChange={(event) => setHasPexcover(event.target.checked)} />
                   <span>Yes, add Pexcover to this pack</span>
                 </label>
-                
+
                 <p className={styles.addonNote}>Pexcover applies to exercise books included in the selected school pack.</p>
 
-                {hasPexcover && (
+                {hasPexcover ? (
                   <div className={styles.addonDetails} aria-expanded={hasPexcover}>
                     <p className={styles.addonDetailsHelper}>
                       Only complete these fields if you want specific name or subject details written on the books.
@@ -398,29 +530,22 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
                     <div className={styles.detailGrid}>
                       <label>
                         <span>Learner name to write on books</span>
-                        <input
-                          placeholder="e.g. John Doe"
-                          value={pexcoverName}
-                          onChange={(e) => setPexcoverName(e.target.value)}
-                        />
+                        <input placeholder="e.g. John Doe" value={pexcoverName} onChange={(event) => setPexcoverName(event.target.value)} />
                       </label>
                       <label>
                         <span>Preferred label format</span>
-                        <select 
-                          value={pexcoverLabelFormat}
-                          onChange={(e) => setPexcoverLabelFormat(e.target.value)}
-                        >
+                        <select value={pexcoverLabelFormat} onChange={(event) => setPexcoverLabelFormat(event.target.value)}>
                           <option>First Name + Surname</option>
                           <option>First Name + Initial</option>
                           <option>Initials + Surname</option>
                         </select>
                       </label>
                       <label className={styles.fullWidthField}>
-                        <span>Subject names (if required by school)</span>
+                        <span>Subject names, if required by school</span>
                         <input
                           placeholder="e.g. English, Maths, Life Skills"
                           value={pexcoverSubjects}
-                          onChange={(e) => setPexcoverSubjects(e.target.value)}
+                          onChange={(event) => setPexcoverSubjects(event.target.value)}
                         />
                       </label>
                       <label className={styles.fullWidthField}>
@@ -428,38 +553,25 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
                         <input
                           placeholder="Any specific covering instructions?"
                           value={pexcoverNotes}
-                          onChange={(e) => setPexcoverNotes(e.target.value)}
+                          onChange={(event) => setPexcoverNotes(event.target.value)}
                         />
                       </label>
                     </div>
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
           ) : null}
 
-          {activeStep === 4 ? (
+          {currentStep === "details" ? (
             <div className={styles.detailGrid}>
               <label>
                 <span>Parent or buyer name</span>
-                <input
-                  name="name"
-                  placeholder="Your full name"
-                  required
-                  value={buyerName}
-                  onChange={(event) => setBuyerName(event.target.value)}
-                />
+                <input name="name" placeholder="Your full name" required value={buyerName} onChange={(event) => setBuyerName(event.target.value)} />
               </label>
               <label>
                 <span>Phone number</span>
-                <input
-                  name="phone"
-                  type="tel"
-                  placeholder="+27"
-                  required
-                  value={buyerPhone}
-                  onChange={(event) => setBuyerPhone(event.target.value)}
-                />
+                <input name="phone" type="tel" placeholder="+27" required value={buyerPhone} onChange={(event) => setBuyerPhone(event.target.value)} />
               </label>
               <label>
                 <span>Email address</span>
@@ -474,67 +586,67 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
               </label>
               <label>
                 <span>Delivery preference</span>
-                <select
-                  name="delivery"
-                  value={deliveryPreference}
-                  onChange={(event) => setDeliveryPreference(event.target.value)}
-                >
+                <select name="delivery" value={deliveryPreference} onChange={(event) => setDeliveryPreference(event.target.value)}>
                   <option>School collection</option>
                   <option>Home delivery</option>
                   <option>Office delivery</option>
                 </select>
               </label>
-              {deliveryPreference === "Home delivery" && (
+              {deliveryPreference === "Home delivery" ? (
                 <div className={styles.deliveryNotice}>
                   <p>
                     Home delivery incurs an additional delivery fee based on your location. Please{" "}
                     <Link href="/delivery-policy" className={styles.deliveryPolicyLink} target="_blank" rel="noopener noreferrer">
-                      Read our Delivery Policy
+                      read our Delivery Policy
                     </Link>{" "}
                     for more details on pricing and schedules.
                   </p>
                 </div>
-              )}
+              ) : null}
               <label>
                 <span>Preferred contact method</span>
-                <select
-                  name="preferredContactMethod"
-                  value={preferredContactMethod}
-                  onChange={(event) => setPreferredContactMethod(event.target.value)}
-                >
+                <select name="preferredContactMethod" value={preferredContactMethod} onChange={(event) => setPreferredContactMethod(event.target.value)}>
                   <option value="whatsapp">WhatsApp</option>
                   <option value="phone">Phone</option>
                   <option value="email">Email</option>
                 </select>
               </label>
               <label className={styles.consentField}>
-                <input
-                  name="consent"
-                  type="checkbox"
-                  required
-                  checked={consent}
-                  onChange={(event) => setConsent(event.target.checked)}
-                />
+                <input name="consent" type="checkbox" required checked={consent} onChange={(event) => setConsent(event.target.checked)} />
                 <span>
-                  I consent to Pexpacks using my information to contact me about this enquiry and provide related
-                  support.{" "}
+                  I consent to Pexpacks using my information to contact me about this enquiry and provide related support.{" "}
                   <Link href="/privacy-policy" className={styles.privacyLink}>
-                    privacy-policy
+                    Privacy policy
                   </Link>
                 </span>
               </label>
               <p className={styles.privacyNotice}>
-                We only use your details to respond to your enquiry and manage your stationery pack request. We collect
-                only the information needed to assist you. You may contact Pexpacks to update, correct, or request
-                deletion of your information.
+                We only use your details to respond to your enquiry and manage your stationery pack request. You may
+                contact Pexpacks to update, correct, or request deletion of your information.
               </p>
             </div>
           ) : null}
 
-          {activeStep === 5 ? (
+          {currentStep === "confirm" ? (
             <div className={styles.confirmPack}>
               <p className={styles.confirmKicker}>Final check</p>
               <h2>Confirm order</h2>
+              <dl className={styles.finalSummary}>
+                <div>
+                  <dt>Pack</dt>
+                  <dd>{selectedPackTitle}</dd>
+                </div>
+                <div>
+                  <dt>Grade</dt>
+                  <dd>{standardSelection ? standardSelection.pack.grade : selectedGrade?.grade ?? "Selected grade"}</dd>
+                </div>
+                {typeof selectedPackPrice === "number" ? (
+                  <div>
+                    <dt>Estimated total</dt>
+                    <dd>{formatCurrency(selectedPackPrice + (hasPexcover ? PEXCOVER_PRICE : 0))}</dd>
+                  </div>
+                ) : null}
+              </dl>
               <p>
                 This is an enquiry order. No online payment is taken here. Pexpacks will confirm availability, delivery
                 details and payment options. Order support is available at <a href={ordersEmailHref}>{ordersEmail}</a>.
@@ -562,20 +674,14 @@ export function OrderForm({ initialSchool = "", initialGrade = "" }: OrderFormPr
             </button>
             <Button
               type="button"
-              onClick={activeStep === steps.length - 1 ? submitOrder : continueOrder}
-              disabled={submitting || (activeStep === 0 && schoolLoading)}
+              onClick={activeStep === stepFlow.length - 1 ? submitOrder : continueOrder}
+              disabled={submitting || (currentStep === "school" && schoolLoading)}
             >
-              {activeStep === steps.length - 1 ? (submitting ? "Submitting enquiry" : "Submit order enquiry") : "Continue"}
+              {activeStep === stepFlow.length - 1 ? (submitting ? "Submitting enquiry" : "Submit order enquiry") : "Continue"}
             </Button>
           </div>
         </form>
       </div>
-      <OrderSummary
-        schoolName={selectedSchool?.name}
-        gradeName={selectedGrade?.grade}
-        gradePrice={selectedGrade?.price}
-        hasPexcover={hasPexcover}
-      />
     </section>
   );
 }

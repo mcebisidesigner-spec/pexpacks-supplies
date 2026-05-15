@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PageHero } from "@/components/marketing/PageHero";
+import heroStyles from "@/components/marketing/Marketing.module.css";
 import { phasePacks } from "@/data/phasePacks";
 import { PhaseClient } from "@/components/school-packs/PhaseClient";
 import { buildMetadata } from "@/lib/seo";
@@ -14,7 +15,7 @@ export const metadata: Metadata = buildMetadata(
 );
 
 export default function FoundationPhasePage() {
-  const phaseData = phasePacks.find((p) => p.slug === phaseSlug);
+  const phaseData = phasePacks.find((pack) => pack.slug === phaseSlug);
 
   if (!phaseData) {
     notFound();
@@ -22,24 +23,10 @@ export default function FoundationPhasePage() {
 
   return (
     <>
-      <PageHero
-        eyebrow={phaseData.eyebrow}
-        title={phaseData.title}
-        text={phaseData.description}
-      >
-        <ul style={{ 
-          display: "flex", 
-          flexDirection: "column", 
-          gap: "8px", 
-          listStyle: "none", 
-          padding: 0, 
-          margin: "24px 0 0",
-          textAlign: "left"
-        }}>
+      <PageHero eyebrow={phaseData.eyebrow} title={phaseData.title} text={phaseData.description}>
+        <ul className={`${heroStyles.checkList} ${heroStyles.checkListSpaced}`}>
           {phaseData.heroBullets.map((bullet) => (
-            <li key={bullet} style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--pex-text)" }}>
-              <span style={{ color: "var(--pex-keppel)", fontWeight: 800 }}>✓</span> {bullet}
-            </li>
+            <li key={bullet}>{bullet}</li>
           ))}
         </ul>
       </PageHero>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, FormEvent } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { ItemIcon } from "@/components/ui/ItemIcon";
@@ -14,161 +15,275 @@ type PackCustomizerProps = {
   onCancel?: () => void;
 };
 
-export function PackCustomizer({ phaseSlug, gradePack, onCancel }: PackCustomizerProps) {
-  const [quantities, setQuantities] = useState<Record<string, number>>(
-    gradePack.items.reduce((acc, item) => ({ ...acc, [item.id]: item.quantity }), {})
-  );
+const addOnStationeryItems: StationeryItem[] = [
+  {
+    id: "addon-coloured-pencils",
+    name: "Coloured Pencils",
+    quantity: 0,
+    specification: "12 Pack",
+    category: "Brand Upgrades",
+    icon: "pencil",
+    unitPrice: 55,
+  },
+  {
+    id: "addon-black-pens",
+    name: "Black Ballpoint Pens",
+    quantity: 0,
+    specification: "Pack of 4",
+    category: "Brand Upgrades",
+    icon: "pen",
+    unitPrice: 45,
+  },
+  {
+    id: "addon-highlighters",
+    name: "Highlighters",
+    quantity: 0,
+    specification: "Assorted Colours",
+    category: "Brand Upgrades",
+    icon: "highlighter",
+    unitPrice: 25,
+  },
+  {
+    id: "addon-exam-pad",
+    name: "A4 Exam Pad",
+    quantity: 0,
+    specification: "100 page punched",
+    category: "Core Essentials",
+    icon: "pad",
+    unitPrice: 35,
+  },
+  {
+    id: "addon-plastic-sleeves",
+    name: "Plastic Sleeves",
+    quantity: 0,
+    specification: "Pack of 10",
+    category: "Durables",
+    icon: "file",
+    unitPrice: 35,
+  },
+  {
+    id: "addon-lever-arch-file",
+    name: "Lever Arch File",
+    quantity: 0,
+    specification: "A4",
+    category: "Durables",
+    icon: "file",
+    unitPrice: 60,
+  },
+  {
+    id: "addon-calculator",
+    name: "Scientific Calculator",
+    quantity: 0,
+    category: "Durables",
+    icon: "calculator",
+    unitPrice: 350,
+  },
+  {
+    id: "addon-glue-stick",
+    name: "Glue Stick",
+    quantity: 0,
+    specification: "40g",
+    category: "Core Essentials",
+    icon: "glue",
+    unitPrice: 35,
+  },
+];
 
-  const [buyerName, setBuyerName] = useState("");
-  const [buyerEmail, setBuyerEmail] = useState("");
-  const [deliveryOption, setDeliveryOption] = useState("Collection");
-  const [submitting, setSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(null);
+function buildInitialQuantities(gradePack: GradePackTemplate) {
+  return [...gradePack.items, ...addOnStationeryItems].reduce<Record<string, number>>(
+    (acc, item) => ({ ...acc, [item.id]: item.quantity }),
+    {}
+  );
+}
+
+export function PackCustomizer({ phaseSlug, gradePack, onCancel }: PackCustomizerProps) {
+  const router = useRouter();
+  const [quantities, setQuantities] = useState<Record<string, number>>(() => buildInitialQuantities(gradePack));
+
+  useEffect(() => {
+    setQuantities(buildInitialQuantities(gradePack));
+  }, [gradePack]);
 
   const handleQuantityChange = (id: string, value: number) => {
-    setQuantities(prev => ({ ...prev, [id]: value }));
+    setQuantities((prev) => ({ ...prev, [id]: value }));
   };
 
   const totalPrice = useMemo(() => {
     let total = gradePack.priceFrom;
-    gradePack.items.forEach(item => {
+
+    gradePack.items.forEach((item) => {
       const baseQty = item.quantity;
       const currentQty = quantities[item.id] || 0;
       const diff = currentQty - baseQty;
       const price = item.unitPrice || 0;
-      total += (diff * price);
+      total += diff * price;
     });
+
+    addOnStationeryItems.forEach((item) => {
+      const currentQty = quantities[item.id] || 0;
+      const price = item.unitPrice || 0;
+      total += currentQty * price;
+    });
+
     return Math.max(0, total);
   }, [gradePack, quantities]);
 
   const groupedItems = useMemo(() => {
     const groups: Record<string, StationeryItem[]> = {
       "Core Essentials": [],
-      "Durables": [],
-      "Brand Upgrades": []
+      Durables: [],
+      "Brand Upgrades": [],
     };
-    
-    gradePack.items.forEach(item => {
-      const cat = item.category || "Core Essentials";
-      if (groups[cat]) {
-        groups[cat].push(item);
+
+    gradePack.items.forEach((item) => {
+      const category = item.category || "Core Essentials";
+      if (groups[category]) {
+        groups[category].push(item);
       } else {
-        groups[cat] = [item];
+        groups[category] = [item];
       }
     });
+
     return groups;
   }, [gradePack]);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    
-    // Simulate submit delay
-    await new Promise(res => setTimeout(res, 1000));
-    
-    setSubmitStatus({
-      success: true,
-      message: "Order enquiry submitted successfully! Our team will contact you shortly to confirm."
-    });
-    setSubmitting(false);
-  };
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
 
-  if (submitStatus?.success) {
-    return (
-      <div className={styles.customizerContainer} style={{ padding: "40px" }}>
-        <div className={`${styles.submitStatus} ${styles.submitSuccess}`}>
-          {submitStatus.message}
-        </div>
-        <div style={{ marginTop: "24px", textAlign: "center" }}>
-          <Button onClick={onCancel || (() => window.location.reload())} variant="outline">
-            Done
-          </Button>
-        </div>
-      </div>
-    );
-  }
+    const standardItems = gradePack.items
+      .map((item) => ({
+        name: item.name,
+        quantity: quantities[item.id] || 0,
+      }))
+      .filter((item) => item.quantity > 0);
+    const addOnItems = addOnStationeryItems
+      .map((item) => ({
+        name: item.name,
+        quantity: quantities[item.id] || 0,
+      }))
+      .filter((item) => item.quantity > 0);
+    const customItems = [...standardItems, ...addOnItems].map((item) => `${item.quantity} x ${item.name}`).join("; ");
+
+    const params = new URLSearchParams({
+      phase: phaseSlug,
+      pack: gradePack.id,
+      grade: gradePack.grade,
+      type: "custom",
+      total: String(totalPrice),
+    });
+
+    if (customItems) {
+      params.set("items", customItems);
+    }
+
+    router.push(`/order?${params.toString()}`);
+  };
 
   return (
     <div className={styles.customizerContainer} id="pack-customizer">
       <div className={styles.customizerHeader}>
+        <p>Custom pack builder</p>
         <h2>Customise your {gradePack.grade} pack</h2>
-        <p style={{ margin: 0, color: "var(--pex-text)" }}>Review the standard requirements below. Add or remove items to match your exact needs.</p>
+        <span>Review the standard requirements below. Adjust quantities, then continue to checkout.</span>
       </div>
 
       <form className={styles.formGrid} onSubmit={handleSubmit} id="customizer-form">
         <div className={styles.customizerItems}>
-          {Object.entries(groupedItems).map(([category, items]) => {
-            if (items.length === 0) return null;
-            return (
-              <div key={category} className={styles.itemGroup}>
-                <h3 className={styles.itemGroupTitle}>{category}</h3>
-                <div className={styles.itemList}>
-                  {items.map(item => (
-                    <div key={item.id} className={styles.itemRow}>
-                      <div className={styles.itemInfoWrap}>
-                        <div className={styles.itemIconBox}>
-                          <ItemIcon name={item.icon} size={24} />
-                        </div>
-                        <div className={styles.itemInfo}>
-                          <span className={styles.itemName}>{item.name}</span>
-                          {item.specification && <span className={styles.itemSpec}>{item.specification}</span>}
-                        </div>
-                      </div>
-                      <QuantityStepper 
-                        value={quantities[item.id] || 0} 
-                        onChange={(val) => handleQuantityChange(item.id, val)} 
-                        ariaLabel={`Quantity for ${item.name}`}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className={styles.summarySidebar}>
-          <h3 style={{ margin: 0, color: "var(--pex-primary)", fontWeight: 800 }}>Order Details</h3>
-          <div className={styles.detailsForm}>
-            <label>
-              Parent / Guardian Name
-              <input type="text" required value={buyerName} onChange={e => setBuyerName(e.target.value)} placeholder="e.g. Jane Doe" />
-            </label>
-            <label>
-              Email Address
-              <input type="email" required value={buyerEmail} onChange={e => setBuyerEmail(e.target.value)} placeholder="name@example.com" />
-            </label>
-            <label>
-              Delivery Preference
-              <select value={deliveryOption} onChange={e => setDeliveryOption(e.target.value)}>
-                <option>Collection</option>
-                <option>School Delivery</option>
-                <option>Home Delivery</option>
-              </select>
-            </label>
-
-            {submitStatus && !submitStatus.success && (
-              <div className={`${styles.submitStatus} ${styles.submitError}`}>
-                {submitStatus.message}
-              </div>
-            )}
+          <div className={styles.preloadBanner}>
+            <div>
+              <p>Standard pack loaded</p>
+              <h3>{gradePack.title}</h3>
+              <span>
+                {gradePack.items.length} standard items are pre-populated below. Add extras first, then adjust the
+                standard quantities if needed.
+              </span>
+            </div>
+            <strong>{formatCurrency(gradePack.priceFrom)}</strong>
           </div>
+
+          <section className={styles.addOnSection} aria-labelledby="custom-add-ons-title">
+            <div className={styles.sectionBlockHeader}>
+              <p>Optional extras</p>
+              <h3 id="custom-add-ons-title">Add more stationery to this pack</h3>
+            </div>
+            <div className={styles.addOnGrid}>
+              {addOnStationeryItems.map((item) => (
+                <div key={item.id} className={`${styles.itemRow} ${styles.addOnRow}`}>
+                  <div className={styles.itemInfoWrap}>
+                    <div className={styles.itemIconBox}>
+                      <ItemIcon name={item.icon} size={24} />
+                    </div>
+                    <div className={styles.itemInfo}>
+                      <span className={styles.itemName}>{item.name}</span>
+                      {item.specification ? <span className={styles.itemSpec}>{item.specification}</span> : null}
+                      {item.unitPrice ? <span className={styles.itemPrice}>{formatCurrency(item.unitPrice)} each</span> : null}
+                    </div>
+                  </div>
+                  <QuantityStepper
+                    value={quantities[item.id] || 0}
+                    onChange={(value) => handleQuantityChange(item.id, value)}
+                    ariaLabel={`Quantity for ${item.name}`}
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className={styles.standardSection} aria-labelledby="standard-items-title">
+            <div className={styles.sectionBlockHeader}>
+              <p>Preloaded standard list</p>
+              <h3 id="standard-items-title">Standard items in your {gradePack.grade} pack</h3>
+            </div>
+            <div className={styles.standardGrid}>
+              {Object.entries(groupedItems).map(([category, items]) => {
+                if (items.length === 0) {
+                  return null;
+                }
+
+                return (
+                  <div key={category} className={styles.itemGroup}>
+                    <h3 className={styles.itemGroupTitle}>{category}</h3>
+                    <div className={styles.itemList}>
+                      {items.map((item) => (
+                        <div key={item.id} className={styles.itemRow}>
+                          <div className={styles.itemInfoWrap}>
+                            <div className={styles.itemIconBox}>
+                              <ItemIcon name={item.icon} size={24} />
+                            </div>
+                            <div className={styles.itemInfo}>
+                              <span className={styles.itemName}>{item.name}</span>
+                              {item.specification ? <span className={styles.itemSpec}>{item.specification}</span> : null}
+                            </div>
+                          </div>
+                          <QuantityStepper
+                            value={quantities[item.id] || 0}
+                            onChange={(value) => handleQuantityChange(item.id, value)}
+                            ariaLabel={`Quantity for ${item.name}`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
         </div>
       </form>
 
       <div className={styles.stickyFooter}>
         <div className={styles.totalBlock}>
-          <span className={styles.totalLabel}>Estimated Total</span>
+          <span className={styles.totalLabel}>Estimated total</span>
           <span className={styles.totalValue}>{formatCurrency(totalPrice)}</span>
         </div>
         <div className={styles.footerActions}>
-          {onCancel && (
+          {onCancel ? (
             <Button type="button" variant="outline" onClick={onCancel}>
               Cancel
             </Button>
-          )}
-          <Button type="submit" form="customizer-form" disabled={submitting}>
-            {submitting ? "Submitting..." : "Submit Order Request"}
+          ) : null}
+          <Button type="submit" form="customizer-form">
+            Continue to checkout
           </Button>
         </div>
       </div>
