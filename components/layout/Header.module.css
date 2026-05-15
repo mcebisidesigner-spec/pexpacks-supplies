@@ -121,8 +121,6 @@
   stroke-linejoin: round;
 }
 
-
-
 .menuButton {
   display: none;
 }
@@ -130,7 +128,12 @@
 .mobileMenu {
   position: fixed;
   z-index: 1;
-  inset: var(--mobile-header-height) 0 0;
+  top: var(--mobile-header-height);
+  left: 0;
+  right: 0;
+  height: calc(100vh - var(--mobile-header-height));
+  height: calc(100dvh - var(--mobile-header-height));
+  bottom: auto;
   background: #ffffff;
   color: var(--pex-navy);
   transform: translateX(100%);
@@ -310,6 +313,7 @@
     box-shadow: none;
     color: var(--pex-navy);
     cursor: pointer;
+    z-index: 10;
     -webkit-tap-highlight-color: transparent;
     transition: background-color 160ms ease-out;
   }

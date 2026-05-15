@@ -1,0 +1,36 @@
+
+> pexpacks-supplies@1.0.0 dev
+> next dev --port 3000
+
+▲ Next.js 16.2.5 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.26:3000
+- Environments: .env.local
+✓ Ready in 513ms
+Creating turbopack project {
+  dir: 'E:\\WORK-FOLDER\\WEB-DESIGN-PROJECTS\\pexpacks-supplies',
+  testMode: true
+}
+
+○ Compiling / ...
+ HEAD / 200 in 3.8s (next.js: 3.0s, application-code: 808ms)
+ GET / 200 in 603ms (next.js: 9ms, application-code: 595ms)
+ GET / 200 in 185ms (next.js: 5ms, application-code: 180ms)
+ GET /foundation-phase 200 in 532ms (next.js: 482ms, application-code: 50ms)
+✓ Compiled in 83ms
+ GET /foundation-phase 200 in 183ms (next.js: 4ms, application-code: 179ms)
+ GET /foundation-phase 200 in 126ms (next.js: 5ms, application-code: 121ms)
+ GET / 200 in 63ms (next.js: 6ms, application-code: 57ms)
+✓ Compiled in 24ms
+ GET / 200 in 156ms (next.js: 4ms, application-code: 152ms)
+ GET / 200 in 140ms (next.js: 4ms, application-code: 136ms)
+ GET /foundation-phase 200 in 51ms (next.js: 5ms, application-code: 45ms)
+ GET /foundation-phase 200 in 107ms (next.js: 4ms, application-code: 103ms)
+ GET / 200 in 60ms (next.js: 3ms, application-code: 56ms)
+ GET /schools 200 in 864ms (next.js: 737ms, application-code: 126ms)
+ GET /add-your-school 200 in 498ms (next.js: 349ms, application-code: 149ms)
+✓ Compiled in 17ms
+ GET / 200 in 75ms (next.js: 7ms, application-code: 68ms)
+ GET /office-packs 200 in 528ms (next.js: 457ms, application-code: 71ms)
+ GET /schools 200 in 68ms (next.js: 18ms, application-code: 49ms)
+ GET / 200 in 67ms (next.js: 4ms, application-code: 63ms)
