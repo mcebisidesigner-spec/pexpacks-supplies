@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PackCustomizer } from "@/components/order/PackCustomizer";
@@ -60,15 +61,57 @@ function buildStandardOrderHref(phaseSlug: string, pack: GradePackTemplate) {
 export function PhaseClient({ phaseData }: PhaseClientProps) {
   const [selectedCustomPack, setSelectedCustomPack] =
     useState<GradePackTemplate | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  
   const faqs = phaseFaqs[phaseData.slug] || [];
 
   const handleCustomise = (pack: GradePackTemplate) => {
     setSelectedCustomPack(pack);
   };
 
+  useEffect(() => {
+    if (selectedCustomPack) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedCustomPack]);
+
   const otherPhases = homepagePacks.filter(
     (pack) => pack.href !== `/${phaseData.slug}`
   );
+
+  const drawerContent = selectedCustomPack ? (
+    <div
+      className={styles.drawerOverlay}
+      onClick={() => setSelectedCustomPack(null)}
+    >
+      <div
+        className={styles.drawerContent}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className={styles.closeDrawerBtn}
+          onClick={() => setSelectedCustomPack(null)}
+          aria-label="Close customiser"
+        >
+          ✕
+        </button>
+        <PackCustomizer
+          phaseSlug={phaseData.slug}
+          gradePack={selectedCustomPack}
+          onCancel={() => setSelectedCustomPack(null)}
+        />
+      </div>
+    </div>
+  ) : null;
 
   return (
     <div className={styles.phaseContainer} data-phase={phaseData.slug}>
@@ -180,30 +223,7 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
         </div>
       </section>
 
-      {selectedCustomPack ? (
-        <div
-          className={styles.drawerOverlay}
-          onClick={() => setSelectedCustomPack(null)}
-        >
-          <div
-            className={styles.drawerContent}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className={styles.closeDrawerBtn}
-              onClick={() => setSelectedCustomPack(null)}
-              aria-label="Close customiser"
-            >
-              ✕
-            </button>
-            <PackCustomizer
-              phaseSlug={phaseData.slug}
-              gradePack={selectedCustomPack}
-              onCancel={() => setSelectedCustomPack(null)}
-            />
-          </div>
-        </div>
-      ) : null}
+      {isMounted && drawerContent ? createPortal(drawerContent, document.body) : null}
 
       {faqs.length > 0 ? (
         <section className={styles.faqSection}>

@@ -1,2 +1,25 @@
 ⚠ Slow filesystem detected. The benchmark took 1088ms. If E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next/dev is a network drive, consider moving it to a local folder.
 See more: https://nextjs.org/docs/app/guides/local-development
+⨯ ReferenceError: useEffect is not defined
+    at PhaseClient (components\school-packs\PhaseClient.tsx:69:3)
+  67 |   };
+  68 |
+> 69 |   useEffect(() => {
+     |   ^
+  70 |     if (selectedCustomPack) {
+  71 |       document.body.style.overflow = "hidden";
+  72 |     } else { {
+  digest: '851778323'
+}
+[browser] Can't perform a React state update on a component that hasn't mounted yet. This indicates that you have a side-effect in your render function that asynchronously tries to update the component. Move this work to useEffect instead. 
+⨯ ReferenceError: isMounted is not defined
+    at PhaseClient (components\school-packs\PhaseClient.tsx:219:8)
+  217 |       </section>
+  218 |
+> 219 |       {isMounted && drawerContent ? createPortal(drawerContent, document.body) : null}
+      |        ^
+  220 |
+  221 |       {faqs.length > 0 ? (
+  222 |         <section className={styles.faqSection}> {
+  digest: '3003834129'
+}

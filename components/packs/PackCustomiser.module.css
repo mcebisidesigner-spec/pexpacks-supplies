@@ -45,8 +45,8 @@
 
 .drawer {
   width: min(620px, 100%);
+  height: 100vh;
   height: 100dvh;
-  height: 100vh; /* fallback */
   overflow-y: auto;
   background: var(--pex-bg);
   box-shadow: -24px 0 60px rgba(15, 37, 55, 0.22);
@@ -276,8 +276,8 @@
 @media (max-width: 760px) {
   .drawer {
     width: 100%;
-    height: 100dvh;
     height: 100vh;
+    height: 100dvh;
   }
 
   .header {
