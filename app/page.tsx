@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { WhatsInTheBoxList } from "@/components/marketing/WhatsInTheBoxList";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
-import { PathwayCards } from "@/components/marketing/PathwayCards";
+import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import {
   whyChoosePexpacks,
@@ -108,9 +108,9 @@ export default function HomePage() {
           <div>
             <p className={styles.eyebrow}>Save time, Pex it.</p>
             <h1 className={styles.heroTitle}>
-              Everything <br />
-              packed.
-              <br className={styles.mobileBreak} /> Everything <br />
+              Everything packed Everything
+              <span className={styles.mobileInlineSpace}> </span>
+              <br className={styles.desktopBreak} />
               ready
             </h1>
             <p className={styles.heroLead}>
@@ -215,16 +215,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.sectionCream}>
-        <div className={styles.inner}>
-          <SectionHeader
-            eyebrow="Pack options"
-            title="Choose the pack that fits you"
-            text="Whether you are a parent, school, or office administrator, you can start with what you need right now."
-          />
-          <PathwayCards />
-        </div>
-      </section>
+      <BookCoveringBanner />
 
       <section className={styles.sectionCream}>
         <div className={styles.inner}>
