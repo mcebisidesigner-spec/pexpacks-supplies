@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AddSchoolForm } from "@/components/forms/AddSchoolForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
@@ -38,55 +39,7 @@ export default function AddYourSchoolPage() {
             <article className={styles.formCard} id="school-request-form">
               <p className={styles.eyebrow}>School request</p>
               <h2>Submit school details</h2>
-              <form className={styles.formGrid} action="/contact" method="get">
-                <label className={styles.field}>
-                  <span>School name</span>
-                  <input
-                    name="school"
-                    type="text"
-                    placeholder="e.g. Parktown Primary"
-                    required
-                  />
-                </label>
-                <label className={styles.field}>
-                  <span>City or area</span>
-                  <input
-                    name="city"
-                    type="text"
-                    placeholder="e.g. Johannesburg"
-                    required
-                  />
-                </label>
-                <label className={styles.field}>
-                  <span>Province</span>
-                  <input
-                    name="province"
-                    type="text"
-                    placeholder="e.g. Gauteng"
-                    required
-                  />
-                </label>
-                <label className={styles.field}>
-                  <span>Grade needed</span>
-                  <input
-                    name="grade"
-                    type="text"
-                    placeholder="e.g. Grade R"
-                    required
-                  />
-                </label>
-                <label className={[styles.field, styles.formWide].join(" ")}>
-                  <span>Stationery list notes</span>
-                  <textarea
-                    name="notes"
-                    placeholder="Tell us what grade lists, books or special pack requirements you have."
-                  />
-                </label>
-                <input name="type" type="hidden" value="add-school" />
-                <div className={styles.formWide}>
-                  <Button type="submit">Submit School Details</Button>
-                </div>
-              </form>
+              <AddSchoolForm />
             </article>
 
             <article className={styles.infoCard}>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { formSubmissionSchema, flattenErrors } from "@/lib/forms/schema";
+import { formSubmissionSchema, flattenErrors, formTypeLabel } from "@/lib/forms/schema";
 import { sanitise, isSpam } from "@/lib/forms/sanitise";
-import { sendEmail } from "@/lib/forms/sendEmail";
+import { sendToWeb3Forms } from "@/lib/forms/web3forms";
 
 export const runtime = "nodejs";
 
@@ -52,16 +52,40 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  /* Sanitise & send */
+  /* Sanitise & forward to Web3Forms */
   const clean = sanitise(parsed.data);
-  const result = await sendEmail(clean);
 
-  if (!result.ok) {
+  const result = await sendToWeb3Forms({
+    subject: `[Pexpacks] New ${formTypeLabel(clean.formType)} from ${clean.fullName}`,
+    formName: formTypeLabel(clean.formType),
+    payload: {
+      "Form Type": formTypeLabel(clean.formType),
+      "Full Name": clean.fullName,
+      Phone: clean.phone,
+      Email: clean.email || "-",
+      "Preferred Contact": clean.preferredContactMethod || "-",
+      "School ID": clean.schoolId || "-",
+      "School Name": clean.schoolName || "-",
+      Grade: clean.grade || "-",
+      "Learner Name": clean.learnerName || "-",
+      "Business Name": clean.businessName || "-",
+      "Order Quantity": clean.orderQuantity ?? "-",
+      "Pack Type": clean.packType || "-",
+      "Selected Items": clean.selectedItems || "-",
+      "Removed Items": clean.removedItems || "-",
+      "Estimated Total": clean.estimatedTotal ?? "-",
+      Message: clean.message || "-",
+      Consent: clean.consent ? "Yes" : "No",
+      "Page URL": clean.pageUrl || "-",
+      "Submitted At": clean.submittedAt || "-",
+    },
+  });
+
+  if (!result.success) {
     return json(
       {
         success: false,
-        message:
-          "We could not submit your enquiry right now. Please try again or contact us directly.",
+        message: result.message,
       },
       500
     );

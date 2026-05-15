@@ -1,11 +1,72 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import styles from "./AddMySchoolBanner.module.css";
 
+type ApiResponse = {
+  success: boolean;
+  message: string;
+};
+
 export function AddMySchoolBanner() {
   const [showRequestForm, setShowRequestForm] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [status, setStatus] = useState<ApiResponse | null>(null);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const fd = new FormData(form);
+    setPending(true);
+    setStatus(null);
+
+    const parentName =
+      typeof fd.get("parentName") === "string"
+        ? (fd.get("parentName") as string)
+        : "";
+    const schoolAndCity =
+      typeof fd.get("schoolAndCity") === "string"
+        ? (fd.get("schoolAndCity") as string)
+        : "";
+    const grade =
+      typeof fd.get("grade") === "string" ? (fd.get("grade") as string) : "";
+
+    const payload = {
+      formType: "contact" as const,
+      fullName: parentName || "School list upload",
+      phone: "Via Add-My-School banner",
+      schoolName: schoolAndCity,
+      grade,
+      message: `School list upload request.\nParent: ${parentName}\nSchool & City: ${schoolAndCity}\nGrade: ${grade}`,
+      packType: "add-school",
+      consent: true,
+      pageUrl: window.location.href,
+      userAgent: navigator.userAgent,
+      submittedAt: new Date().toISOString(),
+    };
+
+    try {
+      const res = await fetch("/api/forms/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = (await res.json()) as ApiResponse;
+      setStatus(result);
+      if (result.success) {
+        form.reset();
+      }
+    } catch {
+      setStatus({
+        success: false,
+        message:
+          "We could not submit your request right now. Please try again or contact us directly.",
+      });
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
     <div className={styles.bannerContainer}>
@@ -78,20 +139,16 @@ export function AddMySchoolBanner() {
         ) : (
           <form
             className={styles.searchForm}
-            onSubmit={(e) => {
-              e.preventDefault();
-              alert(
-                "Request submitted successfully (Pending Backend Integration)"
-              );
-            }}
+            onSubmit={handleSubmit}
           >
             <label>
               Parent / Guardian Name
-              <input type="text" required placeholder="e.g. Jane Doe" />
+              <input name="parentName" type="text" required placeholder="e.g. Jane Doe" />
             </label>
             <label>
-              School Name & City
+              School Name &amp; City
               <input
+                name="schoolAndCity"
                 type="text"
                 placeholder="e.g. Parktown Primary, Johannesburg"
                 required
@@ -99,7 +156,7 @@ export function AddMySchoolBanner() {
             </label>
             <label>
               Grade Needed
-              <input type="text" placeholder="e.g. Grade R" required />
+              <input name="grade" type="text" placeholder="e.g. Grade R" required />
             </label>
             <label>
               Upload Stationery List (PDF or Photo)
@@ -121,7 +178,7 @@ export function AddMySchoolBanner() {
                 <span>
                   <strong>Click to browse</strong> or drag your PDF/image here
                 </span>
-                {/* TODO: implement actual backend upload logic */}
+                {/* TODO: implement actual file upload to cloud storage */}
                 <input type="file" accept=".pdf,image/*" />
               </label>
             </label>
@@ -133,10 +190,31 @@ export function AddMySchoolBanner() {
               >
                 Back
               </Button>
-              <Button type="submit" style={{ flex: 1 }}>
-                Submit List for 5% Off
+              <Button type="submit" style={{ flex: 1 }} disabled={pending}>
+                {pending ? "Submitting..." : "Submit List for 5% Off"}
               </Button>
             </div>
+            {status ? (
+              <p
+                role={status.success ? "status" : "alert"}
+                aria-live="polite"
+                style={{
+                  marginTop: 12,
+                  padding: "12px 14px",
+                  borderRadius: 14,
+                  fontSize: 14,
+                  fontWeight: 800,
+                  background: status.success
+                    ? "rgba(47, 133, 90, 0.12)"
+                    : "rgba(185, 28, 28, 0.1)",
+                  color: status.success
+                    ? "var(--pex-success)"
+                    : "var(--pex-error)",
+                }}
+              >
+                {status.message}
+              </p>
+            ) : null}
           </form>
         )}
       </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Button } from "@/components/ui/Button";
+import { TrackOrderForm } from "@/components/forms/TrackOrderForm";
 import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
@@ -23,22 +23,7 @@ export default function TrackOrderPage() {
       </section>
       <section className={page.section}>
         <div className={page.sectionInner}>
-          <form className={`${page.formCard} ${page.formStack}`}>
-            <p className={page.kicker}>Order tracking</p>
-            <h2>Tracking form</h2>
-            <label>
-              Order number
-              <input name="orderNumber" placeholder="PEX-2026-001" />
-            </label>
-            <label>
-              Phone or email
-              <input
-                name="contact"
-                placeholder="Phone number or email address"
-              />
-            </label>
-            <Button type="submit">Track order</Button>
-          </form>
+          <TrackOrderForm />
         </div>
       </section>
     </>
