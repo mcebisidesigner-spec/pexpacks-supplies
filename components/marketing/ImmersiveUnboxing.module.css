@@ -1,0 +1,101 @@
+.banner {
+  position: relative;
+  width: 100%;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.bgImageWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.bgImage {
+  object-fit: cover;
+  object-position: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 70%);
+  z-index: 1;
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding: clamp(64px, 10vw, 120px) var(--gutter-desktop);
+  display: flex;
+  justify-content: flex-start;
+}
+
+.glassCard {
+  width: 100%;
+  max-width: 540px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 28px;
+  padding: 48px;
+  box-shadow: 0 32px 64px rgba(15, 37, 55, 0.12);
+}
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 36px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  color: var(--pex-navy);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.checkIcon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.12);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  padding: 5px;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding: 64px var(--gutter-mobile);
+    justify-content: center;
+  }
+
+  .glassCard {
+    padding: 32px 24px;
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  .banner {
+    min-height: 500px;
+  }
+}

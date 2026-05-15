@@ -1,5 +1,2 @@
-⚠ Slow filesystem detected. The benchmark took 306ms. If E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next/dev is a network drive, consider moving it to a local folder.
-See more: https://nextjs.org/docs/app/guides/local-development
-⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
-⚠ Slow filesystem detected. The benchmark took 2279ms. If E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next/dev is a network drive, consider moving it to a local folder.
+⚠ Slow filesystem detected. The benchmark took 298ms. If E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next/dev is a network drive, consider moving it to a local folder.
 See more: https://nextjs.org/docs/app/guides/local-development

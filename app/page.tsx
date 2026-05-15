@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
-import { InteractiveUnboxing } from "@/components/marketing/InteractiveUnboxing";
+import { ImmersiveUnboxing } from "@/components/marketing/ImmersiveUnboxing";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
@@ -224,7 +224,7 @@ export default function HomePage() {
 
       <BookCoveringBanner />
 
-      <InteractiveUnboxing />
+      <ImmersiveUnboxing />
 
       <section className={styles.section}>
         <div className={styles.inner}>
