@@ -119,6 +119,7 @@
 }
 
 .searchForm {
+  position: relative;
   min-height: 92px;
   order: 1;
   padding: 6px;
@@ -200,10 +201,13 @@
 }
 
 .resultsPanel {
+  position: absolute;
+  z-index: 12;
+  grid-column: 1 / -1;
+  inset: calc(100% + 12px) 0 auto;
   width: 100%;
-  order: 3;
   max-height: 520px;
-  margin-top: 18px;
+  margin-top: 0;
   padding: 16px;
   overflow-y: auto;
   border: 1px solid rgba(18, 57, 69, 0.12);
@@ -1041,9 +1045,16 @@
   }
 
   .resultsPanel {
-    max-height: 70vh;
-    padding: 12px;
-    border-radius: 24px;
+    position: static;
+    z-index: auto;
+    inset: auto;
+    max-height: min(36vh, 340px);
+    margin-top: -2px;
+    padding: 12px 2px 2px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .resultsCount,

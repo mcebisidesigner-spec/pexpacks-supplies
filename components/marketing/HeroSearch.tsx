@@ -182,6 +182,72 @@ export function HeroSearch() {
             onChange={(event) => updateQuery(event.target.value)}
           />
         </label>
+        {panelOpen ? (
+          <div className={styles.heroResultsPanel} aria-live="polite">
+            {!queryReady ? (
+              <p className={styles.heroSearchState}>
+                Start typing a school name or choose a grade to find packs.
+              </p>
+            ) : null}
+
+            {isLoading ? (
+              <p className={styles.heroSearchState}>Searching schools...</p>
+            ) : null}
+
+            {!isLoading && queryReady && hasSearched && !error ? (
+              <>
+                <div className={styles.resultsCount}>
+                  <strong>
+                    {total === 1 ? "1 school found" : `${total} schools found`}
+                  </strong>
+                  {total > 0 ? (
+                    <span>
+                      Showing {results.length} of {total}
+                    </span>
+                  ) : null}
+                </div>
+
+                {results.length > 0 ? (
+                  <div className={styles.heroResultsList}>
+                    {results.map((school) => (
+                      <SchoolResultCard school={school} key={school.id} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className={styles.noResultsState}>
+                    <p className={styles.heroSearchState}>
+                      No matching schools found.
+                    </p>
+                    <div className={styles.noResultsActions}>
+                      <Link
+                        href="/add-your-school#school-request-form"
+                        className={styles.addSchoolLink}
+                      >
+                        Add your school
+                      </Link>
+                      <Link
+                        href="/standard-school-packs"
+                        className={styles.standardPackLink}
+                      >
+                        Standard Packs
+                      </Link>
+                    </div>
+                  </div>
+                )}
+
+                {hasMore ? (
+                  <button
+                    className={styles.loadMoreButton}
+                    type="button"
+                    onClick={() => fetchResults(results.length, "append")}
+                  >
+                    Load more schools
+                  </button>
+                ) : null}
+              </>
+            ) : null}
+          </div>
+        ) : null}
         <label className={styles.field}>
           <span>Grade</span>
           <select
@@ -216,74 +282,6 @@ export function HeroSearch() {
         inputValue={query}
         className={styles.searchHelper}
       />
-
-      {/* ── Results panel (same data as /schools, homepage design) ── */}
-      {panelOpen ? (
-        <div className={styles.heroResultsPanel} aria-live="polite">
-          {!queryReady ? (
-            <p className={styles.heroSearchState}>
-              Start typing a school name or choose a grade to find packs.
-            </p>
-          ) : null}
-
-          {isLoading ? (
-            <p className={styles.heroSearchState}>Searching schools...</p>
-          ) : null}
-
-          {!isLoading && queryReady && hasSearched && !error ? (
-            <>
-              <div className={styles.resultsCount}>
-                <strong>
-                  {total === 1 ? "1 school found" : `${total} schools found`}
-                </strong>
-                {total > 0 ? (
-                  <span>
-                    Showing {results.length} of {total}
-                  </span>
-                ) : null}
-              </div>
-
-              {results.length > 0 ? (
-                <div className={styles.heroResultsList}>
-                  {results.map((school) => (
-                    <SchoolResultCard school={school} key={school.id} />
-                  ))}
-                </div>
-              ) : (
-                <div className={styles.noResultsState}>
-                  <p className={styles.heroSearchState}>
-                    No matching schools found.
-                  </p>
-                  <div className={styles.noResultsActions}>
-                    <Link
-                      href="/add-your-school#school-request-form"
-                      className={styles.addSchoolLink}
-                    >
-                      Add your school
-                    </Link>
-                    <Link
-                      href="/standard-school-packs"
-                      className={styles.standardPackLink}
-                    >
-                      Standard Packs
-                    </Link>
-                  </div>
-                </div>
-              )}
-
-              {hasMore ? (
-                <button
-                  className={styles.loadMoreButton}
-                  type="button"
-                  onClick={() => fetchResults(results.length, "append")}
-                >
-                  Load more schools
-                </button>
-              ) : null}
-            </>
-          ) : null}
-        </div>
-      ) : null}
     </div>
   );
 }

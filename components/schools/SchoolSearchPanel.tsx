@@ -189,6 +189,18 @@ export function SchoolSearchPanel({
             autoComplete="off"
           />
         </label>
+        <SchoolResultsPanel
+          isOpen={panelOpen}
+          isLoading={isLoading}
+          hasSearched={hasSearched}
+          queryReady={queryReady}
+          results={results}
+          total={total}
+          visibleCount={results.length}
+          hasMore={hasMore}
+          error={error}
+          onLoadMore={() => fetchResults(results.length, "append")}
+        />
         <GradeSelect grades={grades} value={grade} onChange={updateGrade} />
         <button
           className={styles.schoolSearchButton}
@@ -203,19 +215,6 @@ export function SchoolSearchPanel({
         isInputFocused={isSchoolInputFocused}
         inputValue={query}
         className={styles.searchHelper}
-      />
-
-      <SchoolResultsPanel
-        isOpen={panelOpen}
-        isLoading={isLoading}
-        hasSearched={hasSearched}
-        queryReady={queryReady}
-        results={results}
-        total={total}
-        visibleCount={results.length}
-        hasMore={hasMore}
-        error={error}
-        onLoadMore={() => fetchResults(results.length, "append")}
       />
     </section>
   );
