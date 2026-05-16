@@ -1,16 +1,3 @@
-.urgencyAlert {
-  background: rgba(33, 158, 154, 0.1);
-  border-bottom: 1px solid rgba(33, 158, 154, 0.2);
-  text-align: center;
-  padding: 12px 24px;
-}
-
-.urgencyAlert p {
-  margin: 0;
-  color: var(--pex-keppel);
-  font-size: 14px;
-}
-
 .schoolsHero {
   padding: clamp(54px, 8vw, 96px) 0 clamp(42px, 6vw, 72px);
   background:

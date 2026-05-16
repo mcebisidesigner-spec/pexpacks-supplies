@@ -48,12 +48,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
 
   return (
     <>
-      <div className={styles.urgencyAlert}>
-        <p>
-          🚨 <strong>Back-to-school deadline approaching:</strong> Order before
-          December 15th for guaranteed January delivery before term starts.
-        </p>
-      </div>
       <SchoolsPageHero>
         <SchoolSearchPanel
           grades={grades}
