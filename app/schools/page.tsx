@@ -33,7 +33,7 @@ function firstValue(value: string | string[] | undefined) {
 
 export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
   const params = searchParams ? await searchParams : {};
-  const { grades, regions } = getSchoolSearchOptions();
+  const { grades } = getSchoolSearchOptions();
   const featuredSchools = getFeaturedSchoolRecords();
 
   const schoolFaqs = faqs.filter((faq) =>
@@ -57,11 +57,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       <SchoolsPageHero>
         <SchoolSearchPanel
           grades={grades}
-          regions={regions}
           initialQuery={firstValue(params.q) ?? ""}
-          initialRegion={
-            firstValue(params.region) ?? firstValue(params.city) ?? "all"
-          }
           initialGrade={firstValue(params.grade) ?? "all"}
         />
       </SchoolsPageHero>

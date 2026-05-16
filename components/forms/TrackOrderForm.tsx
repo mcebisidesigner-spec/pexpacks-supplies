@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { splitContactInput } from "@/lib/forms/contact";
 import page from "@/styles/Page.module.css";
 
 type ApiResponse = {
@@ -28,11 +29,13 @@ export function TrackOrderForm() {
       typeof fd.get("contact") === "string"
         ? (fd.get("contact") as string)
         : "";
+    const contactParts = splitContactInput(contact);
 
     const payload = {
       formType: "track-order-interest" as const,
       fullName: orderNumber || "Track order request",
-      phone: contact || "Not provided",
+      ...contactParts,
+      contactDetail: contact,
       message: `Order tracking request.\nOrder Number: ${orderNumber || "Not provided"}\nContact: ${contact || "Not provided"}`,
       packType: "track-order",
       consent: true,
@@ -67,7 +70,6 @@ export function TrackOrderForm() {
     <form
       className={`${page.formCard} ${page.formStack}`}
       onSubmit={handleSubmit}
-      noValidate
     >
       <p className={page.kicker}>Order tracking</p>
       <h2>Tracking form</h2>

@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { splitContactInput } from "@/lib/forms/contact";
 import styles from "@/components/marketing/Marketing.module.css";
 
 type ApiResponse = {
@@ -25,11 +26,14 @@ export function AddSchoolForm() {
     const fd = new FormData(form);
     setPending(true);
     setStatus(null);
+    const contact = val(fd, "contact");
+    const contactParts = splitContactInput(contact);
 
     const payload = {
       formType: "contact" as const,
       fullName: val(fd, "school"), // Use school name as the primary identifier
-      phone: "Add-your-school request",
+      ...contactParts,
+      contactDetail: contact,
       schoolName: val(fd, "school"),
       city: val(fd, "city"),
       province: val(fd, "province"),
@@ -65,7 +69,7 @@ export function AddSchoolForm() {
   }
 
   return (
-    <form className={styles.formGrid} onSubmit={handleSubmit} noValidate>
+    <form className={styles.formGrid} onSubmit={handleSubmit}>
       <label className={styles.field}>
         <span>School name</span>
         <input
@@ -85,6 +89,15 @@ export function AddSchoolForm() {
         />
       </label>
       <label className={styles.field}>
+        <span>Phone or email</span>
+        <input
+          name="contact"
+          type="text"
+          placeholder="078 003 6048 or name@example.com"
+          required
+        />
+      </label>
+      <label className={styles.field}>
         <span>Province</span>
         <input
           name="province"
@@ -95,12 +108,7 @@ export function AddSchoolForm() {
       </label>
       <label className={styles.field}>
         <span>Grade needed</span>
-        <input
-          name="grade"
-          type="text"
-          placeholder="e.g. Grade R"
-          required
-        />
+        <input name="grade" type="text" placeholder="e.g. Grade R" required />
       </label>
       <label className={[styles.field, styles.formWide].join(" ")}>
         <span>Stationery list notes</span>
@@ -121,9 +129,7 @@ export function AddSchoolForm() {
       </div>
       {status ? (
         <p
-          className={
-            status.success ? styles.statusMessage : styles.statusError
-          }
+          className={status.success ? styles.statusMessage : styles.statusError}
           role={status.success ? "status" : "alert"}
           aria-live="polite"
         >

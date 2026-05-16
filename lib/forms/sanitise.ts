@@ -1,6 +1,5 @@
 import type { FormSubmission } from "./schema";
 
-/* ── Strip HTML / scripts from user input ── */
 function clean(value: unknown) {
   if (typeof value !== "string") return value;
   return value
@@ -10,7 +9,6 @@ function clean(value: unknown) {
     .trim();
 }
 
-/* ── Normalise SA phone to +27 format ── */
 export function normalisePhone(value: string) {
   const d = value.replace(/\D/g, "");
   if (d.startsWith("0") && d.length === 10) return `+27${d.slice(1)}`;
@@ -18,18 +16,21 @@ export function normalisePhone(value: string) {
   return value.trim();
 }
 
-/* ── Clean all text fields ── */
 export function sanitise(data: FormSubmission) {
   return {
     ...data,
     fullName: clean(data.fullName) as string,
     email: clean(data.email) as string | undefined,
+    contactDetail: clean(data.contactDetail) as string | undefined,
     message: clean(data.message) as string | undefined,
     schoolName: clean(data.schoolName) as string | undefined,
     schoolId: clean(data.schoolId) as string | undefined,
     grade: clean(data.grade) as string | undefined,
     learnerName: clean(data.learnerName) as string | undefined,
     businessName: clean(data.businessName) as string | undefined,
+    suburb: clean(data.suburb) as string | undefined,
+    city: clean(data.city) as string | undefined,
+    province: clean(data.province) as string | undefined,
     packType: clean(data.packType) as string | undefined,
     selectedItems: clean(data.selectedItems) as string | undefined,
     removedItems: clean(data.removedItems) as string | undefined,
@@ -37,20 +38,27 @@ export function sanitise(data: FormSubmission) {
     orderDraftId: clean(data.orderDraftId) as string | undefined,
     pageUrl: clean(data.pageUrl) as string | undefined,
     userAgent: clean(data.userAgent) as string | undefined,
-    phone: normalisePhone(data.phone),
+    phone: data.phone ? normalisePhone(data.phone) : undefined,
   };
 }
 
-/* ── Basic spam detection (honeypot + link spam) ── */
-export function isSpam(data: FormSubmission) {
+export function isSpam(data: Record<string, unknown>) {
   const hp1 =
     typeof data.companyWebsite === "string" ? data.companyWebsite.trim() : "";
   const hp2 = typeof data.honeypot === "string" ? data.honeypot.trim() : "";
   if (hp1 || hp2) return true;
 
-  const text = [data.message, data.schoolName, data.businessName]
+  const text = [
+    data.message,
+    data.schoolName,
+    data.businessName,
+    data.city,
+    data.province,
+    data.contactDetail,
+  ]
     .filter(Boolean)
     .join(" ");
+
   if (/<\s*script|javascript:/i.test(text)) return true;
   if ((text.match(/https?:\/\/|www\./gi) ?? []).length > 4) return true;
 

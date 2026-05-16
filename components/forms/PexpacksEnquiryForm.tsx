@@ -236,11 +236,22 @@ export function PexpacksEnquiryForm({
                   name="schoolName"
                   placeholder="School name"
                   autoComplete="organization"
+                  required
                 />
+                {errors.schoolName ? (
+                  <span className={styles.fieldError}>{errors.schoolName}</span>
+                ) : null}
               </label>
               <label className={styles.field}>
                 <span>Grade</span>
-                <input name="grade" placeholder="Grade R, Grade 4..." />
+                <input
+                  name="grade"
+                  placeholder="Grade R, Grade 4..."
+                  required
+                />
+                {errors.grade ? (
+                  <span className={styles.fieldError}>{errors.grade}</span>
+                ) : null}
               </label>
             </>
           ) : null}
@@ -253,7 +264,13 @@ export function PexpacksEnquiryForm({
                   name="businessName"
                   placeholder="Business name"
                   autoComplete="organization"
+                  required
                 />
+                {errors.businessName ? (
+                  <span className={styles.fieldError}>
+                    {errors.businessName}
+                  </span>
+                ) : null}
               </label>
               <label className={styles.field}>
                 <span>Order quantity</span>

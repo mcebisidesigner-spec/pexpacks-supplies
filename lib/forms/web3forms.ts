@@ -17,13 +17,16 @@ type SendToWeb3FormsOptions = {
   subject: string;
   /** Human-readable form name for internal tracking */
   formName: string;
-  /** Key-value payload — all values will be stringified */
+  /** Reply-to address for the notification email, when provided */
+  replyTo?: string;
+  /** Key-value payload - all values will be stringified */
   payload: Record<string, unknown>;
 };
 
 export async function sendToWeb3Forms({
   subject,
   formName,
+  replyTo,
   payload,
 }: SendToWeb3FormsOptions): Promise<Web3FormsResult> {
   const accessKey = process.env.WEB3FORMS_ACCESS_KEY;
@@ -45,6 +48,11 @@ export async function sendToWeb3Forms({
     from_name: "Pexpacks Website",
     form_name: formName,
   };
+
+  if (replyTo) {
+    body.email = replyTo;
+    body.replyto = replyTo;
+  }
 
   for (const [key, value] of Object.entries(payload)) {
     if (value === undefined || value === null) continue;

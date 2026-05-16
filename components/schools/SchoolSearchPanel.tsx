@@ -15,41 +15,36 @@ const resultLimit = 12;
 
 type SchoolSearchPanelProps = {
   grades: string[];
-  regions: string[];
   initialQuery?: string;
   initialGrade?: string;
-  initialRegion?: string;
 };
 
-function shouldSearch(query: string, grade: string, region: string) {
-  return query.trim().length >= 2 || grade !== "all" || region !== "all";
+function shouldSearch(query: string, grade: string) {
+  return query.trim().length >= 2 || grade !== "all";
 }
 
 export function SchoolSearchPanel({
   grades,
-  regions,
   initialQuery = "",
   initialGrade = "all",
-  initialRegion = "all",
 }: SchoolSearchPanelProps) {
   const [query, setQuery] = useState(initialQuery);
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [grade, setGrade] = useState(initialGrade);
-  const [region, setRegion] = useState(initialRegion);
   const [results, setResults] = useState<SchoolSearchRecord[]>([]);
   const [total, setTotal] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [panelOpen, setPanelOpen] = useState(
-    shouldSearch(initialQuery, initialGrade, initialRegion)
+    shouldSearch(initialQuery, initialGrade)
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const activeRequest = useRef<AbortController | null>(null);
 
   const queryReady = useMemo(
-    () => shouldSearch(debouncedQuery, grade, region),
-    [debouncedQuery, grade, region]
+    () => shouldSearch(debouncedQuery, grade),
+    [debouncedQuery, grade]
   );
 
   useEffect(() => {
@@ -59,7 +54,7 @@ export function SchoolSearchPanel({
 
   const fetchResults = useCallback(
     async (nextOffset: number, mode: "replace" | "append") => {
-      if (!shouldSearch(debouncedQuery, grade, region)) {
+      if (!shouldSearch(debouncedQuery, grade)) {
         setResults([]);
         setTotal(0);
         setHasMore(false);
@@ -80,10 +75,6 @@ export function SchoolSearchPanel({
 
       if (grade !== "all") {
         params.set("grade", grade);
-      }
-
-      if (region !== "all") {
-        params.set("region", region);
       }
 
       try {
@@ -124,7 +115,7 @@ export function SchoolSearchPanel({
         }
       }
     },
-    [debouncedQuery, grade, region]
+    [debouncedQuery, grade]
   );
 
   useEffect(() => {
@@ -162,11 +153,6 @@ export function SchoolSearchPanel({
     setPanelOpen(true);
   }
 
-  function updateRegion(value: string) {
-    setRegion(value);
-    setPanelOpen(true);
-  }
-
   return (
     <section
       className={styles.searchExperience}
@@ -197,11 +183,6 @@ export function SchoolSearchPanel({
           />
         </label>
         <GradeSelect grades={grades} value={grade} onChange={updateGrade} />
-        <RegionSelect
-          regions={regions}
-          value={region}
-          onChange={updateRegion}
-        />
         <button
           className={styles.schoolSearchButton}
           type="submit"

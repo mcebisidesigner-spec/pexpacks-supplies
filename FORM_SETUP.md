@@ -1,153 +1,103 @@
-# PexPacks Form Handler — Web3Forms Setup
+# PexPacks Form Handler - Web3Forms Setup
 
 ## Overview
 
-PexPacks uses **Web3Forms** as the official form handler for all website form submissions. All submissions are routed through a secure server-side Next.js API endpoint that injects the access key before forwarding to Web3Forms.
+PexPacks submits website enquiries through a single Next.js API route:
 
-## Architecture
-
-```
-Browser Form → POST /api/forms/submit → Server validates & sanitises → Web3Forms API
+```text
+Browser form -> POST /api/forms/submit -> server validation/sanitising -> Web3Forms API
 ```
 
-- The Web3Forms access key is **never** exposed to the browser.
-- All validation happens server-side using Zod schemas.
-- Spam detection uses honeypot fields and link-count heuristics.
+The Web3Forms access key is injected only on the server. Do not expose it in JSX, hidden inputs, client components, or any `NEXT_PUBLIC_` variable.
+
+## Important Web3Forms Plan Note
+
+This project uses server-side Web3Forms forwarding from `lib/forms/web3forms.ts`. Web3Forms currently documents server-side API usage as requiring a paid plan plus server IP whitelisting. Confirm that the production deployment is allowed/whitelisted in Web3Forms before relying on live submissions.
+
+If that is not available, the alternative is a direct browser-side Web3Forms integration, but that intentionally exposes the Web3Forms access key to the browser and should be treated as a different security tradeoff.
 
 ## Environment Variables
 
-| Variable | Where | Purpose |
-|----------|-------|---------|
-| `WEB3FORMS_ACCESS_KEY` | `.env.local` / deployment env | Web3Forms access key |
-| `NEXT_PUBLIC_SITE_URL` | `.env.local` / deployment env | Public site URL |
-
-### Security Rules
-
-- **DO NOT** use `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY`
-- **DO NOT** expose the key in JSX, hidden inputs, or client components
-- **DO NOT** commit `.env.local`
-- The key is injected server-side only in `lib/forms/web3forms.ts`
+| Variable               | Where                         | Purpose                                        |
+| ---------------------- | ----------------------------- | ---------------------------------------------- |
+| `WEB3FORMS_ACCESS_KEY` | `.env.local` / deployment env | Web3Forms access key used by the server route  |
+| `NEXT_PUBLIC_SITE_URL` | `.env.local` / deployment env | Public site URL used for origin checks         |
+| `SITE_URL`             | deployment env, optional      | Non-public fallback site URL for origin checks |
 
 ## Local Development Setup
 
-1. Copy `.env.example` to `.env.local`:
-   ```
-   cp .env.example .env.local
-   ```
-2. Add your Web3Forms access key to `.env.local`:
-   ```
-   WEB3FORMS_ACCESS_KEY=your-actual-key-here
-   ```
-3. Get your key at [https://web3forms.com](https://web3forms.com)
-4. Run the dev server: `npm run dev`
+1. Copy `.env.example` to `.env.local`.
+2. Add the real Web3Forms key:
 
-## Production Deployment
+```text
+WEB3FORMS_ACCESS_KEY=your-actual-key-here
+```
 
-Add `WEB3FORMS_ACCESS_KEY` as an environment variable in your deployment provider (Vercel, Netlify, etc).
+3. Run `npm run dev`.
 
 ## API Endpoint
 
-**`POST /api/forms/submit`**
+`POST /api/forms/submit`
 
-All forms submit JSON to this single endpoint. The `formType` field determines the type of enquiry.
+All public forms submit JSON to this endpoint. The route:
 
-### Supported Form Types
+- verifies same-origin requests when an `Origin` header is present
+- rate-limits repeated submissions by client address
+- silently accepts honeypot spam without forwarding it
+- validates and sanitises data with Zod
+- recalculates supported order totals server-side
+- forwards the cleaned payload to Web3Forms
+- sets lowercase `email` / `replyto` for Web3Forms reply-to support when an email is available
 
-| formType | Used By |
-|----------|---------|
-| `contact` | Contact page, Add Your School |
-| `school-partnership` | Partner With Schools page |
-| `school-pack-enquiry` | Contact form (parent order) |
-| `office-pack-enquiry` | Contact form (office pack) |
-| `bulk-order` | Contact form (bulk order) |
-| `custom-pack-enquiry` | Custom pack drawer |
-| `full-pack-enquiry` | Full pack order |
-| `track-order-interest` | Track Order page |
+## Supported Form Types
 
-### Request Format
+| formType               | Used By                                         |
+| ---------------------- | ----------------------------------------------- |
+| `contact`              | Contact page and Add Your School flows          |
+| `school-partnership`   | Partner With Schools page                       |
+| `school-pack-enquiry`  | Parent order/contact and standard pack checkout |
+| `office-pack-enquiry`  | Office pack contact form                        |
+| `bulk-order`           | Bulk order contact form                         |
+| `custom-pack-enquiry`  | Custom school pack checkout                     |
+| `full-pack-enquiry`    | Full school pack checkout                       |
+| `track-order-interest` | Track Order page                                |
 
-```json
-{
-  "formType": "contact",
-  "fullName": "Jane Doe",
-  "phone": "0780036048",
-  "email": "jane@example.com",
-  "message": "I need help with...",
-  "consent": true
-}
-```
+## Required Fields
 
-### Success Response (200)
+All submissions need consent, a valid `formType`, a `fullName`, a message, and at least one valid contact method (`phone`, `email`, or `contactDetail`). Phone numbers must be valid South African numbers when provided.
 
-```json
-{
-  "success": true,
-  "message": "Thank you. Your enquiry has been received."
-}
-```
+Additional form-specific checks:
 
-### Validation Error (400)
+- `packType: "add-school"` requires `schoolName`, `city`, and `grade`.
+- `school-partnership` requires either `businessName` or `schoolName`.
+- `office-pack-enquiry` and `bulk-order` require `businessName`.
+- `full-pack-enquiry` and `custom-pack-enquiry` require school and grade information.
 
-```json
-{
-  "success": false,
-  "message": "Please check the highlighted fields and try again.",
-  "errors": {
-    "phone": "Please enter a valid South African phone number."
-  }
-}
-```
+## File Uploads
 
-### Server Error (500)
-
-```json
-{
-  "success": false,
-  "message": "We could not submit your enquiry right now."
-}
-```
+File uploads are not implemented in the current server route. Web3Forms attachments are a Pro feature and require a multipart form submission flow. Do not add visible upload controls unless the API route and Web3Forms plan are updated to support attachments end to end.
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `lib/forms/web3forms.ts` | Forwards to Web3Forms API (server-only) |
-| `lib/forms/schema.ts` | Zod validation schemas |
-| `lib/forms/sanitise.ts` | Input sanitisation & spam detection |
-| `app/api/forms/submit/route.ts` | API Route Handler |
-| `components/forms/PexpacksEnquiryForm.tsx` | Contact & Partner form UI |
-| `components/forms/ContactForm.tsx` | Contact form wrapper |
-| `components/forms/PartnerForm.tsx` | Partner form wrapper |
-| `components/forms/AddSchoolForm.tsx` | Add Your School form |
-| `components/forms/TrackOrderForm.tsx` | Track Order form |
-| `components/order/OrderForm.tsx` | Order checkout form |
-| `components/sections/AddMySchoolBanner.tsx` | School request banner |
-
-## Adding a New Form
-
-1. Create the client component in `components/forms/`
-2. Use `fetch("/api/forms/submit", ...)` with JSON body
-3. Include `formType` matching a value in `lib/forms/schema.ts`
-4. Add the new formType to `formTypes` in `lib/forms/schema.ts` if needed
-5. Add loading, success, and error states
-6. Include a honeypot field (`companyWebsite`) if the form has public input
+| File                                        | Purpose                                          |
+| ------------------------------------------- | ------------------------------------------------ |
+| `app/api/forms/submit/route.ts`             | Next.js API route handler                        |
+| `lib/forms/schema.ts`                       | Zod validation and form-specific requirements    |
+| `lib/forms/sanitise.ts`                     | Input sanitising and spam checks                 |
+| `lib/forms/contact.ts`                      | Shared phone/email helpers for client and server |
+| `lib/forms/web3forms.ts`                    | Server-side Web3Forms forwarding                 |
+| `components/forms/PexpacksEnquiryForm.tsx`  | Contact and partnership form UI                  |
+| `components/forms/AddSchoolForm.tsx`        | Add Your School form                             |
+| `components/forms/TrackOrderForm.tsx`       | Track Order form                                 |
+| `components/order/OrderForm.tsx`            | Order checkout form                              |
+| `components/sections/AddMySchoolBanner.tsx` | Homepage school request banner                   |
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| "Form handler is not configured" | `WEB3FORMS_ACCESS_KEY` is missing from env |
-| Validation errors | Check `lib/forms/schema.ts` for field requirements |
-| Spam silently accepted | Honeypot triggered — this is expected behaviour |
-| 405 Method Not Allowed | Only POST is accepted |
-
-## Previous Handler (Removed)
-
-The previous form handler used **Nodemailer with Gmail SMTP**. It has been fully removed:
-- `lib/forms/sendEmail.ts` — deleted
-- `nodemailer` and `@types/nodemailer` — uninstalled
-- `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `PEXPACKS_NOTIFICATION_EMAIL` — removed from `.env.example`
-
-## Web3Forms Server-Side Note
-
-Web3Forms free plan supports server-side submissions. No IP whitelisting or paid plan is required for the standard API endpoint. The access key is the only authentication needed.
+| Issue                            | Check                                                                 |
+| -------------------------------- | --------------------------------------------------------------------- |
+| `Form handler is not configured` | `WEB3FORMS_ACCESS_KEY` is missing from env                            |
+| Web3Forms rejects submissions    | Confirm server-side usage is enabled and deployment IP is whitelisted |
+| Validation errors                | Check `lib/forms/schema.ts` and the client payload                    |
+| Spam silently succeeds           | Honeypot triggered; this is expected                                  |
+| 405 Method Not Allowed           | Only POST is accepted                                                 |

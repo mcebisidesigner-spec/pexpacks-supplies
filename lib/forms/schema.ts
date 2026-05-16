@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {
+  isValidEmailAddress,
+  isValidSouthAfricanPhone,
+} from "@/lib/forms/contact";
 
 export const formTypes = [
   "school-pack-enquiry",
@@ -20,19 +24,26 @@ const optionalText = (max: number) =>
     z.string().trim().max(max).optional()
   );
 
-function isValidSouthAfricanPhone(value: string) {
-  const digits = value.replace(/\D/g, "");
-  return (
-    (digits.startsWith("0") && digits.length === 10) ||
-    (digits.startsWith("27") && digits.length === 11) ||
-    (digits.startsWith("0027") && digits.length === 13)
-  );
-}
-
 const consentSchema = z.preprocess(
   (value) =>
     value === true || value === "true" || value === "on" || value === "1",
   z.boolean().refine((value) => value === true, "Consent is required.")
+);
+
+const emailSchema = optionalText(160).refine(
+  (value) => !value || isValidEmailAddress(value),
+  "Please enter a valid email address."
+);
+
+const phoneSchema = optionalText(40).refine(
+  (value) => !value || isValidSouthAfricanPhone(value),
+  "Please enter a valid South African phone number."
+);
+
+const contactDetailSchema = optionalText(160).refine(
+  (value) =>
+    !value || isValidEmailAddress(value) || isValidSouthAfricanPhone(value),
+  "Please enter a valid phone number or email address."
 );
 
 const quantitySchema = z.preprocess((value) => {
@@ -47,25 +58,17 @@ const quantitySchema = z.preprocess((value) => {
   return value;
 }, z.number().positive("Order quantity must be a positive number.").optional());
 
-export const formSubmissionSchema = z.object({
+const baseFormSubmissionSchema = z.object({
   formType: z.enum(formTypes, "Please choose a valid enquiry type."),
   fullName: z
     .string()
     .trim()
     .min(2, "Full name must be at least 2 characters.")
     .max(120, "Full name is too long."),
-  phone: z
-    .string()
-    .trim()
-    .refine(
-      isValidSouthAfricanPhone,
-      "Please enter a valid South African phone number."
-    ),
+  phone: phoneSchema,
+  contactDetail: contactDetailSchema,
   consent: consentSchema,
-  email: optionalText(160).refine(
-    (value) => !value || z.string().email().safeParse(value).success,
-    "Please enter a valid email address."
-  ),
+  email: emailSchema,
   schoolName: optionalText(160),
   schoolId: optionalText(120),
   grade: optionalText(40),
@@ -89,6 +92,74 @@ export const formSubmissionSchema = z.object({
   userAgent: optionalText(500),
   submittedAt: optionalText(80),
 });
+
+export const formSubmissionSchema = baseFormSubmissionSchema.superRefine(
+  (data, ctx) => {
+    const issue = (path: string, message: string) => {
+      ctx.addIssue({ code: "custom", path: [path], message });
+    };
+    const isAddSchoolRequest = data.packType === "add-school";
+    const hasReachableContact = Boolean(
+      data.phone || data.email || data.contactDetail
+    );
+
+    if (!hasReachableContact) {
+      issue(
+        isAddSchoolRequest || data.formType === "track-order-interest"
+          ? "contactDetail"
+          : "phone",
+        "Please provide a phone number or email address."
+      );
+    }
+
+    if (!data.message) {
+      issue("message", "Please tell us what you need.");
+    }
+
+    if (isAddSchoolRequest) {
+      if (!data.schoolName) {
+        issue("schoolName", "School name is required.");
+      }
+      if (!data.city) {
+        issue("city", "City or area is required.");
+      }
+      if (!data.grade) {
+        issue("grade", "Grade is required.");
+      }
+    }
+
+    if (
+      data.formType === "school-partnership" &&
+      !data.businessName &&
+      !data.schoolName
+    ) {
+      issue("businessName", "Organisation or school name is required.");
+    }
+
+    if (
+      (data.formType === "office-pack-enquiry" ||
+        data.formType === "bulk-order") &&
+      !data.businessName
+    ) {
+      issue("businessName", "Business name is required.");
+    }
+
+    if (
+      data.formType === "school-pack-enquiry" &&
+      (!data.schoolName || !data.grade)
+    ) {
+      issue("schoolName", "School and grade are required.");
+    }
+
+    if (
+      (data.formType === "full-pack-enquiry" ||
+        data.formType === "custom-pack-enquiry") &&
+      (!data.schoolName || !data.grade)
+    ) {
+      issue("schoolName", "School and grade are required.");
+    }
+  }
+);
 
 export type ValidatedFormSubmission = z.infer<typeof formSubmissionSchema>;
 export type FormSubmission = ValidatedFormSubmission;

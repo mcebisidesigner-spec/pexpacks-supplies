@@ -6,6 +6,7 @@ import {
 } from "@/lib/forms/schema";
 import { sanitise, isSpam } from "@/lib/forms/sanitise";
 import { sendToWeb3Forms } from "@/lib/forms/web3forms";
+import { isValidEmailAddress } from "@/lib/forms/contact";
 import { normaliseSubmittedTotal } from "@/lib/order/orderTotals";
 import {
   isSameOriginRequest,
@@ -29,7 +30,6 @@ async function readJson(req: NextRequest) {
   }
 }
 
-/* ── POST /api/forms/submit ── */
 export async function POST(req: NextRequest) {
   if (!isSameOriginRequest(req)) {
     return json({ success: false, message: "Invalid request origin." }, 403);
@@ -61,12 +61,10 @@ export async function POST(req: NextRequest) {
     return json({ success: false, message: "Invalid form data." }, 400);
   }
 
-  /* Honeypot — silently accept so bots think it worked */
-  if (isSpam(body as never)) {
+  if (isSpam(body)) {
     return json({ success: true, message: OK_MSG }, 200);
   }
 
-  /* Validate */
   const parsed = formSubmissionSchema.safeParse({
     ...body,
     pageUrl: body.pageUrl || req.headers.get("referer") || undefined,
@@ -91,19 +89,33 @@ export async function POST(req: NextRequest) {
     typeof total.estimatedTotal === "number"
       ? total.estimatedTotal
       : clean.estimatedTotal;
+  const contactEmail =
+    clean.email ||
+    (clean.contactDetail && isValidEmailAddress(clean.contactDetail)
+      ? clean.contactDetail
+      : undefined);
+  const contactPhone =
+    clean.phone ||
+    (clean.contactDetail && !isValidEmailAddress(clean.contactDetail)
+      ? clean.contactDetail
+      : undefined);
 
   const result = await sendToWeb3Forms({
     subject: `[Pexpacks] New ${formTypeLabel(clean.formType)} from ${clean.fullName}`,
     formName: formTypeLabel(clean.formType),
+    replyTo: contactEmail,
     payload: {
       "Form Type": formTypeLabel(clean.formType),
       "Full Name": clean.fullName,
-      Phone: clean.phone,
-      Email: clean.email || "-",
+      Phone: contactPhone || "-",
+      Email: contactEmail || "-",
+      "Contact Detail": clean.contactDetail || "-",
       "Preferred Contact": clean.preferredContactMethod || "-",
       "School ID": clean.schoolId || "-",
       "School Name": clean.schoolName || "-",
       Grade: clean.grade || "-",
+      City: clean.city || "-",
+      Province: clean.province || "-",
       "Learner Name": clean.learnerName || "-",
       "Business Name": clean.businessName || "-",
       "Order Quantity": clean.orderQuantity ?? "-",
@@ -135,16 +147,18 @@ export async function POST(req: NextRequest) {
   return json({ success: true, message: OK_MSG }, 200);
 }
 
-/* Block other methods */
 export function GET() {
   return json({ success: false, message: "Method not allowed." }, 405);
 }
+
 export function PUT() {
   return json({ success: false, message: "Method not allowed." }, 405);
 }
+
 export function DELETE() {
   return json({ success: false, message: "Method not allowed." }, 405);
 }
+
 export function PATCH() {
   return json({ success: false, message: "Method not allowed." }, 405);
 }

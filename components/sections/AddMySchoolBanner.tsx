@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { splitContactInput } from "@/lib/forms/contact";
 import styles from "./AddMySchoolBanner.module.css";
 
 type ApiResponse = {
@@ -25,20 +26,31 @@ export function AddMySchoolBanner() {
       typeof fd.get("parentName") === "string"
         ? (fd.get("parentName") as string)
         : "";
-    const schoolAndCity =
-      typeof fd.get("schoolAndCity") === "string"
-        ? (fd.get("schoolAndCity") as string)
+    const schoolName =
+      typeof fd.get("schoolName") === "string"
+        ? (fd.get("schoolName") as string)
         : "";
+    const city =
+      typeof fd.get("city") === "string" ? (fd.get("city") as string) : "";
     const grade =
       typeof fd.get("grade") === "string" ? (fd.get("grade") as string) : "";
+    const contact =
+      typeof fd.get("contact") === "string"
+        ? (fd.get("contact") as string)
+        : "";
+    const notes =
+      typeof fd.get("notes") === "string" ? (fd.get("notes") as string) : "";
+    const contactParts = splitContactInput(contact);
 
     const payload = {
       formType: "contact" as const,
-      fullName: parentName || "School list upload",
-      phone: "Via Add-My-School banner",
-      schoolName: schoolAndCity,
+      fullName: parentName || "School details request",
+      ...contactParts,
+      contactDetail: contact,
+      schoolName,
+      city,
       grade,
-      message: `School list upload request.\nParent: ${parentName}\nSchool & City: ${schoolAndCity}\nGrade: ${grade}`,
+      message: `School details request.\nParent: ${parentName}\nContact: ${contact}\nSchool: ${schoolName}\nCity: ${city}\nGrade: ${grade}\nNotes: ${notes || "None"}`,
       packType: "add-school",
       consent: true,
       pageUrl: window.location.href,
@@ -132,55 +144,63 @@ export function AddMySchoolBanner() {
                 variant="outline"
                 onClick={() => setShowRequestForm(true)}
               >
-                Upload Your School List
+                Send Your School Details
               </Button>
             </div>
           </div>
         ) : (
-          <form
-            className={styles.searchForm}
-            onSubmit={handleSubmit}
-          >
+          <form className={styles.searchForm} onSubmit={handleSubmit}>
             <label>
               Parent / Guardian Name
-              <input name="parentName" type="text" required placeholder="e.g. Jane Doe" />
+              <input
+                name="parentName"
+                type="text"
+                required
+                placeholder="e.g. Jane Doe"
+              />
             </label>
             <label>
-              School Name &amp; City
+              Phone or email
               <input
-                name="schoolAndCity"
+                name="contact"
                 type="text"
-                placeholder="e.g. Parktown Primary, Johannesburg"
+                required
+                placeholder="078 003 6048 or name@example.com"
+              />
+            </label>
+            <label>
+              School Name
+              <input
+                name="schoolName"
+                type="text"
+                placeholder="e.g. Parktown Primary"
+                required
+              />
+            </label>
+            <label>
+              City or area
+              <input
+                name="city"
+                type="text"
+                placeholder="e.g. Johannesburg"
                 required
               />
             </label>
             <label>
               Grade Needed
-              <input name="grade" type="text" placeholder="e.g. Grade R" required />
+              <input
+                name="grade"
+                type="text"
+                placeholder="e.g. Grade R"
+                required
+              />
             </label>
             <label>
-              Upload Stationery List (PDF or Photo)
-              <label className={styles.fileUpload}>
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
-                <span>
-                  <strong>Click to browse</strong> or drag your PDF/image here
-                </span>
-                {/* TODO: implement actual file upload to cloud storage */}
-                <input type="file" accept=".pdf,image/*" />
-              </label>
+              Stationery list notes
+              <textarea
+                name="notes"
+                placeholder="Paste key list items or special requirements."
+              />
             </label>
             <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>
               <Button

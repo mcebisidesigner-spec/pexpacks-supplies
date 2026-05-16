@@ -25,36 +25,32 @@ npm run build
 npm start
 ```
 
-## Phase 1 Form Backend
+## Form Backend
 
 The site submits contact, partnership and order enquiries to `POST /api/forms/submit`.
 
-The current handler uses Nodemailer with Gmail SMTP. It validates and sanitises submissions, requires consent, blocks honeypot spam, and emails the Pexpacks notification inbox.
+The current handler validates and sanitises submissions, requires consent, blocks honeypot spam, rate-limits repeated requests, and forwards clean payloads to Web3Forms from the server.
 
 Required production environment variables:
 
 ```text
-GMAIL_USER=pexpacks@gmail.com
-GMAIL_APP_PASSWORD=
-PEXPACKS_NOTIFICATION_EMAIL=pexpacks@gmail.com
-
+WEB3FORMS_ACCESS_KEY=
 NEXT_PUBLIC_SITE_URL=https://pexpacks.co.za
+SITE_URL=https://pexpacks.co.za
 NODE_ENV=production
 ```
 
-Gmail SMTP setup:
+Web3Forms setup:
 
-1. Enable 2-Step Verification on the Gmail account.
-2. Create a Gmail app password.
-3. Set `GMAIL_USER` to the Gmail address.
-4. Set `GMAIL_APP_PASSWORD` to the app password.
-5. Set `PEXPACKS_NOTIFICATION_EMAIL` to the inbox that should receive enquiries.
+1. Add the real `WEB3FORMS_ACCESS_KEY` to `.env.local` and production env.
+2. Confirm the Web3Forms plan supports server-side API submissions from the deployment.
+3. If required by Web3Forms, whitelist the production server/deployment IP.
 
 Spam protection:
 
 - A hidden `companyWebsite` honeypot blocks common bot submissions.
 - Consent is required before a form can submit.
-- Do not add Gmail passwords or app passwords with `NEXT_PUBLIC_`; those are exposed to the browser.
+- Do not add the Web3Forms access key with `NEXT_PUBLIC_`; those variables are exposed to the browser.
 
 ## Project Structure
 

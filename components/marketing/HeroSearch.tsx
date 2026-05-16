@@ -1,16 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  FormEvent,
-  ReactNode,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
-import { normaliseSchoolQuery } from "@/lib/schools/normaliseSchoolQuery";
+import type { FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { SchoolSearchRecord } from "@/lib/schools/types";
 import styles from "./HeroSearch.module.css";
 
 const gradeOptions = [
@@ -29,100 +22,66 @@ const gradeOptions = [
   "Grade 12",
 ];
 
-type SchoolSearchResult = {
-  id: string;
-  name: string;
-  slug: string;
-  city: string;
-  province: string;
-};
+const resultLimit = 8;
 
-type SchoolDetails = SchoolSearchResult & {
-  grades: {
-    id: string;
-    grade: string;
-    gradeSlug: string;
-  }[];
-};
-
-async function fetchSchoolSearch(query: string, limit = 8) {
-  const params = new URLSearchParams({
-    q: query.trim(),
-    limit: String(limit),
-  });
-
-  const response = await fetch(`/api/schools/search?${params.toString()}`);
-
-  if (!response.ok) {
-    throw new Error("school_search_failed");
-  }
-
-  return (await response.json()) as {
-    success: true;
-    results: SchoolSearchResult[];
-    total: number;
-  };
-}
-
-async function fetchSchoolDetails(slug: string) {
-  const response = await fetch(`/api/schools/${encodeURIComponent(slug)}`);
-
-  if (!response.ok) {
-    throw new Error("school_details_failed");
-  }
-
-  return (await response.json()) as {
-    success: true;
-    school: SchoolDetails;
-  };
-}
-
-function findGradeBySearchValue(school: SchoolDetails, gradeValue: string) {
-  const normalizedGrade = gradeValue.trim().toLowerCase();
-  return school.grades.find(
-    (grade) =>
-      grade.grade.toLowerCase() === normalizedGrade ||
-      grade.gradeSlug.toLowerCase() === normalizedGrade
-  );
+function shouldSearch(query: string, grade: string) {
+  return query.trim().length >= 2 || grade !== "";
 }
 
 export function HeroSearch() {
-  const router = useRouter();
-  const errorId = useId();
-  const resultsId = useId();
-  const modalTitleId = useId();
-  const modalDescriptionId = useId();
-  const [schoolName, setSchoolName] = useState("");
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [grade, setGrade] = useState("");
-  const [error, setError] = useState<ReactNode>("");
-  const modalRef = useRef<HTMLDivElement>(null);
-  const [showMissingSchoolDialog, setShowMissingSchoolDialog] = useState(false);
-  const [resultsOpen, setResultsOpen] = useState(false);
-  const [schoolTouched, setSchoolTouched] = useState(false);
-  const [schoolLoading, setSchoolLoading] = useState(false);
-  const [schoolResults, setSchoolResults] = useState<SchoolSearchResult[]>([]);
-  const [selectedSchool, setSelectedSchool] =
-    useState<SchoolSearchResult | null>(null);
+  const [results, setResults] = useState<SchoolSearchRecord[]>([]);
+  const [total, setTotal] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const activeRequest = useRef<AbortController | null>(null);
 
+  const queryReady = useMemo(
+    () => shouldSearch(debouncedQuery, grade),
+    [debouncedQuery, grade]
+  );
+
+  /* ── Debounce the text query ── */
   useEffect(() => {
-    if (!schoolTouched) {
-      return;
-    }
+    const timer = window.setTimeout(() => setDebouncedQuery(query), 275);
+    return () => window.clearTimeout(timer);
+  }, [query]);
 
-    const controller = new AbortController();
-    const timeout = window.setTimeout(async () => {
-      setSchoolLoading(true);
+  /* ── Fetch from the same /api/schools/search endpoint ── */
+  const fetchResults = useCallback(
+    async (nextOffset: number, mode: "replace" | "append") => {
+      if (!shouldSearch(debouncedQuery, grade)) {
+        setResults([]);
+        setTotal(0);
+        setHasMore(false);
+        return;
+      }
+
+      activeRequest.current?.abort();
+      const controller = new AbortController();
+      activeRequest.current = controller;
+      setIsLoading(true);
+      setError("");
+
+      const params = new URLSearchParams({
+        q: debouncedQuery.trim(),
+        limit: String(resultLimit),
+        offset: String(nextOffset),
+      });
+
+      if (grade) {
+        params.set("grade", grade);
+      }
 
       try {
-        const params = new URLSearchParams({
-          q: schoolName.trim(),
-          limit: "8",
-        });
         const response = await fetch(
           `/api/schools/search?${params.toString()}`,
-          {
-            signal: controller.signal,
-          }
+          { signal: controller.signal }
         );
 
         if (!response.ok) {
@@ -130,317 +89,208 @@ export function HeroSearch() {
         }
 
         const data = (await response.json()) as {
-          success: true;
-          results: SchoolSearchResult[];
+          success: boolean;
+          results: SchoolSearchRecord[];
+          total: number;
+          hasMore: boolean;
         };
-        setSchoolResults(data.results);
-      } catch {
-        if (!controller.signal.aborted) {
-          setSchoolResults([]);
+        setResults((current) =>
+          mode === "append" ? [...current, ...data.results] : data.results
+        );
+        setTotal(data.total);
+        setHasMore(data.hasMore);
+        setHasSearched(true);
+      } catch (fetchError) {
+        if (
+          fetchError instanceof DOMException &&
+          fetchError.name === "AbortError"
+        ) {
+          return;
         }
+        setError(
+          "We couldn't search schools right now. Please try again."
+        );
       } finally {
-        if (!controller.signal.aborted) {
-          setSchoolLoading(false);
+        if (activeRequest.current === controller) {
+          setIsLoading(false);
         }
       }
-    }, 250);
+    },
+    [debouncedQuery, grade]
+  );
 
-    return () => {
-      controller.abort();
-      window.clearTimeout(timeout);
-    };
-  }, [schoolName, schoolTouched]);
-
+  /* ── Auto-search on debounced query or grade change ── */
   useEffect(() => {
-    if (!showMissingSchoolDialog || !modalRef.current) return;
+    if (!panelOpen) return;
 
-    const modal = modalRef.current;
-    const focusableElements = modal.querySelectorAll<HTMLElement>(
-      'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
-    );
-
-    if (focusableElements.length === 0) return;
-
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-
-    const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          lastElement.focus();
-          e.preventDefault();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          firstElement.focus();
-          e.preventDefault();
-        }
-      }
-    };
-
-    firstElement.focus();
-    modal.addEventListener("keydown", handleTabKey);
-    return () => modal.removeEventListener("keydown", handleTabKey);
-  }, [showMissingSchoolDialog]);
-
-  async function resolveSchoolForSubmit(trimmedSchoolName: string) {
-    if (
-      selectedSchool &&
-      normaliseSchoolQuery(selectedSchool.name) ===
-        normaliseSchoolQuery(trimmedSchoolName)
-    ) {
-      return { school: selectedSchool, ambiguous: false };
+    if (!queryReady) {
+      setResults([]);
+      setTotal(0);
+      setHasMore(false);
+      setHasSearched(false);
+      return;
     }
 
-    const data = await fetchSchoolSearch(trimmedSchoolName, 8);
-    const normalizedQuery = normaliseSchoolQuery(trimmedSchoolName);
-    const exactMatches = data.results.filter(
-      (school) => normaliseSchoolQuery(school.name) === normalizedQuery
-    );
+    void fetchResults(0, "replace");
+  }, [fetchResults, panelOpen, queryReady]);
 
-    if (exactMatches.length === 1) {
-      return { school: exactMatches[0], ambiguous: false };
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setPanelOpen(true);
+
+    if (queryReady) {
+      void fetchResults(0, "replace");
     }
-
-    if (data.results.length === 1 && data.total === 1) {
-      return { school: data.results[0], ambiguous: false };
-    }
-
-    return {
-      school: null,
-      ambiguous: data.total > 1 || data.results.length > 1,
-    };
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function updateQuery(value: string) {
+    setQuery(value);
+    setPanelOpen(true);
+  }
 
-    const trimmedSchoolName = schoolName.trim();
-    const selectedGrade = grade.trim();
-
-    setShowMissingSchoolDialog(false);
-
-    if (!trimmedSchoolName && !selectedGrade) {
-      setError(
-        "Please enter your school name and select a grade before finding your pack."
-      );
-      return;
-    }
-
-    if (!trimmedSchoolName) {
-      setError("Please enter your school name before finding your pack.");
-      return;
-    }
-
-    if (!selectedGrade) {
-      setError("Please select a grade before finding your pack.");
-      return;
-    }
-
-    setSchoolLoading(true);
-
-    try {
-      const { school, ambiguous } =
-        await resolveSchoolForSubmit(trimmedSchoolName);
-
-      if (ambiguous) {
-        setError(
-          "Please enter the full school name so we can find the correct pack."
-        );
-        return;
-      }
-
-      if (!school) {
-        setError("");
-        setShowMissingSchoolDialog(true);
-        return;
-      }
-
-      const details = await fetchSchoolDetails(school.slug);
-      const gradePack = findGradeBySearchValue(details.school, selectedGrade);
-
-      if (!gradePack) {
-        setError(
-          <>
-            We do not have a {selectedGrade} pack listed for{" "}
-            {details.school.name} yet.{" "}
-            <Link
-              href="/standard-school-packs"
-              className={styles.inlineTextLink}
-            >
-              Explore our standard packs
-            </Link>{" "}
-            or{" "}
-            <Link href="/contact" className={styles.inlineTextLink}>
-              contact us
-            </Link>
-            .
-          </>
-        );
-        return;
-      }
-
-      setError("");
-      router.push(`/schools/${details.school.slug}/${gradePack.gradeSlug}`);
-    } catch {
-      setError("We could not search schools right now. Please try again.");
-    } finally {
-      setSchoolLoading(false);
-    }
+  function updateGrade(value: string) {
+    setGrade(value);
+    setPanelOpen(true);
   }
 
   return (
-    <form
-      className={styles.heroSearch}
-      onSubmit={handleSubmit}
-      role="search"
-      noValidate
-    >
-      <label className={[styles.field, styles.schoolSearchField].join(" ")}>
-        <span>Find your school</span>
-        <input
-          name="q"
-          type="search"
-          placeholder="e.g. Parktown Primary"
-          autoComplete="organization"
-          value={schoolName}
-          onFocus={() => {
-            setSchoolTouched(true);
-            setResultsOpen(true);
-          }}
-          onChange={(event) => {
-            setSchoolName(event.target.value);
-            setSelectedSchool(null);
-            setSchoolTouched(true);
-            setResultsOpen(true);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === "Escape") {
-              setResultsOpen(false);
-            }
-          }}
-          role="combobox"
-          aria-autocomplete="list"
-          aria-expanded={resultsOpen}
-          aria-controls={resultsId}
-          aria-describedby={error ? errorId : undefined}
-        />
-        {resultsOpen ? (
-          <div
-            className={styles.heroSearchResults}
-            id={resultsId}
-            role="listbox"
-          >
-            {schoolLoading ? (
-              <p className={styles.heroSearchState}>Searching schools...</p>
-            ) : null}
-            {!schoolLoading && schoolResults.length
-              ? schoolResults.map((school) => (
-                  <button
-                    type="button"
-                    role="option"
-                    aria-selected={selectedSchool?.slug === school.slug}
-                    className={styles.heroSearchResult}
-                    key={school.id}
-                    onClick={() => {
-                      setSelectedSchool(school);
-                      setSchoolName(school.name);
-                      setResultsOpen(false);
-                      setError("");
-                    }}
-                  >
-                    <strong>{school.name}</strong>
-                    <span>
-                      {school.city}, {school.province}
-                    </span>
-                  </button>
-                ))
-              : null}
-            {!schoolLoading && !schoolResults.length ? (
-              <div className={styles.noResultsState}>
-                <p className={styles.heroSearchState}>
-                  No matching schools found.
-                </p>
-                <Link
-                  href="/add-your-school#school-request-form"
-                  className={styles.addSchoolLink}
-                >
-                  Add your school
-                </Link>
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-      </label>
-      <label className={styles.field}>
-        <span>Select grade</span>
-        <select
-          name="grade"
-          value={grade}
-          onChange={(event) => setGrade(event.target.value)}
-          aria-describedby={error ? errorId : undefined}
-        >
-          <option value="" disabled>
-            Choose grade
-          </option>
-          {gradeOptions.map((gradeOption) => (
-            <option value={gradeOption} key={gradeOption}>
-              {gradeOption}
-            </option>
-          ))}
-        </select>
-      </label>
-      <button
-        className={styles.searchButton}
-        type="submit"
-        disabled={schoolLoading}
+    <div className={styles.heroSearchWrapper}>
+      <form
+        className={styles.heroSearch}
+        onSubmit={handleSubmit}
+        role="search"
+        noValidate
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            setPanelOpen(false);
+          }
+        }}
       >
-        {schoolLoading ? "Searching..." : "Find My Pack"}
-      </button>
-      {error ? (
-        <p className={styles.searchError} id={errorId} role="alert">
-          {error}
-        </p>
-      ) : null}
-      {showMissingSchoolDialog ? (
-        <div className={styles.modalOverlay} role="presentation">
-          <div
-            ref={modalRef}
-            className={styles.modalCard}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={modalTitleId}
-            aria-describedby={modalDescriptionId}
+        <label className={styles.field}>
+          <span>Find your school</span>
+          <input
+            name="q"
+            type="search"
+            placeholder="e.g. Parktown Primary"
+            autoComplete="off"
+            value={query}
+            onChange={(event) => updateQuery(event.target.value)}
+          />
+        </label>
+        <label className={styles.field}>
+          <span>Select grade</span>
+          <select
+            name="grade"
+            value={grade}
+            onChange={(event) => updateGrade(event.target.value)}
           >
-            <p className={styles.eyebrow}>Search support</p>
-            <h2 id={modalTitleId}>School not found</h2>
-            <p id={modalDescriptionId}>
-              Your school is not in our database. Would you like to add your
-              school?
+            <option value="">Choose grade</option>
+            {gradeOptions.map((gradeOption) => (
+              <option value={gradeOption} key={gradeOption}>
+                {gradeOption}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button
+          className={styles.searchButton}
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading ? "Searching..." : "Find My Pack"}
+        </button>
+        {error ? (
+          <p className={styles.searchError} role="alert">
+            {error}
+          </p>
+        ) : null}
+      </form>
+
+      {/* ── Results panel (same data as /schools, homepage design) ── */}
+      {panelOpen ? (
+        <div className={styles.heroResultsPanel} aria-live="polite">
+          {!queryReady ? (
+            <p className={styles.heroSearchState}>
+              Start typing a school name or choose a grade to find packs.
             </p>
-            <div className={styles.modalActions}>
-              <Link
-                className={styles.modalPrimaryAction}
-                href="/add-your-school#school-request-form"
-              >
-                Yes
-              </Link>
-              <Link className={styles.modalSecondaryAction} href="/contact">
-                Contact Us
-              </Link>
-              <button
-                className={styles.modalDismiss}
-                type="button"
-                onClick={() => setShowMissingSchoolDialog(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
+          ) : null}
+
+          {isLoading ? (
+            <p className={styles.heroSearchState}>Searching schools...</p>
+          ) : null}
+
+          {!isLoading && queryReady && hasSearched && !error ? (
+            <>
+              <div className={styles.resultsCount}>
+                <strong>
+                  {total === 1 ? "1 school found" : `${total} schools found`}
+                </strong>
+                {total > 0 ? (
+                  <span>
+                    Showing {results.length} of {total}
+                  </span>
+                ) : null}
+              </div>
+
+              {results.length > 0 ? (
+                <div className={styles.heroResultsList}>
+                  {results.map((school) => (
+                    <Link
+                      key={school.id}
+                      href={`/schools/${school.slug}`}
+                      className={styles.heroResultCard}
+                    >
+                      <div className={styles.heroResultInfo}>
+                        <strong>{school.name}</strong>
+                        <span>
+                          {school.region}
+                          {school.province ? `, ${school.province}` : ""}
+                        </span>
+                      </div>
+                      <span className={styles.heroResultGrades}>
+                        {school.grades.length <= 3
+                          ? school.grades.join(", ")
+                          : `${school.grades.slice(0, 2).join(", ")} +${school.grades.length - 2}`}
+                      </span>
+                      <span className={styles.heroResultArrow}>→</span>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className={styles.noResultsState}>
+                  <p className={styles.heroSearchState}>
+                    No matching schools found.
+                  </p>
+                  <div className={styles.noResultsActions}>
+                    <Link
+                      href="/add-your-school#school-request-form"
+                      className={styles.addSchoolLink}
+                    >
+                      Add your school
+                    </Link>
+                    <Link
+                      href="/standard-school-packs"
+                      className={styles.standardPackLink}
+                    >
+                      Standard Packs
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {hasMore ? (
+                <button
+                  className={styles.loadMoreButton}
+                  type="button"
+                  onClick={() => fetchResults(results.length, "append")}
+                >
+                  Load more schools
+                </button>
+              ) : null}
+            </>
+          ) : null}
         </div>
       ) : null}
-    </form>
+    </div>
   );
 }
