@@ -2231,3 +2231,4 @@ Creating turbopack project {
 ✓ Compiled in 380ms
  GET / 200 in 146ms (next.js: 4ms, application-code: 142ms)
  GET / 200 in 167ms (next.js: 4ms, application-code: 163ms)
+ GET / 200 in 230ms (next.js: 6ms, application-code: 225ms)
