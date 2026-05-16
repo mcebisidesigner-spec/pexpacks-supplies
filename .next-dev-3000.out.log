@@ -2211,3 +2211,23 @@ Creating turbopack project {
  GET /schools 200 in 145ms (next.js: 3ms, application-code: 142ms)
  GET /schools 200 in 74ms (next.js: 4ms, application-code: 70ms)
 ✓ Compiled in 24ms
+ GET /api/schools/search?q=pa&limit=12&offset=0 200 in 108ms (next.js: 89ms, application-code: 19ms)
+ GET /schools 200 in 2.9s (next.js: 967ms, application-code: 1899ms)
+○ Compiling / ...
+ GET / 200 in 9.1s (next.js: 8.9s, application-code: 171ms)
+ GET / 200 in 65ms (next.js: 5ms, application-code: 61ms)
+ GET / 200 in 68ms (next.js: 6ms, application-code: 62ms)
+ GET / 200 in 63ms (next.js: 5ms, application-code: 57ms)
+ GET /api/schools/search?q=par&limit=8&offset=0 200 in 30ms (next.js: 13ms, application-code: 17ms)
+ GET /api/schools/search?q=pa&limit=8&offset=0 200 in 14ms (next.js: 4ms, application-code: 10ms)
+ GET / 200 in 757ms (next.js: 4ms, application-code: 753ms)
+ GET /schools 200 in 65ms (next.js: 5ms, application-code: 60ms)
+ GET /api/schools/search?q=pr&limit=12&offset=0 200 in 17ms (next.js: 4ms, application-code: 13ms)
+ GET /api/schools/search?q=par&limit=12&offset=0 200 in 15ms (next.js: 6ms, application-code: 10ms)
+ GET / 200 in 64ms (next.js: 4ms, application-code: 60ms)
+✓ Compiled in 4.1s
+ GET / 200 in 269ms (next.js: 8ms, application-code: 260ms)
+✓ Compiled in 15ms
+✓ Compiled in 380ms
+ GET / 200 in 146ms (next.js: 4ms, application-code: 142ms)
+ GET / 200 in 167ms (next.js: 4ms, application-code: 163ms)
