@@ -214,6 +214,7 @@ export function HeroSearch() {
         storageKey="pexpacks:gauteng-helper:home"
         isInputFocused={isSchoolInputFocused}
         inputValue={query}
+        className={styles.searchHelper}
       />
 
       {/* ── Results panel (same data as /schools, homepage design) ── */}
