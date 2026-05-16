@@ -1,7 +1,14 @@
-.heroSearch {
+.heroSearchWrapper {
+  position: relative;
   width: 100%;
   max-width: 760px;
   margin-top: 28px;
+}
+
+.heroSearch {
+  width: 100%;
+  max-width: 760px;
+  margin-top: 0;
   padding: 8px;
   border-radius: 60px;
   background: var(--pex-bg);

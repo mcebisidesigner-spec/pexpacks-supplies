@@ -6,6 +6,7 @@ import type {
   PaginatedSchoolResults,
   SchoolSearchRecord,
 } from "@/lib/schools/types";
+import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import { GradeSelect } from "./GradeSelect";
 import { RegionSelect } from "./RegionSelect";
 import { SchoolResultsPanel } from "./SchoolResultsPanel";
@@ -38,6 +39,7 @@ export function SchoolSearchPanel({
   const [panelOpen, setPanelOpen] = useState(
     shouldSearch(initialQuery, initialGrade)
   );
+  const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const activeRequest = useRef<AbortController | null>(null);
@@ -180,6 +182,8 @@ export function SchoolSearchPanel({
             id="schoolQuery"
             name="schoolQuery"
             value={query}
+            onFocus={() => setIsSchoolInputFocused(true)}
+            onBlur={() => setIsSchoolInputFocused(false)}
             onChange={(event) => updateQuery(event.target.value)}
             placeholder="e.g. Parktown Primary"
             autoComplete="off"
@@ -194,6 +198,11 @@ export function SchoolSearchPanel({
           Search
         </button>
       </form>
+      <SearchHelperPill
+        storageKey="pexpacks:gauteng-helper:schools"
+        isInputFocused={isSchoolInputFocused}
+        inputValue={query}
+      />
 
       <SchoolResultsPanel
         isOpen={panelOpen}

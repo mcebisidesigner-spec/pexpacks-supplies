@@ -5,6 +5,7 @@ import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
 import { SchoolResultCard } from "@/components/schools/SchoolResultCard";
+import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import styles from "./HeroSearch.module.css";
 
 const gradeOptions = [
@@ -38,6 +39,7 @@ export function HeroSearch() {
   const [hasMore, setHasMore] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const activeRequest = useRef<AbortController | null>(null);
@@ -175,6 +177,8 @@ export function HeroSearch() {
             placeholder="e.g. Parktown Primary"
             autoComplete="off"
             value={query}
+            onFocus={() => setIsSchoolInputFocused(true)}
+            onBlur={() => setIsSchoolInputFocused(false)}
             onChange={(event) => updateQuery(event.target.value)}
           />
         </label>
@@ -206,6 +210,11 @@ export function HeroSearch() {
           </p>
         ) : null}
       </form>
+      <SearchHelperPill
+        storageKey="pexpacks:gauteng-helper:home"
+        isInputFocused={isSchoolInputFocused}
+        inputValue={query}
+      />
 
       {/* ── Results panel (same data as /schools, homepage design) ── */}
       {panelOpen ? (
