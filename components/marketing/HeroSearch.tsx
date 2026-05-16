@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
+import { SchoolResultCard } from "@/components/schools/SchoolResultCard";
 import styles from "./HeroSearch.module.css";
 
 const gradeOptions = [
@@ -235,25 +236,7 @@ export function HeroSearch() {
               {results.length > 0 ? (
                 <div className={styles.heroResultsList}>
                   {results.map((school) => (
-                    <Link
-                      key={school.id}
-                      href={`/schools/${school.slug}`}
-                      className={styles.heroResultCard}
-                    >
-                      <div className={styles.heroResultInfo}>
-                        <strong>{school.name}</strong>
-                        <span>
-                          {school.region}
-                          {school.province ? `, ${school.province}` : ""}
-                        </span>
-                      </div>
-                      <span className={styles.heroResultGrades}>
-                        {school.grades.length <= 3
-                          ? school.grades.join(", ")
-                          : `${school.grades.slice(0, 2).join(", ")} +${school.grades.length - 2}`}
-                      </span>
-                      <span className={styles.heroResultArrow}>→</span>
-                    </Link>
+                    <SchoolResultCard school={school} key={school.id} />
                   ))}
                 </div>
               ) : (
