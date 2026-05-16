@@ -791,6 +791,37 @@
   .heroTitle {
     font-size: clamp(50px, 9vw, 62px);
   }
+
+  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus)),
+  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus)) {
+    padding-top: 18px;
+    padding-bottom: 24px;
+  }
+
+  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus))
+    .heroInner,
+  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
+    .pageHeroInner {
+    align-items: start;
+    gap: 0;
+  }
+
+  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus))
+    .eyebrow,
+  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus))
+    .heroTitle,
+  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus))
+    .heroLead,
+  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
+    .eyebrow,
+  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
+    .pageTitle,
+  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
+    .pageLead,
+  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
+    .heroPanel {
+    display: none;
+  }
 }
 
 @media (max-width: 420px) {

@@ -157,7 +157,7 @@ export function SchoolSearchPanel({
 
   return (
     <section
-      className={styles.searchExperience}
+      className={`${styles.searchExperience} pex-school-search-focus-anchor`}
       aria-labelledby="school-search-heading"
     >
       <h2 id="school-search-heading" className="sr-only">

@@ -157,7 +157,7 @@ export function HeroSearch() {
   }
 
   return (
-    <div className={styles.heroSearchWrapper}>
+    <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
       <form
         className={styles.heroSearch}
         onSubmit={handleSubmit}
