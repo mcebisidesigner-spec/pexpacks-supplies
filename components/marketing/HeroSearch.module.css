@@ -12,8 +12,9 @@
   max-width: 760px;
   margin-top: 0;
   order: 1;
-  padding: 8px;
-  border-radius: 60px;
+  padding: 6px;
+  border: var(--card-border);
+  border-radius: var(--radius-card);
   background: var(--pex-bg);
   box-shadow: 0 16px 40px rgba(18, 57, 69, 0.08);
   display: grid;
@@ -73,9 +74,8 @@
 .searchButton {
   min-height: 60px;
   min-width: 150px;
-  margin-left: 12px;
   border: 0;
-  border-radius: 60px;
+  border-radius: calc(var(--radius-card) - 6px);
   background: var(--pex-coral);
   color: var(--pex-bg);
   font-family: var(--font-button);
@@ -326,24 +326,25 @@
   }
 
   .heroSearch {
-    border-radius: 28px;
+    border-radius: var(--radius-card);
     grid-template-columns: 1fr;
-    padding: 16px;
-    gap: 12px;
+    padding: 12px;
+    gap: 10px;
   }
 
   .schoolSearchField {
     border-right: none;
     border-bottom: 1px solid rgba(18, 57, 69, 0.12);
+    padding-bottom: 14px;
   }
 
   .field {
-    padding: 12px 14px;
+    padding: 10px 14px;
   }
 
   .searchButton {
     width: 100%;
-    margin-left: 0;
+    border-radius: calc(var(--radius-card) - 12px);
   }
 
   .modalActions {
