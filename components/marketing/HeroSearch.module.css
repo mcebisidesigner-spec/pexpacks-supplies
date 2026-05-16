@@ -14,7 +14,7 @@
   background: var(--pex-bg);
   box-shadow: 0 16px 40px rgba(18, 57, 69, 0.08);
   display: grid;
-  grid-template-columns: 1.4fr 1fr auto;
+  grid-template-columns: 1.1fr 1fr auto;
   align-items: stretch;
   gap: 0;
 }
@@ -24,7 +24,7 @@
   display: grid;
   align-content: center;
   gap: 4px;
-  padding: 12px 24px;
+  padding: 12px 20px;
   background: transparent;
 }
 
