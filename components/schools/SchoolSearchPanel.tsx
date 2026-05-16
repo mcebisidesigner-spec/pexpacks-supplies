@@ -171,7 +171,10 @@ export function SchoolSearchPanel({
         }}
         aria-controls="school-search-results"
       >
-        <label className={styles.searchField} htmlFor="schoolQuery">
+        <label
+          className={`${styles.searchField} ${styles.schoolSearchField}`}
+          htmlFor="schoolQuery"
+        >
           <span>School Name</span>
           <input
             id="schoolQuery"

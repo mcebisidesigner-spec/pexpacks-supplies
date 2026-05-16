@@ -2,7 +2,7 @@ import { customPackAddOns } from "@/data/packAddOns";
 import { phasePacks } from "@/data/phasePacks";
 import { getFullSchoolRecords } from "@/data/schools";
 import { normalisePackItems } from "@/lib/packs/normalisePackItems";
-import type { FormSubmission } from "@/lib/forms/schema";
+import type { FormSubmission } from "@/lib/forms/types";
 
 const PEXCOVER_ADDON_PRICE = 120;
 

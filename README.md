@@ -27,30 +27,37 @@ npm start
 
 ## Form Backend
 
-The site submits contact, partnership and order enquiries to `POST /api/forms/submit`.
+The site submits contact, partnership and order enquiries to internal endpoints under `POST /api/forms/*`.
 
-The current handler validates and sanitises submissions, requires consent, blocks honeypot spam, rate-limits repeated requests, and forwards clean payloads to Web3Forms from the server.
+The current handler validates and sanitises submissions, requires consent, blocks honeypot spam, rate-limits repeated requests, and sends clean payloads by SMTP through Nodemailer.
 
 Required production environment variables:
 
 ```text
-WEB3FORMS_ACCESS_KEY=
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=
+SMTP_PASS=
+SMTP_FROM_EMAIL=
+SMTP_FROM_NAME=PexPacks Website
+SMTP_TO_EMAIL=
 NEXT_PUBLIC_SITE_URL=https://pexpacks.co.za
 SITE_URL=https://pexpacks.co.za
 NODE_ENV=production
 ```
 
-Web3Forms setup:
+SMTP setup:
 
-1. Add the real `WEB3FORMS_ACCESS_KEY` to `.env.local` and production env.
-2. Confirm the Web3Forms plan supports server-side API submissions from the deployment.
-3. If required by Web3Forms, whitelist the production server/deployment IP.
+1. Add real SMTP values to `.env.local` and production env.
+2. Confirm the SMTP provider allows server-side sending from the deployment.
+3. Configure SPF, DKIM, and DMARC for reliable delivery.
 
 Spam protection:
 
 - A hidden `companyWebsite` honeypot blocks common bot submissions.
 - Consent is required before a form can submit.
-- Do not add the Web3Forms access key with `NEXT_PUBLIC_`; those variables are exposed to the browser.
+- Do not add SMTP credentials with `NEXT_PUBLIC_`; those variables are exposed to the browser.
 
 ## Project Structure
 

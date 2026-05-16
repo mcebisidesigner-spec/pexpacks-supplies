@@ -31,3 +31,12 @@ See more: https://nextjs.org/docs/app/guides/local-development
 ⚠ Slow filesystem detected. The benchmark took 1001ms. If E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next/dev is a network drive, consider moving it to a local folder.
 See more: https://nextjs.org/docs/app/guides/local-development
 ⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Fast Refresh had to perform a full reload when ./node_modules/next/dist/client/image-component.js changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+⚠ Slow filesystem detected. The benchmark took 1291ms. If E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next/dev is a network drive, consider moving it to a local folder.
+See more: https://nextjs.org/docs/app/guides/local-development
+[SMTP] SMTP_TO_EMAIL or endpoint recipient is not set.
+[SMTP] SMTP_TO_EMAIL or endpoint recipient is not set.
+[SMTP] SMTP_TO_EMAIL or endpoint recipient is not set.
+[SMTP] SMTP_TO_EMAIL or endpoint recipient is not set.
+[SMTP] SMTP_TO_EMAIL or endpoint recipient is not set.

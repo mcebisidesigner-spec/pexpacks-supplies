@@ -39,13 +39,14 @@ export function TrackOrderForm() {
       message: `Order tracking request.\nOrder Number: ${orderNumber || "Not provided"}\nContact: ${contact || "Not provided"}`,
       packType: "track-order",
       consent: true,
+      sourceUrl: window.location.href,
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
       submittedAt: new Date().toISOString(),
     };
 
     try {
-      const res = await fetch("/api/forms/submit", {
+      const res = await fetch("/api/forms/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

@@ -53,13 +53,14 @@ export function AddMySchoolBanner() {
       message: `School details request.\nParent: ${parentName}\nContact: ${contact}\nSchool: ${schoolName}\nCity: ${city}\nGrade: ${grade}\nNotes: ${notes || "None"}`,
       packType: "add-school",
       consent: true,
+      sourceUrl: window.location.href,
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
       submittedAt: new Date().toISOString(),
     };
 
     try {
-      const res = await fetch("/api/forms/submit", {
+      const res = await fetch("/api/forms/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

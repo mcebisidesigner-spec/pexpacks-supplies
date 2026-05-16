@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { endpointPathForFormType, type FormType } from "@/lib/forms/types";
 import styles from "@/components/marketing/Marketing.module.css";
 
 type ApiResponse = {
@@ -11,14 +12,6 @@ type ApiResponse = {
   message: string;
   errors?: Record<string, string>;
 };
-
-type FormType =
-  | "school-pack-enquiry"
-  | "office-pack-enquiry"
-  | "bulk-order"
-  | "school-partnership"
-  | "contact"
-  | "track-order-interest";
 
 type PexpacksEnquiryFormProps = {
   mode: "contact" | "partner";
@@ -90,17 +83,19 @@ export function PexpacksEnquiryForm({
       grade: val(fd, "grade") || undefined,
       businessName: val(fd, "businessName") || undefined,
       orderQuantity: val(fd, "orderQuantity") || undefined,
+      enquiryType: isContact ? enquiryType : partnerType,
       packType: isContact ? enquiryType : partnerType,
       message: val(fd, "message"),
       consent: fd.get("consent") === "on",
       companyWebsite: val(fd, "companyWebsite"),
+      sourceUrl: window.location.href,
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
       submittedAt: new Date().toISOString(),
     };
 
     try {
-      const res = await fetch("/api/forms/submit", {
+      const res = await fetch(endpointPathForFormType(payload.formType), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

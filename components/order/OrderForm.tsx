@@ -565,19 +565,21 @@ export function OrderForm({
       orderReference: submittedOrderReference,
       orderDraftId: initialDraftId,
       preferredContactMethod,
+      deliveryMethod: deliveryPreference,
       message: `Order reference: ${submittedOrderReference}. Delivery preference: ${deliveryPreference}. ${standardPackMessage} ${selectedItemsMessage} ${removedItemsMessage}${pexcoverMessage}`,
       consent,
       companyWebsite:
         typeof formData.get("companyWebsite") === "string"
           ? formData.get("companyWebsite")
           : "",
+      sourceUrl: window.location.href,
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
       submittedAt: new Date().toISOString(),
     };
 
     try {
-      const response = await fetch("/api/forms/submit", {
+      const response = await fetch("/api/forms/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

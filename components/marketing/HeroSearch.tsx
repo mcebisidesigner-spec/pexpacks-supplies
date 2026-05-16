@@ -167,8 +167,8 @@ export function HeroSearch() {
           }
         }}
       >
-        <label className={styles.field}>
-          <span>Find your school</span>
+        <label className={`${styles.field} ${styles.schoolSearchField}`}>
+          <span>School Name</span>
           <input
             name="q"
             type="search"
@@ -179,7 +179,7 @@ export function HeroSearch() {
           />
         </label>
         <label className={styles.field}>
-          <span>Select grade</span>
+          <span>Grade</span>
           <select
             name="grade"
             value={grade}
@@ -198,7 +198,7 @@ export function HeroSearch() {
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? "Searching..." : "Find My Pack"}
+          {isLoading ? "Searching..." : "Search"}
         </button>
         {error ? (
           <p className={styles.searchError} role="alert">
