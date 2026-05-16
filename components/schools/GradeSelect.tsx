@@ -16,7 +16,7 @@ export function GradeSelect({ grades, value, onChange }: GradeSelectProps) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
       >
-        <option value="all">Select grade</option>
+        <option value="all">Choose grade</option>
         {grades.map((grade) => (
           <option value={grade} key={grade}>
             {grade}
