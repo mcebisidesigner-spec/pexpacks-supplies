@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function debounce<T extends (...args: never[]) => void>(
   fn: T,
   delay = 150
