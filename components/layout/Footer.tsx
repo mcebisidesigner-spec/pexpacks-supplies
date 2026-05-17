@@ -1,12 +1,9 @@
-"use client";
-
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
-import { usePathname } from "next/navigation";
 import { hasWhatsAppNumber, orderWhatsAppHref } from "@/data/contact";
-import { footerNavLinks, footerLinks } from "@/data/navigation";
+import { footerLinks } from "@/data/navigation";
 import { officialSocialLinks } from "@/data/social";
-import { isActivePath } from "@/lib/isActivePath";
+import { FooterNav } from "./FooterNav";
 import styles from "./Footer.module.css";
 
 const socialLinks = [
@@ -59,7 +56,6 @@ function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
 }
 
 export function Footer() {
-  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -72,33 +68,7 @@ export function Footer() {
           </Link>
 
           <div className={styles.navGroup}>
-            <nav className={styles.mainNav} aria-label="Footer navigation">
-              {footerNavLinks.map((link, index) => {
-                const active = isActivePath(link.href, pathname);
-
-                return (
-                  <span key={link.label} className={styles.navItem}>
-                    <Link
-                      href={link.href}
-                      className={[
-                        styles.navLink,
-                        active ? styles.navLinkActive : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      aria-current={active ? "page" : undefined}
-                    >
-                      {link.label}
-                    </Link>
-                    {index < footerNavLinks.length - 1 && (
-                      <span className={styles.separator} aria-hidden="true">
-                        |
-                      </span>
-                    )}
-                  </span>
-                );
-              })}
-            </nav>
+            <FooterNav />
 
             <nav className={styles.legalNav} aria-label="Legal links">
               {footerLinks.map((link) => (

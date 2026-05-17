@@ -10,26 +10,16 @@ import styles from "./Schools.module.css";
 
 const resultLimit = 12;
 
-/** Top cities shown as quick filter chips */
-const POPULAR_CITIES = [
-  "Johannesburg",
-  "Pretoria",
-  "Centurion",
-  "Sandton",
-  "Midrand",
-  "Roodepoort",
-  "Randburg",
-  "Soweto",
-];
-
 type SchoolSearchPanelProps = {
   grades: string[];
+  popularCities?: string[];
   initialQuery?: string;
   initialGrade?: string;
 };
 
 export function SchoolSearchPanel({
   grades,
+  popularCities = [],
   initialQuery = "",
   initialGrade = "all",
 }: SchoolSearchPanelProps) {
@@ -141,20 +131,27 @@ export function SchoolSearchPanel({
         </button>
       </form>
 
-      {/* Strategy 5.3: City filter chips */}
-      <div className={styles.cityChips} role="group" aria-label="Filter by city">
-        {POPULAR_CITIES.map((city) => (
-          <button
-            key={city}
-            type="button"
-            className={`${styles.cityChip} ${activeCity === city ? styles.cityChipActive : ""}`}
-            onClick={() => handleCityChip(city)}
-            aria-pressed={activeCity === city}
-          >
-            {city}
-          </button>
-        ))}
-      </div>
+      {popularCities.length > 0 ? (
+        <div
+          className={styles.cityChips}
+          role="group"
+          aria-label="Filter by city"
+        >
+          {popularCities.map((city) => (
+            <button
+              key={city}
+              type="button"
+              className={`${styles.cityChip} ${
+                activeCity === city ? styles.cityChipActive : ""
+              }`}
+              onClick={() => handleCityChip(city)}
+              aria-pressed={activeCity === city}
+            >
+              {city}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       <SearchHelperPill
         storageKey="pexpacks:gauteng-helper:schools"

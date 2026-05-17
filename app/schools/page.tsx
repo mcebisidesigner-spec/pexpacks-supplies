@@ -11,6 +11,7 @@ import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
+  getPopularSchoolCities,
   getSchoolSearchOptions,
 } from "@/lib/schools/schoolSearchData";
 import { testimonials } from "@/data/testimonials";
@@ -35,6 +36,7 @@ function firstValue(value: string | string[] | undefined) {
 export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
   const params = searchParams ? await searchParams : {};
   const { grades } = getSchoolSearchOptions();
+  const popularCities = getPopularSchoolCities();
   const featuredSchools = getFeaturedSchoolRecords();
 
   const schoolFaqs = faqs.filter((faq) =>
@@ -52,6 +54,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       <SchoolsPageHero>
         <SchoolSearchPanel
           grades={grades}
+          popularCities={popularCities}
           initialQuery={firstValue(params.q) ?? ""}
           initialGrade={firstValue(params.grade) ?? "all"}
         />

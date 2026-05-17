@@ -56,6 +56,33 @@ function normaliseEnquiryType(value?: string): ContactOption {
     : contactOptions[0];
 }
 
+function errorAttributes(errors: Record<string, string>, fieldName: string) {
+  return errors[fieldName]
+    ? {
+        "aria-describedby": `${fieldName}-error`,
+        "aria-invalid": true,
+      }
+    : {};
+}
+
+function FieldError({
+  id,
+  message,
+}: {
+  id: string;
+  message: string | undefined;
+}) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <span id={id} className={styles.fieldError}>
+      {message}
+    </span>
+  );
+}
+
 export function PexpacksEnquiryForm({
   mode,
   title,
@@ -154,10 +181,9 @@ export function PexpacksEnquiryForm({
               placeholder="Your name"
               autoComplete="name"
               required
+              {...errorAttributes(errors, "fullName")}
             />
-            {errors.fullName ? (
-              <span className={styles.fieldError}>{errors.fullName}</span>
-            ) : null}
+            <FieldError id="fullName-error" message={errors.fullName} />
           </label>
           <label className={styles.field}>
             <span>Phone</span>
@@ -167,10 +193,9 @@ export function PexpacksEnquiryForm({
               placeholder="078 003 6048"
               autoComplete="tel"
               required
+              {...errorAttributes(errors, "phone")}
             />
-            {errors.phone ? (
-              <span className={styles.fieldError}>{errors.phone}</span>
-            ) : null}
+            <FieldError id="phone-error" message={errors.phone} />
           </label>
           <label className={styles.field}>
             <span>Email</span>
@@ -179,10 +204,9 @@ export function PexpacksEnquiryForm({
               type="email"
               placeholder="name@example.com"
               autoComplete="email"
+              {...errorAttributes(errors, "email")}
             />
-            {errors.email ? (
-              <span className={styles.fieldError}>{errors.email}</span>
-            ) : null}
+            <FieldError id="email-error" message={errors.email} />
           </label>
           <label className={styles.field}>
             <span>Preferred contact method</span>
@@ -216,12 +240,12 @@ export function PexpacksEnquiryForm({
                   autoComplete="organization"
                   defaultValue={initialBusinessName}
                   required
+                  {...errorAttributes(errors, "businessName")}
                 />
-                {errors.businessName ? (
-                  <span className={styles.fieldError}>
-                    {errors.businessName}
-                  </span>
-                ) : null}
+                <FieldError
+                  id="businessName-error"
+                  message={errors.businessName}
+                />
               </label>
               <label className={styles.field}>
                 <span>Partner type</span>
@@ -247,10 +271,9 @@ export function PexpacksEnquiryForm({
                   placeholder="School name"
                   autoComplete="organization"
                   required
+                  {...errorAttributes(errors, "schoolName")}
                 />
-                {errors.schoolName ? (
-                  <span className={styles.fieldError}>{errors.schoolName}</span>
-                ) : null}
+                <FieldError id="schoolName-error" message={errors.schoolName} />
               </label>
               <label className={styles.field}>
                 <span>Grade</span>
@@ -258,10 +281,9 @@ export function PexpacksEnquiryForm({
                   name="grade"
                   placeholder="Grade R, Grade 4..."
                   required
+                  {...errorAttributes(errors, "grade")}
                 />
-                {errors.grade ? (
-                  <span className={styles.fieldError}>{errors.grade}</span>
-                ) : null}
+                <FieldError id="grade-error" message={errors.grade} />
               </label>
             </>
           ) : null}
@@ -276,12 +298,12 @@ export function PexpacksEnquiryForm({
                   autoComplete="organization"
                   defaultValue={initialBusinessName}
                   required
+                  {...errorAttributes(errors, "businessName")}
                 />
-                {errors.businessName ? (
-                  <span className={styles.fieldError}>
-                    {errors.businessName}
-                  </span>
-                ) : null}
+                <FieldError
+                  id="businessName-error"
+                  message={errors.businessName}
+                />
               </label>
               <label className={styles.field}>
                 <span>Order quantity</span>
@@ -302,15 +324,19 @@ export function PexpacksEnquiryForm({
               placeholder="Tell us what you need"
               defaultValue={initialMessage}
               required
+              {...errorAttributes(errors, "message")}
             />
-            {errors.message ? (
-              <span className={styles.fieldError}>{errors.message}</span>
-            ) : null}
+            <FieldError id="message-error" message={errors.message} />
           </label>
         </div>
 
         <label className={styles.consentField}>
-          <input name="consent" type="checkbox" required />
+          <input
+            name="consent"
+            type="checkbox"
+            required
+            {...errorAttributes(errors, "consent")}
+          />
           <span>
             {consentText}{" "}
             <Link href="/privacy-policy" className={styles.inlineTextLink}>
@@ -318,9 +344,7 @@ export function PexpacksEnquiryForm({
             </Link>
           </span>
         </label>
-        {errors.consent ? (
-          <p className={styles.fieldError}>{errors.consent}</p>
-        ) : null}
+        <FieldError id="consent-error" message={errors.consent} />
 
         {/* Honeypot — hidden from real users */}
         <label className={styles.honeypot} aria-hidden="true">
