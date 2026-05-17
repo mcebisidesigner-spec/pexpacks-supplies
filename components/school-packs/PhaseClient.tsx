@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PackCustomizer } from "@/components/order/PackCustomizer";
 import type { PhasePack, GradePackTemplate } from "@/data/phasePacks";
-import { homepagePacks } from "@/data/packs";
+import { homepagePacks, mostPopularPacksHref } from "@/data/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
 import styles from "./PhaseClient.module.css";
 
@@ -46,17 +46,6 @@ const phaseFaqs: Record<string, { q: string; a: string }[]> = {
     },
   ],
 };
-
-function buildStandardOrderHref(phaseSlug: string, pack: GradePackTemplate) {
-  const params = new URLSearchParams({
-    phase: phaseSlug,
-    pack: pack.id,
-    grade: pack.grade,
-    type: "standard",
-  });
-
-  return `/order?${params.toString()}#checkout-form`;
-}
 
 export function PhaseClient({ phaseData }: PhaseClientProps) {
   const [selectedCustomPack, setSelectedCustomPack] =
@@ -187,7 +176,7 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
                   </p>
                   <div className={styles.cardActions}>
                     <Button
-                      href={buildStandardOrderHref(phaseData.slug, pack)}
+                      href={mostPopularPacksHref}
                       size="sm"
                     >
                       Buy standard pack

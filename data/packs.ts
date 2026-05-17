@@ -194,3 +194,5 @@ export const homepagePacks = featuredPacks.filter((pack) =>
     pack.id
   )
 );
+
+export const mostPopularPacksHref = "/#most-popular-packs";

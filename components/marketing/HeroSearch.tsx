@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
+import { mostPopularPacksHref } from "@/data/packs";
 import { SchoolResultCard } from "@/components/schools/SchoolResultCard";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import styles from "./HeroSearch.module.css";
@@ -226,10 +227,10 @@ export function HeroSearch() {
                         Add your school
                       </Link>
                       <Link
-                        href="/standard-school-packs"
+                        href={mostPopularPacksHref}
                         className={styles.standardPackLink}
                       >
-                        Standard Packs
+                        Buy standard pack
                       </Link>
                     </div>
                   </div>

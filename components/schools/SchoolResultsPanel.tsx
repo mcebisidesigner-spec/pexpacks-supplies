@@ -1,5 +1,7 @@
 import type { SchoolSearchRecord } from "@/lib/schools/types";
+import { mostPopularPacksHref } from "@/data/packs";
 import Link from "next/link";
+import heroSearchStyles from "@/components/marketing/HeroSearch.module.css";
 import { SchoolResultCard } from "./SchoolResultCard";
 import styles from "./Schools.module.css";
 
@@ -66,28 +68,22 @@ export function SchoolResultsPanel({
               ))}
             </div>
           ) : (
-            <div className={styles.noResults}>
-              <h3>No matching schools found.</h3>
-              <p>
-                You can request your school, or skip the wait and buy a Standard
-                Pack.
+            <div className={heroSearchStyles.noResultsState}>
+              <p className={heroSearchStyles.heroSearchState}>
+                No matching schools found.
               </p>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "12px",
-                  justifyContent: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <Link href="/add-your-school#school-request-form">
-                  Request School
+              <div className={heroSearchStyles.noResultsActions}>
+                <Link
+                  href="/add-your-school#school-request-form"
+                  className={heroSearchStyles.addSchoolLink}
+                >
+                  Add your school
                 </Link>
                 <Link
-                  href="/standard-packs"
-                  className={styles.noResultsSecondary}
+                  href={mostPopularPacksHref}
+                  className={heroSearchStyles.standardPackLink}
                 >
-                  Buy Standard Pack
+                  Buy standard pack
                 </Link>
               </div>
             </div>

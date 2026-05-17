@@ -187,6 +187,7 @@ export default function HomePage() {
             eyebrow="Top choices"
             title="Most popular packs"
             text="Explore our best-seller standard packs for every grade level."
+            headingId="most-popular-packs"
           />
           <div className={styles.packGrid}>
             {homepagePacks.map((pack) => (

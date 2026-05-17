@@ -210,15 +210,43 @@
 @media (max-width: 960px) {
   .inner {
     grid-template-columns: 1fr;
-    gap: 48px;
+    gap: 0;
   }
 
   .imageSide {
     order: -1;
+    position: sticky;
+    top: var(--header-height-mobile, 88px);
+    z-index: 4;
+    padding-bottom: 24px;
+    background: var(--pex-bg-soft);
   }
   
   .imageWrapper {
-    aspect-ratio: 16/10;
+    aspect-ratio: 16/9;
+    border-radius: var(--radius-card);
+    box-shadow: 0 12px 32px rgba(15, 37, 55, 0.1);
+  }
+
+  .featureBadge {
+    bottom: 16px;
+    left: 16px;
+    padding: 8px 16px 8px 8px;
+    gap: 10px;
+  }
+
+  .badgeIcon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .badgeIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .badgeText {
+    font-size: 13px;
   }
 }
 
