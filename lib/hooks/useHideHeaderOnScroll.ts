@@ -27,7 +27,14 @@ export function useHideHeaderOnScroll({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if (disabled) {
+    function isScrollLockActive() {
+      return (
+        document.body.classList.contains("menu-open") ||
+        document.body.style.overflow === "hidden"
+      );
+    }
+
+    if (disabled || isScrollLockActive()) {
       setIsHidden(false);
       setIsAtTop(window.scrollY <= topThreshold);
       setScrollDirection(null);
@@ -39,6 +46,15 @@ export function useHideHeaderOnScroll({
     function updateHeaderState() {
       const currentScrollY = window.scrollY;
       const delta = currentScrollY - lastScrollY.current;
+
+      if (disabled || isScrollLockActive()) {
+        setIsHidden(false);
+        setIsAtTop(currentScrollY <= topThreshold);
+        setScrollDirection(null);
+        lastScrollY.current = currentScrollY;
+        ticking.current = false;
+        return;
+      }
 
       if (currentScrollY <= topThreshold) {
         setIsAtTop(true);

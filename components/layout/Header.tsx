@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
@@ -12,20 +12,34 @@ import styles from "./Header.module.css";
 
 export function Header() {
   const pathname = usePathname();
-  const [isHeaderFocused, setIsHeaderFocused] = useState(false);
+  const [isKeyboardNavigating, setIsKeyboardNavigating] = useState(false);
+  const [isHeaderKeyboardFocused, setIsHeaderKeyboardFocused] = useState(false);
   const shouldPinHeader = pathname === "/order" || pathname === "/track-order";
 
   const { isHidden, isAtTop } = useHideHeaderOnScroll({
-    disabled: shouldPinHeader || isHeaderFocused,
+    disabled: shouldPinHeader || isHeaderKeyboardFocused,
   });
 
   return (
     <header
       className={`${styles.siteHeader} ${isHidden ? styles.headerHidden : styles.headerVisible} ${isAtTop ? styles.headerAtTop : styles.headerScrolled}`}
-      onFocusCapture={() => setIsHeaderFocused(true)}
+      onKeyDownCapture={(event) => {
+        if (event.key === "Tab") {
+          setIsKeyboardNavigating(true);
+        }
+      }}
+      onPointerDownCapture={() => {
+        setIsKeyboardNavigating(false);
+        setIsHeaderKeyboardFocused(false);
+      }}
+      onFocusCapture={() => {
+        if (isKeyboardNavigating) {
+          setIsHeaderKeyboardFocused(true);
+        }
+      }}
       onBlurCapture={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node)) {
-          setIsHeaderFocused(false);
+          setIsHeaderKeyboardFocused(false);
         }
       }}
     >

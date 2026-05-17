@@ -453,9 +453,9 @@
   }
 
   .headerHidden {
-    transform: translateY(0);
+    transform: translateY(-100%);
     opacity: 1;
-    pointer-events: auto;
+    pointer-events: none;
   }
 
   .desktopOrder,
