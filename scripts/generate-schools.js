@@ -1017,11 +1017,6 @@ function slugify(name) {
     .replace(/(^-|-$)/g, "");
 }
 
-function pickGrades(gradePool, count) {
-  const shuffled = [...gradePool].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, Math.min(count, shuffled.length));
-}
-
 // Seed random for reproducibility
 let seed = 42;
 function seededRandom() {
