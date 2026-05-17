@@ -38,30 +38,20 @@ export function useHideHeaderOnScroll({
 
     function updateHeaderState() {
       const currentScrollY = window.scrollY;
-      const delta = currentScrollY - lastScrollY.current;
 
       if (currentScrollY <= topThreshold) {
         setIsAtTop(true);
         setIsHidden(false);
         setScrollDirection(null);
-        lastScrollY.current = currentScrollY;
-        ticking.current = false;
-        return;
-      }
-
-      setIsAtTop(false);
-
-      if (Math.abs(delta) < directionThreshold) {
-        ticking.current = false;
-        return;
-      }
-
-      if (delta > 0 && currentScrollY > hideAfter) {
-        setIsHidden(true);
-        setScrollDirection("down");
-      } else if (delta < 0) {
-        setIsHidden(false);
-        setScrollDirection("up");
+      } else {
+        setIsAtTop(false);
+        if (currentScrollY > lastScrollY.current && currentScrollY > hideAfter) {
+          setIsHidden(true);
+          setScrollDirection("down");
+        } else if (currentScrollY < lastScrollY.current) {
+          setIsHidden(false);
+          setScrollDirection("up");
+        }
       }
 
       lastScrollY.current = currentScrollY;
