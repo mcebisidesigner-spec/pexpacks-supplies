@@ -19,10 +19,6 @@
   flex-direction: column;
 }
 
-.mobileImage {
-  display: none;
-}
-
 .accordion {
   margin-top: 16px;
   display: flex;
@@ -218,43 +214,37 @@
   }
 
   .imageSide {
-    display: none;
+    display: block;
+    order: -1;
+    margin-bottom: 20px;
   }
 
-  .mobileImage {
-    display: block;
+  .imageWrapper {
     position: relative;
     width: 100%;
     aspect-ratio: 16/9;
-    margin-bottom: 20px;
     border-radius: var(--radius-card);
-    overflow: hidden;
     box-shadow: 0 12px 32px rgba(15, 37, 55, 0.1);
-    background: var(--pex-bg);
   }
 
-  .mobileImage .image {
-    object-fit: cover;
-  }
-
-  .mobileImage .featureBadge {
+  .featureBadge {
     bottom: 12px;
     left: 12px;
     padding: 8px 14px 8px 8px;
     gap: 8px;
   }
 
-  .mobileImage .badgeIcon {
+  .badgeIcon {
     width: 28px;
     height: 28px;
   }
 
-  .mobileImage .badgeIcon svg {
+  .badgeIcon svg {
     width: 14px;
     height: 14px;
   }
 
-  .mobileImage .badgeText {
+  .badgeText {
     font-size: 13px;
   }
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GradeSelector } from "@/components/schools/GradeSelector";
 import { PageHero } from "@/components/marketing/PageHero";
-import { Button } from "@/components/ui/Button";
+import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
@@ -14,6 +14,12 @@ type SchoolPageProps = {
 };
 
 export const dynamicParams = true;
+
+export function generateStaticParams() {
+  return getSchoolIndex().map((school) => ({
+    schoolSlug: school.slug,
+  }));
+}
 
 export async function generateMetadata({
   params,

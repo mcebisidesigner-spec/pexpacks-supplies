@@ -22,7 +22,49 @@ export const metadata: Metadata = buildMetadata(
   "/contact"
 );
 
-export default function ContactPage() {
+type ContactPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+function firstValue(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] || "" : value || "";
+}
+
+function resolveContactPrefill(params: Record<string, string | string[] | undefined>) {
+  const type = firstValue(params.type).trim().toLowerCase();
+  const subject = firstValue(params.subject).trim();
+  const notes = firstValue(params.notes).trim();
+  const businessName = firstValue(params.businessName).trim();
+
+  const initialEnquiryType =
+    type === "office"
+      ? "Office pack"
+      : type === "bulk" || type === "quote"
+        ? "Bulk order"
+        : type === "partner" || type === "school-partnership"
+          ? "School partnership"
+          : type === "parent" || type === "order"
+            ? "Parent order"
+            : type === "supplier"
+              ? "Supplier partnership"
+              : "General enquiry";
+
+  const initialMessage = [subject ? `I am enquiring about ${subject}.` : "", notes]
+    .filter(Boolean)
+    .join("\n\n");
+
+  return {
+    initialEnquiryType,
+    initialMessage,
+    initialBusinessName:
+      businessName || (initialEnquiryType === "Office pack" ? subject : ""),
+  };
+}
+
+export default async function ContactPage({ searchParams }: ContactPageProps) {
+  const params = searchParams ? await searchParams : {};
+  const prefill = resolveContactPrefill(params);
+
   return (
     <>
       <PageHero
@@ -45,7 +87,7 @@ export default function ContactPage() {
       <section className={styles.section}>
         <div className={styles.inner}>
           <div className={styles.infoGrid}>
-            <ContactForm />
+            <ContactForm {...prefill} />
             <div className={styles.infoCard}>
               <SectionHeader
                 eyebrow="Contact channels"

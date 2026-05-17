@@ -41,14 +41,34 @@ export const schoolIndex: SchoolIndexRecord[] =
 
 export const getSchoolIndex = (): SchoolIndexRecord[] => schoolIndex;
 
+type SchoolRecordMap = Map<string, School>;
+
+let fullSchoolRecordsPromise: Promise<School[]> | null = null;
+let schoolRecordMapPromise: Promise<SchoolRecordMap> | null = null;
+
 export const getFullSchoolRecords = async (): Promise<School[]> => {
-  const records = await import("./school-records.json");
-  return records.default as School[];
+  if (!fullSchoolRecordsPromise) {
+    fullSchoolRecordsPromise = import("./school-records.json").then(
+      (records) => records.default as School[]
+    );
+  }
+
+  return fullSchoolRecordsPromise;
+};
+
+export const getSchoolRecordMap = async (): Promise<SchoolRecordMap> => {
+  if (!schoolRecordMapPromise) {
+    schoolRecordMapPromise = getFullSchoolRecords().then(
+      (records) => new Map(records.map((school) => [school.slug, school]))
+    );
+  }
+
+  return schoolRecordMapPromise;
 };
 
 export const getSchoolBySlug = async (
   slug: string
 ): Promise<School | undefined> => {
-  const records = await getFullSchoolRecords();
-  return records.find((s) => s.slug === slug);
+  const records = await getSchoolRecordMap();
+  return records.get(slug);
 };

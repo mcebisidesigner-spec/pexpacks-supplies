@@ -1,13 +1,13 @@
 import {
   getSchoolIndex,
   getFullSchoolRecords,
+  getSchoolBySlug as getSchoolRecordBySlug,
   type GradePack,
   type School,
 } from "@/data/schools";
 
 export async function getSchoolBySlug(slug: string) {
-  const records = await getFullSchoolRecords();
-  return records.find((school) => school.slug === slug);
+  return getSchoolRecordBySlug(slug);
 }
 
 export async function getGradeBySlug(schoolSlug: string, gradeSlug: string) {

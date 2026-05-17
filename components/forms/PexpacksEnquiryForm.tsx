@@ -17,6 +17,9 @@ type PexpacksEnquiryFormProps = {
   mode: "contact" | "partner";
   title: string;
   submitLabel: string;
+  initialEnquiryType?: string;
+  initialMessage?: string;
+  initialBusinessName?: string;
 };
 
 const contactOptions = [
@@ -29,6 +32,7 @@ const contactOptions = [
 ];
 
 const partnerOptions = ["School", "Supplier", "Office stationery partner"];
+type ContactOption = (typeof contactOptions)[number];
 
 const consentText =
   "I consent to Pexpacks using my information to contact me about this enquiry and provide related support.";
@@ -46,12 +50,22 @@ function val(data: FormData, key: string) {
   return typeof v === "string" ? v : "";
 }
 
+function normaliseEnquiryType(value?: string): ContactOption {
+  return contactOptions.includes(value as ContactOption)
+    ? (value as ContactOption)
+    : contactOptions[0];
+}
+
 export function PexpacksEnquiryForm({
   mode,
   title,
   submitLabel,
+  initialEnquiryType,
+  initialMessage = "",
+  initialBusinessName = "",
 }: PexpacksEnquiryFormProps) {
-  const [enquiryType, setEnquiryType] = useState(contactOptions[0]);
+  const initialType = normaliseEnquiryType(initialEnquiryType);
+  const [enquiryType, setEnquiryType] = useState<ContactOption>(initialType);
   const [partnerType, setPartnerType] = useState(partnerOptions[0]);
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
@@ -107,7 +121,7 @@ export function PexpacksEnquiryForm({
         return;
       }
       form.reset();
-      setEnquiryType(contactOptions[0]);
+      setEnquiryType(contactOptions[0] as ContactOption);
       setPartnerType(partnerOptions[0]);
     } catch {
       setStatus({
@@ -200,6 +214,7 @@ export function PexpacksEnquiryForm({
                   name="businessName"
                   placeholder="School, business or supplier name"
                   autoComplete="organization"
+                  defaultValue={initialBusinessName}
                   required
                 />
                 {errors.businessName ? (
@@ -259,6 +274,7 @@ export function PexpacksEnquiryForm({
                   name="businessName"
                   placeholder="Business name"
                   autoComplete="organization"
+                  defaultValue={initialBusinessName}
                   required
                 />
                 {errors.businessName ? (
@@ -284,6 +300,7 @@ export function PexpacksEnquiryForm({
             <textarea
               name="message"
               placeholder="Tell us what you need"
+              defaultValue={initialMessage}
               required
             />
             {errors.message ? (
@@ -297,7 +314,7 @@ export function PexpacksEnquiryForm({
           <span>
             {consentText}{" "}
             <Link href="/privacy-policy" className={styles.inlineTextLink}>
-              privacy-policy
+              privacy policy
             </Link>
           </span>
         </label>

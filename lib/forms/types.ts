@@ -95,7 +95,8 @@ export function endpointForFormType(formType: FormType): FormEndpointKind {
   if (
     formType === "school-pack-enquiry" ||
     formType === "full-pack-enquiry" ||
-    formType === "custom-pack-enquiry"
+    formType === "custom-pack-enquiry" ||
+    formType === "track-order-interest"
   ) {
     return "order";
   }

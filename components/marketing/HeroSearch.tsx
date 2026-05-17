@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import type { FormEvent } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { SchoolSearchRecord } from "@/lib/schools/types";
+import { useState } from "react";
 import { mostPopularPacksHref } from "@/data/packs";
+import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import { SchoolResultCard } from "@/components/schools/SchoolResultCard";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import styles from "./HeroSearch.module.css";
@@ -27,116 +27,28 @@ const gradeOptions = [
 
 const resultLimit = 8;
 
-function shouldSearch(query: string, grade: string) {
-  return query.trim().length >= 2 || grade !== "";
-}
-
 export function HeroSearch() {
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
-  const [grade, setGrade] = useState("");
-  const [results, setResults] = useState<SchoolSearchRecord[]>([]);
-  const [total, setTotal] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(false);
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const activeRequest = useRef<AbortController | null>(null);
-
-  const queryReady = useMemo(
-    () => shouldSearch(debouncedQuery, grade),
-    [debouncedQuery, grade]
-  );
-
-  /* ── Debounce the text query ── */
-  useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedQuery(query), 275);
-    return () => window.clearTimeout(timer);
-  }, [query]);
-
-  /* ── Fetch from the same /api/schools/search endpoint ── */
-  const fetchResults = useCallback(
-    async (nextOffset: number, mode: "replace" | "append") => {
-      if (!shouldSearch(debouncedQuery, grade)) {
-        setResults([]);
-        setTotal(0);
-        setHasMore(false);
-        return;
-      }
-
-      activeRequest.current?.abort();
-      const controller = new AbortController();
-      activeRequest.current = controller;
-      setIsLoading(true);
-      setError("");
-
-      const params = new URLSearchParams({
-        q: debouncedQuery.trim(),
-        limit: String(resultLimit),
-        offset: String(nextOffset),
-      });
-
-      if (grade) {
-        params.set("grade", grade);
-      }
-
-      try {
-        const response = await fetch(
-          `/api/schools/search?${params.toString()}`,
-          { signal: controller.signal }
-        );
-
-        if (!response.ok) {
-          throw new Error("school_search_failed");
-        }
-
-        const data = (await response.json()) as {
-          success: boolean;
-          results: SchoolSearchRecord[];
-          total: number;
-          hasMore: boolean;
-        };
-        setResults((current) =>
-          mode === "append" ? [...current, ...data.results] : data.results
-        );
-        setTotal(data.total);
-        setHasMore(data.hasMore);
-        setHasSearched(true);
-      } catch (fetchError) {
-        if (
-          fetchError instanceof DOMException &&
-          fetchError.name === "AbortError"
-        ) {
-          return;
-        }
-        setError(
-          "We couldn't search schools right now. Please try again."
-        );
-      } finally {
-        if (activeRequest.current === controller) {
-          setIsLoading(false);
-        }
-      }
-    },
-    [debouncedQuery, grade]
-  );
-
-  /* ── Auto-search on debounced query or grade change ── */
-  useEffect(() => {
-    if (!panelOpen) return;
-
-    if (!queryReady) {
-      setResults([]);
-      setTotal(0);
-      setHasMore(false);
-      setHasSearched(false);
-      return;
-    }
-
-    void fetchResults(0, "replace");
-  }, [fetchResults, panelOpen, queryReady]);
+  const {
+    query,
+    grade,
+    results,
+    total,
+    hasMore,
+    hasSearched,
+    panelOpen,
+    isLoading,
+    error,
+    queryReady,
+    setPanelOpen,
+    fetchResults,
+    updateQuery,
+    updateGrade,
+  } = usePaginatedSchoolSearch({
+    gradeAllValue: "",
+    resultLimit,
+    errorMessage: "We couldn't search schools right now. Please try again.",
+  });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -145,16 +57,6 @@ export function HeroSearch() {
     if (queryReady) {
       void fetchResults(0, "replace");
     }
-  }
-
-  function updateQuery(value: string) {
-    setQuery(value);
-    setPanelOpen(true);
-  }
-
-  function updateGrade(value: string) {
-    setGrade(value);
-    setPanelOpen(true);
   }
 
   return (

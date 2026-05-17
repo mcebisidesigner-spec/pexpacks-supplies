@@ -13,7 +13,7 @@ type SearchHelperPillProps = {
 };
 
 const defaultMessage =
-  "We currently cater for Gauteng schools. Find your school by name.";
+  "We currently cater for Gauteng schools. More provinces will be added soon";
 
 const exitAnimationMs = 200;
 
@@ -46,7 +46,7 @@ export function SearchHelperPill({
   isInputFocused,
   inputValue,
   message = defaultMessage,
-  autoDismissMs = 5000,
+  autoDismissMs = 7000,
   className,
 }: SearchHelperPillProps) {
   const [visible, setVisible] = useState(false);

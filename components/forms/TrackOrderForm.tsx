@@ -46,7 +46,7 @@ export function TrackOrderForm() {
     };
 
     try {
-      const res = await fetch("/api/forms/contact", {
+      const res = await fetch("/api/forms/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

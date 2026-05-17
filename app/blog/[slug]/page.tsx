@@ -1,12 +1,11 @@
-import { Metadata } from "next";
-import Link from "next/link";
+import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CTASection } from "@/components/marketing/CTASection";
 import { blogPosts, getPostBySlug } from "@/data/blog";
 import styles from "../Blog.module.css";
-import { CTASection } from "@/components/marketing/CTASection";
 
-// This is crucial for static generation of all blog posts
 export async function generateStaticParams() {
   return blogPosts.map((post) => ({
     slug: post.slug,
@@ -64,7 +63,7 @@ export default async function BlogPostPage({
           <h1>{post.title}</h1>
           <div className={styles.blogMeta}>
             <span>By {post.author}</span>
-            <span>•</span>
+            <span aria-hidden="true">&bull;</span>
             <time dateTime={post.date}>
               {new Date(post.date).toLocaleDateString("en-ZA", {
                 year: "numeric",
@@ -75,7 +74,7 @@ export default async function BlogPostPage({
           </div>
         </header>
 
-        {post.image && (
+        {post.image ? (
           <div className={styles.postHeroImage}>
             <Image
               src={post.image}
@@ -86,11 +85,12 @@ export default async function BlogPostPage({
               priority
             />
           </div>
-        )}
+        ) : null}
 
         <div className={styles.postContent}>
           {post.content.map((paragraph, index) => {
             const imageMatch = paragraph.match(/^!\[(.*?)\]\((.*?)\)$/);
+
             if (imageMatch) {
               return (
                 <div key={index} className={styles.postInlineImage}>
@@ -112,6 +112,7 @@ export default async function BlogPostPage({
                 </div>
               );
             }
+
             if (paragraph.startsWith("## ")) {
               return (
                 <h2
@@ -127,6 +128,7 @@ export default async function BlogPostPage({
                 </h2>
               );
             }
+
             return <p key={index}>{paragraph}</p>;
           })}
         </div>

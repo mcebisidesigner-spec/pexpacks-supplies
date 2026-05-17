@@ -40,8 +40,13 @@ export default function OfficePacksPage() {
         panelTitle="Office essentials packed and delivered, so your business keeps moving."
       >
         <div className={styles.buttonRow}>
-          <Button href="/contact">Request a Quote</Button>
-          <Button href="/order" variant="white">
+          <Button href="/contact?type=office&subject=Office%20pack%20quote">
+            Request a Quote
+          </Button>
+          <Button
+            href="/contact?type=office&subject=Office%20pack%20order"
+            variant="white"
+          >
             Order a Pack
           </Button>
         </div>
@@ -79,7 +84,9 @@ export default function OfficePacksPage() {
                         : `From ${formatCurrency(pack.priceFrom)}`}
                     </span>
                     <Button
-                      href={`/contact?type=office&pack=${pack.slug}`}
+                      href={`/contact?type=office&subject=${encodeURIComponent(
+                        pack.name
+                      )}`}
                       size="sm"
                     >
                       Request Quote
@@ -137,7 +144,10 @@ export default function OfficePacksPage() {
                 comprehensive package for only <strong>R3,500.00</strong>.
               </p>
               <div className={styles.buttonRow}>
-                <Button href="/contact?type=brand-package" variant="white">
+                <Button
+                  href="/contact?subject=Business%20Starter%20Brand%20Package"
+                  variant="white"
+                >
                   Claim This Package
                 </Button>
               </div>
@@ -191,8 +201,13 @@ export default function OfficePacksPage() {
                 site needs practical supplies quickly.
               </p>
               <div className={styles.buttonRow}>
-                <Button href="/contact">Start Monthly Pack</Button>
-                <Button href="/contact?type=office" variant="white">
+                <Button href="/contact?type=office&subject=Monthly%20office%20pack">
+                  Start Monthly Pack
+                </Button>
+                <Button
+                  href="/contact?type=office&subject=Custom%20office%20quote"
+                  variant="white"
+                >
                   Custom Office Quote
                 </Button>
               </div>

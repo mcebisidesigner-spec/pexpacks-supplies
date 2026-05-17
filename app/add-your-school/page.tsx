@@ -19,7 +19,7 @@ export default function AddYourSchoolPage() {
     <>
       <PageHero
         eyebrow="Add your school"
-        title="Can’t find your school? Send us the details."
+        title="Can't find your school? Send us the details."
         text="Share the school name, location and grade list information. Pexpacks will review it and help prepare the correct stationery pack path."
         panelText="Need a pack today?"
         panelTitle="Use a standard grade combo while your school list is being reviewed."
