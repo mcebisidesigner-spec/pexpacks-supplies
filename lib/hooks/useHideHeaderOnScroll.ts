@@ -12,12 +12,14 @@ type UseHideHeaderOnScrollOptions = {
 export function useHideHeaderOnScroll({
   topThreshold = 24,
   hideAfter = 100,
-  directionThreshold = 10,
+  directionThreshold = 0,
   disabled = false,
 }: UseHideHeaderOnScrollOptions = {}) {
   const [isHidden, setIsHidden] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
-  const [scrollDirection, setScrollDirection] = useState<"up" | "down" | null>(null);
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down" | null>(
+    null
+  );
 
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
@@ -25,12 +27,10 @@ export function useHideHeaderOnScroll({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if (
-      disabled ||
-      document.body.classList.contains("menu-open") ||
-      document.body.style.overflow === "hidden"
-    ) {
+    if (disabled) {
       setIsHidden(false);
+      setIsAtTop(window.scrollY <= topThreshold);
+      setScrollDirection(null);
       return;
     }
 
@@ -38,6 +38,7 @@ export function useHideHeaderOnScroll({
 
     function updateHeaderState() {
       const currentScrollY = window.scrollY;
+      const delta = currentScrollY - lastScrollY.current;
 
       if (currentScrollY <= topThreshold) {
         setIsAtTop(true);
@@ -45,10 +46,17 @@ export function useHideHeaderOnScroll({
         setScrollDirection(null);
       } else {
         setIsAtTop(false);
-        if (currentScrollY > lastScrollY.current && currentScrollY > hideAfter) {
+
+        if (Math.abs(delta) <= directionThreshold) {
+          lastScrollY.current = currentScrollY;
+          ticking.current = false;
+          return;
+        }
+
+        if (delta > 0 && currentScrollY > hideAfter) {
           setIsHidden(true);
           setScrollDirection("down");
-        } else if (currentScrollY < lastScrollY.current) {
+        } else if (delta < 0) {
           setIsHidden(false);
           setScrollDirection("up");
         }
@@ -66,6 +74,7 @@ export function useHideHeaderOnScroll({
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    updateHeaderState();
 
     return () => {
       window.removeEventListener("scroll", onScroll);

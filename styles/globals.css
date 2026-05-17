@@ -269,6 +269,7 @@ button:disabled {
 .site-main {
   flex: 1;
   background: var(--pex-bg);
+  padding-top: var(--header-height-desktop);
 }
 
 /* ── Container utility ── */
@@ -288,5 +289,11 @@ button:disabled {
 @media (max-width: 768px) {
   .container {
     padding-inline: var(--gutter-mobile);
+  }
+}
+
+@media (max-width: 1023px) {
+  .site-main {
+    padding-top: var(--header-height-mobile);
   }
 }
