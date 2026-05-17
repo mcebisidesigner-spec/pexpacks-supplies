@@ -1,12 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { mostPopularPacksHref } from "@/data/packs";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
-import { SchoolResultCard } from "@/components/schools/SchoolResultCard";
-import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
+import { SchoolResultsPanel } from "@/components/schools/SchoolResultsPanel";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import styles from "./HeroSearch.module.css";
 
@@ -86,82 +83,18 @@ export function HeroSearch() {
             onChange={(event) => updateQuery(event.target.value)}
           />
         </label>
-        {panelOpen ? (
-          <div
-            className={styles.heroResultsPanel}
-            aria-live="polite"
-            data-school-results-scroll
-          >
-            {!queryReady ? (
-              <p className={styles.heroSearchState}>
-                Start typing a school name or choose a grade to find packs.
-              </p>
-            ) : null}
-
-            {isLoading ? (
-              <p className={styles.heroSearchState}>Searching schools...</p>
-            ) : null}
-
-            {!isLoading && queryReady && hasSearched && !error ? (
-              <>
-                <div className={styles.resultsCount}>
-                  <strong>
-                    {total === 1 ? "1 school found" : `${total} schools found`}
-                  </strong>
-                  {total > 0 ? (
-                    <span>
-                      Showing {results.length} of {total}
-                    </span>
-                  ) : null}
-                </div>
-
-                {results.length > 0 ? (
-                  <div className={styles.heroResultsList}>
-                    {results.map((school) => (
-                      <SchoolResultCard school={school} key={school.id} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className={styles.noResultsState}>
-                    <p className={styles.heroSearchState}>
-                      No matching schools found.
-                    </p>
-                    <div className={styles.noResultsActions}>
-                      <Link
-                        href="/add-your-school#school-request-form"
-                        className={styles.addSchoolLink}
-                      >
-                        Add your school
-                      </Link>
-                      <Link
-                        href={mostPopularPacksHref}
-                        className={styles.standardPackLink}
-                      >
-                        Buy standard pack
-                      </Link>
-                    </div>
-                  </div>
-                )}
-
-                <SchoolResultsAutoLoad
-                  hasMore={hasMore}
-                  isLoading={isLoading}
-                  onLoadMore={() => fetchResults(results.length, "append")}
-                  className={styles.loadMoreSentinel}
-                />
-                {hasMore ? (
-                  <button
-                    className={styles.loadMoreButton}
-                    type="button"
-                    onClick={() => fetchResults(results.length, "append")}
-                  >
-                    Load more schools
-                  </button>
-                ) : null}
-              </>
-            ) : null}
-          </div>
-        ) : null}
+        <SchoolResultsPanel
+          isOpen={panelOpen}
+          isLoading={isLoading}
+          hasSearched={hasSearched}
+          queryReady={queryReady}
+          results={results}
+          total={total}
+          visibleCount={results.length}
+          hasMore={hasMore}
+          error={error}
+          onLoadMore={() => fetchResults(results.length, "append")}
+        />
         <label className={styles.field}>
           <span>Grade</span>
           <select
