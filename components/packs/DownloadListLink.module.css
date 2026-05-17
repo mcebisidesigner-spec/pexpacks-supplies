@@ -5,12 +5,17 @@
   gap: 6px;
   width: fit-content;
   min-height: 36px;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
   color: var(--pex-text-muted);
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
   text-decoration: underline;
   text-underline-offset: 3px;
+  cursor: pointer;
   transition: color 180ms ease;
 }
 
@@ -18,10 +23,28 @@
   color: var(--pex-keppel);
 }
 
+.link:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
 .link:focus-visible {
   outline: 2px solid var(--pex-coral);
   outline-offset: 4px;
   color: var(--pex-primary);
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 640px) {
@@ -33,5 +56,9 @@
 @media (prefers-reduced-motion: reduce) {
   .link {
     transition: none;
+  }
+
+  .spinner {
+    animation: none;
   }
 }

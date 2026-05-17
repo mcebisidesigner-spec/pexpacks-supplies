@@ -78,14 +78,11 @@ export function GradePackActions({
   const total = useMemo(() => calculatePackTotal(selection) ?? 0, [selection]);
   const displayedTotal = total > 0 ? formatCurrency(total) : "R 0";
   const selectedCount = selectedItems.length;
-  const listText = [
-    `${pack.schoolName} ${pack.grade} Stationery Pack`,
-    "",
-    ...pack.items.map((item) => `- ${item.requiredQuantity} x ${item.name}`),
-  ].join("\n");
-  const downloadHref = `data:text/plain;charset=utf-8,${encodeURIComponent(
-    listText
-  )}`;
+  const pdfItems = pack.items.map((item) => ({
+    name: item.name,
+    quantity: item.requiredQuantity,
+    specification: "",
+  }));
 
   const closeCustomiser = useCallback(() => {
     setIsOpen(false);
@@ -325,8 +322,18 @@ export function GradePackActions({
       </div>
       {showDownloadLink ? (
         <DownloadListLink
-          href={downloadHref}
-          download={`${pack.schoolSlug}-${pack.gradeSlug}-stationery-list.txt`}
+          pdfOptions={{
+            schoolName: pack.schoolName,
+            grade: pack.grade,
+            items: pdfItems,
+            estimatedPrice: formatCurrency(
+              pack.items.reduce(
+                (sum, item) => sum + (item.unitPrice ?? 0) * item.requiredQuantity,
+                0
+              )
+            ),
+            fileName: `${pack.schoolSlug}-${pack.gradeSlug}`,
+          }}
         />
       ) : null}
 

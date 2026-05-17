@@ -65,38 +65,8 @@ function toPhaseListItems(pack: GradePackTemplate): PackListItem[] {
   }));
 }
 
-function buildPhaseDownloadText(phaseData: PhasePack, pack: GradePackTemplate) {
-  return [
-    `${pack.title} - Stationery List`,
-    `Phase: ${phaseData.title}`,
-    "",
-    ...pack.items.map(
-      (item) =>
-        `- ${item.quantity} x ${item.name}${
-          item.specification ? ` (${item.specification})` : ""
-        }`
-    ),
-    "",
-    `Estimated price from: ${formatCurrency(pack.priceFrom)}`,
-    "",
-    "Prepared by Pexpacks - pexpacks.co.za",
-  ].join("\n");
-}
 
-function buildPhaseDownloadHref(phaseData: PhasePack, pack: GradePackTemplate) {
-  return `data:text/plain;charset=utf-8,${encodeURIComponent(
-    buildPhaseDownloadText(phaseData, pack)
-  )}`;
-}
 
-function buildPhaseDownloadFileName(
-  phaseData: PhasePack,
-  pack: GradePackTemplate
-) {
-  return `${phaseData.slug}-${pack.grade
-    .toLowerCase()
-    .replace(/\s+/g, "-")}-stationery-list.txt`;
-}
 
 function getCardTone(phaseSlug: string): "default" | "primary" | "high" {
   if (phaseSlug === "primary-school") {
@@ -156,8 +126,19 @@ function PhasePackActions({
         </Button>
       </div>
       <DownloadListLink
-        href={buildPhaseDownloadHref(phaseData, pack)}
-        download={buildPhaseDownloadFileName(phaseData, pack)}
+        pdfOptions={{
+          schoolName: phaseData.title,
+          grade: pack.grade,
+          items: pack.items.map((item) => ({
+            name: item.name,
+            quantity: item.quantity,
+            specification: item.specification ?? "",
+          })),
+          estimatedPrice: formatCurrency(pack.priceFrom),
+          fileName: `${phaseData.slug}-${pack.grade
+            .toLowerCase()
+            .replace(/\s+/g, "-")}`,
+        }}
       />
     </>
   );
