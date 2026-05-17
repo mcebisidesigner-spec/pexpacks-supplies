@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
 import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
+import { ReturningParentBanner } from "@/components/schools/ReturningParentBanner";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
@@ -55,6 +56,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
           initialGrade={firstValue(params.grade) ?? "all"}
         />
       </SchoolsPageHero>
+      <ReturningParentBanner />
 
       {featuredSchools.length > 0 && (
         <FeaturedSchoolsBanner schools={featuredSchools} />

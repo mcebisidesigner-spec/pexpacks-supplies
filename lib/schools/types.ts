@@ -9,6 +9,8 @@ export type SchoolSearchRecord = {
   isFeatured?: boolean;
   isPartner?: boolean;
   image?: string;
+  /** Lowest grade pack price for this school (in ZAR cents) */
+  lowestPrice?: number;
 };
 
 export type SchoolSearchFilters = {

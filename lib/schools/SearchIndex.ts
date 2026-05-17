@@ -141,6 +141,7 @@ export class SchoolSearchIndex {
         isFeatured: s.isFeatured,
         isPartner: s.isPartner,
         image: s.image,
+        lowestPrice: s.lowestPrice,
       })),
       total: candidates.length,
       limit: safeLimit,

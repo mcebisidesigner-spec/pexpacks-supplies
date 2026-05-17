@@ -5,6 +5,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { mostPopularPacksHref } from "@/data/packs";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
+import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import styles from "./HeroSearch.module.css";
 
@@ -182,6 +183,12 @@ export function HeroSearch() {
                     </div>
                   </div>
                 )}
+                <SchoolResultsAutoLoad
+                  hasMore={hasMore}
+                  isLoading={isLoading}
+                  onLoadMore={() => fetchResults(results.length, "append")}
+                  className={styles.loadMoreSentinel}
+                />
                 {hasMore ? (
                   <button
                     className={styles.loadMoreButton}

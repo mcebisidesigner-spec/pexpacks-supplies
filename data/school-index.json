@@ -48,7 +48,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-auckland-park-primary",
@@ -99,7 +100,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-brixton-primary",
@@ -150,7 +152,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-melville-primary",
@@ -201,7 +204,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-westbury-primary",
@@ -252,7 +256,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-roosevelt-primary",
@@ -303,7 +308,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-emmarentia-primary",
@@ -354,7 +360,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-greenside-primary",
@@ -405,7 +412,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-linden-primary",
@@ -456,7 +464,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-blairgowrie-primary",
@@ -507,7 +516,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-craighall-primary",
@@ -558,7 +568,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-bryanston-primary",
@@ -609,7 +620,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-randburg-primary",
@@ -660,7 +672,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-ferndale-primary",
@@ -711,7 +724,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-fairland-primary",
@@ -762,7 +776,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-berario-primary",
@@ -813,7 +828,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-northcliff-primary",
@@ -864,7 +880,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-victory-park-primary",
@@ -915,7 +932,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-mayfair-primary",
@@ -966,7 +984,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-fordsburg-primary",
@@ -1017,7 +1036,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-turffontein-primary",
@@ -1068,7 +1088,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 709
   },
   {
     "id": "school-rosettenville-primary",
@@ -1119,7 +1140,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-la-rochelle-primary",
@@ -1170,7 +1192,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-malvern-primary",
@@ -1221,7 +1244,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-jeppestown-primary",
@@ -1272,7 +1296,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-yeoville-primary",
@@ -1323,7 +1348,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-belgravia-primary",
@@ -1374,7 +1400,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-kensington-primary",
@@ -1425,7 +1452,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-troyeville-primary",
@@ -1476,7 +1504,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-observatory-primary",
@@ -1527,7 +1556,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-bez-valley-primary",
@@ -1578,7 +1608,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-judith-memoria-primary",
@@ -1629,7 +1660,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-bertrams-primary",
@@ -1680,7 +1712,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-hillbrow-primary",
@@ -1731,7 +1764,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-berea-primary",
@@ -1782,7 +1816,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-cyrildene-primary",
@@ -1833,7 +1868,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-bramley-primary",
@@ -1884,7 +1920,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-lombardy-east-primary",
@@ -1935,7 +1972,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-rembrandt-park-primary",
@@ -1986,7 +2024,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-sandown-primary",
@@ -2037,7 +2076,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-hyde-park-primary",
@@ -2088,7 +2128,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-rivonia-primary",
@@ -2139,7 +2180,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-morningside-primary",
@@ -2190,7 +2232,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-sunningdale-primary",
@@ -2241,7 +2284,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-glenhazel-primary",
@@ -2292,7 +2336,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-fairmount-primary",
@@ -2343,7 +2388,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-sandringham-primary",
@@ -2394,7 +2440,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-lyndhurst-primary",
@@ -2445,7 +2492,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-orchards-primary",
@@ -2496,7 +2544,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-norwood-primary",
@@ -2547,7 +2596,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-orange-grove-primary",
@@ -2598,7 +2648,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-houghton-primary",
@@ -2649,7 +2700,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-saxonwold-primary",
@@ -2700,7 +2752,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-killarney-primary",
@@ -2751,7 +2804,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-illovo-primary",
@@ -2802,7 +2856,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-rosebank-primary",
@@ -2853,7 +2908,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-parkmore-primary",
@@ -2904,7 +2960,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-benmore-primary",
@@ -2955,7 +3012,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-atholl-primary",
@@ -3006,7 +3064,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-dunkeld-primary",
@@ -3057,7 +3116,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-northcliff-high",
@@ -3093,7 +3153,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-parktown-high",
@@ -3129,7 +3190,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-greenside-high",
@@ -3165,7 +3227,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-linden-high",
@@ -3201,7 +3264,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-roosevelt-high",
@@ -3237,7 +3301,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-emmarentia-high",
@@ -3273,7 +3338,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-bryanston-high",
@@ -3309,7 +3375,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-randburg-high",
@@ -3345,7 +3412,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-ferndale-high",
@@ -3381,7 +3449,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-blairgowrie-high",
@@ -3417,7 +3486,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-fairland-high",
@@ -3453,7 +3523,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-mayfair-high",
@@ -3489,7 +3560,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-turffontein-high",
@@ -3525,7 +3597,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-rosettenville-high",
@@ -3561,7 +3634,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-malvern-high",
@@ -3597,7 +3671,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-jeppestown-high",
@@ -3633,7 +3708,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-kensington-high",
@@ -3669,7 +3745,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-berea-high",
@@ -3705,7 +3782,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-bramley-high",
@@ -3741,7 +3819,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-sandown-high",
@@ -3777,7 +3856,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-hyde-park-high",
@@ -3813,7 +3893,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-rivonia-high",
@@ -3849,7 +3930,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-king-edward-vii",
@@ -3885,7 +3967,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-barnato-park-high",
@@ -3921,7 +4004,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-forest-high",
@@ -3957,7 +4041,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-athlone-boys-high",
@@ -3993,7 +4078,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-athlone-girls-high",
@@ -4029,7 +4115,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-jeppe-high-boys",
@@ -4065,7 +4152,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-jeppe-high-girls",
@@ -4101,7 +4189,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-highlands-north-high",
@@ -4137,7 +4226,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-orlando-west-primary",
@@ -4188,7 +4278,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-meadowlands-primary",
@@ -4239,7 +4330,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-diepkloof-primary",
@@ -4290,7 +4382,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-pimville-primary",
@@ -4341,7 +4434,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-naledi-primary",
@@ -4392,7 +4486,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-zola-primary",
@@ -4443,7 +4538,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-jabulani-primary",
@@ -4494,7 +4590,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-mofolo-primary",
@@ -4545,7 +4642,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-dube-primary",
@@ -4596,7 +4694,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-klipspruit-primary",
@@ -4647,7 +4746,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-moroka-primary",
@@ -4698,7 +4798,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-chiawelo-primary",
@@ -4749,7 +4850,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-protea-glen-primary",
@@ -4800,7 +4902,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-dobsonville-primary",
@@ -4851,7 +4954,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-braamfischerville-primary",
@@ -4902,7 +5006,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-mapetla-primary",
@@ -4953,7 +5058,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-moletsane-primary",
@@ -5004,7 +5110,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-tladi-primary",
@@ -5055,7 +5162,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-phiri-primary",
@@ -5106,7 +5214,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-senaoane-primary",
@@ -5157,7 +5266,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-emdeni-primary",
@@ -5208,7 +5318,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-zondi-primary",
@@ -5259,7 +5370,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-white-city-primary",
@@ -5310,7 +5422,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-central-western-jabavu-primary",
@@ -5361,7 +5474,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-jabavu-primary",
@@ -5412,7 +5526,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-molapo-primary",
@@ -5463,7 +5578,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-power-park-primary",
@@ -5514,7 +5630,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-noordgesig-primary",
@@ -5565,7 +5682,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-pennyville-primary",
@@ -5616,7 +5734,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-mmesi-park-primary",
@@ -5667,7 +5786,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-orlando-high",
@@ -5703,7 +5823,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-meadowlands-high",
@@ -5739,7 +5860,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-morris-isaacson-high",
@@ -5775,7 +5897,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-musi-high",
@@ -5811,7 +5934,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-pace-commercial-high",
@@ -5847,7 +5971,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-sekano-ntoane-high",
@@ -5883,7 +6008,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-phefeni-high",
@@ -5919,7 +6045,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 869
   },
   {
     "id": "school-madibane-high",
@@ -5955,7 +6082,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-immaculata-high",
@@ -5991,7 +6119,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-fons-luminis-high",
@@ -6027,7 +6156,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-ithute-high",
@@ -6063,7 +6193,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-bopasenatla-high",
@@ -6099,7 +6230,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-aha-thuto-high",
@@ -6135,7 +6267,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-ibhongo-high",
@@ -6171,7 +6304,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-lavela-high",
@@ -6207,7 +6341,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-sandton-primary",
@@ -6258,7 +6393,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-sandhurst-primary",
@@ -6309,7 +6445,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-kramerville-primary",
@@ -6360,7 +6497,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-woodmead-primary",
@@ -6411,7 +6549,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-buccleuch-primary",
@@ -6462,7 +6601,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-bryandale-primary",
@@ -6513,7 +6653,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-hurlingham-primary",
@@ -6564,7 +6705,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-sandton-morningside-primary",
@@ -6615,7 +6757,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-sandton-atholl-primary",
@@ -6666,7 +6809,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-sandton-rivonia-primary",
@@ -6717,7 +6861,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-sunninghill-primary",
@@ -6768,7 +6913,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-paulshof-primary",
@@ -6819,7 +6965,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-lonehill-primary",
@@ -6870,7 +7017,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-fourways-primary",
@@ -6921,7 +7069,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-dainfern-primary",
@@ -6972,7 +7121,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-chartwell-primary",
@@ -7023,7 +7173,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-broadacres-primary",
@@ -7074,7 +7225,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-kya-sand-primary",
@@ -7125,7 +7277,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-olivedale-primary",
@@ -7176,7 +7329,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-northriding-primary",
@@ -7227,7 +7381,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-sandton-sandown-high",
@@ -7263,7 +7418,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-fourways-high",
@@ -7299,7 +7455,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-sandton-bryanston-high",
@@ -7335,7 +7492,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-dainfern-high",
@@ -7371,7 +7529,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-beaulieu-high",
@@ -7407,7 +7566,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-northriding-high",
@@ -7443,7 +7603,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-lonehill-high",
@@ -7479,7 +7640,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-sunninghill-high",
@@ -7515,7 +7677,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-randpark-high",
@@ -7551,7 +7714,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-kyalami-high",
@@ -7587,7 +7751,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-roodepoort-primary",
@@ -7638,7 +7803,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-florida-primary",
@@ -7689,7 +7855,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-maraisburg-primary",
@@ -7740,7 +7907,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-constantia-kloof-primary",
@@ -7791,7 +7959,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-wilro-park-primary",
@@ -7842,7 +8011,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-horison-primary",
@@ -7893,7 +8063,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-linmeyer-primary",
@@ -7944,7 +8115,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-helderkruin-primary",
@@ -7995,7 +8167,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-ruimsig-primary",
@@ -8046,7 +8219,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-honeydew-primary",
@@ -8097,7 +8271,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-strubens-valley-primary",
@@ -8148,7 +8323,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-little-falls-primary",
@@ -8199,7 +8375,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-quellerina-primary",
@@ -8250,7 +8427,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-weltevredenpark-primary",
@@ -8301,7 +8479,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-northgate-primary",
@@ -8352,7 +8531,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-randgate-primary",
@@ -8403,7 +8583,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-featherbrooke-primary",
@@ -8454,7 +8635,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-muldersdrift-primary",
@@ -8505,7 +8687,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-zandspruit-primary",
@@ -8556,7 +8739,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-cosmo-city-primary",
@@ -8607,7 +8791,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-roodepoort-high",
@@ -8643,7 +8828,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-florida-high",
@@ -8679,7 +8865,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-horison-high",
@@ -8715,7 +8902,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-helderkruin-high",
@@ -8751,7 +8939,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-ruimsig-high",
@@ -8787,7 +8976,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-honeydew-high",
@@ -8823,7 +9013,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-weltevredenpark-high",
@@ -8859,7 +9050,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-northgate-high",
@@ -8895,7 +9087,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-muldersdrift-high",
@@ -8931,7 +9124,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-cosmo-city-high",
@@ -8967,7 +9161,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-alexandra-primary",
@@ -9018,7 +9213,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-ithute-primary",
@@ -9069,7 +9265,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-bovet-primary",
@@ -9120,7 +9317,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-eastbank-primary",
@@ -9171,7 +9369,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-minerva-primary",
@@ -9222,7 +9421,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-iphuteng-primary",
@@ -9273,7 +9473,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-pholosho-primary",
@@ -9324,7 +9525,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-itirele-primary",
@@ -9375,7 +9577,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-realogile-primary",
@@ -9426,7 +9629,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-zenzeleni-primary",
@@ -9477,7 +9681,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-alexandra-high",
@@ -9513,7 +9718,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-eastbank-high",
@@ -9549,7 +9755,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-realogile-high",
@@ -9585,7 +9792,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-minerva-high",
@@ -9621,7 +9829,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-pholosho-high",
@@ -9657,7 +9866,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-benoni-primary",
@@ -9708,7 +9918,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-rynfield-primary",
@@ -9759,7 +9970,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-crystal-park-primary",
@@ -9810,7 +10022,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-farrarmere-primary",
@@ -9861,7 +10074,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-benoni-west-primary",
@@ -9912,7 +10126,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-benoni-junior",
@@ -9963,7 +10178,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-arbor-primary",
@@ -10014,7 +10230,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-pioneer-primary",
@@ -10065,7 +10282,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-rynsoord-primary",
@@ -10116,7 +10334,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-actonville-primary",
@@ -10167,7 +10386,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-albertina-sisulu-primary",
@@ -10218,7 +10438,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-chief-luthuli-primary",
@@ -10269,7 +10490,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-ekukhanyeni-primary",
@@ -10320,7 +10542,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-isaac-makau-primary",
@@ -10371,7 +10594,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-putfontein-primary",
@@ -10422,7 +10646,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-brentwood-park-primary",
@@ -10473,7 +10698,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-northmead-primary",
@@ -10524,7 +10750,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-sazakhela-primary",
@@ -10575,7 +10802,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-mokgoba-primary",
@@ -10626,7 +10854,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-bhekimfundo-primary",
@@ -10677,7 +10906,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-benoni-high",
@@ -10713,7 +10943,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-willowmoore-high",
@@ -10749,7 +10980,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-wordsworth-high",
@@ -10785,7 +11017,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-crystal-park-high",
@@ -10821,7 +11054,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-petit-high",
@@ -10857,7 +11091,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-unity-high",
@@ -10893,7 +11128,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-hulwazi-high",
@@ -10929,7 +11165,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-liverpool-high",
@@ -10965,7 +11202,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-tamboville-high",
@@ -11001,7 +11239,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-william-hills-high",
@@ -11037,7 +11276,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-boksburg-primary",
@@ -11088,7 +11328,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-sunward-park-primary",
@@ -11139,7 +11380,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-reiger-park-primary",
@@ -11190,7 +11432,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-vosloorus-primary",
@@ -11241,7 +11484,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-windmill-park-primary",
@@ -11292,7 +11536,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-parkrand-primary",
@@ -11343,7 +11588,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-witfield-primary",
@@ -11394,7 +11640,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-jet-park-primary",
@@ -11445,7 +11692,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-bardene-primary",
@@ -11496,7 +11744,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-ravenswood-primary",
@@ -11547,7 +11796,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-elsburg-primary",
@@ -11598,7 +11848,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-comet-primary",
@@ -11649,7 +11900,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-freeway-park-primary",
@@ -11700,7 +11952,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-leondale-primary",
@@ -11751,7 +12004,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-dalview-primary",
@@ -11802,7 +12056,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-boksburg-high",
@@ -11838,7 +12093,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-sunward-park-high",
@@ -11874,7 +12130,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-reiger-park-high",
@@ -11910,7 +12167,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-vosloorus-high",
@@ -11946,7 +12204,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-parkrand-high",
@@ -11982,7 +12241,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-witfield-high",
@@ -12018,7 +12278,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-freeway-park-high",
@@ -12054,7 +12315,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-leondale-high",
@@ -12090,7 +12352,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-dalview-high",
@@ -12126,7 +12389,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-comet-high",
@@ -12162,7 +12426,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-kempton-park-primary",
@@ -12213,7 +12478,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-birchleigh-primary",
@@ -12264,7 +12530,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-norhem-primary",
@@ -12315,7 +12582,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-pomona-primary",
@@ -12366,7 +12634,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-glen-marais-primary",
@@ -12417,7 +12686,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-bonaero-park-primary",
@@ -12468,7 +12738,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-spartan-primary",
@@ -12519,7 +12790,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-edleen-primary",
@@ -12570,7 +12842,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-aston-manor-primary",
@@ -12621,7 +12894,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-cresslawn-primary",
@@ -12672,7 +12946,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-van-riebeeck-park-primary",
@@ -12723,7 +12998,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-birch-acres-primary",
@@ -12774,7 +13050,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-tembisa-south-primary",
@@ -12825,7 +13102,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-esther-park-primary",
@@ -12876,7 +13154,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-bredell-primary",
@@ -12927,7 +13206,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-kempton-park-high",
@@ -12963,7 +13243,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-birchleigh-high",
@@ -12999,7 +13280,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-norhem-high",
@@ -13035,7 +13317,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-pomona-high",
@@ -13071,7 +13354,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-glen-marais-high",
@@ -13107,7 +13391,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-bonaero-park-high",
@@ -13143,7 +13428,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-spartan-high",
@@ -13179,7 +13465,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-edleen-high",
@@ -13215,7 +13502,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-aston-manor-high",
@@ -13251,7 +13539,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-cresslawn-high",
@@ -13287,7 +13576,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-germiston-primary",
@@ -13338,7 +13628,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-lambton-primary",
@@ -13389,7 +13680,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-dinwiddie-primary",
@@ -13440,7 +13732,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-delmore-primary",
@@ -13491,7 +13784,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-rondebult-primary",
@@ -13542,7 +13836,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-elspark-primary",
@@ -13593,7 +13888,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-klippoortje-primary",
@@ -13644,7 +13940,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-wadeville-primary",
@@ -13695,7 +13992,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-parkhill-primary",
@@ -13746,7 +14044,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-knights-primary",
@@ -13797,7 +14096,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-elandsfontein-primary",
@@ -13848,7 +14148,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-driehoek-primary",
@@ -13899,7 +14200,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-elma-park-primary",
@@ -13950,7 +14252,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-castleview-primary",
@@ -14001,7 +14304,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-meadowbrook-primary",
@@ -14052,7 +14356,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-germiston-high",
@@ -14088,7 +14393,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-dawnview-high",
@@ -14124,7 +14430,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-elspark-high",
@@ -14160,7 +14467,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-delmore-high",
@@ -14196,7 +14504,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-rondebult-high",
@@ -14232,7 +14541,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-wadeville-high",
@@ -14268,7 +14578,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-dinwiddie-high",
@@ -14304,7 +14615,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-knights-high",
@@ -14340,7 +14652,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-elandsfontein-high",
@@ -14376,7 +14689,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-driehoek-high",
@@ -14412,7 +14726,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-edenvale-primary",
@@ -14463,7 +14778,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-greenstone-primary",
@@ -14514,7 +14830,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-edenvale-bredell-primary",
@@ -14565,7 +14882,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-dowerglen-primary",
@@ -14616,7 +14934,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-eastleigh-primary",
@@ -14667,7 +14986,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-dunvegan-primary",
@@ -14718,7 +15038,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-modderfontein-primary",
@@ -14769,7 +15090,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-sebenza-primary",
@@ -14820,7 +15142,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-klipfontein-primary",
@@ -14871,7 +15194,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-eden-park-primary",
@@ -14922,7 +15246,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-edenvale-high",
@@ -14958,7 +15283,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-edenglen-high",
@@ -14994,7 +15320,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-greenstone-high",
@@ -15030,7 +15357,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-dowerglen-high",
@@ -15066,7 +15394,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-eastleigh-high",
@@ -15102,7 +15431,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-alberton-primary",
@@ -15153,7 +15483,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-new-redruth-primary",
@@ -15204,7 +15535,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-brackendowns-primary",
@@ -15255,7 +15587,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-meyersdal-primary",
@@ -15306,7 +15639,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-verwoerdpark-primary",
@@ -15357,7 +15691,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-randhart-primary",
@@ -15408,7 +15743,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-florentia-primary",
@@ -15459,7 +15795,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-alberante-primary",
@@ -15510,7 +15847,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-albertsdal-primary",
@@ -15561,7 +15899,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-henley-on-klip-primary",
@@ -15612,7 +15951,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-tokoza-primary",
@@ -15663,7 +16003,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-vosloorus-east-primary",
@@ -15714,7 +16055,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-alberton-eden-park-primary",
@@ -15765,7 +16107,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-palm-ridge-primary",
@@ -15816,7 +16159,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-thokoza-east-primary",
@@ -15867,7 +16211,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-alberton-high",
@@ -15903,7 +16248,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-brackendowns-high",
@@ -15939,7 +16285,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-meyersdal-high",
@@ -15975,7 +16322,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-randhart-high",
@@ -16011,7 +16359,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-florentia-high",
@@ -16047,7 +16396,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-alberante-high",
@@ -16083,7 +16433,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-tokoza-high",
@@ -16119,7 +16470,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-thokoza-high",
@@ -16155,7 +16507,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-palm-ridge-high",
@@ -16191,7 +16544,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-verwoerdpark-high",
@@ -16227,7 +16581,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-springs-primary",
@@ -16278,7 +16633,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-strubenvale-primary",
@@ -16329,7 +16685,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-casseldale-primary",
@@ -16380,7 +16737,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-selection-park-primary",
@@ -16431,7 +16789,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-kwa-thema-primary",
@@ -16482,7 +16841,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-bakerton-primary",
@@ -16533,7 +16893,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-geduld-primary",
@@ -16584,7 +16945,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-daggafontein-primary",
@@ -16635,7 +16997,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-pollak-park-primary",
@@ -16686,7 +17049,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-welgedacht-primary",
@@ -16737,7 +17101,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-springs-boys-high",
@@ -16773,7 +17138,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-springs-girls-high",
@@ -16809,7 +17175,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-eureka-high",
@@ -16845,7 +17212,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-johan-jurgens-high",
@@ -16881,7 +17249,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-springs-high",
@@ -16917,7 +17286,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-kenneth-masekela-high",
@@ -16953,7 +17323,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-kwa-thema-high",
@@ -16989,7 +17360,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-laban-motlhabi-high",
@@ -17025,7 +17397,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-strubenvale-high",
@@ -17061,7 +17434,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-casseldale-high",
@@ -17097,7 +17471,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-brakpan-primary",
@@ -17148,7 +17523,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-dalpark-primary",
@@ -17199,7 +17575,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-geldenhuys-primary",
@@ -17250,7 +17627,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-tsakane-primary",
@@ -17301,7 +17679,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-langaville-primary",
@@ -17352,7 +17731,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-brakpan-south-primary",
@@ -17403,7 +17783,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-sunward-primary",
@@ -17454,7 +17835,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-daveyton-primary",
@@ -17505,7 +17887,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-etwatwa-primary",
@@ -17556,7 +17939,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-apex-primary",
@@ -17607,7 +17991,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-brakpan-high",
@@ -17643,7 +18028,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-dalpark-high",
@@ -17679,7 +18065,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-tsakane-high",
@@ -17715,7 +18102,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-daveyton-high",
@@ -17751,7 +18139,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-etwatwa-high",
@@ -17787,7 +18176,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-langaville-high",
@@ -17823,7 +18213,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-sunward-high",
@@ -17859,7 +18250,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-apex-high",
@@ -17895,7 +18287,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-geldenhuys-high",
@@ -17931,7 +18324,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-brakpan-south-high",
@@ -17967,7 +18361,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-tembisa-primary",
@@ -18018,7 +18413,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-winnie-mandela-primary",
@@ -18069,7 +18465,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-rabasotho-primary",
@@ -18120,7 +18517,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-phomolong-primary",
@@ -18171,7 +18569,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-umthambeka-primary",
@@ -18222,7 +18621,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-ithemba-primary",
@@ -18273,7 +18673,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-kaalfontein-primary",
@@ -18324,7 +18725,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-ivory-park-primary",
@@ -18375,7 +18777,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-ebony-park-primary",
@@ -18426,7 +18829,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-esselen-park-primary",
@@ -18477,7 +18881,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-tswelopele-primary",
@@ -18528,7 +18933,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-endulwini-primary",
@@ -18579,7 +18985,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-oakmoor-primary",
@@ -18630,7 +19037,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-ekurhuleni-primary",
@@ -18681,7 +19089,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-midrand-view-primary",
@@ -18732,7 +19141,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-tembisa-high",
@@ -18768,7 +19178,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-winnie-mandela-high",
@@ -18804,7 +19215,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-boitumelong-high",
@@ -18840,7 +19252,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-bokomoso-high",
@@ -18876,7 +19289,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-jiyana-high",
@@ -18912,7 +19326,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-masiqhakaze-high",
@@ -18948,7 +19363,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-charlotte-maxeke-high",
@@ -18984,7 +19400,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-zitikeni-high",
@@ -19020,7 +19437,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-ikusasa-high",
@@ -19056,7 +19474,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-inqayizivele-high",
@@ -19092,7 +19511,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-nigel-primary",
@@ -19143,7 +19563,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-dunnottar-primary",
@@ -19194,7 +19615,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-ferryvale-primary",
@@ -19245,7 +19667,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-sharon-park-primary",
@@ -19296,7 +19719,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-alra-park-primary",
@@ -19347,7 +19771,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-duduza-primary",
@@ -19398,7 +19823,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-tsakane-east-primary",
@@ -19449,7 +19875,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-glenvista-primary",
@@ -19500,7 +19927,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-springs-road-primary",
@@ -19551,7 +19979,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-vorsterkroon-primary",
@@ -19602,7 +20031,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-nigel-high",
@@ -19638,7 +20068,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-dunnottar-high",
@@ -19674,7 +20105,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-ferryvale-high",
@@ -19710,7 +20142,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-duduza-high",
@@ -19746,7 +20179,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-alra-park-high",
@@ -19782,7 +20216,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-pretoria-primary",
@@ -19833,7 +20268,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-arcadia-primary",
@@ -19884,7 +20320,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-sunnyside-primary",
@@ -19935,7 +20372,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-hatfield-primary",
@@ -19986,7 +20424,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-brooklyn-primary",
@@ -20037,7 +20476,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-waterkloof-primary",
@@ -20088,7 +20528,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-groenkloof-primary",
@@ -20139,7 +20580,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-muckleneuk-primary",
@@ -20190,7 +20632,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-menlo-park-primary",
@@ -20241,7 +20684,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-lynnwood-primary",
@@ -20292,7 +20736,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-faerie-glen-primary",
@@ -20343,7 +20788,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-garsfontein-primary",
@@ -20394,7 +20840,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-moreleta-park-primary",
@@ -20445,7 +20892,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-equestria-primary",
@@ -20496,7 +20944,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-woodhill-primary",
@@ -20547,7 +20996,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-constantia-park-primary",
@@ -20598,7 +21048,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-erasmuskloof-primary",
@@ -20649,7 +21100,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-wapadrand-primary",
@@ -20700,7 +21152,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-willow-park-primary",
@@ -20751,7 +21204,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-murrayfield-primary",
@@ -20802,7 +21256,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-elardus-park-primary",
@@ -20853,7 +21308,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-cornwall-hill-primary",
@@ -20904,7 +21360,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-monument-park-primary",
@@ -20955,7 +21412,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-ashlea-gardens-primary",
@@ -21006,7 +21464,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-rietondale-primary",
@@ -21057,7 +21516,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-capital-park-primary",
@@ -21108,7 +21568,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-riviera-primary",
@@ -21159,7 +21620,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-villieria-primary",
@@ -21210,7 +21672,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-mountain-view-primary",
@@ -21261,7 +21724,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-gezina-primary",
@@ -21312,7 +21776,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-silverton-primary",
@@ -21363,7 +21828,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-weavind-park-primary",
@@ -21414,7 +21880,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-moot-primary",
@@ -21465,7 +21932,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-danville-primary",
@@ -21516,7 +21984,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-elandspoort-primary",
@@ -21567,7 +22036,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-pretoria-west-primary",
@@ -21618,7 +22088,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-west-park-primary",
@@ -21669,7 +22140,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-proclamation-hill-primary",
@@ -21720,7 +22192,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-claremont-primary",
@@ -21771,7 +22244,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-hercules-primary",
@@ -21822,7 +22296,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-pretoria-high",
@@ -21858,7 +22333,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-pretoria-boys-high",
@@ -21894,7 +22370,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-pretoria-girls-high",
@@ -21930,7 +22407,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-afrikaanse-hoer-meisies",
@@ -21966,7 +22444,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-afrikaanse-hoer-seunskool",
@@ -22002,7 +22481,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-waterkloof-high",
@@ -22038,7 +22518,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-menlo-park-high",
@@ -22074,7 +22555,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-garsfontein-high",
@@ -22110,7 +22592,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-lyttelton-manor-high",
@@ -22146,7 +22629,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-centurion-high",
@@ -22182,7 +22666,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-zwartkop-high",
@@ -22218,7 +22703,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-eldoraigne-high",
@@ -22254,7 +22740,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-uitsig-high",
@@ -22290,7 +22777,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-sutherland-high",
@@ -22326,7 +22814,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-montana-high",
@@ -22362,7 +22851,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-wonderboom-high",
@@ -22398,7 +22888,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-akasia-high",
@@ -22434,7 +22925,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-hoerskool-oos-moot",
@@ -22470,7 +22962,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-hoerskool-langenhoven",
@@ -22506,7 +22999,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-hoerskool-die-wilgers",
@@ -22542,7 +23036,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-centurion-primary",
@@ -22593,7 +23088,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-wierdapark-primary",
@@ -22644,7 +23140,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-swartkop-primary",
@@ -22695,7 +23192,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-doringkloof-primary",
@@ -22746,7 +23244,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-rooihuiskraal-primary",
@@ -22797,7 +23296,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-bakenkop-primary",
@@ -22848,7 +23348,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-hennopspark-primary",
@@ -22899,7 +23400,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-lyttelton-primary",
@@ -22950,7 +23452,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-irene-primary",
@@ -23001,7 +23504,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-highveld-primary",
@@ -23052,7 +23556,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-clubview-primary",
@@ -23103,7 +23608,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-pierre-van-ryneveld-primary",
@@ -23154,7 +23660,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-wierda-park-primary",
@@ -23205,7 +23712,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-zwartkop-primary",
@@ -23256,7 +23764,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-eldoraigne-primary",
@@ -23307,7 +23816,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-centurion-centurion-high",
@@ -23343,7 +23853,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-centurion-zwartkop-high",
@@ -23379,7 +23890,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-centurion-eldoraigne-high",
@@ -23415,7 +23927,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-centurion-lyttelton-manor-high",
@@ -23451,7 +23964,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-centurion-sutherland-high",
@@ -23487,7 +24001,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-rooihuiskraal-high",
@@ -23523,7 +24038,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-wierdapark-high",
@@ -23559,7 +24075,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-bakenkop-high",
@@ -23595,7 +24112,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-irene-high",
@@ -23631,7 +24149,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-highveld-high",
@@ -23667,7 +24186,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-midrand-primary",
@@ -23718,7 +24238,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-halfway-house-primary",
@@ -23769,7 +24290,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-vorna-valley-primary",
@@ -23820,7 +24342,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-carlswald-primary",
@@ -23871,7 +24394,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-noordwyk-primary",
@@ -23922,7 +24446,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-olifantsfontein-primary",
@@ -23973,7 +24498,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-barbeque-downs-primary",
@@ -24024,7 +24550,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-summerset-primary",
@@ -24075,7 +24602,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-blue-hills-primary",
@@ -24126,7 +24654,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-rabie-ridge-primary",
@@ -24177,7 +24706,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-kaalfontein-east-primary",
@@ -24228,7 +24758,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-commercia-primary",
@@ -24279,7 +24810,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-glen-austin-primary",
@@ -24330,7 +24862,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-kyalami-primary",
@@ -24381,7 +24914,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-waterfall-primary",
@@ -24432,7 +24966,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-midrand-high",
@@ -24468,7 +25003,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-noordwyk-high",
@@ -24504,7 +25040,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-carlswald-high",
@@ -24540,7 +25077,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-olifantsfontein-high",
@@ -24576,7 +25114,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-rabie-ridge-high",
@@ -24612,7 +25151,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-vorna-valley-high",
@@ -24648,7 +25188,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-kaalfontein-high",
@@ -24684,7 +25225,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-commercia-high",
@@ -24720,7 +25262,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 869
   },
   {
     "id": "school-waterfall-high",
@@ -24756,7 +25299,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-glen-austin-high",
@@ -24792,7 +25336,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-mamelodi-primary",
@@ -24843,7 +25388,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-balebogeng-primary",
@@ -24894,7 +25440,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-boikgantsho-primary",
@@ -24945,7 +25492,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-emasangwene-primary",
@@ -24996,7 +25544,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-ezazi-primary",
@@ -25047,7 +25596,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-ff-ribeiro-primary",
@@ -25098,7 +25648,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-koos-matli-primary",
@@ -25149,7 +25700,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-legora-primary",
@@ -25200,7 +25752,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-masingita-primary",
@@ -25251,7 +25804,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-bula-dikgoro-primary",
@@ -25302,7 +25856,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-agnes-chidi-primary",
@@ -25353,7 +25908,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-bajabulile-primary",
@@ -25404,7 +25960,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-emthunzini-primary",
@@ -25455,7 +26012,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-bohlabatsatsi-primary",
@@ -25506,7 +26064,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-dr-im-monare-primary",
@@ -25557,7 +26116,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-mamelodi-high",
@@ -25593,7 +26153,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-gatang-high",
@@ -25629,7 +26190,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-j-kekana-high",
@@ -25665,7 +26227,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-jafta-mahlangu-high",
@@ -25701,7 +26264,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-lehlabile-high",
@@ -25737,7 +26301,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-stanza-bopape-high",
@@ -25773,7 +26338,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-vlakfontein-high",
@@ -25809,7 +26375,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-mamelodi-west-high",
@@ -25845,7 +26412,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 869
   },
   {
     "id": "school-nellmapius-high",
@@ -25881,7 +26449,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-eerste-fabriek-high",
@@ -25917,7 +26486,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-bud-mbelle-primary",
@@ -25968,7 +26538,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-isaac-more-primary",
@@ -26019,7 +26590,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-kgabo-primary",
@@ -26070,7 +26642,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-kholofelo-primary",
@@ -26121,7 +26694,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-marematlou-primary",
@@ -26172,7 +26746,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-matseke-primary",
@@ -26223,7 +26798,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-mboweni-primary",
@@ -26274,7 +26850,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-patogeng-primary",
@@ -26325,7 +26902,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-seshegong-primary",
@@ -26376,7 +26954,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-walton-jameson-primary",
@@ -26427,7 +27006,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-banareng-primary",
@@ -26478,7 +27058,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-phuthaditshaba-primary",
@@ -26529,7 +27110,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-st-annes-primary",
@@ -26580,7 +27162,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-atteridgeville-primary",
@@ -26631,7 +27214,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 689
   },
   {
     "id": "school-lotus-primary",
@@ -26682,7 +27266,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-bokgoni-high",
@@ -26718,7 +27303,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-david-hellen-peta-high",
@@ -26754,7 +27340,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-dr-wf-nkomo-high",
@@ -26790,7 +27377,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-edward-phatudi-high",
@@ -26826,7 +27414,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-hofmeyr-high",
@@ -26862,7 +27451,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-phelindaba-high",
@@ -26898,7 +27488,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-saulridge-high",
@@ -26934,7 +27525,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-ribane-laka-high",
@@ -26970,7 +27562,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-atteridgeville-high",
@@ -27006,7 +27599,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-lotus-gardens-high",
@@ -27042,7 +27636,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-soshanguve-primary",
@@ -27093,7 +27688,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-itumeleng-madiba-primary",
@@ -27144,7 +27740,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-bokamoso-primary",
@@ -27195,7 +27792,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-gontse-primary",
@@ -27246,7 +27844,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-lethabong-primary",
@@ -27297,7 +27896,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-soshanguve-south-primary",
@@ -27348,7 +27948,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-block-l-primary",
@@ -27399,7 +28000,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-block-h-primary",
@@ -27450,7 +28052,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-block-k-primary",
@@ -27501,7 +28104,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-thorntree-primary",
@@ -27552,7 +28156,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-kopanong-primary",
@@ -27603,7 +28208,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-lerato-primary",
@@ -27654,7 +28260,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-refilwe-primary",
@@ -27705,7 +28312,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-lesedi-primary",
@@ -27756,7 +28364,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-tshepo-primary",
@@ -27807,7 +28416,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-soshanguve-high",
@@ -27843,7 +28453,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-soshanguve-south-high",
@@ -27879,7 +28490,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-central-high-soshanguve",
@@ -27915,7 +28527,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-soshanguve-technical-high",
@@ -27951,7 +28564,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-lebone-high",
@@ -27987,7 +28601,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-modiri-high",
@@ -28023,7 +28638,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-mapenane-high",
@@ -28059,7 +28675,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-rethabile-high",
@@ -28095,7 +28712,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-tirisano-high",
@@ -28131,7 +28749,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-motsweding-high",
@@ -28167,7 +28786,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-krugersdorp-primary",
@@ -28218,7 +28838,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-monument-primary",
@@ -28269,7 +28890,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-luipaardsvlei-primary",
@@ -28320,7 +28942,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-burgershoop-primary",
@@ -28371,7 +28994,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-dan-pienaar-primary",
@@ -28422,7 +29046,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-kenmare-primary",
@@ -28473,7 +29098,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-rant-en-dal-primary",
@@ -28524,7 +29150,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-west-village-primary",
@@ -28575,7 +29202,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-azaadville-primary",
@@ -28626,7 +29254,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-kagiso-primary",
@@ -28677,7 +29306,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-munsieville-primary",
@@ -28728,7 +29358,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-toekomsrus-primary",
@@ -28779,7 +29410,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-randfontein-primary",
@@ -28830,7 +29462,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-mohlakeng-primary",
@@ -28881,7 +29514,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-westonaria-primary",
@@ -28932,7 +29566,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-krugersdorp-high",
@@ -28968,7 +29603,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-monument-high",
@@ -29004,7 +29640,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 869
   },
   {
     "id": "school-luipaardsvlei-high",
@@ -29040,7 +29677,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-kagiso-high",
@@ -29076,7 +29714,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-azaadville-high",
@@ -29112,7 +29751,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-munsieville-high",
@@ -29148,7 +29788,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-toekomsrus-high",
@@ -29184,7 +29825,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-randfontein-high",
@@ -29220,7 +29862,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-mohlakeng-high",
@@ -29256,7 +29899,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   },
   {
     "id": "school-westonaria-high",
@@ -29292,7 +29936,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-vereeniging-primary",
@@ -29343,7 +29988,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-three-rivers-primary",
@@ -29394,7 +30040,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 699
   },
   {
     "id": "school-sharpeville-primary",
@@ -29445,7 +30092,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-lochvaal-primary",
@@ -29496,7 +30144,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-duncanville-primary",
@@ -29547,7 +30196,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-rust-ter-vaal-primary",
@@ -29598,7 +30248,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-boipatong-primary",
@@ -29649,7 +30300,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-bophelong-primary",
@@ -29700,7 +30352,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-sebokeng-primary",
@@ -29751,7 +30404,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-evaton-primary",
@@ -29802,7 +30456,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 669
   },
   {
     "id": "school-evaton-north-primary",
@@ -29853,7 +30508,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-orange-farm-primary",
@@ -29904,7 +30560,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 619
   },
   {
     "id": "school-lakeside-primary",
@@ -29955,7 +30612,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-roshnee-primary",
@@ -30006,7 +30664,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-arcon-park-primary",
@@ -30057,7 +30716,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-vereeniging-high",
@@ -30093,7 +30753,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-three-rivers-high",
@@ -30129,7 +30790,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 879
   },
   {
     "id": "school-sharpeville-high",
@@ -30165,7 +30827,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-sebokeng-high",
@@ -30201,7 +30864,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-evaton-high",
@@ -30237,7 +30901,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-evaton-north-high",
@@ -30273,7 +30938,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-orange-farm-high",
@@ -30309,7 +30975,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-bophelong-high",
@@ -30345,7 +31012,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 869
   },
   {
     "id": "school-boipatong-high",
@@ -30381,7 +31049,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-roshnee-high",
@@ -30417,7 +31086,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 919
   },
   {
     "id": "school-vanderbijlpark-primary",
@@ -30468,7 +31138,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-bonnievale-primary",
@@ -30519,7 +31190,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-se-1-primary",
@@ -30570,7 +31242,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-se-2-primary",
@@ -30621,7 +31294,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-se-3-primary",
@@ -30672,7 +31346,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 639
   },
   {
     "id": "school-tshepiso-primary",
@@ -30723,7 +31398,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-boitumelo-primary",
@@ -30774,7 +31450,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 649
   },
   {
     "id": "school-bedworth-park-primary",
@@ -30825,7 +31502,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 679
   },
   {
     "id": "school-waldrift-primary",
@@ -30876,7 +31554,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 659
   },
   {
     "id": "school-roseacres-primary",
@@ -30927,7 +31606,8 @@
         "grade": "Grade 7",
         "gradeSlug": "grade-7"
       }
-    ]
+    ],
+    "lowestPrice": 629
   },
   {
     "id": "school-vanderbijlpark-high",
@@ -30963,7 +31643,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-bonnievale-high",
@@ -30999,7 +31680,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 889
   },
   {
     "id": "school-tshepiso-high",
@@ -31035,7 +31717,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 909
   },
   {
     "id": "school-boitumelo-high",
@@ -31071,7 +31754,8 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 899
   },
   {
     "id": "school-bedworth-park-high",
@@ -31107,6 +31791,7 @@
         "grade": "Grade 12",
         "gradeSlug": "grade-12"
       }
-    ]
+    ],
+    "lowestPrice": 929
   }
 ]

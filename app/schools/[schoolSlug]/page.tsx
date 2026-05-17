@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GradeSelector } from "@/components/schools/GradeSelector";
+import { MultiLearnerBanner } from "@/components/schools/MultiLearnerBanner";
 import { PageHero } from "@/components/marketing/PageHero";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
@@ -68,10 +69,10 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
       />
       <section className={page.section}>
         <div className={page.sectionInner}>
+          {school.grades.length > 1 && <MultiLearnerBanner />}
           <GradeSelector school={school} />
         </div>
       </section>
-
     </>
   );
 }

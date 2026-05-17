@@ -1,3 +1,7 @@
+.wrapper {
+  position: relative;
+}
+
 .link {
   display: inline-flex;
   align-items: center;
@@ -39,17 +43,109 @@
 }
 
 @keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ═══ Strategy 4.3: Email Capture ═══ */
+
+.emailCapture {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  z-index: 10;
+  min-width: 280px;
+  padding: 16px;
+  border-radius: var(--radius-card, 12px);
+  background: var(--pex-bg, #fff);
+  border: 1px solid rgba(26, 42, 64, 0.12);
+  box-shadow: 0 8px 32px rgba(26, 42, 64, 0.12);
+  animation: fadeUp 200ms ease;
+}
+
+@keyframes fadeUp {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(6px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+.emailForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.emailPrompt {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pex-primary, #1a2a40);
+}
+
+.emailInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgba(26, 42, 64, 0.15);
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.emailInput:focus {
+  border-color: var(--pex-keppel);
+}
+
+.emailActions {
+  display: flex;
+  gap: 8px;
+}
+
+.emailSubmit {
+  flex: 1;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--pex-keppel, #3fb8a0);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.emailSubmit:hover {
+  background: var(--pex-primary, #1a2a40);
+}
+
+.emailSkip {
+  padding: 8px 12px;
+  border: 1px solid rgba(26, 42, 64, 0.12);
+  border-radius: 8px;
+  background: none;
+  color: var(--pex-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.emailSkip:hover {
+  color: var(--pex-primary);
 }
 
 @media (max-width: 640px) {
   .link {
     min-height: 44px;
+  }
+
+  .emailCapture {
+    min-width: 240px;
+    right: 0;
   }
 }
 
@@ -59,6 +155,10 @@
   }
 
   .spinner {
+    animation: none;
+  }
+
+  .emailCapture {
     animation: none;
   }
 }

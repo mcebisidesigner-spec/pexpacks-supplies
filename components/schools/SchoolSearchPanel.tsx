@@ -10,6 +10,18 @@ import styles from "./Schools.module.css";
 
 const resultLimit = 12;
 
+/** Top cities shown as quick filter chips */
+const POPULAR_CITIES = [
+  "Johannesburg",
+  "Pretoria",
+  "Centurion",
+  "Sandton",
+  "Midrand",
+  "Roodepoort",
+  "Randburg",
+  "Soweto",
+];
+
 type SchoolSearchPanelProps = {
   grades: string[];
   initialQuery?: string;
@@ -22,6 +34,7 @@ export function SchoolSearchPanel({
   initialGrade = "all",
 }: SchoolSearchPanelProps) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
+  const [activeCity, setActiveCity] = useState<string | null>(null);
   const {
     query,
     grade,
@@ -57,6 +70,18 @@ export function SchoolSearchPanel({
     }
   }
 
+  function handleCityChip(city: string) {
+    if (activeCity === city) {
+      // Toggle off — clear the city filter
+      setActiveCity(null);
+      updateQuery("");
+    } else {
+      setActiveCity(city);
+      updateQuery(city);
+      setPanelOpen(true);
+    }
+  }
+
   return (
     <section
       className={`${styles.searchExperience} pex-school-search-focus-anchor`}
@@ -86,7 +111,10 @@ export function SchoolSearchPanel({
             value={query}
             onFocus={() => setIsSchoolInputFocused(true)}
             onBlur={() => setIsSchoolInputFocused(false)}
-            onChange={(event) => updateQuery(event.target.value)}
+            onChange={(event) => {
+              setActiveCity(null);
+              updateQuery(event.target.value);
+            }}
             placeholder="e.g. Parktown Primary"
             autoComplete="off"
           />
@@ -112,6 +140,22 @@ export function SchoolSearchPanel({
           Search
         </button>
       </form>
+
+      {/* Strategy 5.3: City filter chips */}
+      <div className={styles.cityChips} role="group" aria-label="Filter by city">
+        {POPULAR_CITIES.map((city) => (
+          <button
+            key={city}
+            type="button"
+            className={`${styles.cityChip} ${activeCity === city ? styles.cityChipActive : ""}`}
+            onClick={() => handleCityChip(city)}
+            aria-pressed={activeCity === city}
+          >
+            {city}
+          </button>
+        ))}
+      </div>
+
       <SearchHelperPill
         storageKey="pexpacks:gauteng-helper:schools"
         isInputFocused={isSchoolInputFocused}

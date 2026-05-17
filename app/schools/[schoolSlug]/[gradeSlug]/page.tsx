@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GradePackDetails } from "@/components/schools/GradePackDetails";
+import { SaveVisitTracker } from "@/components/schools/SaveVisitTracker";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
@@ -67,6 +68,12 @@ export default async function GradePackPage({ params }: GradePageProps) {
             path: `/schools/${school.slug}/${grade.gradeSlug}`,
           },
         ])}
+      />
+      <SaveVisitTracker
+        schoolName={school.name}
+        schoolSlug={school.slug}
+        grade={grade.grade}
+        gradeSlug={grade.gradeSlug}
       />
       <section className={page.section}>
         <GradePackDetails school={school} grade={grade} />

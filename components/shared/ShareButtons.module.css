@@ -1,0 +1,68 @@
+.shareRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--pex-border, rgba(26, 42, 64, 0.1));
+}
+
+.shareLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pex-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.shareButtons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.shareBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid rgba(26, 42, 64, 0.12);
+  border-radius: var(--radius-pill);
+  background: var(--pex-bg);
+  color: var(--pex-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.shareBtn:hover {
+  background: var(--pex-keppel);
+  color: #fff;
+  border-color: var(--pex-keppel);
+}
+
+.shareBtn:focus-visible {
+  outline: 2px solid var(--pex-coral);
+  outline-offset: 2px;
+}
+
+.shareBtn svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .shareButtons {
+    gap: 6px;
+  }
+
+  .shareBtn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shareBtn {
+    transition: none;
+  }
+}

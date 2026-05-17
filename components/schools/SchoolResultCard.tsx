@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
+import { formatCurrency } from "@/lib/formatCurrency";
 import styles from "./Schools.module.css";
 
 function gradeLabel(grades: string[]) {
@@ -27,9 +28,16 @@ export function SchoolResultCard({ school }: SchoolResultCardProps) {
         </p>
       </div>
       <span>{gradeLabel(school.grades)}</span>
-      <div className={styles.resultBadges}>
-        {school.isFeatured ? <span>Featured</span> : null}
-        {school.isPartner ? <span>Partner</span> : null}
+      <div className={styles.resultMeta}>
+        {school.lowestPrice ? (
+          <span className={styles.resultPrice}>
+            Packs from {formatCurrency(school.lowestPrice)}
+          </span>
+        ) : null}
+        <div className={styles.resultBadges}>
+          {school.isFeatured ? <span>Featured</span> : null}
+          {school.isPartner ? <span>Partner</span> : null}
+        </div>
       </div>
       <Link href={`/schools/${school.slug}`} className={styles.resultLink}>
         View packs

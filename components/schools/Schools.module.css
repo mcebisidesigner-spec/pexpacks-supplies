@@ -957,6 +957,199 @@
   margin-bottom: 10px;
 }
 
+/* ═══ Strategy 3.2: Verified Badge ═══ */
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.verifiedBadge svg {
+  flex-shrink: 0;
+  color: var(--pex-keppel);
+}
+
+/* ═══ Strategy 1.2: Urgency Badge ═══ */
+
+.urgencyBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 10px 16px;
+  border-radius: var(--radius-card);
+  background: rgba(244, 124, 106, 0.08);
+  border: 1px solid rgba(244, 124, 106, 0.2);
+  color: var(--pex-coral);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.urgencyBadge svg {
+  flex-shrink: 0;
+}
+
+/* ═══ Strategy 1 + 2: Price in search results ═══ */
+
+.resultMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.resultPrice {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(33, 158, 154, 0.1);
+  color: var(--pex-keppel);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* ═══ Strategy 2.2: Returning Parent Banner ═══ */
+
+.returningBanner {
+  background: linear-gradient(135deg, rgba(33, 158, 154, 0.06), rgba(63, 184, 160, 0.1));
+  border-bottom: 1px solid rgba(33, 158, 154, 0.15);
+}
+
+.returningBannerInner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 12px var(--gutter-desktop);
+}
+
+.returningBannerInner svg {
+  flex-shrink: 0;
+  color: var(--pex-keppel);
+}
+
+.returningBannerInner p {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.returningBannerInner a {
+  color: var(--pex-keppel);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.returningBannerInner a:hover {
+  color: var(--pex-primary);
+}
+
+.returningDismiss {
+  padding: 4px 8px;
+  border: none;
+  background: none;
+  color: var(--pex-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 150ms ease;
+}
+
+.returningDismiss:hover {
+  opacity: 1;
+}
+
+/* ═══ Strategy 2.4: Multi-Learner Discount Banner ═══ */
+
+.multiLearnerBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding: 14px 20px;
+  border-radius: var(--radius-card);
+  background: linear-gradient(135deg, rgba(26, 42, 64, 0.04), rgba(63, 184, 160, 0.08));
+  border: 1px solid rgba(63, 184, 160, 0.18);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.multiLearnerBanner svg {
+  flex-shrink: 0;
+  color: var(--pex-keppel);
+}
+
+.multiLearnerBanner strong {
+  color: var(--pex-primary);
+}
+
+/* ═══ Strategy 4.2: Share section spacing on grade page ═══ */
+
+.shareSection {
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+
+
+/* ═══ Strategy 5.3: City Filter Chips ═══ */
+
+.cityChips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.cityChip {
+  padding: 6px 14px;
+  border: 1px solid rgba(26, 42, 64, 0.12);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--pex-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 180ms ease;
+  white-space: nowrap;
+}
+
+.cityChip:hover {
+  border-color: var(--pex-keppel);
+  color: var(--pex-keppel);
+  background: rgba(63, 184, 160, 0.06);
+}
+
+.cityChipActive {
+  background: var(--pex-keppel);
+  color: #fff;
+  border-color: var(--pex-keppel);
+}
+
+.cityChipActive:hover {
+  background: var(--pex-primary);
+  border-color: var(--pex-primary);
+  color: #fff;
+}
+
+.cityChip:focus-visible {
+  outline: 2px solid var(--pex-coral);
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .resultsPanel {
     animation: none;

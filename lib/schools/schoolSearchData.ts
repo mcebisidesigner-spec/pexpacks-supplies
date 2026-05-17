@@ -28,6 +28,7 @@ export const searchableSchools: SchoolSearchRecord[] = getSchoolIndex().map(
     isFeatured: Boolean("isFeatured" in school && school.isFeatured),
     isPartner: school.isPartnerSchool,
     image: school.logo,
+    lowestPrice: school.lowestPrice,
   })
 );
 
