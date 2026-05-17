@@ -34,7 +34,9 @@ function getPreparedFields(school: SchoolSearchRecord) {
     grades: school.grades.map((grade) =>
       normaliseFilterValue(grade).toLowerCase()
     ),
-    priority: Number(Boolean(school.isFeatured)) * 2 + Number(Boolean(school.isPartner)),
+    priority:
+      Number(Boolean(school.isFeatured)) * 2 +
+      Number(Boolean(school.isPartner)),
   };
 
   preparedSchoolSearchFields.set(school.id, fields);
@@ -69,18 +71,19 @@ export function filterSchools(
   const region = normaliseSchoolQuery(normaliseFilterValue(filters.region));
 
   const filtered = records.filter((school) => {
-      const fields = getPreparedFields(school);
-      const matchesQuery =
-        !query || fields.name.includes(query);
-      const matchesGrade = !grade || fields.grades.includes(grade);
-      const matchesRegion =
-        !region ||
-        fields.region.includes(region) ||
-        fields.city.includes(region) ||
-        fields.province.includes(region);
+    const fields = getPreparedFields(school);
+    const matchesQuery = !query || fields.name.includes(query);
+    const matchesGrade = !grade || fields.grades.includes(grade);
+    const matchesRegion =
+      !region ||
+      fields.region.includes(region) ||
+      fields.city.includes(region) ||
+      fields.province.includes(region);
 
-      return matchesQuery && matchesGrade && matchesRegion;
-    });
+    return matchesQuery && matchesGrade && matchesRegion;
+  });
 
-  return options.preserveOrder ? filtered : filtered.sort(compareSchoolsForDisplay);
+  return options.preserveOrder
+    ? filtered
+    : filtered.sort(compareSchoolsForDisplay);
 }
