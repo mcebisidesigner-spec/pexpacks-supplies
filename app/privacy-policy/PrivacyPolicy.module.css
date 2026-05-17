@@ -41,12 +41,34 @@
 
 .tocCard {
   position: sticky;
-  top: 104px;
+  top: clamp(84px, 10vh, 112px);
+  align-self: start;
+  z-index: 2;
+  max-height: calc(100dvh - 128px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   border: 1px solid rgba(225, 231, 234, 0.9);
   border-radius: 24px;
   padding: 24px;
   background: rgba(255, 255, 255, 0.92);
   box-shadow: var(--card-shadow);
+  backdrop-filter: blur(14px);
+  scrollbar-color: rgba(33, 158, 154, 0.48) transparent;
+  scrollbar-width: thin;
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.tocCard::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tocCard::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tocCard::-webkit-scrollbar-thumb {
+  border-radius: var(--radius-pill);
+  background: rgba(33, 158, 154, 0.42);
 }
 
 .tocEyebrow,
@@ -253,8 +275,8 @@
   }
 
   .tocCard {
-    position: relative;
-    top: auto;
+    top: 76px;
+    max-height: min(52dvh, 440px);
   }
 
   .tocCard ol {
@@ -274,10 +296,40 @@
   }
 
   .tocCard {
-    padding: 20px;
+    top: 70px;
+    max-height: none;
+    overflow: hidden;
+    padding: 16px;
   }
 
-  .tocCard ol,
+  .tocCard h2 {
+    margin-bottom: 12px;
+    font-size: 19px;
+  }
+
+  .tocCard ol {
+    display: flex;
+    gap: 8px;
+    margin-right: -16px;
+    margin-left: -16px;
+    overflow-x: auto;
+    padding: 0 16px 2px;
+    scroll-snap-type: x proximity;
+  }
+
+  .tocCard li {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .tocCard a {
+    border: 1px solid rgba(33, 158, 154, 0.16);
+    padding: 9px 12px;
+    background: var(--pex-bg-soft);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
   .detailsList {
     grid-template-columns: 1fr;
   }
@@ -291,6 +343,24 @@
   .sectionBody {
     font-size: 15px;
     line-height: 1.62;
+  }
+}
+
+@supports not (height: 100dvh) {
+  .tocCard {
+    max-height: calc(100vh - 128px);
+  }
+
+  @media (max-width: 960px) {
+    .tocCard {
+      max-height: min(52vh, 440px);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tocCard {
+      max-height: none;
+    }
   }
 }
 
