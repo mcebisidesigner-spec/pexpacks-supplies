@@ -57,6 +57,24 @@ export function UnboxingAccordion() {
             title="What's in the box?"
             text="Everything your child needs to start school ready, meticulously packed and delivered to your door."
           />
+
+          {/* Mobile-only image — always visible above the accordion */}
+          <div className={styles.mobileImage}>
+            {features.map((feature, index) => (
+              <Image
+                key={`mobile-img-${feature.id}`}
+                src={feature.imageSrc}
+                alt={`Pexpacks ${feature.title}`}
+                fill
+                className={`${styles.image} ${activeIndex === index ? styles.imageActive : ""}`}
+                sizes="100vw"
+              />
+            ))}
+            <div className={styles.featureBadge} key={`mobile-badge-${activeIndex}`}>
+              <span className={styles.badgeIcon}>{features[activeIndex].icon}</span>
+              <span className={styles.badgeText}>{features[activeIndex].title}</span>
+            </div>
+          </div>
           
           <div className={styles.accordion}>
             {features.map((feature, index) => {

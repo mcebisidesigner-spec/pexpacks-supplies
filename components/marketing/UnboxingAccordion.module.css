@@ -19,6 +19,10 @@
   flex-direction: column;
 }
 
+.mobileImage {
+  display: none;
+}
+
 .accordion {
   margin-top: 16px;
   display: flex;
@@ -214,38 +218,43 @@
   }
 
   .imageSide {
-    order: -1;
-    position: sticky;
-    top: var(--header-height-mobile, 88px);
-    z-index: 4;
-    padding-bottom: 24px;
-    background: var(--pex-bg-soft);
+    display: none;
   }
-  
-  .imageWrapper {
+
+  .mobileImage {
+    display: block;
+    position: relative;
+    width: 100%;
     aspect-ratio: 16/9;
+    margin-bottom: 20px;
     border-radius: var(--radius-card);
+    overflow: hidden;
     box-shadow: 0 12px 32px rgba(15, 37, 55, 0.1);
+    background: var(--pex-bg);
   }
 
-  .featureBadge {
-    bottom: 16px;
-    left: 16px;
-    padding: 8px 16px 8px 8px;
-    gap: 10px;
+  .mobileImage .image {
+    object-fit: cover;
   }
 
-  .badgeIcon {
-    width: 30px;
-    height: 30px;
+  .mobileImage .featureBadge {
+    bottom: 12px;
+    left: 12px;
+    padding: 8px 14px 8px 8px;
+    gap: 8px;
   }
 
-  .badgeIcon svg {
-    width: 15px;
-    height: 15px;
+  .mobileImage .badgeIcon {
+    width: 28px;
+    height: 28px;
   }
 
-  .badgeText {
+  .mobileImage .badgeIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .mobileImage .badgeText {
     font-size: 13px;
   }
 }
