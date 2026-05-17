@@ -18,8 +18,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/foundation-phase",
     "/primary-school",
     "/high-school",
-    "/standard-packs",
-    "/standard-school-packs",
     "/success-stories",
     "/faq",
     "/contact",

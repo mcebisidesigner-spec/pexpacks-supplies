@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/Button";
+import { mostPopularPacksHref } from "@/data/packs";
 import styles from "./Schools.module.css";
 
 export function RequestSchoolCTA() {
@@ -20,7 +21,7 @@ export function RequestSchoolCTA() {
           Request a School Pack
         </Button>
         <Button
-          href="/standard-packs"
+          href={mostPopularPacksHref}
           variant="outline"
           className={styles.fallbackBtn}
         >

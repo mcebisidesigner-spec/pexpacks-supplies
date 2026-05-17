@@ -1,0 +1,125 @@
+.card {
+  display: flex;
+  overflow: hidden;
+  min-width: 0;
+  flex-direction: column;
+  border: var(--card-border);
+  border-radius: 30px;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.media {
+  display: flex;
+  min-height: 156px;
+  align-items: flex-end;
+  padding: 22px;
+  background:
+    linear-gradient(135deg, rgba(33, 158, 154, 0.84), rgba(26, 42, 64, 0.72)),
+    var(--pex-bg-soft);
+}
+
+.tonePrimary .media {
+  background:
+    linear-gradient(135deg, rgba(26, 42, 64, 0.88), rgba(33, 158, 154, 0.62)),
+    var(--pex-navy);
+}
+
+.toneHigh .media {
+  background:
+    linear-gradient(135deg, rgba(21, 34, 56, 0.92), rgba(26, 42, 64, 0.78)),
+    var(--pex-navy);
+}
+
+.media span {
+  border-radius: var(--radius-pill);
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--pex-primary);
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(26, 42, 64, 0.08);
+}
+
+.body {
+  display: grid;
+  flex: 1;
+  gap: 13px;
+  padding: 26px 24px 12px;
+}
+
+.bestFor {
+  margin: 0;
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.body h3 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: clamp(23px, 2vw, 29px);
+  font-weight: 800;
+  line-height: 1.06;
+}
+
+.description {
+  margin: 0;
+  color: var(--pex-text);
+  line-height: 1.48;
+}
+
+.footer {
+  display: grid;
+  gap: 16px;
+  margin-top: auto;
+  padding: 14px 24px 24px;
+}
+
+.price {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.actionSlot {
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .card {
+    border-radius: 28px;
+  }
+
+  .media {
+    min-height: 132px;
+    padding: 18px;
+  }
+
+  .body {
+    padding: 24px 20px 10px;
+  }
+
+  .footer {
+    padding: 14px 20px 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}

@@ -3,8 +3,14 @@
 import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
-import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PackCustomizer } from "@/components/order/PackCustomizer";
+import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
+import { CompleteListModal } from "@/components/packs/CompleteListModal";
+import { DownloadListLink } from "@/components/packs/DownloadListLink";
+import type {
+  CompleteListPack,
+  PackListItem,
+} from "@/components/packs/packListTypes";
 import type { PhasePack, GradePackTemplate } from "@/data/phasePacks";
 import { homepagePacks, mostPopularPacksHref } from "@/data/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -47,11 +53,125 @@ const phaseFaqs: Record<string, { q: string; a: string }[]> = {
   ],
 };
 
+function toPhaseListItems(pack: GradePackTemplate): PackListItem[] {
+  return pack.items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    quantity: item.quantity,
+    quantityLabel: String(item.quantity),
+    icon: item.icon,
+    category: item.category,
+    specification: item.specification,
+  }));
+}
+
+function buildPhaseDownloadText(phaseData: PhasePack, pack: GradePackTemplate) {
+  return [
+    `${pack.title} - Stationery List`,
+    `Phase: ${phaseData.title}`,
+    "",
+    ...pack.items.map(
+      (item) =>
+        `- ${item.quantity} x ${item.name}${
+          item.specification ? ` (${item.specification})` : ""
+        }`
+    ),
+    "",
+    `Estimated price from: ${formatCurrency(pack.priceFrom)}`,
+    "",
+    "Prepared by Pexpacks - pexpacks.co.za",
+  ].join("\n");
+}
+
+function buildPhaseDownloadHref(phaseData: PhasePack, pack: GradePackTemplate) {
+  return `data:text/plain;charset=utf-8,${encodeURIComponent(
+    buildPhaseDownloadText(phaseData, pack)
+  )}`;
+}
+
+function buildPhaseDownloadFileName(
+  phaseData: PhasePack,
+  pack: GradePackTemplate
+) {
+  return `${phaseData.slug}-${pack.grade
+    .toLowerCase()
+    .replace(/\s+/g, "-")}-stationery-list.txt`;
+}
+
+function getCardTone(phaseSlug: string): "default" | "primary" | "high" {
+  if (phaseSlug === "primary-school") {
+    return "primary";
+  }
+
+  if (phaseSlug === "high-school") {
+    return "high";
+  }
+
+  return "default";
+}
+
+function buildPhaseCompleteListPack(
+  phaseData: PhasePack,
+  pack: GradePackTemplate,
+  footerActions?: CompleteListPack["footerActions"]
+): CompleteListPack {
+  return {
+    id: `phase-${phaseData.slug}-${pack.id}`,
+    gradeLabel: pack.grade,
+    modalTitle: `${pack.grade} Stationery List`,
+    contentHeading: "Complete stationery list",
+    description: `Prepared according to the standard stationery list for ${pack.grade}.`,
+    priceLabel: `From ${formatCurrency(pack.priceFrom)}`,
+    items: toPhaseListItems(pack),
+    footerActions,
+  };
+}
+
+type PhasePackActionsProps = {
+  phaseData: PhasePack;
+  pack: GradePackTemplate;
+  onCustomise: (
+    pack: GradePackTemplate,
+    event: MouseEvent<HTMLButtonElement>
+  ) => void;
+};
+
+function PhasePackActions({
+  phaseData,
+  pack,
+  onCustomise,
+}: PhasePackActionsProps) {
+  return (
+    <>
+      <div className={styles.cardActions}>
+        <Button href={mostPopularPacksHref} size="sm">
+          Buy Full Pack
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(event) => onCustomise(pack, event)}
+        >
+          Customise This Pack
+        </Button>
+      </div>
+      <DownloadListLink
+        href={buildPhaseDownloadHref(phaseData, pack)}
+        download={buildPhaseDownloadFileName(phaseData, pack)}
+      />
+    </>
+  );
+}
+
 export function PhaseClient({ phaseData }: PhaseClientProps) {
   const [selectedCustomPack, setSelectedCustomPack] =
     useState<GradePackTemplate | null>(null);
+  const [selectedListPackId, setSelectedListPackId] = useState<string | null>(
+    null
+  );
   const [isMounted, setIsMounted] = useState(false);
   const customiseTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const viewListTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -74,9 +194,31 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
     }, 0);
   }, []);
 
+  const closeCompleteList = useCallback(() => {
+    setSelectedListPackId(null);
+    window.setTimeout(() => {
+      viewListTriggerRef.current?.focus();
+    }, 0);
+  }, []);
+
   const otherPhases = homepagePacks.filter(
     (pack) => pack.href !== `/${phaseData.slug}`
   );
+
+  const selectedListPackTemplate = selectedListPackId
+    ? phaseData.gradePacks.find((pack) => pack.id === selectedListPackId)
+    : undefined;
+  const selectedListPack = selectedListPackTemplate
+    ? buildPhaseCompleteListPack(
+        phaseData,
+        selectedListPackTemplate,
+        <PhasePackActions
+          phaseData={phaseData}
+          pack={selectedListPackTemplate}
+          onCustomise={handleCustomise}
+        />
+      )
+    : null;
 
   const drawerContent = selectedCustomPack ? (
     <PackCustomizer
@@ -134,99 +276,30 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
 
           <div className={styles.cardsGrid}>
             {phaseData.gradePacks.map((pack, i) => (
-              <article
+              <ArticlePackCard
                 key={pack.id}
-                className={`${styles.gradeCard} ${styles.animateFadeInUp}`}
+                className={styles.animateFadeInUp}
                 style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className={styles.cardMedia}>
-                  <span>{pack.grade}</span>
-                </div>
-
-                <div className={styles.cardBody}>
-                  <p className={styles.bestFor}>Best for: {pack.bestFor}</p>
-                  <h3>{pack.title}</h3>
-                  <p className={styles.summary}>{pack.summary}</p>
-
-                  <ul
-                    className={styles.itemList}
-                    aria-label={`${pack.title} includes`}
-                  >
-                    {pack.items.slice(0, 5).map((item) => (
-                      <li key={item.id}>
-                        <ItemIcon
-                          name={item.icon}
-                          size={16}
-                          className={styles.itemIcon}
-                        />
-                        {item.name}
-                      </li>
-                    ))}
-                    {pack.items.length > 5 ? (
-                      <li className={styles.moreItems}>
-                        + {pack.items.length - 5} more essentials
-                      </li>
-                    ) : null}
-                  </ul>
-                </div>
-
-                <div className={styles.cardFooter}>
-                  <p className={styles.priceFrom}>
-                    From {formatCurrency(pack.priceFrom)}
-                  </p>
-                  <div className={styles.cardActions}>
-                    <Button
-                      href={mostPopularPacksHref}
-                      size="sm"
-                    >
-                      Buy standard pack
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(event) => handleCustomise(pack, event)}
-                    >
-                      Customise this pack
-                    </Button>
-                  </div>
-                  <a
-                    className={styles.downloadLink}
-                    href={`data:text/plain;charset=utf-8,${encodeURIComponent(
-                      [
-                        `${pack.title} — Stationery List`,
-                        `Phase: ${phaseData.title}`,
-                        "",
-                        ...pack.items.map(
-                          (item) =>
-                            `- ${item.quantity} x ${item.name}${item.specification ? ` (${item.specification})` : ""}`
-                        ),
-                        "",
-                        `Estimated price from: R ${pack.priceFrom}`,
-                        "",
-                        "Prepared by Pexpacks — pexpacks.co.za",
-                      ].join("\n")
-                    )}`}
-                    download={`${phaseData.slug}-${pack.grade.toLowerCase().replace(/\s+/g, "-")}-stationery-list.txt`}
-                  >
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    Download List
-                  </a>
-                </div>
-              </article>
+                tone={getCardTone(phaseData.slug)}
+                gradeLabel={pack.grade}
+                bestFor={`Best for ${pack.bestFor}`}
+                title={pack.title}
+                description={pack.summary}
+                priceLabel={`From ${formatCurrency(pack.priceFrom)}`}
+                items={toPhaseListItems(pack)}
+                viewCompleteAriaLabel={`View complete ${pack.grade} stationery list`}
+                onViewCompleteList={(event) => {
+                  viewListTriggerRef.current = event.currentTarget;
+                  setSelectedListPackId(pack.id);
+                }}
+                actions={
+                  <PhasePackActions
+                    phaseData={phaseData}
+                    pack={pack}
+                    onCustomise={handleCustomise}
+                  />
+                }
+              />
             ))}
           </div>
         </div>
@@ -235,6 +308,11 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
       {isMounted && drawerContent
         ? createPortal(drawerContent, document.body)
         : null}
+
+      <CompleteListModal
+        pack={selectedListPack}
+        onClose={closeCompleteList}
+      />
 
       {faqs.length > 0 ? (
         <section className={styles.faqSection}>

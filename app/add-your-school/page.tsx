@@ -3,6 +3,7 @@ import { AddSchoolForm } from "@/components/forms/AddSchoolForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { mostPopularPacksHref } from "@/data/packs";
 import { standardSchoolPacks } from "@/data/standardSchoolPacks";
 import { buildMetadata } from "@/lib/seo";
 import styles from "@/components/marketing/Marketing.module.css";
@@ -24,9 +25,7 @@ export default function AddYourSchoolPage() {
         panelTitle="Use a standard grade combo while your school list is being reviewed."
       >
         <div className={styles.buttonRow}>
-          <Button href="/standard-school-packs">
-            View Standard School Packs
-          </Button>
+          <Button href={mostPopularPacksHref}>Buy Standard Pack</Button>
           <Button href="/contact" variant="white">
             Contact Us
           </Button>
@@ -55,8 +54,8 @@ export default function AddYourSchoolPage() {
                 <li>We help you move to an order or enquiry path.</li>
               </ul>
               <div className={styles.buttonRow}>
-                <Button href="/standard-school-packs" variant="white">
-                  Standard Pack List
+                <Button href={mostPopularPacksHref} variant="white">
+                  Buy Standard Pack
                 </Button>
               </div>
             </article>
@@ -90,8 +89,8 @@ export default function AddYourSchoolPage() {
                     ))}
                   </ul>
                   <div className={styles.packFooter}>
-                    <Button href="/standard-school-packs" size="sm">
-                      View All Grades
+                    <Button href={mostPopularPacksHref} size="sm">
+                      Buy Standard Pack
                     </Button>
                   </div>
                 </div>

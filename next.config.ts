@@ -46,6 +46,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/standard-packs",
+        destination: "/#most-popular-packs",
+        permanent: true,
+      },
+      {
+        source: "/standard-school-packs",
+        destination: "/#most-popular-packs",
+        permanent: true,
+      },
+      {
         source: "/how-it-works",
         destination: "/",
         permanent: true,

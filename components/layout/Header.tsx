@@ -7,44 +7,27 @@ import { Logo } from "@/components/ui/Logo";
 import { HeaderActiveLink } from "./HeaderActiveLink";
 import { HeaderMenu } from "./HeaderMenu";
 import { mainNavLinks } from "@/data/navigation";
+import { useHideHeaderOnScroll } from "@/lib/hooks/useHideHeaderOnScroll";
 import styles from "./Header.module.css";
 
 export function Header() {
   const pathname = usePathname();
-  const [isVisible, setIsVisible] = useState(true);
-  const lastScrollY = useRef(0);
+  const [isHeaderFocused, setIsHeaderFocused] = useState(false);
   const shouldPinHeader = pathname === "/order" || pathname === "/track-order";
 
-  useEffect(() => {
-    if (shouldPinHeader) {
-      setIsVisible(true);
-      return;
-    }
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      // If we're near the top, always show the header
-      if (currentScrollY < 60) {
-        setIsVisible(true);
-      } else if (currentScrollY > lastScrollY.current) {
-        // Scrolling down
-        setIsVisible(false);
-      } else {
-        // Scrolling up
-        setIsVisible(true);
-      }
-
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [shouldPinHeader]);
+  const { isHidden, isAtTop } = useHideHeaderOnScroll({
+    disabled: shouldPinHeader || isHeaderFocused,
+  });
 
   return (
     <header
-      className={`${styles.siteHeader} ${isVisible ? "" : styles.headerHidden}`}
+      className={`${styles.siteHeader} ${isHidden ? styles.headerHidden : styles.headerVisible} ${isAtTop ? styles.headerAtTop : styles.headerScrolled}`}
+      onFocusCapture={() => setIsHeaderFocused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+          setIsHeaderFocused(false);
+        }
+      }}
     >
       <div className={styles.headerInner}>
         <Link

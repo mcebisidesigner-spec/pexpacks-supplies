@@ -1,65 +1,113 @@
-import type { School } from "@/data/schools";
+"use client";
+
+import { useCallback, useRef, useState } from "react";
+import type { GradePack, School } from "@/data/schools";
+import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
+import { CompleteListModal } from "@/components/packs/CompleteListModal";
 import { GradePackActions } from "@/components/packs/GradePackActions";
-import { ItemIcon } from "@/components/ui/ItemIcon";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
+import type { GradePackForCustomisation } from "@/lib/packs/types";
+import type { CompleteListPack, PackListItem } from "@/components/packs/packListTypes";
 import styles from "./Schools.module.css";
 
 type GradeSelectorProps = {
   school: School;
 };
 
-export function GradeSelector({ school }: GradeSelectorProps) {
-  return (
-    <div className={styles.gradeSelector}>
-      {school.grades.map((grade) => {
-        const pack = createSchoolGradePack(school, grade);
-        const previewItems = pack.items.slice(0, 5);
-        const remainingItems = Math.max(pack.items.length - previewItems.length, 0);
+function toSchoolListItems(pack: GradePackForCustomisation): PackListItem[] {
+  return pack.items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    quantity: item.requiredQuantity,
+    icon: item.icon,
+    category: item.category,
+  }));
+}
 
-        return (
-          <article key={grade.id} className={styles.gradeCard}>
-            <div className={styles.gradeCardMedia}>
-              <span>{grade.grade}</span>
-            </div>
-            <div className={styles.gradeCardBody}>
-              <p className={styles.gradeBestFor}>Best for: {grade.grade} learners</p>
-              <h3>{grade.grade} Stationery Pack</h3>
-              <p className={styles.gradeSummary}>
-                Prepared according to the official school list.
-              </p>
-              <ul
-                className={styles.gradeItemList}
-                aria-label={`${grade.grade} stationery list preview`}
-              >
-                {previewItems.map((item) => (
-                  <li key={item.id}>
-                    <ItemIcon
-                      name={item.icon}
-                      size={16}
-                      className={styles.gradeItemIcon}
-                    />
-                    {item.name}
-                  </li>
-                ))}
-                {remainingItems ? (
-                  <li className={styles.moreItems}>
-                    + {remainingItems} more essentials
-                  </li>
-                ) : null}
-              </ul>
-            </div>
-            <div className={styles.gradeCardFooter}>
-              <strong>From {formatCurrency(grade.price)}</strong>
-              <GradePackActions
-                pack={pack}
-                showDownloadLink={true}
-                showMicrocopy={false}
-              />
-            </div>
-          </article>
-        );
-      })}
-    </div>
+function buildCompleteListPack(
+  grade: GradePack,
+  pack: GradePackForCustomisation,
+  footerActions?: CompleteListPack["footerActions"]
+): CompleteListPack {
+  return {
+    id: `school-${pack.id}`,
+    gradeLabel: grade.grade,
+    modalTitle: `${grade.grade} Stationery List`,
+    contentHeading: "Official school stationery list",
+    description: `Prepared according to the official school list for ${grade.grade}.`,
+    priceLabel: `From ${formatCurrency(grade.price)}`,
+    items: toSchoolListItems(pack),
+    footerActions,
+  };
+}
+
+export function GradeSelector({ school }: GradeSelectorProps) {
+  const [selectedGradeId, setSelectedGradeId] = useState<string | null>(null);
+  const viewListTriggerRef = useRef<HTMLButtonElement | null>(null);
+
+  const closeCompleteList = useCallback(() => {
+    setSelectedGradeId(null);
+    window.setTimeout(() => {
+      viewListTriggerRef.current?.focus();
+    }, 0);
+  }, []);
+
+  const selectedGrade = selectedGradeId
+    ? school.grades.find((grade) => grade.id === selectedGradeId)
+    : undefined;
+  const selectedPack = selectedGrade
+    ? createSchoolGradePack(school, selectedGrade)
+    : null;
+  const selectedListPack =
+    selectedGrade && selectedPack
+      ? buildCompleteListPack(
+          selectedGrade,
+          selectedPack,
+          <GradePackActions
+            pack={selectedPack}
+            showDownloadLink={true}
+            showMicrocopy={false}
+          />
+        )
+      : null;
+
+  return (
+    <>
+      <div className={styles.gradeSelector}>
+        {school.grades.map((grade) => {
+          const pack = createSchoolGradePack(school, grade);
+
+          return (
+            <ArticlePackCard
+              key={grade.id}
+              gradeLabel={grade.grade}
+              bestFor={`Best for ${grade.grade} learners`}
+              title={`${grade.grade} Stationery Pack`}
+              description="Prepared according to the official school list."
+              priceLabel={`From ${formatCurrency(grade.price)}`}
+              items={toSchoolListItems(pack)}
+              viewCompleteAriaLabel={`View complete ${grade.grade} stationery list`}
+              onViewCompleteList={(event) => {
+                viewListTriggerRef.current = event.currentTarget;
+                setSelectedGradeId(grade.id);
+              }}
+              actions={
+                <GradePackActions
+                  pack={pack}
+                  showDownloadLink={true}
+                  showMicrocopy={false}
+                />
+              }
+            />
+          );
+        })}
+      </div>
+
+      <CompleteListModal
+        pack={selectedListPack}
+        onClose={closeCompleteList}
+      />
+    </>
   );
 }
