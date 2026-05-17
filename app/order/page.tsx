@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
 import { OrderForm } from "@/components/order/OrderForm";
 import { PageHero } from "@/components/marketing/PageHero";
-import {
-  ordersEmail,
-  ordersEmailHref,
-  phoneHref,
-  phoneNumber,
-} from "@/data/contact";
+import { ordersEmail, phoneNumber } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { PexcoverMarquee } from "@/components/order/PexcoverMarquee";

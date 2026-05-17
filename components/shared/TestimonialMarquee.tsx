@@ -155,7 +155,7 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
                     src={item.avatar}
                     width={54}
                     height={54}
-                    alt="testmonials"
+                    alt=""
                     className={styles.avatar}
                     loading="lazy"
                   />
@@ -184,10 +184,14 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
       >
         <ChevronRightIcon />
       </button>
-      <div className={styles.trackingBar} aria-hidden="true">
+      <div className={styles.trackingBar} role="tablist" aria-label="Testimonial slides">
         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-          <div
+          <button
             key={i}
+            type="button"
+            role="tab"
+            aria-selected={i === activeIndex}
+            aria-label={`Go to testimonial ${i + 1}`}
             className={[
               styles.trackingDot,
               i === activeIndex ? styles.trackingDotActive : "",

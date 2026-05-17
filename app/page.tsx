@@ -12,7 +12,6 @@ import {
 } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
-import Link from "next/link";
 import styles from "@/components/marketing/Marketing.module.css";
 
 const PackageIcon = () => (

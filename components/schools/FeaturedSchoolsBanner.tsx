@@ -100,10 +100,14 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
             </Link>
           ))}
         </div>
-        <div className={styles.trackingBar} aria-hidden="true">
+        <div className={styles.trackingBar} role="tablist" aria-label="Featured school slides">
           {schools.map((_, i) => (
-            <div
+            <button
               key={i}
+              type="button"
+              role="tab"
+              aria-selected={i === activeIndex}
+              aria-label={`Go to school ${i + 1}`}
               className={[
                 styles.trackingDot,
                 i === activeIndex ? styles.trackingDotActive : "",
