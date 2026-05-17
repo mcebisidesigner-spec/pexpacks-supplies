@@ -60,6 +60,7 @@ function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
 
 export function Footer() {
   const pathname = usePathname();
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className={styles.footer} id="site-footer">
@@ -115,7 +116,7 @@ export function Footer() {
         <hr className={styles.divider} />{" "}
         <div className={styles.bottomSection}>
           <p className={styles.copyright}>
-            &copy; 2026 Pexpacks. Design:{"  "}
+            &copy; {currentYear} Pexpacks. Design:{"  "}
             <a
               href="https://mcebisih.co.za/"
               target="_blank"
