@@ -125,6 +125,99 @@
   gap: 10px;
 }
 
+.heroResultCard {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(244, 250, 252, 0.92);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.heroResultContent {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.heroResultSummary {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.heroResultSummary h3 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.heroResultSummary h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.heroResultSummary p {
+  margin: 0;
+  color: var(--pex-text-muted);
+  font-weight: 700;
+}
+
+.heroResultMeta {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+}
+
+.heroResultGrades {
+  min-width: 0;
+  color: var(--pex-text-muted);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.heroResultBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.heroResultBadges span {
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-bg);
+  color: var(--pex-keppel);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.heroResultLink {
+  min-height: 50px;
+  padding: 0 20px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
+  font-family: var(--font-button);
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  transition: var(--button-transition);
+}
+
+.heroResultLink:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
+}
+
 .resultsCount {
   margin-bottom: 12px;
   padding: 0 4px;
@@ -375,6 +468,16 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
     font-size: 13px;
+  }
+
+  .heroResultCard {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 12px;
+  }
+
+  .heroResultLink {
+    width: 100%;
   }
 
   .modalActions {
