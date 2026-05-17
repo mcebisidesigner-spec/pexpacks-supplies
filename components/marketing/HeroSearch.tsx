@@ -6,6 +6,7 @@ import { useState } from "react";
 import { mostPopularPacksHref } from "@/data/packs";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import { SchoolResultCard } from "@/components/schools/SchoolResultCard";
+import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import styles from "./HeroSearch.module.css";
 
@@ -86,7 +87,11 @@ export function HeroSearch() {
           />
         </label>
         {panelOpen ? (
-          <div className={styles.heroResultsPanel} aria-live="polite">
+          <div
+            className={styles.heroResultsPanel}
+            aria-live="polite"
+            data-school-results-scroll
+          >
             {!queryReady ? (
               <p className={styles.heroSearchState}>
                 Start typing a school name or choose a grade to find packs.
@@ -138,6 +143,12 @@ export function HeroSearch() {
                   </div>
                 )}
 
+                <SchoolResultsAutoLoad
+                  hasMore={hasMore}
+                  isLoading={isLoading}
+                  onLoadMore={() => fetchResults(results.length, "append")}
+                  className={styles.loadMoreSentinel}
+                />
                 {hasMore ? (
                   <button
                     className={styles.loadMoreButton}

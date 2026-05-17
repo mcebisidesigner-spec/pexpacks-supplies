@@ -3,6 +3,7 @@ import { mostPopularPacksHref } from "@/data/packs";
 import Link from "next/link";
 import heroSearchStyles from "@/components/marketing/HeroSearch.module.css";
 import { SchoolResultCard } from "./SchoolResultCard";
+import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import styles from "./Schools.module.css";
 
 type SchoolResultsPanelProps = {
@@ -39,6 +40,7 @@ export function SchoolResultsPanel({
       className={styles.resultsPanel}
       id="school-search-results"
       aria-live="polite"
+      data-school-results-scroll
     >
       {!queryReady ? (
         <p className={styles.resultsState}>
@@ -88,6 +90,12 @@ export function SchoolResultsPanel({
               </div>
             </div>
           )}
+          <SchoolResultsAutoLoad
+            hasMore={hasMore}
+            isLoading={isLoading}
+            onLoadMore={onLoadMore}
+            className={styles.loadMoreSentinel}
+          />
           {hasMore ? (
             <button
               className={styles.loadMoreButton}
