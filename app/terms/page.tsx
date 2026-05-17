@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
@@ -11,16 +12,13 @@ export const metadata: Metadata = buildMetadata(
 export default function TermsPage() {
   return (
     <>
-      <section className={page.pageHero}>
-        <div className={page.pageHeroNarrow}>
-          <p>Terms of use</p>
-          <h1>Using the Pexpacks website</h1>
-          <p className={page.pageHeroText}>
-            These terms explain the basic conditions for browsing the website
-            and submitting stationery pack enquiries or order requests.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Terms of use"
+        title="Using the Pexpacks website"
+        text="These terms explain the basic conditions for browsing the website and submitting stationery pack enquiries or order requests."
+        panelTitle="Terms"
+        panelText="Information about using our site."
+      />
       <section className={page.section}>
         <div className={page.sectionInner}>
           <article className={page.infoCard}>

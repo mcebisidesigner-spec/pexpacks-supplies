@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
@@ -11,16 +12,13 @@ export const metadata: Metadata = buildMetadata(
 export default function DeliveryPolicyPage() {
   return (
     <>
-      <section className={page.pageHero}>
-        <div className={page.pageHeroNarrow}>
-          <p>Delivery policy</p>
-          <h1>Delivery and collection guidance</h1>
-          <p className={page.pageHeroText}>
-            Pexpacks confirms delivery and collection details after receiving
-            the selected school, grade, pack, and customer information.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Delivery Policy"
+        title="Delivery and collection guidance"
+        text="Pexpacks confirms delivery and collection details after receiving the selected school, grade, pack, and customer information."
+        panelTitle="Support"
+        panelText="Contact us for delivery assistance."
+      />
       <section className={page.section}>
         <div className={page.sectionInner}>
           <article className={page.infoCard}>

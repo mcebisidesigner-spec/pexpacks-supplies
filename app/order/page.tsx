@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OrderForm } from "@/components/order/OrderForm";
+import { PageHero } from "@/components/marketing/PageHero";
 import {
   ordersEmail,
   ordersEmailHref,
@@ -40,18 +41,13 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
 
   return (
     <>
-      <section className={page.pageHero}>
-        <div className={page.pageHeroNarrow}>
-          <p>Order now</p>
-          <h1>Order your ready-to-use pack</h1>
-          <p className={page.pageHeroText}>
-            Select school, choose grade, confirm the pack and send your order
-            details. For order support, email{" "}
-            <a href={ordersEmailHref}>{ordersEmail}</a> or call{" "}
-            <a href={phoneHref}>{phoneNumber}</a>.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Order now"
+        title="Order your ready-to-use pack"
+        text="Select school, choose grade, confirm the pack and send your order details."
+        panelTitle="Order Support"
+        panelText={`Email ${ordersEmail} or call ${phoneNumber}`}
+      />
       <section className={page.section}>
         <div
           style={{

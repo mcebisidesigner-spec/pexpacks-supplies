@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
+import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
@@ -13,17 +14,13 @@ export const metadata: Metadata = buildMetadata(
 export default function AboutPage() {
   return (
     <>
-      <section className={page.pageHero}>
-        <div className={page.pageHeroNarrow}>
-          <p>About Pexpacks</p>
-          <h1>A simple digital office for stationery packs</h1>
-          <p className={page.pageHeroText}>
-            Pexpacks helps parents, learners, schools, teachers, offices and
-            small businesses order practical stationery packs without the
-            last-minute rush.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="About Pexpacks"
+        title="A simple digital office for stationery packs"
+        text="Pexpacks helps parents, learners, schools, teachers, offices and small businesses order practical stationery packs without the last-minute rush."
+        panelTitle="Our Mission"
+        panelText="Stationery, without the stress."
+      />
       <section className={page.section}>
         <div className={`${page.sectionInner} ${page.twoColumn}`}>
           <div className={page.infoCard}>

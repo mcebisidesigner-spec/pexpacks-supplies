@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
+import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
@@ -12,16 +13,13 @@ export const metadata: Metadata = buildMetadata(
 export default function DeliveriesPage() {
   return (
     <>
-      <section className={page.pageHero}>
-        <div className={page.pageHeroNarrow}>
-          <p>Deliveries</p>
-          <h1>Simple delivery and collection options</h1>
-          <p className={page.pageHeroText}>
-            Choose school collection, home delivery, or office delivery when you
-            place your stationery pack order.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Deliveries"
+        title="Simple delivery and collection options"
+        text="Choose school collection, home delivery, or office delivery when you place your stationery pack order."
+        panelTitle="Delivery area"
+        panelText="Currently serving Gauteng"
+      />
 
       <section className={page.section}>
         <div className={`${page.sectionInner} ${page.cardGrid}`}>

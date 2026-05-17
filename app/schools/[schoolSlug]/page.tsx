@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GradeSelector } from "@/components/schools/GradeSelector";
+import { PageHero } from "@/components/marketing/PageHero";
 import { Button } from "@/components/ui/Button";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -52,18 +53,13 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           { name: school.name, path: `/schools/${school.slug}` },
         ])}
       />
-      <section className={page.pageHero}>
-        <div className={page.pageHeroNarrow}>
-          <p>
-            {school.city}, {school.province}
-          </p>
-          <h1>{school.name}</h1>
-          <p className={page.pageHeroText}>
-            Official stationery packs prepared according to the school
-            stationery list.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow={`${school.city}, ${school.province}`}
+        title={school.name}
+        text="Official stationery packs prepared according to the school stationery list."
+        panelTitle="Ready packed"
+        panelText="Prepared for your grade."
+      />
       <section className={page.section}>
         <div className={page.sectionInner}>
           <GradeSelector school={school} />

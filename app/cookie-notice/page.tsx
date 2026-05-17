@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
@@ -11,16 +12,13 @@ export const metadata: Metadata = buildMetadata(
 export default function CookieNoticePage() {
   return (
     <>
-      <section className={page.pageHero}>
-        <div className={page.pageHeroNarrow}>
-          <p>Cookie notice</p>
-          <h1>Cookies and website functionality</h1>
-          <p className={page.pageHeroText}>
-            Cookies may be used to support basic website functionality, improve
-            browsing, and understand how visitors use the Pexpacks website.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Cookie Notice"
+        title="Cookies and website functionality"
+        text="Cookies may be used to support basic website functionality, improve browsing, and understand how visitors use the Pexpacks website."
+        panelTitle="Data Notice"
+        panelText="We use cookies to improve experience."
+      />
       <section className={page.section}>
         <div className={page.sectionInner}>
           <article className={page.infoCard}>

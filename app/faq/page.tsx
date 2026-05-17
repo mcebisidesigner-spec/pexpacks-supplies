@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { faqs } from "@/data/faqs";
+import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import { faqPageSchema } from "@/lib/schema";
 import page from "@/styles/Page.module.css";
@@ -15,16 +16,13 @@ export default function FAQPage() {
   return (
     <>
       <JsonLd data={faqPageSchema(faqs)} />
-      <section className={page.pageHero}>
-        <div className={page.pageHeroNarrow}>
-          <p>Questions</p>
-          <h1>Frequently asked questions</h1>
-          <p className={page.pageHeroText}>
-            Common questions about school lists, delivery, payment and
-            partnerships.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Questions"
+        title="Frequently asked questions"
+        text="Common questions about school lists, delivery, payment and partnerships."
+        panelTitle="Support"
+        panelText="Need more help? Use our contact page."
+      />
       <section className={page.section}>
         <div className={`${page.sectionInner} ${page.faqList}`}>
           {faqs.map((faq) => (
