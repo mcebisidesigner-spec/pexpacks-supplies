@@ -45,7 +45,7 @@ export function usePaginatedSchoolSearch({
   );
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedQuery(query), 275);
+    const timer = window.setTimeout(() => setDebouncedQuery(query), 350);
     return () => window.clearTimeout(timer);
   }, [query]);
 

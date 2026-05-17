@@ -1,10 +1,9 @@
 import { getSchoolIndex } from "@/data/schools";
-import { filterSchools } from "./filterSchools";
+import { SchoolSearchIndex } from "./SearchIndex";
 import { getFeaturedSchools } from "./getFeaturedSchools";
 import { getGrades } from "./getGrades";
 import { getRegions } from "./getRegions";
-import { paginateSchools } from "./paginateSchools";
-import type { SchoolSearchFilters } from "./types";
+import type { SchoolSearchFilters, SchoolSearchRecord } from "./types";
 
 function gradeRank(grade: string) {
   if (/grade\s*r/i.test(grade)) {
@@ -15,20 +14,25 @@ function gradeRank(grade: string) {
   return Number.isFinite(number) ? number : 99;
 }
 
-export const searchableSchools = getSchoolIndex().map((school) => ({
-  id: school.id,
-  name: school.name,
-  slug: school.slug,
-  region: school.city,
-  city: school.city,
-  province: school.province,
-  grades: school.grades
-    .map((g) => g.grade)
-    .sort((a, b) => gradeRank(a) - gradeRank(b)),
-  isFeatured: Boolean("isFeatured" in school && school.isFeatured),
-  isPartner: school.isPartnerSchool,
-  image: school.logo,
-}));
+export const searchableSchools: SchoolSearchRecord[] = getSchoolIndex().map(
+  (school) => ({
+    id: school.id,
+    name: school.name,
+    slug: school.slug,
+    region: school.city,
+    city: school.city,
+    province: school.province,
+    grades: school.grades
+      .map((g) => g.grade)
+      .sort((a, b) => gradeRank(a) - gradeRank(b)),
+    isFeatured: Boolean("isFeatured" in school && school.isFeatured),
+    isPartner: school.isPartnerSchool,
+    image: school.logo,
+  })
+);
+
+/** Singleton search index — built once, reused across all requests */
+const searchIndex = new SchoolSearchIndex(searchableSchools);
 
 export function getSchoolSearchOptions() {
   return {
@@ -46,9 +50,5 @@ export function searchSchoolRecords(
   limit = 12,
   offset = 0
 ) {
-  return paginateSchools(
-    filterSchools(searchableSchools, filters),
-    limit,
-    offset
-  );
+  return searchIndex.search(filters, limit, offset);
 }

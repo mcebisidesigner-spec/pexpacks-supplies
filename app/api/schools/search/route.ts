@@ -42,10 +42,19 @@ export function GET(request: NextRequest) {
     offset
   );
 
-  return NextResponse.json({
-    success: true,
-    ...results,
-    limit,
-    offset,
-  });
+  return NextResponse.json(
+    {
+      success: true,
+      ...results,
+      limit,
+      offset,
+    },
+    {
+      headers: {
+        // Cache search results for 60s on CDN, allow stale for 5 min
+        "Cache-Control":
+          "public, s-maxage=60, stale-while-revalidate=300",
+      },
+    }
+  );
 }
