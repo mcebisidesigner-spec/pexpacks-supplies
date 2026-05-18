@@ -120,7 +120,7 @@
 
 .accordionBodyInner p {
   margin: 0;
-  padding: 0 24px 24px 84px; /* Align text under the title */
+  padding: 0 24px 24px 84px;
   color: var(--pex-text-muted);
   font-size: 16px;
   line-height: 1.5;
@@ -158,10 +158,9 @@
   z-index: 2;
 }
 
-.featureBadge {
+.featureBadge,
+.mobileFeatureBadge {
   position: absolute;
-  bottom: 32px;
-  left: 32px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   padding: 12px 20px 12px 12px;
@@ -172,6 +171,20 @@
   box-shadow: 0 16px 32px rgba(15, 37, 55, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.8);
   animation: badgePopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.featureBadge {
+  bottom: 32px;
+  left: 32px;
+}
+
+.mobileImageWrapper {
+  display: none;
+}
+
+.mobileFeatureBadge {
+  bottom: 16px;
+  left: 16px;
 }
 
 .badgeIcon {
@@ -196,6 +209,10 @@
   font-size: 15px;
 }
 
+.mobileImage {
+  object-fit: cover;
+}
+
 @keyframes badgePopIn {
   from {
     opacity: 0;
@@ -214,22 +231,26 @@
   }
 
   .imageSide {
-    display: block;
-    order: -1;
-    margin-bottom: 20px;
+    display: none;
   }
 
-  .imageWrapper {
+  .accordionBodyInner p {
+    padding: 16px 20px 20px;
+  }
+
+  .mobileImageWrapper {
     position: relative;
-    width: 100%;
-    aspect-ratio: 16/9;
-    border-radius: var(--radius-card);
+    display: block;
+    width: calc(100% - 24px);
+    margin: 0 12px;
+    aspect-ratio: 16 / 10;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--pex-bg-soft);
     box-shadow: 0 12px 32px rgba(15, 37, 55, 0.1);
   }
 
-  .featureBadge {
-    bottom: 12px;
-    left: 12px;
+  .mobileFeatureBadge {
     padding: 8px 14px 8px 8px;
     gap: 8px;
   }
@@ -254,10 +275,6 @@
     padding-inline: var(--gutter-mobile);
   }
 
-  .accordionBodyInner p {
-    padding: 0 20px 20px 20px;
-  }
-  
   .accordionHeader {
     padding: 16px 20px;
     gap: 12px;
@@ -267,18 +284,27 @@
     width: 36px;
     height: 36px;
   }
-  
+
   .iconWrapper svg {
     width: 18px;
     height: 18px;
   }
-  
+
   .accordionHeader h3 {
     font-size: 18px;
   }
-  
-  .featureBadge {
-    bottom: 20px;
-    left: 20px;
+
+  .mobileImageWrapper {
+    width: calc(100% - 20px);
+    margin: 0 10px;
+    aspect-ratio: 4 / 3;
+    border-radius: 18px;
+  }
+
+  .mobileFeatureBadge {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    padding-right: 12px;
   }
 }

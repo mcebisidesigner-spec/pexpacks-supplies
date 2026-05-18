@@ -129,6 +129,19 @@ export function UnboxingAccordion() {
                   </button>
                   <div className={styles.accordionBody}>
                     <div className={styles.accordionBodyInner}>
+                      <div className={styles.mobileImageWrapper}>
+                        <Image
+                          src={feature.imageSrc}
+                          alt={`Pexpacks ${feature.title}`}
+                          fill
+                          className={styles.mobileImage}
+                          sizes="100vw"
+                        />
+                        <div className={styles.mobileFeatureBadge}>
+                          <span className={styles.badgeIcon}>{feature.icon}</span>
+                          <span className={styles.badgeText}>{feature.title}</span>
+                        </div>
+                      </div>
                       <p>{feature.text}</p>
                     </div>
                   </div>
