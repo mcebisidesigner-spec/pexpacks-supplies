@@ -6,17 +6,7 @@ type CompleteListTableProps = {
   label: string;
 };
 
-function splitIntoColumns(items: PackListItem[]) {
-  if (items.length <= 6) {
-    return [items];
-  }
-
-  const splitIndex = Math.ceil(items.length / 2);
-  return [items.slice(0, splitIndex), items.slice(splitIndex)];
-}
-
 export function CompleteListTable({ items, label }: CompleteListTableProps) {
-  const columns = splitIntoColumns(items);
 
   if (!items.length) {
     return (
@@ -25,43 +15,32 @@ export function CompleteListTable({ items, label }: CompleteListTableProps) {
   }
 
   return (
-    <div
-      className={[
-        styles.tableGrid,
-        columns.length === 1 ? styles.singleColumn : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      {columns.map((column, columnIndex) => (
-        <table className={styles.table} key={columnIndex}>
-          <caption className="sr-only">
-            {label}
-            {columns.length > 1 ? `, column ${columnIndex + 1}` : ""}
-          </caption>
-          <thead className="sr-only">
-            <tr>
-              <th scope="col">Item</th>
-              <th scope="col">Quantity</th>
+    <div className={styles.tableWrapper}>
+      <table className={styles.table}>
+        <caption className="sr-only">{label}</caption>
+        <thead>
+          <tr>
+            <th scope="col" className={styles.quantityHeading}>
+              Qty
+            </th>
+            <th scope="col">Item</th>
+            <th scope="col">Specification</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item, index) => (
+            <tr key={`${item.id}-${index}`}>
+              <td className={styles.quantity}>
+                {item.quantityLabel ?? item.quantity}
+              </td>
+              <td className={styles.itemName}>{item.name}</td>
+              <td className={styles.specification}>
+                {item.specification?.trim() || "-"}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {column.map((item, index) => (
-              <tr key={`${item.id}-${columnIndex}-${index}`}>
-                <td className={styles.itemName}>
-                  <span>{item.name}</span>
-                  {item.specification ? (
-                    <small>{item.specification}</small>
-                  ) : null}
-                </td>
-                <td className={styles.quantity}>
-                  {item.quantityLabel ?? item.quantity}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ))}
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

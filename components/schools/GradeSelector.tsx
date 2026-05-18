@@ -4,7 +4,10 @@ import { useCallback, useRef, useState } from "react";
 import type { GradePack, School } from "@/data/schools";
 import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
 import { CompleteListModal } from "@/components/packs/CompleteListModal";
-import { GradePackActions } from "@/components/packs/GradePackActions";
+import {
+  buildFullPackHref,
+  GradePackActions,
+} from "@/components/packs/GradePackActions";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
 import type { GradePackForCustomisation } from "@/lib/packs/types";
@@ -27,8 +30,7 @@ function toSchoolListItems(pack: GradePackForCustomisation): PackListItem[] {
 
 function buildCompleteListPack(
   grade: GradePack,
-  pack: GradePackForCustomisation,
-  footerActions?: CompleteListPack["footerActions"]
+  pack: GradePackForCustomisation
 ): CompleteListPack {
   return {
     id: `school-${pack.id}`,
@@ -38,7 +40,8 @@ function buildCompleteListPack(
     description: `Prepared according to the official school list for ${grade.grade}.`,
     priceLabel: `From ${formatCurrency(grade.price)}`,
     items: toSchoolListItems(pack),
-    footerActions,
+    fullPackHref: buildFullPackHref(pack),
+    customiseTargetId: `customise-${pack.id}`,
   };
 }
 
@@ -61,15 +64,7 @@ export function GradeSelector({ school }: GradeSelectorProps) {
     : null;
   const selectedListPack =
     selectedGrade && selectedPack
-      ? buildCompleteListPack(
-          selectedGrade,
-          selectedPack,
-          <GradePackActions
-            pack={selectedPack}
-            showDownloadLink={true}
-            showMicrocopy={false}
-          />
-        )
+      ? buildCompleteListPack(selectedGrade, selectedPack)
       : null;
 
   return (

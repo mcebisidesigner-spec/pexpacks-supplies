@@ -28,7 +28,7 @@ type GradePackActionsProps = {
   showMicrocopy?: boolean;
 };
 
-function buildFullPackHref(pack: GradePackForCustomisation) {
+export function buildFullPackHref(pack: GradePackForCustomisation) {
   const params = new URLSearchParams({
     school: pack.schoolSlug,
     grade: pack.gradeSlug,

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { CompleteListTable } from "./CompleteListTable";
@@ -28,6 +29,21 @@ export function CompleteListModal({ pack, onClose }: CompleteListModalProps) {
   const closeModal = useCallback(() => {
     onClose();
   }, [onClose]);
+
+  const handleCustomise = useCallback(() => {
+    if (!pack?.customiseTargetId) {
+      return;
+    }
+
+    const targetId = pack.customiseTargetId;
+    closeModal();
+    window.setTimeout(() => {
+      const trigger = document.getElementById(targetId) as
+        | HTMLButtonElement
+        | null;
+      trigger?.click();
+    }, 0);
+  }, [closeModal, pack]);
 
   useDialogFocusTrap({
     isOpen: isMounted && Boolean(pack),
@@ -91,13 +107,35 @@ export function CompleteListModal({ pack, onClose }: CompleteListModalProps) {
 
         <div className={styles.footer}>
           <p className={styles.microcopy}>
-            Need everything? Buy the full pack. Already have some items?
-            Customise it.
+            Need everything?{" "}
+            {pack.fullPackHref ? (
+              <Link href={pack.fullPackHref} className={styles.inlineLink}>
+                Buy the full pack
+              </Link>
+            ) : (
+              <span className={styles.inlineLinkText}>Buy the full pack</span>
+            )}
+            .
+            <span className={styles.mobileBreak} aria-hidden="true">
+              {" "}
+            </span>
+            <span className={styles.mobileBreakText}>
+              Already have some items?{" "}
+            </span>
+            {pack.customiseTargetId ? (
+              <button
+                type="button"
+                className={styles.inlineAction}
+                onClick={handleCustomise}
+              >
+                Customise it
+              </button>
+            ) : (
+              <span className={styles.inlineLinkText}>Customise it</span>
+            )}
+            .
           </p>
           <p className={styles.price}>{pack.priceLabel}</p>
-          {pack.footerActions ? (
-            <div className={styles.footerActions}>{pack.footerActions}</div>
-          ) : null}
         </div>
       </section>
     </div>,

@@ -19,4 +19,6 @@ export type CompleteListPack = {
   priceLabel: string;
   items: PackListItem[];
   footerActions?: ReactNode;
+  fullPackHref?: string;
+  customiseTargetId?: string;
 };

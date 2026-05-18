@@ -1,16 +1,27 @@
-.tableGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px 42px;
-}
-
-.singleColumn {
-  grid-template-columns: minmax(0, 1fr);
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid rgba(225, 231, 234, 0.82);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(225, 231, 234, 0.92);
+  background: #f4f8fa;
+  color: var(--pex-primary);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: left;
 }
 
 .table tr {
@@ -21,35 +32,34 @@
   border-bottom: 0;
 }
 
-.itemName,
-.quantity {
-  padding: 11px 0;
-  vertical-align: top;
-}
-
 .itemName {
+  padding: 13px 16px;
   color: var(--pex-text);
   font-size: 15px;
   line-height: 1.35;
+  vertical-align: top;
 }
 
-.itemName span,
-.itemName small {
-  display: block;
-}
-
-.itemName small {
-  margin-top: 3px;
+.specification {
+  padding: 13px 16px;
   color: var(--pex-text-muted);
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  vertical-align: top;
 }
 
 .quantity {
-  width: 72px;
+  width: 84px;
+  padding: 13px 16px;
   color: var(--pex-primary);
   font-size: 15px;
   font-weight: 800;
-  text-align: right;
+  text-align: left;
+  vertical-align: top;
+}
+
+.quantityHeading {
+  width: 84px;
 }
 
 .empty {
@@ -58,8 +68,20 @@
 }
 
 @media (max-width: 720px) {
-  .tableGrid {
-    grid-template-columns: 1fr;
-    gap: 0;
+  .table thead th,
+  .itemName,
+  .specification,
+  .quantity {
+    padding: 12px 12px;
+  }
+
+  .table thead th {
+    font-size: 12px;
+  }
+
+  .itemName,
+  .specification,
+  .quantity {
+    font-size: 13px;
   }
 }
