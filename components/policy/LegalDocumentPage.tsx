@@ -87,6 +87,7 @@ export function LegalDocumentPage({
               tocCard: styles.tocCard,
               tocEyebrow: styles.tocEyebrow,
               tocShell: styles.tocShell,
+              tocShellFloating: styles.tocShellFloating,
             }}
             heading={tocHeading}
             headingId={headingId}

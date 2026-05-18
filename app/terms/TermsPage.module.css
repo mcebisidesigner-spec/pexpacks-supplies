@@ -341,9 +341,14 @@
   }
 
   .tocShell {
-    position: static;
-    top: calc(var(--header-height-mobile) + 8px);
-    z-index: auto;
+    position: relative;
+    top: auto;
+    z-index: 60;
+    width: 100%;
+  }
+
+  .tocShellFloating {
+    min-height: 100px;
   }
 
   .tocCard {
@@ -351,37 +356,56 @@
     backdrop-filter: none;
     max-height: none;
     overflow: hidden;
-    padding: 16px;
+    padding: 14px 16px;
     -webkit-backdrop-filter: none;
   }
 
+  .tocShellFloating .tocCard {
+    position: fixed;
+    top: 8px;
+    right: var(--gutter-mobile);
+    left: var(--gutter-mobile);
+    z-index: 90;
+    box-shadow: 0 18px 42px rgba(26, 42, 64, 0.16);
+  }
+
+  .tocEyebrow {
+    font-size: 10px;
+  }
+
   .tocCard h2 {
-    margin-bottom: 12px;
-    font-size: 19px;
+    margin: 4px 0 8px;
+    font-size: 16px;
   }
 
   .tocCard ol {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px;
     margin: 0;
-    overflow: visible;
-    padding: 0;
-    scroll-snap-type: none;
+    overflow-x: auto;
+    padding: 0 0 2px;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tocCard ol::-webkit-scrollbar {
+    display: none;
   }
 
   .tocCard li {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
+    scroll-snap-align: start;
   }
 
   .tocCard a {
     border: 1px solid rgba(190, 147, 64, 0.22);
-    padding: 9px 12px;
+    padding: 8px 11px;
     background: rgba(250, 247, 240, 0.92);
-    font-size: 13px;
-    white-space: normal;
-    overflow-wrap: anywhere;
+    font-size: 11px;
+    white-space: nowrap;
   }
 
   .tocCard a[aria-current="true"] {

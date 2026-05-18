@@ -343,6 +343,7 @@ export default function PrivacyPolicyPage() {
               tocCard: styles.tocCard,
               tocEyebrow: styles.tocEyebrow,
               tocShell: styles.tocShell,
+              tocShellFloating: styles.tocShellFloating,
             }}
             heading="Privacy contents"
             headingId="privacy-toc-title"

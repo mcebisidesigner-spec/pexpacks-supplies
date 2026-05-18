@@ -521,6 +521,7 @@ export default function TermsPage() {
               tocCard: styles.tocCard,
               tocEyebrow: styles.tocEyebrow,
               tocShell: styles.tocShell,
+              tocShellFloating: styles.tocShellFloating,
             }}
             heading="Terms contents"
             headingId="terms-toc-title"

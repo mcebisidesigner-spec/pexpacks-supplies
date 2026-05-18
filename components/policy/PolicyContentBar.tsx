@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useHideHeaderOnScroll } from "@/lib/hooks/useHideHeaderOnScroll";
 
 type PolicyTopic = {
   id: string;
@@ -11,6 +12,7 @@ type PolicyContentBarClasses = {
   tocCard: string;
   tocEyebrow: string;
   tocShell: string;
+  tocShellFloating?: string;
 };
 
 type PolicyContentBarProps = {
@@ -30,6 +32,11 @@ export function PolicyContentBar({
 }: PolicyContentBarProps) {
   const [activeId, setActiveId] = useState(topics[0]?.id ?? "");
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const { isHidden: isHeaderHidden, isAtTop } = useHideHeaderOnScroll({
+    hideAfter: 64,
+    directionThreshold: 4,
+  });
+  const isFloating = isHeaderHidden && !isAtTop;
 
   useEffect(() => {
     if (topics.length === 0) {
@@ -81,7 +88,15 @@ export function PolicyContentBar({
   }, [topics]);
 
   return (
-    <aside className={classNames.tocShell} aria-labelledby={headingId}>
+    <aside
+      className={[
+        classNames.tocShell,
+        isFloating ? classNames.tocShellFloating : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      aria-labelledby={headingId}
+    >
       <div className={classNames.tocCard}>
         <p className={classNames.tocEyebrow}>On this page</p>
         <h2 id={headingId}>{heading}</h2>
