@@ -12,19 +12,16 @@ const resultLimit = 12;
 
 type SchoolSearchPanelProps = {
   grades: string[];
-  popularCities?: string[];
   initialQuery?: string;
   initialGrade?: string;
 };
 
 export function SchoolSearchPanel({
   grades,
-  popularCities = [],
   initialQuery = "",
   initialGrade = "all",
 }: SchoolSearchPanelProps) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
-  const [activeCity, setActiveCity] = useState<string | null>(null);
   const {
     query,
     grade,
@@ -60,18 +57,6 @@ export function SchoolSearchPanel({
     }
   }
 
-  function handleCityChip(city: string) {
-    if (activeCity === city) {
-      // Toggle off — clear the city filter
-      setActiveCity(null);
-      updateQuery("");
-    } else {
-      setActiveCity(city);
-      updateQuery(city);
-      setPanelOpen(true);
-    }
-  }
-
   return (
     <section
       className={`${styles.searchExperience} pex-school-search-focus-anchor`}
@@ -101,10 +86,7 @@ export function SchoolSearchPanel({
             value={query}
             onFocus={() => setIsSchoolInputFocused(true)}
             onBlur={() => setIsSchoolInputFocused(false)}
-            onChange={(event) => {
-              setActiveCity(null);
-              updateQuery(event.target.value);
-            }}
+            onChange={(event) => updateQuery(event.target.value)}
             placeholder="e.g. Parktown Primary"
             autoComplete="off"
           />
@@ -130,28 +112,6 @@ export function SchoolSearchPanel({
           Search
         </button>
       </form>
-
-      {popularCities.length > 0 ? (
-        <div
-          className={styles.cityChips}
-          role="group"
-          aria-label="Filter by city"
-        >
-          {popularCities.map((city) => (
-            <button
-              key={city}
-              type="button"
-              className={`${styles.cityChip} ${
-                activeCity === city ? styles.cityChipActive : ""
-              }`}
-              onClick={() => handleCityChip(city)}
-              aria-pressed={activeCity === city}
-            >
-              {city}
-            </button>
-          ))}
-        </div>
-      ) : null}
 
       <SearchHelperPill
         storageKey="pexpacks:gauteng-helper:schools"

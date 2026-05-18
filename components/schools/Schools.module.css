@@ -1105,51 +1105,6 @@
 
 
 
-/* ═══ Strategy 5.3: City Filter Chips ═══ */
-
-.cityChips {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-.cityChip {
-  padding: 6px 14px;
-  border: 1px solid rgba(26, 42, 64, 0.12);
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.85);
-  color: var(--pex-text-muted);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 180ms ease;
-  white-space: nowrap;
-}
-
-.cityChip:hover {
-  border-color: var(--pex-keppel);
-  color: var(--pex-keppel);
-  background: rgba(63, 184, 160, 0.06);
-}
-
-.cityChipActive {
-  background: var(--pex-keppel);
-  color: #fff;
-  border-color: var(--pex-keppel);
-}
-
-.cityChipActive:hover {
-  background: var(--pex-primary);
-  border-color: var(--pex-primary);
-  color: #fff;
-}
-
-.cityChip:focus-visible {
-  outline: 2px solid var(--pex-coral);
-  outline-offset: 2px;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .resultsPanel {
     animation: none;

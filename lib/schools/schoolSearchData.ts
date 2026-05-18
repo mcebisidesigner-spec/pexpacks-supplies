@@ -42,29 +42,6 @@ export function getSchoolSearchOptions() {
   };
 }
 
-export function getPopularSchoolCities(limit = 8) {
-  const cityCounts = new Map<string, number>();
-
-  for (const school of searchableSchools) {
-    if (!school.city) {
-      continue;
-    }
-
-    cityCounts.set(school.city, (cityCounts.get(school.city) ?? 0) + 1);
-  }
-
-  return Array.from(cityCounts.entries())
-    .sort(([cityA, countA], [cityB, countB]) => {
-      if (countA !== countB) {
-        return countB - countA;
-      }
-
-      return cityA.localeCompare(cityB);
-    })
-    .slice(0, limit)
-    .map(([city]) => city);
-}
-
 export function getFeaturedSchoolRecords() {
   return getFeaturedSchools(searchableSchools, 4);
 }
