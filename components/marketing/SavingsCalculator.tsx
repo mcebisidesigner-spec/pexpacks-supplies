@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import styles from "./SavingsCalculator.module.css";
 import { SectionHeader } from "./SectionHeader";
@@ -57,9 +58,10 @@ export function SavingsCalculator() {
           <div className={styles.resultsGrid}>
             <div className={styles.resultCard}>
               <div className={styles.resultIcon}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="1" x2="12" y2="23"></line>
-                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M7 19V5h6.25a4.25 4.25 0 1 1 0 8.5H7"></path>
+                  <path d="M13.5 13.5 18 19"></path>
+                  <path d="M7 12h6"></path>
                 </svg>
               </div>
               <div className={styles.resultContent}>
@@ -85,12 +87,13 @@ export function SavingsCalculator() {
           </div>
 
           <div className={styles.ctaWrapper}>
-            <a href="/schools" className={styles.ctaButton}>
+            <Link href="/schools" className={styles.ctaButton}>
               Find Your School Pack
-            </a>
+            </Link>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
