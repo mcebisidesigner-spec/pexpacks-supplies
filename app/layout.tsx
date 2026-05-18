@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { StickyMobileCTA } from "@/components/shared/StickyMobileCTA";
+import { WhatsAppWidget } from "@/components/shared/WhatsAppWidget";
+import { FirstOrderDiscount } from "@/components/shared/FirstOrderDiscount";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildMetadata } from "@/lib/seo";
 import {
@@ -51,6 +53,8 @@ export default function RootLayout({
           </main>
           <Footer />
           <StickyMobileCTA />
+          <WhatsAppWidget />
+          <FirstOrderDiscount />
         </div>
       </body>
     </html>

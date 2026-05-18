@@ -7,6 +7,7 @@ import {
 } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/marketing/PageHero";
+import { PolicyContentBar } from "@/components/policy/PolicyContentBar";
 import page from "@/styles/Page.module.css";
 import styles from "./PrivacyPolicy.module.css";
 
@@ -321,6 +322,8 @@ const privacySections = [
   },
 ] as const;
 
+const privacyTopics = privacySections.map(({ id, title }) => ({ id, title }));
+
 export default function PrivacyPolicyPage() {
   return (
     <>
@@ -334,19 +337,16 @@ export default function PrivacyPolicyPage() {
 
       <section className={`${page.section} ${styles.policySection}`}>
         <div className={`${page.sectionInner} ${styles.policyInner}`}>
-          <aside className={styles.tocCard} aria-labelledby="privacy-toc-title">
-            <p className={styles.tocEyebrow}>On this page</p>
-            <h2 id="privacy-toc-title">Privacy contents</h2>
-            <nav aria-label="Privacy policy table of contents">
-              <ol>
-                {privacySections.map((section) => (
-                  <li key={section.id}>
-                    <a href={`#${section.id}`}>{section.title}</a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          </aside>
+          <PolicyContentBar
+            ariaLabel="Privacy policy table of contents"
+            classNames={{
+              tocCard: styles.tocCard,
+              tocEyebrow: styles.tocEyebrow,
+            }}
+            heading="Privacy contents"
+            headingId="privacy-toc-title"
+            topics={privacyTopics}
+          />
 
           <div className={styles.policyContent}>
             <div className={styles.summaryPanel}>

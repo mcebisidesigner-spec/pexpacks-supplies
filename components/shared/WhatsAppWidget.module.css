@@ -1,0 +1,182 @@
+.widgetContainer {
+  position: fixed;
+  z-index: 80;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.fab {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #25D366; /* WhatsApp Green */
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  pointer-events: auto;
+}
+
+.fab:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.fab:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 4px;
+}
+
+.chatPopup {
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform-origin: bottom right;
+}
+
+.chatPopup.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.popupHeader {
+  background-color: #128C7E;
+  color: white;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.headerInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.headerInfo strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.headerInfo span {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.closeBtn:hover {
+  opacity: 1;
+}
+
+.popupBody {
+  padding: 20px 16px;
+  background-color: #e5ddd5; /* Classic WA background color */
+  position: relative;
+}
+
+.popupBody::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23000000' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.chatBubble {
+  background: white;
+  padding: 12px 16px;
+  border-radius: 8px 8px 8px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  display: inline-block;
+  max-width: 90%;
+}
+
+.chatBubble::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-top: 8px solid white;
+  border-left: 8px solid transparent;
+}
+
+.popupFooter {
+  padding: 16px;
+  background: white;
+  display: flex;
+  justify-content: center;
+}
+
+.startChatBtn {
+  background-color: #25D366;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 24px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.startChatBtn:hover {
+  background-color: #128C7E;
+}
+
+/* Adjust position on mobile to avoid StickyMobileCTA */
+@media (max-width: 767px) {
+  .widgetContainer {
+    right: 16px;
+    bottom: calc(85px + env(safe-area-inset-bottom));
+  }
+  
+  .chatPopup {
+    width: calc(100vw - 32px);
+    right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fab, .chatPopup, .startChatBtn, .closeBtn {
+    transition: none;
+  }
+}

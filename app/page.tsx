@@ -5,6 +5,7 @@ import { UnboxingAccordion } from "@/components/marketing/UnboxingAccordion";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { SavingsCalculator } from "@/components/marketing/SavingsCalculator";
 import {
   whyChoosePexpacks,
   homeProcessSteps,
@@ -221,6 +222,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <SavingsCalculator />
 
       <BookCoveringBanner />
 

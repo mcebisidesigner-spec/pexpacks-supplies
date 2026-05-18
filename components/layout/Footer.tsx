@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { hasWhatsAppNumber, orderWhatsAppHref } from "@/data/contact";
-import { footerLinks } from "@/data/navigation";
 import { officialSocialLinks } from "@/data/social";
 import { FooterNav } from "./FooterNav";
 import styles from "./Footer.module.css";
@@ -26,6 +25,35 @@ const socialLinks = [
         } as const,
       ]
     : []),
+] as const;
+
+const policyGroups = [
+  {
+    title: "Legal",
+    links: [
+      { label: "Terms of Use", href: "/terms" },
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Cookie Policy", href: "/cookie-notice" },
+      { label: "PAIA Manual" },
+    ],
+  },
+  {
+    title: "Customer Support",
+    links: [
+      { label: "Delivery Policy", href: "/delivery-policy" },
+      { label: "Returns & Refunds Policy", href: "/terms#returns-cancellations" },
+      { label: "Social Media Guidelines" },
+      { label: "Contact / Complaints", href: "/contact" },
+    ],
+  },
+  {
+    title: "Business Partners",
+    links: [
+      { label: "School Partnership Terms", href: "/terms#promotions-partnerships" },
+      { label: "Supplier Terms" },
+      { label: "Campaign Terms", href: "/terms#promotions-partnerships" },
+    ],
+  },
 ] as const;
 
 function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
@@ -70,17 +98,34 @@ export function Footer() {
           <div className={styles.navGroup}>
             <FooterNav />
 
-            <nav className={styles.legalNav} aria-label="Legal links">
-              {footerLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={styles.legalLink}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+            <details className={styles.policyDisclosure}>
+              <summary className={styles.policySummary}>
+                <span>
+                  Pexpacks policies, terms, and customer information:
+                </span>
+                <span className={styles.policyChevron} aria-hidden="true" />
+              </summary>
+              <div className={styles.policyPanel}>
+                {policyGroups.map((group) => (
+                  <section className={styles.policyGroup} key={group.title}>
+                    <h2>{group.title}</h2>
+                    <ul>
+                      {group.links.map((link) => (
+                        <li key={link.label}>
+                          {"href" in link ? (
+                            <Link href={link.href} className={styles.policyLink}>
+                              {link.label}
+                            </Link>
+                          ) : (
+                            <span className={styles.policyText}>{link.label}</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ))}
+              </div>
+            </details>
           </div>
         </div>{" "}
         <hr className={styles.divider} />{" "}
