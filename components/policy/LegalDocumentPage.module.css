@@ -357,7 +357,9 @@
 
 @media (max-width: 640px) {
   .tocShell {
+    position: static;
     top: calc(var(--header-height-mobile) + 8px);
+    z-index: auto;
   }
 
   .tocCard,
@@ -383,17 +385,17 @@
 
   .tocCard ol {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
-    margin-right: -16px;
-    margin-left: -16px;
-    overflow-x: auto;
-    padding: 0 16px 2px;
-    scroll-snap-type: x proximity;
+    margin: 0;
+    overflow: visible;
+    padding: 0;
+    scroll-snap-type: none;
   }
 
   .tocCard li {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
+    flex: 0 1 auto;
+    min-width: 0;
   }
 
   .tocCard a {
@@ -401,7 +403,8 @@
     padding: 9px 12px;
     background: var(--pex-bg-soft);
     font-size: 13px;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .tocCard a[aria-current="true"] {
@@ -421,7 +424,9 @@
   .sectionHeader,
   .sectionBody,
   .noticePanel {
+    min-width: 0;
     padding: 22px;
+    overflow-wrap: anywhere;
   }
 
   .sectionBody {

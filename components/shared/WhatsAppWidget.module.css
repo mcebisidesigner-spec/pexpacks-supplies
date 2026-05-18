@@ -1,8 +1,8 @@
 .widgetContainer {
   position: fixed;
   z-index: 80;
-  right: 24px;
-  bottom: 24px;
+  right: 18px;
+  bottom: 18px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -10,13 +10,13 @@
 }
 
 .fab {
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background-color: #25D366; /* WhatsApp Green */
   color: white;
   border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 24px rgba(26, 42, 64, 0.18);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -26,8 +26,8 @@
 }
 
 .fab:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 14px 28px rgba(26, 42, 64, 0.2);
 }
 
 .fab:focus-visible {
@@ -37,9 +37,9 @@
 
 .chatPopup {
   position: absolute;
-  bottom: 80px;
+  bottom: 68px;
   right: 0;
-  width: 320px;
+  width: min(300px, calc(100vw - 32px));
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -162,15 +162,19 @@
   background-color: #128C7E;
 }
 
-/* Adjust position on mobile to avoid StickyMobileCTA */
 @media (max-width: 767px) {
   .widgetContainer {
-    right: 16px;
-    bottom: calc(85px + env(safe-area-inset-bottom));
+    right: max(14px, env(safe-area-inset-right));
+    bottom: max(14px, env(safe-area-inset-bottom));
   }
-  
+
+  .fab {
+    width: 48px;
+    height: 48px;
+  }
+
   .chatPopup {
-    width: calc(100vw - 32px);
+    width: min(292px, calc(100vw - 28px));
     right: 0;
   }
 }

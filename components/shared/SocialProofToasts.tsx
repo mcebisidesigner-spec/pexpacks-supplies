@@ -38,6 +38,7 @@ export function SocialProofToasts() {
   const [activeItem, setActiveItem] = useState<SocialProofItem | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
   const indexRef = useRef(0);
 
   useEffect(() => {
@@ -46,6 +47,25 @@ export function SocialProofToasts() {
     } catch {
       setIsMuted(false);
     }
+  }, []);
+
+  useEffect(() => {
+    const footer = document.getElementById("site-footer");
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const footerVisible = entries[0]?.isIntersecting ?? false;
+        setIsFooterVisible(footerVisible);
+        if (footerVisible) {
+          setIsVisible(false);
+        }
+      },
+      { rootMargin: "0px" }
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -85,7 +105,7 @@ export function SocialProofToasts() {
     }
   }
 
-  if (!activeItem || isMuted) {
+  if (!activeItem || isMuted || isFooterVisible) {
     return null;
   }
 

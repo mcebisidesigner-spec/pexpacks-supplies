@@ -119,11 +119,9 @@
   --logo-width-mobile: 95px;
   --logo-width-desktop: 103px;
 
-  --cta-height-mobile: 48px;
-  --cta-height-desktop: 52px;
   --touch-target-min: 48px;
-  --button-height-mobile: var(--cta-height-mobile);
-  --button-height-desktop: var(--cta-height-desktop);
+  --button-height-mobile: 48px;
+  --button-height-desktop: 52px;
   --cta-padding-x: 24px;
 
   --section-padding-mobile: 64px;
