@@ -34,24 +34,24 @@ const policyGroups = [
       { label: "Terms of Use", href: "/terms" },
       { label: "Privacy Policy", href: "/privacy-policy" },
       { label: "Cookie Policy", href: "/cookie-notice" },
-      { label: "PAIA Manual" },
+      { label: "PAIA Manual", href: "/paia-manual" },
     ],
   },
   {
     title: "Customer Support",
     links: [
       { label: "Delivery Policy", href: "/delivery-policy" },
-      { label: "Returns & Refunds Policy", href: "/terms#returns-cancellations" },
-      { label: "Social Media Guidelines" },
+      { label: "Returns & Refunds Policy", href: "/returns-refunds-policy" },
+      { label: "Social Media Guidelines", href: "/social-media-guidelines" },
       { label: "Contact / Complaints", href: "/contact" },
     ],
   },
   {
     title: "Business Partners",
     links: [
-      { label: "School Partnership Terms", href: "/terms#promotions-partnerships" },
-      { label: "Supplier Terms" },
-      { label: "Campaign Terms", href: "/terms#promotions-partnerships" },
+      { label: "School Partnership Terms", href: "/school-partnership-terms" },
+      { label: "Supplier Terms", href: "/supplier-terms" },
+      { label: "Campaign Terms", href: "/campaign-terms" },
     ],
   },
 ] as const;
@@ -112,13 +112,9 @@ export function Footer() {
                     <ul>
                       {group.links.map((link) => (
                         <li key={link.label}>
-                          {"href" in link ? (
-                            <Link href={link.href} className={styles.policyLink}>
-                              {link.label}
-                            </Link>
-                          ) : (
-                            <span className={styles.policyText}>{link.label}</span>
-                          )}
+                          <Link href={link.href} className={styles.policyLink}>
+                            {link.label}
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -161,3 +157,6 @@ export function Footer() {
     </footer>
   );
 }
+
+
+

@@ -1,0 +1,463 @@
+.documentSection {
+  background: linear-gradient(180deg, var(--pex-bg-soft), var(--pex-bg));
+}
+
+.documentInner {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.tocShell {
+  position: sticky;
+  top: calc(var(--header-height-desktop) + 14px);
+  align-self: start;
+  z-index: 20;
+}
+
+.tocCard {
+  max-height: calc(100dvh - var(--header-height-desktop) - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(225, 231, 234, 0.9);
+  border-radius: 24px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.tocEyebrow,
+.summaryKicker,
+.sectionHeader p,
+.noticeEyebrow {
+  margin: 0;
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.tocCard h2 {
+  margin: 8px 0 18px;
+  color: var(--pex-primary);
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.tocCard ol {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tocCard a {
+  display: block;
+  border-radius: 14px;
+  padding: 10px 12px;
+  color: var(--pex-text);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-decoration: none;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.tocCard a:hover {
+  background: var(--pex-bg-soft);
+  color: var(--pex-keppel);
+  transform: translateX(2px);
+}
+
+.tocCard a[aria-current="true"] {
+  background: linear-gradient(90deg, rgba(33, 158, 154, 0.14), rgba(255, 255, 255, 0.78)), var(--pex-bg-soft);
+  color: var(--pex-keppel);
+  box-shadow: inset 3px 0 0 rgba(33, 158, 154, 0.82);
+}
+
+.tocCard a:focus-visible {
+  outline: 2px solid var(--pex-coral);
+  outline-offset: 3px;
+}
+
+.documentContent {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.summaryPanel,
+.documentCard,
+.noticePanel {
+  border: 1px solid rgba(225, 231, 234, 0.86);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--card-shadow);
+}
+
+.summaryPanel {
+  padding: 28px;
+  border-color: rgba(33, 158, 154, 0.22);
+  background: linear-gradient(135deg, rgba(33, 158, 154, 0.08), rgba(255, 255, 255, 0.92)), var(--pex-bg);
+}
+
+.summaryPanel h2 {
+  margin: 8px 0 10px;
+  color: var(--pex-primary);
+  font-size: clamp(26px, 3vw, 34px);
+  line-height: 1.08;
+}
+
+.summaryText {
+  margin: 0;
+  max-width: 760px;
+  color: var(--pex-text);
+  line-height: 1.6;
+}
+
+.highlightGrid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.highlightCard {
+  min-width: 0;
+  padding: 16px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(225, 231, 234, 0.86);
+  background: rgba(255, 255, 255, 0.92);
+  display: grid;
+  gap: 8px;
+}
+
+.highlightCard strong {
+  color: var(--pex-primary);
+  font-size: 15px;
+}
+
+.highlightCard span,
+.highlightCard p {
+  margin: 0;
+  color: var(--pex-text-muted);
+  line-height: 1.55;
+}
+
+.highlightCardAccent {
+  border-color: rgba(33, 158, 154, 0.28);
+  background: rgba(33, 158, 154, 0.08);
+}
+
+.highlightCardWarning {
+  border-color: rgba(244, 124, 106, 0.28);
+  background: rgba(244, 124, 106, 0.08);
+}
+
+.documentCard {
+  scroll-margin-top: 110px;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: grid;
+  gap: 10px;
+  padding: 28px 32px 22px;
+  border-bottom: 1px solid rgba(225, 231, 234, 0.78);
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.05;
+}
+
+.sectionHeader span {
+  max-width: 760px;
+  color: var(--pex-text-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.sectionBody {
+  padding: 26px 32px 30px;
+  color: var(--pex-text);
+  font-size: 16px;
+  line-height: 1.68;
+}
+
+.sectionBody p,
+.sectionBody ul,
+.sectionBody ol,
+.sectionBody dl,
+.sectionBody table,
+.sectionBody blockquote {
+  margin: 0 0 18px;
+}
+
+.sectionBody p:last-child,
+.sectionBody ul:last-child,
+.sectionBody ol:last-child,
+.sectionBody dl:last-child,
+.sectionBody table:last-child,
+.sectionBody blockquote:last-child {
+  margin-bottom: 0;
+}
+
+.sectionBody h3 {
+  margin: 24px 0 8px;
+  color: var(--pex-primary);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.sectionBody h3:first-child {
+  margin-top: 0;
+}
+
+.sectionBody ul,
+.sectionBody ol {
+  padding-left: 22px;
+}
+
+.sectionBody li {
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+
+.sectionBody strong,
+.noticePanel strong {
+  color: var(--pex-primary);
+}
+
+.sectionBody a,
+.summaryPanel a,
+.detailsList a,
+.highlightCard a,
+.noticePanel a {
+  color: var(--pex-primary);
+  font-weight: 800;
+  text-decoration-color: rgba(33, 158, 154, 0.48);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.sectionBody a:hover,
+.summaryPanel a:hover,
+.detailsList a:hover,
+.highlightCard a:hover,
+.noticePanel a:hover {
+  color: var(--pex-keppel);
+}
+
+.detailsList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+.detailsList div {
+  min-width: 0;
+  border: 1px solid rgba(225, 231, 234, 0.78);
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: var(--pex-bg-soft);
+}
+
+.detailsList dt {
+  margin: 0 0 6px;
+  color: var(--pex-text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.detailsList dd {
+  margin: 0;
+  min-width: 0;
+  color: var(--pex-primary);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.noticePanel {
+  padding: 24px 28px;
+  border-color: rgba(244, 124, 106, 0.22);
+  background: linear-gradient(135deg, rgba(244, 124, 106, 0.08), rgba(255, 255, 255, 0.98));
+}
+
+.noticePanel p {
+  margin: 0;
+  color: var(--pex-text);
+  line-height: 1.6;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid rgba(225, 231, 234, 0.86);
+  border-radius: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+
+.table th,
+.table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(225, 231, 234, 0.86);
+  vertical-align: top;
+}
+
+.table th {
+  background: var(--pex-bg-soft);
+  color: var(--pex-primary);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.table tr:last-child td {
+  border-bottom: 0;
+}
+
+@media (max-width: 1100px) {
+  .highlightGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+  .documentInner {
+    grid-template-columns: 1fr;
+  }
+
+  .tocShell {
+    top: calc(var(--header-height-mobile) + 10px);
+  }
+
+  .tocCard {
+    max-height: min(52dvh, 440px);
+  }
+
+  .tocCard ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .tocShell {
+    top: calc(var(--header-height-mobile) + 8px);
+  }
+
+  .tocCard,
+  .summaryPanel,
+  .documentCard,
+  .noticePanel {
+    border-radius: 22px;
+  }
+
+  .tocCard {
+    background: #ffffff;
+    backdrop-filter: none;
+    max-height: none;
+    overflow: hidden;
+    padding: 16px;
+    -webkit-backdrop-filter: none;
+  }
+
+  .tocCard h2 {
+    margin-bottom: 12px;
+    font-size: 19px;
+  }
+
+  .tocCard ol {
+    display: flex;
+    gap: 8px;
+    margin-right: -16px;
+    margin-left: -16px;
+    overflow-x: auto;
+    padding: 0 16px 2px;
+    scroll-snap-type: x proximity;
+  }
+
+  .tocCard li {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .tocCard a {
+    border: 1px solid rgba(33, 158, 154, 0.16);
+    padding: 9px 12px;
+    background: var(--pex-bg-soft);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .tocCard a[aria-current="true"] {
+    border-color: rgba(33, 158, 154, 0.4);
+    box-shadow: none;
+  }
+
+  .documentCard {
+    scroll-margin-top: calc(var(--header-height-mobile) + 150px);
+  }
+
+  .detailsList {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryPanel,
+  .sectionHeader,
+  .sectionBody,
+  .noticePanel {
+    padding: 22px;
+  }
+
+  .sectionBody {
+    font-size: 15px;
+    line-height: 1.62;
+  }
+
+  .table {
+    min-width: 0;
+  }
+}
+
+@supports not (height: 100dvh) {
+  .tocCard {
+    max-height: calc(100vh - var(--header-height-desktop) - 32px);
+  }
+
+  @media (max-width: 960px) {
+    .tocCard {
+      max-height: min(52vh, 440px);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tocCard {
+      max-height: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tocCard a {
+    transition: none;
+  }
+
+  .tocCard a:hover {
+    transform: none;
+  }
+}

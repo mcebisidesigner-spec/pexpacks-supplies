@@ -25,6 +25,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/terms",
     "/cookie-notice",
     "/delivery-policy",
+    "/returns-refunds-policy",
+    "/paia-manual",
+    "/social-media-guidelines",
+    "/school-partnership-terms",
+    "/supplier-terms",
+    "/campaign-terms",
   ];
 
   const schools = await getFullSchoolRecords();
