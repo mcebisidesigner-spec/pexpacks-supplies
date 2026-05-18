@@ -10,6 +10,7 @@ type PolicyTopic = {
 type PolicyContentBarClasses = {
   tocCard: string;
   tocEyebrow: string;
+  tocShell: string;
 };
 
 type PolicyContentBarProps = {
@@ -28,20 +29,18 @@ export function PolicyContentBar({
   topics,
 }: PolicyContentBarProps) {
   const [activeId, setActiveId] = useState(topics[0]?.id ?? "");
-  const listRef = useRef<HTMLOListElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     if (topics.length === 0) {
       return;
     }
 
-    let frame = 0;
-
     function updateActiveTopic() {
       const offset =
         window.innerWidth <= 640
-          ? 150
-          : Math.max(130, window.innerHeight * 0.18);
+          ? Math.max(150, window.innerHeight * 0.22)
+          : Math.max(140, window.innerHeight * 0.2);
       let currentTopic = topics[0];
 
       for (let index = topics.length - 1; index >= 0; index -= 1) {
@@ -54,63 +53,55 @@ export function PolicyContentBar({
         }
       }
 
-      setActiveId(currentTopic.id);
+      setActiveId((previousId) =>
+        previousId === currentTopic.id ? previousId : currentTopic.id
+      );
     }
 
-    function scheduleUpdate() {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(updateActiveTopic);
-    }
+    observerRef.current?.disconnect();
+    observerRef.current = new IntersectionObserver(updateActiveTopic, {
+      root: null,
+      rootMargin: "-18% 0px -62% 0px",
+      threshold: [0, 0.1, 0.5, 1],
+    });
 
+    const observedElements = topics
+      .map((topic) => document.getElementById(topic.id))
+      .filter((element): element is HTMLElement => Boolean(element));
+
+    observedElements.forEach((element) => {
+      observerRef.current?.observe(element);
+    });
     updateActiveTopic();
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
 
     return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
+      observerRef.current?.disconnect();
+      observerRef.current = null;
     };
   }, [topics]);
 
-  useEffect(() => {
-    if (!activeId) {
-      return;
-    }
-
-    const activeLink = listRef.current?.querySelector<HTMLAnchorElement>(
-      `[data-policy-topic="${activeId}"]`
-    );
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    activeLink?.scrollIntoView({
-      block: "nearest",
-      inline: "center",
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    });
-  }, [activeId]);
-
   return (
-    <aside className={classNames.tocCard} aria-labelledby={headingId}>
-      <p className={classNames.tocEyebrow}>On this page</p>
-      <h2 id={headingId}>{heading}</h2>
-      <nav aria-label={ariaLabel}>
-        <ol ref={listRef}>
-          {topics.map((topic) => (
-            <li key={topic.id}>
-              <a
-                aria-current={activeId === topic.id ? "true" : undefined}
-                data-policy-topic={topic.id}
-                href={`#${topic.id}`}
-              >
-                {topic.title}
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
+    <aside className={classNames.tocShell} aria-labelledby={headingId}>
+      <div className={classNames.tocCard}>
+        <p className={classNames.tocEyebrow}>On this page</p>
+        <h2 id={headingId}>{heading}</h2>
+        <nav aria-label={ariaLabel}>
+          <ol>
+            {topics.map((topic) => (
+              <li key={topic.id}>
+                <a
+                  aria-current={activeId === topic.id ? "true" : undefined}
+                  data-policy-topic={topic.id}
+                  href={`#${topic.id}`}
+                  onClick={() => setActiveId(topic.id)}
+                >
+                  {topic.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </div>
     </aside>
   );
 }

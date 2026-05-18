@@ -11,11 +11,14 @@
   align-items: start;
 }
 
-.tocCard {
+.tocShell {
   position: sticky;
   top: calc(var(--header-height-desktop) + 14px);
   align-self: start;
   z-index: 20;
+}
+
+.tocCard {
   max-height: calc(100dvh - var(--header-height-desktop) - 32px);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -316,8 +319,11 @@
     grid-template-columns: 1fr;
   }
 
-  .tocCard {
+  .tocShell {
     top: calc(var(--header-height-mobile) + 10px);
+  }
+
+  .tocCard {
     max-height: min(52dvh, 440px);
   }
 
@@ -334,11 +340,17 @@
     border-radius: 22px;
   }
 
-  .tocCard {
+  .tocShell {
     top: calc(var(--header-height-mobile) + 8px);
+  }
+
+  .tocCard {
+    background: #ffffff;
+    backdrop-filter: none;
     max-height: none;
     overflow: hidden;
     padding: 16px;
+    -webkit-backdrop-filter: none;
   }
 
   .tocCard h2 {
@@ -372,6 +384,10 @@
   .tocCard a[aria-current="true"] {
     border-color: rgba(245, 166, 35, 0.45);
     box-shadow: none;
+  }
+
+  .termsCard {
+    scroll-margin-top: calc(var(--header-height-mobile) + 150px);
   }
 
   .detailsList,

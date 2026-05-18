@@ -3,11 +3,12 @@
 import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { mostPopularPacksHref } from "@/data/packs";
 import heroStyles from "@/components/marketing/HeroSearch.module.css";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
+import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
+import { ViralReferralBanner } from "./ViralReferralBanner";
 import styles from "./Schools.module.css";
 
 const resultLimit = 12;
@@ -176,20 +177,11 @@ export function SchoolSearchPanel({
                     <p className={heroStyles.heroSearchState}>
                       No matching schools found.
                     </p>
-                    <div className={heroStyles.noResultsActions}>
-                      <Link
-                        href="/add-your-school#school-request-form"
-                        className={heroStyles.addSchoolLink}
-                      >
-                        Add your school
-                      </Link>
-                      <Link
-                        href={mostPopularPacksHref}
-                        className={heroStyles.standardPackLink}
-                      >
-                        Buy standard pack
-                      </Link>
-                    </div>
+                    <InlineSchoolWaitlist
+                      schoolName={query}
+                      source="schools-search"
+                    />
+                    <ViralReferralBanner schoolName={query} compact />
                   </div>
                 )}
                 <SchoolResultsAutoLoad

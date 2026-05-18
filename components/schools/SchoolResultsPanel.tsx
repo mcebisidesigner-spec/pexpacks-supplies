@@ -1,9 +1,9 @@
 import type { SchoolSearchRecord } from "@/lib/schools/types";
-import { mostPopularPacksHref } from "@/data/packs";
-import Link from "next/link";
 import heroSearchStyles from "@/components/marketing/HeroSearch.module.css";
+import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultCard } from "./SchoolResultCard";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
+import { ViralReferralBanner } from "./ViralReferralBanner";
 import styles from "./Schools.module.css";
 
 type SchoolResultsPanelProps = {
@@ -16,6 +16,7 @@ type SchoolResultsPanelProps = {
   visibleCount: number;
   hasMore: boolean;
   error: string;
+  query?: string;
   onLoadMore: () => void;
 };
 
@@ -29,6 +30,7 @@ export function SchoolResultsPanel({
   visibleCount,
   hasMore,
   error,
+  query = "",
   onLoadMore,
 }: SchoolResultsPanelProps) {
   if (!isOpen) {
@@ -74,20 +76,8 @@ export function SchoolResultsPanel({
               <p className={heroSearchStyles.heroSearchState}>
                 No matching schools found.
               </p>
-              <div className={heroSearchStyles.noResultsActions}>
-                <Link
-                  href="/add-your-school#school-request-form"
-                  className={heroSearchStyles.addSchoolLink}
-                >
-                  Add your school
-                </Link>
-                <Link
-                  href={mostPopularPacksHref}
-                  className={heroSearchStyles.standardPackLink}
-                >
-                  Buy standard pack
-                </Link>
-              </div>
+              <InlineSchoolWaitlist schoolName={query} source="schools-search" />
+              <ViralReferralBanner schoolName={query} compact />
             </div>
           )}
           <SchoolResultsAutoLoad

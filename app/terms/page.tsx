@@ -520,6 +520,7 @@ export default function TermsPage() {
             classNames={{
               tocCard: styles.tocCard,
               tocEyebrow: styles.tocEyebrow,
+              tocShell: styles.tocShell,
             }}
             heading="Terms contents"
             headingId="terms-toc-title"

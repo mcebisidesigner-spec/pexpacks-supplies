@@ -3,10 +3,11 @@
 import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { mostPopularPacksHref } from "@/data/packs";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
+import { InlineSchoolWaitlist } from "@/components/schools/InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
+import { ViralReferralBanner } from "@/components/schools/ViralReferralBanner";
 import styles from "./HeroSearch.module.css";
 
 const gradeOptions = [
@@ -167,20 +168,11 @@ export function HeroSearch() {
                     <p className={styles.heroSearchState}>
                       No matching schools found.
                     </p>
-                    <div className={styles.noResultsActions}>
-                      <Link
-                        href="/add-your-school#school-request-form"
-                        className={styles.addSchoolLink}
-                      >
-                        Add your school
-                      </Link>
-                      <Link
-                        href={mostPopularPacksHref}
-                        className={styles.standardPackLink}
-                      >
-                        Buy standard pack
-                      </Link>
-                    </div>
+                    <InlineSchoolWaitlist
+                      schoolName={query}
+                      source="home-search"
+                    />
+                    <ViralReferralBanner schoolName={query} compact />
                   </div>
                 )}
                 <SchoolResultsAutoLoad

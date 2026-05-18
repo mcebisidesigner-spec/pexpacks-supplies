@@ -151,7 +151,12 @@ export function createEmailTemplate(
   endpoint: FormEndpointKind,
   data: FormSubmission
 ): TemplateResult {
-  const subject = subjectByEndpoint[endpoint];
+  const subject =
+    data.formType === "school-waitlist"
+      ? "New PexPacks School Waitlist Lead"
+      : data.formType === "readiness-quiz"
+        ? "New PexPacks Readiness Quiz Lead"
+        : subjectByEndpoint[endpoint];
   const fields = fieldsForEndpoint(endpoint, data);
   const text = [
     subject,

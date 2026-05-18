@@ -130,7 +130,7 @@
 html {
   background: var(--pex-body-bg);
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -141,7 +141,7 @@ body {
   font-size: 16px;
   line-height: var(--line-body);
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body.menu-open {

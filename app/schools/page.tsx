@@ -5,6 +5,7 @@ import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
 import { ReturningParentBanner } from "@/components/schools/ReturningParentBanner";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
+import { RetailComparisonSlider } from "@/components/marketing/RetailComparisonSlider";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
@@ -98,6 +99,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
               <p>Skip the queues and receive a complete, ready-to-go box.</p>
             </div>
           </div>
+          <RetailComparisonSlider />
         </div>
       </section>
 

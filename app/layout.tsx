@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { StickyMobileCTA } from "@/components/shared/StickyMobileCTA";
 import { WhatsAppWidget } from "@/components/shared/WhatsAppWidget";
 import { FirstOrderDiscount } from "@/components/shared/FirstOrderDiscount";
+import { SocialProofToasts } from "@/components/shared/SocialProofToasts";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildMetadata } from "@/lib/seo";
 import {
@@ -54,6 +55,7 @@ export default function RootLayout({
           <Footer />
           <StickyMobileCTA />
           <WhatsAppWidget />
+          <SocialProofToasts />
           <FirstOrderDiscount />
         </div>
       </body>

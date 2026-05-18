@@ -5,6 +5,8 @@ export const formTypes = [
   "office-pack-enquiry",
   "bulk-order",
   "school-partnership",
+  "school-waitlist",
+  "readiness-quiz",
   "contact",
   "track-order-interest",
   "quote",

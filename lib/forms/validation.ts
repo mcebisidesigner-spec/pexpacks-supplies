@@ -328,6 +328,15 @@ function validateEndpointRules(
     if (!data.grade) add("grade", "Grade is required.");
   }
 
+  if (data.formType === "school-waitlist") {
+    if (!data.schoolName) add("schoolName", "School name is required.");
+    if (!data.email) add("email", "Email address is required.");
+  }
+
+  if (data.formType === "readiness-quiz" && !data.email) {
+    add("email", "Email address is required.");
+  }
+
   return errors;
 }
 

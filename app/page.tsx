@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { UnboxingAccordion } from "@/components/marketing/UnboxingAccordion";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
+import { BackToSchoolQuiz } from "@/components/marketing/BackToSchoolQuiz";
 import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
+import { RetailComparisonSlider } from "@/components/marketing/RetailComparisonSlider";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { SavingsCalculator } from "@/components/marketing/SavingsCalculator";
 import {
@@ -178,6 +180,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+          <RetailComparisonSlider />
         </div>
       </section>
 
@@ -226,6 +229,8 @@ export default function HomePage() {
       <SavingsCalculator />
 
       <BookCoveringBanner />
+
+      <BackToSchoolQuiz />
 
       <UnboxingAccordion />
 
