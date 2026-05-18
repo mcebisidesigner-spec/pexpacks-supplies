@@ -102,12 +102,19 @@
 }
 
 .pane li {
+  display: flex;
+  align-items: center;
   border-radius: var(--radius-pill);
   padding: 9px 12px;
   background: rgba(255, 255, 255, 0.84);
   color: var(--pex-primary);
   font-size: 13px;
   font-weight: 800;
+}
+
+.pointIcon {
+  margin-right: 6px;
+  font-size: 16px;
 }
 
 .pexpacksPane li {
