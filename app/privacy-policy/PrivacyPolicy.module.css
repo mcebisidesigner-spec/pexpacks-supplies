@@ -310,14 +310,15 @@
   }
 
   .tocShell {
-    position: relative;
-    top: auto;
+    position: sticky;
+    top: 0;
     z-index: 60;
     width: 100%;
   }
 
+  /* When floating, boost shadow for depth cue */
   .tocShellFloating {
-    min-height: 100px;
+    /* No min-height spacer needed — sticky keeps the element in flow */
   }
 
   .tocCard {
@@ -327,14 +328,11 @@
     overflow: hidden;
     padding: 14px 16px;
     -webkit-backdrop-filter: none;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.25s ease;
   }
 
   .tocShellFloating .tocCard {
-    position: fixed;
-    top: 8px;
-    right: var(--gutter-mobile);
-    left: var(--gutter-mobile);
-    z-index: 90;
     box-shadow: 0 18px 42px rgba(26, 42, 64, 0.16);
   }
 
