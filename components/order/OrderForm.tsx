@@ -697,7 +697,11 @@ export function OrderForm({
                     : null}
                   {!schoolLoading && !schoolResults.length ? (
                     <p className={styles.schoolEmpty}>
-                      No matching schools found. Try a different name.
+                      No matching schools found. Try detailed search at{" "}
+                      <Link href="/school" className={styles.privacyLink}>
+                        Schools page
+                      </Link>
+                      .
                     </p>
                   ) : null}
                 </div>
