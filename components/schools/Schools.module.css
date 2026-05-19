@@ -31,7 +31,6 @@
 }
 
 .schoolEyebrow,
-.sectionIntro p,
 .requestCta p,
 .supportSection p {
   margin: 0 0 12px;
@@ -41,7 +40,6 @@
 }
 
 .schoolsHeroCopy h1,
-.sectionIntro h2,
 .requestCta h2,
 .supportSection h2,
 .searchExperience h2 {
@@ -355,7 +353,7 @@
 }
 
 .featuredSection,
-.sectionIntro,
+.featuredIntro,
 .supportSection > div {
   width: 100%;
   max-width: var(--layout-max-width);
@@ -363,14 +361,12 @@
   padding-inline: var(--gutter-desktop);
 }
 
-.sectionIntro h2,
 .supportSection h2,
 .requestCta h2 {
   font-size: clamp(34px, 4vw, 54px);
   line-height: 1;
 }
 
-.sectionIntro span,
 .supportSection span,
 .requestCtaText {
   display: block;
@@ -385,7 +381,7 @@
 .featuredScroller {
   width: 100%;
   max-width: var(--layout-max-width);
-  margin: 26px auto 0;
+  margin: 0 auto;
   padding-inline: var(--gutter-desktop);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1076,7 +1072,7 @@
   }
 
   .schoolsHeroInner,
-  .sectionIntro,
+  .featuredIntro,
   .supportSection > div {
     padding-inline: var(--gutter-mobile);
   }
