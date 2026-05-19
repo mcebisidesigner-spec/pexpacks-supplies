@@ -5,7 +5,7 @@ import styles from "./Button.module.css";
 
 type BaseProps = {
   children: ReactNode;
-  variant?: "primary" | "secondary" | "navy" | "white" | "outline";
+  variant?: "primary" | "secondary" | "tertiary" | "navy" | "white" | "outline";
   size?: "sm" | "md" | "lg";
   className?: string;
   ariaLabel?: string;
@@ -34,10 +34,11 @@ export function Button({
   const classNames = [styles.button, styles[variant], styles[size], className]
     .filter(Boolean)
     .join(" ");
+  const iconTone = variant === "primary" ? "white" : "orange";
   const content = (
     <>
       <span>{children}</span>
-      <IconCircle tone="orange" />
+      <IconCircle tone={iconTone} />
     </>
   );
 

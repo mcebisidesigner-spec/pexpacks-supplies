@@ -42,7 +42,7 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(15, 37, 55, 0.52);
+  background: var(--color-overlay);
   display: flex;
   justify-content: flex-end;
   overflow: hidden;
@@ -97,7 +97,7 @@
 .header h2 {
   margin: 0;
   color: var(--pex-primary);
-  font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
+  font-family: var(--font-heading);
   font-size: clamp(28px, 4vw, 40px);
   line-height: 1;
 }
@@ -115,7 +115,7 @@
   width: 48px;
   height: 48px;
   border: 1px solid var(--pex-border);
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   background: var(--pex-bg);
   color: var(--pex-primary);
   font-size: 24px;
@@ -140,7 +140,7 @@
 .summaryCard,
 .itemRow,
 .emptyState {
-  border: 1px solid var(--pex-border);
+  border: var(--card-border);
   border-radius: var(--radius-card);
   background: var(--pex-bg-soft);
 }

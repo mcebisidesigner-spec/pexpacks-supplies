@@ -8,7 +8,7 @@
   justify-content: center;
   gap: 6px;
   width: fit-content;
-  min-height: 36px;
+  min-height: 40px;
   padding: 0;
   border: none;
   background: none;
@@ -20,11 +20,11 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
-  transition: color 180ms ease;
+  transition: var(--interactive-transition);
 }
 
 .link:hover {
-  color: var(--pex-keppel);
+  color: var(--color-brand-teal);
 }
 
 .link:disabled {
@@ -33,7 +33,7 @@
 }
 
 .link:focus-visible {
-  outline: 2px solid var(--pex-coral);
+  outline: 2px solid var(--color-brand-orange);
   outline-offset: 4px;
   color: var(--pex-primary);
 }
@@ -56,10 +56,10 @@
   z-index: 10;
   min-width: 280px;
   padding: 16px;
-  border-radius: var(--radius-card, 12px);
-  background: var(--pex-bg, #fff);
-  border: 1px solid rgba(26, 42, 64, 0.12);
-  box-shadow: 0 8px 32px rgba(26, 42, 64, 0.12);
+  border-radius: var(--radius-card);
+  background: var(--card-bg);
+  border: var(--card-border);
+  box-shadow: var(--card-shadow-hover);
   animation: fadeUp 200ms ease;
 }
 
@@ -84,7 +84,7 @@
   margin: 0;
   font-size: 13px;
   font-weight: 700;
-  color: var(--pex-primary, #1a2a40);
+  color: var(--color-text-strong);
 }
 
 .emailInput {
@@ -111,8 +111,8 @@
   padding: 8px 14px;
   border: none;
   border-radius: 8px;
-  background: var(--pex-keppel, #3fb8a0);
-  color: #fff;
+  background: var(--color-brand-teal);
+  color: var(--color-surface);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -120,7 +120,7 @@
 }
 
 .emailSubmit:hover {
-  background: var(--pex-primary, #1a2a40);
+  background: var(--color-brand-navy);
 }
 
 .emailSkip {
@@ -140,7 +140,7 @@
 
 @media (max-width: 640px) {
   .link {
-    min-height: 44px;
+    min-height: var(--touch-target-min);
   }
 
   .emailCapture {

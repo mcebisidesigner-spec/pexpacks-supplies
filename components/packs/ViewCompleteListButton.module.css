@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-height: 36px;
+  min-height: 40px;
   border: 0;
   border-radius: var(--radius-pill);
   background: transparent;
@@ -15,24 +15,22 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
-  transition:
-    color 180ms ease,
-    background 180ms ease;
+  transition: var(--interactive-transition);
 }
 
 .button:hover {
-  color: var(--pex-keppel);
+  color: var(--color-brand-teal);
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--pex-coral);
+  outline: 2px solid var(--color-brand-orange);
   outline-offset: 4px;
   color: var(--pex-primary);
 }
 
 @media (max-width: 640px) {
   .button {
-    min-height: 44px;
+    min-height: var(--touch-target-min);
   }
 }
 

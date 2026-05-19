@@ -1,0 +1,56 @@
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  min-height: 40px;
+  color: var(--color-text-muted);
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: var(--interactive-transition);
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  color: var(--color-brand-orange);
+}
+
+.icon svg {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.link:hover {
+  color: var(--color-text-strong);
+}
+
+.pill {
+  min-height: var(--touch-target-min);
+  padding: 0 16px;
+  border: var(--surface-border-soft);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  text-decoration: none;
+}
+
+.pill:hover {
+  border-color: rgba(33, 158, 154, 0.4);
+  color: var(--color-brand-teal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

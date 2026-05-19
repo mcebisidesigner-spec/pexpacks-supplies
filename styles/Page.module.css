@@ -37,7 +37,7 @@
 
 .pageHero h1 {
   margin: 0;
-  font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
+  font-family: var(--font-heading);
   font-size: clamp(42px, 6.4vw, 76px);
   line-height: 0.98;
   letter-spacing: 0;

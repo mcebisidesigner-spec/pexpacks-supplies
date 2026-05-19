@@ -124,7 +124,7 @@
 }
 
 .resultValue {
-  font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
+  font-family: var(--font-heading);
   font-size: 32px;
   font-weight: 800;
   color: var(--pex-primary);

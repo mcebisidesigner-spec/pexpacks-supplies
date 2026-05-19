@@ -32,22 +32,22 @@
 }
 
 .blogCard {
-  background: var(--pex-bg);
-  border-radius: 20px;
+  background: var(--card-bg);
+  border-radius: var(--radius-card);
   padding: 32px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 12px rgba(15, 37, 55, 0.04);
-  border: 1px solid rgba(15, 37, 55, 0.05);
+  box-shadow: var(--card-shadow);
+  border: var(--card-border);
   transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+    transform var(--motion-duration) var(--motion-ease),
+    box-shadow var(--motion-duration) var(--motion-ease);
   text-decoration: none;
 }
 
 .blogCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 32px rgba(15, 37, 55, 0.08);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .blogCategory {

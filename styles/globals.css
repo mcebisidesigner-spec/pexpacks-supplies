@@ -34,6 +34,38 @@
 }
 
 @font-face {
+  font-family: "OpenSans";
+  src: url("/fonts/PexSans Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("/fonts/PexSans Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("/fonts/PexSans Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("/fonts/PexSans Bold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Grota Sans";
   src: url("/fonts/PexSans Regular.woff2") format("woff2");
   font-weight: 400;
@@ -92,6 +124,30 @@
 
 @font-face {
   font-family: "Pexpacks Sans Alt";
+  src: url("/fonts/PexSans Alt Bold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo_Expanded";
+  src: url("/fonts/PexSans Alt Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo_Expanded";
+  src: url("/fonts/PexSans Alt Semi Bold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo_Expanded";
   src: url("/fonts/PexSans Alt Bold.woff2") format("woff2");
   font-weight: 800;
   font-style: normal;
@@ -188,18 +244,6 @@ button {
   cursor: pointer;
   font-family: var(--font-button);
   transform-origin: center;
-  transition: var(--button-transition);
-}
-
-button:not(:disabled):hover {
-  filter: brightness(110%);
-  transform: var(--button-hover-transform);
-  box-shadow: var(--button-hover-shadow);
-}
-
-button:not(:disabled):active {
-  filter: brightness(100%);
-  transform: var(--button-active-transform);
 }
 
 button:disabled {
@@ -209,11 +253,6 @@ button:disabled {
 @media (prefers-reduced-motion: reduce) {
   button {
     transition: none;
-  }
-
-  button:not(:disabled):hover,
-  button:not(:disabled):active {
-    transform: none;
   }
 }
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { IconButton } from "@/components/ui/IconButton";
 import { CompleteListTable } from "./CompleteListTable";
 import type { CompleteListPack } from "./packListTypes";
 import { useDialogFocusTrap } from "./useDialogFocusTrap";
@@ -82,15 +83,16 @@ export function CompleteListModal({ pack, onClose }: CompleteListModalProps) {
         <div className={styles.header}>
           <div className={styles.titlePill}>
             <h2 id={titleId}>{pack.modalTitle}</h2>
-            <button
-              type="button"
+            <IconButton
               className={styles.closeButton}
               onClick={closeModal}
-              aria-label={`Close ${pack.gradeLabel} stationery list`}
+              label={`Close ${pack.gradeLabel} stationery list`}
               ref={closeButtonRef}
             >
-              &times;
-            </button>
+              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                <path d="m6 6 12 12M18 6 6 18" />
+              </svg>
+            </IconButton>
           </div>
         </div>
 

@@ -1,0 +1,63 @@
+.button {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  border: var(--surface-border-soft);
+  border-radius: var(--radius-pill);
+  display: inline-grid;
+  place-items: center;
+  background: var(--color-surface);
+  color: var(--color-text-strong);
+  cursor: pointer;
+  transition: var(--interactive-transition);
+}
+
+.button svg {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.button:not(:disabled):hover {
+  border-color: rgba(33, 158, 154, 0.4);
+  color: var(--color-brand-teal);
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.sm {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.lg {
+  min-width: 52px;
+  min-height: 52px;
+}
+
+.navy {
+  background: var(--color-brand-navy);
+  color: var(--color-surface);
+  border-color: transparent;
+}
+
+.ghost {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:not(:disabled):hover {
+    transform: none;
+  }
+}

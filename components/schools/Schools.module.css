@@ -45,7 +45,7 @@
 .searchExperience h2 {
   margin: 0;
   color: var(--pex-navy);
-  font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
+  font-family: var(--font-heading);
   font-weight: 800;
   letter-spacing: 0;
 }
@@ -114,7 +114,7 @@
   border: var(--card-border);
   border-radius: var(--radius-card);
   background: var(--pex-bg);
-  box-shadow: 0 16px 40px rgba(18, 57, 69, 0.08);
+  box-shadow: var(--card-shadow);
   display: grid;
   grid-template-columns: 1.1fr 1fr auto;
   align-items: stretch;
@@ -136,7 +136,7 @@
 
 .schoolSearchField {
   position: relative;
-  border-right: 1px solid rgba(18, 57, 69, 0.12);
+  border-right: var(--surface-border-soft);
 }
 
 .searchField span {
@@ -197,11 +197,11 @@
   margin-top: 0;
   padding: 16px;
   overflow-y: auto;
-  border: 1px solid rgba(18, 57, 69, 0.12);
-  border-radius: 28px;
+  border: var(--surface-border-soft);
+  border-radius: var(--radius-card);
   background: var(--pex-bg);
-  box-shadow: 0 18px 40px rgba(18, 57, 69, 0.14);
-  animation: schoolResultsIn 0.22s ease both;
+  box-shadow: var(--card-shadow-hover);
+  animation: schoolResultsIn var(--motion-duration) var(--motion-ease) both;
 }
 
 .resultsState,
@@ -814,7 +814,7 @@
 
 .gradeDetails h1 {
   margin: 0;
-  font-family: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
+  font-family: var(--font-heading);
   font-size: clamp(42px, 6.4vw, 76px);
   font-weight: 800;
   line-height: 0.98;

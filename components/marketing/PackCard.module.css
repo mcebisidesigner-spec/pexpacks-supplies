@@ -1,11 +1,19 @@
 .packCard {
-  border: 1px solid rgba(15, 37, 55, 0.06);
-  border-radius: 20px;
-  background: var(--pex-bg);
-  box-shadow: 0 4px 12px rgba(15, 37, 55, 0.05);
+  border: var(--card-border);
+  border-radius: var(--radius-card);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition:
+    transform var(--motion-duration) var(--motion-ease),
+    box-shadow var(--motion-duration) var(--motion-ease);
+}
+
+.packCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .packCard h3 {
@@ -46,7 +54,7 @@
 }
 
 .packMedia span {
-  border-radius: 40px;
+  border-radius: var(--radius-pill);
   padding: 9px 12px;
   background: rgba(255, 255, 255, 0.9);
   color: var(--pex-primary);
@@ -55,10 +63,20 @@
 }
 
 .packBody {
-  padding: 22px;
+  padding: var(--space-5);
   display: grid;
   gap: 14px;
   flex: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .packCard {
+    transition: none;
+  }
+
+  .packCard:hover {
+    transform: none;
+  }
 }
 
 .packMeta {
