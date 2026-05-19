@@ -914,14 +914,14 @@ export function OrderForm({
                 <div className={styles.deliveryNotice}>
                   <p>
                     Home delivery incurs an additional delivery fee based on
-                    your location. Please{" "}
+                    your location. Please read our{" "}
                     <Link
                       href="/delivery-policy"
                       className={styles.deliveryPolicyLink}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      read our Delivery Policy
+                      Delivery Policy
                     </Link>{" "}
                     for more details on pricing and schedules.
                   </p>
