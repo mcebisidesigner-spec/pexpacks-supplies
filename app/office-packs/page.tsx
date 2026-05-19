@@ -5,6 +5,7 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { officePacks } from "@/data/officePacks";
 import { buildMetadata } from "@/lib/seo";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { PexpacksEnquiryForm } from "@/components/forms/PexpacksEnquiryForm";
 import styles from "@/components/marketing/Marketing.module.css";
 
 const businessUseCases = [
@@ -21,6 +22,74 @@ const officeBenefits = [
   "Monthly pack planning for recurring supplies",
   "Custom quotes for teams, shops and admin offices",
   "Delivery or collection options during the Gauteng pilot",
+];
+
+const BrandIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 3l2.5 5.1 5.6.8-4.1 4 1 5.6-5-2.7-5 2.7 1-5.6-4.1-4 5.6-.8L12 3z" />
+  </svg>
+);
+
+const CardIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="6" width="18" height="12" rx="2" />
+    <path d="M3 10h18" />
+    <path d="M7 15h4" />
+  </svg>
+);
+
+const MegaphoneIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 14h3l9 4V6L7 10H4v4z" />
+    <path d="M7 14l1 5h3" />
+    <path d="M19 9c1 .7 1.5 1.7 1.5 3s-.5 2.3-1.5 3" />
+  </svg>
+);
+
+const DocumentIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7 3h7l4 4v14H7V3z" />
+    <path d="M14 3v5h4" />
+    <path d="M10 13h5" />
+    <path d="M10 17h4" />
+  </svg>
+);
+
+const WebsiteIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="M3 9h18" />
+    <path d="M8 14h3" />
+    <path d="M14 14h2" />
+  </svg>
+);
+
+const brandPackageItems = [
+  {
+    title: "Professional Logo Design",
+    text: "A practical visual identity your customers can recognise quickly.",
+    Icon: BrandIcon,
+  },
+  {
+    title: "Custom Business Cards",
+    text: "Printed cards for owners, staff, sales teams and customer handouts.",
+    Icon: CardIcon,
+  },
+  {
+    title: "Marketing Flyers",
+    text: "Simple promotional flyers for launches, offers and local campaigns.",
+    Icon: MegaphoneIcon,
+  },
+  {
+    title: "Official Company Letterhead",
+    text: "A clean document style for quotes, invoices, proposals and notices.",
+    Icon: DocumentIcon,
+  },
+  {
+    title: "5-Page Website",
+    text: "Hosted free for 12 months so the brand package has a live home.",
+    Icon: WebsiteIcon,
+  },
 ];
 
 export const metadata: Metadata = buildMetadata(
@@ -40,17 +109,65 @@ export default function OfficePacksPage() {
         panelTitle="Office essentials packed and delivered, so your business keeps moving."
       >
         <div className={styles.buttonRow}>
-          <Button href="/contact?type=office&subject=Office%20pack%20quote">
+          <Button href="#request-quote">
             Request a Quote
           </Button>
           <Button
-            href="/contact?type=office&subject=Office%20pack%20order"
+            href="#request-quote"
             variant="white"
           >
             Order a Pack
           </Button>
         </div>
       </PageHero>
+
+      <section
+        className={styles.brandPackageSection}
+        aria-labelledby="brand-package-heading"
+      >
+        <div className={styles.inner}>
+          <div className={styles.brandPackagePanel}>
+            <div className={styles.brandPackageCopy}>
+              <p className={styles.sectionEyebrow}>Special Offer</p>
+              <h2 id="brand-package-heading">
+                Business Starter Brand Package
+              </h2>
+              <p>
+                Launch with a professional identity. Pexpacks prepares your
+                essential physical and digital branding in one focused starter
+                package.
+              </p>
+              <div className={styles.brandPackagePrice}>
+                <span>Complete package</span>
+                <strong>R3,500.00</strong>
+              </div>
+              <div className={styles.buttonRow}>
+                <Button href="#request-quote" variant="white">
+                  Claim This Package
+                </Button>
+              </div>
+            </div>
+
+            <div className={styles.brandPackageItems}>
+              {brandPackageItems.map(({ title, text, Icon }, index) => (
+                <details
+                  className={styles.brandPackageItem}
+                  key={title}
+                  open={index === 0}
+                >
+                  <summary>
+                    <span className={styles.brandPackageIcon}>
+                      <Icon />
+                    </span>
+                    <strong>{title}</strong>
+                  </summary>
+                  <p>{text}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className={styles.section}>
         <div className={styles.inner}>
@@ -84,9 +201,7 @@ export default function OfficePacksPage() {
                         : `From ${formatCurrency(pack.priceFrom)}`}
                     </span>
                     <Button
-                      href={`/contact?type=office&subject=${encodeURIComponent(
-                        pack.name
-                      )}`}
+                      href="#request-quote"
                       size="sm"
                     >
                       Request Quote
@@ -95,95 +210,6 @@ export default function OfficePacksPage() {
                 </div>
               </article>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        className={styles.sectionCream}
-        aria-labelledby="brand-package-heading"
-      >
-        <div className={styles.inner}>
-          <div
-            className={styles.splitBand}
-            style={{
-              background: "var(--pex-primary)",
-              color: "var(--pex-bg)",
-              borderRadius: "var(--radius-section)",
-              padding: "clamp(32px, 6vw, 64px)",
-            }}
-          >
-            <div>
-              <p
-                className={styles.sectionEyebrow}
-              >
-                Special Offer
-              </p>
-              <h2
-                id="brand-package-heading"
-                style={{
-                  color: "var(--pex-bg)",
-                  fontSize: "clamp(32px, 4vw, 42px)",
-                  marginBottom: "16px",
-                }}
-              >
-                Business Starter Brand Package
-              </h2>
-              <p
-                style={{
-                  fontSize: "18px",
-                  opacity: 0.9,
-                  marginBottom: "24px",
-                  maxWidth: "480px",
-                  lineHeight: 1.5,
-                }}
-              >
-                Launch your business with a professional identity. Get your
-                complete physical and digital branding sorted in one
-                comprehensive package for only <strong>R3,500.00</strong>.
-              </p>
-              <div className={styles.buttonRow}>
-                <Button
-                  href="/contact?subject=Business%20Starter%20Brand%20Package"
-                  variant="white"
-                >
-                  Claim This Package
-                </Button>
-              </div>
-            </div>
-            <div
-              style={{
-                background: "rgba(255,255,255,0.05)",
-                padding: "32px",
-                borderRadius: "24px",
-                border: "1px solid rgba(255,255,255,0.1)",
-              }}
-            >
-              <h3
-                style={{
-                  color: "var(--pex-bg)",
-                  marginBottom: "20px",
-                  fontSize: "20px",
-                }}
-              >
-                What's Included:
-              </h3>
-              <ul
-                className={styles.checkList}
-                style={
-                  {
-                    color: "var(--pex-bg)",
-                    "--check-color": "var(--pex-accent)",
-                  } as React.CSSProperties
-                }
-              >
-                <li>Professional Logo Design</li>
-                <li>Custom Business Cards</li>
-                <li>Marketing Flyers</li>
-                <li>Official Company Letterhead</li>
-                <li>5-Page Website (Hosted free for 12 months)</li>
-              </ul>
-            </div>
           </div>
         </div>
       </section>
@@ -200,14 +226,8 @@ export default function OfficePacksPage() {
                 site needs practical supplies quickly.
               </p>
               <div className={styles.buttonRow}>
-                <Button href="/contact?type=office&subject=Monthly%20office%20pack">
+                <Button href="#request-quote">
                   Start Monthly Pack
-                </Button>
-                <Button
-                  href="/contact?type=office&subject=Custom%20office%20quote"
-                  variant="white"
-                >
-                  Custom Office Quote
                 </Button>
               </div>
             </div>
@@ -230,13 +250,22 @@ export default function OfficePacksPage() {
           <div className={styles.gridThree}>
             {businessUseCases.map((useCase) => (
               <article className={styles.infoCard} key={useCase}>
-                <h3>{useCase}</h3>
-                <p>
-                  Choose a pack, request a quote, and let Pexpacks prepare the
-                  essentials your team needs.
-                </p>
+                <h3 style={{ margin: 0 }}>{useCase}</h3>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="request-quote" className={styles.sectionCream}>
+        <div className={styles.inner}>
+          <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+            <PexpacksEnquiryForm
+              mode="contact"
+              title="Get a custom office quote"
+              submitLabel="Request Quote"
+              initialEnquiryType="Office pack"
+            />
           </div>
         </div>
       </section>

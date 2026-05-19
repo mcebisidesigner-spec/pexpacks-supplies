@@ -496,6 +496,180 @@
   font-weight: 800;
 }
 
+.brandPackageSection {
+  padding: clamp(28px, 5vw, 56px) 0 var(--section-padding-y-desktop);
+  background:
+    linear-gradient(180deg, var(--pex-bg), var(--pex-bg-soft) 88%);
+}
+
+.brandPackagePanel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(33, 158, 154, 0.26);
+  border-radius: var(--radius-section);
+  padding: clamp(28px, 5vw, 58px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.78fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+  background:
+    radial-gradient(circle at 86% 12%, rgba(255, 111, 89, 0.22), transparent 28%),
+    linear-gradient(135deg, var(--pex-primary), var(--pex-sme-navy));
+  color: var(--pex-bg);
+  box-shadow:
+    0 28px 70px rgba(26, 42, 64, 0.22),
+    0 8px 22px rgba(33, 158, 154, 0.16);
+}
+
+.brandPackagePanel::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: calc(var(--radius-section) - 8px);
+}
+
+.brandPackageCopy,
+.brandPackageItems {
+  position: relative;
+  z-index: 1;
+}
+
+.brandPackageCopy {
+  max-width: 620px;
+}
+
+.brandPackageCopy .sectionEyebrow {
+  color: var(--pex-sme-mint);
+}
+
+.brandPackageCopy h2 {
+  margin: 0;
+  color: var(--pex-bg);
+  font-size: clamp(38px, 5.6vw, 68px);
+  line-height: 0.98;
+  font-weight: 800;
+}
+
+.brandPackageCopy p:not(.sectionEyebrow) {
+  max-width: 540px;
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(17px, 2vw, 20px);
+  line-height: 1.5;
+}
+
+.brandPackagePrice {
+  width: fit-content;
+  margin: 26px 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: grid;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.brandPackagePrice span {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.brandPackagePrice strong {
+  color: var(--pex-bg);
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1;
+}
+
+.brandPackageItems {
+  display: grid;
+  gap: 12px;
+}
+
+.brandPackageItem {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.brandPackageItem:hover,
+.brandPackageItem:focus-within {
+  transform: translateY(-2px);
+  border-color: rgba(129, 212, 181, 0.62);
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.brandPackageItem[open] {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.brandPackageItem summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  color: var(--pex-bg);
+}
+
+.brandPackageItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.brandPackageIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: var(--pex-sme-mint);
+  color: var(--pex-primary);
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.brandPackageIcon svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.brandPackageItem:hover .brandPackageIcon,
+.brandPackageItem:focus-within .brandPackageIcon,
+.brandPackageItem[open] .brandPackageIcon {
+  transform: scale(1.06);
+  background: var(--pex-accent);
+  color: var(--pex-bg);
+}
+
+.brandPackageItem strong {
+  color: var(--pex-bg);
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.brandPackageItem p {
+  margin: 0;
+  padding: 0 14px 16px 70px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
 .splitBand {
   border-radius: var(--radius-section);
   padding: clamp(28px, 5vw, 54px);
@@ -727,8 +901,13 @@
 @media (max-width: 1080px) {
   .heroInner,
   .pageHeroInner,
-  .splitBand {
+  .splitBand,
+  .brandPackagePanel {
     grid-template-columns: 1fr;
+  }
+
+  .brandPackagePanel {
+    align-items: start;
   }
 
   .heroVisual {
@@ -794,6 +973,18 @@
 
   .buttonRow > * {
     width: 100%;
+  }
+
+  .brandPackageSection {
+    padding-top: 24px;
+  }
+
+  .brandPackagePanel {
+    padding: 28px;
+  }
+
+  .brandPackageItems {
+    gap: 10px;
   }
 
   .heroTitle {
@@ -862,6 +1053,7 @@
   }
 
   .splitBand,
+  .brandPackagePanel,
   .formCard,
   .infoCard,
   .pathCard,
@@ -869,14 +1061,37 @@
   .benefitCard {
     padding: 22px;
   }
+
+  .brandPackagePanel::before {
+    inset: 10px;
+  }
+
+  .brandPackageItem summary {
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 12px;
+  }
+
+  .brandPackageIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+  }
+
+  .brandPackageItem p {
+    padding: 0 12px 14px 62px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pathCard {
+  .pathCard,
+  .brandPackageItem,
+  .brandPackageIcon {
     transition: none;
   }
 
-  .pathCard:hover {
+  .pathCard:hover,
+  .brandPackageItem:hover,
+  .brandPackageItem:hover .brandPackageIcon {
     transform: none;
   }
 }
