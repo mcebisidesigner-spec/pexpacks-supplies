@@ -41,6 +41,9 @@ export async function generateMetadata({
   );
 }
 
+import { GradeSelector } from "@/components/schools/GradeSelector";
+import pageStyles from "@/styles/Page.module.css";
+
 export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   const { schoolSlug } = await params;
   const school = await getSchoolBySlug(schoolSlug);
@@ -65,6 +68,11 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         panelTitle="Ready packed"
         panelText="Prepared for your grade."
       />
+      <section className={pageStyles.section}>
+        <div className={pageStyles.sectionInner}>
+          <GradeSelector school={school} />
+        </div>
+      </section>
       <SchoolReferralPrompt school={school} />
     </>
   );
