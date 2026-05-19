@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { FormEvent } from "react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { OfficePack } from "@/data/officePacks";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -89,12 +89,60 @@ export function OfficeQuoteExperience({
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showStickyBar, setShowStickyBar] = useState(true);
+  const [selectedItemOption, setSelectedItemOption] = useState("");
   const formRef = useRef<HTMLElement | null>(null);
+  const footerSentinelRef = useRef<HTMLDivElement | null>(null);
 
   const selectedPack = useMemo(
     () => officePacks.find((pack) => pack.id === selectedPackId) ?? officePacks[0],
     [officePacks, selectedPackId]
   );
+
+  const itemOptions = useMemo(
+    () =>
+      Array.from(new Set(officePacks.flatMap((pack) => pack.contents))).sort(
+        (a, b) => a.localeCompare(b)
+      ),
+    [officePacks]
+  );
+
+  useEffect(() => {
+    setSelectedItemOption(
+      itemOptions.find((item) => !items.includes(item)) ?? itemOptions[0] ?? ""
+    );
+  }, [itemOptions, items]);
+
+  useEffect(() => {
+    const formElement = formRef.current;
+    const footerSentinelElement = footerSentinelRef.current;
+
+    if (!formElement || !footerSentinelElement) {
+      return;
+    }
+
+    const formNode = formElement;
+    const footerSentinelNode = footerSentinelElement;
+
+    function updateStickyVisibility() {
+      const formRect = formNode.getBoundingClientRect();
+      const footerRect = footerSentinelNode.getBoundingClientRect();
+      const formReached =
+        formRect.top <= window.innerHeight - 120 && formRect.bottom >= 0;
+      const footerReached = footerRect.top <= window.innerHeight;
+
+      setShowStickyBar(!formReached && !footerReached);
+    }
+
+    updateStickyVisibility();
+    window.addEventListener("scroll", updateStickyVisibility, { passive: true });
+    window.addEventListener("resize", updateStickyVisibility);
+
+    return () => {
+      window.removeEventListener("scroll", updateStickyVisibility);
+      window.removeEventListener("resize", updateStickyVisibility);
+    };
+  }, []);
 
   function scrollToForm() {
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -109,9 +157,21 @@ export function OfficeQuoteExperience({
     window.setTimeout(scrollToForm, 0);
   }
 
-  function addItem() {
+  function addItem(value = selectedItemOption) {
+    const nextValue = value.trim();
+    if (!nextValue) return;
+    if (items.includes(nextValue)) return;
+    setItems((current) => [...current, nextValue]);
+    setNewItem("");
+  }
+
+  function addCustomItem() {
     const value = newItem.trim();
     if (!value) return;
+    if (items.includes(value)) {
+      setNewItem("");
+      return;
+    }
     setItems((current) => [...current, value]);
     setNewItem("");
   }
@@ -358,19 +418,37 @@ export function OfficeQuoteExperience({
                     ))}
                   </ul>
                   <div className={styles.addItemRow}>
+                    <select
+                      value={selectedItemOption}
+                      onChange={(event) =>
+                        setSelectedItemOption(event.target.value)
+                      }
+                      aria-label="Choose an office stationery item to add"
+                    >
+                      {itemOptions.map((item) => (
+                        <option key={item} value={item} disabled={items.includes(item)}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                    <button type="button" onClick={() => addItem()}>
+                      Add selected item
+                    </button>
+                  </div>
+                  <div className={styles.addItemRow}>
                     <input
                       value={newItem}
                       onChange={(event) => setNewItem(event.target.value)}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {
                           event.preventDefault();
-                          addItem();
+                          addCustomItem();
                         }
                       }}
-                      placeholder="Add another item"
+                      placeholder="Or type a custom item"
                     />
-                    <button type="button" onClick={addItem}>
-                      Add item
+                    <button type="button" onClick={addCustomItem}>
+                      Add custom item
                     </button>
                   </div>
                 </div>
@@ -509,12 +587,16 @@ export function OfficeQuoteExperience({
         </div>
       </section>
 
-      <div className={styles.stickyQuoteBar}>
-        <span>Ready for an office quote?</span>
-        <button type="button" onClick={scrollToForm}>
-          Request Quote
-        </button>
-      </div>
+      <div ref={footerSentinelRef} className={styles.footerStickySentinel} />
+
+      {showStickyBar ? (
+        <div className={styles.stickyQuoteBar}>
+          <span>Ready for an office quote?</span>
+          <button type="button" onClick={scrollToForm}>
+            Request Quote
+          </button>
+        </div>
+      ) : null}
     </>
   );
 }
