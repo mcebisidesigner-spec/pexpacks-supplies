@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import styles from "./ViralReferralBanner.module.css";
 
 type ViralReferralBannerProps = {
-  schoolName?: string;
   compact?: boolean;
   className?: string;
 };
@@ -24,25 +23,19 @@ function WhatsAppIcon() {
 }
 
 export function ViralReferralBanner({
-  schoolName = "",
   compact = false,
   className,
 }: ViralReferralBannerProps) {
   const [currentUrl, setCurrentUrl] = useState("https://pexpacks.com/schools");
-  const cleanSchoolName = schoolName.trim();
-  const schoolLabel = cleanSchoolName || "your school";
-  const schoolOrderText = cleanSchoolName
-    ? `from ${cleanSchoolName} order`
-    : "from your school order";
 
   useEffect(() => {
     setCurrentUrl(window.location.href);
   }, []);
 
   const whatsappUrl = useMemo(() => {
-    const text = `Want free shipping? I found Pexpacks for ${schoolLabel}. If 10 parents ${schoolOrderText}, Pexpacks will refund everyone's shipping fee. Share this with the school WhatsApp group: ${currentUrl}`;
+    const text = `Would you like free delivery for your child's school supplies? Check out Pexpacks Supplies, which has partnered with our school. If 10 parents from our school place orders through Pexpacks, we will receive a 5% discount, and the supplies will be delivered directly to the school. Please share this information in the school WhatsApp group! ${currentUrl}`;
     return `https://wa.me/?text=${encodeURIComponent(text)}`;
-  }, [currentUrl, schoolLabel, schoolOrderText]);
+  }, [currentUrl]);
 
   return (
     <aside
@@ -55,10 +48,9 @@ export function ViralReferralBanner({
         <WhatsAppIcon />
       </div>
       <div className={styles.content}>
-        <strong>Want free shipping?</strong>
+        <strong>Want 5% discount?</strong>
         <p>
-          Share Pexpacks with {schoolLabel}'s WhatsApp group. If 10 parents{" "}
-          {schoolOrderText}, we'll refund everyone's shipping fee!
+          Share Pexpacks with your school's WhatsApp group or with anyone you know. If 10 parents from your school place an order, you'll receive a 5% discount!
         </p>
       </div>
       <a

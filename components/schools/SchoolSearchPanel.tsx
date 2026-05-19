@@ -209,7 +209,7 @@ export function SchoolSearchPanel({
                       schoolName={query}
                       source="schools-search"
                     />
-                    <ViralReferralBanner schoolName={query} compact />
+                    <ViralReferralBanner compact />
                   </div>
                 )}
                 <SchoolResultsAutoLoad

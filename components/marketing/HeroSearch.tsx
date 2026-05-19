@@ -172,7 +172,7 @@ export function HeroSearch() {
                       schoolName={query}
                       source="home-search"
                     />
-                    <ViralReferralBanner schoolName={query} compact />
+                    <ViralReferralBanner compact />
                   </div>
                 )}
                 <SchoolResultsAutoLoad

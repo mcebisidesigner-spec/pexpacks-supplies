@@ -77,7 +77,7 @@ export function SchoolResultsPanel({
                 No matching schools found.
               </p>
               <InlineSchoolWaitlist schoolName={query} source="schools-search" />
-              <ViralReferralBanner schoolName={query} compact />
+              <ViralReferralBanner compact />
             </div>
           )}
           <SchoolResultsAutoLoad
