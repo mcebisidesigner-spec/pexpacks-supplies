@@ -27,7 +27,7 @@ export function SavingsCalculator() {
     <section className={styles.section}>
       <div className={styles.inner}>
         <SectionHeader
-          eyebrow="Calculate Your Savings"
+          eyebrow="Calculate your savings"
           title="See how much you save"
           text="Shopping retail means driving to multiple stores, dealing with out-of-stock items, and paying premium prices. See what Pexpacks saves you."
         />
