@@ -941,9 +941,9 @@ export function OrderForm({
                 </span>
               </label>
               <p className={styles.privacyNotice}>
-                We only use your details to respond to your enquiry and manage
-                your stationery pack request. You may contact Pexpacks to
-                update, correct, or request deletion of your information.
+                I confirm that I am duly authorised to submit the parent or
+                learner-related information and that the information provided is
+                accurate.
               </p>
             </div>
           ) : null}

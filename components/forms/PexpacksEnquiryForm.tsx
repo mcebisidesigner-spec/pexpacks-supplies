@@ -169,9 +169,9 @@ export function PexpacksEnquiryForm({
         </p>
         <h2>{title}</h2>
         <p className={styles.privacyNotice}>
-          We only use your details to respond to your enquiry and manage your
-          stationery pack request. We collect only the information needed to
-          assist you.
+          I confirm that I am duly authorised to submit the parent or
+          learner-related information and that the information provided is
+          accurate.
         </p>
         <div className={styles.formGrid}>
           <label className={styles.field}>
