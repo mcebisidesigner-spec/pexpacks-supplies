@@ -33,7 +33,7 @@ export const mainCategories: MainCategory[] = [
     title: "Office Packs",
     description:
       "Practical office stationery packs for SMEs, home offices, and small businesses.",
-    href: "/office-packs",
+    href: "/office",
     cta: "View Office Stationery",
     icon: "office",
   },
@@ -185,7 +185,7 @@ export const featuredPacks: Pack[] = [
     ],
     priceLabel: "Request quote",
     cta: "View Office Stationery",
-    href: "/office-packs",
+    href: "/office",
   },
 ];
 

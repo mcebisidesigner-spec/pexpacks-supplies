@@ -234,7 +234,7 @@ export default function HomePage() {
               <div
                 className={[styles.buttonRow, styles.splitActions].join(" ")}
               >
-                <Button href="/office-packs" variant="secondary">
+                <Button href="/office" variant="secondary">
                   View Office Packs
                 </Button>
               </div>
@@ -287,7 +287,7 @@ export default function HomePage() {
         text="Choose your school or office pack and let Pexpacks prepare your stationery for you."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
-        secondaryHref="/office-packs"
+        secondaryHref="/office"
         secondaryLabel="Order Office Stationery"
       />
     </>

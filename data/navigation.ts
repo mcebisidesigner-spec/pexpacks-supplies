@@ -5,7 +5,7 @@ export type NavLink = {
 
 export const mainNavLinks: NavLink[] = [
   { label: "Schools", href: "/schools" },
-  { label: "Office", href: "/office-packs" },
+  { label: "Office", href: "/office" },
   { label: "Partner", href: "/partner-with-schools" },
   { label: "Success Stories", href: "/success-stories" },
   { label: "Resources", href: "/blog" },
@@ -14,7 +14,7 @@ export const mainNavLinks: NavLink[] = [
 
 export const footerNavLinks: NavLink[] = [
   { label: "Schools", href: "/schools" },
-  { label: "Office", href: "/office-packs" },
+  { label: "Office", href: "/office" },
   { label: "Partner", href: "/partner-with-schools" },
   { label: "Resources", href: "/blog" },
   { label: "Contact", href: "/contact" },

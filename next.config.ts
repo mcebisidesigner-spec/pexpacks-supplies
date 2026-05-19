@@ -61,8 +61,8 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/office",
-        destination: "/office-packs",
+        source: "/office-packs",
+        destination: "/office",
         permanent: true,
       },
       {

@@ -95,7 +95,7 @@ export function onlineStoreSchema() {
   const officeOffers = officePacks.map((pack) => ({
     "@type": "Offer",
     name: pack.name,
-    url: `${siteUrl}/office-packs`,
+    url: `${siteUrl}/office`,
     category: "Office stationery pack",
     availability: "https://schema.org/PreOrder",
     priceCurrency: pack.priceFrom > 0 ? "ZAR" : undefined,
