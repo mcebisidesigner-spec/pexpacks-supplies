@@ -242,6 +242,7 @@ export function OrderForm({
   const [preferredContactMethod, setPreferredContactMethod] =
     useState("whatsapp");
   const [consent, setConsent] = useState(false);
+  const [finalConfirmation, setFinalConfirmation] = useState(false);
   const [hasPexcover, setHasPexcover] = useState(false);
   const [pexcoverName, setPexcoverName] = useState("");
   const [pexcoverSubjects, setPexcoverSubjects] = useState("");
@@ -487,6 +488,15 @@ export function OrderForm({
         success: false,
         message:
           "Please select a school and grade before submitting your order enquiry.",
+      });
+      return;
+    }
+
+    if (!finalConfirmation) {
+      setSubmitStatus({
+        success: false,
+        message:
+          "Please confirm that the order details are correct and that you agree to the Pexpacks policies before submitting.",
       });
       return;
     }
@@ -986,6 +996,40 @@ export function OrderForm({
                 options. Order support is available at{" "}
                 <a href={ordersEmailHref}>{ordersEmail}</a>.
               </p>
+              <label className={`${styles.consentField} ${styles.finalConsent}`}>
+                <input
+                  name="finalConfirmation"
+                  type="checkbox"
+                  required
+                  checked={finalConfirmation}
+                  onChange={(event) =>
+                    setFinalConfirmation(event.target.checked)
+                  }
+                />
+                <span>
+                  By placing this order, I confirm that the order details are
+                  correct and agree to the Pexpacks{" "}
+                  <Link href="/terms" className={styles.privacyLink}>
+                    Terms of Use
+                  </Link>
+                  ,{" "}
+                  <Link href="/privacy-policy" className={styles.privacyLink}>
+                    Privacy Policy
+                  </Link>
+                  ,{" "}
+                  <Link href="/delivery-policy" className={styles.privacyLink}>
+                    Delivery Policy
+                  </Link>
+                  , and{" "}
+                  <Link
+                    href="/returns-refunds-policy"
+                    className={styles.privacyLink}
+                  >
+                    Returns, Refunds & Cancellation Policy
+                  </Link>
+                  .
+                </span>
+              </label>
               {submitStatus ? (
                 <p
                   className={
