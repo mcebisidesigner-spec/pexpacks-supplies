@@ -31,6 +31,30 @@ const trustSignals = [
   "Business-ready admin packs",
 ];
 
+const itemBrandDetails: Record<string, string> = {
+  "Notebook set": "3x A4 72-page Feint/Margin books (Croxley)",
+  "Ballpoint pens": "Pack of 10 black & blue medium pens (Bic / Pilot)",
+  "Pencils": "Pack of 4 HB graphite pencils (Staedtler)",
+  "Sticky notes": "3x3 yellow self-adhesive notes, 100 sheets (Post-it)",
+  "Correction tape": "5mm x 8m dry correction tape (Pritt / Penflex)",
+  "Filing basics": "2x Lever arch files, 10x plastic sleeves (Croxley)",
+  "Pens": "Box of 50 black/blue ballpoint writing pens (Bic)",
+  "Notebooks": "5x Executive wirebound college books (Croxley)",
+  "Folders": "10x Presentation folders with fasteners (Bantex)",
+  "Markers": "4x Dry erase whiteboard markers (Pentel)",
+  "Desk basics": "1x Heavy-duty stapler, 1x tape dispenser, staples (Bostitch)",
+  "Job-card books": "3x Carbonless duplicate job card books (Croxley)",
+  "Labels": "100x White multi-purpose printer labels (Tower)",
+  "Clipboards": "3x Heavy-duty Masonite clipboards (Bantex)",
+  "Receipt books": "3x Carbonless duplicate receipt books (Croxley)",
+  "Price tags": "Pack of 500 white stringed price tags",
+  "Tape": "3x Clear packaging tape 48mm x 50m (Sellotape)",
+  "Printer paper": "5x Reams of A4 Typek white 80gsm copy paper",
+  "Lever arch files": "5x Polypropylene A4 lever arch files (Bantex)",
+  "Dividers": "5x Sets of A4 10-tab board indexes (Croxley)",
+  "Plastic sleeves": "Pack of 100 clear A4 punched pockets",
+};
+
 function val(data: FormData, key: string) {
   const value = data.get(key);
   return typeof value === "string" ? value.trim() : "";
@@ -91,6 +115,7 @@ export function OfficeQuoteExperience({
   const [status, setStatus] = useState<ApiResponse | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedItemOption, setSelectedItemOption] = useState("");
+  const [companySize, setCompanySize] = useState<string>("all");
   const formRef = useRef<HTMLElement | null>(null);
   const footerSentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -98,6 +123,28 @@ export function OfficeQuoteExperience({
     () => officePacks.find((pack) => pack.id === selectedPackId) ?? officePacks[0],
     [officePacks, selectedPackId]
   );
+
+  const filteredPacks = useMemo(() => {
+    if (companySize === "all") return officePacks;
+    if (companySize === "solo") return officePacks.filter((p) => p.id === "home-office-starter");
+    if (companySize === "small") return officePacks.filter((p) => ["small-business-monthly", "retail-shop-admin"].includes(p.id));
+    if (companySize === "medium") return officePacks.filter((p) => ["bulk-office-supply", "printer-paper-filing"].includes(p.id));
+    return officePacks;
+  }, [officePacks, companySize]);
+
+  const draftMailtoLink = useMemo(() => {
+    const subject = encodeURIComponent("PexPacks Custom Stationery Quote Draft");
+    const body = encodeURIComponent(
+      `Here is a draft of the customized PexPacks stationery quote:\n\n` +
+      `Selected Pack: ${selectedPack.name}\n` +
+      `Mode: ${mode === "custom" ? "Customised" : "Standard"}\n` +
+      `Estimated Price: ${selectedPack.priceFrom === 0 ? "Quote-based" : `From ${formatCurrency(selectedPack.priceFrom)}`}\n\n` +
+      `Items Included:\n` +
+      items.map((item) => `- ${item}${itemBrandDetails[item] ? ` (${itemBrandDetails[item]})` : ""}`).join("\n") +
+      `\n\nGenerated via PexPacks Supplies (http://localhost:3000/office)`
+    );
+    return `mailto:?subject=${subject}&body=${body}`;
+  }, [selectedPack, mode, items]);
 
   const itemOptions = useMemo(
     () =>
@@ -271,8 +318,43 @@ export function OfficeQuoteExperience({
             <h2>Office pack options</h2>
             <p>Ready-to-quote packs for small teams, home offices and recurring admin needs.</p>
           </div>
+
+          <div className={styles.sizeSelectorWrapper}>
+            <span className={styles.sizeSelectorLabel}>Find packs by company size:</span>
+            <div className={styles.sizeSelectorButtons}>
+              <button
+                type="button"
+                className={companySize === "all" ? styles.activeSizeButton : styles.sizeButton}
+                onClick={() => setCompanySize("all")}
+              >
+                All Sizes
+              </button>
+              <button
+                type="button"
+                className={companySize === "solo" ? styles.activeSizeButton : styles.sizeButton}
+                onClick={() => setCompanySize("solo")}
+              >
+                Solo / Home Office (1 user)
+              </button>
+              <button
+                type="button"
+                className={companySize === "small" ? styles.activeSizeButton : styles.sizeButton}
+                onClick={() => setCompanySize("small")}
+              >
+                Small Team (2-10 users)
+              </button>
+              <button
+                type="button"
+                className={companySize === "medium" ? styles.activeSizeButton : styles.sizeButton}
+                onClick={() => setCompanySize("medium")}
+              >
+                Medium Office (10+ users)
+              </button>
+            </div>
+          </div>
+
           <div className={styles.officeGrid}>
-            {officePacks.map((pack) => (
+            {filteredPacks.map((pack) => (
               <article className={styles.packCard} key={pack.id}>
                 <div
                   className={`${styles.packMedia} ${styles.packMediaBlue}`}
@@ -286,7 +368,12 @@ export function OfficeQuoteExperience({
                   <p>{pack.description}</p>
                   <ul className={styles.packList}>
                     {pack.contents.map((item) => (
-                      <li key={item}>{item}</li>
+                      <li key={item}>
+                        <strong>{item}</strong>
+                        {itemBrandDetails[item] && (
+                          <span className={styles.cardItemDetail}> — {itemBrandDetails[item]}</span>
+                        )}
+                      </li>
                     ))}
                   </ul>
                   <div className={styles.packFooter}>
@@ -409,7 +496,12 @@ export function OfficeQuoteExperience({
                   <ul>
                     {items.map((item, index) => (
                       <li key={`${item}-${index}`}>
-                        <span>{item}</span>
+                        <span style={{ display: "flex", flexDirection: "column" }}>
+                          <strong>{item}</strong>
+                          {itemBrandDetails[item] && (
+                            <span className={styles.itemDetailSub}>{itemBrandDetails[item]}</span>
+                          )}
+                        </span>
                         <button
                           type="button"
                           onClick={() => removeItem(index)}
@@ -453,6 +545,31 @@ export function OfficeQuoteExperience({
                     <button type="button" onClick={addCustomItem}>
                       Add custom item
                     </button>
+                  </div>
+
+                  <div className={styles.draftActionsGroup}>
+                    <button
+                      type="button"
+                      className={styles.draftActionButton}
+                      onClick={() => window.print()}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                      </svg>
+                      Print / Save PDF
+                    </button>
+                    <a
+                      href={draftMailtoLink}
+                      className={styles.draftActionButtonLink}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                      </svg>
+                      Email Draft
+                    </a>
                   </div>
                 </div>
               ) : null}
@@ -591,6 +708,34 @@ export function OfficeQuoteExperience({
       </section>
 
       <div ref={footerSentinelRef} className={styles.footerStickySentinel} />
+
+      <div className={styles.printDraftOnly}>
+        <div className={styles.printDraftHeader}>
+          <h1>Pexpacks Supplies</h1>
+          <p>Ready-Packed Stationery & SME Office Combos</p>
+        </div>
+        <div className={styles.printDraftSection}>
+          <h2>Stationery Quote Draft</h2>
+          <p><strong>Date:</strong> {new Date().toLocaleDateString()}</p>
+          <p><strong>Selected Pack:</strong> {selectedPack.name}</p>
+          <p><strong>Mode:</strong> {mode === "custom" ? "Customised Selection" : "Standard Selection"}</p>
+          <p><strong>Estimated Price:</strong> {selectedPack.priceFrom === 0 ? "Quote-based (pricing to be confirmed)" : `From ${formatCurrency(selectedPack.priceFrom)}`}</p>
+        </div>
+        <div className={styles.printDraftSection}>
+          <h2>Items Included in Draft:</h2>
+          <ol className={styles.printDraftList}>
+            {items.map((item) => (
+              <li key={item}>
+                <strong>{item}</strong>
+                {itemBrandDetails[item] && ` — ${itemBrandDetails[item]}`}
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div style={{ marginTop: "40px", borderTop: "1px solid #ccc", paddingTop: "20px", fontSize: "12px", color: "#666" }}>
+          <p>This is an automated stationery draft from Pexpacks. To place a live order or request a formal quote, please visit http://localhost:3000/office or contact Pexpacks directly.</p>
+        </div>
+      </div>
     </>
   );
 }

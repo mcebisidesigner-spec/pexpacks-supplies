@@ -1620,3 +1620,155 @@
     transform: translateX(0);
   }
 }
+
+/* Office Page SME Improvements */
+.sizeSelectorWrapper {
+  margin: 24px 0 clamp(24px, 4vw, 36px);
+  padding: 18px 24px;
+  background: var(--pex-bg-warm);
+  border-radius: 20px;
+  border: 1px solid rgba(33, 158, 154, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.sizeSelectorLabel {
+  font-weight: 800;
+  color: var(--pex-navy);
+  font-size: 16px;
+}
+
+.sizeSelectorButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sizeButton {
+  cursor: pointer;
+  border: 1px solid rgba(26, 42, 64, 0.12);
+  border-radius: 12px;
+  padding: 8px 16px;
+  background: var(--pex-bg);
+  color: var(--pex-primary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.sizeButton:hover {
+  background: rgba(33, 158, 154, 0.05);
+  border-color: var(--pex-keppel);
+}
+
+.activeSizeButton {
+  cursor: pointer;
+  border: 1px solid var(--pex-keppel);
+  border-radius: 12px;
+  padding: 8px 16px;
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(33, 158, 154, 0.22);
+}
+
+.itemDetailSub {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--pex-text-muted);
+  margin-top: 3px;
+}
+
+.cardItemDetail {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pex-text-muted);
+}
+
+.draftActionsGroup {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.draftActionButton,
+.draftActionButtonLink {
+  cursor: pointer;
+  border: 1px solid rgba(33, 158, 154, 0.28);
+  border-radius: 12px;
+  padding: 8px 12px;
+  background: var(--pex-bg-warm);
+  color: var(--pex-keppel);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.draftActionButton:hover,
+.draftActionButtonLink:hover {
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  border-color: var(--pex-keppel);
+}
+
+.draftActionButton svg,
+.draftActionButtonLink svg {
+  stroke: currentColor;
+}
+
+.printDraftOnly {
+  display: none;
+}
+
+@media print {
+  body > * {
+    display: none !important;
+  }
+  .printDraftOnly {
+    display: block !important;
+    font-family: system-ui, sans-serif;
+    color: #1a2a40;
+    padding: 40px;
+  }
+  .printDraftHeader {
+    border-bottom: 2px solid #219e9a;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+  .printDraftHeader h1 {
+    margin: 0;
+    font-size: 28px;
+  }
+  .printDraftHeader p {
+    margin: 5px 0 0;
+    color: #555;
+  }
+  .printDraftSection {
+    margin-bottom: 20px;
+  }
+  .printDraftSection h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .printDraftList {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .printDraftList li {
+    margin-bottom: 6px;
+    font-size: 15px;
+  }
+}
