@@ -13,6 +13,8 @@
 
 .popupBanner {
   margin: 0;
+  background: #ffffff;
+  background-image: none;
   box-shadow: 0 22px 58px rgba(15, 37, 55, 0.24);
   pointer-events: auto;
   animation: referralPromptIn 0.26s ease both;
