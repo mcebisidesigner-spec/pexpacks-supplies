@@ -4,6 +4,9 @@ import page from "@/styles/Page.module.css";
 import { PolicyContentBar } from "./PolicyContentBar";
 import styles from "./LegalDocumentPage.module.css";
 
+/** Re-export styles so page content can reference shared CSS module classes */
+export const legalStyles = styles;
+
 export type LegalDocumentHighlightTone = "default" | "accent" | "warning";
 
 export type LegalDocumentHighlight = {
@@ -36,6 +39,8 @@ export type LegalDocumentConfig = {
   summaryText: string;
   highlights?: LegalDocumentHighlight[];
   sections: LegalDocumentSection[];
+  /** Optional extra content rendered after all sections (e.g. consent wording card). */
+  extraContent?: ReactNode;
   notice?: ReactNode;
 };
 
@@ -64,6 +69,7 @@ export function LegalDocumentPage({
   summaryText,
   highlights = [],
   sections,
+  extraContent,
   notice,
 }: LegalDocumentConfig) {
   const topics = sections.map(({ id, title }) => ({ id, title }));
@@ -98,7 +104,9 @@ export function LegalDocumentPage({
             <div className={styles.summaryPanel}>
               <p className={styles.summaryKicker}>{summaryKicker}</p>
               <h2>{summaryTitle}</h2>
-              <p className={styles.summaryText}>{summaryText}</p>
+              {summaryText ? (
+                <p className={styles.summaryText}>{summaryText}</p>
+              ) : null}
               {highlights.length > 0 ? (
                 <div className={styles.highlightGrid}>
                   {highlights.map((highlight) => (
@@ -127,6 +135,8 @@ export function LegalDocumentPage({
               </article>
             ))}
 
+            {extraContent}
+
             {notice ? (
               <aside className={styles.noticePanel}>
                 <p className={styles.noticeEyebrow}>Important note</p>
@@ -139,3 +149,4 @@ export function LegalDocumentPage({
     </>
   );
 }
+

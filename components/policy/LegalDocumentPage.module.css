@@ -299,6 +299,36 @@
   line-height: 1.6;
 }
 
+.contactPanel,
+.noticeBlock {
+  border: 1px solid rgba(225, 231, 234, 0.86);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 18px;
+}
+
+.contactPanel {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.contactPanel p,
+.noticeBlock p {
+  margin: 0;
+}
+
+.noticeBlock + .noticeBlock {
+  margin-top: 14px;
+}
+
+.legalNote {
+  margin-top: 20px;
+  border-left: 4px solid rgba(33, 158, 154, 0.55);
+  padding-left: 14px;
+  color: var(--pex-text-muted);
+}
+
 .tableWrap {
   overflow-x: auto;
   border: 1px solid rgba(225, 231, 234, 0.86);
@@ -357,14 +387,16 @@
 
 @media (max-width: 640px) {
   .tocShell {
-    position: relative;
-    top: auto;
+    position: sticky;
+    top: calc(var(--header-height-mobile) + 10px);
     z-index: 60;
     width: 100%;
+    min-width: 0;
+    transition: top 0.25s ease;
   }
 
   .tocShellFloating {
-    min-height: 100px;
+    top: 8px;
   }
 
   .tocCard,
@@ -381,14 +413,11 @@
     overflow: hidden;
     padding: 14px 16px;
     -webkit-backdrop-filter: none;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.25s ease;
   }
 
   .tocShellFloating .tocCard {
-    position: fixed;
-    top: 8px;
-    right: var(--gutter-mobile);
-    left: var(--gutter-mobile);
-    z-index: 90;
     box-shadow: 0 18px 42px rgba(26, 42, 64, 0.16);
   }
 
@@ -440,7 +469,8 @@
     scroll-margin-top: calc(var(--header-height-mobile) + 150px);
   }
 
-  .detailsList {
+  .detailsList,
+  .highlightGrid {
     grid-template-columns: 1fr;
   }
 
