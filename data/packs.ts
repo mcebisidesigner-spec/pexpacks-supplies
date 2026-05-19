@@ -69,18 +69,18 @@ export const processSteps = [
   "Start school ready",
 ];
 
-export const homeProcessSteps = [
+export const orderingWorksSteps = [
   {
-    title: "Find your school or office",
-    text: "Search for your school or choose the office stationery pack you need.",
+    title: "Find your school",
+    text: "Search your child's school and select the required grade.",
   },
   {
-    title: "Choose your pack",
-    text: "Pick the grade-specific school pack or SME office pack.",
+    title: "Review the pack",
+    text: "All items perfectly match your official school stationery list.",
   },
   {
-    title: "We pack it",
-    text: "Pexpacks prepares your stationery and confirms collection or delivery.",
+    title: "Delivered ready",
+    text: "Skip the queues and receive a complete, ready-to-go box.",
   },
 ];
 

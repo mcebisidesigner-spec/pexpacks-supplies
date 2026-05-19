@@ -5,14 +5,10 @@ import { UnboxingAccordion } from "@/components/marketing/UnboxingAccordion";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { BackToSchoolQuiz } from "@/components/marketing/BackToSchoolQuiz";
 import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
-import { RetailComparisonSlider } from "@/components/marketing/RetailComparisonSlider";
+import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { SavingsCalculator } from "@/components/marketing/SavingsCalculator";
-import {
-  whyChoosePexpacks,
-  homeProcessSteps,
-  homepagePacks,
-} from "@/data/packs";
+import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import styles from "@/components/marketing/Marketing.module.css";
@@ -164,25 +160,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.sectionCream}>
-        <div className={styles.inner}>
-          <SectionHeader
-            eyebrow="Simple process"
-            title="How ordering works"
-            text="Get your stationery sorted in three easy steps without leaving your home."
-          />
-          <div className={styles.gridThree}>
-            {homeProcessSteps.map((step, idx) => (
-              <div className={styles.stepCard} key={step.title}>
-                <div className={styles.stepNumber}>{idx + 1}</div>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </div>
-            ))}
-          </div>
-          <RetailComparisonSlider />
-        </div>
-      </section>
+      <OrderingWorksSection />
 
       <section className={styles.section}>
         <div className={styles.inner}>

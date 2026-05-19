@@ -5,7 +5,7 @@ import { ReturningParentBanner } from "@/components/schools/ReturningParentBanne
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
-import { RetailComparisonSlider } from "@/components/marketing/RetailComparisonSlider";
+import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
@@ -16,7 +16,6 @@ import {
 } from "@/lib/schools/schoolSearchData";
 import { testimonials } from "@/data/testimonials";
 import { faqs } from "@/data/faqs";
-import styles from "@/components/schools/Schools.module.css";
 import pageStyles from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
@@ -64,45 +63,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       )}
       <RecentlyViewedSchools />
       <RequestSchoolCTA />
-      <section
-        className={styles.howItWorksSection}
-        aria-labelledby="how-it-works-heading"
-      >
-        <div className={styles.howItWorksInner}>
-          <div className={styles.sectionIntro}>
-            <p>School-ready support</p>
-            <h2 id="how-it-works-heading">How ordering works</h2>
-            <span>
-              Pexpacks keeps the school list searchable so parents do not need
-              to scroll through hundreds of schools.{" "}
-              <strong>
-                The average parent saves 4 hours of driving, queuing, and
-                crossing off lists.
-              </strong>
-            </span>
-          </div>
-          <div className={styles.howItWorksGrid}>
-            <div className={styles.howItWorksStep}>
-              <div className={styles.stepCircle}>1</div>
-              <h3>Find your school</h3>
-              <p>Search your child's school and select the required grade.</p>
-            </div>
-            <div className={styles.howItWorksStep}>
-              <div className={styles.stepCircle}>2</div>
-              <h3>Review the pack</h3>
-              <p>
-                All items perfectly match your official school stationery list.
-              </p>
-            </div>
-            <div className={styles.howItWorksStep}>
-              <div className={styles.stepCircle}>3</div>
-              <h3>Delivered ready</h3>
-              <p>Skip the queues and receive a complete, ready-to-go box.</p>
-            </div>
-          </div>
-          <RetailComparisonSlider />
-        </div>
-      </section>
+      <OrderingWorksSection />
 
       <section
         className={pageStyles.section}
