@@ -93,17 +93,21 @@ const brandPackageItems = [
 export const metadata: Metadata = buildMetadata(
   "Office Stationery Packs for SMEs | Pexpacks",
   "Practical office stationery packs for SMEs, home offices, freelancers, admin teams, shops, and small businesses.",
-  "/office"
+  "/office",
 );
 
 type OfficePacksPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default async function OfficePacksPage({ searchParams }: OfficePacksPageProps) {
+export default async function OfficePacksPage({
+  searchParams,
+}: OfficePacksPageProps) {
   const params = searchParams ? await searchParams : {};
   const packParam = typeof params.pack === "string" ? params.pack : "";
-  const initialMessage = packParam ? `I am interested in the ${packParam} pack.` : "";
+  const initialMessage = packParam
+    ? `I am interested in the ${packParam} pack.`
+    : "";
 
   return (
     <>
@@ -115,13 +119,8 @@ export default async function OfficePacksPage({ searchParams }: OfficePacksPageP
         panelTitle="Office essentials packed and delivered, so your business keeps moving."
       >
         <div className={styles.buttonRow}>
-          <Button href="#contact-enquiry">
-            Request a Quote
-          </Button>
-          <Button
-            href="#contact-enquiry"
-            variant="white"
-          >
+          <Button href="#contact-enquiry">Request a Quote</Button>
+          <Button href="#contact-enquiry" variant="white">
             Order a Pack
           </Button>
         </div>
@@ -135,9 +134,7 @@ export default async function OfficePacksPage({ searchParams }: OfficePacksPageP
           <div className={styles.brandPackagePanel}>
             <div className={styles.brandPackageCopy}>
               <p className={styles.sectionEyebrow}>Special Offer</p>
-              <h2 id="brand-package-heading">
-                Business Starter Brand Package
-              </h2>
+              <h2 id="brand-package-heading">Business Starter Brand Package</h2>
               <p>
                 Launch with a professional identity. Pexpacks prepares your
                 essential physical and digital branding in one focused starter
@@ -179,6 +176,7 @@ export default async function OfficePacksPage({ searchParams }: OfficePacksPageP
         officePacks={officePacks}
         officeBenefits={officeBenefits}
         businessUseCases={businessUseCases}
+        initialMessage={initialMessage}
       />
     </>
   );

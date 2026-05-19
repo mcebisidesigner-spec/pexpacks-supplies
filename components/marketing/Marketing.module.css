@@ -1729,46 +1729,15 @@
   stroke: currentColor;
 }
 
-.printDraftOnly {
-  display: none;
+.spinner {
+  animation: spin 0.8s linear infinite;
 }
 
-@media print {
-  body > * {
-    display: none !important;
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  .printDraftOnly {
-    display: block !important;
-    font-family: system-ui, sans-serif;
-    color: #1a2a40;
-    padding: 40px;
-  }
-  .printDraftHeader {
-    border-bottom: 2px solid #219e9a;
-    padding-bottom: 12px;
-    margin-bottom: 20px;
-  }
-  .printDraftHeader h1 {
-    margin: 0;
-    font-size: 28px;
-  }
-  .printDraftHeader p {
-    margin: 5px 0 0;
-    color: #555;
-  }
-  .printDraftSection {
-    margin-bottom: 20px;
-  }
-  .printDraftSection h2 {
-    font-size: 18px;
-    margin-bottom: 8px;
-  }
-  .printDraftList {
-    margin: 0;
-    padding-left: 20px;
-  }
-  .printDraftList li {
-    margin-bottom: 6px;
-    font-size: 15px;
+  to {
+    transform: rotate(360deg);
   }
 }

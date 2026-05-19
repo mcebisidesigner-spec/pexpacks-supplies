@@ -213,6 +213,12 @@
   align-items: center;
 }
 
+.footerActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
 /* ── Copyright ── */
 .copyright {
   margin: 0;
@@ -340,6 +346,10 @@
     gap: 24px;
   }
 
+  .footerActions {
+    margin-left: auto;
+  }
+
   .socialNav {
     gap: 12px;
   }
@@ -408,6 +418,17 @@
 
   .copyright {
     font-size: 12px;
+  }
+
+  .footerActions {
+    width: 100%;
+    margin-left: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .socialNav {
+    justify-content: flex-start;
   }
 }
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PwaInstallButton } from "@/components/pwa/PwaInstallButton";
 import { Logo } from "@/components/ui/Logo";
 import { hasWhatsAppNumber, orderWhatsAppHref } from "@/data/contact";
 import { officialSocialLinks } from "@/data/social";
@@ -100,9 +101,7 @@ export function Footer() {
 
             <details className={styles.policyDisclosure}>
               <summary className={styles.policySummary}>
-                <span>
-                  Pexpacks policies, terms, and customer information:
-                </span>
+                <span>Pexpacks policies, terms, and customer information:</span>
                 <span className={styles.policyChevron} aria-hidden="true" />
               </summary>
               <div className={styles.policyPanel}>
@@ -138,25 +137,25 @@ export function Footer() {
             </a>
           </p>
 
-          <nav className={styles.socialNav} aria-label="Social media">
-            {socialLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className={styles.socialLink}
-                aria-label={link.label}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <SocialIcon icon={link.icon} />
-              </a>
-            ))}
-          </nav>
+          <div className={styles.footerActions}>
+            <PwaInstallButton />
+            <nav className={styles.socialNav} aria-label="Social media">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className={styles.socialLink}
+                  aria-label={link.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SocialIcon icon={link.icon} />
+                </a>
+              ))}
+            </nav>
+          </div>
         </div>
       </div>
     </footer>
   );
 }
-
-
-

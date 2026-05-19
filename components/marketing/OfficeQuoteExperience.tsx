@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/Button";
 import type { OfficePack } from "@/data/officePacks";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { endpointPathForFormType } from "@/lib/forms/types";
-import { isValidSouthAfricanPhone, isValidEmailAddress } from "@/lib/forms/contact";
+import {
+  isValidSouthAfricanPhone,
+  isValidEmailAddress,
+} from "@/lib/forms/contact";
 import styles from "@/components/marketing/Marketing.module.css";
 
 type ApiResponse = {
@@ -22,6 +25,7 @@ type OfficeQuoteExperienceProps = {
   officePacks: OfficePack[];
   officeBenefits: string[];
   businessUseCases: string[];
+  initialMessage?: string;
 };
 
 const trustSignals = [
@@ -34,24 +38,24 @@ const trustSignals = [
 const itemBrandDetails: Record<string, string> = {
   "Notebook set": "3x A4 72-page Feint/Margin books (Croxley)",
   "Ballpoint pens": "Pack of 10 black & blue medium pens (Bic / Pilot)",
-  "Pencils": "Pack of 4 HB graphite pencils (Staedtler)",
+  Pencils: "Pack of 4 HB graphite pencils (Staedtler)",
   "Sticky notes": "3x3 yellow self-adhesive notes, 100 sheets (Post-it)",
   "Correction tape": "5mm x 8m dry correction tape (Pritt / Penflex)",
   "Filing basics": "2x Lever arch files, 10x plastic sleeves (Croxley)",
-  "Pens": "Box of 50 black/blue ballpoint writing pens (Bic)",
-  "Notebooks": "5x Executive wirebound college books (Croxley)",
-  "Folders": "10x Presentation folders with fasteners (Bantex)",
-  "Markers": "4x Dry erase whiteboard markers (Pentel)",
+  Pens: "Box of 50 black/blue ballpoint writing pens (Bic)",
+  Notebooks: "5x Executive wirebound college books (Croxley)",
+  Folders: "10x Presentation folders with fasteners (Bantex)",
+  Markers: "4x Dry erase whiteboard markers (Pentel)",
   "Desk basics": "1x Heavy-duty stapler, 1x tape dispenser, staples (Bostitch)",
   "Job-card books": "3x Carbonless duplicate job card books (Croxley)",
-  "Labels": "100x White multi-purpose printer labels (Tower)",
-  "Clipboards": "3x Heavy-duty Masonite clipboards (Bantex)",
+  Labels: "100x White multi-purpose printer labels (Tower)",
+  Clipboards: "3x Heavy-duty Masonite clipboards (Bantex)",
   "Receipt books": "3x Carbonless duplicate receipt books (Croxley)",
   "Price tags": "Pack of 500 white stringed price tags",
-  "Tape": "3x Clear packaging tape 48mm x 50m (Sellotape)",
+  Tape: "3x Clear packaging tape 48mm x 50m (Sellotape)",
   "Printer paper": "5x Reams of A4 Typek white 80gsm copy paper",
   "Lever arch files": "5x Polypropylene A4 lever arch files (Bantex)",
-  "Dividers": "5x Sets of A4 10-tab board indexes (Croxley)",
+  Dividers: "5x Sets of A4 10-tab board indexes (Croxley)",
   "Plastic sleeves": "Pack of 100 clear A4 punched pockets",
 };
 
@@ -106,8 +110,11 @@ export function OfficeQuoteExperience({
   officePacks,
   officeBenefits,
   businessUseCases,
+  initialMessage = "",
 }: OfficeQuoteExperienceProps) {
-  const [selectedPackId, setSelectedPackId] = useState(officePacks[0]?.id ?? "");
+  const [selectedPackId, setSelectedPackId] = useState(
+    officePacks[0]?.id ?? "",
+  );
   const [mode, setMode] = useState<QuoteMode>("standard");
   const [items, setItems] = useState<string[]>(officePacks[0]?.contents ?? []);
   const [newItem, setNewItem] = useState("");
@@ -120,43 +127,62 @@ export function OfficeQuoteExperience({
   const footerSentinelRef = useRef<HTMLDivElement | null>(null);
 
   const selectedPack = useMemo(
-    () => officePacks.find((pack) => pack.id === selectedPackId) ?? officePacks[0],
-    [officePacks, selectedPackId]
+    () =>
+      officePacks.find((pack) => pack.id === selectedPackId) ?? officePacks[0],
+    [officePacks, selectedPackId],
   );
 
   const filteredPacks = useMemo(() => {
     if (companySize === "all") return officePacks;
-    if (companySize === "solo") return officePacks.filter((p) => p.id === "home-office-starter");
-    if (companySize === "small") return officePacks.filter((p) => ["small-business-monthly", "retail-shop-admin"].includes(p.id));
-    if (companySize === "medium") return officePacks.filter((p) => ["bulk-office-supply", "printer-paper-filing"].includes(p.id));
+    if (companySize === "solo")
+      return officePacks.filter((p) => p.id === "home-office-starter");
+    if (companySize === "small")
+      return officePacks.filter((p) =>
+        ["small-business-monthly", "retail-shop-admin"].includes(p.id),
+      );
+    if (companySize === "medium")
+      return officePacks.filter((p) =>
+        ["bulk-office-supply", "printer-paper-filing"].includes(p.id),
+      );
     return officePacks;
   }, [officePacks, companySize]);
 
-  const draftMailtoLink = useMemo(() => {
-    const subject = encodeURIComponent("PexPacks Custom Stationery Quote Draft");
-    const body = encodeURIComponent(
-      `Here is a draft of the customized PexPacks stationery quote:\n\n` +
-      `Selected Pack: ${selectedPack.name}\n` +
-      `Mode: ${mode === "custom" ? "Customised" : "Standard"}\n` +
-      `Estimated Price: ${selectedPack.priceFrom === 0 ? "Quote-based" : `From ${formatCurrency(selectedPack.priceFrom)}`}\n\n` +
-      `Items Included:\n` +
-      items.map((item) => `- ${item}${itemBrandDetails[item] ? ` (${itemBrandDetails[item]})` : ""}`).join("\n") +
-      `\n\nGenerated via PexPacks Supplies (http://localhost:3000/office)`
-    );
-    return `mailto:?subject=${subject}&body=${body}`;
-  }, [selectedPack, mode, items]);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+
+  async function handleDownloadPdf() {
+    if (isGeneratingPdf) return;
+    setIsGeneratingPdf(true);
+    try {
+      const { generateOfficeQuotePdf } = await import(
+        "@/lib/pdf/generateOfficeQuotePdf"
+      );
+      await generateOfficeQuotePdf({
+        packName: selectedPack.name,
+        items,
+        itemBrandDetails,
+        estimatedPrice: selectedPack.priceFrom === 0
+          ? "Quote-based"
+          : `From ${formatCurrency(selectedPack.priceFrom)}`,
+        fileName: `${selectedPack.slug}-quote-draft`,
+      });
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  }
 
   const itemOptions = useMemo(
     () =>
       Array.from(new Set(officePacks.flatMap((pack) => pack.contents))).sort(
-        (a, b) => a.localeCompare(b)
+        (a, b) => a.localeCompare(b),
       ),
-    [officePacks]
+    [officePacks],
   );
 
   useEffect(() => {
     setSelectedItemOption(
-      itemOptions.find((item) => !items.includes(item)) ?? itemOptions[0] ?? ""
+      itemOptions.find((item) => !items.includes(item)) ?? itemOptions[0] ?? "",
     );
   }, [itemOptions, items]);
 
@@ -193,7 +219,9 @@ export function OfficeQuoteExperience({
   }
 
   function removeItem(index: number) {
-    setItems((current) => current.filter((_, itemIndex) => itemIndex !== index));
+    setItems((current) =>
+      current.filter((_, itemIndex) => itemIndex !== index),
+    );
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -252,7 +280,8 @@ export function OfficeQuoteExperience({
       fullName: val(formData, "fullName"),
       phone: val(formData, "phone"),
       email: val(formData, "email") || undefined,
-      preferredContactMethod: val(formData, "preferredContactMethod") || undefined,
+      preferredContactMethod:
+        val(formData, "preferredContactMethod") || undefined,
       businessName: val(formData, "businessName"),
       orderQuantity: val(formData, "orderQuantity") || undefined,
       enquiryType: "Office pack",
@@ -274,11 +303,14 @@ export function OfficeQuoteExperience({
     setErrors({});
 
     try {
-      const response = await fetch(endpointPathForFormType("office-pack-enquiry"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        endpointPathForFormType("office-pack-enquiry"),
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      );
       const result = (await response.json()) as ApiResponse;
       setStatus(result);
 
@@ -301,7 +333,10 @@ export function OfficeQuoteExperience({
 
   return (
     <>
-      <section className={styles.officeTrustStrip} aria-label="Business trust signals">
+      <section
+        className={styles.officeTrustStrip}
+        aria-label="Business trust signals"
+      >
         <div className={styles.inner}>
           <ul>
             {trustSignals.map((signal) => (
@@ -316,36 +351,57 @@ export function OfficeQuoteExperience({
           <div className={styles.sectionHeader}>
             <p className={styles.sectionEyebrow}>Office pack types</p>
             <h2>Office pack options</h2>
-            <p>Ready-to-quote packs for small teams, home offices and recurring admin needs.</p>
+            <p>
+              Ready-to-quote packs for small teams, home offices and recurring
+              admin needs.
+            </p>
           </div>
 
           <div className={styles.sizeSelectorWrapper}>
-            <span className={styles.sizeSelectorLabel}>Find packs by company size:</span>
+            <span className={styles.sizeSelectorLabel}>
+              Find packs by company size:
+            </span>
             <div className={styles.sizeSelectorButtons}>
               <button
                 type="button"
-                className={companySize === "all" ? styles.activeSizeButton : styles.sizeButton}
+                className={
+                  companySize === "all"
+                    ? styles.activeSizeButton
+                    : styles.sizeButton
+                }
                 onClick={() => setCompanySize("all")}
               >
                 All Sizes
               </button>
               <button
                 type="button"
-                className={companySize === "solo" ? styles.activeSizeButton : styles.sizeButton}
+                className={
+                  companySize === "solo"
+                    ? styles.activeSizeButton
+                    : styles.sizeButton
+                }
                 onClick={() => setCompanySize("solo")}
               >
                 Solo / Home Office (1 user)
               </button>
               <button
                 type="button"
-                className={companySize === "small" ? styles.activeSizeButton : styles.sizeButton}
+                className={
+                  companySize === "small"
+                    ? styles.activeSizeButton
+                    : styles.sizeButton
+                }
                 onClick={() => setCompanySize("small")}
               >
                 Small Team (2-10 users)
               </button>
               <button
                 type="button"
-                className={companySize === "medium" ? styles.activeSizeButton : styles.sizeButton}
+                className={
+                  companySize === "medium"
+                    ? styles.activeSizeButton
+                    : styles.sizeButton
+                }
                 onClick={() => setCompanySize("medium")}
               >
                 Medium Office (10+ users)
@@ -371,7 +427,10 @@ export function OfficeQuoteExperience({
                       <li key={item}>
                         <strong>{item}</strong>
                         {itemBrandDetails[item] && (
-                          <span className={styles.cardItemDetail}> — {itemBrandDetails[item]}</span>
+                          <span className={styles.cardItemDetail}>
+                            {" "}
+                            — {itemBrandDetails[item]}
+                          </span>
                         )}
                       </li>
                     ))}
@@ -409,7 +468,10 @@ export function OfficeQuoteExperience({
                 site needs practical supplies quickly.
               </p>
               <div className={styles.buttonRow}>
-                <Button type="button" onClick={() => selectPack(selectedPack, "custom")}>
+                <Button
+                  type="button"
+                  onClick={() => selectPack(selectedPack, "custom")}
+                >
                   Request Quote
                 </Button>
               </div>
@@ -458,7 +520,11 @@ export function OfficeQuoteExperience({
                 standard quote or customise the items before submitting.
               </p>
 
-              <div className={styles.quoteModeTabs} role="tablist" aria-label="Office quote mode">
+              <div
+                className={styles.quoteModeTabs}
+                role="tablist"
+                aria-label="Office quote mode"
+              >
                 <button
                   type="button"
                   className={mode === "standard" ? styles.activeQuoteMode : ""}
@@ -466,7 +532,9 @@ export function OfficeQuoteExperience({
                   role="tab"
                   aria-selected={mode === "standard"}
                 >
-                  <span><BoxIcon /></span>
+                  <span>
+                    <BoxIcon />
+                  </span>
                   Standard office quote
                 </button>
                 <button
@@ -476,7 +544,9 @@ export function OfficeQuoteExperience({
                   role="tab"
                   aria-selected={mode === "custom"}
                 >
-                  <span><EditIcon /></span>
+                  <span>
+                    <EditIcon />
+                  </span>
                   Customise quotation
                 </button>
               </div>
@@ -491,15 +561,21 @@ export function OfficeQuoteExperience({
                 <div className={styles.customItemsPanel}>
                   <div>
                     <strong>Customise stationery items</strong>
-                    <p>Add or remove items before sending the quotation request.</p>
+                    <p>
+                      Add or remove items before sending the quotation request.
+                    </p>
                   </div>
                   <ul>
                     {items.map((item, index) => (
                       <li key={`${item}-${index}`}>
-                        <span style={{ display: "flex", flexDirection: "column" }}>
+                        <span
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
                           <strong>{item}</strong>
                           {itemBrandDetails[item] && (
-                            <span className={styles.itemDetailSub}>{itemBrandDetails[item]}</span>
+                            <span className={styles.itemDetailSub}>
+                              {itemBrandDetails[item]}
+                            </span>
                           )}
                         </span>
                         <button
@@ -521,7 +597,11 @@ export function OfficeQuoteExperience({
                       aria-label="Choose an office stationery item to add"
                     >
                       {itemOptions.map((item) => (
-                        <option key={item} value={item} disabled={items.includes(item)}>
+                        <option
+                          key={item}
+                          value={item}
+                          disabled={items.includes(item)}
+                        >
                           {item}
                         </option>
                       ))}
@@ -551,25 +631,41 @@ export function OfficeQuoteExperience({
                     <button
                       type="button"
                       className={styles.draftActionButton}
-                      onClick={() => window.print()}
+                      onClick={handleDownloadPdf}
+                      disabled={isGeneratingPdf}
                     >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                        <rect x="6" y="14" width="12" height="8"></rect>
-                      </svg>
-                      Print / Save PDF
+                      {isGeneratingPdf ? (
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={styles.spinner}
+                        >
+                          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                        </svg>
+                      ) : (
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                          <polyline points="7 10 12 15 17 10" />
+                          <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                      )}
+                      {isGeneratingPdf ? "Generating PDF..." : "Download PDF Quote Draft"}
                     </button>
-                    <a
-                      href={draftMailtoLink}
-                      className={styles.draftActionButtonLink}
-                    >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                      </svg>
-                      Email Draft
-                    </a>
                   </div>
                 </div>
               ) : null}
@@ -626,7 +722,10 @@ export function OfficeQuoteExperience({
                   </label>
                   <label className={styles.field}>
                     <span>Preferred contact method</span>
-                    <select name="preferredContactMethod" defaultValue="whatsapp">
+                    <select
+                      name="preferredContactMethod"
+                      defaultValue="whatsapp"
+                    >
                       <option value="whatsapp">WhatsApp</option>
                       <option value="phone">Phone</option>
                       <option value="email">Email</option>
@@ -646,6 +745,7 @@ export function OfficeQuoteExperience({
                     <textarea
                       name="message"
                       placeholder="Delivery area, monthly restock needs, preferred brands, or anything else we should know."
+                      defaultValue={initialMessage}
                     />
                   </label>
                 </div>
@@ -660,7 +760,10 @@ export function OfficeQuoteExperience({
                   <span>
                     I consent to Pexpacks using my information to contact me
                     about this enquiry and provide related support.{" "}
-                    <Link href="/privacy-policy" className={styles.inlineTextLink}>
+                    <Link
+                      href="/privacy-policy"
+                      className={styles.inlineTextLink}
+                    >
                       privacy policy
                     </Link>
                   </span>
@@ -669,7 +772,11 @@ export function OfficeQuoteExperience({
 
                 <label className={styles.honeypot} aria-hidden="true">
                   Company website
-                  <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
+                  <input
+                    name="companyWebsite"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
                 </label>
 
                 <Button type="submit" disabled={pending}>
@@ -708,34 +815,6 @@ export function OfficeQuoteExperience({
       </section>
 
       <div ref={footerSentinelRef} className={styles.footerStickySentinel} />
-
-      <div className={styles.printDraftOnly}>
-        <div className={styles.printDraftHeader}>
-          <h1>Pexpacks Supplies</h1>
-          <p>Ready-Packed Stationery & SME Office Combos</p>
-        </div>
-        <div className={styles.printDraftSection}>
-          <h2>Stationery Quote Draft</h2>
-          <p><strong>Date:</strong> {new Date().toLocaleDateString()}</p>
-          <p><strong>Selected Pack:</strong> {selectedPack.name}</p>
-          <p><strong>Mode:</strong> {mode === "custom" ? "Customised Selection" : "Standard Selection"}</p>
-          <p><strong>Estimated Price:</strong> {selectedPack.priceFrom === 0 ? "Quote-based (pricing to be confirmed)" : `From ${formatCurrency(selectedPack.priceFrom)}`}</p>
-        </div>
-        <div className={styles.printDraftSection}>
-          <h2>Items Included in Draft:</h2>
-          <ol className={styles.printDraftList}>
-            {items.map((item) => (
-              <li key={item}>
-                <strong>{item}</strong>
-                {itemBrandDetails[item] && ` — ${itemBrandDetails[item]}`}
-              </li>
-            ))}
-          </ol>
-        </div>
-        <div style={{ marginTop: "40px", borderTop: "1px solid #ccc", paddingTop: "20px", fontSize: "12px", color: "#666" }}>
-          <p>This is an automated stationery draft from Pexpacks. To place a live order or request a formal quote, please visit http://localhost:3000/office or contact Pexpacks directly.</p>
-        </div>
-      </div>
     </>
   );
 }
