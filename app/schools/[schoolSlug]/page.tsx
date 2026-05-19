@@ -7,7 +7,7 @@ import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
-import { ViralReferralBanner } from "@/components/marketing/ViralReferralBanner";
+import { ViralReferralBanner } from "@/components/schools/ViralReferralBanner";
 import { JsonLd } from "@/components/ui/JsonLd";
 import page from "@/styles/Page.module.css";
 
