@@ -1,4 +1,5 @@
 .banner {
+  position: relative;
   width: 100%;
   margin: 18px 0 0;
   padding: 16px;
@@ -18,10 +19,18 @@
   text-align: left;
 }
 
+.dismissible {
+  padding-right: 48px;
+}
+
 .compact {
   margin-top: 14px;
   padding: 14px;
   border-radius: 22px;
+}
+
+.compact.dismissible {
+  padding-right: 48px;
 }
 
 .iconWrapper {
@@ -78,6 +87,29 @@
   box-shadow: var(--button-hover-shadow);
 }
 
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: rgba(15, 37, 55, 0.08);
+  color: var(--pex-primary);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: var(--button-transition);
+}
+
+.closeButton:hover {
+  background: rgba(15, 37, 55, 0.14);
+  transform: var(--button-hover-transform);
+}
+
 @media (max-width: 720px) {
   .banner {
     grid-template-columns: 1fr;
@@ -90,11 +122,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shareButton {
+  .shareButton,
+  .closeButton {
     transition: none;
   }
 
-  .shareButton:hover {
+  .shareButton:hover,
+  .closeButton:hover {
     transform: none;
   }
 }

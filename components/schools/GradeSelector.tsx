@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type MouseEvent } from "react";
 import type { GradePack, School } from "@/data/schools";
 import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
 import { CompleteListModal } from "@/components/packs/CompleteListModal";
@@ -16,6 +16,7 @@ import styles from "./Schools.module.css";
 
 type GradeSelectorProps = {
   school: School;
+  onGradeIntent?: () => void;
 };
 
 function toSchoolListItems(pack: GradePackForCustomisation): PackListItem[] {
@@ -45,7 +46,7 @@ function buildCompleteListPack(
   };
 }
 
-export function GradeSelector({ school }: GradeSelectorProps) {
+export function GradeSelector({ school, onGradeIntent }: GradeSelectorProps) {
   const [selectedGradeId, setSelectedGradeId] = useState<string | null>(null);
   const viewListTriggerRef = useRef<HTMLButtonElement | null>(null);
 
@@ -67,9 +68,27 @@ export function GradeSelector({ school }: GradeSelectorProps) {
       ? buildCompleteListPack(selectedGrade, selectedPack)
       : null;
 
+  const handleGradeInteraction = useCallback(
+    (event: MouseEvent<HTMLDivElement>) => {
+      const target = event.target;
+
+      if (
+        onGradeIntent &&
+        target instanceof HTMLElement &&
+        target.closest("a,button")
+      ) {
+        onGradeIntent();
+      }
+    },
+    [onGradeIntent]
+  );
+
   return (
     <>
-      <div className={styles.gradeSelector}>
+      <div
+        className={styles.gradeSelector}
+        onClickCapture={handleGradeInteraction}
+      >
         {school.grades.map((grade) => {
           const pack = createSchoolGradePack(school, grade);
 

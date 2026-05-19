@@ -6,6 +6,8 @@ import styles from "./ViralReferralBanner.module.css";
 type ViralReferralBannerProps = {
   compact?: boolean;
   className?: string;
+  headingId?: string;
+  onClose?: () => void;
 };
 
 function WhatsAppIcon() {
@@ -25,6 +27,8 @@ function WhatsAppIcon() {
 export function ViralReferralBanner({
   compact = false,
   className,
+  headingId,
+  onClose,
 }: ViralReferralBannerProps) {
   const [currentUrl, setCurrentUrl] = useState("https://pexpacks.com/schools");
 
@@ -39,16 +43,31 @@ export function ViralReferralBanner({
 
   return (
     <aside
-      className={[styles.banner, compact ? styles.compact : "", className]
+      className={[
+        styles.banner,
+        compact ? styles.compact : "",
+        onClose ? styles.dismissible : "",
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
       aria-label="WhatsApp referral offer"
     >
+      {onClose ? (
+        <button
+          type="button"
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label="Close referral offer"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      ) : null}
       <div className={styles.iconWrapper}>
         <WhatsAppIcon />
       </div>
       <div className={styles.content}>
-        <strong>Want 5% discount?</strong>
+        <strong id={headingId}>Want 5% discount?</strong>
         <p>
           Share Pexpacks with your school's WhatsApp group or with anyone you know. If 10 parents from your school place an order, you'll receive a 5% discount!
         </p>

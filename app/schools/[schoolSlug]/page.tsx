@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { GradeSelector } from "@/components/schools/GradeSelector";
-import { MultiLearnerBanner } from "@/components/schools/MultiLearnerBanner";
 import { PageHero } from "@/components/marketing/PageHero";
+import { SchoolReferralPrompt } from "@/components/schools/SchoolReferralPrompt";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
-import { ViralReferralBanner } from "@/components/schools/ViralReferralBanner";
 import { JsonLd } from "@/components/ui/JsonLd";
-import page from "@/styles/Page.module.css";
 
 type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
@@ -68,15 +65,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         panelTitle="Ready packed"
         panelText="Prepared for your grade."
       />
-      <section className={page.section}>
-        <div className={page.sectionInner}>
-          {school.grades.length > 1 && <MultiLearnerBanner />}
-          <GradeSelector school={school} />
-        </div>
-      </section>
-      
-      {/* Viral Referral for Engagement */}
-      <ViralReferralBanner />
+      <SchoolReferralPrompt school={school} />
     </>
   );
 }
