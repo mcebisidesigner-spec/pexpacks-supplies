@@ -9,6 +9,11 @@ type SendPexPacksEmailInput = {
   text: string;
   html: string;
   formType: string;
+  attachments?: Array<{
+    filename: string;
+    content: Buffer;
+    contentType?: string;
+  }>;
   metadata?: Record<string, string | number | boolean | undefined>;
 };
 
@@ -106,6 +111,7 @@ export async function sendPexPacksEmail({
   text,
   html,
   formType,
+  attachments,
   metadata,
 }: SendPexPacksEmailInput): Promise<SendPexPacksEmailResult> {
   try {
@@ -117,6 +123,7 @@ export async function sendPexPacksEmail({
       subject,
       text,
       html,
+      attachments,
       headers: {
         "X-PexPacks-Form-Type": formType,
         ...(metadata?.sourceUrl

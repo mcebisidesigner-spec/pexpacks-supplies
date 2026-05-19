@@ -3,6 +3,7 @@ export const formTypes = [
   "full-pack-enquiry",
   "custom-pack-enquiry",
   "office-pack-enquiry",
+  "brand-package-enquiry",
   "bulk-order",
   "school-partnership",
   "school-waitlist",
@@ -44,6 +45,13 @@ export type FormSubmission = {
   schoolOrBusinessName?: string;
   grade?: string;
   businessName?: string;
+  businessDescription?: string;
+  brandingPreferences?: string;
+  existingBranding?: string;
+  targetAudience?: string;
+  website?: string;
+  deadline?: string;
+  brandAssetSummary?: string;
   suburb?: string;
   city?: string;
   province?: string;
@@ -103,7 +111,7 @@ export function endpointForFormType(formType: FormType): FormEndpointKind {
     return "order";
   }
 
-  if (formType === "office-pack-enquiry") {
+  if (formType === "office-pack-enquiry" || formType === "brand-package-enquiry") {
     return "office-pack";
   }
 

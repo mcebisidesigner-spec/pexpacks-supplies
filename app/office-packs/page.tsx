@@ -142,7 +142,7 @@ export default function OfficePacksPage() {
                 <strong>R3,500.00</strong>
               </div>
               <div className={styles.buttonRow}>
-                <Button href="#request-quote" variant="white">
+                <Button href="/business-starter-brand-package" variant="white">
                   Claim This Package
                 </Button>
               </div>

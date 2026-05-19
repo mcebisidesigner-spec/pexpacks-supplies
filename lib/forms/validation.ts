@@ -75,6 +75,13 @@ const formSubmissionSchema = z.object({
   schoolOrBusinessName: optionalText(160),
   grade: optionalText(160),
   businessName: optionalText(160),
+  businessDescription: optionalText(1200),
+  brandingPreferences: optionalText(1200),
+  existingBranding: optionalText(500),
+  targetAudience: optionalText(500),
+  website: optionalText(300),
+  deadline: optionalText(120),
+  brandAssetSummary: optionalText(1200),
   suburb: optionalText(120),
   city: optionalText(120),
   province: optionalText(120),
@@ -232,6 +239,13 @@ function normaliseSubmission(
     schoolOrBusinessName: getString(raw, "schoolOrBusinessName"),
     grade: getString(raw, "grade"),
     businessName,
+    businessDescription: getString(raw, "businessDescription"),
+    brandingPreferences: getString(raw, "brandingPreferences"),
+    existingBranding: getString(raw, "existingBranding"),
+    targetAudience: getString(raw, "targetAudience"),
+    website: getString(raw, "website"),
+    deadline: getString(raw, "deadline"),
+    brandAssetSummary: getString(raw, "brandAssetSummary"),
     suburb: getString(raw, "suburb"),
     city: getString(raw, "city"),
     province: getString(raw, "province"),
@@ -304,6 +318,15 @@ function validateEndpointRules(
     if (!data.businessName) add("businessName", "Business name is required.");
     if (!data.fullName) add("fullName", "Contact name is required.");
     if (!data.phone) add("phone", "Phone number is required.");
+    if (data.formType === "brand-package-enquiry") {
+      if (!data.email) add("email", "Email address is required.");
+      if (!data.businessDescription) {
+        add("businessDescription", "Please describe the business.");
+      }
+      if (!data.brandingPreferences) {
+        add("brandingPreferences", "Please share your branding preferences.");
+      }
+    }
   }
 
   if (endpoint === "school-partnership") {
@@ -346,15 +369,93 @@ export function isHoneypotSubmission(raw: Record<string, unknown>) {
   );
 }
 
-export async function readFormBody(request: Request) {
+export type SubmittedFormAttachment = {
+  filename: string;
+  content: Buffer;
+  contentType?: string;
+  size: number;
+};
+
+type ReadFormBodyResult = {
+  raw: Record<string, unknown>;
+  attachments: SubmittedFormAttachment[];
+  fileError?: string;
+};
+
+const MAX_ATTACHMENT_COUNT = 5;
+const MAX_ATTACHMENT_SIZE = 4 * 1024 * 1024;
+const MAX_TOTAL_ATTACHMENT_SIZE = 10 * 1024 * 1024;
+
+function formatFileSize(bytes: number) {
+  if (bytes >= 1024 * 1024) {
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+}
+
+export async function readFormBody(
+  request: Request
+): Promise<ReadFormBodyResult> {
   const contentType = request.headers.get("content-type") || "";
 
   if (contentType.includes("application/json")) {
-    return (await request.json()) as Record<string, unknown>;
+    return {
+      raw: (await request.json()) as Record<string, unknown>,
+      attachments: [],
+    };
   }
 
   const formData = await request.formData();
-  return Object.fromEntries(formData.entries());
+  const raw: Record<string, unknown> = {};
+  const attachments: SubmittedFormAttachment[] = [];
+  const fileSummaries: string[] = [];
+  let totalSize = 0;
+  let fileError: string | undefined;
+
+  for (const [key, value] of formData.entries()) {
+    if (typeof value === "string") {
+      raw[key] = value;
+      continue;
+    }
+
+    if (!value.size) {
+      continue;
+    }
+
+    if (attachments.length >= MAX_ATTACHMENT_COUNT) {
+      fileError = `Please upload no more than ${MAX_ATTACHMENT_COUNT} files.`;
+      continue;
+    }
+
+    if (value.size > MAX_ATTACHMENT_SIZE) {
+      fileError = `Each upload must be ${formatFileSize(MAX_ATTACHMENT_SIZE)} or smaller.`;
+      continue;
+    }
+
+    if (totalSize + value.size > MAX_TOTAL_ATTACHMENT_SIZE) {
+      fileError = `Total uploads must be ${formatFileSize(MAX_TOTAL_ATTACHMENT_SIZE)} or smaller.`;
+      continue;
+    }
+
+    const filename = value.name || `${key}-upload`;
+    totalSize += value.size;
+    fileSummaries.push(
+      `${filename} (${formatFileSize(value.size)}${value.type ? `, ${value.type}` : ""})`
+    );
+    attachments.push({
+      filename,
+      content: Buffer.from(await value.arrayBuffer()),
+      contentType: value.type || undefined,
+      size: value.size,
+    });
+  }
+
+  if (fileSummaries.length) {
+    raw.brandAssetSummary = fileSummaries.join("; ");
+  }
+
+  return { raw, attachments, fileError };
 }
 
 export function validateFormSubmission(

@@ -165,6 +165,17 @@
   resize: vertical;
 }
 
+.field input[type="file"] {
+  cursor: pointer;
+}
+
+.fieldHint {
+  color: var(--pex-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .trustBadges {
   margin: 24px 0 0;
   padding: 0;
@@ -788,6 +799,70 @@
   padding: 26px;
 }
 
+.packageClaimLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.52fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.packageClaimSummary {
+  position: sticky;
+  top: calc(var(--header-height-desktop) + 18px);
+  border: var(--card-border);
+  border-radius: var(--radius-section);
+  padding: 28px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(33, 158, 154, 0.12), transparent 28%),
+    var(--card-bg);
+  box-shadow: var(--card-shadow);
+}
+
+.packageClaimSummary h2 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1;
+}
+
+.packageClaimSummary p:not(.sectionEyebrow) {
+  margin: 14px 0 0;
+  color: var(--pex-text);
+  line-height: 1.5;
+}
+
+.packageClaimSummary ol {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.packageClaimSummary li {
+  position: relative;
+  padding-left: 34px;
+  color: var(--pex-text);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.packageClaimSummary li::before {
+  content: counter(list-item);
+  position: absolute;
+  left: 0;
+  top: -2px;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  display: grid;
+  place-items: center;
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .formGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -946,8 +1021,13 @@
   .packGrid,
   .officeGrid,
   .infoGrid,
+  .packageClaimLayout,
   .formGrid {
     grid-template-columns: 1fr;
+  }
+
+  .packageClaimSummary {
+    position: static;
   }
 
   .benefitGrid {

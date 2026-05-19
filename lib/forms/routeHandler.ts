@@ -16,6 +16,7 @@ import {
 import {
   isHoneypotSubmission,
   readFormBody,
+  type SubmittedFormAttachment,
   validateFormSubmission,
 } from "@/lib/forms/validation";
 
@@ -88,8 +89,22 @@ export async function handlePexPacksFormRequest(
 
   let raw: Record<string, unknown>;
 
+  let attachments: SubmittedFormAttachment[] = [];
+
   try {
-    raw = withRequestMetadata(request, await readFormBody(request));
+    const body = await readFormBody(request);
+    raw = withRequestMetadata(request, body.raw);
+    attachments = body.attachments;
+    if (body.fileError) {
+      return json(
+        {
+          success: false,
+          message: FORM_VALIDATION_MESSAGE,
+          errors: { brandAssets: body.fileError },
+        },
+        400
+      );
+    }
   } catch {
     return json({ success: false, message: "Invalid form data." }, 400);
   }
@@ -131,6 +146,7 @@ export async function handlePexPacksFormRequest(
     text: template.text,
     html: template.html,
     formType: data.formType,
+    attachments,
     metadata: {
       sourceUrl: data.sourceUrl || data.pageUrl,
     },

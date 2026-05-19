@@ -106,7 +106,15 @@ function officePackFields(data: FormSubmission): Field[] {
     ...baseFields(data),
     { label: "Business name", value: data.businessName },
     { label: "Pack type", value: data.packType || data.pack },
+    { label: "Package", value: data.packName },
     { label: "Quantity", value: data.orderQuantity || data.quantity },
+    { label: "Business description", value: data.businessDescription },
+    { label: "Branding preferences", value: data.brandingPreferences },
+    { label: "Existing branding", value: data.existingBranding },
+    { label: "Target audience", value: data.targetAudience },
+    { label: "Website / social link", value: data.website },
+    { label: "Deadline", value: data.deadline },
+    { label: "Uploaded files", value: data.brandAssetSummary },
     { label: "Message", value: data.message },
   ];
 }
@@ -156,7 +164,9 @@ export function createEmailTemplate(
       ? "New PexPacks School Waitlist Lead"
       : data.formType === "readiness-quiz"
         ? "New PexPacks Readiness Quiz Lead"
-        : subjectByEndpoint[endpoint];
+        : data.formType === "brand-package-enquiry"
+          ? "New PexPacks Business Starter Brand Package Claim"
+          : subjectByEndpoint[endpoint];
   const fields = fieldsForEndpoint(endpoint, data);
   const text = [
     subject,
