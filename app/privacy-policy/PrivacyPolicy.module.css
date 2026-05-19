@@ -311,13 +311,17 @@
 
   .tocShell {
     position: sticky;
-    top: 0;
+    top: calc(var(--header-height-mobile) + 10px); /* Stick below header */
     z-index: 60;
     width: 100%;
-    min-width: 0; /* Crucial for preventing horizontal overflow from the scrolling list inside */
+    min-width: 0;
+    transition: top 0.25s ease;
   }
 
-
+  /* When header hides, move bar to top of screen */
+  .tocShellFloating {
+    top: 8px;
+  }
   .tocCard {
     background: #ffffff;
     backdrop-filter: none;
