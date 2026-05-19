@@ -13,7 +13,7 @@ export const metadata: Metadata = buildMetadata(
 const packageSteps = [
   "Submit your business and branding details.",
   "Upload existing logos, colour palettes or reference material if available.",
-  "Pexpacks reviews the brief and confirms the next steps for your R3,500 package.",
+  "Pexpacks reviews the brief and confirms the next steps for your R3,999 package.",
 ];
 
 export default function BusinessStarterBrandPackagePage() {
@@ -24,7 +24,7 @@ export default function BusinessStarterBrandPackagePage() {
         title="Claim your brand package"
         text="Use this dedicated order form to send the information Pexpacks needs to prepare your logo, business cards, flyers, letterhead and starter website."
         panelText="Package value"
-        panelTitle="Complete physical and digital branding for R3,500.00."
+        panelTitle="Complete physical and digital branding for R3,999.00."
       />
 
       <section className={styles.section}>
