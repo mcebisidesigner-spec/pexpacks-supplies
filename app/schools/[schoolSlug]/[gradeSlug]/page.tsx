@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GradePackDetails } from "@/components/schools/GradePackDetails";
+import { PackBuildingAnimation } from "@/components/schools/PackBuildingAnimation";
 import { SaveVisitTracker } from "@/components/schools/SaveVisitTracker";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getSchoolIndex } from "@/data/schools";
@@ -76,7 +77,9 @@ export default async function GradePackPage({ params }: GradePageProps) {
         gradeSlug={grade.gradeSlug}
       />
       <section className={page.section}>
-        <GradePackDetails school={school} grade={grade} />
+        <PackBuildingAnimation schoolName={school.name}>
+          <GradePackDetails school={school} grade={grade} />
+        </PackBuildingAnimation>
       </section>
     </>
   );

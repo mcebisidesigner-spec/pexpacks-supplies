@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./Schools.module.css";
 
-const STORAGE_KEY = "pexpacks:last-school-visit";
+const STORAGE_KEY = "pexpacks:recent-school-visits";
 
-type LastVisit = {
+export type LastVisit = {
   schoolName: string;
   schoolSlug: string;
   grade: string;
@@ -16,11 +16,34 @@ type LastVisit = {
 
 /**
  * Save the user's current school/grade visit for the "Continue where you left off" feature.
+ * Stores up to 3 recent unique schools.
  */
 export function saveSchoolVisit(data: Omit<LastVisit, "timestamp">) {
   try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    let history: LastVisit[] = [];
+    if (raw) {
+      // Handle legacy single-object format or new array format
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        history = parsed;
+      } else if (parsed && typeof parsed === "object") {
+        history = [parsed];
+      }
+    }
+
     const entry: LastVisit = { ...data, timestamp: Date.now() };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entry));
+    
+    // Remove previous entries for the same school to avoid duplicates
+    history = history.filter(v => v.schoolSlug !== entry.schoolSlug);
+    
+    // Add to front and keep only top 3
+    history.unshift(entry);
+    if (history.length > 3) {
+      history = history.slice(0, 3);
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
   } catch {
     // localStorage may be unavailable
   }
@@ -28,7 +51,7 @@ export function saveSchoolVisit(data: Omit<LastVisit, "timestamp">) {
 
 /**
  * Banner shown to returning parents who have previously visited a school page.
- * Provides a one-click link back to their last school/grade.
+ * Provides a one-click link back to their most recent school/grade.
  */
 export function ReturningParentBanner() {
   const [lastVisit, setLastVisit] = useState<LastVisit | null>(null);
@@ -37,10 +60,15 @@ export function ReturningParentBanner() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
-      const parsed: LastVisit = JSON.parse(raw);
-      // Only show if visit was within the last 30 days
-      if (Date.now() - parsed.timestamp < 30 * 24 * 60 * 60 * 1000) {
-        setLastVisit(parsed);
+      const parsed = JSON.parse(raw);
+      const visits: LastVisit[] = Array.isArray(parsed) ? parsed : [parsed];
+      
+      if (visits.length > 0) {
+        const mostRecent = visits[0];
+        // Only show if visit was within the last 30 days
+        if (Date.now() - mostRecent.timestamp < 30 * 24 * 60 * 60 * 1000) {
+          setLastVisit(mostRecent);
+        }
       }
     } catch {
       // ignore

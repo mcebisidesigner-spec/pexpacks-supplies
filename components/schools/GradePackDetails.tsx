@@ -3,6 +3,7 @@
 import type { GradePack, School } from "@/data/schools";
 import { GradePackActions } from "@/components/packs/GradePackActions";
 import { ShareButtons } from "@/components/shared/ShareButtons";
+import { StickyOrderBar } from "@/components/schools/StickyOrderBar";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
 import styles from "./Schools.module.css";
@@ -69,7 +70,7 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
           Already have some items? Customise this pack and only buy what your
           child still needs.
         </p>
-        <div className={styles.gradeActionPanel}>
+        <div className={styles.gradeActionPanel} id="grade-actions">
           <GradePackActions pack={pack} />
         </div>
 
@@ -101,6 +102,12 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
           </p>
         )}
       </div>
+      <StickyOrderBar
+        schoolName={school.name}
+        gradeLabel={grade.grade}
+        priceLabel={formatCurrency(grade.price)}
+        targetSelector="#grade-actions"
+      />
     </article>
   );
 }

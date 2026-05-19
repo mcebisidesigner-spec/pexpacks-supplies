@@ -27,6 +27,29 @@ function gradeLabel(grades: string[]) {
   return `${grades.slice(0, 3).join(", ")} +${grades.length - 3} more`;
 }
 
+function HighlightMatch({ text, query }: { text: string; query: string }) {
+  if (!query.trim()) {
+    return <>{text}</>;
+  }
+
+  const matchIndex = text.toLowerCase().indexOf(query.toLowerCase());
+  if (matchIndex === -1) {
+    return <>{text}</>;
+  }
+
+  const before = text.slice(0, matchIndex);
+  const match = text.slice(matchIndex, matchIndex + query.length);
+  const after = text.slice(matchIndex + query.length);
+
+  return (
+    <>
+      {before}
+      <span className={heroStyles.searchHighlight}>{match}</span>
+      {after}
+    </>
+  );
+}
+
 export function SchoolSearchPanel({
   grades,
   initialQuery = "",
@@ -143,7 +166,7 @@ export function SchoolSearchPanel({
                           <div className={heroStyles.heroResultSummary}>
                             <h3>
                               <Link href={`/schools/${school.slug}`}>
-                                {school.name}
+                                <HighlightMatch text={school.name} query={query} />
                               </Link>
                             </h3>
                             <p>
@@ -155,6 +178,11 @@ export function SchoolSearchPanel({
                             <span className={heroStyles.heroResultGrades}>
                               {gradeLabel(school.grades)}
                             </span>
+                            {school.lowestPrice ? (
+                              <span className={heroStyles.heroResultPrice}>
+                                From R{school.lowestPrice}
+                              </span>
+                            ) : null}
                             {school.isFeatured || school.isPartner ? (
                               <div className={heroStyles.heroResultBadges}>
                                 {school.isFeatured ? <span>Featured</span> : null}

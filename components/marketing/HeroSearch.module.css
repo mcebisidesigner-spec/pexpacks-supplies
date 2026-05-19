@@ -186,13 +186,30 @@
   gap: 7px;
 }
 
-.heroResultBadges span {
+.heroResultBadges span,
+.heroResultPrice {
   padding: 6px 10px;
   border-radius: var(--radius-pill);
-  background: var(--pex-bg);
-  color: var(--pex-keppel);
   font-size: 12px;
   font-weight: 800;
+}
+
+.heroResultBadges span {
+  background: var(--pex-bg);
+  color: var(--pex-keppel);
+}
+
+.heroResultPrice {
+  background: rgba(33, 158, 154, 0.1);
+  color: var(--pex-navy);
+}
+
+.searchHighlight {
+  color: var(--pex-primary);
+  font-weight: 900;
+  background: rgba(190, 147, 64, 0.2);
+  padding: 0 2px;
+  border-radius: 2px;
 }
 
 .heroResultLink {

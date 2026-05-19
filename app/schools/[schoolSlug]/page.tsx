@@ -7,6 +7,7 @@ import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
+import { ViralReferralBanner } from "@/components/marketing/ViralReferralBanner";
 import { JsonLd } from "@/components/ui/JsonLd";
 import page from "@/styles/Page.module.css";
 
@@ -73,6 +74,9 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <GradeSelector school={school} />
         </div>
       </section>
+      
+      {/* Viral Referral for Engagement */}
+      <ViralReferralBanner />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanne
 import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
 import { ReturningParentBanner } from "@/components/schools/ReturningParentBanner";
+import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
 import { RetailComparisonSlider } from "@/components/marketing/RetailComparisonSlider";
@@ -62,6 +63,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       {featuredSchools.length > 0 && (
         <FeaturedSchoolsBanner schools={featuredSchools} />
       )}
+      <RecentlyViewedSchools />
       <BookCoveringBanner />
       <section
         className={styles.howItWorksSection}
