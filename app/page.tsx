@@ -225,7 +225,7 @@ export default function HomePage() {
               />
             </div>
             <div>
-              <p className={styles.eyebrow}>Office and SME solutions</p>
+              <p className={styles.sectionEyebrow}>Office and SME solutions</p>
               <h2>Office stationery, packed for work.</h2>
               <p>
                 Keep your business stocked with curated office stationery packs.

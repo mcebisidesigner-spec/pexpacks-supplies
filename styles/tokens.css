@@ -75,6 +75,11 @@
   --font-weight-heading: 800;
   --font-weight-body: 400;
   --font-weight-medium: 500;
+  --section-eyebrow-color: var(--pex-keppel);
+  --section-eyebrow-font-size: 14px;
+  --section-eyebrow-font-weight: 800;
+  --section-eyebrow-letter-spacing: 0;
+  --section-eyebrow-margin: 0 0 16px;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;

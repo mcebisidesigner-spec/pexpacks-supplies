@@ -53,7 +53,7 @@ export default function PartnerWithSchoolsPage() {
           />
           <div className={styles.splitBand}>
             <div>
-              <p className={styles.eyebrow}>School-list support</p>
+              <p className={styles.sectionEyebrow}>School-list support</p>
               <h2>Grade-specific stationery made clearer</h2>
               <p>
                 Pexpacks helps schools turn approved stationery lists into clear

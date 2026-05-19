@@ -115,8 +115,7 @@ export default function OfficePacksPage() {
           >
             <div>
               <p
-                className={styles.eyebrow}
-                style={{ color: "var(--pex-accent)" }}
+                className={styles.sectionEyebrow}
               >
                 Special Offer
               </p>
@@ -193,7 +192,7 @@ export default function OfficePacksPage() {
         <div className={styles.inner}>
           <div className={styles.splitBand}>
             <div>
-              <p className={styles.eyebrow}>Monthly office support</p>
+              <p className={styles.sectionEyebrow}>Monthly office support</p>
               <h2>Keep admin supplies predictable</h2>
               <p>
                 Set up a recurring office pack for the basics your team uses

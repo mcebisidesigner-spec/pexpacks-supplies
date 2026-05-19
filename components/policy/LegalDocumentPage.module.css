@@ -31,7 +31,6 @@
 
 .tocEyebrow,
 .summaryKicker,
-.sectionHeader p,
 .noticeEyebrow {
   margin: 0;
   color: var(--pex-keppel);
@@ -39,6 +38,14 @@
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+}
+
+.sectionHeader p {
+  margin: var(--section-eyebrow-margin);
+  color: var(--section-eyebrow-color);
+  font-size: var(--section-eyebrow-font-size);
+  font-weight: var(--section-eyebrow-font-weight);
+  letter-spacing: var(--section-eyebrow-letter-spacing);
 }
 
 .tocCard h2 {

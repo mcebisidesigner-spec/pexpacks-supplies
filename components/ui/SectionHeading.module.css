@@ -11,10 +11,11 @@
 }
 
 .eyebrow {
-  margin: 0 0 12px;
-  color: var(--color-orange);
-  font-size: 15px;
-  font-weight: 800;
+  margin: var(--section-eyebrow-margin);
+  color: var(--section-eyebrow-color);
+  font-size: var(--section-eyebrow-font-size);
+  font-weight: var(--section-eyebrow-font-weight);
+  letter-spacing: var(--section-eyebrow-letter-spacing);
 }
 
 .text {

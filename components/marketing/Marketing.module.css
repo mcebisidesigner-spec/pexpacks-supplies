@@ -71,6 +71,14 @@
   letter-spacing: 0;
 }
 
+.sectionEyebrow {
+  margin: var(--section-eyebrow-margin);
+  color: var(--section-eyebrow-color);
+  font-weight: var(--section-eyebrow-font-weight);
+  font-size: var(--section-eyebrow-font-size);
+  letter-spacing: var(--section-eyebrow-letter-spacing);
+}
+
 .heroTitle,
 .pageTitle {
   margin: 0;

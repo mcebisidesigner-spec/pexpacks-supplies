@@ -17,10 +17,11 @@
 
 .eyebrow {
   max-width: none;
-  margin: 0 0 16px;
-  color: var(--pex-keppel);
-  font-size: 14px;
-  font-weight: 800;
+  margin: var(--section-eyebrow-margin);
+  color: var(--section-eyebrow-color);
+  font-size: var(--section-eyebrow-font-size);
+  font-weight: var(--section-eyebrow-font-weight);
+  letter-spacing: var(--section-eyebrow-letter-spacing);
 }
 
 .ctaInner h2 {

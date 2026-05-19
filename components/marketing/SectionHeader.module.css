@@ -4,11 +4,11 @@
 }
 
 .eyebrow {
-  margin: 0 0 16px;
-  color: var(--pex-keppel);
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: 0;
+  margin: var(--section-eyebrow-margin);
+  color: var(--section-eyebrow-color);
+  font-weight: var(--section-eyebrow-font-weight);
+  font-size: var(--section-eyebrow-font-size);
+  letter-spacing: var(--section-eyebrow-letter-spacing);
 }
 
 .sectionHeader h2 {
@@ -24,7 +24,7 @@
   scroll-margin-top: calc(var(--header-height-desktop) + 24px);
 }
 
-.sectionHeader p {
+.sectionHeader p:not(.eyebrow) {
   margin: 14px 0 0;
   color: var(--pex-text-muted);
   font-size: 18px;
