@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
-import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
 import { ReturningParentBanner } from "@/components/schools/ReturningParentBanner";
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
@@ -64,7 +63,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         <FeaturedSchoolsBanner schools={featuredSchools} />
       )}
       <RecentlyViewedSchools />
-      <BookCoveringBanner />
+      <RequestSchoolCTA />
       <section
         className={styles.howItWorksSection}
         aria-labelledby="how-it-works-heading"
@@ -119,8 +118,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
           <TestimonialMarquee items={testimonials} />
         </div>
       </section>
-
-      <RequestSchoolCTA />
 
       <section className={pageStyles.section} aria-labelledby="school-faqs">
         <div className={pageStyles.sectionInner}>
