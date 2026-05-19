@@ -25,7 +25,14 @@
   gap: 14px;
 }
 
-.eyebrow,
+.eyebrow {
+  margin: 0;
+  color: var(--pex-keppel);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
 .stepLabel {
   margin: 0;
   color: var(--pex-keppel);
