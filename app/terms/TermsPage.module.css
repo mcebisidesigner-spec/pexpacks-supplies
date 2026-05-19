@@ -345,6 +345,7 @@
     top: 0;
     z-index: 60;
     width: 100%;
+    min-width: 0; /* Crucial for preventing horizontal overflow */
   }
 
   /* When floating, boost shadow for depth cue */

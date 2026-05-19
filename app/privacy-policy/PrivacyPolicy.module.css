@@ -314,6 +314,7 @@
     top: 0;
     z-index: 60;
     width: 100%;
+    min-width: 0; /* Crucial for preventing horizontal overflow from the scrolling list inside */
   }
 
   /* When floating, boost shadow for depth cue */
