@@ -96,7 +96,15 @@ export const metadata: Metadata = buildMetadata(
   "/office-packs"
 );
 
-export default function OfficePacksPage() {
+type OfficePacksPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function OfficePacksPage({ searchParams }: OfficePacksPageProps) {
+  const params = searchParams ? await searchParams : {};
+  const packParam = typeof params.pack === "string" ? params.pack : "";
+  const initialMessage = packParam ? `I am interested in the ${packParam} pack.` : "";
+
   return (
     <>
       <PageHero

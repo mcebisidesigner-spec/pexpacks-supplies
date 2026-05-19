@@ -89,7 +89,6 @@ export function OfficeQuoteExperience({
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showStickyBar, setShowStickyBar] = useState(true);
   const [selectedItemOption, setSelectedItemOption] = useState("");
   const formRef = useRef<HTMLElement | null>(null);
   const footerSentinelRef = useRef<HTMLDivElement | null>(null);
@@ -112,37 +111,6 @@ export function OfficeQuoteExperience({
       itemOptions.find((item) => !items.includes(item)) ?? itemOptions[0] ?? ""
     );
   }, [itemOptions, items]);
-
-  useEffect(() => {
-    const formElement = formRef.current;
-    const footerSentinelElement = footerSentinelRef.current;
-
-    if (!formElement || !footerSentinelElement) {
-      return;
-    }
-
-    const formNode = formElement;
-    const footerSentinelNode = footerSentinelElement;
-
-    function updateStickyVisibility() {
-      const formRect = formNode.getBoundingClientRect();
-      const footerRect = footerSentinelNode.getBoundingClientRect();
-      const formReached =
-        formRect.top <= window.innerHeight - 120 && formRect.bottom >= 0;
-      const footerReached = footerRect.top <= window.innerHeight;
-
-      setShowStickyBar(!formReached && !footerReached);
-    }
-
-    updateStickyVisibility();
-    window.addEventListener("scroll", updateStickyVisibility, { passive: true });
-    window.addEventListener("resize", updateStickyVisibility);
-
-    return () => {
-      window.removeEventListener("scroll", updateStickyVisibility);
-      window.removeEventListener("resize", updateStickyVisibility);
-    };
-  }, []);
 
   function scrollToForm() {
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -588,15 +556,6 @@ export function OfficeQuoteExperience({
       </section>
 
       <div ref={footerSentinelRef} className={styles.footerStickySentinel} />
-
-      {showStickyBar ? (
-        <div className={styles.stickyQuoteBar}>
-          <span>Ready for an office quote?</span>
-          <button type="button" onClick={scrollToForm}>
-            Request Quote
-          </button>
-        </div>
-      ) : null}
     </>
   );
 }
