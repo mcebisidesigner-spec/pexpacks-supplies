@@ -328,6 +328,9 @@ export function OrderForm({
     : isCustomSchoolPack && effectiveInitialCustomItems
       ? effectiveInitialCustomItems.split("; ").filter(Boolean)
       : (selectedGrade?.contents ?? []);
+  const checkoutItemsLabel = hasPexcover
+    ? `${selectedPackItems.length || "Confirming"} + Pexcover added`
+    : selectedPackItems.length || "Confirming";
   const selectedPackNote = standardSelection
     ? standardSelection.mode === "custom"
       ? "Your customised pack has been prepared for checkout. The adjusted items below will be included in the enquiry."
@@ -618,7 +621,7 @@ export function OrderForm({
           </div>
           <div>
             <span>Items</span>
-            <strong>{selectedPackItems.length || "Confirming"}</strong>
+            <strong>{checkoutItemsLabel}</strong>
           </div>
           <div>
             <span>Estimated total</span>
