@@ -1,6 +1,6 @@
 .requestCta {
   width: min(calc(100% - 40px), 1120px);
-  margin: 0 auto 72px;
+  margin: clamp(54px, 8vw, 96px) auto;
   padding: clamp(26px, 5vw, 42px);
   border-radius: var(--radius-section);
   background:
