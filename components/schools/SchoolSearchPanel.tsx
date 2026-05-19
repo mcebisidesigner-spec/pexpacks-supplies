@@ -99,6 +99,7 @@ export function SchoolSearchPanel({
       <h2 id="school-search-heading" className="sr-only">
         Search by School, Grade or Region
       </h2>
+      <div className={styles.searchFormWrapper}>
       <form
         className={styles.searchForm}
         onSubmit={handleSubmit}
@@ -126,111 +127,6 @@ export function SchoolSearchPanel({
             autoComplete="off"
           />
         </label>
-        {panelOpen ? (
-          <div
-            className={`${styles.resultsPanel} ${heroStyles.heroResultsPanel}`}
-            id="school-search-results"
-            aria-live="polite"
-            data-school-results-scroll
-          >
-            {!queryReady ? (
-              <p className={heroStyles.heroSearchState}>
-                Start typing your school name or choose a grade and region.
-              </p>
-            ) : null}
-            {isLoading ? (
-              <p className={heroStyles.heroSearchState}>Loading schools...</p>
-            ) : null}
-            {error ? (
-              <p className={heroStyles.searchError} role="alert">
-                {error}
-              </p>
-            ) : null}
-            {!isLoading && queryReady && hasSearched && !error ? (
-              <>
-                <div className={heroStyles.resultsCount}>
-                  <strong>
-                    {total === 1 ? "1 school found" : `${total} schools found`}
-                  </strong>
-                  {total > 0 ? (
-                    <span>
-                      Showing {results.length} of {total}
-                    </span>
-                  ) : null}
-                </div>
-                {results.length > 0 ? (
-                  <div className={heroStyles.heroResultsList}>
-                    {results.map((school) => (
-                      <article className={heroStyles.heroResultCard} key={school.id}>
-                        <div className={heroStyles.heroResultContent}>
-                          <div className={heroStyles.heroResultSummary}>
-                            <h3>
-                              <Link href={`/schools/${school.slug}`}>
-                                <HighlightMatch text={school.name} query={query} />
-                              </Link>
-                            </h3>
-                            <p>
-                              {school.region}
-                              {school.province ? `, ${school.province}` : ""}
-                            </p>
-                          </div>
-                          <div className={heroStyles.heroResultMeta}>
-                            <span className={heroStyles.heroResultGrades}>
-                              {gradeLabel(school.grades)}
-                            </span>
-                            {school.lowestPrice ? (
-                              <span className={heroStyles.heroResultPrice}>
-                                From R{school.lowestPrice}
-                              </span>
-                            ) : null}
-                            {school.isFeatured || school.isPartner ? (
-                              <div className={heroStyles.heroResultBadges}>
-                                {school.isFeatured ? <span>Featured</span> : null}
-                                {school.isPartner ? <span>Partner</span> : null}
-                              </div>
-                            ) : null}
-                          </div>
-                        </div>
-                        <Link
-                          href={`/schools/${school.slug}`}
-                          className={heroStyles.heroResultLink}
-                        >
-                          View packs
-                        </Link>
-                      </article>
-                    ))}
-                  </div>
-                ) : (
-                  <div className={heroStyles.noResultsState}>
-                    <p className={heroStyles.heroSearchState}>
-                      No matching schools found.
-                    </p>
-                    <InlineSchoolWaitlist
-                      schoolName={query}
-                      source="schools-search"
-                    />
-                    <ViralReferralBanner compact />
-                  </div>
-                )}
-                <SchoolResultsAutoLoad
-                  hasMore={hasMore}
-                  isLoading={isLoading}
-                  onLoadMore={() => fetchResults(results.length, "append")}
-                  className={heroStyles.loadMoreSentinel}
-                />
-                {hasMore ? (
-                  <button
-                    className={heroStyles.loadMoreButton}
-                    type="button"
-                    onClick={() => fetchResults(results.length, "append")}
-                  >
-                    Load more schools
-                  </button>
-                ) : null}
-              </>
-            ) : null}
-          </div>
-        ) : null}
         <label className={heroStyles.field} htmlFor="schoolGrade">
           <span>Grade</span>
           <select
@@ -256,6 +152,112 @@ export function SchoolSearchPanel({
           {isLoading ? "Searching..." : "Search"}
         </button>
       </form>
+      {panelOpen ? (
+        <div
+          className={`${styles.resultsPanel} ${heroStyles.heroResultsPanel}`}
+          id="school-search-results"
+          aria-live="polite"
+          data-school-results-scroll
+        >
+          {!queryReady ? (
+            <p className={heroStyles.heroSearchState}>
+              Start typing your school name or choose a grade and region.
+            </p>
+          ) : null}
+          {isLoading ? (
+            <p className={heroStyles.heroSearchState}>Loading schools...</p>
+          ) : null}
+          {error ? (
+            <p className={heroStyles.searchError} role="alert">
+              {error}
+            </p>
+          ) : null}
+          {!isLoading && queryReady && hasSearched && !error ? (
+            <>
+              <div className={heroStyles.resultsCount}>
+                <strong>
+                  {total === 1 ? "1 school found" : `${total} schools found`}
+                </strong>
+                {total > 0 ? (
+                  <span>
+                    Showing {results.length} of {total}
+                  </span>
+                ) : null}
+              </div>
+              {results.length > 0 ? (
+                <div className={heroStyles.heroResultsList}>
+                  {results.map((school) => (
+                    <article className={heroStyles.heroResultCard} key={school.id}>
+                      <div className={heroStyles.heroResultContent}>
+                        <div className={heroStyles.heroResultSummary}>
+                          <h3>
+                            <Link href={`/schools/${school.slug}`}>
+                              <HighlightMatch text={school.name} query={query} />
+                            </Link>
+                          </h3>
+                          <p>
+                            {school.region}
+                            {school.province ? `, ${school.province}` : ""}
+                          </p>
+                        </div>
+                        <div className={heroStyles.heroResultMeta}>
+                          <span className={heroStyles.heroResultGrades}>
+                            {gradeLabel(school.grades)}
+                          </span>
+                          {school.lowestPrice ? (
+                            <span className={heroStyles.heroResultPrice}>
+                              From R{school.lowestPrice}
+                            </span>
+                          ) : null}
+                          {school.isFeatured || school.isPartner ? (
+                            <div className={heroStyles.heroResultBadges}>
+                              {school.isFeatured ? <span>Featured</span> : null}
+                              {school.isPartner ? <span>Partner</span> : null}
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                      <Link
+                        href={`/schools/${school.slug}`}
+                        className={heroStyles.heroResultLink}
+                      >
+                        View packs
+                      </Link>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div className={heroStyles.noResultsState}>
+                  <p className={heroStyles.heroSearchState}>
+                    No matching schools found.
+                  </p>
+                  <InlineSchoolWaitlist
+                    schoolName={query}
+                    source="schools-search"
+                  />
+                  <ViralReferralBanner compact />
+                </div>
+              )}
+              <SchoolResultsAutoLoad
+                hasMore={hasMore}
+                isLoading={isLoading}
+                onLoadMore={() => fetchResults(results.length, "append")}
+                className={heroStyles.loadMoreSentinel}
+              />
+              {hasMore ? (
+                <button
+                  className={heroStyles.loadMoreButton}
+                  type="button"
+                  onClick={() => fetchResults(results.length, "append")}
+                >
+                  Load more schools
+                </button>
+              ) : null}
+            </>
+          ) : null}
+        </div>
+      ) : null}
+      </div>
 
       <SearchHelperPill
         storageKey="pexpacks:gauteng-helper:schools"
