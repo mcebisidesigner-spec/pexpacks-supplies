@@ -33,7 +33,7 @@ export function ViralReferralBanner({
   }, []);
 
   const whatsappUrl = useMemo(() => {
-    const text = `Would you like free delivery for your child's school supplies? Check out Pexpacks Supplies, which has partnered with our school. If 10 parents from our school place orders through Pexpacks, we will receive a 5% discount, and the supplies will be delivered directly to the school. Please share this information in the school WhatsApp group! ${currentUrl}`;
+    const text = `Would you like free delivery for your child's school supplies? Check out Pexpacks Supplies, which has partnered with our school. If 10 parents from our school place orders through Pexpacks, we will receive a 5% discount, and the supplies will be delivered directly to the school. Please share this information in the school WhatsApp group!\n\n${currentUrl}`;
     return `https://wa.me/?text=${encodeURIComponent(text)}`;
   }, [currentUrl]);
 
