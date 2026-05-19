@@ -317,10 +317,6 @@
     min-width: 0; /* Crucial for preventing horizontal overflow from the scrolling list inside */
   }
 
-  /* When floating, boost shadow for depth cue */
-  .tocShellFloating {
-    /* No min-height spacer needed — sticky keeps the element in flow */
-  }
 
   .tocCard {
     background: #ffffff;
