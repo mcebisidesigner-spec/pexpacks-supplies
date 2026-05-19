@@ -464,24 +464,25 @@ export function validateFormSubmission(
 ) {
   const normalised = normaliseSubmission(raw, endpoint);
   const parsed = formSubmissionSchema.safeParse(normalised);
+  const errors: Record<string, string> = {};
 
   if (!parsed.success) {
-    const errors: Record<string, string> = {};
-
     for (const issue of parsed.error.issues) {
       const key = issue.path[0]?.toString() || "form";
       addIssue(errors, key, issue.message);
     }
+  }
 
+  const data = (parsed.success ? parsed.data : normalised) as FormSubmission;
+  const endpointErrors = validateEndpointRules(data, endpoint);
+
+  for (const [key, value] of Object.entries(endpointErrors)) {
+    addIssue(errors, key, value);
+  }
+
+  if (Object.keys(errors).length) {
     return { success: false, errors } as const;
   }
 
-  const data = parsed.data as FormSubmission;
-  const endpointErrors = validateEndpointRules(data, endpoint);
-
-  if (Object.keys(endpointErrors).length) {
-    return { success: false, errors: endpointErrors } as const;
-  }
-
-  return { success: true, data } as const;
+  return { success: true, data: parsed.data as FormSubmission } as const;
 }

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import type { OfficePack } from "@/data/officePacks";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { endpointPathForFormType } from "@/lib/forms/types";
+import { isValidSouthAfricanPhone, isValidEmailAddress } from "@/lib/forms/contact";
 import styles from "@/components/marketing/Marketing.module.css";
 
 type ApiResponse = {
@@ -152,6 +153,40 @@ export function OfficeQuoteExperience({
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
+
+    // Client-side Validation Check
+    const clientErrors: Record<string, string> = {};
+    const fullName = val(formData, "fullName");
+    const businessName = val(formData, "businessName");
+    const phone = val(formData, "phone");
+    const email = val(formData, "email");
+    const consent = formData.get("consent") === "on";
+
+    if (!businessName) {
+      clientErrors.businessName = "Business name is required.";
+    }
+    if (!fullName) {
+      clientErrors.fullName = "Contact name is required.";
+    } else if (fullName.length < 2) {
+      clientErrors.fullName = "Name must be at least 2 characters.";
+    }
+    if (!phone) {
+      clientErrors.phone = "Phone number is required.";
+    } else if (!isValidSouthAfricanPhone(phone)) {
+      clientErrors.phone = "Please enter a valid South African phone number.";
+    }
+    if (email && !isValidEmailAddress(email)) {
+      clientErrors.email = "Please enter a valid email address.";
+    }
+    if (!consent) {
+      clientErrors.consent = "Consent is required.";
+    }
+
+    if (Object.keys(clientErrors).length > 0) {
+      setErrors(clientErrors);
+      return;
+    }
+
     const selectedItems = mode === "custom" ? items : selectedPack.contents;
     const message = [
       `Quote mode: ${mode === "custom" ? "Customise quotation" : "Standard office quote"}`,
