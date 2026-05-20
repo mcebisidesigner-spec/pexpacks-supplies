@@ -806,6 +806,7 @@
   max-width: var(--layout-max-width);
   margin: 0 auto;
   padding-inline: var(--gutter-desktop);
+  padding-bottom: 96px;
   display: grid;
   grid-template-columns: 1fr 0.72fr;
   gap: 28px;
@@ -832,6 +833,7 @@
 
 .deliveryPanel {
   margin-top: 16px;
+  margin-bottom: 32px;
   padding: 14px 18px;
   border: 1px solid rgba(33, 158, 154, 0.2);
   border-radius: var(--radius-card);
@@ -1216,6 +1218,7 @@
   .searchPanel,
   .gradeDetails {
     padding-inline: var(--gutter-mobile);
+    padding-bottom: 112px;
   }
 
   .contentsCard {

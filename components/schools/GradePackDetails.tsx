@@ -71,7 +71,6 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
 
         {/* Strategy 4.2: Share buttons */}
         <ShareButtons
-          title={`${school.name} — ${grade.grade} Stationery Pack`}
           text={`Check out the ${grade.grade} stationery pack for ${school.name} on Pexpacks!`}
           className={styles.shareSection}
         />
