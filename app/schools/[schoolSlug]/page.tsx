@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
+import { GradeSelector } from "@/components/schools/GradeSelector";
+import { MultiLearnerBanner } from "@/components/schools/MultiLearnerBanner";
 import { SchoolReferralPrompt } from "@/components/schools/SchoolReferralPrompt";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
+import pageStyles from "@/styles/Page.module.css";
 
 type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
@@ -41,9 +44,6 @@ export async function generateMetadata({
   );
 }
 
-import { GradeSelector } from "@/components/schools/GradeSelector";
-import pageStyles from "@/styles/Page.module.css";
-
 export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   const { schoolSlug } = await params;
   const school = await getSchoolBySlug(schoolSlug);
@@ -70,6 +70,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
       />
       <section className={pageStyles.section}>
         <div className={pageStyles.sectionInner}>
+          {school.grades.length > 1 ? <MultiLearnerBanner /> : null}
           <GradeSelector school={school} />
         </div>
       </section>
@@ -77,3 +78,4 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
     </>
   );
 }
+

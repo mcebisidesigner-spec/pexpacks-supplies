@@ -3,7 +3,7 @@ import { blogPosts } from "@/data/blog";
 import { getFullSchoolRecords } from "@/data/schools";
 import { siteUrl } from "@/lib/seo";
 
-const siteContentUpdatedAt = new Date("2026-05-16");
+const siteContentUpdatedAt = new Date();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [

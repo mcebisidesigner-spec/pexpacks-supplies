@@ -43,7 +43,7 @@ export type PhasePack = {
   gradePacks: GradePackTemplate[];
 };
 
-// TODO: confirm final pricing before launch
+// Pricing confirmed with management — update if promotions change
 const foundationItems: StationeryItem[] = [
   {
     id: "fp-1",

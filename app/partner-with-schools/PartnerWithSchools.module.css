@@ -1,0 +1,78 @@
+.buttonRowMargin {
+  margin-top: 24px;
+}
+
+.sectionNoPaddingTop {
+  padding-top: 0;
+}
+
+.featureCardTitle {
+  margin: 0 0 10px 0;
+  color: var(--pex-navy);
+  font-weight: 800;
+}
+
+.featureCardDesc {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.benefitPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.benefitTitle {
+  margin: 0;
+  color: var(--color-text-strong);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.benefitListItem {
+  font-size: 15px;
+  font-weight: normal;
+  color: var(--color-text);
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  grid-column: 1 / -1;
+  position: static;
+}
+
+.stepItem {
+  counter-increment: list-item 1;
+}
+
+.stepItem::before {
+  display: none;
+}
+
+.stepTitle {
+  margin: 0 0 8px 0;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.stepDesc {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  font-weight: normal;
+}
+
+.supplierPanel {
+  background: var(--pex-bg-warm);
+  border: none;
+}
+
+.supplierAction {
+  display: flex;
+  justify-content: flex-end;
+}

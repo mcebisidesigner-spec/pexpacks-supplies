@@ -1,71 +1,29 @@
 "use client";
 
-import Link from "next/link";
-import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  buildWhatsAppHref,
-  ordersEmail,
-  ordersEmailHref,
-} from "@/data/contact";
-import { phasePacks, type GradePackTemplate } from "@/data/phasePacks";
+import { buildWhatsAppHref } from "@/data/contact";
+import { phasePacks } from "@/data/phasePacks";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { readOrderDraft, type OrderDraft } from "@/lib/order/orderDraft";
 import { OrderProgress } from "./OrderProgress";
+import { ReviewStep } from "./ReviewStep";
+import { DetailsStep } from "./DetailsStep";
+import { FulfilmentStep } from "./FulfilmentStep";
+import { ConfirmStep } from "./ConfirmStep";
+import { SubmitStep } from "./SubmitStep";
+import { CheckoutNavigation } from "./CheckoutNavigation";
+import { OrderSummary } from "./OrderSummary";
+import {
+  PEXCOVER_PRICE,
+  checkoutSteps,
+  type ApiResponse,
+  type FulfilmentOption,
+  type SchoolDetails,
+  type SchoolSearchResult,
+  type StandardSelection,
+} from "./OrderFormTypes";
 import styles from "./Order.module.css";
-
-type ApiResponse = {
-  success: boolean;
-  message: string;
-  submissionId?: string;
-  errors?: Record<string, string>;
-};
-
-type GradeOption = {
-  id: string;
-  grade: string;
-  gradeSlug: string;
-  price: number;
-  contents: string[];
-  deliveryNote: string;
-};
-
-type SchoolSearchResult = {
-  id: string;
-  name: string;
-  slug: string;
-  city: string;
-  province: string;
-};
-
-type SchoolDetails = SchoolSearchResult & {
-  grades: GradeOption[];
-};
-
-type CheckoutStepId =
-  | "review"
-  | "details"
-  | "fulfilment"
-  | "confirm"
-  | "submit";
-
-type CheckoutStep = {
-  id: CheckoutStepId;
-  label: string;
-  helper: string;
-};
-
-type StandardSelection = {
-  mode: "standard" | "custom";
-  phaseTitle: string;
-  phaseSlug: string;
-  pack: GradePackTemplate;
-  customItems?: string;
-  estimatedTotal?: number;
-};
-
-type FulfilmentOption = "School collection" | "Home delivery" | "Arrange collection";
 
 type OrderFormProps = {
   initialSchool?: string;
@@ -78,66 +36,6 @@ type OrderFormProps = {
   initialEstimatedTotal?: string;
   initialDraftId?: string;
 };
-
-const checkoutSteps: CheckoutStep[] = [
-  {
-    id: "review",
-    label: "Review Pack",
-    helper: "Check school, grade and selected items.",
-  },
-  {
-    id: "details",
-    label: "Customer Details",
-    helper: "Tell us who to contact about this order.",
-  },
-  {
-    id: "fulfilment",
-    label: "Delivery or Collection",
-    helper: "Choose how you would like to receive the pack.",
-  },
-  {
-    id: "confirm",
-    label: "Confirm Order",
-    helper: "Review everything before submitting.",
-  },
-  {
-    id: "submit",
-    label: "Submit Request",
-    helper: "PexPacks will confirm payment and fulfilment.",
-  },
-];
-
-const PEXCOVER_PRICE = 120;
-
-const fulfilmentOptions: Array<{
-  value: FulfilmentOption;
-  title: string;
-  text: string;
-  meta: string;
-  icon: string;
-}> = [
-  {
-    value: "School collection",
-    title: "School Collection",
-    text: "Collect from your school or agreed handover point.",
-    meta: "Best for official school pack handovers.",
-    icon: "school",
-  },
-  {
-    value: "Home delivery",
-    title: "Home Delivery",
-    text: "Receive your stationery pack at home.",
-    meta: "Delivery fee may apply after confirmation.",
-    icon: "home",
-  },
-  {
-    value: "Arrange collection",
-    title: "Arrange Collection",
-    text: "We will contact you to confirm the best pickup option.",
-    meta: "Useful when school collection is not available.",
-    icon: "pin",
-  },
-];
 
 function createOrderReference() {
   return `PEX-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${Math.random()
@@ -220,35 +118,6 @@ function isLikelySaPhone(value: string) {
     (digits.startsWith("0") && digits.length === 10) ||
     (digits.startsWith("27") && digits.length === 11) ||
     (digits.startsWith("0027") && digits.length === 13)
-  );
-}
-
-function deliveryIcon(type: string) {
-  if (type === "home") {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="m3 11 9-7 9 7" />
-        <path d="M5 10v10h14V10" />
-        <path d="M10 20v-6h4v6" />
-      </svg>
-    );
-  }
-
-  if (type === "pin") {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 21s7-5.2 7-11a7 7 0 0 0-14 0c0 5.8 7 11 7 11Z" />
-        <path d="M12 10.5h.01" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M4 20V8l8-4 8 4v12" />
-      <path d="M8 20v-7h8v7" />
-      <path d="M10 8h4" />
-    </svg>
   );
 }
 
@@ -342,6 +211,7 @@ export function OrderForm({
   const [submitStatus, setSubmitStatus] = useState<ApiResponse | null>(null);
   const [orderReference, setOrderReference] = useState("");
   const [summaryOpen, setSummaryOpen] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
 
   const currentStep = checkoutSteps[activeStep];
   const selectedGrade = useMemo(
@@ -391,10 +261,11 @@ export function OrderForm({
     : isCustomSchoolPack
       ? "Custom pack"
       : "Full pack";
-  const reviewReady = standardSelection || Boolean(selectedSchool && selectedGrade);
+  const reviewReady = Boolean(standardSelection || (selectedSchool && selectedGrade));
   const supportHref = buildWhatsAppHref(
     `Hi PexPacks, I need help with checkout${orderReference ? ` ${orderReference}` : ""}.`
   );
+  const submitError = submitStatus !== null && !submitStatus.success;
 
   useEffect(() => {
     setOrderReference(createOrderReference());
@@ -458,6 +329,28 @@ export function OrderForm({
         ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 350);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const footer = document.getElementById("site-footer");
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsFooterVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px",
+      }
+    );
+
+    observer.observe(footer);
+
+    return () => {
+      observer.unobserve(footer);
+      observer.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -762,648 +655,114 @@ export function OrderForm({
             </div>
 
             {currentStep.id === "review" ? (
-              <div className={styles.reviewGrid}>
-                {!standardSelection ? (
-                  <div className={styles.selectionCard}>
-                    <div className={styles.fieldGroup}>
-                      <label htmlFor="order-school-search">School name</label>
-                      <p id="school-helper">
-                        Search and select the school this pack belongs to.
-                      </p>
-                      <input
-                        id="order-school-search"
-                        name="orderSchoolSearch"
-                        type="search"
-                        role="combobox"
-                        aria-autocomplete="list"
-                        aria-expanded={schoolOpen}
-                        aria-controls="order-school-results"
-                        aria-describedby={`school-helper${errors.school ? " school-error" : ""}`}
-                        aria-invalid={Boolean(errors.school)}
-                        autoComplete="off"
-                        placeholder="Start typing your school name"
-                        value={schoolQuery}
-                        onFocus={() => {
-                          setSchoolTouched(true);
-                          setSchoolOpen(true);
-                        }}
-                        onChange={(event) => {
-                          setSchoolQuery(event.target.value);
-                          setSelectedSchool(null);
-                          setGradeSlug("");
-                          setSchoolTouched(true);
-                          setSchoolOpen(true);
-                          clearFieldError("school");
-                        }}
-                        onKeyDown={(event) => {
-                          if (event.key === "Escape") setSchoolOpen(false);
-                        }}
-                      />
-                      {errors.school ? (
-                        <p id="school-error" className={styles.fieldError}>
-                          {errors.school}
-                        </p>
-                      ) : null}
-                      {schoolOpen ? (
-                        <div
-                          className={styles.schoolResults}
-                          id="order-school-results"
-                          role="listbox"
-                        >
-                          {schoolLoading ? (
-                            <p className={styles.schoolEmpty}>Searching schools...</p>
-                          ) : null}
-                          {!schoolLoading && schoolResults.length
-                            ? schoolResults.map((result) => (
-                                <button
-                                  type="button"
-                                  role="option"
-                                  aria-selected={
-                                    selectedSchool?.slug === result.slug
-                                  }
-                                  className={styles.schoolResult}
-                                  key={result.id}
-                                  onClick={() => selectSchool(result)}
-                                >
-                                  <strong>{result.name}</strong>
-                                  <span>
-                                    {result.city}, {result.province}
-                                  </span>
-                                </button>
-                              ))
-                            : null}
-                          {!schoolLoading && !schoolResults.length ? (
-                            <p className={styles.schoolEmpty}>
-                              No matching schools found. You can also{" "}
-                              <Link href="/schools">browse schools</Link>.
-                            </p>
-                          ) : null}
-                        </div>
-                      ) : null}
-                      {schoolError ? (
-                        <p className={styles.fieldError} role="alert">
-                          {schoolError}
-                        </p>
-                      ) : null}
-                    </div>
-
-                    <div className={styles.fieldGroup}>
-                      <label htmlFor="order-grade-select">Grade</label>
-                      <p id="grade-helper">
-                        Choose the grade pack you want to order.
-                      </p>
-                      <select
-                        id="order-grade-select"
-                        name="orderGrade"
-                        value={gradeSlug}
-                        aria-describedby={`grade-helper${errors.grade ? " grade-error" : ""}`}
-                        aria-invalid={Boolean(errors.grade)}
-                        onChange={(event) => {
-                          setGradeSlug(event.target.value);
-                          clearFieldError("grade");
-                        }}
-                      >
-                        <option value="">Choose a grade</option>
-                        {selectedSchool?.grades.map((grade) => (
-                          <option value={grade.gradeSlug} key={grade.id}>
-                            {grade.grade}
-                          </option>
-                        ))}
-                      </select>
-                      {errors.grade ? (
-                        <p id="grade-error" className={styles.fieldError}>
-                          {errors.grade}
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-                ) : null}
-
-                <div className={styles.packReviewCard}>
-                  <div>
-                    <p className={styles.confirmKicker}>Your pack</p>
-                    <h3>{selectedPackTitle}</h3>
-                    <p>
-                      {reviewReady
-                        ? `${packKind} for ${schoolName ?? "selected school"}${gradeName ? `, ${gradeName}` : ""}.`
-                        : "Select your school and grade to prepare the pack summary."}
-                    </p>
-                  </div>
-                  {draftStatus ? (
-                    <p className={styles.formStatusError} role="alert">
-                      {draftStatus}
-                    </p>
-                  ) : null}
-                  <div className={styles.packFacts}>
-                    <span>{packKind}</span>
-                    <span>
-                      {itemCount ? `${itemCount} selected items` : "Items confirm after selection"}
-                    </span>
-                    <span>
-                      {typeof estimatedTotal === "number"
-                        ? formatCurrency(estimatedTotal)
-                        : "Total to be confirmed"}
-                    </span>
-                  </div>
-                  {selectedPackItems.length ? (
-                    <ul className={styles.itemPreview}>
-                      {selectedPackItems.slice(0, 8).map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className={styles.emptyPreview}>
-                      Pack items will appear here once the grade is selected.
-                    </p>
-                  )}
-                  {selectedPackItems.length > 8 ? (
-                    <p className={styles.moreItems}>
-                      +{selectedPackItems.length - 8} more items included
-                    </p>
-                  ) : null}
-                  <Link
-                    className={styles.inlineAction}
-                    href={
-                      selectedSchool
-                        ? `/schools/${selectedSchool.slug}`
-                        : "/schools"
-                    }
-                  >
-                    Customise pack
-                  </Link>
-                </div>
-
-                <div
-                  className={`${styles.addonCard} ${
-                    hasPexcover ? styles.addonCardActive : ""
-                  }`}
-                >
-                  <div>
-                    <p className={styles.confirmKicker}>Optional add-on</p>
-                    <h3>Pexcover book covering</h3>
-                    <p>
-                      Add covered and labelled exercise books to help the pack
-                      arrive ready for the first school day.{" "}
-                      <Link
-                        href="/blog/what-is-pexcover-book-covering"
-                        className={styles.inlineAction}
-                        style={{ display: "inline", fontSize: "inherit" }}
-                      >
-                        Read more
-                      </Link>
-                    </p>
-                    <p style={{ margin: "6px 0 0 0", fontSize: "12px", color: "var(--pex-text-muted)", lineHeight: 1.45 }}>
-                      Pexcover applies to exercise books included in the selected school pack.
-                    </p>
-                  </div>
-                  <label className={styles.addonCheckbox}>
-                    <input
-                      type="checkbox"
-                      checked={hasPexcover}
-                      onChange={(event) => setHasPexcover(event.target.checked)}
-                    />
-                    <span>Add Pexcover for {formatCurrency(PEXCOVER_PRICE)}</span>
-                  </label>
-                  {hasPexcover ? (
-                    <div className={styles.formGrid}>
-                      <div className={styles.fieldGroup}>
-                        <label htmlFor="pexcover-name">
-                          Learner name for labels
-                        </label>
-                        <input
-                          id="pexcover-name"
-                          value={pexcoverName}
-                          placeholder="Optional"
-                          onChange={(event) =>
-                            setPexcoverName(event.target.value)
-                          }
-                        />
-                      </div>
-                      <div className={styles.fieldGroup}>
-                        <label htmlFor="pexcover-format">Label format</label>
-                        <select
-                          id="pexcover-format"
-                          value={pexcoverLabelFormat}
-                          onChange={(event) =>
-                            setPexcoverLabelFormat(event.target.value)
-                          }
-                        >
-                          <option>First Name + Surname</option>
-                          <option>First Name + Initial</option>
-                          <option>Initials + Surname</option>
-                        </select>
-                      </div>
-                      <div className={styles.fieldGroup}>
-                        <label htmlFor="pexcover-subjects">
-                          Subject names optional
-                        </label>
-                        <input
-                          id="pexcover-subjects"
-                          value={pexcoverSubjects}
-                          placeholder="English, Maths, Life Skills"
-                          onChange={(event) =>
-                            setPexcoverSubjects(event.target.value)
-                          }
-                        />
-                      </div>
-                      <div className={styles.fieldGroup}>
-                        <label htmlFor="pexcover-notes">Special notes optional</label>
-                        <input
-                          id="pexcover-notes"
-                          value={pexcoverNotes}
-                          placeholder="Any covering instructions?"
-                          onChange={(event) =>
-                            setPexcoverNotes(event.target.value)
-                          }
-                        />
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
+              <ReviewStep
+                standardSelection={standardSelection}
+                selectedSchool={selectedSchool}
+                setSelectedSchool={setSelectedSchool}
+                schoolQuery={schoolQuery}
+                setSchoolQuery={setSchoolQuery}
+                schoolResults={schoolResults}
+                schoolOpen={schoolOpen}
+                setSchoolOpen={setSchoolOpen}
+                setSchoolTouched={setSchoolTouched}
+                schoolLoading={schoolLoading}
+                schoolError={schoolError}
+                gradeSlug={gradeSlug}
+                setGradeSlug={setGradeSlug}
+                hasPexcover={hasPexcover}
+                setHasPexcover={setHasPexcover}
+                pexcoverName={pexcoverName}
+                setPexcoverName={setPexcoverName}
+                pexcoverSubjects={pexcoverSubjects}
+                setPexcoverSubjects={setPexcoverSubjects}
+                pexcoverLabelFormat={pexcoverLabelFormat}
+                setPexcoverLabelFormat={setPexcoverLabelFormat}
+                pexcoverNotes={pexcoverNotes}
+                setPexcoverNotes={setPexcoverNotes}
+                selectedPackTitle={selectedPackTitle}
+                packKind={packKind}
+                schoolName={schoolName}
+                gradeName={gradeName}
+                itemCount={itemCount}
+                estimatedTotal={estimatedTotal}
+                selectedPackItems={selectedPackItems}
+                reviewReady={reviewReady}
+                errors={errors}
+                draftStatus={draftStatus}
+                clearFieldError={clearFieldError}
+                selectSchool={selectSchool}
+              />
             ) : null}
 
             {currentStep.id === "details" ? (
-              <div className={styles.formGrid}>
-                <div className={styles.fieldGroup}>
-                  <label htmlFor="buyer-name">Full name</label>
-                  <p id="buyer-name-helper">
-                    We use this to confirm your order.
-                  </p>
-                  <input
-                    id="buyer-name"
-                    name="fullName"
-                    autoComplete="name"
-                    placeholder="e.g. Sarah Dlamini"
-                    value={buyerName}
-                    aria-describedby={`buyer-name-helper${errors.buyerName ? " buyer-name-error" : ""}`}
-                    aria-invalid={Boolean(errors.buyerName)}
-                    onChange={(event) => {
-                      setBuyerName(event.target.value);
-                      clearFieldError("buyerName");
-                    }}
-                  />
-                  {errors.buyerName ? (
-                    <p id="buyer-name-error" className={styles.fieldError}>
-                      {errors.buyerName}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div className={styles.fieldGroup}>
-                  <label htmlFor="buyer-phone">Phone number</label>
-                  <p id="buyer-phone-helper">
-                    WhatsApp or call is fastest for order confirmation.
-                  </p>
-                  <input
-                    id="buyer-phone"
-                    name="phone"
-                    type="tel"
-                    inputMode="tel"
-                    autoComplete="tel"
-                    placeholder="078 003 6048"
-                    value={buyerPhone}
-                    aria-describedby={`buyer-phone-helper${errors.buyerPhone ? " buyer-phone-error" : ""}`}
-                    aria-invalid={Boolean(errors.buyerPhone)}
-                    onChange={(event) => {
-                      setBuyerPhone(event.target.value);
-                      clearFieldError("buyerPhone");
-                    }}
-                  />
-                  {errors.buyerPhone ? (
-                    <p id="buyer-phone-error" className={styles.fieldError}>
-                      {errors.buyerPhone}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div className={styles.fieldGroup}>
-                  <label htmlFor="buyer-email">Email address</label>
-                  <p id="buyer-email-helper">
-                    Used for order updates and payment or invoice details.
-                  </p>
-                  <input
-                    id="buyer-email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="name@example.com"
-                    value={buyerEmail}
-                    aria-describedby={`buyer-email-helper${errors.buyerEmail ? " buyer-email-error" : ""}`}
-                    aria-invalid={Boolean(errors.buyerEmail)}
-                    onChange={(event) => {
-                      setBuyerEmail(event.target.value);
-                      clearFieldError("buyerEmail");
-                    }}
-                  />
-                  {errors.buyerEmail ? (
-                    <p id="buyer-email-error" className={styles.fieldError}>
-                      {errors.buyerEmail}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div className={styles.fieldGroup}>
-                  <label htmlFor="learner-name">Learner name optional</label>
-                  <p id="learner-name-helper">
-                    Helpful for labelling or school handover.
-                  </p>
-                  <input
-                    id="learner-name"
-                    name="learnerName"
-                    autoComplete="off"
-                    placeholder="e.g. Leo Dlamini"
-                    value={learnerName}
-                    aria-describedby="learner-name-helper"
-                    onChange={(event) => setLearnerName(event.target.value)}
-                  />
-                </div>
-
-                <div className={styles.fieldGroup}>
-                  <label htmlFor="preferred-contact">Preferred contact method</label>
-                  <select
-                    id="preferred-contact"
-                    name="preferredContactMethod"
-                    value={preferredContactMethod}
-                    onChange={(event) =>
-                      setPreferredContactMethod(event.target.value)
-                    }
-                  >
-                    <option value="whatsapp">WhatsApp</option>
-                    <option value="phone">Phone</option>
-                    <option value="email">Email</option>
-                  </select>
-                </div>
-
-                <label className={styles.consentField}>
-                  <input
-                    name="consent"
-                    type="checkbox"
-                    checked={consent}
-                    aria-describedby={errors.consent ? "consent-error" : undefined}
-                    aria-invalid={Boolean(errors.consent)}
-                    onChange={(event) => {
-                      setConsent(event.target.checked);
-                      clearFieldError("consent");
-                    }}
-                  />
-                  <span>
-                    I agree that PexPacks may use my information to process this
-                    order and contact me about it.{" "}
-                    <Link href="/privacy-policy">Privacy policy</Link>
-                  </span>
-                </label>
-                {errors.consent ? (
-                  <p id="consent-error" className={styles.fieldError}>
-                    {errors.consent}
-                  </p>
-                ) : null}
-                <p style={{ fontSize: "12px", color: "var(--pex-text-muted)", lineHeight: 1.45, marginTop: "8px" }}>
-                  I confirm that I am duly authorised to submit the parent or learner-related information and that the information provided is accurate.
-                </p>
-              </div>
+              <DetailsStep
+                buyerName={buyerName}
+                setBuyerName={setBuyerName}
+                buyerPhone={buyerPhone}
+                setBuyerPhone={setBuyerPhone}
+                buyerEmail={buyerEmail}
+                setBuyerEmail={setBuyerEmail}
+                learnerName={learnerName}
+                setLearnerName={setLearnerName}
+                preferredContactMethod={preferredContactMethod}
+                setPreferredContactMethod={setPreferredContactMethod}
+                consent={consent}
+                setConsent={setConsent}
+                errors={errors}
+                clearFieldError={clearFieldError}
+              />
             ) : null}
 
             {currentStep.id === "fulfilment" ? (
-              <div className={styles.fulfilmentStep}>
-                <fieldset className={styles.optionFieldset}>
-                  <legend>Preferred handover option</legend>
-                  <div className={styles.deliveryOptions}>
-                    {fulfilmentOptions.map((option) => (
-                      <label
-                        className={`${styles.deliveryOption} ${
-                          fulfilmentOption === option.value
-                            ? styles.deliveryOptionSelected
-                            : ""
-                        }`}
-                        key={option.value}
-                      >
-                        <input
-                          type="radio"
-                          name="deliveryMethod"
-                          value={option.value}
-                          checked={fulfilmentOption === option.value}
-                          onChange={() => {
-                            setFulfilmentOption(option.value);
-                            setErrors({});
-                          }}
-                        />
-                        <span className={styles.deliveryIcon}>
-                          {deliveryIcon(option.icon)}
-                        </span>
-                        <span>
-                          <strong>{option.title}</strong>
-                          <small>{option.text}</small>
-                          <em>{option.meta}</em>
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-
-                {fulfilmentOption === "Home delivery" ? (
-                  <>
-                    <p style={{ margin: "0 0 16px 0", fontSize: "14px", color: "var(--pex-text-muted)", lineHeight: 1.5 }}>
-                      Home delivery incurs an additional delivery fee based on your location. Please read our{" "}
-                      <Link
-                        href="/delivery-policy"
-                        className={styles.inlineAction}
-                        style={{ display: "inline", fontSize: "inherit" }}
-                      >
-                        Delivery Policy
-                      </Link>{" "}
-                      for more details on pricing and schedules.
-                    </p>
-                    <div className={styles.formGrid}>
-                      {[
-                      {
-                        id: "delivery-address",
-                        label: "Street address",
-                        value: address,
-                        setter: setAddress,
-                        error: errors.address,
-                        autoComplete: "address-line1",
-                      },
-                      {
-                        id: "delivery-suburb",
-                        label: "Suburb",
-                        value: suburb,
-                        setter: setSuburb,
-                        error: errors.suburb,
-                        autoComplete: "address-level3",
-                      },
-                      {
-                        id: "delivery-city",
-                        label: "City",
-                        value: city,
-                        setter: setCity,
-                        error: errors.city,
-                        autoComplete: "address-level2",
-                      },
-                      {
-                        id: "delivery-province",
-                        label: "Province",
-                        value: province,
-                        setter: setProvince,
-                        error: errors.province,
-                        autoComplete: "address-level1",
-                      },
-                    ].map((field) => (
-                      <div className={styles.fieldGroup} key={field.id}>
-                        <label htmlFor={field.id}>{field.label}</label>
-                        <input
-                          id={field.id}
-                          value={field.value}
-                          autoComplete={field.autoComplete}
-                          aria-invalid={Boolean(field.error)}
-                          aria-describedby={field.error ? `${field.id}-error` : undefined}
-                          onChange={(event) => {
-                            field.setter(event.target.value);
-                            clearFieldError(
-                              field.id.replace("delivery-", "") as keyof typeof errors
-                            );
-                          }}
-                        />
-                        {field.error ? (
-                          <p id={`${field.id}-error`} className={styles.fieldError}>
-                            {field.error}
-                          </p>
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : null}
-
-                <div className={styles.fieldGroup}>
-                  <label htmlFor="delivery-notes">Delivery or collection notes optional</label>
-                  <textarea
-                    id="delivery-notes"
-                    value={deliveryNotes}
-                    placeholder="Gate code, preferred pickup time, or anything the team should know"
-                    onChange={(event) => setDeliveryNotes(event.target.value)}
-                  />
-                </div>
-              </div>
+              <FulfilmentStep
+                fulfilmentOption={fulfilmentOption}
+                setFulfilmentOption={setFulfilmentOption}
+                address={address}
+                setAddress={setAddress}
+                suburb={suburb}
+                setSuburb={setSuburb}
+                city={city}
+                setCity={setCity}
+                province={province}
+                setProvince={setProvince}
+                deliveryNotes={deliveryNotes}
+                setDeliveryNotes={setDeliveryNotes}
+                errors={errors}
+                clearFieldError={clearFieldError}
+              />
             ) : null}
 
             {currentStep.id === "confirm" ? (
-              <div className={styles.confirmGrid}>
-                <ReviewBlock title="Pack" onEdit={() => goToStep(0)}>
-                  <strong>{selectedPackTitle}</strong>
-                  <span>
-                    {schoolName ?? "School to confirm"} · {gradeName ?? "Grade to confirm"} ·{" "}
-                    {itemCount || "Confirming"} items
-                  </span>
-                </ReviewBlock>
-                <ReviewBlock title="Customer" onEdit={() => goToStep(1)}>
-                  <strong>{buyerName || "Name required"}</strong>
-                  <span>
-                    {buyerPhone || "Phone required"} · {buyerEmail || "Email required"}
-                  </span>
-                </ReviewBlock>
-                <ReviewBlock title="Delivery / Collection" onEdit={() => goToStep(2)}>
-                  <strong>{fulfilmentOption}</strong>
-                  <span>
-                    {fulfilmentOption === "Home delivery"
-                      ? [address, suburb, city, province].filter(Boolean).join(", ") ||
-                        "Address required"
-                      : "PexPacks will confirm the handover details."}
-                  </span>
-                </ReviewBlock>
-                <ReviewBlock title="Estimated total">
-                  <strong>
-                    {typeof estimatedTotal === "number"
-                      ? formatCurrency(estimatedTotal)
-                      : "To be confirmed"}
-                  </strong>
-                  <span>Final amount will be confirmed before payment.</span>
-                </ReviewBlock>
-                <label className={`${styles.consentField} ${styles.finalConsent}`}>
-                  <input
-                    name="finalConfirmation"
-                    type="checkbox"
-                    checked={finalConfirmation}
-                    aria-describedby={
-                      errors.finalConfirmation ? "final-confirmation-error" : undefined
-                    }
-                    aria-invalid={Boolean(errors.finalConfirmation)}
-                    onChange={(event) => {
-                      setFinalConfirmation(event.target.checked);
-                      clearFieldError("finalConfirmation");
-                    }}
-                  />
-                  <span>
-                    I confirm the order details are correct and agree to the{" "}
-                    <Link href="/terms">Terms</Link>,{" "}
-                    <Link href="/privacy-policy">Privacy Policy</Link>,{" "}
-                    <Link href="/delivery-policy">Delivery Policy</Link>, and{" "}
-                    <Link href="/returns-refunds-policy">
-                      Returns & Refunds Policy
-                    </Link>
-                    .
-                  </span>
-                </label>
-                {errors.finalConfirmation ? (
-                  <p id="final-confirmation-error" className={styles.fieldError}>
-                    {errors.finalConfirmation}
-                  </p>
-                ) : null}
-              </div>
+              <ConfirmStep
+                selectedPackTitle={selectedPackTitle}
+                schoolName={schoolName}
+                gradeName={gradeName}
+                itemCount={itemCount}
+                buyerName={buyerName}
+                buyerPhone={buyerPhone}
+                buyerEmail={buyerEmail}
+                fulfilmentOption={fulfilmentOption}
+                address={address}
+                suburb={suburb}
+                city={city}
+                province={province}
+                estimatedTotal={estimatedTotal}
+                finalConfirmation={finalConfirmation}
+                setFinalConfirmation={setFinalConfirmation}
+                errors={errors}
+                clearFieldError={clearFieldError}
+                goToStep={goToStep}
+              />
             ) : null}
 
             {currentStep.id === "submit" ? (
-              <div className={styles.submitStep}>
-                {submitStatus?.success ? (
-                  <div className={styles.successCard} role="status" aria-live="polite">
-                    <span className={styles.successIcon}>✓</span>
-                    <p className={styles.confirmKicker}>Order request received</p>
-                    <h3>Thank you. We have your request.</h3>
-                    <p>
-                      The PexPacks team will contact you to confirm availability,
-                      payment, packing and delivery details.
-                    </p>
-                    <dl className={styles.successDetails}>
-                      <div>
-                        <dt>Reference</dt>
-                        <dd>{orderReference}</dd>
-                      </div>
-                      <div>
-                        <dt>Pack</dt>
-                        <dd>{selectedPackTitle}</dd>
-                      </div>
-                      <div>
-                        <dt>Contact method</dt>
-                        <dd>{preferredContactMethod}</dd>
-                      </div>
-                    </dl>
-                    <div className={styles.successActions}>
-                      <Button href="/" variant="secondary">Back to Home</Button>
-                      <Button href="/schools">Find another pack</Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className={styles.paymentReadyCard}>
-                    <p className={styles.confirmKicker}>Payment readiness</p>
-                    <h3>Submit your order request</h3>
-                    <p>
-                      Online payment is not taken on this page yet. PexPacks will
-                      confirm the final amount, invoice or payment instructions
-                      before any payment is due.
-                    </p>
-                    <ul>
-                      <li>Secure order request</li>
-                      <li>Final price confirmed before payment</li>
-                      <li>WhatsApp support available</li>
-                    </ul>
-                    {submitStatus && !submitStatus.success ? (
-                      <p className={styles.formStatusError} role="alert">
-                        {submitStatus.message}
-                      </p>
-                    ) : null}
-                  </div>
-                )}
-              </div>
+              <SubmitStep
+                submitStatus={submitStatus}
+                submitError={submitError}
+                orderReference={orderReference}
+                selectedPackTitle={selectedPackTitle}
+                preferredContactMethod={preferredContactMethod}
+              />
             ) : null}
 
             <label className={styles.honeypot} aria-hidden="true">
@@ -1441,7 +800,14 @@ export function OrderForm({
       </div>
 
       {!submitStatus?.success ? (
-        <div className={styles.mobileStickyCta}>
+        <div
+          className={[
+            styles.mobileStickyCta,
+            isFooterVisible ? styles.hiddenCta : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
           <Button
             type="button"
             onClick={currentStep.id === "submit" ? submitOrder : continueOrder}
@@ -1452,152 +818,5 @@ export function OrderForm({
         </div>
       ) : null}
     </section>
-  );
-}
-
-function CheckoutNavigation({
-  activeStep,
-  primaryLabel,
-  primaryDisabled,
-  onBack,
-  onPrimary,
-}: {
-  activeStep: number;
-  primaryLabel: string;
-  primaryDisabled: boolean;
-  onBack: () => void;
-  onPrimary: () => void;
-}) {
-  return (
-    <div className={styles.formActions}>
-      <button type="button" onClick={onBack} disabled={activeStep === 0}>
-        Back
-      </button>
-      <Button type="button" onClick={onPrimary} disabled={primaryDisabled}>
-        {primaryLabel}
-      </Button>
-    </div>
-  );
-}
-
-function ReviewBlock({
-  title,
-  children,
-  onEdit,
-}: {
-  title: string;
-  children: ReactNode;
-  onEdit?: () => void;
-}) {
-  return (
-    <section className={styles.reviewBlock}>
-      <div>
-        <p>{title}</p>
-        {children}
-      </div>
-      {onEdit ? (
-        <button type="button" onClick={onEdit}>
-          Edit
-        </button>
-      ) : null}
-    </section>
-  );
-}
-
-function OrderSummary({
-  packName,
-  schoolName,
-  gradeName,
-  packKind,
-  itemCount,
-  estimatedTotal,
-  fulfilmentOption,
-  supportHref,
-  summaryOpen,
-  setSummaryOpen,
-  hasPexcover,
-}: {
-  packName: string;
-  schoolName?: string;
-  gradeName?: string;
-  packKind: string;
-  itemCount: number;
-  estimatedTotal?: number;
-  fulfilmentOption: FulfilmentOption;
-  supportHref: string;
-  summaryOpen: boolean;
-  setSummaryOpen: (open: boolean) => void;
-  hasPexcover?: boolean;
-}) {
-  return (
-    <aside className={styles.summaryColumn} aria-label="Order summary">
-      <button
-        className={styles.summaryToggle}
-        type="button"
-        aria-expanded={summaryOpen}
-        onClick={() => setSummaryOpen(!summaryOpen)}
-      >
-        <span>
-          {gradeName ?? "Pack"} · {itemCount || "Confirming"} items ·{" "}
-          {typeof estimatedTotal === "number"
-            ? formatCurrency(estimatedTotal)
-            : "Total TBC"}
-        </span>
-        <strong>{summaryOpen ? "Hide" : "View summary"}</strong>
-      </button>
-      <div
-        className={`${styles.summaryCard} ${summaryOpen ? styles.summaryCardOpen : ""}`}
-      >
-        <p className={styles.confirmKicker}>Your pack</p>
-        <h2>{packName}</h2>
-        <div className={styles.summaryMeta}>
-          <span>{schoolName ?? "School to confirm"}</span>
-          <span>{gradeName ?? "Grade to confirm"}</span>
-          <span>{packKind}</span>
-        </div>
-        <dl className={styles.priceSummary}>
-          <div>
-            <dt>Selected items</dt>
-            <dd>{itemCount || "Confirming"}</dd>
-          </div>
-          {hasPexcover ? (
-            <div style={{ color: "var(--pex-keppel)", fontWeight: 700 }}>
-              <dt>Pexcover book covering</dt>
-              <dd>+ {formatCurrency(PEXCOVER_PRICE)}</dd>
-            </div>
-          ) : null}
-          <div>
-            <dt>Delivery / collection</dt>
-            <dd>{fulfilmentOption}</dd>
-          </div>
-          <div>
-            <dt>Estimated total</dt>
-            <dd>
-              {typeof estimatedTotal === "number"
-                ? formatCurrency(estimatedTotal)
-                : "To be confirmed"}
-            </dd>
-          </div>
-        </dl>
-        <p className={styles.summaryNote}>
-          Final amount will be confirmed before payment. No online payment is
-          taken on this page.
-        </p>
-        <ul className={styles.trustList}>
-          <li>Packed according to the school list</li>
-          <li>Customisable before submission</li>
-          <li>Privacy-aware order request</li>
-        </ul>
-        {supportHref ? (
-          <a className={styles.supportLink} href={supportHref}>
-            Need help? Chat to PexPacks
-          </a>
-        ) : (
-          <a className={styles.supportLink} href={ordersEmailHref}>
-            Need help? Email {ordersEmail}
-          </a>
-        )}
-      </div>
-    </aside>
   );
 }

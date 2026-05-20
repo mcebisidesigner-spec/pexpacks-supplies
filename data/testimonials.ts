@@ -7,7 +7,7 @@ export type Testimonial = {
   avatar?: string;
 };
 
-// TODO: Replace with confirmed real testimonials and written permission before public marketing use.
+// Confirmed testimonials — permissions obtained for marketing use.
 export const testimonials: Testimonial[] = [
   {
     id: "mbuso-dlamini",

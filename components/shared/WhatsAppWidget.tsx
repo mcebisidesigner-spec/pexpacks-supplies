@@ -1,75 +1,23 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { buildWhatsAppHref } from "@/data/contact";
 import styles from "./WhatsAppWidget.module.css";
 
 export function WhatsAppWidget() {
-  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isPageSurfaceVisible, setIsPageSurfaceVisible] = useState(true);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
+  if (!mounted) return null;
 
-    let frame = 0;
-    let observer: IntersectionObserver | undefined;
-    const footer = document.getElementById("site-footer");
-    const main = document.getElementById("site-main");
-    const hero = main?.querySelector("section");
-
-    function isVisible(element: Element | null | undefined) {
-      if (!element) return false;
-
-      const rect = element.getBoundingClientRect();
-      return rect.top < window.innerHeight && rect.bottom > 0;
-    }
-
-    function updateVisibility() {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        const shouldHide = isVisible(hero) || isVisible(footer);
-        setIsPageSurfaceVisible(shouldHide);
-
-        if (shouldHide) {
-          setIsOpen(false);
-        }
-      });
-    }
-
-    if (hero || footer) {
-      observer = new IntersectionObserver(updateVisibility, {
-        rootMargin: "0px",
-        threshold: [0, 0.01, 1],
-      });
-      if (hero) observer.observe(hero);
-      if (footer) observer.observe(footer);
-    }
-
-    updateVisibility();
-    window.addEventListener("scroll", updateVisibility, { passive: true });
-    window.addEventListener("resize", updateVisibility);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", updateVisibility);
-      window.removeEventListener("resize", updateVisibility);
-      observer?.disconnect();
-    };
-  }, [mounted, pathname]);
-
-  if (!mounted || isPageSurfaceVisible) return null;
-
-  const whatsappNumber = "27780036048";
-  const defaultMessage = encodeURIComponent(
+  const waUrl = buildWhatsAppHref(
     "Hi Pexpacks, I need some help with my stationery pack."
   );
-  const waUrl = `https://wa.me/${whatsappNumber}?text=${defaultMessage}`;
+  if (!waUrl) return null;
 
   return (
     <div className={styles.widgetContainer}>

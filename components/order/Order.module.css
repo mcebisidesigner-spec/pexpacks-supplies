@@ -932,6 +932,13 @@
     background: rgba(255, 255, 255, 0.92);
     border-top: var(--surface-border-soft);
     backdrop-filter: blur(12px);
+    transition: transform var(--motion-duration) var(--motion-ease), opacity var(--motion-duration) var(--motion-ease);
+  }
+
+  .hiddenCta {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
   }
 
   .mobileStickyCta > * {

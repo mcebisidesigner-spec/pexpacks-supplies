@@ -2,9 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { School } from "@/data/schools";
-import page from "@/styles/Page.module.css";
-import { GradeSelector } from "./GradeSelector";
-import { MultiLearnerBanner } from "./MultiLearnerBanner";
 import { ViralReferralBanner } from "./ViralReferralBanner";
 import styles from "./SchoolReferralPrompt.module.css";
 
@@ -16,16 +13,10 @@ const POPUP_DELAY_MS = 5000;
 
 export function SchoolReferralPrompt({ school }: SchoolReferralPromptProps) {
   const bannerRef = useRef<HTMLDivElement | null>(null);
-  const [hasChosenGrade, setHasChosenGrade] = useState(false);
   const [hasReachedBanner, setHasReachedBanner] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupDismissed, setIsPopupDismissed] = useState(false);
   const shouldPrompt = school.grades.length > 0;
-
-  const handleGradeIntent = useCallback(() => {
-    setHasChosenGrade(true);
-    setIsPopupOpen(false);
-  }, []);
 
   const closePopup = useCallback(() => {
     setIsPopupOpen(false);
@@ -63,7 +54,6 @@ export function SchoolReferralPrompt({ school }: SchoolReferralPromptProps) {
   useEffect(() => {
     if (
       !shouldPrompt ||
-      hasChosenGrade ||
       hasReachedBanner ||
       isPopupDismissed ||
       isPopupOpen
@@ -79,7 +69,6 @@ export function SchoolReferralPrompt({ school }: SchoolReferralPromptProps) {
       window.clearTimeout(timer);
     };
   }, [
-    hasChosenGrade,
     hasReachedBanner,
     isPopupDismissed,
     isPopupOpen,
@@ -88,13 +77,6 @@ export function SchoolReferralPrompt({ school }: SchoolReferralPromptProps) {
 
   return (
     <>
-      <section className={page.section}>
-        <div className={page.sectionInner}>
-          {school.grades.length > 1 ? <MultiLearnerBanner /> : null}
-          <GradeSelector school={school} onGradeIntent={handleGradeIntent} />
-        </div>
-      </section>
-
       <div ref={bannerRef} className={styles.inlineBanner}>
         <ViralReferralBanner />
       </div>

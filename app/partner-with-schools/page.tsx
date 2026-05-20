@@ -5,7 +5,8 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { SchoolMockupDemo } from "@/components/marketing/SchoolMockupDemo";
 import { buildMetadata } from "@/lib/seo";
-import styles from "@/components/marketing/Marketing.module.css";
+import marketingStyles from "@/components/marketing/Marketing.module.css";
+import pageStyles from "./PartnerWithSchools.module.css";
 
 const schoolBenefits = [
   "Custom domain connection (e.g., yourschool.co.za)",
@@ -72,7 +73,7 @@ export default function PartnerWithSchoolsPage() {
         panelText="School Web Package Value"
         panelTitle="R35,000 / year"
       >
-        <div className={styles.buttonRow}>
+        <div className={marketingStyles.buttonRow}>
           <Button href="#partner-form">Get Started</Button>
           <Button href="#how-it-works" variant="white">
             How It Works
@@ -81,25 +82,25 @@ export default function PartnerWithSchoolsPage() {
       </PageHero>
 
       {/* The Hook Detail Section */}
-      <section className={styles.section}>
-        <div className={styles.inner}>
+      <section className={marketingStyles.section}>
+        <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Zero Cost Web Development"
             title="Professional Web Design & Hosting, On Us"
             text="We handle the design, server management, security, and updates. You get a modern online hub for your community."
           />
-          <div className={styles.splitBand}>
+          <div className={marketingStyles.splitBand}>
             <div>
-              <p className={styles.sectionEyebrow}>Fully Managed Package</p>
+              <p className={marketingStyles.sectionEyebrow}>Fully Managed Package</p>
               <h2>Everything your school needs online</h2>
               <p>
                 From custom domain routing to mobile responsiveness, our free website package matches premium agency designs. All we ask is that you list Pexpacks as your official stationery box supplier for parents.
               </p>
-              <div className={styles.buttonRow} style={{ marginTop: "24px" }}>
+              <div className={`${marketingStyles.buttonRow} ${pageStyles.buttonRowMargin}`}>
                 <Button href="#partner-form">Apply for Partnership</Button>
               </div>
             </div>
-            <ul className={styles.checkList}>
+            <ul className={marketingStyles.checkList}>
               {schoolBenefits.map((benefit) => (
                 <li key={benefit}>{benefit}</li>
               ))}
@@ -109,8 +110,8 @@ export default function PartnerWithSchoolsPage() {
       </section>
 
       {/* Realistic Interactive Mockup Section */}
-      <section className={styles.section} style={{ paddingTop: 0 }}>
-        <div className={styles.inner}>
+      <section className={`${marketingStyles.section} ${pageStyles.sectionNoPaddingTop}`}>
+        <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Interactive Demo"
             title="Experience Your Future School Website"
@@ -121,18 +122,18 @@ export default function PartnerWithSchoolsPage() {
       </section>
 
       {/* Website Features Grid */}
-      <section className={styles.sectionCream}>
-        <div className={styles.inner}>
+      <section className={marketingStyles.sectionCream}>
+        <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Website Features"
             title="Built for modern schools"
             text="Explore the modules built into our custom school websites to help you engage with your community."
           />
-          <div className={styles.infoGrid}>
+          <div className={marketingStyles.infoGrid}>
             {websiteFeatures.map((feat) => (
-              <article className={styles.infoCard} key={feat.title}>
-                <h3 style={{ margin: "0 0 10px 0", color: "var(--pex-navy)", fontWeight: 800 }}>{feat.title}</h3>
-                <p style={{ margin: 0, fontSize: "15px", color: "var(--pex-text-muted)", lineHeight: 1.5 }}>
+              <article className={marketingStyles.infoCard} key={feat.title}>
+                <h3 className={pageStyles.featureCardTitle}>{feat.title}</h3>
+                <p className={pageStyles.featureCardDesc}>
                   {feat.desc}
                 </p>
               </article>
@@ -142,20 +143,20 @@ export default function PartnerWithSchoolsPage() {
       </section>
 
       {/* Mutual Benefit Section */}
-      <section className={styles.section}>
-        <div className={styles.inner}>
+      <section className={marketingStyles.section}>
+        <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="The Mutual Benefit"
             title="A partnership that works for everyone"
             text="Pexpacks removes the admin burden of list compiling, while giving schools a premier digital identity."
           />
-          <div className={styles.infoGrid}>
+          <div className={marketingStyles.infoGrid}>
             {mutualBenefits.map((benefit) => (
-              <div key={benefit.title} className={styles.heroPanel} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <h3 style={{ margin: 0, color: "var(--pex-primary)", fontSize: "22px", fontWeight: 800 }}>{benefit.title}</h3>
-                <ul className={styles.checkList}>
+              <div key={benefit.title} className={`${marketingStyles.heroPanel} ${pageStyles.benefitPanel}`}>
+                <h3 className={pageStyles.benefitTitle}>{benefit.title}</h3>
+                <ul className={marketingStyles.checkList}>
                   {benefit.list.map((item, idx) => (
-                    <li key={idx} style={{ fontSize: "15px", fontWeight: "normal", color: "var(--pex-text)" }}>{item}</li>
+                    <li key={idx} className={pageStyles.benefitListItem}>{item}</li>
                   ))}
                 </ul>
               </div>
@@ -165,37 +166,37 @@ export default function PartnerWithSchoolsPage() {
       </section>
 
       {/* How it Works steps */}
-      <section className={styles.sectionCream} id="how-it-works">
-        <div className={styles.inner}>
+      <section className={marketingStyles.sectionCream} id="how-it-works">
+        <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Simple setup"
             title="Launch in 4 simple steps"
             text="Our team handles the transition process from start to finish."
           />
-          <div className={styles.packageClaimLayout}>
-            <div className={styles.packageClaimSummary} style={{ gridColumn: "1 / -1", position: "static" }}>
-              <ol style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "24px" }}>
-                <li style={{ counterIncrement: "list-item 1" }}>
-                  <h4 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: 800 }}>1. Submit Request</h4>
-                  <p style={{ margin: 0, fontSize: "14px", color: "var(--pex-text-muted)", fontWeight: "normal" }}>
+          <div className={marketingStyles.packageClaimLayout}>
+            <div className={marketingStyles.packageClaimSummary}>
+              <ol className={pageStyles.stepsGrid}>
+                <li className={pageStyles.stepItem}>
+                  <h4 className={pageStyles.stepTitle}>1. Submit Request</h4>
+                  <p className={pageStyles.stepDesc}>
                     Fill out the form below with your school details and contact information.
                   </p>
                 </li>
-                <li style={{ counterIncrement: "list-item 1" }}>
-                  <h4 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: 800 }}>2. Share Stationery Lists</h4>
-                  <p style={{ margin: 0, fontSize: "14px", color: "var(--pex-text-muted)", fontWeight: "normal" }}>
+                <li className={pageStyles.stepItem}>
+                  <h4 className={pageStyles.stepTitle}>2. Share Stationery Lists</h4>
+                  <p className={pageStyles.stepDesc}>
                     Provide your approved grade lists. We digitize them and build custom pack configurations.
                   </p>
                 </li>
-                <li style={{ counterIncrement: "list-item 1" }}>
-                  <h4 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: 800 }}>3. Website & Store Setup</h4>
-                  <p style={{ margin: 0, fontSize: "14px", color: "var(--pex-text-muted)", fontWeight: "normal" }}>
+                <li className={pageStyles.stepItem}>
+                  <h4 className={pageStyles.stepTitle}>3. Website & Store Setup</h4>
+                  <p className={pageStyles.stepDesc}>
                     We design your brand new school website, secure domain connection, and launch the parent store.
                   </p>
                 </li>
-                <li style={{ counterIncrement: "list-item 1" }}>
-                  <h4 style={{ margin: "0 0 8px 0", fontSize: "17px", fontWeight: 800 }}>4. Launch & Earn Rebates</h4>
-                  <p style={{ margin: 0, fontSize: "14px", color: "var(--pex-text-muted)", fontWeight: "normal" }}>
+                <li className={pageStyles.stepItem}>
+                  <h4 className={pageStyles.stepTitle}>4. Launch & Earn Rebates</h4>
+                  <p className={pageStyles.stepDesc}>
                     Parents order hassle-free. Your school receives annual development fund checks on all orders.
                   </p>
                 </li>
@@ -206,17 +207,17 @@ export default function PartnerWithSchoolsPage() {
       </section>
 
       {/* Supplier Section (Secondary) */}
-      <section className={styles.section}>
-        <div className={styles.inner}>
-          <div className={styles.splitBand} style={{ background: "var(--pex-bg-warm)", border: "none" }}>
+      <section className={marketingStyles.section}>
+        <div className={marketingStyles.inner}>
+          <div className={`${marketingStyles.splitBand} ${pageStyles.supplierPanel}`}>
             <div>
-              <p className={styles.sectionEyebrow}>Supplier Network</p>
+              <p className={marketingStyles.sectionEyebrow}>Supplier Network</p>
               <h2>Are you a stationery distributor?</h2>
               <p>
                 Pexpacks partners with reliable stationery suppliers in Gauteng to source certified quality brands in bulk. Join our distribution network to quote on recurring seasonal volume.
               </p>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div className={pageStyles.supplierAction}>
               <Button href="#partner-form">Join as Supplier</Button>
             </div>
           </div>
@@ -224,8 +225,8 @@ export default function PartnerWithSchoolsPage() {
       </section>
 
       {/* Enquiry Form */}
-      <section className={styles.sectionCream} id="partner-form">
-        <div className={styles.inner}>
+      <section className={marketingStyles.sectionCream} id="partner-form">
+        <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Partnership Enquiry"
             title="Start your partnership today"

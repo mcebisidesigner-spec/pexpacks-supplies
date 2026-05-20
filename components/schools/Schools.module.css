@@ -683,7 +683,7 @@
 }
 
 .gradeSelector {
-  margin-top: 46px;
+  margin-top: 24px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
@@ -807,32 +807,32 @@
   margin: 0 auto;
   padding-inline: var(--gutter-desktop);
   display: grid;
-  grid-template-columns: 1fr 0.82fr;
-  gap: 42px;
+  grid-template-columns: 1fr 0.72fr;
+  gap: 28px;
   align-items: start;
 }
 
 .gradeDetails h1 {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: clamp(42px, 6.4vw, 76px);
+  font-size: clamp(32px, 4.5vw, 52px);
   font-weight: 800;
-  line-height: 0.98;
+  line-height: 1;
   letter-spacing: 0;
 }
 
 .gradeDetails p {
-  font-size: 19px;
-  line-height: 1.35;
+  font-size: 16px;
+  line-height: 1.45;
 }
 
 .gradeActionPanel {
-  margin-top: 26px;
+  margin-top: 16px;
 }
 
 .deliveryPanel {
-  margin-top: 24px;
-  padding: 18px 20px;
+  margin-top: 16px;
+  padding: 14px 18px;
   border: 1px solid rgba(33, 158, 154, 0.2);
   border-radius: var(--radius-card);
   background: rgba(33, 158, 154, 0.07);
@@ -843,45 +843,48 @@
 }
 
 .kicker {
-  margin: 0 0 20px;
+  margin: 0 0 12px;
   color: var(--pex-keppel);
   font-weight: 800;
 }
 
 .contentsCard .kicker {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: var(--pex-keppel);
   font-size: 14px;
   line-height: 1.2;
 }
 
 .price {
-  margin: 28px 0;
-  font-size: 44px !important;
+  margin: 16px 0;
+  font-size: 32px !important;
   font-weight: 800;
 }
 
 .contentsCard {
   scroll-margin-top: 96px;
-  padding: 34px;
+  padding: 24px;
   border: var(--card-border);
-  border-radius: var(--radius-section);
+  border-radius: var(--radius-card);
   background: var(--card-bg);
   box-shadow: var(--card-shadow);
+  position: sticky;
+  top: calc(var(--header-height-desktop) + 24px);
 }
 
 .contentsCard h2 {
-  margin: 0 0 20px;
-  font-size: 30px;
+  margin: 0 0 14px;
+  font-size: 22px;
 }
 
 .contentsCard ul {
-  margin: 0 0 30px;
+  margin: 0 0 16px;
   padding-left: 20px;
 }
 
 .contentsCard li {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-size: 15px;
 }
 
 /* ═══ Strategy 3.2: Verified Badge ═══ */
@@ -890,8 +893,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 16px;
-  padding: 8px 14px;
+  margin-bottom: 10px;
+  padding: 7px 12px;
   border-radius: var(--radius-pill);
   background: rgba(33, 158, 154, 0.08);
   color: var(--pex-keppel);
@@ -910,13 +913,13 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 20px;
-  padding: 10px 16px;
+  margin-bottom: 14px;
+  padding: 8px 14px;
   border-radius: var(--radius-card);
   background: rgba(244, 124, 106, 0.08);
   border: 1px solid rgba(244, 124, 106, 0.2);
   color: var(--pex-coral);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -1026,8 +1029,8 @@
 /* ═══ Strategy 4.2: Share section spacing on grade page ═══ */
 
 .shareSection {
-  margin-top: 24px;
-  margin-bottom: 8px;
+  margin-top: 16px;
+  margin-bottom: 4px;
 }
 
 
@@ -1213,6 +1216,10 @@
   .searchPanel,
   .gradeDetails {
     padding-inline: var(--gutter-mobile);
+  }
+
+  .contentsCard {
+    position: static;
   }
 
   .filters {

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
-import styles from "./Schools.module.css";
+import styles from "./FeaturedSchools.module.css";
 
 function gradeRangeLabel(grades: string[]) {
   if (grades.length === 0) {

@@ -137,23 +137,24 @@ export function Footer() {
             </a>
           </p>
 
-          <div className={styles.footerActions}>
+          <div className={styles.pwaWrapper}>
             <PwaInstallButton />
-            <nav className={styles.socialNav} aria-label="Social media">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className={styles.socialLink}
-                  aria-label={link.label}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <SocialIcon icon={link.icon} />
-                </a>
-              ))}
-            </nav>
           </div>
+
+          <nav className={styles.socialNav} aria-label="Social media">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className={styles.socialLink}
+                aria-label={link.label}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SocialIcon icon={link.icon} />
+              </a>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>

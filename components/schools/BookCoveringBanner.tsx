@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "./Schools.module.css";
+import styles from "./BookCoveringBanner.module.css";
 import { Button } from "@/components/ui/Button";
 
 export function BookCoveringBanner() {
