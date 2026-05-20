@@ -945,7 +945,14 @@ export function OrderForm({
                     <h3>Pexcover book covering</h3>
                     <p>
                       Add covered and labelled exercise books to help the pack
-                      arrive ready for the first school day.
+                      arrive ready for the first school day.{" "}
+                      <Link
+                        href="/blog/what-is-pexcover-book-covering"
+                        className={styles.inlineAction}
+                        style={{ display: "inline", fontSize: "inherit" }}
+                      >
+                        Read more
+                      </Link>
                     </p>
                   </div>
                   <label className={styles.addonCheckbox}>
