@@ -924,14 +924,12 @@ export function OrderForm({
                   <Link
                     className={styles.inlineAction}
                     href={
-                      standardSelection
-                        ? `/${standardSelection.phaseSlug}`
-                        : selectedSchool && selectedGrade
-                          ? `/schools/${selectedSchool.slug}/${selectedGrade.gradeSlug}`
-                          : "/schools"
+                      selectedSchool
+                        ? `/schools/${selectedSchool.slug}`
+                        : "/schools"
                     }
                   >
-                    Edit or customise pack
+                    Customise pack
                   </Link>
                 </div>
 
