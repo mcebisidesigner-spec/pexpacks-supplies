@@ -1421,6 +1421,7 @@ export function OrderForm({
           supportHref={supportHref}
           summaryOpen={summaryOpen}
           setSummaryOpen={setSummaryOpen}
+          hasPexcover={hasPexcover}
         />
       </div>
 
@@ -1499,6 +1500,7 @@ function OrderSummary({
   supportHref,
   summaryOpen,
   setSummaryOpen,
+  hasPexcover,
 }: {
   packName: string;
   schoolName?: string;
@@ -1510,6 +1512,7 @@ function OrderSummary({
   supportHref: string;
   summaryOpen: boolean;
   setSummaryOpen: (open: boolean) => void;
+  hasPexcover?: boolean;
 }) {
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">
@@ -1542,6 +1545,12 @@ function OrderSummary({
             <dt>Selected items</dt>
             <dd>{itemCount || "Confirming"}</dd>
           </div>
+          {hasPexcover ? (
+            <div style={{ color: "var(--pex-keppel)", fontWeight: 700 }}>
+              <dt>Pexcover book covering</dt>
+              <dd>+ {formatCurrency(PEXCOVER_PRICE)}</dd>
+            </div>
+          ) : null}
           <div>
             <dt>Delivery / collection</dt>
             <dd>{fulfilmentOption}</dd>
