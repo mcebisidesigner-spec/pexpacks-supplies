@@ -943,8 +943,7 @@ export function OrderForm({
                     <h3>Pexcover book covering</h3>
                     <p>
                       Add covered and labelled exercise books to help the pack
-                      arrive ready for the first school day. Pexcover applies to
-                      exercise books included in the selected school pack.{" "}
+                      arrive ready for the first school day.{" "}
                       <Link
                         href="/blog/what-is-pexcover-book-covering"
                         className={styles.inlineAction}
@@ -952,6 +951,9 @@ export function OrderForm({
                       >
                         Read more
                       </Link>
+                    </p>
+                    <p style={{ margin: "6px 0 0 0", fontSize: "12px", color: "var(--pex-text-muted)", lineHeight: 1.45 }}>
+                      Pexcover applies to exercise books included in the selected school pack.
                     </p>
                   </div>
                   <label className={styles.addonCheckbox}>
