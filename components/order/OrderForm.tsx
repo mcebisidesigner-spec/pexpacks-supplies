@@ -1034,6 +1034,7 @@ export function OrderForm({
                     id="buyer-name"
                     name="fullName"
                     autoComplete="name"
+                    placeholder="e.g. Sarah Dlamini"
                     value={buyerName}
                     aria-describedby={`buyer-name-helper${errors.buyerName ? " buyer-name-error" : ""}`}
                     aria-invalid={Boolean(errors.buyerName)}
@@ -1111,6 +1112,7 @@ export function OrderForm({
                     id="learner-name"
                     name="learnerName"
                     autoComplete="off"
+                    placeholder="e.g. Leo Dlamini"
                     value={learnerName}
                     aria-describedby="learner-name-helper"
                     onChange={(event) => setLearnerName(event.target.value)}
