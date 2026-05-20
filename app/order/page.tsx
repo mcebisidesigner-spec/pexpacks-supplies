@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { OrderForm } from "@/components/order/OrderForm";
-import { PageHero } from "@/components/marketing/PageHero";
-import { ordersEmail, phoneNumber } from "@/data/contact";
+import { orderWhatsAppHref } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { PexcoverMarquee } from "@/components/order/PexcoverMarquee";
 import { faqs } from "@/data/faqs";
+import orderStyles from "@/components/order/Order.module.css";
 import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
@@ -36,21 +37,29 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
 
   return (
     <>
-      <PageHero
-        eyebrow="Order now"
-        title="Order your ready-to-use pack"
-        text="Select school, choose grade, confirm the pack and send your order details."
-        panelTitle="Order Support"
-        panelText={`Email ${ordersEmail} or call ${phoneNumber}`}
-      />
-      <section className={page.section}>
-        <div
-          style={{
-            maxWidth: "var(--layout-max-width)",
-            margin: "0 auto",
-            paddingInline: "var(--gutter-desktop)",
-          }}
-        >
+      <section className={orderStyles.checkoutHero}>
+        <div className={orderStyles.checkoutHeroInner}>
+          <div>
+            <Link href="/schools" className={orderStyles.backLink}>
+              Back to packs
+            </Link>
+            <h1>Complete your stationery order</h1>
+            <p>
+              Review your pack, share the details PexPacks needs, choose
+              delivery or collection, and submit a secure order request.
+            </p>
+          </div>
+          <div className={orderStyles.checkoutHeroActions}>
+            {orderWhatsAppHref ? (
+              <a className={orderStyles.helpLink} href={orderWhatsAppHref}>
+                Need help? WhatsApp us
+              </a>
+            ) : null}
+          </div>
+        </div>
+      </section>
+      <section>
+        <div className={page.sectionInner}>
           <PexcoverMarquee />
         </div>
         <OrderForm
