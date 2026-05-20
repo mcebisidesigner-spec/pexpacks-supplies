@@ -3,6 +3,7 @@ import { PartnerForm } from "@/components/forms/PartnerForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { SchoolMockupDemo } from "@/components/marketing/SchoolMockupDemo";
 import { buildMetadata } from "@/lib/seo";
 import styles from "@/components/marketing/Marketing.module.css";
 
@@ -104,6 +105,18 @@ export default function PartnerWithSchoolsPage() {
               ))}
             </ul>
           </div>
+        </div>
+      </section>
+
+      {/* Realistic Interactive Mockup Section */}
+      <section className={styles.section} style={{ paddingTop: 0 }}>
+        <div className={styles.inner}>
+          <SectionHeader
+            eyebrow="Interactive Demo"
+            title="Experience Your Future School Website"
+            text="Below is an authentic preview of the premium websites we design, build, and host for our partner schools. Explore the interactive modules and portal icons."
+          />
+          <SchoolMockupDemo />
         </div>
       </section>
 
