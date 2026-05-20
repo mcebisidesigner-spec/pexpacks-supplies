@@ -1201,8 +1201,20 @@ export function OrderForm({
                 </fieldset>
 
                 {fulfilmentOption === "Home delivery" ? (
-                  <div className={styles.formGrid}>
-                    {[
+                  <>
+                    <p style={{ margin: "0 0 16px 0", fontSize: "14px", color: "var(--pex-text-muted)", lineHeight: 1.5 }}>
+                      Home delivery incurs an additional delivery fee based on your location. Please read our{" "}
+                      <Link
+                        href="/delivery-policy"
+                        className={styles.inlineAction}
+                        style={{ display: "inline", fontSize: "inherit" }}
+                      >
+                        Delivery Policy
+                      </Link>{" "}
+                      for more details on pricing and schedules.
+                    </p>
+                    <div className={styles.formGrid}>
+                      {[
                       {
                         id: "delivery-address",
                         label: "Street address",
@@ -1259,7 +1271,8 @@ export function OrderForm({
                       </div>
                     ))}
                   </div>
-                ) : null}
+                </>
+              ) : null}
 
                 <div className={styles.fieldGroup}>
                   <label htmlFor="delivery-notes">Delivery or collection notes optional</label>
