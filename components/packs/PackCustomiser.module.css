@@ -310,3 +310,115 @@
     width: 100%;
   }
 }
+
+/* ═══ Actions Card Detail Layout (Prototype Redesign) ═══ */
+
+.actionsCard {
+  background: var(--pex-bg);
+  border: 1px solid rgba(26, 42, 64, 0.08);
+  border-radius: 28px;
+  box-shadow: 0 10px 30px rgba(26, 42, 64, 0.04);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px dashed rgba(26, 42, 64, 0.08);
+  padding-bottom: 20px;
+}
+
+.detailPrice {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--pex-primary);
+  line-height: 1;
+}
+
+.viewListLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pex-navy);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: var(--interactive-transition);
+}
+
+.viewListLink:hover {
+  color: var(--pex-keppel);
+}
+
+.detailActionRow {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.detailButton {
+  width: 100% !important;
+  min-height: 54px !important;
+  position: relative !important;
+  justify-content: center !important;
+  font-size: 18px !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+.detailButton > span:first-child {
+  margin: 0 auto;
+}
+
+.detailButton > span:last-child {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.downloadLinkWrapper {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+.downloadLink {
+  color: var(--pex-navy) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--interactive-transition);
+}
+
+.downloadLink:hover {
+  color: var(--pex-keppel) !important;
+}
+
+@media (max-width: 520px) {
+  .actionsCard {
+    padding: 24px;
+    gap: 20px;
+  }
+
+  .priceRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .detailPrice {
+    font-size: 32px;
+  }
+}
+

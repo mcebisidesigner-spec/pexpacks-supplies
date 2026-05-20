@@ -41,12 +41,11 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
         <p className={styles.kicker}>
           Prepared according to the official school list.
         </p>
-        <h1>
+        <h1 className={styles.gradeTitle}>
           {school.name}
           <br />
           {grade.grade} Stationery Pack
         </h1>
-        <p className={styles.price}>{formatCurrency(grade.price)}</p>
 
         {/* Strategy 1.2: Urgency signal */}
         <div className={styles.urgencyBadge}>
@@ -66,12 +65,8 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
           <span>Pre-order now — packs are prepared before school starts</span>
         </div>
 
-        <p>
-          Already have some items? Customise this pack and only buy what your
-          child still needs.
-        </p>
         <div className={styles.gradeActionPanel} id="grade-actions">
-          <GradePackActions pack={pack} />
+          <GradePackActions pack={pack} layout="detail" />
         </div>
 
         {/* Strategy 4.2: Share buttons */}
