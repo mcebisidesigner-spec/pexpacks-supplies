@@ -399,7 +399,47 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
 
-  doc.save(`${safeName}-stationery-list.pdf`);
+  const defaultFilename = `${safeName}-stationery-list.pdf`;
+
+  if (typeof window !== "undefined" && "showSaveFilePicker" in window) {
+    try {
+      const handle = await (window as unknown as {
+        showSaveFilePicker: (options: unknown) => Promise<{
+          createWritable: () => Promise<{
+            write: (data: unknown) => Promise<void>;
+            close: () => Promise<void>;
+          }>;
+        }>;
+      }).showSaveFilePicker({
+        suggestedName: defaultFilename,
+        types: [
+          {
+            description: "PDF Document",
+            accept: {
+              "application/pdf": [".pdf"],
+            },
+          },
+        ],
+      });
+      const writable = await handle.createWritable();
+      const pdfBlob = doc.output("blob");
+      await writable.write(pdfBlob);
+      await writable.close();
+      return;
+    } catch (err: unknown) {
+      if (
+        err &&
+        typeof err === "object" &&
+        "name" in err &&
+        err.name === "AbortError"
+      ) {
+        return;
+      }
+      console.warn("showSaveFilePicker failed, falling back to auto download", err);
+    }
+  }
+
+  doc.save(defaultFilename);
 }
 
 function drawPageFooter(
