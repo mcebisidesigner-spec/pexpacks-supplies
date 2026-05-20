@@ -1156,9 +1156,8 @@ export function OrderForm({
                     {errors.consent}
                   </p>
                 ) : null}
-                <p className={styles.privacyNotice}>
-                  We only use your details to process your PexPacks order and
-                  provide support.
+                <p style={{ fontSize: "12px", color: "var(--pex-text-muted)", lineHeight: 1.45, marginTop: "8px" }}>
+                  I confirm that I am duly authorised to submit the parent or learner-related information and that the information provided is accurate.
                 </p>
               </div>
             ) : null}
