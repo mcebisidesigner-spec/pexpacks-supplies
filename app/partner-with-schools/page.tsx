@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PartnerForm } from "@/components/forms/PartnerForm";
 import { Button } from "@/components/ui/Button";
-import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { SchoolMockupDemo } from "@/components/marketing/SchoolMockupDemo";
 import { SchoolPitchDeck } from "@/components/marketing/SchoolPitchDeck";
@@ -9,31 +9,44 @@ import { buildMetadata } from "@/lib/seo";
 import marketingStyles from "@/components/marketing/Marketing.module.css";
 import pageStyles from "./PartnerWithSchools.module.css";
 
+const pitchStats = [
+  { value: "R35k", label: "website and hosting package value" },
+  { value: "0", label: "setup or monthly school website fees" },
+  { value: "5%", label: "sample development-fund rebate model" },
+];
+
+const pitchFlow = [
+  "See the offer",
+  "Calculate partner value",
+  "Preview the school website",
+  "Apply for partnership",
+];
+
 const schoolBenefits = [
   "Custom domain connection (e.g., yourschool.co.za)",
   "Full website hosting and SSL certificate included free",
   "Dedicated Parent Portal for stationery ordering",
   "News, calendars, and prospectus download sections",
-  "Development fund rebate (percentage of stationery sales)",
+  "Development fund rebate on stationery sales",
   "Zero setup or ongoing maintenance fees",
 ];
 
 const websiteFeatures = [
   {
-    title: "School Brand Customization",
-    desc: "Designed using your school's official badge, colours, and motto for a professional presence.",
+    title: "School Brand Customisation",
+    desc: "Designed around your official badge, colours, motto, and admissions message.",
   },
   {
     title: "Parent Portal Integration",
-    desc: "Parents can select their child's grade and purchase pre-packed stationery kits in under 3 clicks.",
+    desc: "Parents can choose a grade and order pre-packed stationery kits without manual school admin.",
   },
   {
-    title: "Prospectus & Document Downloads",
-    desc: "A secure repository for newsletters, school policy docs, and prospectus downloads.",
+    title: "Prospectus and Document Hub",
+    desc: "Publish newsletters, policies, calendars, prospectus files, and stationery lists in one place.",
   },
   {
-    title: "News & Events Board",
-    desc: "Keep the community updated on sports fixtures, terms dates, and assemblies.",
+    title: "News and Events Board",
+    desc: "Keep families updated on assemblies, term dates, school notices, and sports fixtures.",
   },
 ];
 
@@ -41,73 +54,134 @@ const mutualBenefits = [
   {
     title: "For Your School",
     list: [
-      "Modern, secure web presence to attract new enrolments.",
-      "Zero IT overhead or monthly server subscription costs.",
-      "Stationery admin completely handled by our team.",
-      "Annual development rebate checks on every pack sold.",
+      "Modern, secure web presence to support enrolment confidence.",
+      "No server subscription or maintenance workload.",
+      "Stationery admin handled through the Pexpacks workflow.",
+      "Annual development-fund rebate model on pack sales.",
     ],
   },
   {
     title: "For Your Parents",
     list: [
-      "100% correct items packed according to official grade lists.",
-      "No retail store hopping or long queues in January.",
-      "Secure payment methods including card, instant EFT, and WhatsApp options.",
-      "Direct home delivery or organized bulk drop-off at school.",
+      "Correct stationery items packed from official grade lists.",
+      "Less retail-store hopping and fewer January queues.",
+      "Secure payment options including card, instant EFT, and WhatsApp support.",
+      "Home delivery or organised bulk drop-off at school.",
     ],
+  },
+];
+
+const launchSteps = [
+  {
+    title: "1. Submit Request",
+    desc: "Share school details and the best contact person for the partnership conversation.",
+  },
+  {
+    title: "2. Share Stationery Lists",
+    desc: "Send approved grade lists so Pexpacks can digitise and prepare pack options.",
+  },
+  {
+    title: "3. Website and Store Setup",
+    desc: "We design the school website, connect the parent portal, and prepare launch content.",
+  },
+  {
+    title: "4. Launch and Earn Rebates",
+    desc: "Parents order from the approved path and your school gains measurable partner value.",
   },
 ];
 
 export const metadata: Metadata = buildMetadata(
   "Partner With Pexpacks | Free Website & Hosting for Schools",
   "Designate Pexpacks as your official school stationery partner and get a professional modern website built, hosted, and maintained completely free of charge.",
-  "/partner-with-schools"
+  "/partner-with-schools",
 );
 
 export default function PartnerWithSchoolsPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Exclusive school program"
-        title="A Free Modern Website & Hosting for Your School"
-        text="Upgrade your school's digital presence and streamline stationery list ordering. We will design, build, and host a professional site completely free of charge—while simplifying stationery ordering for parents."
-        panelText="School Web Package Value"
-        panelTitle="R35,000 / year"
-      >
-        <div className={marketingStyles.buttonRow}>
-          <Button href="#pitch-deck">View Pitch Presentation</Button>
-          <Button href="#partner-form" variant="white">
-            Apply Now
-          </Button>
-        </div>
-      </PageHero>
+      <section className={pageStyles.pitchHero}>
+        <div className={pageStyles.pitchHeroInner}>
+          <div className={pageStyles.pitchHeroCopy}>
+            <p className={pageStyles.heroEyebrow}>Exclusive school partner program</p>
+            <h1>A pitch deck schools can understand in minutes.</h1>
+            <p>
+              Pexpacks builds your school a modern website and parent stationery
+              portal at no setup cost. Walk through the offer, calculate the
+              value, preview the experience, and apply when the partnership
+              makes sense.
+            </p>
+            <div className={pageStyles.pitchHeroActions}>
+              <Button href="#pitch-deck" size="lg">
+                Open the pitch deck
+              </Button>
+              <Button href="#interactive-demo" variant="white" size="lg">
+                Preview demo website
+              </Button>
+            </div>
+          </div>
 
-      {/* Interactive Pitch Deck Presentation Section */}
+          <div
+            className={pageStyles.pitchHeroVisual}
+            aria-label="School partnership value summary"
+          >
+            <Image
+              src="/images/hero-school-delivery.webp"
+              alt="Pexpacks school stationery boxes ready for a school delivery"
+              fill
+              priority
+              sizes="(max-width: 820px) 100vw, 44vw"
+            />
+            <div className={pageStyles.heroGlassPanel}>
+              <span>Partner value snapshot</span>
+              <strong>Website + parent ordering + rebate model</strong>
+            </div>
+          </div>
+        </div>
+
+        <div className={pageStyles.pitchStats} aria-label="Partnership highlights">
+          {pitchStats.map((stat) => (
+            <div key={stat.label}>
+              <strong>{stat.value}</strong>
+              <span>{stat.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className={marketingStyles.sectionAlt} id="pitch-deck">
         <div className={marketingStyles.inner}>
-          <SectionHeader
-            eyebrow="Interactive Pitch"
-            title="Explore our school partnership deck"
-            text="Step through our presentation slide deck to see the total financial, admin, and parent convenience benefits for your school."
-          />
+          <div className={pageStyles.flowIntro}>
+            <SectionHeader
+              eyebrow="Interactive Pitch"
+              title="A guided presentation flow for future partners"
+              text="Move through the offer like a sales deck: the promise, the website, the parent portal, the value calculator, and the launch plan."
+            />
+            <ol className={pageStyles.pitchFlow}>
+              {pitchFlow.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ol>
+          </div>
           <SchoolPitchDeck />
         </div>
       </section>
 
-      {/* The Hook Detail Section */}
       <section className={marketingStyles.section}>
         <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Zero Cost Web Development"
-            title="Professional Web Design & Hosting, On Us"
-            text="We handle the design, server management, security, and updates. You get a modern online hub for your community."
+            title="Professional web design and hosting, on us"
+            text="We handle design, server management, security, updates, and the parent ordering path. Your school gets a premium online hub with less admin load."
           />
           <div className={marketingStyles.splitBand}>
             <div>
               <p className={marketingStyles.sectionEyebrow}>Fully Managed Package</p>
               <h2>Everything your school needs online</h2>
               <p>
-                From custom domain routing to mobile responsiveness, our free website package matches premium agency designs. All we ask is that you list Pexpacks as your official stationery box supplier for parents.
+                From domain routing to mobile responsiveness, the website package
+                is built to feel like a professional school platform. The
+                partnership asks that Pexpacks becomes the official stationery
+                pack supplier for parents.
               </p>
               <div className={`${marketingStyles.buttonRow} ${pageStyles.buttonRowMargin}`}>
                 <Button href="#partner-form">Apply for Partnership</Button>
@@ -122,7 +196,6 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      {/* Realistic Interactive Mockup Section */}
       <section
         className={`${marketingStyles.section} ${pageStyles.sectionNoPaddingTop}`}
         id="interactive-demo"
@@ -137,42 +210,43 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      {/* Website Features Grid */}
       <section className={marketingStyles.sectionCream}>
         <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Website Features"
             title="Built for modern schools"
-            text="Explore the modules built into our custom school websites to help you engage with your community."
+            text="The website is designed to be useful immediately: families can find information, school teams can share updates, and parents can order stationery from the correct path."
           />
           <div className={marketingStyles.infoGrid}>
             {websiteFeatures.map((feat) => (
               <article className={marketingStyles.infoCard} key={feat.title}>
                 <h3 className={pageStyles.featureCardTitle}>{feat.title}</h3>
-                <p className={pageStyles.featureCardDesc}>
-                  {feat.desc}
-                </p>
+                <p className={pageStyles.featureCardDesc}>{feat.desc}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Mutual Benefit Section */}
       <section className={marketingStyles.section}>
         <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="The Mutual Benefit"
             title="A partnership that works for everyone"
-            text="Pexpacks removes the admin burden of list compiling, while giving schools a premier digital identity."
+            text="Pexpacks reduces stationery admin for schools while giving parents a simpler, more reliable back-to-school experience."
           />
           <div className={marketingStyles.infoGrid}>
             {mutualBenefits.map((benefit) => (
-              <div key={benefit.title} className={`${marketingStyles.heroPanel} ${pageStyles.benefitPanel}`}>
+              <div
+                key={benefit.title}
+                className={`${marketingStyles.heroPanel} ${pageStyles.benefitPanel}`}
+              >
                 <h3 className={pageStyles.benefitTitle}>{benefit.title}</h3>
                 <ul className={marketingStyles.checkList}>
-                  {benefit.list.map((item, idx) => (
-                    <li key={idx} className={pageStyles.benefitListItem}>{item}</li>
+                  {benefit.list.map((item) => (
+                    <li key={item} className={pageStyles.benefitListItem}>
+                      {item}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -181,72 +255,34 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      {/* How it Works steps */}
       <section className={marketingStyles.sectionCream} id="how-it-works">
         <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Simple setup"
-            title="Launch in 4 simple steps"
-            text="Our team handles the transition process from start to finish."
+            title="Launch in four clear steps"
+            text="The flow is intentionally simple so your team can evaluate the offer, approve the setup, and launch without a heavy IT project."
           />
           <div className={marketingStyles.packageClaimLayout}>
             <div className={marketingStyles.packageClaimSummary}>
               <ol className={pageStyles.stepsGrid}>
-                <li className={pageStyles.stepItem}>
-                  <h4 className={pageStyles.stepTitle}>1. Submit Request</h4>
-                  <p className={pageStyles.stepDesc}>
-                    Fill out the form below with your school details and contact information.
-                  </p>
-                </li>
-                <li className={pageStyles.stepItem}>
-                  <h4 className={pageStyles.stepTitle}>2. Share Stationery Lists</h4>
-                  <p className={pageStyles.stepDesc}>
-                    Provide your approved grade lists. We digitize them and build custom pack configurations.
-                  </p>
-                </li>
-                <li className={pageStyles.stepItem}>
-                  <h4 className={pageStyles.stepTitle}>3. Website & Store Setup</h4>
-                  <p className={pageStyles.stepDesc}>
-                    We design your brand new school website, secure domain connection, and launch the parent store.
-                  </p>
-                </li>
-                <li className={pageStyles.stepItem}>
-                  <h4 className={pageStyles.stepTitle}>4. Launch & Earn Rebates</h4>
-                  <p className={pageStyles.stepDesc}>
-                    Parents order hassle-free. Your school receives annual development fund checks on all orders.
-                  </p>
-                </li>
+                {launchSteps.map((step) => (
+                  <li className={pageStyles.stepItem} key={step.title}>
+                    <h4 className={pageStyles.stepTitle}>{step.title}</h4>
+                    <p className={pageStyles.stepDesc}>{step.desc}</p>
+                  </li>
+                ))}
               </ol>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Supplier Section (Secondary) */}
-      <section className={marketingStyles.section}>
-        <div className={marketingStyles.inner}>
-          <div className={`${marketingStyles.splitBand} ${pageStyles.supplierPanel}`}>
-            <div>
-              <p className={marketingStyles.sectionEyebrow}>Supplier Network</p>
-              <h2>Are you a stationery distributor?</h2>
-              <p>
-                Pexpacks partners with reliable stationery suppliers in Gauteng to source certified quality brands in bulk. Join our distribution network to quote on recurring seasonal volume.
-              </p>
-            </div>
-            <div className={pageStyles.supplierAction}>
-              <Button href="#partner-form">Join as Supplier</Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Enquiry Form */}
       <section className={marketingStyles.sectionCream} id="partner-form">
         <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Partnership Enquiry"
             title="Start your partnership today"
-            text="Complete the form below and our team will get in touch with you to design your school website and prepare your grade packs."
+            text="Complete the form below and our team will get in touch to discuss the school website, grade packs, and launch path."
           />
           <PartnerForm />
         </div>

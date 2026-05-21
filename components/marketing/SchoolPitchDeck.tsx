@@ -1,405 +1,303 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import styles from "./SchoolPitchDeck.module.css";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import styles from "./SchoolPitchDeck.module.css";
 
-type SlideId = "overview" | "website" | "calculator" | "parents" | "roadmap";
+type SlideId = "promise" | "website" | "portal" | "value" | "launch";
+type JourneyStep = "find" | "select" | "checkout";
 
-interface SlideInfo {
+type Slide = {
   id: SlideId;
   label: string;
+  eyebrow: string;
   title: string;
-}
+  body: string;
+  bullets: string[];
+  stat: string;
+  statLabel: string;
+};
 
-const slides: SlideInfo[] = [
-  { id: "overview", label: "Partnership Overview", title: "Free Modern School Website & Easy Stationery" },
-  { id: "website", label: "Free Website & Hosting", title: "Complete Managed Digital Presence" },
-  { id: "calculator", label: "Value Calculator", title: "Interactive Rebate & Savings Calculator" },
-  { id: "parents", label: "Parent Convenience", title: "Zero Admin Stationery Ordering" },
-  { id: "roadmap", label: "Launch Roadmap", title: "Launch in 4 Simple Steps" },
+const slides: Slide[] = [
+  {
+    id: "promise",
+    label: "The offer",
+    eyebrow: "Partner pitch",
+    title: "A premium school website, stationery portal, and rebate engine at no setup cost.",
+    body: "Pexpacks gives schools a stronger digital presence while removing one of the most frustrating annual admin jobs: stationery list ordering.",
+    bullets: [
+      "Custom school website designed around the school's identity.",
+      "Managed hosting, SSL, maintenance, and content support.",
+      "Parent ordering journey connected to approved grade stationery packs.",
+    ],
+    stat: "R35k",
+    statLabel: "estimated yearly website value",
+  },
+  {
+    id: "website",
+    label: "Website",
+    eyebrow: "Digital presence",
+    title: "A real school website parents can trust, not a template placeholder.",
+    body: "The school gets a modern public hub for admissions, calendars, newsletters, policies, leadership messages, and contact details.",
+    bullets: [
+      "School crest, colours, motto, and tone carried through the site.",
+      "Mobile-first pages for families searching from a phone.",
+      "Documents and updates organised so parents can find them quickly.",
+    ],
+    stat: "0",
+    statLabel: "monthly hosting fee for partner schools",
+  },
+  {
+    id: "portal",
+    label: "Portal",
+    eyebrow: "Parent convenience",
+    title: "Parents buy the correct grade pack without school staff chasing forms.",
+    body: "Every grade can have a verified stationery list, clear pricing, add-ons, and delivery or collection options.",
+    bullets: [
+      "Grade-specific packs reduce wrong-item buying.",
+      "Card, instant EFT, and WhatsApp-assisted ordering options.",
+      "Bulk school drop-off or direct home delivery workflows.",
+    ],
+    stat: "3",
+    statLabel: "clicks to a parent-ready pack path",
+  },
+  {
+    id: "value",
+    label: "Value",
+    eyebrow: "Financial impact",
+    title: "The partnership creates visible value beyond a free website.",
+    body: "Use the calculator to model rebates, admin time saved, and the annual website package value.",
+    bullets: [
+      "Estimated development-fund rebate on pack sales.",
+      "Reduced admin time spent handling stationery queries.",
+      "A measurable partner benefit the school can report internally.",
+    ],
+    stat: "5%",
+    statLabel: "sample development rebate model",
+  },
+  {
+    id: "launch",
+    label: "Launch",
+    eyebrow: "Easy rollout",
+    title: "A clean handover from interest to launch-ready partner site.",
+    body: "Pexpacks handles the technical build and pack setup. The school shares brand assets, lists, and approval feedback.",
+    bullets: [
+      "Submit the partnership enquiry.",
+      "Share approved stationery lists and school brand assets.",
+      "Review the site, launch the portal, and start partner ordering.",
+    ],
+    stat: "4",
+    statLabel: "simple rollout stages",
+  },
+];
+
+const journeyCopy: Record<JourneyStep, { title: string; body: string; tag: string }> = {
+  find: {
+    tag: "Step 1",
+    title: "Find the school",
+    body: "Parents land on the school website, see official pack links, and know they are ordering from the approved path.",
+  },
+  select: {
+    tag: "Step 2",
+    title: "Choose the grade",
+    body: "Each grade opens a verified list with the correct items, optional extras, and clear pricing.",
+  },
+  checkout: {
+    tag: "Step 3",
+    title: "Confirm and pay",
+    body: "The order is sent to Pexpacks for fulfilment, reducing school-side stationery admin.",
+  },
+};
+
+const launchSteps = [
+  "Enquiry",
+  "Lists",
+  "Website",
+  "Parent launch",
 ];
 
 export function SchoolPitchDeck() {
-  const [activeSlide, setActiveSlide] = useState<SlideId>("overview");
-  const [, startTransition] = useTransition();
+  const [activeSlide, setActiveSlide] = useState<SlideId>("promise");
+  const [journeyStep, setJourneyStep] = useState<JourneyStep>("select");
+  const [enrollment, setEnrollment] = useState(650);
+  const [adoption, setAdoption] = useState(72);
 
-  // Calculator State
-  const [enrollment, setEnrollment] = useState<number>(600);
-  const [adoption, setAdoption] = useState<number>(70);
+  const activeIndex = slides.findIndex((slide) => slide.id === activeSlide);
+  const slide = slides[activeIndex];
+  const parentPacks = Math.round(enrollment * (adoption / 100));
+  const rebate = parentPacks * 850 * 0.05;
+  const adminHours = Math.round(parentPacks * 0.5);
+  const totalValue = rebate + 35000 + adminHours * 160;
 
-  // Derived Calculations
-  const averagePackCost = 850; // ZAR
-  const rebateRate = 0.05; // 5%
-  const hourlyRate = 160; // ZAR/hr value of admin labor
-  
-  const estimatedPacks = Math.round(enrollment * (adoption / 100));
-  const annualRebate = estimatedPacks * averagePackCost * rebateRate;
-  const adminHoursSaved = estimatedPacks * 0.5; // 30 mins per pack
-  const websiteHostingSaving = 35000; // R35k standard web package value
-  const adminLaborSaving = adminHoursSaved * hourlyRate;
-  const totalValue = annualRebate + websiteHostingSaving + adminLaborSaving;
+  const progress = useMemo(
+    () => `${((activeIndex + 1) / slides.length) * 100}%`,
+    [activeIndex],
+  );
 
-  const handleSlideChange = (id: SlideId) => {
-    startTransition(() => {
-      setActiveSlide(id);
-    });
-  };
-
-  const nextSlide = () => {
-    const currentIndex = slides.findIndex(s => s.id === activeSlide);
-    if (currentIndex < slides.length - 1) {
-      handleSlideChange(slides[currentIndex + 1].id);
-    } else {
-      handleSlideChange(slides[0].id); // Loop back
-    }
-  };
-
-  const prevSlide = () => {
-    const currentIndex = slides.findIndex(s => s.id === activeSlide);
-    if (currentIndex > 0) {
-      handleSlideChange(slides[currentIndex - 1].id);
-    } else {
-      handleSlideChange(slides[slides.length - 1].id); // Loop to end
-    }
+  const goToOffset = (offset: number) => {
+    const nextIndex = (activeIndex + offset + slides.length) % slides.length;
+    setActiveSlide(slides[nextIndex].id);
   };
 
   return (
-    <div className={styles.deckContainer} id="pitch-presentation">
-      {/* Presentation Header */}
-      <div className={styles.deckHeader}>
-        <div className={styles.headerIndicator}>
-          <span className={styles.livePulse}></span>
-          <span>SCHOOL PARTNERSHIP PITCH DECK</span>
+    <section className={styles.deck} aria-label="Interactive school partner pitch deck">
+      <div className={styles.deckTopbar}>
+        <div>
+          <p>School partner presentation</p>
+          <strong>Click through the pitch</strong>
         </div>
-        <div className={styles.slideTracker}>
-          {slides.map((slide, index) => (
+        <div className={styles.progressTrack} aria-hidden="true">
+          <span style={{ width: progress }} />
+        </div>
+        <span className={styles.slideCount}>
+          {activeIndex + 1}/{slides.length}
+        </span>
+      </div>
+
+      <div className={styles.deckGrid}>
+        <nav className={styles.slideNav} aria-label="Pitch deck slides">
+          {slides.map((item, index) => (
             <button
-              key={slide.id}
-              className={`${styles.trackerDot} ${activeSlide === slide.id ? styles.trackerDotActive : ""}`}
-              onClick={() => handleSlideChange(slide.id)}
-              aria-label={`Go to slide ${index + 1}: ${slide.label}`}
-            />
+              className={`${styles.slideNavButton} ${
+                activeSlide === item.id ? styles.slideNavButtonActive : ""
+              }`}
+              key={item.id}
+              type="button"
+              onClick={() => setActiveSlide(item.id)}
+            >
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              {item.label}
+            </button>
           ))}
-        </div>
+        </nav>
+
+        <article className={styles.slidePanel}>
+          <div className={styles.slideCopy}>
+            <p className={styles.slideEyebrow}>{slide.eyebrow}</p>
+            <h3>{slide.title}</h3>
+            <p>{slide.body}</p>
+            <ul>
+              {slide.bullets.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className={styles.slideVisual}>
+            <div className={styles.metricSpotlight}>
+              <span>{slide.stat}</span>
+              <small>{slide.statLabel}</small>
+            </div>
+
+            {activeSlide === "value" ? (
+              <div className={styles.calculator}>
+                <label>
+                  <span>Learners</span>
+                  <strong>{enrollment}</strong>
+                  <input
+                    type="range"
+                    min="150"
+                    max="1600"
+                    step="50"
+                    value={enrollment}
+                    onChange={(event) => setEnrollment(Number(event.target.value))}
+                  />
+                </label>
+                <label>
+                  <span>Expected pack adoption</span>
+                  <strong>{adoption}%</strong>
+                  <input
+                    type="range"
+                    min="20"
+                    max="100"
+                    step="4"
+                    value={adoption}
+                    onChange={(event) => setAdoption(Number(event.target.value))}
+                  />
+                </label>
+                <div className={styles.valueGrid}>
+                  <div>
+                    <span>Pack orders</span>
+                    <strong>{parentPacks}</strong>
+                  </div>
+                  <div>
+                    <span>Admin hours saved</span>
+                    <strong>{adminHours}</strong>
+                  </div>
+                  <div className={styles.totalValue}>
+                    <span>Total estimated value</span>
+                    <strong>
+                      R{totalValue.toLocaleString("en-ZA", { maximumFractionDigits: 0 })}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            ) : activeSlide === "portal" ? (
+              <div className={styles.journeyCard}>
+                <div className={styles.journeyTabs}>
+                  {(Object.keys(journeyCopy) as JourneyStep[]).map((step) => (
+                    <button
+                      className={journeyStep === step ? styles.journeyTabActive : ""}
+                      key={step}
+                      type="button"
+                      onClick={() => setJourneyStep(step)}
+                    >
+                      {journeyCopy[step].tag}
+                    </button>
+                  ))}
+                </div>
+                <div>
+                  <span>{journeyCopy[journeyStep].tag}</span>
+                  <h4>{journeyCopy[journeyStep].title}</h4>
+                  <p>{journeyCopy[journeyStep].body}</p>
+                </div>
+              </div>
+            ) : activeSlide === "launch" ? (
+              <div className={styles.launchFlow}>
+                {launchSteps.map((step, index) => (
+                  <div key={step}>
+                    <span>{index + 1}</span>
+                    <strong>{step}</strong>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.previewStack}>
+                <div>
+                  <span>Website</span>
+                  <strong>Admissions, news, documents</strong>
+                </div>
+                <div>
+                  <span>Portal</span>
+                  <strong>Grade packs and checkout</strong>
+                </div>
+                <div>
+                  <span>Partnership</span>
+                  <strong>Rebates and less admin</strong>
+                </div>
+              </div>
+            )}
+          </div>
+        </article>
       </div>
 
-      {/* Main Slide Window */}
-      <div className={styles.deckWindow}>
-        {/* Navigation Sidebar */}
-        <aside className={styles.sidebar}>
-          <p className={styles.sidebarTitle}>Key Highlights</p>
-          <nav className={styles.navMenu}>
-            {slides.map((slide, idx) => (
-              <button
-                key={slide.id}
-                className={`${styles.navItem} ${activeSlide === slide.id ? styles.navItemActive : ""}`}
-                onClick={() => handleSlideChange(slide.id)}
-              >
-                <span className={styles.navIndex}>0{idx + 1}</span>
-                <span className={styles.navLabel}>{slide.label}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Slide Content Display */}
-        <div className={styles.contentArea}>
-          {/* SLIDE 1: OVERVIEW */}
-          {activeSlide === "overview" && (
-            <div className={`${styles.slide} ${styles.fadeIn}`}>
-              <span className={styles.slideEyebrow}>Exclusive School Program</span>
-              <h2 className={styles.slideTitle}>Modern School Web Design & Free Hosting</h2>
-              <p className={styles.slideText}>
-                Elevate your school’s digital presence and streamline stationery list ordering. We design, host, and maintain a professional school site completely free of charge—saving admin costs while giving parents a simple web portal to buy correct stationery packs in 3 clicks.
-              </p>
-
-              <div className={styles.metricsGrid}>
-                <div className={styles.metricCard}>
-                  <h3>R35,000 /yr</h3>
-                  <p>Web Development & Hosting Package Value</p>
-                </div>
-                <div className={styles.metricCard}>
-                  <h3>R0.00</h3>
-                  <p>Setup, License, or Monthly Fees</p>
-                </div>
-                <div className={styles.metricCard}>
-                  <h3>5% Rebate</h3>
-                  <p>Annual Development Rebate on all packs sold</p>
-                </div>
-              </div>
-
-              <div className={styles.slideActions}>
-                <Button onClick={nextSlide} variant="primary">
-                  Explore Website Value
-                </Button>
-                <Button href="#partner-form" variant="outline">
-                  Apply Today
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* SLIDE 2: WEBSITE FEATURES */}
-          {activeSlide === "website" && (
-            <div className={`${styles.slide} ${styles.fadeIn}`}>
-              <span className={styles.slideEyebrow}>No-Cost Managed Platform</span>
-              <h2 className={styles.slideTitle}>Everything Your School Needs Online</h2>
-              <p className={styles.slideText}>
-                We handle the design, server management, security, and updates. You get a modern online hub customized for your brand, badges, and school identity.
-              </p>
-
-              <div className={styles.featuresList}>
-                <div className={styles.featureItem}>
-                  <div className={styles.featureIcon}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4>Custom Domain Connection</h4>
-                    <p>Hook up yourschool.co.za with premium, secure SSL certificate and hosting included free.</p>
-                  </div>
-                </div>
-
-                <div className={styles.featureItem}>
-                  <div className={styles.featureIcon}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4>Prospectus & News Hub</h4>
-                    <p>Keep your community updated on term dates, events, newsletters, and supply lists.</p>
-                  </div>
-                </div>
-
-                <div className={styles.featureItem}>
-                  <div className={styles.featureIcon}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4>Integrated Parent Portal</h4>
-                    <p>Stationery list pages configured for simple parent ordering with secure payment channels.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.slideActions}>
-                <Button onClick={nextSlide} variant="primary">
-                  Calculate Partnership Value
-                </Button>
-                <button className={styles.textButton} onClick={prevSlide}>
-                  ← Back
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* SLIDE 3: VALUE CALCULATOR */}
-          {activeSlide === "calculator" && (
-            <div className={`${styles.slide} ${styles.fadeIn}`}>
-              <span className={styles.slideEyebrow}>Interactive Projection</span>
-              <h2 className={styles.slideTitle}>Calculate School Benefits Dynamically</h2>
-              <p className={styles.slideText}>
-                Adjust the sliders below to estimate your school's annual rebates, admin hours saved, and overall value.
-              </p>
-
-              <div className={styles.calcGrid}>
-                {/* Sliders Block */}
-                <div className={styles.calcInputs}>
-                  <div className={styles.inputGroup}>
-                    <div className={styles.sliderLabel}>
-                      <span>School Enrollment Size</span>
-                      <strong>{enrollment} Students</strong>
-                    </div>
-                    <input
-                      type="range"
-                      min="100"
-                      max="1500"
-                      step="50"
-                      value={enrollment}
-                      onChange={(e) => setEnrollment(parseInt(e.target.value))}
-                      className={styles.rangeSlider}
-                    />
-                    <div className={styles.rangeLimits}>
-                      <span>100</span>
-                      <span>1,500</span>
-                    </div>
-                  </div>
-
-                  <div className={styles.inputGroup}>
-                    <div className={styles.sliderLabel}>
-                      <span>Stationery Pack Adoption Rate</span>
-                      <strong>{adoption}%</strong>
-                    </div>
-                    <input
-                      type="range"
-                      min="20"
-                      max="100"
-                      step="5"
-                      value={adoption}
-                      onChange={(e) => setAdoption(parseInt(e.target.value))}
-                      className={styles.rangeSlider}
-                    />
-                    <div className={styles.rangeLimits}>
-                      <span>20%</span>
-                      <span>100%</span>
-                    </div>
-                  </div>
-
-                  <div className={styles.calcDisclaimer}>
-                    *Based on average stationery pack value of R850.00 and 5% development rebate structure.
-                  </div>
-                </div>
-
-                {/* Outputs Block */}
-                <div className={styles.calcOutputs}>
-                  <div className={styles.outputItem}>
-                    <span>Estimated Annual Rebate Check</span>
-                    <strong>R {annualRebate.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
-                  </div>
-                  <div className={styles.outputItem}>
-                    <span>Free Website Package Value</span>
-                    <strong>R {websiteHostingSaving.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
-                  </div>
-                  <div className={styles.outputItem}>
-                    <span>Staff Admin Labor Saved</span>
-                    <span>{adminHoursSaved} hours (~R {adminLaborSaving.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>
-                  </div>
-                  <div className={styles.totalValCard}>
-                    <span>TOTAL ECONOMIC VALUE</span>
-                    <strong>R {totalValue.toLocaleString("en-ZA", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</strong>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.slideActions}>
-                <Button onClick={nextSlide} variant="primary">
-                  See Parent Convenience
-                </Button>
-                <button className={styles.textButton} onClick={prevSlide}>
-                  ← Back
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* SLIDE 4: PARENT CONVENIENCE */}
-          {activeSlide === "parents" && (
-            <div className={`${styles.slide} ${styles.fadeIn}`}>
-              <span className={styles.slideEyebrow}>Stress-Free Back-to-School</span>
-              <h2 className={styles.slideTitle}>Parents Buy Correct Grade Packs Fast</h2>
-              <p className={styles.slideText}>
-                No retail hopping or long queues in January. Parents get exactly what teachers require for the academic year.
-              </p>
-
-              <div className={styles.benefitsGridMini}>
-                <div className={styles.benefitBox}>
-                  <div className={styles.benefitIconWrapper}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h4>100% Grade List Accuracy</h4>
-                  <p>Stationery bundles are packed specifically according to the official lists verified by your school.</p>
-                </div>
-
-                <div className={styles.benefitBox}>
-                  <div className={styles.benefitIconWrapper}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  </div>
-                  <h4>Instant 3-Click Checkout</h4>
-                  <p>Smooth buying experience with Card, Instant EFT, and WhatsApp ordering capabilities.</p>
-                </div>
-
-                <div className={styles.benefitBox}>
-                  <div className={styles.benefitIconWrapper}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 01-2 2H6a2 2 0 01-2-2m16 0V9a2 2 0 00-2-2H6a2 2 0 00-2 2v2m16 4h-2a2 2 0 00-2 2v3H6V17a2 2 0 00-2-2H2" />
-                    </svg>
-                  </div>
-                  <h4>Direct & Organized Delivery</h4>
-                  <p>Choose direct-to-home delivery or a bulk drop-off directly to the school at the start of the year.</p>
-                </div>
-              </div>
-
-              <div className={styles.slideActions}>
-                <Button onClick={nextSlide} variant="primary">
-                  Review Onboarding Steps
-                </Button>
-                <button className={styles.textButton} onClick={prevSlide}>
-                  ← Back
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* SLIDE 5: ROADMAP */}
-          {activeSlide === "roadmap" && (
-            <div className={`${styles.slide} ${styles.fadeIn}`}>
-              <span className={styles.slideEyebrow}>Simple Setup Process</span>
-              <h2 className={styles.slideTitle}>How We Launch Your Portal</h2>
-              <p className={styles.slideText}>
-                Our team does the heavy lifting, taking you from request to live portal in days.
-              </p>
-
-              <div className={styles.roadmapFlow}>
-                <div className={styles.roadmapStep}>
-                  <div className={styles.stepNum}>1</div>
-                  <h4>Submit Request</h4>
-                  <p>Fill out our short enquiry form below with your school details.</p>
-                </div>
-                <div className={styles.roadmapStep}>
-                  <div className={styles.stepNum}>2</div>
-                  <h4>Share Lists</h4>
-                  <p>Send your grade stationery requirements; we digitize them.</p>
-                </div>
-                <div className={styles.roadmapStep}>
-                  <div className={styles.stepNum}>3</div>
-                  <h4>Launch Site</h4>
-                  <p>We build your website, set up branding, and open the parent store.</p>
-                </div>
-                <div className={styles.roadmapStep}>
-                  <div className={styles.stepNum}>4</div>
-                  <h4>Earn Rebates</h4>
-                  <p>Parents order hassle-free and the school gains development funds.</p>
-                </div>
-              </div>
-
-              <div className={styles.slideActions}>
-                <Button href="#partner-form" variant="primary">
-                  Start Application
-                </Button>
-                <button className={styles.textButton} onClick={() => handleSlideChange("overview")}>
-                  Restart Show
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Navigation Arrows */}
-      <div className={styles.deckFooter}>
-        <button className={styles.navArrow} onClick={prevSlide} aria-label="Previous Slide">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
+      <div className={styles.deckControls}>
+        <button
+          className={styles.deckNavButton}
+          type="button"
+          onClick={() => goToOffset(-1)}
+        >
+          Previous
         </button>
-        <div className={styles.slideInfoLabel}>
-          Slide {slides.findIndex(s => s.id === activeSlide) + 1} of {slides.length} — {slides.find(s => s.id === activeSlide)?.label}
-        </div>
-        <button className={styles.navArrow} onClick={nextSlide} aria-label="Next Slide">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
+        <Button href="#partner-form">Start partnership</Button>
+        <button
+          className={styles.deckNavButton}
+          type="button"
+          onClick={() => goToOffset(1)}
+        >
+          Next
         </button>
       </div>
-    </div>
+    </section>
   );
 }
