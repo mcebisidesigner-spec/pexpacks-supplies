@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { HeaderActiveLink } from "./HeaderActiveLink";
 import { HeaderMenu } from "./HeaderMenu";
@@ -11,13 +10,11 @@ import { useHideHeaderOnScroll } from "@/lib/hooks/useHideHeaderOnScroll";
 import styles from "./Header.module.css";
 
 export function Header() {
-  const pathname = usePathname();
   const [isKeyboardNavigating, setIsKeyboardNavigating] = useState(false);
   const [isHeaderKeyboardFocused, setIsHeaderKeyboardFocused] = useState(false);
-  const shouldPinHeader = pathname === "/order" || pathname === "/track-order";
 
   const { isHidden, isAtTop } = useHideHeaderOnScroll({
-    disabled: shouldPinHeader || isHeaderKeyboardFocused,
+    disabled: isHeaderKeyboardFocused,
   });
 
   return (
@@ -67,13 +64,14 @@ export function Header() {
           <Link
             className={styles.desktopLogin}
             href="/login"
-            aria-label="Log in"
+            aria-label="Open parent portal"
+            title="Parent portal"
           >
             <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
               <circle cx="12" cy="8" r="3.5" />
               <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
-              <circle cx="12" cy="12" r="10" />
             </svg>
+            <span className="sr-only">Parent portal</span>
           </Link>
 
           <Link

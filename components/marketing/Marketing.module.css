@@ -1358,6 +1358,10 @@
     padding: var(--section-padding-y-tablet) 0;
   }
 
+  .pageHero {
+    padding: var(--section-padding-y-tablet) 0 clamp(34px, 8vw, 56px);
+  }
+
   .inner,
   .heroInner,
   .pageHeroInner {
@@ -1425,6 +1429,14 @@
     font-size: clamp(50px, 9vw, 62px);
   }
 
+  .pageTitle {
+    font-size: clamp(42px, 9vw, 58px);
+  }
+
+  .heroPanel {
+    padding: 22px;
+  }
+
   .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus)),
   .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus)) {
     padding-top: 18px;
@@ -1466,7 +1478,8 @@
   }
 
   .pageTitle {
-    font-size: 46px;
+    font-size: clamp(34px, 9vw, 40px);
+    line-height: 1.02;
   }
 
   .heroTitle {
@@ -1479,6 +1492,7 @@
 
   .heroLead,
   .pageLead {
+    margin-top: 16px;
     font-size: 16px;
   }
 

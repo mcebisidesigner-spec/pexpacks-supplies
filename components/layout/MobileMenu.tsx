@@ -74,7 +74,24 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
             .join(" ")}
           aria-current={isActivePath("/login", pathname) ? "page" : undefined}
         >
-          Login
+          Parent Portal
+        </Link>
+        <Link
+          href="/track-order"
+          onClick={onClose}
+          className={[
+            styles.mobileMenuLink,
+            isActivePath("/track-order", pathname)
+              ? styles.mobileMenuLinkActive
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          aria-current={
+            isActivePath("/track-order", pathname) ? "page" : undefined
+          }
+        >
+          Track Order
         </Link>
       </nav>
 

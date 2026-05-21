@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { OrderForm } from "@/components/order/OrderForm";
+import { PageHero } from "@/components/marketing/PageHero";
 import { orderWhatsAppHref } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
@@ -37,27 +38,24 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
 
   return (
     <>
-      <section className={orderStyles.checkoutHero}>
-        <div className={orderStyles.checkoutHeroInner}>
-          <div>
-            <Link href="/schools" className={orderStyles.backLink}>
-              Back to packs
-            </Link>
-            <h1>Complete your stationery order</h1>
-            <p>
-              Review your pack, share the details PexPacks needs, choose
-              delivery or collection, and submit a secure order request.
-            </p>
-          </div>
-          <div className={orderStyles.checkoutHeroActions}>
-            {orderWhatsAppHref ? (
-              <a className={orderStyles.helpLink} href={orderWhatsAppHref}>
-                Need help? WhatsApp us
-              </a>
-            ) : null}
-          </div>
+      <PageHero
+        eyebrow="Stationery order"
+        title="Complete your stationery order"
+        text="Review your pack, share the details PexPacks needs, choose delivery or collection, and submit a secure order request."
+        panelText="Need support?"
+        panelTitle="We can help confirm your school pack before you submit."
+      >
+        <div className={orderStyles.checkoutHeroActions}>
+          <Link href="/schools" className={orderStyles.backLink}>
+            Back to packs
+          </Link>
+          {orderWhatsAppHref ? (
+            <a className={orderStyles.helpLink} href={orderWhatsAppHref}>
+              Need help? WhatsApp us
+            </a>
+          ) : null}
         </div>
-      </section>
+      </PageHero>
       <section>
         <div className={page.sectionInner}>
           <PexcoverMarquee />

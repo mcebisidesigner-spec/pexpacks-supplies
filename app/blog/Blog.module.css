@@ -117,23 +117,12 @@
   font-weight: 800;
   font-size: 16px;
   text-decoration: none;
-  margin-bottom: 40px;
+  margin-top: 24px;
   transition: opacity 0.2s;
 }
 
 .backLink:hover {
   opacity: 0.8;
-}
-
-.postHeader {
-  margin-bottom: 48px;
-}
-
-.postHeader h1 {
-  color: var(--pex-navy);
-  font-size: clamp(32px, 5vw, 48px);
-  line-height: 1.2;
-  margin-bottom: 24px;
 }
 
 .postHeroImage {

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CTASection } from "@/components/marketing/CTASection";
+import { PageHero } from "@/components/marketing/PageHero";
 import { blogPosts, getPostBySlug } from "@/data/blog";
 import styles from "../Blog.module.css";
 
@@ -51,29 +52,27 @@ export default async function BlogPostPage({
     notFound();
   }
 
+  const publishedDate = new Date(post.date).toLocaleDateString("en-ZA", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <>
-      <article className={styles.postContainer}>
+      <PageHero
+        eyebrow={post.category}
+        title={post.title}
+        text={post.excerpt}
+        panelText={`By ${post.author}`}
+        panelTitle={publishedDate}
+      >
         <Link href="/blog" className={styles.backLink}>
-          &larr; Back to Resource Hub
+          Back to Resource Hub
         </Link>
+      </PageHero>
 
-        <header className={styles.postHeader}>
-          <span className={styles.blogCategory}>{post.category}</span>
-          <h1>{post.title}</h1>
-          <div className={styles.blogMeta}>
-            <span>By {post.author}</span>
-            <span aria-hidden="true">&bull;</span>
-            <time dateTime={post.date}>
-              {new Date(post.date).toLocaleDateString("en-ZA", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
-          </div>
-        </header>
-
+      <article className={styles.postContainer}>
         {post.image ? (
           <div className={styles.postHeroImage}>
             <Image

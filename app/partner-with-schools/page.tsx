@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { PartnerForm } from "@/components/forms/PartnerForm";
 import { Button } from "@/components/ui/Button";
+import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { SchoolMockupDemo } from "@/components/marketing/SchoolMockupDemo";
 import { SchoolPitchDeck } from "@/components/marketing/SchoolPitchDeck";
@@ -99,46 +99,28 @@ export const metadata: Metadata = buildMetadata(
 export default function PartnerWithSchoolsPage() {
   return (
     <>
-      <section className={pageStyles.pitchHero}>
-        <div className={pageStyles.pitchHeroInner}>
-          <div className={pageStyles.pitchHeroCopy}>
-            <p className={pageStyles.heroEyebrow}>Exclusive school partner program</p>
-            <h1>A pitch deck schools can understand in minutes.</h1>
-            <p>
-              Pexpacks builds your school a modern website and parent stationery
-              portal at no setup cost. Walk through the offer, calculate the
-              value, preview the experience, and apply when the partnership
-              makes sense.
-            </p>
-            <div className={pageStyles.pitchHeroActions}>
-              <Button href="#pitch-deck" size="lg">
-                Open the pitch deck
-              </Button>
-              <Button href="#interactive-demo" variant="white" size="lg">
-                Preview demo website
-              </Button>
-            </div>
-          </div>
-
-          <div
-            className={pageStyles.pitchHeroVisual}
-            aria-label="School partnership value summary"
-          >
-            <Image
-              src="/images/hero-school-delivery.webp"
-              alt="Pexpacks school stationery boxes ready for a school delivery"
-              fill
-              priority
-              sizes="(max-width: 820px) 100vw, 44vw"
-            />
-            <div className={pageStyles.heroGlassPanel}>
-              <span>Partner value snapshot</span>
-              <strong>Website + parent ordering + rebate model</strong>
-            </div>
-          </div>
+      <PageHero
+        eyebrow="Exclusive school partner program"
+        title="A pitch deck schools can understand in minutes."
+        text="Pexpacks builds your school a modern website and parent stationery portal at no setup cost. Walk through the offer, calculate the value, preview the experience, and apply when the partnership makes sense."
+        panelText="Partner value snapshot"
+        panelTitle="Website + parent ordering + rebate model"
+      >
+        <div className={marketingStyles.buttonRow}>
+          <Button href="#pitch-deck" size="lg">
+            Open the pitch deck
+          </Button>
+          <Button href="#interactive-demo" variant="white" size="lg">
+            Preview demo website
+          </Button>
         </div>
+      </PageHero>
 
-        <div className={pageStyles.pitchStats} aria-label="Partnership highlights">
+      <section
+        className={pageStyles.pitchStatsSection}
+        aria-label="Partnership highlights"
+      >
+        <div className={pageStyles.pitchStats}>
           {pitchStats.map((stat) => (
             <div key={stat.label}>
               <strong>{stat.value}</strong>

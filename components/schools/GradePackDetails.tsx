@@ -41,11 +41,11 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
         <p className={styles.kicker}>
           Prepared according to the official school list.
         </p>
-        <h1 className={styles.gradeTitle}>
+        <h2 className={styles.gradeTitle}>
           {school.name}
           <br />
           {grade.grade} Stationery Pack
-        </h1>
+        </h2>
 
         {/* Strategy 1.2: Urgency signal */}
         <div className={styles.urgencyBadge}>

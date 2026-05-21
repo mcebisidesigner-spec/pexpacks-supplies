@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { PageHero } from "@/components/marketing/PageHero";
 import { GradePackDetails } from "@/components/schools/GradePackDetails";
 import { PackBuildingAnimation } from "@/components/schools/PackBuildingAnimation";
 import { SaveVisitTracker } from "@/components/schools/SaveVisitTracker";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
+import { formatCurrency } from "@/lib/formatCurrency";
 import { breadcrumbSchema, productSchema } from "@/lib/schema";
 import { getGradeBySlug, getSchoolBySlug } from "@/lib/school-utils";
 import page from "@/styles/Page.module.css";
@@ -75,6 +77,13 @@ export default async function GradePackPage({ params }: GradePageProps) {
         schoolSlug={school.slug}
         grade={grade.grade}
         gradeSlug={grade.gradeSlug}
+      />
+      <PageHero
+        eyebrow={school.name}
+        title={`${grade.grade} Stationery Pack`}
+        text={`Order a ready-packed ${grade.grade} stationery pack for ${school.name}, prepared according to the official school stationery list.`}
+        panelText="Pack estimate"
+        panelTitle={formatCurrency(grade.price)}
       />
       <section className={page.section}>
         <PackBuildingAnimation schoolName={school.name}>
