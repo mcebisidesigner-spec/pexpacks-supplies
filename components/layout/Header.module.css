@@ -105,21 +105,22 @@
   border-radius: 0;
   display: inline-grid;
   place-items: center;
-  background: #101010;
-  color: #ffffff;
-  box-shadow: 0 10px 20px rgba(16, 16, 16, 0.14);
+  background: transparent;
+  color: var(--pex-navy);
+  box-shadow: none;
   transform-origin: center;
   transition: var(--button-transition);
 }
 
 .desktopLogin:hover {
-  filter: brightness(112%);
+  color: var(--pex-keppel);
+  filter: none;
   transform: var(--button-hover-transform);
-  box-shadow: var(--button-hover-shadow);
+  box-shadow: none;
 }
 
 .desktopLogin:active {
-  filter: brightness(100%);
+  filter: none;
   transform: var(--button-active-transform);
 }
 
