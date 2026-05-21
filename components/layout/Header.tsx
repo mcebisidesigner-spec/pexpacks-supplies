@@ -63,18 +63,32 @@ export function Header() {
           ))}
         </nav>
 
-        <Link
-          className={styles.desktopOrder}
-          href="/order"
-          aria-label="Order a Pexpacks pack"
-        >
-          <span>Order a Pack</span>
-          <span className={styles.orderIcon} aria-hidden="true">
-            <svg viewBox="0 0 24 24" focusable="false">
-              <path d="M7 17 17 7M9 7h8v8" />
+        <div className={styles.desktopActions}>
+          <Link
+            className={styles.desktopLogin}
+            href="/login"
+            aria-label="Log in"
+          >
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.5" />
+              <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
+              <circle cx="12" cy="12" r="10" />
             </svg>
-          </span>
-        </Link>
+          </Link>
+
+          <Link
+            className={styles.desktopOrder}
+            href="/order"
+            aria-label="Order a Pexpacks pack"
+          >
+            <span>Order a Pack</span>
+            <span className={styles.orderIcon} aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M7 17 17 7M9 7h8v8" />
+              </svg>
+            </span>
+          </Link>
+        </div>
 
         <HeaderMenu />
       </div>

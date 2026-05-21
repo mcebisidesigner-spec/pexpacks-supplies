@@ -92,8 +92,48 @@
   border-bottom-color: var(--pex-keppel);
 }
 
-.desktopOrder {
+.desktopActions {
   justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.desktopLogin {
+  width: 42px;
+  height: 42px;
+  border-radius: 0;
+  display: inline-grid;
+  place-items: center;
+  background: #101010;
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(16, 16, 16, 0.14);
+  transform-origin: center;
+  transition: var(--button-transition);
+}
+
+.desktopLogin:hover {
+  filter: brightness(112%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
+}
+
+.desktopLogin:active {
+  filter: brightness(100%);
+  transform: var(--button-active-transform);
+}
+
+.desktopLogin svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.desktopOrder {
   min-height: 42px;
   padding: 0 7px 0 18px;
   border-radius: var(--radius-pill);
@@ -290,6 +330,20 @@
     width: 110px;
   }
 
+  .desktopActions {
+    gap: 8px;
+  }
+
+  .desktopLogin {
+    width: 38px;
+    height: 38px;
+  }
+
+  .desktopLogin svg {
+    width: 20px;
+    height: 20px;
+  }
+
   .desktopOrder {
     min-height: 38px;
     font-size: 13px;
@@ -324,7 +378,7 @@
   }
 
   .desktopNav,
-  .desktopOrder {
+  .desktopActions {
     display: none;
   }
 
@@ -458,6 +512,8 @@
     pointer-events: none;
   }
 
+  .desktopActions,
+  .desktopLogin,
   .desktopOrder,
   .menuButton,
   .mobileMenu,
@@ -468,6 +524,7 @@
     transition: none;
   }
 
+  .desktopLogin:hover,
   .desktopOrder:hover,
   .mobileMenuCta:hover,
   .desktopOrder:hover .orderIcon,

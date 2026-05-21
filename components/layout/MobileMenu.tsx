@@ -63,6 +63,19 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
             </Link>
           );
         })}
+        <Link
+          href="/login"
+          onClick={onClose}
+          className={[
+            styles.mobileMenuLink,
+            isActivePath("/login", pathname) ? styles.mobileMenuLinkActive : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          aria-current={isActivePath("/login", pathname) ? "page" : undefined}
+        >
+          Login
+        </Link>
       </nav>
 
       <Link
