@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./Schools.module.css";
 
-const STORAGE_KEY = "pexpacks:recent-school-visits";
+export const STORAGE_KEY = "pexpacks:recent-school-visits";
+export const RECENT_SCHOOL_VISITS_EVENT = "pexpacks:recent-school-visits-updated";
 
 export type LastVisit = {
   schoolName: string;
@@ -44,6 +45,7 @@ export function saveSchoolVisit(data: Omit<LastVisit, "timestamp">) {
     }
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    window.dispatchEvent(new Event(RECENT_SCHOOL_VISITS_EVENT));
   } catch {
     // localStorage may be unavailable
   }
@@ -57,22 +59,39 @@ export function ReturningParentBanner() {
   const [lastVisit, setLastVisit] = useState<LastVisit | null>(null);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      const visits: LastVisit[] = Array.isArray(parsed) ? parsed : [parsed];
-      
-      if (visits.length > 0) {
-        const mostRecent = visits[0];
-        // Only show if visit was within the last 30 days
-        if (Date.now() - mostRecent.timestamp < 30 * 24 * 60 * 60 * 1000) {
-          setLastVisit(mostRecent);
+    function loadLastVisit() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          setLastVisit(null);
+          return;
         }
+
+        const parsed = JSON.parse(raw);
+        const visits: LastVisit[] = Array.isArray(parsed) ? parsed : [parsed];
+        const mostRecent = visits[0];
+
+        if (
+          mostRecent &&
+          Date.now() - mostRecent.timestamp < 30 * 24 * 60 * 60 * 1000
+        ) {
+          setLastVisit(mostRecent);
+        } else {
+          setLastVisit(null);
+        }
+      } catch {
+        setLastVisit(null);
       }
-    } catch {
-      // ignore
     }
+
+    loadLastVisit();
+    window.addEventListener("storage", loadLastVisit);
+    window.addEventListener(RECENT_SCHOOL_VISITS_EVENT, loadLastVisit);
+
+    return () => {
+      window.removeEventListener("storage", loadLastVisit);
+      window.removeEventListener(RECENT_SCHOOL_VISITS_EVENT, loadLastVisit);
+    };
   }, []);
 
   if (!lastVisit) return null;

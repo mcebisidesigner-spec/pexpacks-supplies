@@ -7,10 +7,34 @@ import styles from "./WhatsAppWidget.module.css";
 export function WhatsAppWidget() {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const footer = document.getElementById("site-footer");
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const footerVisible = entry.isIntersecting;
+        setIsFooterVisible(footerVisible);
+
+        if (footerVisible) {
+          setIsOpen(false);
+        }
+      },
+      { threshold: 0.02 }
+    );
+
+    observer.observe(footer);
+
+    return () => observer.disconnect();
+  }, [mounted]);
 
   if (!mounted) return null;
 
@@ -20,7 +44,15 @@ export function WhatsAppWidget() {
   if (!waUrl) return null;
 
   return (
-    <div className={styles.widgetContainer}>
+    <div
+      className={[
+        styles.widgetContainer,
+        isFooterVisible ? styles.widgetHidden : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      aria-hidden={isFooterVisible}
+    >
       <div
         className={[styles.chatPopup, isOpen ? styles.open : ""]
           .filter(Boolean)

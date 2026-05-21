@@ -9,6 +9,12 @@
   pointer-events: none;
 }
 
+.widgetHidden {
+  opacity: 0;
+  transform: translateY(16px);
+  visibility: hidden;
+}
+
 .fab {
   width: 52px;
   height: 52px;

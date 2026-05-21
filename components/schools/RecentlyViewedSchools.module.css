@@ -1,0 +1,79 @@
+.recentHeader {
+  margin-bottom: 24px;
+}
+
+.recentHeader h2 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.recentHeader p {
+  margin: 4px 0 0;
+  color: var(--pex-text-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.recentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.recentCard {
+  position: relative;
+  padding-right: 58px;
+}
+
+.recentTitle {
+  font-size: 18px !important;
+}
+
+.removeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border: var(--card-border);
+  border-radius: 50%;
+  background: var(--pex-bg);
+  color: var(--pex-text-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: var(--button-transition);
+}
+
+.removeButton:hover {
+  background: var(--pex-bg-soft);
+  color: var(--pex-coral);
+  transform: translateY(-1px);
+  box-shadow: var(--button-hover-shadow);
+}
+
+.removeButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.removeButton svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+@media (max-width: 520px) {
+  .recentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .recentCard {
+    padding-right: 52px;
+  }
+}
