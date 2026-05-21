@@ -138,6 +138,11 @@
 }
 
 @media (max-width: 520px) {
+  .button {
+    white-space: normal;
+    text-align: center;
+  }
+
   .sm {
     min-height: var(--touch-target-min);
   }

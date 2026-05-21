@@ -110,12 +110,15 @@ export default function PartnerWithSchoolsPage() {
       </section>
 
       {/* Realistic Interactive Mockup Section */}
-      <section className={`${marketingStyles.section} ${pageStyles.sectionNoPaddingTop}`}>
+      <section
+        className={`${marketingStyles.section} ${pageStyles.sectionNoPaddingTop}`}
+        id="interactive-demo"
+      >
         <div className={marketingStyles.inner}>
           <SectionHeader
             eyebrow="Interactive Demo"
-            title="Experience Your Future School Website"
-            text="Below is an authentic preview of the premium websites we design, build, and host for our partner schools. Explore the interactive modules and portal icons."
+            title="Showcase the website your school could receive"
+            text="Explore a responsive school website, parent stationery portal, and update desk built to show school partners the full value of working with Pexpacks."
           />
           <SchoolMockupDemo />
         </div>
