@@ -1,0 +1,712 @@
+.deckContainer {
+  background: var(--pex-bg);
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-section);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  margin: 32px auto;
+  max-width: var(--layout-max-width);
+  width: 100%;
+}
+
+/* Header bar styling */
+.deckHeader {
+  background: var(--pex-navy);
+  color: var(--pex-bg);
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.headerIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--pex-sme-mint);
+}
+
+.livePulse {
+  width: 8px;
+  height: 8px;
+  background: var(--pex-sme-mint);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(129, 212, 181, 0.7);
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(129, 212, 181, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(129, 212, 181, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(129, 212, 181, 0);
+  }
+}
+
+.slideTracker {
+  display: flex;
+  gap: 6px;
+}
+
+.trackerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.trackerDot:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: scale(1.15);
+}
+
+.trackerDotActive {
+  background: var(--pex-sme-mint);
+  width: 20px;
+  border-radius: 4px;
+}
+
+/* Window & layout */
+.deckWindow {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 520px;
+}
+
+/* Sidebar navigation */
+.sidebar {
+  background: var(--pex-bg-soft);
+  border-right: 1px solid var(--pex-border);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebarTitle {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--pex-muted);
+  letter-spacing: 0.05em;
+  margin: 0 0 8px 0;
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navItem {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.navIndex {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+  min-width: 28px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.navLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pex-navy);
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateX(4px);
+}
+
+.navItemActive {
+  background: var(--pex-navy);
+  box-shadow: 0 8px 16px rgba(26, 42, 64, 0.1);
+}
+
+.navItemActive .navIndex {
+  background: var(--pex-keppel);
+  color: #ffffff;
+}
+
+.navItemActive .navLabel {
+  color: #ffffff;
+}
+
+/* Slide Display Area */
+.contentArea {
+  padding: 40px var(--gutter-desktop);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(244,245,247,0.4) 100%);
+  min-width: 0;
+}
+
+.slide {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.fadeIn {
+  animation: slideFadeIn 0.35s var(--motion-ease) forwards;
+}
+
+@keyframes slideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slideEyebrow {
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.slideTitle {
+  color: var(--pex-navy);
+  font-size: clamp(24px, 3.2vw, 36px);
+  line-height: 1.15;
+  font-weight: 800;
+  margin: 0;
+}
+
+.slideText {
+  color: var(--pex-text);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0;
+}
+
+/* Layout Specifics: Slide 1 Metrics */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.metricCard {
+  background: #ffffff;
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-card-compact);
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease;
+}
+
+.metricCard:hover {
+  transform: translateY(-4px);
+}
+
+.metricCard h3 {
+  color: var(--pex-keppel);
+  font-size: clamp(20px, 2.5vw, 28px);
+  margin: 0 0 6px 0;
+  font-weight: 800;
+}
+
+.metricCard p {
+  color: var(--pex-muted);
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+/* Layout Specifics: Slide 2 Features */
+.featuresList {
+  display: grid;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.featureItem {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.featureIcon {
+  width: 48px;
+  height: 48px;
+  background: rgba(33, 158, 154, 0.1);
+  color: var(--pex-keppel);
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.featureIcon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.featureItem h4 {
+  color: var(--pex-navy);
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0 0 4px 0;
+}
+
+.featureItem p {
+  color: var(--pex-muted);
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Layout Specifics: Slide 3 Value Calculator */
+.calcGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 32px;
+  align-items: start;
+  margin: 8px 0;
+}
+
+.calcInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sliderLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.sliderLabel span {
+  color: var(--pex-muted);
+  font-weight: 700;
+}
+
+.sliderLabel strong {
+  color: var(--pex-navy);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.rangeSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--pex-border);
+  outline: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.rangeSlider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  background: var(--pex-border);
+}
+
+.rangeSlider::-webkit-slider-thumb {
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  background: var(--pex-coral);
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -7px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.1s ease, background 0.1s ease;
+}
+
+.rangeSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: var(--pex-coral-hover);
+}
+
+.rangeLimits {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--pex-muted);
+  font-weight: 700;
+}
+
+.calcDisclaimer {
+  font-size: 11px;
+  color: var(--pex-muted);
+  line-height: 1.4;
+}
+
+.calcOutputs {
+  background: var(--pex-bg-soft);
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.01);
+}
+
+.outputItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.outputItem span:first-child {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--pex-muted);
+  letter-spacing: 0.02em;
+}
+
+.outputItem strong {
+  color: var(--pex-navy);
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 800;
+}
+
+.outputItem span:last-child {
+  font-size: 13px;
+  color: var(--pex-keppel);
+  font-weight: 700;
+}
+
+.totalValCard {
+  background: var(--pex-navy);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.totalValCard span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--pex-sme-mint);
+}
+
+.totalValCard strong {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+}
+
+/* Layout Specifics: Slide 4 Parent Benefits */
+.benefitsGridMini {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.benefitBox {
+  background: #ffffff;
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-card-compact);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.benefitIconWrapper {
+  width: 42px;
+  height: 42px;
+  background: rgba(33, 158, 154, 0.1);
+  color: var(--pex-keppel);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+}
+
+.benefitIconWrapper svg {
+  width: 20px;
+  height: 20px;
+}
+
+.benefitBox h4 {
+  color: var(--pex-navy);
+  font-size: 15px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.benefitBox p {
+  color: var(--pex-muted);
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Layout Specifics: Slide 5 Roadmap */
+.roadmapFlow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+  position: relative;
+}
+
+.roadmapStep {
+  background: #ffffff;
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-card-compact);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.stepNum {
+  width: 32px;
+  height: 32px;
+  background: var(--pex-keppel);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 14px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.roadmapStep h4 {
+  color: var(--pex-navy);
+  font-size: 14px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.roadmapStep p {
+  color: var(--pex-muted);
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Actions footer & navigation buttons */
+.slideActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.textButton {
+  background: transparent;
+  border: none;
+  color: var(--pex-navy);
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: transform 0.2s ease;
+}
+
+.textButton:hover {
+  transform: translateX(-4px);
+}
+
+/* Control footer bar */
+.deckFooter {
+  background: var(--pex-bg-soft);
+  border-top: 1px solid var(--pex-border);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navArrow {
+  background: #ffffff;
+  border: 1px solid var(--pex-border);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--pex-navy);
+  transition: all 0.2s ease;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.navArrow:hover {
+  background: var(--pex-navy);
+  color: #ffffff;
+  border-color: var(--pex-navy);
+  transform: scale(1.08);
+}
+
+.navArrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.slideInfoLabel {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--pex-muted);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .deckWindow {
+    grid-template-columns: 220px 1fr;
+  }
+  
+  .sidebar {
+    padding: 24px 16px;
+  }
+
+  .navItem {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .navLabel {
+    font-size: 13px;
+  }
+
+  .calcGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .calcOutputs {
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 820px) {
+  .deckWindow {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--pex-border);
+    padding: 16px;
+  }
+
+  .navMenu {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    gap: 12px;
+    scrollbar-width: thin;
+  }
+
+  .navItem {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 8px 12px;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .benefitsGridMini {
+    grid-template-columns: 1fr;
+  }
+
+  .roadmapFlow {
+    grid-template-columns: 1fr;
+  }
+  
+  .calcOutputs {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .deckHeader {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .contentArea {
+    padding: 24px 16px;
+  }
+
+  .slideActions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .slideActions > * {
+    width: 100%;
+  }
+
+  .textButton {
+    text-align: center;
+  }
+}

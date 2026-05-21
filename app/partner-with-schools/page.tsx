@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { SchoolMockupDemo } from "@/components/marketing/SchoolMockupDemo";
+import { SchoolPitchDeck } from "@/components/marketing/SchoolPitchDeck";
 import { buildMetadata } from "@/lib/seo";
 import marketingStyles from "@/components/marketing/Marketing.module.css";
 import pageStyles from "./PartnerWithSchools.module.css";
@@ -74,12 +75,24 @@ export default function PartnerWithSchoolsPage() {
         panelTitle="R35,000 / year"
       >
         <div className={marketingStyles.buttonRow}>
-          <Button href="#partner-form">Get Started</Button>
-          <Button href="#how-it-works" variant="white">
-            How It Works
+          <Button href="#pitch-deck">View Pitch Presentation</Button>
+          <Button href="#partner-form" variant="white">
+            Apply Now
           </Button>
         </div>
       </PageHero>
+
+      {/* Interactive Pitch Deck Presentation Section */}
+      <section className={marketingStyles.sectionAlt} id="pitch-deck">
+        <div className={marketingStyles.inner}>
+          <SectionHeader
+            eyebrow="Interactive Pitch"
+            title="Explore our school partnership deck"
+            text="Step through our presentation slide deck to see the total financial, admin, and parent convenience benefits for your school."
+          />
+          <SchoolPitchDeck />
+        </div>
+      </section>
 
       {/* The Hook Detail Section */}
       <section className={marketingStyles.section}>
