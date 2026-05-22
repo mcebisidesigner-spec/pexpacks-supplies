@@ -147,9 +147,171 @@
   font-weight: 500;
 }
 
+/* Magazine dual column layout */
+.blogContainer {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 48px;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 80px) var(--gutter-desktop);
+}
+
+.articlesColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.articlesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.sidebarColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.stickySidebar {
+  position: sticky;
+  top: calc(var(--header-height-desktop) + 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* GUARANTEE CARD STYLES */
+.guaranteeCard {
+  background: linear-gradient(135deg, rgba(33, 158, 154, 0.03), rgba(26, 42, 64, 0.01));
+  border: 1px solid rgba(33, 158, 154, 0.15);
+  border-radius: var(--radius-card, 20px);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.guaranteeHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.guaranteeIcon {
+  width: 28px;
+  height: 28px;
+  color: var(--pex-keppel);
+  flex-shrink: 0;
+}
+
+.guaranteeTitle {
+  font-family: var(--font-button);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--pex-navy);
+  margin: 0;
+}
+
+.guaranteeText {
+  font-size: 13.5px;
+  color: var(--pex-text);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* PEXCOVER PROMO CARD */
+.pexcoverPromoCard {
+  background: var(--pex-navy);
+  color: #ffffff;
+  border-radius: var(--radius-card, 20px);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 10px 30px rgba(15, 37, 55, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.pexcoverPromoCard::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(33, 158, 154, 0.15);
+}
+
+.promoEyebrow {
+  font-family: var(--font-button);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--pex-coral);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.promoTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.promoText {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.promoLink {
+  margin-top: 4px;
+  font-family: var(--font-button);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.promoLink:hover {
+  color: var(--pex-keppel);
+}
+
+@media (max-width: 1024px) {
+  .blogContainer {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  
+  .stickySidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+}
+
 @media (max-width: 768px) {
-  .blogGrid {
+  .blogGrid,
+  .articlesGrid {
     grid-template-columns: 1fr;
     gap: 24px;
   }
+  
+  .stickySidebar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.postInlineWidget {
+  margin-top: 48px;
+  margin-bottom: 48px;
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CTASection } from "@/components/marketing/CTASection";
 import { PageHero } from "@/components/marketing/PageHero";
+import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
 import { blogPosts, getPostBySlug } from "@/data/blog";
 import styles from "../Blog.module.css";
 
@@ -130,6 +131,15 @@ export default async function BlogPostPage({
 
             return <p key={index}>{paragraph}</p>;
           })}
+          
+          {/* CONTEXTUAL SEARCH INLINE FUNNEL */}
+          <div className={styles.postInlineWidget}>
+            <SchoolSearchWidget 
+              compact={true} 
+              titleText="Find your official school pack"
+              bodyText="Save time and buy the exact teacher-approved stationery kit for your school & grade in just 3 clicks."
+            />
+          </div>
         </div>
       </article>
       <CTASection

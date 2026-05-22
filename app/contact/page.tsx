@@ -8,8 +8,6 @@ import {
   generalEmailHref,
   hasWhatsAppNumber,
   orderWhatsAppHref,
-  ordersEmail,
-  ordersEmailHref,
   phoneHref,
   phoneNumber,
 } from "@/data/contact";
@@ -62,6 +60,8 @@ function resolveContactPrefill(params: Record<string, string | string[] | undefi
   };
 }
 
+import pageStyles from "./ContactPage.module.css";
+
 export default async function ContactPage({ searchParams }: ContactPageProps) {
   const params = searchParams ? await searchParams : {};
   const prefill = resolveContactPrefill(params);
@@ -89,46 +89,110 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         <div className={sectionStyles.inner}>
           <div className={cardStyles.infoGrid}>
             <ContactForm {...prefill} />
-            <div className={cardStyles.infoCard}>
-              <SectionHeader
-                eyebrow="Contact channels"
-                title="Contact details"
-                text="Use the form for structured enquiries or WhatsApp for quick order follow-ups."
-              />
-              <p>
-                <strong>Email:</strong>{" "}
-                <a href={generalEmailHref}>{generalEmail}</a>
-              </p>
-              <p>
-                <strong>Orders:</strong>{" "}
-                <a href={ordersEmailHref}>{ordersEmail}</a>
-              </p>
-              <p>
-                <strong>Telephone:</strong>{" "}
-                <a href={phoneHref}>{phoneNumber}</a>
-              </p>
-              <p>
-                <strong>WhatsApp:</strong>{" "}
-                {hasWhatsAppNumber ? (
-                  <a href={orderWhatsAppHref}>
-                    Start a prefilled WhatsApp order chat
-                  </a>
-                ) : (
-                  "WhatsApp chat is currently unavailable."
-                )}
-              </p>
-              <p>
-                <strong>Location:</strong> Gauteng pilot province, South Africa.
-              </p>
-              <div className={sectionStyles.buttonRow}>
-                {hasWhatsAppNumber ? (
-                  <Button href={orderWhatsAppHref} variant="white">
-                    WhatsApp us
-                  </Button>
-                ) : null}
-                <Button href="/partnership">Partner With Us</Button>
+            
+            <div className={pageStyles.sidebarWrapper}>
+              {/* 🟢 LIVE SUPPORT STATUS */}
+              <div className={pageStyles.liveStatusCard}>
+                <div className={pageStyles.statusIndicator}>
+                  <span className={pageStyles.statusPulse} />
+                </div>
+                <div className={pageStyles.statusText}>
+                  <h4 className={pageStyles.statusTitle}>Gauteng Support Desk Active</h4>
+                  <span className={pageStyles.statusDesc}>
+                    Live chat active • WhatsApp response time &lt; 5 mins
+                  </span>
+                </div>
+              </div>
+
+              {/* SERVICE LEVEL AGREEMENTS */}
+              <div className={pageStyles.slaGroup}>
+                <div className={pageStyles.slaCard}>
+                  <span className={pageStyles.slaTitle}>School Partners</span>
+                  <h5 className={pageStyles.slaTime}>&lt; 2 Hours</h5>
+                  <span className={pageStyles.slaLabel}>Dedicated School Relations Lead callback.</span>
+                </div>
+                <div className={pageStyles.slaCard}>
+                  <span className={pageStyles.slaTitle}>Office/Quotes</span>
+                  <h5 className={pageStyles.slaTime}>&lt; 4 Hours</h5>
+                  <span className={pageStyles.slaLabel}>Custom line-item quotation prepared.</span>
+                </div>
+              </div>
+
+              {/* "WHAT HAPPENS NEXT?" TIMELINE */}
+              <div className={pageStyles.timelineCard}>
+                <h4 className={pageStyles.timelineTitle}>Your Response Timeline</h4>
+                <div className={pageStyles.timelineSteps}>
+                  <div className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}>
+                    <span className={pageStyles.stepIcon}>1</span>
+                    <div className={pageStyles.stepDetails}>
+                      <h5 className={pageStyles.stepTitle}>Submit Request</h5>
+                      <p className={pageStyles.stepDesc}>Submit your contact form with your exact needs.</p>
+                    </div>
+                  </div>
+                  <div className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}>
+                    <span className={pageStyles.stepIcon}>2</span>
+                    <div className={pageStyles.stepDetails}>
+                      <h5 className={pageStyles.stepTitle}>Gauteng Fast-Track Router</h5>
+                      <p className={pageStyles.stepDesc}>Your request is automatically fast-tracked to the correct department.</p>
+                    </div>
+                  </div>
+                  <div className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}>
+                    <span className={pageStyles.stepIcon}>3</span>
+                    <div className={pageStyles.stepDetails}>
+                      <h5 className={pageStyles.stepTitle}>Direct Outreach</h5>
+                      <p className={pageStyles.stepDesc}>A support representative contacts you on WhatsApp or phone to finalize details.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CONTACT DETAILS CHANNELS */}
+              <div className={pageStyles.contactChannelsCard}>
+                <SectionHeader
+                  eyebrow="Quick connections"
+                  title="Contact details"
+                  text="Reach out directly through standard support paths."
+                />
+                <div className={pageStyles.channelsGrid}>
+                  <div className={pageStyles.channelRow}>
+                    <svg className={pageStyles.channelIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                    <strong>Email:</strong>
+                    <a href={generalEmailHref}>{generalEmail}</a>
+                  </div>
+                  <div className={pageStyles.channelRow}>
+                    <svg className={pageStyles.channelIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    <strong>Telephone:</strong>
+                    <a href={phoneHref}>{phoneNumber}</a>
+                  </div>
+                  <div className={pageStyles.channelRow}>
+                    <svg className={pageStyles.channelIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                    </svg>
+                    <strong>WhatsApp:</strong>
+                    {hasWhatsAppNumber ? (
+                      <a href={orderWhatsAppHref}>Start prefilled chat</a>
+                    ) : (
+                      <span>Currently offline</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className={sectionStyles.buttonRow} style={{ marginTop: "12px" }}>
+                  {hasWhatsAppNumber ? (
+                    <Button href={orderWhatsAppHref} variant="white">
+                      WhatsApp us
+                    </Button>
+                  ) : null}
+                  <Button href="/partnership">Partner With Us</Button>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>

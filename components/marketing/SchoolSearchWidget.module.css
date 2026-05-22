@@ -1,0 +1,149 @@
+.widgetCard {
+  background: var(--card-bg, #ffffff);
+  border-radius: var(--radius-card, 20px);
+  border: var(--card-border, 1px solid rgba(15, 37, 55, 0.08));
+  padding: clamp(24px, 4vw, 36px);
+  box-shadow: var(--card-shadow, 0 10px 30px rgba(15, 37, 55, 0.03));
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.widgetCard:hover {
+  box-shadow: var(--card-shadow-hover, 0 20px 40px rgba(15, 37, 55, 0.06));
+  border-color: rgba(33, 158, 154, 0.2);
+}
+
+.eyebrow {
+  font-family: var(--font-button);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--pex-keppel);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.title {
+  color: var(--pex-navy);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.text {
+  color: var(--pex-text);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.searchForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pex-navy);
+}
+
+.inputField {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border-radius: var(--radius-pill, 9999px);
+  border: 1px solid var(--pex-border, rgba(15, 37, 55, 0.12));
+  background: var(--pex-bg, #f4f7f6);
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--pex-navy);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.inputField:focus {
+  border-color: var(--pex-keppel);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(33, 158, 154, 0.12);
+}
+
+.searchButton {
+  min-height: 48px;
+  border-radius: var(--radius-pill, 9999px);
+  background: var(--pex-navy);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-button);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(26, 42, 64, 0.15);
+  transition: all 0.2s ease;
+}
+
+.searchButton:hover {
+  background: var(--pex-keppel);
+  box-shadow: 0 6px 16px rgba(33, 158, 154, 0.25);
+  transform: translateY(-1px);
+}
+
+.searchButton:active {
+  transform: translateY(0);
+}
+
+.searchIcon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(15, 37, 55, 0.08);
+  margin: 4px 0;
+}
+
+.featuresList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--pex-text);
+  line-height: 1.4;
+}
+
+.checkIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--pex-keppel);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
