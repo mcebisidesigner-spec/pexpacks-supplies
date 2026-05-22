@@ -209,20 +209,10 @@
 /* ── Bottom section ── */
 .bottomSection {
   display: grid;
-  grid-template-areas: "copyright pwa social";
-  grid-template-columns: 1fr auto auto;
+  grid-template-areas: "copyright social";
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 14px;
-}
-
-.pwaWrapper {
-  grid-area: pwa;
-  display: inline-flex;
-  align-items: center;
-}
-
-.pwaWrapper:empty {
-  display: none;
 }
 
 /* ── Copyright ── */
@@ -348,16 +338,10 @@
   }
 
   .bottomSection {
-    grid-template-areas: 
-      "pwa pwa"
-      "copyright social";
+    grid-template-areas: "copyright social";
     grid-template-columns: 1fr auto;
     gap: 16px;
     align-items: center;
-  }
-
-  .pwaWrapper {
-    width: 100%;
   }
 
   .socialNav {

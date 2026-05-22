@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { PwaInstallButton } from "@/components/pwa/PwaInstallButton";
 import { Logo } from "@/components/ui/Logo";
 import { hasWhatsAppNumber, orderWhatsAppHref } from "@/data/contact";
 import { officialSocialLinks } from "@/data/social";
@@ -136,10 +135,6 @@ export function Footer() {
               McebisiH
             </a>
           </p>
-
-          <div className={styles.pwaWrapper}>
-            <PwaInstallButton />
-          </div>
 
           <nav className={styles.socialNav} aria-label="Social media">
             {socialLinks.map((link) => (
