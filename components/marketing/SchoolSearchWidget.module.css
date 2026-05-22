@@ -47,9 +47,66 @@
 }
 
 .inputGroup {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.schoolResults {
+  position: absolute;
+  z-index: 8;
+  inset: calc(100% + 8px) 0 auto;
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid rgba(15, 37, 55, 0.08);
+  border-radius: var(--radius-card, 20px);
+  padding: 8px;
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(15, 37, 55, 0.12);
+}
+
+.schoolResult {
+  width: 100%;
+  min-height: 58px;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: transparent;
+  color: var(--pex-navy, #1a2a40);
+  text-align: left;
+  display: grid;
+  gap: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.schoolResult:hover,
+.schoolResult:focus-visible {
+  background: var(--pex-bg, #f4f7f6);
+  outline: none;
+}
+
+.schoolResult span {
+  color: var(--pex-text-muted, #5a6b7a);
+  font-size: 14px;
+}
+
+.schoolEmpty {
+  margin: 0;
+  padding: 12px 14px;
+  color: var(--pex-text-muted, #5a6b7a);
+  font-size: 14px;
+}
+
+.schoolError {
+  margin: 0;
+  padding: 12px 14px;
+  color: var(--pex-error, #dc2626);
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .inputLabel {
@@ -76,44 +133,6 @@
   border-color: var(--pex-keppel);
   background: #ffffff;
   box-shadow: 0 0 0 4px rgba(33, 158, 154, 0.12);
-}
-
-.searchButton {
-  min-height: 48px;
-  border-radius: var(--radius-pill, 9999px);
-  background: var(--pex-navy);
-  color: #ffffff;
-  border: none;
-  font-family: var(--font-button);
-  font-weight: 700;
-  font-size: 15px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 4px 12px rgba(26, 42, 64, 0.15);
-  transition: all 0.2s ease;
-}
-
-.searchButton:hover {
-  background: var(--pex-keppel);
-  box-shadow: 0 6px 16px rgba(33, 158, 154, 0.25);
-  transform: translateY(-1px);
-}
-
-.searchButton:active {
-  transform: translateY(0);
-}
-
-.searchIcon {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 .divider {

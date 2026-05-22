@@ -95,8 +95,6 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
       onTouchEnd={handleTouchEnd}
     >
       <div className={styles.mobileMenuInner}>
-        <span className={styles.mobileMenuEyebrow}>Grab your pack & go!</span>
-
         <nav className={styles.mobileMenuNav} aria-label="Mobile navigation">
           {mainNavLinks.map((link) => {
             const active = isActivePath(link.href, pathname);
