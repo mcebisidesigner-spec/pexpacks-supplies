@@ -15,10 +15,25 @@ export function PackBuildingAnimation({
   const [isBuilding, setIsBuilding] = useState(true);
 
   useEffect(() => {
-    // Show animation for 1.5s
+    try {
+      const seen = sessionStorage.getItem("pexpacks:pack-animation-seen");
+      if (seen) {
+        setIsBuilding(false);
+        return;
+      }
+    } catch {
+      // Ignore storage access errors in private browsing/sandboxed settings
+    }
+
+    // Show animation for a snappy 700ms
     const timer = setTimeout(() => {
       setIsBuilding(false);
-    }, 1500);
+      try {
+        sessionStorage.setItem("pexpacks:pack-animation-seen", "true");
+      } catch {
+        // Ignore storage write errors
+      }
+    }, 700);
 
     return () => clearTimeout(timer);
   }, []);

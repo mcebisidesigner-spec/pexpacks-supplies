@@ -10,7 +10,7 @@ export function Header() {
     <header className={`${styles.siteHeader} ${styles.headerVisible} ${styles.headerAtTop}`}>
       <div className={styles.headerInner}>
         <Link className={styles.logoLink} href="/" aria-label="Pexpacks home" data-mobile-menu-close>
-          <Logo />
+          <Logo priority />
         </Link>
         <nav className={styles.desktopNav} aria-label="Primary navigation">
           {mainNavLinks.map((link) => (
