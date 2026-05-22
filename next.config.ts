@@ -79,7 +79,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/partner",
-        destination: "/partner-with-schools",
+        destination: "/partnership",
+        permanent: true,
+      },
+      {
+        source: "/partner-with-schools",
+        destination: "/partnership",
         permanent: true,
       },
       {

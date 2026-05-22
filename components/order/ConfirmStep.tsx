@@ -66,7 +66,7 @@ export function ConfirmStep({
           {fulfilmentOption === "Home delivery"
             ? [address, suburb, city, province].filter(Boolean).join(", ") ||
               "Address required"
-            : "PexPacks will confirm the handover details."}
+            : "Pexpacks will confirm the handover details."}
         </span>
       </ReviewBlock>
       <ReviewBlock title="Estimated total">

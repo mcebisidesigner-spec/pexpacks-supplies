@@ -1,7 +1,7 @@
-# PexPacks Website Audit Report
+# Pexpacks Website Audit Report
 
 Audit date: 2026-05-17  
-Project: `pexpacks-supplies`  
+Project: `Pexpacks-supplies`  
 Stack: Next.js 16.2.5, React 19.2.5, TypeScript 5.9, App Router, CSS Modules, global CSS tokens, local WOFF2 fonts.
 
 ## 1. Executive Summary
@@ -151,10 +151,10 @@ Strengths:
 - Organization, OnlineStore, WebSite, breadcrumb and product JSON-LD exist.
 
 Issues and recommendations:
-- School page title format is currently `{School Name} School Stationery Packs | Pexpacks`; align with the desired keyword pattern if needed: `{School Name} Stationery Pack | PexPacks`.
+- School page title format is currently `{School Name} School Stationery Packs | Pexpacks`; align with the desired keyword pattern if needed: `{School Name} Stationery Pack | Pexpacks`.
 - Add `FAQPage` schema only on pages where those FAQs are visibly rendered.
 - Ensure all blog markdown images keep descriptive alt text.
-- Consider LocalBusiness schema if PexPacks has a public service location.
+- Consider LocalBusiness schema if Pexpacks has a public service location.
 - Keep grade pages with meaningful visible copy, not only product cards.
 
 ## 6. Accessibility Findings

@@ -174,7 +174,7 @@ export function OrderForm({
       : "Full pack";
   const reviewReady = Boolean(standardSelection || (selectedSchool && selectedGrade));
   const supportHref = buildWhatsAppHref(
-    `Hi PexPacks, I need help with checkout${orderReference ? ` ${orderReference}` : ""}.`
+    `Hi Pexpacks, I need help with checkout${orderReference ? ` ${orderReference}` : ""}.`
   );
   const submitError = submitStatus !== null && !submitStatus.success;
 
@@ -372,7 +372,7 @@ export function OrderForm({
       }
       if (!consent) {
         nextErrors.consent =
-          "Please agree that PexPacks may use your information to process this order.";
+          "Please agree that Pexpacks may use your information to process this order.";
       }
     }
 

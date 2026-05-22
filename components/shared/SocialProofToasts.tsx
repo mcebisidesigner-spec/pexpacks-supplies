@@ -32,7 +32,7 @@ const notifications: SocialProofItem[] = [
   },
 ];
 
-const STORAGE_KEY = "pexpacks:social-proof-muted";
+const STORAGE_KEY = "Pexpacks:social-proof-muted";
 
 export function SocialProofToasts() {
   const [activeItem, setActiveItem] = useState<SocialProofItem | null>(null);

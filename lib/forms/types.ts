@@ -92,7 +92,7 @@ export const FORM_SUCCESS_MESSAGE =
 export const FORM_VALIDATION_MESSAGE = "Please check the form and try again.";
 
 export const FORM_ERROR_MESSAGE =
-  "We could not send your message right now. Please contact PexPacks directly.";
+  "We could not send your message right now. Please contact Pexpacks directly.";
 
 export function formTypeLabel(formType: FormType) {
   return formType

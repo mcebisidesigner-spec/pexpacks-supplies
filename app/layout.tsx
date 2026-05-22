@@ -15,7 +15,7 @@ import {
 } from "@/lib/schema";
 import "@/styles/globals.css";
 
-const pexpacksSans = localFont({
+const PexpacksSans = localFont({
   src: [
     {
       path: "../public/fonts/PexSans Regular.woff2",
@@ -38,11 +38,11 @@ const pexpacksSans = localFont({
       style: "normal",
     },
   ],
-  variable: "--font-pexpacks-sans",
+  variable: "--font-Pexpacks-sans",
   display: "swap",
 });
 
-const pexpacksSansAlt = localFont({
+const PexpacksSansAlt = localFont({
   src: [
     {
       path: "../public/fonts/PexSans Alt Regular.woff2",
@@ -65,7 +65,7 @@ const pexpacksSansAlt = localFont({
       style: "normal",
     },
   ],
-  variable: "--font-pexpacks-sans-alt",
+  variable: "--font-Pexpacks-sans-alt",
   display: "swap",
 });
 
@@ -123,7 +123,7 @@ export default function RootLayout({
     <html
       lang="en-ZA"
       data-scroll-behavior="smooth"
-      className={`${pexpacksSans.variable} ${pexpacksSansAlt.variable}`}
+      className={`${PexpacksSans.variable} ${PexpacksSansAlt.variable}`}
     >
       <body suppressHydrationWarning>
         <a href="#site-main" className="skip-link">

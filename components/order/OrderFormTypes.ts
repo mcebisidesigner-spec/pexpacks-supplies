@@ -81,7 +81,7 @@ export const checkoutSteps: CheckoutStep[] = [
   {
     id: "submit",
     label: "Submit Request",
-    helper: "PexPacks will confirm payment and fulfilment.",
+    helper: "Pexpacks will confirm payment and fulfilment.",
   },
 ];
 

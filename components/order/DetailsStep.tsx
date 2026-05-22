@@ -159,7 +159,7 @@ export function DetailsStep({
           }}
         />
         <span>
-          I agree that PexPacks may use my information to process this
+          I agree that Pexpacks may use my information to process this
           order and contact me about it.{" "}
           <Link href="/privacy-policy">Privacy policy</Link>
         </span>

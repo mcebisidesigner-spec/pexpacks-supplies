@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const siteName = "Pexpacks";
-export const siteUrl = "https://pexpacks.co.za";
+export const siteUrl = "https://Pexpacks.co.za";
 export const defaultOgImage = `${siteUrl}/opengraph-image.jpg`;
 export const defaultTwitterImage = `${siteUrl}/twitter-image.jpg`;
 export const defaultImageAlt = "Pexpacks school and office stationery packs";
@@ -53,7 +53,7 @@ export function buildMetadata(
       card: "summary_large_image",
       title: normalizedTitle,
       description,
-      creator: "@pexpacks",
+      creator: "@Pexpacks",
       images: [
         {
           url: defaultTwitterImage,

@@ -95,7 +95,7 @@ const launchSteps = [
 export const metadata: Metadata = buildMetadata(
   "Partner With Pexpacks | Free Website & Hosting for Schools",
   "Designate Pexpacks as your official school stationery partner and get a professional modern website built, hosted, and maintained completely free of charge.",
-  "/partner-with-schools",
+  "/partnership",
 );
 
 export default function PartnerWithSchoolsPage() {
@@ -103,8 +103,8 @@ export default function PartnerWithSchoolsPage() {
     <>
       <PageHero
         eyebrow="Exclusive school partner program"
-        title="A pitch deck schools can understand in minutes."
-        text="Pexpacks builds your school a modern website and parent stationery portal at no setup cost. Walk through the offer, calculate the value, preview the experience, and apply when the partnership makes sense."
+        title="Partnership with real benefits"
+        text="Pexpacks works with schools to simplify stationery ordering, reduce parent stress, and help learners start the year prepared with the right supplies."
         panelText="Partner value snapshot"
         panelTitle="Website + parent ordering + rebate model"
       >

@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import type { FormEndpointKind } from "@/lib/forms/types";
 
-type SendPexPacksEmailInput = {
+type SendPexpacksEmailInput = {
   to: string;
   replyTo?: string;
   subject: string;
@@ -17,7 +17,7 @@ type SendPexPacksEmailInput = {
   metadata?: Record<string, string | number | boolean | undefined>;
 };
 
-type SendPexPacksEmailResult =
+type SendPexpacksEmailResult =
   | { success: true; messageId?: string }
   | { success: false; error: string };
 
@@ -60,7 +60,7 @@ function readSmtpConfig(): SmtpConfig {
     user: requiredEnv("SMTP_USER"),
     pass: requiredEnv("SMTP_PASS"),
     fromEmail: requiredEnv("SMTP_FROM_EMAIL"),
-    fromName: process.env.SMTP_FROM_NAME?.trim() || "PexPacks Website",
+    fromName: process.env.SMTP_FROM_NAME?.trim() || "Pexpacks Website",
     defaultReplyTo: process.env.SMTP_REPLY_TO_EMAIL?.trim(),
   };
 }
@@ -104,7 +104,7 @@ export function recipientForEndpoint(endpoint: FormEndpointKind) {
   return process.env.SMTP_CONTACT_TO_EMAIL || process.env.SMTP_TO_EMAIL;
 }
 
-export async function sendPexPacksEmail({
+export async function sendPexpacksEmail({
   to,
   replyTo,
   subject,
@@ -113,7 +113,7 @@ export async function sendPexPacksEmail({
   formType,
   attachments,
   metadata,
-}: SendPexPacksEmailInput): Promise<SendPexPacksEmailResult> {
+}: SendPexpacksEmailInput): Promise<SendPexpacksEmailResult> {
   try {
     const config = readSmtpConfig();
     const result = await getTransporter(config).sendMail({
@@ -125,9 +125,9 @@ export async function sendPexPacksEmail({
       html,
       attachments,
       headers: {
-        "X-PexPacks-Form-Type": formType,
+        "X-Pexpacks-Form-Type": formType,
         ...(metadata?.sourceUrl
-          ? { "X-PexPacks-Source-Url": String(metadata.sourceUrl) }
+          ? { "X-Pexpacks-Source-Url": String(metadata.sourceUrl) }
           : {}),
       },
     });

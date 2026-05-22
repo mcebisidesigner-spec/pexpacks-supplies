@@ -53,12 +53,12 @@ export function DownloadListLink({
     if (email.trim()) {
       try {
         const existing = JSON.parse(
-          localStorage.getItem("pexpacks:list-emails") || "[]"
+          localStorage.getItem("Pexpacks:list-emails") || "[]"
         ) as string[];
         if (!existing.includes(email.trim())) {
           existing.push(email.trim());
           localStorage.setItem(
-            "pexpacks:list-emails",
+            "Pexpacks:list-emails",
             JSON.stringify(existing)
           );
         }

@@ -209,8 +209,8 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
   doc.setFont("helvetica", "normal");
   doc.setTextColor(MUTED);
   const contactX = PAGE_W - MARGIN_RIGHT;
-  doc.text("www.pexpacks.co.za", contactX, y + 4, { align: "right" });
-  doc.text("orders@pexpacks.co.za", contactX, y + 9, { align: "right" });
+  doc.text("www.Pexpacks.co.za", contactX, y + 4, { align: "right" });
+  doc.text("orders@Pexpacks.co.za", contactX, y + 9, { align: "right" });
   doc.text("078 003 6048", contactX, y + 14, { align: "right" });
   doc.text("Gauteng, South Africa", contactX, y + 19, { align: "right" });
 
@@ -373,7 +373,7 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
   );
   y += 6;
   doc.text(
-    "For queries or to order, visit www.pexpacks.co.za or call 078 003 6048",
+    "For queries or to order, visit www.Pexpacks.co.za or call 078 003 6048",
     MARGIN_LEFT,
     y
   );
@@ -458,7 +458,7 @@ function drawPageFooter(
   doc.setFont("helvetica", "normal");
   doc.setTextColor(MUTED);
   doc.text(
-    "Pexpacks Supplies  •  www.pexpacks.co.za  •  orders@pexpacks.co.za  •  078 003 6048",
+    "Pexpacks Supplies  •  www.Pexpacks.co.za  •  orders@Pexpacks.co.za  •  078 003 6048",
     PAGE_W / 2,
     footerY,
     { align: "center" }

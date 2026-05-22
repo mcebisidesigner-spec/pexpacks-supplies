@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./ReturningParentBanner.module.css";
 
-export const STORAGE_KEY = "pexpacks:recent-school-visits";
-export const RECENT_SCHOOL_VISITS_EVENT = "pexpacks:recent-school-visits-updated";
+export const STORAGE_KEY = "Pexpacks:recent-school-visits";
+export const RECENT_SCHOOL_VISITS_EVENT = "Pexpacks:recent-school-visits-updated";
 
 export type LastVisit = {
   schoolName: string;

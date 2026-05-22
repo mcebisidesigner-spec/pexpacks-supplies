@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 
-const CACHE_DIR = path.join(process.env.TMPDIR || process.env.TMP || "/tmp", ".pexpacks-rate-limit");
+const CACHE_DIR = path.join(process.env.TMPDIR || process.env.TMP || "/tmp", ".Pexpacks-rate-limit");
 const PERSIST_INTERVAL = 30_000;
 const CLEANUP_INTERVAL = 60_000;
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createEmailTemplate } from "@/lib/email/templates";
-import { recipientForEndpoint, sendPexPacksEmail } from "@/lib/email/mailer";
+import { recipientForEndpoint, sendPexpacksEmail } from "@/lib/email/mailer";
 import { normaliseSubmittedTotal } from "@/lib/order/orderTotals";
 import {
   isSameOriginRequest,
@@ -59,7 +59,7 @@ async function withOrderTotal(data: FormSubmission) {
   };
 }
 
-export async function handlePexPacksFormRequest(
+export async function handlePexpacksFormRequest(
   request: NextRequest,
   endpoint: FormEndpointKind
 ) {
@@ -139,7 +139,7 @@ export async function handlePexPacksFormRequest(
   }
 
   const template = createEmailTemplate(endpoint, data);
-  const result = await sendPexPacksEmail({
+  const result = await sendPexpacksEmail({
     to: recipient,
     replyTo: data.email,
     subject: template.subject,

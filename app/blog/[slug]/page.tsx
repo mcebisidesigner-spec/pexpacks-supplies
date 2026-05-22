@@ -23,12 +23,12 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Post Not Found | PexPacks",
+      title: "Post Not Found | Pexpacks",
     };
   }
 
   return {
-    title: `${post.title} | PexPacks Resource Hub`,
+    title: `${post.title} | Pexpacks Resource Hub`,
     description: post.excerpt,
     openGraph: {
       title: post.title,
@@ -135,7 +135,7 @@ export default async function BlogPostPage({
       <CTASection
         eyebrow="Skip the hassle"
         title="Ready to order your school pack?"
-        text="Don't spend hours hunting for these items. Let PexPacks deliver your exact school list straight to your door."
+        text="Don't spend hours hunting for these items. Let Pexpacks deliver your exact school list straight to your door."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
         secondaryHref="/add-your-school#school-request-form"

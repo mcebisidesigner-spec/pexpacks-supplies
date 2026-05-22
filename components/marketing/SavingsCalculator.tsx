@@ -6,22 +6,22 @@ import styles from "./SavingsCalculator.module.css";
 import { SectionHeader } from "./SectionHeader";
 
 const GRADES = [
-  { id: "grade-rr", label: "Grade RR", avgRetail: 1200, pexpacks: 950, hours: 3 },
-  { id: "grade-r", label: "Grade R", avgRetail: 1400, pexpacks: 1100, hours: 3 },
-  { id: "grade-1", label: "Grade 1", avgRetail: 1800, pexpacks: 1450, hours: 4 },
-  { id: "grade-2", label: "Grade 2", avgRetail: 1750, pexpacks: 1400, hours: 4 },
-  { id: "grade-3", label: "Grade 3", avgRetail: 1600, pexpacks: 1300, hours: 4 },
-  { id: "grade-4", label: "Grade 4", avgRetail: 2100, pexpacks: 1750, hours: 5 },
-  { id: "grade-5", label: "Grade 5", avgRetail: 1950, pexpacks: 1600, hours: 5 },
-  { id: "grade-6", label: "Grade 6", avgRetail: 1800, pexpacks: 1500, hours: 4 },
-  { id: "grade-7", label: "Grade 7", avgRetail: 2200, pexpacks: 1850, hours: 5 },
-  { id: "high-school", label: "High School", avgRetail: 2500, pexpacks: 2100, hours: 6 },
+  { id: "grade-rr", label: "Grade RR", avgRetail: 1200, Pexpacks: 950, hours: 3 },
+  { id: "grade-r", label: "Grade R", avgRetail: 1400, Pexpacks: 1100, hours: 3 },
+  { id: "grade-1", label: "Grade 1", avgRetail: 1800, Pexpacks: 1450, hours: 4 },
+  { id: "grade-2", label: "Grade 2", avgRetail: 1750, Pexpacks: 1400, hours: 4 },
+  { id: "grade-3", label: "Grade 3", avgRetail: 1600, Pexpacks: 1300, hours: 4 },
+  { id: "grade-4", label: "Grade 4", avgRetail: 2100, Pexpacks: 1750, hours: 5 },
+  { id: "grade-5", label: "Grade 5", avgRetail: 1950, Pexpacks: 1600, hours: 5 },
+  { id: "grade-6", label: "Grade 6", avgRetail: 1800, Pexpacks: 1500, hours: 4 },
+  { id: "grade-7", label: "Grade 7", avgRetail: 2200, Pexpacks: 1850, hours: 5 },
+  { id: "high-school", label: "High School", avgRetail: 2500, Pexpacks: 2100, hours: 6 },
 ];
 
 export function SavingsCalculator() {
   const [selectedGrade, setSelectedGrade] = useState(GRADES[2]); // Default Grade 1
 
-  const savings = selectedGrade.avgRetail - selectedGrade.pexpacks;
+  const savings = selectedGrade.avgRetail - selectedGrade.Pexpacks;
 
   return (
     <section className={styles.section}>

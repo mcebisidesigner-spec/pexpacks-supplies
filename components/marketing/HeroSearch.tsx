@@ -223,7 +223,7 @@ export function HeroSearch() {
         ) : null}
       </form>
       <SearchHelperPill
-        storageKey="pexpacks:gauteng-helper:home"
+        storageKey="Pexpacks:gauteng-helper:home"
         isInputFocused={isSchoolInputFocused}
         inputValue={query}
         className={styles.searchHelper}

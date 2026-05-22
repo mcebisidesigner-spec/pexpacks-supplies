@@ -13,11 +13,11 @@ type Field = {
 };
 
 const subjectByEndpoint: Record<FormEndpointKind, string> = {
-  contact: "New PexPacks Contact Enquiry",
-  order: "New PexPacks Order Request",
-  "office-pack": "New PexPacks Office Pack Enquiry",
-  "school-partnership": "New PexPacks School Partnership Request",
-  quote: "New PexPacks Quote Request",
+  contact: "New Pexpacks Contact Enquiry",
+  order: "New Pexpacks Order Request",
+  "office-pack": "New Pexpacks Office Pack Enquiry",
+  "school-partnership": "New Pexpacks School Partnership Request",
+  quote: "New Pexpacks Quote Request",
 };
 
 function escapeHtml(value: unknown) {
@@ -161,24 +161,24 @@ export function createEmailTemplate(
 ): TemplateResult {
   const subject =
     data.formType === "school-waitlist"
-      ? "New PexPacks School Waitlist Lead"
+      ? "New Pexpacks School Waitlist Lead"
       : data.formType === "readiness-quiz"
-        ? "New PexPacks Readiness Quiz Lead"
+        ? "New Pexpacks Readiness Quiz Lead"
         : data.formType === "brand-package-enquiry"
-          ? "New PexPacks Business Starter Brand Package Claim"
+          ? "New Pexpacks Business Starter Brand Package Claim"
           : subjectByEndpoint[endpoint];
   const fields = fieldsForEndpoint(endpoint, data);
   const text = [
     subject,
     "",
-    "PexPacks website form submission",
+    "Pexpacks website form submission",
     "",
     renderText(fields),
   ].join("\n");
   const html = `
     <div style="font-family:Arial,sans-serif;line-height:1.5;color:#17323a;">
       <h1 style="font-size:22px;margin:0 0 8px;">${escapeHtml(subject)}</h1>
-      <p style="margin:0 0 18px;color:#49616a;">PexPacks website form submission</p>
+      <p style="margin:0 0 18px;color:#49616a;">Pexpacks website form submission</p>
       <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:760px;border:1px solid #e6edf0;">
         <tbody>${renderHtmlRows(fields)}</tbody>
       </table>

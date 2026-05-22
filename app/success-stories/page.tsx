@@ -7,7 +7,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata(
   "Partner Success Stories",
-  "See how PexPacks helps schools across South Africa streamline their back-to-school stationery logistics.",
+  "See how Pexpacks helps schools across South Africa streamline their back-to-school stationery logistics.",
   "/success-stories"
 );
 
@@ -25,7 +25,7 @@ export default function SuccessStoriesPage() {
       <PageHero
         eyebrow="Success Stories"
         title="Trusted by schools across the country"
-        text="See how PexPacks helps principals and teachers streamline their back-to-school logistics so they can focus on what matters: teaching."
+        text="See how Pexpacks helps principals and teachers streamline their back-to-school logistics so they can focus on what matters: teaching."
         panelTitle="Ready to simplify your school's stationery?"
         panelText="Contact us today to set up a custom portal for your parents."
       />
@@ -53,7 +53,7 @@ export default function SuccessStoriesPage() {
                   </div>
 
                   <div className={styles.detailSection}>
-                    <h3>The PexPacks Solution</h3>
+                    <h3>The Pexpacks Solution</h3>
                     <p>{story.solution}</p>
                   </div>
 
@@ -88,8 +88,8 @@ export default function SuccessStoriesPage() {
       <CTASection
         eyebrow="Join the network"
         title="Become a partner school today"
-        text="It is 100% free for schools to partner with PexPacks. We set up your lists, handle the payments, and deliver the packs."
-        primaryHref="/partner-with-schools"
+        text="It is 100% free for schools to partner with Pexpacks. We set up your lists, handle the payments, and deliver the packs."
+        primaryHref="/partnership"
         primaryLabel="Learn about Partnerships"
         secondaryHref="/contact"
         secondaryLabel="Contact Us"

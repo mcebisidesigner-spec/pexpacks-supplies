@@ -16,7 +16,7 @@ export function PackBuildingAnimation({
 
   useEffect(() => {
     try {
-      const seen = sessionStorage.getItem("pexpacks:pack-animation-seen");
+      const seen = sessionStorage.getItem("Pexpacks:pack-animation-seen");
       if (seen) {
         setIsBuilding(false);
         return;
@@ -29,7 +29,7 @@ export function PackBuildingAnimation({
     const timer = setTimeout(() => {
       setIsBuilding(false);
       try {
-        sessionStorage.setItem("pexpacks:pack-animation-seen", "true");
+        sessionStorage.setItem("Pexpacks:pack-animation-seen", "true");
       } catch {
         // Ignore storage write errors
       }
@@ -47,7 +47,7 @@ export function PackBuildingAnimation({
           <div className={`${styles.item} ${styles.item3}`}></div>
           <div className={styles.box}>
             <div className={styles.boxFront}>
-              <span className={styles.boxLabel}>PEXPACKS</span>
+              <span className={styles.boxLabel}>Pexpacks</span>
             </div>
           </div>
         </div>

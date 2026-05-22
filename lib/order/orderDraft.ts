@@ -14,7 +14,7 @@ export type OrderDraft = {
   estimatedTotal?: number;
 };
 
-const DRAFT_PREFIX = "pexpacks:order-draft:";
+const DRAFT_PREFIX = "Pexpacks:order-draft:";
 const DRAFT_TTL_MS = 1000 * 60 * 60 * 24;
 
 function createDraftId() {

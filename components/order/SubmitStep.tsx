@@ -25,7 +25,7 @@ export function SubmitStep({
           <p className={styles.confirmKicker}>Order request received</p>
           <h3>Thank you. We have your request.</h3>
           <p>
-            The PexPacks team will contact you to confirm availability,
+            The Pexpacks team will contact you to confirm availability,
             payment, packing and delivery details.
           </p>
           <dl className={styles.successDetails}>
@@ -52,7 +52,7 @@ export function SubmitStep({
           <p className={styles.confirmKicker}>Payment readiness</p>
           <h3>Submit your order request</h3>
           <p>
-            Online payment is not taken on this page yet. PexPacks will
+            Online payment is not taken on this page yet. Pexpacks will
             confirm the final amount, invoice or payment instructions
             before any payment is due.
           </p>

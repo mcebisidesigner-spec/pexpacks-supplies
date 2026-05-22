@@ -260,7 +260,7 @@ export function SchoolSearchPanel({
       </div>
 
       <SearchHelperPill
-        storageKey="pexpacks:gauteng-helper:schools"
+        storageKey="Pexpacks:gauteng-helper:schools"
         isInputFocused={isSchoolInputFocused}
         inputValue={query}
         className={styles.searchHelper}

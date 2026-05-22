@@ -40,10 +40,10 @@ SMTP_SECURE=false
 SMTP_USER=
 SMTP_PASS=
 SMTP_FROM_EMAIL=
-SMTP_FROM_NAME=PexPacks Website
+SMTP_FROM_NAME=Pexpacks Website
 SMTP_TO_EMAIL=
-NEXT_PUBLIC_SITE_URL=https://pexpacks.co.za
-SITE_URL=https://pexpacks.co.za
+NEXT_PUBLIC_SITE_URL=https://Pexpacks.co.za
+SITE_URL=https://Pexpacks.co.za
 NODE_ENV=production
 ```
 
@@ -79,7 +79,7 @@ styles/           -> Global CSS, design tokens, shared page styles
 | `/schools/[schoolSlug]`                    | School detail page                                      |
 | `/schools/[schoolSlug]/[gradeSlug]`        | Grade pack detail page                                  |
 | `/office`                                 | Office supply packs                                     |
-| `/partner-with-schools`                    | Partner with Pexpacks                                   |
+| `/partnership`                    | Partner with Pexpacks                                   |
 | `/contact`                                 | Contact form                                            |
 | `/order`                                   | Order flow                                              |
 | `/school`, `/office`, `/partner`, `/copex` | Legacy redirects                                        |

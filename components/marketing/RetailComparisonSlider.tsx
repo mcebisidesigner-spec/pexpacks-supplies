@@ -11,7 +11,7 @@ const retailPoints = [
   { text: "4+ hours lost", icon: "⏳" },
 ];
 
-const pexpacksPoints = [
+const PexpacksPoints = [
   { text: "One click", icon: "🖱️" },
   { text: "Exact list match", icon: "✅" },
   { text: "Delivered ready", icon: "📦" },
@@ -28,9 +28,9 @@ export function RetailComparisonSlider() {
   }
 
   // Calculate dynamic scales based on position (0 to 100)
-  // When position is near 0, retail is 1 (fully visible/scaled), pexpacks is 0.8
+  // When position is near 0, retail is 1 (fully visible/scaled), Pexpacks is 0.8
   const retailScale = position < 50 ? 1 : Math.max(0.9, 1 - (position - 50) * 0.005);
-  const pexpacksScale = position > 50 ? 1 : Math.max(0.9, 1 - (50 - position) * 0.005);
+  const PexpacksScale = position > 50 ? 1 : Math.max(0.9, 1 - (50 - position) * 0.005);
 
   return (
     <div className={styles.comparison} style={sliderStyle}>
@@ -56,13 +56,13 @@ export function RetailComparisonSlider() {
         </div>
 
         <div 
-          className={`${styles.pane} ${styles.pexpacksPane}`}
-          style={{ transform: `scale(${pexpacksScale})`, transition: 'transform 0.1s ease-out' }}
+          className={`${styles.pane} ${styles.PexpacksPane}`}
+          style={{ transform: `scale(${PexpacksScale})`, transition: 'transform 0.1s ease-out' }}
         >
           <span className={styles.paneLabel}>Pexpacks experience</span>
           <h3>Search, choose, get it packed.</h3>
           <ul>
-            {pexpacksPoints.map((point) => (
+            {PexpacksPoints.map((point) => (
               <li key={point.text}>
                 <span className={styles.pointIcon} aria-hidden="true">{point.icon}</span> {point.text}
               </li>

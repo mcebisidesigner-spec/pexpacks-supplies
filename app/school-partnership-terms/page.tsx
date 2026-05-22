@@ -91,7 +91,7 @@ const config: LegalDocumentConfig = {
       ),
     },
     {
-      id: "pexpacks-responsibilities",
+      id: "Pexpacks-responsibilities",
       eyebrow: "3",
       title: "Pexpacks responsibilities",
       summary:

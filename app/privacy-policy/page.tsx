@@ -61,7 +61,7 @@ const config: LegalDocumentConfig = {
               <strong>Effective date:</strong> May 2026
             </li>
             <li>
-              <strong>Website:</strong> www.pexpacks.co.za
+              <strong>Website:</strong> www.Pexpacks.co.za
             </li>
             <li>
               <strong>Trading name:</strong> Pexpacks / Pexcover

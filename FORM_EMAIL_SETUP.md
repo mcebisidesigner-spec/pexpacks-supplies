@@ -1,8 +1,8 @@
-# PexPacks Form Email Setup
+# Pexpacks Form Email Setup
 
 ## Overview
 
-Web3Forms has been removed. PexPacks now submits website forms to internal Next.js App Router endpoints under `app/api/forms/*`. Those route handlers validate the payload server-side and send notification emails through Nodemailer using generic SMTP credentials.
+Web3Forms has been removed. Pexpacks now submits website forms to internal Next.js App Router endpoints under `app/api/forms/*`. Those route handlers validate the payload server-side and send notification emails through Nodemailer using generic SMTP credentials.
 
 ```text
 Frontend form -> internal Next.js endpoint -> validation -> Nodemailer SMTP -> JSON response
@@ -18,12 +18,12 @@ Create `.env.local` for local development and add the same values to production 
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
 SMTP_SECURE=false
-SMTP_USER=orders@pexpacks.co.za
+SMTP_USER=orders@Pexpacks.co.za
 SMTP_PASS=your_smtp_password
-SMTP_FROM_EMAIL=website@pexpacks.co.za
-SMTP_FROM_NAME=PexPacks Website
-SMTP_TO_EMAIL=info@pexpacks.co.za
-SMTP_REPLY_TO_EMAIL=info@pexpacks.co.za
+SMTP_FROM_EMAIL=website@Pexpacks.co.za
+SMTP_FROM_NAME=Pexpacks Website
+SMTP_TO_EMAIL=info@Pexpacks.co.za
+SMTP_REPLY_TO_EMAIL=info@Pexpacks.co.za
 
 SMTP_CONTACT_TO_EMAIL=
 SMTP_ORDERS_TO_EMAIL=
@@ -31,8 +31,8 @@ SMTP_QUOTES_TO_EMAIL=
 SMTP_PARTNERSHIPS_TO_EMAIL=
 SMTP_OFFICE_PACKS_TO_EMAIL=
 
-NEXT_PUBLIC_SITE_URL=https://pexpacks.co.za
-SITE_URL=https://pexpacks.co.za
+NEXT_PUBLIC_SITE_URL=https://Pexpacks.co.za
+SITE_URL=https://Pexpacks.co.za
 ```
 
 Do not prefix SMTP values with `NEXT_PUBLIC_`. Client-side variables are exposed to the browser.
@@ -92,4 +92,4 @@ Validation errors return a generic message plus an `errors` object. SMTP failure
 
 ## Future Storage Note
 
-The form route handler is structured so a future Supabase insert can happen before `sendPexPacksEmail`. Do not add Supabase dependencies until form persistence is explicitly required.
+The form route handler is structured so a future Supabase insert can happen before `sendPexpacksEmail`. Do not add Supabase dependencies until form persistence is explicitly required.

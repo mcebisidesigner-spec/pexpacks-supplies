@@ -5,7 +5,7 @@ import { blogPosts } from "@/data/blog";
 import styles from "./Blog.module.css";
 
 export const metadata: Metadata = {
-  title: "Back to School Resource Hub | PexPacks",
+  title: "Back to School Resource Hub | Pexpacks",
   description:
     "Helpful guides, stationery checklists, and tips for parents preparing for the new school year.",
 };

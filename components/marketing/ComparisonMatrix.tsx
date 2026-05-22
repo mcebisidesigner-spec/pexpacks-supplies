@@ -5,27 +5,27 @@ const comparisonData = [
   {
     feature: "Finding the correct school list",
     retail: "Frustrating (hunting down PDFs)",
-    pexpacks: "Instant (we have the exact list)",
+    Pexpacks: "Instant (we have the exact list)",
   },
   {
     feature: "Sourcing specific items",
     retail: "Multiple store visits",
-    pexpacks: "Everything packed in one box",
+    Pexpacks: "Everything packed in one box",
   },
   {
     feature: "Time spent",
     retail: "3-4 hours per child",
-    pexpacks: "Under 2 minutes online",
+    Pexpacks: "Under 2 minutes online",
   },
   {
     feature: "Stress level",
     retail: "High (sold out items, queues)",
-    pexpacks: "Zero (delivered to your door)",
+    Pexpacks: "Zero (delivered to your door)",
   },
   {
     feature: "Cost",
     retail: "Hidden costs (petrol, extra items)",
-    pexpacks: "Transparent, upfront pricing",
+    Pexpacks: "Transparent, upfront pricing",
   },
 ];
 
@@ -63,7 +63,7 @@ export function ComparisonMatrix() {
       <div className={styles.inner}>
         <SectionHeader
           eyebrow="The Smart Choice"
-          title="PexPacks vs. Retail Shopping"
+          title="Pexpacks vs. Retail Shopping"
           text="See how much time and effort you save when we pack the stationery for you."
         />
 
@@ -80,11 +80,11 @@ export function ComparisonMatrix() {
                   </div>
                 </div>
                 <div className={styles.vsBadge}>VS</div>
-                <div className={`${styles.compareItem} ${styles.pexpacksItem}`}>
-                  <span className={styles.itemLabel}>PexPacks</span>
+                <div className={`${styles.compareItem} ${styles.PexpacksItem}`}>
+                  <span className={styles.itemLabel}>Pexpacks</span>
                   <div className={styles.itemContent}>
                     <CheckIcon />
-                    <span>{row.pexpacks}</span>
+                    <span>{row.Pexpacks}</span>
                   </div>
                 </div>
               </div>

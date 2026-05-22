@@ -1,13 +1,13 @@
 import { NextRequest } from "next/server";
 import {
-  handlePexPacksFormRequest,
+  handlePexpacksFormRequest,
   methodNotAllowed,
 } from "@/lib/forms/routeHandler";
 
 export const runtime = "nodejs";
 
 export function POST(request: NextRequest) {
-  return handlePexPacksFormRequest(request, "school-partnership");
+  return handlePexpacksFormRequest(request, "school-partnership");
 }
 
 export const GET = methodNotAllowed;

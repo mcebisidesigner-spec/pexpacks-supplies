@@ -126,7 +126,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                     WhatsApp us
                   </Button>
                 ) : null}
-                <Button href="/partner-with-schools">Partner With Us</Button>
+                <Button href="/partnership">Partner With Us</Button>
               </div>
             </div>
           </div>

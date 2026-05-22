@@ -92,7 +92,7 @@ export function OrderSummary({
         </ul>
         {supportHref ? (
           <a className={styles.supportLink} href={supportHref}>
-            Need help? Chat to PexPacks
+            Need help? Chat to Pexpacks
           </a>
         ) : (
           <a className={styles.supportLink} href={ordersEmailHref}>

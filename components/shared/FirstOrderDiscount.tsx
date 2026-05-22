@@ -10,20 +10,20 @@ export function FirstOrderDiscount() {
 
   useEffect(() => {
     // Only show once per user (check localStorage)
-    const hasSeen = localStorage.getItem("pexpacks:discount-seen");
+    const hasSeen = localStorage.getItem("Pexpacks:discount-seen");
     if (hasSeen) return;
 
     // Show after 15 seconds
     const timer = setTimeout(() => {
       setIsOpen(true);
-      localStorage.setItem("pexpacks:discount-seen", "true");
+      localStorage.setItem("Pexpacks:discount-seen", "true");
     }, 15000);
 
     // Or show on exit intent (desktop)
     const handleMouseLeave = (e: MouseEvent) => {
       if (e.clientY <= 0 && !hasSeen && !isOpen) {
         setIsOpen(true);
-        localStorage.setItem("pexpacks:discount-seen", "true");
+        localStorage.setItem("Pexpacks:discount-seen", "true");
       }
     };
 
@@ -43,10 +43,10 @@ export function FirstOrderDiscount() {
       // Here you would typically send the email to your API/CRM
       // For now, we'll just save it to localStorage and show success
       try {
-        const existing = JSON.parse(localStorage.getItem("pexpacks:list-emails") || "[]");
+        const existing = JSON.parse(localStorage.getItem("Pexpacks:list-emails") || "[]");
         if (!existing.includes(email.trim())) {
           existing.push(email.trim());
-          localStorage.setItem("pexpacks:list-emails", JSON.stringify(existing));
+          localStorage.setItem("Pexpacks:list-emails", JSON.stringify(existing));
         }
       } catch {
         // ignore

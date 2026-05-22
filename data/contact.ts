@@ -1,5 +1,5 @@
-export const generalEmail = "hello@pexpacks.co.za";
-export const ordersEmail = "orders@pexpacks.co.za";
+export const generalEmail = "hello@Pexpacks.co.za";
+export const ordersEmail = "orders@Pexpacks.co.za";
 export const phoneNumber = "0780036048";
 
 export const generalEmailHref = `mailto:${generalEmail}`;
@@ -20,7 +20,7 @@ export const internationalPhoneNumber =
 export const phoneHref = `tel:+${internationalPhoneNumber}`;
 
 export const whatsappNumber =
-  process.env.NEXT_PUBLIC_PEXPACKS_WHATSAPP_NUMBER ?? phoneNumber;
+  process.env.NEXT_PUBLIC_Pexpacks_WHATSAPP_NUMBER ?? phoneNumber;
 export const hasWhatsAppNumber = whatsappNumber.trim().length > 0;
 
 export function buildWhatsAppHref(message: string) {
