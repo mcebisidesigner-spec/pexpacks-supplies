@@ -245,7 +245,6 @@
 
 .sectionBody a,
 .summaryPanel a,
-.detailsList a,
 .highlightCard a,
 .noticePanel a {
   color: var(--pex-primary);
@@ -257,41 +256,9 @@
 
 .sectionBody a:hover,
 .summaryPanel a:hover,
-.detailsList a:hover,
 .highlightCard a:hover,
 .noticePanel a:hover {
   color: var(--pex-keppel);
-}
-
-.detailsList {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin: 0;
-}
-
-.detailsList div {
-  min-width: 0;
-  border: 1px solid rgba(225, 231, 234, 0.78);
-  border-radius: 18px;
-  padding: 14px 16px;
-  background: var(--pex-bg-soft);
-}
-
-.detailsList dt {
-  margin: 0 0 6px;
-  color: var(--pex-text-muted);
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.detailsList dd {
-  margin: 0;
-  min-width: 0;
-  color: var(--pex-primary);
-  font-weight: 800;
-  overflow-wrap: anywhere;
 }
 
 .noticePanel {
@@ -476,7 +443,6 @@
     scroll-margin-top: calc(var(--header-height-mobile) + 150px);
   }
 
-  .detailsList,
   .highlightGrid {
     grid-template-columns: 1fr;
   }

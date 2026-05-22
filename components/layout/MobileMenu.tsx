@@ -95,7 +95,7 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
       onTouchEnd={handleTouchEnd}
     >
       <div className={styles.mobileMenuInner}>
-        <span className={styles.mobileMenuEyebrow}>Navigation</span>
+        <span className={styles.mobileMenuEyebrow}>Grab your pack & go!</span>
 
         <nav className={styles.mobileMenuNav} aria-label="Mobile navigation">
           {mainNavLinks.map((link) => {
@@ -143,7 +143,7 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
               <circle cx="12" cy="8" r="3.5" />
               <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
             </svg>
-            Parent Portal
+            Login
           </Link>
 
           <Link

@@ -152,16 +152,6 @@
   font-weight: normal;
 }
 
-.supplierPanel {
-  background: var(--pex-bg-warm);
-  border: none;
-}
-
-.supplierAction {
-  display: flex;
-  justify-content: flex-end;
-}
-
 @media (max-width: 980px) {
   .flowIntro {
     grid-template-columns: 1fr;

@@ -57,10 +57,6 @@ function compareSchoolsForDisplay(
   return a.name.localeCompare(b.name);
 }
 
-export function sortSchoolsForDisplay(records: SchoolSearchRecord[]) {
-  return [...records].sort(compareSchoolsForDisplay);
-}
-
 export function filterSchools(
   records: SchoolSearchRecord[],
   filters: SchoolSearchFilters,

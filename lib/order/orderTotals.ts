@@ -1,10 +1,9 @@
+import { PEXCOVER_PRICE } from "@/lib/constants";
 import { customPackAddOns } from "@/data/packAddOns";
 import { phasePacks } from "@/data/phasePacks";
 import { getFullSchoolRecords } from "@/data/schools";
 import { normalisePackItems } from "@/lib/packs/normalisePackItems";
 import type { FormSubmission } from "@/lib/forms/types";
-
-const PEXCOVER_ADDON_PRICE = 120;
 
 type ParsedLineItem = {
   name: string;
@@ -143,7 +142,7 @@ export async function normaliseSubmittedTotal(data: FormSubmission) {
   }
 
   const addOnsTotal = /pexcover add-on requested/i.test(data.message ?? "")
-    ? PEXCOVER_ADDON_PRICE
+    ? PEXCOVER_PRICE
     : 0;
   const estimatedTotal = roundCurrency(calculated + addOnsTotal);
 

@@ -1,14 +1,3 @@
-.blogHeader {
-  padding: clamp(60px, 8vw, 100px) var(--gutter-desktop) clamp(40px, 6vw, 60px);
-  background: var(--pex-bg);
-  text-align: center;
-}
-
-.blogHeaderInner {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
 .blogHeader h1 {
   color: var(--pex-navy);
   font-size: clamp(36px, 6vw, 56px);

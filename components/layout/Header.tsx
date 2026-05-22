@@ -18,12 +18,12 @@ export function Header() {
           ))}
         </nav>
         <div className={styles.desktopActions}>
-          <Link className={styles.desktopLogin} href="/login" aria-label="Open parent portal" title="Parent portal">
+          <Link className={styles.desktopLogin} href="/login" aria-label="Login" title="Login">
             <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
               <circle cx="12" cy="8" r="3.5" />
               <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
             </svg>
-            <span className="sr-only">Parent portal</span>
+            <span className="sr-only">Login</span>
           </Link>
           <Link className={styles.desktopOrder} href="/order" aria-label="Order a Pexpacks pack">
             <span>Order a Pack</span>

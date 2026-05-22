@@ -19,21 +19,10 @@
     border-bottom-color 180ms ease;
 }
 
-.headerHidden {
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
-}
-
 .headerVisible {
   transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
-}
-
-.headerScrolled {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  border-bottom-color: rgba(0, 0, 0, 0.06);
 }
 
 .headerAtTop {
@@ -201,8 +190,9 @@
   left: 0;
   right: 0;
   height: calc(100vh - var(--mobile-header-height));
+  height: calc(100svh - var(--mobile-header-height));
   height: calc(100dvh - var(--mobile-header-height));
-  bottom: auto;
+  bottom: 0;
   background: #ffffff;
   color: var(--pex-navy);
   transform: translateX(100%);
@@ -210,6 +200,7 @@
   visibility: hidden;
   pointer-events: none;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   transition:
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -225,40 +216,42 @@
 }
 
 .mobileMenuInner {
-  padding: clamp(20px, 4vw, 32px) var(--gutter-mobile) var(--gutter-mobile);
+  padding: clamp(16px, 3vh, 32px) var(--gutter-mobile)
+    calc(var(--gutter-mobile) + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  gap: 0;
 }
 
 .mobileMenuEyebrow {
   display: inline-block;
   color: var(--pex-keppel);
   font-family: var(--font-button);
-  font-size: 13px;
+  font-size: clamp(13px, 1.8vw, 15px);
   font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 20px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  margin-bottom: clamp(12px, 2vh, 20px);
   padding: 0 6px;
 }
 
 .mobileMenuNav {
   display: grid;
-  gap: 8px;
+  gap: clamp(4px, 0.8vh, 8px);
 }
 
 .mobileMenuLink {
   width: 100%;
   color: var(--pex-navy);
-  padding: 14px 20px;
+  padding: clamp(10px, 1.4vh, 14px) clamp(14px, 2vw, 20px);
   border-radius: var(--radius-card-compact);
   font-family: var(--font-button);
-  font-size: 18px;
+  font-size: clamp(15px, 2.2vw, 18px);
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0;
-  min-height: var(--touch-target-min);
+  min-height: clamp(40px, 5.5vh, 48px);
   display: flex;
   align-items: center;
   background: var(--pex-bg);
@@ -285,16 +278,16 @@
 .mobileMenuDivider {
   height: 1px;
   background: var(--pex-border);
-  margin: 16px 0;
+  margin: clamp(8px, 1.5vh, 16px) 0;
   flex-shrink: 0;
 }
 
 .mobileMenuSecondary {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: clamp(8px, 1.2vh, 12px);
   margin-top: auto;
-  padding-top: 4px;
+  padding-top: clamp(2px, 0.5vh, 4px);
 }
 
 .mobileMenuLogin {
@@ -327,7 +320,7 @@
 }
 
 .mobileMenuCta {
-  min-height: var(--touch-target-min);
+  min-height: clamp(40px, 5.5vh, 48px);
   padding: 6px 8px 6px 24px;
   border-radius: var(--radius-pill);
   display: flex;
@@ -337,7 +330,7 @@
   background: var(--pex-navy);
   color: var(--pex-bg);
   font-family: var(--font-button);
-  font-size: 16px;
+  font-size: clamp(14px, 2vw, 16px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
@@ -576,43 +569,44 @@
   }
 
   .mobileMenuInner {
-    padding: 16px var(--gutter-mobile) var(--gutter-mobile);
+    padding: clamp(12px, 2vh, 16px) var(--gutter-mobile)
+      calc(var(--gutter-mobile) + env(safe-area-inset-bottom, 0px));
   }
 
   .mobileMenuEyebrow {
-    font-size: 12px;
-    margin-bottom: 14px;
+    font-size: clamp(12px, 1.6vw, 13px);
+    margin-bottom: clamp(8px, 1.5vh, 14px);
   }
 
   .mobileMenuNav {
-    gap: 6px;
+    gap: clamp(4px, 0.7vh, 6px);
   }
 
   .mobileMenuLink {
-    font-size: 16px;
-    padding: 12px 16px;
-    min-height: 44px;
+    font-size: clamp(14px, 2vw, 16px);
+    padding: clamp(8px, 1.2vh, 12px) clamp(12px, 2vw, 16px);
+    min-height: clamp(38px, 5vh, 44px);
   }
 
   .mobileMenuDivider {
-    margin: 12px 0;
+    margin: clamp(6px, 1vh, 12px) 0;
+  }
+
+  .mobileMenuLogin {
+    font-size: clamp(13px, 1.8vw, 15px);
+    min-height: clamp(38px, 5vh, 44px);
   }
 
   .mobileMenuCta {
-    font-size: 15px;
+    font-size: clamp(13px, 1.8vw, 15px);
     padding: 6px 8px 6px 20px;
+    min-height: clamp(38px, 5vh, 44px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .siteHeader {
     transition: none;
-  }
-
-  .headerHidden {
-    transform: translateY(-100%);
-    opacity: 1;
-    pointer-events: none;
   }
 
   .desktopActions,

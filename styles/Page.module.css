@@ -44,21 +44,6 @@
   font-weight: 800;
 }
 
-.pageHeroText {
-  max-width: 680px;
-  margin: 24px auto 0;
-  font-size: 20px;
-  line-height: 1.35;
-}
-
-.notFoundText {
-  max-width: 720px;
-  margin: 24px auto 0;
-  color: var(--pex-text);
-  font-size: 20px;
-  line-height: 1.35;
-}
-
 .notFoundActions {
   margin-top: 40px;
   display: flex;
@@ -105,19 +90,6 @@
   }
 }
 
-.twoColumn {
-  display: grid;
-  grid-template-columns: 1fr 0.9fr;
-  gap: 40px;
-  align-items: center;
-}
-
-.cardGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-}
-
 .infoCard,
 .packCard,
 .formCard {
@@ -143,15 +115,13 @@
 }
 
 .infoCard ul,
-.packCard ul,
-.stepList {
+.packCard ul {
   margin: 0;
   padding-left: 20px;
 }
 
 .infoCard li,
-.packCard li,
-.stepList li {
+.packCard li {
   margin-bottom: 10px;
 }
 
@@ -160,31 +130,6 @@
   color: var(--pex-coral);
   font-size: 28px;
   font-weight: 800;
-}
-
-.darkBand {
-  width: 100%;
-  max-width: var(--layout-max-width);
-  margin: 0 auto 86px;
-  padding: 46px var(--gutter-desktop);
-  border-radius: var(--radius-section);
-  background: var(--pex-navy);
-  color: var(--pex-bg);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 28px;
-}
-
-.darkBand h2,
-.darkBand p {
-  margin: 0;
-}
-
-.darkBand h2 {
-  margin-top: 8px;
-  font-size: clamp(34px, 5vw, 56px);
-  line-height: 0.98;
 }
 
 .formStack {
@@ -214,18 +159,6 @@
   resize: vertical;
 }
 
-.imageCard {
-  overflow: hidden;
-  border-radius: var(--radius-section);
-}
-
-.imageCard img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 0.98;
-  object-fit: cover;
-}
-
 .faqList {
   display: grid;
   gap: 16px;
@@ -251,17 +184,6 @@
 @media (max-width: 860px) {
   .pageHero {
     padding: 54px 0 40px;
-  }
-
-  .twoColumn,
-  .cardGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .darkBand {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: var(--section-padding-mobile) var(--gutter-mobile);
   }
 
   .pageHeroNarrow,

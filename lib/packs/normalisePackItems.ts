@@ -1,15 +1,8 @@
+import { slugify } from "@/lib/slugify";
 import type { GradePack, School } from "@/data/schools";
 import type { GradePackForCustomisation, PackItem } from "./types";
 
 const quantityPattern = /^(\d+)\s*(?:x|X)\s+(.+)$/;
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 function inferCategory(name: string) {
   const value = name.toLowerCase();
