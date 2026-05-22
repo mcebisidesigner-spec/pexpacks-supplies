@@ -1,10 +1,10 @@
 .comparison {
   margin-top: 34px;
-  border: var(--card-border);
-  border-radius: var(--radius-section);
-  padding: clamp(18px, 4vw, 28px);
-  background: var(--card-bg);
-  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(26, 42, 64, 0.12);
+  border-radius: 20px;
+  padding: clamp(16px, 4vw, 24px);
+  background: #ffffff;
+  box-shadow: 0 22px 52px rgba(26, 42, 64, 0.1);
 }
 
 .header {
@@ -18,21 +18,24 @@
 .header p {
   margin: 0;
   color: var(--pex-keppel);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .header strong {
   color: var(--pex-primary);
-  font-size: clamp(22px, 3vw, 34px);
+  font-size: clamp(22px, 3vw, 32px);
   font-family: var(--font-heading);
-  line-height: 1;
+  line-height: 1.05;
+  text-align: right;
 }
 
 .stage {
   position: relative;
-  min-height: 300px;
-  border-radius: 24px;
+  min-height: 320px;
+  border-radius: 18px;
   overflow: hidden;
   background: var(--pex-primary);
   isolation: isolate;
@@ -44,82 +47,90 @@
   padding: clamp(24px, 5vw, 42px);
   display: grid;
   align-content: center;
-  gap: 16px;
+  gap: 18px;
+  transition: transform 0.12s ease-out;
 }
 
 .retailPane {
   background:
-    radial-gradient(
-      circle at 20% 18%,
-      rgba(255, 111, 89, 0.22),
-      transparent 28%
-    ),
-    linear-gradient(135deg, #f8f1ed, #ffffff);
+    linear-gradient(90deg, rgba(255, 111, 89, 0.14), transparent 46%),
+    linear-gradient(135deg, #fff7f2, #ffffff);
   color: var(--pex-primary);
 }
 
 .pexpacksPane {
   background:
-    radial-gradient(
-      circle at 82% 18%,
-      rgba(255, 255, 255, 0.16),
-      transparent 28%
-    ),
-    linear-gradient(135deg, var(--pex-keppel), var(--pex-primary));
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.16)),
+    linear-gradient(135deg, #168f84, var(--pex-primary));
   color: var(--pex-bg);
   clip-path: inset(0 0 0 var(--comparison-position));
 }
 
 .paneLabel {
   width: fit-content;
-  border-radius: var(--radius-pill);
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.86);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: rgba(255, 255, 255, 0.9);
   color: var(--pex-primary);
   font-size: 12px;
   font-weight: 800;
+  box-shadow: 0 10px 24px rgba(26, 42, 64, 0.08);
 }
 
 .pexpacksPane .paneLabel {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.18);
   color: var(--pex-bg);
+  box-shadow: none;
 }
 
 .pane h3 {
-  max-width: 520px;
+  max-width: 620px;
   margin: 0;
-  font-size: clamp(30px, 5vw, 54px);
-  line-height: 0.98;
+  font-size: clamp(30px, 5vw, 52px);
+  line-height: 1;
+  letter-spacing: 0;
 }
 
 .pane ul {
   margin: 0;
   padding: 0;
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 760px;
 }
 
 .pane li {
-  display: flex;
-  align-items: center;
-  border-radius: var(--radius-pill);
-  padding: 9px 12px;
-  background: rgba(255, 255, 255, 0.84);
+  display: grid;
+  gap: 5px;
+  min-height: 82px;
+  border: 1px solid rgba(26, 42, 64, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.9);
   color: var(--pex-primary);
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
-.pointIcon {
-  margin-right: 6px;
-  font-size: 16px;
+.pointStat {
+  color: var(--pex-coral);
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 .pexpacksPane li {
-  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.13);
   color: var(--pex-bg);
+}
+
+.pexpacksPane .pointStat {
+  color: #ffffff;
 }
 
 .handle {
@@ -131,7 +142,7 @@
   width: 3px;
   background: var(--pex-bg);
   transform: translateX(-50%);
-  box-shadow: 0 0 0 1px rgba(26, 42, 64, 0.12);
+  box-shadow: 0 0 0 1px rgba(26, 42, 64, 0.16);
 }
 
 .handle span {
@@ -140,7 +151,7 @@
   left: 50%;
   width: 54px;
   height: 54px;
-  border-radius: var(--radius-pill);
+  border-radius: 999px;
   background: var(--pex-bg);
   transform: translate(-50%, -50%);
   box-shadow: 0 18px 34px rgba(26, 42, 64, 0.22);
@@ -199,10 +210,15 @@
 @media (max-width: 720px) {
   .header {
     display: grid;
+    gap: 8px;
+  }
+
+  .header strong {
+    text-align: left;
   }
 
   .stage {
-    min-height: 360px;
+    min-height: 430px;
   }
 
   .pane {
@@ -212,5 +228,17 @@
 
   .pane ul {
     display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .pane li {
+    min-height: auto;
+    grid-template-columns: 68px 1fr;
+    align-items: center;
+  }
+
+  .pane h3 {
+    font-size: clamp(30px, 12vw, 42px);
   }
 }

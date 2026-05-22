@@ -6,15 +6,15 @@ import { AnimatedVehicle } from "./AnimatedVehicle";
 import styles from "./RetailComparisonSlider.module.css";
 
 const retailPoints = [
-  { text: "Long queues", icon: "🛒" },
-  { text: "Out-of-stock items", icon: "🚫" },
-  { text: "4+ hours lost", icon: "⏳" },
+  { stat: "3-4 hrs", text: "Driving, parking, queuing" },
+  { stat: "Risk", text: "Missing or sold-out items" },
+  { stat: "Extra", text: "Impulse buys and repeat trips" },
 ];
 
-const PexpacksPoints = [
-  { text: "One click", icon: "🖱️" },
-  { text: "Exact list match", icon: "✅" },
-  { text: "Delivered ready", icon: "📦" },
+const pexpacksPoints = [
+  { stat: "2 min", text: "Find the school pack online" },
+  { stat: "Exact", text: "Packed to the grade list" },
+  { stat: "Ready", text: "Labelled, checked, and delivered" },
 ];
 
 export function RetailComparisonSlider() {
@@ -27,44 +27,46 @@ export function RetailComparisonSlider() {
     setPosition(Number(event.target.value));
   }
 
-  // Calculate dynamic scales based on position (0 to 100)
-  // When position is near 0, retail is 1 (fully visible/scaled), Pexpacks is 0.8
-  const retailScale = position < 50 ? 1 : Math.max(0.9, 1 - (position - 50) * 0.005);
-  const PexpacksScale = position > 50 ? 1 : Math.max(0.9, 1 - (50 - position) * 0.005);
+  const retailScale =
+    position < 50 ? 1 : Math.max(0.9, 1 - (position - 50) * 0.005);
+  const pexpacksScale =
+    position > 50 ? 1 : Math.max(0.9, 1 - (50 - position) * 0.005);
 
   return (
     <div className={styles.comparison} style={sliderStyle}>
       <div className={styles.header}>
-        <p>Drag to compare</p>
-        <strong>Retail vs. Pexpacks</strong>
+        <p>Drag the line</p>
+        <strong>Retail run vs. Pexpacks ready</strong>
       </div>
 
       <div className={styles.stage}>
-        <div 
+        <div
           className={`${styles.pane} ${styles.retailPane}`}
-          style={{ transform: `scale(${retailScale})`, transition: 'transform 0.1s ease-out' }}
+          style={{ transform: `scale(${retailScale})` }}
         >
-          <span className={styles.paneLabel}>Retail experience</span>
-          <h3>Drive, queue, check every shelf.</h3>
+          <span className={styles.paneLabel}>Retail shopping</span>
+          <h3>More trips. More gaps. More last-minute stress.</h3>
           <ul>
             {retailPoints.map((point) => (
               <li key={point.text}>
-                <span className={styles.pointIcon} aria-hidden="true">{point.icon}</span> {point.text}
+                <span className={styles.pointStat}>{point.stat}</span>
+                <span>{point.text}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <div 
-          className={`${styles.pane} ${styles.PexpacksPane}`}
-          style={{ transform: `scale(${PexpacksScale})`, transition: 'transform 0.1s ease-out' }}
+        <div
+          className={`${styles.pane} ${styles.pexpacksPane}`}
+          style={{ transform: `scale(${pexpacksScale})` }}
         >
           <span className={styles.paneLabel}>Pexpacks experience</span>
-          <h3>Search, choose, get it packed.</h3>
+          <h3>The correct pack, sorted before school starts.</h3>
           <ul>
-            {PexpacksPoints.map((point) => (
+            {pexpacksPoints.map((point) => (
               <li key={point.text}>
-                <span className={styles.pointIcon} aria-hidden="true">{point.icon}</span> {point.text}
+                <span className={styles.pointStat}>{point.stat}</span>
+                <span>{point.text}</span>
               </li>
             ))}
           </ul>
