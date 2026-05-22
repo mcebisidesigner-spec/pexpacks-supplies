@@ -1,4 +1,4 @@
-import styles from "./Schools.module.css";
+import styles from "./GradeSelect.module.css";
 
 type GradeSelectProps = {
   grades: string[];

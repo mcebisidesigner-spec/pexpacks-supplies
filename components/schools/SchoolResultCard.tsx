@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
 import { formatCurrency } from "@/lib/formatCurrency";
-import styles from "./Schools.module.css";
+import styles from "./SchoolResultCard.module.css";
 
 function gradeLabel(grades: string[]) {
   if (grades.length <= 4) {

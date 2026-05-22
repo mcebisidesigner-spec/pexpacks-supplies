@@ -14,7 +14,8 @@ import {
   phoneNumber,
 } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
-import styles from "@/components/marketing/Marketing.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Contact",
@@ -74,7 +75,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         panelText="Service area"
         panelTitle="Gauteng pilot province"
       >
-        <div className={styles.buttonRow}>
+        <div className={sectionStyles.buttonRow}>
           {hasWhatsAppNumber ? (
             <Button href={orderWhatsAppHref} variant="white">
               WhatsApp Pexpacks
@@ -84,11 +85,11 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         </div>
       </PageHero>
 
-      <section className={styles.section}>
-        <div className={styles.inner}>
-          <div className={styles.infoGrid}>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={cardStyles.infoGrid}>
             <ContactForm {...prefill} />
-            <div className={styles.infoCard}>
+            <div className={cardStyles.infoCard}>
               <SectionHeader
                 eyebrow="Contact channels"
                 title="Contact details"
@@ -119,7 +120,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               <p>
                 <strong>Location:</strong> Gauteng pilot province, South Africa.
               </p>
-              <div className={styles.buttonRow}>
+              <div className={sectionStyles.buttonRow}>
                 {hasWhatsAppNumber ? (
                   <Button href={orderWhatsAppHref} variant="white">
                     WhatsApp us

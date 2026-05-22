@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { BrandPackageClaimForm } from "@/components/forms/BrandPackageClaimForm";
 import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
-import styles from "@/components/marketing/Marketing.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Business Starter Brand Package | Pexpacks",
@@ -27,13 +27,13 @@ export default function BusinessStarterBrandPackagePage() {
         panelTitle="Complete physical and digital branding for R3,999.00."
       />
 
-      <section className={styles.section}>
-        <div className={styles.inner}>
-          <div className={styles.packageClaimLayout}>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.packageClaimLayout}>
             <BrandPackageClaimForm />
 
-            <aside className={styles.packageClaimSummary}>
-              <p className={styles.sectionEyebrow}>What happens next</p>
+            <aside className={sectionStyles.packageClaimSummary}>
+              <p className={sectionStyles.sectionEyebrow}>What happens next</p>
               <h2>Send one clear brief</h2>
               <p>
                 The form captures the practical details needed to confirm the

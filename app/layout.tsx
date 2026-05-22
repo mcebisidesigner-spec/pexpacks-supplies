@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppWidget } from "@/components/shared/WhatsAppWidget";
 import { FirstOrderDiscount } from "@/components/shared/FirstOrderDiscount";
 import { SocialProofToasts } from "@/components/shared/SocialProofToasts";
 import { PwaLifecycle } from "@/components/pwa/PwaLifecycle";
-import { BrowserDataScript } from "@/components/system/BrowserDataScript";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildMetadata } from "@/lib/seo";
 import {
@@ -14,6 +14,60 @@ import {
   websiteSchema,
 } from "@/lib/schema";
 import "@/styles/globals.css";
+
+const pexpacksSans = localFont({
+  src: [
+    {
+      path: "../public/fonts/PexSans Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/PexSans Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/PexSans Bold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/PexSans Bold.woff2",
+      weight: "800",
+      style: "normal",
+    },
+  ],
+  variable: "--font-pexpacks-sans",
+  display: "swap",
+});
+
+const pexpacksSansAlt = localFont({
+  src: [
+    {
+      path: "../public/fonts/PexSans Alt Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/PexSans Alt Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/PexSans Alt Semi Bold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/PexSans Alt Bold.woff2",
+      weight: "800",
+      style: "normal",
+    },
+  ],
+  variable: "--font-pexpacks-sans-alt",
+  display: "swap",
+});
 
 export const viewport: Viewport = {
   themeColor: "#1A2A40",
@@ -27,7 +81,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   ...buildMetadata(
     "Pexpacks | School & Office Stationery Packs",
-    "School and office stationery made simple. Find your school pack, choose your grade, or request office stationery for your SME or home office.",
+    "School and office stationery made simple. Find your school pack, choose your grade, or request office stationery for your SME or home office."
   ),
   title: {
     default: "Pexpacks | School & Office Stationery Packs",
@@ -66,12 +120,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-ZA" data-scroll-behavior="smooth">
+    <html
+      lang="en-ZA"
+      data-scroll-behavior="smooth"
+      className={`${pexpacksSans.variable} ${pexpacksSansAlt.variable}`}
+    >
       <body suppressHydrationWarning>
         <a href="#site-main" className="skip-link">
           Skip to content
         </a>
-        <BrowserDataScript />
         <JsonLd data={organizationSchema()} />
         <JsonLd data={onlineStoreSchema()} />
         <JsonLd data={websiteSchema()} />

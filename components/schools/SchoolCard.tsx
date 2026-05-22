@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { School, SchoolIndexRecord } from "@/data/schools";
 import { Button } from "@/components/ui/Button";
-import styles from "./Schools.module.css";
+import styles from "./SchoolCard.module.css";
 
 type SchoolCardProps = {
   school: School | SchoolIndexRecord;

@@ -9,7 +9,7 @@ import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import { ViralReferralBanner } from "./ViralReferralBanner";
-import styles from "./Schools.module.css";
+import styles from "./SchoolSearchPanel.module.css";
 
 const resultLimit = 12;
 

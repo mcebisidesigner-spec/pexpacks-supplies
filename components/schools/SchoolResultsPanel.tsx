@@ -4,7 +4,7 @@ import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultCard } from "./SchoolResultCard";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import { ViralReferralBanner } from "./ViralReferralBanner";
-import styles from "./Schools.module.css";
+import styles from "./SchoolResultsPanel.module.css";
 
 type SchoolResultsPanelProps = {
   isOpen: boolean;

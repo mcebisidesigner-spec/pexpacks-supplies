@@ -226,28 +226,34 @@
 
 .mobileMenuNav {
   position: relative;
-  padding: clamp(34px, 6vh, 54px) clamp(30px, 8vw, 64px) 0;
+  padding: 20px 24px 0;
   display: grid;
   justify-items: start;
-  gap: clamp(22px, 4vh, 34px);
+  gap: 6px;
 }
 
 .mobileMenuLink {
-  width: fit-content;
+  width: 100%;
   color: var(--pex-navy);
-  border-bottom: 2px solid transparent;
-  padding-bottom: 5px;
+  padding: 10px 14px;
+  border-radius: 12px;
   font-family: var(--font-button);
-  font-size: clamp(18px, 5.2vw, 24px);
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 500;
   line-height: 1;
   letter-spacing: 0;
-  min-height: 48px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   transition:
-    color 0.25s ease,
-    border-color 0.25s ease;
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.mobileMenuLink:hover,
+.mobileMenuLinkActive {
+  color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.08);
 }
 
 .mobileMenuLink:hover,
@@ -257,23 +263,22 @@
 }
 
 .mobileMenuCta {
-  margin: clamp(42px, 8vh, 70px) 0 0 clamp(30px, 8vw, 64px);
+  margin: 24px 24px 0;
   min-height: 44px;
-  padding: 6px 7px 6px 22px;
-  border-radius: var(--radius-pill);
-  display: inline-flex;
+  padding: 6px 7px 6px 20px;
+  border-radius: 12px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   background: var(--pex-navy);
   color: var(--pex-bg);
   font-family: var(--font-button);
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 15px;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
   white-space: nowrap;
-  box-shadow: 0 10px 20px rgba(26, 42, 64, 0.12);
   transform-origin: center;
   transition: var(--button-transition);
 }
@@ -486,18 +491,20 @@
   }
 
   .mobileMenuNav {
-    padding: 30px 30px 0;
-    gap: 24px;
+    padding: 16px 16px 0;
+    gap: 4px;
   }
 
   .mobileMenuLink {
-    font-size: 20px;
+    font-size: 15px;
+    padding: 8px 12px;
+    min-height: 40px;
   }
 
   .mobileMenuCta {
-    margin: 56px 0 0 30px;
-    min-height: 44px;
-    padding-left: 16px;
+    margin: 16px 16px 0;
+    min-height: 40px;
+    padding-left: 14px;
     font-size: 14px;
   }
 }

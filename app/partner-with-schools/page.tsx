@@ -6,7 +6,9 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { SchoolMockupDemo } from "@/components/marketing/SchoolMockupDemo";
 import { SchoolPitchDeck } from "@/components/marketing/SchoolPitchDeck";
 import { buildMetadata } from "@/lib/seo";
-import marketingStyles from "@/components/marketing/Marketing.module.css";
+import heroStyles from "@/components/marketing/HeroBase.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import pageStyles from "./PartnerWithSchools.module.css";
 
 const pitchStats = [
@@ -106,7 +108,7 @@ export default function PartnerWithSchoolsPage() {
         panelText="Partner value snapshot"
         panelTitle="Website + parent ordering + rebate model"
       >
-        <div className={marketingStyles.buttonRow}>
+        <div className={sectionStyles.buttonRow}>
           <Button href="#pitch-deck" size="lg">
             Open the pitch deck
           </Button>
@@ -130,8 +132,8 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={marketingStyles.sectionAlt} id="pitch-deck">
-        <div className={marketingStyles.inner}>
+      <section className={sectionStyles.sectionAlt} id="pitch-deck">
+        <div className={sectionStyles.inner}>
           <div className={pageStyles.flowIntro}>
             <SectionHeader
               eyebrow="Interactive Pitch"
@@ -148,16 +150,16 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={marketingStyles.section}>
-        <div className={marketingStyles.inner}>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Zero Cost Web Development"
             title="Professional web design and hosting, on us"
             text="We handle design, server management, security, updates, and the parent ordering path. Your school gets a premium online hub with less admin load."
           />
-          <div className={marketingStyles.splitBand}>
+          <div className={sectionStyles.splitBand}>
             <div>
-              <p className={marketingStyles.sectionEyebrow}>Fully Managed Package</p>
+              <p className={sectionStyles.sectionEyebrow}>Fully Managed Package</p>
               <h2>Everything your school needs online</h2>
               <p>
                 From domain routing to mobile responsiveness, the website package
@@ -165,11 +167,11 @@ export default function PartnerWithSchoolsPage() {
                 partnership asks that Pexpacks becomes the official stationery
                 pack supplier for parents.
               </p>
-              <div className={`${marketingStyles.buttonRow} ${pageStyles.buttonRowMargin}`}>
+              <div className={`${sectionStyles.buttonRow} ${pageStyles.buttonRowMargin}`}>
                 <Button href="#partner-form">Apply for Partnership</Button>
               </div>
             </div>
-            <ul className={marketingStyles.checkList}>
+            <ul className={sectionStyles.checkList}>
               {schoolBenefits.map((benefit) => (
                 <li key={benefit}>{benefit}</li>
               ))}
@@ -179,10 +181,10 @@ export default function PartnerWithSchoolsPage() {
       </section>
 
       <section
-        className={`${marketingStyles.section} ${pageStyles.sectionNoPaddingTop}`}
+        className={`${sectionStyles.section} ${pageStyles.sectionNoPaddingTop}`}
         id="interactive-demo"
       >
-        <div className={marketingStyles.inner}>
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Interactive Demo"
             title="Showcase the website your school could receive"
@@ -192,16 +194,16 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={marketingStyles.sectionCream}>
-        <div className={marketingStyles.inner}>
+      <section className={sectionStyles.sectionCream}>
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Website Features"
             title="Built for modern schools"
             text="The website is designed to be useful immediately: families can find information, school teams can share updates, and parents can order stationery from the correct path."
           />
-          <div className={marketingStyles.infoGrid}>
+          <div className={cardStyles.infoGrid}>
             {websiteFeatures.map((feat) => (
-              <article className={marketingStyles.infoCard} key={feat.title}>
+              <article className={cardStyles.infoCard} key={feat.title}>
                 <h3 className={pageStyles.featureCardTitle}>{feat.title}</h3>
                 <p className={pageStyles.featureCardDesc}>{feat.desc}</p>
               </article>
@@ -210,21 +212,21 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={marketingStyles.section}>
-        <div className={marketingStyles.inner}>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="The Mutual Benefit"
             title="A partnership that works for everyone"
             text="Pexpacks reduces stationery admin for schools while giving parents a simpler, more reliable back-to-school experience."
           />
-          <div className={marketingStyles.infoGrid}>
+          <div className={cardStyles.infoGrid}>
             {mutualBenefits.map((benefit) => (
               <div
                 key={benefit.title}
-                className={`${marketingStyles.heroPanel} ${pageStyles.benefitPanel}`}
+                className={`${heroStyles.heroPanel} ${pageStyles.benefitPanel}`}
               >
                 <h3 className={pageStyles.benefitTitle}>{benefit.title}</h3>
-                <ul className={marketingStyles.checkList}>
+                <ul className={sectionStyles.checkList}>
                   {benefit.list.map((item) => (
                     <li key={item} className={pageStyles.benefitListItem}>
                       {item}
@@ -237,15 +239,15 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={marketingStyles.sectionCream} id="how-it-works">
-        <div className={marketingStyles.inner}>
+      <section className={sectionStyles.sectionCream} id="how-it-works">
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Simple setup"
             title="Launch in four clear steps"
             text="The flow is intentionally simple so your team can evaluate the offer, approve the setup, and launch without a heavy IT project."
           />
-          <div className={marketingStyles.packageClaimLayout}>
-            <div className={marketingStyles.packageClaimSummary}>
+          <div className={sectionStyles.packageClaimLayout}>
+            <div className={sectionStyles.packageClaimSummary}>
               <ol className={pageStyles.stepsGrid}>
                 {launchSteps.map((step) => (
                   <li className={pageStyles.stepItem} key={step.title}>
@@ -259,8 +261,8 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={marketingStyles.sectionCream} id="partner-form">
-        <div className={marketingStyles.inner}>
+      <section className={sectionStyles.sectionCream} id="partner-form">
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Partnership Enquiry"
             title="Start your partnership today"

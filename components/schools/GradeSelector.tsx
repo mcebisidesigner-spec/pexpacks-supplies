@@ -12,7 +12,7 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
 import type { GradePackForCustomisation } from "@/lib/packs/types";
 import type { CompleteListPack, PackListItem } from "@/components/packs/packListTypes";
-import styles from "./Schools.module.css";
+import styles from "./GradeSelector.module.css";
 
 type GradeSelectorProps = {
   school: School;

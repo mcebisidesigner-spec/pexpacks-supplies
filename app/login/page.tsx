@@ -3,7 +3,8 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { buildMetadata } from "@/lib/seo";
-import styles from "@/components/marketing/Marketing.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Parent Portal | Pexpacks",
@@ -21,7 +22,7 @@ export default function LoginPage() {
         panelText="No account needed"
         panelTitle="Track your order with your order reference."
       >
-        <div className={styles.buttonRow}>
+        <div className={sectionStyles.buttonRow}>
           <Button href="/track-order" size="lg">
             Track order
           </Button>
@@ -31,33 +32,33 @@ export default function LoginPage() {
         </div>
       </PageHero>
 
-      <section className={styles.section}>
-        <div className={styles.inner}>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Parent actions"
             title="Choose what you need next"
             text="Pexpacks keeps the parent path simple while full account features are being prepared."
           />
-          <div className={styles.infoGrid}>
-            <article className={styles.infoCard}>
-              <p className={styles.sectionEyebrow}>Existing order</p>
+          <div className={cardStyles.infoGrid}>
+            <article className={cardStyles.infoCard}>
+              <p className={sectionStyles.sectionEyebrow}>Existing order</p>
               <h3>Track your pack</h3>
               <p>
                 Check the status of a submitted stationery order using your
                 reference details.
               </p>
-              <div className={styles.buttonRow}>
+              <div className={sectionStyles.buttonRow}>
                 <Button href="/track-order">Track order</Button>
               </div>
             </article>
-            <article className={styles.infoCard}>
-              <p className={styles.sectionEyebrow}>New order</p>
+            <article className={cardStyles.infoCard}>
+              <p className={sectionStyles.sectionEyebrow}>New order</p>
               <h3>Find your school</h3>
               <p>
                 Search by school and grade to start a new ready-packed
                 stationery order.
               </p>
-              <div className={styles.buttonRow}>
+              <div className={sectionStyles.buttonRow}>
                 <Button href="/schools" variant="white">
                   Search schools
                 </Button>

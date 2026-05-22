@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import styles from "./Marketing.module.css";
+import styles from "./HeroBase.module.css";
 
 type PageHeroProps = {
   eyebrow: string;

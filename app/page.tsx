@@ -11,7 +11,10 @@ import { SavingsCalculator } from "@/components/marketing/SavingsCalculator";
 import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
-import styles from "@/components/marketing/Marketing.module.css";
+import heroStyles from "@/components/marketing/HeroBase.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
+import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
 const PackageIcon = () => (
   <svg
@@ -106,24 +109,24 @@ const benefitIcons = [
 export default function HomePage() {
   return (
     <>
-      <section className={styles.hero}>
-        <div className={styles.heroInner}>
+      <section className={heroStyles.hero}>
+        <div className={heroStyles.heroInner}>
           <div>
-            <p className={styles.eyebrow}>Save time, Pex it.</p>
-            <h1 className={styles.heroTitle}>
-              Everything packed Everything
-              <span className={styles.mobileInlineSpace}> </span>
-              <br className={styles.desktopBreak} />
+            <p className={heroStyles.eyebrow}>Save time, Pex it.</p>
+            <h1 className={heroStyles.heroTitle}>
+              Everything packed. Everything
+              <span className={heroStyles.mobileInlineSpace}> </span>
+              <br className={heroStyles.desktopBreak} />
               ready
             </h1>
-            <p className={styles.heroLead}>
+            <p className={heroStyles.heroLead}>
               No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
           </div>
 
-          <div className={styles.heroVisual}>
-            <span className={styles.heroVisualImage}>
+          <div className={heroStyles.heroVisual}>
+            <span className={heroStyles.heroVisualImage}>
               <Image
                 src="/images/hero-school-delivery.webp"
                 alt="Pexpacks stationery pack items arranged neatly"
@@ -132,8 +135,8 @@ export default function HomePage() {
                 sizes="(min-width: 1024px) 44vw, 100vw"
               />
             </span>
-            <div className={styles.productScene}>
-              <div className={styles.brandBox}>
+            <div className={heroStyles.productScene}>
+              <div className={heroStyles.brandBox}>
                 <div>
                   <span>Pexpacks Supplies</span>
                   <br />
@@ -145,10 +148,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.section} style={{ paddingBottom: "0" }}>
-        <div className={styles.inner}>
-          <div className={styles.guaranteeBox}>
-            <div className={styles.guaranteeContent}>
+      <section className={sectionStyles.section} style={{ paddingBottom: "0" }}>
+        <div className={sectionStyles.inner}>
+          <div className={homeStyles.guaranteeBox}>
+            <div className={homeStyles.guaranteeContent}>
               <h2>100% Exact List Match Guarantee</h2>
               <p>
                 We pack exactly what is on your school's official stationery
@@ -162,19 +165,19 @@ export default function HomePage() {
 
       <OrderingWorksSection />
 
-      <section className={styles.section}>
-        <div className={styles.inner}>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Top choices"
             title="Most popular packs"
             text="Explore our best-seller standard packs for every grade level."
             headingId="most-popular-packs"
           />
-          <div className={styles.packGrid}>
+          <div className={cardStyles.packGrid}>
             {homepagePacks.map((pack) => (
-              <div className={styles.packCard} key={pack.id}>
+              <div className={cardStyles.packCard} key={pack.id}>
                 <div style={{ padding: "24px", flexGrow: 1 }}>
-                  <span className={styles.eyebrow}>{pack.category}</span>
+                  <span className={heroStyles.eyebrow}>{pack.category}</span>
                   <h3>{pack.name}</h3>
                   <p
                     style={{
@@ -212,27 +215,27 @@ export default function HomePage() {
 
       <UnboxingAccordion />
 
-      <section className={styles.section}>
-        <div className={styles.inner}>
-          <div className={styles.splitBand}>
-            <div className={styles.unboxingImageWrap}>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div className={homeStyles.unboxingImageWrap}>
               <Image
                 src="/images/office-packs.webp"
                 alt="Pexpacks premium office stationery packs"
                 fill
-                className={styles.mediaImage}
+                className={homeStyles.mediaImage}
                 sizes="(min-width: 1024px) 42vw, 100vw"
               />
             </div>
             <div>
-              <p className={styles.sectionEyebrow}>Office and SME solutions</p>
+              <p className={sectionStyles.sectionEyebrow}>Office and SME solutions</p>
               <h2>Office stationery, packed for work.</h2>
               <p>
                 Keep your business stocked with curated office stationery packs.
                 We handle the supplies so your team can focus on the work.
               </p>
               <div
-                className={[styles.buttonRow, styles.splitActions].join(" ")}
+                className={[sectionStyles.buttonRow, sectionStyles.splitActions].join(" ")}
               >
                 <Button href="/office" variant="secondary">
                   View Office Packs
@@ -243,19 +246,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={styles.sectionCream}>
-        <div className={styles.inner}>
+      <section className={sectionStyles.sectionCream}>
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Why Pexpacks"
             title="The Pexpacks promise"
             text="We save you time, reduce stress, and guarantee quality you can trust."
           />
-          <div className={styles.benefitGrid}>
+          <div className={cardStyles.benefitGrid}>
             {whyChoosePexpacks.map((benefit, index) => {
               const Icon = benefitIcons[index];
               return (
-                <article className={styles.benefitCard} key={benefit.title}>
-                  <div className={styles.benefitIconWrapper}>
+                <article className={cardStyles.benefitCard} key={benefit.title}>
+                  <div className={cardStyles.benefitIconWrapper}>
                     <Icon />
                   </div>
                   <h3>{benefit.title}</h3>
@@ -268,10 +271,10 @@ export default function HomePage() {
       </section>
 
       <section
-        className={styles.section}
+        className={sectionStyles.section}
         aria-labelledby="home-testimonials-heading"
       >
-        <div className={styles.inner}>
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Trusted by parents and schools"
             title="How Pexpacks will feel"

@@ -1,0 +1,139 @@
+.gradeDetails {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding-inline: var(--gutter-desktop);
+  padding-bottom: 96px;
+  display: grid;
+  grid-template-columns: 1fr 0.72fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.gradeTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(32px, 4.5vw, 52px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.gradeDetails p {
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.gradeActionPanel {
+  margin-top: 16px;
+}
+
+.deliveryPanel {
+  margin-top: 16px;
+  margin-bottom: 32px;
+  padding: 14px 18px;
+  border: 1px solid rgba(33, 158, 154, 0.2);
+  border-radius: var(--radius-card);
+  background: rgba(33, 158, 154, 0.07);
+}
+
+.deliveryPanel p:last-child {
+  margin: 0;
+}
+
+.kicker {
+  margin: 0 0 12px;
+  color: var(--pex-keppel);
+  font-weight: 800;
+}
+
+.contentsCard .kicker {
+  margin: 0 0 8px;
+  color: var(--pex-keppel);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.contentsCard {
+  scroll-margin-top: 96px;
+  padding: 24px;
+  border: var(--card-border);
+  border-radius: var(--radius-card);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  position: sticky;
+  top: calc(var(--header-height-desktop) + 24px);
+}
+
+.contentsCard h2 {
+  margin: 0 0 14px;
+  font-size: 22px;
+}
+
+.contentsCard ul {
+  margin: 0 0 16px;
+  padding-left: 20px;
+}
+
+.contentsCard li {
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 7px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.verifiedBadge svg {
+  flex-shrink: 0;
+  color: var(--pex-keppel);
+}
+
+.urgencyBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  margin-bottom: 14px;
+  padding: 8px 14px;
+  border-radius: var(--radius-card);
+  background: rgba(244, 124, 106, 0.08);
+  border: 1px solid rgba(244, 124, 106, 0.2);
+  color: var(--pex-coral);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.urgencyBadge svg {
+  flex-shrink: 0;
+}
+
+.shareSection {
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 820px) {
+  .gradeDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .searchPanel,
+  .gradeDetails {
+    padding-inline: var(--gutter-mobile);
+    padding-bottom: 112px;
+  }
+
+  .contentsCard {
+    position: static;
+  }
+}

@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { splitContactInput } from "@/lib/forms/contact";
-import styles from "@/components/marketing/Marketing.module.css";
+import styles from "@/components/marketing/MarketingForms.module.css";
 
 type ApiResponse = {
   success: boolean;

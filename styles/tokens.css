@@ -108,8 +108,8 @@
   --shadow-card: var(--card-shadow);
 
   /* Typography */
-  --font-heading: "Grota Sans Alt", "Pexpacks Sans Alt", Arial, sans-serif;
-  --font-body: "Grota Sans", "Pexpacks Sans", Arial, sans-serif;
+  --font-heading: var(--font-pexpacks-sans-alt), Arial, sans-serif;
+  --font-body: var(--font-pexpacks-sans), Arial, sans-serif;
   --font-weight-heading: 800;
   --font-weight-body: 400;
   --font-weight-medium: 500;

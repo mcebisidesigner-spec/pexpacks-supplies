@@ -78,7 +78,7 @@ styles/           -> Global CSS, design tokens, shared page styles
 | `/schools`                                 | Find your school + grade packs                          |
 | `/schools/[schoolSlug]`                    | School detail page                                      |
 | `/schools/[schoolSlug]/[gradeSlug]`        | Grade pack detail page                                  |
-| `/office-packs`                            | Office supply packs                                     |
+| `/office`                                 | Office supply packs                                     |
 | `/partner-with-schools`                    | Partner with Pexpacks                                   |
 | `/contact`                                 | Contact form                                            |
 | `/order`                                   | Order flow                                              |

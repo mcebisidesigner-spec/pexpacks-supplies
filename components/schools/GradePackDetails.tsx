@@ -6,7 +6,7 @@ import { ShareButtons } from "@/components/shared/ShareButtons";
 import { StickyOrderBar } from "@/components/schools/StickyOrderBar";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
-import styles from "./Schools.module.css";
+import styles from "./GradePackDetails.module.css";
 
 type GradePackDetailsProps = {
   school: School;

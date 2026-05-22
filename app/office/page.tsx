@@ -4,7 +4,7 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
 import { officePacks } from "@/data/officePacks";
 import { buildMetadata } from "@/lib/seo";
-import styles from "@/components/marketing/Marketing.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 
 const businessUseCases = [
   "Home offices",
@@ -118,7 +118,7 @@ export default async function OfficePacksPage({
         panelText="Core message"
         panelTitle="Office essentials packed and delivered, so your business keeps moving."
       >
-        <div className={styles.buttonRow}>
+        <div className={sectionStyles.buttonRow}>
           <Button href="#contact-enquiry">Request a Quote</Button>
           <Button href="#contact-enquiry" variant="white">
             Order a Pack
@@ -127,39 +127,39 @@ export default async function OfficePacksPage({
       </PageHero>
 
       <section
-        className={styles.brandPackageSection}
+        className={sectionStyles.brandPackageSection}
         aria-labelledby="brand-package-heading"
       >
-        <div className={styles.inner}>
-          <div className={styles.brandPackagePanel}>
-            <div className={styles.brandPackageCopy}>
-              <p className={styles.sectionEyebrow}>Special Offer</p>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.brandPackagePanel}>
+            <div className={sectionStyles.brandPackageCopy}>
+              <p className={sectionStyles.sectionEyebrow}>Special Offer</p>
               <h2 id="brand-package-heading">Business Starter Brand Package</h2>
               <p>
                 Launch with a professional identity. Pexpacks prepares your
                 essential physical and digital branding in one focused starter
                 package.
               </p>
-              <div className={styles.brandPackagePrice}>
+              <div className={sectionStyles.brandPackagePrice}>
                 <span>Complete package</span>
                 <strong>R3,999.00</strong>
               </div>
-              <div className={styles.buttonRow}>
+              <div className={sectionStyles.buttonRow}>
                 <Button href="/business-starter-brand-package" variant="white">
                   Claim This Package
                 </Button>
               </div>
             </div>
 
-            <div className={styles.brandPackageItems}>
+            <div className={sectionStyles.brandPackageItems}>
               {brandPackageItems.map(({ title, text, Icon }, index) => (
                 <details
-                  className={styles.brandPackageItem}
+                  className={sectionStyles.brandPackageItem}
                   key={title}
                   open={index === 0}
                 >
                   <summary>
-                    <span className={styles.brandPackageIcon}>
+                    <span className={sectionStyles.brandPackageIcon}>
                       <Icon />
                     </span>
                     <strong>{title}</strong>

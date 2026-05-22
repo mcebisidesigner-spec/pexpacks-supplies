@@ -11,7 +11,10 @@ import {
   isValidSouthAfricanPhone,
   isValidEmailAddress,
 } from "@/lib/forms/contact";
-import styles from "@/components/marketing/Marketing.module.css";
+import officeStyles from "@/components/marketing/Marketing.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
+import formStyles from "@/components/marketing/MarketingForms.module.css";
 
 type ApiResponse = {
   success: boolean;
@@ -85,7 +88,7 @@ function FieldError({
   }
 
   return (
-    <span id={id} className={styles.fieldError}>
+    <span id={id} className={formStyles.fieldError}>
       {message}
     </span>
   );
@@ -334,10 +337,10 @@ export function OfficeQuoteExperience({
   return (
     <>
       <section
-        className={styles.officeTrustStrip}
+        className={officeStyles.officeTrustStrip}
         aria-label="Business trust signals"
       >
-        <div className={styles.inner}>
+        <div className={sectionStyles.inner}>
           <ul>
             {trustSignals.map((signal) => (
               <li key={signal}>{signal}</li>
@@ -346,10 +349,10 @@ export function OfficeQuoteExperience({
         </div>
       </section>
 
-      <section className={styles.section}>
-        <div className={styles.inner}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionEyebrow}>Office pack types</p>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.sectionHeader}>
+            <p className={sectionStyles.sectionEyebrow}>Office pack types</p>
             <h2>Office pack options</h2>
             <p>
               Ready-to-quote packs for small teams, home offices and recurring
@@ -357,17 +360,17 @@ export function OfficeQuoteExperience({
             </p>
           </div>
 
-          <div className={styles.sizeSelectorWrapper}>
-            <span className={styles.sizeSelectorLabel}>
+          <div className={officeStyles.sizeSelectorWrapper}>
+            <span className={officeStyles.sizeSelectorLabel}>
               Find packs by company size:
             </span>
-            <div className={styles.sizeSelectorButtons}>
+            <div className={officeStyles.sizeSelectorButtons}>
               <button
                 type="button"
                 className={
                   companySize === "all"
-                    ? styles.activeSizeButton
-                    : styles.sizeButton
+                    ? officeStyles.activeSizeButton
+                    : officeStyles.sizeButton
                 }
                 onClick={() => setCompanySize("all")}
               >
@@ -377,8 +380,8 @@ export function OfficeQuoteExperience({
                 type="button"
                 className={
                   companySize === "solo"
-                    ? styles.activeSizeButton
-                    : styles.sizeButton
+                    ? officeStyles.activeSizeButton
+                    : officeStyles.sizeButton
                 }
                 onClick={() => setCompanySize("solo")}
               >
@@ -388,8 +391,8 @@ export function OfficeQuoteExperience({
                 type="button"
                 className={
                   companySize === "small"
-                    ? styles.activeSizeButton
-                    : styles.sizeButton
+                    ? officeStyles.activeSizeButton
+                    : officeStyles.sizeButton
                 }
                 onClick={() => setCompanySize("small")}
               >
@@ -399,8 +402,8 @@ export function OfficeQuoteExperience({
                 type="button"
                 className={
                   companySize === "medium"
-                    ? styles.activeSizeButton
-                    : styles.sizeButton
+                    ? officeStyles.activeSizeButton
+                    : officeStyles.sizeButton
                 }
                 onClick={() => setCompanySize("medium")}
               >
@@ -409,25 +412,25 @@ export function OfficeQuoteExperience({
             </div>
           </div>
 
-          <div className={styles.officeGrid}>
+          <div className={cardStyles.officeGrid}>
             {filteredPacks.map((pack) => (
-              <article className={styles.packCard} key={pack.id}>
+              <article className={cardStyles.packCard} key={pack.id}>
                 <div
-                  className={`${styles.packMedia} ${styles.packMediaBlue}`}
+                  className={`${cardStyles.packMedia} ${cardStyles.packMediaBlue}`}
                   aria-hidden="true"
                 >
                   <span>Office</span>
                 </div>
-                <div className={styles.packBody}>
-                  <p className={styles.packMeta}>SME and office supplies</p>
+                <div className={cardStyles.packBody}>
+                  <p className={cardStyles.packMeta}>SME and office supplies</p>
                   <h3>{pack.name}</h3>
                   <p>{pack.description}</p>
-                  <ul className={styles.packList}>
+                  <ul className={cardStyles.packList}>
                     {pack.contents.map((item) => (
                       <li key={item}>
                         <strong>{item}</strong>
                         {itemBrandDetails[item] && (
-                          <span className={styles.cardItemDetail}>
+                          <span className={officeStyles.cardItemDetail}>
                             {" "}
                             — {itemBrandDetails[item]}
                           </span>
@@ -435,8 +438,8 @@ export function OfficeQuoteExperience({
                       </li>
                     ))}
                   </ul>
-                  <div className={styles.packFooter}>
-                    <span className={styles.priceLabel}>
+                  <div className={cardStyles.packFooter}>
+                    <span className={cardStyles.priceLabel}>
                       {pack.priceFrom === 0
                         ? "Request quote"
                         : `From ${formatCurrency(pack.priceFrom)}`}
@@ -456,18 +459,18 @@ export function OfficeQuoteExperience({
         </div>
       </section>
 
-      <section className={styles.sectionCream}>
-        <div className={styles.inner}>
-          <div className={styles.splitBand}>
+      <section className={sectionStyles.sectionCream}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
             <div>
-              <p className={styles.sectionEyebrow}>Monthly office support</p>
+              <p className={sectionStyles.sectionEyebrow}>Monthly office support</p>
               <h2>Keep admin supplies predictable</h2>
               <p>
                 Set up a recurring office pack for the basics your team uses
                 every month, or request a custom pack when a project, shop or
                 site needs practical supplies quickly.
               </p>
-              <div className={styles.buttonRow}>
+              <div className={sectionStyles.buttonRow}>
                 <Button
                   type="button"
                   onClick={() => selectPack(selectedPack, "custom")}
@@ -476,7 +479,7 @@ export function OfficeQuoteExperience({
                 </Button>
               </div>
             </div>
-            <ul className={styles.checkList}>
+            <ul className={sectionStyles.checkList}>
               {officeBenefits.map((benefit) => (
                 <li key={benefit}>{benefit}</li>
               ))}
@@ -485,19 +488,19 @@ export function OfficeQuoteExperience({
         </div>
       </section>
 
-      <section className={styles.section}>
-        <div className={styles.inner}>
-          <div className={styles.sectionHeader}>
-            <p className={styles.sectionEyebrow}>Business stationery</p>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.sectionHeader}>
+            <p className={sectionStyles.sectionEyebrow}>Business stationery</p>
             <h2>Built for practical business types</h2>
             <p>
               Pexpacks office packs are structured around real admin needs, not
               cluttered catalogue browsing.
             </p>
           </div>
-          <div className={styles.gridThree}>
+          <div className={cardStyles.gridThree}>
             {businessUseCases.map((useCase) => (
-              <article className={styles.infoCard} key={useCase}>
+              <article className={cardStyles.infoCard} key={useCase}>
                 <h3 style={{ margin: 0 }}>{useCase}</h3>
               </article>
             ))}
@@ -507,13 +510,13 @@ export function OfficeQuoteExperience({
 
       <section
         id="contact-enquiry"
-        className={styles.sectionCream}
+        className={sectionStyles.sectionCream}
         ref={formRef}
       >
-        <div className={styles.inner}>
-          <div className={styles.officeQuoteLayout}>
-            <div className={styles.officeQuoteFormCard}>
-              <p className={styles.sectionEyebrow}>Contact enquiry</p>
+        <div className={sectionStyles.inner}>
+          <div className={officeStyles.officeQuoteLayout}>
+            <div className={officeStyles.officeQuoteFormCard}>
+              <p className={sectionStyles.sectionEyebrow}>Contact enquiry</p>
               <h2>Request an office quote</h2>
               <p>
                 Your selected pack is already attached to the enquiry. Choose a
@@ -521,13 +524,13 @@ export function OfficeQuoteExperience({
               </p>
 
               <div
-                className={styles.quoteModeTabs}
+                className={officeStyles.quoteModeTabs}
                 role="tablist"
                 aria-label="Office quote mode"
               >
                 <button
                   type="button"
-                  className={mode === "standard" ? styles.activeQuoteMode : ""}
+                  className={mode === "standard" ? officeStyles.activeQuoteMode : ""}
                   onClick={() => setMode("standard")}
                   role="tab"
                   aria-selected={mode === "standard"}
@@ -539,7 +542,7 @@ export function OfficeQuoteExperience({
                 </button>
                 <button
                   type="button"
-                  className={mode === "custom" ? styles.activeQuoteMode : ""}
+                  className={mode === "custom" ? officeStyles.activeQuoteMode : ""}
                   onClick={() => setMode("custom")}
                   role="tab"
                   aria-selected={mode === "custom"}
@@ -551,14 +554,14 @@ export function OfficeQuoteExperience({
                 </button>
               </div>
 
-              <div className={styles.selectedPackPanel}>
+              <div className={officeStyles.selectedPackPanel}>
                 <span>Selected pack</span>
                 <strong>{selectedPack.name}</strong>
                 <p>{selectedPack.description}</p>
               </div>
 
               {mode === "custom" ? (
-                <div className={styles.customItemsPanel}>
+                <div className={officeStyles.customItemsPanel}>
                   <div>
                     <strong>Customise stationery items</strong>
                     <p>
@@ -573,7 +576,7 @@ export function OfficeQuoteExperience({
                         >
                           <strong>{item}</strong>
                           {itemBrandDetails[item] && (
-                            <span className={styles.itemDetailSub}>
+                            <span className={officeStyles.itemDetailSub}>
                               {itemBrandDetails[item]}
                             </span>
                           )}
@@ -588,7 +591,7 @@ export function OfficeQuoteExperience({
                       </li>
                     ))}
                   </ul>
-                  <div className={styles.addItemRow}>
+                  <div className={officeStyles.addItemRow}>
                     <select
                       value={selectedItemOption}
                       onChange={(event) =>
@@ -610,7 +613,7 @@ export function OfficeQuoteExperience({
                       Add selected item
                     </button>
                   </div>
-                  <div className={styles.addItemRow}>
+                  <div className={officeStyles.addItemRow}>
                     <input
                       value={newItem}
                       onChange={(event) => setNewItem(event.target.value)}
@@ -627,10 +630,10 @@ export function OfficeQuoteExperience({
                     </button>
                   </div>
 
-                  <div className={styles.draftActionsGroup}>
+                  <div className={officeStyles.draftActionsGroup}>
                     <button
                       type="button"
-                      className={styles.draftActionButton}
+                      className={officeStyles.draftActionButton}
                       onClick={handleDownloadPdf}
                       disabled={isGeneratingPdf}
                     >
@@ -644,7 +647,7 @@ export function OfficeQuoteExperience({
                           strokeWidth="2.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          className={styles.spinner}
+                          className={officeStyles.spinner}
                         >
                           <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                         </svg>
@@ -671,8 +674,8 @@ export function OfficeQuoteExperience({
               ) : null}
 
               <form onSubmit={handleSubmit} noValidate>
-                <div className={styles.formGrid}>
-                  <label className={styles.field}>
+                <div className={formStyles.formGrid}>
+                  <label className={formStyles.field}>
                     <span>Business name</span>
                     <input
                       name="businessName"
@@ -686,7 +689,7 @@ export function OfficeQuoteExperience({
                       message={errors.businessName}
                     />
                   </label>
-                  <label className={styles.field}>
+                  <label className={formStyles.field}>
                     <span>Contact person</span>
                     <input
                       name="fullName"
@@ -697,7 +700,7 @@ export function OfficeQuoteExperience({
                     />
                     <FieldError id="fullName-error" message={errors.fullName} />
                   </label>
-                  <label className={styles.field}>
+                  <label className={formStyles.field}>
                     <span>Phone</span>
                     <input
                       name="phone"
@@ -709,7 +712,7 @@ export function OfficeQuoteExperience({
                     />
                     <FieldError id="phone-error" message={errors.phone} />
                   </label>
-                  <label className={styles.field}>
+                  <label className={formStyles.field}>
                     <span>Email</span>
                     <input
                       name="email"
@@ -720,7 +723,7 @@ export function OfficeQuoteExperience({
                     />
                     <FieldError id="email-error" message={errors.email} />
                   </label>
-                  <label className={styles.field}>
+                  <label className={formStyles.field}>
                     <span>Preferred contact method</span>
                     <select
                       name="preferredContactMethod"
@@ -731,7 +734,7 @@ export function OfficeQuoteExperience({
                       <option value="email">Email</option>
                     </select>
                   </label>
-                  <label className={styles.field}>
+                  <label className={formStyles.field}>
                     <span>Quantity</span>
                     <input
                       name="orderQuantity"
@@ -740,7 +743,7 @@ export function OfficeQuoteExperience({
                       placeholder="1"
                     />
                   </label>
-                  <label className={`${styles.field} ${styles.formWide}`}>
+                  <label className={`${formStyles.field} ${formStyles.formWide}`}>
                     <span>Notes</span>
                     <textarea
                       name="message"
@@ -750,7 +753,7 @@ export function OfficeQuoteExperience({
                   </label>
                 </div>
 
-                <label className={styles.consentField}>
+                <label className={formStyles.consentField}>
                   <input
                     name="consent"
                     type="checkbox"
@@ -762,7 +765,7 @@ export function OfficeQuoteExperience({
                     about this enquiry and provide related support.{" "}
                     <Link
                       href="/privacy-policy"
-                      className={styles.inlineTextLink}
+                      className={formStyles.inlineTextLink}
                     >
                       privacy policy
                     </Link>
@@ -770,7 +773,7 @@ export function OfficeQuoteExperience({
                 </label>
                 <FieldError id="consent-error" message={errors.consent} />
 
-                <label className={styles.honeypot} aria-hidden="true">
+                <label className={formStyles.honeypot} aria-hidden="true">
                   Company website
                   <input
                     name="companyWebsite"
@@ -785,7 +788,7 @@ export function OfficeQuoteExperience({
                 {status ? (
                   <p
                     className={
-                      status.success ? styles.statusMessage : styles.statusError
+                      status.success ? formStyles.statusMessage : formStyles.statusError
                     }
                     role={status.success ? "status" : "alert"}
                     aria-live="polite"
@@ -796,8 +799,8 @@ export function OfficeQuoteExperience({
               </form>
             </div>
 
-            <aside className={styles.officeQuoteSummary}>
-              <p className={styles.sectionEyebrow}>Quote ready</p>
+            <aside className={officeStyles.officeQuoteSummary}>
+              <p className={sectionStyles.sectionEyebrow}>Quote ready</p>
               <h3>{selectedPack.name}</h3>
               <p>
                 {mode === "custom"
@@ -814,7 +817,7 @@ export function OfficeQuoteExperience({
         </div>
       </section>
 
-      <div ref={footerSentinelRef} className={styles.footerStickySentinel} />
+      <div ref={footerSentinelRef} className={officeStyles.footerStickySentinel} />
     </>
   );
 }

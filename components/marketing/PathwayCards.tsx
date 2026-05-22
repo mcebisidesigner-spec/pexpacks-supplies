@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { MainCategory } from "@/data/packs";
 import { mainCategories } from "@/data/packs";
-import styles from "./Marketing.module.css";
+import styles from "./MarketingCards.module.css";
 
 function CategoryIcon({ icon }: { icon: MainCategory["icon"] }) {
   return (

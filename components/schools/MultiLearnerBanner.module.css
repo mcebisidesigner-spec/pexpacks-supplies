@@ -1,0 +1,21 @@
+.multiLearnerBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding: 14px 20px;
+  border-radius: var(--radius-card);
+  background: linear-gradient(135deg, rgba(26, 42, 64, 0.04), rgba(63, 184, 160, 0.08));
+  border: 1px solid rgba(63, 184, 160, 0.18);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.multiLearnerBanner svg {
+  flex-shrink: 0;
+  color: var(--pex-keppel);
+}
+
+.multiLearnerBanner strong {
+  color: var(--pex-primary);
+}

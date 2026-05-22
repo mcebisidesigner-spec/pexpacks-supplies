@@ -85,6 +85,18 @@ export const checkoutSteps: CheckoutStep[] = [
   },
 ];
 
+export type OrderFormProps = {
+  initialSchool?: string;
+  initialGrade?: string;
+  initialPhase?: string;
+  initialPackId?: string;
+  initialPackType?: string;
+  initialCustomItems?: string;
+  initialRemovedItems?: string;
+  initialEstimatedTotal?: string;
+  initialDraftId?: string;
+};
+
 export const fulfilmentOptions: Array<{
   value: FulfilmentOption;
   title: string;

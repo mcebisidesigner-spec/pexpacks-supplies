@@ -5,7 +5,8 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { endpointPathForFormType } from "@/lib/forms/types";
-import styles from "@/components/marketing/Marketing.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import formStyles from "@/components/marketing/MarketingForms.module.css";
 
 type ApiResponse = {
   success: boolean;
@@ -42,7 +43,7 @@ function FieldError({
   }
 
   return (
-    <span id={id} className={styles.fieldError}>
+    <span id={id} className={formStyles.fieldError}>
       {message}
     </span>
   );
@@ -113,17 +114,17 @@ export function BrandPackageClaimForm() {
   }
 
   return (
-    <div className={styles.formCard}>
+    <div className={formStyles.formCard}>
       <form onSubmit={handleSubmit} noValidate>
-        <p className={styles.sectionEyebrow}>Package claim</p>
+        <p className={sectionStyles.sectionEyebrow}>Package claim</p>
         <h2>Claim the Business Starter Brand Package</h2>
-        <p className={styles.privacyNotice}>
+        <p className={formStyles.privacyNotice}>
           Share the business details, creative direction and any existing brand
           material so Pexpacks can prepare the package properly.
         </p>
 
-        <div className={styles.formGrid}>
-          <label className={styles.field}>
+        <div className={formStyles.formGrid}>
+          <label className={formStyles.field}>
             <span>Business name</span>
             <input
               name="businessName"
@@ -138,7 +139,7 @@ export function BrandPackageClaimForm() {
             />
           </label>
 
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Contact person</span>
             <input
               name="fullName"
@@ -150,7 +151,7 @@ export function BrandPackageClaimForm() {
             <FieldError id="fullName-error" message={errors.fullName} />
           </label>
 
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Phone</span>
             <input
               name="phone"
@@ -163,7 +164,7 @@ export function BrandPackageClaimForm() {
             <FieldError id="phone-error" message={errors.phone} />
           </label>
 
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Email</span>
             <input
               name="email"
@@ -176,7 +177,7 @@ export function BrandPackageClaimForm() {
             <FieldError id="email-error" message={errors.email} />
           </label>
 
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Preferred contact method</span>
             <select name="preferredContactMethod" defaultValue="whatsapp">
               <option value="whatsapp">WhatsApp</option>
@@ -185,7 +186,7 @@ export function BrandPackageClaimForm() {
             </select>
           </label>
 
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Website or social link</span>
             <input
               name="website"
@@ -195,7 +196,7 @@ export function BrandPackageClaimForm() {
             />
           </label>
 
-          <label className={`${styles.field} ${styles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`}>
             <span>Brief description of the business</span>
             <textarea
               name="businessDescription"
@@ -209,7 +210,7 @@ export function BrandPackageClaimForm() {
             />
           </label>
 
-          <label className={`${styles.field} ${styles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`}>
             <span>Branding preferences</span>
             <textarea
               name="brandingPreferences"
@@ -223,7 +224,7 @@ export function BrandPackageClaimForm() {
             />
           </label>
 
-          <label className={`${styles.field} ${styles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`}>
             <span>Existing branding material</span>
             <textarea
               name="existingBranding"
@@ -231,7 +232,7 @@ export function BrandPackageClaimForm() {
             />
           </label>
 
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Target audience</span>
             <input
               name="targetAudience"
@@ -239,12 +240,12 @@ export function BrandPackageClaimForm() {
             />
           </label>
 
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Preferred deadline</span>
             <input name="deadline" placeholder="Flexible, 2 weeks, launch date..." />
           </label>
 
-          <label className={`${styles.field} ${styles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`}>
             <span>Upload sample branding files</span>
             <input
               name="brandAssets"
@@ -253,14 +254,14 @@ export function BrandPackageClaimForm() {
               accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx,.ppt,.pptx,.svg"
               {...errorAttributes(errors, "brandAssets")}
             />
-            <small className={styles.fieldHint}>
+            <small className={formStyles.fieldHint}>
               Optional. Upload up to 5 files, 4 MB each: logos, colour palettes,
               flyers, references, documents or screenshots.
             </small>
             <FieldError id="brandAssets-error" message={errors.brandAssets} />
           </label>
 
-          <label className={`${styles.field} ${styles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`}>
             <span>Additional notes</span>
             <textarea
               name="notes"
@@ -269,7 +270,7 @@ export function BrandPackageClaimForm() {
           </label>
         </div>
 
-        <label className={styles.consentField}>
+        <label className={formStyles.consentField}>
           <input
             name="consent"
             type="checkbox"
@@ -278,14 +279,14 @@ export function BrandPackageClaimForm() {
           />
           <span>
             {consentText}{" "}
-            <Link href="/privacy-policy" className={styles.inlineTextLink}>
+            <Link href="/privacy-policy" className={formStyles.inlineTextLink}>
               privacy policy
             </Link>
           </span>
         </label>
         <FieldError id="consent-error" message={errors.consent} />
 
-        <label className={styles.honeypot} aria-hidden="true">
+        <label className={formStyles.honeypot} aria-hidden="true">
           Company website
           <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
         </label>
@@ -297,7 +298,7 @@ export function BrandPackageClaimForm() {
         {status ? (
           <p
             className={
-              status.success ? styles.statusMessage : styles.statusError
+              status.success ? formStyles.statusMessage : formStyles.statusError
             }
             role={status.success ? "status" : "alert"}
             aria-live="polite"

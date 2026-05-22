@@ -5,7 +5,8 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { endpointPathForFormType, type FormType } from "@/lib/forms/types";
-import styles from "@/components/marketing/Marketing.module.css";
+import heroStyles from "@/components/marketing/HeroBase.module.css";
+import formStyles from "@/components/marketing/MarketingForms.module.css";
 
 type ApiResponse = {
   success: boolean;
@@ -77,7 +78,7 @@ function FieldError({
   }
 
   return (
-    <span id={id} className={styles.fieldError}>
+    <span id={id} className={formStyles.fieldError}>
       {message}
     </span>
   );
@@ -162,19 +163,19 @@ export function PexpacksEnquiryForm({
   }
 
   return (
-    <div className={styles.formCard}>
+    <div className={formStyles.formCard}>
       <form onSubmit={handleSubmit} noValidate>
-        <p className={styles.eyebrow}>
+        <p className={heroStyles.eyebrow}>
           {isContact ? "Contact enquiry" : "Partnership enquiry"}
         </p>
         <h2>{title}</h2>
-        <p className={styles.privacyNotice}>
+        <p className={formStyles.privacyNotice}>
           I confirm that I am duly authorised to submit the parent or
           learner-related information and that the information provided is
           accurate.
         </p>
-        <div className={styles.formGrid}>
-          <label className={styles.field}>
+        <div className={formStyles.formGrid}>
+          <label className={formStyles.field}>
             <span>Full name</span>
             <input
               name="fullName"
@@ -185,7 +186,7 @@ export function PexpacksEnquiryForm({
             />
             <FieldError id="fullName-error" message={errors.fullName} />
           </label>
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Phone</span>
             <input
               name="phone"
@@ -197,7 +198,7 @@ export function PexpacksEnquiryForm({
             />
             <FieldError id="phone-error" message={errors.phone} />
           </label>
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Email</span>
             <input
               name="email"
@@ -208,7 +209,7 @@ export function PexpacksEnquiryForm({
             />
             <FieldError id="email-error" message={errors.email} />
           </label>
-          <label className={styles.field}>
+          <label className={formStyles.field}>
             <span>Preferred contact method</span>
             <select name="preferredContactMethod" defaultValue="whatsapp">
               <option value="whatsapp">WhatsApp</option>
@@ -218,7 +219,7 @@ export function PexpacksEnquiryForm({
           </label>
 
           {isContact ? (
-            <label className={styles.field}>
+            <label className={formStyles.field}>
               <span>Enquiry type</span>
               <select
                 name="enquiryType"
@@ -232,7 +233,7 @@ export function PexpacksEnquiryForm({
             </label>
           ) : (
             <>
-              <label className={styles.field}>
+              <label className={formStyles.field}>
                 <span>Organisation</span>
                 <input
                   name="businessName"
@@ -247,7 +248,7 @@ export function PexpacksEnquiryForm({
                   message={errors.businessName}
                 />
               </label>
-              <label className={styles.field}>
+              <label className={formStyles.field}>
                 <span>Partner type</span>
                 <select
                   name="partnerType"
@@ -264,7 +265,7 @@ export function PexpacksEnquiryForm({
 
           {showSchoolFields ? (
             <>
-              <label className={styles.field}>
+              <label className={formStyles.field}>
                 <span>School name</span>
                 <input
                   name="schoolName"
@@ -275,7 +276,7 @@ export function PexpacksEnquiryForm({
                 />
                 <FieldError id="schoolName-error" message={errors.schoolName} />
               </label>
-              <label className={styles.field}>
+              <label className={formStyles.field}>
                 <span>Grade</span>
                 <input
                   name="grade"
@@ -290,7 +291,7 @@ export function PexpacksEnquiryForm({
 
           {showOfficeFields ? (
             <>
-              <label className={styles.field}>
+              <label className={formStyles.field}>
                 <span>Business name</span>
                 <input
                   name="businessName"
@@ -305,7 +306,7 @@ export function PexpacksEnquiryForm({
                   message={errors.businessName}
                 />
               </label>
-              <label className={styles.field}>
+              <label className={formStyles.field}>
                 <span>Order quantity</span>
                 <input
                   name="orderQuantity"
@@ -317,7 +318,7 @@ export function PexpacksEnquiryForm({
             </>
           ) : null}
 
-          <label className={`${styles.field} ${styles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`}>
             <span>Message</span>
             <textarea
               name="message"
@@ -330,7 +331,7 @@ export function PexpacksEnquiryForm({
           </label>
         </div>
 
-        <label className={styles.consentField}>
+        <label className={formStyles.consentField}>
           <input
             name="consent"
             type="checkbox"
@@ -339,7 +340,7 @@ export function PexpacksEnquiryForm({
           />
           <span>
             {consentText}{" "}
-            <Link href="/privacy-policy" className={styles.inlineTextLink}>
+            <Link href="/privacy-policy" className={formStyles.inlineTextLink}>
               privacy policy
             </Link>
           </span>
@@ -347,7 +348,7 @@ export function PexpacksEnquiryForm({
         <FieldError id="consent-error" message={errors.consent} />
 
         {/* Honeypot — hidden from real users */}
-        <label className={styles.honeypot} aria-hidden="true">
+        <label className={formStyles.honeypot} aria-hidden="true">
           Company website
           <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
         </label>
@@ -358,7 +359,7 @@ export function PexpacksEnquiryForm({
         {status ? (
           <p
             className={
-              status.success ? styles.statusMessage : styles.statusError
+              status.success ? formStyles.statusMessage : formStyles.statusError
             }
             role={status.success ? "status" : "alert"}
             aria-live="polite"

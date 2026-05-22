@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PageHero } from "@/components/marketing/PageHero";
-import heroStyles from "@/components/marketing/Marketing.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import { phasePacks } from "@/data/phasePacks";
 import { PhaseClient } from "@/components/school-packs/PhaseClient";
 import { buildMetadata } from "@/lib/seo";
@@ -28,7 +28,7 @@ export default function FoundationPhasePage() {
         title={phaseData.title}
         text={phaseData.description}
       >
-        <ul className={`${heroStyles.checkList} ${heroStyles.checkListSpaced}`}>
+        <ul className={`${sectionStyles.checkList} ${sectionStyles.checkListSpaced}`}>
           {phaseData.heroBullets.map((bullet) => (
             <li key={bullet}>{bullet}</li>
           ))}

@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { buildWhatsAppHref } from "@/data/contact";
-import { phasePacks } from "@/data/phasePacks";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { readOrderDraft, type OrderDraft } from "@/lib/order/orderDraft";
@@ -19,107 +18,19 @@ import {
   checkoutSteps,
   type ApiResponse,
   type FulfilmentOption,
+  type OrderFormProps,
   type SchoolDetails,
   type SchoolSearchResult,
-  type StandardSelection,
 } from "./OrderFormTypes";
+import {
+  createOrderReference,
+  fetchSchoolDetails,
+  parseEstimatedTotal,
+  resolveStandardSelection,
+  isValidEmail,
+  isLikelySaPhone,
+} from "./orderFormHelpers";
 import styles from "./Order.module.css";
-
-type OrderFormProps = {
-  initialSchool?: string;
-  initialGrade?: string;
-  initialPhase?: string;
-  initialPackId?: string;
-  initialPackType?: string;
-  initialCustomItems?: string;
-  initialRemovedItems?: string;
-  initialEstimatedTotal?: string;
-  initialDraftId?: string;
-};
-
-function createOrderReference() {
-  return `PEX-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${Math.random()
-    .toString(36)
-    .slice(2, 7)
-    .toUpperCase()}`;
-}
-
-async function fetchSchoolDetails(slug: string) {
-  const response = await fetch(`/api/schools/${encodeURIComponent(slug)}`);
-
-  if (!response.ok) {
-    throw new Error("School not found");
-  }
-
-  return (await response.json()) as { success: true; school: SchoolDetails };
-}
-
-function parseEstimatedTotal(value?: string) {
-  if (!value) {
-    return undefined;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed >= 0 ? parsed : undefined;
-}
-
-function resolveStandardSelection({
-  initialPhase,
-  initialPackId,
-  initialGrade,
-  initialPackType,
-  initialCustomItems,
-  initialEstimatedTotal,
-}: Pick<
-  OrderFormProps,
-  | "initialPhase"
-  | "initialPackId"
-  | "initialGrade"
-  | "initialPackType"
-  | "initialCustomItems"
-  | "initialEstimatedTotal"
->): StandardSelection | null {
-  if (!initialPhase) {
-    return null;
-  }
-
-  const phase = phasePacks.find((pack) => pack.slug === initialPhase);
-  if (!phase) {
-    return null;
-  }
-
-  const selectedPack =
-    phase.gradePacks.find((pack) => pack.id === initialPackId) ||
-    phase.gradePacks.find(
-      (pack) => pack.grade.toLowerCase() === initialGrade?.toLowerCase()
-    );
-
-  if (!selectedPack) {
-    return null;
-  }
-
-  return {
-    mode: initialPackType === "custom" ? "custom" : "standard",
-    phaseTitle: phase.title,
-    phaseSlug: phase.slug,
-    pack: selectedPack,
-    customItems: initialCustomItems,
-    estimatedTotal: parseEstimatedTotal(initialEstimatedTotal),
-  };
-}
-
-function isValidEmail(value: string) {
-  return !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function isLikelySaPhone(value: string) {
-  const digits = value.replace(/\D/g, "");
-  return (
-    (digits.startsWith("0") && digits.length === 10) ||
-    (digits.startsWith("27") && digits.length === 11) ||
-    (digits.startsWith("0027") && digits.length === 13)
-  );
-}
 
 export function OrderForm({
   initialSchool = "",

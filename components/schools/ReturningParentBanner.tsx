@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import styles from "./Schools.module.css";
+import styles from "./ReturningParentBanner.module.css";
 
 export const STORAGE_KEY = "pexpacks:recent-school-visits";
 export const RECENT_SCHOOL_VISITS_EVENT = "pexpacks:recent-school-visits-updated";
