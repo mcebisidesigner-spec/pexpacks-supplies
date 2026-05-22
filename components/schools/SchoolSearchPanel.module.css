@@ -30,7 +30,7 @@
   background: var(--pex-bg);
   box-shadow: var(--card-shadow);
   display: grid;
-  grid-template-columns: 1.1fr 1fr auto;
+  grid-template-columns: 1.1fr 1fr;
   align-items: stretch;
   gap: 0;
 }

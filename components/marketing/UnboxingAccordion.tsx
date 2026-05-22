@@ -152,6 +152,9 @@ export function UnboxingAccordion() {
 
           <div className={styles.actions}>
             <Button href="/schools">Find Your School Pack</Button>
+            <p className={styles.actionsNote}>
+              From R 659 per pack &middot; Free school delivery
+            </p>
           </div>
         </div>
 

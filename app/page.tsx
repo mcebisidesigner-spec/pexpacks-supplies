@@ -11,6 +11,8 @@ import { SavingsCalculator } from "@/components/marketing/SavingsCalculator";
 import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
+import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
+import { CountdownTimer } from "@/components/shared/CountdownTimer";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -82,28 +84,11 @@ const BriefcaseIcon = () => (
   </svg>
 );
 
-const ShieldCheckIcon = () => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-    <path d="M9 12l2 2 4-4"></path>
-  </svg>
-);
-
 const benefitIcons = [
   PackageIcon,
   ClipboardCheckIcon,
   BookIcon,
   BriefcaseIcon,
-  ShieldCheckIcon,
 ];
 
 export default function HomePage() {
@@ -123,6 +108,13 @@ export default function HomePage() {
               No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
+            <p className={heroStyles.urgencyBar}>
+              <CountdownTimer targetDate={new Date("2027-09-30T23:59:59")} />
+            </p>
+            <p className={heroStyles.gradeBrowse}>
+              Don&apos;t know your school?{" "}
+              <a href="/foundation-phase">Browse packs by grade &rarr;</a>
+            </p>
           </div>
 
           <div className={heroStyles.heroVisual}>
@@ -152,12 +144,19 @@ export default function HomePage() {
         <div className={sectionStyles.inner}>
           <div className={homeStyles.guaranteeBox}>
             <div className={homeStyles.guaranteeContent}>
+              <div className={homeStyles.guaranteeIcon}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="M9 12l2 2 4-4" />
+                </svg>
+              </div>
               <h2>100% Exact List Match Guarantee</h2>
               <p>
                 We pack exactly what is on your school's official stationery
                 list. No missing items, no incorrect brands. If it's on the
                 list, it's in the box.
               </p>
+              <span className={homeStyles.guaranteeStat}>1 200+ school lists matched</span>
             </div>
           </div>
         </div>
@@ -174,28 +173,40 @@ export default function HomePage() {
             headingId="most-popular-packs"
           />
           <div className={cardStyles.packGrid}>
-            {homepagePacks.map((pack) => (
+            {homepagePacks.map((pack, idx) => (
               <div className={cardStyles.packCard} key={pack.id}>
-                <div style={{ padding: "24px", flexGrow: 1 }}>
-                  <span className={heroStyles.eyebrow}>{pack.category}</span>
+                <div className={cardStyles.packCardHead}>
+                  <span className={heroStyles.eyebrow}>
+                    {pack.category}
+                    {idx === 1 ? <span className={cardStyles.mostOrderedBadge}>Most ordered</span> : null}
+                  </span>
                   <h3>{pack.name}</h3>
+                </div>
+                <div style={{ padding: "0 24px", flexGrow: 1, display: "flex", flexDirection: "column" }}>
                   <p
                     style={{
                       color: "var(--pex-text-muted)",
-                      marginBottom: "16px",
+                      marginBottom: "8px",
                       fontSize: "15px",
                     }}
                   >
                     {pack.description}
                   </p>
-                  <p style={{ fontWeight: 800, color: "var(--pex-keppel)" }}>
-                    {pack.priceLabel}
-                  </p>
+                  <ul className={cardStyles.packPreview}>
+                    {pack.includes.slice(0, 3).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                  <div style={{ marginTop: "auto", paddingBottom: "20px" }}>
+                    <span className={cardStyles.priceBadge}>
+                      {pack.priceLabel}
+                    </span>
+                  </div>
                 </div>
                 <div style={{ padding: "0 24px 24px" }}>
                   <Button
                     href={pack.href}
-                    variant="outline"
+                    variant="primary"
                     style={{ width: "100%" }}
                   >
                     {pack.cta}
@@ -237,7 +248,7 @@ export default function HomePage() {
               <div
                 className={[sectionStyles.buttonRow, sectionStyles.splitActions].join(" ")}
               >
-                <Button href="/office" variant="secondary">
+                <Button href="/office" variant="primary">
                   View Office Packs
                 </Button>
               </div>
@@ -293,6 +304,7 @@ export default function HomePage() {
         secondaryHref="/office"
         secondaryLabel="Order Office Stationery"
       />
+      <MobileStickyCta />
     </>
   );
 }

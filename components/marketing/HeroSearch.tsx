@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import type { FormEvent } from "react";
 import { useState } from "react";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import { InlineSchoolWaitlist } from "@/components/schools/InlineSchoolWaitlist";
@@ -59,20 +58,10 @@ export function HeroSearch() {
     errorMessage: "We couldn't search schools right now. Please try again.",
   });
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setPanelOpen(true);
-
-    if (queryReady) {
-      void fetchResults(0, "replace");
-    }
-  }
-
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
       <form
         className={styles.heroSearch}
-        onSubmit={handleSubmit}
         role="search"
         noValidate
         onKeyDown={(event) => {
@@ -209,19 +198,18 @@ export function HeroSearch() {
             ))}
           </select>
         </label>
-        <button
-          className={styles.searchButton}
-          type="submit"
-          disabled={isLoading}
-        >
-          {isLoading ? "Searching..." : "Search"}
-        </button>
         {error ? (
           <p className={styles.searchError} role="alert">
             {error}
           </p>
         ) : null}
       </form>
+      <div className={styles.heroSearchLinks}>
+        <Link href="/schools" className={styles.heroFallbackLink}>
+          Browse all schools
+        </Link>
+        <span className={styles.heroSearchCount}>685+ schools available</span>
+      </div>
       <SearchHelperPill
         storageKey="Pexpacks:gauteng-helper:home"
         isInputFocused={isSchoolInputFocused}

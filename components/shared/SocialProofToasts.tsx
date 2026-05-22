@@ -10,26 +10,21 @@ type SocialProofItem = {
 };
 
 const notifications: SocialProofItem[] = [
-  {
-    location: "Johannesburg",
-    grade: "Grade 3",
-    school: "Parktown Primary",
-  },
-  {
-    location: "Sandton",
-    grade: "Grade 1",
-    school: "Bryanston Primary",
-  },
-  {
-    location: "Randburg",
-    grade: "Grade 7",
-    school: "Blairgowrie Primary",
-  },
-  {
-    location: "Midrand",
-    grade: "Grade R",
-    school: "Halfway House Primary",
-  },
+  { location: "Johannesburg", grade: "Grade 3", school: "Parktown Primary" },
+  { location: "Sandton", grade: "Grade 1", school: "Bryanston Primary" },
+  { location: "Randburg", grade: "Grade 7", school: "Blairgowrie Primary" },
+  { location: "Midrand", grade: "Grade R", school: "Halfway House Primary" },
+  { location: "Pretoria", grade: "Grade 4", school: "Brooklyn Primary" },
+  { location: "Centurion", grade: "Grade 2", school: "Laerskool Doringkloof" },
+  { location: "Benoni", grade: "Grade 6", school: "St Patrick's School" },
+  { location: "Kempton Park", grade: "Grade 5", school: "Edleen Primary" },
+  { location: "Roodepoort", grade: "Grade 8", school: "Hoërskool Roodepoort" },
+  { location: "Soweto", grade: "Grade 1", school: "Orlando West Primary" },
+  { location: "Alberton", grade: "Grade 3", school: "Alberton Primary" },
+  { location: "Fourways", grade: "Grade 9", school: "Fourways High" },
+  { location: "Boksburg", grade: "Grade R", school: "Sunward Primary" },
+  { location: "Bramley", grade: "Grade 10", school: "Waverley Girls' High" },
+  { location: "Bryanston", grade: "Grade 11", school: "Bryanston High" },
 ];
 
 const STORAGE_KEY = "Pexpacks:social-proof-muted";

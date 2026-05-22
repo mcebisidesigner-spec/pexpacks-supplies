@@ -1,0 +1,44 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/Button";
+import styles from "./MobileStickyCta.module.css";
+
+export function MobileStickyCta() {
+  const [visible, setVisible] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
+
+  useEffect(() => {
+    function handleScroll() {
+      setVisible(window.scrollY > 600);
+    }
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const footer = document.getElementById("site-footer");
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsFooterVisible(entry.isIntersecting);
+      },
+      { threshold: 0.02 }
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
+  const show = visible && !isFooterVisible;
+
+  return (
+    <div className={`${styles.stickyCta} ${show ? styles.visible : ""}`}>
+      <Button href="/schools" variant="primary" style={{ width: "100%" }}>
+        Find Your School Pack
+      </Button>
+    </div>
+  );
+}

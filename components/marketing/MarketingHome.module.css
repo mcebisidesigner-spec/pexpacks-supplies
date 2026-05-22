@@ -43,6 +43,25 @@
 .guaranteeContent {
   max-width: 680px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.guaranteeIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--pex-navy);
+  color: var(--pex-bg);
+  display: grid;
+  place-items: center;
+}
+
+.guaranteeIcon svg {
+  width: 28px;
+  height: 28px;
 }
 
 .guaranteeContent h2 {
@@ -54,11 +73,22 @@
 }
 
 .guaranteeContent p {
-  margin: 16px 0 0;
+  margin: 0;
   color: var(--pex-primary);
   font-size: 18px;
   line-height: 1.5;
   font-weight: 700;
+}
+
+.guaranteeStat {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: rgba(26, 42, 64, 0.1);
+  color: var(--pex-primary);
+  font-size: 14px;
+  font-weight: 800;
 }
 
 @media (max-width: 820px) {

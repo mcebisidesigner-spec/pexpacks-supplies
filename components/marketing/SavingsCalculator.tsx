@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import { Button } from "@/components/ui/Button";
 import styles from "./SavingsCalculator.module.css";
 import { SectionHeader } from "./SectionHeader";
 
@@ -87,9 +87,9 @@ export function SavingsCalculator() {
           </div>
 
           <div className={styles.ctaWrapper}>
-            <Link href="/schools" className={styles.ctaButton}>
-              Find Your School Pack
-            </Link>
+            <Button href="/schools" variant="primary" size="lg">
+              Pack my {selectedGrade.label} pack
+            </Button>
           </div>
         </div>
       </div>

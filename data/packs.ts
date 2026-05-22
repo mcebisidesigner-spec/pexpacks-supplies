@@ -91,7 +91,7 @@ export const whyChoosePexpacks = [
   },
   {
     title: "School-list accuracy",
-    text: "School packs are prepared according to official stationery lists and grade requirements.",
+    text: "School packs are prepared according to official stationery lists and grade requirements — guaranteed.",
   },
   {
     title: "Exercise books included",
@@ -100,10 +100,6 @@ export const whyChoosePexpacks = [
   {
     title: "SME office support",
     text: "Office packs provide practical stationery for small businesses without wasting time.",
-  },
-  {
-    title: "School partnerships",
-    text: "We work with schools to simplify ordering for parents and reduce admin pressure.",
   },
 ];
 

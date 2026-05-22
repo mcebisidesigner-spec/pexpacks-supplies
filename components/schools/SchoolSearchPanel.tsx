@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import type { FormEvent } from "react";
 import { useState } from "react";
 import heroStyles from "@/components/marketing/HeroSearch.module.css";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
@@ -82,15 +81,6 @@ export function SchoolSearchPanel({
       "We couldn't load the school list. Please refresh or contact Pexpacks.",
   });
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setPanelOpen(true);
-
-    if (queryReady) {
-      void fetchResults(0, "replace");
-    }
-  }
-
   return (
     <section
       className={`${styles.searchExperience} pex-school-search-focus-anchor`}
@@ -102,7 +92,6 @@ export function SchoolSearchPanel({
       <div className={styles.searchFormWrapper}>
       <form
         className={styles.searchForm}
-        onSubmit={handleSubmit}
         onKeyDown={(event) => {
           if (event.key === "Escape") {
             setPanelOpen(false);
@@ -143,14 +132,6 @@ export function SchoolSearchPanel({
             ))}
           </select>
         </label>
-        <button
-          className={heroStyles.searchButton}
-          type="submit"
-          aria-label="Search schools"
-          disabled={isLoading}
-        >
-          {isLoading ? "Searching..." : "Search"}
-        </button>
       </form>
       {panelOpen ? (
         <div

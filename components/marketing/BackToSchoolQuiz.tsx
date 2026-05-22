@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import styles from "./BackToSchoolQuiz.module.css";
@@ -257,6 +258,12 @@ export function BackToSchoolQuiz() {
                   {status.message}
                 </p>
               ) : null}
+              <Link
+                href="/schools"
+                className={styles.quizCtaLink}
+              >
+                Find your school pack now &rarr;
+              </Link>
               <button
                 className={styles.resetButton}
                 type="button"

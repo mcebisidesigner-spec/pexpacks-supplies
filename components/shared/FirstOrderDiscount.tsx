@@ -3,107 +3,124 @@
 import { useState, useEffect } from "react";
 import styles from "./FirstOrderDiscount.module.css";
 
+type ApiResponse = {
+  success: boolean;
+  message: string;
+  errors?: Record<string, string>;
+};
+
 export function FirstOrderDiscount() {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [status, setStatus] = useState<ApiResponse | null>(null);
 
   useEffect(() => {
-    // Only show once per user (check localStorage)
     const hasSeen = localStorage.getItem("Pexpacks:discount-seen");
     if (hasSeen) return;
 
-    // Show after 15 seconds
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-      localStorage.setItem("Pexpacks:discount-seen", "true");
-    }, 15000);
-
-    // Or show on exit intent (desktop)
     const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY <= 0 && !hasSeen && !isOpen) {
+      if (e.clientY <= 0 && !isOpen) {
         setIsOpen(true);
-        localStorage.setItem("Pexpacks:discount-seen", "true");
       }
     };
 
     document.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-    };
+    return () => document.removeEventListener("mouseleave", handleMouseLeave);
   }, [isOpen]);
+
+  function dismiss() {
+    setIsOpen(false);
+    localStorage.setItem("Pexpacks:discount-seen", "true");
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!email.trim()) return;
+
+    setPending(true);
+    setStatus(null);
+
+    try {
+      const response = await fetch("/api/forms/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "first-order-discount",
+          fullName: "First-order discount lead",
+          email: email.trim(),
+          contactDetail: email.trim(),
+          enquiryType: "First-order discount",
+          packType: "first-order-discount",
+          message: "Requested 5% first-order discount code.",
+          consent: true,
+          sourceUrl: window.location.href,
+          pageUrl: window.location.href,
+          userAgent: navigator.userAgent,
+          submittedAt: new Date().toISOString(),
+        }),
+      });
+
+      const result = (await response.json()) as ApiResponse;
+
+      setStatus(
+        result.success
+          ? { success: true, message: "Use code PEX5 at checkout!" }
+          : result
+      );
+
+      if (result.success) {
+        localStorage.setItem("Pexpacks:discount-seen", "true");
+        setTimeout(() => setIsOpen(false), 5000);
+      }
+    } catch {
+      setStatus({
+        success: false,
+        message: "Could not send. Please try again.",
+      });
+    } finally {
+      setPending(false);
+    }
+  }
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      // Here you would typically send the email to your API/CRM
-      // For now, we'll just save it to localStorage and show success
-      try {
-        const existing = JSON.parse(localStorage.getItem("Pexpacks:list-emails") || "[]");
-        if (!existing.includes(email.trim())) {
-          existing.push(email.trim());
-          localStorage.setItem("Pexpacks:list-emails", JSON.stringify(existing));
-        }
-      } catch {
-        // ignore
-      }
-      setSubmitted(true);
-      
-      // Auto close after 3 seconds on success
-      setTimeout(() => {
-        setIsOpen(false);
-      }, 3000);
-    }
-  };
-
   return (
-    <div className={styles.overlay}>
-      <div className={styles.popup} role="dialog" aria-labelledby="discount-title">
-        <button className={styles.closeBtn} onClick={() => setIsOpen(false)} aria-label="Close popup">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <div className={styles.banner} role="complementary" aria-label="First order discount">
+      <div className={styles.bannerInner}>
+        <div className={styles.bannerContent}>
+          <span className={styles.badge}>5% OFF</span>
+          <p className={styles.bannerText}>
+            {status?.success
+              ? status.message
+              : "Get 5% off your first pack!"}
+          </p>
+        </div>
+        {!status?.success ? (
+          <form className={styles.bannerForm} onSubmit={handleSubmit}>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className={styles.input}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <button className={styles.submitBtn} type="submit" disabled={pending}>
+              {pending ? "Sending..." : "Claim"}
+            </button>
+          </form>
+        ) : null}
+        {status && !status.success ? (
+          <p className={styles.statusError} role="alert">{status.message}</p>
+        ) : null}
+        <button className={styles.closeBtn} onClick={dismiss} aria-label="Dismiss discount offer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
-        
-        <div className={styles.content}>
-          <span className={styles.badge}>Special Offer</span>
-          <h2 id="discount-title" className={styles.title}>Get 5% Off Your First Pack!</h2>
-          
-          {submitted ? (
-            <div className={styles.successMessage}>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--pex-keppel)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-              <p>Success! Use code <strong>PEX5</strong> at checkout.</p>
-            </div>
-          ) : (
-            <>
-              <p className={styles.description}>
-                Enter your email to receive your 5% discount code and get notified when your school&apos;s latest list is available.
-              </p>
-              <form onSubmit={handleSubmit} className={styles.form}>
-                <input 
-                  type="email" 
-                  placeholder="Enter your email address" 
-                  className={styles.input}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <button type="submit" className={styles.submitBtn}>
-                  Claim My 5% Off
-                </button>
-              </form>
-              <p className={styles.disclaimer}>We respect your privacy. No spam.</p>
-            </>
-          )}
-        </div>
       </div>
     </div>
   );

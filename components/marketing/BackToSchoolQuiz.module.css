@@ -196,6 +196,26 @@
   color: var(--pex-error);
 }
 
+.quizCtaLink {
+  display: block;
+  margin-top: 16px;
+  padding: 14px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  font-weight: 800;
+  font-family: var(--font-button);
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.quizCtaLink:hover {
+  filter: brightness(110%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(33, 158, 154, 0.25);
+}
+
 .honeypot {
   position: absolute;
   left: -10000px;
