@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
-import { IconCircle } from "@/components/ui/IconCircle";
+import { useEffect, useRef } from "react";
 import { mainNavLinks } from "@/data/navigation";
 import { isActivePath } from "@/lib/isActivePath";
 import styles from "./Header.module.css";
@@ -13,80 +12,155 @@ type MobileMenuProps = {
   pathname: string;
 };
 
+const FOCUSABLE =
+  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
 export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
+  const menuRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const menu = menuRef.current;
+    if (!menu) return;
+
+    function handleTab(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+
+      const el = menuRef.current;
+      if (!el) return;
+
+      const focusable = [
+        ...el.querySelectorAll<HTMLElement>(FOCUSABLE),
+      ];
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleTab);
+
+    const firstFocusable = menu.querySelector<HTMLElement>(FOCUSABLE);
+    firstFocusable?.focus();
+
+    return () => document.removeEventListener("keydown", handleTab);
+  }, [open]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
+    const touch = e.touches[0];
+    touchStartX.current = touch.clientX;
+    touchStartY.current = touch.clientY;
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const deltaX = touchEndX - touchStartX.current;
 
-    // If swiped right by more than 50px, close the menu
-    if (deltaX > 50) {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const deltaX = touchEndX - touchStartX.current;
+    const deltaY = touchEndY - touchStartY.current!;
+
+    if (deltaX > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
       onClose();
     }
+
     touchStartX.current = null;
+    touchStartY.current = null;
   };
 
   return (
     <div
+      ref={menuRef}
       id="mobile-menu"
+      role="dialog"
+      aria-modal={open ? true : undefined}
+      aria-label="Navigation menu"
       className={[styles.mobileMenu, open ? styles.mobileMenuOpen : ""]
         .filter(Boolean)
         .join(" ")}
       inert={!open ? true : undefined}
+      aria-hidden={!open ? true : undefined}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <nav className={styles.mobileMenuNav} aria-label="Mobile navigation">
-        {mainNavLinks.map((link) => {
-          const active = isActivePath(link.href, pathname);
+      <div className={styles.mobileMenuInner}>
+        <span className={styles.mobileMenuEyebrow}>Navigation</span>
 
-          return (
-            <Link
-              href={link.href}
-              key={link.href}
-              onClick={onClose}
-              className={[
-                styles.mobileMenuLink,
-                active ? styles.mobileMenuLinkActive : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              aria-current={active ? "page" : undefined}
+        <nav className={styles.mobileMenuNav} aria-label="Mobile navigation">
+          {mainNavLinks.map((link) => {
+            const active = isActivePath(link.href, pathname);
+
+            return (
+              <Link
+                href={link.href}
+                key={link.href}
+                onClick={onClose}
+                className={[
+                  styles.mobileMenuLink,
+                  active ? styles.mobileMenuLinkActive : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-current={active ? "page" : undefined}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className={styles.mobileMenuDivider} role="separator" />
+
+        <div className={styles.mobileMenuSecondary}>
+          <Link
+            href="/login"
+            onClick={onClose}
+            className={[
+              styles.mobileMenuLink,
+              styles.mobileMenuLogin,
+              isActivePath("/login", pathname) ? styles.mobileMenuLinkActive : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            aria-current={isActivePath("/login", pathname) ? "page" : undefined}
+          >
+            <svg
+              className={styles.mobileMenuLoginIcon}
+              viewBox="0 0 24 24"
+              aria-hidden="true"
             >
-              {link.label}
-            </Link>
-          );
-        })}
-        <Link
-          href="/login"
-          onClick={onClose}
-          className={[
-            styles.mobileMenuLink,
-            isActivePath("/login", pathname) ? styles.mobileMenuLinkActive : "",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          aria-current={isActivePath("/login", pathname) ? "page" : undefined}
-        >
-          Login
-        </Link>
-      </nav>
+              <circle cx="12" cy="8" r="3.5" />
+              <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
+            </svg>
+            Parent Portal
+          </Link>
 
-      <Link
-        href="/order"
-        className={styles.mobileMenuCta}
-        onClick={onClose}
-        aria-label="Order a Pexpacks pack"
-      >
-        <span>Order a Pack</span>
-        <IconCircle className={styles.mobileMenuCtaIcon} />
-      </Link>
+          <Link
+            href="/order"
+            className={styles.mobileMenuCta}
+            onClick={onClose}
+            aria-label="Order a Pexpacks pack"
+          >
+            <span>Order a Pack</span>
+            <span className={styles.mobileMenuCtaIcon}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8" />
+              </svg>
+            </span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

@@ -55,40 +55,65 @@ export function HeaderMenu() {
     setIconClosing(false);
   }, [clearClosingTimer]);
 
+  /* ── Body scroll lock (iOS-safe) ── */
   useEffect(() => {
     mobileOpenRef.current = mobileOpen;
-    document.body.classList.toggle("menu-open", mobileOpen);
-    return () => document.body.classList.remove("menu-open");
+
+    if (mobileOpen) {
+      const scrollY = window.scrollY;
+
+      document.body.classList.add("menu-open");
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.width = "100%";
+    } else {
+      const prevTop = document.body.style.top;
+      const scrollY = prevTop ? parseInt(prevTop) * -1 : 0;
+
+      document.body.classList.remove("menu-open");
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.width = "";
+
+      if (scrollY) window.scrollTo(0, scrollY);
+    }
+
+    return () => {
+      document.body.classList.remove("menu-open");
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.width = "";
+    };
   }, [mobileOpen]);
 
+  /* ── Reset on route change ── */
   useEffect(() => {
     resetMobileMenu();
   }, [pathname, resetMobileMenu]);
 
+  /* ── Cleanup closing timer on unmount ── */
   useEffect(() => {
     return () => clearClosingTimer();
   }, [clearClosingTimer]);
 
+  /* ── Logo click closes menu (targeted, only when open) ── */
   useEffect(() => {
-    if (!mobileOpen) {
-      return;
-    }
+    if (!mobileOpen) return;
 
-    function onDocumentClick(event: MouseEvent) {
-      const target = event.target;
+    const logoLink = document.querySelector<HTMLElement>(
+      "[data-mobile-menu-close]"
+    );
+    if (!logoLink) return;
 
-      if (
-        target instanceof Element &&
-        target.closest("[data-mobile-menu-close]")
-      ) {
-        closeMobileMenu();
-      }
-    }
-
-    document.addEventListener("click", onDocumentClick, true);
-    return () => document.removeEventListener("click", onDocumentClick, true);
+    const handler = () => closeMobileMenu();
+    logoLink.addEventListener("click", handler);
+    return () => logoLink.removeEventListener("click", handler);
   }, [mobileOpen, closeMobileMenu]);
 
+  /* ── Escape key closes menu ── */
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -100,8 +125,13 @@ export function HeaderMenu() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [closeMobileMenu]);
 
+  /* ── Focus management ── */
   useEffect(() => {
     if (mobileOpen) {
+      const menu = document.getElementById("mobile-menu");
+      const firstLink = menu?.querySelector<HTMLElement>("a");
+      firstLink?.focus();
+    } else {
       menuButtonRef.current?.focus();
     }
   }, [mobileOpen]);
