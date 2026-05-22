@@ -290,16 +290,17 @@ export function SchoolMockupDemo() {
               {/* Header */}
               <header className={styles.mockHeader}>
                 <div className={styles.mockLogoArea}>
-                  <svg className={styles.mockCrest} width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50 5 L90 25 V65 C90 80 50 95 50 95 C50 95 10 80 10 65 V25 L50 5 Z" fill="#1a2a40" stroke="#ff6f59" strokeWidth="4"/>
-                    <path d="M50 15 L80 30 V60 C80 72 50 83 50 83 C50 83 20 72 20 60 V30 L50 15 Z" fill="#219e9a"/>
-                    <path d="M35 55 C42 50 50 52 50 52 C50 52 58 50 65 55 V38 C58 33 50 35 50 35 C50 35 42 33 35 38 V55 Z" fill="#ffffff"/>
-                    <path d="M50 35 V52" stroke="#1a2a40" strokeWidth="2"/>
-                    <path d="M50 20 L52 25 L58 25 L53 28 L55 34 L50 30 L45 34 L47 28 L42 25 L48 25 Z" fill="#ff6f59"/>
+                  <svg className={styles.mockCrest} width="46" height="46" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M60 7 106 25v39c0 29-24 43-46 50-22-7-46-21-46-50V25L60 7Z" fill="#10233f"/>
+                    <path d="M60 17 95 31v31c0 21-17 32-35 38-18-6-35-17-35-38V31l35-14Z" fill="#13a6a0"/>
+                    <path d="m60 29 25 15H35l25-15Z" fill="#ffffff"/>
+                    <path d="M39 48h42v8H39v-8ZM43 58h7v20h-7V58Zm14 0h7v20h-7V58Zm14 0h7v20h-7V58ZM36 81h48v7H36v-7Z" fill="#ffffff"/>
+                    <path d="M47 92c7-5 19-5 26 0M47 92V78c7-5 19-5 26 0v14" stroke="#10233f" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="m60 13 4 8 9 1-6 6 2 9-9-5-9 5 2-9-6-6 9-1 4-8Z" fill="#ffcf3f"/>
                   </svg>
                   <div className={styles.mockSchoolName}>
                     <strong>Oakridge Academy</strong>
-                    <span>Inspiring Excellence</span>
+                    <span>Independent School Website</span>
                   </div>
                 </div>
 
@@ -336,10 +337,10 @@ export function SchoolMockupDemo() {
               {/* Hero Section */}
               <div className={styles.mockHero}>
                 <div className={styles.mockHeroContent}>
-                  <h1>Shaping Tomorrow's Leaders, Today</h1>
+                  <span className={styles.mockHeroKicker}>Admissions open for 2026</span>
+                  <h1>Oakridge Academy</h1>
                   <p>
-                    Oakridge Academy is an independent primary and high school providing elite quality 
-                    education, sports and cultural programs in a modern, values-driven environment.
+                    A polished school website for families to explore admissions, news, calendars, and official stationery packs from any device.
                   </p>
                   <div className={styles.mockHeroBtns}>
                     <button className={styles.mockHeroBtnPrimary} onClick={() => {
@@ -356,19 +357,26 @@ export function SchoolMockupDemo() {
                       Download Prospectus
                     </button>
                   </div>
+                  <div className={styles.mockHeroStats} aria-label="School highlights">
+                    <span><strong>98%</strong> parent satisfaction</span>
+                    <span><strong>42</strong> activities</span>
+                    <span><strong>5%</strong> fund rebate</span>
+                  </div>
                 </div>
                 <div className={styles.mockHeroVisual}>
-                  <div className={styles.mockAbstractArt}>
-                    <div className={styles.artCircle1}></div>
-                    <div className={styles.artCircle2}></div>
-                    <div className={styles.artCard}>
-                      <div className={styles.artLine}></div>
-                      <div className={styles.artLineShort}></div>
-                      <div className={styles.artGrid}>
-                        <div>✏️</div>
-                        <div>📚</div>
-                        <div>🎨</div>
+                  <div className={styles.mockCampusPanel} aria-hidden="true">
+                    <div className={styles.mockCampusPhoto}>
+                      <div className={styles.campusSun}></div>
+                      <div className={styles.campusBuilding}>
+                        <span></span>
+                        <span></span>
+                        <span></span>
                       </div>
+                      <div className={styles.campusLearners}></div>
+                    </div>
+                    <div className={styles.mockFeatureBadge}>
+                      <strong>School Portal Live</strong>
+                      <span>Orders, notices, prospectus and admissions in one place.</span>
                     </div>
                   </div>
                 </div>
@@ -477,9 +485,11 @@ export function SchoolMockupDemo() {
               {/* Portal Header */}
               <div className={styles.portalNav}>
                 <div className={styles.portalLogo}>
-                  <svg className={styles.mockCrest} width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50 5 L90 25 V65 C90 80 50 95 50 95 C50 95 10 80 10 65 V25 L50 5 Z" fill="#1a2a40" stroke="#ff6f59" strokeWidth="4"/>
-                    <path d="M50 15 L80 30 V60 C80 72 50 83 50 83 C50 83 20 72 20 60 V30 L50 15 Z" fill="#219e9a"/>
+                  <svg className={styles.mockCrest} width="32" height="32" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M60 7 106 25v39c0 29-24 43-46 50-22-7-46-21-46-50V25L60 7Z" fill="#10233f"/>
+                    <path d="M60 17 95 31v31c0 21-17 32-35 38-18-6-35-17-35-38V31l35-14Z" fill="#13a6a0"/>
+                    <path d="m60 29 25 15H35l25-15Z" fill="#ffffff"/>
+                    <path d="M39 48h42v8H39v-8ZM43 58h7v20h-7V58Zm14 0h7v20h-7V58Zm14 0h7v20h-7V58ZM36 81h48v7H36v-7Z" fill="#ffffff"/>
                   </svg>
                   <span>Oakridge Parent Portal</span>
                 </div>
@@ -642,8 +652,11 @@ export function SchoolMockupDemo() {
               {/* News Desk Header */}
               <div className={styles.newsHeader}>
                 <div className={styles.newsLogo}>
-                  <svg className={styles.mockCrest} width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50 5 L90 25 V65 C90 80 50 95 50 95 C50 95 10 80 10 65 V25 L50 5 Z" fill="#1a2a40" stroke="#ff6f59" strokeWidth="4"/>
+                  <svg className={styles.mockCrest} width="32" height="32" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M60 7 106 25v39c0 29-24 43-46 50-22-7-46-21-46-50V25L60 7Z" fill="#10233f"/>
+                    <path d="M60 17 95 31v31c0 21-17 32-35 38-18-6-35-17-35-38V31l35-14Z" fill="#13a6a0"/>
+                    <path d="m60 29 25 15H35l25-15Z" fill="#ffffff"/>
+                    <path d="M39 48h42v8H39v-8ZM43 58h7v20h-7V58Zm14 0h7v20h-7V58Zm14 0h7v20h-7V58ZM36 81h48v7H36v-7Z" fill="#ffffff"/>
                   </svg>
                   <span>Oakridge Notice Board</span>
                 </div>
@@ -811,4 +824,3 @@ export function SchoolMockupDemo() {
     </div>
   );
 }
-
