@@ -30,7 +30,7 @@ export function ViralReferralBanner({
   headingId,
   onClose,
 }: ViralReferralBannerProps) {
-  const [currentUrl, setCurrentUrl] = useState("https://Pexpacks.com/schools");
+  const [currentUrl, setCurrentUrl] = useState("https://pexpacks.co.za/schools");
 
   useEffect(() => {
     setCurrentUrl(window.location.href);

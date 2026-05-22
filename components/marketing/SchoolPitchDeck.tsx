@@ -259,15 +259,15 @@ export function SchoolPitchDeck() {
                   <strong>R {fmtCurrency(annualRebate)}</strong>
                 </div>
                 <div>
-                  <span>Website Value</span>
+                  <span>Free Website &amp; Hosting Value</span>
                   <strong>R {fmt(websiteHostingSaving)}</strong>
                 </div>
                 <div>
-                  <span>Admin Saved</span>
+                  <span>Admin Labour Saved</span>
                   <strong>{fmt(adminHoursSaved)} hrs</strong>
                 </div>
                 <div className={styles.totalValue}>
-                  <span>Total Economic Value</span>
+                  <span>Total Projected Partner Value</span>
                   <strong>R {fmt(totalValue)}</strong>
                 </div>
               </div>

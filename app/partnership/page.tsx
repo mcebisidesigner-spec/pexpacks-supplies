@@ -12,16 +12,16 @@ import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import pageStyles from "./PartnerWithSchools.module.css";
 
 const pitchStats = [
-  { value: "R35k", label: "website and hosting package value" },
-  { value: "0", label: "setup or monthly school website fees" },
-  { value: "5%", label: "sample development-fund rebate model" },
+  { value: "R35,000+", label: "Annual website & hosting package value (R0 cost)" },
+  { value: "R0.00", label: "Setup, licensing, or monthly maintenance fees" },
+  { value: "5% Cash Back", label: "Rebate on every stationery pack reinvested in your school" },
 ];
 
 const pitchFlow = [
-  "See the offer",
-  "Calculate partner value",
-  "Preview the school website",
-  "Apply for partnership",
+  "Partnership Offer",
+  "Economic Value Calculator",
+  "Interactive Website Preview",
+  "Launch Roadmap",
 ];
 
 const schoolBenefits = [
@@ -92,6 +92,29 @@ const launchSteps = [
   },
 ];
 
+const faqItems = [
+  {
+    q: "Is the website and hosting package really 100% free?",
+    a: "Yes. There are absolutely zero setup costs, monthly maintenance fees, or hidden hosting charges. Pexpacks covers all development and operational costs out of our standard retail stationery margins. Your school will never receive an invoice from us."
+  },
+  {
+    q: "How does the 5% development-fund rebate work?",
+    a: "Every time a parent orders a grade stationery pack through your school's customized portal, 5% of the total pack cost is automatically earmarked for your school. We transfer these accumulated fundraising rebates directly to your school's development fund annually."
+  },
+  {
+    q: "Who handles parent inquiries, payments, and order issues?",
+    a: "Pexpacks handles 100% of the customer support workload. Parents can pay securely via credit card, instant EFT, or WhatsApp, and track their orders directly with us. We handle package assembly, delivery, and any refunds or returns, meaning zero support load for school staff."
+  },
+  {
+    q: "Does this require complex IT setup or school admin workload?",
+    a: "None at all. Our team does the heavy lifting. All you need to do is share your approved grade stationery lists. We will handle custom styling, domain connection (e.g., yourschool.co.za), product catalog upload, and deploy the entire system in days."
+  },
+  {
+    q: "Are the parents' personal information and transactions secure?",
+    a: "Security is our highest priority. The custom school portal is fully hosted with premium SSL encryption, and all checkout transactions are processed through 256-bit encrypted secure payment gateways. Our data handling is strictly POPIA and GDPR compliant."
+  }
+];
+
 export const metadata: Metadata = buildMetadata(
   "Partner With Pexpacks | Free Website & Hosting for Schools",
   "Designate Pexpacks as your official school stationery partner and get a professional modern website built, hosted, and maintained completely free of charge.",
@@ -103,14 +126,14 @@ export default function PartnerWithSchoolsPage() {
     <>
       <PageHero
         eyebrow="Exclusive school partner program"
-        title="Partnership with real benefits"
-        text="Pexpacks works with schools to simplify stationery ordering, reduce parent stress, and help learners start the year prepared with the right supplies."
+        title="Get a Premium School Website & Raise Development Funds — 100% Free"
+        text="Pexpacks builds, hosts, and maintains a custom school website and parent stationery portal at zero cost. Save hundreds of admin hours, streamline back-to-school ordering, and earn 5% cash-back on all pack sales."
         panelText="Partner value snapshot"
         panelTitle="Website + parent ordering + rebate model"
       >
         <div className={sectionStyles.buttonRow}>
           <Button href="#pitch-deck" size="lg">
-            Open the pitch deck
+            Open benefits presentation
           </Button>
           <Button href="#interactive-demo" variant="white" size="lg">
             Preview demo website
@@ -136,9 +159,9 @@ export default function PartnerWithSchoolsPage() {
         <div className={sectionStyles.inner}>
           <div className={pageStyles.flowIntro}>
             <SectionHeader
-              eyebrow="Interactive Pitch"
-              title="A guided presentation flow for future partners"
-              text="Move through the offer like a sales deck: the promise, the website, the parent portal, the value calculator, and the launch plan."
+              eyebrow="Interactive Proposal"
+              title="Explore the benefits of our School Partner Program"
+              text="Walk through the four core pillars of our partnership: the zero-cost managed website, the seamless parent ordering portal, your projected fund earnings, and our simplified launch roadmap."
             />
             <ol className={pageStyles.pitchFlow}>
               {pitchFlow.map((item) => (
@@ -257,6 +280,29 @@ export default function PartnerWithSchoolsPage() {
                 ))}
               </ol>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={sectionStyles.sectionAlt} id="partnership-faq">
+        <div className={sectionStyles.inner}>
+          <SectionHeader
+            eyebrow="Common Questions"
+            title="Partnership reassurance & trust details"
+            text="Transparent answers to the questions school boards, principals, and administrative teams ask most."
+          />
+          <div className={pageStyles.faqGrid}>
+            {faqItems.map((item, index) => (
+              <details className={pageStyles.faqItem} key={index}>
+                <summary className={pageStyles.faqQuestion}>
+                  <span>{item.q}</span>
+                  <span className={pageStyles.faqIcon}></span>
+                </summary>
+                <div className={pageStyles.faqAnswer}>
+                  <p>{item.a}</p>
+                </div>
+              </details>
+            ))}
           </div>
         </div>
       </section>

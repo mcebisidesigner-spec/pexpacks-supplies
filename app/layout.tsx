@@ -38,7 +38,7 @@ const PexpacksSans = localFont({
       style: "normal",
     },
   ],
-  variable: "--font-Pexpacks-sans",
+  variable: "--font-pexpacks-sans",
   display: "swap",
 });
 
@@ -65,7 +65,7 @@ const PexpacksSansAlt = localFont({
       style: "normal",
     },
   ],
-  variable: "--font-Pexpacks-sans-alt",
+  variable: "--font-pexpacks-sans-alt",
   display: "swap",
 });
 
