@@ -1,303 +1,381 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { useState, useTransition } from "react";
 import styles from "./SchoolPitchDeck.module.css";
+import { Button } from "@/components/ui/Button";
 
-type SlideId = "promise" | "website" | "portal" | "value" | "launch";
-type JourneyStep = "find" | "select" | "checkout";
+type SlideId = "overview" | "website" | "calculator" | "parents" | "roadmap";
 
-type Slide = {
+interface SlideInfo {
   id: SlideId;
   label: string;
-  eyebrow: string;
-  title: string;
-  body: string;
-  bullets: string[];
-  stat: string;
-  statLabel: string;
-};
+}
 
-const slides: Slide[] = [
-  {
-    id: "promise",
-    label: "The offer",
-    eyebrow: "Partner pitch",
-    title: "A premium school website, stationery portal, and rebate engine at no setup cost.",
-    body: "Pexpacks gives schools a stronger digital presence while removing one of the most frustrating annual admin jobs: stationery list ordering.",
-    bullets: [
-      "Custom school website designed around the school's identity.",
-      "Managed hosting, SSL, maintenance, and content support.",
-      "Parent ordering journey connected to approved grade stationery packs.",
-    ],
-    stat: "R35k",
-    statLabel: "estimated yearly website value",
-  },
-  {
-    id: "website",
-    label: "Website",
-    eyebrow: "Digital presence",
-    title: "A real school website parents can trust, not a template placeholder.",
-    body: "The school gets a modern public hub for admissions, calendars, newsletters, policies, leadership messages, and contact details.",
-    bullets: [
-      "School crest, colours, motto, and tone carried through the site.",
-      "Mobile-first pages for families searching from a phone.",
-      "Documents and updates organised so parents can find them quickly.",
-    ],
-    stat: "0",
-    statLabel: "monthly hosting fee for partner schools",
-  },
-  {
-    id: "portal",
-    label: "Portal",
-    eyebrow: "Parent convenience",
-    title: "Parents buy the correct grade pack without school staff chasing forms.",
-    body: "Every grade can have a verified stationery list, clear pricing, add-ons, and delivery or collection options.",
-    bullets: [
-      "Grade-specific packs reduce wrong-item buying.",
-      "Card, instant EFT, and WhatsApp-assisted ordering options.",
-      "Bulk school drop-off or direct home delivery workflows.",
-    ],
-    stat: "3",
-    statLabel: "clicks to a parent-ready pack path",
-  },
-  {
-    id: "value",
-    label: "Value",
-    eyebrow: "Financial impact",
-    title: "The partnership creates visible value beyond a free website.",
-    body: "Use the calculator to model rebates, admin time saved, and the annual website package value.",
-    bullets: [
-      "Estimated development-fund rebate on pack sales.",
-      "Reduced admin time spent handling stationery queries.",
-      "A measurable partner benefit the school can report internally.",
-    ],
-    stat: "5%",
-    statLabel: "sample development rebate model",
-  },
-  {
-    id: "launch",
-    label: "Launch",
-    eyebrow: "Easy rollout",
-    title: "A clean handover from interest to launch-ready partner site.",
-    body: "Pexpacks handles the technical build and pack setup. The school shares brand assets, lists, and approval feedback.",
-    bullets: [
-      "Submit the partnership enquiry.",
-      "Share approved stationery lists and school brand assets.",
-      "Review the site, launch the portal, and start partner ordering.",
-    ],
-    stat: "4",
-    statLabel: "simple rollout stages",
-  },
+const slides: SlideInfo[] = [
+  { id: "overview", label: "Partnership Overview" },
+  { id: "website", label: "Free Website & Hosting" },
+  { id: "calculator", label: "Value Calculator" },
+  { id: "parents", label: "Parent Convenience" },
+  { id: "roadmap", label: "Launch Roadmap" },
 ];
 
-const journeyCopy: Record<JourneyStep, { title: string; body: string; tag: string }> = {
-  find: {
-    tag: "Step 1",
-    title: "Find the school",
-    body: "Parents land on the school website, see official pack links, and know they are ordering from the approved path.",
+const journeyTabsData = [
+  {
+    label: "Accuracy",
+    title: "100% Grade List Accuracy",
+    text: "Stationery bundles are packed specifically according to the official lists verified by your school. Parents never buy the wrong items.",
   },
-  select: {
-    tag: "Step 2",
-    title: "Choose the grade",
-    body: "Each grade opens a verified list with the correct items, optional extras, and clear pricing.",
+  {
+    label: "Checkout",
+    title: "Instant 3-Click Checkout",
+    text: "Smooth buying experience with Card, Instant EFT, and WhatsApp ordering capabilities. No queues, no retail hopping.",
   },
-  checkout: {
-    tag: "Step 3",
-    title: "Confirm and pay",
-    body: "The order is sent to Pexpacks for fulfilment, reducing school-side stationery admin.",
+  {
+    label: "Delivery",
+    title: "Direct & Organised Delivery",
+    text: "Choose direct-to-home delivery or a bulk drop-off directly to the school at the start of the year.",
   },
-};
-
-const launchSteps = [
-  "Enquiry",
-  "Lists",
-  "Website",
-  "Parent launch",
 ];
 
 export function SchoolPitchDeck() {
-  const [activeSlide, setActiveSlide] = useState<SlideId>("promise");
-  const [journeyStep, setJourneyStep] = useState<JourneyStep>("select");
-  const [enrollment, setEnrollment] = useState(650);
-  const [adoption, setAdoption] = useState(72);
+  const [activeSlide, setActiveSlide] = useState<SlideId>("overview");
+  const [, startTransition] = useTransition();
+  const [activeJourneyTab, setActiveJourneyTab] = useState(0);
 
-  const activeIndex = slides.findIndex((slide) => slide.id === activeSlide);
-  const slide = slides[activeIndex];
-  const parentPacks = Math.round(enrollment * (adoption / 100));
-  const rebate = parentPacks * 850 * 0.05;
-  const adminHours = Math.round(parentPacks * 0.5);
-  const totalValue = rebate + 35000 + adminHours * 160;
+  // Calculator state
+  const [enrollment, setEnrollment] = useState<number>(600);
+  const [adoption, setAdoption] = useState<number>(70);
 
-  const progress = useMemo(
-    () => `${((activeIndex + 1) / slides.length) * 100}%`,
-    [activeIndex],
-  );
+  // Derived calculations
+  const averagePackCost = 850;
+  const rebateRate = 0.05;
+  const hourlyRate = 160;
 
-  const goToOffset = (offset: number) => {
-    const nextIndex = (activeIndex + offset + slides.length) % slides.length;
-    setActiveSlide(slides[nextIndex].id);
+  const estimatedPacks = Math.round(enrollment * (adoption / 100));
+  const annualRebate = estimatedPacks * averagePackCost * rebateRate;
+  const adminHoursSaved = estimatedPacks * 0.5;
+  const websiteHostingSaving = 35000;
+  const adminLaborSaving = adminHoursSaved * hourlyRate;
+  const totalValue = annualRebate + websiteHostingSaving + adminLaborSaving;
+
+  const currentIndex = slides.findIndex((s) => s.id === activeSlide);
+  const progress = ((currentIndex + 1) / slides.length) * 100;
+
+  const handleSlideChange = (id: SlideId) => {
+    startTransition(() => {
+      setActiveSlide(id);
+    });
   };
 
+  const nextSlide = () => {
+    if (currentIndex < slides.length - 1) {
+      handleSlideChange(slides[currentIndex + 1].id);
+    } else {
+      handleSlideChange(slides[0].id);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentIndex > 0) {
+      handleSlideChange(slides[currentIndex - 1].id);
+    } else {
+      handleSlideChange(slides[slides.length - 1].id);
+    }
+  };
+
+  const fmt = (n: number) =>
+    n.toLocaleString("en-ZA", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+
+  const fmtCurrency = (n: number) =>
+    n.toLocaleString("en-ZA", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
   return (
-    <section className={styles.deck} aria-label="Interactive school partner pitch deck">
+    <div className={styles.deck} id="pitch-presentation">
+      {/* ── Top bar ── */}
       <div className={styles.deckTopbar}>
         <div>
-          <p>School partner presentation</p>
-          <strong>Click through the pitch</strong>
+          <p>School Partnership</p>
+          <strong>{slides[currentIndex].label}</strong>
         </div>
-        <div className={styles.progressTrack} aria-hidden="true">
-          <span style={{ width: progress }} />
+        <div className={styles.progressTrack}>
+          <span style={{ width: `${progress}%` }} />
         </div>
-        <span className={styles.slideCount}>
-          {activeIndex + 1}/{slides.length}
-        </span>
+        <div className={styles.slideCount}>
+          {currentIndex + 1} / {slides.length}
+        </div>
       </div>
 
+      {/* ── Main grid ── */}
       <div className={styles.deckGrid}>
-        <nav className={styles.slideNav} aria-label="Pitch deck slides">
-          {slides.map((item, index) => (
+        {/* Slide navigation */}
+        <nav className={styles.slideNav}>
+          {slides.map((slide, idx) => (
             <button
-              className={`${styles.slideNavButton} ${
-                activeSlide === item.id ? styles.slideNavButtonActive : ""
-              }`}
-              key={item.id}
-              type="button"
-              onClick={() => setActiveSlide(item.id)}
+              key={slide.id}
+              className={`${styles.slideNavButton} ${activeSlide === slide.id ? styles.slideNavButtonActive : ""}`}
+              onClick={() => handleSlideChange(slide.id)}
             >
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              {item.label}
+              <span>0{idx + 1}</span>
+              {slide.label}
             </button>
           ))}
         </nav>
 
-        <article className={styles.slidePanel}>
-          <div className={styles.slideCopy}>
-            <p className={styles.slideEyebrow}>{slide.eyebrow}</p>
-            <h3>{slide.title}</h3>
-            <p>{slide.body}</p>
-            <ul>
-              {slide.bullets.map((bullet) => (
-                <li key={bullet}>{bullet}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className={styles.slideVisual}>
-            <div className={styles.metricSpotlight}>
-              <span>{slide.stat}</span>
-              <small>{slide.statLabel}</small>
+        {/* ── SLIDE 1: OVERVIEW ── */}
+        {activeSlide === "overview" && (
+          <div className={styles.slidePanel}>
+            <div className={styles.slideCopy}>
+              <p className={styles.slideEyebrow}>Exclusive School Program</p>
+              <h3>Modern School Web Design &amp; Free Hosting</h3>
+              <p>
+                Elevate your school&apos;s digital presence and streamline
+                stationery list ordering. We design, host, and maintain a
+                professional school site completely free of charge.
+              </p>
+              <ul>
+                <li>Custom domain and SSL certificate included</li>
+                <li>Parent stationery portal with 3-click ordering</li>
+                <li>5% annual development fund rebate on pack sales</li>
+                <li>Zero setup, license, or monthly fees</li>
+              </ul>
             </div>
+            <div className={styles.slideVisual}>
+              <div className={styles.metricSpotlight}>
+                <span>R35k</span>
+                <small>
+                  Web development &amp; hosting package value per year
+                </small>
+              </div>
+              <div className={styles.metricSpotlight}>
+                <span>R0</span>
+                <small>Setup, license, or monthly school fees</small>
+              </div>
+              <div className={styles.metricSpotlight}>
+                <span>5%</span>
+                <small>Annual development rebate on all packs sold</small>
+              </div>
+            </div>
+          </div>
+        )}
 
-            {activeSlide === "value" ? (
+        {/* ── SLIDE 2: WEBSITE FEATURES ── */}
+        {activeSlide === "website" && (
+          <div className={styles.slidePanel}>
+            <div className={styles.slideCopy}>
+              <p className={styles.slideEyebrow}>No-Cost Managed Platform</p>
+              <h3>Everything Your School Needs Online</h3>
+              <p>
+                We handle the design, server management, security, and updates.
+                You get a modern online hub customised for your brand, badges,
+                and school identity.
+              </p>
+              <ul>
+                <li>Custom domain connection (yourschool.co.za)</li>
+                <li>Prospectus, newsletters, and document hub</li>
+                <li>Integrated parent stationery portal</li>
+                <li>News board, term dates, and event updates</li>
+              </ul>
+            </div>
+            <div className={styles.slideVisual}>
+              <div className={styles.previewStack}>
+                <div>
+                  <span>Domain &amp; Hosting</span>
+                  <strong>
+                    Custom domain with premium SSL certificate and hosting
+                    included free
+                  </strong>
+                </div>
+                <div>
+                  <span>Prospectus &amp; News Hub</span>
+                  <strong>
+                    Term dates, events, newsletters, and supply lists in one
+                    place
+                  </strong>
+                </div>
+                <div>
+                  <span>Parent Portal</span>
+                  <strong>
+                    Stationery ordering with secure payment channels configured
+                    per grade
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── SLIDE 3: VALUE CALCULATOR ── */}
+        {activeSlide === "calculator" && (
+          <div className={styles.slidePanel}>
+            <div className={styles.slideCopy}>
+              <p className={styles.slideEyebrow}>Interactive Projection</p>
+              <h3>Calculate Your School Benefits</h3>
+              <p>
+                Adjust the sliders to estimate your school&apos;s annual
+                rebates, admin hours saved, and overall partnership value.
+              </p>
+              <ul>
+                <li>Based on average pack value of R850</li>
+                <li>5% development rebate structure</li>
+                <li>Admin labour valued at R160/hour</li>
+              </ul>
+            </div>
+            <div className={styles.slideVisual}>
               <div className={styles.calculator}>
                 <label>
-                  <span>Learners</span>
-                  <strong>{enrollment}</strong>
+                  <span>School Enrollment</span>
+                  <strong>{enrollment} students</strong>
                   <input
                     type="range"
-                    min="150"
-                    max="1600"
+                    min="100"
+                    max="1500"
                     step="50"
                     value={enrollment}
-                    onChange={(event) => setEnrollment(Number(event.target.value))}
+                    onChange={(e) => setEnrollment(parseInt(e.target.value))}
                   />
                 </label>
                 <label>
-                  <span>Expected pack adoption</span>
+                  <span>Pack Adoption Rate</span>
                   <strong>{adoption}%</strong>
                   <input
                     type="range"
                     min="20"
                     max="100"
-                    step="4"
+                    step="5"
                     value={adoption}
-                    onChange={(event) => setAdoption(Number(event.target.value))}
+                    onChange={(e) => setAdoption(parseInt(e.target.value))}
                   />
                 </label>
-                <div className={styles.valueGrid}>
-                  <div>
-                    <span>Pack orders</span>
-                    <strong>{parentPacks}</strong>
-                  </div>
-                  <div>
-                    <span>Admin hours saved</span>
-                    <strong>{adminHours}</strong>
-                  </div>
-                  <div className={styles.totalValue}>
-                    <span>Total estimated value</span>
-                    <strong>
-                      R{totalValue.toLocaleString("en-ZA", { maximumFractionDigits: 0 })}
-                    </strong>
-                  </div>
+              </div>
+              <div className={styles.valueGrid}>
+                <div>
+                  <span>Annual Rebate</span>
+                  <strong>R {fmtCurrency(annualRebate)}</strong>
+                </div>
+                <div>
+                  <span>Website Value</span>
+                  <strong>R {fmt(websiteHostingSaving)}</strong>
+                </div>
+                <div>
+                  <span>Admin Saved</span>
+                  <strong>{fmt(adminHoursSaved)} hrs</strong>
+                </div>
+                <div className={styles.totalValue}>
+                  <span>Total Economic Value</span>
+                  <strong>R {fmt(totalValue)}</strong>
                 </div>
               </div>
-            ) : activeSlide === "portal" ? (
+            </div>
+          </div>
+        )}
+
+        {/* ── SLIDE 4: PARENT CONVENIENCE ── */}
+        {activeSlide === "parents" && (
+          <div className={styles.slidePanel}>
+            <div className={styles.slideCopy}>
+              <p className={styles.slideEyebrow}>
+                Stress-Free Back-to-School
+              </p>
+              <h3>Parents Buy Correct Grade Packs Fast</h3>
+              <p>
+                No retail hopping or long queues in January. Parents get exactly
+                what teachers require for the academic year, delivered to their
+                door or the school gate.
+              </p>
+              <ul>
+                <li>100% grade list accuracy verified by schools</li>
+                <li>Card, Instant EFT, and WhatsApp ordering</li>
+                <li>Home delivery or bulk school drop-off</li>
+              </ul>
+            </div>
+            <div className={styles.slideVisual}>
               <div className={styles.journeyCard}>
                 <div className={styles.journeyTabs}>
-                  {(Object.keys(journeyCopy) as JourneyStep[]).map((step) => (
+                  {journeyTabsData.map((tab, idx) => (
                     <button
-                      className={journeyStep === step ? styles.journeyTabActive : ""}
-                      key={step}
-                      type="button"
-                      onClick={() => setJourneyStep(step)}
+                      key={tab.label}
+                      className={
+                        activeJourneyTab === idx
+                          ? styles.journeyTabActive
+                          : undefined
+                      }
+                      onClick={() => setActiveJourneyTab(idx)}
                     >
-                      {journeyCopy[step].tag}
+                      {tab.label}
                     </button>
                   ))}
                 </div>
-                <div>
-                  <span>{journeyCopy[journeyStep].tag}</span>
-                  <h4>{journeyCopy[journeyStep].title}</h4>
-                  <p>{journeyCopy[journeyStep].body}</p>
-                </div>
+                <h4>{journeyTabsData[activeJourneyTab].title}</h4>
+                <p>{journeyTabsData[activeJourneyTab].text}</p>
               </div>
-            ) : activeSlide === "launch" ? (
-              <div className={styles.launchFlow}>
-                {launchSteps.map((step, index) => (
-                  <div key={step}>
-                    <span>{index + 1}</span>
-                    <strong>{step}</strong>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className={styles.previewStack}>
-                <div>
-                  <span>Website</span>
-                  <strong>Admissions, news, documents</strong>
-                </div>
-                <div>
-                  <span>Portal</span>
-                  <strong>Grade packs and checkout</strong>
-                </div>
-                <div>
-                  <span>Partnership</span>
-                  <strong>Rebates and less admin</strong>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
-        </article>
+        )}
+
+        {/* ── SLIDE 5: ROADMAP ── */}
+        {activeSlide === "roadmap" && (
+          <div className={styles.slidePanel}>
+            <div className={styles.slideCopy}>
+              <p className={styles.slideEyebrow}>Simple Setup Process</p>
+              <h3>How We Launch Your Portal</h3>
+              <p>
+                Our team does the heavy lifting, taking you from request to live
+                portal in days, not months.
+              </p>
+              <ul>
+                <li>No heavy IT project required</li>
+                <li>Pexpacks handles design and deployment</li>
+                <li>Parents order from day one</li>
+              </ul>
+            </div>
+            <div className={styles.slideVisual}>
+              <div className={styles.launchFlow}>
+                <div>
+                  <span>1</span>
+                  <strong>
+                    Submit your school details via the enquiry form
+                  </strong>
+                </div>
+                <div>
+                  <span>2</span>
+                  <strong>
+                    Share grade stationery lists for digitisation
+                  </strong>
+                </div>
+                <div>
+                  <span>3</span>
+                  <strong>We build the website and parent portal</strong>
+                </div>
+                <div>
+                  <span>4</span>
+                  <strong>
+                    Parents order hassle-free, school earns rebates
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
+      {/* ── Bottom controls ── */}
       <div className={styles.deckControls}>
-        <button
-          className={styles.deckNavButton}
-          type="button"
-          onClick={() => goToOffset(-1)}
-        >
-          Previous
+        <button className={styles.deckNavButton} onClick={prevSlide}>
+          ← Previous
         </button>
-        <Button href="#partner-form">Start partnership</Button>
-        <button
-          className={styles.deckNavButton}
-          type="button"
-          onClick={() => goToOffset(1)}
-        >
-          Next
+        <Button href="#partner-form" variant="primary">
+          Apply Today
+        </Button>
+        <button className={styles.deckNavButton} onClick={nextSlide}>
+          Next →
         </button>
       </div>
-    </section>
+    </div>
   );
 }
