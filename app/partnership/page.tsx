@@ -33,25 +33,6 @@ const schoolBenefits = [
   "Zero setup or ongoing maintenance fees",
 ];
 
-const websiteFeatures = [
-  {
-    title: "School Brand Customisation",
-    desc: "Designed around your official badge, colours, motto, and admissions message.",
-  },
-  {
-    title: "Parent Portal Integration",
-    desc: "Parents can choose a grade and order pre-packed stationery kits without manual school admin.",
-  },
-  {
-    title: "Prospectus and Document Hub",
-    desc: "Publish newsletters, policies, calendars, prospectus files, and stationery lists in one place.",
-  },
-  {
-    title: "News and Events Board",
-    desc: "Keep families updated on assemblies, term dates, school notices, and sports fixtures.",
-  },
-];
-
 const mutualBenefits = [
   {
     title: "For Your School",
@@ -126,8 +107,8 @@ export default function PartnerWithSchoolsPage() {
     <>
       <PageHero
         eyebrow="Exclusive school partner program"
-        title="Get a Premium School Website & Raise Development Funds — 100% Free"
-        text="Pexpacks builds, hosts, and maintains a custom school website and parent stationery portal at zero cost. Save hundreds of admin hours, streamline back-to-school ordering, and earn 5% cash-back on all pack sales."
+        title="Partnership with real benefits"
+        text="Pexpacks works with schools to simplify stationery ordering, reduce parent stress, and help learners start the year prepared with the right supplies."
         panelText="Partner value snapshot"
         panelTitle="Website + parent ordering + rebate model"
       >
@@ -214,24 +195,6 @@ export default function PartnerWithSchoolsPage() {
             text="Explore a responsive school website, parent stationery portal, and update desk built to show school partners the full value of working with Pexpacks."
           />
           <SchoolMockupDemo />
-        </div>
-      </section>
-
-      <section className={sectionStyles.sectionCream}>
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Website Features"
-            title="Built for modern schools"
-            text="The website is designed to be useful immediately: families can find information, school teams can share updates, and parents can order stationery from the correct path."
-          />
-          <div className={cardStyles.infoGrid}>
-            {websiteFeatures.map((feat) => (
-              <article className={cardStyles.infoCard} key={feat.title}>
-                <h3 className={pageStyles.featureCardTitle}>{feat.title}</h3>
-                <p className={pageStyles.featureCardDesc}>{feat.desc}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 
