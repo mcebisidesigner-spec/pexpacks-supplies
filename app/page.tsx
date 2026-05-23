@@ -189,14 +189,8 @@ No queues. No confusion. No missing items.
                   </span>
                   <h3>{pack.name}</h3>
                 </div>
-                <div style={{ padding: "0 24px", flexGrow: 1, display: "flex", flexDirection: "column" }}>
-                  <p
-                    style={{
-                      color: "var(--pex-text-muted)",
-                      marginBottom: "8px",
-                      fontSize: "15px",
-                    }}
-                  >
+                <div className={cardStyles.packCardBody}>
+                  <p className={cardStyles.packDescription}>
                     {pack.description}
                   </p>
                   <div className={cardStyles.packMetaRow}>
@@ -217,11 +211,11 @@ No queues. No confusion. No missing items.
                     </span>
                   </div>
                 </div>
-                <div style={{ padding: "0 24px 24px" }}>
+                <div className={cardStyles.packCardButtonWrap}>
                   <Button
                     href={pack.href}
                     variant="primary"
-                    style={{ width: "100%" }}
+                    className={cardStyles.fullWidthButton}
                   >
                     {pack.cta}
                   </Button>
@@ -316,7 +310,7 @@ No queues. No confusion. No missing items.
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
         secondaryHref="/office"
-        secondaryLabel="Order Office Stationery"
+        secondaryLabel="View Office Packs"
       />
       <MobileStickyCta />
     </>

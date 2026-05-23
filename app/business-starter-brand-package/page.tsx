@@ -22,7 +22,7 @@ export default function BusinessStarterBrandPackagePage() {
   return (
     <>
       <PageHero
-        eyebrow="Business Starter Brand Package"
+        eyebrow="Pex your brand"
         title="Claim your brand package"
         text="Use this dedicated order form to send the information Pexpacks needs to prepare your logo, business cards, flyers, letterhead and starter website."
         panelText="Package value"

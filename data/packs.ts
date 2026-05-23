@@ -120,7 +120,7 @@ export const featuredPacks: Pack[] = [
       "Scrapbook",
     ],
     priceLabel: "From R 659",
-    cta: "View Foundation Phase Packs",
+    cta: "Order This Pack",
     href: "/foundation-phase",
   },
   {
@@ -140,7 +140,7 @@ export const featuredPacks: Pack[] = [
       "Sharpener",
     ],
     priceLabel: "From R 779",
-    cta: "View Primary School Packs",
+    cta: "Order This Pack",
     href: "/primary-school",
   },
   {
@@ -160,7 +160,7 @@ export const featuredPacks: Pack[] = [
       "Exam pad",
     ],
     priceLabel: "From R 879",
-    cta: "View High School Stationery Packs",
+    cta: "Order This Pack",
     href: "/high-school",
   },
   {
@@ -180,7 +180,7 @@ export const featuredPacks: Pack[] = [
       "Desk basics",
     ],
     priceLabel: "Request quote",
-    cta: "View Office Stationery",
+    cta: "Order This Pack",
     href: "/office",
   },
 ];

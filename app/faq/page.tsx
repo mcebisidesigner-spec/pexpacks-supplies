@@ -20,7 +20,7 @@ export default function FAQPage() {
     <>
       <JsonLd data={faqPageSchema(faqs)} />
       <PageHero
-        eyebrow="Questions"
+          eyebrow="Pex your questions"
         title="Frequently asked questions"
         text="Common questions about school lists, delivery, payment and partnerships."
         panelTitle="Support"

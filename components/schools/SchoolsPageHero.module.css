@@ -11,26 +11,3 @@
   display: flex;
   justify-content: center;
 }
-
-.ratingStrip {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.stars {
-  color: #f59e0b;
-  font-size: 16px;
-  letter-spacing: 2px;
-}
-
-.ratingText {
-  color: var(--pex-text-muted);
-  font-size: 13px;
-}
-
-.ratingText strong {
-  color: var(--pex-primary);
-}

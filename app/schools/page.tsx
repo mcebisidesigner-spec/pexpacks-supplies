@@ -12,7 +12,6 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
-import { SchoolsLeadCapture } from "@/components/schools/SchoolsLeadCapture";
 import { FindSchoolBar } from "@/components/schools/FindSchoolBar";
 import { buildMetadata } from "@/lib/seo";
 import {
@@ -194,7 +193,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         </div>
       </section>
       <MobileStickyCta />
-      <SchoolsLeadCapture />
       <FindSchoolBar />
     </>
   );

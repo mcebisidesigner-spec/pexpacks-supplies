@@ -227,7 +227,7 @@ export const phasePacks: PhasePack[] = [
     id: "foundation-phase",
     title: "Foundation Phase Stationery Packs",
     slug: "foundation-phase",
-    eyebrow: "Foundation Phase Packs",
+    eyebrow: "Pex foundation learning",
     phaseRange: "Grade R to Grade 3",
     description:
       "Ready-packed stationery for Grade R to Grade 3 learners, prepared around common school stationery needs and easy to customise for your child.",
@@ -281,7 +281,7 @@ export const phasePacks: PhasePack[] = [
     id: "primary-school",
     title: "Primary School Stationery Packs",
     slug: "primary-school",
-    eyebrow: "Primary School Packs",
+    eyebrow: "Pex primary learning",
     phaseRange: "Grade 4 to Grade 7",
     description:
       "Ready-packed stationery for Grade 4 to Grade 7 learners, including school essentials, exercise books and writing supplies.",
@@ -334,7 +334,7 @@ export const phasePacks: PhasePack[] = [
     id: "high-school",
     title: "High School Stationery Packs",
     slug: "high-school",
-    eyebrow: "High School Packs",
+    eyebrow: "Pex high school prep",
     phaseRange: "Grade 8 to Matric",
     description:
       "Ready-packed stationery for Grade 8 to Grade 12 learners, including exercise books, pens, files, calculator-ready items and exam basics.",

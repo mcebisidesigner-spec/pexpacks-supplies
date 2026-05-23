@@ -114,7 +114,7 @@ export default async function OfficePacksPage({
   return (
     <>
       <PageHero
-        eyebrow="Office"
+        eyebrow="Pex your office"
         title="Office supplies packed for busy SMEs"
         text="Pexpacks prepares practical stationery and office packs so your team can stay stocked without wasting time on small purchases."
         panelText="Core message"

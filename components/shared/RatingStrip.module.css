@@ -1,0 +1,22 @@
+.strip {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.stars {
+  color: #f59e0b;
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.text {
+  color: var(--pex-text-muted);
+  font-size: 13px;
+}
+
+.text strong {
+  color: var(--pex-primary);
+}

@@ -39,7 +39,7 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
   return (
     <>
       <PageHero
-        eyebrow="Stationery order"
+        eyebrow="Pex your order"
         title="Complete your stationery order"
         text="Review your pack, share the details Pexpacks needs, choose delivery or collection, and submit a secure order request."
         panelText="Need support?"

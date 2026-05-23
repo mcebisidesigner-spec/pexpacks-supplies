@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHero } from "@/components/marketing/PageHero";
+import { RatingStrip } from "@/components/shared/RatingStrip";
+import { Button } from "@/components/ui/Button";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import { phasePacks } from "@/data/phasePacks";
 import { PhaseClient } from "@/components/school-packs/PhaseClient";
 import { buildMetadata } from "@/lib/seo";
@@ -36,6 +40,48 @@ export default function PrimarySchoolPage() {
       </PageHero>
 
       <PhaseClient phaseData={phaseData} />
+
+      <section className={sectionStyles.section} aria-labelledby="phase-trust">
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>Guaranteed accuracy</p>
+              <h2>Packed to your school's list</h2>
+              <p>
+                Every item in this phase pack is checked against your school's
+                official stationery list. If it's on the list, it's in the box.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/schools" variant="primary">
+                  Find Your School
+                </Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Is your school listed?</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  Search now to see if we have your school's exact stationery
+                  list. If not, request it and get notified.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/schools" className={cardStyles.cardLink}>
+                  Search schools &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner} style={{ textAlign: "center" }}>
+          <RatingStrip />
+        </div>
+      </section>
     </>
   );
 }
