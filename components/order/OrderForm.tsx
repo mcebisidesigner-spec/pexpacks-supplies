@@ -85,6 +85,16 @@ export function OrderForm({
       effectiveInitialPhase,
     ],
   );
+  const isCustomSchoolPack =
+    !standardSelection && effectiveInitialPackType === "custom-school";
+  const isFullSchoolPack =
+    !standardSelection && effectiveInitialPackType === "full-school";
+  const isMultiSchoolPack =
+    !standardSelection && effectiveInitialPackType === "multi-school";
+  const siblingGradeLabels = effectiveSiblingGrades
+    .split(",")
+    .map((grade) => grade.trim())
+    .filter(Boolean);
 
   const [activeStep, setActiveStep] = useState(0);
   const [selectedSchool, setSelectedSchool] = useState<SchoolDetails | null>(
@@ -149,16 +159,6 @@ export function OrderForm({
       null,
     [gradeSlug, selectedSchool],
   );
-  const isCustomSchoolPack =
-    !standardSelection && effectiveInitialPackType === "custom-school";
-  const isFullSchoolPack =
-    !standardSelection && effectiveInitialPackType === "full-school";
-  const isMultiSchoolPack =
-    !standardSelection && effectiveInitialPackType === "multi-school";
-  const siblingGradeLabels = effectiveSiblingGrades
-    .split(",")
-    .map((grade) => grade.trim())
-    .filter(Boolean);
   const selectedPackTitle = standardSelection
     ? standardSelection.pack.title
     : isMultiSchoolPack
