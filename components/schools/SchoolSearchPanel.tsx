@@ -143,12 +143,7 @@ export function SchoolSearchPanel({
           aria-live="polite"
           data-school-results-scroll
         >
-          {!queryReady ? (
-            <p className={heroStyles.heroSearchState}>
-              Start typing your school name or choose a grade and region.
-            </p>
-          ) : null}
-          {isLoading ? (
+          {!hasSearched && isLoading ? (
             <p className={heroStyles.heroSearchState}>Loading schools...</p>
           ) : null}
           {error ? (

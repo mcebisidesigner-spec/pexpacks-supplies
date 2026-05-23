@@ -16,7 +16,7 @@ type UsePaginatedSchoolSearchOptions = {
 };
 
 function shouldSearch(query: string, grade: string, gradeAllValue: string) {
-  return query.trim().length >= 2 || grade !== gradeAllValue;
+  return query.trim().length >= 0;
 }
 
 export function usePaginatedSchoolSearch({

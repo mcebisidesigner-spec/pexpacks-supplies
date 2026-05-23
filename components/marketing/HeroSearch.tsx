@@ -93,12 +93,7 @@ export function HeroSearch() {
             aria-live="polite"
             data-school-results-scroll
           >
-            {!queryReady ? (
-              <p className={styles.heroSearchState}>
-                Start typing your school name or choose a grade.
-              </p>
-            ) : null}
-            {isLoading ? (
+            {!hasSearched && isLoading ? (
               <p className={styles.heroSearchState}>Loading schools...</p>
             ) : null}
             {error ? (
