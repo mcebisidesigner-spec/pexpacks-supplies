@@ -293,6 +293,34 @@
   }
 }
 
+.packCardBody {
+  padding: 0 24px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.packDescription {
+  color: var(--pex-text-muted);
+  margin-bottom: 8px;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.packCardButtonWrap {
+  padding: 0 24px 24px;
+}
+
+.fullWidthButton {
+  width: 100%;
+}
+
+.faqContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 32px;
+}
+
 .packCardHead h3 {
   margin: 8px 0 0;
 }
@@ -419,6 +447,13 @@
   transform: translateY(0);
 }
 
+@media (max-width: 820px) {
+  .quickListTooltip {
+    bottom: auto;
+    top: calc(100% + 10px);
+  }
+}
+
 .packMedia {
   min-height: 156px;
   padding: 18px;
@@ -507,13 +542,22 @@
 @media (max-width: 820px) {
   .gridThree,
   .stepsGrid,
-  .packGrid,
   .officeGrid,
   .infoGrid {
     grid-template-columns: 1fr;
   }
 
+  .packGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .benefitGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .packGrid {
     grid-template-columns: 1fr;
   }
 }

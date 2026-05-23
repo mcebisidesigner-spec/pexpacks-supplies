@@ -12,7 +12,7 @@ type SaveVisitTrackerProps = {
 
 /**
  * Invisible component that saves the current school/grade visit
- * to localStorage so ReturningParentBanner can offer a quick re-order.
+ * to localStorage so RecentlyViewedSchools can offer a quick re-order.
  */
 export function SaveVisitTracker({
   schoolName,

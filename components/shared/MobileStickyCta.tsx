@@ -3,14 +3,18 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import styles from "./MobileStickyCta.module.css";
+import btnStyles from "@/components/ui/Button.module.css";
 
 export function MobileStickyCta() {
   const [visible, setVisible] = useState(false);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
 
   useEffect(() => {
+    const hero = document.getElementById("schools-search");
+    const threshold = hero ? hero.offsetHeight - 100 : 400;
+
     function handleScroll() {
-      setVisible(window.scrollY > 600);
+      setVisible(window.scrollY > threshold);
     }
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -36,7 +40,11 @@ export function MobileStickyCta() {
 
   return (
     <div className={`${styles.stickyCta} ${show ? styles.visible : ""}`}>
-      <Button href="/schools" variant="navy" style={{ width: "100%" }}>
+      <Button
+        href="#schools-search"
+        variant="navy"
+        className={btnStyles.fullWidth}
+      >
         Find Your School Pack
       </Button>
     </div>

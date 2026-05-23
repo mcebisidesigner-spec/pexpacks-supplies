@@ -17,12 +17,14 @@
 }
 
 .form {
-  max-width: var(--layout-max-width);
-  margin-inline: auto;
-  height: 64px;
+  all: unset;
   display: flex;
   align-items: center;
   gap: 12px;
+  max-width: var(--layout-max-width);
+  height: 64px;
+  margin-inline: auto;
+  cursor: pointer;
 }
 
 .icon {
@@ -30,31 +32,28 @@
   color: var(--pex-text-muted);
 }
 
-.input {
+.label {
   flex: 1;
   min-width: 0;
   height: 44px;
+  display: flex;
+  align-items: center;
   padding: 0 16px;
   border: 1px solid var(--pex-border);
   border-radius: var(--radius-pill);
   background: var(--pex-bg);
-  color: var(--pex-text);
-  font-size: 15px;
-  outline: none;
-  cursor: text;
-}
-
-.input:focus {
-  border-color: var(--pex-keppel);
-}
-
-.input::placeholder {
   color: var(--pex-text-muted);
+  font-family: inherit;
+  font-size: 15px;
+  text-align: left;
+  cursor: text;
 }
 
 .btn {
   flex-shrink: 0;
   height: 44px;
+  display: inline-flex;
+  align-items: center;
   padding: 0 22px;
   border: 0;
   border-radius: var(--radius-pill);

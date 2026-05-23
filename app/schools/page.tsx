@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
 
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
-import { ReturningParentBanner } from "@/components/schools/ReturningParentBanner";
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
@@ -30,7 +28,7 @@ import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Find Your School Stationery Pack | Pexpacks",
-  "Search for your school and grade to order a ready-packed stationery pack prepared according to the school stationery list.",
+  "Find your child's school and grade to order a ready-packed stationery kit, prepared exactly to their official school stationery list and delivered to your door.",
   "/schools"
 );
 
@@ -59,15 +57,15 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
 
   return (
     <>
-      <SchoolsPageHero>
+      <div id="schools-search">
+        <SchoolsPageHero>
         <SchoolSearchPanel
           grades={grades}
           initialQuery={firstValue(params.q) ?? ""}
           initialGrade={firstValue(params.grade) ?? "all"}
         />
       </SchoolsPageHero>
-      <ReturningParentBanner />
-
+      </div>
       {featuredSchools.length > 0 && (
         <FeaturedSchoolsBanner schools={featuredSchools} />
       )}
@@ -100,14 +98,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                   </span>
                   <h3>{pack.name}</h3>
                 </div>
-                <div style={{ padding: "0 24px", flexGrow: 1, display: "flex", flexDirection: "column" }}>
-                  <p
-                    style={{
-                      color: "var(--pex-text-muted)",
-                      marginBottom: "8px",
-                      fontSize: "15px",
-                    }}
-                  >
+                <div className={cardStyles.packCardBody}>
+                  <p className={cardStyles.packDescription}>
                     {pack.description}
                   </p>
                   <div className={cardStyles.packMetaRow}>
@@ -128,11 +120,11 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                     </span>
                   </div>
                 </div>
-                <div style={{ padding: "0 24px 24px" }}>
+                <div className={cardStyles.packCardButtonWrap}>
                   <Button
                     href={pack.href}
                     variant="primary"
-                    style={{ width: "100%" }}
+                    className={cardStyles.fullWidthButton}
                   >
                     {pack.cta}
                   </Button>
@@ -162,8 +154,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         eyebrow="Ready to order"
         title="Find your school pack now."
         text="Search for your school or choose a standard grade pack. Either way, your stationery is handled."
-        primaryHref="/schools"
-        primaryLabel="Search Your School"
+        primaryHref="#schools-search"
+        primaryLabel="Back to Search"
         secondaryHref="/foundation-phase"
         secondaryLabel="Browse Grade Packs"
       />
@@ -176,9 +168,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
             text="Answers for parents and schools."
             headingId="school-faqs"
           />
-          <div
-            style={{ maxWidth: "800px", margin: "0 auto", marginTop: "32px" }}
-          >
+          <div className={cardStyles.faqContainer}>
             <FaqAccordion faqs={schoolFaqs} title="" subtitle="" />
           </div>
         </div>

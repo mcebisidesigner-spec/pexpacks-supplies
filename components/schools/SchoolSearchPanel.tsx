@@ -230,7 +230,7 @@ export function SchoolSearchPanel({
                     onLoadMore={() => fetchResults(results.length, "append")}
                     className={heroStyles.loadMoreSentinel}
                   />
-                  {hasMore ? (
+                  {hasMore && !isLoading ? (
                     <button
                       className={heroStyles.loadMoreButton}
                       type="button"

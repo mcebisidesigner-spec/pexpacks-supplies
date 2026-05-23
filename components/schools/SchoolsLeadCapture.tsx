@@ -21,7 +21,7 @@ export function SchoolsLeadCapture() {
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY)) return;
 
-    const timer = setTimeout(() => setVisible(true), 15000);
+    const timer = setTimeout(() => setVisible(true), 35000);
     return () => clearTimeout(timer);
   }, []);
 
