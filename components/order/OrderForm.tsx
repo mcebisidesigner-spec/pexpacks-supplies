@@ -91,10 +91,14 @@ export function OrderForm({
     !standardSelection && effectiveInitialPackType === "full-school";
   const isMultiSchoolPack =
     !standardSelection && effectiveInitialPackType === "multi-school";
-  const siblingGradeLabels = effectiveSiblingGrades
-    .split(",")
-    .map((grade) => grade.trim())
-    .filter(Boolean);
+  const siblingGradeLabels = useMemo(
+    () =>
+      effectiveSiblingGrades
+        .split(",")
+        .map((grade) => grade.trim())
+        .filter(Boolean),
+    [effectiveSiblingGrades],
+  );
 
   const [activeStep, setActiveStep] = useState(0);
   const [selectedSchool, setSelectedSchool] = useState<SchoolDetails | null>(
@@ -276,6 +280,7 @@ export function OrderForm({
       pexcoverSubjects,
       pexcoverLabelFormat,
       pexcoverNotes,
+      gradePexcovers,
       orderRef: orderReference,
       params,
     };
@@ -303,6 +308,7 @@ export function OrderForm({
     pexcoverSubjects,
     pexcoverLabelFormat,
     pexcoverNotes,
+    gradePexcovers,
     orderReference,
     persistence,
     standardSelection,
@@ -366,6 +372,25 @@ export function OrderForm({
       cancelled = true;
     };
   }, [effectiveInitialGrade, effectiveInitialSchool, standardSelection]);
+
+  /* Sync gradePexcovers when sibling grade labels become available (e.g. after draft loads) */
+  useEffect(() => {
+    if (!isMultiSchoolPack) {
+      setGradePexcovers([]);
+      return;
+    }
+    setGradePexcovers((prev) => {
+      const existingLabels = new Set(prev.map((e) => e.gradeLabel));
+      const newLabels = siblingGradeLabels.filter((l) => !existingLabels.has(l));
+      if (newLabels.length === 0 && prev.length === siblingGradeLabels.length) {
+        return prev;
+      }
+      return siblingGradeLabels.map((label) => {
+        const existing = prev.find((e) => e.gradeLabel === label);
+        return existing ?? { gradeLabel: label, selected: false, childName: "" };
+      });
+    });
+  }, [isMultiSchoolPack, siblingGradeLabels]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -752,6 +777,9 @@ export function OrderForm({
                         saved.pexcoverLabelFormat ?? "First Name + Surname",
                       );
                       setPexcoverNotes(saved.pexcoverNotes ?? "");
+                      if (saved.gradePexcovers) {
+                        setGradePexcovers(saved.gradePexcovers);
+                      }
                       setOrderReference(saved.orderRef ?? "");
                     }
                     setRestoreBanner(false);
@@ -884,6 +912,8 @@ export function OrderForm({
                 schoolName={schoolName}
                 gradeName={gradeName}
                 itemCount={itemCount}
+                pexcoverCount={pexcoverCount}
+                gradePexcovers={isMultiSchoolPack ? gradePexcovers : undefined}
                 buyerName={buyerName}
                 buyerPhone={buyerPhone}
                 buyerEmail={buyerEmail}

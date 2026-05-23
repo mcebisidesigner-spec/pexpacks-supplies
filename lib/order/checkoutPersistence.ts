@@ -4,6 +4,12 @@ import { useCallback, useEffect, useRef } from "react";
 
 const STORAGE_KEY = "Pexpacks:checkout-state";
 
+export type GradePexcoverEntry = {
+  gradeLabel: string;
+  selected: boolean;
+  childName: string;
+};
+
 export type CheckoutState = {
   activeStep: number;
   schoolQuery: string;
@@ -27,6 +33,7 @@ export type CheckoutState = {
   pexcoverSubjects: string;
   pexcoverLabelFormat: string;
   pexcoverNotes: string;
+  gradePexcovers?: GradePexcoverEntry[];
   savedAt: number;
   orderRef: string;
   /** URL params needed to reconstruct the checkout context */

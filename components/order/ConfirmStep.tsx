@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { ReviewBlock } from "./ReviewBlock";
-import type { FulfilmentOption } from "./OrderFormTypes";
+import { PEXCOVER_PRICE, type GradePexcoverEntry, type FulfilmentOption } from "./OrderFormTypes";
 import styles from "./Order.module.css";
 
 type ConfirmStepProps = {
@@ -9,6 +9,8 @@ type ConfirmStepProps = {
   schoolName?: string;
   gradeName?: string;
   itemCount: number;
+  pexcoverCount: number;
+  gradePexcovers?: GradePexcoverEntry[];
   buyerName: string;
   buyerPhone: string;
   buyerEmail: string;
@@ -30,6 +32,8 @@ export function ConfirmStep({
   schoolName,
   gradeName,
   itemCount,
+  pexcoverCount,
+  gradePexcovers,
   buyerName,
   buyerPhone,
   buyerEmail,
@@ -45,6 +49,11 @@ export function ConfirmStep({
   clearFieldError,
   goToStep,
 }: ConfirmStepProps) {
+  const selectedPexcovers = gradePexcovers?.filter((g) => g.selected) ?? [];
+  const pexcoverDescription = selectedPexcovers.length > 0
+    ? selectedPexcovers.map((g) => g.gradeLabel).join(", ")
+    : "";
+
   return (
     <div className={styles.confirmGrid}>
       <ReviewBlock title="Pack" onEdit={() => goToStep(0)}>
@@ -52,6 +61,9 @@ export function ConfirmStep({
         <span>
           {schoolName ?? "School to confirm"} · {gradeName ?? "Grade to confirm"} ·{" "}
           {itemCount || "Confirming"} items
+          {pexcoverCount > 0
+            ? ` · Pexcover: ${pexcoverDescription || `${pexcoverCount} child${pexcoverCount > 1 ? "ren" : ""}`}`
+            : ""}
         </span>
       </ReviewBlock>
       <ReviewBlock title="Customer" onEdit={() => goToStep(1)}>
@@ -69,6 +81,16 @@ export function ConfirmStep({
             : "Pexpacks will confirm the handover details."}
         </span>
       </ReviewBlock>
+      {pexcoverCount > 0 ? (
+        <ReviewBlock title="Pexcover book covering">
+          <strong>
+            {pexcoverDescription
+              ? `${pexcoverDescription} (${pexcoverCount} ${pexcoverCount === 1 ? "child" : "children"})`
+              : `${pexcoverCount} ${pexcoverCount === 1 ? "child" : "children"}`}
+          </strong>
+          <span>{formatCurrency(pexcoverCount * PEXCOVER_PRICE)} total</span>
+        </ReviewBlock>
+      ) : null}
       <ReviewBlock title="Estimated total">
         <strong>
           {typeof estimatedTotal === "number"

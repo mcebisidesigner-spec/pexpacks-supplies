@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
-import { MultiLearnerBanner } from "@/components/schools/MultiLearnerBanner";
+
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
 import { ReturningParentBanner } from "@/components/schools/ReturningParentBanner";
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
@@ -82,10 +82,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
             text="Choose a standard grade pack if your school isn't listed or you know exactly what you need."
             headingId="school-grade-packs"
           />
-          <MultiLearnerBanner />
-          <p className={sectionStyles.urgencyNote}>
-            Order before <strong>15:00</strong> for next-day dispatch &middot; Free delivery to school
-          </p>
           <div className={cardStyles.packGrid}>
             {homepagePacks.map((pack, idx) => (
               <div className={`${cardStyles.packCard} ${idx === 1 ? cardStyles.packCardFeatured : ""}`} key={pack.id}>
@@ -114,9 +110,21 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                   >
                     {pack.description}
                   </p>
-                  <div style={{ marginTop: "auto", paddingBottom: "20px" }}>
+                  <div className={cardStyles.packMetaRow}>
                     <span className={cardStyles.priceBadge}>
                       {pack.priceLabel}
+                    </span>
+                    <span
+                      className={cardStyles.quickListPreview}
+                      tabIndex={0}
+                      aria-label={`${pack.name} quick list preview: ${pack.includes.join(", ")}`}
+                    >
+                      Quick list preview
+                      <span className={cardStyles.quickListTooltip} role="tooltip">
+                        {pack.includes.map((item) => (
+                          <span key={item}>{item}</span>
+                        ))}
+                      </span>
                     </span>
                   </div>
                 </div>

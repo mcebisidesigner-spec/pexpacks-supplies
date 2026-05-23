@@ -72,6 +72,12 @@ export function OrderSummary({
             <dt>Delivery / collection</dt>
             <dd>{fulfilmentOption}</dd>
           </div>
+          {pexcoverCount > 0 ? (
+            <div>
+              <dt>Pexcover ({pexcoverCount} {pexcoverCount === 1 ? "child" : "children"})</dt>
+              <dd>{formatCurrency(pexcoverCount * PEXCOVER_PRICE)}</dd>
+            </div>
+          ) : null}
           <div>
             <dt>Estimated total</dt>
             <dd>
