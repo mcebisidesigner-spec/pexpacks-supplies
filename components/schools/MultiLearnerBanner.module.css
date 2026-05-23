@@ -5,7 +5,11 @@
   margin-bottom: 28px;
   padding: 14px 20px;
   border-radius: var(--radius-card);
-  background: linear-gradient(135deg, rgba(26, 42, 64, 0.04), rgba(63, 184, 160, 0.08));
+  background: linear-gradient(
+    135deg,
+    rgba(26, 42, 64, 0.04),
+    rgba(63, 184, 160, 0.08)
+  );
   border: 1px solid rgba(63, 184, 160, 0.18);
   font-size: 14px;
   line-height: 1.5;
@@ -18,4 +22,9 @@
 
 .multiLearnerBanner strong {
   color: var(--pex-primary);
+}
+
+.discountActive {
+  background: rgba(33, 158, 154, 0.1);
+  border-color: rgba(33, 158, 154, 0.32);
 }

@@ -52,6 +52,8 @@ export function OrderForm({
   const effectiveInitialPhase = orderDraft?.phaseSlug ?? initialPhase;
   const effectiveInitialPackId = orderDraft?.packId ?? initialPackId;
   const effectiveInitialPackType = orderDraft?.type ?? initialPackType;
+  const effectiveSiblingGrades = orderDraft?.siblingGrades ?? "";
+  const effectiveSiblingPackCount = orderDraft?.siblingPackCount ?? 0;
   const effectiveInitialCustomItems =
     orderDraft?.selectedItems ?? initialCustomItems;
   const effectiveInitialRemovedItems =
@@ -77,23 +79,23 @@ export function OrderForm({
       effectiveInitialPackId,
       effectiveInitialPackType,
       effectiveInitialPhase,
-    ]
+    ],
   );
 
   const [activeStep, setActiveStep] = useState(0);
   const [selectedSchool, setSelectedSchool] = useState<SchoolDetails | null>(
-    null
+    null,
   );
   const [schoolQuery, setSchoolQuery] = useState("");
   const [schoolResults, setSchoolResults] = useState<SchoolSearchResult[]>([]);
   const [schoolOpen, setSchoolOpen] = useState(false);
   const [schoolTouched, setSchoolTouched] = useState(
-    Boolean(effectiveInitialSchool) && !standardSelection
+    Boolean(effectiveInitialSchool) && !standardSelection,
   );
   const [schoolLoading, setSchoolLoading] = useState(false);
   const [schoolError, setSchoolError] = useState("");
   const [gradeSlug, setGradeSlug] = useState(
-    standardSelection ? "" : effectiveInitialGrade
+    standardSelection ? "" : effectiveInitialGrade,
   );
   const [buyerName, setBuyerName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
@@ -114,7 +116,7 @@ export function OrderForm({
   const [pexcoverName, setPexcoverName] = useState("");
   const [pexcoverSubjects, setPexcoverSubjects] = useState("");
   const [pexcoverLabelFormat, setPexcoverLabelFormat] = useState(
-    "First Name + Surname"
+    "First Name + Surname",
   );
   const [pexcoverNotes, setPexcoverNotes] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -129,16 +131,27 @@ export function OrderForm({
     () =>
       selectedSchool?.grades.find((grade) => grade.gradeSlug === gradeSlug) ??
       null,
-    [gradeSlug, selectedSchool]
+    [gradeSlug, selectedSchool],
   );
   const isCustomSchoolPack =
     !standardSelection && effectiveInitialPackType === "custom-school";
   const isFullSchoolPack =
     !standardSelection && effectiveInitialPackType === "full-school";
+  const isMultiSchoolPack =
+    !standardSelection && effectiveInitialPackType === "multi-school";
+  const siblingGradeLabels = effectiveSiblingGrades
+    .split(",")
+    .map((grade) => grade.trim())
+    .filter(Boolean);
   const selectedPackTitle = standardSelection
     ? standardSelection.pack.title
-    : `${selectedGrade?.grade ?? "Selected"} stationery pack`;
+    : isMultiSchoolPack
+      ? `${effectiveSiblingPackCount || siblingGradeLabels.length || 2} ${selectedSchool?.name ?? "school"} stationery packs`
+      : `${selectedGrade?.grade ?? "Selected"} stationery pack`;
   const selectedPackPrice =
+    (isMultiSchoolPack
+      ? parseEstimatedTotal(effectiveInitialEstimatedTotal)
+      : undefined) ??
     standardSelection?.estimatedTotal ??
     (isCustomSchoolPack
       ? parseEstimatedTotal(effectiveInitialEstimatedTotal)
@@ -149,12 +162,18 @@ export function OrderForm({
     ? standardSelection.customItems
       ? standardSelection.customItems.split("; ").filter(Boolean)
       : standardSelection.pack.items.map(
-          (item) => `${item.quantity} x ${item.name}`
+          (item) => `${item.quantity} x ${item.name}`,
         )
-    : isCustomSchoolPack && effectiveInitialCustomItems
+    : isMultiSchoolPack && effectiveInitialCustomItems
       ? effectiveInitialCustomItems.split("; ").filter(Boolean)
-      : (selectedGrade?.contents ?? []);
-  const itemCount = selectedPackItems.length;
+      : isCustomSchoolPack && effectiveInitialCustomItems
+        ? effectiveInitialCustomItems.split("; ").filter(Boolean)
+        : (selectedGrade?.contents ?? []);
+  const itemCount = isMultiSchoolPack
+    ? effectiveSiblingPackCount ||
+      siblingGradeLabels.length ||
+      selectedPackItems.length
+    : selectedPackItems.length;
   const estimatedTotal =
     typeof selectedPackPrice === "number"
       ? selectedPackPrice + (hasPexcover ? PEXCOVER_PRICE : 0)
@@ -164,17 +183,24 @@ export function OrderForm({
     : selectedSchool?.name;
   const gradeName = standardSelection
     ? standardSelection.pack.grade
-    : selectedGrade?.grade;
+    : isMultiSchoolPack
+      ? siblingGradeLabels.join(", ")
+      : selectedGrade?.grade;
   const packKind = standardSelection
     ? standardSelection.mode === "custom"
       ? "Custom pack"
       : "Full pack"
-    : isCustomSchoolPack
-      ? "Custom pack"
-      : "Full pack";
-  const reviewReady = Boolean(standardSelection || (selectedSchool && selectedGrade));
+    : isMultiSchoolPack
+      ? "Sibling pack order"
+      : isCustomSchoolPack
+        ? "Custom pack"
+        : "Full pack";
+  const reviewReady = Boolean(
+    standardSelection ||
+    (selectedSchool && (isMultiSchoolPack || selectedGrade)),
+  );
   const supportHref = buildWhatsAppHref(
-    `Hi Pexpacks, I need help with checkout${orderReference ? ` ${orderReference}` : ""}.`
+    `Hi Pexpacks, I need help with checkout${orderReference ? ` ${orderReference}` : ""}.`,
   );
   const submitError = submitStatus !== null && !submitStatus.success;
 
@@ -191,7 +217,7 @@ export function OrderForm({
 
     if (!draft) {
       setDraftStatus(
-        "Your saved custom pack could not be restored. Please confirm the pack details before submitting."
+        "Your saved custom pack could not be restored. Please confirm the pack details before submitting.",
       );
       return;
     }
@@ -199,6 +225,17 @@ export function OrderForm({
     setOrderDraft(draft);
     setDraftStatus("");
   }, [initialDraftId]);
+
+  useEffect(() => {
+    if (!orderDraft) {
+      return;
+    }
+
+    if (orderDraft.pexcoverRequested) {
+      setHasPexcover(true);
+      setPexcoverName(orderDraft.pexcoverName ?? "");
+    }
+  }, [orderDraft]);
 
   useEffect(() => {
     if (standardSelection || !effectiveInitialSchool) {
@@ -213,7 +250,7 @@ export function OrderForm({
         setSelectedSchool(school);
         setSchoolQuery(school.name);
         setGradeSlug(
-          effectiveInitialGrade || school.grades[0]?.gradeSlug || ""
+          effectiveInitialGrade || school.grades[0]?.gradeSlug || "",
         );
       })
       .catch(() => {
@@ -253,7 +290,7 @@ export function OrderForm({
       {
         threshold: 0,
         rootMargin: "0px",
-      }
+      },
     );
 
     observer.observe(footer);
@@ -281,7 +318,7 @@ export function OrderForm({
         });
         const response = await fetch(
           `/api/schools/search?${params.toString()}`,
-          { signal: controller.signal }
+          { signal: controller.signal },
         );
 
         if (!response.ok) {
@@ -297,7 +334,7 @@ export function OrderForm({
         if (!controller.signal.aborted) {
           setSchoolResults([]);
           setSchoolError(
-            "We could not search schools right now. Please try again."
+            "We could not search schools right now. Please try again.",
           );
         }
       } finally {
@@ -377,7 +414,8 @@ export function OrderForm({
     }
 
     if (stepId === "fulfilment" && fulfilmentOption === "Home delivery") {
-      if (!address.trim()) nextErrors.address = "Please enter the delivery address.";
+      if (!address.trim())
+        nextErrors.address = "Please enter the delivery address.";
       if (!suburb.trim()) nextErrors.suburb = "Please enter the suburb.";
       if (!city.trim()) nextErrors.city = "Please enter the city.";
       if (!province.trim()) nextErrors.province = "Please enter the province.";
@@ -416,7 +454,10 @@ export function OrderForm({
       return;
     }
 
-    if (!standardSelection && (!selectedSchool || !selectedGrade)) {
+    if (
+      !standardSelection &&
+      (!selectedSchool || (!selectedGrade && !isMultiSchoolPack))
+    ) {
       setSubmitStatus({
         success: false,
         message:
@@ -430,11 +471,13 @@ export function OrderForm({
 
     const packType = standardSelection
       ? `${standardSelection.mode === "custom" ? "Customised" : "Standard"} ${standardSelection.pack.title}`
-      : isCustomSchoolPack
-        ? `Custom ${selectedGrade?.grade} stationery pack`
-        : isFullSchoolPack
-          ? `Full ${selectedGrade?.grade} stationery pack`
-          : `${selectedGrade?.grade} stationery pack`;
+      : isMultiSchoolPack
+        ? `Sibling pack order: ${siblingGradeLabels.join(", ")}`
+        : isCustomSchoolPack
+          ? `Custom ${selectedGrade?.grade} stationery pack`
+          : isFullSchoolPack
+            ? `Full ${selectedGrade?.grade} stationery pack`
+            : `${selectedGrade?.grade} stationery pack`;
     const submittedOrderReference = orderReference || createOrderReference();
 
     if (!orderReference) {
@@ -459,7 +502,7 @@ export function OrderForm({
     const payload = {
       formType: isCustomSchoolPack
         ? "custom-pack-enquiry"
-        : isFullSchoolPack
+        : isFullSchoolPack || isMultiSchoolPack
           ? "full-pack-enquiry"
           : "school-pack-enquiry",
       fullName: buyerName,
@@ -472,9 +515,15 @@ export function OrderForm({
         : (selectedSchool?.name ?? ""),
       grade: standardSelection
         ? standardSelection.pack.grade
-        : (selectedGrade?.grade ?? ""),
+        : isMultiSchoolPack
+          ? siblingGradeLabels.join(", ")
+          : (selectedGrade?.grade ?? ""),
       packType,
-      packId: standardSelection ? standardSelection.pack.id : selectedGrade?.id,
+      packId: standardSelection
+        ? standardSelection.pack.id
+        : isMultiSchoolPack
+          ? "multi-school"
+          : selectedGrade?.id,
       packName: selectedPackTitle,
       selectedItems: selectedPackItems.join("; "),
       removedItems: effectiveInitialRemovedItems,
@@ -554,7 +603,10 @@ export function OrderForm({
             activeStep={activeStep}
           />
 
-          <article className={styles.stepCard} aria-labelledby="checkout-step-title">
+          <article
+            className={styles.stepCard}
+            aria-labelledby="checkout-step-title"
+          >
             <div className={styles.stepIntro}>
               <p className={styles.stepEyebrow}>
                 Step {activeStep + 1} of {checkoutSteps.length}
@@ -602,6 +654,16 @@ export function OrderForm({
                 draftStatus={draftStatus}
                 clearFieldError={clearFieldError}
                 selectSchool={selectSchool}
+                selectionLockedLabel={
+                  isMultiSchoolPack
+                    ? `Sibling order for ${siblingGradeLabels.join(", ")}`
+                    : undefined
+                }
+                customiseHref={
+                  isMultiSchoolPack && selectedSchool
+                    ? `/schools/${selectedSchool.slug}`
+                    : undefined
+                }
               />
             ) : null}
 

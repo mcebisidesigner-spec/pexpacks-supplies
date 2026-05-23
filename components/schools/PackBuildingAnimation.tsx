@@ -38,24 +38,27 @@ export function PackBuildingAnimation({
     return () => clearTimeout(timer);
   }, []);
 
-  if (isBuilding) {
-    return (
-      <div className={styles.animationWrapper} aria-live="polite">
-        <div className={styles.boxContainer} aria-hidden="true">
-          <div className={`${styles.item} ${styles.item1}`}></div>
-          <div className={`${styles.item} ${styles.item2}`}></div>
-          <div className={`${styles.item} ${styles.item3}`}></div>
-          <div className={styles.box}>
-            <div className={styles.boxFront}>
-              <span className={styles.boxLabel}>Pexpacks</span>
+  return (
+    <>
+      {isBuilding ? (
+        <div className={styles.animationWrapper} aria-live="polite">
+          <div className={styles.boxContainer} aria-hidden="true">
+            <div className={`${styles.item} ${styles.item1}`}></div>
+            <div className={`${styles.item} ${styles.item2}`}></div>
+            <div className={`${styles.item} ${styles.item3}`}></div>
+            <div className={styles.box}>
+              <div className={styles.boxFront}>
+                <span className={styles.boxLabel}>Pexpacks</span>
+              </div>
             </div>
           </div>
+          <h2 className={styles.title}>Building your pack...</h2>
+          <p className={styles.subtitle}>Matching items for {schoolName}</p>
         </div>
-        <h2 className={styles.title}>Building your pack...</h2>
-        <p className={styles.subtitle}>Matching items for {schoolName}</p>
+      ) : null}
+      <div className={isBuilding ? styles.contentWhileBuilding : styles.fadeIn}>
+        {children}
       </div>
-    );
-  }
-
-  return <div className={styles.fadeIn}>{children}</div>;
+    </>
+  );
 }

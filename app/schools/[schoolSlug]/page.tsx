@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
 import { MultiLearnerBanner } from "@/components/schools/MultiLearnerBanner";
+import { SiblingQuickAdd } from "@/components/schools/SiblingQuickAdd";
 import { SchoolReferralPrompt } from "@/components/schools/SchoolReferralPrompt";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
@@ -33,14 +34,14 @@ export async function generateMetadata({
     return buildMetadata(
       "School Not Found",
       "The requested school pack could not be found.",
-      "/schools"
+      "/schools",
     );
   }
 
   return buildMetadata(
     `${school.name} School Stationery Packs`,
     `View ready-to-use stationery packs for ${school.name}, prepared by grade and matched to school stationery requirements.`,
-    `/schools/${school.slug}`
+    `/schools/${school.slug}`,
   );
 }
 
@@ -72,10 +73,10 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         <div className={pageStyles.sectionInner}>
           {school.grades.length > 1 ? <MultiLearnerBanner /> : null}
           <GradeSelector school={school} />
+          <SiblingQuickAdd school={school} />
         </div>
       </section>
       <SchoolReferralPrompt school={school} />
     </>
   );
 }
-

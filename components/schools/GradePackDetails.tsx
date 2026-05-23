@@ -3,6 +3,8 @@
 import type { GradePack, School } from "@/data/schools";
 import { GradePackActions } from "@/components/packs/GradePackActions";
 import { ShareButtons } from "@/components/shared/ShareButtons";
+import { ChecklistExitCapture } from "@/components/schools/ChecklistExitCapture";
+import { PexcoverGradeUpsell } from "@/components/schools/PexcoverGradeUpsell";
 import { StickyOrderBar } from "@/components/schools/StickyOrderBar";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
@@ -12,6 +14,22 @@ type GradePackDetailsProps = {
   school: School;
   grade: GradePack;
 };
+
+function teacherPreferredBadge(item: string) {
+  if (
+    /(bostik|pritt|staedtler|faber|pilot|bic|crayola|carlton|marlin|croxley)/i.test(
+      item,
+    )
+  ) {
+    return "Teacher-preferred brand";
+  }
+
+  if (/(calculator|scissor|geometry|dictionary|atlas)/i.test(item)) {
+    return "Reusable item";
+  }
+
+  return "";
+}
 
 export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
   const pack = createSchoolGradePack(school, grade);
@@ -35,7 +53,9 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
             <polyline points="22 4 12 14.01 9 11.01" />
           </svg>
-          <span>Verified against {school.name}&apos;s official stationery list</span>
+          <span>
+            Verified against {school.name}&apos;s official stationery list
+          </span>
         </div>
 
         <p className={styles.kicker}>
@@ -69,6 +89,8 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
           <GradePackActions pack={pack} layout="detail" />
         </div>
 
+        <PexcoverGradeUpsell school={school} grade={grade} />
+
         {/* Strategy 4.2: Share buttons */}
         <ShareButtons
           text={`Check out the ${grade.grade} stationery pack for ${school.name} on Pexpacks!`}
@@ -85,9 +107,18 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
         <h2>What&apos;s Included</h2>
         {grade.contents.length ? (
           <ul>
-            {grade.contents.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
+            {grade.contents.map((item) => {
+              const badge = teacherPreferredBadge(item);
+
+              return (
+                <li key={item}>
+                  <span>{item}</span>
+                  {badge ? (
+                    <span className={styles.itemBadge}>{badge}</span>
+                  ) : null}
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <p>
@@ -95,6 +126,7 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
             confirm the list with you.
           </p>
         )}
+        <ChecklistExitCapture school={school} grade={grade} />
       </div>
       <StickyOrderBar
         schoolName={school.name}

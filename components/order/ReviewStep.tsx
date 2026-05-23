@@ -44,6 +44,8 @@ type ReviewStepProps = {
   draftStatus: string;
   clearFieldError: (field: string) => void;
   selectSchool: (result: SchoolSearchResult) => Promise<void>;
+  selectionLockedLabel?: string;
+  customiseHref?: string;
 };
 
 export function ReviewStep({
@@ -82,10 +84,20 @@ export function ReviewStep({
   draftStatus,
   clearFieldError,
   selectSchool,
+  selectionLockedLabel,
+  customiseHref,
 }: ReviewStepProps) {
   return (
     <div className={styles.reviewGrid}>
-      {!standardSelection ? (
+      {selectionLockedLabel ? (
+        <div className={styles.selectionCard}>
+          <div>
+            <p className={styles.confirmKicker}>School and grades</p>
+            <h3>{schoolName ?? "Selected school"}</h3>
+            <p>{selectionLockedLabel}</p>
+          </div>
+        </div>
+      ) : !standardSelection ? (
         <div className={styles.selectionCard}>
           <div className={styles.fieldGroup}>
             <label htmlFor="order-school-search">School name</label>
@@ -169,9 +181,7 @@ export function ReviewStep({
 
           <div className={styles.fieldGroup}>
             <label htmlFor="order-grade-select">Grade</label>
-            <p id="grade-helper">
-              Choose the grade pack you want to order.
-            </p>
+            <p id="grade-helper">Choose the grade pack you want to order.</p>
             <select
               id="order-grade-select"
               name="orderGrade"
@@ -217,7 +227,9 @@ export function ReviewStep({
         <div className={styles.packFacts}>
           <span>{packKind}</span>
           <span>
-            {itemCount ? `${itemCount} selected items` : "Items confirm after selection"}
+            {itemCount
+              ? `${itemCount} selected items`
+              : "Items confirm after selection"}
           </span>
           <span>
             {typeof estimatedTotal === "number"
@@ -243,7 +255,12 @@ export function ReviewStep({
         ) : null}
         <Link
           className={styles.inlineAction}
-          href={selectedSchool ? `/schools/${selectedSchool.slug}/${gradeSlug}#grade-actions` : "/schools"}
+          href={
+            customiseHref ??
+            (selectedSchool
+              ? `/schools/${selectedSchool.slug}/${gradeSlug}#grade-actions`
+              : "/schools")
+          }
         >
           Customise pack
         </Link>
@@ -258,8 +275,8 @@ export function ReviewStep({
           <p className={styles.confirmKicker}>Optional add-on</p>
           <h3>Pexcover book covering</h3>
           <p>
-            Add covered and labelled exercise books to help the pack
-            arrive ready for the first school day.{" "}
+            Add covered and labelled exercise books to help the pack arrive
+            ready for the first school day.{" "}
             <Link
               href="/blog/what-is-pexcover-book-covering"
               className={styles.inlineAction}
@@ -268,8 +285,16 @@ export function ReviewStep({
               Read more
             </Link>
           </p>
-          <p style={{ margin: "6px 0 0 0", fontSize: "12px", color: "var(--pex-text-muted)", lineHeight: 1.45 }}>
-            Pexcover applies to exercise books included in the selected school pack.
+          <p
+            style={{
+              margin: "6px 0 0 0",
+              fontSize: "12px",
+              color: "var(--pex-text-muted)",
+              lineHeight: 1.45,
+            }}
+          >
+            Pexcover applies to exercise books included in the selected school
+            pack.
           </p>
         </div>
         <label className={styles.addonCheckbox}>
@@ -283,16 +308,12 @@ export function ReviewStep({
         {hasPexcover ? (
           <div className={styles.formGrid}>
             <div className={styles.fieldGroup}>
-              <label htmlFor="pexcover-name">
-                Learner name for labels
-              </label>
+              <label htmlFor="pexcover-name">Learner name for labels</label>
               <input
                 id="pexcover-name"
                 value={pexcoverName}
                 placeholder="Optional"
-                onChange={(event) =>
-                  setPexcoverName(event.target.value)
-                }
+                onChange={(event) => setPexcoverName(event.target.value)}
               />
             </div>
             <div className={styles.fieldGroup}>
@@ -300,9 +321,7 @@ export function ReviewStep({
               <select
                 id="pexcover-format"
                 value={pexcoverLabelFormat}
-                onChange={(event) =>
-                  setPexcoverLabelFormat(event.target.value)
-                }
+                onChange={(event) => setPexcoverLabelFormat(event.target.value)}
               >
                 <option>First Name + Surname</option>
                 <option>First Name + Initial</option>
@@ -310,16 +329,12 @@ export function ReviewStep({
               </select>
             </div>
             <div className={styles.fieldGroup}>
-              <label htmlFor="pexcover-subjects">
-                Subject names optional
-              </label>
+              <label htmlFor="pexcover-subjects">Subject names optional</label>
               <input
                 id="pexcover-subjects"
                 value={pexcoverSubjects}
                 placeholder="English, Maths, Life Skills"
-                onChange={(event) =>
-                  setPexcoverSubjects(event.target.value)
-                }
+                onChange={(event) => setPexcoverSubjects(event.target.value)}
               />
             </div>
             <div className={styles.fieldGroup}>
@@ -328,9 +343,7 @@ export function ReviewStep({
                 id="pexcover-notes"
                 value={pexcoverNotes}
                 placeholder="Any covering instructions?"
-                onChange={(event) =>
-                  setPexcoverNotes(event.target.value)
-                }
+                onChange={(event) => setPexcoverNotes(event.target.value)}
               />
             </div>
           </div>

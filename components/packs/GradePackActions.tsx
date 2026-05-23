@@ -27,6 +27,7 @@ type GradePackActionsProps = {
   showDownloadLink?: boolean;
   showMicrocopy?: boolean;
   layout?: "compact" | "detail";
+  downloadLabel?: string;
 };
 
 export function buildFullPackHref(pack: GradePackForCustomisation) {
@@ -55,6 +56,7 @@ export function GradePackActions({
   showDownloadLink = true,
   showMicrocopy = true,
   layout = "compact",
+  downloadLabel = "View official teacher list (PDF)",
 }: GradePackActionsProps) {
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -67,15 +69,15 @@ export function GradePackActions({
   // Only recalculate when the serialised item list actually changes.
   const itemsKey = useMemo(
     () => pack.items.map((i) => `${i.id}:${i.requiredQuantity}`).join(","),
-    [pack.items]
+    [pack.items],
   );
 
   const [selection, setSelection] = useState<PackSelectionItem[]>(() =>
-    createCustomPackSelection(pack.items)
+    createCustomPackSelection(pack.items),
   );
 
   const selectedItems = selection.filter(
-    (item) => item.selected && item.selectedQuantity > 0
+    (item) => item.selected && item.selectedQuantity > 0,
   );
   const total = useMemo(() => calculatePackTotal(selection) ?? 0, [selection]);
   const displayedTotal = total > 0 ? formatCurrency(total) : "R 0";
@@ -122,8 +124,8 @@ export function GradePackActions({
                 ? item.selectedQuantity || item.requiredQuantity
                 : 0,
             }
-          : item
-      )
+          : item,
+      ),
     );
   }
 
@@ -136,8 +138,8 @@ export function GradePackActions({
               selected: quantity > 0,
               selectedQuantity: Math.max(0, quantity),
             }
-          : item
-      )
+          : item,
+      ),
     );
   }
 
@@ -338,14 +340,17 @@ export function GradePackActions({
                 items: pdfItems,
                 estimatedPrice: formatCurrency(
                   pack.items.reduce(
-                    (sum, item) => sum + (item.unitPrice ?? 0) * item.requiredQuantity,
-                    0
-                  )
+                    (sum, item) =>
+                      sum + (item.unitPrice ?? 0) * item.requiredQuantity,
+                    0,
+                  ),
                 ),
                 fileName: `${pack.schoolSlug}-${pack.gradeSlug}`,
               }}
               className={styles.downloadLink}
-            />
+            >
+              {downloadLabel}
+            </DownloadListLink>
           </div>
         ) : null}
 
@@ -389,13 +394,16 @@ export function GradePackActions({
             items: pdfItems,
             estimatedPrice: formatCurrency(
               pack.items.reduce(
-                (sum, item) => sum + (item.unitPrice ?? 0) * item.requiredQuantity,
-                0
-              )
+                (sum, item) =>
+                  sum + (item.unitPrice ?? 0) * item.requiredQuantity,
+                0,
+              ),
             ),
             fileName: `${pack.schoolSlug}-${pack.gradeSlug}`,
           }}
-        />
+        >
+          {downloadLabel}
+        </DownloadListLink>
       ) : null}
 
       {isMounted && drawerContent
