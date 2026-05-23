@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import styles from "./FaqAccordion.module.css";
 import { FAQ } from "@/data/faqs";
@@ -63,7 +64,21 @@ export function FaqAccordion({
                 className={styles.accordionContent}
                 hidden={!isOpen}
               >
-                <div className={styles.answerInner}>{faq.answer}</div>
+                <div className={styles.answerInner}>
+                  <p>{faq.answer}</p>
+                  {faq.links?.length ? (
+                    <div
+                      className={styles.relatedLinks}
+                      aria-label="Related FAQ links"
+                    >
+                      {faq.links.map((link) => (
+                        <Link href={link.href} key={link.href}>
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           );

@@ -181,6 +181,38 @@
   margin: 0;
 }
 
+.faqLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.faqLinks a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border: 1px solid rgba(33, 158, 154, 0.2);
+  border-radius: var(--radius-pill);
+  padding: 7px 12px;
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-primary);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition:
+    background var(--motion-duration) var(--motion-ease),
+    border-color var(--motion-duration) var(--motion-ease),
+    color var(--motion-duration) var(--motion-ease);
+}
+
+.faqLinks a:hover,
+.faqLinks a:focus-visible {
+  border-color: var(--pex-keppel);
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+}
+
 @media (max-width: 860px) {
   .pageHero {
     padding: 54px 0 40px;

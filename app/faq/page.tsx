@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { faqs } from "@/data/faqs";
 import { PageHero } from "@/components/marketing/PageHero";
@@ -30,6 +31,15 @@ export default function FAQPage() {
               <p className={page.kicker}>Question</p>
               <h2>{faq.question}</h2>
               <p>{faq.answer}</p>
+              {faq.links?.length ? (
+                <div className={page.faqLinks} aria-label="Related FAQ links">
+                  {faq.links.map((link) => (
+                    <Link href={link.href} key={link.href}>
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
             </article>
           ))}
         </div>
