@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { faqs } from "@/data/faqs";
+import { FAQExperience } from "@/components/marketing/FAQExperience";
 import { PageHero } from "@/components/marketing/PageHero";
+import { CTASection } from "@/components/marketing/CTASection";
 import { buildMetadata } from "@/lib/seo";
 import { faqPageSchema } from "@/lib/schema";
-import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Frequently Asked Questions",
@@ -20,32 +20,22 @@ export default function FAQPage() {
     <>
       <JsonLd data={faqPageSchema(faqs)} />
       <PageHero
-          eyebrow="Pex your questions"
-        title="Frequently asked questions"
-        text="Common questions about school lists, delivery, payment and partnerships."
-        panelTitle="Support"
-        panelText="Need more help? Use our contact page."
+        eyebrow="Pex answers"
+        title="Answers without the back-and-forth"
+        text="Search school packs, orders, delivery, payment, office supplies and partnership questions in one simple help hub."
+        panelTitle={`${faqs.length} practical answers`}
+        panelText="Start with a category, open what matters, and jump straight to the next action."
       />
-      <section className={page.section}>
-        <div className={`${page.sectionInner} ${page.faqList}`}>
-          {faqs.map((faq) => (
-            <article className={page.faqItem} key={faq.id}>
-              <p className={page.kicker}>Question</p>
-              <h2>{faq.question}</h2>
-              <p>{faq.answer}</p>
-              {faq.links?.length ? (
-                <div className={page.faqLinks} aria-label="Related FAQ links">
-                  {faq.links.map((link) => (
-                    <Link href={link.href} key={link.href}>
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              ) : null}
-            </article>
-          ))}
-        </div>
-      </section>
+      <FAQExperience faqs={faqs} />
+      <CTASection
+        eyebrow="Still need help?"
+        title="Send the team the details."
+        text="Tell us the school, grade, order or office request and Pexpacks will help you choose the next step."
+        primaryHref="/contact"
+        primaryLabel="Contact Pexpacks"
+        secondaryHref="/schools"
+        secondaryLabel="Find a School Pack"
+      />
     </>
   );
 }
