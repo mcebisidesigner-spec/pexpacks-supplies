@@ -36,7 +36,7 @@ export function MobileStickyCta() {
 
   return (
     <div className={`${styles.stickyCta} ${show ? styles.visible : ""}`}>
-      <Button href="/schools" variant="primary" style={{ width: "100%" }}>
+      <Button href="/schools" variant="navy" style={{ width: "100%" }}>
         Find Your School Pack
       </Button>
     </div>
