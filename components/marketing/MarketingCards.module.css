@@ -525,6 +525,24 @@
   .benefitCard {
     padding: 22px;
   }
+
+  .packMedia {
+    min-height: 120px;
+  }
+
+  .packBody,
+  .packCardHead {
+    padding-inline: 18px;
+  }
+
+  .packFooter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .packFooter > * {
+    width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

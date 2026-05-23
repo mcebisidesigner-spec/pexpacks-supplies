@@ -461,6 +461,11 @@
     width: 100%;
   }
 
+  .splitBand,
+  .brandPackagePanel {
+    grid-template-columns: 1fr;
+  }
+
   .packageClaimLayout {
     grid-template-columns: 1fr;
   }
@@ -491,11 +496,26 @@
 
   .splitBand,
   .brandPackagePanel {
-    padding: 22px;
+    padding: 18px;
   }
 
   .brandPackagePanel::before {
     inset: 10px;
+  }
+
+  .splitBand h2,
+  .brandPackageCopy h2 {
+    font-size: clamp(28px, 12vw, 38px);
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .brandPackageCopy p:not(.sectionEyebrow) {
+    font-size: 15px;
+  }
+
+  .brandPackagePrice {
+    width: 100%;
   }
 
   .brandPackageItem summary {
