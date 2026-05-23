@@ -20,35 +20,41 @@ type PhaseClientProps = {
   phaseData: PhasePack;
 };
 
-const phaseFaqs: Record<string, { q: string; a: string }[]> = {
+const phaseFaqs: Record<string, { q: string; a: string; links?: { label: string; href: string }[] }[]> = {
   "foundation-phase": [
     {
       q: "Are art supplies included?",
       a: "Yes, our Baseline packs include standard art tools like jumbo crayons, scissors, and glue. You can also customise to add paints or other specific items.",
+      links: [{ label: "View Foundation Phase packs", href: "/foundation-phase" }],
     },
     {
       q: "Do the packs align with the CAPS curriculum?",
       a: "Yes, our Foundation Phase packs are designed around standard CAPS requirements for Grade R to 3.",
+      links: [{ label: "Find your school", href: "/schools" }],
     },
   ],
   "primary-school": [
     {
       q: "Can I swap the type of pens or pencils?",
       a: "Absolutely. When you click Customise this pack, you can swap items, change quantities, or remove things you already have.",
+      links: [{ label: "Start customising", href: "/order" }],
     },
     {
       q: "Do these packs have enough books for the year?",
       a: "The packs are designed as a solid starter for the year. Every school is different, so we recommend checking against your specific booklist and adjusting quantities if needed.",
+      links: [{ label: "Check your school list", href: "/schools" }],
     },
   ],
   "high-school": [
     {
       q: "Do these packs include a scientific calculator?",
       a: "Yes, our high school baseline packs include a standard scientific calculator. You can remove it during customisation if you already have one.",
+      links: [{ label: "View High School packs", href: "/high-school" }],
     },
     {
       q: "Can I add specific subject items like Accounting books?",
       a: "Yes, the customiser allows you to add specific books and items required for your chosen subjects.",
+      links: [{ label: "Customise your pack", href: "/high-school" }],
     },
   ],
 };
@@ -307,6 +313,14 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
                 <div key={faq.q} className={styles.faqItem}>
                   <h3>{faq.q}</h3>
                   <p>{faq.a}</p>
+                  {faq.links?.length ? (
+                    <div className={styles.faqLinks}>
+                      {faq.links.map((link) => (
+                        <a href={link.href} key={link.href}>{link.label}</a>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
                 </div>
               ))}
             </div>

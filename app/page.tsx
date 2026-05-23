@@ -98,14 +98,14 @@ export default function HomePage() {
             <p className={heroStyles.eyebrow}>Save time, Pex it.</p>
             <h1 className={heroStyles.heroTitle}>
               <span className={heroStyles.desktopHeroTitleText}>
-                Everything ready. Everything
+                Stationery, packed and ready
                 <br className={heroStyles.desktopBreak} />
-                packed
+                for school or office
               </span>
               <span className={heroStyles.mobileHeroTitleText}>
-                Everything ready
+                Stationery, packed
                 <br />
-                Everything packed
+                and ready for school or office
               </span>
             </h1>
             <p className={heroStyles.heroLead}>
@@ -156,14 +156,19 @@ No queues. No confusion. No missing items.
               <span className={homeStyles.guaranteeStat}>1 200+ school lists matched</span>
             </div>
           </div>
+          <p style={{ marginTop: "18px", textAlign: "center" }}>
+            <a href="#readiness-quiz-heading" style={{ color: "var(--pex-keppel)", fontWeight: 800, fontSize: "15px" }}>
+              Get your free back-to-school checklist &rarr;
+            </a>
+          </p>
         </div>
       </section>
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <SectionHeader
-            eyebrow="Top choices"
-            title="Most popular packs"
+            eyebrow="Best sellers"
+            title="Most popular grade packs"
             text="Explore our best-seller standard packs for every grade level."
             headingId="most-popular-packs"
           />
@@ -222,9 +227,9 @@ No queues. No confusion. No missing items.
         </div>
       </section>
 
-      <SavingsCalculator />
-
       <BackToSchoolQuiz />
+
+      <SavingsCalculator />
 
       <section
         className={sectionStyles.section}
@@ -232,8 +237,8 @@ No queues. No confusion. No missing items.
       >
         <div className={sectionStyles.inner}>
           <SectionHeader
-            eyebrow="Trusted by parents and schools"
-            title="How Pexpacks will feel"
+            eyebrow="Trusted by parents"
+            title="10,000+ parents have used Pexpacks"
             headingId="home-testimonials-heading"
           />
           <TestimonialMarquee items={testimonials} />
@@ -266,10 +271,68 @@ No queues. No confusion. No missing items.
         </div>
       </section>
 
+      <section className={sectionStyles.section} aria-labelledby="home-faq-heading">
+        <div className={sectionStyles.inner}>
+          <SectionHeader
+            eyebrow="Quick answers"
+            title="Common questions"
+            headingId="home-faq-heading"
+          />
+          <div className={sectionStyles.faqList}>
+            <details className={sectionStyles.faqItem}>
+              <summary>When will my pack arrive?</summary>
+              <p>
+                Orders placed before 30 September are delivered before school
+                opens in January. Delivery within 3-5 business days during peak
+                season.
+              </p>
+              <div className={sectionStyles.faqLinks}>
+                <a href="/delivery-policy">Delivery policy</a>
+                <a href="/track-order">Track an order</a>
+              </div>
+            </details>
+            <details className={sectionStyles.faqItem}>
+              <summary>Can I customise what's in the pack?</summary>
+              <p>
+                Yes. You can swap, add, or remove items from any standard pack
+                before checkout. If your school has a specific list, we can
+                match it exactly.
+              </p>
+              <div className={sectionStyles.faqLinks}>
+                <a href="/schools">Search your school</a>
+                <a href="/order">Start customising</a>
+              </div>
+            </details>
+            <details className={sectionStyles.faqItem}>
+              <summary>What if an item is wrong or missing?</summary>
+              <p>
+                We guarantee a 100% exact list match. If anything is incorrect,
+                we replace it at no cost within 48 hours.
+              </p>
+              <div className={sectionStyles.faqLinks}>
+                <a href="/contact">Contact us</a>
+                <a href="/returns-refunds-policy">Returns policy</a>
+              </div>
+            </details>
+            <details className={sectionStyles.faqItem}>
+              <summary>Is there a minimum order?</summary>
+              <p>
+                No minimum. Order a single pack for one learner or bulk for the
+                whole grade. Free delivery on orders over R500.
+              </p>
+              <div className={sectionStyles.faqLinks}>
+                <a href="/order">Place an order</a>
+                <a href="/office">Office packs</a>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
       <CTASection
         eyebrow="Ready to order"
-        title="Pexpacks gets stationery packed right."
-        text="Choose your school or office pack and let Pexpacks prepare your stationery for you."
+        title="Find your child's school pack in 30 seconds"
+        text="Search your school, pick the grade, and get the exact stationery pack delivered before school opens."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
         secondaryHref="/office"

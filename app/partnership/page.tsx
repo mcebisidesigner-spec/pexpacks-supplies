@@ -76,23 +76,28 @@ const launchSteps = [
 const faqItems = [
   {
     q: "Is the website and hosting package really 100% free?",
-    a: "Yes. There are absolutely zero setup costs, monthly maintenance fees, or hidden hosting charges. Pexpacks covers all development and operational costs out of our standard retail stationery margins. Your school will never receive an invoice from us."
+    a: "Yes. There are absolutely zero setup costs, monthly maintenance fees, or hidden hosting charges. Pexpacks covers all development and operational costs out of our standard retail stationery margins. Your school will never receive an invoice from us.",
+    links: [{ label: "Partnership terms", href: "/school-partnership-terms" }]
   },
   {
     q: "How does the 5% development-fund rebate work?",
-    a: "Every time a parent orders a grade stationery pack through your school's customized portal, 5% of the total pack cost is automatically earmarked for your school. We transfer these accumulated fundraising rebates directly to your school's development fund annually."
+    a: "Every time a parent orders a grade stationery pack through your school's customized portal, 5% of the total pack cost is automatically earmarked for your school. We transfer these accumulated fundraising rebates directly to your school's development fund annually.",
+    links: [{ label: "Talk to our team", href: "/contact" }]
   },
   {
     q: "Who handles parent inquiries, payments, and order issues?",
-    a: "Pexpacks handles 100% of the customer support workload. Parents can pay securely via credit card, instant EFT, or WhatsApp, and track their orders directly with us. We handle package assembly, delivery, and any refunds or returns, meaning zero support load for school staff."
+    a: "Pexpacks handles 100% of the customer support workload. Parents can pay securely via credit card, instant EFT, or WhatsApp, and track their orders directly with us. We handle package assembly, delivery, and any refunds or returns, meaning zero support load for school staff.",
+    links: [{ label: "Track an order", href: "/track-order" }, { label: "Contact us", href: "/contact" }]
   },
   {
     q: "Does this require complex IT setup or school admin workload?",
-    a: "None at all. Our team does the heavy lifting. All you need to do is share your approved grade stationery lists. We will handle custom styling, domain connection (e.g., yourschool.co.za), product catalog upload, and deploy the entire system in days."
+    a: "None at all. Our team does the heavy lifting. All you need to do is share your approved grade stationery lists. We will handle custom styling, domain connection (e.g., yourschool.co.za), product catalog upload, and deploy the entire system in days.",
+    links: [{ label: "Start your enquiry", href: "/contact" }]
   },
   {
     q: "Are the parents' personal information and transactions secure?",
-    a: "Security is our highest priority. The custom school portal is fully hosted with premium SSL encryption, and all checkout transactions are processed through 256-bit encrypted secure payment gateways. Our data handling is strictly POPIA and GDPR compliant."
+    a: "Security is our highest priority. The custom school portal is fully hosted with premium SSL encryption, and all checkout transactions are processed through 256-bit encrypted secure payment gateways. Our data handling is strictly POPIA and GDPR compliant.",
+    links: [{ label: "Privacy policy", href: "/privacy-policy" }]
   }
 ];
 
@@ -265,6 +270,13 @@ export default function PartnerWithSchoolsPage() {
                 </summary>
                 <div className={pageStyles.faqAnswer}>
                   <p>{item.a}</p>
+                  {item.links?.length ? (
+                    <div className={pageStyles.faqLinks}>
+                      {item.links.map((link: { label: string; href: string }) => (
+                        <a href={link.href} key={link.href}>{link.label}</a>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               </details>
             ))}
