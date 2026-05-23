@@ -33,9 +33,6 @@ export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {
       }
     >
       {children}
-      <p className={styles.urgencyNote}>
-        Order by 30 september for delivery before school opens
-      </p>
       <div className={styles.heroActions}>
         <Button href="/foundation-phase" variant="secondary" size="md">
           Browse Packs by Grade &rarr;

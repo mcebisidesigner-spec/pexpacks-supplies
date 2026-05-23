@@ -430,18 +430,6 @@
   line-height: 1.45;
 }
 
-.urgencyNote {
-  margin: -14px 0 28px;
-  color: var(--pex-text-muted);
-  font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.urgencyNote strong {
-  color: var(--pex-primary);
-}
-
 .trendingPills {
   max-width: var(--layout-max-width);
   margin: 24px auto 0;

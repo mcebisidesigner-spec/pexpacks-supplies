@@ -1,11 +1,3 @@
-.urgencyNote {
-  margin: 8px 0 0;
-  color: var(--pex-text-muted);
-  font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-}
-
 .heroActions {
   margin-top: 16px;
   display: flex;
