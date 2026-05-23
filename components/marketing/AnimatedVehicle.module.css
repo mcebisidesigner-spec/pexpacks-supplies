@@ -28,20 +28,12 @@
 }
 
 .cargo {
+  opacity: var(--cargo-opacity);
+  transform: translateY(var(--cargo-y)) scale(var(--cargo-scale));
   transform-origin: 48px 28px;
   transition:
     opacity 0.24s ease,
     transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.cargoLoose {
-  opacity: 0.36;
-  transform: translateY(7px) scale(0.9);
-}
-
-.cargoPacked {
-  opacity: 1;
-  transform: translateY(0) scale(1);
 }
 
 .speedLines {

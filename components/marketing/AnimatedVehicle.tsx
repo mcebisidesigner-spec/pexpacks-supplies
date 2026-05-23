@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import styles from "./AnimatedVehicle.module.css";
 
 type AnimatedVehicleProps = {
@@ -7,7 +8,12 @@ type AnimatedVehicleProps = {
 };
 
 export function AnimatedVehicle({ position }: AnimatedVehicleProps) {
-  const isPacked = position >= 50;
+  const cargoProgress = Math.min(1, Math.max(0, position / 50));
+  const cargoStyle = {
+    "--cargo-opacity": cargoProgress.toFixed(2),
+    "--cargo-y": `${Math.round((1 - cargoProgress) * 10)}px`,
+    "--cargo-scale": (0.82 + cargoProgress * 0.18).toFixed(2),
+  } as CSSProperties;
 
   return (
     <div className={styles.trackContainer} aria-hidden="true">
@@ -18,11 +24,7 @@ export function AnimatedVehicle({ position }: AnimatedVehicleProps) {
             viewBox="0 0 150 66"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g
-              className={`${styles.cargo} ${
-                isPacked ? styles.cargoPacked : styles.cargoLoose
-              }`}
-            >
+            <g className={styles.cargo} style={cargoStyle}>
               <rect
                 x="18"
                 y="8"
