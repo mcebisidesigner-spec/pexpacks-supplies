@@ -25,7 +25,7 @@ export default function SuccessStoriesPage() {
   return (
     <>
       <PageHero
-        eyebrow="Success Stories"
+        eyebrow="Pex your story"
         title="Trusted by schools across the country"
         text="See how Pexpacks helps principals and teachers streamline their back-to-school logistics so they can focus on what matters: teaching."
         panelTitle="Ready to simplify your school's stationery?"

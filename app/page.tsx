@@ -1,10 +1,8 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
-import { UnboxingAccordion } from "@/components/marketing/UnboxingAccordion";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { BackToSchoolQuiz } from "@/components/marketing/BackToSchoolQuiz";
-import { BookCoveringBanner } from "@/components/schools/BookCoveringBanner";
 import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { SavingsCalculator } from "@/components/marketing/SavingsCalculator";
@@ -161,8 +159,6 @@ No queues. No confusion. No missing items.
         </div>
       </section>
 
-      <OrderingWorksSection />
-
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <SectionHeader
@@ -230,10 +226,6 @@ No queues. No confusion. No missing items.
 
       <BackToSchoolQuiz />
 
-      <UnboxingAccordion />
-
-      <BookCoveringBanner />
-
       <section
         className={sectionStyles.section}
         aria-labelledby="home-testimonials-heading"
@@ -247,6 +239,8 @@ No queues. No confusion. No missing items.
           <TestimonialMarquee items={testimonials} />
         </div>
       </section>
+
+      <OrderingWorksSection />
 
       <section className={sectionStyles.sectionCream}>
         <div className={sectionStyles.inner}>
@@ -268,37 +262,6 @@ No queues. No confusion. No missing items.
                 </article>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
-            <div className={homeStyles.unboxingImageWrap}>
-              <Image
-                src="/images/office-packs.webp"
-                alt="Pexpacks premium office stationery packs"
-                fill
-                className={homeStyles.mediaImage}
-                sizes="(min-width: 1024px) 42vw, 100vw"
-              />
-            </div>
-            <div>
-              <p className={sectionStyles.sectionEyebrow}>Office and SME solutions</p>
-              <h2>Office stationery, packed for work.</h2>
-              <p>
-                Keep your business stocked with curated office stationery packs.
-                We handle the supplies so your team can focus on the work.
-              </p>
-              <div
-                className={[sectionStyles.buttonRow, sectionStyles.splitActions].join(" ")}
-              >
-                <Button href="/office" variant="primary">
-                  View Office Packs
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
       </section>

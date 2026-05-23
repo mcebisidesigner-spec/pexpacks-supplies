@@ -18,7 +18,7 @@ const stats = [
 export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {
   return (
     <PageHero
-      eyebrow="Start school ready"
+      eyebrow="Pex your pack"
       title="Find your pack in 30 seconds"
       text="Search your child's school, choose the grade, and get the correct stationery pack delivered before school opens."
       panelChildren={
