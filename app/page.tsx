@@ -12,7 +12,7 @@ import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
-import { CountdownTimer } from "@/components/shared/CountdownTimer";
+
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -109,11 +109,11 @@ export default function HomePage() {
             </p>
             <HeroSearch />
             <p className={heroStyles.urgencyBar}>
-              <CountdownTimer targetDate={new Date("2026-09-30T23:59:59")} />
-            </p>
-            <p className={heroStyles.gradeBrowse}>
-              Don&apos;t know your school?{" "}
-              <a href="/foundation-phase">Browse packs by grade &rarr;</a>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Order by 30 September for delivery before school starts in 2027
             </p>
           </div>
 

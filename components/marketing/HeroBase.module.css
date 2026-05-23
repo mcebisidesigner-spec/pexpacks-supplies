@@ -210,25 +210,6 @@
   flex-shrink: 0;
 }
 
-.gradeBrowse {
-  margin: 14px 0 0;
-  font-size: 14px;
-  color: var(--pex-text-muted);
-  font-weight: 600;
-}
-
-.gradeBrowse a {
-  color: var(--pex-keppel);
-  font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1.5px;
-  transition: opacity 0.2s;
-}
-
-.gradeBrowse a:hover {
-  opacity: 0.7;
-}
 
 @media (max-width: 1080px) {
   .heroInner,

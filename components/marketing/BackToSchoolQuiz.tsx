@@ -181,7 +181,7 @@ export function BackToSchoolQuiz() {
       <div className={styles.inner}>
         <div className={styles.copy}>
           <p className={styles.eyebrow}>30-second check</p>
-          <h2 id="readiness-quiz-heading">Are you fully prepared for Day 1?</h2>
+          <h2 id="readiness-quiz-heading">Are you prepared for Day 1?</h2>
           <span>
             Answer three quick questions and get a personalized checklist plus a
             5% first-pack discount code.
