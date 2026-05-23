@@ -100,9 +100,9 @@ export default function HomePage() {
             <p className={heroStyles.eyebrow}>Save time, Pex it.</p>
             <h1 className={heroStyles.heroTitle}>
               <span className={heroStyles.desktopHeroTitleText}>
-                Everything packed. Everything
+                Everything ready. Everything
                 <br className={heroStyles.desktopBreak} />
-                ready
+                packed
               </span>
               <span className={heroStyles.mobileHeroTitleText}>
                 Everything ready
