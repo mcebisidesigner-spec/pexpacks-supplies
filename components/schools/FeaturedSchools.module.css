@@ -78,19 +78,16 @@
   font-weight: 800;
 }
 
-.featuredMeta {
-  color: var(--pex-keppel);
-  font-size: 13px;
-  font-weight: 800;
+.featuredLogo {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  object-fit: contain;
+  background: var(--pex-bg);
 }
 
-.featuredPrice {
-  display: inline-block;
-  width: fit-content;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  background: var(--pex-navy);
-  color: var(--pex-bg);
+.featuredMeta {
+  color: var(--pex-keppel);
   font-size: 13px;
   font-weight: 800;
 }

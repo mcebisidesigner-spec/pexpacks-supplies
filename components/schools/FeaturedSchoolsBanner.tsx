@@ -84,9 +84,19 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
               key={school.id}
             >
               <div className={styles.featuredHeader}>
-                <span className={styles.featuredIcon}>
-                  {school.name.charAt(0)}
-                </span>
+                {school.image ? (
+                  <img
+                    src={school.image}
+                    alt={`${school.name} logo`}
+                    className={styles.featuredLogo}
+                    width={54}
+                    height={54}
+                  />
+                ) : (
+                  <span className={styles.featuredIcon}>
+                    {school.name.charAt(0)}
+                  </span>
+                )}
                 {school.isPartner && (
                   <span className={styles.partnerBadge}>
                     ★ Official Partner
@@ -96,11 +106,7 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
               <span className={styles.featuredMeta}>{school.region}</span>
               <h3>{school.name}</h3>
               <p>{gradeRangeLabel(school.grades)}</p>
-              {school.lowestPrice ? (
-                <span className={styles.featuredPrice}>From R{Math.round(school.lowestPrice / 100)}</span>
-              ) : (
-                <strong>Stationery packs available</strong>
-              )}
+              <strong>Stationery packs available</strong>
               <span className={styles.featuredCta}>View packs</span>
             </Link>
           ))}

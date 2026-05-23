@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="pp-title pp-desc">
+  <title id="pp-title">Parktown Primary School crest</title>
+  <desc id="pp-desc">Parktown Primary School coat of arms with PP initials, open book and torch</desc>
+  <rect width="160" height="160" rx="34" fill="#f0f4f0"/>
+  <path fill="#1a3a2a" d="M80 22 28 44v34c0 33 22 52 52 60 30-8 52-27 52-60V44L80 22Z"/>
+  <path fill="#f5f7f4" d="M80 38 44 54v24c0 24 14 39 36 46 22-7 36-22 36-46V54L80 38Z"/>
+  <path fill="#d4a12a" d="M65 72 80 62l15 10v8c0 10-6 17-15 21-9-4-15-11-15-21v-8z"/>
+  <path fill="#1a3a2a" d="M70 78h20v2H70zM70 84h16v2H70z"/>
+  <text x="80" y="110" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#1a3a2a">PP</text>
+</svg>

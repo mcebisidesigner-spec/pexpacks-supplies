@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="ap-title ap-desc">
+  <title id="ap-title">Auckland Park Primary School crest</title>
+  <desc id="ap-desc">Auckland Park Primary School coat of arms with AP initials and star emblem</desc>
+  <rect width="160" height="160" rx="34" fill="#f0f4fa"/>
+  <path fill="#1a2a4a" d="M80 22 28 44v34c0 33 22 52 52 60 30-8 52-27 52-60V44L80 22Z"/>
+  <path fill="#f5f7f4" d="M80 38 44 54v24c0 24 14 39 36 46 22-7 36-22 36-46V54L80 38Z"/>
+  <path fill="#c0a030" d="M80 56 84 66l10 2-8 7 2 10-8-5-8 5 2-10-8-7 10-2z"/>
+  <text x="80" y="115" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#1a2a4a">AP</text>
+</svg>
