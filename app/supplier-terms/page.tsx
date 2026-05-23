@@ -10,14 +10,17 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
-const effectiveDate = "18 May 2026";
+
 
 export const metadata: Metadata = buildMetadata(
   "Supplier Terms",
   "Read the Pexpacks supplier terms for onboarding, quality standards, delivery expectations, and invoicing.",
   "/supplier-terms"
 );
+
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/supplier-terms",
@@ -28,7 +31,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Commercial expectations for suppliers",
   heroText:
     "These terms outline the working standards Pexpacks expects from suppliers, service providers, and production partners who support fulfilment or brand delivery.",
-  heroPanelTitle: `Effective ${effectiveDate}`,
+  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
   heroPanelText: "Operational, quality, and invoicing expectations.",
   tocHeading: "Supplier contents",
   tocAriaLabel: "Supplier terms contents",

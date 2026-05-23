@@ -10,14 +10,17 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
-const effectiveDate = "18 May 2026";
+
 
 export const metadata: Metadata = buildMetadata(
   "Campaign Terms",
   "Read the Pexpacks campaign terms for promotions, discounts, qualifying schools, and offer limits.",
   "/campaign-terms"
 );
+
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/campaign-terms",
@@ -28,7 +31,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Rules for promotions and campaign offers",
   heroText:
     "These terms explain how limited-time campaigns, school promotions, launch offers, and discount mechanics are generally managed across the Pexpacks platform.",
-  heroPanelTitle: `Effective ${effectiveDate}`,
+  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
   heroPanelText: "Offer eligibility, limits, and fair-use conditions.",
   tocHeading: "Campaign contents",
   tocAriaLabel: "Campaign terms contents",

@@ -10,14 +10,17 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
-const effectiveDate = "18 May 2026";
+
 
 export const metadata: Metadata = buildMetadata(
   "Social Media Guidelines",
   "Read the Pexpacks social media guidelines for respectful engagement, moderation, and support boundaries.",
   "/social-media-guidelines"
 );
+
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/social-media-guidelines",
@@ -28,7 +31,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "How Pexpacks manages social engagement",
   heroText:
     "These guidelines explain how comments, messages, tags, mentions, and community engagement are moderated across Pexpacks social platforms.",
-  heroPanelTitle: `Effective ${effectiveDate}`,
+  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
   heroPanelText: "Respectful communication and clear moderation boundaries.",
   tocHeading: "Social contents",
   tocAriaLabel: "Social media guidelines contents",

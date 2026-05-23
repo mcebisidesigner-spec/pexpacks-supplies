@@ -2,7 +2,6 @@
 
 import type { CSSProperties, ChangeEvent } from "react";
 import { useState } from "react";
-import { AnimatedVehicle } from "./AnimatedVehicle";
 import styles from "./RetailComparisonSlider.module.css";
 
 const retailPoints = [
@@ -85,8 +84,6 @@ export function RetailComparisonSlider() {
           aria-label="Compare retail shopping with the Pexpacks experience"
         />
       </div>
-
-      <AnimatedVehicle position={position} />
 
       <div className={styles.caption}>
         <span>Retail stress</span>

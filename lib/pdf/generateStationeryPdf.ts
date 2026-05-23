@@ -1,6 +1,4 @@
-"use client";
-
-import { jsPDF } from "jspdf";
+import type { jsPDF } from "jspdf";
 
 // ── Brand colours ──
 const NAVY = "#1a2a40";
@@ -176,6 +174,7 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
     renderBrandedTitle(`${schoolName.toUpperCase()} STATIONERY LIST`),
   ]);
 
+  const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   let y = 18;
 

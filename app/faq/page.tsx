@@ -13,6 +13,8 @@ export const metadata: Metadata = buildMetadata(
   "/faq"
 );
 
+export const dynamic = "force-static";
+
 export default function FAQPage() {
   return (
     <>

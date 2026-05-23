@@ -37,9 +37,29 @@ export type SchoolIndexRecord = {
 };
 
 import schoolIndexData from "./school-index.json";
+import { z } from "zod";
 
-export const schoolIndex: SchoolIndexRecord[] =
-  schoolIndexData as SchoolIndexRecord[];
+const SchoolIndexGradeSchema = z.object({
+  id: z.string(),
+  grade: z.string(),
+  gradeSlug: z.string(),
+});
+
+const SchoolIndexRecordSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  slug: z.string(),
+  city: z.string(),
+  province: z.string(),
+  logo: z.string(),
+  isPartnerSchool: z.boolean(),
+  isFeatured: z.boolean().optional(),
+  lowestPrice: z.number().optional(),
+  grades: z.array(SchoolIndexGradeSchema),
+});
+
+const parsedIndex = z.array(SchoolIndexRecordSchema).parse(schoolIndexData);
+export const schoolIndex: SchoolIndexRecord[] = parsedIndex;
 
 export const getSchoolIndex = (): SchoolIndexRecord[] => schoolIndex;
 

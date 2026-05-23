@@ -10,6 +10,8 @@ export const metadata: Metadata = buildMetadata(
   "/track-order"
 );
 
+export const dynamic = "force-static";
+
 export default function TrackOrderPage() {
   return (
     <>

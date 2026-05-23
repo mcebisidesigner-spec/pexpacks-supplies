@@ -210,7 +210,7 @@ export function BackToSchoolQuiz() {
               </p>
               <h3>{currentQuestion.question}</h3>
               <p>{currentQuestion.detail}</p>
-              <div className={styles.optionGrid}>
+              <div className={styles.optionGrid} role="radiogroup">
                 {currentQuestion.options.map((option) => (
                   <button
                     className={`${styles.optionButton} ${
@@ -219,6 +219,8 @@ export function BackToSchoolQuiz() {
                         : ""
                     }`}
                     type="button"
+                    role="radio"
+                    aria-checked={answers[currentQuestion.id] === option.value}
                     onClick={() => answerQuestion(option.value)}
                     key={option.value}
                   >

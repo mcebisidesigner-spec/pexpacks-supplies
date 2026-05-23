@@ -10,6 +10,8 @@ export const metadata: Metadata = buildMetadata(
   "/business-starter-brand-package"
 );
 
+export const dynamic = "force-static";
+
 const packageSteps = [
   "Submit your business and branding details.",
   "Upload existing logos, colour palettes or reference material if available.",

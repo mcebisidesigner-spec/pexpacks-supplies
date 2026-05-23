@@ -10,12 +10,15 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
 export const metadata: Metadata = buildMetadata(
   "Privacy Policy",
   "Pexpacks Supplies Privacy Policy - How we handle and protect your personal information in compliance with POPIA.",
   "/privacy-policy"
 );
+
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/privacy-policy",
@@ -27,7 +30,7 @@ const config: LegalDocumentConfig = {
   heroText:
     "A clear guide to what we collect, why we collect it, who we share it with, and how you can contact us about your personal information.",
   heroPanelTitle: "POPIA Aligned",
-  heroPanelText: "Effective May 2026, South Africa",
+  heroPanelText: `Effective ${EFFECTIVE_DATE}, South Africa`,
   tocHeading: "Privacy contents",
   tocAriaLabel: "Privacy policy table of contents",
   summaryKicker: "Quick privacy contact",
@@ -58,7 +61,7 @@ const config: LegalDocumentConfig = {
           <h3>Key details</h3>
           <ul>
             <li>
-              <strong>Effective date:</strong> May 2026
+              <strong>Effective date:</strong> {EFFECTIVE_DATE}
             </li>
             <li>
               <strong>Website:</strong> www.Pexpacks.co.za

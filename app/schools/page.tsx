@@ -117,7 +117,13 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                     <span
                       className={cardStyles.quickListPreview}
                       tabIndex={0}
+                      role="button"
                       aria-label={`${pack.name} quick list preview: ${pack.includes.join(", ")}`}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                        }
+                      }}
                     >
                       Quick list preview
                       <span className={cardStyles.quickListTooltip} role="tooltip">

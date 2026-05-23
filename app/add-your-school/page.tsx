@@ -17,6 +17,8 @@ export const metadata: Metadata = buildMetadata(
   "/add-your-school"
 );
 
+export const dynamic = "force-static";
+
 export default function AddYourSchoolPage() {
   return (
     <>

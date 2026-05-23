@@ -18,6 +18,8 @@ type SchoolPageProps = {
 
 export const dynamicParams = true;
 
+export const revalidate = 86400; // 24 hours
+
 export function generateStaticParams() {
   return getSchoolIndex().map((school) => ({
     schoolSlug: school.slug,

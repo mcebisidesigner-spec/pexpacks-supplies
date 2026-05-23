@@ -11,14 +11,17 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
-const effectiveDate = "18 May 2026";
+
 
 export const metadata: Metadata = buildMetadata(
   "Delivery Policy",
   "Read the Pexpacks delivery policy for school stationery packs, handover timing, and support.",
   "/delivery-policy"
 );
+
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/delivery-policy",
@@ -29,7 +32,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "How delivery and collection work",
   heroText:
     "This document explains how Pexpacks handles collection points, delivery timing, customer handover, and support when fulfilment questions come up.",
-  heroPanelTitle: `Effective ${effectiveDate}`,
+  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
   heroPanelText: "School packs, home delivery, and collection support.",
   tocHeading: "Delivery contents",
   tocAriaLabel: "Delivery policy contents",

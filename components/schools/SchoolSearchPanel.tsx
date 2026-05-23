@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import heroStyles from "@/components/marketing/HeroSearch.module.css";
@@ -154,13 +155,7 @@ export function SchoolSearchPanel({
                           <div className={heroStyles.heroResultContent}>
                             <div className={heroStyles.heroResultRow}>
                               {school.image ? (
-                                <img
-                                  src={school.image}
-                                  alt=""
-                                  className={heroStyles.heroResultLogo}
-                                  width={36}
-                                  height={36}
-                                />
+                                <Image src={school.image} alt="" className={heroStyles.heroResultLogo} width={36} height={36} />
                               ) : null}
                               <div className={heroStyles.heroResultSummary}>
                               <h3>

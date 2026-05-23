@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
@@ -85,13 +86,7 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
             >
               <div className={styles.featuredHeader}>
                 {school.image ? (
-                  <img
-                    src={school.image}
-                    alt={`${school.name} logo`}
-                    className={styles.featuredLogo}
-                    width={54}
-                    height={54}
-                  />
+                  <Image src={school.image} alt={school.name} className={styles.featuredLogo} width={54} height={54} />
                 ) : (
                   <span className={styles.featuredIcon}>
                     {school.name.charAt(0)}

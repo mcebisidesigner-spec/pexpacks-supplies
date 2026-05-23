@@ -1,13 +1,10 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { footerNavLinks } from "@/data/navigation";
 import { isActivePath } from "@/lib/isActivePath";
 import styles from "./Footer.module.css";
 
 export function FooterNav() {
-  const pathname = usePathname();
+  const pathname = "";
 
   return (
     <nav className={styles.mainNav} aria-label="Footer navigation">

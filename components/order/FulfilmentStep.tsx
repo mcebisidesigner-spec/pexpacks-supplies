@@ -173,7 +173,7 @@ export function FulfilmentStep({
                   }}
                 />
                 {field.error ? (
-                  <p id={`${field.id}-error`} className={styles.fieldError}>
+                  <p id={`${field.id}-error`} className={styles.fieldError} role="alert">
                     {field.error}
                   </p>
                 ) : null}

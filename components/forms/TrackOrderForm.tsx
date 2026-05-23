@@ -13,6 +13,7 @@ type ApiResponse = {
 export function TrackOrderForm() {
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
+  const [consent, setConsent] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,7 +39,7 @@ export function TrackOrderForm() {
       contactDetail: contact,
       message: `Order tracking request.\nOrder Number: ${orderNumber || "Not provided"}\nContact: ${contact || "Not provided"}`,
       packType: "track-order",
-      consent: true,
+      consent,
       sourceUrl: window.location.href,
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
@@ -86,7 +87,13 @@ export function TrackOrderForm() {
           required
         />
       </label>
-      <Button type="submit" disabled={pending}>
+      <label style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10, marginTop: 8 }}>
+        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
+        <span style={{ fontSize: 13, color: "var(--pex-text-muted)" }}>
+          I consent to Pexpacks processing my information to handle this request.
+        </span>
+      </label>
+      <Button type="submit" disabled={pending || !consent}>
         {pending ? "Submitting..." : "Track order"}
       </Button>
       {status ? (

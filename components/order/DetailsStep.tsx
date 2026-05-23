@@ -55,7 +55,7 @@ export function DetailsStep({
           }}
         />
         {errors.buyerName ? (
-          <p id="buyer-name-error" className={styles.fieldError}>
+          <p id="buyer-name-error" className={styles.fieldError} role="alert">
             {errors.buyerName}
           </p>
         ) : null}
@@ -82,7 +82,7 @@ export function DetailsStep({
           }}
         />
         {errors.buyerPhone ? (
-          <p id="buyer-phone-error" className={styles.fieldError}>
+          <p id="buyer-phone-error" className={styles.fieldError} role="alert">
             {errors.buyerPhone}
           </p>
         ) : null}
@@ -108,7 +108,7 @@ export function DetailsStep({
           }}
         />
         {errors.buyerEmail ? (
-          <p id="buyer-email-error" className={styles.fieldError}>
+          <p id="buyer-email-error" className={styles.fieldError} role="alert">
             {errors.buyerEmail}
           </p>
         ) : null}
@@ -165,7 +165,7 @@ export function DetailsStep({
         </span>
       </label>
       {errors.consent ? (
-        <p id="consent-error" className={styles.fieldError}>
+        <p id="consent-error" className={styles.fieldError} role="alert">
           {errors.consent}
         </p>
       ) : null}

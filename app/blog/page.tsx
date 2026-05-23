@@ -3,12 +3,13 @@ import Link from "next/link";
 import { PageHero } from "@/components/marketing/PageHero";
 import { blogPosts } from "@/data/blog";
 import styles from "./Blog.module.css";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Back to School Resource Hub | Pexpacks",
-  description:
-    "Helpful guides, stationery checklists, and tips for parents preparing for the new school year.",
-};
+export const metadata: Metadata = buildMetadata(
+  "Back to School Resource Hub | Pexpacks",
+  "Helpful guides, stationery checklists, and tips for parents preparing for the new school year.",
+  "/blog"
+);
 
 import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
 

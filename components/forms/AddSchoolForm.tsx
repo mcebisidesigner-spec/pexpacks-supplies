@@ -19,6 +19,7 @@ function val(data: FormData, key: string) {
 export function AddSchoolForm() {
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
+  const [consent, setConsent] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,7 +41,7 @@ export function AddSchoolForm() {
       grade: val(fd, "grade"),
       message: val(fd, "notes") || "School addition request",
       packType: "add-school",
-      consent: true,
+      consent,
       sourceUrl: window.location.href,
       pageUrl: window.location.href,
       userAgent: navigator.userAgent,
@@ -123,8 +124,14 @@ export function AddSchoolForm() {
         Company website
         <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
       </label>
+      <label className={[styles.field, styles.formWide].join(" ")} style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
+        <span style={{ fontSize: 13, color: "var(--pex-text-muted)" }}>
+          I consent to Pexpacks processing my information to handle this request.
+        </span>
+      </label>
       <div className={styles.formWide}>
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending || !consent}>
           {pending ? "Submitting..." : "Submit School Details"}
         </Button>
       </div>

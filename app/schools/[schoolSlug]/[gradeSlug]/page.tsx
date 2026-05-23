@@ -18,6 +18,8 @@ type GradePageProps = {
 
 export const dynamicParams = true;
 
+export const revalidate = 86400; // 24 hours
+
 export function generateStaticParams() {
   return getSchoolIndex().flatMap((school) =>
     school.grades.map((grade) => ({

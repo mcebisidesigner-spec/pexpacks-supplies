@@ -10,14 +10,17 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
-const effectiveDate = "18 May 2026";
+
 
 export const metadata: Metadata = buildMetadata(
   "PAIA Manual",
   "Read the Pexpacks PAIA manual overview for access requests, records, and information officer contact guidance.",
   "/paia-manual"
 );
+
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/paia-manual",
@@ -28,7 +31,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Access to information guidance",
   heroText:
     "This page gives a practical PAIA-oriented overview of how to request access to records held by Pexpacks and how those requests are reviewed.",
-  heroPanelTitle: `Effective ${effectiveDate}`,
+  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
   heroPanelText: "PAIA-oriented operational summary.",
   tocHeading: "PAIA contents",
   tocAriaLabel: "PAIA manual contents",

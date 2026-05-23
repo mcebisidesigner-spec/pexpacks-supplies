@@ -11,6 +11,8 @@ export const metadata: Metadata = buildMetadata(
   "/success-stories"
 );
 
+export const dynamic = "force-static";
+
 function QuoteIcon() {
   return (
     <svg className={styles.quoteIcon} viewBox="0 0 24 24" fill="currentColor">

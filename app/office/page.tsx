@@ -96,6 +96,8 @@ export const metadata: Metadata = buildMetadata(
   "/office",
 );
 
+export const dynamic = "force-static";
+
 type OfficePacksPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };

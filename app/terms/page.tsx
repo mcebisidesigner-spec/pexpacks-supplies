@@ -14,6 +14,7 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata, siteUrl } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
 export const metadata: Metadata = buildMetadata(
   "Terms of Use",
@@ -21,7 +22,7 @@ export const metadata: Metadata = buildMetadata(
   "/terms"
 );
 
-const effectiveDate = "18 May 2026";
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/terms",
@@ -32,7 +33,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Clear terms for ordering and using Pexpacks online",
   heroText:
     "These terms explain how Pexpacks handles quotes, orders, payments, school packs, Pexcover services, delivery, cancellations, and your use of the website and web app.",
-  heroPanelTitle: `Effective ${effectiveDate}`,
+  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
   heroPanelText: "South Africa",
   tocHeading: "Terms contents",
   tocAriaLabel: "Terms of use table of contents",
@@ -79,10 +80,10 @@ const config: LegalDocumentConfig = {
           <h3>Key details</h3>
           <ul>
             <li>
-              <strong>Effective date:</strong> {effectiveDate}
+              <strong>Effective date:</strong> {EFFECTIVE_DATE}
             </li>
             <li>
-              <strong>Last updated:</strong> {effectiveDate}
+              <strong>Last updated:</strong> {EFFECTIVE_DATE}
             </li>
             <li>
               <strong>Website:</strong>{" "}

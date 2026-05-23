@@ -21,6 +21,8 @@ export const metadata: Metadata = buildMetadata(
   "/contact"
 );
 
+export const dynamic = "force-static";
+
 type ContactPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
@@ -97,7 +99,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                   <span className={pageStyles.statusPulse} />
                 </div>
                 <div className={pageStyles.statusText}>
-                  <h4 className={pageStyles.statusTitle}>Gauteng Support Desk Active</h4>
+                  <h2 className={pageStyles.statusTitle}>Gauteng Support Desk Active</h2>
                   <span className={pageStyles.statusDesc}>
                     Live chat active • WhatsApp response time &lt; 5 mins
                   </span>
@@ -108,38 +110,38 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               <div className={pageStyles.slaGroup}>
                 <div className={pageStyles.slaCard}>
                   <span className={pageStyles.slaTitle}>School Partners</span>
-                  <h5 className={pageStyles.slaTime}>&lt; 2 Hours</h5>
+                  <h3 className={pageStyles.slaTime}>&lt; 2 Hours</h3>
                   <span className={pageStyles.slaLabel}>Dedicated School Relations Lead callback.</span>
                 </div>
                 <div className={pageStyles.slaCard}>
                   <span className={pageStyles.slaTitle}>Office/Quotes</span>
-                  <h5 className={pageStyles.slaTime}>&lt; 4 Hours</h5>
+                  <h3 className={pageStyles.slaTime}>&lt; 4 Hours</h3>
                   <span className={pageStyles.slaLabel}>Custom line-item quotation prepared.</span>
                 </div>
               </div>
 
               {/* "WHAT HAPPENS NEXT?" TIMELINE */}
               <div className={pageStyles.timelineCard}>
-                <h4 className={pageStyles.timelineTitle}>Your Response Timeline</h4>
+                <h2 className={pageStyles.timelineTitle}>Your Response Timeline</h2>
                 <div className={pageStyles.timelineSteps}>
                   <div className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}>
                     <span className={pageStyles.stepIcon}>1</span>
                     <div className={pageStyles.stepDetails}>
-                      <h5 className={pageStyles.stepTitle}>Submit Request</h5>
+                      <h3 className={pageStyles.stepTitle}>Submit Request</h3>
                       <p className={pageStyles.stepDesc}>Submit your contact form with your exact needs.</p>
                     </div>
                   </div>
                   <div className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}>
                     <span className={pageStyles.stepIcon}>2</span>
                     <div className={pageStyles.stepDetails}>
-                      <h5 className={pageStyles.stepTitle}>Gauteng Fast-Track Router</h5>
+                      <h3 className={pageStyles.stepTitle}>Gauteng Fast-Track Router</h3>
                       <p className={pageStyles.stepDesc}>Your request is automatically fast-tracked to the correct department.</p>
                     </div>
                   </div>
                   <div className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}>
                     <span className={pageStyles.stepIcon}>3</span>
                     <div className={pageStyles.stepDetails}>
-                      <h5 className={pageStyles.stepTitle}>Direct Outreach</h5>
+                      <h3 className={pageStyles.stepTitle}>Direct Outreach</h3>
                       <p className={pageStyles.stepDesc}>A support representative contacts you on WhatsApp or phone to finalize details.</p>
                     </div>
                   </div>

@@ -141,7 +141,7 @@ export function ReviewStep({
               }}
             />
             {errors.school ? (
-              <p id="school-error" className={styles.fieldError}>
+              <p id="school-error" className={styles.fieldError} role="alert">
                 {errors.school}
               </p>
             ) : null}
@@ -208,7 +208,7 @@ export function ReviewStep({
               ))}
             </select>
             {errors.grade ? (
-              <p id="grade-error" className={styles.fieldError}>
+              <p id="grade-error" className={styles.fieldError} role="alert">
                 {errors.grade}
               </p>
             ) : null}

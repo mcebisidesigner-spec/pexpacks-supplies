@@ -1,4 +1,4 @@
-@import "./tokens.css";
+/* tokens.css imported separately in layout */
 
 /* ── Reset & base ── */
 * {
@@ -7,11 +7,16 @@
 
 html {
   background: var(--pex-body-bg);
-  scroll-behavior: smooth;
   overflow-x: clip;
   min-height: 100%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {

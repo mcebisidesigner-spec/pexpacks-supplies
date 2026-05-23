@@ -10,14 +10,17 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
-const effectiveDate = "18 May 2026";
+
 
 export const metadata: Metadata = buildMetadata(
   "Cookie Policy",
   "Read the Pexpacks cookie notice for website functionality, analytics, and browser controls.",
   "/cookie-notice"
 );
+
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/cookie-notice",
@@ -28,7 +31,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "How cookies support the Pexpacks website",
   heroText:
     "A readable guide to the cookies and similar tools used to keep the website working, measure performance, and improve the browsing experience.",
-  heroPanelTitle: `Effective ${effectiveDate}`,
+  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
   heroPanelText: "Functional, performance, and limited analytics use.",
   tocHeading: "Cookie contents",
   tocAriaLabel: "Cookie notice contents",

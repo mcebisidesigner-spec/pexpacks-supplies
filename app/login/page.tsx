@@ -12,6 +12,8 @@ export const metadata: Metadata = buildMetadata(
   "/login",
 );
 
+export const dynamic = "force-static";
+
 export default function LoginPage() {
   return (
     <>

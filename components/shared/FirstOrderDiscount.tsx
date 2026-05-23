@@ -106,6 +106,7 @@ export function FirstOrderDiscount() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              aria-label="Email address for discount"
             />
             <button className={styles.submitBtn} type="submit" disabled={pending}>
               {pending ? "Sending..." : "Claim"}

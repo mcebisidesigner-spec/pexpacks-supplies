@@ -11,14 +11,17 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
-const effectiveDate = "18 May 2026";
+
 
 export const metadata: Metadata = buildMetadata(
   "Returns & Refunds Policy",
   "Read the Pexpacks returns and refunds policy for school packs, custom work, and CPA-aligned remedies.",
   "/returns-refunds-policy"
 );
+
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/returns-refunds-policy",
@@ -29,7 +32,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "How returns, refunds, and cancellations are handled",
   heroText:
     "This page explains when goods can be returned, when customised items may be restricted, and how refunds or replacements are assessed under South African consumer protections.",
-  heroPanelTitle: `Effective ${effectiveDate}`,
+  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
   heroPanelText: "CPA aligned and operationally practical.",
   tocHeading: "Returns contents",
   tocAriaLabel: "Returns and refunds policy contents",

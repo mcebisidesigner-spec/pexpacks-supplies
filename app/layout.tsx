@@ -14,6 +14,7 @@ import {
   organizationSchema,
   websiteSchema,
 } from "@/lib/schema";
+import "@/styles/tokens.css";
 import "@/styles/globals.css";
 
 const PexpacksSans = localFont({

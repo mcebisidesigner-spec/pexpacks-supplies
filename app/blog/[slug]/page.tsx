@@ -6,6 +6,7 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
 import { blogPosts, getPostBySlug } from "@/data/blog";
+import { buildMetadata, siteUrl } from "@/lib/seo";
 import styles from "../Blog.module.css";
 
 export async function generateStaticParams() {
@@ -23,20 +24,25 @@ export async function generateMetadata({
   const post = getPostBySlug(resolvedParams.slug);
 
   if (!post) {
-    return {
-      title: "Post Not Found | Pexpacks",
-    };
+    return buildMetadata("Post Not Found | Pexpacks", "", "/blog");
   }
 
+  const metadata = buildMetadata(
+    `${post.title} | Pexpacks Resource Hub`,
+    post.excerpt,
+    `/blog/${post.slug}`
+  );
+
   return {
-    title: `${post.title} | Pexpacks Resource Hub`,
-    description: post.excerpt,
+    ...metadata,
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      ...metadata.openGraph,
       type: "article",
       publishedTime: post.date,
       authors: [post.author],
+    },
+    alternates: {
+      canonical: `${siteUrl}/blog/${post.slug}`,
     },
   };
 }

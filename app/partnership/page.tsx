@@ -102,6 +102,8 @@ export const metadata: Metadata = buildMetadata(
   "/partnership",
 );
 
+export const dynamic = "force-static";
+
 export default function PartnerWithSchoolsPage() {
   return (
     <>

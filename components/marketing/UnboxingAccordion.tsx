@@ -111,6 +111,7 @@ export function UnboxingAccordion() {
                     className={styles.accordionHeader}
                     onClick={() => setActiveIndex(index)}
                     aria-expanded={isActive}
+                    aria-controls={`accordion-panel-${feature.id}`}
                   >
                     <span className={styles.iconWrapper}>{feature.icon}</span>
                     <h3>{feature.title}</h3>
@@ -127,7 +128,7 @@ export function UnboxingAccordion() {
                       </svg>
                     </span>
                   </button>
-                  <div className={styles.accordionBody}>
+                  <div className={styles.accordionBody} id={`accordion-panel-${feature.id}`}>
                     <div className={styles.accordionBodyInner}>
                       <div className={styles.mobileImageWrapper}>
                         <Image

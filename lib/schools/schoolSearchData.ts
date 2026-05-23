@@ -32,8 +32,14 @@ export const searchableSchools: SchoolSearchRecord[] = getSchoolIndex().map(
   })
 );
 
-/** Singleton search index — built once, reused across all requests */
-const searchIndex = new SchoolSearchIndex(searchableSchools);
+/** Lazy singleton search index — built on first use */
+let searchIndex: SchoolSearchIndex | null = null;
+function getSearchIndex() {
+  if (!searchIndex) {
+    searchIndex = new SchoolSearchIndex(searchableSchools);
+  }
+  return searchIndex;
+}
 
 export function getSchoolSearchOptions() {
   return {
@@ -51,5 +57,5 @@ export function searchSchoolRecords(
   limit = 12,
   offset = 0
 ) {
-  return searchIndex.search(filters, limit, offset);
+  return getSearchIndex().search(filters, limit, offset);
 }

@@ -10,14 +10,17 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
+import { EFFECTIVE_DATE } from "@/lib/constants";
 
-const effectiveDate = "18 May 2026";
+
 
 export const metadata: Metadata = buildMetadata(
   "School Partnership Terms",
   "Read the Pexpacks school partnership terms for collaboration scope, responsibilities, data handling, and campaign delivery.",
   "/school-partnership-terms"
 );
+
+export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/school-partnership-terms",
@@ -28,7 +31,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "How school partnership arrangements are structured",
   heroText:
     "This page outlines the operating expectations for schools partnering with Pexpacks on stationery fulfilment, campaigns, and related digital or parent-support services.",
-  heroPanelTitle: `Effective ${effectiveDate}`,
+  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
   heroPanelText: "School-facing collaboration terms.",
   tocHeading: "Partnership contents",
   tocAriaLabel: "School partnership terms contents",

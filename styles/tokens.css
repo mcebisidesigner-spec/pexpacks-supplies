@@ -1,7 +1,7 @@
 :root {
   /* Master brand palette */
   --pex-navy: #1a2a40;
-  --pex-keppel: #219e9a;
+  --pex-keppel: #1a7a77;
   --pex-coral: #ff6f59;
   --pex-coral-hover: #e85e4b;
 
@@ -9,7 +9,7 @@
   --pex-body-bg: #f8f9fa;
   --pex-bg-soft: #f4f5f7;
   --pex-text: #172326;
-  --pex-muted: #5b6b6e;
+  --pex-muted: #4d5a5d;
   --pex-border: #e1e7ea;
 
   /* Semantic colour aliases */
@@ -46,7 +46,7 @@
   --color-success: var(--pex-success);
   --color-warning: var(--pex-sme-amber);
   --color-danger: var(--pex-error);
-  --color-disabled: #9ca3af;
+  --color-disabled: #6b7280;
   --color-disabled-bg: #e5e7eb;
   --color-error-bg: #fef2f2;
   --color-error-border: #fecaca;

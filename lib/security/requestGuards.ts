@@ -129,7 +129,14 @@ function getAllowedOrigins(request: NextRequest) {
 
 export function isSameOriginRequest(request: NextRequest) {
   const origin = request.headers.get("origin");
+  const method = request.method;
 
+  // Mutating methods must carry an Origin header
+  if (!origin && ["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
+    return false;
+  }
+
+  // GET/HEAD/OPTIONS without origin are likely direct navigations
   if (!origin) {
     return true;
   }
