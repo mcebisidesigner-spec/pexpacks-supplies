@@ -99,16 +99,21 @@ export default function HomePage() {
           <div>
             <p className={heroStyles.eyebrow}>Save time, Pex it.</p>
             <h1 className={heroStyles.heroTitle}>
-             Everything packed. Everything
-              <span className={heroStyles.mobileInlineSpace}></span>
-              <br className={heroStyles.desktopBreak}/>
-              ready
+              <span className={heroStyles.desktopHeroTitleText}>
+                Everything packed. Everything
+                <br className={heroStyles.desktopBreak} />
+                ready
+              </span>
+              <span className={heroStyles.mobileHeroTitleText}>
+                Everything ready
+                <br />
+                Everything packed
+              </span>
             </h1>
             <p className={heroStyles.heroLead}>
 No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
-
           </div>
 
           <div className={heroStyles.heroVisual}>
