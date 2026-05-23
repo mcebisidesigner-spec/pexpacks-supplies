@@ -96,7 +96,11 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
               <span className={styles.featuredMeta}>{school.region}</span>
               <h3>{school.name}</h3>
               <p>{gradeRangeLabel(school.grades)}</p>
-              <strong>Stationery packs available</strong>
+              {school.lowestPrice ? (
+                <span className={styles.featuredPrice}>From R{Math.round(school.lowestPrice / 100)}</span>
+              ) : (
+                <strong>Stationery packs available</strong>
+              )}
               <span className={styles.featuredCta}>View packs</span>
             </Link>
           ))}
