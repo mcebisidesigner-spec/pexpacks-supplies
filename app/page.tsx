@@ -216,11 +216,49 @@ export default function HomePage() {
 
       <SavingsCalculator />
 
-      <BookCoveringBanner />
-
       <BackToSchoolQuiz />
 
       <UnboxingAccordion />
+
+      <BookCoveringBanner />
+
+      <section
+        className={sectionStyles.section}
+        aria-labelledby="home-testimonials-heading"
+      >
+        <div className={sectionStyles.inner}>
+          <SectionHeader
+            eyebrow="Trusted by parents and schools"
+            title="How Pexpacks will feel"
+            headingId="home-testimonials-heading"
+          />
+          <TestimonialMarquee items={testimonials} />
+        </div>
+      </section>
+
+      <section className={sectionStyles.sectionCream}>
+        <div className={sectionStyles.inner}>
+          <SectionHeader
+            eyebrow="Why Pexpacks"
+            title="The Pexpacks promise"
+            text="We save you time, reduce stress, and guarantee quality you can trust."
+          />
+          <div className={cardStyles.benefitGrid}>
+            {whyChoosePexpacks.map((benefit, index) => {
+              const Icon = benefitIcons[index];
+              return (
+                <article className={cardStyles.benefitCard} key={benefit.title}>
+                  <div className={cardStyles.benefitIconWrapper}>
+                    <Icon />
+                  </div>
+                  <h3>{benefit.title}</h3>
+                  <p>{benefit.text}</p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
@@ -250,44 +288,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className={sectionStyles.sectionCream}>
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Why Pexpacks"
-            title="The Pexpacks promise"
-            text="We save you time, reduce stress, and guarantee quality you can trust."
-          />
-          <div className={cardStyles.benefitGrid}>
-            {whyChoosePexpacks.map((benefit, index) => {
-              const Icon = benefitIcons[index];
-              return (
-                <article className={cardStyles.benefitCard} key={benefit.title}>
-                  <div className={cardStyles.benefitIconWrapper}>
-                    <Icon />
-                  </div>
-                  <h3>{benefit.title}</h3>
-                  <p>{benefit.text}</p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section
-        className={sectionStyles.section}
-        aria-labelledby="home-testimonials-heading"
-      >
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Trusted by parents and schools"
-            title="How Pexpacks will feel"
-            headingId="home-testimonials-heading"
-          />
-          <TestimonialMarquee items={testimonials} />
         </div>
       </section>
 
