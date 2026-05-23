@@ -109,7 +109,7 @@ export default function HomePage() {
             </p>
             <HeroSearch />
             <p className={heroStyles.urgencyBar}>
-              <CountdownTimer targetDate={new Date("2027-09-30T23:59:59")} />
+              <CountdownTimer targetDate={new Date("2026-09-30T23:59:59")} />
             </p>
             <p className={heroStyles.gradeBrowse}>
               Don&apos;t know your school?{" "}
