@@ -196,20 +196,6 @@
   opacity: 0.8;
 }
 
-.urgencyBar {
-  margin: 16px 0 0;
-  color: var(--pex-coral);
-  font-size: 14px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.urgencyBar svg {
-  flex-shrink: 0;
-}
-
 
 @media (max-width: 1080px) {
   .heroInner,

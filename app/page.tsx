@@ -108,13 +108,7 @@ export default function HomePage() {
               No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
-            <p className={heroStyles.urgencyBar}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              Order by 30 September for delivery before school starts in 2027
-            </p>
+
           </div>
 
           <div className={heroStyles.heroVisual}>

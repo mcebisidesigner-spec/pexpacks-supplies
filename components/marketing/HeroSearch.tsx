@@ -204,12 +204,14 @@ export function HeroSearch() {
           </p>
         ) : null}
       </form>
-      <div className={styles.heroSearchLinks}>
-        <Link href="/schools" className={styles.heroFallbackLink}>
-          Browse all schools
-        </Link>
-        <span className={styles.heroSearchCount}>685+ schools available</span>
-      </div>
+      {panelOpen ? null : (
+        <div className={styles.heroSearchLinks}>
+          <Link href="/schools" className={styles.heroFallbackLink}>
+            Browse all schools
+          </Link>
+          <span className={styles.heroSearchCount}>685+ schools available</span>
+        </div>
+      )}
       <SearchHelperPill
         storageKey="Pexpacks:gauteng-helper:home"
         isInputFocused={isSchoolInputFocused}
