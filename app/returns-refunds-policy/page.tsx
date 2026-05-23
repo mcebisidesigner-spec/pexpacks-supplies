@@ -28,7 +28,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Returns & Refunds Policy",
   metaDescription:
     "Read the Pexpacks returns and refunds policy for school packs, custom work, and CPA-aligned remedies.",
-  heroEyebrow: "Pex your returns",
+  heroEyebrow: "Pex returns",
   heroTitle: "How returns, refunds, and cancellations are handled",
   heroText:
     "This page explains when goods can be returned, when customised items may be restricted, and how refunds or replacements are assessed under South African consumer protections.",

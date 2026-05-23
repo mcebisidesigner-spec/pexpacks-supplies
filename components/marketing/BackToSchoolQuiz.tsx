@@ -224,7 +224,14 @@ export function BackToSchoolQuiz() {
                     onClick={() => answerQuestion(option.value)}
                     key={option.value}
                   >
-                    <span className={styles.optionCheck} aria-hidden="true">
+                    <span
+                      className={`${styles.optionCheck} ${
+                        answers[currentQuestion.id] === option.value
+                          ? styles.optionCheckSelected
+                          : styles.optionCheckEmpty
+                      }`}
+                      aria-hidden="true"
+                    >
                       ✓
                     </span>
                     {option.label}

@@ -25,7 +25,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Privacy Policy",
   metaDescription:
     "Pexpacks Supplies Privacy Policy - How we handle and protect your personal information in compliance with POPIA.",
-  heroEyebrow: "Pex your privacy",
+  heroEyebrow: "Pex privacy",
   heroTitle: "How Pexpacks handles your information",
   heroText:
     "A clear guide to what we collect, why we collect it, who we share it with, and how you can contact us about your personal information.",

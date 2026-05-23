@@ -27,7 +27,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "PAIA Manual",
   metaDescription:
     "Read the Pexpacks PAIA manual overview for access requests, records, and information officer contact guidance.",
-  heroEyebrow: "Pex your info",
+  heroEyebrow: "Pex info",
   heroTitle: "Access to information guidance",
   heroText:
     "This page gives a practical PAIA-oriented overview of how to request access to records held by Pexpacks and how those requests are reviewed.",

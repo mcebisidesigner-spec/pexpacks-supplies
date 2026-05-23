@@ -27,7 +27,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Cookie Policy",
   metaDescription:
     "Read the Pexpacks cookie notice for website functionality, analytics, and browser controls.",
-  heroEyebrow: "Pex your cookies",
+  heroEyebrow: "Pex cookies",
   heroTitle: "How cookies support the Pexpacks website",
   heroText:
     "A readable guide to the cookies and similar tools used to keep the website working, measure performance, and improve the browsing experience.",
