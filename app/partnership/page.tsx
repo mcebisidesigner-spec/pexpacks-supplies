@@ -108,7 +108,7 @@ export default function PartnerWithSchoolsPage() {
   return (
     <>
       <PageHero
-        eyebrow="Pex your partnership"
+        eyebrow="Pex partnership"
         title="Partnership with real benefits"
         text="Pexpacks works with schools to simplify stationery ordering, reduce parent stress, and help learners start the year prepared with the right supplies."
         panelText="Partner value snapshot"
