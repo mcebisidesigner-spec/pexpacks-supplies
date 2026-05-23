@@ -27,6 +27,7 @@ export type SchoolIndexRecord = {
   province: string;
   logo: string;
   isPartnerSchool: boolean;
+  isFeatured?: boolean;
   lowestPrice?: number;
   grades: {
     id: string;

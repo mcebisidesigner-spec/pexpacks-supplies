@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { siteName, siteUrl } from "@/lib/seo";
+import { siteName } from "@/lib/seo";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -62,19 +62,5 @@ export default function manifest(): MetadataRoute.Manifest {
       },
     ],
     related_applications: [],
-    screenshots: [
-      {
-        src: `${siteUrl}/opengraph-image.jpg`,
-        sizes: "835x1200",
-        type: "image/jpeg",
-        form_factor: "narrow",
-      },
-      {
-        src: `${siteUrl}/twitter-image.jpg`,
-        sizes: "835x1200",
-        type: "image/jpeg",
-        form_factor: "wide",
-      },
-    ],
   };
 }

@@ -30,11 +30,6 @@ const PexpacksSans = localFont({
     },
     {
       path: "../public/fonts/PexSans Bold.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/PexSans Bold.woff2",
       weight: "800",
       style: "normal",
     },
@@ -100,7 +95,6 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icon.png", sizes: "193x193", type: "image/png" },
       { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
