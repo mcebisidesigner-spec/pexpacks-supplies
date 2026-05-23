@@ -171,6 +171,12 @@ export default function HomePage() {
               <div className={`${cardStyles.packCard} ${idx === 1 ? cardStyles.packCardFeatured : ""}`} key={pack.id}>
                 {idx === 1 ? <div className={cardStyles.packCardAccent} /> : null}
                 {idx === 1 ? <span className={cardStyles.popularPill}>Most popular</span> : null}
+                <div
+                  className={`${cardStyles.packMedia} ${pack.id === "primary-school-pack" ? cardStyles.packMediaGreen : cardStyles.packMediaBlue}`}
+                  aria-hidden="true"
+                >
+                  <span>{pack.subcategory ?? pack.category}</span>
+                </div>
                 <div className={cardStyles.packCardHead}>
                   <span className={heroStyles.eyebrow}>
                     {pack.category}

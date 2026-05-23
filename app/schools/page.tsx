@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
+import { MultiLearnerBanner } from "@/components/schools/MultiLearnerBanner";
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
 import { ReturningParentBanner } from "@/components/schools/ReturningParentBanner";
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
@@ -12,6 +13,8 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
+import { SchoolsLeadCapture } from "@/components/schools/SchoolsLeadCapture";
+import { FindSchoolBar } from "@/components/schools/FindSchoolBar";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
@@ -79,11 +82,21 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
             text="Choose a standard grade pack if your school isn't listed or you know exactly what you need."
             headingId="school-grade-packs"
           />
+          <MultiLearnerBanner />
+          <p className={sectionStyles.urgencyNote}>
+            Order before <strong>15:00</strong> for next-day dispatch &middot; Free delivery to school
+          </p>
           <div className={cardStyles.packGrid}>
             {homepagePacks.map((pack, idx) => (
               <div className={`${cardStyles.packCard} ${idx === 1 ? cardStyles.packCardFeatured : ""}`} key={pack.id}>
                 {idx === 1 ? <div className={cardStyles.packCardAccent} /> : null}
                 {idx === 1 ? <span className={cardStyles.popularPill}>Most popular</span> : null}
+                <div
+                  className={`${cardStyles.packMedia} ${pack.id === "primary-school-pack" ? cardStyles.packMediaGreen : cardStyles.packMediaBlue}`}
+                  aria-hidden="true"
+                >
+                  <span>{pack.subcategory ?? pack.category}</span>
+                </div>
                 <div className={cardStyles.packCardHead}>
                   <span className={heroStyles.eyebrow}>
                     {pack.category}
@@ -168,6 +181,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         </div>
       </section>
       <MobileStickyCta />
+      <SchoolsLeadCapture />
+      <FindSchoolBar />
     </>
   );
 }

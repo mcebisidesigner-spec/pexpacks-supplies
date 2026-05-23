@@ -8,6 +8,7 @@ import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import { ViralReferralBanner } from "./ViralReferralBanner";
+import { homepagePacks } from "@/data/packs";
 import styles from "./SchoolSearchPanel.module.css";
 
 const resultLimit = 12;
@@ -151,7 +152,17 @@ export function SchoolSearchPanel({
                       {results.map((school) => (
                         <article className={heroStyles.heroResultCard} key={school.id}>
                           <div className={heroStyles.heroResultContent}>
-                            <div className={heroStyles.heroResultSummary}>
+                            <div className={heroStyles.heroResultRow}>
+                              {school.image ? (
+                                <img
+                                  src={school.image}
+                                  alt=""
+                                  className={heroStyles.heroResultLogo}
+                                  width={36}
+                                  height={36}
+                                />
+                              ) : null}
+                              <div className={heroStyles.heroResultSummary}>
                               <h3>
                                 <Link href={`/schools/${school.slug}`}>
                                   <HighlightMatch text={school.name} query={query} />
@@ -161,6 +172,7 @@ export function SchoolSearchPanel({
                                 {school.region}
                                 {school.province ? `, ${school.province}` : ""}
                               </p>
+                            </div>
                             </div>
                             <div className={heroStyles.heroResultMeta}>
                               <span className={heroStyles.heroResultGrades}>
@@ -197,6 +209,23 @@ export function SchoolSearchPanel({
                         schoolName={query}
                         source="schools-search"
                       />
+                      <div className={heroStyles.noResultsPacks}>
+                        <p className={heroStyles.noResultsPacksLabel}>
+                          Browse standard packs instead
+                        </p>
+                        <div className={heroStyles.noResultsPackGrid}>
+                          {homepagePacks.map((pack) => (
+                            <Link
+                              key={pack.id}
+                              href={pack.href}
+                              className={heroStyles.noResultsPackCard}
+                            >
+                              <span className={heroStyles.noResultsPackName}>{pack.name}</span>
+                              <span className={heroStyles.noResultsPackPrice}>{pack.priceLabel}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
                       <ViralReferralBanner compact />
                     </div>
                   )}
