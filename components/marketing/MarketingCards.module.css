@@ -223,11 +223,70 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.packCardFeatured {
+  border: 2px solid var(--pex-keppel);
+  box-shadow:
+    0 8px 32px rgba(33, 158, 154, 0.14),
+    var(--card-shadow);
+  transform: scale(1.02);
+}
+
+.packCardFeatured:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(33, 158, 154, 0.2),
+    var(--card-shadow-hover);
 }
 
 .packCardHead {
   padding: 24px 24px 12px;
   min-width: 0;
+}
+
+.packCardFeatured .packCardHead {
+  padding-top: 32px;
+}
+
+.packCardAccent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--pex-keppel);
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+}
+
+.packCardFeatured .packCardAccent {
+  height: 0;
+}
+
+.popularPill {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+
+@media (max-width: 820px) {
+  .packCardFeatured {
+    transform: none;
+  }
+
+  .packCardFeatured:hover {
+    transform: translateY(-4px);
+  }
 }
 
 .packCardHead h3 {

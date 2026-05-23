@@ -168,7 +168,9 @@ export default function HomePage() {
           />
           <div className={cardStyles.packGrid}>
             {homepagePacks.map((pack, idx) => (
-              <div className={cardStyles.packCard} key={pack.id}>
+              <div className={`${cardStyles.packCard} ${idx === 1 ? cardStyles.packCardFeatured : ""}`} key={pack.id}>
+                {idx === 1 ? <div className={cardStyles.packCardAccent} /> : null}
+                {idx === 1 ? <span className={cardStyles.popularPill}>Most popular</span> : null}
                 <div className={cardStyles.packCardHead}>
                   <span className={heroStyles.eyebrow}>
                     {pack.category}
