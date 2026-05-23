@@ -78,7 +78,10 @@ export function HeroSearch() {
             placeholder="e.g. Parktown Primary"
             autoComplete="off"
             value={query}
-            onFocus={() => setIsSchoolInputFocused(true)}
+            onFocus={() => {
+              setIsSchoolInputFocused(true);
+              setPanelOpen(true);
+            }}
             onBlur={() => setIsSchoolInputFocused(false)}
             onChange={(event) => updateQuery(event.target.value)}
           />

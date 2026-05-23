@@ -109,7 +109,10 @@ export function SchoolSearchPanel({
             name="schoolQuery"
             type="search"
             value={query}
-            onFocus={() => setIsSchoolInputFocused(true)}
+            onFocus={() => {
+              setIsSchoolInputFocused(true);
+              setPanelOpen(true);
+            }}
             onBlur={() => setIsSchoolInputFocused(false)}
             onChange={(event) => updateQuery(event.target.value)}
             placeholder="e.g. Parktown Primary"
