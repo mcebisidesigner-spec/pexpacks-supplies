@@ -197,6 +197,52 @@
 }
 
 
+.trustStats {
+  display: grid;
+  gap: 18px;
+}
+
+.trustStat {
+  display: grid;
+  gap: 2px;
+}
+
+.trustStat strong {
+  color: var(--pex-primary);
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.trustStat span {
+  color: var(--pex-text-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.trustStat + .trustStat {
+  padding-top: 18px;
+  border-top: 1px solid var(--pex-border);
+}
+
+.gradeBrowse {
+  margin: 16px 0 0;
+  font-size: 14px;
+}
+
+.gradeBrowse a {
+  color: var(--pex-keppel);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  transition: opacity 0.2s;
+}
+
+.gradeBrowse a:hover {
+  opacity: 0.7;
+}
+
 @media (max-width: 1080px) {
   .heroInner,
   .pageHeroInner {

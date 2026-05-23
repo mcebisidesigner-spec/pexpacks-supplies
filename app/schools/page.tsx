@@ -1,22 +1,29 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { CTASection } from "@/components/marketing/CTASection";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
 import { ReturningParentBanner } from "@/components/schools/ReturningParentBanner";
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
-import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
+import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
   getSchoolSearchOptions,
 } from "@/lib/schools/schoolSearchData";
+import { homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { faqs } from "@/data/faqs";
 import pageStyles from "@/styles/Page.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
+import heroStyles from "@/components/marketing/HeroBase.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Find Your School Stationery Pack | Pexpacks",
@@ -63,7 +70,62 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       )}
       <RecentlyViewedSchools />
       <RequestSchoolCTA />
-      <OrderingWorksSection />
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <SectionHeader
+            eyebrow="Standard packs"
+            title="Packs by grade"
+            text="Choose a standard grade pack if your school isn't listed or you know exactly what you need."
+            headingId="school-grade-packs"
+          />
+          <div className={cardStyles.packGrid}>
+            {homepagePacks.map((pack, idx) => (
+              <div className={`${cardStyles.packCard} ${idx === 1 ? cardStyles.packCardFeatured : ""}`} key={pack.id}>
+                {idx === 1 ? <div className={cardStyles.packCardAccent} /> : null}
+                {idx === 1 ? <span className={cardStyles.popularPill}>Most popular</span> : null}
+                <div className={cardStyles.packCardHead}>
+                  <span className={heroStyles.eyebrow}>
+                    {pack.category}
+                    {idx === 1 ? <span className={cardStyles.mostOrderedBadge}>Most ordered</span> : null}
+                  </span>
+                  <h3>{pack.name}</h3>
+                </div>
+                <div style={{ padding: "0 24px", flexGrow: 1, display: "flex", flexDirection: "column" }}>
+                  <p
+                    style={{
+                      color: "var(--pex-text-muted)",
+                      marginBottom: "8px",
+                      fontSize: "15px",
+                    }}
+                  >
+                    {pack.description}
+                  </p>
+                  <ul className={cardStyles.packPreview}>
+                    {pack.includes.slice(0, 3).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                  <div style={{ marginTop: "auto", paddingBottom: "20px" }}>
+                    <span className={cardStyles.priceBadge}>
+                      {pack.priceLabel}
+                    </span>
+                  </div>
+                </div>
+                <div style={{ padding: "0 24px 24px" }}>
+                  <Button
+                    href={pack.href}
+                    variant="primary"
+                    style={{ width: "100%" }}
+                  >
+                    {pack.cta}
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section
         className={pageStyles.section}
@@ -80,6 +142,16 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         </div>
       </section>
 
+      <CTASection
+        eyebrow="Ready to order"
+        title="Find your school pack now."
+        text="Search for your school or choose a standard grade pack. Either way, your stationery is handled."
+        primaryHref="/schools"
+        primaryLabel="Search Your School"
+        secondaryHref="/foundation-phase"
+        secondaryLabel="Browse Grade Packs"
+      />
+
       <section className={pageStyles.section} aria-labelledby="school-faqs">
         <div className={pageStyles.sectionInner}>
           <SectionHeader
@@ -95,6 +167,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
           </div>
         </div>
       </section>
+      <MobileStickyCta />
     </>
   );
 }

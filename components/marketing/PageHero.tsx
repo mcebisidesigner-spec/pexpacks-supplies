@@ -7,6 +7,7 @@ type PageHeroProps = {
   text: string;
   panelTitle?: string;
   panelText?: string;
+  panelChildren?: ReactNode;
   children?: ReactNode;
 };
 
@@ -16,6 +17,7 @@ export function PageHero({
   text,
   panelTitle,
   panelText,
+  panelChildren,
   children,
 }: PageHeroProps) {
   return (
@@ -27,10 +29,14 @@ export function PageHero({
           <p className={styles.pageLead}>{text}</p>
           {children}
         </div>
-        {panelTitle || panelText ? (
+        {panelChildren || panelTitle || panelText ? (
           <aside className={styles.heroPanel} aria-label={`${eyebrow} summary`}>
-            {panelText ? <p>{panelText}</p> : null}
-            {panelTitle ? <strong>{panelTitle}</strong> : null}
+            {panelChildren || (
+              <>
+                {panelText ? <p>{panelText}</p> : null}
+                {panelTitle ? <strong>{panelTitle}</strong> : null}
+              </>
+            )}
           </aside>
         ) : null}
       </div>
