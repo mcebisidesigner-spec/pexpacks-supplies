@@ -99,16 +99,13 @@ export default function HomePage() {
           <div>
             <p className={heroStyles.eyebrow}>Save time, Pex it.</p>
             <h1 className={heroStyles.heroTitle}>
-              School stationery,
-              <span className={heroStyles.mobileInlineSpace}> </span>
-              <br className={heroStyles.desktopBreak} />
-              <span className={heroStyles.heroTitleGradient}>
-                perfectly pre-packed.
-              </span>
+             Everything packed. Everything
+              <span className={heroStyles.mobileInlineSpace}></span>
+              <br className={heroStyles.desktopBreak}/>
+              ready
             </h1>
             <p className={heroStyles.heroLead}>
-              Find your school, choose the grade, and get the correct pack
-              prepared before the school rush.
+No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
 
