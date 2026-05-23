@@ -117,7 +117,7 @@ export function InlineSchoolWaitlist({
     <div className={[styles.waitlist, className].filter(Boolean).join(" ")}>
       <div className={styles.copy}>
         <p className={styles.eyebrow}>We'll add it!</p>
-        <h3>Enter your email to be notified the moment {displaySchoolName} is ready.</h3>
+        <h3>Get 10% off when {displaySchoolName} launches — enter your email to be first.</h3>
       </div>
 
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
@@ -153,7 +153,7 @@ export function InlineSchoolWaitlist({
           <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
         </label>
         <button className={styles.submitButton} type="submit" disabled={pending}>
-          {pending ? "Saving..." : "Notify me"}
+          {pending ? "Saving..." : "Get notified & save 10%"}
         </button>
       </form>
 

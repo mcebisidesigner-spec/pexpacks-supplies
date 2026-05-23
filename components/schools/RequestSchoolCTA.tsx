@@ -5,7 +5,7 @@ export function RequestSchoolCTA() {
   return (
     <section className={styles.requestCta} aria-labelledby="request-school-heading">
       <div className={styles.copy}>
-        <p className={styles.eyebrow}>Need help?</p>
+        <p className={styles.eyebrow}>School not on our list?</p>
         <h2 id="request-school-heading">Can't find your school?</h2>
         <span>
           We prioritise schools with the most parent requests. Add the school

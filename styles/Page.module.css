@@ -74,7 +74,7 @@
 }
 
 .section {
-  padding: 24px 0 86px;
+  padding: var(--section-padding-y-desktop) 0;
 }
 
 .sectionInner {

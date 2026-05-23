@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
+import Link from "next/link";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
 
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
@@ -66,11 +67,23 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         />
       </SchoolsPageHero>
       </div>
-      {featuredSchools.length > 0 && (
-        <FeaturedSchoolsBanner schools={featuredSchools} />
-      )}
-      <RecentlyViewedSchools />
-      <RequestSchoolCTA />
+
+      {featuredSchools.length > 3 ? (
+        <div className={sectionStyles.trendingPills}>
+          <span className={sectionStyles.trendingLabel}>Trending:</span>
+          <div className={sectionStyles.pillRow}>
+            {featuredSchools.slice(0, 6).map((school) => (
+              <Link
+                key={school.slug}
+                href={`/schools/${school.slug}`}
+                className={sectionStyles.trendingPill}
+              >
+                {school.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
@@ -135,6 +148,11 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         </div>
       </section>
 
+      {featuredSchools.length > 0 && (
+        <FeaturedSchoolsBanner schools={featuredSchools} />
+      )}
+      <RecentlyViewedSchools />
+
       <section
         className={pageStyles.section}
         aria-labelledby="school-testimonials"
@@ -150,14 +168,16 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         </div>
       </section>
 
+      <RequestSchoolCTA />
+
       <CTASection
         eyebrow="Ready to order"
         title="Find your school pack now."
         text="Search for your school or choose a standard grade pack. Either way, your stationery is handled."
-        primaryHref="#schools-search"
-        primaryLabel="Back to Search"
-        secondaryHref="/foundation-phase"
-        secondaryLabel="Browse Grade Packs"
+        primaryHref="/foundation-phase"
+        primaryLabel="Order a Standard Pack"
+        secondaryHref="#schools-search"
+        secondaryLabel="Search for Your School"
       />
 
       <section className={pageStyles.section} aria-labelledby="school-faqs">

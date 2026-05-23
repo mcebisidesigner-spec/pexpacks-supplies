@@ -21,8 +21,15 @@ export function SchoolsLeadCapture() {
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY)) return;
 
-    const timer = setTimeout(() => setVisible(true), 35000);
-    return () => clearTimeout(timer);
+    function onMouseLeave(event: MouseEvent) {
+      if (event.clientY <= 0) {
+        setVisible(true);
+        document.removeEventListener("mouseleave", onMouseLeave);
+      }
+    }
+
+    document.addEventListener("mouseleave", onMouseLeave);
+    return () => document.removeEventListener("mouseleave", onMouseLeave);
   }, []);
 
   function dismiss() {

@@ -6,9 +6,9 @@ import { useState } from "react";
 import heroStyles from "@/components/marketing/HeroSearch.module.css";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
+import { slugify } from "@/lib/slugify";
 import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
-import { ViralReferralBanner } from "./ViralReferralBanner";
 import { homepagePacks } from "@/data/packs";
 import styles from "./SchoolSearchPanel.module.css";
 
@@ -19,14 +19,6 @@ type SchoolSearchPanelProps = {
   initialQuery?: string;
   initialGrade?: string;
 };
-
-function gradeLabel(grades: string[]) {
-  if (grades.length <= 3) {
-    return grades.join(", ");
-  }
-
-  return `${grades.slice(0, 3).join(", ")} +${grades.length - 3} more`;
-}
 
 function HighlightMatch({ text, query }: { text: string; query: string }) {
   if (!query.trim()) {
@@ -170,9 +162,22 @@ export function SchoolSearchPanel({
                             </div>
                             </div>
                             <div className={heroStyles.heroResultMeta}>
-                              <span className={heroStyles.heroResultGrades}>
-                                {gradeLabel(school.grades)}
-                              </span>
+                              <div className={heroStyles.heroResultGrades}>
+                                {school.grades.slice(0, 4).map((g) => (
+                                  <Link
+                                    key={g}
+                                    href={`/schools/${school.slug}/${slugify(g)}`}
+                                    className={heroStyles.gradePill}
+                                  >
+                                    {g}
+                                  </Link>
+                                ))}
+                                {school.grades.length > 4 ? (
+                                  <span className={heroStyles.gradePillMore}>
+                                    +{school.grades.length - 4} more
+                                  </span>
+                                ) : null}
+                              </div>
                               {school.lowestPrice ? (
                                 <span className={heroStyles.heroResultPrice}>
                                   From R{school.lowestPrice}
@@ -221,7 +226,6 @@ export function SchoolSearchPanel({
                           ))}
                         </div>
                       </div>
-                      <ViralReferralBanner compact />
                     </div>
                   )}
                   <SchoolResultsAutoLoad

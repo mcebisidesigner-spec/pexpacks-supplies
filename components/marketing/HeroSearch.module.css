@@ -248,9 +248,32 @@
 
 .heroResultGrades {
   min-width: 0;
-  color: var(--pex-text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.gradePill {
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-bg-soft);
+  color: var(--pex-text);
+  font-size: 12px;
   font-weight: 700;
-  line-height: 1.45;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.gradePill:hover {
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+}
+
+.gradePillMore {
+  padding: 3px 9px;
+  color: var(--pex-text-muted);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .heroResultBadges {
