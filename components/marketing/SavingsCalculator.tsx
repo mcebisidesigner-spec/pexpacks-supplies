@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import styles from "./SavingsCalculator.module.css";
 import { SectionHeader } from "./SectionHeader";
@@ -20,8 +20,29 @@ const GRADES = [
 
 export function SavingsCalculator() {
   const [selectedGrade, setSelectedGrade] = useState(GRADES[2]); // Default Grade 1
+  const [displaySavings, setDisplaySavings] = useState(0);
+  const [displayHours, setDisplayHours] = useState(0);
 
   const savings = selectedGrade.avgRetail - selectedGrade.Pexpacks;
+
+  useEffect(() => {
+    const duration = 520;
+    const start = performance.now();
+
+    function tick(timestamp: number) {
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplaySavings(Math.round(savings * eased));
+      setDisplayHours(Math.round(selectedGrade.hours * eased));
+
+      if (progress < 1) {
+        window.requestAnimationFrame(tick);
+      }
+    }
+
+    const frame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame);
+  }, [savings, selectedGrade.hours]);
 
   return (
     <section className={styles.section}>
@@ -66,12 +87,16 @@ export function SavingsCalculator() {
               </div>
               <div className={styles.resultContent}>
                 <span className={styles.resultLabel}>Money Saved</span>
-                <strong className={styles.resultValue}>R {savings}</strong>
+                <strong className={styles.resultValue}>R {displaySavings}</strong>
                 <span className={styles.resultContext}>Avg. retail: R {selectedGrade.avgRetail}</span>
               </div>
             </div>
 
-            <div className={styles.resultCard}>
+            <div
+              className={`${styles.resultCard} ${
+                selectedGrade.hours >= 5 ? styles.resultCardWarm : ""
+              }`}
+            >
               <div className={styles.resultIcon}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
@@ -80,7 +105,7 @@ export function SavingsCalculator() {
               </div>
               <div className={styles.resultContent}>
                 <span className={styles.resultLabel}>Time Saved</span>
-                <strong className={styles.resultValue}>{selectedGrade.hours} Hours</strong>
+                <strong className={styles.resultValue}>{displayHours} Hours</strong>
                 <span className={styles.resultContext}>No queues, no driving</span>
               </div>
             </div>

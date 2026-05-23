@@ -74,6 +74,7 @@
 }
 
 .progress span {
+  position: relative;
   height: 6px;
   border-radius: var(--radius-pill);
   background: rgba(26, 42, 64, 0.1);
@@ -81,6 +82,17 @@
 
 .progressActive {
   background: var(--pex-keppel) !important;
+}
+
+.progressCompleted::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  color: var(--pex-bg);
+  font-size: 10px;
+  font-weight: 900;
+  transform: translateY(-50%);
 }
 
 .questionPanel,
@@ -125,10 +137,35 @@
   background: var(--pex-bg);
   color: var(--pex-primary);
   text-align: left;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .optionButton:hover {
   background: rgba(33, 158, 154, 0.08);
+}
+
+.optionSelected {
+  border-color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.1);
+}
+
+.optionCheck {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(33, 158, 154, 0.12);
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.optionSelected .optionCheck {
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
 }
 
 .emailForm {

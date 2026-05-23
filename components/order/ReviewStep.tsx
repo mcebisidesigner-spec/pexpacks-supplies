@@ -2,6 +2,7 @@ import Link from "next/link";
 import { formatCurrency } from "@/lib/formatCurrency";
 import {
   PEXCOVER_PRICE,
+  type GradePexcoverEntry,
   type SchoolDetails,
   type SchoolSearchResult,
   type StandardSelection,
@@ -46,6 +47,9 @@ type ReviewStepProps = {
   selectSchool: (result: SchoolSearchResult) => Promise<void>;
   selectionLockedLabel?: string;
   customiseHref?: string;
+  gradePexcovers?: GradePexcoverEntry[];
+  setGradePexcovers?: (entries: GradePexcoverEntry[]) => void;
+  isMultiSchoolPack?: boolean;
 };
 
 export function ReviewStep({
@@ -86,6 +90,9 @@ export function ReviewStep({
   selectSchool,
   selectionLockedLabel,
   customiseHref,
+  gradePexcovers,
+  setGradePexcovers,
+  isMultiSchoolPack,
 }: ReviewStepProps) {
   return (
     <div className={styles.reviewGrid}>
@@ -167,7 +174,7 @@ export function ReviewStep({
                 {!schoolLoading && !schoolResults.length ? (
                   <p className={styles.schoolEmpty}>
                     No matching schools found. You can also{" "}
-                    <Link href="/schools">browse schools</Link>.
+                    <Link href="/schools" target="_blank" rel="noopener noreferrer">browse schools</Link>.
                   </p>
                 ) : null}
               </div>
@@ -255,6 +262,8 @@ export function ReviewStep({
         ) : null}
         <Link
           className={styles.inlineAction}
+          target="_blank"
+          rel="noopener noreferrer"
           href={
             customiseHref ??
             (selectedSchool
@@ -266,89 +275,150 @@ export function ReviewStep({
         </Link>
       </div>
 
-      <div
-        className={`${styles.addonCard} ${
-          hasPexcover ? styles.addonCardActive : ""
-        }`}
-      >
-        <div>
-          <p className={styles.confirmKicker}>Optional add-on</p>
-          <h3>Pexcover book covering</h3>
-          <p>
-            Add covered and labelled exercise books to help the pack arrive
-            ready for the first school day.{" "}
-            <Link
-              href="/blog/what-is-pexcover-book-covering"
-              className={styles.inlineAction}
-              style={{ display: "inline", fontSize: "inherit" }}
-            >
-              Read more
-            </Link>
-          </p>
-          <p
-            style={{
-              margin: "6px 0 0 0",
-              fontSize: "12px",
-              color: "var(--pex-text-muted)",
-              lineHeight: 1.45,
-            }}
-          >
-            Pexcover applies to exercise books included in the selected school
-            pack.
-          </p>
-        </div>
-        <label className={styles.addonCheckbox}>
-          <input
-            type="checkbox"
-            checked={hasPexcover}
-            onChange={(event) => setHasPexcover(event.target.checked)}
-          />
-          <span>Add Pexcover for {formatCurrency(PEXCOVER_PRICE)}</span>
-        </label>
-        {hasPexcover ? (
-          <div className={styles.formGrid}>
-            <div className={styles.fieldGroup}>
-              <label htmlFor="pexcover-name">Learner name for labels</label>
-              <input
-                id="pexcover-name"
-                value={pexcoverName}
-                placeholder="Optional"
-                onChange={(event) => setPexcoverName(event.target.value)}
-              />
-            </div>
-            <div className={styles.fieldGroup}>
-              <label htmlFor="pexcover-format">Label format</label>
-              <select
-                id="pexcover-format"
-                value={pexcoverLabelFormat}
-                onChange={(event) => setPexcoverLabelFormat(event.target.value)}
+      {isMultiSchoolPack && gradePexcovers && setGradePexcovers ? (
+        <div className={styles.addonCard}>
+          <div>
+            <p className={styles.confirmKicker}>Optional add-on per grade</p>
+            <h3>Pexcover book covering</h3>
+            <p>
+              Select which grades get covered and labelled exercise books.{" "}
+              <Link
+                href="/blog/what-is-pexcover-book-covering"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.inlineAction}
+                style={{ display: "inline", fontSize: "inherit" }}
               >
-                <option>First Name + Surname</option>
-                <option>First Name + Initial</option>
-                <option>Initials + Surname</option>
-              </select>
-            </div>
-            <div className={styles.fieldGroup}>
-              <label htmlFor="pexcover-subjects">Subject names optional</label>
-              <input
-                id="pexcover-subjects"
-                value={pexcoverSubjects}
-                placeholder="English, Maths, Life Skills"
-                onChange={(event) => setPexcoverSubjects(event.target.value)}
-              />
-            </div>
-            <div className={styles.fieldGroup}>
-              <label htmlFor="pexcover-notes">Special notes optional</label>
-              <input
-                id="pexcover-notes"
-                value={pexcoverNotes}
-                placeholder="Any covering instructions?"
-                onChange={(event) => setPexcoverNotes(event.target.value)}
-              />
-            </div>
+                Read more
+              </Link>
+            </p>
           </div>
-        ) : null}
-      </div>
+          <div className={styles.gradePexcoverList}>
+            {gradePexcovers.map((entry, index) => (
+              <div key={entry.gradeLabel} className={styles.gradePexcoverRow}>
+                <label className={styles.addonCheckbox}>
+                  <input
+                    type="checkbox"
+                    checked={entry.selected}
+                    onChange={() => {
+                      const next = gradePexcovers.map((e, i) =>
+                        i === index ? { ...e, selected: !e.selected } : e,
+                      );
+                      setGradePexcovers(next);
+                    }}
+                  />
+                  <span>
+                    {entry.gradeLabel} &middot;{" "}
+                    {formatCurrency(PEXCOVER_PRICE)}
+                  </span>
+                </label>
+                {entry.selected ? (
+                  <input
+                    className={styles.pexcoverChildInput}
+                    type="text"
+                    placeholder="Child name for labels (optional)"
+                    value={entry.childName}
+                    onChange={(e) => {
+                      const next = gradePexcovers.map((g, i) =>
+                        i === index
+                          ? { ...g, childName: e.target.value }
+                          : g,
+                      );
+                      setGradePexcovers(next);
+                    }}
+                  />
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`${styles.addonCard} ${
+            hasPexcover ? styles.addonCardActive : ""
+          }`}
+        >
+          <div>
+            <p className={styles.confirmKicker}>Optional add-on</p>
+            <h3>Pexcover book covering</h3>
+            <p>
+              Add covered and labelled exercise books to help the pack arrive
+              ready for the first school day.{" "}
+              <Link
+                href="/blog/what-is-pexcover-book-covering"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.inlineAction}
+                style={{ display: "inline", fontSize: "inherit" }}
+              >
+                Read more
+              </Link>
+            </p>
+            <p
+              style={{
+                margin: "6px 0 0 0",
+                fontSize: "12px",
+                color: "var(--pex-text-muted)",
+                lineHeight: 1.45,
+              }}
+            >
+              Pexcover applies to exercise books included in the selected school
+              pack.
+            </p>
+          </div>
+          <label className={styles.addonCheckbox}>
+            <input
+              type="checkbox"
+              checked={hasPexcover}
+              onChange={(event) => setHasPexcover(event.target.checked)}
+            />
+            <span>Add Pexcover for {formatCurrency(PEXCOVER_PRICE)}</span>
+          </label>
+          {hasPexcover ? (
+            <div className={styles.formGrid}>
+              <div className={styles.fieldGroup}>
+                <label htmlFor="pexcover-name">Learner name for labels</label>
+                <input
+                  id="pexcover-name"
+                  value={pexcoverName}
+                  placeholder="Optional"
+                  onChange={(event) => setPexcoverName(event.target.value)}
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label htmlFor="pexcover-format">Label format</label>
+                <select
+                  id="pexcover-format"
+                  value={pexcoverLabelFormat}
+                  onChange={(event) => setPexcoverLabelFormat(event.target.value)}
+                >
+                  <option>First Name + Surname</option>
+                  <option>First Name + Initial</option>
+                  <option>Initials + Surname</option>
+                </select>
+              </div>
+              <div className={styles.fieldGroup}>
+                <label htmlFor="pexcover-subjects">Subject names optional</label>
+                <input
+                  id="pexcover-subjects"
+                  value={pexcoverSubjects}
+                  placeholder="English, Maths, Life Skills"
+                  onChange={(event) => setPexcoverSubjects(event.target.value)}
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label htmlFor="pexcover-notes">Special notes optional</label>
+                <input
+                  id="pexcover-notes"
+                  value={pexcoverNotes}
+                  placeholder="Any covering instructions?"
+                  onChange={(event) => setPexcoverNotes(event.target.value)}
+                />
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

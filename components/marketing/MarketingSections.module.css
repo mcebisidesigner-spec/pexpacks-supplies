@@ -32,6 +32,23 @@
   margin-top: 24px;
 }
 
+.splitBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.splitBadges span {
+  border: 1px solid rgba(33, 158, 154, 0.2);
+  border-radius: var(--radius-pill);
+  padding: 7px 11px;
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-primary);
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .sectionHeader {
   max-width: 760px;
   margin: 0 0 34px;

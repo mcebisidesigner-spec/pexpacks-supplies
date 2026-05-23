@@ -113,6 +113,8 @@ export function FulfilmentStep({
             Home delivery incurs an additional delivery fee based on your location. Please read our{" "}
             <Link
               href="/delivery-policy"
+              target="_blank"
+              rel="noopener noreferrer"
               className={styles.inlineAction}
               style={{ display: "inline", fontSize: "inherit" }}
             >

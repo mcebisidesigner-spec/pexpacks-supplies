@@ -98,6 +98,17 @@
   transform: translateY(-4px);
 }
 
+.resultCardWarm {
+  border-color: rgba(190, 147, 64, 0.48);
+  background:
+    linear-gradient(135deg, rgba(190, 147, 64, 0.16), rgba(255, 255, 255, 0.76)),
+    var(--pex-bg);
+}
+
+.resultCardWarm .resultIcon {
+  background: #be9340;
+}
+
 .resultIcon {
   width: 48px;
   height: 48px;

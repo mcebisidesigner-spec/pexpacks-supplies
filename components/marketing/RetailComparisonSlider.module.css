@@ -64,6 +64,9 @@
     linear-gradient(135deg, #168f84, var(--pex-primary));
   color: var(--pex-bg);
   clip-path: inset(0 0 0 var(--comparison-position));
+  transition:
+    clip-path 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .paneLabel {
@@ -143,6 +146,9 @@
   background: var(--pex-bg);
   transform: translateX(-50%);
   box-shadow: 0 0 0 1px rgba(26, 42, 64, 0.16);
+  transition:
+    background var(--motion-duration) var(--motion-ease),
+    box-shadow var(--motion-duration) var(--motion-ease);
 }
 
 .handle span {
@@ -154,7 +160,20 @@
   border-radius: 999px;
   background: var(--pex-bg);
   transform: translate(-50%, -50%);
-  box-shadow: 0 18px 34px rgba(26, 42, 64, 0.22);
+  box-shadow:
+    0 18px 34px rgba(26, 42, 64, 0.22),
+    0 0 0 0 rgba(33, 158, 154, 0.28);
+  transition:
+    transform var(--motion-duration) var(--motion-ease),
+    box-shadow var(--motion-duration) var(--motion-ease);
+}
+
+.stage:hover .handle span,
+.stage:focus-within .handle span {
+  transform: translate(-50%, -50%) scale(1.04);
+  box-shadow:
+    0 18px 34px rgba(26, 42, 64, 0.22),
+    0 0 0 9px rgba(33, 158, 154, 0.14);
 }
 
 .handle span::before,

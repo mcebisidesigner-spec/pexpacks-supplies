@@ -43,8 +43,8 @@ export function SubmitStep({
             </div>
           </dl>
           <div className={styles.successActions}>
-            <Button href="/" variant="secondary">Back to Home</Button>
-            <Button href="/schools">Find another pack</Button>
+            <Button href="/" variant="secondary" target="_blank" rel="noopener noreferrer">Back to Home</Button>
+            <Button href="/schools" target="_blank" rel="noopener noreferrer">Find another pack</Button>
           </div>
         </div>
       ) : (

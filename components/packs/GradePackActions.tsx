@@ -56,7 +56,7 @@ export function GradePackActions({
   showDownloadLink = true,
   showMicrocopy = true,
   layout = "compact",
-  downloadLabel = "View official teacher list (PDF)",
+  downloadLabel = "Download list (PDF)",
 }: GradePackActionsProps) {
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);

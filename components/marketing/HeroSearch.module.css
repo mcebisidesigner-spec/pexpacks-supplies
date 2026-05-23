@@ -120,6 +120,69 @@
   gap: 10px;
 }
 
+.quickStartPanel {
+  display: grid;
+  gap: 12px;
+}
+
+.quickStartLabel {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.alphabetStrip {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.letterButton,
+.popularSchoolButton {
+  border: 1px solid rgba(33, 158, 154, 0.22);
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-primary);
+  font-family: var(--font-button);
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background var(--motion-duration) var(--motion-ease),
+    border-color var(--motion-duration) var(--motion-ease),
+    transform var(--motion-duration) var(--motion-ease);
+}
+
+.letterButton {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+}
+
+.popularSchools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.popularSchoolButton {
+  min-height: 36px;
+  border-radius: var(--radius-pill);
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.letterButton:hover,
+.letterButton:focus-visible,
+.popularSchoolButton:hover,
+.popularSchoolButton:focus-visible {
+  border-color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.16);
+  transform: translateY(-1px);
+}
+
 .heroResultCard {
   padding: 16px 18px;
   border-radius: 18px;

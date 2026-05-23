@@ -99,13 +99,16 @@ export default function HomePage() {
           <div>
             <p className={heroStyles.eyebrow}>Save time, Pex it.</p>
             <h1 className={heroStyles.heroTitle}>
-              Everything packed. Everything
+              School stationery,
               <span className={heroStyles.mobileInlineSpace}> </span>
               <br className={heroStyles.desktopBreak} />
-              ready
+              <span className={heroStyles.heroTitleGradient}>
+                perfectly pre-packed.
+              </span>
             </h1>
             <p className={heroStyles.heroLead}>
-              No queues. No confusion. No missing items.
+              Find your school, choose the grade, and get the correct pack
+              prepared before the school rush.
             </p>
             <HeroSearch />
 
@@ -194,14 +197,21 @@ export default function HomePage() {
                   >
                     {pack.description}
                   </p>
-                  <ul className={cardStyles.packPreview}>
-                    {pack.includes.slice(0, 3).map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                  <div style={{ marginTop: "auto", paddingBottom: "20px" }}>
+                  <div className={cardStyles.packMetaRow}>
                     <span className={cardStyles.priceBadge}>
                       {pack.priceLabel}
+                    </span>
+                    <span
+                      className={cardStyles.quickListPreview}
+                      tabIndex={0}
+                      aria-label={`${pack.name} quick list preview: ${pack.includes.join(", ")}`}
+                    >
+                      Quick list preview
+                      <span className={cardStyles.quickListTooltip} role="tooltip">
+                        {pack.includes.map((item) => (
+                          <span key={item}>{item}</span>
+                        ))}
+                      </span>
                     </span>
                   </div>
                 </div>

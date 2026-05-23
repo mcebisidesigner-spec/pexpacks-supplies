@@ -7,10 +7,10 @@
   background: var(--pex-primary);
   color: var(--pex-bg);
   box-shadow: 0 -8px 30px rgba(26, 42, 64, 0.18);
-  animation: slideUpBanner 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeInSlideUpBanner 0.42s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes slideUpBanner {
+@keyframes fadeInSlideUpBanner {
   from {
     transform: translateY(100%);
     opacity: 0;

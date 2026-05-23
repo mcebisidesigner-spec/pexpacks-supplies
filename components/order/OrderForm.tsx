@@ -18,6 +18,7 @@ import {
   checkoutSteps,
   type ApiResponse,
   type FulfilmentOption,
+  type GradePexcoverEntry,
   type OrderFormProps,
   type SchoolDetails,
   type SchoolSearchResult,
@@ -30,6 +31,7 @@ import {
   isValidEmail,
   isLikelySaPhone,
 } from "./orderFormHelpers";
+import { useCheckoutPersistence, clearCheckoutState } from "@/lib/order/checkoutPersistence";
 import styles from "./Order.module.css";
 
 export function OrderForm({
@@ -62,6 +64,8 @@ export function OrderForm({
     typeof orderDraft?.estimatedTotal === "number"
       ? String(orderDraft.estimatedTotal)
       : initialEstimatedTotal;
+  const effectiveSubtotal = orderDraft?.subtotal ?? 0;
+  const effectiveDiscount = orderDraft?.discount ?? 0;
   const standardSelection = useMemo(
     () =>
       resolveStandardSelection({
@@ -119,12 +123,24 @@ export function OrderForm({
     "First Name + Surname",
   );
   const [pexcoverNotes, setPexcoverNotes] = useState("");
+  const [gradePexcovers, setGradePexcovers] = useState<GradePexcoverEntry[]>(
+    () =>
+      isMultiSchoolPack
+        ? siblingGradeLabels.map((label) => ({
+            gradeLabel: label,
+            selected: false,
+            childName: "",
+          }))
+        : [],
+  );
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<ApiResponse | null>(null);
   const [orderReference, setOrderReference] = useState("");
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [restoreBanner, setRestoreBanner] = useState(false);
+  const persistence = useCheckoutPersistence();
 
   const currentStep = checkoutSteps[activeStep];
   const selectedGrade = useMemo(
@@ -174,9 +190,14 @@ export function OrderForm({
       siblingGradeLabels.length ||
       selectedPackItems.length
     : selectedPackItems.length;
+  const pexcoverCount = isMultiSchoolPack
+    ? gradePexcovers.filter((g) => g.selected).length
+    : hasPexcover
+      ? 1
+      : 0;
   const estimatedTotal =
     typeof selectedPackPrice === "number"
-      ? selectedPackPrice + (hasPexcover ? PEXCOVER_PRICE : 0)
+      ? selectedPackPrice + pexcoverCount * PEXCOVER_PRICE
       : undefined;
   const schoolName = standardSelection
     ? standardSelection.phaseTitle
@@ -207,6 +228,85 @@ export function OrderForm({
   useEffect(() => {
     setOrderReference(createOrderReference());
   }, []);
+
+  /* Check for saved checkout state to offer resume */
+  useEffect(() => {
+    const saved = persistence.load();
+    if (
+      saved &&
+      !initialDraftId &&
+      !initialSchool &&
+      !initialGrade &&
+      !initialPhase
+    ) {
+      setRestoreBanner(true);
+    }
+  }, [initialDraftId, initialGrade, initialPhase, initialSchool, persistence]);
+
+  /* Auto-save order state on changes (debounced) */
+  const initialMount = useRef(true);
+  useEffect(() => {
+    if (initialMount.current) {
+      initialMount.current = false;
+      return;
+    }
+    if (standardSelection) return;
+
+    const params = new URLSearchParams(window.location.search).toString();
+    const state = {
+      activeStep,
+      schoolQuery,
+      selectedSchoolSlug: selectedSchool?.slug,
+      gradeSlug,
+      buyerName,
+      buyerPhone,
+      buyerEmail,
+      learnerName,
+      preferredContactMethod,
+      consent,
+      fulfilmentOption,
+      address,
+      suburb,
+      city,
+      province,
+      deliveryNotes,
+      finalConfirmation,
+      hasPexcover,
+      pexcoverName,
+      pexcoverSubjects,
+      pexcoverLabelFormat,
+      pexcoverNotes,
+      orderRef: orderReference,
+      params,
+    };
+    persistence.save(state);
+  }, [
+    activeStep,
+    schoolQuery,
+    selectedSchool,
+    gradeSlug,
+    buyerName,
+    buyerPhone,
+    buyerEmail,
+    learnerName,
+    preferredContactMethod,
+    consent,
+    fulfilmentOption,
+    address,
+    suburb,
+    city,
+    province,
+    deliveryNotes,
+    finalConfirmation,
+    hasPexcover,
+    pexcoverName,
+    pexcoverSubjects,
+    pexcoverLabelFormat,
+    pexcoverNotes,
+    orderReference,
+    persistence,
+    standardSelection,
+  ]);
 
   useEffect(() => {
     if (!initialDraftId) {
@@ -488,9 +588,17 @@ export function OrderForm({
       fulfilmentOption === "Home delivery"
         ? `Fulfilment: Home delivery. Address: ${address}, ${suburb}, ${city}, ${province}. Notes: ${deliveryNotes || "None"}.`
         : `Fulfilment: ${fulfilmentOption}. Notes: ${deliveryNotes || "None"}.`;
-    const pexcoverMessage = hasPexcover
-      ? ` Pexcover requested. Learner: ${pexcoverName || learnerName || buyerName}. Subjects: ${pexcoverSubjects || "Standard"}. Label format: ${pexcoverLabelFormat}. Notes: ${pexcoverNotes || "None"}.`
-      : "";
+    const pexcoverMessage = isMultiSchoolPack
+      ? gradePexcovers
+          .filter((g) => g.selected)
+          .map(
+            (g) =>
+              `Pexcover for ${g.gradeLabel}. Learner: ${g.childName || "Not specified"}.`,
+          )
+          .join(" ")
+      : hasPexcover
+        ? ` Pexcover requested. Learner: ${pexcoverName || learnerName || buyerName}. Subjects: ${pexcoverSubjects || "Standard"}. Label format: ${pexcoverLabelFormat}. Notes: ${pexcoverNotes || "None"}.`
+        : "";
     const selectedItemsMessage = selectedPackItems.length
       ? `Selected items: ${selectedPackItems.join("; ")}.`
       : "";
@@ -570,6 +678,7 @@ export function OrderForm({
       const result = (await response.json()) as ApiResponse;
       setSubmitStatus(result);
       if (result.success) {
+        clearCheckoutState();
         goToStep(4);
       }
     } catch {
@@ -602,6 +711,67 @@ export function OrderForm({
             steps={checkoutSteps.map((step) => step.label)}
             activeStep={activeStep}
           />
+
+          {restoreBanner ? (
+            <div className={styles.restoreBanner} role="status">
+              <p>
+                <strong>You have an incomplete checkout.</strong> Pick up where you left off?
+              </p>
+              <div className={styles.restoreActions}>
+                <button
+                  type="button"
+                  className={styles.restoreBtn}
+                  onClick={() => {
+                    const saved = persistence.load();
+                    if (saved) {
+                      setActiveStep(saved.activeStep);
+                      setSchoolQuery(saved.schoolQuery ?? "");
+                      setGradeSlug(saved.gradeSlug ?? "");
+                      setBuyerName(saved.buyerName ?? "");
+                      setBuyerPhone(saved.buyerPhone ?? "");
+                      setBuyerEmail(saved.buyerEmail ?? "");
+                      setLearnerName(saved.learnerName ?? "");
+                      setPreferredContactMethod(
+                        saved.preferredContactMethod ?? "whatsapp",
+                      );
+                      setConsent(saved.consent ?? false);
+                      setFulfilmentOption(
+                        (saved.fulfilmentOption as FulfilmentOption) ??
+                          "School collection",
+                      );
+                      setAddress(saved.address ?? "");
+                      setSuburb(saved.suburb ?? "");
+                      setCity(saved.city ?? "");
+                      setProvince(saved.province ?? "");
+                      setDeliveryNotes(saved.deliveryNotes ?? "");
+                      setFinalConfirmation(saved.finalConfirmation ?? false);
+                      setHasPexcover(saved.hasPexcover ?? false);
+                      setPexcoverName(saved.pexcoverName ?? "");
+                      setPexcoverSubjects(saved.pexcoverSubjects ?? "");
+                      setPexcoverLabelFormat(
+                        saved.pexcoverLabelFormat ?? "First Name + Surname",
+                      );
+                      setPexcoverNotes(saved.pexcoverNotes ?? "");
+                      setOrderReference(saved.orderRef ?? "");
+                    }
+                    setRestoreBanner(false);
+                  }}
+                >
+                  Resume checkout
+                </button>
+                <button
+                  type="button"
+                  className={styles.restoreDismiss}
+                  onClick={() => {
+                    clearCheckoutState();
+                    setRestoreBanner(false);
+                  }}
+                >
+                  Start fresh
+                </button>
+              </div>
+            </div>
+          ) : null}
 
           <article
             className={styles.stepCard}
@@ -642,6 +812,9 @@ export function OrderForm({
                 setPexcoverLabelFormat={setPexcoverLabelFormat}
                 pexcoverNotes={pexcoverNotes}
                 setPexcoverNotes={setPexcoverNotes}
+                gradePexcovers={gradePexcovers}
+                setGradePexcovers={setGradePexcovers}
+                isMultiSchoolPack={isMultiSchoolPack}
                 selectedPackTitle={selectedPackTitle}
                 packKind={packKind}
                 schoolName={schoolName}
@@ -768,7 +941,10 @@ export function OrderForm({
           supportHref={supportHref}
           summaryOpen={summaryOpen}
           setSummaryOpen={setSummaryOpen}
-          hasPexcover={hasPexcover}
+          hasPexcover={isMultiSchoolPack ? pexcoverCount > 0 : hasPexcover}
+          pexcoverCount={pexcoverCount}
+          subtotal={isMultiSchoolPack ? effectiveSubtotal : undefined}
+          discount={isMultiSchoolPack ? effectiveDiscount : undefined}
         />
       </div>
 

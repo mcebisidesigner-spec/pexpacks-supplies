@@ -27,6 +27,15 @@ const gradeOptions = [
 
 const resultLimit = 8;
 
+const alphabetLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+const popularSchools = [
+  "Parktown Primary",
+  "Auckland Park Primary",
+  "Mamelodi Primary",
+  "Bryanston Primary",
+];
+
 function gradeLabel(grades: string[]) {
   if (grades.length <= 3) {
     return grades.join(", ");
@@ -57,6 +66,8 @@ export function HeroSearch() {
     resultLimit,
     errorMessage: "We couldn't search schools right now. Please try again.",
   });
+
+  const queryEmpty = query.trim().length === 0;
 
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
@@ -101,7 +112,37 @@ export function HeroSearch() {
                 {error}
               </p>
             ) : null}
-            {!isLoading && queryReady && hasSearched && !error ? (
+            {queryEmpty ? (
+              <div className={styles.quickStartPanel}>
+                <p className={styles.quickStartLabel}>Browse schools by letter</p>
+                <div className={styles.alphabetStrip} aria-label="School alphabet quick index">
+                  {alphabetLetters.map((letter) => (
+                    <button
+                      type="button"
+                      className={styles.letterButton}
+                      onClick={() => updateQuery(letter)}
+                      key={letter}
+                    >
+                      {letter}
+                    </button>
+                  ))}
+                </div>
+                <p className={styles.quickStartLabel}>Popular Gauteng schools</p>
+                <div className={styles.popularSchools}>
+                  {popularSchools.map((school) => (
+                    <button
+                      type="button"
+                      className={styles.popularSchoolButton}
+                      onClick={() => updateQuery(school)}
+                      key={school}
+                    >
+                      {school}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {!queryEmpty && !isLoading && queryReady && hasSearched && !error ? (
               <>
                 <div className={styles.resultsCount}>
                   <strong>

@@ -267,16 +267,20 @@
 .popularPill {
   position: absolute;
   top: 14px;
-  right: 14px;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  background: var(--pex-keppel);
+  right: -38px;
+  z-index: 2;
+  width: 148px;
+  padding: 7px 12px;
+  background: linear-gradient(90deg, var(--pex-coral), #be9340, var(--pex-coral));
   color: var(--pex-bg);
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   line-height: 1.4;
+  text-align: center;
+  transform: rotate(34deg);
+  box-shadow: 0 10px 22px rgba(190, 147, 64, 0.24);
 }
 
 @media (max-width: 820px) {
@@ -346,12 +350,73 @@
 }
 
 .packPreview li::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--pex-keppel);
+  content: "✓";
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  color: var(--pex-keppel);
+  font-weight: 900;
   flex-shrink: 0;
+}
+
+.packMetaRow {
+  position: relative;
+  margin-top: auto;
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quickListPreview {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  border: 1px solid rgba(33, 158, 154, 0.2);
+  border-radius: var(--radius-pill);
+  padding: 5px 10px;
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-primary);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: default;
+}
+
+.quickListTooltip {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  bottom: calc(100% + 10px);
+  width: min(260px, 78vw);
+  display: grid;
+  gap: 6px;
+  border: var(--card-border);
+  border-radius: 14px;
+  padding: 12px;
+  background: var(--pex-bg);
+  color: var(--pex-text);
+  box-shadow: var(--card-shadow-hover);
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity var(--motion-duration) var(--motion-ease),
+    transform var(--motion-duration) var(--motion-ease);
+}
+
+.quickListTooltip span {
+  color: var(--pex-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.quickListPreview:hover .quickListTooltip,
+.quickListPreview:focus-visible .quickListTooltip {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .packMedia {

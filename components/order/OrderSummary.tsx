@@ -16,6 +16,9 @@ type OrderSummaryProps = {
   summaryOpen: boolean;
   setSummaryOpen: (open: boolean) => void;
   hasPexcover?: boolean;
+  pexcoverCount?: number;
+  subtotal?: number;
+  discount?: number;
 };
 
 export function OrderSummary({
@@ -30,6 +33,9 @@ export function OrderSummary({
   summaryOpen,
   setSummaryOpen,
   hasPexcover,
+  pexcoverCount = hasPexcover ? 1 : 0,
+  subtotal,
+  discount,
 }: OrderSummaryProps) {
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">
@@ -62,12 +68,6 @@ export function OrderSummary({
             <dt>Selected items</dt>
             <dd>{itemCount || "Confirming"}</dd>
           </div>
-          {hasPexcover ? (
-            <div style={{ color: "var(--pex-keppel)", fontWeight: 700 }}>
-              <dt>Pexcover book covering</dt>
-              <dd>+ {formatCurrency(PEXCOVER_PRICE)}</dd>
-            </div>
-          ) : null}
           <div>
             <dt>Delivery / collection</dt>
             <dd>{fulfilmentOption}</dd>
@@ -91,11 +91,11 @@ export function OrderSummary({
           <li>Privacy-aware order request</li>
         </ul>
         {supportHref ? (
-          <a className={styles.supportLink} href={supportHref}>
+          <a className={styles.supportLink} href={supportHref} target="_blank" rel="noopener noreferrer">
             Need help? Chat to Pexpacks
           </a>
         ) : (
-          <a className={styles.supportLink} href={ordersEmailHref}>
+          <a className={styles.supportLink} href={ordersEmailHref} target="_blank" rel="noopener noreferrer">
             Need help? Email {ordersEmail}
           </a>
         )}

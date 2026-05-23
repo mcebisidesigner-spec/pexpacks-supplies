@@ -31,7 +31,7 @@ export function BookCoveringBanner() {
               >
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
-              <span>Heavy-duty plastic book covering</span>
+              <span>Covered in heavy-duty protective film</span>
             </li>
             <li>
               <svg
@@ -44,7 +44,7 @@ export function BookCoveringBanner() {
               >
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
-              <span>Personalised name labels on every item</span>
+              <span>Personalized custom name tags printed</span>
             </li>
             <li>
               <svg
@@ -57,7 +57,7 @@ export function BookCoveringBanner() {
               >
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
-              <span>Color-coded subject labels</span>
+              <span>Exercise books sorted and classroom-ready</span>
             </li>
           </ul>
           <div className={styles.bookCoveringActions}>

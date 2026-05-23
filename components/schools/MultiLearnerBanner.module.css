@@ -28,3 +28,32 @@
   background: rgba(33, 158, 154, 0.1);
   border-color: rgba(33, 158, 154, 0.32);
 }
+
+.quickAddLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(33, 158, 154, 0.12);
+  color: var(--pex-keppel);
+  transition: background 0.2s ease, transform 0.2s ease;
+  animation: bounceArrow 2s ease-in-out infinite;
+}
+
+.quickAddLink:hover {
+  background: rgba(33, 158, 154, 0.22);
+  transform: scale(1.1);
+}
+
+@keyframes bounceArrow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}

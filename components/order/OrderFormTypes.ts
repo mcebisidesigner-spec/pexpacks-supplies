@@ -57,6 +57,12 @@ export type FulfilmentOption =
 
 export { PEXCOVER_PRICE } from "@/lib/constants";
 
+export type GradePexcoverEntry = {
+  gradeLabel: string;
+  selected: boolean;
+  childName: string;
+};
+
 export const checkoutSteps: CheckoutStep[] = [
   {
     id: "review",

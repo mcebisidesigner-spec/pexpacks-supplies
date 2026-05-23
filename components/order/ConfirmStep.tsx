@@ -93,10 +93,10 @@ export function ConfirmStep({
         />
         <span>
           I confirm the order details are correct and agree to the{" "}
-          <Link href="/terms">Terms</Link>,{" "}
-          <Link href="/privacy-policy">Privacy Policy</Link>,{" "}
-          <Link href="/delivery-policy">Delivery Policy</Link>, and{" "}
-          <Link href="/returns-refunds-policy">
+          <Link href="/terms" target="_blank" rel="noopener noreferrer">Terms</Link>,{" "}
+          <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>,{" "}
+          <Link href="/delivery-policy" target="_blank" rel="noopener noreferrer">Delivery Policy</Link>, and{" "}
+          <Link href="/returns-refunds-policy" target="_blank" rel="noopener noreferrer">
             Returns & Refunds Policy
           </Link>
           .

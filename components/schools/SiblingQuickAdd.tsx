@@ -85,6 +85,8 @@ export function SiblingQuickAdd({ school }: SiblingQuickAddProps) {
       siblingPackCount: currentGrades.length,
       selectedItems: currentGrades.map(gradeLine).join("; "),
       estimatedTotal: currentTotal,
+      subtotal: currentSubtotal,
+      discount: currentDiscount,
     });
     const params = new URLSearchParams({
       school: school.slug,

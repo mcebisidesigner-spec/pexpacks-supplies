@@ -199,6 +199,32 @@
   box-shadow: var(--card-shadow);
 }
 
+.gradePexcoverList {
+  display: grid;
+  gap: 10px;
+}
+
+.gradePexcoverRow {
+  display: grid;
+  gap: 8px;
+}
+
+.pexcoverChildInput {
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-pill);
+  padding: 0 14px;
+  background: var(--pex-bg);
+  color: var(--pex-text);
+  font-size: 14px;
+  outline: none;
+}
+
+.pexcoverChildInput:focus {
+  border-color: var(--pex-keppel);
+}
+
 .addonCheckbox {
   border-radius: var(--radius-card-compact);
   padding: 14px;
@@ -765,6 +791,71 @@
 
 .mobileStickyCta {
   display: none;
+}
+
+.restoreBanner {
+  border: 2px solid var(--pex-keppel);
+  border-radius: var(--radius-card);
+  padding: 18px 22px;
+  background: rgba(33, 158, 154, 0.06);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 20px;
+  animation: fadeSlideIn 0.4s ease both;
+}
+
+.restoreBanner p {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.restoreActions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.restoreBtn,
+.restoreDismiss {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--button-transition);
+}
+
+.restoreBtn {
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+}
+
+.restoreBtn:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+}
+
+.restoreDismiss {
+  background: var(--pex-bg);
+  color: var(--pex-text-muted);
+  box-shadow: inset 0 0 0 1px var(--pex-border);
+}
+
+.restoreDismiss:hover {
+  background: var(--pex-bg-soft);
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 1024px) {

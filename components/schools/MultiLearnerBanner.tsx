@@ -34,6 +34,14 @@ export function MultiLearnerBanner() {
 
   const discountActive = selectedCount >= 2;
 
+  function scrollToQuickAdd(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    const target = document.getElementById("sibling-quick-add");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   return (
     <div
       className={`${styles.multiLearnerBanner} ${
@@ -69,6 +77,27 @@ export function MultiLearnerBanner() {
             : "Get 5% off when you order 2 or more packs from the same school."}
         </span>
       </div>
+      <a
+        href="#sibling-quick-add"
+        onClick={scrollToQuickAdd}
+        className={styles.quickAddLink}
+        aria-label="Jump to Sibling Quick-Add"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M7 13l5 5 5-5" />
+          <path d="M7 6l5 5 5-5" />
+        </svg>
+      </a>
     </div>
   );
 }

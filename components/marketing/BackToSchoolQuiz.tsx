@@ -192,7 +192,12 @@ export function BackToSchoolQuiz() {
           <div className={styles.progress} aria-hidden="true">
             {questions.map((question, index) => (
               <span
-                className={index <= activeIndex ? styles.progressActive : ""}
+                className={[
+                  index <= activeIndex ? styles.progressActive : "",
+                  answers[question.id] ? styles.progressCompleted : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 key={question.id}
               />
             ))}
@@ -208,11 +213,18 @@ export function BackToSchoolQuiz() {
               <div className={styles.optionGrid}>
                 {currentQuestion.options.map((option) => (
                   <button
-                    className={styles.optionButton}
+                    className={`${styles.optionButton} ${
+                      answers[currentQuestion.id] === option.value
+                        ? styles.optionSelected
+                        : ""
+                    }`}
                     type="button"
                     onClick={() => answerQuestion(option.value)}
                     key={option.value}
                   >
+                    <span className={styles.optionCheck} aria-hidden="true">
+                      ✓
+                    </span>
                     {option.label}
                   </button>
                 ))}

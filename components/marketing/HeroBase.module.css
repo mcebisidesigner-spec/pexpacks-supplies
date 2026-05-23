@@ -30,6 +30,14 @@
   display: none;
 }
 
+.heroTitleGradient {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--pex-keppel), var(--pex-navy));
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 .heroLead,
 .pageLead {
   max-width: 700px;
@@ -115,6 +123,7 @@
   box-shadow: 0 22px 44px rgba(0, 0, 0, 0.18);
   display: grid;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-origin: left bottom;
 }
 
 .brandBox:hover {
@@ -295,6 +304,7 @@
   .heroVisual {
     min-height: 390px;
     border-radius: 24px;
+    animation: none;
   }
 
   .productScene {
@@ -371,5 +381,11 @@
 
   .brandBox strong {
     font-size: 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroVisual {
+    animation: none;
   }
 }

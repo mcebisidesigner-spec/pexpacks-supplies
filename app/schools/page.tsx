@@ -114,11 +114,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                   >
                     {pack.description}
                   </p>
-                  <ul className={cardStyles.packPreview}>
-                    {pack.includes.slice(0, 3).map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
                   <div style={{ marginTop: "auto", paddingBottom: "20px" }}>
                     <span className={cardStyles.priceBadge}>
                       {pack.priceLabel}
