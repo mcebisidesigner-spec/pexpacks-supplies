@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createEmailTemplate } from "@/lib/email/templates";
-import { recipientForEndpoint, sendPexpacksEmail } from "@/lib/email/mailer";
 import { normaliseSubmittedTotal } from "@/lib/order/orderTotals";
 import {
   isSameOriginRequest,
   rateLimitRequest,
 } from "@/lib/security/requestGuards";
 import {
-  FORM_ERROR_MESSAGE,
   FORM_SUCCESS_MESSAGE,
   FORM_VALIDATION_MESSAGE,
   type FormEndpointKind,
@@ -16,7 +13,6 @@ import {
 import {
   isHoneypotSubmission,
   readFormBody,
-  type SubmittedFormAttachment,
   validateFormSubmission,
 } from "@/lib/forms/validation";
 
@@ -89,12 +85,9 @@ export async function handlePexpacksFormRequest(
 
   let raw: Record<string, unknown>;
 
-  let attachments: SubmittedFormAttachment[] = [];
-
   try {
     const body = await readFormBody(request);
     raw = withRequestMetadata(request, body.raw);
-    attachments = body.attachments;
     if (body.fileError) {
       return json(
         {
@@ -126,35 +119,12 @@ export async function handlePexpacksFormRequest(
     );
   }
 
-  // Future: persist this payload to Supabase before sending email.
   const data =
     endpoint === "order"
       ? await withOrderTotal(validation.data)
       : validation.data;
-  const recipient = recipientForEndpoint(endpoint);
 
-  if (!recipient) {
-    console.error("[SMTP] SMTP_TO_EMAIL or endpoint recipient is not set.");
-    return json({ success: false, message: FORM_ERROR_MESSAGE }, 500);
-  }
-
-  const template = createEmailTemplate(endpoint, data);
-  const result = await sendPexpacksEmail({
-    to: recipient,
-    replyTo: data.email,
-    subject: template.subject,
-    text: template.text,
-    html: template.html,
-    formType: data.formType,
-    attachments,
-    metadata: {
-      sourceUrl: data.sourceUrl || data.pageUrl,
-    },
-  });
-
-  if (!result.success) {
-    return json({ success: false, message: FORM_ERROR_MESSAGE }, 500);
-  }
+  // TODO: Connect Resend to deliver form submissions via email.
 
   return json({ success: true, message: FORM_SUCCESS_MESSAGE }, 200);
 }

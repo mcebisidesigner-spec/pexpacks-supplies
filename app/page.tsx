@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
@@ -299,7 +300,7 @@ No queues. No confusion. No missing items.
                 match it exactly.
               </p>
               <div className={sectionStyles.faqLinks}>
-                <a href="/schools">Search your school</a>
+                <Link href="/schools">Search your school</Link>
                 <a href="/order">Start customising</a>
               </div>
             </details>
