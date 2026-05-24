@@ -86,6 +86,25 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
               ].includes(faq.id)
             )}
           />
+          <div style={{ textAlign: "center", marginTop: "28px" }}>
+            <Link
+              href="/faq"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "10px 22px",
+                borderRadius: "var(--radius-pill)",
+                background: "rgba(33, 158, 154, 0.1)",
+                color: "var(--pex-keppel)",
+                fontWeight: 800,
+                fontSize: "15px",
+                textDecoration: "none",
+              }}
+            >
+              Read all FAQs &rarr;
+            </Link>
+          </div>
         </div>
       </section>
     </>

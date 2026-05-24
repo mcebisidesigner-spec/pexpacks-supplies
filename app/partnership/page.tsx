@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PartnerForm } from "@/components/forms/PartnerForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
@@ -281,6 +282,25 @@ export default function PartnerWithSchoolsPage() {
               </details>
             ))}
           </div>
+          <div style={{ textAlign: "center", marginTop: "28px" }}>
+            <Link
+              href="/faq"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "10px 22px",
+                borderRadius: "var(--radius-pill)",
+                background: "rgba(33, 158, 154, 0.1)",
+                color: "var(--pex-keppel)",
+                fontWeight: 800,
+                fontSize: "15px",
+                textDecoration: "none",
+              }}
+            >
+              Read all FAQs &rarr;
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -292,6 +312,39 @@ export default function PartnerWithSchoolsPage() {
             text="Complete the form below and our team will get in touch to discuss the school website, grade packs, and launch path."
           />
           <PartnerForm />
+        </div>
+      </section>
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>Explore more</p>
+              <h2>Find school packs &amp; office supplies</h2>
+              <p>
+                Pexpacks prepares stationery for every grade and workplace. Search your school or browse our office range.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/schools" variant="primary">Find School Packs</Button>
+                <Button href="/office" variant="white">View Office Packs</Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Visit our FAQ</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  Quick answers to common questions about partnerships, school packs, delivery, and payments.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/faq" className={cardStyles.cardLink}>
+                  Read all FAQs &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </>
