@@ -321,7 +321,6 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
                     </div>
                   ) : null}
                 </div>
-                </div>
               ))}
             </div>
           </div>

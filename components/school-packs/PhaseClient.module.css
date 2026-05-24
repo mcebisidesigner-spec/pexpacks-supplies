@@ -237,6 +237,35 @@
   line-height: 1.5;
 }
 
+.faqLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.faqLinks a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  border: 1px solid rgba(33, 158, 154, 0.2);
+  border-radius: var(--radius-pill);
+  padding: 7px 12px;
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-primary);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.faqLinks a:hover,
+.faqLinks a:focus-visible {
+  border-color: var(--pex-keppel);
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+}
+
 @media (max-width: 1080px) {
   .cardsGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
