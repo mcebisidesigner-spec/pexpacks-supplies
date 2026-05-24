@@ -3,11 +3,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/marketing/PageHero";
 import { RatingStrip } from "@/components/shared/RatingStrip";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { Button } from "@/components/ui/Button";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import { phasePacks } from "@/data/phasePacks";
 import { PhaseClient } from "@/components/school-packs/PhaseClient";
+import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
 
 const phaseSlug = "primary-school";
@@ -80,6 +82,45 @@ export default function PrimarySchoolPage() {
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner} style={{ textAlign: "center" }}>
           <RatingStrip />
+        </div>
+      </section>
+
+      <FaqMarquee
+        faqs={faqs.filter((f) =>
+          ["delivery-timing", "exercise-books", "multiple-learners", "customise-pack"].includes(f.id)
+        )}
+      />
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>More grade packs</p>
+              <h2>Other phases</h2>
+              <p>
+                Need stationery for a younger or older learner? Browse packs for every grade level.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/foundation-phase" variant="primary">Foundation Phase Packs</Button>
+                <Button href="/high-school" variant="white">High School Packs</Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Need office supplies?</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  Pexpacks also supplies practical office stationery for SMEs, home offices, and small teams.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/office" className={cardStyles.cardLink}>
+                  View office packs &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </>

@@ -157,7 +157,7 @@ export function BackToSchoolQuiz() {
           ? {
               success: true,
               message:
-                "Checklist requested. Use code READY5 for 5% off your first pack.",
+                "Thanks! We'll send your checklist and discount code READY5 to your email.",
             }
           : result
       );

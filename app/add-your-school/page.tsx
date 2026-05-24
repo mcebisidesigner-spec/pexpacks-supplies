@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { AddSchoolForm } from "@/components/forms/AddSchoolForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { mostPopularPacksHref } from "@/data/packs";
-import { standardSchoolPacks } from "@/data/standardSchoolPacks";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { mostPopularPacksHref, homepagePacks } from "@/data/packs";
+import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
@@ -39,6 +41,69 @@ export default function AddYourSchoolPage() {
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
+          <SectionHeader
+            eyebrow="Standard packs"
+            title="Packs by grade"
+            text="Choose a standard grade pack if your school isn't listed or you know exactly what you need."
+            headingId="school-grade-packs"
+          />
+          <div className={cardStyles.packGrid}>
+            {homepagePacks.map((pack, idx) => (
+              <div className={`${cardStyles.packCard} ${idx === 1 ? cardStyles.packCardFeatured : ""}`} key={pack.id}>
+                {idx === 1 ? <div className={cardStyles.packCardAccent} /> : null}
+                {idx === 1 ? <span className={cardStyles.popularPill}>Most popular</span> : null}
+                <div
+                  className={`${cardStyles.packMedia} ${pack.id === "primary-school-pack" ? cardStyles.packMediaGreen : cardStyles.packMediaBlue}`}
+                  aria-hidden="true"
+                >
+                  <span>{pack.subcategory ?? pack.category}</span>
+                </div>
+                <div className={cardStyles.packCardHead}>
+                  <span className={heroStyles.eyebrow}>
+                    {pack.category}
+                    {idx === 1 ? <span className={cardStyles.mostOrderedBadge}>Most ordered</span> : null}
+                  </span>
+                  <h3>{pack.name}</h3>
+                </div>
+                <div className={cardStyles.packCardBody}>
+                  <p className={cardStyles.packDescription}>
+                    {pack.description}
+                  </p>
+                  <div className={cardStyles.packMetaRow}>
+                    <span className={cardStyles.priceBadge}>
+                      {pack.priceLabel}
+                    </span>
+                    <span
+                      className={cardStyles.quickListPreview}
+                      tabIndex={0}
+                      aria-label={`${pack.name} quick list preview: ${pack.includes.join(", ")}`}
+                    >
+                      Quick list preview
+                      <span className={cardStyles.quickListTooltip} role="tooltip">
+                        {pack.includes.map((item) => (
+                          <span key={item}>{item}</span>
+                        ))}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div className={cardStyles.packCardButtonWrap}>
+                  <Button
+                    href={pack.href}
+                    variant="primary"
+                    className={cardStyles.fullWidthButton}
+                  >
+                    {pack.cta}
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
           <div className={cardStyles.infoGrid}>
             <article className={formStyles.formCard} id="school-request-form">
               <p className={heroStyles.eyebrow}>School request</p>
@@ -68,39 +133,41 @@ export default function AddYourSchoolPage() {
         </div>
       </section>
 
-      <section className={sectionStyles.sectionAlt}>
+      <FaqMarquee
+        faqs={faqs.filter((f) =>
+          ["school-not-listed", "school-list-submission", "find-grade-pack", "delivery-timing"].includes(f.id)
+        )}
+      />
+
+      <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Grade packs"
-            title="Standard grade combo packs"
-            text="Use these per-grade combos when a school-specific pack has not been added yet."
-          />
-          <div className={cardStyles.packGrid}>
-            {standardSchoolPacks.slice(0, 6).map((pack) => (
-              <article className={cardStyles.packCard} key={pack.id}>
-                <div
-                  className={[cardStyles.packMedia, cardStyles.packMediaBlue].join(" ")}
-                  aria-hidden="true"
-                >
-                  <span>{pack.phase}</span>
-                </div>
-                <div className={cardStyles.packBody}>
-                  <p className={cardStyles.packMeta}>{pack.priceLabel}</p>
-                  <h3>{pack.grade} Combo Pack</h3>
-                  <p>{pack.description}</p>
-                  <ul className={cardStyles.packList}>
-                    {pack.includes.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                  <div className={cardStyles.packFooter}>
-                    <Button href={mostPopularPacksHref} size="sm">
-                      Buy Standard Pack
-                    </Button>
-                  </div>
-                </div>
-              </article>
-            ))}
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>Already listed?</p>
+              <h2>Find your school pack</h2>
+              <p>
+                Search for your school now &mdash; if we already have the list, you can order in seconds.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/schools" variant="primary">Search Schools</Button>
+                <Button href="/partnership" variant="white">School Partnerships</Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Contact us</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  Questions about the school request process? Reach out to the Pexpacks support team.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/contact" className={cardStyles.cardLink}>
+                  Contact Pexpacks &rarr;
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -10,11 +10,8 @@ export function MobileStickyCta() {
   const [isFooterVisible, setIsFooterVisible] = useState(false);
 
   useEffect(() => {
-    const hero = document.getElementById("schools-search");
-    const threshold = hero ? hero.offsetHeight - 100 : 400;
-
     function handleScroll() {
-      setVisible(window.scrollY > threshold);
+      setVisible(window.scrollY > 400);
     }
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -41,7 +38,7 @@ export function MobileStickyCta() {
   return (
     <div className={`${styles.stickyCta} ${show ? styles.visible : ""}`}>
       <Button
-        href="#schools-search"
+        href="/schools"
         variant="navy"
         className={btnStyles.fullWidth}
       >

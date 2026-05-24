@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import {
   generalEmail,
   generalEmailHref,
@@ -11,6 +13,7 @@ import {
   phoneHref,
   phoneNumber,
 } from "@/data/contact";
+import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -195,6 +198,45 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               </div>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      <FaqMarquee
+        faqs={faqs.filter((f) =>
+          ["school-not-listed", "delivery-timing", "payment-flow", "order-changes"].includes(f.id)
+        )}
+      />
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>Quick links</p>
+              <h2>Find what you need</h2>
+              <p>
+                Browse grade packs, track an existing order, or partner with Pexpacks.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/schools" variant="primary">Find School Packs</Button>
+                <Button href="/faq" variant="white">Read All FAQs</Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Track your order</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  Check the status of a submitted stationery order using your reference details.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/track-order" className={cardStyles.cardLink}>
+                  Track order &rarr;
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

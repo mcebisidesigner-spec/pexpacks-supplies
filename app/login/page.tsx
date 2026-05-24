@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Button } from "@/components/ui/Button";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -66,6 +69,45 @@ export default function LoginPage() {
                 </Button>
               </div>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <FaqMarquee
+        faqs={faqs.filter((f) =>
+          ["delivery-timing", "school-not-listed", "payment-flow", "proof-of-payment"].includes(f.id)
+        )}
+      />
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>Need more help?</p>
+              <h2>Get in touch</h2>
+              <p>
+                Contact the Pexpacks team for order assistance, school enquiries, or office pack quotes.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/contact" variant="primary">Contact Us</Button>
+                <Button href="/faq" variant="white">Read FAQs</Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Office supplies</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  Pexpacks also prepares practical office stationery packs for SMEs, home offices, and small teams.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/office" className={cardStyles.cardLink}>
+                  View office packs &rarr;
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

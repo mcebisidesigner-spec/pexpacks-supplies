@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { officePacks } from "@/data/officePacks";
+import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
 const businessUseCases = [
   "Home offices",
@@ -180,6 +184,45 @@ export default async function OfficePacksPage({
         businessUseCases={businessUseCases}
         initialMessage={initialMessage}
       />
+
+      <FaqMarquee
+        faqs={faqs.filter((f) =>
+          ["sme-office-packs", "custom-office-quote", "bulk-office-orders", "delivery-timing"].includes(f.id)
+        )}
+      />
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>Need school stationery?</p>
+              <h2>Back to school</h2>
+              <p>
+                Pexpacks prepares ready-packed stationery for every grade &mdash; Foundation Phase through to High School.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/schools" variant="primary">Find a School Pack</Button>
+                <Button href="/foundation-phase" variant="white">Browse Grade Packs</Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Partner with Pexpacks</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  Schools can submit their stationery lists so parents order grade-specific packs. No admin, no hassle.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/partnership" className={cardStyles.cardLink}>
+                  Explore partnerships &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
