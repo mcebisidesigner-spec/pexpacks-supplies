@@ -315,3 +315,28 @@
     padding-bottom: var(--section-padding-y-mobile);
   }
 }
+
+.urgencyStrip {
+  background: linear-gradient(135deg, var(--pex-coral), #c8452b);
+  color: var(--pex-bg);
+  text-align: center;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.urgencyStrip p {
+  margin: 0;
+}
+
+.urgencyStrip a {
+  color: var(--pex-bg);
+  font-weight: 800;
+  text-decoration: underline;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.urgencyStrip a:hover {
+  text-decoration: none;
+}

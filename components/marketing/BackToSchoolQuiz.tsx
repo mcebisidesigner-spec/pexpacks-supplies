@@ -77,8 +77,12 @@ function getAnswerLabel(question: QuizQuestion, answer?: QuizAnswer) {
 }
 
 export function BackToSchoolQuiz() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, QuizAnswer>>({});
+  const [activeIndex, setActiveIndex] = useState(questions.length);
+  const [answers, setAnswers] = useState<Record<string, QuizAnswer>>({
+    labels: "ready",
+    "book-covers": "ready",
+    "lunchbox-gear": "ready",
+  });
   const [email, setEmail] = useState("");
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);

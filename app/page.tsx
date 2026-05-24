@@ -6,7 +6,6 @@ import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { BackToSchoolQuiz } from "@/components/marketing/BackToSchoolQuiz";
 import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { SavingsCalculator } from "@/components/marketing/SavingsCalculator";
 import { RatingStrip } from "@/components/shared/RatingStrip";
 import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
@@ -117,15 +116,21 @@ No queues. No confusion. No missing items.
             </div>
           </div>
           <div className={homeStyles.guaranteeLinks}>
-            <a href="#readiness-quiz-heading" className={homeStyles.guaranteeLink}>
-              Get your free back-to-school checklist &rarr;
-            </a>
             <Link href="/add-your-school" className={homeStyles.guaranteeLink}>
               School not listed? Notify us &rarr;
             </Link>
           </div>
         </div>
       </section>
+
+      <div className={homeStyles.urgencyStrip}>
+        <p>
+          Order before <strong>30 September 2026</strong> for delivery before school opens in January.
+          <Link href="/schools">Shop now &rarr;</Link>
+        </p>
+      </div>
+
+      <OrderingWorksSection />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
@@ -215,12 +220,6 @@ No queues. No confusion. No missing items.
           <TestimonialMarquee items={testimonials} />
         </div>
       </section>
-
-      <BackToSchoolQuiz />
-
-      <SavingsCalculator />
-
-      <OrderingWorksSection />
 
       <section className={sectionStyles.sectionCream}>
         <div className={sectionStyles.inner}>
@@ -323,6 +322,39 @@ No queues. No confusion. No missing items.
         </div>
       </section>
 
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>Business supplies</p>
+              <h2>Need office stationery?</h2>
+              <p>
+                Pexpacks prepares practical office packs for SMEs, home offices, freelancers, and small teams &mdash; with custom quotes and bulk pricing.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/office" variant="primary">View Office Packs</Button>
+                <Button href="/office#contact-enquiry" variant="white">Request a Quote</Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Business Starter Brand Package</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  Launch with a professional identity &mdash; logo, business cards, flyers, letterhead, and a 5-page website hosted free for 12 months.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/business-starter-brand-package" className={cardStyles.cardLink}>
+                  View package &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <RatingStrip />
@@ -338,6 +370,9 @@ No queues. No confusion. No missing items.
         secondaryHref="/office"
         secondaryLabel="View Office Packs"
       />
+
+      <BackToSchoolQuiz />
+
       <MobileStickyCta />
     </>
   );
