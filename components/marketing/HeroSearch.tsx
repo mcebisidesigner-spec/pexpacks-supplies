@@ -1,12 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import { InlineSchoolWaitlist } from "@/components/schools/InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
-import { ViralReferralBanner } from "@/components/schools/ViralReferralBanner";
+import { homepagePacks } from "@/data/packs";
+import { slugify } from "@/lib/slugify";
 import styles from "./HeroSearch.module.css";
 
 const gradeOptions = [
@@ -25,23 +27,30 @@ const gradeOptions = [
   "Grade 12",
 ];
 
-const resultLimit = 8;
+const resultLimit = 12;
 
-const alphabetLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
-const popularSchools = [
-  "Parktown Primary",
-  "Auckland Park Primary",
-  "Mamelodi Primary",
-  "Bryanston Primary",
-];
-
-function gradeLabel(grades: string[]) {
-  if (grades.length <= 3) {
-    return grades.join(", ");
+function HighlightMatch({ text, query }: { text: string; query: string }) {
+  if (!query.trim()) {
+    return <>{text}</>;
   }
 
-  return `${grades.slice(0, 3).join(", ")} +${grades.length - 3} more`;
+  const matchIndex = text.toLowerCase().indexOf(query.toLowerCase());
+
+  if (matchIndex === -1) {
+    return <>{text}</>;
+  }
+
+  const before = text.slice(0, matchIndex);
+  const match = text.slice(matchIndex, matchIndex + query.length);
+  const after = text.slice(matchIndex + query.length);
+
+  return (
+    <>
+      {before}
+      <span className={styles.searchHighlight}>{match}</span>
+      {after}
+    </>
+  );
 }
 
 export function HeroSearch() {
@@ -75,16 +84,21 @@ export function HeroSearch() {
         className={styles.heroSearch}
         role="search"
         noValidate
+        aria-controls="school-search-results"
         onKeyDown={(event) => {
           if (event.key === "Escape") {
             setPanelOpen(false);
           }
         }}
       >
-        <label className={`${styles.field} ${styles.schoolSearchField}`}>
+        <label
+          className={`${styles.field} ${styles.schoolSearchField}`}
+          htmlFor="homeSchoolQuery"
+        >
           <span>School Name</span>
           <input
-            name="q"
+            id="homeSchoolQuery"
+            name="schoolQuery"
             type="search"
             placeholder="e.g. Parktown Primary"
             autoComplete="off"
@@ -112,36 +126,6 @@ export function HeroSearch() {
                 {error}
               </p>
             ) : null}
-            {queryEmpty ? (
-              <div className={styles.quickStartPanel}>
-                <p className={styles.quickStartLabel}>Browse schools by letter</p>
-                <div className={styles.alphabetStrip} aria-label="School alphabet quick index">
-                  {alphabetLetters.map((letter) => (
-                    <button
-                      type="button"
-                      className={styles.letterButton}
-                      onClick={() => updateQuery(letter)}
-                      key={letter}
-                    >
-                      {letter}
-                    </button>
-                  ))}
-                </div>
-                <p className={styles.quickStartLabel}>Popular Gauteng schools</p>
-                <div className={styles.popularSchools}>
-                  {popularSchools.map((school) => (
-                    <button
-                      type="button"
-                      className={styles.popularSchoolButton}
-                      onClick={() => updateQuery(school)}
-                      key={school}
-                    >
-                      {school}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : null}
             {!queryEmpty && !isLoading && queryReady && hasSearched && !error ? (
               <>
                 <div className={styles.resultsCount}>
@@ -159,21 +143,50 @@ export function HeroSearch() {
                     {results.map((school) => (
                       <article className={styles.heroResultCard} key={school.id}>
                         <div className={styles.heroResultContent}>
-                          <div className={styles.heroResultSummary}>
-                            <h3>
-                              <Link href={`/schools/${school.slug}`}>
-                                {school.name}
-                              </Link>
-                            </h3>
-                            <p>
-                              {school.region}
-                              {school.province ? `, ${school.province}` : ""}
-                            </p>
+                          <div className={styles.heroResultRow}>
+                            {school.image ? (
+                              <Image
+                                src={school.image}
+                                alt=""
+                                className={styles.heroResultLogo}
+                                width={36}
+                                height={36}
+                              />
+                            ) : null}
+                            <div className={styles.heroResultSummary}>
+                              <h3>
+                                <Link href={`/schools/${school.slug}`}>
+                                  <HighlightMatch text={school.name} query={query} />
+                                </Link>
+                              </h3>
+                              <p>
+                                {school.region}
+                                {school.province ? `, ${school.province}` : ""}
+                              </p>
+                            </div>
                           </div>
                           <div className={styles.heroResultMeta}>
-                            <span className={styles.heroResultGrades}>
-                              {gradeLabel(school.grades)}
-                            </span>
+                            <div className={styles.heroResultGrades}>
+                              {school.grades.slice(0, 4).map((schoolGrade) => (
+                                <Link
+                                  key={schoolGrade}
+                                  href={`/schools/${school.slug}/${slugify(schoolGrade)}`}
+                                  className={styles.gradePill}
+                                >
+                                  {schoolGrade}
+                                </Link>
+                              ))}
+                              {school.grades.length > 4 ? (
+                                <span className={styles.gradePillMore}>
+                                  +{school.grades.length - 4} more
+                                </span>
+                              ) : null}
+                            </div>
+                            {school.lowestPrice ? (
+                              <span className={styles.heroResultPrice}>
+                                From R{school.lowestPrice}
+                              </span>
+                            ) : null}
                             {school.isFeatured || school.isPartner ? (
                               <div className={styles.heroResultBadges}>
                                 {school.isFeatured ? <span>Featured</span> : null}
@@ -200,7 +213,27 @@ export function HeroSearch() {
                       schoolName={query}
                       source="home-search"
                     />
-                    <ViralReferralBanner compact />
+                    <div className={styles.noResultsPacks}>
+                      <p className={styles.noResultsPacksLabel}>
+                        Browse standard packs instead
+                      </p>
+                      <div className={styles.noResultsPackGrid}>
+                        {homepagePacks.map((pack) => (
+                          <Link
+                            key={pack.id}
+                            href={pack.href}
+                            className={styles.noResultsPackCard}
+                          >
+                            <span className={styles.noResultsPackName}>
+                              {pack.name}
+                            </span>
+                            <span className={styles.noResultsPackPrice}>
+                              {pack.priceLabel}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
                 <SchoolResultsAutoLoad
@@ -209,7 +242,7 @@ export function HeroSearch() {
                   onLoadMore={() => fetchResults(results.length, "append")}
                   className={styles.loadMoreSentinel}
                 />
-                {hasMore ? (
+                {hasMore && !isLoading ? (
                   <button
                     className={styles.loadMoreButton}
                     type="button"
@@ -222,9 +255,10 @@ export function HeroSearch() {
             ) : null}
           </div>
         ) : null}
-        <label className={styles.field}>
+        <label className={styles.field} htmlFor="homeSchoolGrade">
           <span>Grade</span>
           <select
+            id="homeSchoolGrade"
             name="grade"
             value={grade}
             onChange={(event) => updateGrade(event.target.value)}

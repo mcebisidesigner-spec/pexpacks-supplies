@@ -1,8 +1,8 @@
 .heroSearchWrapper {
   position: relative;
   width: 100%;
-  max-width: 760px;
-  margin-top: 28px;
+  max-width: 1120px;
+  margin-top: 26px;
   display: flex;
   flex-direction: column;
 }
@@ -10,7 +10,8 @@
 .heroSearch {
   position: relative;
   width: 100%;
-  max-width: 760px;
+  max-width: 1120px;
+  min-height: 92px;
   margin-top: 0;
   order: 1;
   padding: 6px;
@@ -105,7 +106,7 @@
   grid-column: 1 / -1;
   inset: calc(100% + 12px) 0 auto;
   width: 100%;
-  max-height: 480px;
+  max-height: 520px;
   overflow-y: auto;
   padding: 16px;
   border: var(--surface-border-soft);
@@ -605,7 +606,7 @@
 
   .schoolSearchField {
     border-right: none;
-  border-bottom: var(--surface-border-soft);
+    border-bottom: var(--surface-border-soft);
     padding-bottom: 14px;
   }
 
