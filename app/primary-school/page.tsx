@@ -5,6 +5,7 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { RatingStrip } from "@/components/shared/RatingStrip";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { LayByPromo } from "@/components/shared/LayByPromo";
 import { Button } from "@/components/ui/Button";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -123,6 +124,8 @@ export default function PrimarySchoolPage() {
           ["delivery-timing", "exercise-books", "multiple-learners", "customise-pack"].includes(f.id)
         )}
       />
+
+      <LayByPromo />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>

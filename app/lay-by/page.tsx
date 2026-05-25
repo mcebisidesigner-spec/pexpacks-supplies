@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { CTASection } from "@/components/marketing/CTASection";
 import { LayByExperience } from "@/components/marketing/LayByExperience";
 import { PageHero } from "@/components/marketing/PageHero";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { Button } from "@/components/ui/Button";
 import { buildMetadata } from "@/lib/seo";
 import styles from "@/components/marketing/LayByExperience.module.css";
+import pageStyles from "./LayByPage.module.css";
 
 export const metadata: Metadata = buildMetadata(
-  "Lay-by Information | Pexpacks Supplies",
+  "Lay-by & Pay Monthly | Pexpacks Supplies",
   "Secure your child's stationery pack with Pexpacks Lay-by. Spread payments over a few months with zero interest, CPA-compliant terms, and secure South African payment processing.",
   "/lay-by"
 );
@@ -19,8 +22,8 @@ export default function LayByPage() {
     <>
       <PageHero
         eyebrow="Pex lay-by"
-        title="Secure Your Child's Stationery with Pexpacks Lay-by"
-        text="Beat the January rush. Spread the cost. Zero interest, zero stress."
+        title="Lock in your school pack today, pay over time"
+        text="Reserve your child&rsquo;s exact stationery pack now with 0% interest. Spread the cost and arrive in January stress-free."
         panelChildren={
           <div className={styles.heroPanelCard}>
             <span>Lay-by at a glance</span>
@@ -36,15 +39,81 @@ export default function LayByPage() {
       >
         <div className={styles.heroActions}>
           <Button href="/schools" size="lg">
-            Start Shopping Packs
+            Browse School Packs
           </Button>
           <Button href="#layby-details" variant="outline" size="lg">
-            Read the Details
+            How Lay-by Works
           </Button>
         </div>
       </PageHero>
 
+      <section className={pageStyles.priceDemoSection}>
+        <div className={pageStyles.inner}>
+          <div className={pageStyles.priceDemoCard}>
+            <div className={pageStyles.priceDemoContent}>
+              <p className={pageStyles.priceDemoEyebrow}>Example calculation</p>
+              <h2>From as little as R110 per month</h2>
+              <p>
+                A standard primary school pack costs around <strong>R659</strong>. With lay-by, that&rsquo;s roughly <strong>R110/month</strong> over 6 months &mdash; zero interest, zero hidden fees.
+              </p>
+              <div className={pageStyles.priceDemoRow}>
+                <div className={pageStyles.priceDemoBox}>
+                  <span className={pageStyles.priceDemoLabel}>One-time payment</span>
+                  <span className={pageStyles.priceDemoValue}>R659</span>
+                </div>
+                <div className={pageStyles.priceDemoDivider}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+                <div className={`${pageStyles.priceDemoBox} ${pageStyles.priceDemoBoxHighlight}`}>
+                  <span className={pageStyles.priceDemoLabel}>Lay-by, 6 months</span>
+                  <span className={pageStyles.priceDemoValue}>R110<span className={pageStyles.priceDemoUnit}>/mo</span></span>
+                </div>
+              </div>
+            </div>
+            <div className={pageStyles.priceDemoActions}>
+              <Button href="/schools" variant="primary" size="lg">
+                Find Your Pack
+              </Button>
+              <Link href="#layby-details" className={pageStyles.demoLink}>
+                See full terms &rarr;
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={pageStyles.trustStatsSection}>
+        <div className={pageStyles.inner}>
+          <div className={pageStyles.trustStatsGrid}>
+            <div className={pageStyles.trustStatCard}>
+              <strong className={pageStyles.trustStatValue}>0%</strong>
+              <span className={pageStyles.trustStatLabel}>Interest charged</span>
+            </div>
+            <div className={pageStyles.trustStatCard}>
+              <strong className={pageStyles.trustStatValue}>R0</strong>
+              <span className={pageStyles.trustStatLabel}>Admin fees</span>
+            </div>
+            <div className={pageStyles.trustStatCard}>
+              <strong className={pageStyles.trustStatValue}>5</strong>
+              <span className={pageStyles.trustStatLabel}>Months to settle</span>
+            </div>
+            <div className={pageStyles.trustStatCard}>
+              <strong className={pageStyles.trustStatValue}>CPA</strong>
+              <span className={pageStyles.trustStatLabel}>Compliant</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <LayByExperience />
+
+      <div className={pageStyles.ratingSection}>
+        <div className={pageStyles.inner}>
+          <RatingStrip />
+        </div>
+      </div>
 
       <CTASection
         eyebrow="Ready when January arrives"

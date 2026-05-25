@@ -11,6 +11,7 @@ import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { LayByPromo } from "@/components/shared/LayByPromo";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { FindSchoolBar } from "@/components/schools/FindSchoolBar";
 import { buildMetadata } from "@/lib/seo";
@@ -181,6 +182,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         eyebrow="Questions and answers"
         title="Frequently asked questions"
       />
+
+      <LayByPromo />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>

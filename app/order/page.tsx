@@ -5,6 +5,7 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { orderWhatsAppHref } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { LayByPromo } from "@/components/shared/LayByPromo";
 import { PexcoverMarquee } from "@/components/order/PexcoverMarquee";
 import { faqs } from "@/data/faqs";
 import orderStyles from "@/components/order/Order.module.css";
@@ -72,6 +73,7 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
           initialDraftId={draft}
         />
       </section>
+      <LayByPromo />
       <FaqMarquee
         faqs={faqs.filter((faq) =>
           [

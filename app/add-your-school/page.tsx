@@ -6,6 +6,7 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { LayByPromo } from "@/components/shared/LayByPromo";
 import { mostPopularPacksHref, homepagePacks } from "@/data/packs";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
@@ -139,6 +140,8 @@ export default function AddYourSchoolPage() {
           ["school-not-listed", "school-list-submission", "find-grade-pack", "delivery-timing"].includes(f.id)
         )}
       />
+
+      <LayByPromo />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>

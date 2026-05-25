@@ -13,6 +13,7 @@ import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { SchoolWaitlistCapture } from "@/components/marketing/SchoolWaitlistCapture";
+import { LayByPromo } from "@/components/shared/LayByPromo";
 import {
   PackageIcon,
   ClipboardCheckIcon,
@@ -283,6 +284,8 @@ No queues. No confusion. No missing items.
           ].includes(faq.id)
         )}
       />
+
+      <LayByPromo />
 
       <div className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
