@@ -119,10 +119,9 @@ export async function handlePexpacksFormRequest(
     );
   }
 
-  const data =
-    endpoint === "order"
-      ? await withOrderTotal(validation.data)
-      : validation.data;
+  if (endpoint === "order") {
+    await withOrderTotal(validation.data);
+  }
 
   // TODO: Connect Resend to deliver form submissions via email.
 

@@ -17,8 +17,6 @@ type OrderSummaryProps = {
   setSummaryOpen: (open: boolean) => void;
   hasPexcover?: boolean;
   pexcoverCount?: number;
-  subtotal?: number;
-  discount?: number;
 };
 
 export function OrderSummary({
@@ -34,8 +32,6 @@ export function OrderSummary({
   setSummaryOpen,
   hasPexcover,
   pexcoverCount = hasPexcover ? 1 : 0,
-  subtotal,
-  discount,
 }: OrderSummaryProps) {
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">

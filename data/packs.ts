@@ -1,4 +1,4 @@
-export type Pack = {
+type Pack = {
   id: string;
   name: string;
   category: "School" | "Office" | "Pexpacks";

@@ -217,11 +217,13 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 14px;
   box-sizing: border-box;
-  width: min(100%, 520px);
-  max-width: min(100%, 520px);
-  padding: 12px 22px 12px 14px;
+  width: min(100%, 468px);
+  max-width: min(100%, 468px);
+  min-height: 74px;
+  padding: 11px 28px;
   border: 1px solid rgba(33, 158, 154, 0.18);
   border-radius: var(--radius-pill);
   background:
@@ -277,8 +279,11 @@
 .laybySpotlightText {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   min-width: 0;
+  text-align: center;
 }
 
 .laybySpotlightText strong {
@@ -286,14 +291,14 @@
   font-family: var(--font-heading);
   font-size: clamp(19px, 2.4vw, 27px);
   font-weight: 900;
-  line-height: 1;
+  line-height: 0.96;
 }
 
 .laybySpotlightText span {
   color: var(--pex-muted);
   font-size: 14px;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.15;
   overflow-wrap: anywhere;
 }
 
@@ -416,8 +421,9 @@
   }
 
   .laybySpotlightLink {
-    gap: 10px;
-    padding: 10px 16px 10px 10px;
+    gap: 12px;
+    min-height: 70px;
+    padding: 10px 16px;
   }
 
   .laybySpotlightIcon {

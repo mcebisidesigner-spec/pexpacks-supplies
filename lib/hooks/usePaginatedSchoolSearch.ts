@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   PaginatedSchoolResults,
   SchoolSearchRecord,
@@ -15,8 +15,8 @@ type UsePaginatedSchoolSearchOptions = {
   errorMessage: string;
 };
 
-function shouldSearch(query: string, grade: string, gradeAllValue: string) {
-  return query.trim().length >= 0;
+function shouldSearch() {
+  return true;
 }
 
 export function usePaginatedSchoolSearch({
@@ -39,10 +39,7 @@ export function usePaginatedSchoolSearch({
   const [error, setError] = useState("");
   const activeRequest = useRef<AbortController | null>(null);
 
-  const queryReady = useMemo(
-    () => shouldSearch(debouncedQuery, grade, gradeAllValue),
-    [debouncedQuery, grade, gradeAllValue]
-  );
+  const queryReady = true;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedQuery(query), 350);
@@ -51,7 +48,7 @@ export function usePaginatedSchoolSearch({
 
   const fetchResults = useCallback(
     async (nextOffset: number, mode: "replace" | "append") => {
-      if (!shouldSearch(debouncedQuery, grade, gradeAllValue)) {
+      if (!shouldSearch()) {
         setResults([]);
         setTotal(0);
         setHasMore(false);

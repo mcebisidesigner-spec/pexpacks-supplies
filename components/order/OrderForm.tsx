@@ -64,8 +64,6 @@ export function OrderForm({
     typeof orderDraft?.estimatedTotal === "number"
       ? String(orderDraft.estimatedTotal)
       : initialEstimatedTotal;
-  const effectiveSubtotal = orderDraft?.subtotal ?? 0;
-  const effectiveDiscount = orderDraft?.discount ?? 0;
   const standardSelection = useMemo(
     () =>
       resolveStandardSelection({
@@ -973,8 +971,6 @@ export function OrderForm({
           setSummaryOpen={setSummaryOpen}
           hasPexcover={isMultiSchoolPack ? pexcoverCount > 0 : hasPexcover}
           pexcoverCount={pexcoverCount}
-          subtotal={isMultiSchoolPack ? effectiveSubtotal : undefined}
-          discount={isMultiSchoolPack ? effectiveDiscount : undefined}
         />
       </div>
 
