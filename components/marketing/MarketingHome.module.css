@@ -381,3 +381,90 @@
 .brandChip:hover {
   opacity: 1;
 }
+
+.captureForm {
+  margin-top: 18px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.captureLabel {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--pex-primary);
+  margin-bottom: 10px;
+}
+
+.captureRow {
+  display: flex;
+  gap: 8px;
+}
+
+.captureInput {
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid var(--pex-border);
+  border-radius: var(--radius-pill);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.captureInput:focus {
+  border-color: var(--pex-keppel);
+}
+
+.captureButton {
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.captureButton:hover {
+  background: var(--pex-navy);
+}
+
+.captureSuccess {
+  margin-top: 14px;
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
+  background: rgba(47, 133, 90, 0.1);
+  color: var(--pex-success);
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+}
+
+.urgencyBar {
+  background: linear-gradient(135deg, var(--pex-coral), #c8452b);
+  color: var(--pex-bg);
+  text-align: center;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.urgencyBar p {
+  margin: 0;
+}
+
+.urgencyBar a {
+  color: var(--pex-bg);
+  font-weight: 800;
+  text-decoration: underline;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+.urgencyBar a:hover {
+  text-decoration: none;
+}

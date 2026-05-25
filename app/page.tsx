@@ -12,6 +12,7 @@ import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
+import { SchoolWaitlistCapture } from "@/components/marketing/SchoolWaitlistCapture";
 import {
   PackageIcon,
   ClipboardCheckIcon,
@@ -121,6 +122,7 @@ No queues. No confusion. No missing items.
               School not listed? Notify us &rarr;
             </Link>
           </div>
+          <SchoolWaitlistCapture />
         </div>
       </section>
 
@@ -147,6 +149,13 @@ No queues. No confusion. No missing items.
             </span>
           ))}
         </div>
+      </div>
+
+      <div className={homeStyles.urgencyBar}>
+        <p>
+          Order before <strong>30 September 2026</strong> for delivery before school opens in January.
+          <a href="/schools">Shop now &rarr;</a>
+        </p>
       </div>
 
       <OrderingWorksSection />
@@ -275,39 +284,6 @@ No queues. No confusion. No missing items.
         )}
       />
 
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
-            <div>
-              <p className={sectionStyles.sectionEyebrow}>Business supplies</p>
-              <h2>Need office stationery?</h2>
-              <p>
-                Pexpacks prepares practical office packs for SMEs, home offices, freelancers, and small teams &mdash; with custom quotes and bulk pricing.
-              </p>
-              <div className={sectionStyles.buttonRow}>
-                <Button href="/office" variant="primary">View Office Packs</Button>
-                <Button href="/office#contact-enquiry" variant="white">Request a Quote</Button>
-              </div>
-            </div>
-            <div className={cardStyles.packCard}>
-              <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Business Starter Brand Package</h3>
-              </div>
-              <div className={cardStyles.packCardBody}>
-                <p className={cardStyles.packDescription}>
-                  Launch with a professional identity &mdash; logo, business cards, flyers, letterhead, and a 5-page website hosted free for 12 months.
-                </p>
-              </div>
-              <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/business-starter-brand-package" className={cardStyles.cardLink}>
-                  View package &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <div className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <RatingStrip />
@@ -316,12 +292,10 @@ No queues. No confusion. No missing items.
 
       <CTASection
         eyebrow="Ready to order"
-        title="Find your child's school pack in 30 seconds"
-        text="Search your school, pick the grade, and get the exact stationery pack delivered before school opens."
+        title="Ready to save time this year?"
+        text="Join thousands of parents who've made the smart switch to Pexpacks. Order now and experience stress-free school mornings."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
-        secondaryHref="/office"
-        secondaryLabel="View Office Packs"
       />
 
       <MobileStickyCta />

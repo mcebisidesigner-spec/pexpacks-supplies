@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppWidget } from "@/components/shared/WhatsAppWidget";
 import { FirstOrderDiscount } from "@/components/shared/FirstOrderDiscount";
 import { SocialProofToasts } from "@/components/shared/SocialProofToasts";
+import { ExitIntent } from "@/components/shared/ExitIntent";
 import { PwaLifecycle } from "@/components/pwa/PwaLifecycle";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildMetadata } from "@/lib/seo";
@@ -136,6 +137,7 @@ export default function RootLayout({
           <WhatsAppWidget />
           <SocialProofToasts />
           <FirstOrderDiscount />
+          <ExitIntent />
           <PwaLifecycle />
         </div>
       </body>

@@ -159,12 +159,10 @@ export default function FoundationPhasePage() {
 
       <CTASection
         eyebrow="Ready to order"
-        title="Find your child's school pack in 30 seconds"
-        text="Search your school, pick the grade, and get the exact stationery pack delivered before school opens."
+        title="Ready to save time this year?"
+        text="Join thousands of parents who've made the smart switch to Pexpacks. Order now and experience stress-free school mornings."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
-        secondaryHref="/office"
-        secondaryLabel="View Office Packs"
       />
     </>
   );
