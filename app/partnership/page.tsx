@@ -274,7 +274,9 @@ export default function PartnerWithSchoolsPage() {
                   {item.links?.length ? (
                     <div className={pageStyles.faqLinks}>
                       {item.links.map((link: { label: string; href: string }) => (
-                        <a href={link.href} key={link.href}>{link.label}</a>
+                        <Link href={link.href} key={link.href}>
+                          {link.label}
+                        </Link>
                       ))}
                     </div>
                   ) : null}

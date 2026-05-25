@@ -2,6 +2,7 @@
 
 import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { PackCustomizer } from "@/components/order/PackCustomizer";
 import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
@@ -310,17 +311,24 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
             </div>
             <div className={styles.faqGrid}>
               {faqs.map((faq) => (
-                <div key={faq.q} className={styles.faqItem}>
-                  <h3>{faq.q}</h3>
-                  <p>{faq.a}</p>
-                  {faq.links?.length ? (
-                    <div className={styles.faqLinks}>
-                      {faq.links.map((link) => (
-                        <a href={link.href} key={link.href}>{link.label}</a>
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
+                <details key={faq.q} className={styles.faqItem}>
+                  <summary className={styles.faqQuestion}>
+                    <span>{faq.q}</span>
+                    <span className={styles.faqIcon} aria-hidden="true" />
+                  </summary>
+                  <div className={styles.faqAnswer}>
+                    <p>{faq.a}</p>
+                    {faq.links?.length ? (
+                      <div className={styles.faqLinks}>
+                        {faq.links.map((link) => (
+                          <Link href={link.href} key={link.href}>
+                            {link.label}
+                          </Link>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                </details>
               ))}
             </div>
           </div>

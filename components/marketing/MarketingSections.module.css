@@ -410,17 +410,47 @@
 }
 
 .faqItem {
-  border: var(--card-border);
-  border-radius: var(--radius-card);
-  background: var(--card-bg);
-  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  border: 1px solid rgba(26, 42, 64, 0.1);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(26, 42, 64, 0.06);
 }
 
 .faqItem summary {
+  position: relative;
   cursor: pointer;
-  padding: 20px 24px;
+  min-height: 64px;
+  padding: 20px 60px 20px 24px;
   color: var(--pex-primary);
-  font-weight: 800;
+  font-weight: 900;
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary::before,
+.faqItem summary::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  width: 15px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translateY(-50%);
+  transition: transform var(--motion-duration) var(--motion-ease);
+}
+
+.faqItem summary::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.faqItem[open] summary::after {
+  transform: translateY(-50%) rotate(0deg);
 }
 
 .faqItem p {

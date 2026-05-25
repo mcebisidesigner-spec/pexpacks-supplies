@@ -129,7 +129,7 @@ export function FAQExperience({ faqs }: FAQExperienceProps) {
 
           {filteredFaqs.length ? (
             <div className={styles.accordion}>
-              {filteredFaqs.map((faq, index) => {
+              {filteredFaqs.map((faq) => {
                 const isOpen = openId === faq.id;
 
                 return (
@@ -145,9 +145,6 @@ export function FAQExperience({ faqs }: FAQExperienceProps) {
                       aria-expanded={isOpen}
                       aria-controls={`${faq.id}-answer`}
                     >
-                      <span className={styles.questionNumber}>
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
                       <span className={styles.questionText}>{faq.question}</span>
                       <span className={styles.categoryPill}>{faq.category}</span>
                       <span className={styles.toggleIcon} aria-hidden="true" />

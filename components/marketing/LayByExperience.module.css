@@ -331,10 +331,10 @@
 
 .detailItem,
 .faqItem {
-  border: 1px solid rgba(26, 42, 64, 0.08);
+  border: 1px solid rgba(26, 42, 64, 0.1);
   border-radius: 20px;
-  background: var(--pex-bg);
-  box-shadow: var(--card-shadow);
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(26, 42, 64, 0.06);
   overflow: hidden;
 }
 

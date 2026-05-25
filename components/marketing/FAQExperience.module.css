@@ -198,7 +198,7 @@
 .faqItem {
   overflow: hidden;
   border: 1px solid rgba(26, 42, 64, 0.1);
-  border-radius: 18px;
+  border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 12px 34px rgba(26, 42, 64, 0.06);
   transition:
@@ -214,28 +214,22 @@
 .faqItem button {
   width: 100%;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 14px;
   align-items: center;
   border: 0;
-  padding: 18px 18px;
+  min-height: 66px;
+  padding: 18px 24px;
   background: transparent;
   color: var(--pex-primary);
   text-align: left;
   cursor: pointer;
 }
 
-.questionNumber {
-  color: var(--pex-coral);
-  font-family: var(--font-heading);
-  font-size: 16px;
-  font-weight: 900;
-}
-
 .questionText {
-  font-size: clamp(17px, 2vw, 21px);
+  font-size: clamp(16px, 1.8vw, 20px);
   font-weight: 900;
-  line-height: 1.16;
+  line-height: 1.2;
 }
 
 .categoryPill {
@@ -250,10 +244,10 @@
 
 .toggleIcon {
   position: relative;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  background: var(--pex-primary);
+  width: 26px;
+  height: 26px;
+  color: var(--pex-primary);
+  flex: 0 0 auto;
 }
 
 .toggleIcon::before,
@@ -265,7 +259,7 @@
   width: 14px;
   height: 2px;
   border-radius: 999px;
-  background: #ffffff;
+  background: currentColor;
   transform: translate(-50%, -50%);
 }
 
@@ -279,7 +273,7 @@
 }
 
 .answer {
-  padding: 0 18px 20px 58px;
+  padding: 0 24px 22px;
 }
 
 .answer p {
@@ -366,7 +360,8 @@
   }
 
   .faqItem button {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding-inline: 20px;
   }
 
   .categoryPill {

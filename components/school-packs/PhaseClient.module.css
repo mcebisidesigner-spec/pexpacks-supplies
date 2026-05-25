@@ -212,23 +212,73 @@
 
 .faqGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: 12px;
+  max-width: 860px;
+  margin-inline: auto;
 }
 
 .faqItem {
-  border: var(--card-border);
-  border-radius: var(--radius-card);
-  padding: 24px;
-  background: var(--card-bg);
-  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  border: 1px solid rgba(26, 42, 64, 0.1);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(26, 42, 64, 0.06);
+  transition:
+    border-color var(--motion-duration) var(--motion-ease),
+    box-shadow var(--motion-duration) var(--motion-ease);
 }
 
-.faqItem h3 {
-  margin: 0 0 10px;
+.faqQuestion {
+  min-height: 64px;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  cursor: pointer;
   color: var(--pex-primary);
-  font-size: 20px;
-  line-height: 1.12;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 900;
+  list-style: none;
+}
+
+.faqQuestion::-webkit-details-marker {
+  display: none;
+}
+
+.faqIcon {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  color: var(--pex-primary);
+  flex: 0 0 auto;
+}
+
+.faqIcon::before,
+.faqIcon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  transition: transform var(--motion-duration) var(--motion-ease);
+}
+
+.faqIcon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.faqItem[open] .faqIcon::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.faqAnswer {
+  padding: 0 24px 22px;
 }
 
 .faqItem p {
@@ -241,7 +291,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .faqLinks a {
@@ -371,14 +421,8 @@
   transform: translateY(-2px);
 }
 
-.faqItem {
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
 .faqItem:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 18px 42px rgba(26, 42, 64, 0.09);
   border-color: rgba(33, 158, 154, 0.3);
 }
 
