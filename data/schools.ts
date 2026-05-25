@@ -36,32 +36,16 @@ export type SchoolIndexRecord = {
   }[];
 };
 
-import schoolIndexData from "./school-index.json";
-import { z } from "zod";
+let schoolIndexPromise: Promise<SchoolIndexRecord[]> | null = null;
 
-const SchoolIndexGradeSchema = z.object({
-  id: z.string(),
-  grade: z.string(),
-  gradeSlug: z.string(),
-});
-
-const SchoolIndexRecordSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  slug: z.string(),
-  city: z.string(),
-  province: z.string(),
-  logo: z.string(),
-  isPartnerSchool: z.boolean(),
-  isFeatured: z.boolean().optional(),
-  lowestPrice: z.number().optional(),
-  grades: z.array(SchoolIndexGradeSchema),
-});
-
-const parsedIndex = z.array(SchoolIndexRecordSchema).parse(schoolIndexData);
-export const schoolIndex: SchoolIndexRecord[] = parsedIndex;
-
-export const getSchoolIndex = (): SchoolIndexRecord[] => schoolIndex;
+export const getSchoolIndex = async (): Promise<SchoolIndexRecord[]> => {
+  if (!schoolIndexPromise) {
+    schoolIndexPromise = import("./school-index.json").then(
+      (data) => data.default as SchoolIndexRecord[]
+    );
+  }
+  return schoolIndexPromise;
+};
 
 type SchoolRecordMap = Map<string, School>;
 

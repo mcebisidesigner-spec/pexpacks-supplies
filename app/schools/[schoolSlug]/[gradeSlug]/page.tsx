@@ -20,8 +20,9 @@ export const dynamicParams = true;
 
 export const revalidate = 86400; // 24 hours
 
-export function generateStaticParams() {
-  return getSchoolIndex().flatMap((school) =>
+export async function generateStaticParams() {
+  const schoolIndex = await getSchoolIndex();
+  return schoolIndex.flatMap((school) =>
     school.grades.map((grade) => ({
       schoolSlug: school.slug,
       gradeSlug: grade.gradeSlug,

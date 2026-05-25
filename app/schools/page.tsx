@@ -42,8 +42,8 @@ function firstValue(value: string | string[] | undefined) {
 
 export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
   const params = searchParams ? await searchParams : {};
-  const { grades } = getSchoolSearchOptions();
-  const featuredSchools = getFeaturedSchoolRecords();
+  const { grades } = await getSchoolSearchOptions();
+  const featuredSchools = await getFeaturedSchoolRecords();
 
   return (
     <>

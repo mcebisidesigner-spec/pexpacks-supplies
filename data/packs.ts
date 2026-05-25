@@ -1,11 +1,3 @@
-export type MainCategory = {
-  title: string;
-  description: string;
-  href: string;
-  cta: string;
-  icon: "school" | "office" | "package";
-};
-
 export type Pack = {
   id: string;
   name: string;
@@ -19,55 +11,6 @@ export type Pack = {
   cta: string;
   href: string;
 };
-
-export const mainCategories: MainCategory[] = [
-  {
-    title: "School Packs",
-    description:
-      "Stationery packs prepared according to school lists and grade requirements.",
-    href: "/schools",
-    cta: "Find Your School Pack",
-    icon: "school",
-  },
-  {
-    title: "Office Packs",
-    description:
-      "Practical office stationery packs for SMEs, home offices, and small businesses.",
-    href: "/office",
-    cta: "View Office Stationery",
-    icon: "office",
-  },
-  {
-    title: "Order a Pack",
-    description:
-      "Submit a stationery pack order enquiry and our team will confirm the details.",
-    href: "/order",
-    cta: "Start an Order Enquiry",
-    icon: "package",
-  },
-];
-
-export const trustBadges = [
-  "Save time and money",
-  "Packed for your school list",
-  "Delivered or ready for collection",
-];
-
-export const schoolPackBenefits = [
-  "Prepared according to school stationery lists",
-  "Exercise books included per learner",
-  "Grade-specific items checked before packing",
-  "Delivery or collection options",
-  "Parent prepayment options supported",
-];
-
-export const processSteps = [
-  "Find your school",
-  "Choose your grade",
-  "Confirm your pack",
-  "Order online",
-  "Start school ready",
-];
 
 export const orderingWorksSteps = [
   {

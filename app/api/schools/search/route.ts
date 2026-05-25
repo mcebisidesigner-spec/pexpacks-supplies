@@ -9,7 +9,7 @@ function numberParam(value: string | null, fallback: number) {
   return Number.isFinite(number) ? number : fallback;
 }
 
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const limitStatus = rateLimitRequest(request, {
     keyPrefix: "schools-search",
     windowMs: 60 * 1000,
@@ -32,7 +32,7 @@ export function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const limit = Math.min(Math.max(numberParam(params.get("limit"), 12), 1), 24);
   const offset = Math.max(numberParam(params.get("offset"), 0), 0);
-  const results = searchSchoolRecords(
+  const results = await searchSchoolRecords(
     {
       query: params.get("q") ?? "",
       grade: params.get("grade") ?? "",

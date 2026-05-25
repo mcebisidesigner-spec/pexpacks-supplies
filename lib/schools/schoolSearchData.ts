@@ -14,48 +14,60 @@ function gradeRank(grade: string) {
   return Number.isFinite(number) ? number : 99;
 }
 
-export const searchableSchools: SchoolSearchRecord[] = getSchoolIndex().map(
-  (school) => ({
-    id: school.id,
-    name: school.name,
-    slug: school.slug,
-    region: school.city,
-    city: school.city,
-    province: school.province,
-    grades: school.grades
-      .map((g) => g.grade)
-      .sort((a, b) => gradeRank(a) - gradeRank(b)),
-    isFeatured: Boolean("isFeatured" in school && school.isFeatured),
-    isPartner: school.isPartnerSchool,
-    image: school.logo,
-    lowestPrice: school.lowestPrice,
-  })
-);
+let searchableSchoolsPromise: Promise<SchoolSearchRecord[]> | null = null;
+
+async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
+  if (!searchableSchoolsPromise) {
+    searchableSchoolsPromise = getSchoolIndex().then((index) =>
+      index.map(
+        (school): SchoolSearchRecord => ({
+          id: school.id,
+          name: school.name,
+          slug: school.slug,
+          region: school.city,
+          city: school.city,
+          province: school.province,
+          grades: school.grades
+            .map((g) => g.grade)
+            .sort((a, b) => gradeRank(a) - gradeRank(b)),
+          isFeatured: Boolean("isFeatured" in school && school.isFeatured),
+          isPartner: school.isPartnerSchool,
+          image: school.logo,
+          lowestPrice: school.lowestPrice,
+        })
+      )
+    );
+  }
+  return searchableSchoolsPromise;
+}
 
 /** Lazy singleton search index — built on first use */
 let searchIndex: SchoolSearchIndex | null = null;
-function getSearchIndex() {
+async function getSearchIndex() {
   if (!searchIndex) {
-    searchIndex = new SchoolSearchIndex(searchableSchools);
+    searchIndex = new SchoolSearchIndex(await getSearchableSchools());
   }
   return searchIndex;
 }
 
-export function getSchoolSearchOptions() {
+export async function getSchoolSearchOptions() {
+  const schools = await getSearchableSchools();
   return {
-    grades: getGrades(searchableSchools),
-    regions: getRegions(searchableSchools),
+    grades: getGrades(schools),
+    regions: getRegions(schools),
   };
 }
 
-export function getFeaturedSchoolRecords() {
-  return getFeaturedSchools(searchableSchools, 4);
+export async function getFeaturedSchoolRecords() {
+  const schools = await getSearchableSchools();
+  return getFeaturedSchools(schools, 4);
 }
 
-export function searchSchoolRecords(
+export async function searchSchoolRecords(
   filters: SchoolSearchFilters,
   limit = 12,
   offset = 0
 ) {
-  return getSearchIndex().search(filters, limit, offset);
+  const index = await getSearchIndex();
+  return index.search(filters, limit, offset);
 }
