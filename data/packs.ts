@@ -191,4 +191,4 @@ export const homepagePacks = featuredPacks.filter((pack) =>
   )
 );
 
-export const mostPopularPacksHref = "/#most-popular-packs";
+export const mostPopularPacksHref = "/schools#school-grade-packs";

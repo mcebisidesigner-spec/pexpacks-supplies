@@ -34,7 +34,7 @@ export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {
     >
       {children}
       <div className={styles.heroActions}>
-        <Button href="/foundation-phase" variant="secondary" size="md">
+        <Button href="/schools#school-grade-packs" variant="secondary" size="md">
           Browse Packs by Grade &rarr;
         </Button>
       </div>

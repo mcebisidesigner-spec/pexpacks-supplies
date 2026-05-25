@@ -163,7 +163,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         eyebrow="Ready to order"
         title="Find your school pack now."
         text="Search for your school or choose a standard grade pack. Either way, your stationery is handled."
-        primaryHref="/foundation-phase"
+        primaryHref="/schools#school-grade-packs"
         primaryLabel="Order a Standard Pack"
         secondaryHref="#schools-search"
         secondaryLabel="Search for Your School"

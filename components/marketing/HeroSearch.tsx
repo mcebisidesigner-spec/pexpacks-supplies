@@ -212,9 +212,9 @@ export function HeroSearch() {
                       source="home-search"
                     />
                     <div className={styles.noResultsPacks}>
-                      <p className={styles.noResultsPacksLabel}>
+                      <Link href="/schools#school-grade-packs" className={styles.noResultsPacksLabel}>
                         Browse standard packs instead
-                      </p>
+                      </Link>
                       <div className={styles.noResultsPackGrid}>
                         {homepagePacks.map((pack) => (
                           <Link

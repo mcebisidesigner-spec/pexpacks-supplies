@@ -210,9 +210,9 @@ export function SchoolSearchPanel({
                         source="schools-search"
                       />
                       <div className={heroStyles.noResultsPacks}>
-                        <p className={heroStyles.noResultsPacksLabel}>
+                        <Link href="/schools#school-grade-packs" className={heroStyles.noResultsPacksLabel}>
                           Browse standard packs instead
-                        </p>
+                        </Link>
                         <div className={heroStyles.noResultsPackGrid}>
                           {homepagePacks.map((pack) => (
                             <Link

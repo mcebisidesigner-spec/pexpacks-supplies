@@ -12,7 +12,6 @@ import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
-import { SchoolWaitlistCapture } from "@/components/marketing/SchoolWaitlistCapture";
 import { LayByPromo } from "@/components/shared/LayByPromo";
 import {
   PackageIcon,
@@ -123,7 +122,6 @@ No queues. No confusion. No missing items.
               School not listed? Notify us &rarr;
             </Link>
           </div>
-          <SchoolWaitlistCapture />
         </div>
       </section>
 
