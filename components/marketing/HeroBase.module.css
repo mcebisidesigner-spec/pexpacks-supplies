@@ -18,36 +18,12 @@
   overflow-wrap: anywhere;
 }
 
-.mobileBreak {
-  display: none;
-}
-
-.desktopBreak {
-  display: inline;
-}
-
-.mobileInlineSpace {
-  display: none;
-}
-
-.mobileInlineSpace::before {
-  content: " ";
-}
-
 .desktopHeroTitleText {
   display: inline;
 }
 
 .mobileHeroTitleText {
   display: none;
-}
-
-.heroTitleGradient {
-  display: inline-block;
-  background: linear-gradient(90deg, var(--pex-keppel), var(--pex-navy));
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
 }
 
 .heroLead,
@@ -212,37 +188,6 @@
   line-height: 1;
 }
 
-.trustBadges {
-  margin: 24px 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.trustBadges li {
-  border: 1px solid rgba(33, 158, 154, 0.18);
-  border-radius: var(--radius-pill);
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.78);
-  color: var(--pex-navy);
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.searchSocialProof {
-  display: flex;
-  gap: 24px;
-  margin-top: 16px;
-  margin-bottom: 24px;
-  color: var(--pex-text);
-  font-size: 14px;
-  font-weight: 600;
-  opacity: 0.8;
-}
-
-
 .trustStats {
   display: grid;
   gap: 18px;
@@ -269,24 +214,6 @@
 .trustStat + .trustStat {
   padding-top: 18px;
   border-top: 1px solid var(--pex-border);
-}
-
-.gradeBrowse {
-  margin: 16px 0 0;
-  font-size: 14px;
-}
-
-.gradeBrowse a {
-  color: var(--pex-keppel);
-  font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1.5px;
-  transition: opacity 0.2s;
-}
-
-.gradeBrowse a:hover {
-  opacity: 0.7;
 }
 
 @media (max-width: 1080px) {

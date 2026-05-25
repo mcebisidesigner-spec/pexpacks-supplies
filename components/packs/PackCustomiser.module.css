@@ -340,22 +340,6 @@
   line-height: 1;
 }
 
-.viewListLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--pex-navy);
-  font-size: 15px;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  transition: var(--interactive-transition);
-}
-
-.viewListLink:hover {
-  color: var(--pex-keppel);
-}
-
 .detailActionRow {
   display: flex;
   flex-direction: column;

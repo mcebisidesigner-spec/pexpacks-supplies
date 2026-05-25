@@ -192,8 +192,7 @@
 }
 
 .customItemsPanel li button,
-.addItemRow button,
-.stickyQuoteBar button {
+.addItemRow button {
   cursor: pointer;
   border: 0;
   border-radius: var(--radius-pill);
@@ -277,38 +276,6 @@
   height: 12px;
   border-radius: var(--radius-pill);
   background: var(--pex-keppel);
-}
-
-.stickyQuoteBar {
-  position: fixed;
-  left: 50%;
-  bottom: 18px;
-  z-index: 60;
-  width: min(calc(100% - 32px), 560px);
-  border: 1px solid rgba(33, 158, 154, 0.22);
-  border-radius: var(--radius-pill);
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 18px 46px rgba(26, 42, 64, 0.18);
-  transform: translateX(-50%);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.stickyQuoteBar span {
-  padding-left: 12px;
-  color: var(--pex-primary);
-  font-weight: 800;
-}
-
-.stickyQuoteBar button {
-  padding: 12px 18px;
-  background: var(--pex-accent);
-  color: var(--pex-bg);
 }
 
 .footerStickySentinel {
@@ -405,8 +372,7 @@
   gap: 10px;
 }
 
-.draftActionButton,
-.draftActionButtonLink {
+.draftActionButton {
   cursor: pointer;
   border: 1px solid rgba(33, 158, 154, 0.28);
   border-radius: 12px;
@@ -423,15 +389,13 @@
   transition: all 0.2s ease;
 }
 
-.draftActionButton:hover,
-.draftActionButtonLink:hover {
+.draftActionButton:hover {
   background: var(--pex-keppel);
   color: var(--pex-bg);
   border-color: var(--pex-keppel);
 }
 
-.draftActionButton svg,
-.draftActionButtonLink svg {
+.draftActionButton svg {
   stroke: currentColor;
 }
 
@@ -445,24 +409,6 @@
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-.opacityZero {
-  opacity: 0;
-  transform: translateX(-16px);
-}
-
-.animateSlideIn {
-  opacity: 0;
-  transform: translateX(-16px);
-  animation: slideInFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes slideInFade {
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 }
 
@@ -481,20 +427,6 @@
 }
 
 @media (max-width: 420px) {
-  .stickyQuoteBar {
-    bottom: 78px;
-    width: min(calc(100% - 24px), 560px);
-  }
-
-  .stickyQuoteBar span {
-    font-size: 13px;
-  }
-
-  .stickyQuoteBar button {
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-
   .officeQuoteFormCard,
   .officeQuoteSummary {
     padding: 22px;

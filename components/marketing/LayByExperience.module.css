@@ -1,16 +1,3 @@
-.heroActions {
-  margin-top: 28px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.heroPanelCard {
-  display: grid;
-  gap: 12px;
-}
-
-.heroPanelCard > span,
 .eyebrow,
 .stepKicker {
   color: var(--pex-keppel);
@@ -18,26 +5,14 @@
   font-weight: var(--section-eyebrow-font-weight);
 }
 
-.heroPanelCard strong {
-  margin: 0;
-  color: var(--pex-primary);
-  font-family: var(--font-heading);
-  font-size: clamp(38px, 4.8vw, 58px);
-  line-height: 0.95;
-}
 
-.heroPanelCard p {
-  margin: 0;
-}
-
-.heroMiniStats,
+.trustRail,
 .trustRail {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.heroMiniStats span,
 .trustRail span {
   border: 1px solid rgba(33, 158, 154, 0.2);
   border-radius: var(--radius-pill);
@@ -699,7 +674,6 @@
 }
 
 @media (max-width: 520px) {
-  .heroActions,
   .faqActions {
     display: grid;
   }

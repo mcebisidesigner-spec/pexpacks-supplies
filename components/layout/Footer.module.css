@@ -71,8 +71,7 @@
     border-color 0.25s ease;
 }
 
-.navLink:hover,
-.navLinkActive {
+.navLink:hover {
   color: var(--pex-keppel);
   border-bottom-color: var(--pex-keppel);
 }
@@ -171,8 +170,7 @@
   list-style: none;
 }
 
-.policyLink,
-.policyText {
+.policyLink {
   color: rgba(255, 255, 255, 0.7);
   font-size: 13px;
   font-weight: 500;
@@ -192,10 +190,6 @@
   outline: 2px solid var(--pex-coral);
   outline-offset: 4px;
   border-radius: 4px;
-}
-
-.policyText {
-  display: inline-flex;
 }
 
 /* ── Divider ── */
@@ -388,8 +382,7 @@
     font-size: 15px;
   }
 
-  .policyLink,
-  .policyText {
+  .policyLink {
     font-size: 12px;
   }
 

@@ -230,18 +230,6 @@
   gap: 0;
 }
 
-.mobileMenuEyebrow {
-  display: inline-block;
-  color: var(--pex-keppel);
-  font-family: var(--font-button);
-  font-size: clamp(13px, 1.8vw, 15px);
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  margin-bottom: clamp(12px, 2vh, 20px);
-  padding: 0 6px;
-}
-
 .mobileMenuNav {
   display: grid;
   gap: clamp(4px, 0.8vh, 8px);
@@ -577,11 +565,6 @@
   .mobileMenuInner {
     padding: clamp(12px, 2vh, 16px) var(--gutter-mobile)
       calc(var(--gutter-mobile) + env(safe-area-inset-bottom, 0px));
-  }
-
-  .mobileMenuEyebrow {
-    font-size: clamp(12px, 1.6vw, 13px);
-    margin-bottom: clamp(8px, 1.5vh, 14px);
   }
 
   .mobileMenuNav {
