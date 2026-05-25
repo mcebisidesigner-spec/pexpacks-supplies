@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PartnerForm } from "@/components/forms/PartnerForm";
+import { InteractiveDemoSection } from "@/components/partnership/InteractiveDemoSection";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { SchoolMockupDemo } from "@/components/marketing/SchoolMockupDemo";
 import { SchoolPitchDeck } from "@/components/marketing/SchoolPitchDeck";
 import { buildMetadata } from "@/lib/seo";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
@@ -192,19 +192,7 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section
-        className={`${sectionStyles.section} ${pageStyles.sectionNoPaddingTop}`}
-        id="interactive-demo"
-      >
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Interactive Demo"
-            title="Showcase the website your school could receive"
-            text="Explore a responsive school website, parent stationery portal, and update desk built to show school partners the full value of working with Pexpacks."
-          />
-          <SchoolMockupDemo />
-        </div>
-      </section>
+      <InteractiveDemoSection />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>

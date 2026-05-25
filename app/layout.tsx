@@ -2,11 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { WhatsAppWidget } from "@/components/shared/WhatsAppWidget";
-import { FirstOrderDiscount } from "@/components/shared/FirstOrderDiscount";
-import { SocialProofToasts } from "@/components/shared/SocialProofToasts";
-import { ExitIntent } from "@/components/shared/ExitIntent";
-import { PwaLifecycle } from "@/components/pwa/PwaLifecycle";
+import { ClientRuntimeWidgets } from "@/components/layout/ClientRuntimeWidgets";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildMetadata } from "@/lib/seo";
 import {
@@ -134,11 +130,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <WhatsAppWidget />
-          <SocialProofToasts />
-          <FirstOrderDiscount />
-          <ExitIntent />
-          <PwaLifecycle />
+          <ClientRuntimeWidgets />
         </div>
       </body>
     </html>
