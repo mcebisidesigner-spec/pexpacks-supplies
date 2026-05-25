@@ -76,8 +76,6 @@ export function HeroSearch() {
     errorMessage: "We couldn't search schools right now. Please try again.",
   });
 
-  const queryEmpty = query.trim().length === 0;
-
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
       <form
@@ -126,7 +124,7 @@ export function HeroSearch() {
                 {error}
               </p>
             ) : null}
-            {!queryEmpty && !isLoading && queryReady && hasSearched && !error ? (
+            {!isLoading && queryReady && hasSearched && !error ? (
               <>
                 <div className={styles.resultsCount}>
                   <strong>
