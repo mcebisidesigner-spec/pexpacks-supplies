@@ -28,7 +28,7 @@ export default function LayByPage() {
           <div className={styles.heroPanelCard}>
             <span>Lay-by at a glance</span>
             <strong>0% interest</strong>
-            <p>Reserve your school pack now and settle it by November 30th.</p>
+            <p>Reserve your school pack now and settle it by October 31st.</p>
             <div className={styles.heroMiniStats}>
               <span>CPA compliant</span>
               <span>Secure payments</span>
@@ -54,7 +54,7 @@ export default function LayByPage() {
               <p className={pageStyles.priceDemoEyebrow}>Example calculation</p>
               <h2>From as little as R110 per month</h2>
               <p>
-                A standard primary school pack costs around <strong>R659</strong>. With lay-by, that&rsquo;s roughly <strong>R110/month</strong> over 6 months &mdash; zero interest, zero hidden fees.
+                A standard primary school pack costs around <strong>R659</strong>. With lay-by, that&rsquo;s roughly <strong>R132/month</strong> over 5 months &mdash; zero interest, zero hidden fees. The deposit is simply your first month&rsquo;s installment.
               </p>
               <div className={pageStyles.priceDemoRow}>
                 <div className={pageStyles.priceDemoBox}>
@@ -67,8 +67,8 @@ export default function LayByPage() {
                   </svg>
                 </div>
                 <div className={`${pageStyles.priceDemoBox} ${pageStyles.priceDemoBoxHighlight}`}>
-                  <span className={pageStyles.priceDemoLabel}>Lay-by, 6 months</span>
-                  <span className={pageStyles.priceDemoValue}>R110<span className={pageStyles.priceDemoUnit}>/mo</span></span>
+                  <span className={pageStyles.priceDemoLabel}>Lay-by, 5 months</span>
+                  <span className={pageStyles.priceDemoValue}>R132<span className={pageStyles.priceDemoUnit}>/mo</span></span>
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@ export default function LayByPage() {
               <Button href="/schools" variant="primary" size="lg">
                 Find Your Pack
               </Button>
-              <Link href="#layby-details" className={pageStyles.demoLink}>
+              <Link href="/lay-by-terms" className={pageStyles.demoLink}>
                 See full terms &rarr;
               </Link>
             </div>

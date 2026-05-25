@@ -31,7 +31,7 @@ export function LayByPromo() {
               <Button href="/lay-by" variant="primary" size="md">
                 Learn About Lay-by
               </Button>
-              <Link href="/lay-by" className={styles.textLink}>
+              <Link href="/lay-by-terms" className={styles.textLink}>
                 See full terms &rarr;
               </Link>
             </div>

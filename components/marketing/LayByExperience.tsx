@@ -46,12 +46,12 @@ const steps: Step[] = [
   },
   {
     title: "Pay Your Deposit",
-    text: "Secure your order with a small upfront deposit today.",
+    text: "Secure your order with a deposit equal to one month\u2019s installment. For a 5-month term, that\u2019s one-fifth of the total price.",
     icon: "deposit",
   },
   {
     title: "Spread the Payments",
-    text: "Pay the remaining balance over 3 to 6 months via our secure automated payment portal.",
+    text: "Pay the remaining balance over 3 to 5 months via our secure automated payment portal.",
     icon: "calendar",
   },
   {
@@ -79,7 +79,7 @@ const details: Detail[] = [
   },
   {
     title: "Strict Cut-off Dates",
-    text: "To give us enough time to perfectly pack and cover your books, all lay-by accounts must be fully settled by November 30th.",
+    text: "To give us enough time to perfectly pack and cover your books, all lay-by accounts must be fully settled by October 31st.",
     tone: "notice",
   },
   {
@@ -93,7 +93,7 @@ const faqs: FAQ[] = [
   {
     question: "What happens if I miss a payment?",
     answer:
-      "Your pack stays reserved while the team helps you catch up. The key requirement is that the full lay-by balance must be settled by November 30th so packing and delivery can be completed in time.",
+      "Your pack stays reserved while the team helps you catch up. The key requirement is that the full lay-by balance must be settled by October 31st so packing and delivery can be completed in time.",
   },
   {
     question: "Are my card details secure?",
@@ -330,7 +330,7 @@ export function LayByExperience() {
               </p>
               <div className={styles.trustRail} aria-label="Lay-by benefits">
                 <span>Zero interest</span>
-                <span>3 to 6 months</span>
+                <span>3 to 5 months</span>
                 <span>School-year ready</span>
               </div>
             </div>
@@ -484,7 +484,7 @@ export function LayByExperience() {
               </p>
               <ul className={styles.applicationChecklist}>
                 <li>No card details are collected on this form.</li>
-                <li>Your final balance must be settled by November 30th.</li>
+                <li>Your deposit is equal to one month\u2019s installment. The final balance must be settled by October 31st.</li>
                 <li>The typed signature confirms the applicant is 18 or older.</li>
                 <li>Pexpacks will confirm pricing before activation.</li>
               </ul>
@@ -619,23 +619,22 @@ export function LayByExperience() {
                       />
                     </label>
                     <label className={styles.field}>
-                      <span>Deposit amount you can pay now</span>
+                      <span>Deposit amount (one month\u2019s installment)</span>
                       <input
                         name="depositAmount"
                         type="number"
                         min="0"
                         step="0.01"
-                        placeholder="200.00"
+                        placeholder="e.g. 132.00"
                         required
                       />
                     </label>
                     <label className={styles.field}>
                       <span>Preferred payment term</span>
-                      <select name="paymentTerm" defaultValue="3 months">
+                      <select name="paymentTerm" defaultValue="5 months">
                         <option>3 months</option>
                         <option>4 months</option>
                         <option>5 months</option>
-                        <option>6 months</option>
                       </select>
                     </label>
                     <label className={styles.field}>
@@ -671,7 +670,7 @@ export function LayByExperience() {
                       <input name="cutoffConfirmation" type="checkbox" required />
                       <span>
                         I understand that the lay-by must be fully settled by
-                        November 30th for January packing and delivery.
+                        October 31st for January packing and delivery.
                       </span>
                     </label>
                     <label className={styles.checkField}>
