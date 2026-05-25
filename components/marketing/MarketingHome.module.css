@@ -233,7 +233,7 @@
     0 18px 40px rgba(18, 57, 69, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.85);
   transform-origin: center;
-  animation: laybyHeartbeat 2.7s ease-in-out infinite;
+  animation: laybyHeartbeat 1.35s ease-in-out infinite;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -246,7 +246,7 @@
   background: rgba(255, 111, 89, 0.12);
   opacity: 0;
   transform: scale(0.94);
-  animation: laybyHalo 2.7s ease-in-out infinite;
+  animation: laybyHalo 1.35s ease-in-out infinite;
 }
 
 .laybySpotlightLink:hover {
@@ -298,41 +298,50 @@
 }
 
 @keyframes laybyHeartbeat {
-  0%,
-  58%,
-  100% {
+  0% {
     transform: scale(1);
   }
 
-  10% {
-    transform: scale(1.045);
-  }
-
   18% {
-    transform: scale(0.992);
+    transform: scale(1.055);
   }
 
-  28% {
-    transform: scale(1.028);
+  34% {
+    transform: scale(0.985);
+  }
+
+  52% {
+    transform: scale(1.035);
+  }
+
+  72% {
+    transform: scale(0.995);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }
 
 @keyframes laybyHalo {
-  0%,
-  60%,
-  100% {
+  0% {
     opacity: 0;
     transform: scale(0.94);
   }
 
-  14% {
+  22% {
     opacity: 1;
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
 
-  34% {
+  54% {
+    opacity: 0.34;
+    transform: scale(1.15);
+  }
+
+  100% {
     opacity: 0;
-    transform: scale(1.14);
+    transform: scale(1.22);
   }
 }
 
