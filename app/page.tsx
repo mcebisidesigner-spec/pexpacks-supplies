@@ -154,7 +154,7 @@ No queues. No confusion. No missing items.
       <div className={homeStyles.urgencyBar}>
         <p>
           Order before <strong>30 September 2026</strong> for delivery before school opens in January.
-          <a href="/schools">Shop now &rarr;</a>
+          <Link href="/schools">Shop now &rarr;</Link>
         </p>
       </div>
 
