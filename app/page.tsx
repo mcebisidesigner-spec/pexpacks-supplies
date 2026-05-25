@@ -103,7 +103,7 @@ No queues. No confusion. No missing items.
       </section>
 
       <section className={homeStyles.laybySpotlight} aria-label="Lay-by payment option">
-        <Link href="#layby-promo-heading" className={homeStyles.laybySpotlightLink}>
+        <Link href="#layby-promo" className={homeStyles.laybySpotlightLink}>
           <span className={homeStyles.laybySpotlightIcon} aria-hidden="true">
             <WalletIcon />
           </span>
