@@ -55,6 +55,7 @@
 }
 
 .title {
+  scroll-margin-top: 110px;
   margin: 0 0 8px;
   font-size: clamp(20px, 2.8vw, 28px);
   font-weight: 800;

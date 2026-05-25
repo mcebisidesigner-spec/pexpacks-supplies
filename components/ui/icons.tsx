@@ -34,3 +34,10 @@ export const ShieldCheckIcon = () => (
     <path d="M9 12l2 2 4-4" />
   </svg>
 );
+
+export const WalletIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 7V6a2 2 0 0 0-2-2H5a3 3 0 0 0 0 6h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a3 3 0 0 1-3-3V7" />
+    <path d="M16 14h.01" />
+  </svg>
+);

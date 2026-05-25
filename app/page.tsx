@@ -19,6 +19,7 @@ import {
   BookIcon,
   BriefcaseIcon,
   ShieldCheckIcon,
+  WalletIcon,
 } from "@/components/ui/icons";
 
 import heroStyles from "@/components/marketing/HeroBase.module.css";
@@ -99,6 +100,18 @@ No queues. No confusion. No missing items.
             </div>
           </div>
         </div>
+      </section>
+
+      <section className={homeStyles.laybySpotlight} aria-label="Lay-by payment option">
+        <Link href="#layby-promo-heading" className={homeStyles.laybySpotlightLink}>
+          <span className={homeStyles.laybySpotlightIcon} aria-hidden="true">
+            <WalletIcon />
+          </span>
+          <span className={homeStyles.laybySpotlightText}>
+            <strong>Lay-by available</strong>
+            <span>Reserve your school pack and pay monthly</span>
+          </span>
+        </Link>
       </section>
 
       <section className={`${sectionStyles.section} ${homeStyles.guaranteeSection}`}>
