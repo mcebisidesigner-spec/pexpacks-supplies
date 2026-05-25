@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
+import { CTASection } from "@/components/marketing/CTASection";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { officePacks } from "@/data/officePacks";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
@@ -185,6 +187,12 @@ export default async function OfficePacksPage({
         initialMessage={initialMessage}
       />
 
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner} style={{ textAlign: "center" }}>
+          <RatingStrip />
+        </div>
+      </section>
+
       <FaqMarquee
         faqs={faqs.filter((f) =>
           ["sme-office-packs", "custom-office-quote", "bulk-office-orders", "delivery-timing"].includes(f.id)
@@ -223,6 +231,16 @@ export default async function OfficePacksPage({
           </div>
         </div>
       </section>
+
+      <CTASection
+        eyebrow="Ready to get started"
+        title="Get your office stationery quote"
+        text="Request a custom quote for your business or browse our standard packs for SMEs, home offices, and small teams."
+        primaryHref="#contact-enquiry"
+        primaryLabel="Request a Quote"
+        secondaryHref="/schools"
+        secondaryLabel="Find School Packs"
+      />
     </>
   );
 }

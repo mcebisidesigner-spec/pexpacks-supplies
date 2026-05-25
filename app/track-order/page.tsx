@@ -3,10 +3,10 @@ import Link from "next/link";
 import { TrackOrderForm } from "@/components/forms/TrackOrderForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
+import { CTASection } from "@/components/marketing/CTASection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
-import page from "@/styles/Page.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
@@ -28,8 +28,8 @@ export default function TrackOrderPage() {
         panelTitle="Order Tracking"
         panelText="Stay updated on your pack."
       />
-      <section className={page.section}>
-        <div className={page.sectionInner}>
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
           <TrackOrderForm />
         </div>
       </section>
@@ -72,6 +72,16 @@ export default function TrackOrderPage() {
           </div>
         </div>
       </section>
+
+      <CTASection
+        eyebrow="Need a new pack?"
+        title="Start your order"
+        text="Find your school pack or browse office stationery options for your business."
+        primaryHref="/schools"
+        primaryLabel="Find School Packs"
+        secondaryHref="/office"
+        secondaryLabel="View Office Packs"
+      />
     </>
   );
 }

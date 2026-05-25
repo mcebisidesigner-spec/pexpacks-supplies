@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
+import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import {
@@ -240,6 +241,16 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           </div>
         </div>
       </section>
+
+      <CTASection
+        eyebrow="Still need help?"
+        title="Read our FAQs"
+        text="Find answers to common questions about ordering, delivery, and payments before reaching out."
+        primaryHref="/faq"
+        primaryLabel="Read All FAQs"
+        secondaryHref="/schools"
+        secondaryLabel="Find School Packs"
+      />
     </>
   );
 }

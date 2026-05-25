@@ -10,7 +10,7 @@ import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
-import { FaqAccordion } from "@/components/shared/FaqAccordion";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { FindSchoolBar } from "@/components/schools/FindSchoolBar";
 import { buildMetadata } from "@/lib/seo";
@@ -21,7 +21,6 @@ import {
 import { homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { faqs } from "@/data/faqs";
-import pageStyles from "@/styles/Page.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
@@ -44,16 +43,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
   const params = searchParams ? await searchParams : {};
   const { grades } = getSchoolSearchOptions();
   const featuredSchools = getFeaturedSchoolRecords();
-
-  const schoolFaqs = faqs.filter((faq) =>
-    [
-      "school-not-listed",
-      "delivery-timing",
-      "exercise-books",
-      "multiple-learners",
-      "school-list-submission",
-    ].includes(faq.id)
-  );
 
   return (
     <>
@@ -153,10 +142,10 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       <RecentlyViewedSchools />
 
       <section
-        className={pageStyles.section}
+        className={sectionStyles.section}
         aria-labelledby="school-testimonials"
       >
-        <div className={pageStyles.sectionInner}>
+        <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Trusted by parents"
             title="Hear from our parents"
@@ -179,38 +168,19 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         secondaryLabel="Search for Your School"
       />
 
-      <section className={pageStyles.section} aria-labelledby="school-faqs">
-        <div className={pageStyles.sectionInner}>
-          <SectionHeader
-            eyebrow="Questions and answers"
-            title="Frequently asked questions"
-            text="Answers for parents and schools."
-            headingId="school-faqs"
-          />
-          <div className={cardStyles.faqContainer}>
-            <FaqAccordion faqs={schoolFaqs} title="" subtitle="" />
-          </div>
-          <div style={{ textAlign: "center", marginTop: "28px" }}>
-            <Link
-              href="/faq"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "10px 22px",
-                borderRadius: "var(--radius-pill)",
-                background: "rgba(33, 158, 154, 0.1)",
-                color: "var(--pex-keppel)",
-                fontWeight: 800,
-                fontSize: "15px",
-                textDecoration: "none",
-              }}
-            >
-              Read all FAQs &rarr;
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FaqMarquee
+        faqs={faqs.filter((faq) =>
+          [
+            "school-not-listed",
+            "delivery-timing",
+            "exercise-books",
+            "multiple-learners",
+            "school-list-submission",
+          ].includes(faq.id)
+        )}
+        eyebrow="Questions and answers"
+        title="Frequently asked questions"
+      />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>

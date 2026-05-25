@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/marketing/PageHero";
+import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
@@ -111,6 +112,16 @@ export default function LoginPage() {
           </div>
         </div>
       </section>
+
+      <CTASection
+        eyebrow="New here?"
+        title="Find your school pack"
+        text="Search for your child's school and grade to get the exact stationery pack delivered."
+        primaryHref="/schools"
+        primaryLabel="Find School Pack"
+        secondaryHref="/office"
+        secondaryLabel="View Office Packs"
+      />
     </>
   );
 }

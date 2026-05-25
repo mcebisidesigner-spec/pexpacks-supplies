@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AddSchoolForm } from "@/components/forms/AddSchoolForm";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
+import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { mostPopularPacksHref, homepagePacks } from "@/data/packs";
@@ -171,6 +172,16 @@ export default function AddYourSchoolPage() {
           </div>
         </div>
       </section>
+
+      <CTASection
+        eyebrow="Ready to order?"
+        title="Find your school pack"
+        text="Search for your school to see if we already have the list, then order in seconds."
+        primaryHref="/schools"
+        primaryLabel="Search Schools"
+        secondaryHref="/faq"
+        secondaryLabel="Read FAQs"
+      />
     </>
   );
 }

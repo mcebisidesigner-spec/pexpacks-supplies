@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/marketing/PageHero";
+import { CTASection } from "@/components/marketing/CTASection";
 import { RatingStrip } from "@/components/shared/RatingStrip";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { Button } from "@/components/ui/Button";
@@ -85,6 +86,38 @@ export default function HighSchoolPage() {
         </div>
       </section>
 
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>Teachers &amp; tutors</p>
+              <h2>Ordering for your classroom?</h2>
+              <p>
+                Pexpacks supports teachers, tutors, and learning centres with classroom stationery packs. Bulk discounts and custom lists available.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/contact?type=bulk" variant="primary">Request Bulk Quote</Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Custom classroom packs</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  Tell us what you need and we&rsquo;ll prepare a classroom pack tailored to your list.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/contact" className={cardStyles.cardLink}>
+                  Get in touch &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <FaqMarquee
         faqs={faqs.filter((f) =>
           ["delivery-timing", "exercise-books", "multiple-learners", "customise-pack"].includes(f.id)
@@ -123,6 +156,16 @@ export default function HighSchoolPage() {
           </div>
         </div>
       </section>
+
+      <CTASection
+        eyebrow="Ready to order"
+        title="Find your child's school pack in 30 seconds"
+        text="Search your school, pick the grade, and get the exact stationery pack delivered before school opens."
+        primaryHref="/schools"
+        primaryLabel="Find Your School Pack"
+        secondaryHref="/office"
+        secondaryLabel="View Office Packs"
+      />
     </>
   );
 }

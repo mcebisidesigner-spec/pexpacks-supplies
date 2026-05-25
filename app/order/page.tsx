@@ -4,11 +4,11 @@ import { OrderForm } from "@/components/order/OrderForm";
 import { PageHero } from "@/components/marketing/PageHero";
 import { orderWhatsAppHref } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
-import { FaqAccordion } from "@/components/shared/FaqAccordion";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { PexcoverMarquee } from "@/components/order/PexcoverMarquee";
 import { faqs } from "@/data/faqs";
 import orderStyles from "@/components/order/Order.module.css";
-import page from "@/styles/Page.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Order Stationery",
@@ -57,7 +57,7 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
         </div>
       </PageHero>
       <section>
-        <div className={page.sectionInner}>
+        <div className={sectionStyles.inner}>
           <PexcoverMarquee />
         </div>
         <OrderForm
@@ -72,41 +72,18 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
           initialDraftId={draft}
         />
       </section>
-      <section className={`${page.section} ${page.bgAlt}`}>
-        <div className={page.sectionInner}>
-          <FaqAccordion
-            title="Ordering FAQs"
-            subtitle="Everything you need to know about placing your stationery order."
-            faqs={faqs.filter((faq) =>
-              [
-                "delivery-timing",
-                "payment-flow",
-                "multiple-learners",
-                "exercise-books",
-              ].includes(faq.id)
-            )}
-          />
-          <div style={{ textAlign: "center", marginTop: "28px" }}>
-            <Link
-              href="/faq"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "10px 22px",
-                borderRadius: "var(--radius-pill)",
-                background: "rgba(33, 158, 154, 0.1)",
-                color: "var(--pex-keppel)",
-                fontWeight: 800,
-                fontSize: "15px",
-                textDecoration: "none",
-              }}
-            >
-              Read all FAQs &rarr;
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FaqMarquee
+        faqs={faqs.filter((faq) =>
+          [
+            "delivery-timing",
+            "payment-flow",
+            "multiple-learners",
+            "exercise-books",
+          ].includes(faq.id)
+        )}
+        eyebrow="Questions"
+        title="Ordering FAQs"
+      />
     </>
   );
 }

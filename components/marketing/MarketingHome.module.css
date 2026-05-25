@@ -340,3 +340,44 @@
 .urgencyStrip a:hover {
   text-decoration: none;
 }
+
+.brandMarquee {
+  overflow: hidden;
+  background: var(--pex-bg-soft);
+  padding: 18px 0;
+  border-block: 1px solid var(--pex-border);
+}
+
+.brandMarqueeTrack {
+  display: flex;
+  gap: 60px;
+  width: max-content;
+  animation: marqueeScroll 40s linear infinite;
+}
+
+.brandMarqueeTrack:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.brandChip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0 24px;
+  opacity: 0.65;
+  transition: opacity 0.3s;
+}
+
+.brandChip:hover {
+  opacity: 1;
+}

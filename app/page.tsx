@@ -3,10 +3,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
-import { BackToSchoolQuiz } from "@/components/marketing/BackToSchoolQuiz";
 import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { RatingStrip } from "@/components/shared/RatingStrip";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { faqs } from "@/data/faqs";
 import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
@@ -123,11 +124,29 @@ No queues. No confusion. No missing items.
         </div>
       </section>
 
-      <div className={homeStyles.urgencyStrip}>
-        <p>
-          Order before <strong>30 September 2026</strong> for delivery before school opens in January.
-          <Link href="/schools">Shop now &rarr;</Link>
-        </p>
+      <div className={homeStyles.brandMarquee}>
+        <div className={homeStyles.brandMarqueeTrack}>
+          {[
+            "croxley", "bic", "pilot", "pritt", "staedtler",
+            "post-it", "bantex", "pexnflex", "freedom",
+            "casio", "marlin", "pentel", "rapid", "rexel",
+            "sellotape", "stabilo", "starpie",
+            "croxley", "bic", "pilot", "pritt", "staedtler",
+            "post-it", "bantex", "pexnflex", "freedom",
+            "casio", "marlin", "pentel", "rapid", "rexel",
+            "sellotape", "stabilo", "starpie",
+          ].map((brand, i) => (
+            <span key={i} className={homeStyles.brandChip}>
+              <Image
+                src={`/images/stationery-brands/${brand}.svg`}
+                alt={`${brand} logo`}
+                width={80}
+                height={40}
+                style={{ objectFit: "contain", display: "block" }}
+              />
+            </span>
+          ))}
+        </div>
       </div>
 
       <OrderingWorksSection />
@@ -245,82 +264,16 @@ No queues. No confusion. No missing items.
         </div>
       </section>
 
-      <section className={sectionStyles.section} aria-labelledby="home-faq-heading">
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Quick answers"
-            title="Common questions"
-            headingId="home-faq-heading"
-          />
-          <div className={sectionStyles.faqList}>
-            <details className={sectionStyles.faqItem}>
-              <summary>When will my pack arrive?</summary>
-              <p>
-                Orders placed before 30 September are delivered before school
-                opens in January. Delivery within 3-5 business days during peak
-                season.
-              </p>
-              <div className={sectionStyles.faqLinks}>
-                <Link href="/delivery-policy">Delivery policy</Link>
-                <Link href="/track-order">Track an order</Link>
-              </div>
-            </details>
-            <details className={sectionStyles.faqItem}>
-              <summary>Can I customise what's in the pack?</summary>
-              <p>
-                Yes. You can swap, add, or remove items from any standard pack
-                before checkout. If your school has a specific list, we can
-                match it exactly.
-              </p>
-              <div className={sectionStyles.faqLinks}>
-                <Link href="/schools">Search your school</Link>
-                <Link href="/order">Start customising</Link>
-              </div>
-            </details>
-            <details className={sectionStyles.faqItem}>
-              <summary>What if an item is wrong or missing?</summary>
-              <p>
-                We guarantee a 100% exact list match. If anything is incorrect,
-                we replace it at no cost within 48 hours.
-              </p>
-              <div className={sectionStyles.faqLinks}>
-                <Link href="/contact">Contact us</Link>
-                <Link href="/returns-refunds-policy">Returns policy</Link>
-              </div>
-            </details>
-            <details className={sectionStyles.faqItem}>
-              <summary>Is there a minimum order?</summary>
-              <p>
-                No minimum. Order a single pack for one learner or bulk for the
-                whole grade. Free delivery on orders over R500.
-              </p>
-              <div className={sectionStyles.faqLinks}>
-                <Link href="/order">Place an order</Link>
-                <Link href="/office">Office packs</Link>
-              </div>
-            </details>
-          </div>
-          <div style={{ textAlign: "center", marginTop: "28px" }}>
-            <Link
-              href="/faq"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "10px 22px",
-                borderRadius: "var(--radius-pill)",
-                background: "rgba(33, 158, 154, 0.1)",
-                color: "var(--pex-keppel)",
-                fontWeight: 800,
-                fontSize: "15px",
-                textDecoration: "none",
-              }}
-            >
-              Read all FAQs &rarr;
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FaqMarquee
+        faqs={faqs.filter((faq) =>
+          [
+            "delivery-timing",
+            "customise-pack",
+            "wrong-item",
+            "minimum-order",
+          ].includes(faq.id)
+        )}
+      />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
@@ -370,8 +323,6 @@ No queues. No confusion. No missing items.
         secondaryHref="/office"
         secondaryLabel="View Office Packs"
       />
-
-      <BackToSchoolQuiz />
 
       <MobileStickyCta />
     </>
