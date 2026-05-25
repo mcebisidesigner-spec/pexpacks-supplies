@@ -1,8 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { endpointPathForFormType } from "@/lib/forms/types";
 import styles from "./LayByExperience.module.css";
 
 type IconName = "cart" | "checkout" | "deposit" | "calendar" | "box" | "shield";
@@ -22,6 +25,12 @@ type Detail = {
 type FAQ = {
   question: string;
   answer: string;
+};
+
+type ApiResponse = {
+  success: boolean;
+  message: string;
+  errors?: Record<string, string>;
 };
 
 const steps: Step[] = [
@@ -97,6 +106,48 @@ const faqs: FAQ[] = [
       "Yes. If you cancel before the lay-by is completed, you are entitled to a refund of paid installments, less the standard 1% cancellation penalty permitted by law.",
   },
 ];
+
+function value(data: FormData, key: string) {
+  const field = data.get(key);
+  return typeof field === "string" ? field.trim() : "";
+}
+
+function formatLayByMessage(data: FormData) {
+  const lines = [
+    "Lay-by application request",
+    "",
+    "Applicant / payer",
+    `Full name: ${value(data, "fullName")}`,
+    `SA ID or passport: ${value(data, "idNumber")}`,
+    `Phone: ${value(data, "phone")}`,
+    `Email: ${value(data, "email")}`,
+    `Preferred contact method: ${value(data, "preferredContactMethod")}`,
+    `Residential address: ${value(data, "address")}`,
+    "",
+    "Learner and pack",
+    `Learner full name: ${value(data, "learnerName")}`,
+    `School: ${value(data, "schoolName")}`,
+    `Grade: ${value(data, "grade")}`,
+    `Pack or list required: ${value(data, "packName")}`,
+    `Pexcover requested: ${value(data, "pexcoverRequested")}`,
+    "",
+    "Lay-by payment plan",
+    `Estimated pack total: ${value(data, "estimatedTotal")}`,
+    `Deposit amount: ${value(data, "depositAmount")}`,
+    `Payment term: ${value(data, "paymentTerm")}`,
+    `Preferred monthly debit date: ${value(data, "debitDate")}`,
+    `Delivery / collection preference: ${value(data, "deliveryMethod")}`,
+    "",
+    "Signing details",
+    `Signature full name: ${value(data, "signatureName")}`,
+    `Signature date: ${value(data, "signatureDate")}`,
+    "",
+    "Additional notes",
+    value(data, "notes") || "None provided",
+  ];
+
+  return lines.join("\n");
+}
 
 function LayByIcon({ name }: { name: IconName }) {
   const common = {
@@ -193,12 +244,74 @@ export function LayByExperience() {
   const [activeStep, setActiveStep] = useState(0);
   const [openDetail, setOpenDetail] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
+  const [pending, setPending] = useState(false);
+  const [status, setStatus] = useState<ApiResponse | null>(null);
 
   const progress = useMemo(
     () => `${Math.round(((activeStep + 1) / steps.length) * 100)}%`,
     [activeStep]
   );
   const selectedStep = steps[activeStep];
+
+  async function handleApplicationSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    setPending(true);
+    setStatus(null);
+
+    const payload = {
+      formType: "contact",
+      fullName: value(data, "fullName"),
+      phone: value(data, "phone"),
+      email: value(data, "email") || undefined,
+      preferredContactMethod: value(data, "preferredContactMethod"),
+      enquiryType: "Lay-by application",
+      customerType: "Parent / guardian",
+      parentName: value(data, "fullName"),
+      learnerName: value(data, "learnerName"),
+      schoolName: value(data, "schoolName"),
+      grade: value(data, "grade"),
+      packName: value(data, "packName"),
+      estimatedTotal: Number(value(data, "estimatedTotal")) || undefined,
+      deliveryMethod: value(data, "deliveryMethod"),
+      address: value(data, "address"),
+      notes: `Lay-by term: ${value(data, "paymentTerm")}. Deposit: ${value(
+        data,
+        "depositAmount"
+      )}. Preferred debit date: ${value(data, "debitDate")}.`,
+      message: formatLayByMessage(data),
+      consent: data.get("privacyConsent") === "on",
+      companyWebsite: value(data, "companyWebsite"),
+      sourceUrl: window.location.href,
+      pageUrl: window.location.href,
+      userAgent: navigator.userAgent,
+      submittedAt: new Date().toISOString(),
+    };
+
+    try {
+      const response = await fetch(endpointPathForFormType("contact"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = (await response.json()) as ApiResponse;
+
+      if (result.success) {
+        form.reset();
+      }
+
+      setStatus(result);
+    } catch {
+      setStatus({
+        success: false,
+        message:
+          "We could not submit your lay-by application right now. Please try again or contact Pexpacks directly.",
+      });
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
     <>
@@ -346,6 +459,282 @@ export function LayByExperience() {
                   </article>
                 );
               })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className={styles.applicationSection}
+        id="layby-application"
+        aria-labelledby="layby-application-heading"
+      >
+        <div className={styles.inner}>
+          <div className={styles.applicationLayout}>
+            <aside className={styles.applicationSummary}>
+              <p className={styles.eyebrow}>Lay-by application</p>
+              <h2 id="layby-application-heading">
+                Apply with the details needed to sign.
+              </h2>
+              <p>
+                Complete this form when you are ready for Pexpacks to prepare a
+                lay-by agreement for your school pack. We collect the payer,
+                learner, pack, payment plan, delivery, and signature details
+                needed to draft the agreement.
+              </p>
+              <ul className={styles.applicationChecklist}>
+                <li>No card details are collected on this form.</li>
+                <li>Your final balance must be settled by November 30th.</li>
+                <li>The typed signature confirms the applicant is 18 or older.</li>
+                <li>Pexpacks will confirm pricing before activation.</li>
+              </ul>
+            </aside>
+
+            <div className={styles.applicationFormCard}>
+              <form onSubmit={handleApplicationSubmit}>
+                <div className={styles.formHeader}>
+                  <span>Secure application</span>
+                  <h3>Lay-by agreement details</h3>
+                  <p>
+                    Use the applicant or payer details exactly as they should
+                    appear on the lay-by agreement.
+                  </p>
+                </div>
+
+                <fieldset className={styles.formSection}>
+                  <legend>Applicant / payer details</legend>
+                  <div className={styles.formGrid}>
+                    <label className={styles.field}>
+                      <span>Full legal name</span>
+                      <input
+                        name="fullName"
+                        autoComplete="name"
+                        placeholder="Parent or guardian name"
+                        required
+                      />
+                    </label>
+                    <label className={styles.field}>
+                      <span>SA ID or passport number</span>
+                      <input
+                        name="idNumber"
+                        inputMode="text"
+                        placeholder="ID or passport number"
+                        required
+                      />
+                    </label>
+                    <label className={styles.field}>
+                      <span>Mobile number</span>
+                      <input
+                        name="phone"
+                        type="tel"
+                        autoComplete="tel"
+                        placeholder="078 003 6048"
+                        required
+                      />
+                    </label>
+                    <label className={styles.field}>
+                      <span>Email address</span>
+                      <input
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        placeholder="name@example.com"
+                        required
+                      />
+                    </label>
+                    <label className={styles.field}>
+                      <span>Preferred contact method</span>
+                      <select name="preferredContactMethod" defaultValue="whatsapp">
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="phone">Phone call</option>
+                        <option value="email">Email</option>
+                      </select>
+                    </label>
+                    <label className={`${styles.field} ${styles.formWide}`}>
+                      <span>Residential address</span>
+                      <input
+                        name="address"
+                        autoComplete="street-address"
+                        placeholder="Street, suburb, city, province"
+                        required
+                      />
+                    </label>
+                  </div>
+                </fieldset>
+
+                <fieldset className={styles.formSection}>
+                  <legend>Learner and pack details</legend>
+                  <div className={styles.formGrid}>
+                    <label className={styles.field}>
+                      <span>Learner full name</span>
+                      <input name="learnerName" placeholder="Learner name" required />
+                    </label>
+                    <label className={styles.field}>
+                      <span>School name</span>
+                      <input name="schoolName" placeholder="School name" required />
+                    </label>
+                    <label className={styles.field}>
+                      <span>Grade for next year</span>
+                      <input name="grade" placeholder="Grade R, Grade 4..." required />
+                    </label>
+                    <label className={styles.field}>
+                      <span>Pack or list required</span>
+                      <input
+                        name="packName"
+                        placeholder="Official school list or Baseline Combo"
+                        required
+                      />
+                    </label>
+                    <label className={styles.field}>
+                      <span>Add Pexcover?</span>
+                      <select name="pexcoverRequested" defaultValue="yes">
+                        <option value="yes">Yes, include book covering</option>
+                        <option value="no">No, stationery only</option>
+                        <option value="confirm">Please confirm options</option>
+                      </select>
+                    </label>
+                    <label className={styles.field}>
+                      <span>Delivery / collection preference</span>
+                      <select name="deliveryMethod" defaultValue="school-delivery">
+                        <option value="school-delivery">Deliver to school</option>
+                        <option value="home-delivery">Home delivery</option>
+                        <option value="collection">Collection</option>
+                        <option value="confirm">Confirm with me</option>
+                      </select>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <fieldset className={styles.formSection}>
+                  <legend>Payment plan</legend>
+                  <div className={styles.formGrid}>
+                    <label className={styles.field}>
+                      <span>Estimated pack total</span>
+                      <input
+                        name="estimatedTotal"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="899.00"
+                      />
+                    </label>
+                    <label className={styles.field}>
+                      <span>Deposit amount you can pay now</span>
+                      <input
+                        name="depositAmount"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="200.00"
+                        required
+                      />
+                    </label>
+                    <label className={styles.field}>
+                      <span>Preferred payment term</span>
+                      <select name="paymentTerm" defaultValue="3 months">
+                        <option>3 months</option>
+                        <option>4 months</option>
+                        <option>5 months</option>
+                        <option>6 months</option>
+                      </select>
+                    </label>
+                    <label className={styles.field}>
+                      <span>Preferred monthly payment date</span>
+                      <select name="debitDate" defaultValue="25th">
+                        <option>1st</option>
+                        <option>15th</option>
+                        <option>25th</option>
+                        <option>Last working day</option>
+                      </select>
+                    </label>
+                    <label className={`${styles.field} ${styles.formWide}`}>
+                      <span>Notes for Pexpacks</span>
+                      <textarea
+                        name="notes"
+                        placeholder="Anything we should know about the pack, timing, siblings, delivery, or payment plan?"
+                      />
+                    </label>
+                  </div>
+                </fieldset>
+
+                <fieldset className={styles.formSection}>
+                  <legend>Declarations and signature</legend>
+                  <div className={styles.signatureGrid}>
+                    <label className={styles.checkField}>
+                      <input name="ageConfirmation" type="checkbox" required />
+                      <span>
+                        I confirm that I am 18 years or older and authorised to
+                        enter into this lay-by agreement.
+                      </span>
+                    </label>
+                    <label className={styles.checkField}>
+                      <input name="cutoffConfirmation" type="checkbox" required />
+                      <span>
+                        I understand that the lay-by must be fully settled by
+                        November 30th for January packing and delivery.
+                      </span>
+                    </label>
+                    <label className={styles.checkField}>
+                      <input name="cancellationConfirmation" type="checkbox" required />
+                      <span>
+                        I understand that cancellation before completion allows
+                        a refund of installments paid, less the standard 1%
+                        cancellation penalty permitted by law.
+                      </span>
+                    </label>
+                    <label className={styles.checkField}>
+                      <input name="privacyConsent" type="checkbox" required />
+                      <span>
+                        I consent to Pexpacks processing this information to
+                        prepare and manage my lay-by application, in line with
+                        the{" "}
+                        <Link href="/privacy-policy">privacy policy</Link>.
+                      </span>
+                    </label>
+                  </div>
+                  <div className={styles.formGrid}>
+                    <label className={styles.field}>
+                      <span>Typed signature</span>
+                      <input
+                        name="signatureName"
+                        placeholder="Type your full legal name"
+                        required
+                      />
+                    </label>
+                    <label className={styles.field}>
+                      <span>Signature date</span>
+                      <input name="signatureDate" type="date" required />
+                    </label>
+                  </div>
+                </fieldset>
+
+                <label className={styles.honeypot} aria-hidden="true">
+                  Company website
+                  <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
+                </label>
+
+                <div className={styles.formFooter}>
+                  <Button type="submit" disabled={pending}>
+                    {pending ? "Submitting..." : "Submit Lay-by Application"}
+                  </Button>
+                  <p>
+                    Submitting this form does not collect payment. Pexpacks will
+                    confirm pack pricing and send the secure payment next step.
+                  </p>
+                </div>
+
+                {status ? (
+                  <p
+                    className={
+                      status.success ? styles.statusMessage : styles.statusError
+                    }
+                    role={status.success ? "status" : "alert"}
+                    aria-live="polite"
+                  >
+                    {status.message}
+                  </p>
+                ) : null}
+              </form>
             </div>
           </div>
         </div>

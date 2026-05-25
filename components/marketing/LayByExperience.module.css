@@ -66,6 +66,13 @@
     var(--pex-bg-soft);
 }
 
+.applicationSection {
+  padding: var(--section-padding-y-desktop) 0;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(255, 111, 89, 0.12), transparent 30%),
+    linear-gradient(180deg, var(--pex-bg), var(--pex-bg-soft));
+}
+
 .inner {
   width: 100%;
   max-width: var(--layout-max-width);
@@ -75,7 +82,8 @@
 
 .introGrid,
 .detailsGrid,
-.faqLayout {
+.faqLayout,
+.applicationLayout {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1fr);
   gap: clamp(28px, 5vw, 68px);
@@ -84,14 +92,16 @@
 
 .introCopy,
 .detailsCopy,
-.faqLayout > div:first-child {
+.faqLayout > div:first-child,
+.applicationSummary {
   max-width: 640px;
 }
 
 .introCopy h2,
 .sectionHeader h2,
 .detailsCopy h2,
-.faqLayout h2 {
+.faqLayout h2,
+.applicationSummary h2 {
   margin: 0;
   color: var(--pex-primary);
   font-family: var(--font-heading);
@@ -104,7 +114,8 @@
 .introCopy p:not(.eyebrow),
 .sectionHeader p,
 .detailsCopy > p,
-.faqLayout p {
+.faqLayout p,
+.applicationSummary > p {
   margin: 16px 0 0;
   color: var(--pex-text-muted);
   font-size: 18px;
@@ -424,6 +435,209 @@
   gap: 12px;
 }
 
+.applicationLayout {
+  align-items: start;
+  grid-template-columns: minmax(280px, 0.46fr) minmax(0, 1fr);
+}
+
+.applicationChecklist {
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.applicationChecklist li {
+  position: relative;
+  border: 1px solid rgba(33, 158, 154, 0.16);
+  border-radius: 18px;
+  padding: 14px 16px 14px 42px;
+  background: var(--pex-bg);
+  color: var(--pex-primary);
+  font-weight: 800;
+  line-height: 1.35;
+  box-shadow: var(--card-shadow);
+}
+
+.applicationChecklist li::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 1.22em;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--pex-keppel);
+}
+
+.applicationFormCard {
+  border: 1px solid rgba(26, 42, 64, 0.08);
+  border-radius: var(--radius-section);
+  padding: clamp(22px, 4vw, 34px);
+  background: var(--pex-bg);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.applicationFormCard form {
+  display: grid;
+  gap: 22px;
+}
+
+.formHeader span {
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.formHeader h3 {
+  margin: 8px 0 0;
+  color: var(--pex-primary);
+  font-size: clamp(26px, 3vw, 36px);
+  line-height: 1;
+}
+
+.formHeader p,
+.formFooter p {
+  margin: 10px 0 0;
+  color: var(--pex-text-muted);
+  line-height: 1.45;
+}
+
+.formSection {
+  min-width: 0;
+  margin: 0;
+  border: 1px solid rgba(26, 42, 64, 0.08);
+  border-radius: 22px;
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+  background: linear-gradient(180deg, #ffffff, rgba(244, 245, 247, 0.58));
+}
+
+.formSection legend {
+  padding: 0 8px;
+  color: var(--pex-primary);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.field {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-field);
+  padding: 12px 14px;
+  background: var(--pex-bg);
+}
+
+.field span {
+  color: var(--pex-text-muted);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.field input,
+.field select,
+.field textarea {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--pex-primary);
+  font: inherit;
+  font-size: 15px;
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--pex-keppel);
+  outline-offset: 2px;
+}
+
+.field textarea {
+  min-height: 106px;
+  resize: vertical;
+}
+
+.formWide {
+  grid-column: 1 / -1;
+}
+
+.signatureGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.checkField {
+  border: 1px solid rgba(33, 158, 154, 0.16);
+  border-radius: 18px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  background: var(--pex-bg);
+  color: var(--pex-primary);
+  line-height: 1.4;
+}
+
+.checkField input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--pex-keppel);
+}
+
+.checkField a {
+  color: var(--pex-keppel);
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.formFooter {
+  display: grid;
+  gap: 10px;
+}
+
+.statusMessage,
+.statusError {
+  margin: 0;
+  border-radius: 16px;
+  padding: 12px 14px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.statusMessage {
+  background: rgba(47, 133, 90, 0.12);
+  color: var(--pex-success);
+}
+
+.statusError {
+  background: rgba(185, 28, 28, 0.1);
+  color: var(--pex-error);
+}
+
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 @media (max-width: 1100px) {
   .stepExperience,
   .timeline {
@@ -443,6 +657,7 @@
   .introSection,
   .stepsSection,
   .detailsSection,
+  .applicationSection,
   .faqSection {
     padding: var(--section-padding-y-mobile) 0;
   }
@@ -453,6 +668,7 @@
 
   .introGrid,
   .detailsGrid,
+  .applicationLayout,
   .faqLayout {
     grid-template-columns: 1fr;
   }
@@ -472,6 +688,14 @@
   .securityCard {
     display: grid;
   }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formWide {
+    grid-column: auto;
+  }
 }
 
 @media (max-width: 520px) {
@@ -488,5 +712,13 @@
 
   .detailItem p {
     padding: 0 16px 18px 56px;
+  }
+
+  .applicationFormCard {
+    padding: 18px;
+  }
+
+  .formSection {
+    padding: 14px;
   }
 }
