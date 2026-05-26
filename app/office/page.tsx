@@ -3,9 +3,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
-import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { RatingStrip } from "@/components/shared/RatingStrip";
+import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
 import { officePacks } from "@/data/officePacks";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
@@ -233,7 +232,6 @@ export default async function OfficePacksPage({
           </div>
         </div>
       </section>
-      <RatingStrip text="Entrepreneurs love the convenience" />
     </>
   );
 }
