@@ -5,16 +5,16 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { faqs } from "@/data/faqs";
-import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
+import { homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { LayByPromo } from "@/components/shared/LayByPromo";
+import { SchoolWaitlistCapture } from "@/components/shared/SchoolWaitlistCapture";
 import {
-  PackageIcon,
-  ClipboardCheckIcon,
   BookIcon,
   BriefcaseIcon,
   ShieldCheckIcon,
@@ -26,12 +26,7 @@ import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
-const benefitIcons = [
-  PackageIcon,
-  ClipboardCheckIcon,
-  BookIcon,
-  BriefcaseIcon,
-];
+
 
 export default function HomePage() {
   return (
@@ -128,6 +123,7 @@ No queues. No confusion. No missing items.
               </p>
               <span className={homeStyles.guaranteeStat}>1 200+ school lists matched</span>
             </div>
+            <SchoolWaitlistCapture />
           </div>
           <div className={homeStyles.guaranteeLinks}>
             <Link href="/add-your-school" className={homeStyles.guaranteeLink}>
@@ -231,6 +227,60 @@ No queues. No confusion. No missing items.
               </div>
             ))}
           </div>
+          <div style={{ textAlign: "center", marginTop: "32px" }}>
+            <Link
+              href="/schools#school-grade-packs"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "12px 28px",
+                borderRadius: "var(--radius-pill)",
+                background: "var(--pex-primary)",
+                color: "var(--pex-bg)",
+                fontWeight: 800,
+                fontSize: "16px",
+                textDecoration: "none",
+              }}
+            >
+              Browse All Grade Packs &rarr;
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className={sectionStyles.sectionCream} aria-labelledby="home-testimonials-heading">
+        <div className={sectionStyles.inner}>
+          <SectionHeader
+            eyebrow="Trusted by parents"
+            title="10,000+ parents have used Pexpacks"
+            text="Hear from parents and see why Pexpacks is the smart choice for school stationery."
+            headingId="home-testimonials-heading"
+          />
+          <TestimonialMarquee items={testimonials} />
+          <div style={{ marginTop: "28px" }}>
+            <RatingStrip />
+          </div>
+        </div>
+      </section>
+
+      <FaqMarquee
+        faqs={faqs}
+        seeAllHref="/faq"
+      />
+
+      <LayByPromo />
+
+      <CTASection
+        eyebrow="Find your school pack"
+        title="Get started in under a minute"
+        text="Search for your child's school, pick their grade, and order the exact stationery they need. Delivered before school opens."
+        primaryHref="/schools"
+        primaryLabel="Find Your School's Pack"
+      />
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
           <div className={homeStyles.officeCard}>
             <div className={homeStyles.officeCardIcon}>
               <BriefcaseIcon />
@@ -245,65 +295,6 @@ No queues. No confusion. No missing items.
           </div>
         </div>
       </section>
-
-      <section
-        className={sectionStyles.section}
-        aria-labelledby="home-testimonials-heading"
-      >
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Trusted by parents"
-            title="10,000+ parents have used Pexpacks"
-            headingId="home-testimonials-heading"
-          />
-          <TestimonialMarquee items={testimonials} />
-        </div>
-      </section>
-
-      <section className={sectionStyles.sectionCream}>
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Why Pexpacks"
-            title="The Pexpacks promise"
-            text="We save you time, reduce stress, and guarantee quality you can trust."
-          />
-          <div className={cardStyles.benefitGrid}>
-            {whyChoosePexpacks.map((benefit, index) => {
-              const Icon = benefitIcons[index];
-              return (
-                <article className={cardStyles.benefitCard} key={benefit.title}>
-                  <div className={cardStyles.benefitIconWrapper}>
-                    <Icon />
-                  </div>
-                  <h3>{benefit.title}</h3>
-                  <p>{benefit.text}</p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <FaqMarquee
-        faqs={faqs.filter((faq) =>
-          [
-            "delivery-timing",
-            "customise-pack",
-            "wrong-item",
-            "minimum-order",
-          ].includes(faq.id)
-        )}
-      />
-
-      <LayByPromo />
-
-      <CTASection
-        eyebrow="Ready to order"
-        title="Ready to save time this year?"
-        text="Join thousands of parents who've made the smart switch to Pexpacks. Order now and experience stress-free school mornings."
-        primaryHref="/schools"
-        primaryLabel="Find Your School Pack"
-      />
 
       <MobileStickyCta />
     </>

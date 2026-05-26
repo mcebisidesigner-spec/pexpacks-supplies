@@ -1,0 +1,75 @@
+.form {
+  margin-top: 18px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.label {
+  display: block;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pex-primary);
+  margin-bottom: 12px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.input {
+  flex: 1;
+  min-width: 160px;
+  padding: 10px 16px;
+  border: 2px solid var(--pex-border);
+  border-radius: var(--radius-pill);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  background: var(--pex-bg);
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: var(--pex-keppel);
+}
+
+.button {
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.button:hover {
+  background: var(--pex-navy);
+}
+
+.success {
+  margin-top: 14px;
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
+  background: rgba(47, 133, 90, 0.1);
+  color: var(--pex-success);
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+}
+
+.error {
+  margin: 8px 0 0;
+  color: var(--pex-error);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
