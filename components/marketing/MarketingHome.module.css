@@ -445,11 +445,9 @@
   }
 
   .laybySpotlightLink {
-    width: 100%;
-    max-width: calc(100vw - (var(--gutter-mobile) * 2));
     gap: 6px;
-    min-height: 44px;
-    padding: 6px;
+    min-height: 40px;
+    padding: 5px;
   }
 
   .laybySpotlightIcon {
