@@ -12,7 +12,6 @@ import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { LayByPromo } from "@/components/shared/LayByPromo";
-import { SchoolWaitlistCapture } from "@/components/shared/SchoolWaitlistCapture";
 import {
   BookIcon,
   BriefcaseIcon,
@@ -124,7 +123,6 @@ No queues. No confusion. No missing items.
                 School not listed? Notify us &rarr;
               </Link>
             </div>
-            <SchoolWaitlistCapture />
           </div>
         </div>
       </section>
@@ -154,14 +152,14 @@ No queues. No confusion. No missing items.
         </div>
       </div>
 
+      <OrderingWorksSection />
+
       <div className={homeStyles.urgencyBar}>
         <p>
           Order before <strong>30 September 2026</strong> for delivery before school opens in January.
           <Link href="/schools">Shop now &rarr;</Link>
         </p>
       </div>
-
-      <OrderingWorksSection />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
@@ -244,6 +242,13 @@ No queues. No confusion. No missing items.
             headingId="home-testimonials-heading"
           />
           <TestimonialMarquee items={testimonials} />
+          <div className={homeStyles.statsRow}>
+            <span>10,000+ parents served</span>
+            <span className={homeStyles.statsDot} aria-hidden="true" />
+            <span>1,200+ school lists matched</span>
+            <span className={homeStyles.statsDot} aria-hidden="true" />
+            <span>4.9 / 5 average rating</span>
+          </div>
         </div>
       </section>
 
