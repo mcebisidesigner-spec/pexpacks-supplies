@@ -226,7 +226,7 @@ No queues. No confusion. No missing items.
           </div>
           <div style={{ textAlign: "center", marginTop: "32px" }}>
             <Link
-              href="/schools#school-grade-packs"
+              href="/schools#schools-search"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -240,7 +240,7 @@ No queues. No confusion. No missing items.
                 textDecoration: "none",
               }}
             >
-              Browse All Grade Packs &rarr;
+              Browse All Schools
             </Link>
           </div>
         </div>
