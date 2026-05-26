@@ -237,17 +237,17 @@ No queues. No confusion. No missing items.
         <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Trusted by parents"
-            title="10,000+ parents have used Pexpacks"
-            text="Hear from parents and see why Pexpacks is the smart choice for school stationery."
+            title="Parents trust Pexpacks for school stationery"
+            text="Hear from parents who have made the smart switch to Pexpacks."
             headingId="home-testimonials-heading"
           />
           <TestimonialMarquee items={testimonials} />
           <div className={homeStyles.statsRow}>
-            <span>10,000+ parents served</span>
+            <span>School-accurate stationery lists</span>
             <span className={homeStyles.statsDot} aria-hidden="true" />
-            <span>1,200+ school lists matched</span>
+            <span>Delivered before school opens</span>
             <span className={homeStyles.statsDot} aria-hidden="true" />
-            <span>4.9 / 5 average rating</span>
+            <span>Backed by a 100% match promise</span>
           </div>
         </div>
       </section>

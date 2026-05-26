@@ -9,9 +9,9 @@ type SchoolsPageHeroProps = {
 };
 
 const stats = [
-  { value: "500+", label: "Schools listed" },
-  { value: "10 000+", label: "Packs delivered" },
-  { value: "4.8/5", label: "Parent rating" },
+  { value: "Growing", label: "School directory" },
+  { value: "Stress-free", label: "Back-to-school" },
+  { value: "Accurate", label: "Grade lists guaranteed" },
 ];
 
 export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {

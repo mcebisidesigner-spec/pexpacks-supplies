@@ -156,7 +156,7 @@ export default function PrimarySchoolPage() {
       <CTASection
         eyebrow="Ready to order"
         title="Ready to save time this year?"
-        text="Join thousands of parents who've made the smart switch to Pexpacks. Order now and experience stress-free school mornings."
+        text="Join the growing number of parents who have made the smart switch to Pexpacks. Order now and experience stress-free school mornings."
         primaryHref="/schools"
         primaryLabel="Find Your School Pack"
       />

@@ -16,7 +16,7 @@ export function OrderingWorksSection() {
           <SectionHeader
             eyebrow="School-ready support"
             title="How ordering works"
-            text="Pexpacks keeps the school list searchable so parents do not need to scroll through hundreds of schools. The average parent saves 4 hours of driving, queuing, and crossing off lists."
+            text="Pexpacks keeps the school list searchable so parents do not need to scroll through endless stationsery shops. No driving, no queuing, no crossing off lists by hand."
             headingId="how-it-works-heading"
           />
         </ScrollReveal>
