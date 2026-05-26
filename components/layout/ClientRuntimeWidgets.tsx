@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 
 const DynamicWhatsAppWidget = dynamic(
   () => import("@/components/shared/WhatsAppWidget").then((m) => m.WhatsAppWidget),
@@ -23,14 +24,19 @@ const DynamicPwaLifecycle = dynamic(
   { ssr: false }
 );
 
+const conversionPaths = ["/", "/schools", "/foundation-phase", "/primary-school", "/high-school", "/office", "/lay-by", "/add-your-school"];
+
 export function ClientRuntimeWidgets() {
+  const pathname = usePathname();
+  const isConversionPage = conversionPaths.includes(pathname);
+
   return (
     <>
       <DynamicWhatsAppWidget />
-      <DynamicSocialProofToasts />
-      <DynamicFirstOrderDiscount />
-      <DynamicExitIntent />
       <DynamicPwaLifecycle />
+      {isConversionPage ? <DynamicSocialProofToasts /> : null}
+      {isConversionPage ? <DynamicFirstOrderDiscount /> : null}
+      {isConversionPage ? <DynamicExitIntent /> : null}
     </>
   );
 }

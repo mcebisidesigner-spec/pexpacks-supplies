@@ -22,12 +22,14 @@ export const revalidate = 86400; // 24 hours
 
 export async function generateStaticParams() {
   const schoolIndex = await getSchoolIndex();
-  return schoolIndex.flatMap((school) =>
-    school.grades.map((grade) => ({
-      schoolSlug: school.slug,
-      gradeSlug: grade.gradeSlug,
-    }))
-  );
+  return schoolIndex
+    .filter((school) => school.isFeatured || school.isPartnerSchool)
+    .flatMap((school) =>
+      school.grades.map((grade) => ({
+        schoolSlug: school.slug,
+        gradeSlug: grade.gradeSlug,
+      }))
+    );
 }
 
 export async function generateMetadata({

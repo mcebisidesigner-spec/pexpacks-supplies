@@ -1,26 +1,14 @@
-"use client";
-
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { HeaderActiveLink } from "./HeaderActiveLink";
 import { HeaderMenu } from "./HeaderMenu";
-import { useHideHeaderOnScroll } from "@/lib/hooks/useHideHeaderOnScroll";
+import { HeaderScrollWrapper } from "./HeaderScrollWrapper";
 import { mainNavLinks } from "@/data/navigation";
 import styles from "./Header.module.css";
 
 export function Header() {
-  const { isHidden, isAtTop } = useHideHeaderOnScroll();
-
-  const headerClass = [
-    styles.siteHeader,
-    isHidden ? styles.headerHidden : styles.headerVisible,
-    isAtTop ? styles.headerAtTop : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
-    <header className={headerClass}>
+    <HeaderScrollWrapper>
       <div className={styles.headerInner}>
         <Link className={styles.logoLink} href="/" aria-label="Pexpacks home" data-mobile-menu-close>
           <Logo priority />
@@ -49,6 +37,6 @@ export function Header() {
         </div>
         <HeaderMenu />
       </div>
-    </header>
+    </HeaderScrollWrapper>
   );
 }

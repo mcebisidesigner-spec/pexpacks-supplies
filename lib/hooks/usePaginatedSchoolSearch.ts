@@ -15,8 +15,9 @@ type UsePaginatedSchoolSearchOptions = {
   errorMessage: string;
 };
 
-function shouldSearch() {
-  return true;
+function shouldSearch(gradeAllValue: string, grade: string, debouncedQuery: string) {
+  if (grade !== gradeAllValue) return true;
+  return debouncedQuery.trim().length >= 2;
 }
 
 export function usePaginatedSchoolSearch({
@@ -39,7 +40,7 @@ export function usePaginatedSchoolSearch({
   const [error, setError] = useState("");
   const activeRequest = useRef<AbortController | null>(null);
 
-  const queryReady = true;
+  const queryReady = grade !== gradeAllValue || debouncedQuery.trim().length >= 2;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedQuery(query), 350);
@@ -48,7 +49,7 @@ export function usePaginatedSchoolSearch({
 
   const fetchResults = useCallback(
     async (nextOffset: number, mode: "replace" | "append") => {
-      if (!shouldSearch()) {
+      if (!shouldSearch(gradeAllValue, grade, debouncedQuery)) {
         setResults([]);
         setTotal(0);
         setHasMore(false);
