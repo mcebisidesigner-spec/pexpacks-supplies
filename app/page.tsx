@@ -103,6 +103,11 @@ No queues. No confusion. No missing items.
             <strong>Lay-by now open</strong>
             <span>Reserve your school pack today</span>
           </span>
+          <span className={homeStyles.laybySpotlightAction} aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M7 17 17 7M9 7h8v8" />
+            </svg>
+          </span>
         </Link>
       </section>
 
