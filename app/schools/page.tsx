@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
-import Link from "next/link";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
 
 import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
@@ -25,6 +26,7 @@ import { faqs } from "@/data/faqs";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Find Your School Stationery Pack | Pexpacks",
@@ -57,22 +59,37 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       </SchoolsPageHero>
       </div>
 
-      {featuredSchools.length > 3 ? (
-        <div className={sectionStyles.trendingPills}>
-          <span className={sectionStyles.trendingLabel}>Trending:</span>
-          <div className={sectionStyles.pillRow}>
-            {featuredSchools.slice(0, 6).map((school) => (
-              <Link
-                key={school.slug}
-                href={`/schools/${school.slug}`}
-                className={sectionStyles.trendingPill}
-              >
-                {school.name}
-              </Link>
-            ))}
-          </div>
+      <div className={homeStyles.brandMarquee}>
+        <div className={homeStyles.brandMarqueeTrack}>
+          {[
+            "croxley", "bic", "pilot", "pritt", "staedtler",
+            "post-it", "bantex", "pexnflex", "freedom",
+            "casio", "marlin", "pentel", "rapid", "rexel",
+            "sellotape", "stabilo", "starpie",
+            "croxley", "bic", "pilot", "pritt", "staedtler",
+            "post-it", "bantex", "pexnflex", "freedom",
+            "casio", "marlin", "pentel", "rapid", "rexel",
+            "sellotape", "stabilo", "starpie",
+          ].map((brand, i) => (
+            <span key={i} className={homeStyles.brandChip}>
+              <Image
+                src={`/images/stationery-brands/${brand}.svg`}
+                alt={`${brand} logo`}
+                width={80}
+                height={40}
+                style={{ objectFit: "contain", display: "block" }}
+              />
+            </span>
+          ))}
         </div>
-      ) : null}
+      </div>
+
+      <div className={homeStyles.urgencyBar}>
+        <p>
+          Order before <strong>30 September 2026</strong> for delivery before school opens in January.
+          <Link href="/schools">Shop now &rarr;</Link>
+        </p>
+      </div>
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
