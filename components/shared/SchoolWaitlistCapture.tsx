@@ -39,7 +39,7 @@ export function SchoolWaitlistCapture() {
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <label className={styles.label}>
-        School not listed? Leave your details and we&rsquo;ll notify you.
+        or you could leave your details and we&rsquo;ll notify you.
       </label>
       <div className={styles.row}>
         <input

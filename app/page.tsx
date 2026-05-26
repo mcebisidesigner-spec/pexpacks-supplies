@@ -121,14 +121,11 @@ No queues. No confusion. No missing items.
                 list. No missing items, no incorrect brands. If it's on the
                 list, it's in the box.
               </p>
-              <span className={homeStyles.guaranteeStat}>1 200+ school lists matched</span>
+              <Link href="/add-your-school" className={homeStyles.guaranteeLink}>
+                School not listed? Notify us &rarr;
+              </Link>
             </div>
             <SchoolWaitlistCapture />
-          </div>
-          <div className={homeStyles.guaranteeLinks}>
-            <Link href="/add-your-school" className={homeStyles.guaranteeLink}>
-              School not listed? Notify us &rarr;
-            </Link>
           </div>
         </div>
       </section>
