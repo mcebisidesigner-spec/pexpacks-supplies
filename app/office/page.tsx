@@ -231,8 +231,6 @@ export default async function OfficePacksPage({
         text="Request a custom quote for your business or browse our standard packs for SMEs, home offices, and small teams."
         primaryHref="#contact-enquiry"
         primaryLabel="Request a Quote"
-        secondaryHref="/schools"
-        secondaryLabel="Find School Packs"
       />
     </>
   );

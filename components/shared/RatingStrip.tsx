@@ -5,7 +5,7 @@ export function RatingStrip() {
     <div className={styles.strip}>
       <span className={styles.stars} aria-hidden="true">★★★★★</span>
       <span className={styles.text}>
-        <strong>Parents love the convenience</strong>
+        <strong>Entrepreneurs love the convenience</strong>
       </span>
     </div>
   );
