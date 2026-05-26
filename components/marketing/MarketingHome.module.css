@@ -219,10 +219,10 @@
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  gap: clamp(8px, 1.2vw, 14px);
+  gap: clamp(10px, 1.5vw, 18px);
   width: auto;
-  min-height: clamp(48px, 5.5vw, 60px);
-  padding: clamp(6px, 1vw, 10px);
+  min-height: clamp(52px, 6vw, 68px);
+  padding: clamp(10px, 1.5vw, 16px) clamp(18px, 2.5vw, 28px);
   border: none;
   border-radius: var(--radius-pill);
   background:
@@ -230,9 +230,9 @@
   color: var(--pex-bg);
   text-decoration: none;
   box-shadow:
-    0 10px 24px rgba(26, 42, 64, 0.18),
-    0 0 0 1px rgba(255, 255, 255, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    0 18px 40px rgba(26, 42, 64, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
   transform-origin: center;
   animation: laybyCtaGlow 2.4s ease-in-out infinite;
   transition:
@@ -267,10 +267,10 @@
 
 .laybySpotlightLink:hover {
   box-shadow:
-    0 18px 36px rgba(26, 42, 64, 0.24),
-    0 0 0 3px rgba(255, 111, 89, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  transform: translateY(-2px) scale(1.01);
+    0 24px 52px rgba(26, 42, 64, 0.32),
+    0 0 0 3px rgba(255, 111, 89, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transform: translateY(-3px) scale(1.015);
 }
 
 .laybySpotlightIcon {
@@ -324,23 +324,23 @@
   56%,
   100% {
     box-shadow:
-      0 20px 48px rgba(26, 42, 64, 0.28),
+      0 18px 40px rgba(26, 42, 64, 0.25),
       0 0 0 1px rgba(255, 255, 255, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.16);
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
   }
 
   12% {
     box-shadow:
-      0 24px 56px rgba(26, 42, 64, 0.36),
-      0 0 0 2px rgba(255, 111, 89, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      0 24px 52px rgba(26, 42, 64, 0.34),
+      0 0 0 2px rgba(255, 111, 89, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
   }
 
   30% {
     box-shadow:
-      0 20px 48px rgba(26, 42, 64, 0.28),
+      0 18px 40px rgba(26, 42, 64, 0.25),
       0 0 0 1px rgba(255, 255, 255, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.16);
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
   }
 }
 
@@ -445,23 +445,23 @@
   }
 
   .laybySpotlightLink {
-    gap: 6px;
-    min-height: 40px;
-    padding: 5px;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 14px;
   }
 
   .laybySpotlightIcon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
 
   .laybySpotlightIcon svg {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
   }
 
   .laybySpotlightText strong {
-    font-size: 13px;
+    font-size: 14px;
     white-space: normal;
   }
 
