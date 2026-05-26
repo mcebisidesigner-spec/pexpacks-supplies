@@ -8,7 +8,6 @@ import { buildMetadata } from "@/lib/seo";
 import { faqPageSchema } from "@/lib/schema";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
@@ -73,7 +72,6 @@ export default function FAQPage() {
           </div>
         </div>
       </section>
-      <RatingStrip />
     </>
   );
 }

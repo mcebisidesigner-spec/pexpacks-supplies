@@ -7,7 +7,6 @@ import { successStories } from "@/data/successStories";
 import styles from "./SuccessStories.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata(
@@ -134,7 +133,6 @@ export default function SuccessStoriesPage() {
           </div>
         </div>
       </section>
-      <RatingStrip />
     </>
   );
 }

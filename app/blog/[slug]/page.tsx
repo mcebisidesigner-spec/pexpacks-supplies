@@ -7,7 +7,6 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
 import { blogPosts, getPostBySlug } from "@/data/blog";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { buildMetadata, siteUrl } from "@/lib/seo";
 import styles from "../Blog.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
@@ -194,7 +193,6 @@ export default async function BlogPostPage({
           </div>
         </div>
       </section>
-      <RatingStrip />
     </>
   );
 }

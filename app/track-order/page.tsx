@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
@@ -83,7 +82,6 @@ export default function TrackOrderPage() {
           </div>
         </div>
       </section>
-      <RatingStrip />
     </>
   );
 }

@@ -4,7 +4,6 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { LayByExperience } from "@/components/marketing/LayByExperience";
 import { PageHero } from "@/components/marketing/PageHero";
 import { Button } from "@/components/ui/Button";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { buildMetadata } from "@/lib/seo";
 import styles from "@/components/marketing/LayByExperience.module.css";
 import pageStyles from "./LayByPage.module.css";
@@ -153,7 +152,6 @@ export default function LayByPage() {
           </div>
         </div>
       </section>
-      <RatingStrip />
     </>
   );
 }

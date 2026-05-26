@@ -233,7 +233,7 @@ export default async function OfficePacksPage({
           </div>
         </div>
       </section>
-      <RatingStrip />
+      <RatingStrip text="Entrepreneurs love the convenience" />
     </>
   );
 }

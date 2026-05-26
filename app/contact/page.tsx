@@ -6,7 +6,6 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import {
   generalEmail,
   generalEmailHref,
@@ -252,7 +251,6 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           </div>
         </div>
       </section>
-      <RatingStrip />
     </>
   );
 }

@@ -16,7 +16,6 @@ export const metadata: Metadata = buildMetadata(
 );
 
 import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 
 export default function BlogIndex() {
   return (
@@ -133,7 +132,6 @@ export default function BlogIndex() {
           </div>
         </div>
       </section>
-      <RatingStrip />
     </>
   );
 }

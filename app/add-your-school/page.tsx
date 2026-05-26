@@ -7,7 +7,6 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { mostPopularPacksHref, homepagePacks } from "@/data/packs";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
@@ -186,7 +185,6 @@ export default function AddYourSchoolPage() {
           </div>
         </div>
       </section>
-      <RatingStrip />
     </>
   );
 }

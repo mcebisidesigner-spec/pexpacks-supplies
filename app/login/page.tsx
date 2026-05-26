@@ -5,7 +5,6 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
@@ -123,7 +122,6 @@ export default function LoginPage() {
           </div>
         </div>
       </section>
-      <RatingStrip />
     </>
   );
 }

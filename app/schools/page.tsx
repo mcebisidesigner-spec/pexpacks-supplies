@@ -14,7 +14,6 @@ import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { FindSchoolBar } from "@/components/schools/FindSchoolBar";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
@@ -233,7 +232,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
 
       <MobileStickyCta />
       <FindSchoolBar />
-      <RatingStrip />
     </>
   );
 }

@@ -1,11 +1,15 @@
 import styles from "./RatingStrip.module.css";
 
-export function RatingStrip() {
+type RatingStripProps = {
+  text?: string;
+};
+
+export function RatingStrip({ text = "Parents love the convenience" }: RatingStripProps) {
   return (
     <div className={styles.strip}>
       <span className={styles.stars} aria-hidden="true">★★★★★</span>
       <span className={styles.text}>
-        <strong>Entrepreneurs love the convenience</strong>
+        <strong>{text}</strong>
       </span>
     </div>
   );
