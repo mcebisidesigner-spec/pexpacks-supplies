@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { PageHero } from "@/components/marketing/PageHero";
@@ -50,6 +51,169 @@ export async function generateMetadata({
   };
 }
 
+/* ── Content parsing helpers ── */
+
+type ParsedImage = { alt: string; src: string };
+
+function parseImage(line: string): ParsedImage | null {
+  const match = line.match(/^!\[(.*?)\]\((.*?)\)$/);
+  return match ? { alt: match[1], src: match[2] } : null;
+}
+
+function parseLinkPills(
+  text: string
+): { text: string; href: string }[] {
+  const pills: { text: string; href: string }[] = [];
+  const regex = /\[link_pill:\s*(.*?)\s*\|\s*(.*?)\s*\]/g;
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    pills.push({ text: match[1], href: match[2] });
+  }
+  return pills;
+}
+
+function renderContent(
+  content: string[]
+): ReactNode[] {
+  const elements: ReactNode[] = [];
+  let listBuffer: {
+    items: string[];
+    ordered: boolean;
+  } | null = null;
+
+  function flushList() {
+    if (!listBuffer) return;
+    const ListTag = listBuffer.ordered ? "ol" : "ul";
+    const cls = listBuffer.ordered
+      ? styles.postOrderedList
+      : styles.postList;
+    elements.push(
+      <ListTag key={`list-${elements.length}`} className={cls}>
+        {listBuffer.items.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
+      </ListTag>
+    );
+    listBuffer = null;
+  }
+
+  for (let i = 0; i < content.length; i++) {
+    const line = content[i];
+
+    /* ── Image ── */
+    const img = parseImage(line);
+    if (img) {
+      flushList();
+      const next = i + 1 < content.length ? content[i + 1] : "";
+      const isCaption =
+        next &&
+        !parseImage(next) &&
+        !next.startsWith("## ") &&
+        !next.startsWith("> ") &&
+        !next.startsWith("[link_pill:") &&
+        !next.startsWith(":::") &&
+        !next.trim().match(/^[-*\d]/);
+      if (isCaption) i++;
+
+      elements.push(
+        <figure key={`img-${i}`} className={styles.postImageWrapper}>
+          <Image
+            src={img.src}
+            alt={img.alt}
+            width={800}
+            height={450}
+            className={styles.postImage}
+            style={{
+              width: "100%",
+              height: "auto",
+              borderRadius: "16px",
+              border: "1px solid rgba(0,0,0,0.05)",
+            }}
+          />
+          {isCaption ? (
+            <figcaption className={styles.postImageCaption}>
+              {content[i]}
+            </figcaption>
+          ) : null}
+        </figure>
+      );
+      continue;
+    }
+
+    /* ── Heading ── */
+    if (line.startsWith("## ")) {
+      flushList();
+      elements.push(
+        <h2 key={`h2-${i}`} className={styles.postHeading}>
+          {line.replace("## ", "")}
+        </h2>
+      );
+      continue;
+    }
+
+    /* ── Blockquote ── */
+    if (line.startsWith("> ")) {
+      flushList();
+      elements.push(
+        <blockquote key={`bq-${i}`} className={styles.postBlockquote}>
+          {line.replace("> ", "")}
+        </blockquote>
+      );
+      continue;
+    }
+
+    /* ── List items ── */
+    const bulletMatch = line.match(/^[-*]\s+(.+)/);
+    const numMatch = line.match(/^\d+[.)]\s+(.+)/);
+    const listItem = bulletMatch
+      ? { ordered: false, text: bulletMatch[1] }
+      : numMatch
+        ? { ordered: true, text: numMatch[1] }
+        : null;
+
+    if (listItem) {
+      if (!listBuffer) {
+        listBuffer = { items: [], ordered: listItem.ordered };
+      }
+      listBuffer.items.push(listItem.text);
+      continue;
+    }
+    if (listBuffer && line.trim() === "") {
+      continue;
+    }
+    flushList();
+
+    /* ── Paragraph (with optional inline link pills) ── */
+    const pills = parseLinkPills(line);
+    if (pills.length > 0) {
+      const cleaned = line.replace(
+        /\[link_pill:\s*.*?\s*\|\s*.*?\s*\]/g,
+        ""
+      ).trim();
+      if (cleaned) {
+        elements.push(<p key={`p-${i}`}>{cleaned}</p>);
+      }
+      elements.push(
+        <div key={`pills-${i}`} className={styles.postLinkPillRow}>
+          {pills.map((pill, pi) => (
+            <Link key={pi} href={pill.href} className={styles.postLinkPill}>
+              {pill.text}
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+          ))}
+        </div>
+      );
+      continue;
+    }
+
+    elements.push(<p key={`p-${i}`}>{line}</p>);
+  }
+
+  flushList();
+
+  return elements;
+}
+
 export default async function BlogPostPage({
   params,
 }: {
@@ -67,6 +231,10 @@ export default async function BlogPostPage({
     month: "long",
     day: "numeric",
   });
+
+  const relatedPosts = blogPosts
+    .filter((p) => p.slug !== post.slug)
+    .slice(0, 3);
 
   return (
     <>
@@ -97,54 +265,61 @@ export default async function BlogPostPage({
         ) : null}
 
         <div className={styles.postContent}>
-          {post.content.map((paragraph, index) => {
-            const imageMatch = paragraph.match(/^!\[(.*?)\]\((.*?)\)$/);
+          {renderContent(post.content)}
 
-            if (imageMatch) {
-              return (
-                <div key={index} className={styles.postInlineImage}>
-                  <Image
-                    src={imageMatch[2]}
-                    alt={imageMatch[1]}
-                    width={800}
-                    height={450}
-                    className={styles.postImage}
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      borderRadius: "16px",
-                      marginTop: "24px",
-                      marginBottom: "32px",
-                      border: "1px solid rgba(0,0,0,0.05)",
-                    }}
-                  />
-                </div>
-              );
-            }
+          {/* Pex Your Knowledge section */}
+          <aside className={styles.postKnowledgeSection} aria-label="Explore more resources">
+            <h2>Pex your knowledge</h2>
+            <p>
+              Dive deeper into related topics and discover helpful resources to
+              make your back-to-school experience smoother.
+            </p>
+            <div className={styles.postKnowledgeGrid}>
+              <Link href="/schools" className={styles.postKnowledgePill}>
+                Browse school packs
+              </Link>
+              <Link href="/lay-by" className={styles.postKnowledgePill}>
+                Lay-by payment plans
+              </Link>
+              <Link href="/add-your-school" className={styles.postKnowledgePill}>
+                Request your school
+              </Link>
+              <Link href="/faq" className={styles.postKnowledgePill}>
+                Frequently asked questions
+              </Link>
+              <Link href="/office" className={styles.postKnowledgePill}>
+                Office & business packs
+              </Link>
+              <Link href="/partnership" className={styles.postKnowledgePill}>
+                School partnerships
+              </Link>
+            </div>
+          </aside>
 
-            if (paragraph.startsWith("## ")) {
-              return (
-                <h2
-                  key={index}
-                  style={{
-                    marginTop: "32px",
-                    marginBottom: "16px",
-                    fontSize: "24px",
-                    color: "var(--pex-primary)",
-                  }}
-                >
-                  {paragraph.replace("## ", "")}
-                </h2>
-              );
-            }
+          {/* Related posts */}
+          {relatedPosts.length > 0 ? (
+            <section className={styles.postRelatedSection} aria-label="Continue reading">
+              <h2>Continue reading</h2>
+              <div className={styles.postRelatedGrid}>
+                {relatedPosts.map((rp) => (
+                  <Link
+                    key={rp.id}
+                    href={`/blog/${rp.slug}`}
+                    className={styles.postRelatedCard}
+                  >
+                    <h3>{rp.title}</h3>
+                    <p>{rp.excerpt}</p>
+                    <span>Read more &rarr;</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : null}
 
-            return <p key={index}>{paragraph}</p>;
-          })}
-          
           {/* CONTEXTUAL SEARCH INLINE FUNNEL */}
           <div className={styles.postInlineWidget}>
-            <SchoolSearchWidget 
-              compact={true} 
+            <SchoolSearchWidget
+              compact={true}
               titleText="Find your official school pack"
               bodyText="Save time and buy the exact teacher-approved stationery kit for your school & grade in just 3 clicks."
             />
@@ -168,11 +343,16 @@ export default async function BlogPostPage({
               <p className={sectionStyles.sectionEyebrow}>Need office stationery?</p>
               <h2>Business supplies</h2>
               <p>
-                Pexpacks prepares practical office packs for SMEs, home offices, and small teams with custom quotes and bulk pricing.
+                Pexpacks prepares practical office packs for SMEs, home
+                offices, and small teams with custom quotes and bulk pricing.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/office" variant="primary">View Office Packs</Button>
-                <Button href="/office#contact-enquiry" variant="white">Request a Quote</Button>
+                <Button href="/office" variant="primary">
+                  View Office Packs
+                </Button>
+                <Button href="/office#contact-enquiry" variant="white">
+                  Request a Quote
+                </Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>
@@ -181,7 +361,8 @@ export default async function BlogPostPage({
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  Schools can submit stationery lists so parents order grade-specific packs. No admin, no hassle.
+                  Schools can submit stationery lists so parents order
+                  grade-specific packs. No admin, no hassle.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>

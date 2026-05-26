@@ -315,3 +315,313 @@
   margin-top: 48px;
   margin-bottom: 48px;
 }
+
+/* ── Enhanced Content: Lists ── */
+.postList,
+.postOrderedList {
+  margin: 0 0 28px;
+  padding-left: 24px;
+  display: grid;
+  gap: 10px;
+  color: var(--pex-text);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.postList {
+  list-style: disc;
+}
+
+.postOrderedList {
+  list-style: decimal;
+}
+
+.postList li,
+.postOrderedList li {
+  margin: 0;
+  padding-left: 6px;
+}
+
+/* ── Enhanced Content: Blockquotes ── */
+.postBlockquote {
+  margin: 0 0 28px;
+  padding: 20px 24px;
+  border-left: 4px solid var(--pex-keppel);
+  background: var(--pex-bg-soft);
+  border-radius: 0 var(--radius-card-compact) var(--radius-card-compact) 0;
+  color: var(--pex-navy);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* ── Enhanced Content: Headings ── */
+.postHeading {
+  margin-top: 44px;
+  margin-bottom: 18px;
+  font-size: 26px;
+  color: var(--pex-navy);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+/* ── Enhanced Content: Callout boxes ── */
+.postCallout {
+  margin: 0 0 28px;
+  padding: 24px 28px;
+  border-radius: var(--radius-card-compact);
+  display: grid;
+  gap: 10px;
+}
+
+.postCallout > strong {
+  font-family: var(--font-button);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.postCallout > p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.postCalloutTip {
+  background: rgba(33, 158, 154, 0.06);
+  border: 1px solid rgba(33, 158, 154, 0.18);
+}
+
+.postCalloutTip > strong {
+  color: var(--pex-keppel);
+}
+
+.postCalloutTakeaway {
+  background: rgba(26, 42, 64, 0.04);
+  border: 1px solid rgba(26, 42, 64, 0.1);
+}
+
+.postCalloutTakeaway > strong {
+  color: var(--pex-navy);
+}
+
+.postCalloutCta {
+  background: var(--pex-navy);
+  border: none;
+  color: var(--pex-bg);
+}
+
+.postCalloutCta > strong {
+  color: var(--pex-keppel);
+}
+
+.postCalloutCta > p {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* ── Enhanced Content: Linking Pills ── */
+.postLinkPillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 28px;
+}
+
+.postLinkPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-bg);
+  border: 1.5px solid var(--pex-keppel);
+  color: var(--pex-keppel);
+  font-family: var(--font-button);
+  font-weight: 800;
+  font-size: 14px;
+  text-decoration: none;
+  transition:
+    all var(--motion-duration) var(--motion-ease);
+}
+
+.postLinkPill:hover {
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(33, 158, 154, 0.25);
+}
+
+.postLinkPill span {
+  font-size: 16px;
+  transition: transform var(--motion-duration) var(--motion-ease);
+}
+
+.postLinkPill:hover span {
+  transform: translateX(3px);
+}
+
+/* ── Enhanced Content: Captioned images ── */
+.postImageWrapper {
+  margin: 0 0 28px;
+}
+
+.postImageCaption {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--pex-text-muted);
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* ── Related Posts Section ── */
+.postRelatedSection {
+  margin-top: 56px;
+  padding-top: 44px;
+  border-top: 1px solid var(--pex-border);
+}
+
+.postRelatedSection h2 {
+  font-size: 26px;
+  color: var(--pex-navy);
+  margin: 0 0 24px;
+  font-weight: 800;
+}
+
+.postRelatedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.postRelatedCard {
+  border: var(--card-border);
+  border-radius: var(--radius-card-compact);
+  padding: 24px;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform var(--motion-duration) var(--motion-ease),
+    box-shadow var(--motion-duration) var(--motion-ease);
+}
+
+.postRelatedCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.postRelatedCard h3 {
+  font-size: 17px;
+  margin: 0 0 12px;
+  color: var(--pex-navy);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.postRelatedCard p {
+  font-size: 14px;
+  color: var(--pex-text-muted);
+  margin: 0;
+  flex: 1;
+  line-height: 1.45;
+}
+
+.postRelatedCard span {
+  margin-top: 16px;
+  font-family: var(--font-button);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--pex-keppel);
+  transition: opacity var(--motion-duration) var(--motion-ease);
+}
+
+.postRelatedCard:hover span {
+  opacity: 0.8;
+}
+
+/* ── Pex Your Knowledge Section ── */
+.postKnowledgeSection {
+  margin-top: 48px;
+  margin-bottom: 48px;
+  padding: 32px 36px;
+  border-radius: var(--radius-section);
+  background: linear-gradient(135deg, rgba(33, 158, 154, 0.04), rgba(26, 42, 64, 0.02));
+  border: 1px solid rgba(33, 158, 154, 0.12);
+}
+
+.postKnowledgeSection h2 {
+  font-size: 24px;
+  color: var(--pex-navy);
+  margin: 0 0 8px;
+  font-weight: 800;
+}
+
+.postKnowledgeSection > p {
+  margin: 0 0 20px;
+  color: var(--pex-text-muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.postKnowledgeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.postKnowledgePill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border-radius: var(--radius-card-compact);
+  background: var(--card-bg);
+  border: var(--card-border);
+  box-shadow: var(--card-shadow);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--pex-navy);
+  transition:
+    all var(--motion-duration) var(--motion-ease);
+}
+
+.postKnowledgePill:hover {
+  border-color: var(--pex-keppel);
+  color: var(--pex-keppel);
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* ── Responsive tweaks ── */
+@media (max-width: 768px) {
+  .postRelatedGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .postKnowledgeGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .postKnowledgeSection {
+    padding: 24px;
+  }
+
+  .postCallout {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .postKnowledgeGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .postBlockquote {
+    padding: 16px 18px;
+    font-size: 17px;
+  }
+}
