@@ -222,7 +222,7 @@
   gap: clamp(8px, 1.2vw, 14px);
   width: min(100%, 480px);
   min-height: clamp(48px, 5.5vw, 60px);
-  padding: clamp(5px, 0.8vw, 8px) clamp(14px, 2vw, 24px);
+  padding: clamp(5px, 0.8vw, 8px) clamp(8px, 1.2vw, 14px);
   border: none;
   border-radius: var(--radius-pill);
   background:
