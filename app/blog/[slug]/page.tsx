@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
+import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { blogPosts, getPostBySlug } from "@/data/blog";
 import { buildMetadata, siteUrl } from "@/lib/seo";
 import styles from "../Blog.module.css";
@@ -450,6 +451,7 @@ export default async function BlogPostPage({
           </div>
         </div>
       </section>
+      <MobileStickyCta />
     </>
   );
 }
