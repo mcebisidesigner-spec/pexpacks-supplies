@@ -224,23 +224,13 @@ No queues. No confusion. No missing items.
             ))}
           </div>
           <div style={{ textAlign: "center", marginTop: "32px" }}>
-            <Link
+            <Button
               href="/schools#schools-search"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "12px 28px",
-                borderRadius: "var(--radius-pill)",
-                background: "var(--pex-primary)",
-                color: "var(--pex-bg)",
-                fontWeight: 800,
-                fontSize: "16px",
-                textDecoration: "none",
-              }}
+              variant="navy"
+              size="md"
             >
-              Browse All Schools
-            </Link>
+              Browse School Packs
+            </Button>
           </div>
         </div>
       </section>
