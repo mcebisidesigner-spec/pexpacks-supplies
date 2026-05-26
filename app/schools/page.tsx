@@ -179,8 +179,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
             "school-list-submission",
           ].includes(faq.id)
         )}
-        eyebrow="Questions and answers"
-        title="Frequently asked questions"
       />
 
       <LayByPromo />

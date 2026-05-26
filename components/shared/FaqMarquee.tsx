@@ -14,7 +14,7 @@ type FaqMarqueeProps = {
 export function FaqMarquee({
   faqs,
   eyebrow = "Quick answers",
-  title = "Common questions",
+  title = "Frequently asked questions",
   seeAllHref = "/faq",
 }: FaqMarqueeProps) {
   if (faqs.length === 0) return null;

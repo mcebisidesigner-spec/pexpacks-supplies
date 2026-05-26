@@ -188,7 +188,7 @@ export default async function OfficePacksPage({
 
       <FaqMarquee
         faqs={faqs.filter((f) =>
-          ["sme-office-packs", "custom-office-quote", "bulk-office-orders", "delivery-timing"].includes(f.id)
+          ["sme-office-packs", "custom-office-quote", "bulk-office-orders", "delivery-timing", "payment-flow"].includes(f.id)
         )}
       />
 

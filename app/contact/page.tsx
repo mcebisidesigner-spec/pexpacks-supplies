@@ -205,7 +205,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
 
       <FaqMarquee
         faqs={faqs.filter((f) =>
-          ["school-not-listed", "delivery-timing", "payment-flow", "order-changes"].includes(f.id)
+          ["school-not-listed", "delivery-timing", "payment-flow", "order-changes", "delivery-areas"].includes(f.id)
         )}
       />
 

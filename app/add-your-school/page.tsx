@@ -137,7 +137,7 @@ export default function AddYourSchoolPage() {
 
       <FaqMarquee
         faqs={faqs.filter((f) =>
-          ["school-not-listed", "school-list-submission", "find-grade-pack", "delivery-timing"].includes(f.id)
+          ["school-not-listed", "school-list-submission", "find-grade-pack", "delivery-timing", "school-rebate"].includes(f.id)
         )}
       />
 

@@ -248,8 +248,9 @@ No queues. No confusion. No missing items.
       </section>
 
       <FaqMarquee
-        faqs={faqs}
-        seeAllHref="/faq"
+        faqs={faqs.filter((f) =>
+          ["school-not-listed", "delivery-timing", "exercise-books", "payment-flow", "find-grade-pack"].includes(f.id)
+        )}
       />
 
       <LayByPromo />

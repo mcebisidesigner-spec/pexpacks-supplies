@@ -76,7 +76,7 @@ export default function LoginPage() {
 
       <FaqMarquee
         faqs={faqs.filter((f) =>
-          ["delivery-timing", "school-not-listed", "payment-flow", "proof-of-payment"].includes(f.id)
+          ["delivery-timing", "school-not-listed", "payment-flow", "proof-of-payment", "order-changes"].includes(f.id)
         )}
       />
 

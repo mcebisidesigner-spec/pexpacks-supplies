@@ -36,7 +36,7 @@ export default function TrackOrderPage() {
 
       <FaqMarquee
         faqs={faqs.filter((f) =>
-          ["delivery-timing", "order-changes", "proof-of-payment", "payment-flow"].includes(f.id)
+          ["delivery-timing", "order-changes", "proof-of-payment", "payment-flow", "delivery-areas"].includes(f.id)
         )}
       />
 

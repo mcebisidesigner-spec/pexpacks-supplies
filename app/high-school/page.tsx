@@ -114,7 +114,7 @@ export default function HighSchoolPage() {
 
       <FaqMarquee
         faqs={faqs.filter((f) =>
-          ["delivery-timing", "exercise-books", "multiple-learners", "customise-pack"].includes(f.id)
+          ["delivery-timing", "exercise-books", "multiple-learners", "customise-pack", "stationery-quality"].includes(f.id)
         )}
       />
 

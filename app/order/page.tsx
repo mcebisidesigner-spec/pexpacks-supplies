@@ -81,10 +81,9 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
             "payment-flow",
             "multiple-learners",
             "exercise-books",
+            "order-changes",
           ].includes(faq.id)
         )}
-        eyebrow="Questions"
-        title="Ordering FAQs"
       />
     </>
   );
