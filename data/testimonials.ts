@@ -5,6 +5,7 @@ export type Testimonial = {
   context: string;
   quote: string;
   avatar?: string;
+  rating: number;
 };
 
 // Confirmed testimonials — permissions obtained for marketing use.
@@ -14,6 +15,7 @@ export const testimonials: Testimonial[] = [
     name: "Mbuso Dlamini",
     role: "Parent",
     context: "Grade 01 learner",
+    rating: 5,
     quote:
       "Pexpacks made back-to-school preparation simple. Everything was packed clearly and ready before the first day of school.",
     avatar: "/images/avatars/mbuso.webp",
@@ -23,6 +25,7 @@ export const testimonials: Testimonial[] = [
     name: "Thandeka Mkhize",
     role: "Teacher",
     context: "Primary school educator",
+    rating: 5,
     quote:
       "When learners arrive with the correct stationery, teaching can begin immediately. Pexpacks helps remove that first-week stress.",
     avatar: "/images/avatars/thandeka.webp",
@@ -32,6 +35,7 @@ export const testimonials: Testimonial[] = [
     name: "Lisa Bomani",
     role: "Parent",
     context: "Grade 10 learner",
+    rating: 5,
     quote:
       "Pexpacks is a game changer for parents. I was able to order everything my daughter needed for school from the comfort of my home and everything was packed clearly and ready before the first day of school.",
     avatar: "/images/avatars/lisa.webp",
@@ -41,6 +45,7 @@ export const testimonials: Testimonial[] = [
     name: "Ndoda Mabuza",
     role: "SME Owner",
     context: "Home office supplies",
+    rating: 5,
     quote:
       "The office stationery pack helped me restock quickly without wasting time searching for individual items.",
     avatar: "/images/avatars/ndoda.webp",
@@ -50,6 +55,7 @@ export const testimonials: Testimonial[] = [
     name: "Mpoh Pitso",
     role: "School Administrator",
     context: "School Support Team",
+    rating: 5,
     quote:
       "A structured stationery pack system reduces confusion for parents and helps learners start the year prepared.",
     avatar: "/images/avatars/mpoh.webp",

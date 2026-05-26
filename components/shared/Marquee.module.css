@@ -116,6 +116,24 @@
   line-height: 1.5;
 }
 
+.stars {
+  display: flex;
+  gap: 3px;
+}
+
+.stars svg {
+  width: 18px;
+  height: 18px;
+}
+
+.starFilled {
+  fill: #f5a623;
+}
+
+.starEmpty {
+  fill: rgba(26, 42, 64, 0.12);
+}
+
 .trackingBar {
   display: none;
 }

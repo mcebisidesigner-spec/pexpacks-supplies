@@ -168,6 +168,13 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
                   </span>
                 </div>
               </div>
+              <div className={styles.stars} aria-label={`${item.rating} out of 5 stars`}>
+                {Array.from({ length: 5 }, (_, i) => (
+                  <svg key={i} viewBox="0 0 20 20" className={i < item.rating ? styles.starFilled : styles.starEmpty}>
+                    <path d="M10 1.5l2.5 5.1 5.6.8-4 3.9.9 5.6L10 14.1l-5 2.6.9-5.6-4-3.9 5.6-.8z" />
+                  </svg>
+                ))}
+              </div>
               <p className={styles.quote}>&ldquo;{item.quote}&rdquo;</p>
             </article>
           ))}
