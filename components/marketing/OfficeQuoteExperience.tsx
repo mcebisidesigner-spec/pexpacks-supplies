@@ -488,26 +488,6 @@ export function OfficeQuoteExperience({
         </div>
       </section>
 
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.sectionHeader}>
-            <p className={sectionStyles.sectionEyebrow}>Business stationery</p>
-            <h2>Built for practical business types</h2>
-            <p>
-              Pexpacks office packs are structured around real admin needs, not
-              cluttered catalogue browsing.
-            </p>
-          </div>
-          <div className={cardStyles.gridThree}>
-            {businessUseCases.map((useCase) => (
-              <article className={cardStyles.infoCard} key={useCase}>
-                <h3 style={{ margin: 0 }}>{useCase}</h3>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section
         id="contact-enquiry"
         className={sectionStyles.sectionCream}
