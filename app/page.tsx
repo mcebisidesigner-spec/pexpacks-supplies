@@ -102,8 +102,8 @@ No queues. No confusion. No missing items.
             <WalletIcon />
           </span>
           <span className={homeStyles.laybySpotlightText}>
-            <strong>Lay-by is now open</strong>
-            <span>0% interest &middot; Reserve your school pack today</span>
+            <strong>Lay-by now open</strong>
+            <span>Reserve your school pack today</span>
           </span>
         </Link>
       </section>
