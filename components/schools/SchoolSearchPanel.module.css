@@ -8,6 +8,10 @@
 .searchFormWrapper {
   position: relative;
   order: 1;
+  box-shadow:
+    0 12px 32px rgba(26, 42, 64, 0.1),
+    0 0 0 1px rgba(26, 42, 64, 0.04);
+  border-radius: var(--radius-card);
 }
 
 .searchExperience h2 {
