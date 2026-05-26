@@ -51,7 +51,7 @@ export async function generateMetadata({
   };
 }
 
-/* ── Content parsing helpers ── */
+/* ── Helpers ── */
 
 type ParsedImage = { alt: string; src: string };
 
@@ -72,9 +72,22 @@ function parseLinkPills(
   return pills;
 }
 
-function renderContent(
+function extractHeadings(
   content: string[]
-): ReactNode[] {
+): { id: string; title: string }[] {
+  return content
+    .filter((line) => line.startsWith("## "))
+    .map((line) => {
+      const title = line.replace("## ", "");
+      const id = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+      return { id, title };
+    });
+}
+
+function renderContent(content: string[]): ReactNode[] {
   const elements: ReactNode[] = [];
   let listBuffer: {
     items: string[];
@@ -111,7 +124,6 @@ function renderContent(
         !next.startsWith("## ") &&
         !next.startsWith("> ") &&
         !next.startsWith("[link_pill:") &&
-        !next.startsWith(":::") &&
         !next.trim().match(/^[-*\d]/);
       if (isCaption) i++;
 
@@ -143,9 +155,14 @@ function renderContent(
     /* ── Heading ── */
     if (line.startsWith("## ")) {
       flushList();
+      const title = line.replace("## ", "");
+      const id = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
       elements.push(
-        <h2 key={`h2-${i}`} className={styles.postHeading}>
-          {line.replace("## ", "")}
+        <h2 key={`h2-${i}`} id={id} className={styles.postHeading}>
+          {title}
         </h2>
       );
       continue;
@@ -186,10 +203,9 @@ function renderContent(
     /* ── Paragraph (with optional inline link pills) ── */
     const pills = parseLinkPills(line);
     if (pills.length > 0) {
-      const cleaned = line.replace(
-        /\[link_pill:\s*.*?\s*\|\s*.*?\s*\]/g,
-        ""
-      ).trim();
+      const cleaned = line
+        .replace(/\[link_pill:\s*.*?\s*\|\s*.*?\s*\]/g, "")
+        .trim();
       if (cleaned) {
         elements.push(<p key={`p-${i}`}>{cleaned}</p>);
       }
@@ -232,6 +248,7 @@ export default async function BlogPostPage({
     day: "numeric",
   });
 
+  const headings = extractHeadings(post.content);
   const relatedPosts = blogPosts
     .filter((p) => p.slug !== post.slug)
     .slice(0, 3);
@@ -250,82 +267,141 @@ export default async function BlogPostPage({
         </Link>
       </PageHero>
 
-      <article className={styles.postContainer}>
-        {post.image ? (
-          <div className={styles.postHeroImage}>
-            <Image
-              src={post.image}
-              alt={post.title}
-              width={800}
-              height={450}
-              className={styles.postImage}
-              priority
-            />
-          </div>
-        ) : null}
+      <section className={styles.documentSection}>
+        <div className={styles.documentInner}>
+          {/* ── Sidebar ── */}
+          <aside className={styles.sidebarShell}>
+            <nav className={styles.sidebarCard} aria-label="Article sections">
+              {headings.length > 0 ? (
+                <>
+                  <p className={styles.sidebarEyebrow}>In this article</p>
+                  <h2 className={styles.sidebarTitle}>Contents</h2>
+                  <ol className={styles.sidebarToc}>
+                    {headings.map((h) => (
+                      <li key={h.id}>
+                        <a href={`#${h.id}`}>{h.title}</a>
+                      </li>
+                    ))}
+                  </ol>
+                  <hr className={styles.sidebarDivider} />
+                </>
+              ) : null}
 
-        <div className={styles.postContent}>
-          {renderContent(post.content)}
+              <div className={styles.sidebarMeta}>
+                <div>
+                  <span className={styles.sidebarMetaLabel}>Published</span>
+                  <span className={styles.sidebarMetaValue}>{publishedDate}</span>
+                </div>
+                <div>
+                  <span className={styles.sidebarMetaLabel}>Author</span>
+                  <span className={styles.sidebarMetaValue}>{post.author}</span>
+                </div>
+                <div>
+                  <span className={styles.sidebarMetaLabel}>Category</span>
+                  <span className={styles.sidebarMetaValue}>{post.category}</span>
+                </div>
+              </div>
 
-          {/* Pex Your Knowledge section */}
-          <aside className={styles.postKnowledgeSection} aria-label="Explore more resources">
-            <h2>Pex your knowledge</h2>
-            <p>
-              Dive deeper into related topics and discover helpful resources to
-              make your back-to-school experience smoother.
-            </p>
-            <div className={styles.postKnowledgeGrid}>
-              <Link href="/schools" className={styles.postKnowledgePill}>
-                Browse school packs
+              <Link href="/schools" className={styles.sidebarCta}>
+                Find Your School Pack
               </Link>
-              <Link href="/lay-by" className={styles.postKnowledgePill}>
-                Lay-by payment plans
-              </Link>
-              <Link href="/add-your-school" className={styles.postKnowledgePill}>
-                Request your school
-              </Link>
-              <Link href="/faq" className={styles.postKnowledgePill}>
-                Frequently asked questions
-              </Link>
-              <Link href="/office" className={styles.postKnowledgePill}>
-                Office & business packs
-              </Link>
-              <Link href="/partnership" className={styles.postKnowledgePill}>
-                School partnerships
-              </Link>
-            </div>
+            </nav>
           </aside>
 
-          {/* Related posts */}
-          {relatedPosts.length > 0 ? (
-            <section className={styles.postRelatedSection} aria-label="Continue reading">
-              <h2>Continue reading</h2>
-              <div className={styles.postRelatedGrid}>
-                {relatedPosts.map((rp) => (
-                  <Link
-                    key={rp.id}
-                    href={`/blog/${rp.slug}`}
-                    className={styles.postRelatedCard}
-                  >
-                    <h3>{rp.title}</h3>
-                    <p>{rp.excerpt}</p>
-                    <span>Read more &rarr;</span>
-                  </Link>
-                ))}
+          {/* ── Main content ── */}
+          <div className={styles.documentContent}>
+            {post.image ? (
+              <div className={styles.postHeroCard}>
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  width={800}
+                  height={450}
+                  className={styles.postImage}
+                  priority
+                />
               </div>
-            </section>
-          ) : null}
+            ) : null}
 
-          {/* CONTEXTUAL SEARCH INLINE FUNNEL */}
-          <div className={styles.postInlineWidget}>
-            <SchoolSearchWidget
-              compact={true}
-              titleText="Find your official school pack"
-              bodyText="Save time and buy the exact teacher-approved stationery kit for your school & grade in just 3 clicks."
-            />
+            <article className={styles.documentCard}>
+              <div className={styles.postCardBody}>
+                {renderContent(post.content)}
+              </div>
+            </article>
+
+            <aside
+              className={styles.knowledgeCard}
+              aria-label="Explore more resources"
+            >
+              <p className={styles.sidebarEyebrow}>Pex your knowledge</p>
+              <h2 className={styles.knowledgeTitle}>
+                Dive deeper into related topics
+              </h2>
+              <p className={styles.knowledgeText}>
+                Discover helpful resources to make your back-to-school
+                experience smoother.
+              </p>
+              <div className={styles.postKnowledgeGrid}>
+                <Link href="/schools" className={styles.postKnowledgePill}>
+                  Browse school packs
+                </Link>
+                <Link href="/lay-by" className={styles.postKnowledgePill}>
+                  Lay-by payment plans
+                </Link>
+                <Link href="/add-your-school" className={styles.postKnowledgePill}>
+                  Request your school
+                </Link>
+                <Link href="/faq" className={styles.postKnowledgePill}>
+                  Frequently asked questions
+                </Link>
+                <Link href="/office" className={styles.postKnowledgePill}>
+                  Office & business packs
+                </Link>
+                <Link href="/partnership" className={styles.postKnowledgePill}>
+                  School partnerships
+                </Link>
+              </div>
+            </aside>
+
+            {relatedPosts.length > 0 ? (
+              <section
+                className={styles.documentCard}
+                aria-label="Continue reading"
+              >
+                <div className={styles.postCardHeader}>
+                  <h2>Continue reading</h2>
+                </div>
+                <div className={styles.postCardBody}>
+                  <div className={styles.postRelatedGrid}>
+                    {relatedPosts.map((rp) => (
+                      <Link
+                        key={rp.id}
+                        href={`/blog/${rp.slug}`}
+                        className={styles.postRelatedCard}
+                      >
+                        <h3>{rp.title}</h3>
+                        <p>{rp.excerpt}</p>
+                        <span>Read more &rarr;</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            ) : null}
+
+            <div className={styles.documentCard}>
+              <div className={styles.postCardBody}>
+                <SchoolSearchWidget
+                  compact={true}
+                  titleText="Find your official school pack"
+                  bodyText="Save time and buy the exact teacher-approved stationery kit for your school & grade in just 3 clicks."
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </article>
+      </section>
+
       <CTASection
         eyebrow="Skip the hassle"
         title="Ready to order your school pack?"
