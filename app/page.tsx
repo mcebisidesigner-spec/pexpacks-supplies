@@ -103,7 +103,10 @@ No queues. No confusion. No missing items.
           </span>
           <span className={homeStyles.laybySpotlightText}>
             <strong>Lay-by available</strong>
-            <span>Reserve your school pack and pay monthly</span>
+            <span>0% interest. Reserve today.</span>
+          </span>
+          <span className={homeStyles.laybySpotlightAction} aria-hidden="true">
+            &rarr;
           </span>
         </Link>
       </section>
