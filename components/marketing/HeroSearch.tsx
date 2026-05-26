@@ -117,13 +117,18 @@ export function HeroSearch() {
             data-school-results-scroll
           >
             {!hasSearched && isLoading ? (
-              <p className={styles.heroSearchState}>Loading schools...</p>
-            ) : null}
-            {error ? (
-              <p className={styles.searchError} role="alert">
-                {error}
-              </p>
-            ) : null}
+                <p className={styles.heroSearchState}>Loading schools...</p>
+              ) : null}
+              {error ? (
+                <p className={styles.searchError} role="alert">
+                  {error}
+                </p>
+              ) : null}
+              {panelOpen && !queryReady && !isLoading ? (
+                <p className={styles.heroSearchState}>
+                  Type your school name to begin searching
+                </p>
+              ) : null}
             {!isLoading && queryReady && hasSearched && !error ? (
               <>
                 <div className={styles.resultsCount}>

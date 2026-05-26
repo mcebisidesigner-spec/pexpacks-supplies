@@ -128,6 +128,11 @@ export function SchoolSearchPanel({
                   {error}
                 </p>
               ) : null}
+              {panelOpen && !queryReady && !isLoading ? (
+                <p className={heroStyles.heroSearchState}>
+                  Type your school name to begin searching
+                </p>
+              ) : null}
               {!isLoading && queryReady && hasSearched && !error ? (
                 <>
                   <div className={heroStyles.resultsCount}>

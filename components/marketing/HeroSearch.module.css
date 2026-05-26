@@ -408,16 +408,15 @@
   }
 
   .heroResultsPanel {
-    position: static;
-    z-index: auto;
-    inset: auto;
-    max-height: min(36vh, 340px);
-    margin: -2px 0 2px;
-    padding: 12px 2px 2px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
+    position: absolute;
+    inset: calc(100% + 8px) 0 auto;
+    max-height: min(50vh, 400px);
+    padding: 12px;
+    margin: 0;
+    border: var(--surface-border-soft);
+    border-radius: var(--radius-card);
+    background: var(--pex-bg);
+    box-shadow: var(--card-shadow-hover);
   }
 
   .resultsCount {
