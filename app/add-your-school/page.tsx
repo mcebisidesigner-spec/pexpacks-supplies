@@ -7,6 +7,7 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { mostPopularPacksHref, homepagePacks } from "@/data/packs";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
@@ -143,6 +144,16 @@ export default function AddYourSchoolPage() {
 
       <LayByPromo />
 
+      <CTASection
+        eyebrow="Ready to order?"
+        title="Find your school pack"
+        text="Search for your school to see if we already have the list, then order in seconds."
+        primaryHref="/schools"
+        primaryLabel="Search Schools"
+        secondaryHref="/faq"
+        secondaryLabel="Read FAQs"
+      />
+
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.splitBand}>
@@ -175,16 +186,7 @@ export default function AddYourSchoolPage() {
           </div>
         </div>
       </section>
-
-      <CTASection
-        eyebrow="Ready to order?"
-        title="Find your school pack"
-        text="Search for your school to see if we already have the list, then order in seconds."
-        primaryHref="/schools"
-        primaryLabel="Search Schools"
-        secondaryHref="/faq"
-        secondaryLabel="Read FAQs"
-      />
+      <RatingStrip />
     </>
   );
 }

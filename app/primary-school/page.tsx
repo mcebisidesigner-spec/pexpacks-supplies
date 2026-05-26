@@ -5,6 +5,7 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { Button } from "@/components/ui/Button";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -120,6 +121,14 @@ export default function PrimarySchoolPage() {
 
       <LayByPromo />
 
+      <CTASection
+        eyebrow="Ready to order"
+        title="Ready to save time this year?"
+        text="Join the growing number of parents who have made the smart switch to Pexpacks. Order now and experience stress-free school mornings."
+        primaryHref="/schools"
+        primaryLabel="Find Your School Pack"
+      />
+
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.splitBand}>
@@ -153,13 +162,7 @@ export default function PrimarySchoolPage() {
         </div>
       </section>
 
-      <CTASection
-        eyebrow="Ready to order"
-        title="Ready to save time this year?"
-        text="Join the growing number of parents who have made the smart switch to Pexpacks. Order now and experience stress-free school mornings."
-        primaryHref="/schools"
-        primaryLabel="Find Your School Pack"
-      />
+      <RatingStrip />
     </>
   );
 }

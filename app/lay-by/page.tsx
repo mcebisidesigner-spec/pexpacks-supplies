@@ -4,9 +4,12 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { LayByExperience } from "@/components/marketing/LayByExperience";
 import { PageHero } from "@/components/marketing/PageHero";
 import { Button } from "@/components/ui/Button";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { buildMetadata } from "@/lib/seo";
 import styles from "@/components/marketing/LayByExperience.module.css";
 import pageStyles from "./LayByPage.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Lay-by & Pay Monthly | Pexpacks Supplies",
@@ -117,6 +120,40 @@ export default function LayByPage() {
         secondaryHref="/contact"
         secondaryLabel="Ask a Question"
       />
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.splitBand}>
+            <div>
+              <p className={sectionStyles.sectionEyebrow}>Any questions?</p>
+              <h2>We're here to help</h2>
+              <p>
+                Contact the Pexpacks team for lay-by questions, school pack enquiries, or help with your order.
+              </p>
+              <div className={sectionStyles.buttonRow}>
+                <Button href="/contact" variant="primary">Contact Us</Button>
+                <Button href="/schools" variant="white">Browse School Packs</Button>
+              </div>
+            </div>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <h3 style={{ fontSize: "20px" }}>Read the full terms</h3>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  View the complete lay-by terms and conditions, including CPA compliance details.
+                </p>
+              </div>
+              <div className={cardStyles.packCardButtonWrap}>
+                <Link href="/lay-by-terms" className={cardStyles.cardLink}>
+                  View terms &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <RatingStrip />
     </>
   );
 }

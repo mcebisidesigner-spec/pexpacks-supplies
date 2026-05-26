@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
 
-import { RequestSchoolCTA } from "@/components/schools/RequestSchoolCTA";
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
@@ -15,6 +14,7 @@ import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { FindSchoolBar } from "@/components/schools/FindSchoolBar";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
@@ -174,18 +174,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         </div>
       </section>
 
-      <RequestSchoolCTA />
-
-      <CTASection
-        eyebrow="Ready to order"
-        title="Find your school pack now."
-        text="Search for your school or choose a standard grade pack. Either way, your stationery is handled."
-        primaryHref="/schools#school-grade-packs"
-        primaryLabel="Order a Standard Pack"
-        secondaryHref="#schools-search"
-        secondaryLabel="Search for Your School"
-      />
-
       <FaqMarquee
         faqs={faqs.filter((faq) =>
           [
@@ -199,6 +187,16 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       />
 
       <LayByPromo />
+
+      <CTASection
+        eyebrow="Ready to order"
+        title="Find your school pack now."
+        text="Search for your school or choose a standard grade pack. Either way, your stationery is handled."
+        primaryHref="/schools#school-grade-packs"
+        primaryLabel="Order a Standard Pack"
+        secondaryHref="#schools-search"
+        secondaryLabel="Search for Your School"
+      />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
@@ -235,6 +233,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
 
       <MobileStickyCta />
       <FindSchoolBar />
+      <RatingStrip />
     </>
   );
 }

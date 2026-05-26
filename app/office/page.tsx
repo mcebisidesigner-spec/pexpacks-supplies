@@ -5,6 +5,7 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { officePacks } from "@/data/officePacks";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
@@ -192,6 +193,14 @@ export default async function OfficePacksPage({
         )}
       />
 
+      <CTASection
+        eyebrow="Ready to get started"
+        title="Get your office stationery quote"
+        text="Request a custom quote for your business or browse our standard packs for SMEs, home offices, and small teams."
+        primaryHref="#contact-enquiry"
+        primaryLabel="Request a Quote"
+      />
+
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.splitBand}>
@@ -224,14 +233,7 @@ export default async function OfficePacksPage({
           </div>
         </div>
       </section>
-
-      <CTASection
-        eyebrow="Ready to get started"
-        title="Get your office stationery quote"
-        text="Request a custom quote for your business or browse our standard packs for SMEs, home offices, and small teams."
-        primaryHref="#contact-enquiry"
-        primaryLabel="Request a Quote"
-      />
+      <RatingStrip />
     </>
   );
 }

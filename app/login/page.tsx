@@ -5,6 +5,7 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
@@ -80,6 +81,16 @@ export default function LoginPage() {
         )}
       />
 
+      <CTASection
+        eyebrow="New here?"
+        title="Find your school pack"
+        text="Search for your child's school and grade to get the exact stationery pack delivered."
+        primaryHref="/schools"
+        primaryLabel="Find School Pack"
+        secondaryHref="/office"
+        secondaryLabel="View Office Packs"
+      />
+
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.splitBand}>
@@ -112,16 +123,7 @@ export default function LoginPage() {
           </div>
         </div>
       </section>
-
-      <CTASection
-        eyebrow="New here?"
-        title="Find your school pack"
-        text="Search for your child's school and grade to get the exact stationery pack delivered."
-        primaryHref="/schools"
-        primaryLabel="Find School Pack"
-        secondaryHref="/office"
-        secondaryLabel="View Office Packs"
-      />
+      <RatingStrip />
     </>
   );
 }

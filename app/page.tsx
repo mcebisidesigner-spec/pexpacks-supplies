@@ -12,6 +12,7 @@ import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { LayByPromo } from "@/components/shared/LayByPromo";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import {
   BookIcon,
   BriefcaseIcon,
@@ -291,6 +292,7 @@ No queues. No confusion. No missing items.
       </section>
 
       <MobileStickyCta />
+      <RatingStrip />
     </>
   );
 }

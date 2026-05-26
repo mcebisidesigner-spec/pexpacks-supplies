@@ -6,6 +6,7 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import {
   generalEmail,
   generalEmailHref,
@@ -209,6 +210,16 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         )}
       />
 
+      <CTASection
+        eyebrow="Still need help?"
+        title="Read our FAQs"
+        text="Find answers to common questions about ordering, delivery, and payments before reaching out."
+        primaryHref="/faq"
+        primaryLabel="Read All FAQs"
+        secondaryHref="/schools"
+        secondaryLabel="Find School Packs"
+      />
+
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.splitBand}>
@@ -241,16 +252,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           </div>
         </div>
       </section>
-
-      <CTASection
-        eyebrow="Still need help?"
-        title="Read our FAQs"
-        text="Find answers to common questions about ordering, delivery, and payments before reaching out."
-        primaryHref="/faq"
-        primaryLabel="Read All FAQs"
-        secondaryHref="/schools"
-        secondaryLabel="Find School Packs"
-      />
+      <RatingStrip />
     </>
   );
 }
