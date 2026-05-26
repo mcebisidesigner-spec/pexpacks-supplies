@@ -3,7 +3,6 @@ import Link from "next/link";
 import { CTASection } from "@/components/marketing/CTASection";
 import { LayByExperience } from "@/components/marketing/LayByExperience";
 import { PageHero } from "@/components/marketing/PageHero";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { Button } from "@/components/ui/Button";
 import { buildMetadata } from "@/lib/seo";
 import styles from "@/components/marketing/LayByExperience.module.css";
@@ -108,12 +107,6 @@ export default function LayByPage() {
       </section>
 
       <LayByExperience />
-
-      <div className={pageStyles.ratingSection}>
-        <div className={pageStyles.inner}>
-          <RatingStrip />
-        </div>
-      </div>
 
       <CTASection
         eyebrow="Ready when January arrives"

@@ -5,7 +5,6 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { officePacks } from "@/data/officePacks";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
@@ -186,12 +185,6 @@ export default async function OfficePacksPage({
         businessUseCases={businessUseCases}
         initialMessage={initialMessage}
       />
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner} style={{ textAlign: "center" }}>
-          <RatingStrip />
-        </div>
-      </section>
 
       <FaqMarquee
         faqs={faqs.filter((f) =>

@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
 import { Button } from "@/components/ui/Button";
@@ -78,12 +77,6 @@ export default function PrimarySchoolPage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner} style={{ textAlign: "center" }}>
-          <RatingStrip />
         </div>
       </section>
 

@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ClientRuntimeWidgets } from "@/components/layout/ClientRuntimeWidgets";
+import { RatingStrip } from "@/components/shared/RatingStrip";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildMetadata } from "@/lib/seo";
 import {
@@ -129,6 +130,9 @@ export default function RootLayout({
           <main id="site-main" className="site-main">
             {children}
           </main>
+          <div className="site-rating-strip" aria-label="Pexpacks parent rating">
+            <RatingStrip />
+          </div>
           <Footer />
           <ClientRuntimeWidgets />
         </div>

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import styles from "./SchoolsPageHero.module.css";
 
@@ -38,7 +37,6 @@ export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {
           Browse Packs by Grade &rarr;
         </Button>
       </div>
-      <RatingStrip />
     </PageHero>
   );
 }

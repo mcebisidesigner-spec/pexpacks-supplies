@@ -5,7 +5,6 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { RatingStrip } from "@/components/shared/RatingStrip";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { faqs } from "@/data/faqs";
 import { whyChoosePexpacks, homepagePacks } from "@/data/packs";
@@ -297,12 +296,6 @@ No queues. No confusion. No missing items.
       />
 
       <LayByPromo />
-
-      <div className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <RatingStrip />
-        </div>
-      </div>
 
       <CTASection
         eyebrow="Ready to order"
