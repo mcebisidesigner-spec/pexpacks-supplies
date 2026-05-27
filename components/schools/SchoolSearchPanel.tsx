@@ -150,6 +150,19 @@ export function SchoolSearchPanel({
               aria-live="polite"
               data-school-results-scroll
             >
+              <button
+                className={heroStyles.mobileResultsClose}
+                type="button"
+                aria-label="Close school search results"
+                onClick={() => {
+                  setPanelOpen(false);
+                  setIsSchoolInputFocused(false);
+                }}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="m6 6 12 12M18 6 6 18" />
+                </svg>
+              </button>
               {!hasSearched && isLoading ? (
                 <p className={heroStyles.heroSearchState}>Loading schools...</p>
               ) : null}
