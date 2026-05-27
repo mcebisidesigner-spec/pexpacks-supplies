@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { ordersEmail, ordersEmailHref } from "@/data/contact";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { PEXCOVER_PRICE } from "@/lib/constants";
@@ -33,10 +36,46 @@ export function OrderSummary({
   hasPexcover,
   pexcoverCount = hasPexcover ? 1 : 0,
 }: OrderSummaryProps) {
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const [summaryPinned, setSummaryPinned] = useState(false);
+
+  useEffect(() => {
+    const toggle = toggleRef.current;
+    if (!toggle) return;
+
+    let triggerTop = toggle.getBoundingClientRect().top + window.scrollY;
+    let lastScrollY = window.scrollY;
+
+    function updateTriggerTop() {
+      const currentToggle = toggleRef.current;
+      if (!currentToggle) return;
+      triggerTop = currentToggle.getBoundingClientRect().top + window.scrollY;
+    }
+
+    function handleScroll() {
+      const currentScrollY = window.scrollY;
+      const isScrollingDown = currentScrollY > lastScrollY;
+      const hasReachedToggle = currentScrollY >= triggerTop;
+
+      setSummaryPinned(isScrollingDown && hasReachedToggle);
+      lastScrollY = Math.max(currentScrollY, 0);
+    }
+
+    updateTriggerTop();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", updateTriggerTop);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", updateTriggerTop);
+    };
+  }, []);
+
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">
       <button
-        className={styles.summaryToggle}
+        ref={toggleRef}
+        className={`${styles.summaryToggle} ${summaryPinned ? styles.summaryTogglePinned : ""}`}
         type="button"
         aria-expanded={summaryOpen}
         onClick={() => setSummaryOpen(!summaryOpen)}

@@ -562,7 +562,7 @@
   }
 
   .field > span {
-    font-size: clamp(14px, 3.5vw, 16px);
+    font-size: clamp(14px, 9vw, 18px);
     font-weight: 750;
   }
 
@@ -620,7 +620,7 @@
   }
 
   .heroSearch[data-mobile-search-active="true"] .schoolSearchField > span {
-    font-size: 12px;
+    font-size: clamp(12px, 9vw, 14px);
     font-weight: 750;
   }
 
