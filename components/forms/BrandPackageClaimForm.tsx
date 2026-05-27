@@ -80,6 +80,23 @@ export function BrandPackageClaimForm() {
       `Additional notes: ${payload.notes || "None"}`,
     ].join("\n");
 
+    const files = fileRef.current?.files;
+    if (files && files.length > 0) {
+      const oversized: string[] = [];
+      for (const file of files) {
+        if (file.size > 5 * 1024 * 1024) {
+          oversized.push(`${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
+        }
+      }
+      if (oversized.length) {
+        setErrors({
+          brandAssets: `Files must be 5 MB or smaller: ${oversized.join(", ")}`,
+        });
+        setPending(false);
+        return;
+      }
+    }
+
     setPending(true);
     setStatus(null);
     setErrors({});
@@ -275,7 +292,7 @@ export function BrandPackageClaimForm() {
               {...errorAttributes(errors, "brandAssets")}
             />
             <small className={formStyles.fieldHint}>
-              Optional. Upload up to 5 files, 4 MB each: logos, colour palettes,
+              Optional. Upload up to 5 files, 5 MB each: logos, colour palettes,
               flyers, references, documents or screenshots. Files upload after the
               form is submitted.
             </small>

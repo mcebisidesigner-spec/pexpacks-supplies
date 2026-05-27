@@ -5,6 +5,7 @@ import {
   rateLimitRequest,
 } from "@/lib/security/requestGuards";
 import {
+  FORM_ERROR_MESSAGE,
   FORM_SUCCESS_MESSAGE,
   FORM_VALIDATION_MESSAGE,
   type FormEndpointKind,
@@ -15,7 +16,12 @@ import {
   readFormBody,
   validateFormSubmission,
 } from "@/lib/forms/validation";
-import { saveFormSubmission } from "@/lib/supabase/forms";
+import {
+  saveFormSubmission,
+  saveOrderRecord,
+  saveBrandPackageRecord,
+  saveLayByRecord,
+} from "@/lib/supabase/forms";
 
 function json(body: unknown, status: number) {
   return NextResponse.json(body, { status });
@@ -128,15 +134,31 @@ export async function handlePexpacksFormRequest(
 
   const saved = await saveFormSubmission(data);
 
+  if (saved.submission_id) {
+    await Promise.allSettled([
+      saveOrderRecord(data, saved.submission_id),
+      saveBrandPackageRecord(data, saved.submission_id),
+      saveLayByRecord(data, saved.submission_id),
+    ]);
+  }
+
   if (!saved.success) {
     console.error("Failed to persist form submission:", saved.error);
+    return json(
+      {
+        success: false,
+        message: FORM_ERROR_MESSAGE,
+        error: saved.error,
+      },
+      500
+    );
   }
 
   return json(
     {
       success: true,
       message: FORM_SUCCESS_MESSAGE,
-      ...(saved.submission_id ? { submission_id: saved.submission_id } : {}),
+      submission_id: saved.submission_id,
     },
     200
   );

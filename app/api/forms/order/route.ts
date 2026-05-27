@@ -6,7 +6,7 @@ import {
 
 export const runtime = "nodejs";
 
-export function POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   return handlePexpacksFormRequest(request, "order");
 }
 
