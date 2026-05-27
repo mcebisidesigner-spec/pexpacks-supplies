@@ -233,16 +233,17 @@ export function OrderForm({
 
   /* Check for saved checkout state to offer resume */
   useEffect(() => {
-    const saved = persistence.load();
-    if (
-      saved &&
-      !initialDraftId &&
-      !initialSchool &&
-      !initialGrade &&
-      !initialPhase
-    ) {
-      setRestoreBanner(true);
-    }
+    persistence.load().then((saved) => {
+      if (
+        saved &&
+        !initialDraftId &&
+        !initialSchool &&
+        !initialGrade &&
+        !initialPhase
+      ) {
+        setRestoreBanner(true);
+      }
+    });
   }, [initialDraftId, initialGrade, initialPhase, initialSchool, persistence]);
 
   /* Auto-save order state on changes (debounced) */
@@ -744,8 +745,8 @@ export function OrderForm({
                 <button
                   type="button"
                   className={styles.restoreBtn}
-                  onClick={() => {
-                    const saved = persistence.load();
+                  onClick={async () => {
+                    const saved = await persistence.load();
                     if (saved) {
                       setActiveStep(saved.activeStep);
                       setSchoolQuery(saved.schoolQuery ?? "");

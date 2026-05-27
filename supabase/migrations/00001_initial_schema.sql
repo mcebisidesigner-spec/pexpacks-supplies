@@ -202,6 +202,8 @@ create trigger trg_blog_posts_updated_at
 -- 4. INDEXES
 -- ─────────────────────────────────────────────────────────────
 
+create unique index idx_form_submissions_draft on form_submissions(form_type, source_url)
+  where form_type = 'checkout-draft';
 create index idx_form_submissions_type_status on form_submissions(form_type, status);
 create index idx_form_submissions_created   on form_submissions(created_at desc);
 create index idx_orders_reference            on orders(order_reference);
@@ -239,8 +241,21 @@ create policy "anon can insert form_submissions"
   on form_submissions for insert to anon
   with check (true);
 
+create policy "anon can read own checkout drafts"
+  on form_submissions for select to anon
+  using (form_type = 'checkout-draft');
+
+create policy "anon can update own checkout drafts"
+  on form_submissions for update to anon
+  using (form_type = 'checkout-draft')
+  with check (form_type = 'checkout-draft');
+
 create policy "anon can insert waitlist_entries"
   on waitlist_entries for insert to anon
+  with check (true);
+
+create policy "anon can insert brand_package_assets"
+  on brand_package_assets for insert to anon
   with check (true);
 
 -- Anon can read published blog posts and schools (public data)

@@ -1,8 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-
-const STORAGE_KEY = "Pexpacks:checkout-state";
+import {
+  saveCheckoutDraft,
+  loadCheckoutDraft,
+  clearCheckoutDraft,
+} from "@/lib/supabase/checkoutDraft";
 
 export type GradePexcoverEntry = {
   gradeLabel: string;
@@ -41,36 +44,28 @@ export type CheckoutState = {
 };
 
 export function saveCheckoutState(state: Omit<CheckoutState, "savedAt">) {
-  try {
-    const payload: CheckoutState = { ...state, savedAt: Date.now() };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  } catch {
-    // localStorage may be unavailable
-  }
+  const payload: CheckoutState = { ...state, savedAt: Date.now() };
+  saveCheckoutDraft(payload);
 }
 
-export function loadCheckoutState(): CheckoutState | null {
+export async function loadCheckoutState(): Promise<CheckoutState | null> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as CheckoutState;
+    const data = await loadCheckoutDraft();
+    if (!data) return null;
+    return data as CheckoutState;
   } catch {
     return null;
   }
 }
 
 export function clearCheckoutState() {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // noop
-  }
+  clearCheckoutDraft();
 }
 
 const DEBOUNCE_MS = 800;
 
 /**
- * Auto-saves order form state to localStorage on change (debounced).
+ * Auto-saves order form state to Supabase on change (debounced).
  * Returns a restore function and the saved state.
  */
 export function useCheckoutPersistence() {

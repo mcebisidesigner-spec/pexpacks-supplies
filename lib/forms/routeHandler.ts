@@ -132,7 +132,14 @@ export async function handlePexpacksFormRequest(
     console.error("Failed to persist form submission:", saved.error);
   }
 
-  return json({ success: true, message: FORM_SUCCESS_MESSAGE }, 200);
+  return json(
+    {
+      success: true,
+      message: FORM_SUCCESS_MESSAGE,
+      ...(saved.submission_id ? { submission_id: saved.submission_id } : {}),
+    },
+    200
+  );
 }
 
 export function methodNotAllowed() {

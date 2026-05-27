@@ -1,9 +1,10 @@
 import { createSupabaseServerClient } from "./server";
 import type { FormSubmission } from "@/lib/forms/types";
+import type { Json } from "./types";
 
 export async function saveFormSubmission(
   data: FormSubmission
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; error?: string; submission_id?: string }> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -15,20 +16,24 @@ export async function saveFormSubmission(
   try {
     const supabase = await createSupabaseServerClient();
 
-    const { error } = await supabase.from("form_submissions").insert({
-      form_type: data.formType,
-      status: "new",
-      data: data as unknown as Record<string, unknown>,
-      source_url: data.sourceUrl || data.pageUrl || null,
-      user_agent: data.userAgent || null,
-    });
+    const { data: inserted, error } = await supabase
+      .from("form_submissions")
+      .insert({
+        form_type: data.formType,
+        status: "new",
+        data: data as unknown as Json,
+        source_url: data.sourceUrl || data.pageUrl || null,
+        user_agent: data.userAgent || null,
+      })
+      .select("id")
+      .single();
 
     if (error) {
       console.error("[supabase] Failed to insert form submission:", error);
       return { success: false, error: error.message };
     }
 
-    return { success: true };
+    return { success: true, submission_id: inserted.id };
   } catch (err) {
     console.error("[supabase] Unexpected error inserting form submission:", err);
     return { success: false, error: "Unexpected error" };

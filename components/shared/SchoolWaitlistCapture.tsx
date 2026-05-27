@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import styles from "./SchoolWaitlistCapture.module.css";
 
 export function SchoolWaitlistCapture() {
@@ -9,7 +10,7 @@ export function SchoolWaitlistCapture() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     if (!schoolName.trim() || !email.trim()) {
@@ -17,13 +18,11 @@ export function SchoolWaitlistCapture() {
       return;
     }
     try {
-      const existing = JSON.parse(localStorage.getItem("pex-waitlist") || "[]");
-      existing.push({
-        schoolName: schoolName.trim(),
+      const supabase = createClient();
+      await supabase.from("waitlist_entries").insert({
+        school_name: schoolName.trim(),
         email: email.trim(),
-        date: new Date().toISOString(),
       });
-      localStorage.setItem("pex-waitlist", JSON.stringify(existing));
     } catch {}
     setSubmitted(true);
   };
