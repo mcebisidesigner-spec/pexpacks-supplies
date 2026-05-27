@@ -11,15 +11,6 @@ import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
-const businessUseCases = [
-  "Home offices",
-  "Freelancers",
-  "Retail shops",
-  "Construction companies",
-  "Admin offices",
-  "Small teams",
-];
-
 const officeBenefits = [
   "One practical order instead of many small purchases",
   "Monthly pack planning for recurring supplies",
@@ -182,7 +173,6 @@ export default async function OfficePacksPage({
       <OfficeQuoteExperience
         officePacks={officePacks}
         officeBenefits={officeBenefits}
-        businessUseCases={businessUseCases}
         initialMessage={initialMessage}
       />
 

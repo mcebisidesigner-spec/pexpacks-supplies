@@ -15,6 +15,7 @@ import {
   readFormBody,
   validateFormSubmission,
 } from "@/lib/forms/validation";
+import { saveFormSubmission } from "@/lib/supabase/forms";
 
 function json(body: unknown, status: number) {
   return NextResponse.json(body, { status });
@@ -119,11 +120,17 @@ export async function handlePexpacksFormRequest(
     );
   }
 
+  let data = validation.data;
+
   if (endpoint === "order") {
-    await withOrderTotal(validation.data);
+    data = await withOrderTotal(validation.data);
   }
 
-  // TODO: Connect Resend to deliver form submissions via email.
+  const saved = await saveFormSubmission(data);
+
+  if (!saved.success) {
+    console.error("Failed to persist form submission:", saved.error);
+  }
 
   return json({ success: true, message: FORM_SUCCESS_MESSAGE }, 200);
 }

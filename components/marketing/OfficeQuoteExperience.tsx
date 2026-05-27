@@ -27,7 +27,6 @@ type QuoteMode = "standard" | "custom";
 type OfficeQuoteExperienceProps = {
   officePacks: OfficePack[];
   officeBenefits: string[];
-  businessUseCases: string[];
   initialMessage?: string;
 };
 
@@ -112,7 +111,6 @@ const EditIcon = () => (
 export function OfficeQuoteExperience({
   officePacks,
   officeBenefits,
-  businessUseCases,
   initialMessage = "",
 }: OfficeQuoteExperienceProps) {
   const [selectedPackId, setSelectedPackId] = useState(
