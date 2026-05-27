@@ -570,12 +570,14 @@
   }
 
   .field > span {
-    font-size: clamp(14px, 8vw, 18px);
+    font-size: clamp(14px, 7vw, 18px);
     font-weight: 750;
   }
 
   .field input,
-  .phaseButton {
+  .phaseButton,
+  .phaseButtonPlaceholder,
+  .phaseButtonValue {
     font-size: 20px;
   }
 
@@ -628,7 +630,7 @@
   }
 
   .heroSearch[data-mobile-search-active="true"] .schoolSearchField > span {
-    font-size: clamp(12px, 8vw, 14px);
+    font-size: clamp(12px, 7vw, 14px);
     font-weight: 750;
   }
 
