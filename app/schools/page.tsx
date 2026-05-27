@@ -17,7 +17,6 @@ import { FindSchoolBar } from "@/components/schools/FindSchoolBar";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
-  getSchoolSearchOptions,
 } from "@/lib/schools/schoolSearchData";
 import { homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
@@ -43,7 +42,6 @@ function firstValue(value: string | string[] | undefined) {
 
 export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
   const params = searchParams ? await searchParams : {};
-  const { grades } = await getSchoolSearchOptions();
   const featuredSchools = await getFeaturedSchoolRecords();
 
   return (
@@ -51,9 +49,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       <div id="schools-search">
         <SchoolsPageHero>
         <SchoolSearchPanel
-          grades={grades}
           initialQuery={firstValue(params.q) ?? ""}
-          initialGrade={firstValue(params.grade) ?? "all"}
+          initialPhase={firstValue(params.phase) ?? "all"}
         />
       </SchoolsPageHero>
       </div>

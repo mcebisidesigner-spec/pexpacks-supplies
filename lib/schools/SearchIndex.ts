@@ -1,4 +1,5 @@
 import { normaliseSchoolQuery, normaliseFilterValue } from "./normaliseSchoolQuery";
+import type { SchoolPhase } from "./schoolPhase";
 import type {
   SchoolSearchRecord,
   SchoolSearchFilters,
@@ -23,6 +24,7 @@ type IndexedSchool = SchoolSearchRecord & {
   normalisedRegion: string;
   normalisedCity: string;
   normalisedProvince: string;
+  phases: SchoolPhase[];
   /** Priority score for sorting (featured/partner schools first) */
   priority: number;
 };
@@ -39,6 +41,7 @@ const CACHE_TTL_MS = 30_000; // 30 seconds
 export class SchoolSearchIndex {
   private readonly schools: IndexedSchool[];
   private readonly gradeIndex: Map<string, Set<number>>;
+  private readonly phaseIndex: Map<SchoolPhase, Set<number>>;
   private readonly cache: Map<string, CacheEntry>;
 
   constructor(records: SchoolSearchRecord[]) {
@@ -62,12 +65,22 @@ export class SchoolSearchIndex {
 
     // Build a grade → school-indices lookup for O(1) grade filtering
     this.gradeIndex = new Map();
+    this.phaseIndex = new Map();
     for (let i = 0; i < this.schools.length; i++) {
       for (const grade of this.schools[i].lowerGrades) {
         let set = this.gradeIndex.get(grade);
         if (!set) {
           set = new Set();
           this.gradeIndex.set(grade, set);
+        }
+        set.add(i);
+      }
+
+      for (const phase of this.schools[i].phases) {
+        let set = this.phaseIndex.get(phase);
+        if (!set) {
+          set = new Set();
+          this.phaseIndex.set(phase, set);
         }
         set.add(i);
       }
@@ -94,15 +107,20 @@ export class SchoolSearchIndex {
 
     const query = normaliseSchoolQuery(filters.query);
     const grade = normaliseFilterValue(filters.grade);
+    const phase = filters.phase || "";
     const region = normaliseFilterValue(filters.region);
 
-    // If only filtering by grade with no query/region, use the grade index
+    // If only filtering by grade or phase, use the index
     // for a fast O(1) lookup instead of scanning all schools
     let candidates: IndexedSchool[];
 
-    if (grade && !query && !region) {
-      // Fast path: grade-only filter via index
+    if (grade && !phase && !query && !region) {
       const indices = this.gradeIndex.get(grade.toLowerCase());
+      candidates = indices
+        ? Array.from(indices).map((i) => this.schools[i])
+        : [];
+    } else if (phase && !grade && !query && !region) {
+      const indices = this.phaseIndex.get(phase);
       candidates = indices
         ? Array.from(indices).map((i) => this.schools[i])
         : [];
@@ -115,6 +133,7 @@ export class SchoolSearchIndex {
           !school.lowerGrades.includes(grade.toLowerCase())
         )
           return false;
+        if (phase && !school.phases.includes(phase)) return false;
         if (region) {
           const normRegion = normaliseSchoolQuery(region);
           if (
@@ -141,6 +160,7 @@ export class SchoolSearchIndex {
         isFeatured: s.isFeatured,
         isPartner: s.isPartner,
         image: s.image,
+        phases: s.phases,
         lowestPrice: s.lowestPrice,
       })),
       total: candidates.length,
@@ -158,7 +178,7 @@ export class SchoolSearchIndex {
     limit: number,
     offset: number
   ): string {
-    return `${filters.query ?? ""}|${filters.grade ?? ""}|${filters.region ?? ""}|${limit}|${offset}`;
+    return `${filters.query ?? ""}|${filters.grade ?? ""}|${filters.phase ?? ""}|${filters.region ?? ""}|${limit}|${offset}`;
   }
 
   private getFromCache(key: string): PaginatedSchoolResults | null {

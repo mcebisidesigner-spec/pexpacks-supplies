@@ -84804,5 +84804,113 @@
         "availability": "seasonal"
       }
     ]
+  },
+  {
+    "id": "school-little-sprouts-creche",
+    "name": "Little Sprouts Creche",
+    "slug": "little-sprouts-creche",
+    "city": "Johannesburg",
+    "province": "Gauteng",
+    "logo": "/images/school-logo-placeholder.svg",
+    "isPartnerSchool": false,
+    "grades": [
+      {
+        "id": "little-sprouts-creche-creche",
+        "grade": "Creche",
+        "gradeSlug": "creche",
+        "price": 349,
+        "contents": [
+          "Jumbo crayons",
+          "Glue stick",
+          "Safety scissors",
+          "A4 scrapbook",
+          "Tissues",
+          "Wet wipes"
+        ],
+        "deliveryNote": "Availability confirmed during order follow-up.",
+        "availability": "pre-order"
+      }
+    ]
+  },
+  {
+    "id": "school-bright-beginnings-pre-school",
+    "name": "Bright Beginnings Pre-School",
+    "slug": "bright-beginnings-pre-school",
+    "city": "Johannesburg",
+    "province": "Gauteng",
+    "logo": "/images/school-logo-placeholder.svg",
+    "isPartnerSchool": false,
+    "grades": [
+      {
+        "id": "bright-beginnings-pre-school-pre-school",
+        "grade": "Pre-school",
+        "gradeSlug": "pre-school",
+        "price": 379,
+        "contents": [
+          "Wax crayons",
+          "Colouring book",
+          "Glue stick",
+          "Safety scissors",
+          "Play dough",
+          "A4 plastic envelope"
+        ],
+        "deliveryNote": "Prepared for delivery before school starts.",
+        "availability": "pre-order"
+      }
+    ]
+  },
+  {
+    "id": "school-rainbow-nursery-school",
+    "name": "Rainbow Nursery School",
+    "slug": "rainbow-nursery-school",
+    "city": "Pretoria",
+    "province": "Gauteng",
+    "logo": "/images/school-logo-placeholder.svg",
+    "isPartnerSchool": false,
+    "grades": [
+      {
+        "id": "rainbow-nursery-school-nursery",
+        "grade": "Nursery",
+        "gradeSlug": "nursery",
+        "price": 359,
+        "contents": [
+          "Jumbo pencils",
+          "Crayons",
+          "Glue stick",
+          "A4 scrapbook",
+          "Tissues",
+          "Apron"
+        ],
+        "deliveryNote": "Availability confirmed during order follow-up.",
+        "availability": "seasonal"
+      }
+    ]
+  },
+  {
+    "id": "school-sunshine-ecd-centre",
+    "name": "Sunshine ECD Centre",
+    "slug": "sunshine-ecd-centre",
+    "city": "Soweto",
+    "province": "Gauteng",
+    "logo": "/images/school-logo-placeholder.svg",
+    "isPartnerSchool": false,
+    "grades": [
+      {
+        "id": "sunshine-ecd-centre-ecd",
+        "grade": "ECD",
+        "gradeSlug": "ecd",
+        "price": 329,
+        "contents": [
+          "Jumbo crayons",
+          "Glue stick",
+          "Colouring book",
+          "Wet wipes",
+          "Tissues",
+          "A4 envelope"
+        ],
+        "deliveryNote": "Prepared for delivery before school starts.",
+        "availability": "pre-order"
+      }
+    ]
   }
 ]

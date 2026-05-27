@@ -9,21 +9,32 @@ import type {
 type UsePaginatedSchoolSearchOptions = {
   initialQuery?: string;
   initialGrade?: string;
+  initialPhase?: string;
   gradeAllValue?: string;
+  phaseAllValue?: string;
   resultLimit?: number;
   initialPanelOpen?: boolean;
   errorMessage: string;
 };
 
-function shouldSearch(gradeAllValue: string, grade: string, debouncedQuery: string) {
+function shouldSearch(
+  gradeAllValue: string,
+  grade: string,
+  phaseAllValue: string,
+  phase: string,
+  debouncedQuery: string
+) {
   if (grade !== gradeAllValue) return true;
+  if (phase !== phaseAllValue) return true;
   return debouncedQuery.trim().length >= 2;
 }
 
 export function usePaginatedSchoolSearch({
   initialQuery = "",
   initialGrade = "",
+  initialPhase = "",
   gradeAllValue = "",
+  phaseAllValue = "",
   resultLimit = 12,
   initialPanelOpen = false,
   errorMessage,
@@ -31,6 +42,7 @@ export function usePaginatedSchoolSearch({
   const [query, setQuery] = useState(initialQuery);
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
   const [grade, setGrade] = useState(initialGrade);
+  const [phase, setPhase] = useState(initialPhase);
   const [results, setResults] = useState<SchoolSearchRecord[]>([]);
   const [total, setTotal] = useState(0);
   const [hasMore, setHasMore] = useState(false);
@@ -40,7 +52,10 @@ export function usePaginatedSchoolSearch({
   const [error, setError] = useState("");
   const activeRequest = useRef<AbortController | null>(null);
 
-  const queryReady = grade !== gradeAllValue || debouncedQuery.trim().length >= 2;
+  const queryReady =
+    grade !== gradeAllValue ||
+    phase !== phaseAllValue ||
+    debouncedQuery.trim().length >= 2;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedQuery(query), 350);
@@ -49,7 +64,7 @@ export function usePaginatedSchoolSearch({
 
   const fetchResults = useCallback(
     async (nextOffset: number, mode: "replace" | "append") => {
-      if (!shouldSearch(gradeAllValue, grade, debouncedQuery)) {
+      if (!shouldSearch(gradeAllValue, grade, phaseAllValue, phase, debouncedQuery)) {
         setResults([]);
         setTotal(0);
         setHasMore(false);
@@ -70,6 +85,10 @@ export function usePaginatedSchoolSearch({
 
       if (grade !== gradeAllValue) {
         params.set("grade", grade);
+      }
+
+      if (phase !== phaseAllValue) {
+        params.set("phase", phase);
       }
 
       try {
@@ -105,7 +124,7 @@ export function usePaginatedSchoolSearch({
         }
       }
     },
-    [debouncedQuery, errorMessage, grade, gradeAllValue, resultLimit]
+    [debouncedQuery, errorMessage, grade, gradeAllValue, phase, phaseAllValue, resultLimit]
   );
 
   useEffect(() => {
@@ -138,9 +157,15 @@ export function usePaginatedSchoolSearch({
     setPanelOpen(true);
   }
 
+  function updatePhase(value: string) {
+    setPhase(value);
+    setPanelOpen(true);
+  }
+
   return {
     query,
     grade,
+    phase,
     results,
     total,
     hasMore,
@@ -153,5 +178,6 @@ export function usePaginatedSchoolSearch({
     fetchResults,
     updateQuery,
     updateGrade,
+    updatePhase,
   };
 }

@@ -31793,5 +31793,73 @@
       }
     ],
     "lowestPrice": 929
+  },
+  {
+    "id": "school-little-sprouts-creche",
+    "name": "Little Sprouts Creche",
+    "slug": "little-sprouts-creche",
+    "city": "Johannesburg",
+    "province": "Gauteng",
+    "logo": "/images/school-logo-placeholder.svg",
+    "isPartnerSchool": false,
+    "grades": [
+      {
+        "id": "little-sprouts-creche-creche",
+        "grade": "Creche",
+        "gradeSlug": "creche"
+      }
+    ],
+    "lowestPrice": 349
+  },
+  {
+    "id": "school-bright-beginnings-pre-school",
+    "name": "Bright Beginnings Pre-School",
+    "slug": "bright-beginnings-pre-school",
+    "city": "Johannesburg",
+    "province": "Gauteng",
+    "logo": "/images/school-logo-placeholder.svg",
+    "isPartnerSchool": false,
+    "grades": [
+      {
+        "id": "bright-beginnings-pre-school-pre-school",
+        "grade": "Pre-school",
+        "gradeSlug": "pre-school"
+      }
+    ],
+    "lowestPrice": 379
+  },
+  {
+    "id": "school-rainbow-nursery-school",
+    "name": "Rainbow Nursery School",
+    "slug": "rainbow-nursery-school",
+    "city": "Pretoria",
+    "province": "Gauteng",
+    "logo": "/images/school-logo-placeholder.svg",
+    "isPartnerSchool": false,
+    "grades": [
+      {
+        "id": "rainbow-nursery-school-nursery",
+        "grade": "Nursery",
+        "gradeSlug": "nursery"
+      }
+    ],
+    "lowestPrice": 359
+  },
+  {
+    "id": "school-sunshine-ecd-centre",
+    "name": "Sunshine ECD Centre",
+    "slug": "sunshine-ecd-centre",
+    "city": "Soweto",
+    "province": "Gauteng",
+    "logo": "/images/school-logo-placeholder.svg",
+    "isPartnerSchool": false,
+    "grades": [
+      {
+        "id": "sunshine-ecd-centre-ecd",
+        "grade": "ECD",
+        "gradeSlug": "ecd"
+      }
+    ],
+    "lowestPrice": 329
   }
 ]

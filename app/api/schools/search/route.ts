@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchSchoolRecords } from "@/lib/schools/schoolSearchData";
+import { isSchoolPhase } from "@/lib/schools/schoolPhase";
 import { rateLimitRequest } from "@/lib/security/requestGuards";
 
 export const runtime = "nodejs";
@@ -32,10 +33,12 @@ export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const limit = Math.min(Math.max(numberParam(params.get("limit"), 12), 1), 24);
   const offset = Math.max(numberParam(params.get("offset"), 0), 0);
+  const phaseParam = params.get("phase") ?? "";
   const results = await searchSchoolRecords(
     {
       query: params.get("q") ?? "",
       grade: params.get("grade") ?? "",
+      phase: isSchoolPhase(phaseParam) ? phaseParam : "",
       region: params.get("region") ?? "",
     },
     limit,

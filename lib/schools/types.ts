@@ -1,3 +1,5 @@
+import type { SchoolPhase } from "./schoolPhase";
+
 export type SchoolSearchRecord = {
   id: string;
   name: string;
@@ -9,6 +11,7 @@ export type SchoolSearchRecord = {
   isFeatured?: boolean;
   isPartner?: boolean;
   image?: string;
+  phases: SchoolPhase[];
   /** Lowest grade pack price for this school (in ZAR cents) */
   lowestPrice?: number;
 };
@@ -16,6 +19,7 @@ export type SchoolSearchRecord = {
 export type SchoolSearchFilters = {
   query?: string;
   grade?: string;
+  phase?: SchoolPhase | "";
   region?: string;
 };
 

@@ -3,6 +3,7 @@ import { SchoolSearchIndex } from "./SearchIndex";
 import { getFeaturedSchools } from "./getFeaturedSchools";
 import { getGrades } from "./getGrades";
 import { getRegions } from "./getRegions";
+import { getSchoolPhasesFromGrades } from "./schoolPhase";
 import type { SchoolSearchFilters, SchoolSearchRecord } from "./types";
 
 function gradeRank(grade: string) {
@@ -30,6 +31,10 @@ async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
           grades: school.grades
             .map((g) => g.grade)
             .sort((a, b) => gradeRank(a) - gradeRank(b)),
+          phases: getSchoolPhasesFromGrades(
+            school.grades.map((g) => g.grade),
+            school.name
+          ),
           isFeatured: Boolean("isFeatured" in school && school.isFeatured),
           isPartner: school.isPartnerSchool,
           image: school.logo,

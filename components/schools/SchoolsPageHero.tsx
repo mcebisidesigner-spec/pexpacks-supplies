@@ -19,7 +19,7 @@ export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {
     <PageHero
       eyebrow="Pex your pack"
       title="Find your pack in 30 seconds"
-      text="Search your child's school, choose the grade, and get the correct stationery pack delivered before school opens."
+      text="Search your child's school, choose the school phase, and get the correct stationery pack delivered before school opens."
       panelChildren={
         <div className={heroStyles.trustStats}>
           {stats.map((stat) => (

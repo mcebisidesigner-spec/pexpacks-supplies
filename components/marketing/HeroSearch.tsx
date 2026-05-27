@@ -2,30 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import { InlineSchoolWaitlist } from "@/components/schools/InlineSchoolWaitlist";
+import { SchoolPhaseSelect } from "@/components/schools/SchoolPhaseSelect";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import { homepagePacks } from "@/data/packs";
+import {
+  getSchoolPhaseLabel,
+  isSchoolPhase,
+} from "@/lib/schools/schoolPhase";
 import { slugify } from "@/lib/slugify";
 import styles from "./HeroSearch.module.css";
-
-const gradeOptions = [
-  "Grade R",
-  "Grade 1",
-  "Grade 2",
-  "Grade 3",
-  "Grade 4",
-  "Grade 5",
-  "Grade 6",
-  "Grade 7",
-  "Grade 8",
-  "Grade 9",
-  "Grade 10",
-  "Grade 11",
-  "Grade 12",
-];
 
 const resultLimit = 12;
 
@@ -55,9 +44,10 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 
 export function HeroSearch() {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const {
     query,
-    grade,
+    phase,
     results,
     total,
     hasMore,
@@ -69,26 +59,50 @@ export function HeroSearch() {
     setPanelOpen,
     fetchResults,
     updateQuery,
-    updateGrade,
+    updatePhase,
   } = usePaginatedSchoolSearch({
-    gradeAllValue: "",
+    phaseAllValue: "",
     resultLimit,
     errorMessage: "We couldn't search schools right now. Please try again.",
   });
 
+  const searchActive = panelOpen;
+  const selectedPhaseLabel = isSchoolPhase(phase) ? getSchoolPhaseLabel(phase) : "";
+
+  useEffect(() => {
+    if (!panelOpen) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (!searchRef.current?.contains(event.target as Node)) {
+        setPanelOpen(false);
+        setIsSchoolInputFocused(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [panelOpen, setPanelOpen]);
+
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
-      <form
+      <div
+        ref={searchRef}
         className={styles.heroSearch}
         role="search"
-        noValidate
         aria-controls="school-search-results"
+        data-mobile-search-active={searchActive ? "true" : "false"}
         onKeyDown={(event) => {
           if (event.key === "Escape") {
             setPanelOpen(false);
+            setIsSchoolInputFocused(false);
           }
         }}
       >
+        <SchoolPhaseSelect
+          id="homeSchoolPhase"
+          value={phase}
+          onChange={updatePhase}
+        />
         <label
           className={`${styles.field} ${styles.schoolSearchField}`}
           htmlFor="homeSchoolQuery"
@@ -98,7 +112,7 @@ export function HeroSearch() {
             id="homeSchoolQuery"
             name="schoolQuery"
             type="search"
-            placeholder="e.g. Parktown Primary"
+            placeholder="e.g. Westminster School"
             autoComplete="off"
             value={query}
             onFocus={() => {
@@ -125,7 +139,7 @@ export function HeroSearch() {
                 </p>
               ) : null}
               {panelOpen && !queryReady && !isLoading ? (
-                <p className={styles.heroSearchState}>
+                <p className={`${styles.heroSearchState} ${styles.emptySearchDrawer}`}>
                   Type your school name to begin searching
                 </p>
               ) : null}
@@ -133,8 +147,9 @@ export function HeroSearch() {
               <>
                 <div className={styles.resultsCount}>
                   <strong>
-                    {total === 1 ? "1 school found" : `${total} schools found`}
+                  {total === 1 ? "1 school found" : `${total} schools found`}
                   </strong>
+                  {selectedPhaseLabel ? <span>{selectedPhaseLabel}</span> : null}
                   {total > 0 ? (
                     <span>
                       Showing {results.length} of {total}
@@ -185,10 +200,19 @@ export function HeroSearch() {
                                 </span>
                               ) : null}
                             </div>
-                            {school.lowestPrice ? (
+                              {school.lowestPrice ? (
                               <span className={styles.heroResultPrice}>
                                 From R{school.lowestPrice}
                               </span>
+                            ) : null}
+                            {school.phases.length > 0 ? (
+                              <div className={styles.heroResultBadges}>
+                                {school.phases.slice(0, 2).map((schoolPhase) => (
+                                  <span key={schoolPhase}>
+                                    {getSchoolPhaseLabel(schoolPhase)}
+                                  </span>
+                                ))}
+                              </div>
                             ) : null}
                             {school.isFeatured || school.isPartner ? (
                               <div className={styles.heroResultBadges}>
@@ -258,28 +282,12 @@ export function HeroSearch() {
             ) : null}
           </div>
         ) : null}
-        <label className={styles.field} htmlFor="homeSchoolGrade">
-          <span>Grade</span>
-          <select
-            id="homeSchoolGrade"
-            name="grade"
-            value={grade}
-            onChange={(event) => updateGrade(event.target.value)}
-          >
-            <option value="">Choose grade</option>
-            {gradeOptions.map((gradeOption) => (
-              <option value={gradeOption} key={gradeOption}>
-                {gradeOption}
-              </option>
-            ))}
-          </select>
-        </label>
         {error ? (
           <p className={styles.searchError} role="alert">
             {error}
           </p>
         ) : null}
-      </form>
+      </div>
       <SearchHelperPill
         storageKey="Pexpacks:gauteng-helper:home"
         isInputFocused={isSchoolInputFocused}

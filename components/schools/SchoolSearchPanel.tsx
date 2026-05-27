@@ -2,10 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import heroStyles from "@/components/marketing/HeroSearch.module.css";
+import { SchoolPhaseSelect } from "@/components/schools/SchoolPhaseSelect";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
+import {
+  getSchoolPhaseLabel,
+  isSchoolPhase,
+} from "@/lib/schools/schoolPhase";
 import { slugify } from "@/lib/slugify";
 import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
@@ -15,9 +20,8 @@ import styles from "./SchoolSearchPanel.module.css";
 const resultLimit = 12;
 
 type SchoolSearchPanelProps = {
-  grades: string[];
   initialQuery?: string;
-  initialGrade?: string;
+  initialPhase?: string;
 };
 
 function HighlightMatch({ text, query }: { text: string; query: string }) {
@@ -44,14 +48,14 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 }
 
 export function SchoolSearchPanel({
-  grades,
   initialQuery = "",
-  initialGrade = "all",
+  initialPhase = "all",
 }: SchoolSearchPanelProps) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const {
     query,
-    grade,
+    phase,
     results,
     total,
     hasMore,
@@ -63,17 +67,33 @@ export function SchoolSearchPanel({
     setPanelOpen,
     fetchResults,
     updateQuery,
-    updateGrade,
+    updatePhase,
   } = usePaginatedSchoolSearch({
     initialQuery,
-    initialGrade,
+    initialPhase,
     initialPanelOpen:
-      initialQuery.trim().length >= 2 || initialGrade !== "all",
-    gradeAllValue: "all",
+      initialQuery.trim().length >= 2 || initialPhase !== "all",
+    phaseAllValue: "all",
     resultLimit,
     errorMessage:
       "We couldn't load the school list. Please refresh or contact Pexpacks.",
   });
+  const searchActive = panelOpen;
+  const selectedPhaseLabel = isSchoolPhase(phase) ? getSchoolPhaseLabel(phase) : "";
+
+  useEffect(() => {
+    if (!panelOpen) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (!searchRef.current?.contains(event.target as Node)) {
+        setPanelOpen(false);
+        setIsSchoolInputFocused(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [panelOpen, setPanelOpen]);
 
   return (
     <section
@@ -84,15 +104,25 @@ export function SchoolSearchPanel({
         Search by School, Grade or Region
       </h2>
       <div className={styles.searchFormWrapper}>
-        <form
-          className={styles.searchForm}
+        <div
+          ref={searchRef}
+          className={`${heroStyles.heroSearch} ${styles.searchForm}`}
+          role="search"
           onKeyDown={(event) => {
             if (event.key === "Escape") {
               setPanelOpen(false);
+              setIsSchoolInputFocused(false);
             }
           }}
           aria-controls="school-search-results"
+          data-mobile-search-active={searchActive ? "true" : "false"}
         >
+          <SchoolPhaseSelect
+            id="schoolPhase"
+            value={phase}
+            onChange={updatePhase}
+            className={styles.phaseField}
+          />
           <label
             className={`${heroStyles.field} ${heroStyles.schoolSearchField} ${styles.schoolSearchField}`}
             htmlFor="schoolQuery"
@@ -109,13 +139,13 @@ export function SchoolSearchPanel({
               }}
               onBlur={() => setIsSchoolInputFocused(false)}
               onChange={(event) => updateQuery(event.target.value)}
-              placeholder="e.g. Parktown Primary"
+              placeholder="e.g. Westminster School"
               autoComplete="off"
             />
           </label>
           {panelOpen ? (
             <div
-              className={`${styles.resultsPanel} ${heroStyles.heroResultsPanel}`}
+              className={heroStyles.heroResultsPanel}
               id="school-search-results"
               aria-live="polite"
               data-school-results-scroll
@@ -129,7 +159,7 @@ export function SchoolSearchPanel({
                 </p>
               ) : null}
               {panelOpen && !queryReady && !isLoading ? (
-                <p className={heroStyles.heroSearchState}>
+                <p className={`${heroStyles.heroSearchState} ${heroStyles.emptySearchDrawer}`}>
                   Type your school name to begin searching
                 </p>
               ) : null}
@@ -139,6 +169,7 @@ export function SchoolSearchPanel({
                     <strong>
                       {total === 1 ? "1 school found" : `${total} schools found`}
                     </strong>
+                    {selectedPhaseLabel ? <span>{selectedPhaseLabel}</span> : null}
                     {total > 0 ? (
                       <span>
                         Showing {results.length} of {total}
@@ -187,6 +218,15 @@ export function SchoolSearchPanel({
                                 <span className={heroStyles.heroResultPrice}>
                                   From R{school.lowestPrice}
                                 </span>
+                              ) : null}
+                              {school.phases.length > 0 ? (
+                                <div className={heroStyles.heroResultBadges}>
+                                  {school.phases.slice(0, 2).map((schoolPhase) => (
+                                    <span key={schoolPhase}>
+                                      {getSchoolPhaseLabel(schoolPhase)}
+                                    </span>
+                                  ))}
+                                </div>
                               ) : null}
                               {school.isFeatured || school.isPartner ? (
                                 <div className={heroStyles.heroResultBadges}>
@@ -252,23 +292,7 @@ export function SchoolSearchPanel({
               ) : null}
             </div>
           ) : null}
-          <label className={heroStyles.field} htmlFor="schoolGrade">
-            <span>Grade</span>
-            <select
-              id="schoolGrade"
-              name="grade"
-              value={grade}
-              onChange={(event) => updateGrade(event.target.value)}
-            >
-              <option value="all">Choose grade</option>
-              {grades.map((gradeOption) => (
-                <option value={gradeOption} key={gradeOption}>
-                  {gradeOption}
-                </option>
-              ))}
-            </select>
-          </label>
-        </form>
+        </div>
       </div>
 
       <SearchHelperPill
