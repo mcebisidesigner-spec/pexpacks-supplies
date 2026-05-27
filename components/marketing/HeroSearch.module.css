@@ -65,10 +65,18 @@
   font-weight: 500;
   line-height: 1.1;
   padding: 0;
+  transition: color 0.15s ease, font-weight 0.15s ease;
+}
+
+.field input:focus,
+.field input:not(:placeholder-shown) {
+  color: var(--pex-navy);
+  font-weight: 800;
 }
 
 .field input::placeholder {
   color: rgba(31, 41, 55, 0.4);
+  font-weight: 500;
   opacity: 1;
 }
 
@@ -562,7 +570,7 @@
   }
 
   .field > span {
-    font-size: clamp(14px, 9vw, 18px);
+    font-size: clamp(14px, 8vw, 18px);
     font-weight: 750;
   }
 
@@ -620,7 +628,7 @@
   }
 
   .heroSearch[data-mobile-search-active="true"] .schoolSearchField > span {
-    font-size: clamp(12px, 9vw, 14px);
+    font-size: clamp(12px, 8vw, 14px);
     font-weight: 750;
   }
 
