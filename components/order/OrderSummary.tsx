@@ -81,10 +81,13 @@ export function OrderSummary({
         onClick={() => setSummaryOpen(!summaryOpen)}
       >
         <span>
-          {gradeName ?? "Pack"} · {itemCount || "Confirming"} items ·{" "}
-          {typeof estimatedTotal === "number"
-            ? formatCurrency(estimatedTotal)
-            : "Total TBC"}
+          {schoolName && gradeName
+            ? `${gradeName} · ${itemCount || "Confirming"} items · ${
+                typeof estimatedTotal === "number"
+                  ? formatCurrency(estimatedTotal)
+                  : "Total TBC"
+              }`
+            : "Select your school"}
         </span>
         <strong>{summaryOpen ? "Hide" : "View summary"}</strong>
       </button>
