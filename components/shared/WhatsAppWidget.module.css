@@ -7,12 +7,27 @@
   flex-direction: column;
   align-items: flex-end;
   pointer-events: none;
+  opacity: 0;
+  transform: translateY(20px);
+  visibility: hidden;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    visibility 0.35s ease;
 }
 
-.widgetHidden {
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.hidden {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(20px);
   visibility: hidden;
+  pointer-events: none;
 }
 
 .fab {
@@ -39,6 +54,31 @@
 .fab:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 4px;
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.08);
+  }
+  22% {
+    transform: scale(0.96);
+  }
+  34% {
+    transform: scale(1.04);
+  }
+  46% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.heartbeat {
+  animation: heartbeat 1s ease-in-out;
 }
 
 .chatPopup {
@@ -186,7 +226,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .widgetContainer {
+    transition: none;
+  }
+
   .fab, .chatPopup, .startChatBtn, .closeBtn {
     transition: none;
+  }
+
+  .heartbeat {
+    animation: none;
   }
 }

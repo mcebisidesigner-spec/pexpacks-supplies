@@ -8,10 +8,27 @@ export function WhatsAppWidget() {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    function handleScroll() {
+      const scrolled = window.scrollY > 400;
+      setIsScrolled(scrolled);
+      if (scrolled && !hasAnimated) {
+        setHasAnimated(true);
+      }
+    }
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [mounted, hasAnimated]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -43,15 +60,17 @@ export function WhatsAppWidget() {
   );
   if (!waUrl) return null;
 
+  const show = isScrolled && !isFooterVisible;
+
   return (
     <div
       className={[
         styles.widgetContainer,
-        isFooterVisible ? styles.widgetHidden : "",
+        show ? styles.visible : styles.hidden,
       ]
         .filter(Boolean)
         .join(" ")}
-      aria-hidden={isFooterVisible}
+      aria-hidden={!show}
     >
       <div
         className={[styles.chatPopup, isOpen ? styles.open : ""]
@@ -103,7 +122,12 @@ export function WhatsAppWidget() {
       </div>
 
       <button
-        className={styles.fab}
+        className={[
+          styles.fab,
+          hasAnimated ? styles.heartbeat : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Open WhatsApp Support"
         aria-expanded={isOpen}
