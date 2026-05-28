@@ -88,8 +88,6 @@ textarea {
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
 textarea {
-  border: 0 !important;
-  box-shadow: none !important;
   caret-color: var(--pex-keppel);
 }
 
@@ -97,8 +95,7 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus-visible,
 textarea:focus,
 textarea:focus-visible {
-  border: 0 !important;
-  outline: none;
+  outline: 0 !important;
   box-shadow: none !important;
 }
 
