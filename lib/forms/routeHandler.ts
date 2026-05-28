@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { normaliseSubmittedTotal } from "@/lib/order/orderTotals";
 import {
   isSameOriginRequest,
   rateLimitRequest,
@@ -39,26 +38,6 @@ function withRequestMetadata(
       raw.pageUrl || raw.sourceUrl || request.headers.get("referer") || "",
     userAgent: raw.userAgent || request.headers.get("user-agent") || "",
     submittedAt: raw.submittedAt || new Date().toISOString(),
-  };
-}
-
-async function withOrderTotal(data: FormSubmission) {
-  const total = await normaliseSubmittedTotal(data);
-
-  return {
-    ...data,
-    estimatedTotal:
-      typeof total.estimatedTotal === "number"
-        ? total.estimatedTotal
-        : data.estimatedTotal,
-    notes: [
-      data.notes,
-      `Total source: ${total.source}. Client total adjusted: ${
-        total.changed ? "Yes" : "No"
-      }.`,
-    ]
-      .filter(Boolean)
-      .join("\n"),
   };
 }
 
@@ -126,11 +105,7 @@ export async function handlePexpacksFormRequest(
     );
   }
 
-  let data = validation.data;
-
-  if (endpoint === "order") {
-    data = await withOrderTotal(validation.data);
-  }
+  const data = validation.data;
 
   const saved = await saveFormSubmission(data);
 

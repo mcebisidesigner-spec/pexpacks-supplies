@@ -14,9 +14,7 @@ export type OrderDraft = {
   selectedItems?: string;
   removedItems?: string;
   estimatedTotal?: number;
-  /** Subtotal before sibling discount (multi-school only) */
   subtotal?: number;
-  /** Sibling discount amount (multi-school only) */
   discount?: number;
   pexcoverRequested?: boolean;
   pexcoverName?: string;

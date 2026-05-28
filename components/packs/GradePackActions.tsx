@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { saveOrderDraft } from "@/lib/order/orderDraft";
+import { saveOrderDraft } from "@/lib/checkout/draft";
 import { calculatePackTotal } from "@/lib/packs/calculatePackTotal";
 import {
   createCustomPackSelection,
@@ -28,6 +28,7 @@ type GradePackActionsProps = {
   showMicrocopy?: boolean;
   layout?: "compact" | "detail";
   downloadLabel?: string;
+  autoCustomise?: boolean;
 };
 
 export function buildFullPackHref(pack: GradePackForCustomisation) {
@@ -47,7 +48,7 @@ function buildCustomPackHref(pack: GradePackForCustomisation, draftId: string) {
     draft: draftId,
   });
 
-  return `/order?${params.toString()}#checkout-form`;
+  return `/checkout?${params.toString()}`;
 }
 
 export function GradePackActions({
@@ -56,6 +57,7 @@ export function GradePackActions({
   showMicrocopy = true,
   layout = "compact",
   downloadLabel = "Download list (PDF)",
+  autoCustomise,
 }: GradePackActionsProps) {
   const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -98,6 +100,13 @@ export function GradePackActions({
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Auto-open drawer when customize=1 is in the URL
+  useEffect(() => {
+    if (autoCustomise && isMounted) {
+      setIsOpen(true);
+    }
+  }, [autoCustomise, isMounted]);
 
   useDialogFocusTrap({
     isOpen,

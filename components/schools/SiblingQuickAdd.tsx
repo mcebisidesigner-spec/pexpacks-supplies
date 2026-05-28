@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { GradePack, School } from "@/data/schools";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { saveOrderDraft } from "@/lib/order/orderDraft";
+import { saveOrderDraft } from "@/lib/checkout/draft";
 import styles from "./SiblingQuickAdd.module.css";
 
 const SIBLING_SELECTION_COUNT_KEY = "Pexpacks:sibling-selection-count";
@@ -95,7 +95,7 @@ export function SiblingQuickAdd({ school }: SiblingQuickAddProps) {
       draft: draft.id,
     });
 
-    router.push(`/order?${params.toString()}#checkout-form`);
+    router.push(`/checkout?${params.toString()}`);
   }
 
   if (school.grades.length < 2) {

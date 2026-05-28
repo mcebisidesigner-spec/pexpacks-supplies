@@ -13,6 +13,7 @@ import styles from "./GradePackDetails.module.css";
 type GradePackDetailsProps = {
   school: School;
   grade: GradePack;
+  autoCustomise?: boolean;
 };
 
 function teacherPreferredBadge(item: string) {
@@ -31,7 +32,7 @@ function teacherPreferredBadge(item: string) {
   return "";
 }
 
-export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
+export function GradePackDetails({ school, grade, autoCustomise }: GradePackDetailsProps) {
   const pack = createSchoolGradePack(school, grade);
 
   return (
@@ -86,7 +87,7 @@ export function GradePackDetails({ school, grade }: GradePackDetailsProps) {
         </div>
 
         <div className={styles.gradeActionPanel} id="grade-actions">
-          <GradePackActions pack={pack} layout="detail" />
+          <GradePackActions pack={pack} layout="detail" autoCustomise={autoCustomise} />
         </div>
 
         <PexcoverGradeUpsell school={school} grade={grade} />

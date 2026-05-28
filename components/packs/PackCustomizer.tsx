@@ -13,9 +13,9 @@ import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { useDialogFocusTrap } from "@/components/packs/useDialogFocusTrap";
 import { customPackAddOns } from "@/data/packAddOns";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { saveOrderDraft } from "@/lib/order/orderDraft";
+import { saveOrderDraft } from "@/lib/checkout/draft";
 import type { GradePackTemplate } from "@/data/phasePacks";
-import styles from "../packs/PackCustomiser.module.css";
+import styles from "./PackCustomiser.module.css";
 
 type PackCustomizerProps = {
   phaseSlug: string;
@@ -24,7 +24,6 @@ type PackCustomizerProps = {
 };
 
 function buildInitialQuantities(gradePack: GradePackTemplate) {
-  // Only standard items start populated
   return gradePack.items.reduce<Record<string, number>>(
     (acc, item) => ({ ...acc, [item.id]: item.quantity }),
     {}
@@ -131,7 +130,7 @@ export function PackCustomizer({
       draft: draft.id,
     });
 
-    router.push(`/order?${params.toString()}#checkout-form`);
+    router.push(`/checkout?${params.toString()}`);
   };
 
   return (
@@ -233,7 +232,6 @@ export function PackCustomizer({
               );
             })}
 
-            {/* Optional Add-Ons Section */}
             {customPackAddOns.length > 0 && (
               <div style={{ marginTop: 20 }}>
                 <p

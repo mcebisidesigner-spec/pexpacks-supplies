@@ -14,6 +14,7 @@ import page from "@/styles/Page.module.css";
 
 type GradePageProps = {
   params: Promise<{ schoolSlug: string; gradeSlug: string }>;
+  searchParams?: Promise<{ customize?: string }>;
 };
 
 export const dynamicParams = true;
@@ -54,8 +55,10 @@ export async function generateMetadata({
   );
 }
 
-export default async function GradePackPage({ params }: GradePageProps) {
+export default async function GradePackPage({ params, searchParams }: GradePageProps) {
   const { schoolSlug, gradeSlug } = await params;
+  const search = await searchParams;
+  const autoCustomise = search?.customize === "1";
   const school = await getSchoolBySlug(schoolSlug);
   const grade = await getGradeBySlug(schoolSlug, gradeSlug);
 
@@ -92,7 +95,7 @@ export default async function GradePackPage({ params }: GradePageProps) {
       />
       <section className={page.section}>
         <PackBuildingAnimation schoolName={school.name}>
-          <GradePackDetails school={school} grade={grade} />
+          <GradePackDetails school={school} grade={grade} autoCustomise={autoCustomise} />
         </PackBuildingAnimation>
       </section>
     </>

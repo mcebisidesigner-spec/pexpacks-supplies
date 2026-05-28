@@ -4,7 +4,7 @@ import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { PackCustomizer } from "@/components/order/PackCustomizer";
+import { PackCustomizer } from "@/components/packs/PackCustomizer";
 import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
 import { CompleteListModal } from "@/components/packs/CompleteListModal";
 import { DownloadListLink } from "@/components/packs/DownloadListLink";
@@ -121,7 +121,7 @@ function PhasePackActions({
   return (
     <>
       <div className={styles.cardActions}>
-        <Button href={mostPopularPacksHref} size="sm">
+        <Button href={`/checkout?phase=${phaseData.slug}&pack=${pack.id}`} size="sm">
           Buy Full Pack
         </Button>
         <Button

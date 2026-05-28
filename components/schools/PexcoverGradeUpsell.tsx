@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { GradePack, School } from "@/data/schools";
 import { Button } from "@/components/ui/Button";
-import { PEXCOVER_PRICE } from "@/components/order/OrderFormTypes";
+import { PEXCOVER_PRICE } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { saveOrderDraft } from "@/lib/order/orderDraft";
+import { saveOrderDraft } from "@/lib/checkout/draft";
 import styles from "./GradePackDetails.module.css";
 
 type PexcoverGradeUpsellProps = {
@@ -38,7 +38,7 @@ export function PexcoverGradeUpsell({
       draft: draft.id,
     });
 
-    router.push(`/order?${params.toString()}#checkout-form`);
+    router.push(`/checkout?${params.toString()}`);
   }
 
   return (
