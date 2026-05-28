@@ -102,7 +102,7 @@ export function RecentlyViewedSchools() {
               <div className={heroStyles.heroResultContent}>
                 <div className={heroStyles.heroResultSummary}>
                   <h3 className={styles.recentTitle}>
-                    <Link href={`/schools/${visit.schoolSlug}/${visit.gradeSlug}`}>
+                    <Link href={`/schools/${visit.schoolSlug}`}>
                       {visit.schoolName}
                     </Link>
                   </h3>
@@ -110,7 +110,7 @@ export function RecentlyViewedSchools() {
                 </div>
               </div>
               <Link
-                href={`/schools/${visit.schoolSlug}/${visit.gradeSlug}`}
+                href={`/schools/${visit.schoolSlug}`}
                 className={heroStyles.heroResultLink}
               >
                 View pack

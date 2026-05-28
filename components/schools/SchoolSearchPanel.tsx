@@ -215,7 +215,7 @@ export function SchoolSearchPanel({
                                 {school.grades.slice(0, 4).map((g) => (
                                   <Link
                                     key={g}
-                                    href={`/schools/${school.slug}/${slugify(g)}`}
+                                    href={`/schools/${school.slug}`}
                                     className={heroStyles.gradePill}
                                   >
                                     {g}

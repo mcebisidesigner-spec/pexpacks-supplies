@@ -32,23 +32,11 @@ type GradePackActionsProps = {
 };
 
 export function buildFullPackHref(pack: GradePackForCustomisation) {
-  const params = new URLSearchParams({
-    school: pack.schoolSlug,
-    grade: pack.gradeSlug,
-  });
-
-  return `/checkout?${params.toString()}`;
+  return `/checkout/${encodeURIComponent(pack.schoolSlug)}+${encodeURIComponent(pack.gradeSlug)}`;
 }
 
 function buildCustomPackHref(pack: GradePackForCustomisation, draftId: string) {
-  const params = new URLSearchParams({
-    school: pack.schoolSlug,
-    grade: pack.gradeSlug,
-    type: "custom-school",
-    draft: draftId,
-  });
-
-  return `/checkout?${params.toString()}`;
+  return `/checkout/${encodeURIComponent(pack.schoolSlug)}+${encodeURIComponent(pack.gradeSlug)}?draft=${encodeURIComponent(draftId)}`;
 }
 
 export function GradePackActions({

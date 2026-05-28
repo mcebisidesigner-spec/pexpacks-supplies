@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { PEXCOVER_PRICE } from "@/lib/constants";
@@ -191,6 +192,14 @@ export function CheckoutForm({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const [showSchoolSearch, setShowSchoolSearch] = useState(false);
+  const [schoolQuery, setSchoolQuery] = useState("");
+  const [schoolResults, setSchoolResults] = useState<{ slug: string; name: string; city: string; province: string; grades: string[] }[]>([]);
+  const [showGradeDrawer, setShowGradeDrawer] = useState(false);
+  const [availableGrades, setAvailableGrades] = useState<{ id: string; grade: string; gradeSlug: string; price: number }[]>([]);
+
+  const router = useRouter();
+
   useEffect(() => {
     if (!draftId || draftLoaded) return;
     const draft = readOrderDraft(draftId);
@@ -211,13 +220,43 @@ export function CheckoutForm({
   const packPrice = draftTotal ?? defaultPrice;
   const pexcoverCount = hasPexcover ? 1 : 0;
   const totalToPay = packPrice + (hasPexcover ? PEXCOVER_PRICE : 0);
-  const backToPackHref = `/schools/${schoolSlug}/${gradeSlug}`;
+  const backToPackHref = `/schools/${schoolSlug}`;
   const currentStep = STEPS[activeStep] ?? STEPS[0];
   const itemCount = contents.length;
 
   const deliveryAddressSummary = useMemo(() => {
     return [address, suburb, city, province, postalCode].filter(Boolean).join(", ");
   }, [address, suburb, city, province, postalCode]);
+
+  useEffect(() => {
+    fetch(`/api/schools/${schoolSlug}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && data.school?.grades) {
+          setAvailableGrades(data.school.grades);
+        }
+      })
+      .catch(() => {});
+  }, [schoolSlug]);
+
+  const schoolSearchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleSchoolSearch = useCallback((query: string) => {
+    setSchoolQuery(query);
+    if (schoolSearchTimeout.current) clearTimeout(schoolSearchTimeout.current);
+    if (!query.trim()) { setSchoolResults([]); return; }
+    schoolSearchTimeout.current = setTimeout(async () => {
+      try {
+        const r = await fetch(`/api/schools/search?q=${encodeURIComponent(query)}&limit=8`);
+        const data = await r.json();
+        if (data.success) setSchoolResults(data.results ?? []);
+      } catch { /* ignore */ }
+    }, 280);
+  }, []);
+
+  function navigateToCheckout(slug: string, gSlug: string) {
+    router.push(`/checkout/${encodeURIComponent(slug)}+${encodeURIComponent(gSlug)}`);
+  }
 
   function focusStepHeading() {
     window.requestAnimationFrame(() => headingRef.current?.focus());
@@ -359,66 +398,144 @@ export function CheckoutForm({
   }
 
   function renderReviewStep() {
+    const selectedGrade = availableGrades.find((g) => g.gradeSlug === gradeSlug);
     return (
       <div className={styles.reviewGrid}>
-        <section className={styles.packReviewCard}>
-          <div>
-            <p className={styles.confirmKicker}>Fixed order selection</p>
-            <h3>{schoolName} - {grade}</h3>
-            <p>Full stationery pack for {schoolName}, {grade}. The pack is fixed at checkout so payment can be processed securely.</p>
+        <section className={styles.reviewLeftCol}>
+          <div className={styles.reviewSchoolCard}>
+            <p className={styles.confirmKicker}>School</p>
+            {showSchoolSearch ? (
+              <div className={styles.schoolSearchWrap}>
+                <input
+                  className={styles.schoolSearchInput}
+                  type="text"
+                  placeholder="Search for a school..."
+                  value={schoolQuery}
+                  onChange={(e) => handleSchoolSearch(e.target.value)}
+                  autoFocus
+                />
+                {schoolResults.length > 0 ? (
+                  <div className={styles.schoolResults}>
+                    {schoolResults.map((s) => (
+                      <button
+                        key={s.slug}
+                        type="button"
+                        className={styles.schoolResultItem}
+                        onClick={() => {
+                          const firstGrade = s.grades?.[0];
+                          if (firstGrade) navigateToCheckout(s.slug, firstGrade);
+                        }}
+                      >
+                        <strong>{s.name}</strong>
+                        <span>{s.city}, {s.province}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : schoolQuery.trim() && schoolResults.length === 0 ? (
+                  <p className={styles.schoolNoResults}>No schools found.</p>
+                ) : null}
+                <button
+                  type="button"
+                  className={styles.schoolSearchCancel}
+                  onClick={() => { setShowSchoolSearch(false); setSchoolQuery(""); setSchoolResults([]); }}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className={styles.reviewSchoolDisplay}>
+                <h3>{schoolName}</h3>
+                <button
+                  type="button"
+                  className={styles.reviewChangeBtn}
+                  onClick={() => setShowSchoolSearch(true)}
+                >
+                  Change school
+                </button>
+              </div>
+            )}
           </div>
-          <div className={styles.packFacts}>
-            <span>Full Pack</span>
-            <span>{itemCount} items</span>
-            <span>{formatCurrency(packPrice)}</span>
+
+          <div className={styles.reviewGradeCard}>
+            <p className={styles.confirmKicker}>Grade</p>
+            <button
+              type="button"
+              className={styles.gradeDrawerTrigger}
+              onClick={() => setShowGradeDrawer(!showGradeDrawer)}
+              aria-expanded={showGradeDrawer}
+            >
+              <span>{grade}</span>
+              <svg className={styles.gradeChevron} viewBox="0 0 24 24" aria-hidden="true" style={{ transform: showGradeDrawer ? "rotate(180deg)" : "none" }}>
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            {showGradeDrawer && availableGrades.length > 0 ? (
+              <div className={styles.gradeDrawerPanel}>
+                {availableGrades.map((g) => (
+                  <button
+                    key={g.gradeSlug}
+                    type="button"
+                    className={`${styles.gradeDrawerItem} ${g.gradeSlug === gradeSlug ? styles.gradeDrawerItemActive : ""}`}
+                    onClick={() => { setShowGradeDrawer(false); if (g.gradeSlug !== gradeSlug) navigateToCheckout(schoolSlug, g.gradeSlug); }}
+                  >
+                    <span>{g.grade}</span>
+                    <span className={styles.gradeDrawerPrice}>{formatCurrency(g.price)}</span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
-          <ul className={styles.itemPreview} aria-label="Included items preview">
-            {contents.slice(0, 8).map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          {contents.length > 8 ? (
-            <p className={styles.moreItems}>+{contents.length - 8} more items included</p>
-          ) : null}
-          <p className={styles.changeHint}>
-            Need to change something? <Link href={backToPackHref}>Go back to the pack page</Link>.
-          </p>
         </section>
 
-        <section className={`${styles.addonCard} ${hasPexcover ? styles.addonCardActive : ""}`}>
-          <div>
-            <p className={styles.confirmKicker}>Optional add-on</p>
-            <h3>Pexcover book covering</h3>
-            <p>Add covered and labelled exercise books so the pack arrives closer to first-day ready.</p>
-          </div>
-          <label className={styles.addonCheckbox}>
-            <input type="checkbox" checked={hasPexcover} onChange={(event) => setHasPexcover(event.target.checked)} />
-            <span>Add Pexcover for {formatCurrency(PEXCOVER_PRICE)}</span>
-          </label>
-          {hasPexcover ? (
-            <div className={styles.formGrid}>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="pexcover-name">Learner name for labels</label>
-                <input id="pexcover-name" value={pexcoverName} placeholder="Optional" onChange={(event) => setPexcoverName(event.target.value)} />
-              </div>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="pexcover-format">Label format</label>
-                <select id="pexcover-format" value={pexcoverLabelFormat} onChange={(event) => setPexcoverLabelFormat(event.target.value)}>
-                  <option>First Name + Surname</option>
-                  <option>First Name + Initial</option>
-                  <option>Initials + Surname</option>
-                </select>
-              </div>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="pexcover-subjects">Subject names optional</label>
-                <input id="pexcover-subjects" value={pexcoverSubjects} placeholder="English, Maths, Life Skills" onChange={(event) => setPexcoverSubjects(event.target.value)} />
-              </div>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="pexcover-notes">Special notes optional</label>
-                <input id="pexcover-notes" value={pexcoverNotes} placeholder="Any covering instructions?" onChange={(event) => setPexcoverNotes(event.target.value)} />
-              </div>
+        <section className={styles.reviewRightCol}>
+          <div className={styles.packListCard}>
+            <p className={styles.confirmKicker}>Full pack or Customised pack</p>
+            <ul className={styles.packList} aria-label="All pack items">
+              {contents.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <div className={styles.packListMeta}>
+              <span>{itemCount} items</span>
+              <span>{formatCurrency(packPrice)}</span>
             </div>
-          ) : null}
+          </div>
+
+          <section className={`${styles.addonCard} ${hasPexcover ? styles.addonCardActive : ""}`}>
+            <div>
+              <p className={styles.confirmKicker}>Optional add-on</p>
+              <h3>Pexcover book covering</h3>
+              <p>Add covered and labelled exercise books so the pack arrives closer to first-day ready.</p>
+            </div>
+            <label className={styles.addonCheckbox}>
+              <input type="checkbox" checked={hasPexcover} onChange={(event) => setHasPexcover(event.target.checked)} />
+              <span>Add Pexcover for {formatCurrency(PEXCOVER_PRICE)}</span>
+            </label>
+            {hasPexcover ? (
+              <div className={styles.formGrid}>
+                <div className={styles.fieldGroup}>
+                  <label htmlFor="pexcover-name">Learner name for labels</label>
+                  <input id="pexcover-name" value={pexcoverName} placeholder="Optional" onChange={(event) => setPexcoverName(event.target.value)} />
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label htmlFor="pexcover-format">Label format</label>
+                  <select id="pexcover-format" value={pexcoverLabelFormat} onChange={(event) => setPexcoverLabelFormat(event.target.value)}>
+                    <option>First Name + Surname</option>
+                    <option>First Name + Initial</option>
+                    <option>Initials + Surname</option>
+                  </select>
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label htmlFor="pexcover-subjects">Subject names optional</label>
+                  <input id="pexcover-subjects" value={pexcoverSubjects} placeholder="English, Maths, Life Skills" onChange={(event) => setPexcoverSubjects(event.target.value)} />
+                </div>
+                <div className={styles.fieldGroup}>
+                  <label htmlFor="pexcover-notes">Special notes optional</label>
+                  <input id="pexcover-notes" value={pexcoverNotes} placeholder="Any covering instructions?" onChange={(event) => setPexcoverNotes(event.target.value)} />
+                </div>
+              </div>
+            ) : null}
+          </section>
         </section>
       </div>
     );
@@ -575,7 +692,6 @@ export function CheckoutForm({
   return (
     <div className={styles.checkoutShell}>
       <div className={styles.checkoutHeader}>
-        <Link href="/" className={styles.checkoutLogo} aria-label="PexPacks home">PexPacks</Link>
         <Link href={backToPackHref} className={styles.backLink}>Back to packs</Link>
         <a className={styles.helpLink} href="https://wa.me/27780036048" target="_blank" rel="noopener noreferrer">Need help?</a>
       </div>

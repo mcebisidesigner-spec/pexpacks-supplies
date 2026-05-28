@@ -201,7 +201,7 @@ export function HeroSearch() {
                               {school.grades.slice(0, 4).map((schoolGrade) => (
                                 <Link
                                   key={schoolGrade}
-                                  href={`/schools/${school.slug}/${slugify(schoolGrade)}`}
+                                  href={`/schools/${school.slug}`}
                                   className={styles.gradePill}
                                 >
                                   {schoolGrade}

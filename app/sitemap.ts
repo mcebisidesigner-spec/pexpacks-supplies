@@ -36,12 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const schools = await getFullSchoolRecords();
 
-  const schoolRoutes = schools.flatMap((school) => [
-    `/schools/${school.slug}`,
-    ...school.grades.map(
-      (grade) => `/schools/${school.slug}/${grade.gradeSlug}`
-    ),
-  ]);
+  const schoolRoutes = schools.map((school) => `/schools/${school.slug}`);
 
   const staticEntries = staticRoutes.map((route) => ({
     url: `${siteUrl}${route}`,

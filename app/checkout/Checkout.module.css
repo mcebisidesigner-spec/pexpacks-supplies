@@ -140,7 +140,6 @@
   gap: 18px;
 }
 
-.packReviewCard,
 .paymentReadyCard,
 .successCard,
 .reviewBlock,
@@ -150,7 +149,6 @@
   background: var(--pex-bg-soft);
 }
 
-.packReviewCard,
 .addonCard,
 .paymentReadyCard,
 .successCard {
@@ -209,41 +207,18 @@
   font-weight: 800;
 }
 
-.packReviewCard {
+.packListCard {
+  border: var(--surface-border-soft);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(135deg, rgba(255, 111, 89, 0.08), rgba(255, 255, 255, 0.96)),
+    var(--pex-bg-soft);
+  padding: var(--card-padding);
   display: grid;
   gap: 16px;
 }
 
-.packReviewCard h3 {
-  margin: 0 0 8px;
-  color: var(--pex-primary);
-  font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  line-height: 1.08;
-}
-
-.packReviewCard p {
-  margin: 0;
-  color: var(--pex-text);
-  line-height: 1.55;
-}
-
-.packFacts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.packFacts span {
-  border-radius: var(--radius-pill);
-  padding: 8px 11px;
-  background: var(--pex-bg);
-  color: var(--pex-primary);
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.itemPreview {
+.packList {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -251,16 +226,14 @@
   gap: 8px;
 }
 
-.itemPreview li {
+.packList li {
   position: relative;
   padding-left: 22px;
   color: var(--pex-text-muted);
   line-height: 1.4;
 }
 
-.itemPreview li::before,
-.trustList li::before,
-.paymentReadyCard li::before {
+.packList li::before {
   content: "";
   position: absolute;
   left: 0;
@@ -271,12 +244,22 @@
   background: var(--pex-coral);
 }
 
-.emptyPreview,
-.moreItems {
-  color: var(--pex-text-muted) !important;
-  font-size: 14px;
-  font-weight: 700;
+.packListMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
+
+.packListMeta span {
+  border-radius: var(--radius-pill);
+  padding: 8px 11px;
+  background: var(--pex-bg);
+  color: var(--pex-primary);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
 
 .formGrid {
   display: grid;
@@ -842,7 +825,222 @@
     border-radius: var(--radius-card);
   }
 
-  .formGrid {
+.reviewLeftCol {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.reviewRightCol {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.reviewSchoolCard,
+.reviewGradeCard {
+  border: var(--surface-border-soft);
+  border-radius: var(--radius-card);
+  padding: var(--card-padding);
+  background: var(--pex-bg-soft);
+}
+
+.reviewSchoolDisplay h3 {
+  margin: 0 0 6px;
+  color: var(--pex-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  line-height: 1.1;
+}
+
+.reviewChangeBtn {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--pex-keppel);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.schoolSearchWrap {
+  display: grid;
+  gap: 10px;
+}
+
+.schoolSearchInput {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-field);
+  padding: 0 14px;
+  background: var(--pex-bg);
+  color: var(--pex-primary);
+  font: inherit;
+  transition: var(--interactive-transition);
+}
+
+.schoolSearchInput:focus {
+  border-color: var(--pex-keppel);
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(33, 158, 154, 0.08);
+}
+
+.schoolResults {
+  border: var(--surface-border-soft);
+  border-radius: var(--radius-card-compact);
+  background: var(--pex-bg);
+  display: grid;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.schoolResultItem {
+  padding: 12px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--pex-border);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  gap: 2px;
+  transition: var(--interactive-transition);
+}
+
+.schoolResultItem:last-child {
+  border-bottom: 0;
+}
+
+.schoolResultItem:hover {
+  background: var(--pex-bg-soft);
+}
+
+.schoolResultItem strong {
+  color: var(--pex-primary);
+  font-size: 0.95rem;
+}
+
+.schoolResultItem span {
+  color: var(--pex-text-muted);
+  font-size: 0.85rem;
+}
+
+.schoolNoResults {
+  margin: 0;
+  color: var(--pex-text-muted);
+  font-size: 0.9rem;
+  padding: 12px 14px;
+}
+
+.schoolSearchCancel {
+  width: fit-content;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--pex-text-muted);
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.gradeDrawerTrigger {
+  width: 100%;
+  min-height: 48px;
+  border: var(--surface-border-soft);
+  border-radius: var(--radius-field);
+  padding: 0 14px;
+  background: var(--pex-bg);
+  color: var(--pex-primary);
+  font: inherit;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: var(--interactive-transition);
+}
+
+.gradeDrawerTrigger:hover {
+  border-color: rgba(255, 111, 89, 0.36);
+}
+
+.gradeChevron {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.2s ease;
+}
+
+.gradeDrawerPanel {
+  border: var(--surface-border-soft);
+  border-radius: var(--radius-card-compact);
+  background: var(--pex-bg);
+  overflow: hidden;
+  animation: gradeDrawerIn 0.2s ease;
+}
+
+@keyframes gradeDrawerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gradeDrawerItem {
+  width: 100%;
+  padding: 14px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--pex-border);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: var(--interactive-transition);
+  color: var(--pex-primary);
+  font: inherit;
+  font-weight: 800;
+}
+
+.gradeDrawerItem:last-child {
+  border-bottom: 0;
+}
+
+.gradeDrawerItem:hover {
+  background: var(--pex-bg-soft);
+}
+
+.gradeDrawerItemActive {
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-keppel);
+}
+
+.gradeDrawerPrice {
+  color: var(--pex-text-muted);
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.gradeDrawerItemActive .gradeDrawerPrice {
+  color: inherit;
+}
+
+.formGrid {
     grid-template-columns: 1fr;
   }
 
@@ -876,7 +1074,6 @@
 @media (max-width: 420px) {
   .stepCard,
   .summaryCard,
-  .packReviewCard,
   .paymentReadyCard,
   .successCard {
     padding: 18px;
@@ -919,19 +1116,10 @@
   max-width: min(1280px, var(--layout-max-width));
   margin: 0 auto 22px;
   min-height: 64px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
-}
-
-.checkoutLogo {
-  color: var(--pex-primary);
-  font-family: var(--font-heading);
-  font-size: clamp(1.35rem, 2.3vw, 1.85rem);
-  font-weight: 900;
-  line-height: 1;
-  text-decoration: none;
 }
 
 .backLink,
@@ -993,13 +1181,7 @@
 }
 
 .reviewGrid {
-  grid-template-columns: 1fr;
-}
-
-.packReviewCard {
-  background:
-    linear-gradient(135deg, rgba(255, 111, 89, 0.08), rgba(255, 255, 255, 0.96)),
-    var(--pex-bg-soft);
+  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
 }
 
 .paymentReadyCard {
@@ -1027,21 +1209,6 @@
 
 .addonCard {
   grid-column: auto;
-}
-
-.changeHint {
-  border-radius: var(--radius-card-compact);
-  padding: 12px 14px;
-  background: rgba(33, 158, 154, 0.07);
-  color: var(--pex-primary) !important;
-  font-size: 0.94rem;
-  font-weight: 800;
-}
-
-.changeHint a {
-  color: var(--pex-keppel);
-  text-decoration: underline;
-  text-underline-offset: 4px;
 }
 
 .consentField small {
@@ -1120,10 +1287,6 @@
 }
 
 @media (max-width: 1024px) {
-  .checkoutHeader {
-    grid-template-columns: 1fr auto;
-  }
-
   .backLink {
     display: none;
   }

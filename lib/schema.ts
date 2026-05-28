@@ -228,13 +228,13 @@ export function productSchema(school: School, grade: GradePack) {
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    "@id": `${siteUrl}/schools/${school.slug}/${grade.gradeSlug}#product`,
+    "@id": `${siteUrl}/schools/${school.slug}#${grade.gradeSlug}-product`,
     name: `${grade.grade} Stationery Pack for ${school.name}`,
     description: `Ready-to-use ${grade.grade} stationery pack prepared for ${school.name}, packed according to school stationery requirements for convenient collection or delivery.`,
     image: productPackImage,
     sku: grade.id,
-    url: `${siteUrl}/schools/${school.slug}/${grade.gradeSlug}`,
-    mainEntityOfPage: `${siteUrl}/schools/${school.slug}/${grade.gradeSlug}`,
+    url: `${siteUrl}/schools/${school.slug}`,
+    mainEntityOfPage: `${siteUrl}/schools/${school.slug}`,
     brand: {
       "@id": organizationId,
     },
@@ -243,7 +243,7 @@ export function productSchema(school: School, grade: GradePack) {
       priceCurrency: "ZAR",
       price: grade.price,
       availability: productAvailability[grade.availability],
-      url: `${siteUrl}/schools/${school.slug}/${grade.gradeSlug}`,
+      url: `${siteUrl}/schools/${school.slug}`,
       itemCondition: "https://schema.org/NewCondition",
       seller: {
         "@id": organizationId,
