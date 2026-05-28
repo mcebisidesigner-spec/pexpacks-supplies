@@ -175,13 +175,13 @@ export function CheckoutForm({
       const currentScrollY = window.scrollY;
       
       if (currentScrollY < 80) {
-        // At the top, header is visible, hide sticky button
+        // Near the top — header is visible, hide sticky button
         setIsSticky(false);
-      } else if (currentScrollY < lastScrollY.current) {
-        // Scrolling up, show sticky button
+      } else if (currentScrollY > lastScrollY.current) {
+        // Scrolling DOWN — show sticky button
         setIsSticky(true);
       } else {
-        // Scrolling down, hide sticky button
+        // Scrolling UP — hide sticky button, make way for header
         setIsSticky(false);
       }
       
