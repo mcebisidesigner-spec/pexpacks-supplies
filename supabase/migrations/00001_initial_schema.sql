@@ -332,3 +332,22 @@ create policy "anon can upload brand-assets"
 create policy "admin all storage"
   on storage.objects for all to authenticated
   using (true) with check (true);
+
+-- ─────────────────────────────────────────────────────────────
+-- 7. PAYSTACK CHECKOUT MIGRATION — add payment columns
+-- ─────────────────────────────────────────────────────────────
+
+alter table orders
+  add column if not exists paid_at            timestamptz,
+  add column if not exists payment_gateway    text,
+  add column if not exists gateway_reference  text,
+  add column if not exists metadata           jsonb,
+  alter column status set default 'pending_payment';
+
+create unique index if not exists orders_order_reference_key
+  on orders(order_reference);
+
+-- Anon role: can insert orders (checkout) and update (webhook calls via service-role only)
+create policy "anon can insert orders"
+  on orders for insert to anon
+  with check (true);

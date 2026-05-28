@@ -65,6 +65,10 @@ export interface Database {
           consent: boolean;
           sibling_group_id: string | null;
           status: string;
+          paid_at: string | null;
+          payment_gateway: string | null;
+          gateway_reference: string | null;
+          metadata: Json | null;
           created_at: string;
           updated_at: string;
         };
@@ -90,6 +94,10 @@ export interface Database {
           consent?: boolean;
           sibling_group_id?: string | null;
           status?: string;
+          paid_at?: string | null;
+          payment_gateway?: string | null;
+          gateway_reference?: string | null;
+          metadata?: Json | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -115,6 +123,10 @@ export interface Database {
           consent?: boolean;
           sibling_group_id?: string | null;
           status?: string;
+          paid_at?: string | null;
+          payment_gateway?: string | null;
+          gateway_reference?: string | null;
+          metadata?: Json | null;
           created_at?: string;
           updated_at?: string;
         };

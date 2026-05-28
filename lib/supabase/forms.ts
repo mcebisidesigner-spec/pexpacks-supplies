@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { createSupabaseServerClient } from "./server";
+import { createSupabaseAdminClient } from "./admin";
 import type { FormSubmission } from "@/lib/forms/types";
 import type { Json } from "./types";
 
@@ -15,7 +15,7 @@ export async function saveFormSubmission(
   }
 
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
 
     const submissionId = randomUUID();
 
@@ -61,7 +61,7 @@ export async function saveOrderRecord(
   if (!ORDER_FORM_TYPES.has(data.formType)) return;
 
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
 
     const deliveryAddress: Record<string, string> = {};
     if (data.address) deliveryAddress.address = data.address;
@@ -113,7 +113,7 @@ export async function saveBrandPackageRecord(
   if (!BRAND_PACKAGE_FORM_TYPES.has(data.formType)) return;
 
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
 
     const { error } = await supabase.from("brand_package_claims").insert({
       submission_id: submissionId,
@@ -156,7 +156,7 @@ export async function saveLayByRecord(
   if (data.enquiryType !== "Lay-by application") return;
 
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
 
     const { error } = await supabase.from("lay_by_applications").insert({
       submission_id: submissionId,

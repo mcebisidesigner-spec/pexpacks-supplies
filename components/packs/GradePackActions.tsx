@@ -34,10 +34,9 @@ export function buildFullPackHref(pack: GradePackForCustomisation) {
   const params = new URLSearchParams({
     school: pack.schoolSlug,
     grade: pack.gradeSlug,
-    type: "full-school",
   });
 
-  return `/order?${params.toString()}#checkout-form`;
+  return `/checkout?${params.toString()}`;
 }
 
 function buildCustomPackHref(pack: GradePackForCustomisation, draftId: string) {

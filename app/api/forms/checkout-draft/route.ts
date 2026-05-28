@@ -15,23 +15,50 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createSupabaseServerClient();
 
-    const { error: upsertError } = await supabase
+    // Check if a draft already exists for this device_id
+    const { data: existing, error: selectError } = await supabase
       .from("form_submissions")
-      .upsert(
-        {
+      .select("id")
+      .eq("form_type", "checkout-draft")
+      .eq("source_url", device_id)
+      .maybeSingle();
+
+    if (selectError) {
+      console.error("[checkout-draft] Pre-upsert select failed:", selectError);
+      return NextResponse.json(
+        { success: false, message: "Failed to query existing draft." },
+        { status: 500 }
+      );
+    }
+
+    let dbError;
+
+    if (existing) {
+      // Update existing draft
+      const { error: updateError } = await supabase
+        .from("form_submissions")
+        .update({
+          data: state,
+          status: "draft",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existing.id);
+      dbError = updateError;
+    } else {
+      // Insert new draft
+      const { error: insertError } = await supabase
+        .from("form_submissions")
+        .insert({
           form_type: "checkout-draft",
           status: "draft",
           source_url: device_id,
           data: state,
-        },
-        {
-          onConflict: "form_type, source_url",
-          ignoreDuplicates: false,
-        }
-      );
+        });
+      dbError = insertError;
+    }
 
-    if (upsertError) {
-      console.error("[checkout-draft] Upsert failed:", upsertError);
+    if (dbError) {
+      console.error("[checkout-draft] Save failed:", dbError);
       return NextResponse.json(
         { success: false, message: "Failed to save draft." },
         { status: 500 }
