@@ -61,6 +61,22 @@ textarea {
   font: inherit;
 }
 
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+textarea {
+  border: 0 !important;
+  box-shadow: none !important;
+  caret-color: var(--pex-keppel);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus,
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus-visible,
+textarea:focus,
+textarea:focus-visible {
+  border: 0 !important;
+  outline: none;
+  box-shadow: none !important;
+}
+
 button,
 a.button,
 [role="button"],

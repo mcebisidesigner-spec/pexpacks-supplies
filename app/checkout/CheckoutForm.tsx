@@ -206,7 +206,7 @@ export function CheckoutForm({
       setPexcoverName(draft.pexcoverName);
     }
     setDraftLoaded(true);
-  }, [draftId, draftLoaded, readOrderDraft]);
+  }, [draftId, draftLoaded]);
 
   const packPrice = draftTotal ?? defaultPrice;
   const pexcoverCount = hasPexcover ? 1 : 0;
