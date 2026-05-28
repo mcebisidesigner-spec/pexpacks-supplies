@@ -50,15 +50,7 @@ export function IconCircle({
     );
   }
 
-  if (direction === "left") {
-    return (
-      <span className={classNames} aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <path d="M19 12H5M12 19l-7-7 7-7" />
-        </svg>
-      </span>
-    );
-  }
+
 
   return (
     <span className={classNames} aria-hidden="true">
