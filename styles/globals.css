@@ -11,6 +11,8 @@ html {
   min-height: 100%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  scrollbar-color: var(--pex-keppel) rgba(225, 231, 234, 0.5);
+  scrollbar-width: thin;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -30,6 +32,29 @@ body {
   overflow-x: clip;
   min-height: 100%;
   -webkit-tap-highlight-color: rgba(33, 158, 154, 0.18);
+}
+
+* {
+  scrollbar-color: var(--pex-keppel) rgba(225, 231, 234, 0.5);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(225, 231, 234, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(225, 231, 234, 0.5);
+  border-radius: var(--radius-pill);
+  background: var(--pex-keppel);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #156966;
 }
 
 body.menu-open {
