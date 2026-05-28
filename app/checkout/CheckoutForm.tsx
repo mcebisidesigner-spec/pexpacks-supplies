@@ -721,7 +721,9 @@ export function CheckoutForm({
       <div className={styles.checkoutHeader}>
         {activeStep > 0 ? (
           <>
-            <Link href={backToPackHref} className={`${styles.backLink} ${styles.desktopOnly}`}>Back to packs</Link>
+            <button type="button" className={`${styles.backLink} ${styles.desktopOnly}`} onClick={() => router.back()}>
+              Back to packs
+            </button>
             <button
               type="button"
               className={`${styles.backLink} ${styles.mobileOnly}`}
@@ -731,7 +733,9 @@ export function CheckoutForm({
             </button>
           </>
         ) : (
-          <Link href={backToPackHref} className={styles.backLink}>Back to packs</Link>
+          <button type="button" className={styles.backLink} onClick={() => router.back()}>
+            Back to packs
+          </button>
         )}
         <div className={`${styles.stickyHeaderButton} ${isSticky ? styles.isSticky : ""}`}>
           <Button variant="white" size="sm" onClick={() => setSummaryOpen(!summaryOpen)}>
