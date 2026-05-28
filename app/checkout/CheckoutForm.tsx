@@ -1,24 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { PEXCOVER_PRICE } from "@/lib/constants";
+import { readOrderDraft } from "@/lib/checkout/draft";
 import styles from "./Checkout.module.css";
-
-function isValidEmail(value: string) {
-  return !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function isLikelySaPhone(value: string) {
-  const digits = value.replace(/\D/g, "");
-  return (
-    (digits.startsWith("0") && digits.length === 10) ||
-    (digits.startsWith("27") && digits.length === 11) ||
-    (digits.startsWith("0027") && digits.length === 13)
-  );
-}
 
 type CheckoutFormProps = {
   schoolSlug: string;
@@ -28,19 +16,67 @@ type CheckoutFormProps = {
   price: number;
   contents: string[];
   deliveryNote: string;
+  draftId?: string;
 };
 
+type CheckoutStep = "review" | "details" | "delivery" | "pay";
 type FulfilmentOption = "School collection" | "Home delivery" | "Arrange collection";
+type ContactMethod = "whatsapp" | "phone" | "email";
 
-const STEPS = ["Review Pack", "Customer Details", "Delivery or Collection", "Confirm Order", "Pay Securely"];
-
-const FULFILMENT_OPTIONS: { value: FulfilmentOption; title: string; text: string; meta: string; icon: string }[] = [
-  { value: "School collection", title: "School Collection", text: "Collect from your school or agreed handover point.", meta: "Best for official school pack handovers.", icon: "school" },
-  { value: "Home delivery", title: "Home Delivery", text: "Receive your stationery pack at home.", meta: "Delivery fee may apply after confirmation.", icon: "home" },
-  { value: "Arrange collection", title: "Arrange Collection", text: "We will contact you to confirm the best pickup option.", meta: "Useful when school collection is not available.", icon: "pin" },
+const STEPS: { id: CheckoutStep; label: string; title: string }[] = [
+  { id: "review", label: "Review", title: "Review Order" },
+  { id: "details", label: "Details", title: "Customer Details" },
+  { id: "delivery", label: "Delivery", title: "Delivery or Collection" },
+  { id: "pay", label: "Pay", title: "Confirm & Pay" },
 ];
 
-function deliveryIcon(type: string) {
+const FULFILMENT_OPTIONS: { value: FulfilmentOption; title: string; text: string; meta: string; icon: "school" | "home" | "pin" }[] = [
+  {
+    value: "School collection",
+    title: "School Collection",
+    text: "Collect your pack from the school or agreed school handover point.",
+    meta: "Usually best for school pack campaigns.",
+    icon: "school",
+  },
+  {
+    value: "Home delivery",
+    title: "Home Delivery",
+    text: "Receive your pack at your address. Delivery fee may apply.",
+    meta: "Address required before payment.",
+    icon: "home",
+  },
+  {
+    value: "Arrange collection",
+    title: "Arranged Collection",
+    text: "We will contact you to confirm the best pickup option.",
+    meta: "Useful when school collection is not available.",
+    icon: "pin",
+  },
+];
+
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function normalisePhone(value: string) {
+  const trimmed = value.trim();
+  if (trimmed.startsWith("+")) {
+    return `+${trimmed.slice(1).replace(/\D/g, "")}`;
+  }
+  return trimmed.replace(/\D/g, "");
+}
+
+function isLikelySaPhone(value: string) {
+  const normalised = normalisePhone(value);
+  const digits = normalised.replace(/\D/g, "");
+  return (
+    (digits.startsWith("0") && digits.length === 10) ||
+    (digits.startsWith("27") && digits.length === 11) ||
+    (digits.startsWith("0027") && digits.length === 13)
+  );
+}
+
+function deliveryIcon(type: "school" | "home" | "pin") {
   if (type === "home") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -67,6 +103,40 @@ function deliveryIcon(type: string) {
   );
 }
 
+function CheckoutProgress({ activeStep }: { activeStep: number }) {
+  const currentStep = STEPS[activeStep] ?? STEPS[0];
+  const progressValue = ((activeStep + 1) / STEPS.length) * 100;
+
+  return (
+    <>
+      <ol className={styles.progress} aria-label="Checkout progress">
+        {STEPS.map((step, index) => {
+          const isComplete = index < activeStep;
+          const isCurrent = index === activeStep;
+          return (
+            <li
+              key={step.id}
+              className={[isComplete ? styles.progressActive : "", isCurrent ? styles.progressCurrent : ""].filter(Boolean).join(" ")}
+              aria-current={isCurrent ? "step" : undefined}
+            >
+              <span aria-hidden="true">{isComplete ? "\u2713" : index + 1}</span>
+              <strong>{step.label}</strong>
+              <small>{isCurrent ? "Current step" : isComplete ? "Completed" : "Upcoming"}</small>
+            </li>
+          );
+        })}
+      </ol>
+      <div className={styles.mobileProgress} role="group" aria-label={`Step ${activeStep + 1} of ${STEPS.length}: ${currentStep.title}`}>
+        <span>Step {activeStep + 1} of {STEPS.length}</span>
+        <strong>{currentStep.title}</strong>
+        <div className={styles.mobileProgressBar} aria-hidden="true">
+          <i style={{ width: `${progressValue}%` }} />
+        </div>
+      </div>
+    </>
+  );
+}
+
 function ReviewBlock({ title, children, onEdit }: { title: string; children: React.ReactNode; onEdit?: () => void }) {
   return (
     <section className={styles.reviewBlock}>
@@ -81,55 +151,27 @@ function ReviewBlock({ title, children, onEdit }: { title: string; children: Rea
   );
 }
 
-function CheckoutProgress({ steps, activeStep }: { steps: string[]; activeStep: number }) {
-  const currentStep = steps[activeStep] ?? steps[0];
-  const progressValue = ((activeStep + 1) / steps.length) * 100;
-
-  return (
-    <>
-      <ol className={styles.progress} aria-label="Checkout progress">
-        {steps.map((step, index) => {
-          const isComplete = index < activeStep;
-          const isCurrent = index === activeStep;
-          return (
-            <li
-              key={step}
-              className={[isComplete ? styles.progressActive : "", isCurrent ? styles.progressCurrent : ""].filter(Boolean).join(" ")}
-              aria-current={isCurrent ? "step" : undefined}
-            >
-              <span>{isComplete ? "✓" : index + 1}</span>
-              {step}
-            </li>
-          );
-        })}
-      </ol>
-      <div className={styles.mobileProgress} role="group" aria-label={`Step ${activeStep + 1} of ${steps.length}: ${currentStep}`}>
-        <span>Step {activeStep + 1} of {steps.length}</span>
-        <strong>{currentStep}</strong>
-        <div className={styles.mobileProgressBar} aria-hidden="true">
-          <i style={{ width: `${progressValue}%` }} />
-        </div>
-      </div>
-    </>
-  );
-}
-
 export function CheckoutForm({
   schoolSlug,
   schoolName,
   grade,
   gradeSlug,
-  price,
+  price: defaultPrice,
   contents,
   deliveryNote,
+  draftId,
 }: CheckoutFormProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const [draftLoaded, setDraftLoaded] = useState(false);
+  const [draftTotal, setDraftTotal] = useState<number | null>(null);
 
   const [activeStep, setActiveStep] = useState(0);
   const [buyerName, setBuyerName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
+  const [preferredContactMethod, setPreferredContactMethod] = useState<ContactMethod>("whatsapp");
   const [learnerName, setLearnerName] = useState("");
+  const [consent, setConsent] = useState(false);
 
   const [hasPexcover, setHasPexcover] = useState(false);
   const [pexcoverName, setPexcoverName] = useState("");
@@ -142,21 +184,51 @@ export function CheckoutForm({
   const [suburb, setSuburb] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const [deliveryNotes, setDeliveryNotes] = useState("");
 
-  const [finalConfirmation, setFinalConfirmation] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!draftId || draftLoaded) return;
+    const draft = readOrderDraft(draftId);
+    if (!draft) return;
+
+    if (draft.estimatedTotal != null) {
+      setDraftTotal(draft.estimatedTotal);
+    }
+    if (draft.pexcoverRequested) {
+      setHasPexcover(true);
+    }
+    if (draft.pexcoverName) {
+      setPexcoverName(draft.pexcoverName);
+    }
+    setDraftLoaded(true);
+  }, [draftId, draftLoaded]);
+
+  const packPrice = draftTotal ?? defaultPrice;
   const pexcoverCount = hasPexcover ? 1 : 0;
-  const estimatedTotal = price + (hasPexcover ? PEXCOVER_PRICE : 0);
+  const totalToPay = packPrice + (hasPexcover ? PEXCOVER_PRICE : 0);
+  const backToPackHref = `/schools/${schoolSlug}/${gradeSlug}`;
+  const currentStep = STEPS[activeStep] ?? STEPS[0];
+  const itemCount = contents.length;
+
+  const deliveryAddressSummary = useMemo(() => {
+    return [address, suburb, city, province, postalCode].filter(Boolean).join(", ");
+  }, [address, suburb, city, province, postalCode]);
+
+  function focusStepHeading() {
+    window.requestAnimationFrame(() => headingRef.current?.focus());
+  }
 
   function goToStep(index: number) {
+    const safeIndex = Math.max(0, Math.min(index, STEPS.length - 1));
     setErrors({});
     setSubmitError(null);
-    setActiveStep(index);
-    headingRef.current?.focus();
+    setActiveStep(safeIndex);
+    focusStepHeading();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -169,41 +241,40 @@ export function CheckoutForm({
     });
   }
 
+  function focusFirstInvalid(nextErrors: Record<string, string>) {
+    const first = Object.keys(nextErrors)[0];
+    if (!first) return;
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>(`[data-field="${first}"], #${first}`)?.focus();
+    });
+  }
+
   function validateStep(step: number): boolean {
-    const newErrors: Record<string, string> = {};
+    const nextErrors: Record<string, string> = {};
 
     if (step === 1) {
-      if (!buyerName.trim() || buyerName.trim().length < 2) {
-        newErrors.buyerName = "Name must be at least 2 characters.";
-      }
-      if (!buyerPhone.trim()) {
-        newErrors.buyerPhone = "Phone number is required.";
-      } else if (!isLikelySaPhone(buyerPhone.trim())) {
-        newErrors.buyerPhone = "Please enter a valid SA phone number.";
-      }
-      if (!buyerEmail.trim()) {
-        newErrors.buyerEmail = "Email address is required.";
-      } else if (!isValidEmail(buyerEmail.trim())) {
-        newErrors.buyerEmail = "Please enter a valid email address.";
-      }
-      if (!learnerName.trim() || learnerName.trim().length < 2) {
-        newErrors.learnerName = "Learner name is required.";
-      }
-    } else if (step === 2) {
-      if (fulfilmentOption === "Home delivery") {
-        if (!address.trim()) newErrors.address = "Street address is required.";
-        if (!suburb.trim()) newErrors.suburb = "Suburb is required.";
-        if (!city.trim()) newErrors.city = "City is required.";
-        if (!province.trim()) newErrors.province = "Province is required.";
-      }
-    } else if (step === 3) {
-      if (!finalConfirmation) {
-        newErrors.finalConfirmation = "Please confirm the order details are correct.";
-      }
+      if (!buyerName.trim() || buyerName.trim().length < 2) nextErrors.buyerName = "Please enter your full name.";
+      if (!buyerPhone.trim()) nextErrors.buyerPhone = "Please enter your phone number.";
+      else if (!isLikelySaPhone(buyerPhone)) nextErrors.buyerPhone = "Please enter a valid South African phone number.";
+      if (!buyerEmail.trim()) nextErrors.buyerEmail = "Please enter your email address.";
+      else if (!isValidEmail(buyerEmail.trim())) nextErrors.buyerEmail = "Please enter a valid email address.";
+      if (!learnerName.trim() || learnerName.trim().length < 2) nextErrors.learnerName = "Please enter the learner name.";
+      if (!consent) nextErrors.consent = "Please accept the order processing consent.";
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (step === 2 && fulfilmentOption === "Home delivery") {
+      if (!address.trim()) nextErrors.address = "Please enter the delivery address.";
+      if (!suburb.trim()) nextErrors.suburb = "Please enter the suburb.";
+      if (!city.trim()) nextErrors.city = "Please enter the city.";
+      if (!province.trim()) nextErrors.province = "Please enter the province.";
+    }
+
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      focusFirstInvalid(nextErrors);
+      return false;
+    }
+    return true;
   }
 
   function handleNext() {
@@ -212,9 +283,28 @@ export function CheckoutForm({
     }
   }
 
-  const handlePay = useCallback(async () => {
+  async function handlePay() {
+    const detailsValid = validateStep(1);
+    if (!detailsValid) {
+      goToStep(1);
+      return;
+    }
+
+    const deliveryValid = validateStep(2);
+    if (!deliveryValid) {
+      goToStep(2);
+      return;
+    }
+
     setSubmitError(null);
     setSubmitting(true);
+
+    const fulfilmentNotes = [
+      deliveryNotes.trim() ? `Notes: ${deliveryNotes.trim()}` : "",
+      fulfilmentOption === "Home delivery" ? `Address: ${deliveryAddressSummary}` : "",
+      preferredContactMethod ? `Preferred contact: ${preferredContactMethod}` : "",
+      deliveryNote ? `Pack note: ${deliveryNote}` : "",
+    ].filter(Boolean).join(" | ");
 
     try {
       const response = await fetch("/api/checkout", {
@@ -223,7 +313,7 @@ export function CheckoutForm({
         body: JSON.stringify({
           buyerName: buyerName.trim(),
           buyerEmail: buyerEmail.trim().toLowerCase(),
-          buyerPhone: buyerPhone.trim(),
+          buyerPhone: normalisePhone(buyerPhone),
           learnerName: learnerName.trim(),
           schoolSlug,
           schoolName,
@@ -231,14 +321,14 @@ export function CheckoutForm({
           gradeSlug,
           packType: "full",
           items: contents,
-          estimatedTotal,
+          estimatedTotal: totalToPay,
           deliveryMethod:
             fulfilmentOption === "School collection"
               ? "school_collection"
               : fulfilmentOption === "Home delivery"
                 ? "delivery"
                 : "collection_point",
-          notes: deliveryNotes.trim() || undefined,
+          notes: fulfilmentNotes || undefined,
           hasPexcover,
           pexcoverName: pexcoverName.trim() || undefined,
           pexcoverSubjects: pexcoverSubjects.trim() || undefined,
@@ -253,42 +343,37 @@ export function CheckoutForm({
         throw new Error(
           result.error || result.errors
             ? Object.values(result.errors).join(". ")
-            : "Unable to start checkout"
+            : "Unable to continue to PayFast"
         );
       }
 
       window.location.href = result.checkoutUrl;
     } catch (error) {
       setSubmitError(
-        error instanceof Error ? error.message : "Checkout failed. Please try again."
+        error instanceof Error
+          ? error.message
+          : "We could not continue to PayFast right now. Please try again or contact PexPacks on WhatsApp."
       );
     } finally {
       setSubmitting(false);
     }
-  }, [
-    buyerName, buyerEmail, buyerPhone, learnerName,
-    schoolSlug, schoolName, grade, gradeSlug, contents, estimatedTotal,
-    fulfilmentOption, deliveryNotes,
-    hasPexcover, pexcoverName, pexcoverSubjects, pexcoverLabelFormat, pexcoverNotes,
-  ]);
-
-  const customizeHref = `/schools/${schoolSlug}/${gradeSlug}?customize=1`;
+  }
 
   function renderReviewStep() {
     return (
       <div className={styles.reviewGrid}>
-        <div className={styles.packReviewCard}>
+        <section className={styles.packReviewCard}>
           <div>
-            <p className={styles.confirmKicker}>Your pack</p>
-            <h3>{schoolName} &mdash; {grade}</h3>
-            <p>Full stationery pack for {schoolName}, {grade}.</p>
+            <p className={styles.confirmKicker}>Fixed order selection</p>
+            <h3>{schoolName} - {grade}</h3>
+            <p>Full stationery pack for {schoolName}, {grade}. The pack is fixed at checkout so payment can be processed securely.</p>
           </div>
           <div className={styles.packFacts}>
             <span>Full Pack</span>
-            <span>{contents.length} items</span>
-            <span>{formatCurrency(price)}</span>
+            <span>{itemCount} items</span>
+            <span>{formatCurrency(packPrice)}</span>
           </div>
-          <ul className={styles.itemPreview}>
+          <ul className={styles.itemPreview} aria-label="Included items preview">
             {contents.slice(0, 8).map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -296,24 +381,16 @@ export function CheckoutForm({
           {contents.length > 8 ? (
             <p className={styles.moreItems}>+{contents.length - 8} more items included</p>
           ) : null}
-          <Link className={styles.inlineAction} href={customizeHref}>
-            Customise pack
-          </Link>
-        </div>
+          <p className={styles.changeHint}>
+            Need to change something? <Link href={backToPackHref}>Go back to the pack page</Link>.
+          </p>
+        </section>
 
-        <div className={`${styles.addonCard} ${hasPexcover ? styles.addonCardActive : ""}`}>
+        <section className={`${styles.addonCard} ${hasPexcover ? styles.addonCardActive : ""}`}>
           <div>
             <p className={styles.confirmKicker}>Optional add-on</p>
             <h3>Pexcover book covering</h3>
-            <p>
-              Add covered and labelled exercise books to help the pack arrive ready for the first school day.{" "}
-              <Link href="/blog/what-is-pexcover-book-covering" target="_blank" rel="noopener noreferrer" className={styles.inlineAction} style={{ display: "inline", fontSize: "inherit" }}>
-                Read more
-              </Link>
-            </p>
-            <p style={{ margin: "6px 0 0 0", fontSize: "12px", color: "var(--pex-text-muted)", lineHeight: 1.45 }}>
-              Pexcover applies to exercise books included in the selected school pack.
-            </p>
+            <p>Add covered and labelled exercise books so the pack arrives closer to first-day ready.</p>
           </div>
           <label className={styles.addonCheckbox}>
             <input type="checkbox" checked={hasPexcover} onChange={(event) => setHasPexcover(event.target.checked)} />
@@ -343,7 +420,7 @@ export function CheckoutForm({
               </div>
             </div>
           ) : null}
-        </div>
+        </section>
       </div>
     );
   }
@@ -352,53 +429,50 @@ export function CheckoutForm({
     return (
       <div className={styles.formGrid}>
         <div className={styles.fieldGroup}>
-          <label htmlFor="buyer-name">Full name</label>
-          <p id="buyer-name-helper">We use this to confirm your order.</p>
-          <input
-            id="buyer-name" name="fullName" autoComplete="name" placeholder="e.g. Sarah Dlamini"
-            value={buyerName}
-            aria-describedby={`buyer-name-helper${errors.buyerName ? " buyer-name-error" : ""}`}
-            aria-invalid={Boolean(errors.buyerName)}
-            onChange={(event) => { setBuyerName(event.target.value); clearFieldError("buyerName"); }}
-          />
-          {errors.buyerName ? <p id="buyer-name-error" className={styles.fieldError} role="alert">{errors.buyerName}</p> : null}
+          <label htmlFor="buyerName">Full name</label>
+          <p id="buyerName-helper">We use this to confirm your order and payment updates.</p>
+          <input id="buyerName" data-field="buyerName" name="fullName" autoComplete="name" placeholder="e.g. Sarah Dlamini" value={buyerName} aria-describedby={`buyerName-helper${errors.buyerName ? " buyerName-error" : ""}`} aria-invalid={Boolean(errors.buyerName)} onChange={(event) => { setBuyerName(event.target.value); clearFieldError("buyerName"); }} />
+          {errors.buyerName ? <p id="buyerName-error" className={styles.fieldError} role="alert">{errors.buyerName}</p> : null}
         </div>
         <div className={styles.fieldGroup}>
-          <label htmlFor="buyer-phone">Phone number</label>
-          <p id="buyer-phone-helper">WhatsApp or call is fastest for order confirmation.</p>
-          <input
-            id="buyer-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="078 003 6048"
-            value={buyerPhone}
-            aria-describedby={`buyer-phone-helper${errors.buyerPhone ? " buyer-phone-error" : ""}`}
-            aria-invalid={Boolean(errors.buyerPhone)}
-            onChange={(event) => { setBuyerPhone(event.target.value); clearFieldError("buyerPhone"); }}
-          />
-          {errors.buyerPhone ? <p id="buyer-phone-error" className={styles.fieldError} role="alert">{errors.buyerPhone}</p> : null}
+          <label htmlFor="buyerPhone">Phone number</label>
+          <p id="buyerPhone-helper">WhatsApp or call is fastest for support.</p>
+          <input id="buyerPhone" data-field="buyerPhone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="078 003 6048" value={buyerPhone} aria-describedby={`buyerPhone-helper${errors.buyerPhone ? " buyerPhone-error" : ""}`} aria-invalid={Boolean(errors.buyerPhone)} onChange={(event) => { setBuyerPhone(event.target.value); clearFieldError("buyerPhone"); }} />
+          {errors.buyerPhone ? <p id="buyerPhone-error" className={styles.fieldError} role="alert">{errors.buyerPhone}</p> : null}
         </div>
         <div className={styles.fieldGroup}>
-          <label htmlFor="buyer-email">Email address</label>
-          <p id="buyer-email-helper">Used for order updates and payment or invoice details.</p>
-          <input
-            id="buyer-email" name="email" type="email" autoComplete="email" placeholder="name@example.com"
-            value={buyerEmail}
-            aria-describedby={`buyer-email-helper${errors.buyerEmail ? " buyer-email-error" : ""}`}
-            aria-invalid={Boolean(errors.buyerEmail)}
-            onChange={(event) => { setBuyerEmail(event.target.value); clearFieldError("buyerEmail"); }}
-          />
-          {errors.buyerEmail ? <p id="buyer-email-error" className={styles.fieldError} role="alert">{errors.buyerEmail}</p> : null}
+          <label htmlFor="buyerEmail">Email address</label>
+          <p id="buyerEmail-helper">Used for PayFast/order updates.</p>
+          <input id="buyerEmail" data-field="buyerEmail" name="email" type="email" autoComplete="email" placeholder="name@example.com" value={buyerEmail} aria-describedby={`buyerEmail-helper${errors.buyerEmail ? " buyerEmail-error" : ""}`} aria-invalid={Boolean(errors.buyerEmail)} onChange={(event) => { setBuyerEmail(event.target.value); clearFieldError("buyerEmail"); }} />
+          {errors.buyerEmail ? <p id="buyerEmail-error" className={styles.fieldError} role="alert">{errors.buyerEmail}</p> : null}
         </div>
         <div className={styles.fieldGroup}>
-          <label htmlFor="learner-name">Learner name</label>
-          <p id="learner-name-helper">Helpful for labelling or school handover.</p>
-          <input
-            id="learner-name" name="learnerName" autoComplete="off" placeholder="e.g. Leo Dlamini"
-            value={learnerName}
-            aria-describedby={`learner-name-helper${errors.learnerName ? " learner-name-error" : ""}`}
-            aria-invalid={Boolean(errors.learnerName)}
-            onChange={(event) => { setLearnerName(event.target.value); clearFieldError("learnerName"); }}
-          />
-          {errors.learnerName ? <p id="learner-name-error" className={styles.fieldError} role="alert">{errors.learnerName}</p> : null}
+          <label htmlFor="learnerName">Learner name</label>
+          <p id="learnerName-helper">Helpful for labels and school handover.</p>
+          <input id="learnerName" data-field="learnerName" name="learnerName" autoComplete="off" placeholder="e.g. Leo Dlamini" value={learnerName} aria-describedby={`learnerName-helper${errors.learnerName ? " learnerName-error" : ""}`} aria-invalid={Boolean(errors.learnerName)} onChange={(event) => { setLearnerName(event.target.value); clearFieldError("learnerName"); }} />
+          {errors.learnerName ? <p id="learnerName-error" className={styles.fieldError} role="alert">{errors.learnerName}</p> : null}
         </div>
+
+        <fieldset className={`${styles.optionFieldset} ${styles.contactMethodGroup}`}>
+          <legend>Preferred contact method</legend>
+          <div className={styles.contactOptions}>
+            {(["whatsapp", "phone", "email"] as ContactMethod[]).map((method) => (
+              <label key={method} className={preferredContactMethod === method ? styles.contactOptionSelected : ""}>
+                <input type="radio" name="preferredContactMethod" value={method} checked={preferredContactMethod === method} onChange={() => setPreferredContactMethod(method)} />
+                <span>{method === "whatsapp" ? "WhatsApp" : method === "phone" ? "Phone" : "Email"}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <label className={styles.consentField}>
+          <input data-field="consent" name="consent" type="checkbox" checked={consent} aria-describedby={errors.consent ? "consent-error" : "privacy-note"} aria-invalid={Boolean(errors.consent)} onChange={(event) => { setConsent(event.target.checked); clearFieldError("consent"); }} />
+          <span>
+            I agree that PexPacks may use my information to process this order, send payment updates, and contact me about delivery or collection.
+            <small id="privacy-note">We only use your details to process your order and provide support.</small>
+          </span>
+        </label>
+        {errors.consent ? <p id="consent-error" className={styles.fieldError} role="alert">{errors.consent}</p> : null}
       </div>
     );
   }
@@ -407,18 +481,11 @@ export function CheckoutForm({
     return (
       <div className={styles.fulfilmentStep}>
         <fieldset className={styles.optionFieldset}>
-          <legend>Preferred handover option</legend>
+          <legend>Choose how you will receive your pack</legend>
           <div className={styles.deliveryOptions}>
             {FULFILMENT_OPTIONS.map((option) => (
-              <label
-                key={option.value}
-                className={`${styles.deliveryOption} ${fulfilmentOption === option.value ? styles.deliveryOptionSelected : ""}`}
-              >
-                <input
-                  type="radio" name="deliveryMethod" value={option.value}
-                  checked={fulfilmentOption === option.value}
-                  onChange={() => { setFulfilmentOption(option.value); clearFieldError("address"); clearFieldError("suburb"); clearFieldError("city"); clearFieldError("province"); }}
-                />
+              <label key={option.value} className={`${styles.deliveryOption} ${fulfilmentOption === option.value ? styles.deliveryOptionSelected : ""}`}>
+                <input type="radio" name="deliveryMethod" value={option.value} checked={fulfilmentOption === option.value} onChange={() => { setFulfilmentOption(option.value); ["address", "suburb", "city", "province"].forEach(clearFieldError); }} />
                 <span className={styles.deliveryIcon}>{deliveryIcon(option.icon)}</span>
                 <span>
                   <strong>{option.title}</strong>
@@ -431,128 +498,74 @@ export function CheckoutForm({
         </fieldset>
 
         {fulfilmentOption === "Home delivery" ? (
-          <>
-            <p style={{ margin: "0 0 16px 0", fontSize: "14px", color: "var(--pex-text-muted)", lineHeight: 1.5 }}>
-              Home delivery incurs an additional delivery fee based on your location. Please read our{" "}
-              <Link href="/delivery-policy" target="_blank" rel="noopener noreferrer" className={styles.inlineAction} style={{ display: "inline", fontSize: "inherit" }}>
-                Delivery Policy
-              </Link>{" "}
-              for more details on pricing and schedules.
+          <div className={styles.addressPanel}>
+            <p>
+              Home delivery may include a delivery fee depending on your location. We will confirm any delivery-specific details before fulfilment.
             </p>
             <div className={styles.formGrid}>
               {[
-                { id: "delivery-address", label: "Street address", value: address, setter: setAddress, error: errors.address, autoComplete: "address-line1" },
-                { id: "delivery-suburb", label: "Suburb", value: suburb, setter: setSuburb, error: errors.suburb, autoComplete: "address-level3" },
-                { id: "delivery-city", label: "City", value: city, setter: setCity, error: errors.city, autoComplete: "address-level2" },
-                { id: "delivery-province", label: "Province", value: province, setter: setProvince, error: errors.province, autoComplete: "address-level1" },
+                { id: "address", label: "Address line", value: address, setter: setAddress, error: errors.address, autoComplete: "address-line1" },
+                { id: "suburb", label: "Suburb", value: suburb, setter: setSuburb, error: errors.suburb, autoComplete: "address-level3" },
+                { id: "city", label: "City", value: city, setter: setCity, error: errors.city, autoComplete: "address-level2" },
+                { id: "province", label: "Province", value: province, setter: setProvince, error: errors.province, autoComplete: "address-level1" },
+                { id: "postalCode", label: "Postal code optional", value: postalCode, setter: setPostalCode, error: undefined, autoComplete: "postal-code" },
               ].map((field) => (
                 <div className={styles.fieldGroup} key={field.id}>
                   <label htmlFor={field.id}>{field.label}</label>
-                  <input
-                    id={field.id} value={field.value} autoComplete={field.autoComplete}
-                    aria-invalid={Boolean(field.error)}
-                    aria-describedby={field.error ? `${field.id}-error` : undefined}
-                    onChange={(event) => { field.setter(event.target.value); clearFieldError(field.id.replace("delivery-", "") as keyof typeof errors); }}
-                  />
+                  <input id={field.id} data-field={field.id} value={field.value} autoComplete={field.autoComplete} aria-invalid={Boolean(field.error)} aria-describedby={field.error ? `${field.id}-error` : undefined} onChange={(event) => { field.setter(event.target.value); clearFieldError(field.id); }} />
                   {field.error ? <p id={`${field.id}-error`} className={styles.fieldError} role="alert">{field.error}</p> : null}
                 </div>
               ))}
             </div>
-          </>
+          </div>
         ) : null}
 
         <div className={styles.fieldGroup}>
           <label htmlFor="delivery-notes">Delivery or collection notes optional</label>
-          <textarea
-            id="delivery-notes" value={deliveryNotes} placeholder="Gate code, preferred pickup time, or anything the team should know"
-            onChange={(event) => setDeliveryNotes(event.target.value)}
-          />
+          <textarea id="delivery-notes" value={deliveryNotes} placeholder="Gate code, preferred pickup time, or anything our team should know" onChange={(event) => setDeliveryNotes(event.target.value)} />
         </div>
-      </div>
-    );
-  }
-
-  function renderConfirmStep() {
-    return (
-      <div className={styles.confirmGrid}>
-        <ReviewBlock title="Pack" onEdit={() => goToStep(0)}>
-          <strong>{schoolName} &mdash; {grade}</strong>
-          <span>Full Pack · {contents.length} items{hasPexcover ? " · Pexcover: 1 child" : ""}</span>
-        </ReviewBlock>
-        <ReviewBlock title="Customer" onEdit={() => goToStep(1)}>
-          <strong>{buyerName || "Name required"}</strong>
-          <span>{buyerPhone || "Phone required"} · {buyerEmail || "Email required"}</span>
-        </ReviewBlock>
-        <ReviewBlock title="Delivery / Collection" onEdit={() => goToStep(2)}>
-          <strong>{fulfilmentOption}</strong>
-          <span>
-            {fulfilmentOption === "Home delivery"
-              ? [address, suburb, city, province].filter(Boolean).join(", ") || "Address required"
-              : "Pexpacks will confirm the handover details."}
-          </span>
-        </ReviewBlock>
-        {hasPexcover ? (
-          <ReviewBlock title="Pexcover book covering">
-            <strong>1 child</strong>
-            <span>{formatCurrency(PEXCOVER_PRICE)} total</span>
-          </ReviewBlock>
-        ) : null}
-        <ReviewBlock title="Estimated total">
-          <strong>{formatCurrency(estimatedTotal)}</strong>
-          <span>Final amount charged via Paystack.</span>
-        </ReviewBlock>
-        <label className={`${styles.consentField} ${styles.finalConsent}`}>
-          <input
-            name="finalConfirmation" type="checkbox" checked={finalConfirmation}
-            aria-describedby={errors.finalConfirmation ? "final-confirmation-error" : undefined}
-            aria-invalid={Boolean(errors.finalConfirmation)}
-            onChange={(event) => { setFinalConfirmation(event.target.checked); clearFieldError("finalConfirmation"); }}
-          />
-          <span>
-            I confirm the order details are correct and agree to the{" "}
-            <Link href="/terms" target="_blank" rel="noopener noreferrer">Terms</Link>,{" "}
-            <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>,{" "}
-            <Link href="/delivery-policy" target="_blank" rel="noopener noreferrer">Delivery Policy</Link>, and{" "}
-            <Link href="/returns-refunds-policy" target="_blank" rel="noopener noreferrer">Returns & Refunds Policy</Link>.
-          </span>
-        </label>
-        {errors.finalConfirmation ? (
-          <p id="final-confirmation-error" className={styles.fieldError} role="alert">{errors.finalConfirmation}</p>
-        ) : null}
       </div>
     );
   }
 
   function renderPayStep() {
     return (
-      <div className={styles.payStep}>
-        <div>
-          <p className={styles.confirmKicker}>Payment</p>
-          <h3>Complete payment via Paystack</h3>
-          <p>You will be redirected to Paystack to complete payment securely. Your order will be processed immediately after successful payment.</p>
-        </div>
-        <ul className={styles.trustList}>
-          <li>Secure checkout via Paystack</li>
-          <li>Pay with card, EFT, or mobile money</li>
-          <li>Instant order confirmation after payment</li>
-        </ul>
-        {submitError ? (
-          <p className={styles.formStatusError} role="alert">{submitError}</p>
-        ) : null}
+      <div className={styles.confirmGrid}>
+        <ReviewBlock title="Pack" onEdit={() => goToStep(0)}>
+          <strong>{schoolName} - {grade}</strong>
+          <span>Full Pack - {itemCount} items{hasPexcover ? " - Pexcover add-on" : ""}</span>
+        </ReviewBlock>
+        <ReviewBlock title="Customer" onEdit={() => goToStep(1)}>
+          <strong>{buyerName || "Name required"}</strong>
+          <span>{buyerPhone || "Phone required"} - {buyerEmail || "Email required"}</span>
+        </ReviewBlock>
+        <ReviewBlock title="Delivery / Collection" onEdit={() => goToStep(2)}>
+          <strong>{fulfilmentOption}</strong>
+          <span>{fulfilmentOption === "Home delivery" ? deliveryAddressSummary || "Address required" : "PexPacks will confirm the handover details."}</span>
+        </ReviewBlock>
+
+        <section className={styles.paymentReadyCard}>
+          <p className={styles.confirmKicker}>Secure payment</p>
+          <h3>Confirm and pay securely with PayFast</h3>
+          <p>Review your details before continuing to PayFast. You will be redirected to PayFast to complete payment.</p>
+          <ul className={styles.trustList}>
+            <li>Secure payment powered by PayFast</li>
+            <li>PexPacks does not store your card details</li>
+            <li>POPIA-aware order handling</li>
+            <li>WhatsApp support is available if you need help</li>
+          </ul>
+        </section>
+
+        {submitError ? <p className={styles.formStatusError} role="alert">{submitError}</p> : null}
         <div className={styles.payButtonWrapper}>
-          <button
-            type="button"
-            className={styles.payButton}
-            onClick={handlePay}
-            disabled={submitting}
-          >
+          <button type="button" className={styles.payButton} onClick={handlePay} disabled={submitting} aria-busy={submitting}>
             {submitting ? (
               <>
                 <span className={styles.payButtonSpinner} />
-                Processing...
+                Redirecting to PayFast...
               </>
             ) : (
-              `Pay ${formatCurrency(estimatedTotal)} Securely`
+              `Pay ${formatCurrency(totalToPay)} securely with PayFast`
             )}
           </button>
         </div>
@@ -562,115 +575,67 @@ export function CheckoutForm({
 
   return (
     <div className={styles.checkoutShell}>
+      <div className={styles.checkoutHeader}>
+        <Link href="/" className={styles.checkoutLogo} aria-label="PexPacks home">PexPacks</Link>
+        <Link href={backToPackHref} className={styles.backLink}>Back to packs</Link>
+        <a className={styles.helpLink} href="https://wa.me/27780036048" target="_blank" rel="noopener noreferrer">Need help?</a>
+      </div>
+
       <div className={styles.checkoutGrid}>
         <div className={styles.mainColumn}>
-          <CheckoutProgress steps={STEPS} activeStep={activeStep} />
+          <CheckoutProgress activeStep={activeStep} />
 
-          {activeStep === 0 ? (
-            <div className={styles.stepCard}>
-              <div className={styles.stepIntro}>
-                <p className={styles.stepEyebrow}>Step 1 of 5</p>
-                <h2 ref={headingRef} tabIndex={-1}>Review Pack</h2>
-                <p>Check school, grade and selected items.</p>
-              </div>
-              {renderReviewStep()}
+          <section className={styles.stepCard} aria-labelledby="checkout-step-heading">
+            <div className={styles.stepIntro}>
+              <p className={styles.stepEyebrow}>Step {activeStep + 1} of {STEPS.length}</p>
+              <h2 id="checkout-step-heading" ref={headingRef} tabIndex={-1}>{currentStep.title}</h2>
+              <p>
+                {activeStep === 0 ? "Check your pack details before continuing to payment." : null}
+                {activeStep === 1 ? "We will use these details to confirm your order and send updates." : null}
+                {activeStep === 2 ? "Choose how you want to receive your pack." : null}
+                {activeStep === 3 ? "Review everything before continuing to PayFast." : null}
+              </p>
             </div>
-          ) : null}
 
-          {activeStep === 1 ? (
-            <div className={styles.stepCard}>
-              <div className={styles.stepIntro}>
-                <p className={styles.stepEyebrow}>Step 2 of 5</p>
-                <h2 ref={headingRef} tabIndex={-1}>Customer Details</h2>
-                <p>Tell us who to contact about this order.</p>
-              </div>
-              {renderDetailsStep()}
-            </div>
-          ) : null}
-
-          {activeStep === 2 ? (
-            <div className={styles.stepCard}>
-              <div className={styles.stepIntro}>
-                <p className={styles.stepEyebrow}>Step 3 of 5</p>
-                <h2 ref={headingRef} tabIndex={-1}>Delivery or Collection</h2>
-                <p>Choose how you would like to receive the pack.</p>
-              </div>
-              {renderFulfilmentStep()}
-            </div>
-          ) : null}
-
-          {activeStep === 3 ? (
-            <div className={styles.stepCard}>
-              <div className={styles.stepIntro}>
-                <p className={styles.stepEyebrow}>Step 4 of 5</p>
-                <h2 ref={headingRef} tabIndex={-1}>Confirm Order</h2>
-                <p>Review everything before paying.</p>
-              </div>
-              {renderConfirmStep()}
-            </div>
-          ) : null}
-
-          {activeStep === 4 ? (
-            <div className={styles.stepCard}>
-              <div className={styles.stepIntro}>
-                <p className={styles.stepEyebrow}>Step 5 of 5</p>
-                <h2 ref={headingRef} tabIndex={-1}>Pay Securely</h2>
-                <p>Complete your payment via Paystack.</p>
-              </div>
-              {renderPayStep()}
-            </div>
-          ) : null}
+            {activeStep === 0 ? renderReviewStep() : null}
+            {activeStep === 1 ? renderDetailsStep() : null}
+            {activeStep === 2 ? renderFulfilmentStep() : null}
+            {activeStep === 3 ? renderPayStep() : null}
+          </section>
 
           <div className={styles.formActions}>
-            <button type="button" onClick={() => goToStep(activeStep - 1)} disabled={activeStep === 0}>
-              Back
-            </button>
-            {activeStep < 4 ? (
+            <button type="button" onClick={() => goToStep(activeStep - 1)} disabled={activeStep === 0}>Back</button>
+            {activeStep < 3 ? (
               <Button type="button" onClick={handleNext}>
-                {activeStep === 0 ? "Continue" : activeStep === 3 ? "Review & Confirm" : "Continue"}
+                {activeStep === 2 ? "Review and pay" : activeStep === 0 ? "Continue to details" : "Continue to delivery"}
               </Button>
             ) : null}
           </div>
         </div>
 
         <CheckoutOrderSummary
-          packName={`${schoolName} — ${grade}`}
+          packName={`${schoolName} - ${grade}`}
           schoolName={schoolName}
           gradeName={grade}
-          packKind="Full Pack"
           itemCount={contents.length}
-          estimatedTotal={estimatedTotal}
+          totalToPay={totalToPay}
           fulfilmentOption={fulfilmentOption}
           hasPexcover={hasPexcover}
           pexcoverCount={pexcoverCount}
         />
       </div>
 
-      {activeStep < 4 ? (
-        <div className={styles.mobileStickyCta}>
+      <div className={styles.mobileStickyCta}>
+        {activeStep < 3 ? (
           <Button type="button" onClick={handleNext}>
-            {activeStep === 0 ? "Continue" : activeStep === 3 ? "Review & Confirm" : "Continue"}
+            {activeStep === 2 ? "Review and pay" : "Continue"}
           </Button>
-        </div>
-      ) : (
-        <div className={styles.mobileStickyCta}>
-          <button
-            type="button"
-            className={styles.payButton}
-            onClick={handlePay}
-            disabled={submitting}
-          >
-            {submitting ? (
-              <>
-                <span className={styles.payButtonSpinner} />
-                Processing...
-              </>
-            ) : (
-              `Pay ${formatCurrency(estimatedTotal)} Securely`
-            )}
+        ) : (
+          <button type="button" className={styles.payButton} onClick={handlePay} disabled={submitting}>
+            {submitting ? "Redirecting..." : "Pay with PayFast"}
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
@@ -679,9 +644,8 @@ function CheckoutOrderSummary({
   packName,
   schoolName,
   gradeName,
-  packKind,
   itemCount,
-  estimatedTotal,
+  totalToPay,
   fulfilmentOption,
   hasPexcover,
   pexcoverCount,
@@ -689,9 +653,8 @@ function CheckoutOrderSummary({
   packName: string;
   schoolName?: string;
   gradeName?: string;
-  packKind: string;
   itemCount: number;
-  estimatedTotal?: number;
+  totalToPay: number;
   fulfilmentOption: string;
   hasPexcover?: boolean;
   pexcoverCount?: number;
@@ -700,55 +663,45 @@ function CheckoutOrderSummary({
 
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">
-      <button
-        type="button"
-        className={styles.summaryToggle}
-        aria-expanded={summaryOpen}
-        onClick={() => setSummaryOpen(!summaryOpen)}
-      >
-        <span>
-          {schoolName && gradeName
-            ? `${gradeName} · ${itemCount || "Confirming"} items · ${typeof estimatedTotal === "number" ? formatCurrency(estimatedTotal) : "Total TBC"}`
-            : "Select your school"}
-        </span>
+      <button type="button" className={styles.summaryToggle} aria-expanded={summaryOpen} onClick={() => setSummaryOpen(!summaryOpen)}>
+        <span>{gradeName} - {itemCount} items - {formatCurrency(totalToPay)}</span>
         <strong>{summaryOpen ? "Hide" : "View summary"}</strong>
       </button>
       <div className={`${styles.summaryCard} ${summaryOpen ? styles.summaryCardOpen : ""}`}>
-        <p className={styles.confirmKicker}>Your pack</p>
+        <p className={styles.confirmKicker}>Order summary</p>
         <h2>{packName}</h2>
         <div className={styles.summaryMeta}>
-          <span>{schoolName ?? "School"}</span>
+          <span>{schoolName ?? "School pack"}</span>
           <span>{gradeName ?? "Grade"}</span>
-          <span>{packKind}</span>
+          <span>Full Pack</span>
         </div>
         <dl className={styles.priceSummary}>
           <div>
             <dt>Selected items</dt>
-            <dd>{itemCount || "Confirming"}</dd>
+            <dd>{itemCount}</dd>
           </div>
           <div>
             <dt>Delivery / collection</dt>
             <dd>{fulfilmentOption}</dd>
           </div>
-          {pexcoverCount && pexcoverCount > 0 ? (
+          {hasPexcover && pexcoverCount ? (
             <div>
-              <dt>Pexcover ({pexcoverCount} {pexcoverCount === 1 ? "child" : "children"})</dt>
+              <dt>Pexcover add-on</dt>
               <dd>{formatCurrency(pexcoverCount * PEXCOVER_PRICE)}</dd>
             </div>
           ) : null}
           <div>
-            <dt>Estimated total</dt>
-            <dd>{typeof estimatedTotal === "number" ? formatCurrency(estimatedTotal) : "To be confirmed"}</dd>
+            <dt>Total to pay</dt>
+            <dd>{formatCurrency(totalToPay)}</dd>
           </div>
         </dl>
-        <p className={styles.summaryNote}>
-          Final amount charged via Paystack. No payment is taken on this page yet.
-        </p>
+        <p className={styles.summaryNote}>You will complete payment through PayFast. PexPacks does not store card details.</p>
         <ul className={styles.trustList}>
           <li>Packed according to the school list</li>
-          <li>Secure checkout via Paystack</li>
-          <li>Instant order confirmation</li>
+          <li>Secure PayFast payment</li>
+          <li>POPIA-aware checkout</li>
         </ul>
+        <a className={styles.supportLink} href="https://wa.me/27780036048" target="_blank" rel="noopener noreferrer">WhatsApp support</a>
       </div>
     </aside>
   );

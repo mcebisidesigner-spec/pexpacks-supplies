@@ -5,19 +5,19 @@ import { phasePacks } from "@/data/phasePacks";
 import { CheckoutForm } from "./CheckoutForm";
 
 type CheckoutPageProps = {
-  searchParams: Promise<{ school?: string; grade?: string; phase?: string; pack?: string }>;
+  searchParams: Promise<{ school?: string; grade?: string; phase?: string; pack?: string; draft?: string }>;
 };
 
 export const metadata: Metadata = {
   title: "Checkout | Pexpacks",
   description:
-    "Complete your stationery pack order and pay securely via Paystack.",
+    "Complete your stationery pack order and pay securely with PayFast.",
 };
 
 export default async function CheckoutPage({
   searchParams,
 }: CheckoutPageProps) {
-  const { school: schoolSlug, grade: gradeSlug, phase, pack } = await searchParams;
+  const { school: schoolSlug, grade: gradeSlug, phase, pack, draft } = await searchParams;
 
   if (phase && pack) {
     const phaseData = phasePacks.find((p) => p.slug === phase);
@@ -36,6 +36,7 @@ export default async function CheckoutPage({
         price={gradePack.priceFrom}
         contents={gradePack.items.map(item => `${item.quantity} x ${item.name}`)}
         deliveryNote="Collect from school or arrange delivery."
+        draftId={draft}
       />
     );
   }
@@ -60,6 +61,7 @@ export default async function CheckoutPage({
       price={grade.price}
       contents={grade.contents}
       deliveryNote={grade.deliveryNote || ""}
+      draftId={draft}
     />
   );
 }
