@@ -673,7 +673,7 @@ export function CheckoutForm({
 
         {submitError ? <p className={styles.formStatusError} role="alert">{submitError}</p> : null}
         <div className={styles.payButtonWrapper}>
-          <button type="button" className={styles.payButton} onClick={handlePay} disabled={submitting} aria-busy={submitting}>
+          <Button type="button" variant="primary" size="lg" className={styles.fullWidth} onClick={handlePay} disabled={submitting} aria-busy={submitting}>
             {submitting ? (
               <>
                 <span className={styles.payButtonSpinner} />
@@ -682,7 +682,7 @@ export function CheckoutForm({
             ) : (
               `Complete Payment of ${formatCurrency(totalToPay)}`
             )}
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -718,9 +718,9 @@ export function CheckoutForm({
           </section>
 
           <div className={styles.formActions}>
-            <button type="button" onClick={() => goToStep(activeStep - 1)} disabled={activeStep === 0}>Back</button>
+            <Button type="button" variant="outline" onClick={() => goToStep(activeStep - 1)} disabled={activeStep === 0}>Back</Button>
             {activeStep < 3 ? (
-              <Button type="button" onClick={handleNext}>
+              <Button type="button" variant="primary" onClick={handleNext}>
                 {activeStep === 2 ? "Review and pay" : activeStep === 0 ? "Continue to details" : "Continue to delivery"}
               </Button>
             ) : null}
@@ -741,13 +741,13 @@ export function CheckoutForm({
 
       <div className={styles.mobileStickyCta}>
         {activeStep < 3 ? (
-          <Button type="button" onClick={handleNext}>
+          <Button type="button" variant="primary" className={styles.fullWidth} onClick={handleNext}>
             {activeStep === 2 ? "Review and pay" : "Continue"}
           </Button>
         ) : (
-          <button type="button" className={styles.payButton} onClick={handlePay} disabled={submitting}>
+          <Button type="button" variant="primary" className={styles.fullWidth} onClick={handlePay} disabled={submitting}>
             {submitting ? "Processing..." : "Complete Payment"}
-          </button>
+          </Button>
         )}
       </div>
     </div>
