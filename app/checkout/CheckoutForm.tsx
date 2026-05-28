@@ -213,7 +213,6 @@ export function CheckoutForm({
   const [showGradeDrawer, setShowGradeDrawer] = useState(false);
   const [availableGrades, setAvailableGrades] = useState<{ id: string; grade: string; gradeSlug: string; price: number }[]>([]);
 
-  const router = useRouter();
 
   useEffect(() => {
     if (!draftId || draftLoaded) return;
