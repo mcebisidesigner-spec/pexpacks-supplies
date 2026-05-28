@@ -31,14 +31,7 @@ export function PexcoverGradeUpsell({
       pexcoverRequested: true,
       pexcoverName: learnerName.trim(),
     });
-    const params = new URLSearchParams({
-      school: school.slug,
-      grade: grade.gradeSlug,
-      type: "full-school",
-      draft: draft.id,
-    });
-
-    router.push(`/checkout?${params.toString()}`);
+    router.push(`/checkout/${encodeURIComponent(school.slug)}+${encodeURIComponent(grade.gradeSlug)}?draft=${encodeURIComponent(draft.id)}`);
   }
 
   return (
