@@ -754,9 +754,6 @@ export function CheckoutForm({
 
           <section className={styles.stepCard} aria-labelledby="checkout-step-heading">
             <div className={styles.stepIntro}>
-              <p className={styles.stepEyebrow}>
-                Step {activeStep + 1} of {STEPS.length} <span aria-hidden="true">...</span> [{currentStep.title}]
-              </p>
               <h2 id="checkout-step-heading" ref={headingRef} tabIndex={-1}>{currentStep.title}</h2>
               <p>
                 {activeStep === 0 ? "Check your pack details before continuing to payment." : null}
