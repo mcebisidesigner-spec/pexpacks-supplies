@@ -398,7 +398,6 @@ export function CheckoutForm({
   }
 
   function renderReviewStep() {
-    const selectedGrade = availableGrades.find((g) => g.gradeSlug === gradeSlug);
     return (
       <div className={styles.reviewGrid}>
         <section className={styles.reviewLeftCol}>
