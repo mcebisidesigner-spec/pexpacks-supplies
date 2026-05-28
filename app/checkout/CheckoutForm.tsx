@@ -724,7 +724,7 @@ export function CheckoutForm({
             {grade} - {itemCount} items - <span className={styles.summaryPriceHighlight}>{formatCurrency(totalToPay)}</span>
           </Button>
         </div>
-        <a className={styles.helpLink} href="https://wa.me/27780036048" target="_blank" rel="noopener noreferrer">Need help?</a>
+
       </div>
 
       <div className={styles.checkoutGrid}>
