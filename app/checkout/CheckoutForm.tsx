@@ -119,7 +119,7 @@ function CheckoutProgress({ activeStep }: { activeStep: number }) {
               className={[isComplete ? styles.progressActive : "", isCurrent ? styles.progressCurrent : ""].filter(Boolean).join(" ")}
               aria-current={isCurrent ? "step" : undefined}
             >
-              <span aria-hidden="true">{isComplete ? "\u2713" : index + 1}</span>
+              <span aria-hidden="true">{isComplete ? "✓" : index + 1}</span>
               <strong>{step.label}</strong>
               <small>{isCurrent ? "Current step" : isComplete ? "Completed" : "Upcoming"}</small>
             </li>
@@ -206,7 +206,7 @@ export function CheckoutForm({
       setPexcoverName(draft.pexcoverName);
     }
     setDraftLoaded(true);
-  }, [draftId, draftLoaded]);
+  }, [draftId, draftLoaded, readOrderDraft]);
 
   const packPrice = draftTotal ?? defaultPrice;
   const pexcoverCount = hasPexcover ? 1 : 0;
@@ -676,7 +676,7 @@ function CheckoutOrderSummary({
         </div>
         <dl className={styles.priceSummary}>
           <div>
-            <dt>Selected items</dt>
+            <dt>Items</dt>
             <dd>{itemCount}</dd>
           </div>
           <div>
