@@ -174,20 +174,23 @@ export function CheckoutForm({
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      if (currentScrollY < 80) {
-        // Near the top — header is visible, hide sticky button
+      if (currentScrollY < 96) {
         setIsSticky(false);
-      } else if (currentScrollY < lastScrollY.current) {
-        // Scrolling UP — show sticky button
+      } else if (currentScrollY > lastScrollY.current + 4) {
+        // Scrolling down: keep the summary action visible.
         setIsSticky(true);
-      } else {
-        // Scrolling DOWN — hide sticky button, make way for header
+      } else if (currentScrollY < lastScrollY.current - 4) {
+        // Scrolling up: hide it so the header has space.
         setIsSticky(false);
+      } else {
+        lastScrollY.current = currentScrollY;
+        return;
       }
       
       lastScrollY.current = currentScrollY;
     };
 
+    lastScrollY.current = window.scrollY;
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
