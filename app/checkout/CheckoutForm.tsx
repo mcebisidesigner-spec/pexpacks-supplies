@@ -557,7 +557,7 @@ export function CheckoutForm({
         </div>
         <div className={styles.fieldGroup}>
           <label htmlFor="buyerEmail">Email address</label>
-          <p id="buyerEmail-helper">Used for PayFast/order updates.</p>
+          <p id="buyerEmail-helper">Used for your order updates.</p>
           <input id="buyerEmail" data-field="buyerEmail" name="email" type="email" autoComplete="email" placeholder="name@example.com" value={buyerEmail} aria-describedby={`buyerEmail-helper${errors.buyerEmail ? " buyerEmail-error" : ""}`} aria-invalid={Boolean(errors.buyerEmail)} onChange={(event) => { setBuyerEmail(event.target.value); clearFieldError("buyerEmail"); }} />
           {errors.buyerEmail ? <p id="buyerEmail-error" className={styles.fieldError} role="alert">{errors.buyerEmail}</p> : null}
         </div>
@@ -677,10 +677,10 @@ export function CheckoutForm({
             {submitting ? (
               <>
                 <span className={styles.payButtonSpinner} />
-                Redirecting to PayFast...
+                Processing...
               </>
             ) : (
-              `Pay ${formatCurrency(totalToPay)} securely with PayFast`
+              `Complete Payment of ${formatCurrency(totalToPay)}`
             )}
           </button>
         </div>
@@ -746,7 +746,7 @@ export function CheckoutForm({
           </Button>
         ) : (
           <button type="button" className={styles.payButton} onClick={handlePay} disabled={submitting}>
-            {submitting ? "Redirecting..." : "Pay with PayFast"}
+            {submitting ? "Processing..." : "Complete Payment"}
           </button>
         )}
       </div>

@@ -11,7 +11,7 @@ type SlugPageProps = {
 
 export const metadata: Metadata = {
   title: "Checkout | Pexpacks",
-  description: "Complete your stationery pack order and pay securely with PayFast.",
+  description: "Complete your stationery pack order.",
 };
 
 export default async function SlugPage({ params, searchParams }: SlugPageProps) {
