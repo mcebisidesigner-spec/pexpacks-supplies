@@ -10,7 +10,6 @@ import { faqs } from "@/data/faqs";
 import { homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
-import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { LayByPromo } from "@/components/shared/LayByPromo";
 import {
   BookIcon,
@@ -264,33 +263,6 @@ No queues. No confusion. No missing items.
       />
 
       <LayByPromo />
-
-      <CTASection
-        eyebrow="Find your school pack"
-        title="Get started in under a minute"
-        text="Search for your child's school, pick their grade, and order the exact stationery they need. Delivered before school opens."
-        primaryHref="/schools"
-        primaryLabel="Find Your School's Pack"
-      />
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={homeStyles.officeCard}>
-            <div className={homeStyles.officeCardIcon}>
-              <BriefcaseIcon />
-            </div>
-            <div>
-              <h3>Need office stationery?</h3>
-              <p>Get a quote for your workplace &mdash; bulk pricing, business invoicing, and scheduled delivery.</p>
-            </div>
-            <Button href="/office" variant="secondary" className={homeStyles.officeCardButton}>
-              View Office Packs
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      <MobileStickyCta />
     </>
   );
 }

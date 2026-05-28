@@ -255,6 +255,7 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
       <section
         className={styles.cardsSection}
         aria-label={`${phaseData.phaseRange} pack options`}
+        id="grades"
       >
         <div className={styles.sectionInner}>
           <div className={styles.sectionHeader}>

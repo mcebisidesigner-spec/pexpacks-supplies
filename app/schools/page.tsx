@@ -12,7 +12,6 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
-import { MobileStickyCta } from "@/components/shared/MobileStickyCta";
 import { FindSchoolBar } from "@/components/schools/FindSchoolBar";
 import { buildMetadata } from "@/lib/seo";
 import {
@@ -183,52 +182,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       />
 
       <LayByPromo />
-
-      <CTASection
-        eyebrow="Ready to order"
-        title="Find your school pack now."
-        text="Search for your school or choose a standard grade pack. Either way, your stationery is handled."
-        primaryHref="/schools#school-grade-packs"
-        primaryLabel="Order a Standard Pack"
-        secondaryHref="#schools-search"
-        secondaryLabel="Search for Your School"
-      />
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
-            <div>
-              <p className={sectionStyles.sectionEyebrow}>Business supplies</p>
-              <h2>Need office stationery?</h2>
-              <p>
-                Pexpacks prepares practical office packs for SMEs, home offices, freelancers, and small teams &mdash; with custom quotes and bulk pricing.
-              </p>
-              <div className={sectionStyles.buttonRow}>
-                <Button href="/office" variant="primary">View Office Packs</Button>
-                <Button href="/office#contact-enquiry" variant="white">Request a Quote</Button>
-              </div>
-            </div>
-            <div className={cardStyles.packCard}>
-              <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Business Starter Brand Package</h3>
-              </div>
-              <div className={cardStyles.packCardBody}>
-                <p className={cardStyles.packDescription}>
-                  Launch with a professional identity &mdash; logo, business cards, flyers, letterhead, and a 5-page website hosted free for 12 months.
-                </p>
-              </div>
-              <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/business-starter-brand-package" className={cardStyles.cardLink}>
-                  View package &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <MobileStickyCta />
-      <FindSchoolBar />
     </>
   );
 }

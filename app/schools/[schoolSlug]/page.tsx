@@ -4,7 +4,6 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
 import { MultiLearnerBanner } from "@/components/schools/MultiLearnerBanner";
 import { SiblingQuickAdd } from "@/components/schools/SiblingQuickAdd";
-import { SchoolReferralPrompt } from "@/components/schools/SchoolReferralPrompt";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -79,7 +78,6 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <SiblingQuickAdd school={school} />
         </div>
       </section>
-      <SchoolReferralPrompt school={school} />
     </>
   );
 }

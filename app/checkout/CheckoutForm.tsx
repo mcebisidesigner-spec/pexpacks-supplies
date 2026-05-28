@@ -340,11 +340,10 @@ export function CheckoutForm({
       const result = await response.json();
 
       if (!response.ok || !result.checkoutUrl) {
-        throw new Error(
-          result.error || result.errors
-            ? Object.values(result.errors).join(". ")
-            : "Unable to continue to PayFast"
-        );
+        const msg = result.errors && typeof result.errors === "object"
+          ? Object.values(result.errors).join(". ")
+          : result.error || "Unable to continue to PayFast";
+        throw new Error(msg);
       }
 
       window.location.href = result.checkoutUrl;

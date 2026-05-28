@@ -7,10 +7,6 @@ const DynamicWhatsAppWidget = dynamic(
   () => import("@/components/shared/WhatsAppWidget").then((m) => m.WhatsAppWidget),
   { ssr: false }
 );
-const DynamicSocialProofToasts = dynamic(
-  () => import("@/components/shared/SocialProofToasts").then((m) => m.SocialProofToasts),
-  { ssr: false }
-);
 const DynamicFirstOrderDiscount = dynamic(
   () => import("@/components/shared/FirstOrderDiscount").then((m) => m.FirstOrderDiscount),
   { ssr: false }
@@ -34,7 +30,6 @@ export function ClientRuntimeWidgets() {
     <>
       <DynamicWhatsAppWidget />
       <DynamicPwaLifecycle />
-      {isConversionPage ? <DynamicSocialProofToasts /> : null}
       {isConversionPage ? <DynamicFirstOrderDiscount /> : null}
       {isConversionPage ? <DynamicExitIntent /> : null}
     </>

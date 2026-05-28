@@ -64,7 +64,7 @@ export const featuredPacks: Pack[] = [
     ],
     priceLabel: "From R 659",
     cta: "Order This Pack",
-    href: "/checkout?phase=foundation-phase&pack=grade-r-pack",
+    href: "/foundation-phase#grades",
   },
   {
     id: "primary-school-pack",
@@ -84,7 +84,7 @@ export const featuredPacks: Pack[] = [
     ],
     priceLabel: "From R 779",
     cta: "Order This Pack",
-    href: "/checkout?phase=primary-school&pack=grade-4-pack",
+    href: "/primary-school#grades",
   },
   {
     id: "high-school-pack",
@@ -104,7 +104,7 @@ export const featuredPacks: Pack[] = [
     ],
     priceLabel: "From R 879",
     cta: "Order This Pack",
-    href: "/checkout?phase=high-school&pack=grade-8-pack",
+    href: "/high-school#grades",
   },
   {
     id: "office-stationery-pack",
