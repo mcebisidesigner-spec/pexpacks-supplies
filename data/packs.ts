@@ -63,7 +63,7 @@ export const featuredPacks: Pack[] = [
       "Scrapbook",
     ],
     priceLabel: "From R 659",
-    cta: "Order This Pack",
+    cta: "Foundation packs for Foundation phase",
     href: "/foundation-phase#grades",
   },
   {
@@ -83,7 +83,7 @@ export const featuredPacks: Pack[] = [
       "Sharpener",
     ],
     priceLabel: "From R 779",
-    cta: "Order This Pack",
+    cta: "Primary packs for Primary school",
     href: "/primary-school#grades",
   },
   {
@@ -103,7 +103,7 @@ export const featuredPacks: Pack[] = [
       "Exam pad",
     ],
     priceLabel: "From R 879",
-    cta: "Order This Pack",
+    cta: "High-school packs",
     href: "/high-school#grades",
   },
   {
