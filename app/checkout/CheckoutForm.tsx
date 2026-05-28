@@ -163,6 +163,21 @@ export function CheckoutForm({
   draftId,
 }: CheckoutFormProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isSticky, setIsSticky] = useState(false);
+  const [summaryOpen, setSummaryOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Toggle sticky state if scrolled past the header
+      setIsSticky(window.scrollY > 80);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const [draftLoaded, setDraftLoaded] = useState(false);
   const [draftTotal, setDraftTotal] = useState<number | null>(null);
 
@@ -705,6 +720,11 @@ export function CheckoutForm({
         ) : (
           <Link href={backToPackHref} className={styles.backLink}>Back to packs</Link>
         )}
+        <div className={`${styles.stickyHeaderButton} ${isSticky ? styles.isSticky : ""}`}>
+          <Button variant="white" size="sm" onClick={() => setSummaryOpen(!summaryOpen)}>
+            {grade} - {itemCount} items - <span className={styles.summaryPriceHighlight}>{formatCurrency(totalToPay)}</span>
+          </Button>
+        </div>
         <a className={styles.helpLink} href="https://wa.me/27780036048" target="_blank" rel="noopener noreferrer">Need help?</a>
       </div>
 
@@ -749,6 +769,7 @@ export function CheckoutForm({
           fulfilmentOption={fulfilmentOption}
           hasPexcover={hasPexcover}
           pexcoverCount={pexcoverCount}
+          summaryOpen={summaryOpen}
         />
       </div>
 
@@ -776,6 +797,7 @@ function CheckoutOrderSummary({
   fulfilmentOption,
   hasPexcover,
   pexcoverCount,
+  summaryOpen,
 }: {
   packName: string;
   schoolName?: string;
@@ -785,15 +807,10 @@ function CheckoutOrderSummary({
   fulfilmentOption: string;
   hasPexcover?: boolean;
   pexcoverCount?: number;
+  summaryOpen: boolean;
 }) {
-  const [summaryOpen, setSummaryOpen] = useState(false);
-
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">
-      <button type="button" className={styles.summaryToggle} aria-expanded={summaryOpen} onClick={() => setSummaryOpen(!summaryOpen)}>
-        <span>{gradeName} - {itemCount} items - {formatCurrency(totalToPay)}</span>
-        <strong>{summaryOpen ? "Hide" : "View summary"}</strong>
-      </button>
       <div className={`${styles.summaryCard} ${summaryOpen ? styles.summaryCardOpen : ""}`}>
         <p className={styles.confirmKicker}>Order summary</p>
         <h2>{packName}</h2>
