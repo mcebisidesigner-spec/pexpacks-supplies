@@ -42,10 +42,22 @@
 }
 
 .backLink {
+  border: 0;
+  padding: 0;
+  background: transparent;
   color: var(--pex-primary);
+  font-family: var(--font-button);
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 4px;
+  box-shadow: none;
+}
+
+.backLink:hover,
+.backLink:focus-visible {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .helpLink {
