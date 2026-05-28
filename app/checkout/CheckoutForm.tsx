@@ -128,8 +128,9 @@ function CheckoutProgress({ activeStep }: { activeStep: number }) {
         })}
       </ol>
       <div className={styles.mobileProgress} role="group" aria-label={`Step ${activeStep + 1} of ${STEPS.length}: ${currentStep.title}`}>
-        <span>Step {activeStep + 1} of {STEPS.length}</span>
-        <strong>{currentStep.title}</strong>
+        <p className={styles.mobileProgressLabel}>
+          Step {activeStep + 1} of {STEPS.length}: <strong>{currentStep.title}</strong>
+        </p>
         <div className={styles.mobileProgressBar} aria-hidden="true">
           <i style={{ width: `${progressValue}%` }} />
         </div>
