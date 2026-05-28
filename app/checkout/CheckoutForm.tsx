@@ -691,7 +691,20 @@ export function CheckoutForm({
   return (
     <div className={styles.checkoutShell}>
       <div className={styles.checkoutHeader}>
-        <Link href={backToPackHref} className={styles.backLink}>Back to packs</Link>
+        {activeStep > 0 ? (
+          <>
+            <Link href={backToPackHref} className={`${styles.backLink} ${styles.desktopOnly}`}>Back to packs</Link>
+            <button
+              type="button"
+              className={`${styles.backLink} ${styles.mobileOnly}`}
+              onClick={() => goToStep(activeStep - 1)}
+            >
+              Back
+            </button>
+          </>
+        ) : (
+          <Link href={backToPackHref} className={styles.backLink}>Back to packs</Link>
+        )}
         <a className={styles.helpLink} href="https://wa.me/27780036048" target="_blank" rel="noopener noreferrer">Need help?</a>
       </div>
 
@@ -718,7 +731,7 @@ export function CheckoutForm({
           </section>
 
           <div className={styles.formActions}>
-            <Button type="button" variant="outline" onClick={() => goToStep(activeStep - 1)} disabled={activeStep === 0}>Back</Button>
+            <Button type="button" variant="outline" iconDirection="left" onClick={() => goToStep(activeStep - 1)} disabled={activeStep === 0}>Back</Button>
             {activeStep < 3 ? (
               <Button type="button" variant="primary" onClick={handleNext}>
                 {activeStep === 2 ? "Review and pay" : activeStep === 0 ? "Continue to details" : "Continue to delivery"}
@@ -742,11 +755,11 @@ export function CheckoutForm({
       <div className={styles.mobileStickyCta}>
         {activeStep < 3 ? (
           <Button type="button" variant="primary" className={styles.fullWidth} onClick={handleNext}>
-            {activeStep === 2 ? "Review and pay" : "Continue"}
+            {activeStep === 2 ? "Review and pay" : activeStep === 0 ? "Continue to details" : "Continue to delivery"}
           </Button>
         ) : (
           <Button type="button" variant="primary" className={styles.fullWidth} onClick={handlePay} disabled={submitting}>
-            {submitting ? "Processing..." : "Complete Payment"}
+            {submitting ? "Processing..." : `Complete Payment of ${formatCurrency(totalToPay)}`}
           </Button>
         )}
       </div>

@@ -7,6 +7,7 @@ type BaseProps = {
   children: ReactNode;
   variant?: "primary" | "secondary" | "tertiary" | "navy" | "white" | "outline";
   size?: "sm" | "md" | "lg";
+  iconDirection?: "right" | "left" | "search" | "menu" | "close";
   className?: string;
   ariaLabel?: string;
 };
@@ -29,6 +30,7 @@ export function Button({
   size = "md",
   className = "",
   ariaLabel,
+  iconDirection,
   ...props
 }: ButtonProps) {
   const classNames = [styles.button, styles[variant], styles[size], className]
@@ -37,8 +39,9 @@ export function Button({
   const iconTone = variant === "primary" ? "white" : "orange";
   const content = (
     <>
+      {iconDirection === "left" ? <IconCircle tone={iconTone} direction={iconDirection} /> : null}
       <span>{children}</span>
-      <IconCircle tone={iconTone} />
+      {iconDirection !== "left" ? <IconCircle tone={iconTone} direction={iconDirection ?? "right"} /> : null}
     </>
   );
 
