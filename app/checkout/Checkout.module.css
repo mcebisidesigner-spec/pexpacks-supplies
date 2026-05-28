@@ -525,6 +525,21 @@
 }
 
 @media (max-width: 900px) {
+  .checkoutHeader {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .stickyHeaderButton.isSticky {
+    width: 100%;
+    top: 0;
+  }
+  
+  .stickyHeaderButton.isSticky > button {
+    width: 100%;
+    border-radius: 0;
+  }
+
   .formGrid {
     grid-template-columns: 1fr;
   }

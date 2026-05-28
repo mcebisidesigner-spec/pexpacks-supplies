@@ -168,10 +168,24 @@ export function CheckoutForm({
   const [isSticky, setIsSticky] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
 
+  const lastScrollY = useRef(0);
+
   useEffect(() => {
     const handleScroll = () => {
-      // Toggle sticky state if scrolled past the header
-      setIsSticky(window.scrollY > 80);
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY < 80) {
+        // At the top, header is visible, hide sticky button
+        setIsSticky(false);
+      } else if (currentScrollY < lastScrollY.current) {
+        // Scrolling up, show sticky button
+        setIsSticky(true);
+      } else {
+        // Scrolling down, hide sticky button
+        setIsSticky(false);
+      }
+      
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
