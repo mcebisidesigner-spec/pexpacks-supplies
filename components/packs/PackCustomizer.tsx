@@ -122,15 +122,7 @@ export function PackCustomizer({
       estimatedTotal: totalPrice,
     });
 
-    const params = new URLSearchParams({
-      phase: phaseSlug,
-      pack: gradePack.id,
-      grade: gradePack.grade,
-      type: "custom",
-      draft: draft.id,
-    });
-
-    router.push(`/checkout?${params.toString()}`);
+    router.push(`/checkout/${encodeURIComponent(phaseSlug)}+${encodeURIComponent(gradePack.id)}?draft=${encodeURIComponent(draft.id)}`);
   };
 
   return (

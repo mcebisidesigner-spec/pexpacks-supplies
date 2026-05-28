@@ -11,10 +11,6 @@ const DynamicFirstOrderDiscount = dynamic(
   () => import("@/components/shared/FirstOrderDiscount").then((m) => m.FirstOrderDiscount),
   { ssr: false }
 );
-const DynamicExitIntent = dynamic(
-  () => import("@/components/shared/ExitIntent").then((m) => m.ExitIntent),
-  { ssr: false }
-);
 const DynamicPwaLifecycle = dynamic(
   () => import("@/components/pwa/PwaLifecycle").then((m) => m.PwaLifecycle),
   { ssr: false }
@@ -31,7 +27,6 @@ export function ClientRuntimeWidgets() {
       <DynamicWhatsAppWidget />
       <DynamicPwaLifecycle />
       {isConversionPage ? <DynamicFirstOrderDiscount /> : null}
-      {isConversionPage ? <DynamicExitIntent /> : null}
     </>
   );
 }

@@ -88,14 +88,7 @@ export function SiblingQuickAdd({ school }: SiblingQuickAddProps) {
       subtotal: currentSubtotal,
       discount: currentDiscount,
     });
-    const params = new URLSearchParams({
-      school: school.slug,
-      grade: firstGrade.gradeSlug,
-      type: "multi-school",
-      draft: draft.id,
-    });
-
-    router.push(`/checkout?${params.toString()}`);
+    router.push(`/checkout/${encodeURIComponent(school.slug)}+${encodeURIComponent(firstGrade.gradeSlug)}?draft=${encodeURIComponent(draft.id)}`);
   }
 
   if (school.grades.length < 2) {

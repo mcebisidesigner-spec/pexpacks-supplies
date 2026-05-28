@@ -121,7 +121,7 @@ function PhasePackActions({
   return (
     <>
       <div className={styles.cardActions}>
-        <Button href={`/checkout?phase=${phaseData.slug}&pack=${pack.id}`} size="sm">
+        <Button href={`/checkout/${encodeURIComponent(phaseData.slug)}+${encodeURIComponent(pack.id)}`} size="sm">
           Buy Full Pack
         </Button>
         <Button

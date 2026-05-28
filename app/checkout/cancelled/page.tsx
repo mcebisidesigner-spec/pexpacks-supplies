@@ -18,7 +18,7 @@ export default async function CancelledPage({
 
   const retryHref =
     school && grade
-      ? `/checkout?school=${encodeURIComponent(school)}&grade=${encodeURIComponent(grade)}`
+      ? `/checkout/${encodeURIComponent(school)}+${encodeURIComponent(grade)}`
       : "/schools";
 
   return (
