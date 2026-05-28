@@ -18,15 +18,33 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
   const { slug } = await params;
   const { draft } = await searchParams;
 
-  const separatorIndex = slug.indexOf("+");
-  if (separatorIndex === -1) notFound();
+  console.log("[checkout/[slug]] Resolving slug:", JSON.stringify(slug));
 
-  const first = slug.slice(0, separatorIndex);
-  const second = slug.slice(separatorIndex + 1);
+  const decodedSlug = decodeURIComponent(slug);
+  let separatorIndex = decodedSlug.indexOf("+");
+  if (separatorIndex === -1) {
+    separatorIndex = decodedSlug.indexOf(" ");
+  }
+  
+  if (separatorIndex === -1) {
+    console.warn("[checkout/[slug]] Separator not found in decoded slug:", JSON.stringify(decodedSlug));
+    notFound();
+  }
+
+  const first = decodedSlug.slice(0, separatorIndex);
+  const second = decodedSlug.slice(separatorIndex + 1);
+
+  let resolvedSecond = second;
+  let resolvedDraftId = draft;
+
+  if (second.endsWith("=customised")) {
+    resolvedSecond = second.slice(0, -"=customised".length);
+    resolvedDraftId = "customised";
+  }
 
   const phaseData = phasePacks.find((p) => p.slug === first);
   if (phaseData) {
-    const gradePack = phaseData.gradePacks.find((p) => p.id === second);
+    const gradePack = phaseData.gradePacks.find((p) => p.id === resolvedSecond);
     if (!gradePack) notFound();
 
     return (
@@ -38,7 +56,7 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
         price={gradePack.priceFrom}
         contents={gradePack.items.map(item => `${item.quantity} x ${item.name}`)}
         deliveryNote="Collect from school or arrange delivery."
-        draftId={draft}
+        draftId={resolvedDraftId}
       />
     );
   }
@@ -46,7 +64,7 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
   const school = await getSchoolBySlug(first);
   if (!school) notFound();
 
-  const grade = await getGradeBySlug(first, second);
+  const grade = await getGradeBySlug(first, resolvedSecond);
   if (!grade) notFound();
 
   return (
@@ -58,7 +76,7 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
       price={grade.price}
       contents={grade.contents}
       deliveryNote={grade.deliveryNote || ""}
-      draftId={draft}
+      draftId={resolvedDraftId}
     />
   );
 }

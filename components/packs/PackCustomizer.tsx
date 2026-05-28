@@ -113,16 +113,19 @@ export function PackCustomizer({
       .map((item) => `${item.quantity} x ${item.name}`)
       .join("; ");
 
-    const draft = saveOrderDraft({
-      phaseSlug,
-      packId: gradePack.id,
-      grade: gradePack.grade,
-      type: "custom",
-      selectedItems: customItems,
-      estimatedTotal: totalPrice,
-    });
+    saveOrderDraft(
+      {
+        phaseSlug,
+        packId: gradePack.id,
+        grade: gradePack.grade,
+        type: "custom",
+        selectedItems: customItems,
+        estimatedTotal: totalPrice,
+      },
+      "customised"
+    );
 
-    router.push(`/checkout/${encodeURIComponent(phaseSlug)}+${encodeURIComponent(gradePack.id)}?draft=${encodeURIComponent(draft.id)}`);
+    router.push(`/checkout/${encodeURIComponent(phaseSlug)}+${encodeURIComponent(gradePack.id)}=customised`);
   };
 
   return (

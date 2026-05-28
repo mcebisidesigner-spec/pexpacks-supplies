@@ -36,8 +36,8 @@ function getDraftKey(id: string) {
   return `${DRAFT_PREFIX}${id}`;
 }
 
-export function saveOrderDraft(draft: Omit<OrderDraft, "id" | "createdAt">) {
-  const id = createDraftId();
+export function saveOrderDraft(draft: Omit<OrderDraft, "id" | "createdAt">, customId?: string) {
+  const id = customId || createDraftId();
   const orderDraft: OrderDraft = {
     ...draft,
     id,

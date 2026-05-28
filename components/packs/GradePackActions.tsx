@@ -35,8 +35,8 @@ export function buildFullPackHref(pack: GradePackForCustomisation) {
   return `/checkout/${encodeURIComponent(pack.schoolSlug)}+${encodeURIComponent(pack.gradeSlug)}`;
 }
 
-function buildCustomPackHref(pack: GradePackForCustomisation, draftId: string) {
-  return `/checkout/${encodeURIComponent(pack.schoolSlug)}+${encodeURIComponent(pack.gradeSlug)}?draft=${encodeURIComponent(draftId)}`;
+function buildCustomPackHref(pack: GradePackForCustomisation) {
+  return `/checkout/${encodeURIComponent(pack.schoolSlug)}+${encodeURIComponent(pack.gradeSlug)}=customised`;
 }
 
 export function GradePackActions({
@@ -148,17 +148,20 @@ export function GradePackActions({
       return;
     }
 
-    const draft = saveOrderDraft({
-      schoolSlug: pack.schoolSlug,
-      gradeSlug: pack.gradeSlug,
-      grade: pack.grade,
-      type: "custom-school",
-      selectedItems: serialiseSelectedItems(selection),
-      removedItems: serialiseRemovedItems(selection),
-      estimatedTotal: total,
-    });
+    saveOrderDraft(
+      {
+        schoolSlug: pack.schoolSlug,
+        gradeSlug: pack.gradeSlug,
+        grade: pack.grade,
+        type: "custom-school",
+        selectedItems: serialiseSelectedItems(selection),
+        removedItems: serialiseRemovedItems(selection),
+        estimatedTotal: total,
+      },
+      "customised"
+    );
 
-    router.push(buildCustomPackHref(pack, draft.id));
+    router.push(buildCustomPackHref(pack));
   }
 
   const drawerContent = isOpen ? (
