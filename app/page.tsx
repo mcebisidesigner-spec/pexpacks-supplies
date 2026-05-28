@@ -231,7 +231,7 @@ No queues. No confusion. No missing items.
               variant="navy"
               size="md"
             >
-              Browse School Packs
+              Browse your School Packs
             </Button>
           </div>
         </div>
