@@ -69,7 +69,8 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         title={school.name}
         text="Official stationery packs prepared according to the school stationery list."
         panelTitle="Ready packed"
-        panelText="Prepared for your grade."
+        panelText="Prepared with care"
+        panelImage="/images/school-logo-placeholder.svg"
       />
       <section className={pageStyles.section}>
         <div className={pageStyles.sectionInner}>
