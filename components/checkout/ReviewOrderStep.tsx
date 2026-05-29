@@ -166,19 +166,19 @@ export function ReviewOrderStep({
             ) : (
               <div className={`${styles.reviewSchoolDisplay} ${styles.hasValue}`}>
                 <h3>{schoolName}</h3>
-                <span
-                  className={styles.schoolSearchIcon}
-                  role="button"
-                  tabIndex={0}
+                <button
+                  type="button"
+                  className={styles.schoolSearchIconBtn}
                   onClick={() => setShowSchoolSearch(true)}
-                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setShowSchoolSearch(true); }}
                   aria-label="Change school"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.35-4.35" />
-                  </svg>
-                </span>
+                  <span className={styles.schoolSearchIcon} aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.35-4.35" />
+                    </svg>
+                  </span>
+                </button>
               </div>
             )}
           </div>
