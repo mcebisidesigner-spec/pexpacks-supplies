@@ -574,14 +574,35 @@
 .reviewSchoolDisplay {
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 10px;
+}
+
+.schoolSearchIconBtn {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 50%;
+  color: var(--pex-text-muted);
+  transition: background 0.2s;
+}
+
+.schoolSearchIconBtn:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .schoolSearchIcon {
   flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   color: var(--pex-text-muted);
 }
 
@@ -1024,18 +1045,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  min-height: 82px;
-  margin: 34px -36px -36px;
-  padding: 18px 28px;
+  gap: 16px;
+  min-height: 66px;
+  margin: 26px calc(var(--summary-card-pad) * -1) 0;
+  padding: 12px 32px;
   border-radius: 0 0 var(--radius-card-lg) var(--radius-card-lg);
   background: var(--pex-primary);
   color: var(--pex-bg);
-  overflow: hidden;
 }
 
 .supportCopy {
   min-width: 0;
+  text-align: center;
 }
 
 .supportCopy strong,
@@ -1045,16 +1066,17 @@
 
 .supportCopy strong {
   font-family: var(--font-heading);
-  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
-  line-height: 1.05;
+  font-size: clamp(1rem, 1.45vw, 1.18rem);
+  font-weight: 900;
+  line-height: 1.02;
 }
 
 .supportCopy small {
-  margin-top: 3px;
+  margin-top: 2px;
   color: var(--pex-keppel);
-  font-size: 0.9rem;
+  font-size: 0.76rem;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .trustList a {
@@ -1064,8 +1086,8 @@
 }
 
 .supportIconLink {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   flex: 0 0 auto;
   display: grid;
   place-items: center;
@@ -1073,9 +1095,7 @@
   background: #25d366;
   color: var(--pex-bg);
   text-decoration: none;
-  box-shadow:
-    0 0 0 5px var(--pex-bg),
-    0 8px 18px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 20px rgba(12, 28, 49, 0.22);
   transition: var(--interactive-transition);
 }
 
@@ -1088,8 +1108,8 @@
 }
 
 .supportIconLink svg {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   fill: currentColor;
   stroke: none;
 }
@@ -1356,6 +1376,11 @@
     gap: 10px;
   }
 
+  .schoolSearchIconBtn {
+    width: 36px;
+    height: 36px;
+  }
+
   .schoolSearchIcon {
     width: 18px;
     height: 18px;
@@ -1375,17 +1400,16 @@
     height: auto;
   }
   .supportBlock {
-    margin-inline: -24px;
-    margin-bottom: -24px;
+    margin-inline: calc(var(--summary-card-pad) * -1);
     padding-inline: 24px;
   }
   .supportIconLink {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
   }
   .supportIconLink svg {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 }
 
