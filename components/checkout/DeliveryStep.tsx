@@ -148,7 +148,7 @@ export function DeliveryStep({
                 value: address,
                 setter: onAddressChange,
                 error: errors.address,
-                autoComplete: "address-line1",
+                autoComplete: "shipping address-line1",
               },
               {
                 id: "suburb",
@@ -156,7 +156,7 @@ export function DeliveryStep({
                 value: suburb,
                 setter: onSuburbChange,
                 error: errors.suburb,
-                autoComplete: "address-level3",
+                autoComplete: "shipping address-level3",
               },
               {
                 id: "city",
@@ -164,7 +164,7 @@ export function DeliveryStep({
                 value: city,
                 setter: onCityChange,
                 error: errors.city,
-                autoComplete: "address-level2",
+                autoComplete: "shipping address-level2",
               },
               {
                 id: "province",
@@ -172,7 +172,7 @@ export function DeliveryStep({
                 value: province,
                 setter: onProvinceChange,
                 error: errors.province,
-                autoComplete: "address-level1",
+                autoComplete: "shipping address-level1",
               },
               {
                 id: "postalCode",
@@ -180,7 +180,7 @@ export function DeliveryStep({
                 value: postalCode,
                 setter: onPostalCodeChange,
                 error: undefined,
-                autoComplete: "postal-code",
+                autoComplete: "shipping postal-code",
               },
             ].map((field) => (
               <div className={styles.fieldGroup} key={field.id}>

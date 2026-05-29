@@ -32,12 +32,12 @@ function ReviewBlock({
 }) {
   return (
     <section className={styles.reviewBlock}>
-      <div>
-        <p>{title}</p>
+      <div className={styles.reviewBlockContent}>
+        <p className={styles.reviewBlockTitle}>{title}</p>
         {children}
       </div>
       {onEdit ? (
-        <button type="button" onClick={onEdit}>
+        <button type="button" className={styles.reviewEditBtn} onClick={onEdit}>
           Edit
         </button>
       ) : null}
@@ -87,22 +87,80 @@ export function PayStep({
         <span>
           {fulfilmentOption === "Delivery"
             ? deliveryAddressSummary || "Address required"
-            : "PexPacks will confirm the handover details."}
+            : "Pexpacks will confirm the handover details."}
         </span>
       </ReviewBlock>
 
       <section className={styles.paymentReadyCard}>
-        <p className={styles.confirmKicker}>Secure payment</p>
-        <h3>Confirm and pay securely with Paystack</h3>
-        <p>
-          Review your details before continuing to Paystack. You will be
-          redirected to Paystack to complete payment securely.
+        <div className={styles.paymentSecurityHeader}>
+          <svg className={styles.securityLockIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <div>
+            <p className={styles.confirmKicker}>Secure Payment Gateway</p>
+            <h3>Confirm and pay securely with Paystack</h3>
+          </div>
+        </div>
+        
+        <p className={styles.paymentSubtext}>
+          You will be redirected to Paystack's fully secure checkout page to complete your payment. 
+          Pexpacks does not store or see your card details.
         </p>
+
+        <div className={styles.badgeLabelContainer}>
+          <span>Accepted Payment Methods</span>
+        </div>
+
+        <div className={styles.paymentBadgeRow}>
+          <div className={styles.paymentBadgeItem} title="Visa">
+            <svg viewBox="0 0 48 16" width="38" height="13" aria-hidden="true">
+              <path d="M18.887 0l2.955 16h2.723L21.61 0h-2.723zm10.742 0c-.628-.244-1.614-.492-2.827-.492-3.13 0-5.326 1.63-5.346 3.967-.02 1.724 1.572 2.686 2.775 3.26 1.233.587 1.65 1.0 1.644 1.543-.014.836-1.02 1.22-1.966 1.22-1.31 0-2.008-.198-3.078-.667l-.43-.207-.46 2.784c.767.348 2.186.65 3.655.664 3.328 0 5.485-1.615 5.518-4.116.024-1.37-.832-2.417-2.66-3.284-1.107-.549-1.787-.916-1.781-1.477.008-.512.585-1.04 1.848-1.04.996-.02 1.728.212 2.29.452l.272.124.457-2.786-.437-.207zm14.613 0h-2.588c-.803 0-1.408.435-1.69 1.102l-4.78 14.898h2.868l.57-1.574h3.513l.33 1.574h2.53L44.242 0zm-3.52 11.233l1.648-4.524.953 4.524H40.722z" fill="#0f172a" />
+            </svg>
+          </div>
+          <div className={styles.paymentBadgeItem} title="Mastercard">
+            <svg viewBox="0 0 32 20" width="28" height="18" aria-hidden="true">
+              <circle cx="10" cy="10" r="10" fill="#EB001B" />
+              <circle cx="22" cy="10" r="10" fill="#F79E1B" fillOpacity="0.85" />
+              <path d="M16 10a9.98 9.98 0 0 0 2-6 9.98 9.98 0 0 0-4 6 9.98 9.98 0 0 0 2 6z" fill="#FF5F00" />
+            </svg>
+          </div>
+          <div className={styles.paymentBadgeItem} title="Capitec Pay">
+            <div className={styles.capitecBadge}>
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <circle cx="12" cy="12" r="11" fill="#005B94" />
+                <path d="M12 1a11 11 0 0 1 0 22v-11z" fill="#E31B23" />
+              </svg>
+              <span>Capitec Pay</span>
+            </div>
+          </div>
+          <div className={styles.paymentBadgeItem} title="SnapScan">
+            <div className={styles.snapscanBadge}>
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <rect width="24" height="24" rx="6" fill="#1CA9E5" />
+                <circle cx="12" cy="12" r="6" fill="none" stroke="#FFFFFF" strokeWidth="2.5" />
+                <circle cx="12" cy="12" r="2.5" fill="#FFFFFF" />
+                <path d="M12 6.5v2.5M12 15v2.5M6.5 12h2.5M15 12h2.5" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <span>SnapScan</span>
+            </div>
+          </div>
+          <div className={styles.paymentBadgeItem} title="Instant EFT">
+            <div className={styles.eftBadge}>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="2" y="5" width="20" height="14" rx="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+              </svg>
+              <span>Instant EFT</span>
+            </div>
+          </div>
+        </div>
+
         <ul className={styles.trustList}>
-          <li>Secure payment powered by Paystack</li>
-          <li>PexPacks does not store your card details</li>
-          <li>Your order is saved before payment for tracking</li>
-          <li>Confirmation is sent after successful payment</li>
+          <li>Your connection is secured with SSL 256-bit encryption</li>
+          <li>Pexpacks does not store or see your card/payment details</li>
+          <li>Your order is safely pre-registered for instant tracking</li>
+          <li>Receipt and order confirmation are emailed instantly upon successful payment</li>
         </ul>
       </section>
 

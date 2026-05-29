@@ -1504,3 +1504,196 @@
     display: none;
   }
 }
+
+/* --- Premium Google-Standard Checkout Optimizations --- */
+
+/* Real-Time Form Fields & Validation checkmarks */
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputWrapper input {
+  padding-right: 48px !important;
+}
+
+.fieldGroup input.validField {
+  border-color: #10B981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08) !important;
+  background-color: rgba(16, 185, 129, 0.01);
+}
+
+.fieldSuccessCheckmark {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #10B981;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 5;
+  animation: checkmarkIn 0.28s var(--motion-ease) forwards;
+}
+
+.fieldSuccessCheckmark svg {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes checkmarkIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* Payment Gateway Security Panel & Badging */
+.paymentSecurityHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.securityLockIcon {
+  width: 28px;
+  height: 28px;
+  color: var(--pex-keppel);
+  stroke: var(--pex-keppel);
+  flex-shrink: 0;
+  animation: lockPulse 2.5s infinite ease-in-out;
+}
+
+.paymentSubtext {
+  color: var(--pex-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.badgeLabelContainer {
+  margin-bottom: 10px;
+}
+
+.badgeLabelContainer span {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--pex-text-muted);
+  letter-spacing: 0.8px;
+}
+
+.paymentBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.paymentBadgeItem {
+  background: var(--pex-bg);
+  border: 1px solid var(--pex-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  box-shadow: 0 1px 3px rgba(26, 42, 64, 0.03);
+  transition: all 0.22s var(--motion-ease);
+}
+
+.paymentBadgeItem:hover {
+  transform: translateY(-2px);
+  border-color: rgba(26, 122, 119, 0.25);
+  box-shadow: 0 5px 12px rgba(26, 122, 119, 0.08);
+}
+
+.paymentBadgeItem svg {
+  display: block;
+}
+
+/* South African Local Badges */
+.capitecBadge, .snapscanBadge, .eftBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.capitecBadge span, .snapscanBadge span, .eftBadge span {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--pex-navy);
+  letter-spacing: -0.2px;
+  line-height: 1;
+}
+
+.eftBadge {
+  color: #10B981;
+}
+
+/* Step Progress Pulse */
+.progressCurrent {
+  box-shadow: 0 0 0 3px rgba(255, 111, 89, 0.1);
+  animation: stepCurrentPulse 2s infinite ease-in-out;
+}
+
+@keyframes stepCurrentPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(255, 111, 89, 0.08);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(255, 111, 89, 0.16);
+  }
+}
+
+@keyframes lockPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 0px rgba(26, 122, 119, 0));
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.88;
+    filter: drop-shadow(0 0 4px rgba(26, 122, 119, 0.2));
+  }
+}
+
+/* ReviewBlock sub-component classes (used by PayStep.tsx) */
+.reviewBlockContent {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.reviewBlockTitle {
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 800;
+  margin: 0 0 5px;
+}
+
+.reviewEditBtn {
+  border: none;
+  background: transparent;
+  color: var(--pex-keppel);
+  font-weight: 800;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  align-self: center;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.reviewEditBtn:hover {
+  color: var(--pex-navy);
+}

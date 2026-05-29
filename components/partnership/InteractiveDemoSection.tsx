@@ -97,7 +97,7 @@ export function InteractiveDemoSection() {
             See What Your School Website Could Look Like
           </h2>
           <p>
-            Explore a live school website demo and see how PexPacks can help
+            Explore a live school website demo and see how Pexpacks can help
             schools create a professional digital presence for parents,
             learners, staff and the wider community.
           </p>
@@ -211,7 +211,7 @@ export function InteractiveDemoSection() {
             <p className={styles.ctaEyebrow}>Website, hosting and support</p>
             <h3>Ready to give your school a stronger online presence?</h3>
             <p>
-              Partner with PexPacks and let us help your school create a clean,
+              Partner with Pexpacks and let us help your school create a clean,
               modern and parent-friendly website.
             </p>
           </div>
