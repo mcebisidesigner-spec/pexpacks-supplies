@@ -575,42 +575,23 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
 }
 
-.schoolSearchIconBtn {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  margin: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  border-radius: 50%;
-  color: var(--pex-text-muted);
-  transition: background 0.2s, color 0.2s;
-}
-
-.schoolSearchIconBtn:hover {
-  background: rgba(33, 158, 154, 0.1);
-  color: var(--pex-keppel);
-}
-
-.schoolSearchIcon {
+.reviewSchoolDisplay .schoolSearchIcon {
   flex: 0 0 auto;
   width: 18px;
   height: 18px;
-  color: inherit;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  cursor: pointer;
+  color: var(--pex-text-muted);
+  transition: color 0.15s ease;
 }
 
-.schoolSearchIcon svg {
-  width: 100%;
-  height: 100%;
-  display: block;
+.reviewSchoolDisplay .schoolSearchIcon:hover {
+  color: var(--pex-keppel);
 }
 
 .reviewSchoolDisplay h3 {
@@ -1388,12 +1369,7 @@
     gap: 10px;
   }
 
-  .schoolSearchIconBtn {
-    width: 24px;
-    height: 24px;
-  }
-
-  .schoolSearchIcon {
+  .reviewSchoolDisplay .schoolSearchIcon {
     width: 16px;
     height: 16px;
   }
