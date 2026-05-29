@@ -98,6 +98,7 @@ export function SchoolSearchPanel({
 
   return (
     <section
+      id="school-search"
       className={`${styles.searchExperience} pex-school-search-focus-anchor`}
       aria-labelledby="school-search-heading"
     >

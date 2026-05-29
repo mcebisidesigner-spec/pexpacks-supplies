@@ -26,8 +26,8 @@ export function Header() {
             </svg>
             <span className="sr-only">Login</span>
           </Link>
-          <Link className={styles.desktopOrder} href="/order" aria-label="Order a Pexpacks pack">
-            <span>Order a Pack</span>
+          <Link className={styles.desktopOrder} href="/schools#school-search" aria-label="Find your Pexpacks pack">
+            <span>Find Your Pack</span>
             <span className={styles.orderIcon} aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false">
                 <path d="M7 17 17 7M9 7h8v8" />
