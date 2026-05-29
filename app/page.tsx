@@ -35,18 +35,18 @@ export default function HomePage() {
             <p className={heroStyles.eyebrow}>Save time, Pex it.</p>
             <h1 className={heroStyles.heroTitle}>
               <span className={heroStyles.desktopHeroTitleText}>
-                Stationery, packed and ready
+                Skip the Back-to-School Rush.
                 <br className={heroStyles.desktopBreak} />
-                for school or office
+                We Pack Your Stationery.
               </span>
               <span className={heroStyles.mobileHeroTitleText}>
-                Stationery, packed
+                Skip the Rush.
                 <br />
-                and ready for school or office
+                We Pack Your Stationery.
               </span>
             </h1>
             <p className={heroStyles.heroLead}>
-No queues. No confusion. No missing items.
+              The easiest way to buy school and office supplies. No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
             <div className={homeStyles.audienceCards}>
@@ -68,6 +68,17 @@ No queues. No confusion. No missing items.
                   <span>View office stationery packs</span>
                 </div>
               </Link>
+            </div>
+            <div className={heroStyles.trustBar}>
+              <div className={heroStyles.trustBarItem}>
+                <span className={heroStyles.trustBarItemIcon}>⭐</span> 4.9/5 Parent Rating
+              </div>
+              <div className={heroStyles.trustBarItem}>
+                <span className={heroStyles.trustBarItemIcon}>🛡️</span> 100% List Match Guarantee
+              </div>
+              <div className={heroStyles.trustBarItem}>
+                <span className={heroStyles.trustBarItemIcon}>🚚</span> Fast Nationwide Delivery
+              </div>
             </div>
           </div>
 
@@ -231,10 +242,10 @@ No queues. No confusion. No missing items.
           <div style={{ textAlign: "center", marginTop: "32px" }}>
             <Button
               href="/schools#schools-search"
-              variant="navy"
-              size="md"
+              variant="primary"
+              size="lg"
             >
-              Browse your School Packs
+              Browse all School Packs
             </Button>
           </div>
         </div>
