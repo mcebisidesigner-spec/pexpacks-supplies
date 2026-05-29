@@ -17,7 +17,7 @@ export function PackItemsList({ items, price }: PackItemsListProps) {
 
   return (
     <div className={styles.packListCard}>
-      <h3>Full stationery pack for 2027</h3>
+      <h3>Stationery pack list</h3>
       <ul className={styles.packList} aria-label="All pack items">
         {visibleItems.map((item, index) => (
           <li key={`${item}-${index}`}>{item}</li>
