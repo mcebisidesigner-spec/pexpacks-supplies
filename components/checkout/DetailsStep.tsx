@@ -211,9 +211,7 @@ export function DetailsStep({
           name="consent"
           type="checkbox"
           checked={consent}
-          aria-describedby={
-            errors.consent ? "consent-error" : "privacy-note"
-          }
+          aria-describedby={errors.consent ? "consent-error" : undefined}
           aria-invalid={Boolean(errors.consent)}
           onChange={(event) => {
             onConsentChange(event.target.checked);
@@ -221,11 +219,17 @@ export function DetailsStep({
           }}
         />
         <span>
-          I agree that PexPacks may use my information to process this order,
-          send payment updates, and contact me about delivery or collection.
-          <small id="privacy-note">
-            We only use your details to process your order and provide support.
-          </small>
+          I agree that PexPacks may process my personal information to complete
+          this order, send payment and order updates, and contact me about
+          delivery or collection. I have read and agree to the{" "}
+          <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </a>{" "}
+          and{" "}
+          <a href="/terms" target="_blank" rel="noopener noreferrer">
+            Terms of Use
+          </a>
+          .
         </span>
       </label>
       {errors.consent ? (

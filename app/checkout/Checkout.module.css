@@ -1013,6 +1013,13 @@
   line-height: 1.45;
 }
 
+.consentField span a {
+  color: var(--pex-keppel);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .consentField small {
   display: block;
   color: var(--pex-text-muted);
