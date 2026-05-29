@@ -35,14 +35,14 @@ export default function HomePage() {
             <p className={heroStyles.eyebrow}>Save time, Pex it.</p>
             <h1 className={heroStyles.heroTitle}>
               <span className={heroStyles.desktopHeroTitleText}>
-                Skip the Back-to-School Rush.
+                Stationery, packed and ready
                 <br className={heroStyles.desktopBreak} />
-                We Pack Your Stationery.
+                for school or office
               </span>
               <span className={heroStyles.mobileHeroTitleText}>
-                Skip the Rush.
+                Stationery, packed and ready
                 <br />
-                We Pack Your Stationery.
+                for school or office
               </span>
             </h1>
             <p className={heroStyles.heroLead}>
