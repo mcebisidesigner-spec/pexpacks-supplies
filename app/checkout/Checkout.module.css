@@ -500,7 +500,7 @@
 .selectionPanel {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 0;
   padding: 8px;
   border: var(--card-border);
@@ -511,7 +511,7 @@
   box-shadow:
     0 24px 58px rgba(26, 42, 64, 0.13),
     0 1px 0 rgba(255, 255, 255, 0.95) inset;
-  min-height: 112px;
+  min-height: 0;
 }
 
 .reviewSchoolCard,
@@ -525,7 +525,8 @@
 }
 
 .reviewSchoolCard {
-  border-right: var(--surface-border-soft);
+  border-right: none;
+  border-bottom: var(--surface-border-soft);
 }
 
 .reviewSchoolDisplay,
@@ -564,17 +565,29 @@
 .reviewSchoolCard .confirmKicker,
 .reviewGradeCard .confirmKicker {
   margin: 0;
-  color: var(--pex-primary);
+  color: var(--pex-text-muted);
   font-size: clamp(13px, 1vw, 16px);
   font-weight: 750;
   line-height: 1.05;
 }
 
 .reviewSchoolDisplay {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.schoolSearchIcon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--pex-text-muted);
+}
+
+.schoolSearchIcon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .reviewSchoolDisplay h3 {
@@ -583,8 +596,10 @@
   font-family: var(--font-heading);
   font-size: clamp(16px, 1.3vw, 21px);
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.15;
   text-align: left;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .gradeDrawerTrigger span {
@@ -883,7 +898,7 @@
 }
 
 .confirmKicker {
-  color: var(--pex-keppel);
+  color: var(--pex-text-muted);
   font-size: 14px;
   font-weight: 800;
   margin: 0 0 10px;
@@ -932,17 +947,21 @@
 .summaryCard h2 {
   color: var(--pex-primary);
   font-family: var(--font-heading);
-  font-size: clamp(1.9rem, 3vw, 2.75rem);
-  line-height: 1.04;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 800;
+  line-height: 1.2;
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .summaryGrade {
-  margin: 8px 0 24px;
-  color: var(--pex-primary);
+  margin: 6px 0 20px;
+  color: var(--pex-text-muted);
   font-family: var(--font-heading);
-  font-size: clamp(1.65rem, 2.4vw, 2.35rem);
-  font-weight: 900;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  font-weight: 800;
   line-height: 1;
 }
 
@@ -960,6 +979,10 @@
   gap: 16px;
   padding: 16px 0;
   border-bottom: 1px solid rgba(26, 42, 64, 0.08);
+}
+
+.priceSummary div:nth-last-child(2) {
+  border-bottom: 0;
 }
 
 .priceSummary dt {
@@ -1286,6 +1309,18 @@
     --summary-card-pad: clamp(20px, 6vw, 28px);
     padding-bottom: 0;
   }
+
+  .summaryCard h2 {
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .summaryGrade {
+    font-size: clamp(0.8rem, 3vw, 0.9rem);
+    margin: 4px 0 16px;
+  }
   .selectionPanel {
     min-height: 0;
     border-radius: 28px;
@@ -1295,8 +1330,6 @@
   }
 
   .reviewSchoolCard {
-    border-right: none;
-    border-bottom: var(--surface-border-soft);
     padding: 18px 16px;
     gap: 14px;
   }
@@ -1309,12 +1342,23 @@
   .reviewSchoolCard .confirmKicker,
   .reviewGradeCard .confirmKicker {
     font-size: clamp(14px, 7vw, 18px);
+    color: var(--pex-text-muted);
   }
 
   .reviewSchoolDisplay,
   .gradeDrawerTrigger {
     font-size: 20px;
     min-height: 40px;
+  }
+
+  .reviewSchoolDisplay {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .schoolSearchIcon {
+    width: 18px;
+    height: 18px;
   }
 
   .reviewSchoolDisplay h3,
