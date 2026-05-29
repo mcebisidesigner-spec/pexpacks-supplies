@@ -17,6 +17,8 @@ type DeliveryStepProps = {
   onProvinceChange: (value: string) => void;
   postalCode: string;
   onPostalCodeChange: (value: string) => void;
+  deliveryNotes: string;
+  onDeliveryNotesChange: (value: string) => void;
   consent: boolean;
   onConsentChange: (consent: boolean) => void;
   errors: Record<string, string>;
@@ -39,9 +41,9 @@ const FULFILMENT_OPTIONS: {
   },
   {
     value: "Delivery",
-    title: "Delivery",
-    text: "Receive your pack at your address. Delivery fee may apply.",
-    meta: "Address required before payment.",
+    title: "Home Delivery",
+    text: "Receive your pack at your door.",
+    meta: "Delivery fees apply.",
     icon: "home",
   },
   {
@@ -93,6 +95,8 @@ export function DeliveryStep({
   onProvinceChange,
   postalCode,
   onPostalCodeChange,
+  deliveryNotes,
+  onDeliveryNotesChange,
   consent,
   onConsentChange,
   errors,
@@ -210,6 +214,25 @@ export function DeliveryStep({
                 ) : null}
               </div>
             ))}
+          </div>
+        </div>
+      ) : null}
+
+      {fulfilmentOption === "Collection point" ? (
+        <div className={styles.addressPanel}>
+          <p>
+            We will contact you to confirm the best pickup or handover option.
+            Use the box below to share any special instructions.
+          </p>
+          <div className={styles.fieldGroup}>
+            <label htmlFor="collectionNotes">Pickup / delivery instructions <span style={{ fontWeight: 500, color: 'var(--pex-text-muted)' }}>(optional)</span></label>
+            <textarea
+              id="collectionNotes"
+              data-field="deliveryNotes"
+              value={deliveryNotes}
+              placeholder="e.g. Please leave at the security gate, or I'll collect from your office on Wednesday."
+              onChange={(event) => onDeliveryNotesChange(event.target.value)}
+            />
           </div>
         </div>
       ) : null}

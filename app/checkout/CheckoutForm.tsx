@@ -392,6 +392,8 @@ export function CheckoutForm({
             onProvinceChange={setProvince}
             postalCode={postalCode}
             onPostalCodeChange={setPostalCode}
+            deliveryNotes={deliveryNotes}
+            onDeliveryNotesChange={setDeliveryNotes}
             consent={consent}
             onConsentChange={setConsent}
             errors={errors}
