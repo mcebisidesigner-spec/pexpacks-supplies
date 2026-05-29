@@ -741,12 +741,13 @@ export function CheckoutForm({
             Back to packs
           </button>
         )}
-        <div className={`${styles.stickyHeaderButton} ${isSticky ? styles.isSticky : ""}`}>
-          <Button variant="white" size="sm" onClick={() => setSummaryOpen(!summaryOpen)}>
-            {grade} - {itemCount} items - <span className={styles.summaryPriceHighlight}>{formatCurrency(totalToPay)}</span>
-          </Button>
-        </div>
+      </div>
 
+      <div className={`${styles.stickyHeaderButton} ${isSticky ? styles.isSticky : ""}`}>
+        <Button variant="white" size="lg" className={styles.stickyCtaBtn} onClick={() => setSummaryOpen(!summaryOpen)}>
+          <span className={styles.stickyCtaLabel}>Total to pay</span>
+          <span className={styles.stickyCtaPrice}>{formatCurrency(totalToPay)}</span>
+        </Button>
       </div>
 
       <div className={styles.checkoutGrid}>

@@ -22,21 +22,64 @@
 }
 
 .stickyHeaderButton {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 120;
+  transform: translate(-50%, -100%);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
-  z-index: 100;
-  justify-self: center;
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  pointer-events: none;
 }
 
 .stickyHeaderButton.isSticky {
-  position: fixed;
-  top: max(12px, env(safe-area-inset-top));
-  left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, max(12px, env(safe-area-inset-top)));
+  pointer-events: auto;
   box-shadow: 0 14px 32px rgba(26, 42, 64, 0.16);
-  z-index: 120;
+}
+
+.stickyCtaBtn {
+  background: var(--pex-keppel) !important;
+  color: var(--pex-bg) !important;
+  box-shadow: 0 10px 24px rgba(26, 122, 119, 0.3) !important;
+  gap: 2px !important;
+  padding-inline: 12px 22px !important;
+}
+
+.stickyCtaBtn:hover {
+  background: #15807c !important;
+}
+
+.stickyCtaLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stickyCtaPrice {
+  display: block;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+@media (min-width: 901px) {
+  .stickyHeaderButton.isSticky {
+    transform: translate(-50%, max(20px, env(safe-area-inset-top)));
+  }
+
+  .stickyCtaBtn {
+    padding-block: 12px 14px !important;
+    padding-inline: 20px 28px !important;
+  }
+
+  .stickyCtaPrice {
+    font-size: 28px;
+  }
 }
 
 .summaryPriceHighlight {
@@ -578,20 +621,39 @@
     justify-content: space-between;
   }
   
+  .stickyHeaderButton {
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: translateY(-100%);
+  }
+
   .stickyHeaderButton.isSticky {
     top: 0;
-    right: 0;
     left: 0;
-    width: 100vw;
-    max-width: none;
-    transform: none;
+    right: 0;
+    width: 100%;
+    transform: translateY(0);
     box-shadow: 0 10px 24px rgba(26, 42, 64, 0.14);
   }
   
   .stickyHeaderButton.isSticky > button {
     width: 100%;
     border-radius: 0;
-    min-height: 52px;
+    min-height: 64px;
+  }
+
+  .stickyCtaBtn {
+    gap: 0 !important;
+    padding-inline: 16px !important;
+  }
+
+  .stickyCtaLabel {
+    font-size: 11px;
+  }
+
+  .stickyCtaPrice {
+    font-size: 22px;
   }
 
   .formGrid {
