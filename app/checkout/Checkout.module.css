@@ -184,7 +184,7 @@
   }
   .mainColumn > .summaryColumn {
     grid-column: 2;
-    grid-row: 1 / 99;
+    grid-row: 1 / span 3;
   }
 }
 
