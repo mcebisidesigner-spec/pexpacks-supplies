@@ -17,8 +17,8 @@ type DeliveryStepProps = {
   onProvinceChange: (value: string) => void;
   postalCode: string;
   onPostalCodeChange: (value: string) => void;
-  deliveryNotes: string;
-  onDeliveryNotesChange: (value: string) => void;
+  consent: boolean;
+  onConsentChange: (consent: boolean) => void;
   errors: Record<string, string>;
   onClearError: (field: string) => void;
 };
@@ -93,8 +93,8 @@ export function DeliveryStep({
   onProvinceChange,
   postalCode,
   onPostalCodeChange,
-  deliveryNotes,
-  onDeliveryNotesChange,
+  consent,
+  onConsentChange,
   errors,
   onClearError,
 }: DeliveryStepProps) {
@@ -214,17 +214,46 @@ export function DeliveryStep({
         </div>
       ) : null}
 
-      <div className={styles.fieldGroup}>
-        <label htmlFor="delivery-notes">
-          Delivery or collection notes optional
-        </label>
-        <textarea
-          id="delivery-notes"
-          value={deliveryNotes}
-          placeholder="Gate code, preferred pickup time, or anything our team should know"
-          onChange={(event) => onDeliveryNotesChange(event.target.value)}
+      <label className={styles.consentField}>
+        <input
+          data-field="consent"
+          name="consent"
+          type="checkbox"
+          checked={consent}
+          aria-describedby={errors.consent ? "consent-error" : undefined}
+          aria-invalid={Boolean(errors.consent)}
+          onChange={(event) => {
+            onConsentChange(event.target.checked);
+            onClearError("consent");
+          }}
         />
-      </div>
+        <span>
+          I agree that Pexpacks may process my personal information to complete
+          this order, send payment and order updates, and contact me about
+          delivery or collection. I have read and agree to the{" "}
+          <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+            privacy policy
+          </a>
+          ,{" "}
+          <a href="/terms" target="_blank" rel="noopener noreferrer">
+            terms of use
+          </a>
+          ,{" "}
+          <a href="/delivery-policy" target="_blank" rel="noopener noreferrer">
+            delivery policy
+          </a>
+          , and{" "}
+          <a href="/returns-refunds-policy" target="_blank" rel="noopener noreferrer">
+            returns & refunds policy
+          </a>
+          .
+        </span>
+      </label>
+      {errors.consent ? (
+        <p id="consent-error" className={styles.fieldError} role="alert">
+          {errors.consent}
+        </p>
+      ) : null}
     </div>
   );
 }

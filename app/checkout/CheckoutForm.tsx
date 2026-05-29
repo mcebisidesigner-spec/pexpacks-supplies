@@ -221,15 +221,17 @@ export function CheckoutForm({
         nextErrors.buyerEmail = "Please enter a valid email address.";
       if (!learnerName.trim() || learnerName.trim().length < 2)
         nextErrors.learnerName = "Please enter the learner name.";
-      if (!consent)
-        nextErrors.consent = "Please accept the order processing consent.";
     }
 
-    if (step === 2 && fulfilmentOption === "Delivery") {
-      if (!address.trim()) nextErrors.address = "Please enter the delivery address.";
-      if (!suburb.trim()) nextErrors.suburb = "Please enter the suburb.";
-      if (!city.trim()) nextErrors.city = "Please enter the city.";
-      if (!province.trim()) nextErrors.province = "Please enter the province.";
+    if (step === 2) {
+      if (fulfilmentOption === "Delivery") {
+        if (!address.trim()) nextErrors.address = "Please enter the delivery address.";
+        if (!suburb.trim()) nextErrors.suburb = "Please enter the suburb.";
+        if (!city.trim()) nextErrors.city = "Please enter the city.";
+        if (!province.trim()) nextErrors.province = "Please enter the province.";
+      }
+      if (!consent)
+        nextErrors.consent = "Please accept the order processing consent.";
     }
 
     setErrors(nextErrors);
@@ -371,8 +373,6 @@ export function CheckoutForm({
             onLearnerNotesChange={setLearnerNotes}
             preferredContactMethod={preferredContactMethod}
             onPreferredContactMethodChange={setPreferredContactMethod}
-            consent={consent}
-            onConsentChange={setConsent}
             errors={errors}
             onClearError={clearFieldError}
           />
@@ -392,8 +392,8 @@ export function CheckoutForm({
             onProvinceChange={setProvince}
             postalCode={postalCode}
             onPostalCodeChange={setPostalCode}
-            deliveryNotes={deliveryNotes}
-            onDeliveryNotesChange={setDeliveryNotes}
+            consent={consent}
+            onConsentChange={setConsent}
             errors={errors}
             onClearError={clearFieldError}
           />
@@ -485,18 +485,6 @@ export function CheckoutForm({
         <div className={styles.mainColumn}>
           <CheckoutProgress steps={STEPS} activeStep={activeStep} />
 
-          <OrderSummaryCard
-            schoolName={schoolName}
-            gradeName={grade}
-            packPrice={packPrice}
-            itemCount={contents.length}
-            totalToPay={totalToPay}
-            fulfilmentOption={fulfilmentOption}
-            hasPexcover={hasPexcover}
-            summaryOpen={summaryOpen}
-            whatsAppHref={whatsAppHref}
-          />
-
           <section className={styles.stepCard} aria-labelledby="checkout-step-heading">
             <div className={styles.stepIntro}>
               <h1
@@ -545,6 +533,18 @@ export function CheckoutForm({
               </Button>
             ) : null}
           </div>
+
+          <OrderSummaryCard
+            schoolName={schoolName}
+            gradeName={grade}
+            packPrice={packPrice}
+            itemCount={contents.length}
+            totalToPay={totalToPay}
+            fulfilmentOption={fulfilmentOption}
+            hasPexcover={hasPexcover}
+            summaryOpen={summaryOpen}
+            whatsAppHref={whatsAppHref}
+          />
         </div>
       </div>
 

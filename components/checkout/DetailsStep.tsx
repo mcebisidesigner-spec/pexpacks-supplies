@@ -19,8 +19,6 @@ type DetailsStepProps = {
   onLearnerNotesChange: (value: string) => void;
   preferredContactMethod: ContactMethod;
   onPreferredContactMethodChange: (method: ContactMethod) => void;
-  consent: boolean;
-  onConsentChange: (consent: boolean) => void;
   errors: Record<string, string>;
   onClearError: (field: string) => void;
 };
@@ -40,8 +38,6 @@ export function DetailsStep({
   onLearnerNotesChange,
   preferredContactMethod,
   onPreferredContactMethodChange,
-  consent,
-  onConsentChange,
   errors,
   onClearError,
 }: DetailsStepProps) {
@@ -204,39 +200,6 @@ export function DetailsStep({
           ))}
         </div>
       </fieldset>
-
-      <label className={styles.consentField}>
-        <input
-          data-field="consent"
-          name="consent"
-          type="checkbox"
-          checked={consent}
-          aria-describedby={errors.consent ? "consent-error" : undefined}
-          aria-invalid={Boolean(errors.consent)}
-          onChange={(event) => {
-            onConsentChange(event.target.checked);
-            onClearError("consent");
-          }}
-        />
-        <span>
-          I agree that PexPacks may process my personal information to complete
-          this order, send payment and order updates, and contact me about
-          delivery or collection. I have read and agree to the{" "}
-          <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
-            Privacy Policy
-          </a>{" "}
-          and{" "}
-          <a href="/terms" target="_blank" rel="noopener noreferrer">
-            Terms of Use
-          </a>
-          .
-        </span>
-      </label>
-      {errors.consent ? (
-        <p id="consent-error" className={styles.fieldError} role="alert">
-          {errors.consent}
-        </p>
-      ) : null}
     </div>
   );
 }

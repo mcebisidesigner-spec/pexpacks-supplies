@@ -14,7 +14,7 @@
   margin: 0 auto 34px;
 }
 
-.checkoutHeader > :nth-child(1) {
+.checkoutHeader > .backLink {
   justify-self: start;
 }
 
