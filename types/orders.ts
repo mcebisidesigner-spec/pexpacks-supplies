@@ -14,9 +14,11 @@ export type CheckoutPayload = {
   schoolName: string;
   grade: string;
   gradeSlug: string;
-  packType: "full";
+  packType: "full" | "custom" | "office";
   items: string[];
   estimatedTotal: number;
+  pexcoverSelected?: boolean;
+  pexcoverAmount?: number;
   deliveryMethod: "school_collection" | "delivery" | "collection_point";
   notes?: string;
 };

@@ -89,7 +89,7 @@ export default async function CancelledPage({
               lineHeight: 1.08,
             }}
           >
-            Payment Cancelled
+            Payment was not completed
           </h1>
 
           <p

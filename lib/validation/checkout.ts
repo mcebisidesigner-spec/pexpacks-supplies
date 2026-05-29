@@ -64,7 +64,7 @@ export function validateCheckoutPayload(
   const gradeSlug = typeof raw.gradeSlug === "string" ? raw.gradeSlug.trim() : "";
 
   const packType = typeof raw.packType === "string" ? raw.packType.trim() : "";
-  if (packType !== "full") {
+  if (!["full", "custom", "office"].includes(packType)) {
     errors.packType = "Invalid pack type.";
   }
 
@@ -83,6 +83,19 @@ export function validateCheckoutPayload(
 
   if (!Number.isFinite(estimatedTotal) || estimatedTotal <= 0) {
     errors.estimatedTotal = "Invalid total.";
+  }
+
+  const pexcoverSelected =
+    typeof raw.pexcoverSelected === "boolean" ? raw.pexcoverSelected : false;
+  const pexcoverAmount =
+    typeof raw.pexcoverAmount === "number"
+      ? raw.pexcoverAmount
+      : typeof raw.pexcoverAmount === "string"
+        ? Number(raw.pexcoverAmount)
+        : 0;
+
+  if (pexcoverSelected && (!Number.isFinite(pexcoverAmount) || pexcoverAmount < 0)) {
+    errors.pexcoverAmount = "Invalid Pexcover amount.";
   }
 
   const items: string[] = [];
@@ -111,9 +124,11 @@ export function validateCheckoutPayload(
       schoolName,
       grade,
       gradeSlug,
-      packType: "full",
+      packType: packType as CheckoutPayload["packType"],
       items,
       estimatedTotal,
+      pexcoverSelected,
+      pexcoverAmount: pexcoverSelected ? pexcoverAmount : 0,
       deliveryMethod: deliveryMethod as CheckoutPayload["deliveryMethod"],
       notes: notes || undefined,
     },

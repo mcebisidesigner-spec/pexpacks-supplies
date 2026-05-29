@@ -2,8 +2,40 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateCheckoutPayload } from "@/lib/validation/checkout";
 import { createPendingOrder, generateOrderReference } from "@/lib/orders";
 import { initializePaystackTransaction } from "@/lib/paystack";
+import { PEXCOVER_PRICE } from "@/lib/constants";
+import { phasePacks } from "@/data/phasePacks";
+import { getGradeBySlug } from "@/lib/school-utils";
 
 export const runtime = "nodejs";
+
+async function resolveTrustedPack(input: {
+  schoolSlug: string;
+  gradeSlug: string;
+  packType: string;
+}) {
+  if (input.packType !== "full") {
+    return null;
+  }
+
+  const schoolGrade = await getGradeBySlug(input.schoolSlug, input.gradeSlug);
+  if (schoolGrade) {
+    return {
+      price: schoolGrade.price,
+      items: schoolGrade.contents,
+    };
+  }
+
+  const phase = phasePacks.find((phasePack) => phasePack.slug === input.schoolSlug);
+  const phaseGrade = phase?.gradePacks.find((pack) => pack.id === input.gradeSlug);
+  if (phaseGrade) {
+    return {
+      price: phaseGrade.priceFrom,
+      items: phaseGrade.items.map((item) => `${item.quantity} x ${item.name}`),
+    };
+  }
+
+  return null;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,6 +76,27 @@ export async function POST(request: NextRequest) {
     }
 
     const data = validated.data;
+    const trustedPack = await resolveTrustedPack({
+      schoolSlug: data.schoolSlug,
+      gradeSlug: data.gradeSlug,
+      packType: data.packType,
+    });
+
+    if (!trustedPack) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "We could not find this pack. Please choose your school pack again.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const pexcoverAmount = data.pexcoverSelected ? PEXCOVER_PRICE : 0;
+    const trustedTotal = trustedPack.price + pexcoverAmount;
+    const trustedItems = data.pexcoverSelected
+      ? [...trustedPack.items, `Pexcover book covering - ${PEXCOVER_PRICE}`]
+      : trustedPack.items;
 
     const orderReference = generateOrderReference();
 
@@ -57,8 +110,8 @@ export async function POST(request: NextRequest) {
       schoolName: data.schoolName,
       grade: data.grade,
       packType: data.packType,
-      items: data.items,
-      estimatedTotal: data.estimatedTotal,
+      items: trustedItems,
+      estimatedTotal: trustedTotal,
       deliveryMethod: data.deliveryMethod,
       notes: data.notes,
     });
@@ -68,7 +121,7 @@ export async function POST(request: NextRequest) {
     try {
       paystackResult = await initializePaystackTransaction({
         email: data.buyerEmail,
-        amountInCents: Math.round(data.estimatedTotal * 100),
+        amountInCents: Math.round(trustedTotal * 100),
         reference: orderReference,
         callbackUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?ref=${orderReference}`,
         metadata: {
@@ -76,6 +129,7 @@ export async function POST(request: NextRequest) {
           buyer_name: data.buyerName,
           school_name: data.schoolName,
           grade: data.grade,
+          pexcover_selected: data.pexcoverSelected ? "true" : "false",
           source: "pexpacks_checkout",
         },
       });

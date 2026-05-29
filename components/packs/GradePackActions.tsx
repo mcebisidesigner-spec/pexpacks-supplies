@@ -32,11 +32,22 @@ type GradePackActionsProps = {
 };
 
 export function buildFullPackHref(pack: GradePackForCustomisation) {
-  return `/checkout/${encodeURIComponent(pack.schoolSlug)}+${encodeURIComponent(pack.gradeSlug)}`;
+  const params = new URLSearchParams({
+    school: pack.schoolSlug,
+    grade: pack.gradeSlug,
+    pack: "full",
+  });
+  return `/checkout?${params.toString()}`;
 }
 
 function buildCustomPackHref(pack: GradePackForCustomisation) {
-  return `/checkout/${encodeURIComponent(pack.schoolSlug)}+${encodeURIComponent(pack.gradeSlug)}=customised`;
+  const params = new URLSearchParams({
+    school: pack.schoolSlug,
+    grade: pack.gradeSlug,
+    pack: "custom",
+    draft: "customised",
+  });
+  return `/checkout?${params.toString()}`;
 }
 
 export function GradePackActions({

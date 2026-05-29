@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -21,7 +22,7 @@ type CheckoutFormProps = {
 };
 
 type CheckoutStep = "review" | "details" | "delivery" | "pay";
-type FulfilmentOption = "School collection" | "Home delivery" | "Arrange collection";
+type FulfilmentOption = "School collection" | "Delivery" | "Collection point";
 type ContactMethod = "whatsapp" | "phone" | "email";
 
 const STEPS: { id: CheckoutStep; label: string; title: string }[] = [
@@ -40,15 +41,15 @@ const FULFILMENT_OPTIONS: { value: FulfilmentOption; title: string; text: string
     icon: "school",
   },
   {
-    value: "Home delivery",
-    title: "Home Delivery",
+    value: "Delivery",
+    title: "Delivery",
     text: "Receive your pack at your address. Delivery fee may apply.",
     meta: "Address required before payment.",
     icon: "home",
   },
   {
-    value: "Arrange collection",
-    title: "Arranged Collection",
+    value: "Collection point",
+    title: "Collection Point",
     text: "We will contact you to confirm the best pickup option.",
     meta: "Useful when school collection is not available.",
     icon: "pin",
@@ -171,6 +172,12 @@ export function CheckoutForm({
   const lastScrollY = useRef(0);
 
   useEffect(() => {
+    if (window.matchMedia("(max-width: 1024px)").matches) {
+      setSummaryOpen(true);
+    }
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
@@ -204,6 +211,7 @@ export function CheckoutForm({
   const [buyerEmail, setBuyerEmail] = useState("");
   const [preferredContactMethod, setPreferredContactMethod] = useState<ContactMethod>("whatsapp");
   const [learnerName, setLearnerName] = useState("");
+  const [learnerNotes, setLearnerNotes] = useState("");
   const [consent, setConsent] = useState(false);
 
   const [hasPexcover, setHasPexcover] = useState(false);
@@ -335,7 +343,7 @@ export function CheckoutForm({
       if (!consent) nextErrors.consent = "Please accept the order processing consent.";
     }
 
-    if (step === 2 && fulfilmentOption === "Home delivery") {
+    if (step === 2 && fulfilmentOption === "Delivery") {
       if (!address.trim()) nextErrors.address = "Please enter the delivery address.";
       if (!suburb.trim()) nextErrors.suburb = "Please enter the suburb.";
       if (!city.trim()) nextErrors.city = "Please enter the city.";
@@ -374,7 +382,8 @@ export function CheckoutForm({
 
     const fulfilmentNotes = [
       deliveryNotes.trim() ? `Notes: ${deliveryNotes.trim()}` : "",
-      fulfilmentOption === "Home delivery" ? `Address: ${deliveryAddressSummary}` : "",
+      learnerNotes.trim() ? `Learner notes: ${learnerNotes.trim()}` : "",
+      fulfilmentOption === "Delivery" ? `Address: ${deliveryAddressSummary}` : "",
       preferredContactMethod ? `Preferred contact: ${preferredContactMethod}` : "",
       deliveryNote ? `Pack note: ${deliveryNote}` : "",
     ].filter(Boolean).join(" | ");
@@ -398,11 +407,12 @@ export function CheckoutForm({
           deliveryMethod:
             fulfilmentOption === "School collection"
               ? "school_collection"
-              : fulfilmentOption === "Home delivery"
+              : fulfilmentOption === "Delivery"
                 ? "delivery"
                 : "collection_point",
           notes: fulfilmentNotes || undefined,
-          hasPexcover,
+          pexcoverSelected: hasPexcover,
+          pexcoverAmount: hasPexcover ? PEXCOVER_PRICE : 0,
           pexcoverName: pexcoverName.trim() || undefined,
           pexcoverSubjects: pexcoverSubjects.trim() || undefined,
           pexcoverLabelFormat: pexcoverLabelFormat.trim() || undefined,
@@ -435,102 +445,92 @@ export function CheckoutForm({
     return (
       <div className={styles.reviewGrid}>
         <section className={styles.reviewLeftCol}>
-          <div className={styles.reviewSchoolCard}>
-            <p className={styles.confirmKicker}>School</p>
-            {showSchoolSearch ? (
-              <div className={styles.schoolSearchWrap}>
-                <input
-                  className={styles.schoolSearchInput}
-                  type="text"
-                  placeholder="Search for a school..."
-                  value={schoolQuery}
-                  onChange={(e) => handleSchoolSearch(e.target.value)}
-                  autoFocus
-                />
-                {schoolResults.length > 0 ? (
-                  <div className={styles.schoolResults}>
-                    {schoolResults.map((s) => (
-                      <button
-                        key={s.slug}
-                        type="button"
-                        className={styles.schoolResultItem}
-                        onClick={() => {
-                          const firstGrade = s.grades?.[0];
-                          if (firstGrade) navigateToCheckout(s.slug, firstGrade);
-                        }}
-                      >
-                        <strong>{s.name}</strong>
-                        <span>{s.city}, {s.province}</span>
-                      </button>
-                    ))}
-                  </div>
-                ) : schoolQuery.trim() && schoolResults.length === 0 ? (
-                  <p className={styles.schoolNoResults}>No schools found.</p>
-                ) : null}
-                <button
-                  type="button"
-                  className={styles.schoolSearchCancel}
-                  onClick={() => { setShowSchoolSearch(false); setSchoolQuery(""); setSchoolResults([]); }}
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <div className={styles.reviewSchoolDisplay}>
-                <h3>{schoolName}</h3>
-                <button
-                  type="button"
-                  className={styles.reviewChangeBtn}
-                  onClick={() => setShowSchoolSearch(true)}
-                >
-                  Change school
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className={styles.reviewGradeCard}>
-            <p className={styles.confirmKicker}>Grade</p>
-            <button
-              type="button"
-              className={styles.gradeDrawerTrigger}
-              onClick={() => setShowGradeDrawer(!showGradeDrawer)}
-              aria-expanded={showGradeDrawer}
-            >
-              <span>{grade}</span>
-              <svg className={styles.gradeChevron} viewBox="0 0 24 24" aria-hidden="true" style={{ transform: showGradeDrawer ? "rotate(180deg)" : "none" }}>
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </button>
-            {showGradeDrawer && availableGrades.length > 0 ? (
-              <div className={styles.gradeDrawerPanel}>
-                {availableGrades.map((g) => (
+          <div className={styles.selectionPanel} aria-label="Selected school and grade">
+            <div className={styles.reviewSchoolCard}>
+              <p className={styles.confirmKicker}>School</p>
+              {showSchoolSearch ? (
+                <div className={styles.schoolSearchWrap}>
+                  <label className={styles.srOnly} htmlFor="school-search">Search for a school</label>
+                  <input
+                    id="school-search"
+                    className={styles.schoolSearchInput}
+                    type="search"
+                    placeholder="Search for a school..."
+                    value={schoolQuery}
+                    onChange={(e) => handleSchoolSearch(e.target.value)}
+                    autoFocus
+                  />
+                  {schoolResults.length > 0 ? (
+                    <div className={styles.schoolResults}>
+                      {schoolResults.map((s) => (
+                        <button
+                          key={s.slug}
+                          type="button"
+                          className={styles.schoolResultItem}
+                          onClick={() => {
+                            const firstGrade = s.grades?.[0];
+                            if (firstGrade) navigateToCheckout(s.slug, firstGrade);
+                          }}
+                        >
+                          <strong>{s.name}</strong>
+                          <span>{s.city}, {s.province}</span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : schoolQuery.trim() && schoolResults.length === 0 ? (
+                    <p className={styles.schoolNoResults}>No schools found.</p>
+                  ) : null}
                   <button
-                    key={g.gradeSlug}
                     type="button"
-                    className={`${styles.gradeDrawerItem} ${g.gradeSlug === gradeSlug ? styles.gradeDrawerItemActive : ""}`}
-                    onClick={() => { setShowGradeDrawer(false); if (g.gradeSlug !== gradeSlug) navigateToCheckout(schoolSlug, g.gradeSlug); }}
+                    className={styles.schoolSearchCancel}
+                    onClick={() => { setShowSchoolSearch(false); setSchoolQuery(""); setSchoolResults([]); }}
                   >
-                    <span>{g.grade}</span>
-                    <span className={styles.gradeDrawerPrice}>{formatCurrency(g.price)}</span>
+                    Cancel
                   </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        </section>
+                </div>
+              ) : (
+                <div className={styles.reviewSchoolDisplay}>
+                  <h3>{schoolName}</h3>
+                  <button
+                    type="button"
+                    className={styles.reviewChangeBtn}
+                    onClick={() => setShowSchoolSearch(true)}
+                  >
+                    Change school
+                  </button>
+                </div>
+              )}
+            </div>
 
-        <section className={styles.reviewRightCol}>
-          <div className={styles.packListCard}>
-            <h3>Full stationery pack for 2027</h3>
-            <ul className={styles.packList} aria-label="All pack items">
-              {contents.map((item, index) => (
-                <li key={`${item}-${index}`}>{item}</li>
-              ))}
-            </ul>
-            <div className={styles.packListMeta}>
-              <span>{itemCount} items</span>
-              <span>{formatCurrency(packPrice)}</span>
+            <div className={styles.reviewGradeCard}>
+              <p className={styles.confirmKicker}>Grade</p>
+              <button
+                type="button"
+                className={styles.gradeDrawerTrigger}
+                onClick={() => setShowGradeDrawer(!showGradeDrawer)}
+                aria-expanded={showGradeDrawer}
+                aria-controls="grade-drawer-panel"
+              >
+                <span>{grade}</span>
+                <svg className={styles.gradeChevron} viewBox="0 0 24 24" aria-hidden="true" style={{ transform: showGradeDrawer ? "rotate(180deg)" : "none" }}>
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+              {showGradeDrawer && availableGrades.length > 0 ? (
+                <div className={styles.gradeDrawerPanel} id="grade-drawer-panel">
+                  {availableGrades.map((g) => (
+                    <button
+                      key={g.gradeSlug}
+                      type="button"
+                      className={`${styles.gradeDrawerItem} ${g.gradeSlug === gradeSlug ? styles.gradeDrawerItemActive : ""}`}
+                      onClick={() => { setShowGradeDrawer(false); if (g.gradeSlug !== gradeSlug) navigateToCheckout(schoolSlug, g.gradeSlug); }}
+                    >
+                      <span>{g.grade}</span>
+                      <span className={styles.gradeDrawerPrice}>{formatCurrency(g.price)}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -569,6 +569,21 @@ export function CheckoutForm({
             ) : null}
           </section>
         </section>
+
+        <section className={styles.reviewRightCol}>
+          <div className={styles.packListCard}>
+            <h3>Full stationery pack for 2027</h3>
+            <ul className={styles.packList} aria-label="All pack items">
+              {contents.map((item, index) => (
+                <li key={`${item}-${index}`}>{item}</li>
+              ))}
+            </ul>
+            <div className={styles.packListMeta}>
+              <span>{itemCount} items</span>
+              <span>{formatCurrency(packPrice)}</span>
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
@@ -599,6 +614,18 @@ export function CheckoutForm({
           <p id="learnerName-helper">Helpful for labels and school handover.</p>
           <input id="learnerName" data-field="learnerName" name="learnerName" autoComplete="off" placeholder="e.g. Leo Dlamini" value={learnerName} aria-describedby={`learnerName-helper${errors.learnerName ? " learnerName-error" : ""}`} aria-invalid={Boolean(errors.learnerName)} onChange={(event) => { setLearnerName(event.target.value); clearFieldError("learnerName"); }} />
           {errors.learnerName ? <p id="learnerName-error" className={styles.fieldError} role="alert">{errors.learnerName}</p> : null}
+        </div>
+        <div className={styles.fieldGroup}>
+          <label htmlFor="schoolName">School name</label>
+          <input id="schoolName" value={schoolName} readOnly aria-readonly="true" />
+        </div>
+        <div className={styles.fieldGroup}>
+          <label htmlFor="gradeName">Grade</label>
+          <input id="gradeName" value={grade} readOnly aria-readonly="true" />
+        </div>
+        <div className={styles.fieldGroup}>
+          <label htmlFor="learner-notes">Optional notes</label>
+          <textarea id="learner-notes" value={learnerNotes} placeholder="Anything we should know about this learner or pack?" onChange={(event) => setLearnerNotes(event.target.value)} />
         </div>
 
         <fieldset className={`${styles.optionFieldset} ${styles.contactMethodGroup}`}>
@@ -645,7 +672,7 @@ export function CheckoutForm({
           </div>
         </fieldset>
 
-        {fulfilmentOption === "Home delivery" ? (
+        {fulfilmentOption === "Delivery" ? (
           <div className={styles.addressPanel}>
             <p>
               Home delivery may include a delivery fee depending on your location. We will confirm any delivery-specific details before fulfilment.
@@ -689,7 +716,7 @@ export function CheckoutForm({
         </ReviewBlock>
         <ReviewBlock title="Delivery / Collection" onEdit={() => goToStep(2)}>
           <strong>{fulfilmentOption}</strong>
-          <span>{fulfilmentOption === "Home delivery" ? deliveryAddressSummary || "Address required" : "PexPacks will confirm the handover details."}</span>
+          <span>{fulfilmentOption === "Delivery" ? deliveryAddressSummary || "Address required" : "PexPacks will confirm the handover details."}</span>
         </ReviewBlock>
 
         <section className={styles.paymentReadyCard}>
@@ -699,8 +726,8 @@ export function CheckoutForm({
           <ul className={styles.trustList}>
             <li>Secure payment powered by Paystack</li>
             <li>PexPacks does not store your card details</li>
-            <li>POPIA-aware order handling</li>
-            <li>WhatsApp support is available if you need help</li>
+            <li>Your order is saved before payment for tracking</li>
+            <li>Confirmation is sent after successful payment</li>
           </ul>
         </section>
 
@@ -743,7 +770,15 @@ export function CheckoutForm({
           </button>
         )}
         <div className={`${styles.stickyHeaderButton} ${isSticky ? styles.isSticky : ""}`}>
-          <Button variant="white" size="lg" iconDirection="none" className={styles.stickyCtaBtn} onClick={() => setSummaryOpen(!summaryOpen)}>
+          <Button
+            variant="white"
+            size="lg"
+            iconDirection="none"
+            className={styles.stickyCtaBtn}
+            onClick={() => setSummaryOpen(!summaryOpen)}
+            aria-expanded={summaryOpen}
+            aria-controls="checkout-order-summary"
+          >
             <span className={styles.stickyCtaLabel}>Total to pay</span>
             <span className={styles.stickyCtaPrice}>{formatCurrency(totalToPay)}</span>
           </Button>
@@ -756,9 +791,9 @@ export function CheckoutForm({
 
           <section className={styles.stepCard} aria-labelledby="checkout-step-heading">
             <div className={styles.stepIntro}>
-              <h2 id="checkout-step-heading" ref={headingRef} tabIndex={-1}>{currentStep.title}</h2>
+              <h1 id="checkout-step-heading" ref={headingRef} tabIndex={-1}>{currentStep.title}</h1>
               <p>
-                {activeStep === 0 ? "Check your pack details before continuing to payment." : null}
+                {activeStep === 0 ? "Make sure you check your pack details before continuing to the next step. You can change the school and grade below." : null}
                 {activeStep === 1 ? "We will use these details to confirm your order and send updates." : null}
                 {activeStep === 2 ? "Choose how you want to receive your pack." : null}
                 {activeStep === 3 ? "Review everything before continuing to Paystack." : null}
@@ -838,7 +873,7 @@ function CheckoutOrderSummary({
 }) {
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">
-      <div className={`${styles.summaryCard} ${summaryOpen ? styles.summaryCardOpen : ""}`}>
+      <div className={`${styles.summaryCard} ${summaryOpen ? styles.summaryCardOpen : ""}`} id="checkout-order-summary">
         <p className={styles.confirmKicker}>Order summary</p>
         <h2>{schoolName ?? packName}</h2>
         <p className={styles.summaryGrade}>{gradeName ?? "Full pack"}</p>
@@ -869,7 +904,9 @@ function CheckoutOrderSummary({
         <ul className={styles.trustList}>
           <li>Packed according to the school list</li>
           <li>We use brands as per school list</li>
-          <li>Read our terms and conditions</li>
+          <li>
+            <Link href="/terms">Read our terms and conditions</Link>
+          </li>
         </ul>
         {whatsAppHref ? (
           <a className={styles.supportLink} href={whatsAppHref} target="_blank" rel="noopener noreferrer" aria-label="Reach PexPacks on WhatsApp for checkout help">

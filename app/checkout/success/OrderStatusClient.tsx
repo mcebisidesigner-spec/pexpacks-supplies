@@ -230,7 +230,7 @@ export function OrderStatusClient({
           }}
         >
           {isPaid
-            ? "Payment Received!"
+            ? "Payment received"
             : isStillPending
               ? "Confirming Your Payment"
               : "Payment Pending"}
@@ -246,7 +246,7 @@ export function OrderStatusClient({
           }}
         >
           {isPaid
-            ? `Thank you! Your payment of ${status?.estimatedTotal ? formatCurrency(Number(status.estimatedTotal)) : ""} has been received. Your order is now being prepared.`
+            ? `Your payment of ${status?.estimatedTotal ? formatCurrency(Number(status.estimatedTotal)) : ""} has been received. Your order is being confirmed and prepared.`
             : isStillPending
               ? "We received your payment request and are waiting for secure payment confirmation. This usually takes a few seconds."
               : "We could not confirm your payment yet. If you completed payment, please check your email for confirmation or contact us."}
