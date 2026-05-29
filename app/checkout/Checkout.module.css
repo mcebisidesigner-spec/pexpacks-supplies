@@ -17,9 +17,6 @@
 .checkoutHeader > :nth-child(1) {
   justify-self: start;
 }
-.checkoutHeader > :nth-child(3) {
-  justify-self: end;
-}
 
 .stickyHeaderButton {
   position: fixed;
@@ -112,6 +109,7 @@
   font-weight: 800;
   text-decoration: underline;
   text-underline-offset: 4px;
+  justify-self: end;
 }
 
 .checkoutGrid {

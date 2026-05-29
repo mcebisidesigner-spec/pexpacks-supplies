@@ -7,7 +7,7 @@ type BaseProps = {
   children: ReactNode;
   variant?: "primary" | "secondary" | "tertiary" | "navy" | "white" | "outline";
   size?: "sm" | "md" | "lg";
-  iconDirection?: "right" | "left" | "search" | "menu" | "close";
+  iconDirection?: "right" | "left" | "search" | "menu" | "close" | "none";
   className?: string;
   ariaLabel?: string;
 };
@@ -41,7 +41,7 @@ export function Button({
     <>
       {iconDirection === "left" ? <IconCircle tone={iconTone} direction={iconDirection} /> : null}
       <span>{children}</span>
-      {iconDirection !== "left" ? <IconCircle tone={iconTone} direction={iconDirection ?? "right"} /> : null}
+      {iconDirection && iconDirection !== "left" ? <IconCircle tone={iconTone} direction={iconDirection} /> : null}
     </>
   );
 
