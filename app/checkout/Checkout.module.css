@@ -729,6 +729,26 @@
   font-weight: 900;
 }
 
+.packListToggle {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px dashed rgba(26, 42, 64, 0.18);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--pex-keppel);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--interactive-transition);
+}
+
+.packListToggle:hover {
+  background: rgba(33, 158, 154, 0.06);
+  border-color: var(--pex-keppel);
+}
+
 .reviewBlock {
   padding: 16px;
   border: var(--surface-border-soft);
