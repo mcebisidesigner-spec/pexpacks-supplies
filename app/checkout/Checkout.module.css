@@ -4,6 +4,33 @@
   padding: 34px var(--gutter-desktop) var(--section-padding-y-desktop);
   background: var(--pex-bg-soft);
   font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+}
+
+.checkoutHeader {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  max-width: var(--layout-max-width);
+  margin: 0 auto 34px;
+  flex-shrink: 0;
+}
+
+.checkoutGrid {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
+}
+
+.mainColumn {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: start;
+  min-width: 0;
+  min-height: 100%;
 }
 
 .checkoutHeader {
