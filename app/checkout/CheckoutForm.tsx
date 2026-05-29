@@ -471,6 +471,14 @@ export function CheckoutForm({
             </span>
           </Button>
         </div>
+        <a
+          href={whatsAppHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.helpLink}
+        >
+          Need Help?
+        </a>
       </div>
 
       <div className={styles.checkoutGrid}>
