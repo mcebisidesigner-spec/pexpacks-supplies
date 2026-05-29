@@ -58,6 +58,7 @@ export function AddSchoolForm() {
       setStatus(result);
       if (result.success) {
         form.reset();
+        setConsent(false);
       }
     } catch {
       setStatus({

@@ -17,12 +17,14 @@ type SchoolSearchWidgetProps = {
   compact?: boolean;
   titleText?: string;
   bodyText?: string;
+  headingLevel?: "h2" | "h3";
 };
 
 export function SchoolSearchWidget({
   compact = false,
   titleText = "Gauteng school pack finder",
   bodyText = "Skip the retail store hopping. Search for your school to find and order their official pre-packed grade lists.",
+  headingLevel = "h3",
 }: SchoolSearchWidgetProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SchoolSearchResult[]>([]);
@@ -106,7 +108,11 @@ export function SchoolSearchWidget({
       className={`${styles.widgetCard} ${compact ? styles.compactWidget : ""}`}
     >
       <span className={styles.eyebrow}>Skip the queue</span>
-      <h3 className={styles.title}>{titleText}</h3>
+      {headingLevel === "h2" ? (
+        <h2 className={styles.title}>{titleText}</h2>
+      ) : (
+        <h3 className={styles.title}>{titleText}</h3>
+      )}
       <p className={styles.text}>{bodyText}</p>
 
       <form onSubmit={handleSearch} className={styles.searchForm}>

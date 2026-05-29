@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
+import { buildMetadata } from "@/lib/seo";
 import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = {
-  title: "Offline | Pexpacks",
+  ...buildMetadata(
+    "Offline | Pexpacks",
+    "Pexpacks could not reach the network. Previously opened pages may still be available.",
+    "/offline"
+  ),
   robots: {
     index: false,
     follow: false,

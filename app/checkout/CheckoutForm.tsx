@@ -161,7 +161,7 @@ export function CheckoutForm({
   const whatsAppHref = useMemo(
     () =>
       buildWhatsAppHref(
-        `Hi PexPacks, I need help with checkout for ${schoolName} ${grade}.`
+        `Hi Pexpacks, I need help with checkout for ${schoolName} ${grade}.`
       ),
     [grade, schoolName]
   );
@@ -325,7 +325,7 @@ export function CheckoutForm({
       setSubmitError(
         error instanceof Error
           ? error.message
-          : "We could not continue to Paystack right now. Please try again or contact PexPacks on WhatsApp."
+          : "We could not continue to Paystack right now. Please try again or contact Pexpacks on WhatsApp."
       );
     } finally {
       setSubmitting(false);

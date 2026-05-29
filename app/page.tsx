@@ -135,11 +135,11 @@ No queues. No confusion. No missing items.
         <div className={homeStyles.brandMarqueeTrack}>
           {[
             "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "pexnflex", "freedom",
+            "post-it", "bantex", "penflex", "freedom",
             "casio", "marlin", "pentel", "rapid", "rexel",
             "sellotape", "stabilo", "starpie",
             "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "pexnflex", "freedom",
+            "post-it", "bantex", "penflex", "freedom",
             "casio", "marlin", "pentel", "rapid", "rexel",
             "sellotape", "stabilo", "starpie",
           ].map((brand, i) => (

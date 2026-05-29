@@ -6,8 +6,8 @@ type CheckoutPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "Checkout | PexPacks",
-  description: "Complete your PexPacks stationery pack order securely.",
+  title: "Checkout | Pexpacks",
+  description: "Complete your Pexpacks stationery pack order securely.",
   robots: {
     index: false,
     follow: false,

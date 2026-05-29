@@ -3,7 +3,7 @@ import { buildWhatsAppHref } from "@/data/contact";
 
 export default function CheckoutNotFound() {
   const whatsappHref = buildWhatsAppHref(
-    "Hi PexPacks, I could not find my checkout pack. Please help me choose the right school pack."
+    "Hi Pexpacks, I could not find my checkout pack. Please help me choose the right school pack."
   );
 
   return (
@@ -59,7 +59,7 @@ export default function CheckoutNotFound() {
             lineHeight: 1.55,
           }}
         >
-          Choose your school and grade again, or contact PexPacks and we will
+          Choose your school and grade again, or contact Pexpacks and we will
           help you find the right stationery pack.
         </p>
         <div
@@ -74,11 +74,11 @@ export default function CheckoutNotFound() {
           <Button href="/schools">Find Your School Pack</Button>
           {whatsappHref ? (
             <Button href={whatsappHref} variant="outline">
-              Contact PexPacks
+              Contact Pexpacks
             </Button>
           ) : (
             <Button href="/contact" variant="outline">
-              Contact PexPacks
+              Contact Pexpacks
             </Button>
           )}
         </div>
