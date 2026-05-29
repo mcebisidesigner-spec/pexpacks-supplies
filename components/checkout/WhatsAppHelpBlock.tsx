@@ -10,7 +10,7 @@ export function WhatsAppHelpBlock({ href }: WhatsAppHelpBlockProps) {
   return (
     <div className={styles.supportBlock}>
       <span className={styles.supportCopy}>
-        <strong>Do you need Help?</strong>
+        <strong>Need Help?</strong>
         <small>Reach us on WhatsApp</small>
       </span>
       <a

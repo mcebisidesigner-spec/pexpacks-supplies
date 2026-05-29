@@ -471,14 +471,6 @@ export function CheckoutForm({
             </span>
           </Button>
         </div>
-        <a
-          href="https://wa.me/27780036048"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.helpLink}
-        >
-          Need Help?
-        </a>
       </div>
 
       <div className={styles.checkoutGrid}>
