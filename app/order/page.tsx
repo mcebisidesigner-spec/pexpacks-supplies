@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import styles from "./OrderPage.module.css";
 import { OrderForm } from "./OrderForm";
 import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Order a Custom Pack | Pexpacks",
@@ -19,7 +20,15 @@ export default function OrderPage() {
         {/* Left Side: The Pitch */}
         <div className={styles.pitchSection}>
           <h1>Let us pack it for you.</h1>
-          <p>
+          
+          <div className={styles.searchPromo}>
+            <p>
+              <strong>Wait! Did you check if we already have your school?</strong><br/>
+              We have hundreds of standard packs ready to go. <Link href="/schools" className={styles.searchLink}>Search for your school pack here.</Link>
+            </p>
+          </div>
+
+          <p className={styles.pitchDescription}>
             Can&apos;t find your exact school or office pack? No problem. 
             Send us your list and we&apos;ll build it for you at no extra cost.
           </p>

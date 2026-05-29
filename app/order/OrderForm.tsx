@@ -4,8 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import styles from "./OrderPage.module.css";
 
-
-type OrderCategory = "Pre-School" | "Primary" | "High School" | "Office";
+type OrderCategory = "Primary School Learner" | "High School Learner" | "Office / Business";
 
 function formatPhoneSA(value: string) {
   const hasPlus = value.startsWith('+');
@@ -26,6 +25,7 @@ function formatPhoneSA(value: string) {
 }
 
 export function OrderForm() {
+  const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -40,10 +40,32 @@ export function OrderForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
+  const nextStep = () => {
+    // Basic validation before moving
+    if (step === 1 && !category) {
+      setErrors({ category: "Please select an option" });
+      return;
+    }
+    if (step === 2) {
+      if (inputMethod === "upload" && !fileName) {
+        setErrors({ list: "Please upload your list or type it out" });
+        return;
+      }
+      if (inputMethod === "type" && !listText.trim()) {
+        setErrors({ list: "Please paste or type your list" });
+        return;
+      }
+    }
+    setErrors({});
+    setStep((prev) => prev + 1);
+  };
+  
+  const prevStep = () => setStep((prev) => prev - 1);
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
     setPhone(formatPhoneSA(rawValue));
-    if (errors.phone) setErrors((prev) => ({ ...prev, phone: "" }));
+    if (errors.form) setErrors((prev) => ({ ...prev, form: "" }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,34 +75,17 @@ export function OrderForm() {
     }
   };
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-    if (!name.trim()) newErrors.name = "Name is required";
-    if (!phone.replace(/[^0-9+]/g, "")) newErrors.phone = "WhatsApp number is required";
-    if (!category) newErrors.category = "Please select a category";
-    
-    if (inputMethod === "upload" && !fileName) {
-      newErrors.list = "Please upload your list or switch to typing it out";
-    }
-    if (inputMethod === "type" && !listText.trim()) {
-      newErrors.list = "Please paste or type your list";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!name.trim() || !phone.replace(/[^0-9+]/g, "")) {
+      setErrors({ form: "Please fill in all required fields" });
+      return;
+    }
 
     setIsSubmitting(true);
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    // In a real app, we would send `name, email, phone, category, listText / file` to the backend
     console.log("Form submitted", { name, email, phone, category, listText, fileName });
-    
     setIsSubmitting(false);
     setIsSuccess(true);
   };
@@ -93,14 +98,19 @@ export function OrderForm() {
         <p>
           Thanks {name.split(" ")[0]}! We have received your stationery list.
           <br /><br />
-          Our packing team is reviewing it now and will send your custom quote to <strong>{phone}</strong> via WhatsApp shortly.
+          Our packing team is reviewing it now and will send your custom quote to <strong>{phone}</strong> via WhatsApp within 2 hours.
         </p>
         <Button 
           variant="outline" 
           onClick={() => {
             setIsSuccess(false);
+            setStep(1);
             setFileName(null);
             setListText("");
+            setCategory(null);
+            setName("");
+            setPhone("");
+            setEmail("");
           }}
           style={{ marginTop: "32px" }}
         >
@@ -112,145 +122,186 @@ export function OrderForm() {
 
   return (
     <div className={styles.formCard}>
-      <form onSubmit={handleSubmit} className={styles.formGrid}>
-        
-        {/* Category Selection */}
-        <div className={styles.field}>
-          <label>1. Who are you ordering for?</label>
-          <div className={styles.categoryPills}>
-            {(["Pre-School", "Primary", "High School", "Office"] as OrderCategory[]).map((cat) => (
-              <div 
-                key={cat}
-                className={`${styles.categoryPill} ${category === cat ? styles.active : ""}`}
-                onClick={() => {
-                  setCategory(cat);
-                  if (errors.category) setErrors((prev) => ({ ...prev, category: "" }));
-                }}
-              >
-                {cat}
-              </div>
-            ))}
-          </div>
-          {errors.category && <span className={styles.errorText}>{errors.category}</span>}
-        </div>
+      {/* Progress Indicator */}
+      <div className={styles.progressBar}>
+        <div className={`${styles.progressStep} ${step >= 1 ? styles.active : ""}`}></div>
+        <div className={`${styles.progressStep} ${step >= 2 ? styles.active : ""}`}></div>
+        <div className={`${styles.progressStep} ${step >= 3 ? styles.active : ""}`}></div>
+      </div>
 
-        {/* List Input */}
-        <div className={styles.field}>
-          <label>2. Share your stationery list</label>
-          <div className={styles.tabs}>
-            <button 
-              type="button"
-              className={`${styles.tab} ${inputMethod === "upload" ? styles.active : ""}`}
-              onClick={() => setInputMethod("upload")}
-            >
-              Upload Photo/PDF
-            </button>
-            <button 
-              type="button"
-              className={`${styles.tab} ${inputMethod === "type" ? styles.active : ""}`}
-              onClick={() => setInputMethod("type")}
-            >
-              Paste / Type List
-            </button>
-          </div>
-
-          {inputMethod === "upload" ? (
-            fileName ? (
-              <div className={styles.successArea}>
-                <div className={styles.successIcon} style={{ width: 32, height: 32, fontSize: 16 }}>✓</div>
-                <strong>{fileName}</strong>
-                <button 
-                  type="button" 
-                  onClick={() => setFileName(null)}
-                  style={{ display: "block", margin: "8px auto 0", background: "none", border: "none", color: "var(--pex-coral)", textDecoration: "underline", cursor: "pointer" }}
+      <div className={styles.stepContainer}>
+        {/* FORM STEP 1: Who is this for? */}
+        {step === 1 && (
+          <div className={styles.animateFadeIn}>
+            <h2 className={styles.stepTitle}>Who are we packing for?</h2>
+            <div className={styles.verticalOptions}>
+              {(["Primary School Learner", "High School Learner", "Office / Business"] as OrderCategory[]).map((cat) => (
+                <button
+                  key={cat}
+                  className={`${styles.verticalOptionBtn} ${category === cat ? styles.selected : ""}`}
+                  onClick={() => {
+                    setCategory(cat);
+                    setErrors({});
+                    setTimeout(() => {
+                      setErrors({});
+                      setStep(2);
+                    }, 250); // Auto-advance for friction-less feeling
+                  }}
                 >
-                  Remove file
+                  {cat}
                 </button>
-              </div>
-            ) : (
-              <div 
-                className={`${styles.uploadArea} ${isDragging ? styles.dragging : ""}`}
-                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  setIsDragging(false);
-                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                    setFileName(e.dataTransfer.files[0].name);
-                    if (errors.list) setErrors((prev) => ({ ...prev, list: "" }));
-                  }
-                }}
+              ))}
+            </div>
+            {errors.category && <span className={styles.errorText}>{errors.category}</span>}
+          </div>
+        )}
+
+        {/* FORM STEP 2: File Upload */}
+        {step === 2 && (
+          <div className={styles.animateFadeIn}>
+            <h2 className={styles.stepTitle}>Share your stationery list</h2>
+            <div className={styles.tabs}>
+              <button 
+                type="button"
+                className={`${styles.tab} ${inputMethod === "upload" ? styles.active : ""}`}
+                onClick={() => setInputMethod("upload")}
               >
-                <div className={styles.uploadIcon}>📄</div>
-                <strong>Click to upload or drag and drop</strong>
-                <span>PNG, JPG, PDF (Max. 5MB)</span>
-                <input 
-                  type="file" 
-                  className={styles.fileInput} 
-                  onChange={handleFileChange}
-                  accept="image/png, image/jpeg, application/pdf"
+                Upload Photo/PDF
+              </button>
+              <button 
+                type="button"
+                className={`${styles.tab} ${inputMethod === "type" ? styles.active : ""}`}
+                onClick={() => setInputMethod("type")}
+              >
+                Paste / Type List
+              </button>
+            </div>
+
+            {inputMethod === "upload" ? (
+              fileName ? (
+                <div className={styles.successArea}>
+                  <div className={styles.successIcon} style={{ width: 32, height: 32, fontSize: 16 }}>✓</div>
+                  <strong>{fileName}</strong>
+                  <button 
+                    type="button" 
+                    onClick={() => setFileName(null)}
+                    style={{ display: "block", margin: "8px auto 0", background: "none", border: "none", color: "var(--pex-coral)", textDecoration: "underline", cursor: "pointer" }}
+                  >
+                    Remove file
+                  </button>
+                </div>
+              ) : (
+                <div 
+                  className={`${styles.uploadArea} ${isDragging ? styles.dragging : ""}`}
+                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDragging(false);
+                    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                      setFileName(e.dataTransfer.files[0].name);
+                      if (errors.list) setErrors({});
+                    }
+                  }}
+                >
+                  <div className={styles.uploadIcon}>📄</div>
+                  <strong>Click to upload or drag and drop</strong>
+                  <span>PNG, JPG, PDF (Max. 5MB)</span>
+                  <input 
+                    type="file" 
+                    className={styles.fileInput} 
+                    onChange={handleFileChange}
+                    accept="image/png, image/jpeg, application/pdf"
+                  />
+                </div>
+              )
+            ) : (
+              <textarea
+                className={`${styles.input} ${errors.list ? styles.inputError : ""}`}
+                placeholder="Paste your items here (e.g. 5x HB Pencils, 2x Pritt 43g...)"
+                rows={4}
+                value={listText}
+                onChange={(e) => {
+                  setListText(e.target.value);
+                  if (errors.list) setErrors({});
+                }}
+              />
+            )}
+            {errors.list && <span className={styles.errorText}>{errors.list}</span>}
+
+            <div className={styles.formActions}>
+              <button onClick={prevStep} className={styles.backBtn}>← Back</button>
+              <Button 
+                onClick={nextStep} 
+                disabled={inputMethod === "upload" ? !fileName : !listText.trim()}
+                variant="primary"
+                size="md"
+              >
+                Continue
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* FORM STEP 3: Contact Details */}
+        {step === 3 && (
+          <div className={styles.animateFadeIn}>
+            <h2 className={styles.stepTitle}>Where should we send your quote?</h2>
+            
+            <form onSubmit={handleSubmit} className={styles.formGrid}>
+              <div className={styles.field}>
+                <label>Your Name</label>
+                <input
+                  type="text"
+                  required
+                  className={`${styles.input} ${errors.form ? styles.inputError : ""}`}
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setErrors({});
+                  }}
                 />
               </div>
-            )
-          ) : (
-            <textarea
-              className={`${styles.input} ${errors.list ? styles.inputError : ""}`}
-              placeholder="Paste your items here (e.g. 5x HB Pencils, 2x Pritt 43g...)"
-              rows={4}
-              value={listText}
-              onChange={(e) => {
-                setListText(e.target.value);
-                if (errors.list) setErrors((prev) => ({ ...prev, list: "" }));
-              }}
-            />
-          )}
-          {errors.list && <span className={styles.errorText}>{errors.list}</span>}
-        </div>
 
-        {/* Contact Details */}
-        <div className={styles.field} style={{ marginTop: "8px" }}>
-          <label>3. Where should we send your quote?</label>
-          
-          <input
-            type="text"
-            className={`${styles.input} ${errors.name ? styles.inputError : ""}`}
-            placeholder="Your Name"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
-            }}
-          />
-          {errors.name && <span className={styles.errorText}>{errors.name}</span>}
+              <div className={styles.field}>
+                <label>WhatsApp Number</label>
+                <input
+                  type="tel"
+                  required
+                  className={`${styles.input} ${errors.form ? styles.inputError : ""}`}
+                  placeholder="e.g. 078 123 4567"
+                  value={phone}
+                  onChange={handlePhoneChange}
+                />
+              </div>
 
-          <input
-            type="tel"
-            className={`${styles.input} ${errors.phone ? styles.inputError : ""}`}
-            placeholder="WhatsApp Number (e.g. 078 123 4567)"
-            value={phone}
-            onChange={handlePhoneChange}
-          />
-          {errors.phone && <span className={styles.errorText}>{errors.phone}</span>}
+              <div className={styles.field}>
+                <label>Email Address (Optional)</label>
+                <input
+                  type="email"
+                  className={styles.input}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              
+              {errors.form && <span className={styles.errorText}>{errors.form}</span>}
 
-          <input
-            type="email"
-            className={styles.input}
-            placeholder="Email Address (Optional)"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <Button 
-          type="submit" 
-          variant="primary" 
-          size="lg" 
-          className={styles.submitBtn}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Processing..." : "Get Custom Quote"}
-        </Button>
-      </form>
+              <div className={styles.formActions}>
+                <button type="button" onClick={prevStep} className={styles.backBtn}>← Back</button>
+                <Button 
+                  type="submit" 
+                  variant="primary" 
+                  size="md"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Processing..." : "Submit for Quote"}
+                </Button>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

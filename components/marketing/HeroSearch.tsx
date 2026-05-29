@@ -256,6 +256,12 @@ export function HeroSearch() {
                       schoolName={query}
                       source="home-search"
                     />
+                    <div className={styles.noResultsOrderCta}>
+                      <span>Or skip the wait —</span>
+                      <Link href="/order" className={styles.noResultsOrderLink}>
+                        Upload your list and we&apos;ll pack it for you
+                      </Link>
+                    </div>
                     <div className={styles.noResultsPacks}>
                       <Link href="/schools#school-grade-packs" className={styles.noResultsPacksLabel}>
                         Browse standard packs instead

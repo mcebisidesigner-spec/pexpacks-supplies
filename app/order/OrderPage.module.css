@@ -34,7 +34,40 @@
   margin: 0 0 16px;
 }
 
-.pitchSection p {
+.searchPromo {
+  background: rgba(33, 158, 154, 0.1);
+  border: 1px solid rgba(33, 158, 154, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  max-width: 480px;
+}
+
+.searchPromo p {
+  color: var(--pex-navy);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.searchPromo strong {
+  color: var(--pex-keppel);
+  font-size: 15px;
+}
+
+.searchLink {
+  color: var(--pex-keppel);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+
+.searchLink:hover {
+  color: var(--pex-primary);
+}
+
+.pitchDescription {
   color: var(--pex-text);
   font-size: clamp(16px, 2vw, 18px);
   line-height: 1.5;
@@ -329,4 +362,97 @@
   .pitchSection h1 {
     font-size: 32px;
   }
+}
+
+/* Multi-Step Additions */
+.progressBar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.progressStep {
+  height: 8px;
+  flex: 1;
+  background: rgba(33, 158, 154, 0.15);
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.progressStep.active {
+  background: var(--pex-navy);
+}
+
+.animateFadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stepContainer {
+  min-height: 320px;
+}
+
+.stepTitle {
+  font-family: var(--font-heading);
+  color: var(--pex-navy);
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+.verticalOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.verticalOptionBtn {
+  width: 100%;
+  text-align: left;
+  padding: 18px 24px;
+  border: 2px solid var(--pex-border);
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pex-primary);
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.verticalOptionBtn:hover {
+  border-color: var(--pex-navy);
+  background: rgba(26, 42, 64, 0.03);
+}
+
+.verticalOptionBtn.selected {
+  border-color: var(--pex-navy);
+  background: var(--pex-navy);
+  color: #fff;
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  color: var(--pex-muted);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+
+.backBtn:hover {
+  color: var(--pex-primary);
 }

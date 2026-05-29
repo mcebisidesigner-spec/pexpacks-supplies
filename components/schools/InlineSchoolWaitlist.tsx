@@ -158,9 +158,15 @@ export function InlineSchoolWaitlist({
       </form>
 
       {showFallback ? (
-        <Link href={mostPopularPacksHref} className={styles.fallbackLink}>
-          Buy standard pack instead
-        </Link>
+        <div className={styles.fallbackLinks}>
+          <Link href="/order" className={styles.fallbackLink}>
+            Upload your list and we'll pack it
+          </Link>
+          <span className={styles.fallbackDivider}>or</span>
+          <Link href={mostPopularPacksHref} className={styles.fallbackLink}>
+            Buy standard pack instead
+          </Link>
+        </div>
       ) : null}
 
       {status ? (
