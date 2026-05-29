@@ -46,7 +46,7 @@ export default function HomePage() {
               </span>
             </h1>
             <p className={heroStyles.heroLead}>
-              The easiest way to buy school and office supplies. No queues. No confusion. No missing items.
+No queues. No confusion. No missing items.
             </p>
             <HeroSearch />
             <div className={homeStyles.audienceCards}>
@@ -138,11 +138,11 @@ export default function HomePage() {
         <div className={homeStyles.brandMarqueeTrack}>
           {[
             "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "penflex", "freedom",
+            "post-it", "bantex", "freedom",
             "casio", "marlin", "pentel", "rapid", "rexel",
             "sellotape", "stabilo", "starpie",
             "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "penflex", "freedom",
+            "post-it", "bantex", "freedom",
             "casio", "marlin", "pentel", "rapid", "rexel",
             "sellotape", "stabilo", "starpie",
           ].map((brand, i) => (

@@ -58,11 +58,11 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         <div className={homeStyles.brandMarqueeTrack}>
           {[
             "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "penflex", "freedom",
+            "post-it", "bantex", "freedom",
             "casio", "marlin", "pentel", "rapid", "rexel",
             "sellotape", "stabilo", "starpie",
             "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "penflex", "freedom",
+            "post-it", "bantex", "freedom",
             "casio", "marlin", "pentel", "rapid", "rexel",
             "sellotape", "stabilo", "starpie",
           ].map((brand, i) => (
