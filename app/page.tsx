@@ -69,17 +69,6 @@ export default function HomePage() {
                 </div>
               </Link>
             </div>
-            <div className={heroStyles.trustBar}>
-              <div className={heroStyles.trustBarItem}>
-                <span className={heroStyles.trustBarItemIcon}>⭐</span> 4.9/5 Parent Rating
-              </div>
-              <div className={heroStyles.trustBarItem}>
-                <span className={heroStyles.trustBarItemIcon}>🛡️</span> 100% List Match Guarantee
-              </div>
-              <div className={heroStyles.trustBarItem}>
-                <span className={heroStyles.trustBarItemIcon}>🚚</span> Fast Nationwide Delivery
-              </div>
-            </div>
           </div>
 
           <div className={heroStyles.heroVisual}>
