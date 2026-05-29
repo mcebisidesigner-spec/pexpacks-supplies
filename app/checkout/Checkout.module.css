@@ -177,6 +177,7 @@
   .mainColumn {
     grid-template-columns: 1fr minmax(320px, 380px);
     gap: clamp(24px, 4vw, 40px);
+    align-items: stretch;
   }
   .mainColumn > :not(.summaryColumn) {
     grid-column: 1;
@@ -184,7 +185,8 @@
   }
   .mainColumn > .summaryColumn {
     grid-column: 2;
-    grid-row: 1 / 99;
+    grid-row: 1 / -1;
+    align-self: stretch;
   }
 }
 
