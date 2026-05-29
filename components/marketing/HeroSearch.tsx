@@ -14,6 +14,7 @@ import {
   isSchoolPhase,
 } from "@/lib/schools/schoolPhase";
 import { slugify } from "@/lib/slugify";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import styles from "./HeroSearch.module.css";
 
 const resultLimit = 12;
@@ -178,10 +179,12 @@ export function HeroSearch() {
                             {school.image ? (
                               <Image
                                 src={school.image}
-                                alt=""
+                                alt={`${school.name} logo`}
                                 className={styles.heroResultLogo}
                                 width={36}
                                 height={36}
+                                placeholder="blur"
+                                blurDataURL={IMAGE_BLUR_DATA_URL}
                               />
                             ) : null}
                             <div className={styles.heroResultSummary}>

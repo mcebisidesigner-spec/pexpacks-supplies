@@ -9,7 +9,7 @@ import { officePacks } from "@/data/officePacks";
 import { featuredPacks } from "@/data/packs";
 import { brandLogoUrls } from "@/lib/brand-assets";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { siteName, siteUrl } from "@/lib/seo";
+import { siteName, siteUrl, defaultOgImage } from "@/lib/seo";
 
 const organizationId = `${siteUrl}/#organization`;
 const storeId = `${siteUrl}/#online-store`;
@@ -71,7 +71,7 @@ export function onlineStoreSchema() {
       name: pack.name,
       url: `${siteUrl}${pack.href}`,
       category: `${pack.category} stationery pack`,
-      availability: "https://schema.org/PreOrder",
+      availability: "https://schema.org/InStock",
       priceCurrency: "ZAR",
       priceSpecification: pack.priceLabel.startsWith("From R ")
         ? {
@@ -97,7 +97,7 @@ export function onlineStoreSchema() {
     name: pack.name,
     url: `${siteUrl}/office`,
     category: "Office stationery pack",
-    availability: "https://schema.org/PreOrder",
+    availability: "https://schema.org/InStock",
     priceCurrency: pack.priceFrom > 0 ? "ZAR" : undefined,
     priceSpecification:
       pack.priceFrom > 0
@@ -285,5 +285,35 @@ export function breadcrumbSchema(items: Array<{ name: string; path: string }>) {
       name: item.name,
       item: `${siteUrl}${item.path}`,
     })),
+  };
+}
+
+export function articleSchema(post: {
+  title: string;
+  excerpt: string;
+  image?: string;
+  date: string;
+  author: string;
+  slug: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blog/${post.slug}`,
+    },
+    headline: post.title,
+    description: post.excerpt,
+    image: post.image ? `${siteUrl}${post.image}` : defaultOgImage,
+    author: {
+      "@type": "Person",
+      name: post.author,
+    },
+    publisher: {
+      "@id": organizationId,
+    },
+    datePublished: post.date,
+    dateModified: post.date,
   };
 }

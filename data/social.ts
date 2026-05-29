@@ -1,4 +1,4 @@
 export const officialSocialLinks = {
-  facebook: "https://www.facebook.com/Pexpacks",
-  instagram: "https://www.instagram.com/Pexpacks/",
+  facebook: "https://www.facebook.com/pexpacks",
+  instagram: "https://www.instagram.com/pexpacks/",
 } as const;

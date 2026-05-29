@@ -1,13 +1,25 @@
 .pageHero {
-  padding: 76px 0 58px;
+  padding: 54px 0 40px;
   text-align: center;
+}
+
+@media (min-width: 861px) {
+  .pageHero {
+    padding: 76px 0 58px;
+  }
 }
 
 .pageHeroNarrow {
   width: 100%;
   max-width: 840px;
   margin-inline: auto;
-  padding-inline: var(--gutter-desktop);
+  padding-inline: var(--gutter-mobile);
+}
+
+@media (min-width: 861px) {
+  .pageHeroNarrow {
+    padding-inline: var(--gutter-desktop);
+  }
 }
 
 .pageHero p:first-child,
@@ -45,12 +57,20 @@
 }
 
 .notFoundActions {
-  margin-top: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+  margin-top: 30px;
+  display: grid;
+  justify-items: center;
   gap: 12px;
+}
+
+@media (min-width: 861px) {
+  .notFoundActions {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 }
 
 .loadingState {
@@ -81,7 +101,13 @@
   width: 100%;
   max-width: var(--layout-max-width);
   margin-inline: auto;
-  padding-inline: var(--gutter-desktop);
+  padding-inline: var(--gutter-mobile);
+}
+
+@media (min-width: 861px) {
+  .sectionInner {
+    padding-inline: var(--gutter-desktop);
+  }
 }
 
 @keyframes pexSpin {
@@ -213,22 +239,7 @@
   color: var(--pex-bg);
 }
 
-@media (max-width: 860px) {
-  .pageHero {
-    padding: 54px 0 40px;
-  }
 
-  .pageHeroNarrow,
-  .sectionInner {
-    padding-inline: var(--gutter-mobile);
-  }
-
-  .notFoundActions {
-    margin-top: 30px;
-    display: grid;
-    justify-items: center;
-  }
-}
 
 .bgAlt {
   background: var(--pex-bg);

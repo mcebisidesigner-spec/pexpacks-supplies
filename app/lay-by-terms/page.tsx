@@ -41,7 +41,7 @@ const config: LegalDocumentConfig = {
       title: "Contact",
       content: (
         <>
-          Email <a href="mailto:lay-by@Pexpacks.co.za">lay-by@Pexpacks.co.za</a> or call{" "}
+          Email <a href="mailto:lay-by@pexpacks.co.za">lay-by@pexpacks.co.za</a> or call{" "}
           <a href={phoneHref}>{phoneNumber}</a>.
         </>
       ),
@@ -127,7 +127,7 @@ const config: LegalDocumentConfig = {
               <strong>Installments:</strong> The balance (total pack price less deposit) is divided into equal monthly installments over the remaining payment period. The deposit itself counts as the first installment, so the total number of payments equals the number of months in the payment term. Customers may pay more than the minimum at any time, or settle the full balance early, with no penalty.
             </li>
             <li>
-              <strong>Payment methods:</strong> Payments may be made by <strong>cash deposit</strong> into the Pexpacks bank account or by <strong>Electronic Funds Transfer (EFT)</strong>. Proof of payment must be emailed to Pexpacks (<a href="mailto:lay-by@Pexpacks.co.za">lay-by@Pexpacks.co.za</a>) for each payment. No debit order facilities are available under this lay-by arrangement.
+              <strong>Payment methods:</strong> Payments may be made by <strong>cash deposit</strong> into the Pexpacks bank account or by <strong>Electronic Funds Transfer (EFT)</strong>. Proof of payment must be emailed to Pexpacks (<a href="mailto:lay-by@pexpacks.co.za">lay-by@pexpacks.co.za</a>) for each payment. No debit order facilities are available under this lay-by arrangement.
             </li>
           </ul>
           <p>
@@ -415,7 +415,7 @@ const config: LegalDocumentConfig = {
       <div className={legalStyles.noticeBlock}>
         <p>
           If you have any questions about these Lay-by Terms or wish to initiate a lay-by agreement, please contact Pexpacks at{" "}
-          <a href="mailto:lay-by@Pexpacks.co.za">lay-by@Pexpacks.co.za</a> or call{" "}
+          <a href="mailto:lay-by@pexpacks.co.za">lay-by@pexpacks.co.za</a> or call{" "}
           <a href={phoneHref}>{phoneNumber}</a>. A copy of these terms is available
           on the Pexpacks website at all times.
         </p>

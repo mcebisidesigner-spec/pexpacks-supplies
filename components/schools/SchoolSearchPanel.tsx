@@ -12,6 +12,7 @@ import {
   isSchoolPhase,
 } from "@/lib/schools/schoolPhase";
 import { slugify } from "@/lib/slugify";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import { homepagePacks } from "@/data/packs";
@@ -196,7 +197,7 @@ export function SchoolSearchPanel({
                           <div className={heroStyles.heroResultContent}>
                             <div className={heroStyles.heroResultRow}>
                               {school.image ? (
-                                <Image src={school.image} alt={`${school.name} logo`} className={heroStyles.heroResultLogo} width={36} height={36} />
+                                <Image src={school.image} alt={`${school.name} logo`} className={heroStyles.heroResultLogo} width={36} height={36} placeholder="blur" blurDataURL={IMAGE_BLUR_DATA_URL} />
                               ) : null}
                               <div className={heroStyles.heroResultSummary}>
                               <h3>

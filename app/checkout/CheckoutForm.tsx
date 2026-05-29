@@ -428,7 +428,7 @@ export function CheckoutForm({
     <div className={styles.checkoutShell}>
       <div className={styles.checkoutHeader}>
         {activeStep > 0 ? (
-          <>
+          <div>
             <button
               type="button"
               className={`${styles.backLink} ${styles.desktopOnly}`}
@@ -443,7 +443,7 @@ export function CheckoutForm({
             >
               Back
             </button>
-          </>
+          </div>
         ) : (
           <button
             type="button"

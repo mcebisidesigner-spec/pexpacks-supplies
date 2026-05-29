@@ -9,6 +9,8 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
 import { blogPosts, getPostBySlug } from "@/data/blog";
 import { buildMetadata, siteUrl } from "@/lib/seo";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
+import { articleSchema } from "@/lib/schema";
 import styles from "../Blog.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -34,7 +36,8 @@ export async function generateMetadata({
   const metadata = buildMetadata(
     `${post.title} | Pexpacks Resource Hub`,
     post.excerpt,
-    `/blog/${post.slug}`
+    `/blog/${post.slug}`,
+    post.image
   );
 
   return {
@@ -135,6 +138,8 @@ function renderContent(content: string[]): ReactNode[] {
             width={800}
             height={450}
             className={styles.postImage}
+            placeholder="blur"
+            blurDataURL={IMAGE_BLUR_DATA_URL}
             style={{
               width: "100%",
               height: "auto",
@@ -255,6 +260,10 @@ export default async function BlogPostPage({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema(post)) }}
+      />
       <PageHero
         eyebrow={post.category}
         title={post.title}
@@ -318,6 +327,8 @@ export default async function BlogPostPage({
                   width={800}
                   height={450}
                   className={styles.postImage}
+                  placeholder="blur"
+                  blurDataURL={IMAGE_BLUR_DATA_URL}
                   priority
                 />
               </div>

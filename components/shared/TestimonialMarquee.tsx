@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import type { Testimonial } from "@/data/testimonials";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { debounce } from "@/lib/debounce";
 import styles from "./Marquee.module.css";
 
@@ -155,8 +156,10 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
                     src={item.avatar}
                     width={54}
                     height={54}
-                    alt=""
+                    alt={`${item.name} avatar`}
                     className={styles.avatar}
+                    placeholder="blur"
+                    blurDataURL={IMAGE_BLUR_DATA_URL}
                     loading="lazy"
                   />
                 ) : null}

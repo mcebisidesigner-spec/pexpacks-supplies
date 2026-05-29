@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import styles from "./FeaturedSchools.module.css";
 
 function gradeRangeLabel(grades: string[]) {
@@ -86,7 +87,7 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
             >
               <div className={styles.featuredHeader}>
                 {school.image ? (
-                  <Image src={school.image} alt={school.name} className={styles.featuredLogo} width={54} height={54} />
+                  <Image src={school.image} alt={`${school.name} logo`} className={styles.featuredLogo} width={54} height={54} placeholder="blur" blurDataURL={IMAGE_BLUR_DATA_URL} />
                 ) : (
                   <span className={styles.featuredIcon}>
                     {school.name.charAt(0)}

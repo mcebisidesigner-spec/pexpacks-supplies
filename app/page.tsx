@@ -6,6 +6,7 @@ import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { faqs } from "@/data/faqs";
 import { homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
@@ -77,6 +78,8 @@ No queues. No confusion. No missing items.
                 alt="Pexpacks stationery pack items arranged neatly"
                 fill
                 priority
+                placeholder="blur"
+                blurDataURL={IMAGE_BLUR_DATA_URL}
                 sizes="(min-width: 1024px) 44vw, 100vw"
               />
             </span>

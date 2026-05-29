@@ -6,6 +6,7 @@ import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { endpointPathForFormType } from "@/lib/forms/types";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import styles from "./LayByExperience.module.css";
 
 type IconName = "cart" | "checkout" | "deposit" | "calendar" | "box" | "shield";
@@ -340,6 +341,8 @@ export function LayByExperience() {
                 alt="Packed Pexpacks stationery ready for school delivery"
                 fill
                 sizes="(min-width: 900px) 44vw, 92vw"
+                placeholder="blur"
+                blurDataURL={IMAGE_BLUR_DATA_URL}
                 priority
               />
               <div className={styles.imageOverlay}>

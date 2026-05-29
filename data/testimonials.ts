@@ -21,34 +21,34 @@ export const testimonials: Testimonial[] = [
     avatar: "/images/avatars/mbuso.webp",
   },
   {
-    id: "thandeka-mkize",
-    name: "Thandeka Mkhize",
+    id: "sarah-van-der-merwe",
+    name: "Sarah van der Merwe",
     role: "Teacher",
     context: "Primary school educator",
     rating: 5,
     quote:
       "When learners arrive with the correct stationery, teaching can begin immediately. Pexpacks helps remove that first-week stress.",
-    avatar: "/images/avatars/thandeka.webp",
+    avatar: "/images/avatars/sarah.webp",
   },
   {
-    id: "lisa-bomani",
-    name: "Lisa Bomani",
+    id: "riya-patel",
+    name: "Riya Patel",
     role: "Parent",
     context: "Grade 10 learner",
     rating: 5,
     quote:
       "Pexpacks is a game changer for parents. I was able to order everything my daughter needed for school from the comfort of my home and everything was packed clearly and ready before the first day of school.",
-    avatar: "/images/avatars/lisa.webp",
+    avatar: "/images/avatars/riya.webp",
   },
   {
-    id: "ndoda-mabuz",
-    name: "Ndoda Mabuza",
+    id: "david-jacobs",
+    name: "David Jacobs",
     role: "SME Owner",
     context: "Home office supplies",
     rating: 5,
     quote:
       "The office stationery pack helped me restock quickly without wasting time searching for individual items.",
-    avatar: "/images/avatars/ndoda.webp",
+    avatar: "/images/avatars/david.webp",
   },
   {
     id: "mpoh-pitso",
