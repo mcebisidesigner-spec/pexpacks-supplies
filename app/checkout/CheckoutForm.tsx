@@ -741,6 +741,12 @@ export function CheckoutForm({
             Back to packs
           </button>
         )}
+        <div className={`${styles.stickyHeaderButton} ${isSticky ? styles.isSticky : ""}`}>
+          <Button variant="white" size="lg" iconDirection="none" className={styles.stickyCtaBtn} onClick={() => setSummaryOpen(!summaryOpen)}>
+            <span className={styles.stickyCtaLabel}>Total to pay</span>
+            <span className={styles.stickyCtaPrice}>{formatCurrency(totalToPay)}</span>
+          </Button>
+        </div>
         <a
           href="https://wa.me/27780036048"
           target="_blank"
@@ -749,13 +755,6 @@ export function CheckoutForm({
         >
           Need Help?
         </a>
-      </div>
-
-      <div className={`${styles.stickyHeaderButton} ${isSticky ? styles.isSticky : ""}`}>
-        <Button variant="white" size="lg" iconDirection="none" className={styles.stickyCtaBtn} onClick={() => setSummaryOpen(!summaryOpen)}>
-          <span className={styles.stickyCtaLabel}>Total to pay</span>
-          <span className={styles.stickyCtaPrice}>{formatCurrency(totalToPay)}</span>
-        </Button>
       </div>
 
       <div className={styles.checkoutGrid}>

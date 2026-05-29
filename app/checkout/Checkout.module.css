@@ -19,11 +19,7 @@
 }
 
 .stickyHeaderButton {
-  position: fixed;
-  top: 0;
-  left: 50%;
   z-index: 120;
-  transform: translate(-50%, -100%);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
@@ -31,9 +27,7 @@
 }
 
 .stickyHeaderButton.isSticky {
-  transform: translate(-50%, max(12px, env(safe-area-inset-top)));
   pointer-events: auto;
-  box-shadow: 0 14px 32px rgba(26, 42, 64, 0.16);
 }
 
 .stickyCtaBtn {
@@ -65,8 +59,19 @@
 }
 
 @media (min-width: 901px) {
+  .stickyHeaderButton {
+    position: static;
+    transform: none;
+    pointer-events: auto;
+  }
+
   .stickyHeaderButton.isSticky {
-    transform: translate(-50%, max(20px, env(safe-area-inset-top)));
+    position: fixed;
+    top: max(20px, env(safe-area-inset-top));
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: auto;
+    box-shadow: 0 14px 32px rgba(26, 42, 64, 0.16);
   }
 
   .stickyCtaBtn {
@@ -110,6 +115,7 @@
   text-decoration: underline;
   text-underline-offset: 4px;
   justify-self: end;
+  grid-column: 3;
 }
 
 .checkoutGrid {
@@ -620,6 +626,8 @@
   }
   
   .stickyHeaderButton {
+    position: fixed;
+    top: 0;
     left: 0;
     right: 0;
     width: 100%;
@@ -627,10 +635,6 @@
   }
 
   .stickyHeaderButton.isSticky {
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
     transform: translateY(0);
     box-shadow: 0 10px 24px rgba(26, 42, 64, 0.14);
   }
