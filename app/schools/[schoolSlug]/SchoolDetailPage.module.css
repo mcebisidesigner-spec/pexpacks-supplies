@@ -43,10 +43,21 @@
 
 @media (max-width: 520px) {
   .schoolHeroPanel {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+  }
+
+  .schoolHeroLabel {
+    font-size: 16px;
+  }
+
+  .schoolHeroTitle {
+    margin-top: 10px;
+    font-size: clamp(24px, 8vw, 30px);
   }
 
   .schoolHeroLogoWrap {
-    width: 96px;
+    width: clamp(76px, 24vw, 96px);
+    border-radius: 20px;
   }
 }
