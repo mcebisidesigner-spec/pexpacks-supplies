@@ -164,7 +164,7 @@ export function ReviewOrderStep({
                 </button>
               </div>
             ) : (
-              <div className={styles.reviewSchoolDisplay}>
+              <div className={`${styles.reviewSchoolDisplay} ${styles.hasValue}`}>
                 <h3>{schoolName}</h3>
                 <button
                   type="button"
@@ -181,7 +181,7 @@ export function ReviewOrderStep({
             <p className={styles.confirmKicker}>Grade</p>
             <button
               type="button"
-              className={styles.gradeDrawerTrigger}
+              className={`${styles.gradeDrawerTrigger} ${styles.hasValue}`}
               onClick={() => setShowGradeDrawer(!showGradeDrawer)}
               aria-expanded={showGradeDrawer}
               aria-controls="grade-drawer-panel"
