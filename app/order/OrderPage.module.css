@@ -1,0 +1,332 @@
+.page {
+  padding: clamp(40px, 6vw, 80px) 0;
+  background: radial-gradient(
+      circle at 82% 10%,
+      rgba(33, 158, 154, 0.08),
+      transparent 28%
+    ),
+    linear-gradient(180deg, #ffffff, var(--pex-bg));
+  min-height: calc(100vh - 80px);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter-desktop);
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: clamp(40px, 8vw, 80px);
+  align-items: start;
+}
+
+/* Pitch / Left Panel */
+.pitchSection {
+  padding-top: 20px;
+}
+
+.pitchSection h1 {
+  color: var(--pex-navy);
+  font-family: var(--font-heading);
+  font-size: clamp(38px, 5vw, 56px);
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 0 0 16px;
+}
+
+.pitchSection p {
+  color: var(--pex-text);
+  font-size: clamp(16px, 2vw, 18px);
+  line-height: 1.5;
+  margin: 0 0 40px;
+  max-width: 480px;
+}
+
+.steps {
+  display: grid;
+  gap: 32px;
+}
+
+.step {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.stepIcon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: var(--pex-navy);
+  color: #fff;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  box-shadow: 0 8px 24px rgba(26, 42, 64, 0.15);
+}
+
+.stepContent h3 {
+  margin: 0 0 6px;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--pex-primary);
+}
+
+.stepContent p {
+  margin: 0;
+  color: var(--pex-muted);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.whatsappFallback {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--pex-border);
+}
+
+.whatsappFallback p {
+  font-size: 14px;
+  color: var(--pex-muted);
+  margin-bottom: 16px;
+}
+
+/* Form / Right Panel */
+.formCard {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 253, 253, 0.85));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(33, 158, 154, 0.15);
+  border-radius: 24px;
+  padding: clamp(24px, 4vw, 40px);
+  box-shadow: 0 24px 50px rgba(26, 42, 64, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+  position: relative;
+  z-index: 10;
+}
+
+.formGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pex-primary);
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--pex-border);
+  border-radius: 12px;
+  background: #fff;
+  font-size: 16px;
+  color: var(--pex-primary);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--pex-keppel);
+  box-shadow: 0 0 0 4px rgba(33, 158, 154, 0.1);
+}
+
+.inputError {
+  border-color: #e53e3e;
+}
+
+.errorText {
+  color: #e53e3e;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: -4px;
+}
+
+/* Category Pills */
+.categoryPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.categoryPill {
+  padding: 10px 16px;
+  border: 1px solid var(--pex-border);
+  border-radius: 30px;
+  background: #fff;
+  color: var(--pex-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.categoryPill:hover {
+  border-color: var(--pex-keppel);
+  color: var(--pex-primary);
+}
+
+.categoryPill.active {
+  background: var(--pex-navy);
+  color: #fff;
+  border-color: var(--pex-navy);
+}
+
+/* Tabs for List Input */
+.tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--pex-border);
+  padding-bottom: 8px;
+}
+
+.tab {
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pex-muted);
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.tab:hover {
+  color: var(--pex-primary);
+}
+
+.tab.active {
+  color: var(--pex-keppel);
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pex-keppel);
+  border-radius: 2px;
+}
+
+/* Upload Area */
+.uploadArea {
+  border: 2px dashed rgba(33, 158, 154, 0.3);
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  background: rgba(33, 158, 154, 0.03);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.uploadArea:hover, .uploadArea.dragging {
+  border-color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.08);
+}
+
+.uploadIcon {
+  font-size: 32px;
+  color: var(--pex-keppel);
+  margin-bottom: 12px;
+}
+
+.uploadArea strong {
+  display: block;
+  color: var(--pex-primary);
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.uploadArea span {
+  color: var(--pex-muted);
+  font-size: 13px;
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.successArea {
+  border: 2px solid var(--pex-keppel);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  background: rgba(33, 158, 154, 0.05);
+}
+
+.successIcon {
+  width: 48px;
+  height: 48px;
+  background: var(--pex-keppel);
+  color: #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  margin: 0 auto 12px;
+}
+
+/* Submit Button */
+.submitBtn {
+  margin-top: 12px;
+  width: 100%;
+}
+
+.successState {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.successState h2 {
+  font-family: var(--font-heading);
+  color: var(--pex-navy);
+  margin: 20px 0 12px;
+}
+
+.successState p {
+  color: var(--pex-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 960px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  
+  .formCard {
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 var(--gutter-mobile);
+  }
+  
+  .pitchSection h1 {
+    font-size: 32px;
+  }
+}
