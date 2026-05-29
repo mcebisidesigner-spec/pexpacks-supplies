@@ -485,6 +485,18 @@ export function CheckoutForm({
         <div className={styles.mainColumn}>
           <CheckoutProgress steps={STEPS} activeStep={activeStep} />
 
+          <OrderSummaryCard
+            schoolName={schoolName}
+            gradeName={grade}
+            packPrice={packPrice}
+            itemCount={contents.length}
+            totalToPay={totalToPay}
+            fulfilmentOption={fulfilmentOption}
+            hasPexcover={hasPexcover}
+            summaryOpen={summaryOpen}
+            whatsAppHref={whatsAppHref}
+          />
+
           <section className={styles.stepCard} aria-labelledby="checkout-step-heading">
             <div className={styles.stepIntro}>
               <h1
@@ -534,18 +546,6 @@ export function CheckoutForm({
             ) : null}
           </div>
         </div>
-
-        <OrderSummaryCard
-          schoolName={schoolName}
-          gradeName={grade}
-          packPrice={packPrice}
-          itemCount={contents.length}
-          totalToPay={totalToPay}
-          fulfilmentOption={fulfilmentOption}
-          hasPexcover={hasPexcover}
-          summaryOpen={summaryOpen}
-          whatsAppHref={whatsAppHref}
-        />
       </div>
 
       <div className={styles.mobileStickyCta}>

@@ -155,17 +155,37 @@
 .checkoutGrid {
   max-width: var(--layout-max-width);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
-  gap: clamp(24px, 4vw, 40px);
-  align-items: start;
 }
 
 .mainColumn {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 28px;
+  align-items: start;
   min-width: 0;
+}
+
+.mainColumn > :not(.summaryColumn) {
+  grid-column: 1;
+}
+
+.mainColumn > .summaryColumn {
+  grid-column: 1;
+}
+
+@media (min-width: 901px) {
+  .mainColumn {
+    grid-template-columns: 1fr minmax(320px, 380px);
+    gap: clamp(24px, 4vw, 40px);
+  }
+  .mainColumn > :not(.summaryColumn) {
+    grid-column: 1;
+    min-width: 0;
+  }
+  .mainColumn > .summaryColumn {
+    grid-column: 2;
+    grid-row: 1 / 99;
+  }
 }
 
 /* Glassmorphism removed, back to standard cards */
@@ -1208,7 +1228,6 @@
   }
   .summaryColumn {
     position: static;
-    order: -1;
   }
   .summaryCard {
     display: none;
@@ -1220,9 +1239,18 @@
 }
 
 @media (max-width: 900px) {
-  .checkoutHeader {
-    display: flex;
-    justify-content: space-between;
+  .checkoutGrid {
+    grid-template-columns: 1fr;
+  }
+  .summaryColumn {
+    position: static;
+  }
+  .summaryCard {
+    display: none;
+    margin-top: 24px;
+  }
+  .summaryCardOpen {
+    display: grid;
   }
   
   .stickyHeaderButton {
