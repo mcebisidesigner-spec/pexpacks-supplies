@@ -1229,6 +1229,13 @@
   .summaryColumn {
     position: static;
   }
+  .summaryCard {
+    display: none;
+    margin-top: 24px;
+  }
+  .summaryCardOpen {
+    display: grid;
+  }
 }
 
 @media (max-width: 900px) {
@@ -1237,6 +1244,13 @@
   }
   .summaryColumn {
     position: static;
+  }
+  .summaryCard {
+    display: none;
+    margin-top: 24px;
+  }
+  .summaryCardOpen {
+    display: grid;
   }
   
   .stickyHeaderButton {
