@@ -5,7 +5,7 @@
     "slug": "parktown-primary",
     "city": "Johannesburg",
     "province": "Gauteng",
-    "logo": "/images/school-logo-placeholder.svg",
+    "logo": "/images/schools/parktown-primary.svg",
     "isPartnerSchool": false,
     "grades": [
       {
@@ -145,7 +145,7 @@
     "slug": "auckland-park-primary",
     "city": "Johannesburg",
     "province": "Gauteng",
-    "logo": "/images/school-logo-placeholder.svg",
+    "logo": "/images/schools/auckland-park-primary.svg",
     "isPartnerSchool": false,
     "grades": [
       {
@@ -285,7 +285,7 @@
     "slug": "brixton-primary",
     "city": "Johannesburg",
     "province": "Gauteng",
-    "logo": "/images/school-logo-placeholder.svg",
+    "logo": "/images/schools/brixton-primary.svg",
     "isPartnerSchool": false,
     "grades": [
       {
@@ -425,7 +425,7 @@
     "slug": "melville-primary",
     "city": "Johannesburg",
     "province": "Gauteng",
-    "logo": "/images/school-logo-placeholder.svg",
+    "logo": "/images/schools/melville-primary.svg",
     "isPartnerSchool": false,
     "grades": [
       {

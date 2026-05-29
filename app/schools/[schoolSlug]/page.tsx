@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
@@ -10,6 +11,7 @@ import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
 import pageStyles from "@/styles/Page.module.css";
+import styles from "./SchoolDetailPage.module.css";
 
 type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
@@ -68,8 +70,24 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         eyebrow={`${school.city}, ${school.province}`}
         title={school.name}
         text="Official stationery packs prepared according to the school stationery list."
-        panelTitle="Ready packed"
-        panelText="Prepared for your grade."
+        panelChildren={
+          <div className={styles.schoolHeroPanel}>
+            <div className={styles.schoolHeroCopy}>
+              <span className={styles.schoolHeroLabel}>Prepared with care</span>
+              <span className={styles.schoolHeroTitle}>Ready packed</span>
+            </div>
+            <div className={styles.schoolHeroLogoWrap}>
+              <Image
+                src={school.logo || "/images/school-logo-placeholder.svg"}
+                alt={`${school.name} logo`}
+                width={136}
+                height={136}
+                className={styles.schoolHeroLogo}
+                priority
+              />
+            </div>
+          </div>
+        }
       />
       <section className={pageStyles.section}>
         <div className={pageStyles.sectionInner}>

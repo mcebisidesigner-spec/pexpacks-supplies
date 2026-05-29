@@ -1,0 +1,52 @@
+.schoolHeroPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(18px, 4vw, 36px);
+}
+
+.schoolHeroCopy {
+  min-width: 0;
+}
+
+.schoolHeroLabel {
+  display: block;
+  color: var(--pex-text-muted);
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.25;
+}
+
+.schoolHeroTitle {
+  display: block;
+  margin-top: 12px;
+  color: var(--pex-primary);
+  font-size: clamp(28px, 4vw, 34px);
+  line-height: 1;
+}
+
+.schoolHeroLogoWrap {
+  width: clamp(92px, 12vw, 136px);
+  aspect-ratio: 1;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 16px 34px rgba(26, 42, 64, 0.14);
+  flex: 0 0 auto;
+}
+
+.schoolHeroLogo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 520px) {
+  .schoolHeroPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .schoolHeroLogoWrap {
+    width: 96px;
+  }
+}
