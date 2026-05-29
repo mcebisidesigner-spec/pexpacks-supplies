@@ -997,34 +997,41 @@
   gap: 18px;
 }
 
-.supportLink {
+.supportBlock {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
+  min-height: 82px;
   margin: 34px -36px -36px;
-  padding: 22px 28px;
+  padding: 18px 28px;
   border-radius: 0 0 var(--radius-card-lg) var(--radius-card-lg);
   background: var(--pex-primary);
   color: var(--pex-bg);
-  text-decoration: none;
+  overflow: hidden;
 }
 
-.supportLink strong,
-.supportLink small {
+.supportCopy {
+  min-width: 0;
+}
+
+.supportCopy strong,
+.supportCopy small {
   display: block;
 }
 
-.supportLink strong {
+.supportCopy strong {
   font-family: var(--font-heading);
-  font-size: clamp(1.2rem, 2vw, 1.55rem);
-  line-height: 1;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  line-height: 1.05;
 }
 
-.supportLink small {
-  margin-top: 4px;
+.supportCopy small {
+  margin-top: 3px;
   color: var(--pex-keppel);
-  font-weight: 900;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .trustList a {
@@ -1033,22 +1040,33 @@
   text-underline-offset: 4px;
 }
 
-.supportLink i {
-  width: 58px;
-  height: 58px;
+.supportIconLink {
+  width: 52px;
+  height: 52px;
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  border: 5px solid var(--pex-bg);
   border-radius: 999px;
   background: #25d366;
   color: var(--pex-bg);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+  text-decoration: none;
+  box-shadow:
+    0 0 0 5px var(--pex-bg),
+    0 8px 18px rgba(0, 0, 0, 0.18);
+  transition: var(--interactive-transition);
 }
 
-.supportLink svg {
-  width: 34px;
-  height: 34px;
+.supportIconLink:hover,
+.supportIconLink:focus-visible {
+  background: #20c45f;
+  outline: 3px solid rgba(37, 211, 102, 0.28);
+  outline-offset: 4px;
+  transform: translateY(-1px);
+}
+
+.supportIconLink svg {
+  width: 30px;
+  height: 30px;
   fill: currentColor;
   stroke: none;
 }
@@ -1312,14 +1330,18 @@
   .packListCard {
     height: auto;
   }
-  .supportLink {
+  .supportBlock {
     margin-inline: -24px;
     margin-bottom: -24px;
     padding-inline: 24px;
   }
-  .supportLink i {
-    width: 54px;
-    height: 54px;
+  .supportIconLink {
+    width: 48px;
+    height: 48px;
+  }
+  .supportIconLink svg {
+    width: 28px;
+    height: 28px;
   }
 }
 
