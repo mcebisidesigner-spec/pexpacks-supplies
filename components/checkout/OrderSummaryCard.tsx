@@ -54,8 +54,8 @@ export function OrderSummaryCard({
               <dd>{formatCurrency(PEXCOVER_PRICE)}</dd>
             </div>
           ) : null}
-          <div>
-            <dt>Full stationery pack</dt>
+          <div className={styles.packListRow}>
+            <dt>Stationery pack list</dt>
             <dd>{formatCurrency(packPrice)}</dd>
           </div>
           <div className={styles.summaryTotalRow}>

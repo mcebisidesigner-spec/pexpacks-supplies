@@ -583,8 +583,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   margin: 0;
   border: none;
@@ -592,23 +592,25 @@
   cursor: pointer;
   border-radius: 50%;
   color: var(--pex-text-muted);
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .schoolSearchIconBtn:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(33, 158, 154, 0.1);
+  color: var(--pex-keppel);
 }
 
 .schoolSearchIcon {
   flex: 0 0 auto;
-  width: 22px;
-  height: 22px;
-  color: var(--pex-text-muted);
+  width: 18px;
+  height: 18px;
+  color: inherit;
 }
 
 .schoolSearchIcon svg {
   width: 100%;
   height: 100%;
+  display: block;
 }
 
 .reviewSchoolDisplay h3 {
@@ -965,16 +967,26 @@
   padding: var(--summary-card-pad) var(--summary-card-pad) 0;
 }
 
+.summaryCard .confirmKicker {
+  color: var(--pex-keppel);
+  margin-bottom: 10px;
+}
+
 .summaryCard h2 {
   color: var(--pex-primary);
   font-family: var(--font-heading);
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
   font-weight: 800;
   line-height: 1.2;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.summaryCard .priceSummary div:nth-last-child(2) dt,
+.packListRow dt {
+  font-size: 0.8rem;
 }
 
 .summaryGrade {
@@ -1331,7 +1343,7 @@
   }
 
   .summaryCard h2 {
-    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1377,13 +1389,13 @@
   }
 
   .schoolSearchIconBtn {
-    width: 36px;
-    height: 36px;
+    width: 24px;
+    height: 24px;
   }
 
   .schoolSearchIcon {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   .reviewSchoolDisplay h3,
