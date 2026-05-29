@@ -67,27 +67,61 @@
 
   .stickyHeaderButton.isSticky {
     position: fixed;
-    top: max(20px, env(safe-area-inset-top));
+    top: max(24px, env(safe-area-inset-top));
     left: 50%;
     transform: translateX(-50%);
     pointer-events: auto;
     box-shadow: 0 14px 32px rgba(26, 42, 64, 0.16);
+    z-index: 999;
   }
 
   .stickyCtaBtn {
-    padding-block: 12px 14px !important;
-    padding-inline: 20px 28px !important;
+    background: #20a49f !important;
+    color: #ffffff !important;
+    font-family: var(--font-body), sans-serif;
+    font-weight: 700 !important;
+    border-radius: 9999px !important;
+    padding-block: 16px 18px !important;
+    padding-inline: 42px 42px !important;
+    box-shadow: 0 12px 28px rgba(32, 164, 159, 0.35) !important;
+    border: none !important;
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+    height: auto !important;
+  }
+
+  .stickyCtaBtn:hover {
+    background: #1c938e !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 16px 36px rgba(32, 164, 159, 0.45) !important;
+  }
+
+  .stickyCtaBtn:active {
+    transform: translateY(0) scale(0.98) !important;
+  }
+
+  .stickyCtaLabel {
+    display: inline !important;
+    font-size: 21px !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+    text-transform: none !important;
+    letter-spacing: -0.3px !important;
+    color: #ffffff !important;
+    margin-right: 6px !important;
   }
 
   .stickyCtaPrice {
-    font-size: 28px;
+    display: inline !important;
+    font-size: 21px !important;
+    font-weight: 700 !important;
+    line-height: inherit !important;
+    color: #ffffff !important;
   }
-}
-
-.summaryPriceHighlight {
-  font-weight: 800;
-  color: var(--pex-coral);
-  margin-left: 6px;
 }
 
 .backLink {
@@ -266,6 +300,22 @@
   gap: 18px;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
+.optionFieldset {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.optionFieldset legend {
+  color: var(--pex-primary);
+  font-weight: 900;
+}
+
 .fieldGroup {
   display: grid;
   gap: 8px;
@@ -398,8 +448,273 @@
 /* Review Block */
 .reviewGrid {
   display: grid;
-  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr);
+  grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 32px);
+  align-items: stretch;
+}
+
+.fulfilmentStep,
+.confirmGrid {
+  display: grid;
   gap: 18px;
+}
+
+.addressPanel {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(26, 42, 64, 0.08);
+  border-radius: var(--radius-card);
+  background: var(--pex-bg-soft);
+}
+
+.addressPanel > p {
+  margin: 0;
+  color: var(--pex-text-muted);
+  line-height: var(--line-body);
+}
+
+.reviewLeftCol,
+.reviewRightCol {
+  min-width: 0;
+}
+
+.reviewLeftCol {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.selectionPanel {
+  display: grid;
+  gap: 22px;
+  padding: clamp(20px, 3vw, 32px);
+  min-height: 270px;
+  border-radius: calc(var(--radius-card-lg) - 4px);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(33, 158, 154, 0.12), transparent 32%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(244, 250, 250, 0.72));
+  border: 1px solid rgba(26, 42, 64, 0.06);
+  box-shadow: inset 0 -1px 0 rgba(26, 42, 64, 0.05);
+}
+
+.reviewSchoolCard,
+.reviewGradeCard {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.reviewSchoolDisplay,
+.gradeDrawerTrigger {
+  width: min(100%, 320px);
+  min-height: 64px;
+  margin-inline: auto;
+  border: 2px solid rgba(26, 42, 64, 0.16);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--pex-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 22px;
+  box-shadow: 0 10px 24px rgba(26, 42, 64, 0.05);
+}
+
+.reviewSchoolDisplay {
+  flex-direction: column;
+}
+
+.reviewSchoolDisplay h3,
+.gradeDrawerTrigger span {
+  margin: 0;
+  color: var(--pex-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 1.8vw, 1.26rem);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.reviewChangeBtn,
+.schoolSearchCancel {
+  border: 0;
+  background: transparent;
+  color: var(--pex-keppel);
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.gradeDrawerTrigger {
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.gradeChevron {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+}
+
+.gradeDrawerPanel,
+.schoolResults {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  z-index: 30;
+  width: min(100%, 340px);
+  transform: translateX(-50%);
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid rgba(26, 42, 64, 0.1);
+  border-radius: var(--radius-card-compact);
+  background: var(--pex-bg);
+  box-shadow: 0 18px 40px rgba(26, 42, 64, 0.14);
+}
+
+.gradeDrawerItem,
+.schoolResultItem {
+  border: 0;
+  border-radius: 16px;
+  background: var(--pex-bg-soft);
+  color: var(--pex-primary);
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--interactive-transition);
+}
+
+.gradeDrawerItem:hover,
+.gradeDrawerItemActive,
+.schoolResultItem:hover {
+  background: rgba(33, 158, 154, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(33, 158, 154, 0.2);
+}
+
+.gradeDrawerPrice,
+.schoolResultItem span {
+  color: var(--pex-text-muted);
+  font-weight: 800;
+}
+
+.schoolSearchWrap {
+  position: relative;
+  display: grid;
+  gap: 10px;
+}
+
+.schoolSearchInput {
+  width: 100%;
+  min-height: 58px;
+  border: 1px solid rgba(26, 42, 64, 0.12);
+  border-radius: var(--radius-pill);
+  background: var(--pex-bg);
+  color: var(--pex-primary);
+  padding: 0 18px;
+  font: inherit;
+}
+
+.schoolNoResults {
+  margin: 0;
+  color: var(--pex-text-muted);
+  text-align: center;
+  font-weight: 800;
+}
+
+.addonCard,
+.packListCard {
+  border: 1px solid rgba(26, 42, 64, 0.12);
+  border-radius: calc(var(--radius-card-lg) - 6px);
+  background: var(--pex-bg);
+  box-shadow: 0 12px 26px rgba(26, 42, 64, 0.06);
+}
+
+.addonCard {
+  display: grid;
+  gap: 16px;
+  padding: clamp(18px, 2.4vw, 26px);
+}
+
+.addonCardActive {
+  border-color: rgba(33, 158, 154, 0.34);
+  box-shadow: 0 18px 36px rgba(33, 158, 154, 0.12);
+}
+
+.addonCard h3,
+.packListCard h3 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-family: var(--font-heading);
+  line-height: var(--line-heading);
+}
+
+.addonCard p {
+  margin: 8px 0 0;
+  color: var(--pex-text);
+  line-height: var(--line-body);
+}
+
+.addonCheckbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  color: var(--pex-primary);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.addonCheckbox input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--pex-keppel);
+}
+
+.packListCard {
+  height: 100%;
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.packListCard h3 {
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  margin-bottom: 22px;
+}
+
+.packList {
+  column-count: 3;
+  column-gap: clamp(18px, 2.4vw, 34px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.packList li {
+  break-inside: avoid;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(26, 42, 64, 0.1);
+  color: var(--pex-primary);
+  font-weight: 650;
+}
+
+.packListMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(26, 42, 64, 0.1);
+  color: var(--pex-primary);
+  font-weight: 900;
 }
 
 .reviewBlock {
@@ -492,57 +807,122 @@
 .summaryCard h2 {
   color: var(--pex-primary);
   font-family: var(--font-heading);
-  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-size: clamp(1.9rem, 3vw, 2.75rem);
+  line-height: 1.04;
   margin: 0;
 }
 
-.summaryMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.summaryMeta span {
-  background: var(--pex-bg-soft);
+.summaryGrade {
+  margin: 8px 0 24px;
   color: var(--pex-primary);
-  padding: 8px 11px;
-  border-radius: var(--radius-pill);
-  font-size: 13px;
-  font-weight: 800;
+  font-family: var(--font-heading);
+  font-size: clamp(1.65rem, 2.4vw, 2.35rem);
+  font-weight: 900;
+  line-height: 1;
 }
 
 .priceSummary {
   display: grid;
-  gap: 10px;
+  gap: 0;
   margin-top: 22px;
+  border-top: 1px solid rgba(26, 42, 64, 0.1);
 }
 
 .priceSummary div {
   display: flex;
+  align-items: baseline;
   justify-content: space-between;
-  padding-top: 10px;
-  border-top: 1px solid rgba(26, 42, 64, 0.08);
+  gap: 16px;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(26, 42, 64, 0.08);
 }
 
 .priceSummary dt {
-  color: var(--pex-text-muted);
+  color: var(--pex-primary);
   font-weight: 800;
+}
+
+.priceSummary dt span {
+  color: var(--pex-text-muted);
+  font-size: 0.9em;
+  font-weight: 700;
 }
 
 .priceSummary dd {
   color: var(--pex-primary);
-  font-weight: 800;
+  font-weight: 900;
   margin: 0;
+  text-align: right;
 }
 
-.priceSummary div:last-child {
-  border-top-color: rgba(255, 111, 89, 0.28);
+.summaryTotalRow {
+  margin-top: 18px;
+  border-top: 2px solid rgba(255, 111, 89, 0.34);
+  border-bottom: 0 !important;
+  padding-top: 22px !important;
 }
 
-.priceSummary div:last-child dd {
+.summaryTotalRow dd {
   color: var(--pex-coral);
-  font-size: 1.1rem;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+}
+
+.summaryCard .trustList {
+  margin-top: 28px;
+  gap: 16px;
+}
+
+.supportLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 32px -32px -32px;
+  padding: 20px 26px;
+  border-radius: 0 0 var(--radius-card-lg) var(--radius-card-lg);
+  background: var(--pex-primary);
+  color: var(--pex-bg);
+  text-decoration: none;
+}
+
+.supportLink strong,
+.supportLink small {
+  display: block;
+}
+
+.supportLink strong {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1;
+}
+
+.supportLink small {
+  margin-top: 4px;
+  color: var(--pex-keppel);
+  font-weight: 900;
+}
+
+.supportLink i {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 5px solid var(--pex-bg);
+  border-radius: 999px;
+  background: #20c45a;
+  color: var(--pex-bg);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+}
+
+.supportLink svg {
+  width: 34px;
+  height: 34px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* Actions */
@@ -667,6 +1047,9 @@
   .reviewGrid {
     grid-template-columns: 1fr;
   }
+  .packList {
+    column-count: 2;
+  }
   .formActions {
     display: none;
   }
@@ -710,6 +1093,31 @@
     border-radius: var(--radius-card-compact);
     background: var(--pex-bg);
     box-shadow: var(--card-shadow);
+  }
+  .stepCard,
+  .summaryCard {
+    padding: clamp(20px, 6vw, 28px);
+  }
+  .selectionPanel {
+    min-height: auto;
+  }
+  .packList {
+    column-count: 1;
+    max-height: 360px;
+    overflow: auto;
+    padding-right: 4px;
+  }
+  .packListCard {
+    height: auto;
+  }
+  .supportLink {
+    margin-inline: -20px;
+    margin-bottom: -20px;
+    padding-inline: 20px;
+  }
+  .supportLink i {
+    width: 54px;
+    height: 54px;
   }
 }
 

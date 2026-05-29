@@ -39,7 +39,7 @@ export function Button({
   const iconTone = variant === "primary" ? "white" : "orange";
   const content = (
     <>
-      {iconDirection === "left" && iconDirection !== "none" ? <IconCircle tone={iconTone} direction={iconDirection} /> : null}
+      {iconDirection === "left" ? <IconCircle tone={iconTone} direction={iconDirection} /> : null}
       <span>{children}</span>
       {iconDirection && iconDirection !== "left" && iconDirection !== "none" ? <IconCircle tone={iconTone} direction={iconDirection} /> : null}
     </>

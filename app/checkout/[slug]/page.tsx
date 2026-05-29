@@ -10,15 +10,17 @@ type SlugPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "Checkout | Pexpacks",
-  description: "Complete your stationery pack order.",
+  title: "Checkout | PexPacks",
+  description: "Complete your PexPacks stationery pack order securely.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function SlugPage({ params, searchParams }: SlugPageProps) {
   const { slug } = await params;
   const { draft } = await searchParams;
-
-  console.log("[checkout/[slug]] Resolving slug:", JSON.stringify(slug));
 
   const decodedSlug = decodeURIComponent(slug);
   let separatorIndex = decodedSlug.indexOf("+");
@@ -27,7 +29,6 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
   }
   
   if (separatorIndex === -1) {
-    console.warn("[checkout/[slug]] Separator not found in decoded slug:", JSON.stringify(decodedSlug));
     notFound();
   }
 

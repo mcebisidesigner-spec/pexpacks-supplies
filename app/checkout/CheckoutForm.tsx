@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { readOrderDraft } from "@/lib/checkout/draft";
+import { buildWhatsAppHref } from "@/data/contact";
 import styles from "./Checkout.module.css";
 
 type CheckoutFormProps = {
@@ -120,7 +120,7 @@ function CheckoutProgress({ activeStep }: { activeStep: number }) {
               className={[isComplete ? styles.progressActive : "", isCurrent ? styles.progressCurrent : ""].filter(Boolean).join(" ")}
               aria-current={isCurrent ? "step" : undefined}
             >
-              <span aria-hidden="true">{isComplete ? "✓" : index + 1}</span>
+              <span aria-hidden="true">{isComplete ? "\u2713" : index + 1}</span>
               <strong>{step.label}</strong>
               <small>{isCurrent ? "Current step" : isComplete ? "Completed" : "Upcoming"}</small>
             </li>
@@ -165,7 +165,6 @@ export function CheckoutForm({
 }: CheckoutFormProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isSticky, setIsSticky] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
 
@@ -252,9 +251,12 @@ export function CheckoutForm({
   const packPrice = draftTotal ?? defaultPrice;
   const pexcoverCount = hasPexcover ? 1 : 0;
   const totalToPay = packPrice + (hasPexcover ? PEXCOVER_PRICE : 0);
-  const backToPackHref = `/schools/${schoolSlug}`;
   const currentStep = STEPS[activeStep] ?? STEPS[0];
   const itemCount = contents.length;
+  const whatsAppHref = useMemo(
+    () => buildWhatsAppHref(`Hi PexPacks, I need help with checkout for ${schoolName} ${grade}.`),
+    [grade, schoolName]
+  );
 
   const deliveryAddressSummary = useMemo(() => {
     return [address, suburb, city, province, postalCode].filter(Boolean).join(", ");
@@ -413,7 +415,7 @@ export function CheckoutForm({
       if (!response.ok || !result.checkoutUrl) {
         const msg = result.errors && typeof result.errors === "object"
           ? Object.values(result.errors).join(". ")
-          : result.error || "Unable to continue to PayFast";
+          : result.error || "Unable to continue to Paystack";
         throw new Error(msg);
       }
 
@@ -422,7 +424,7 @@ export function CheckoutForm({
       setSubmitError(
         error instanceof Error
           ? error.message
-          : "We could not continue to PayFast right now. Please try again or contact PexPacks on WhatsApp."
+          : "We could not continue to Paystack right now. Please try again or contact PexPacks on WhatsApp."
       );
     } finally {
       setSubmitting(false);
@@ -520,10 +522,10 @@ export function CheckoutForm({
 
         <section className={styles.reviewRightCol}>
           <div className={styles.packListCard}>
-            <p className={styles.confirmKicker}>Full pack or Customised pack</p>
+            <h3>Full stationery pack for 2027</h3>
             <ul className={styles.packList} aria-label="All pack items">
-              {contents.map((item) => (
-                <li key={item}>{item}</li>
+              {contents.map((item, index) => (
+                <li key={`${item}-${index}`}>{item}</li>
               ))}
             </ul>
             <div className={styles.packListMeta}>
@@ -534,7 +536,6 @@ export function CheckoutForm({
 
           <section className={`${styles.addonCard} ${hasPexcover ? styles.addonCardActive : ""}`}>
             <div>
-              <p className={styles.confirmKicker}>Optional add-on</p>
               <h3>Pexcover book covering</h3>
               <p>Add covered and labelled exercise books so the pack arrives closer to first-day ready.</p>
             </div>
@@ -693,10 +694,10 @@ export function CheckoutForm({
 
         <section className={styles.paymentReadyCard}>
           <p className={styles.confirmKicker}>Secure payment</p>
-          <h3>Confirm and pay securely with PayFast</h3>
-          <p>Review your details before continuing to PayFast. You will be redirected to PayFast to complete payment.</p>
+          <h3>Confirm and pay securely with Paystack</h3>
+          <p>Review your details before continuing to Paystack. You will be redirected to Paystack to complete payment securely.</p>
           <ul className={styles.trustList}>
-            <li>Secure payment powered by PayFast</li>
+            <li>Secure payment powered by Paystack</li>
             <li>PexPacks does not store your card details</li>
             <li>POPIA-aware order handling</li>
             <li>WhatsApp support is available if you need help</li>
@@ -709,10 +710,10 @@ export function CheckoutForm({
             {submitting ? (
               <>
                 <span className={styles.payButtonSpinner} />
-                Processing...
+                Preparing secure checkout...
               </>
             ) : (
-              `Complete Payment of ${formatCurrency(totalToPay)}`
+              `Pay Securely ${formatCurrency(totalToPay)}`
             )}
           </Button>
         </div>
@@ -747,14 +748,6 @@ export function CheckoutForm({
             <span className={styles.stickyCtaPrice}>{formatCurrency(totalToPay)}</span>
           </Button>
         </div>
-        <a
-          href="https://wa.me/27780036048"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.helpLink}
-        >
-          Need Help?
-        </a>
       </div>
 
       <div className={styles.checkoutGrid}>
@@ -768,7 +761,7 @@ export function CheckoutForm({
                 {activeStep === 0 ? "Check your pack details before continuing to payment." : null}
                 {activeStep === 1 ? "We will use these details to confirm your order and send updates." : null}
                 {activeStep === 2 ? "Choose how you want to receive your pack." : null}
-                {activeStep === 3 ? "Review everything before continuing to PayFast." : null}
+                {activeStep === 3 ? "Review everything before continuing to Paystack." : null}
               </p>
             </div>
 
@@ -792,12 +785,14 @@ export function CheckoutForm({
           packName={`${schoolName} - ${grade}`}
           schoolName={schoolName}
           gradeName={grade}
+          packPrice={packPrice}
           itemCount={contents.length}
           totalToPay={totalToPay}
           fulfilmentOption={fulfilmentOption}
           hasPexcover={hasPexcover}
           pexcoverCount={pexcoverCount}
           summaryOpen={summaryOpen}
+          whatsAppHref={whatsAppHref}
         />
       </div>
 
@@ -808,7 +803,7 @@ export function CheckoutForm({
           </Button>
         ) : (
           <Button type="button" variant="primary" className={styles.fullWidth} onClick={handlePay} disabled={submitting}>
-            {submitting ? "Processing..." : `Complete Payment of ${formatCurrency(totalToPay)}`}
+            {submitting ? "Preparing secure checkout..." : `Pay Securely ${formatCurrency(totalToPay)}`}
           </Button>
         )}
       </div>
@@ -820,60 +815,76 @@ function CheckoutOrderSummary({
   packName,
   schoolName,
   gradeName,
+  packPrice,
   itemCount,
   totalToPay,
   fulfilmentOption,
   hasPexcover,
   pexcoverCount,
   summaryOpen,
+  whatsAppHref,
 }: {
   packName: string;
   schoolName?: string;
   gradeName?: string;
+  packPrice: number;
   itemCount: number;
   totalToPay: number;
   fulfilmentOption: string;
   hasPexcover?: boolean;
   pexcoverCount?: number;
   summaryOpen: boolean;
+  whatsAppHref: string;
 }) {
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">
       <div className={`${styles.summaryCard} ${summaryOpen ? styles.summaryCardOpen : ""}`}>
         <p className={styles.confirmKicker}>Order summary</p>
-        <h2>{packName}</h2>
-        <div className={styles.summaryMeta}>
-          <span>{schoolName ?? "School pack"}</span>
-          <span>{gradeName ?? "Grade"}</span>
-          <span>Full Pack</span>
-        </div>
+        <h2>{schoolName ?? packName}</h2>
+        <p className={styles.summaryGrade}>{gradeName ?? "Full pack"}</p>
         <dl className={styles.priceSummary}>
           <div>
             <dt>Items</dt>
             <dd>{itemCount}</dd>
           </div>
           <div>
-            <dt>Delivery / collection</dt>
+            <dt>Delivery/Collection</dt>
             <dd>{fulfilmentOption}</dd>
           </div>
           {hasPexcover && pexcoverCount ? (
             <div>
-              <dt>Pexcover add-on</dt>
+              <dt>Pexcover <span>(Book covering)</span></dt>
               <dd>{formatCurrency(pexcoverCount * PEXCOVER_PRICE)}</dd>
             </div>
           ) : null}
           <div>
+            <dt>Full stationery pack</dt>
+            <dd>{formatCurrency(packPrice)}</dd>
+          </div>
+          <div className={styles.summaryTotalRow}>
             <dt>Total to pay</dt>
             <dd>{formatCurrency(totalToPay)}</dd>
           </div>
         </dl>
-        <p className={styles.summaryNote}>You will complete payment through PayFast. PexPacks does not store card details.</p>
         <ul className={styles.trustList}>
           <li>Packed according to the school list</li>
-          <li>Secure PayFast payment</li>
-          <li>POPIA-aware checkout</li>
+          <li>We use brands as per school list</li>
+          <li>Read our terms and conditions</li>
         </ul>
-        <a className={styles.supportLink} href="https://wa.me/27780036048" target="_blank" rel="noopener noreferrer">WhatsApp support</a>
+        {whatsAppHref ? (
+          <a className={styles.supportLink} href={whatsAppHref} target="_blank" rel="noopener noreferrer" aria-label="Reach PexPacks on WhatsApp for checkout help">
+            <span>
+              <strong>Do you need Help?</strong>
+              <small>Reach us on WhatsApp</small>
+            </span>
+            <i aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M20 11.7a8 8 0 0 1-11.7 7.1L4 20l1.2-4.1A8 8 0 1 1 20 11.7Z" />
+                <path d="M9.2 7.8c.2-.4.4-.4.7-.4h.5c.2 0 .5.1.6.5l.7 1.7c.1.3.1.5-.1.7l-.4.5c-.2.2-.2.4 0 .7.4.8 1.3 1.7 2.2 2.1.3.2.5.2.7 0l.6-.7c.2-.2.4-.3.7-.2l1.6.8c.4.2.5.4.4.7-.1.7-.8 1.4-1.5 1.5-1.3.2-3.3-.7-5-2.4-1.8-1.8-2.8-4-2.5-5.2 0-.2.1-.4.2-.5Z" />
+              </svg>
+            </i>
+          </a>
+        ) : null}
       </div>
     </aside>
   );

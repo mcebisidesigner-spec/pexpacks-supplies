@@ -1,7 +1,17 @@
 import { redirect, notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 type CheckoutPageProps = {
   searchParams: Promise<{ school?: string; grade?: string; phase?: string; pack?: string; draft?: string }>;
+};
+
+export const metadata: Metadata = {
+  title: "Checkout | PexPacks",
+  description: "Complete your PexPacks stationery pack order securely.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function CheckoutPage({
