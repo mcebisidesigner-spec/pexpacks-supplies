@@ -15,6 +15,8 @@ import type {
 import type { PhasePack, GradePackTemplate } from "@/data/phasePacks";
 import { homepagePacks, mostPopularPacksHref } from "@/data/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { createFullTrayPack } from "@/lib/order/createTrayPack";
+import { usePackTrayStore } from "@/store/usePackTrayStore";
 import styles from "./PhaseClient.module.css";
 
 type PhaseClientProps = {
@@ -118,10 +120,41 @@ function PhasePackActions({
   pack,
   onCustomise,
 }: PhasePackActionsProps) {
+  const addPack = usePackTrayStore((s) => s.addPack);
+  const openTray = usePackTrayStore((s) => s.openTray);
+
+  const handleAddFullPack = useCallback(() => {
+    const totalQuantity = pack.items.reduce((sum, item) => sum + item.quantity, 0);
+    const estimatedUnitPrice =
+      pack.priceFrom && totalQuantity ? pack.priceFrom / totalQuantity : 0;
+
+    addPack(
+      createFullTrayPack({
+        packId: pack.id,
+        basePackId: pack.id,
+        packName: pack.title,
+        schoolSlug: phaseData.slug,
+        schoolName: phaseData.title,
+        grade: pack.grade,
+        gradeSlug: pack.id,
+        items: pack.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice ?? estimatedUnitPrice,
+        })),
+        totalPrice: pack.priceFrom,
+        sourcePath: window.location.pathname,
+      })
+    );
+    openTray();
+  }, [addPack, openTray, phaseData, pack]);
+
   return (
     <>
       <div className={styles.cardActions}>
-        <Button href={`/checkout/${encodeURIComponent(phaseData.slug)}+${encodeURIComponent(pack.id)}`} size="sm">
+        <Button type="button" onClick={handleAddFullPack} size="sm">
           Buy Full Pack
         </Button>
         <Button
@@ -161,6 +194,9 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
   const customiseTriggerRef = useRef<HTMLButtonElement | null>(null);
   const viewListTriggerRef = useRef<HTMLButtonElement | null>(null);
 
+  const addPack = usePackTrayStore((s) => s.addPack);
+  const openTray = usePackTrayStore((s) => s.openTray);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -188,6 +224,35 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
       viewListTriggerRef.current?.focus();
     }, 0);
   }, []);
+
+  const handleAddToOrder = useCallback((pack: GradePackTemplate) => {
+    const totalQuantity = pack.items.reduce((sum, item) => sum + item.quantity, 0);
+    const estimatedUnitPrice =
+      pack.priceFrom && totalQuantity ? pack.priceFrom / totalQuantity : 0;
+
+    addPack(
+      createFullTrayPack({
+        packId: pack.id,
+        basePackId: pack.id,
+        packName: pack.title,
+        schoolSlug: phaseData.slug,
+        schoolName: phaseData.title,
+        grade: pack.grade,
+        gradeSlug: pack.id,
+        items: pack.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice ?? estimatedUnitPrice,
+        })),
+        totalPrice: pack.priceFrom,
+        sourcePath: window.location.pathname,
+      })
+    );
+    openTray();
+    closeCompleteList();
+  }, [addPack, openTray, phaseData, closeCompleteList]);
 
   const otherPhases = homepagePacks.filter(
     (pack) => pack.href !== `/${phaseData.slug}`
@@ -301,6 +366,11 @@ export function PhaseClient({ phaseData }: PhaseClientProps) {
       <CompleteListModal
         pack={selectedListPack}
         onClose={closeCompleteList}
+        onAddToOrder={
+          selectedListPackTemplate
+            ? () => handleAddToOrder(selectedListPackTemplate)
+            : undefined
+        }
       />
 
       {faqs.length > 0 ? (

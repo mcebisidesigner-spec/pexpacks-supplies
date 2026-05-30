@@ -1,106 +1,132 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { IconButton } from "@/components/ui/IconButton";
+import { useCallback, useEffect, useRef } from "react";
 import { CompleteListTable } from "./CompleteListTable";
 import type { CompleteListPack } from "./packListTypes";
-import { useDialogFocusTrap } from "./useDialogFocusTrap";
 import styles from "./CompleteListModal.module.css";
 
 type CompleteListModalProps = {
   pack: CompleteListPack | null;
   onClose: () => void;
+  onAddToOrder?: () => void;
 };
 
 function safeId(value: string) {
   return value.replace(/[^a-zA-Z0-9_-]/g, "-");
 }
 
-export function CompleteListModal({ pack, onClose }: CompleteListModalProps) {
-  const [isMounted, setIsMounted] = useState(false);
-  const dialogRef = useRef<HTMLElement>(null);
+export function CompleteListModal({ pack, onClose, onAddToOrder }: CompleteListModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const closeModal = useCallback(() => {
     onClose();
   }, [onClose]);
 
   const handleCustomise = useCallback(() => {
-    if (!pack?.customiseTargetId) {
-      return;
-    }
-
+    if (!pack?.customiseTargetId) return;
     const targetId = pack.customiseTargetId;
     closeModal();
     window.setTimeout(() => {
-      const trigger = document.getElementById(targetId) as
-        | HTMLButtonElement
-        | null;
+      const trigger = document.getElementById(targetId) as HTMLButtonElement | null;
       trigger?.click();
     }, 0);
   }, [closeModal, pack]);
 
-  useDialogFocusTrap({
-    isOpen: isMounted && Boolean(pack),
-    dialogRef,
-    initialFocusRef: closeButtonRef,
-    onClose: closeModal,
-  });
+  const isOpen = Boolean(pack);
 
-  if (!isMounted || !pack) {
-    return null;
-  }
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeModal();
+        return;
+      }
+
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    },
+    [closeModal]
+  );
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    previousFocusRef.current = document.activeElement as HTMLElement;
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    requestAnimationFrame(() => {
+      closeButtonRef.current?.focus();
+    });
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, handleKeyDown]);
+
+  const handleOverlayClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (e.target === e.currentTarget) {
+        closeModal();
+      }
+    },
+    [closeModal]
+  );
+
+  if (!pack) return null;
 
   const idBase = safeId(pack.id);
   const titleId = `${idBase}-complete-list-title`;
-  const descriptionId = `${idBase}-complete-list-description`;
 
-  return createPortal(
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
-          closeModal();
-        }
-      }}
-    >
-      <section
+  return (
+    <div className={styles.overlay} role="presentation" onMouseDown={handleOverlayClick}>
+      <div
         className={styles.dialog}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        aria-describedby={descriptionId}
         ref={dialogRef}
         tabIndex={-1}
       >
         <div className={styles.header}>
-          <div className={styles.titlePill}>
+          <div>
             <h2 id={titleId}>{pack.modalTitle}</h2>
-            <IconButton
-              className={styles.closeButton}
-              onClick={closeModal}
-              label={`Close ${pack.gradeLabel} stationery list`}
-              ref={closeButtonRef}
-            >
-              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                <path d="m6 6 12 12M18 6 6 18" />
-              </svg>
-            </IconButton>
+            <span className={styles.headerSubtitle}>{pack.gradeLabel} stationery list</span>
           </div>
+          <button
+            type="button"
+            className={styles.closeButton}
+            onClick={closeModal}
+            aria-label={`Close ${pack.gradeLabel} stationery list`}
+            ref={closeButtonRef}
+          >
+            &times;
+          </button>
         </div>
 
         <div className={styles.content}>
-          <div className={styles.intro}>
-            <p>{pack.contentHeading ?? "Official school stationery list"}</p>
-            <span id={descriptionId}>{pack.description}</span>
-          </div>
           <CompleteListTable
             items={pack.items}
             label={`${pack.gradeLabel} complete stationery list`}
@@ -108,39 +134,41 @@ export function CompleteListModal({ pack, onClose }: CompleteListModalProps) {
         </div>
 
         <div className={styles.footer}>
-          <p className={styles.microcopy}>
-            Need everything?{" "}
-            {pack.fullPackHref ? (
-              <Link href={pack.fullPackHref} className={styles.inlineLink}>
-                Buy the full pack
-              </Link>
-            ) : (
-              <span className={styles.inlineLinkText}>Buy the full pack</span>
-            )}
-            .
-            <span className={styles.mobileBreak} aria-hidden="true">
-              {" "}
-            </span>
-            <span className={styles.mobileBreakText}>
-              Already have some items?{" "}
-            </span>
-            {pack.customiseTargetId ? (
-              <button
-                type="button"
-                className={styles.inlineAction}
-                onClick={handleCustomise}
-              >
-                Customise it
-              </button>
-            ) : (
-              <span className={styles.inlineLinkText}>Customise it</span>
-            )}
-            .
-          </p>
           <p className={styles.price}>{pack.priceLabel}</p>
+
+          {onAddToOrder ? (
+            <button
+              type="button"
+              className={styles.addToOrderButton}
+              onClick={onAddToOrder}
+            >
+              Add to Order
+            </button>
+          ) : pack.fullPackHref ? (
+            <Link href={pack.fullPackHref} className={styles.addToOrderButton}>
+              Add to Order
+            </Link>
+          ) : (
+            <button type="button" className={styles.addToOrderButton} disabled>
+              Add to Order
+            </button>
+          )}
+
+          {pack.customiseTargetId ? (
+            <button
+              type="button"
+              className={styles.customiseButton}
+              onClick={handleCustomise}
+            >
+              Customise This Pack
+            </button>
+          ) : (
+            <button type="button" className={styles.customiseButton} disabled>
+              Customise This Pack
+            </button>
+          )}
         </div>
-      </section>
-    </div>,
-    document.body
+      </div>
+    </div>
   );
 }

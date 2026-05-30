@@ -104,8 +104,7 @@ export function PayStep({
         </div>
         
         <p className={styles.paymentSubtext}>
-          You will be redirected to Paystack's fully secure checkout page to complete your payment. 
-          Pexpacks does not store or see your card details.
+          A secure Paystack window will open directly on this page to process your payment. Pexpacks does not store or see your card details.
         </p>
 
         <div className={styles.badgeLabelContainer}>
@@ -114,8 +113,8 @@ export function PayStep({
 
         <div className={styles.paymentBadgeRow}>
           <div className={styles.paymentBadgeItem} title="Visa">
-            <svg viewBox="0 0 48 16" width="38" height="13" aria-hidden="true">
-              <path d="M18.887 0l2.955 16h2.723L21.61 0h-2.723zm10.742 0c-.628-.244-1.614-.492-2.827-.492-3.13 0-5.326 1.63-5.346 3.967-.02 1.724 1.572 2.686 2.775 3.26 1.233.587 1.65 1.0 1.644 1.543-.014.836-1.02 1.22-1.966 1.22-1.31 0-2.008-.198-3.078-.667l-.43-.207-.46 2.784c.767.348 2.186.65 3.655.664 3.328 0 5.485-1.615 5.518-4.116.024-1.37-.832-2.417-2.66-3.284-1.107-.549-1.787-.916-1.781-1.477.008-.512.585-1.04 1.848-1.04.996-.02 1.728.212 2.29.452l.272.124.457-2.786-.437-.207zm14.613 0h-2.588c-.803 0-1.408.435-1.69 1.102l-4.78 14.898h2.868l.57-1.574h3.513l.33 1.574h2.53L44.242 0zm-3.52 11.233l1.648-4.524.953 4.524H40.722z" fill="#0f172a" />
+            <svg viewBox="0 0 24 15" width="38" height="24" aria-hidden="true">
+              <path d="M10.15 1.56L8.14 12.38H5.02L3.01 4.54c-.11-.47-.4-.82-.87-.99C1.46 3.25.47 2.92 0 2.82l.06-.21h4.94c.64 0 1.2.42 1.34 1.11l1.58 8.16L11 2.82h3.11l-2.01 9.56H9.15l1-5.69-1.89-5.13zm12.31 4.41c-.04-.54-.42-1.07-1.34-1.39-1.12-.39-2.24-.62-2.24-1.12 0-.34.33-.61.99-.61a3.7 3.7 0 0 1 2.06.63l.36.19.46-2.5c-.64-.28-1.76-.56-2.91-.56-2.9 0-4.93 1.48-4.95 3.73-.02 1.56 1.45 2.42 2.56 2.94.9.42 1.3.8 1.3 1.23-.01.66-.82.97-1.57.97-1.05 0-1.61-.16-2.47-.53l-.35-.16-.48 2.5c.7.31 1.98.59 3.3.59 3.07 0 5.08-1.45 5.12-3.71M24 2.82l-2.33 9.56h-2.33l2.33-9.56H24z" fill="#1A1F71" />
             </svg>
           </div>
           <div className={styles.paymentBadgeItem} title="Mastercard">

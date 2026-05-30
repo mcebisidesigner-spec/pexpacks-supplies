@@ -324,18 +324,18 @@ export function GradePackActions({
           </div>
           <button
             type="button"
-            className={styles.resetButton}
-            onClick={resetToFullPack}
-          >
-            Reset to Full Pack
-          </button>
-          <button
-            type="button"
             className={styles.submitButton}
             onClick={handleSaveCustomPack}
             disabled={selectedCount === 0}
           >
-            Save Pack to Order
+            Add to Order
+          </button>
+          <button
+            type="button"
+            className={styles.resetButton}
+            onClick={resetToFullPack}
+          >
+            Reset to Full Pack
           </button>
         </div>
       </section>

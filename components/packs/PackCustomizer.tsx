@@ -196,7 +196,7 @@ export function PackCustomizer({
           <div>
             <p>{gradePack.title}</p>
             <h2 id="pack-customiser-title">Customise This Pack</h2>
-            <span id="pack-customiser-instructions">
+            <span id="pack-customiser-instructions" className={styles.headerSubtitle}>
               Untick what you already have and order the rest.
             </span>
           </div>
@@ -348,18 +348,18 @@ export function PackCustomizer({
           </div>
           <button
             type="button"
-            className={styles.resetButton}
-            onClick={() => setQuantities(buildInitialQuantities(gradePack))}
-          >
-            Reset to Full Pack
-          </button>
-          <button
-            type="button"
             className={styles.submitButton}
             onClick={handleSaveToOrder}
             disabled={selectedCount === 0}
           >
-            Save Pack to Order
+            Add to Order
+          </button>
+          <button
+            type="button"
+            className={styles.resetButton}
+            onClick={() => setQuantities(buildInitialQuantities(gradePack))}
+          >
+            Reset to Full Pack
           </button>
         </div>
       </section>

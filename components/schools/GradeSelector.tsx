@@ -9,21 +9,14 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
 import type { GradePackForCustomisation } from "@/lib/packs/types";
 import type { CompleteListPack, PackListItem } from "@/components/packs/packListTypes";
+import { usePackTrayStore } from "@/store/usePackTrayStore";
+import { createFullTrayPack } from "@/lib/order/createTrayPack";
 import styles from "./GradeSelector.module.css";
 
 type GradeSelectorProps = {
   school: School;
   onGradeIntent?: () => void;
 };
-
-function buildFullPackHref(pack: GradePackForCustomisation) {
-  const params = new URLSearchParams({
-    school: pack.schoolSlug,
-    grade: pack.gradeSlug,
-    pack: "full",
-  });
-  return `/checkout?${params.toString()}`;
-}
 
 function toSchoolListItems(pack: GradePackForCustomisation): PackListItem[] {
   return pack.items.map((item) => ({
@@ -47,8 +40,14 @@ function buildCompleteListPack(
     description: `Prepared according to the official school list for ${grade.grade}.`,
     priceLabel: `From ${formatCurrency(grade.price)}`,
     items: toSchoolListItems(pack),
-    fullPackHref: buildFullPackHref(pack),
     customiseTargetId: `customise-${pack.id}`,
+    footerActions: (
+      <GradePackActions
+        pack={pack}
+        showDownloadLink={false}
+        showMicrocopy={false}
+      />
+    ),
   };
 }
 
@@ -62,6 +61,31 @@ export function GradeSelector({ school, onGradeIntent }: GradeSelectorProps) {
       viewListTriggerRef.current?.focus();
     }, 0);
   }, []);
+
+  const handleAddToOrder = useCallback((grade: GradePack, pack: GradePackForCustomisation) => {
+    const trayPack = createFullTrayPack({
+      packId: pack.id,
+      basePackId: pack.id,
+      packName: pack.packName || `${grade.grade} Stationery Pack`,
+      schoolId: school.id,
+      schoolSlug: school.slug,
+      schoolName: school.name,
+      grade: grade.grade,
+      gradeSlug: grade.gradeSlug,
+      items: pack.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        category: item.category,
+        quantity: item.requiredQuantity,
+        unitPrice: item.unitPrice,
+      })),
+      totalPrice: grade.price ?? 0,
+      sourcePath: window.location.pathname,
+    });
+    usePackTrayStore.getState().addPack(trayPack);
+    usePackTrayStore.getState().openTray();
+    closeCompleteList();
+  }, [school, closeCompleteList]);
 
   const selectedGrade = selectedGradeId
     ? school.grades.find((grade) => grade.id === selectedGradeId)
@@ -127,6 +151,11 @@ export function GradeSelector({ school, onGradeIntent }: GradeSelectorProps) {
       <CompleteListModal
         pack={selectedListPack}
         onClose={closeCompleteList}
+        onAddToOrder={
+          selectedGrade && selectedPack
+            ? () => handleAddToOrder(selectedGrade, selectedPack)
+            : undefined
+        }
       />
     </>
   );

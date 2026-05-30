@@ -48,18 +48,16 @@ export function HeaderOrderIcon() {
       type="button"
       className={`${styles.iconButton} ${animate ? styles.iconPop : ""}`}
       onClick={handleClick}
-      aria-label={`Open saved order${packCount > 0 ? ` (${packCount} pack${packCount === 1 ? "" : "s"})` : ""}`}
+      aria-label={`Open saved order (${packCount} pack${packCount === 1 ? "" : "s"})`}
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
         <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
         <line x1="3" y1="6" x2="21" y2="6" />
         <path d="M16 10a4 4 0 01-8 0" />
       </svg>
-      {packCount > 0 ? (
-        <span className={styles.badge} aria-hidden="true">
-          {packCount > 9 ? "9+" : packCount}
-        </span>
-      ) : null}
+      <span className={styles.badge} aria-hidden="true">
+        {packCount > 9 ? "9+" : packCount}
+      </span>
     </button>
   );
 }
