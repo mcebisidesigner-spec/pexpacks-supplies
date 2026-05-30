@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -71,6 +72,11 @@ export function CheckoutForm({
 }: CheckoutFormProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const router = useRouter();
+  const openTray = usePackTrayStore((s) => s.openTray);
+  const handleBackToOrder = () => {
+    openTray();
+    router.back();
+  };
   const [isSticky, setIsSticky] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const lastScrollY = useRef(0);
@@ -434,9 +440,9 @@ export function CheckoutForm({
             <button
               type="button"
               className={`${styles.backLink} ${styles.desktopOnly}`}
-              onClick={() => router.back()}
+              onClick={handleBackToOrder}
             >
-              Back to packs
+              Back to Order
             </button>
             <button
               type="button"
@@ -450,9 +456,9 @@ export function CheckoutForm({
           <button
             type="button"
             className={styles.backLink}
-            onClick={() => router.back()}
+            onClick={handleBackToOrder}
           >
-            Back to packs
+            Back to Order
           </button>
         )}
         <div

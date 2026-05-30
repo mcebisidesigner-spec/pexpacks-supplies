@@ -185,6 +185,10 @@
   stroke-linejoin: round;
 }
 
+.mobileActions {
+  display: none;
+}
+
 .menuButton {
   display: none;
 }
@@ -458,6 +462,12 @@
   .desktopNav,
   .desktopActions {
     display: none;
+  }
+
+  .mobileActions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
   .menuButton {

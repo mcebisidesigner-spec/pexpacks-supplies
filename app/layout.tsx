@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { ClientRuntimeWidgets } from "@/components/layout/ClientRuntimeWidgets";
 import { SiteRatingStrip } from "@/components/shared/SiteRatingStrip";
 import { JsonLd } from "@/components/ui/JsonLd";
+import { TrayProviders } from "@/components/order/TrayProviders";
 import { buildMetadata } from "@/lib/seo";
 import {
   onlineStoreSchema,
@@ -133,6 +134,7 @@ export default function RootLayout({
           <SiteRatingStrip />
           <Footer />
           <ClientRuntimeWidgets />
+          <TrayProviders />
         </div>
       </body>
     </html>

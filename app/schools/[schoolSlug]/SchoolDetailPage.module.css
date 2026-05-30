@@ -61,3 +61,102 @@
     border-radius: 20px;
   }
 }
+
+.pexcoverBannerOuter {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 40px var(--gutter-desktop) 0;
+}
+
+.pexcoverBanner {
+  display: flex;
+  gap: 20px;
+  align-items: start;
+  padding: 24px;
+  background: var(--pex-bg-soft);
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-card);
+  transition: var(--interactive-transition);
+}
+
+.pexcoverBanner:hover {
+  border-color: var(--pex-keppel);
+  box-shadow: 0 10px 30px rgba(26, 42, 64, 0.04);
+}
+
+.pexcoverBannerIcon {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-pill);
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-keppel);
+  display: grid;
+  place-items: center;
+}
+
+.pexcoverBannerIcon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.pexcoverBannerContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.pexcoverBannerTitle {
+  margin: 0 0 6px;
+  color: var(--pex-primary);
+  font-family: var(--font-pexpacks-sans);
+  font-size: 18px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.pexcoverBannerText {
+  margin: 0 0 12px;
+  color: var(--pex-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pexcoverBannerLink {
+  display: inline-flex;
+  align-items: center;
+  color: var(--pex-coral);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.pexcoverBannerLink:hover {
+  color: var(--pex-primary);
+  text-decoration: underline;
+}
+
+@media (max-width: 1023px) {
+  .pexcoverBannerOuter {
+    padding: 32px var(--gutter-mobile) 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .pexcoverBannerOuter {
+    padding: 24px var(--gutter-mobile) 0;
+  }
+
+  .pexcoverBanner {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    align-items: stretch;
+  }
+
+  .pexcoverBannerIcon {
+    width: 44px;
+    height: 44px;
+  }
+}

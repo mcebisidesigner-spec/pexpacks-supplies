@@ -1,19 +1,17 @@
 "use client";
 
 import {
-  FormEvent,
   useCallback,
   useEffect,
   useMemo,
   useState,
   useRef,
 } from "react";
-import { useRouter } from "next/navigation";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { useDialogFocusTrap } from "@/components/packs/useDialogFocusTrap";
 import { customPackAddOns } from "@/data/packAddOns";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { saveOrderDraft } from "@/lib/checkout/draft";
+import { usePackTrayStore } from "@/store/usePackTrayStore";
 import type { GradePackTemplate } from "@/data/phasePacks";
 import styles from "./PackCustomiser.module.css";
 
@@ -35,9 +33,10 @@ export function PackCustomizer({
   gradePack,
   onCancel,
 }: PackCustomizerProps) {
-  const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
+  const addPack = usePackTrayStore((s) => s.addPack);
+  const openTray = usePackTrayStore((s) => s.openTray);
   const [quantities, setQuantities] = useState<Record<string, number>>(() =>
     buildInitialQuantities(gradePack)
   );
@@ -93,40 +92,86 @@ export function PackCustomizer({
 
   const selectedCount = Object.values(quantities).reduce((a, b) => a + b, 0);
 
-  const handleSubmit = (event?: FormEvent) => {
-    if (event) event.preventDefault();
+  const handleSaveToOrder = useCallback(() => {
     if (selectedCount === 0) return;
 
-    const standardItems = gradePack.items
-      .map((item) => ({
+    const items: Array<{ id: string; name: string; category?: string; quantity: number; unitPrice?: number }> = [];
+    const modifications: Record<string, number> = {};
+
+    gradePack.items.forEach((item) => {
+      const qty = quantities[item.id] || 0;
+      if (qty > 0) {
+        items.push({
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          quantity: qty,
+          unitPrice: item.unitPrice,
+        });
+      }
+      if (qty !== item.quantity) {
+        modifications[item.id] = qty;
+      }
+    });
+
+    const addOnItems: Array<{ id: string; name: string; category?: string; quantity: number; unitPrice?: number }> = [];
+    customPackAddOns.forEach((item) => {
+      const qty = quantities[item.id] || 0;
+      if (qty > 0) {
+        addOnItems.push({
+          id: item.id,
+          name: item.name,
+          category: item.category || "Add-ons",
+          quantity: qty,
+          unitPrice: item.unitPrice,
+        });
+      }
+    });
+
+    const now = new Date().toISOString();
+    const packId = `phase-${gradePack.id}-${Date.now()}`;
+
+    addPack({
+      id: packId,
+      packId: gradePack.id,
+      basePackId: gradePack.id,
+      packName: gradePack.title,
+      schoolName: phaseSlug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      grade: gradePack.grade,
+      gradeSlug: gradePack.id,
+      learnerName: "",
+      packMode: "customised",
+      items: items.map((item) => ({
+        id: item.id,
+        itemId: item.id,
         name: item.name,
-        quantity: quantities[item.id] || 0,
-      }))
-      .filter((item) => item.quantity > 0);
-    const addOnItems = customPackAddOns
-      .map((item) => ({
-        name: `Add-on: ${item.name}`,
-        quantity: quantities[item.id] || 0,
-      }))
-      .filter((item) => item.quantity > 0);
-    const customItems = [...standardItems, ...addOnItems]
-      .map((item) => `${item.quantity} x ${item.name}`)
-      .join("; ");
+        category: item.category,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        lineTotal: item.unitPrice ? item.unitPrice * item.quantity : undefined,
+      })),
+      modifications: Object.keys(modifications).length > 0 ? modifications : undefined,
+      addOns: addOnItems.length > 0
+        ? addOnItems.map((item) => ({
+            id: item.id,
+            itemId: item.id,
+            name: item.name,
+            category: item.category,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            lineTotal: item.unitPrice ? item.unitPrice * item.quantity : undefined,
+          }))
+        : undefined,
+      subtotal: totalPrice,
+      totalPrice,
+      sourcePath: window.location.pathname,
+      createdAt: now,
+      updatedAt: now,
+    });
 
-    saveOrderDraft(
-      {
-        phaseSlug,
-        packId: gradePack.id,
-        grade: gradePack.grade,
-        type: "custom",
-        selectedItems: customItems,
-        estimatedTotal: totalPrice,
-      },
-      "customised"
-    );
-
-    router.push(`/checkout/${encodeURIComponent(phaseSlug)}+${encodeURIComponent(gradePack.id)}=customised`);
-  };
+    closeCustomiser();
+    openTray();
+  }, [selectedCount, quantities, gradePack, totalPrice, phaseSlug, addPack, closeCustomiser, openTray]);
 
   return (
     <div
@@ -311,10 +356,10 @@ export function PackCustomizer({
           <button
             type="button"
             className={styles.submitButton}
-            onClick={() => handleSubmit()}
+            onClick={handleSaveToOrder}
             disabled={selectedCount === 0}
           >
-            Continue to checkout
+            Save Pack to Order
           </button>
         </div>
       </section>

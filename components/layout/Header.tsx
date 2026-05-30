@@ -4,6 +4,7 @@ import { HeaderActiveLink } from "./HeaderActiveLink";
 import { HeaderMenu } from "./HeaderMenu";
 import { HeaderScrollWrapper } from "./HeaderScrollWrapper";
 import { mainNavLinks } from "@/data/navigation";
+import { HeaderOrderIcon } from "@/components/order/HeaderOrderIcon";
 import styles from "./Header.module.css";
 
 export function Header() {
@@ -19,6 +20,7 @@ export function Header() {
           ))}
         </nav>
         <div className={styles.desktopActions}>
+          <HeaderOrderIcon />
           <Link className={styles.desktopLogin} href="/login" aria-label="Login" title="Login">
             <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
               <circle cx="12" cy="8" r="3.5" />
@@ -35,7 +37,10 @@ export function Header() {
             </span>
           </Link>
         </div>
-        <HeaderMenu />
+        <div className={styles.mobileActions}>
+          <HeaderOrderIcon />
+          <HeaderMenu />
+        </div>
       </div>
     </HeaderScrollWrapper>
   );

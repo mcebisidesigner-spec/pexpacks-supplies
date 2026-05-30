@@ -6,15 +6,14 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { saveOrderDraft } from "@/lib/checkout/draft";
 import { calculatePackTotal } from "@/lib/packs/calculatePackTotal";
 import {
   createCustomPackSelection,
   createFullPackSelection,
-  serialiseRemovedItems,
-  serialiseSelectedItems,
 } from "@/lib/packs/createPackSelection";
 import { useDialogFocusTrap } from "./useDialogFocusTrap";
+import { usePackTrayStore } from "@/store/usePackTrayStore";
+import { createFullTrayPack } from "@/lib/order/createTrayPack";
 import type {
   GradePackForCustomisation,
   PackSelectionItem,
@@ -31,25 +30,6 @@ type GradePackActionsProps = {
   autoCustomise?: boolean;
 };
 
-export function buildFullPackHref(pack: GradePackForCustomisation) {
-  const params = new URLSearchParams({
-    school: pack.schoolSlug,
-    grade: pack.gradeSlug,
-    pack: "full",
-  });
-  return `/checkout?${params.toString()}`;
-}
-
-function buildCustomPackHref(pack: GradePackForCustomisation) {
-  const params = new URLSearchParams({
-    school: pack.schoolSlug,
-    grade: pack.gradeSlug,
-    pack: "custom",
-    draft: "customised",
-  });
-  return `/checkout?${params.toString()}`;
-}
-
 export function GradePackActions({
   pack,
   showDownloadLink = true,
@@ -64,6 +44,8 @@ export function GradePackActions({
   const triggerButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const addPack = usePackTrayStore((s) => s.addPack);
+  const openTray = usePackTrayStore((s) => s.openTray);
 
   // Stabilise the items reference to prevent infinite re-render loops.
   // Only recalculate when the serialised item list actually changes.
@@ -94,6 +76,78 @@ export function GradePackActions({
       triggerButtonRef.current?.focus();
     }, 0);
   }, []);
+
+  const handleAddFullPack = useCallback(() => {
+    const trayPack = createFullTrayPack({
+      packId: pack.id,
+      basePackId: pack.id,
+      packName: pack.packName || `${pack.grade} Stationery Pack`,
+      schoolId: pack.schoolId,
+      schoolSlug: pack.schoolSlug,
+      schoolName: pack.schoolName,
+      grade: pack.grade,
+      gradeSlug: pack.gradeSlug,
+      items: pack.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        category: item.category,
+        quantity: item.requiredQuantity,
+        unitPrice: item.unitPrice,
+      })),
+      totalPrice: pack.fullPackPrice ?? 0,
+      sourcePath: window.location.pathname,
+    });
+    addPack(trayPack);
+    openTray();
+  }, [pack, addPack, openTray]);
+
+  const handleSaveCustomPack = useCallback(() => {
+    if (selectedCount === 0) return;
+
+    const modifications: Record<string, number> = {};
+    const trayItems: Array<{ id: string; name: string; category?: string; quantity: number; unitPrice?: number }> = [];
+    let customTotal = 0;
+
+    selection.forEach((item) => {
+      if (item.selected && item.selectedQuantity > 0) {
+        trayItems.push({
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          quantity: item.selectedQuantity,
+          unitPrice: item.unitPrice,
+        });
+        customTotal += (item.unitPrice ?? 0) * item.selectedQuantity;
+      }
+      if (item.selectedQuantity !== item.requiredQuantity) {
+        modifications[item.id] = item.selectedQuantity;
+      }
+    });
+
+    const trayPack = createFullTrayPack({
+      packId: `${pack.id}-custom-${Date.now()}`,
+      basePackId: pack.id,
+      packName: pack.packName || `${pack.grade} Stationery Pack`,
+      schoolId: pack.schoolId,
+      schoolSlug: pack.schoolSlug,
+      schoolName: pack.schoolName,
+      grade: pack.grade,
+      gradeSlug: pack.gradeSlug,
+      items: trayItems,
+      totalPrice: customTotal,
+      sourcePath: window.location.pathname,
+    });
+
+    const customPack = {
+      ...trayPack,
+      packMode: "customised" as const,
+      modifications: Object.keys(modifications).length > 0 ? modifications : undefined,
+    };
+
+    addPack(customPack);
+    closeCustomiser();
+    openTray();
+  }, [selectedCount, selection, pack, addPack, closeCustomiser, openTray]);
 
   // Mount check for portal rendering
   useEffect(() => {
@@ -152,27 +206,6 @@ export function GradePackActions({
 
   function resetToFullPack() {
     setSelection(createFullPackSelection(pack.items));
-  }
-
-  function requestCustomPack() {
-    if (selectedCount === 0) {
-      return;
-    }
-
-    saveOrderDraft(
-      {
-        schoolSlug: pack.schoolSlug,
-        gradeSlug: pack.gradeSlug,
-        grade: pack.grade,
-        type: "custom-school",
-        selectedItems: serialiseSelectedItems(selection),
-        removedItems: serialiseRemovedItems(selection),
-        estimatedTotal: total,
-      },
-      "customised"
-    );
-
-    router.push(buildCustomPackHref(pack));
   }
 
   const drawerContent = isOpen ? (
@@ -299,10 +332,10 @@ export function GradePackActions({
           <button
             type="button"
             className={styles.submitButton}
-            onClick={requestCustomPack}
+            onClick={handleSaveCustomPack}
             disabled={selectedCount === 0}
           >
-            Continue to checkout
+            Save Pack to Order
           </button>
         </div>
       </section>
@@ -320,11 +353,12 @@ export function GradePackActions({
 
         <div className={styles.detailActionRow}>
           <Button
-            href={buildFullPackHref(pack)}
+            type="button"
             size="lg"
             className={styles.detailButton}
+            onClick={handleAddFullPack}
           >
-            Buy Full Pack
+            Add to Order
           </Button>
           <Button
             id={`customise-${pack.id}`}
@@ -380,8 +414,8 @@ export function GradePackActions({
         </p>
       ) : null}
       <div className={styles.actionRow}>
-        <Button href={buildFullPackHref(pack)} size="sm">
-          Buy Full Pack
+        <Button type="button" size="sm" onClick={handleAddFullPack}>
+          Add to Order
         </Button>
         <Button
           id={`customise-${pack.id}`}

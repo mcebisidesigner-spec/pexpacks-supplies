@@ -4,10 +4,7 @@ import { useCallback, useRef, useState, type MouseEvent } from "react";
 import type { GradePack, School } from "@/data/schools";
 import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
 import { CompleteListModal } from "@/components/packs/CompleteListModal";
-import {
-  buildFullPackHref,
-  GradePackActions,
-} from "@/components/packs/GradePackActions";
+import { GradePackActions } from "@/components/packs/GradePackActions";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
 import type { GradePackForCustomisation } from "@/lib/packs/types";
@@ -18,6 +15,15 @@ type GradeSelectorProps = {
   school: School;
   onGradeIntent?: () => void;
 };
+
+function buildFullPackHref(pack: GradePackForCustomisation) {
+  const params = new URLSearchParams({
+    school: pack.schoolSlug,
+    grade: pack.gradeSlug,
+    pack: "full",
+  });
+  return `/checkout?${params.toString()}`;
+}
 
 function toSchoolListItems(pack: GradePackForCustomisation): PackListItem[] {
   return pack.items.map((item) => ({

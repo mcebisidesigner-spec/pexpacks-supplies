@@ -135,3 +135,78 @@ export async function getOrderByReference(reference: string) {
 }
 
 export type OrderStatusInfo = Awaited<ReturnType<typeof getOrderByReference>>;
+
+export async function createMultiPackOrder(input: {
+  orderReference: string;
+  buyerName: string;
+  buyerEmail: string;
+  buyerPhone: string;
+  packs: {
+    learnerName: string;
+    schoolSlug: string;
+    schoolName: string;
+    grade: string;
+    gradeSlug: string;
+    packName: string;
+    packMode: string;
+    items: { name: string; quantity: number; unitPrice?: number }[];
+    totalPrice: number;
+    wantsPexcover?: boolean;
+    pexcoverPrice?: number;
+    basePackPrice?: number;
+  }[];
+  estimatedTotal: number;
+  deliveryMethod: string;
+  primarySchoolSlug?: string;
+  notes?: string;
+  summaryItems: string[];
+}) {
+  const supabase = createSupabaseAdminClient();
+  const orderId = randomUUID();
+
+  const { error } = await supabase.from("orders").insert({
+    id: orderId,
+    order_reference: input.orderReference,
+    buyer_name: input.buyerName,
+    buyer_phone: input.buyerPhone,
+    buyer_email: input.buyerEmail || null,
+    school_slug: input.primarySchoolSlug || input.packs[0]?.schoolSlug || "",
+    school_name: input.packs.find((p) => p.schoolSlug === input.primarySchoolSlug)?.schoolName || input.packs[0]?.schoolName || "Multiple schools",
+    grade: input.packs.map((p) => p.grade).filter(Boolean).join(", ") || "Multiple grades",
+    pack_type: "multi-school",
+    items: input.summaryItems,
+    estimated_total: input.estimatedTotal,
+    fulfilment_option:
+      input.deliveryMethod === "school_collection"
+        ? "School collection"
+        : input.deliveryMethod === "delivery"
+          ? "Home delivery"
+          : "Collection point",
+    metadata: {
+      packs: input.packs.map((p) => ({
+        learner_name: p.learnerName,
+        school_slug: p.schoolSlug,
+        school_name: p.schoolName,
+        grade: p.grade,
+        pack_name: p.packName,
+        pack_mode: p.packMode,
+        items: p.items,
+        total_price: p.totalPrice + (p.wantsPexcover ? p.pexcoverPrice || 0 : 0),
+        wants_pexcover: p.wantsPexcover || false,
+        pexcover_price: p.wantsPexcover ? p.pexcoverPrice || 0 : 0,
+        base_pack_price: p.basePackPrice || p.totalPrice,
+      })),
+      pack_count: input.packs.length,
+      primary_school_slug: input.primarySchoolSlug || null,
+    },
+    consent: true,
+    status: "pending_payment",
+  });
+
+  if (error) {
+    console.error("[orders] Failed to create multi-pack order:", JSON.stringify(error));
+    throw new Error(`Failed to create order: ${error.message}`);
+  }
+
+  return { id: orderId, orderReference: input.orderReference };
+}
