@@ -3,8 +3,6 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
-import { MultiLearnerBanner } from "@/components/schools/MultiLearnerBanner";
-import { SiblingQuickAdd } from "@/components/schools/SiblingQuickAdd";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -91,9 +89,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
       />
       <section className={pageStyles.section}>
         <div className={pageStyles.sectionInner}>
-          {school.grades.length > 1 ? <MultiLearnerBanner /> : null}
           <GradeSelector school={school} />
-          <SiblingQuickAdd school={school} />
         </div>
       </section>
     </>

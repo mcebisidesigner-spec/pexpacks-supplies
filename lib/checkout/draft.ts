@@ -9,8 +9,6 @@ export type OrderDraft = {
   phaseSlug?: string;
   packId?: string;
   grade?: string;
-  siblingGrades?: string;
-  siblingPackCount?: number;
   selectedItems?: string;
   removedItems?: string;
   estimatedTotal?: number;
