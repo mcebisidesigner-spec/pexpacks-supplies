@@ -1,11 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { PexcoverAddOn } from "./PexcoverAddOn";
 import { PackItemsList } from "./PackItemsList";
-import styles from "@/app/checkout/Checkout.module.css";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import styles from "./ReviewOrderStep.module.css";
 
 type SchoolResult = {
   slug: string;
@@ -42,7 +44,7 @@ type ReviewOrderStepProps = {
   pexcoverPrice: number;
 };
 
-export function ReviewOrderStep({
+export const ReviewOrderStep = memo(function ReviewOrderStep({
   schoolSlug,
   schoolName,
   grade,
@@ -117,43 +119,46 @@ export function ReviewOrderStep({
             <p className={styles.confirmKicker}>School</p>
             {showSchoolSearch ? (
               <div className={styles.schoolSearchWrap}>
-                <label className={styles.srOnly} htmlFor="school-search">
-                  Search for a school
-                </label>
-                <input
+                <Input
                   id="school-search"
-                  className={styles.schoolSearchInput}
+                  label="Search for a school"
                   type="search"
                   placeholder="Search for a school..."
                   value={schoolQuery}
                   onChange={(e) => handleSchoolSearch(e.target.value)}
                   autoFocus
+                  className={styles.schoolSearchInput}
+                  wrapperClassName="!contents"
                 />
                 {schoolResults.length > 0 ? (
                   <div className={styles.schoolResults}>
                     {schoolResults.map((s) => (
-                      <button
+                      <Button
                         key={s.slug}
                         type="button"
-                        className={styles.schoolResultItem}
+                        variant="secondary"
+                        className={`${styles.schoolResultItem} rounded-full`}
                         onClick={() => {
                           const firstGrade = s.grades?.[0];
                           if (firstGrade) navigateToCheckout(s.slug, firstGrade);
                         }}
                       >
-                        <strong>{s.name}</strong>
-                        <span>
-                          {s.city}, {s.province}
-                        </span>
-                      </button>
+                        <div className="flex flex-col text-left w-full">
+                          <strong>{s.name}</strong>
+                          <span>
+                            {s.city}, {s.province}
+                          </span>
+                        </div>
+                      </Button>
                     ))}
                   </div>
                 ) : schoolQuery.trim() && schoolResults.length === 0 ? (
                   <p className={styles.schoolNoResults}>No schools found.</p>
                 ) : null}
-                <button
+                <Button
                   type="button"
-                  className={styles.schoolSearchCancel}
+                  variant="secondary"
+                  className="rounded-full"
                   onClick={() => {
                     setShowSchoolSearch(false);
                     setSchoolQuery("");
@@ -161,16 +166,18 @@ export function ReviewOrderStep({
                   }}
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
             ) : (
               <div className={`${styles.reviewSchoolDisplay} ${styles.hasValue}`}>
                 <h3>{schoolName}</h3>
-                <button
+                <Button
                   type="button"
-                  className={styles.schoolSearchIconBtn}
+                  variant="secondary"
+                  className="rounded-full"
+                  style={{ padding: 6, minWidth: 32, minHeight: 32, height: 32, width: 32 }}
                   onClick={() => setShowSchoolSearch(true)}
-                  aria-label="Change school"
+                  ariaLabel="Change school"
                 >
                   <span className={styles.schoolSearchIcon} aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -178,32 +185,40 @@ export function ReviewOrderStep({
                       <path d="m21 21-4.35-4.35" />
                     </svg>
                   </span>
-                </button>
+                </Button>
               </div>
             )}
           </div>
 
           <div className={styles.reviewGradeCard}>
             <p className={styles.confirmKicker}>Grade</p>
-            <button
+            <Button
               type="button"
-              className={`${styles.gradeDrawerTrigger} ${styles.hasValue}`}
+              variant="secondary"
+              className={`${styles.gradeDrawerTrigger} ${styles.hasValue} rounded-full justify-between w-full`}
               onClick={() => setShowGradeDrawer(!showGradeDrawer)}
               aria-expanded={showGradeDrawer}
               aria-controls="grade-drawer-panel"
             >
-              <span>{grade}</span>
-              <svg
-                className={styles.gradeChevron}
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                style={{
-                  transform: showGradeDrawer ? "rotate(180deg)" : "none",
-                }}
-              >
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </button>
+              <div className="flex justify-between items-center w-full">
+                <span>{grade}</span>
+                <svg
+                  className={styles.gradeChevron}
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  style={{
+                    transform: showGradeDrawer ? "rotate(180deg)" : "none",
+                    width: 18,
+                    height: 18,
+                    fill: "none",
+                    stroke: "currentColor",
+                    strokeWidth: 3
+                  }}
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </div>
+            </Button>
             {showGradeDrawer && availableGrades.length > 0 ? (
               <div
                 className={styles.gradeDrawerPanel}
@@ -212,23 +227,24 @@ export function ReviewOrderStep({
                 aria-label="Available grades"
               >
                 {availableGrades.map((g) => (
-                  <button
+                  <Button
                     key={g.gradeSlug}
                     type="button"
-                    className={`${styles.gradeDrawerItem} ${g.gradeSlug === gradeSlug ? styles.gradeDrawerItemActive : ""}`}
-                    role="option"
-                    aria-selected={g.gradeSlug === gradeSlug}
+                    variant="secondary"
+                    className={`${styles.gradeDrawerItem} ${g.gradeSlug === gradeSlug ? styles.gradeDrawerItemActive : ""} rounded-full justify-between w-full`}
                     onClick={() => {
                       setShowGradeDrawer(false);
                       if (g.gradeSlug !== gradeSlug)
                         navigateToCheckout(schoolSlug, g.gradeSlug);
                     }}
                   >
-                    <span>{g.grade}</span>
-                    <span className={styles.gradeDrawerPrice}>
-                      {formatCurrency(g.price)}
-                    </span>
-                  </button>
+                    <div className="flex justify-between items-center w-full">
+                      <span>{g.grade}</span>
+                      <span className={styles.gradeDrawerPrice}>
+                        {formatCurrency(g.price)}
+                      </span>
+                    </div>
+                  </Button>
                 ))}
               </div>
             ) : null}
@@ -255,4 +271,4 @@ export function ReviewOrderStep({
       </section>
     </div>
   );
-}
+});

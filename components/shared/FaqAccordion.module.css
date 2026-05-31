@@ -182,3 +182,19 @@
     padding: 0 20px 20px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .accordionItem {
+    transition: none;
+  }
+  .accordionItem:hover {
+    transition: none;
+  }
+  .plusIcon::before,
+  .plusIcon::after {
+    transition: none;
+  }
+  .accordionContent {
+    transition: none;
+  }
+}

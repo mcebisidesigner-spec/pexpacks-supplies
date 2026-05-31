@@ -1,0 +1,143 @@
+.summaryColumn {
+  position: sticky;
+  top: calc(var(--header-height-desktop) + 28px);
+}
+
+.summaryCard {
+  --summary-card-pad: 32px;
+  overflow: hidden;
+  padding: var(--summary-card-pad) var(--summary-card-pad) 0;
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: var(--radius-card-lg);
+  box-shadow: var(--card-shadow);
+}
+
+.summaryCard .confirmKicker {
+  color: var(--pex-keppel);
+  margin-bottom: 10px;
+}
+
+.confirmKicker {
+  color: var(--pex-text-muted);
+  font-size: 14px;
+  font-weight: 800;
+  margin: 0 0 10px;
+}
+
+.summaryCard h2 {
+  color: var(--pex-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summaryGrade {
+  margin: 6px 0 20px;
+  color: var(--pex-text-muted);
+  font-family: var(--font-heading);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.priceSummary {
+  display: grid;
+  gap: 0;
+  margin-top: 24px;
+  border-top: 1px solid rgba(26, 42, 64, 0.1);
+}
+
+.priceSummary div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(26, 42, 64, 0.08);
+}
+
+.priceSummary dt {
+  color: var(--pex-primary);
+  font-weight: 800;
+}
+
+.priceSummary dt span {
+  color: var(--pex-text-muted);
+  font-size: 0.9em;
+  font-weight: 700;
+}
+
+.priceSummary dd {
+  color: var(--pex-primary);
+  font-weight: 900;
+  margin: 0;
+  text-align: right;
+}
+
+.summaryTotalRow {
+  margin-top: 20px;
+  border-top: 2px solid rgba(255, 111, 89, 0.34);
+  border-bottom: 0 !important;
+  padding-top: 24px !important;
+}
+
+.summaryTotalRow dd {
+  color: var(--pex-coral);
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+}
+
+.summaryCard .trustList {
+  margin-top: 30px;
+  gap: 18px;
+}
+
+@media (max-width: 1024px) {
+  .summaryColumn {
+    position: static;
+  }
+  .summaryCard {
+    display: none;
+    margin-top: 24px;
+  }
+  .summaryCardOpen {
+    display: grid;
+  }
+}
+
+@media (max-width: 900px) {
+  .summaryColumn {
+    position: static;
+  }
+  .summaryCard {
+    display: none;
+    margin-top: 24px;
+  }
+  .summaryCardOpen {
+    display: grid;
+  }
+}
+
+@media (max-width: 760px) {
+  .summaryCard {
+    --summary-card-pad: clamp(20px, 6vw, 28px);
+    padding-bottom: 0;
+  }
+
+  .summaryCard h2 {
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .summaryGrade {
+    font-size: clamp(0.8rem, 3vw, 0.9rem);
+    margin: 4px 0 16px;
+  }
+}

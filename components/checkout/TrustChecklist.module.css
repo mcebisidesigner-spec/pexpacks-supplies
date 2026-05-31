@@ -1,0 +1,26 @@
+.trustList {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.trustList li {
+  color: var(--pex-primary);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trustList li::before {
+  content: '✓';
+  color: var(--pex-keppel);
+}
+
+.trustList a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

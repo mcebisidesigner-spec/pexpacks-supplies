@@ -17,6 +17,10 @@ desktop.ini
 # debug
 npm-debug.log*
 .next-dev-*.log
+dev-server.log
+dev-server-err.log
+stderr.txt
+stdout.txt
 
 # typescript
 *.tsbuildinfo

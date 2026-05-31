@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from "@/app/checkout/Checkout.module.css";
+import styles from "./TrustChecklist.module.css";
 
 export function TrustChecklist() {
   return (

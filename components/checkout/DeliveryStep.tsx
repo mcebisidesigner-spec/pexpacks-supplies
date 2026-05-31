@@ -1,5 +1,8 @@
 "use client";
 
+import { memo } from "react";
+import { Input } from "@/components/ui/Input";
+import Textarea from "@/components/ui/Textarea";
 import styles from "@/app/checkout/Checkout.module.css";
 
 type FulfilmentOption = "School collection" | "Delivery" | "Collection point";
@@ -82,7 +85,7 @@ function deliveryIcon(type: "school" | "home" | "pin") {
   );
 }
 
-export function DeliveryStep({
+export const DeliveryStep = memo(function DeliveryStep({
   fulfilmentOption,
   onFulfilmentOptionChange,
   address,
@@ -112,7 +115,7 @@ export function DeliveryStep({
               key={option.value}
               className={`${styles.deliveryOption} ${fulfilmentOption === option.value ? styles.deliveryOptionSelected : ""}`}
             >
-              <input
+              <Input
                 type="radio"
                 name="deliveryMethod"
                 value={option.value}
@@ -123,6 +126,8 @@ export function DeliveryStep({
                     onClearError
                   );
                 }}
+                className={styles.srOnly}
+                wrapperClassName="!contents"
               />
               <span className={styles.deliveryIcon}>
                 {deliveryIcon(option.icon)}
@@ -184,7 +189,7 @@ export function DeliveryStep({
               },
               {
                 id: "postalCode",
-                label: "Postal code optional",
+                label: "Postal code (optional)",
                 value: postalCode,
                 setter: onPostalCodeChange,
                 error: undefined,
@@ -192,33 +197,19 @@ export function DeliveryStep({
                 placeholder: "e.g. 8001",
               },
             ].map((field) => (
-              <div className={styles.fieldGroup} key={field.id}>
-                <label htmlFor={field.id}>{field.label}</label>
-                <input
-                  id={field.id}
-                  data-field={field.id}
-                  value={field.value}
-                  autoComplete={field.autoComplete}
-                  placeholder={field.placeholder}
-                  aria-invalid={Boolean(field.error)}
-                  aria-describedby={
-                    field.error ? `${field.id}-error` : undefined
-                  }
-                  onChange={(event) => {
-                    field.setter(event.target.value);
-                    onClearError(field.id);
-                  }}
-                />
-                {field.error ? (
-                  <p
-                    id={`${field.id}-error`}
-                    className={styles.fieldError}
-                    role="alert"
-                  >
-                    {field.error}
-                  </p>
-                ) : null}
-              </div>
+              <Input
+                key={field.id}
+                id={field.id}
+                label={field.label}
+                value={field.value}
+                autoComplete={field.autoComplete}
+                placeholder={field.placeholder}
+                error={field.error}
+                onChange={(event) => {
+                  field.setter(event.target.value);
+                  onClearError(field.id);
+                }}
+              />
             ))}
           </div>
         </div>
@@ -230,31 +221,28 @@ export function DeliveryStep({
             We will contact you to confirm the best pickup or handover option.
             Use the box below to share any special instructions.
           </p>
-          <div className={styles.fieldGroup}>
-            <label htmlFor="collectionNotes">Pickup / delivery instructions <span style={{ fontWeight: 500, color: 'var(--pex-text-muted)' }}>(optional)</span></label>
-            <textarea
-              id="collectionNotes"
-              data-field="deliveryNotes"
-              value={deliveryNotes}
-              placeholder="e.g. Please leave at the security gate, or I'll collect from your office on Wednesday."
-              onChange={(event) => onDeliveryNotesChange(event.target.value)}
-            />
-          </div>
+          <Textarea
+            id="collectionNotes"
+            label="Pickup / delivery instructions (optional)"
+            value={deliveryNotes}
+            placeholder="e.g. Please leave at the security gate, or I'll collect from your office on Wednesday."
+            onChange={(event) => onDeliveryNotesChange(event.target.value)}
+          />
         </div>
       ) : null}
 
-      <label className={styles.consentField}>
-        <input
-          data-field="consent"
-          name="consent"
+      <div className={styles.consentField}>
+        <Input
           type="checkbox"
+          id="consent"
           checked={consent}
-          aria-describedby={errors.consent ? "consent-error" : undefined}
           aria-invalid={Boolean(errors.consent)}
           onChange={(event) => {
             onConsentChange(event.target.checked);
             onClearError("consent");
           }}
+          className="!w-5 !h-5 !min-h-0"
+          wrapperClassName="!contents"
         />
         <span>
           I agree that Pexpacks may process my personal information to complete
@@ -276,13 +264,13 @@ export function DeliveryStep({
             returns & refunds policy
           </a>
           .
+          {errors.consent ? (
+            <small style={{ color: "var(--pex-error)", display: "block", marginTop: 4 }}>
+              {errors.consent}
+            </small>
+          ) : null}
         </span>
-      </label>
-      {errors.consent ? (
-        <p id="consent-error" className={styles.fieldError} role="alert">
-          {errors.consent}
-        </p>
-      ) : null}
+      </div>
     </div>
   );
-}
+});

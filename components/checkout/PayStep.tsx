@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { Button } from "@/components/ui/Button";
 import styles from "@/app/checkout/Checkout.module.css";
@@ -37,15 +38,21 @@ function ReviewBlock({
         {children}
       </div>
       {onEdit ? (
-        <button type="button" className={styles.reviewEditBtn} onClick={onEdit}>
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          className="rounded-full"
+          onClick={onEdit}
+        >
           Edit
-        </button>
+        </Button>
       ) : null}
     </section>
   );
 }
 
-export function PayStep({
+export const PayStep = memo(function PayStep({
   schoolName,
   grade,
   buyerName,
@@ -183,4 +190,4 @@ export function PayStep({
       </div>
     </div>
   );
-}
+});

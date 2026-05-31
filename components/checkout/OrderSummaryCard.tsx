@@ -2,7 +2,7 @@ import { PEXCOVER_PRICE } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { TrustChecklist } from "./TrustChecklist";
 import { WhatsAppHelpBlock } from "./WhatsAppHelpBlock";
-import styles from "@/app/checkout/Checkout.module.css";
+import styles from "./OrderSummaryCard.module.css";
 
 type OrderSummaryCardProps = {
   schoolName: string;

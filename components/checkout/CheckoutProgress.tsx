@@ -1,4 +1,4 @@
-import styles from "@/app/checkout/Checkout.module.css";
+import styles from "./CheckoutProgress.module.css";
 
 type Step = {
   id: string;

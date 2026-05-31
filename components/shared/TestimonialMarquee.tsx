@@ -94,6 +94,11 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
     setActiveIndex((current) => Math.min(maxIndex, current + 1));
   }
 
+  const handleDotClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const index = Number(event.currentTarget.dataset.index);
+    setActiveIndex(index);
+  };
+
   function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
     const touch = event.touches[0];
     touchStartRef.current = { x: touch.clientX, y: touch.clientY };
@@ -101,12 +106,11 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
 
   function handleTouchEnd(event: TouchEvent<HTMLDivElement>) {
     const start = touchStartRef.current;
-    const touch = event.changedTouches[0];
-    touchStartRef.current = null;
-
     if (!start) {
       return;
     }
+    const touch = event.changedTouches[0];
+    touchStartRef.current = null;
 
     const deltaX = touch.clientX - start.x;
     const deltaY = touch.clientY - start.y;
@@ -208,7 +212,8 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
             ]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setActiveIndex(i)}
+            data-index={i}
+            onClick={handleDotClick}
           />
         ))}
       </div>

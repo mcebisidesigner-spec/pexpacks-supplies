@@ -18,7 +18,8 @@ export function FaqAccordion({
 }: FaqAccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const toggleAccordion = (index: number) => {
+  const toggleAccordion = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const index = Number(event.currentTarget.dataset.index);
     setOpenIndex(openIndex === index ? null : index);
   };
 
@@ -40,7 +41,8 @@ export function FaqAccordion({
             >
               <button
                 className={styles.accordionButton}
-                onClick={() => toggleAccordion(index)}
+                data-index={index}
+                onClick={toggleAccordion}
                 aria-expanded={isOpen}
                 aria-controls={`faq-content-${faq.id}`}
               >

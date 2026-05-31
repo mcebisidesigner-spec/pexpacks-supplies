@@ -217,7 +217,7 @@
 .faqLinks a {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
+  min-height: 44px;
   border: 1px solid rgba(33, 158, 154, 0.2);
   border-radius: var(--radius-pill);
   padding: 7px 12px;

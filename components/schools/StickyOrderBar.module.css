@@ -7,8 +7,10 @@
   color: white;
   z-index: 50;
   transform: translateY(100%);
+  will-change: transform;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .visible {

@@ -1,13 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import Textarea from "@/components/ui/Textarea";
 import styles from "@/app/checkout/Checkout.module.css";
 
 type FulfilmentOption = "School collection" | "Delivery" | "Collection point";
@@ -101,7 +103,7 @@ export function TrayCheckoutClient() {
   const [lastName, setLastName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
-  const [preferredContactMethod, setPreferredContactMethod] =
+  const [preferredContactMethod] =
     useState<ContactMethod>("whatsapp");
   const [consent, setConsent] = useState(false);
 
@@ -200,15 +202,7 @@ export function TrayCheckoutClient() {
     setSubmitError(null);
     setSubmitting(true);
 
-    const items = packs.flatMap((pack) => [
-      `Learner: ${pack.learnerName || "Unnamed"}`,
-      `School: ${pack.schoolName || "N/A"}`,
-      `Grade: ${pack.grade || "N/A"}`,
-      `Pack: ${pack.packName} (${pack.packMode})`,
-      ...pack.items.map((i) => `${i.quantity} x ${i.name}`),
-      `Subtotal: ${formatCurrency(pack.totalPrice)}`,
-      "---",
-    ]);
+
 
     const notes = [
       deliveryNotes.trim() ? `Notes: ${deliveryNotes.trim()}` : "",
@@ -307,13 +301,14 @@ export function TrayCheckoutClient() {
   return (
     <div className={styles.checkoutShell}>
       <div className={styles.checkoutHeader}>
-        <button
+        <Button
           type="button"
-          className={styles.backLink}
+          variant="secondary"
+          className="rounded-full"
           onClick={handleBackToOrder}
         >
           Back to Order
-        </button>
+        </Button>
         <a
           href={`https://wa.me/27763456622?text=Hi Pexpacks, I need help with checkout.`}
           target="_blank"
@@ -370,7 +365,7 @@ export function TrayCheckoutClient() {
                         Learner {index + 1}
                       </p>
                       {editNameIndex === index ? (
-                        <input
+                        <Input
                           type="text"
                           value={learnerInputs[index] || ""}
                           onChange={(e) => handleLearnerNameChange(index, e.target.value)}
@@ -397,26 +392,19 @@ export function TrayCheckoutClient() {
                           <span style={{ color: learnerInputs[index]?.trim() ? "var(--pex-primary)" : "var(--pex-text-muted)", fontSize: 15, fontWeight: 700, textTransform: "capitalize" }}>
                             {learnerInputs[index]?.trim() || "Enter Learner Name"}
                           </span>
-                          <button
+                          <Button
                             type="button"
+                            variant="secondary"
+                            className="rounded-full"
+                            style={{ padding: 6, minWidth: 32, minHeight: 32, height: 32, width: 32 }}
                             onClick={() => setEditNameIndex(index)}
-                            aria-label={`Edit learner ${index + 1} name`}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              padding: 4,
-                              cursor: "pointer",
-                              color: "var(--pex-text-muted)",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              lineHeight: 1,
-                            }}
+                            ariaLabel={`Edit learner ${index + 1} name`}
                           >
-                            <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <svg viewBox="0 0 24 24" width={14} height={14} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                             </svg>
-                          </button>
+                          </Button>
                         </div>
                       )}
                     </div>
@@ -461,60 +449,48 @@ export function TrayCheckoutClient() {
               Customer Details
             </h2>
             <div className={styles.formGrid}>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="firstName">First name</label>
-                <input
-                  id="firstName"
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => { setFirstName(e.target.value); clearFieldError("firstName"); }}
-                  placeholder="Enter first name"
-                  aria-invalid={!!errors.firstName}
-                  autoComplete="given-name"
-                />
-                {errors.firstName ? <p className={styles.fieldError}>{errors.firstName}</p> : null}
-              </div>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="lastName">Surname</label>
-                <input
-                  id="lastName"
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => { setLastName(e.target.value); clearFieldError("lastName"); }}
-                  placeholder="Enter surname"
-                  aria-invalid={!!errors.lastName}
-                  autoComplete="family-name"
-                />
-                {errors.lastName ? <p className={styles.fieldError}>{errors.lastName}</p> : null}
-              </div>
+              <Input
+                id="firstName"
+                label="First name"
+                type="text"
+                value={firstName}
+                onChange={(e) => { setFirstName(e.target.value); clearFieldError("firstName"); }}
+                placeholder="Enter first name"
+                error={errors.firstName}
+                autoComplete="given-name"
+              />
+              <Input
+                id="lastName"
+                label="Surname"
+                type="text"
+                value={lastName}
+                onChange={(e) => { setLastName(e.target.value); clearFieldError("lastName"); }}
+                placeholder="Enter surname"
+                error={errors.lastName}
+                autoComplete="family-name"
+              />
 
-              <div className={styles.fieldGroup}>
-                <label htmlFor="buyerPhone">Phone number</label>
-                <input
-                  id="buyerPhone"
-                  type="tel"
-                  value={buyerPhone}
-                  onChange={(e) => { setBuyerPhone(e.target.value); clearFieldError("buyerPhone"); }}
-                  placeholder="e.g. 078 003 6048"
-                  aria-invalid={!!errors.buyerPhone}
-                  autoComplete="tel"
-                />
-                {errors.buyerPhone ? <p className={styles.fieldError}>{errors.buyerPhone}</p> : null}
-              </div>
+              <Input
+                id="buyerPhone"
+                label="Phone number"
+                type="tel"
+                value={buyerPhone}
+                onChange={(e) => { setBuyerPhone(e.target.value); clearFieldError("buyerPhone"); }}
+                placeholder="e.g. 078 003 6048"
+                error={errors.buyerPhone}
+                autoComplete="tel"
+              />
 
-              <div className={styles.fieldGroup}>
-                <label htmlFor="buyerEmail">Email address</label>
-                <input
-                  id="buyerEmail"
-                  type="email"
-                  value={buyerEmail}
-                  onChange={(e) => { setBuyerEmail(e.target.value); clearFieldError("buyerEmail"); }}
-                  placeholder="name@example.com"
-                  aria-invalid={!!errors.buyerEmail}
-                  autoComplete="email"
-                />
-                {errors.buyerEmail ? <p className={styles.fieldError}>{errors.buyerEmail}</p> : null}
-              </div>
+              <Input
+                id="buyerEmail"
+                label="Email address"
+                type="email"
+                value={buyerEmail}
+                onChange={(e) => { setBuyerEmail(e.target.value); clearFieldError("buyerEmail"); }}
+                placeholder="name@example.com"
+                error={errors.buyerEmail}
+                autoComplete="email"
+              />
 
               {/* Learner name errors */}
               {packs.map((pack, index) => {
@@ -539,12 +515,14 @@ export function TrayCheckoutClient() {
                       key={opt}
                       className={`${styles.deliveryOption} ${fulfilmentOption === opt ? styles.deliveryOptionSelected : ""}`}
                     >
-                      <input
+                      <Input
                         type="radio"
                         name="fulfilment"
                         value={opt}
                         checked={fulfilmentOption === opt}
                         onChange={() => setFulfilmentOption(opt)}
+                        className={styles.srOnly}
+                        wrapperClassName="!contents"
                       />
                       <div className={styles.deliveryIcon}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -590,13 +568,14 @@ export function TrayCheckoutClient() {
                           key={s.slug}
                           className={`${styles.schoolDropoffCard} ${isSelected ? styles.schoolDropoffCardActive : ""}`}
                         >
-                          <input
+                          <Input
                             type="radio"
                             name="multiSchoolDrop"
                             value={s.slug}
                             checked={isSelected}
                             onChange={() => setMultiSchoolDrop(s.slug)}
                             className={styles.schoolDropoffRadio}
+                            wrapperClassName="!contents"
                           />
                           <span className={styles.schoolDropoffText}>
                             {s.name}
@@ -614,36 +593,63 @@ export function TrayCheckoutClient() {
               {fulfilmentOption === "Delivery" ? (
                 <>
                   <div className={styles.fieldGroup}>
-                    <label htmlFor="address">Street address</label>
-                    <input id="address" type="text" value={address} onChange={(e) => { setAddress(e.target.value); clearFieldError("address"); }} placeholder="e.g. 42 Main Road" aria-invalid={!!errors.address} autoComplete="street-address" />
-                    {errors.address ? <p className={styles.fieldError}>{errors.address}</p> : null}
+                  <Input
+                    id="address"
+                    label="Street address"
+                    type="text"
+                    value={address}
+                    onChange={(e) => { setAddress(e.target.value); clearFieldError("address"); }}
+                    placeholder="e.g. 42 Main Road"
+                    error={errors.address}
+                    autoComplete="street-address"
+                  />
                   </div>
-                  <div className={styles.fieldGroup}>
-                    <label htmlFor="suburb">Suburb</label>
-                    <input id="suburb" type="text" value={suburb} onChange={(e) => { setSuburb(e.target.value); clearFieldError("suburb"); }} placeholder="e.g. Gardens" aria-invalid={!!errors.suburb} />
-                    {errors.suburb ? <p className={styles.fieldError}>{errors.suburb}</p> : null}
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label htmlFor="city">City</label>
-                    <input id="city" type="text" value={city} onChange={(e) => { setCity(e.target.value); clearFieldError("city"); }} placeholder="e.g. Cape Town" aria-invalid={!!errors.city} />
-                    {errors.city ? <p className={styles.fieldError}>{errors.city}</p> : null}
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label htmlFor="province">Province</label>
-                    <input id="province" type="text" value={province} onChange={(e) => { setProvince(e.target.value); clearFieldError("province"); }} placeholder="e.g. Western Cape" aria-invalid={!!errors.province} />
-                    {errors.province ? <p className={styles.fieldError}>{errors.province}</p> : null}
-                  </div>
-                  <div className={styles.fieldGroup}>
-                    <label htmlFor="postalCode">Postal code</label>
-                    <input id="postalCode" type="text" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="e.g. 8001" autoComplete="postal-code" />
-                  </div>
+                  <Input
+                    id="suburb"
+                    label="Suburb"
+                    type="text"
+                    value={suburb}
+                    onChange={(e) => { setSuburb(e.target.value); clearFieldError("suburb"); }}
+                    placeholder="e.g. Gardens"
+                    error={errors.suburb}
+                  />
+                  <Input
+                    id="city"
+                    label="City"
+                    type="text"
+                    value={city}
+                    onChange={(e) => { setCity(e.target.value); clearFieldError("city"); }}
+                    placeholder="e.g. Cape Town"
+                    error={errors.city}
+                  />
+                  <Input
+                    id="province"
+                    label="Province"
+                    type="text"
+                    value={province}
+                    onChange={(e) => { setProvince(e.target.value); clearFieldError("province"); }}
+                    placeholder="e.g. Western Cape"
+                    error={errors.province}
+                  />
+                  <Input
+                    id="postalCode"
+                    label="Postal code"
+                    type="text"
+                    value={postalCode}
+                    onChange={(e) => setPostalCode(e.target.value)}
+                    placeholder="e.g. 8001"
+                    autoComplete="postal-code"
+                  />
                 </>
               ) : null}
 
-              <div className={styles.fieldGroup} style={{ gridColumn: "1 / -1" }}>
-                <label htmlFor="deliveryNotes">Order notes (optional)</label>
-                <textarea id="deliveryNotes" value={deliveryNotes} onChange={(e) => setDeliveryNotes(e.target.value)} />
-              </div>
+              <Textarea
+                id="deliveryNotes"
+                label="Order notes (optional)"
+                value={deliveryNotes}
+                onChange={(e) => setDeliveryNotes(e.target.value)}
+                className="col-span-full"
+              />
             </div>
 
             {/* Secure Payment Gateway Trust Card */}
@@ -713,12 +719,14 @@ export function TrayCheckoutClient() {
 
             {/* Consent checkbox placed directly before pay button */}
             <div className={styles.consentField} style={{ marginTop: 20, marginBottom: 20 }}>
-              <input
+              <Input
                 type="checkbox"
                 id="consent"
                 checked={consent}
                 onChange={(e) => { setConsent(e.target.checked); clearFieldError("consent"); }}
                 aria-invalid={!!errors.consent}
+                className="!w-5 !h-5 !min-h-0"
+                wrapperClassName="!contents"
               />
               <span>
                 I agree that Pexpacks may process my personal information to complete this order, send payment and order updates, and contact me about delivery or collection. I have read and agree to the{" "}

@@ -20,3 +20,9 @@
 .text strong {
   color: var(--pex-primary);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .strip {
+    transition: none;
+  }
+}

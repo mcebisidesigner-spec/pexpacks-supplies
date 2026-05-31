@@ -1,5 +1,9 @@
 "use client";
 
+import { memo } from "react";
+import { Input } from "@/components/ui/Input";
+import Textarea from "@/components/ui/Textarea";
+import Select from "@/components/ui/Select";
 import styles from "@/app/checkout/Checkout.module.css";
 
 type ContactMethod = "whatsapp" | "phone" | "email";
@@ -77,17 +81,8 @@ function formatPhoneNumber(value: string): string {
   }
 }
 
-function SuccessCheckmark() {
-  return (
-    <span className={styles.fieldSuccessCheckmark} aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="20 6 9 17 4 12" />
-      </svg>
-    </span>
-  );
-}
 
-export function DetailsStep({
+export const DetailsStep = memo(function DetailsStep({
   firstName,
   onFirstNameChange,
   lastName,
@@ -121,204 +116,123 @@ export function DetailsStep({
         </p>
       </div>
 
-      <div className={styles.fieldGroup}>
-        <label htmlFor="firstName">First name</label>
-        <div className={styles.inputWrapper}>
-          <input
-            id="firstName"
-            data-field="firstName"
-            name="firstName"
-            autoComplete="given-name"
-            placeholder="Enter first name"
-            value={firstName}
-            className={isFirstNameValid ? styles.validField : ""}
-            aria-describedby={errors.firstName ? "firstName-error" : undefined}
-            aria-invalid={Boolean(errors.firstName)}
-            onChange={(event) => {
-              onFirstNameChange(event.target.value);
-              onClearError("firstName");
-            }}
-          />
-          {isFirstNameValid && <SuccessCheckmark />}
-        </div>
-        {errors.firstName ? (
-          <p id="firstName-error" className={styles.fieldError} role="alert">
-            {errors.firstName}
-          </p>
-        ) : null}
-      </div>
+      <Input
+        id="firstName"
+        label="First name"
+        name="firstName"
+        autoComplete="given-name"
+        placeholder="Enter first name"
+        value={firstName}
+        showValid={isFirstNameValid}
+        error={errors.firstName}
+        onChange={(event) => {
+          onFirstNameChange(event.target.value);
+          onClearError("firstName");
+        }}
+      />
 
-      <div className={styles.fieldGroup}>
-        <label htmlFor="lastName">Surname</label>
-        <div className={styles.inputWrapper}>
-          <input
-            id="lastName"
-            data-field="lastName"
-            name="lastName"
-            autoComplete="family-name"
-            placeholder="Enter surname"
-            value={lastName}
-            className={isLastNameValid ? styles.validField : ""}
-            aria-describedby={errors.lastName ? "lastName-error" : undefined}
-            aria-invalid={Boolean(errors.lastName)}
-            onChange={(event) => {
-              onLastNameChange(event.target.value);
-              onClearError("lastName");
-            }}
-          />
-          {isLastNameValid && <SuccessCheckmark />}
-        </div>
-        {errors.lastName ? (
-          <p id="lastName-error" className={styles.fieldError} role="alert">
-            {errors.lastName}
-          </p>
-        ) : null}
-      </div>
+      <Input
+        id="lastName"
+        label="Surname"
+        name="lastName"
+        autoComplete="family-name"
+        placeholder="Enter surname"
+        value={lastName}
+        showValid={isLastNameValid}
+        error={errors.lastName}
+        onChange={(event) => {
+          onLastNameChange(event.target.value);
+          onClearError("lastName");
+        }}
+      />
 
-      <div className={styles.fieldGroup}>
-        <label htmlFor="buyerPhone">Phone number</label>
-        <p id="buyerPhone-helper">
-          WhatsApp or call is fastest for support.
-        </p>
-        <div className={styles.inputWrapper}>
-          <input
-            id="buyerPhone"
-            data-field="buyerPhone"
-            name="phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            placeholder="e.g. 078 003 6048"
-            value={buyerPhone}
-            className={isPhoneValid ? styles.validField : ""}
-            aria-describedby={`buyerPhone-helper${errors.buyerPhone ? " buyerPhone-error" : ""}`}
-            aria-invalid={Boolean(errors.buyerPhone)}
-            onChange={(event) => {
-              const formatted = formatPhoneNumber(event.target.value);
-              onBuyerPhoneChange(formatted);
-              onClearError("buyerPhone");
-            }}
-          />
-          {isPhoneValid && <SuccessCheckmark />}
-        </div>
-        {errors.buyerPhone ? (
-          <p id="buyerPhone-error" className={styles.fieldError} role="alert">
-            {errors.buyerPhone}
-          </p>
-        ) : null}
-      </div>
+      <Input
+        id="buyerPhone"
+        label="Phone number"
+        helper="WhatsApp or call is fastest for support."
+        name="phone"
+        type="tel"
+        inputMode="tel"
+        autoComplete="tel"
+        placeholder="e.g. 078 003 6048"
+        value={buyerPhone}
+        showValid={isPhoneValid}
+        error={errors.buyerPhone}
+        onChange={(event) => {
+          const formatted = formatPhoneNumber(event.target.value);
+          onBuyerPhoneChange(formatted);
+          onClearError("buyerPhone");
+        }}
+      />
 
-      <div className={styles.fieldGroup}>
-        <label htmlFor="buyerEmail">Email address</label>
-        <p id="buyerEmail-helper">Used for your order updates.</p>
-        <div className={styles.inputWrapper}>
-          <input
-            id="buyerEmail"
-            data-field="buyerEmail"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="name@example.com"
-            value={buyerEmail}
-            className={isEmailValid ? styles.validField : ""}
-            aria-describedby={`buyerEmail-helper${errors.buyerEmail ? " buyerEmail-error" : ""}`}
-            aria-invalid={Boolean(errors.buyerEmail)}
-            onChange={(event) => {
-              onBuyerEmailChange(event.target.value);
-              onClearError("buyerEmail");
-            }}
-          />
-          {isEmailValid && <SuccessCheckmark />}
-        </div>
-        {errors.buyerEmail ? (
-          <p id="buyerEmail-error" className={styles.fieldError} role="alert">
-            {errors.buyerEmail}
-          </p>
-        ) : null}
-      </div>
+      <Input
+        id="buyerEmail"
+        label="Email address"
+        helper="Used for your order updates."
+        name="email"
+        type="email"
+        autoComplete="email"
+        placeholder="name@example.com"
+        value={buyerEmail}
+        showValid={isEmailValid}
+        error={errors.buyerEmail}
+        onChange={(event) => {
+          onBuyerEmailChange(event.target.value);
+          onClearError("buyerEmail");
+        }}
+      />
 
-      <div className={styles.fieldGroup}>
-        <label htmlFor="learnerName">Learner name</label>
-        <p id="learnerName-helper">
-          Helpful for labels and school handover.
-        </p>
-        <div className={styles.inputWrapper}>
-          <input
-            id="learnerName"
-            data-field="learnerName"
-            name="learnerName"
-            autoComplete="off"
-            placeholder="e.g. Leo Dlamini"
-            value={learnerName}
-            className={isLearnerNameValid ? styles.validField : ""}
-            aria-describedby={`learnerName-helper${errors.learnerName ? " learnerName-error" : ""}`}
-            aria-invalid={Boolean(errors.learnerName)}
-            onChange={(event) => {
-              onLearnerNameChange(event.target.value);
-              onClearError("learnerName");
-            }}
-          />
-          {isLearnerNameValid && <SuccessCheckmark />}
-        </div>
-        {errors.learnerName ? (
-          <p id="learnerName-error" className={styles.fieldError} role="alert">
-            {errors.learnerName}
-          </p>
-        ) : null}
-      </div>
+      <Input
+        id="learnerName"
+        label="Learner name"
+        helper="Helpful for labels and school handover."
+        name="learnerName"
+        autoComplete="off"
+        placeholder="e.g. Leo Dlamini"
+        value={learnerName}
+        showValid={isLearnerNameValid}
+        error={errors.learnerName}
+        onChange={(event) => {
+          onLearnerNameChange(event.target.value);
+          onClearError("learnerName");
+        }}
+      />
 
-      <div className={styles.fieldGroup}>
-        <label htmlFor="schoolName">School name</label>
-        <input id="schoolName" value={schoolName} readOnly aria-readonly="true" />
-      </div>
+      <Input
+        id="schoolName"
+        label="School name"
+        value={schoolName}
+        readOnly
+      />
 
-      <div className={styles.fieldGroup}>
-        <label htmlFor="gradeName">Grade</label>
-        <input id="gradeName" value={grade} readOnly aria-readonly="true" />
-      </div>
+      <Input
+        id="gradeName"
+        label="Grade"
+        value={grade}
+        readOnly
+      />
 
-      <div className={styles.fieldGroup}>
-        <label htmlFor="learner-notes">Optional notes</label>
-        <textarea
-          id="learner-notes"
-          value={learnerNotes}
-          placeholder="Anything we should know about this learner or pack?"
-          onChange={(event) => onLearnerNotesChange(event.target.value)}
-        />
-      </div>
+      <Textarea
+        id="learner-notes"
+        label="Optional notes"
+        value={learnerNotes}
+        placeholder="Anything we should know about this learner or pack?"
+        onChange={(event) => onLearnerNotesChange(event.target.value)}
+        className="col-span-full"
+      />
 
-      <fieldset
-        className={`${styles.optionFieldset} ${styles.contactMethodGroup}`}
-      >
-        <legend>Preferred contact method</legend>
-        <div className={styles.contactOptions}>
-          {(["whatsapp", "phone", "email"] as ContactMethod[]).map((method) => (
-            <label
-              key={method}
-              className={
-                preferredContactMethod === method
-                  ? styles.contactOptionSelected
-                  : ""
-              }
-            >
-              <input
-                type="radio"
-                name="preferredContactMethod"
-                value={method}
-                checked={preferredContactMethod === method}
-                onChange={() => onPreferredContactMethodChange(method)}
-              />
-              <span>
-                {method === "whatsapp"
-                  ? "WhatsApp"
-                  : method === "phone"
-                    ? "Phone"
-                    : "Email"}
-              </span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
+      <Select
+        id="preferredContactMethod"
+        label="Preferred contact method"
+        value={preferredContactMethod}
+        onChange={(event) => onPreferredContactMethodChange(event.target.value as ContactMethod)}
+        className="col-span-full"
+        options={[
+          { value: "whatsapp", label: "WhatsApp" },
+          { value: "phone", label: "Phone call" },
+          { value: "email", label: "Email" }
+        ]}
+      />
     </div>
   );
-}
+});

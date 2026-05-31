@@ -1,7 +1,9 @@
 "use client";
 
 import { formatCurrency } from "@/lib/formatCurrency";
-import styles from "@/app/checkout/Checkout.module.css";
+import { Input } from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
+import styles from "./PexcoverAddOn.module.css";
 
 type PexcoverAddOnProps = {
   selected: boolean;
@@ -43,11 +45,13 @@ export function PexcoverAddOn({
         </p>
       </div>
       <label className={styles.addonCheckbox}>
-        <input
+        <Input
           type="checkbox"
           checked={selected}
           onChange={(event) => onToggle(event.target.checked)}
           aria-describedby="pexcover-price"
+          wrapperClassName="!contents"
+          className="!w-[22px] !h-[22px] !min-h-0"
         />
         <span>
           Add Pexcover for <strong id="pexcover-price">{formatCurrency(price)}</strong>
@@ -55,45 +59,38 @@ export function PexcoverAddOn({
       </label>
       {selected ? (
         <div className={styles.formGrid}>
-          <div className={styles.fieldGroup}>
-            <label htmlFor="pexcover-name">Learner name for labels</label>
-            <input
-              id="pexcover-name"
-              value={pexcoverName}
-              placeholder="Optional"
-              onChange={(event) => onNameChange(event.target.value)}
-            />
-          </div>
-          <div className={styles.fieldGroup}>
-            <label htmlFor="pexcover-format">Label format</label>
-            <select
-              id="pexcover-format"
-              value={pexcoverLabelFormat}
-              onChange={(event) => onLabelFormatChange(event.target.value)}
-            >
-              <option>First Name + Surname</option>
-              <option>First Name + Initial</option>
-              <option>Initials + Surname</option>
-            </select>
-          </div>
-          <div className={styles.fieldGroup}>
-            <label htmlFor="pexcover-subjects">Subject names optional</label>
-            <input
-              id="pexcover-subjects"
-              value={pexcoverSubjects}
-              placeholder="English, Maths, Life Skills"
-              onChange={(event) => onSubjectsChange(event.target.value)}
-            />
-          </div>
-          <div className={styles.fieldGroup}>
-            <label htmlFor="pexcover-notes">Special notes optional</label>
-            <input
-              id="pexcover-notes"
-              value={pexcoverNotes}
-              placeholder="Any covering instructions?"
-              onChange={(event) => onNotesChange(event.target.value)}
-            />
-          </div>
+          <Input
+            id="pexcover-name"
+            label="Learner name for labels"
+            value={pexcoverName}
+            placeholder="Optional"
+            onChange={(event) => onNameChange(event.target.value)}
+          />
+          <Select
+            id="pexcover-format"
+            label="Label format"
+            value={pexcoverLabelFormat}
+            onChange={(event) => onLabelFormatChange(event.target.value)}
+            options={[
+              "First Name + Surname",
+              "First Name + Initial",
+              "Initials + Surname"
+            ]}
+          />
+          <Input
+            id="pexcover-subjects"
+            label="Subject names optional"
+            value={pexcoverSubjects}
+            placeholder="English, Maths, Life Skills"
+            onChange={(event) => onSubjectsChange(event.target.value)}
+          />
+          <Input
+            id="pexcover-notes"
+            label="Special notes optional"
+            value={pexcoverNotes}
+            placeholder="Any covering instructions?"
+            onChange={(event) => onNotesChange(event.target.value)}
+          />
         </div>
       ) : null}
     </section>

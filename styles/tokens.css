@@ -193,4 +193,10 @@
 
   --hero-copy-max-width: 760px;
   --hero-copy-max-width-mobile: 100%;
+
+  /* Standardised breakpoints (min-width values) */
+  --bp-sm: 600px;
+  --bp-md: 900px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
 }

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { formatCurrency } from "@/lib/formatCurrency";
-import styles from "@/app/checkout/Checkout.module.css";
+import { Button } from "@/components/ui/Button";
+import styles from "./PackItemsList.module.css";
 
 type PackItemsListProps = {
   items: string[];
@@ -24,14 +25,15 @@ export function PackItemsList({ items, price }: PackItemsListProps) {
         ))}
       </ul>
       {shouldCollapse ? (
-        <button
+        <Button
           type="button"
-          className={styles.packListToggle}
+          variant="secondary"
+          className={`${styles.packListToggle} rounded-full`}
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
         >
           {expanded ? "Show fewer items" : `View all ${itemCount} items`}
-        </button>
+        </Button>
       ) : null}
       <div className={styles.packListMeta}>
         <span>{itemCount} items</span>

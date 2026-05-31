@@ -10,8 +10,7 @@ import styles from "./GlobalPackTray.module.css";
 export function GlobalPackTray() {
   const packs = usePackTrayStore((s) => s.packs);
   const isOpen = usePackTrayStore((s) => s.isTrayOpen);
-  const closeTray = usePackTrayStore((s) => s.closeTray);
-  const openTray = usePackTrayStore((s) => s.openTray);
+  const closeTray = useCallback(() => usePackTrayStore.getState().closeTray(), []);
 
   const trayRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);

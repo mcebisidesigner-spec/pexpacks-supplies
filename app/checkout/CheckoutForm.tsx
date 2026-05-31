@@ -446,29 +446,32 @@ export function CheckoutForm({
       <div className={styles.checkoutHeader}>
         {activeStep > 0 ? (
           <div>
-            <button
+            <Button
               type="button"
-              className={`${styles.backLink} ${styles.desktopOnly}`}
+              variant="secondary"
+              className={`${styles.desktopOnly} rounded-full`}
               onClick={handleBackToOrder}
             >
               Back to Order
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className={`${styles.backLink} ${styles.mobileOnly}`}
+              variant="secondary"
+              className={`${styles.mobileOnly} rounded-full`}
               onClick={() => goToStep(activeStep - 1)}
             >
               Back
-            </button>
+            </Button>
           </div>
         ) : (
-          <button
+          <Button
             type="button"
-            className={styles.backLink}
+            variant="secondary"
+            className="rounded-full"
             onClick={handleBackToOrder}
           >
             Back to Order
-          </button>
+          </Button>
         )}
         <div
           className={`${styles.stickyHeaderButton} ${isSticky ? styles.isSticky : ""}`}

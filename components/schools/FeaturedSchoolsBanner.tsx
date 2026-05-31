@@ -47,7 +47,8 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
     setActiveIndex(closestIndex);
   }, []);
 
-  const scrollTo = (index: number) => {
+  const handleDotClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const index = Number(event.currentTarget.dataset.index);
     if (!scrollerRef.current) return;
     const children = Array.from(scrollerRef.current.children) as HTMLElement[];
     const target = children[index];
@@ -121,7 +122,8 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
               ]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => scrollTo(i)}
+              data-index={i}
+              onClick={handleDotClick}
             />
           ))}
         </div>

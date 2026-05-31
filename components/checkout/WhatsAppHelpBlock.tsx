@@ -1,4 +1,4 @@
-import styles from "@/app/checkout/Checkout.module.css";
+import styles from "./WhatsAppHelpBlock.module.css";
 
 type WhatsAppHelpBlockProps = {
   href: string;
