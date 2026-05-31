@@ -669,9 +669,8 @@ export function TrayCheckoutClient() {
 
               <div className={styles.paymentBadgeRow}>
                 <div className={styles.paymentBadgeItem} title="Visa">
-                  <svg viewBox="0 0 24 15" width="38" height="24" aria-hidden="true">
-                    <path d="M10.15 1.56L8.14 12.38H5.02L3.01 4.54c-.11-.47-.4-.82-.87-.99C1.46 3.25.47 2.92 0 2.82l.06-.21h4.94c.64 0 1.2.42 1.34 1.11l1.58 8.16L11 2.82h3.11l-2.01 9.56H9.15l1-5.69-1.89-5.13zm12.31 4.41c-.04-.54-.42-1.07-1.34-1.39-1.12-.39-2.24-.62-2.24-1.12 0-.34.33-.61.99-.61a3.7 3.7 0 0 1 2.06.63l.36.19.46-2.5c-.64-.28-1.76-.56-2.91-.56-2.9 0-4.93 1.48-4.95 3.73-.02 1.56 1.45 2.42 2.56 2.94.9.42 1.3.8 1.3 1.23-.01.66-.82.97-1.57.97-1.05 0-1.61-.16-2.47-.53l-.35-.16-.48 2.5c.7.31 1.98.59 3.3.59 3.07 0 5.08-1.45 5.12-3.71M24 2.82l-2.33 9.56h-2.33l2.33-9.56H24z" fill="#1A1F71" />
-                  </svg>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/visa.png" alt="Visa" style={{ height: 18, width: "auto" }} />
                 </div>
                 <div className={styles.paymentBadgeItem} title="Mastercard">
                   <svg viewBox="0 0 32 20" width="28" height="18" aria-hidden="true">
