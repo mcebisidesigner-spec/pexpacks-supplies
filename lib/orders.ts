@@ -28,6 +28,12 @@ export async function createPendingOrder(input: {
 
   const orderId = randomUUID();
 
+  const packItems = Array.isArray(input.items) ? input.items : [];
+  const hasPexcover = packItems.some(
+    (item) => typeof item === "string" && item.toLowerCase().includes("pexcover")
+  );
+  const metaNotes = input.notes ? { notes: input.notes } : undefined;
+
   const { error } = await supabase
     .from("orders")
     .insert({
@@ -41,7 +47,7 @@ export async function createPendingOrder(input: {
       school_name: input.schoolName,
       grade: input.grade,
       pack_type: input.packType,
-      items: input.items.length > 0 ? input.items : null,
+      items: packItems.length > 0 ? packItems : null,
       estimated_total: input.estimatedTotal,
       fulfilment_option:
         input.deliveryMethod === "school_collection"
@@ -49,6 +55,8 @@ export async function createPendingOrder(input: {
           : input.deliveryMethod === "delivery"
             ? "Home delivery"
             : "Collection point",
+      metadata: metaNotes || undefined,
+      pexcover_requested: hasPexcover,
       consent: true,
       status: "pending_payment",
     });
@@ -198,6 +206,7 @@ export async function createMultiPackOrder(input: {
       })),
       pack_count: input.packs.length,
       primary_school_slug: input.primarySchoolSlug || null,
+      ...(input.notes ? { notes: input.notes } : {}),
     },
     consent: true,
     status: "pending_payment",

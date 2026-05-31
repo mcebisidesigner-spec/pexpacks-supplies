@@ -37,6 +37,15 @@ async function resolveTrustedPack(input: {
   return null;
 }
 
+function buildBaseUrl(request: NextRequest): string {
+  const host = request.headers.get("host") || request.headers.get("x-forwarded-host");
+  const proto = request.headers.get("x-forwarded-proto") || "https";
+  if (host) {
+    return `${proto}://${host}`;
+  }
+  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+}
+
 export async function POST(request: NextRequest) {
   try {
     let body: Record<string, unknown>;
@@ -58,13 +67,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.NEXT_PUBLIC_SITE_URL) {
-      console.error("[checkout] Missing NEXT_PUBLIC_SITE_URL");
-      return NextResponse.json(
-        { success: false, error: "Site URL is not configured." },
-        { status: 500 }
-      );
-    }
+    const baseUrl = buildBaseUrl(request);
 
     const isTrayOrder = body.isTrayOrder === true;
 
@@ -145,7 +148,7 @@ export async function POST(request: NextRequest) {
           email: buyerEmail,
           amountInCents: Math.round(estimatedTotal * 100),
           reference: orderReference,
-          callbackUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?ref=${orderReference}`,
+          callbackUrl: `${baseUrl}/checkout/success?ref=${orderReference}`,
           metadata: {
             order_reference: orderReference,
             buyer_name: buyerName,
@@ -229,7 +232,7 @@ export async function POST(request: NextRequest) {
         email: data.buyerEmail,
         amountInCents: Math.round(trustedTotal * 100),
         reference: orderReference,
-        callbackUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?ref=${orderReference}`,
+        callbackUrl: `${baseUrl}/checkout/success?ref=${orderReference}`,
         metadata: {
           order_reference: orderReference,
           buyer_name: data.buyerName,

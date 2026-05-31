@@ -154,13 +154,6 @@ export function PayStep({
             </div>
           </div>
         </div>
-
-        <ul className={styles.trustList}>
-          <li>Your connection is secured with SSL 256-bit encryption</li>
-          <li>Pexpacks does not store or see your card/payment details</li>
-          <li>Your order is safely pre-registered for instant tracking</li>
-          <li>Receipt and order confirmation are emailed instantly upon successful payment</li>
-        </ul>
       </section>
 
       {submitError ? (

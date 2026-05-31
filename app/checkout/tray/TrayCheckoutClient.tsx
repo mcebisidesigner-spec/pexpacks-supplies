@@ -22,7 +22,11 @@ function normalisePhone(value: string) {
   if (trimmed.startsWith("+")) {
     return `+${trimmed.slice(1).replace(/\D/g, "")}`;
   }
-  return trimmed.replace(/\D/g, "");
+  const digits = trimmed.replace(/\D/g, "");
+  if (digits.startsWith("0027") && digits.length >= 13) {
+    return `+27${digits.slice(4)}`;
+  }
+  return digits;
 }
 
 function isLikelySaPhone(value: string) {
@@ -93,7 +97,8 @@ export function TrayCheckoutClient() {
     router.back();
   }, [openTray, router]);
 
-  const [buyerName, setBuyerName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
   const [preferredContactMethod, setPreferredContactMethod] =
@@ -152,8 +157,10 @@ export function TrayCheckoutClient() {
   function validate(): boolean {
     const nextErrors: Record<string, string> = {};
 
-    if (!buyerName.trim() || buyerName.trim().length < 2)
-      nextErrors.buyerName = "Please enter your full name.";
+    if (!firstName.trim() || firstName.trim().length < 2)
+      nextErrors.firstName = "Please enter your first name.";
+    if (!lastName.trim() || lastName.trim().length < 2)
+      nextErrors.lastName = "Please enter your surname.";
     if (!buyerPhone.trim())
       nextErrors.buyerPhone = "Please enter your phone number.";
     else if (!isLikelySaPhone(buyerPhone))
@@ -220,7 +227,7 @@ export function TrayCheckoutClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          buyerName: buyerName.trim(),
+          buyerName: `${firstName.trim()} ${lastName.trim()}`.trim(),
           buyerEmail: buyerEmail.trim().toLowerCase(),
           buyerPhone: normalisePhone(buyerPhone),
           packs: packs.map((pack, pi) => ({
@@ -454,17 +461,31 @@ export function TrayCheckoutClient() {
               Customer Details
             </h2>
             <div className={styles.formGrid}>
-              <div className={styles.fieldGroup} style={{ gridColumn: "1 / -1" }}>
-                <label htmlFor="buyerName">Full name</label>
+              <div className={styles.fieldGroup}>
+                <label htmlFor="firstName">First name</label>
                 <input
-                  id="buyerName"
+                  id="firstName"
                   type="text"
-                  value={buyerName}
-                  onChange={(e) => { setBuyerName(e.target.value); clearFieldError("buyerName"); }}
-                  aria-invalid={!!errors.buyerName}
-                  autoComplete="name"
+                  value={firstName}
+                  onChange={(e) => { setFirstName(e.target.value); clearFieldError("firstName"); }}
+                  placeholder="Enter first name"
+                  aria-invalid={!!errors.firstName}
+                  autoComplete="given-name"
                 />
-                {errors.buyerName ? <p className={styles.fieldError}>{errors.buyerName}</p> : null}
+                {errors.firstName ? <p className={styles.fieldError}>{errors.firstName}</p> : null}
+              </div>
+              <div className={styles.fieldGroup}>
+                <label htmlFor="lastName">Surname</label>
+                <input
+                  id="lastName"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => { setLastName(e.target.value); clearFieldError("lastName"); }}
+                  placeholder="Enter surname"
+                  aria-invalid={!!errors.lastName}
+                  autoComplete="family-name"
+                />
+                {errors.lastName ? <p className={styles.fieldError}>{errors.lastName}</p> : null}
               </div>
 
               <div className={styles.fieldGroup}>
@@ -687,13 +708,6 @@ export function TrayCheckoutClient() {
                   </div>
                 </div>
               </div>
-
-              <ul className={styles.trustList}>
-                <li>Your connection is secured with SSL 256-bit encryption</li>
-                <li>Pexpacks does not store or see your card/payment details</li>
-                <li>Your order is safely pre-registered for instant tracking</li>
-                <li>Receipt and order confirmation are emailed instantly upon successful payment</li>
-              </ul>
             </section>
 
             {/* Consent checkbox placed directly before pay button */}

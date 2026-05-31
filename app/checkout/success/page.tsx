@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { OrderStatusClient } from "./OrderStatusClient";
 
 type SuccessPageProps = {
-  searchParams: Promise<{ ref?: string }>;
+  searchParams: Promise<{ ref?: string; trxref?: string }>;
 };
 
 export const metadata: Metadata = {
@@ -13,7 +14,11 @@ export const metadata: Metadata = {
 export default async function SuccessPage({
   searchParams,
 }: SuccessPageProps) {
-  const { ref } = await searchParams;
+  const { ref, trxref } = await searchParams;
+
+  if (ref && !trxref) {
+    redirect(`/checkout/cancelled?ref=${encodeURIComponent(ref)}`);
+  }
 
   return (
     <div

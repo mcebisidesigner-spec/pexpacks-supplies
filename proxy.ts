@@ -21,7 +21,7 @@ const ratelimit =
       })
     : null;
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Only apply rate limiting to /api routes
   if (request.nextUrl.pathname.startsWith("/api")) {
     if (!ratelimit) {

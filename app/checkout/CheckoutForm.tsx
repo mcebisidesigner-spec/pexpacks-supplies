@@ -47,7 +47,11 @@ function normalisePhone(value: string) {
   if (trimmed.startsWith("+")) {
     return `+${trimmed.slice(1).replace(/\D/g, "")}`;
   }
-  return trimmed.replace(/\D/g, "");
+  const digits = trimmed.replace(/\D/g, "");
+  if (digits.startsWith("0027") && digits.length >= 13) {
+    return `+27${digits.slice(4)}`;
+  }
+  return digits;
 }
 
 function isLikelySaPhone(value: string) {
@@ -114,7 +118,8 @@ export function CheckoutForm({
   const [draftTotal, setDraftTotal] = useState<number | null>(null);
 
   const [activeStep, setActiveStep] = useState(0);
-  const [buyerName, setBuyerName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
   const [preferredContactMethod, setPreferredContactMethod] =
@@ -214,8 +219,10 @@ export function CheckoutForm({
     const nextErrors: Record<string, string> = {};
 
     if (step === 1) {
-      if (!buyerName.trim() || buyerName.trim().length < 2)
-        nextErrors.buyerName = "Please enter your full name.";
+      if (!firstName.trim() || firstName.trim().length < 2)
+        nextErrors.firstName = "Please enter your first name.";
+      if (!lastName.trim() || lastName.trim().length < 2)
+        nextErrors.lastName = "Please enter your surname.";
       if (!buyerPhone.trim())
         nextErrors.buyerPhone = "Please enter your phone number.";
       else if (!isLikelySaPhone(buyerPhone))
@@ -289,7 +296,7 @@ export function CheckoutForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          buyerName: buyerName.trim(),
+          buyerName: `${firstName.trim()} ${lastName.trim()}`.trim(),
           buyerEmail: buyerEmail.trim().toLowerCase(),
           buyerPhone: normalisePhone(buyerPhone),
           learnerName: learnerName.trim(),
@@ -365,8 +372,10 @@ export function CheckoutForm({
       case 1:
         return (
           <DetailsStep
-            buyerName={buyerName}
-            onBuyerNameChange={setBuyerName}
+            firstName={firstName}
+            onFirstNameChange={setFirstName}
+            lastName={lastName}
+            onLastNameChange={setLastName}
             buyerPhone={buyerPhone}
             onBuyerPhoneChange={setBuyerPhone}
             buyerEmail={buyerEmail}
@@ -411,7 +420,7 @@ export function CheckoutForm({
           <PayStep
             schoolName={schoolName}
             grade={grade}
-            buyerName={buyerName}
+            buyerName={`${firstName.trim()} ${lastName.trim()}`.trim()}
             buyerPhone={buyerPhone}
             buyerEmail={buyerEmail}
             fulfilmentOption={fulfilmentOption}

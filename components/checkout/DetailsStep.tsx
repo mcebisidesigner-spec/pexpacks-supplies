@@ -5,8 +5,10 @@ import styles from "@/app/checkout/Checkout.module.css";
 type ContactMethod = "whatsapp" | "phone" | "email";
 
 type DetailsStepProps = {
-  buyerName: string;
-  onBuyerNameChange: (value: string) => void;
+  firstName: string;
+  onFirstNameChange: (value: string) => void;
+  lastName: string;
+  onLastNameChange: (value: string) => void;
   buyerPhone: string;
   onBuyerPhoneChange: (value: string) => void;
   buyerEmail: string;
@@ -23,7 +25,6 @@ type DetailsStepProps = {
   onClearError: (field: string) => void;
 };
 
-// Helper validation functions for real-time indicators
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
@@ -46,7 +47,6 @@ function isLikelySaPhone(value: string) {
   );
 }
 
-// Automatic phone number formatter
 function formatPhoneNumber(value: string): string {
   const clean = value.replace(/\D/g, "");
   
@@ -77,7 +77,6 @@ function formatPhoneNumber(value: string): string {
   }
 }
 
-// Success checkmark SVG component
 function SuccessCheckmark() {
   return (
     <span className={styles.fieldSuccessCheckmark} aria-hidden="true">
@@ -89,8 +88,10 @@ function SuccessCheckmark() {
 }
 
 export function DetailsStep({
-  buyerName,
-  onBuyerNameChange,
+  firstName,
+  onFirstNameChange,
+  lastName,
+  onLastNameChange,
   buyerPhone,
   onBuyerPhoneChange,
   buyerEmail,
@@ -106,40 +107,70 @@ export function DetailsStep({
   errors,
   onClearError,
 }: DetailsStepProps) {
-  // Real-time validations
-  const isNameValid = buyerName.trim().length >= 2;
+  const isFirstNameValid = firstName.trim().length >= 2;
+  const isLastNameValid = lastName.trim().length >= 2;
   const isPhoneValid = isLikelySaPhone(buyerPhone);
   const isEmailValid = isValidEmail(buyerEmail);
   const isLearnerNameValid = learnerName.trim().length >= 2;
 
   return (
     <div className={styles.formGrid}>
-      <div className={styles.fieldGroup}>
-        <label htmlFor="buyerName">Full name</label>
-        <p id="buyerName-helper">
+      <div style={{ gridColumn: "1 / -1" }}>
+        <p style={{ margin: 0, color: "var(--pex-text-muted)", fontSize: "0.9rem" }}>
           We use this to confirm your order and payment updates.
         </p>
+      </div>
+
+      <div className={styles.fieldGroup}>
+        <label htmlFor="firstName">First name</label>
         <div className={styles.inputWrapper}>
           <input
-            id="buyerName"
-            data-field="buyerName"
-            name="fullName"
-            autoComplete="name"
-            placeholder="e.g. Sarah Dlamini"
-            value={buyerName}
-            className={isNameValid ? styles.validField : ""}
-            aria-describedby={`buyerName-helper${errors.buyerName ? " buyerName-error" : ""}`}
-            aria-invalid={Boolean(errors.buyerName)}
+            id="firstName"
+            data-field="firstName"
+            name="firstName"
+            autoComplete="given-name"
+            placeholder="Enter first name"
+            value={firstName}
+            className={isFirstNameValid ? styles.validField : ""}
+            aria-describedby={errors.firstName ? "firstName-error" : undefined}
+            aria-invalid={Boolean(errors.firstName)}
             onChange={(event) => {
-              onBuyerNameChange(event.target.value);
-              onClearError("buyerName");
+              onFirstNameChange(event.target.value);
+              onClearError("firstName");
             }}
           />
-          {isNameValid && <SuccessCheckmark />}
+          {isFirstNameValid && <SuccessCheckmark />}
         </div>
-        {errors.buyerName ? (
-          <p id="buyerName-error" className={styles.fieldError} role="alert">
-            {errors.buyerName}
+        {errors.firstName ? (
+          <p id="firstName-error" className={styles.fieldError} role="alert">
+            {errors.firstName}
+          </p>
+        ) : null}
+      </div>
+
+      <div className={styles.fieldGroup}>
+        <label htmlFor="lastName">Surname</label>
+        <div className={styles.inputWrapper}>
+          <input
+            id="lastName"
+            data-field="lastName"
+            name="lastName"
+            autoComplete="family-name"
+            placeholder="Enter surname"
+            value={lastName}
+            className={isLastNameValid ? styles.validField : ""}
+            aria-describedby={errors.lastName ? "lastName-error" : undefined}
+            aria-invalid={Boolean(errors.lastName)}
+            onChange={(event) => {
+              onLastNameChange(event.target.value);
+              onClearError("lastName");
+            }}
+          />
+          {isLastNameValid && <SuccessCheckmark />}
+        </div>
+        {errors.lastName ? (
+          <p id="lastName-error" className={styles.fieldError} role="alert">
+            {errors.lastName}
           </p>
         ) : null}
       </div>
