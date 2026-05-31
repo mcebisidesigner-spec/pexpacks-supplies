@@ -495,6 +495,7 @@ export function TrayCheckoutClient() {
                   type="tel"
                   value={buyerPhone}
                   onChange={(e) => { setBuyerPhone(e.target.value); clearFieldError("buyerPhone"); }}
+                  placeholder="e.g. 078 003 6048"
                   aria-invalid={!!errors.buyerPhone}
                   autoComplete="tel"
                 />
@@ -508,6 +509,7 @@ export function TrayCheckoutClient() {
                   type="email"
                   value={buyerEmail}
                   onChange={(e) => { setBuyerEmail(e.target.value); clearFieldError("buyerEmail"); }}
+                  placeholder="name@example.com"
                   aria-invalid={!!errors.buyerEmail}
                   autoComplete="email"
                 />
@@ -613,27 +615,27 @@ export function TrayCheckoutClient() {
                 <>
                   <div className={styles.fieldGroup}>
                     <label htmlFor="address">Street address</label>
-                    <input id="address" type="text" value={address} onChange={(e) => { setAddress(e.target.value); clearFieldError("address"); }} aria-invalid={!!errors.address} autoComplete="street-address" />
+                    <input id="address" type="text" value={address} onChange={(e) => { setAddress(e.target.value); clearFieldError("address"); }} placeholder="e.g. 42 Main Road" aria-invalid={!!errors.address} autoComplete="street-address" />
                     {errors.address ? <p className={styles.fieldError}>{errors.address}</p> : null}
                   </div>
                   <div className={styles.fieldGroup}>
                     <label htmlFor="suburb">Suburb</label>
-                    <input id="suburb" type="text" value={suburb} onChange={(e) => { setSuburb(e.target.value); clearFieldError("suburb"); }} aria-invalid={!!errors.suburb} />
+                    <input id="suburb" type="text" value={suburb} onChange={(e) => { setSuburb(e.target.value); clearFieldError("suburb"); }} placeholder="e.g. Gardens" aria-invalid={!!errors.suburb} />
                     {errors.suburb ? <p className={styles.fieldError}>{errors.suburb}</p> : null}
                   </div>
                   <div className={styles.fieldGroup}>
                     <label htmlFor="city">City</label>
-                    <input id="city" type="text" value={city} onChange={(e) => { setCity(e.target.value); clearFieldError("city"); }} aria-invalid={!!errors.city} />
+                    <input id="city" type="text" value={city} onChange={(e) => { setCity(e.target.value); clearFieldError("city"); }} placeholder="e.g. Cape Town" aria-invalid={!!errors.city} />
                     {errors.city ? <p className={styles.fieldError}>{errors.city}</p> : null}
                   </div>
                   <div className={styles.fieldGroup}>
                     <label htmlFor="province">Province</label>
-                    <input id="province" type="text" value={province} onChange={(e) => { setProvince(e.target.value); clearFieldError("province"); }} aria-invalid={!!errors.province} />
+                    <input id="province" type="text" value={province} onChange={(e) => { setProvince(e.target.value); clearFieldError("province"); }} placeholder="e.g. Western Cape" aria-invalid={!!errors.province} />
                     {errors.province ? <p className={styles.fieldError}>{errors.province}</p> : null}
                   </div>
                   <div className={styles.fieldGroup}>
                     <label htmlFor="postalCode">Postal code</label>
-                    <input id="postalCode" type="text" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} autoComplete="postal-code" />
+                    <input id="postalCode" type="text" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="e.g. 8001" autoComplete="postal-code" />
                   </div>
                 </>
               ) : null}

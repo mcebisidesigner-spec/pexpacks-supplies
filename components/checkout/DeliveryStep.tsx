@@ -153,6 +153,7 @@ export function DeliveryStep({
                 setter: onAddressChange,
                 error: errors.address,
                 autoComplete: "shipping address-line1",
+                placeholder: "e.g. 42 Main Road",
               },
               {
                 id: "suburb",
@@ -161,6 +162,7 @@ export function DeliveryStep({
                 setter: onSuburbChange,
                 error: errors.suburb,
                 autoComplete: "shipping address-level3",
+                placeholder: "e.g. Gardens",
               },
               {
                 id: "city",
@@ -169,6 +171,7 @@ export function DeliveryStep({
                 setter: onCityChange,
                 error: errors.city,
                 autoComplete: "shipping address-level2",
+                placeholder: "e.g. Cape Town",
               },
               {
                 id: "province",
@@ -177,6 +180,7 @@ export function DeliveryStep({
                 setter: onProvinceChange,
                 error: errors.province,
                 autoComplete: "shipping address-level1",
+                placeholder: "e.g. Western Cape",
               },
               {
                 id: "postalCode",
@@ -185,6 +189,7 @@ export function DeliveryStep({
                 setter: onPostalCodeChange,
                 error: undefined,
                 autoComplete: "shipping postal-code",
+                placeholder: "e.g. 8001",
               },
             ].map((field) => (
               <div className={styles.fieldGroup} key={field.id}>
@@ -194,6 +199,7 @@ export function DeliveryStep({
                   data-field={field.id}
                   value={field.value}
                   autoComplete={field.autoComplete}
+                  placeholder={field.placeholder}
                   aria-invalid={Boolean(field.error)}
                   aria-describedby={
                     field.error ? `${field.id}-error` : undefined
