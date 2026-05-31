@@ -1,0 +1,38 @@
+.card {
+  border: var(--card-border);
+  border-radius: var(--radius-card-lg);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  display: grid;
+  gap: var(--card-gap);
+}
+
+.default {
+  background: var(--card-bg);
+  padding: var(--card-padding);
+}
+
+.soft {
+  background: var(--pex-bg-soft);
+  border-color: rgba(26, 42, 64, 0.08);
+  padding: var(--card-padding);
+}
+
+.interactive {
+  cursor: pointer;
+  transition: var(--interactive-transition);
+  padding: var(--card-padding);
+}
+
+.interactive:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.paddingCompact {
+  padding: clamp(16px, 2vw, 20px);
+}
+
+.paddingSpacious {
+  padding: clamp(28px, 5vw, 44px);
+}

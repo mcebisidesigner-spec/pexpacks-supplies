@@ -138,6 +138,9 @@
   --button-hover-transform: translateY(-2px) scale(var(--button-hover-scale));
   --button-active-transform: translateY(0) scale(0.99);
   --button-hover-shadow: 0 14px 24px rgba(26, 42, 64, 0.16);
+  --button-disabled-opacity: 0.62;
+  --button-focus-ring: var(--focus-ring);
+  --button-focus-ring-offset: 3px;
   --motion-duration-fast: 160ms;
   --motion-duration: 220ms;
   --motion-duration-slow: 320ms;

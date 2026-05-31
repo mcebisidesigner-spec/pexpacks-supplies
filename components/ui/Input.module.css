@@ -1,0 +1,68 @@
+.wrapper {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--pex-primary);
+}
+
+.helper {
+  margin: 0;
+  font-size: 13px;
+  color: var(--pex-text-muted);
+  line-height: 1.4;
+}
+
+.inputWrap {
+  position: relative;
+  display: grid;
+}
+
+.input {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--pex-border);
+  border-radius: var(--radius-field);
+  padding: 0 16px;
+  background: var(--pex-bg);
+  color: var(--pex-primary);
+  font: inherit;
+  font-size: 15px;
+  transition: var(--interactive-transition);
+}
+
+.input::placeholder {
+  color: var(--pex-text-muted);
+  opacity: 0.5;
+}
+
+.input:focus {
+  border-color: var(--pex-keppel);
+  outline: var(--button-focus-ring);
+  outline-offset: 2px;
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.errorText {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-danger);
+  line-height: 1.4;
+}
+
+.successIcon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--pex-success);
+  pointer-events: none;
+}

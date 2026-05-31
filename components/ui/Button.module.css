@@ -32,12 +32,32 @@
   transform: var(--button-active-transform);
 }
 
+.button:focus-visible {
+  outline: var(--button-focus-ring);
+  outline-offset: var(--button-focus-ring-offset);
+}
+
 .button:disabled,
 .button[aria-disabled="true"] {
-  opacity: 0.62;
+  opacity: var(--button-disabled-opacity);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+/* Loading spinner */
+@keyframes buttonSpinner {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: buttonSpinner 0.6s linear infinite;
+  flex-shrink: 0;
 }
 
 .button > span:last-child {

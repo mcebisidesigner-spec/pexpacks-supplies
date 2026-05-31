@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import type { OrderStatusResponse } from "@/types/orders";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import styles from "./OrderStatusClient.module.css";
 
 type OrderStatusClientProps = {
   orderReference: string | null;
@@ -37,7 +39,7 @@ function SpinnerIcon() {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ animation: "spin 0.8s linear infinite" }}
+      className={styles.spinner}
     >
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
@@ -60,6 +62,14 @@ function AlertIcon() {
       <line x1="12" y1="8" x2="12" y2="12" />
       <line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
+  );
+}
+
+function IconBox({ bg, color, children }: { bg: string; color: string; children: React.ReactNode }) {
+  return (
+    <div className={styles.iconBox} style={{ background: bg, color }}>
+      {children}
+    </div>
   );
 }
 
@@ -105,258 +115,86 @@ export function OrderStatusClient({
     checkStatus();
   }, [checkStatus]);
 
-  const cardStyle: React.CSSProperties = {
-    border: "var(--card-border)",
-    borderRadius: "var(--radius-card-lg)",
-    background: "radial-gradient(circle at 90% 10%, rgba(33, 158, 154, 0.12), transparent 40%), var(--card-bg)",
-    boxShadow: "var(--card-shadow)",
-    padding: "clamp(28px, 5vw, 44px)",
-    display: "grid",
-    gap: 20,
-    textAlign: "center",
-  };
-
-  const iconBoxStyle: React.CSSProperties = {
-    width: 60,
-    height: 60,
-    borderRadius: "var(--radius-pill)",
-    display: "grid",
-    placeItems: "center",
-    margin: "0 auto",
-    fontSize: 26,
-  };
-
   if (!orderReference) {
     return (
-      <div style={cardStyle}>
-        <div
-          style={{
-            ...iconBoxStyle,
-            background: "var(--pex-bg-soft)",
-            color: "var(--pex-text-muted)",
-          }}
-        >
+      <Card padding="spacious" style={{ textAlign: "center", gap: 20 }}>
+        <IconBox bg="var(--pex-bg-soft)" color="var(--pex-text-muted)">
           <AlertIcon />
-        </div>
-        <h1
-          style={{
-            margin: 0,
-            color: "var(--pex-primary)",
-            fontFamily: "var(--font-heading)",
-            fontSize: "clamp(1.4rem, 3vw, 2rem)",
-            lineHeight: 1.08,
-          }}
-        >
-          No Order Reference
-        </h1>
-        <p
-          style={{
-            margin: 0,
-            color: "var(--pex-text-muted)",
-            lineHeight: 1.5,
-          }}
-        >
+        </IconBox>
+        <h1 className={styles.heading}>No Order Reference</h1>
+        <p className={styles.bodyText}>
           We could not find your order reference. If you completed a payment,
           please check your email for confirmation.
         </p>
-        <div
-          style={{
-            marginTop: 8,
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 12,
-            justifyContent: "center",
-          }}
-        >
-          <Link
-            href="/"
-            style={{
-              minHeight: 48,
-              padding: "0 24px",
-              borderRadius: "var(--radius-pill)",
-              background: "var(--pex-navy)",
-              color: "var(--pex-bg)",
-              fontFamily: "var(--font-button)",
-              fontSize: 16,
-              fontWeight: 800,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              textDecoration: "none",
-            }}
-          >
+        <div className={styles.buttonRow}>
+          <Button href="/" variant="navy">
             Back to Home
-          </Link>
+          </Button>
         </div>
-      </div>
+      </Card>
     );
   }
 
   const isPaid = status?.status === "paid";
   const isStillPending =
     status?.status === "pending_payment" || (!status && loading);
+  const iconBg = isPaid
+    ? "var(--pex-success)"
+    : isStillPending
+      ? "var(--pex-bg-soft)"
+      : "var(--color-error-bg)";
+  const iconColor = isPaid
+    ? "var(--pex-bg)"
+    : isStillPending
+      ? "var(--pex-text-muted)"
+      : "var(--pex-error)";
 
   return (
-    <>
-      <style>
-        {`@keyframes spin { to { transform: rotate(360deg); } }`}
-      </style>
-      <div style={cardStyle}>
-        <div
-          style={{
-            ...iconBoxStyle,
-            background: isPaid
-              ? "var(--pex-success)"
-              : isStillPending
-                ? "var(--pex-bg-soft)"
-                : "var(--color-error-bg)",
-            color: isPaid
-              ? "var(--pex-bg)"
-              : isStillPending
-                ? "var(--pex-text-muted)"
-                : "var(--pex-error)",
-          }}
-        >
-          {isPaid ? <CheckIcon /> : isStillPending ? <SpinnerIcon /> : <AlertIcon />}
-        </div>
+    <Card padding="spacious" style={{ textAlign: "center", gap: 20 }}>
+      <IconBox bg={iconBg} color={iconColor}>
+        {isPaid ? <CheckIcon /> : isStillPending ? <SpinnerIcon /> : <AlertIcon />}
+      </IconBox>
 
-        <h1
-          style={{
-            margin: 0,
-            color: "var(--pex-primary)",
-            fontFamily: "var(--font-heading)",
-            fontSize: "clamp(1.4rem, 3vw, 2rem)",
-            lineHeight: 1.08,
-          }}
-        >
-          {isPaid
-            ? "Payment received"
-            : isStillPending
-              ? "Confirming Your Payment"
-              : "Payment Pending"}
-        </h1>
+      <h1 className={styles.heading}>
+        {isPaid
+          ? "Payment received"
+          : isStillPending
+            ? "Confirming Your Payment"
+            : "Payment Pending"}
+      </h1>
 
-        <p
-          style={{
-            margin: 0,
-            color: "var(--pex-text-muted)",
-            lineHeight: 1.5,
-            maxWidth: 420,
-            marginInline: "auto",
-          }}
-        >
-          {isPaid
-            ? `Your payment of ${status?.estimatedTotal ? formatCurrency(Number(status.estimatedTotal)) : ""} has been received. Your order is being confirmed and prepared.`
-            : isStillPending
-              ? "We received your payment request and are waiting for secure payment confirmation. This usually takes a few seconds."
-              : "We could not confirm your payment yet. If you completed payment, please check your email for confirmation or contact us."}
-        </p>
+      <p className={styles.bodyText}>
+        {isPaid
+          ? `Your payment of ${status?.estimatedTotal ? formatCurrency(Number(status.estimatedTotal)) : ""} has been received. Your order is being confirmed and prepared.`
+          : isStillPending
+            ? "We received your payment request and are waiting for secure payment confirmation. This usually takes a few seconds."
+            : "We could not confirm your payment yet. If you completed payment, please check your email for confirmation or contact us."}
+      </p>
 
-        <div
-          style={{
-            display: "grid",
-            gap: 8,
-            padding: "16px 20px",
-            borderRadius: "var(--radius-card-compact)",
-            background: "var(--pex-bg-soft)",
-            textAlign: "center",
-          }}
-        >
-          <span
-            style={{
-              color: "var(--pex-text-muted)",
-              fontSize: "0.85rem",
-              fontWeight: 800,
-            }}
-          >
-            Order Reference
-          </span>
-          <strong
-            style={{
-              color: "var(--pex-primary)",
-              fontSize: "1.1rem",
-              fontFamily: "var(--font-heading)",
-            }}
-          >
-            {orderReference}
-          </strong>
-        </div>
-
-        {status && (
-          <div
-            style={{
-              display: "grid",
-              gap: 8,
-              textAlign: "center",
-            }}
-          >
-            {status.schoolName && (
-              <p
-                style={{
-                  margin: 0,
-                  color: "var(--pex-text-muted)",
-                  fontSize: "0.9rem",
-                }}
-              >
-                {status.schoolName}
-                {status.grade ? ` - ${status.grade}` : ""}
-              </p>
-            )}
-          </div>
-        )}
-
-        <div
-          style={{
-            marginTop: 8,
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 12,
-            justifyContent: "center",
-          }}
-        >
-          <Link
-            href="/"
-            style={{
-              minHeight: 48,
-              padding: "0 24px",
-              borderRadius: "var(--radius-pill)",
-              background: "var(--pex-navy)",
-              color: "var(--pex-bg)",
-              fontFamily: "var(--font-button)",
-              fontSize: 16,
-              fontWeight: 800,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              textDecoration: "none",
-              transition: "var(--button-transition)",
-            }}
-          >
-            Back to Home
-          </Link>
-          <Link
-            href="/schools"
-            style={{
-              minHeight: 48,
-              padding: "0 24px",
-              borderRadius: "var(--radius-pill)",
-              background: "var(--pex-bg)",
-              color: "var(--pex-primary)",
-              fontFamily: "var(--font-button)",
-              fontSize: 16,
-              fontWeight: 800,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              textDecoration: "none",
-              border: "1px solid var(--pex-border)",
-              transition: "var(--button-transition)",
-            }}
-          >
-            Browse Schools
-          </Link>
-        </div>
+      <div className={styles.refBanner}>
+        <span className={styles.refLabel}>Order Reference</span>
+        <strong className={styles.refValue}>{orderReference}</strong>
       </div>
-    </>
+
+      {status && (
+        <div className={styles.orderInfo}>
+          {status.schoolName && (
+            <p className={styles.orderInfoText}>
+              {status.schoolName}
+              {status.grade ? ` - ${status.grade}` : ""}
+            </p>
+          )}
+        </div>
+      )}
+
+      <div className={styles.buttonRow}>
+        <Button href="/" variant="navy">
+          Back to Home
+        </Button>
+        <Button href="/schools" variant="outline">
+          Browse Schools
+        </Button>
+      </div>
+    </Card>
   );
 }

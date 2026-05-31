@@ -1,0 +1,70 @@
+.page {
+  width: 100%;
+  padding: 64px var(--gutter-desktop) var(--section-padding-y-desktop);
+  background: var(--pex-body-bg);
+  display: grid;
+  justify-content: center;
+}
+
+.inner {
+  width: 100%;
+  max-width: 520px;
+  display: grid;
+  gap: 24px;
+}
+
+.iconBox {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-pill);
+  background: rgba(185, 28, 28, 0.1);
+  color: var(--pex-error);
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  font-size: 26px;
+}
+
+.heading {
+  margin: 0;
+  color: var(--pex-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.08;
+  text-align: center;
+}
+
+.bodyText {
+  margin: 0;
+  color: var(--pex-text-muted);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.refBanner {
+  padding: 12px 16px;
+  border-radius: var(--radius-card-compact);
+  background: var(--pex-bg-soft);
+  text-align: center;
+}
+
+.refLabel {
+  color: var(--pex-text-muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.buttonRow {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.contactLink {
+  color: var(--pex-keppel);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

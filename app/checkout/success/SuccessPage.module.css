@@ -1,0 +1,14 @@
+.page {
+  width: 100%;
+  padding: 64px var(--gutter-desktop) var(--section-padding-y-desktop);
+  background: var(--pex-body-bg);
+  display: grid;
+  justify-content: center;
+}
+
+.inner {
+  width: 100%;
+  max-width: 560px;
+  display: grid;
+  gap: 24px;
+}

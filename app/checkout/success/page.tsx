@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { OrderStatusClient } from "./OrderStatusClient";
+import styles from "./SuccessPage.module.css";
 
 type SuccessPageProps = {
   searchParams: Promise<{ ref?: string; trxref?: string }>;
@@ -21,24 +22,8 @@ export default async function SuccessPage({
   }
 
   return (
-    <div
-      style={{
-        width: "100%",
-        padding:
-          "64px var(--gutter-desktop) var(--section-padding-y-desktop)",
-        background: "var(--pex-body-bg)",
-        display: "grid",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 560,
-          display: "grid",
-          gap: 24,
-        }}
-      >
+    <div className={styles.page}>
+      <div className={styles.inner}>
         <OrderStatusClient orderReference={ref || null} />
       </div>
     </div>

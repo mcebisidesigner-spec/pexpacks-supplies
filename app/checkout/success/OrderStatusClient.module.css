@@ -1,0 +1,76 @@
+.iconBox {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-pill);
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  font-size: 26px;
+}
+
+.heading {
+  margin: 0;
+  color: var(--pex-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.08;
+  text-align: center;
+}
+
+.bodyText {
+  margin: 0;
+  color: var(--pex-text-muted);
+  line-height: 1.5;
+  text-align: center;
+  max-width: 420px;
+  margin-inline: auto;
+}
+
+.refBanner {
+  display: grid;
+  gap: 8px;
+  padding: 16px 20px;
+  border-radius: var(--radius-card-compact);
+  background: var(--pex-bg-soft);
+  text-align: center;
+}
+
+.refLabel {
+  color: var(--pex-text-muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.refValue {
+  color: var(--pex-primary);
+  font-size: 1.1rem;
+  font-family: var(--font-heading);
+}
+
+.orderInfo {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+
+.orderInfoText {
+  margin: 0;
+  color: var(--pex-text-muted);
+  font-size: 0.9rem;
+}
+
+.buttonRow {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}

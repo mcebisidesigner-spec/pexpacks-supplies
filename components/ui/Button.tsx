@@ -10,6 +10,7 @@ type BaseProps = {
   iconDirection?: "right" | "left" | "search" | "menu" | "close" | "none";
   className?: string;
   ariaLabel?: string;
+  loading?: boolean;
 };
 
 type ButtonAsButtonProps = BaseProps &
@@ -31,13 +32,18 @@ export function Button({
   className = "",
   ariaLabel,
   iconDirection,
+  loading,
   ...props
 }: ButtonProps) {
+  const isDisabled = props.href ? false : (props as ButtonAsButtonProps).disabled || loading;
   const classNames = [styles.button, styles[variant], styles[size], className]
     .filter(Boolean)
     .join(" ");
   const iconTone = variant === "primary" ? "white" : "orange";
-  const content = (
+
+  const content = loading ? (
+    <span className={styles.spinner} aria-hidden="true" />
+  ) : (
     <>
       {iconDirection === "left" ? <IconCircle tone={iconTone} direction={iconDirection} /> : null}
       <span>{children}</span>
@@ -52,6 +58,7 @@ export function Button({
         className={classNames}
         href={href}
         aria-label={ariaLabel}
+        aria-disabled={isDisabled || undefined}
         {...anchorProps}
       >
         {content}
@@ -59,12 +66,14 @@ export function Button({
     );
   }
 
-  const { type = "button", ...buttonProps } = props as ButtonAsButtonProps;
+  const { type = "button", disabled, ...buttonProps } = props as ButtonAsButtonProps;
   return (
     <button
       className={classNames}
       type={type}
       aria-label={ariaLabel}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
       {...buttonProps}
     >
       {content}
