@@ -131,6 +131,23 @@ No queues. No confusion. No missing items.
               </Link>
             </div>
           </div>
+
+          <div className={homeStyles.officeCard}>
+            <div className={homeStyles.officeCardIcon}>
+              <BriefcaseIcon />
+            </div>
+            <div>
+              <h3>Office & Business Stationery Packs</h3>
+              <p>
+                Need reliable stationery for your SME or home office? We offer curated packs for daily business administration, including files, paper, notebooks, writing tools, and custom restock options.
+              </p>
+            </div>
+            <div className={homeStyles.officeCardButton}>
+              <Button href="/office" variant="primary">
+                Explore Office Packs
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
