@@ -30,13 +30,8 @@ export function useDialogFocusTrap({
     }
 
     const previousOverflow = document.body.style.overflow;
-    const siteShell = document.querySelector<HTMLElement>(".site-shell");
-    const previousAriaHidden = siteShell?.getAttribute("aria-hidden");
-    const previousInert = siteShell?.hasAttribute("inert") ?? false;
 
     document.body.style.overflow = "hidden";
-    siteShell?.setAttribute("aria-hidden", "true");
-    siteShell?.setAttribute("inert", "");
 
     window.setTimeout(() => {
       initialFocusRef?.current?.focus();
@@ -84,20 +79,6 @@ export function useDialogFocusTrap({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
-
-      if (!siteShell) {
-        return;
-      }
-
-      if (previousAriaHidden === null || previousAriaHidden === undefined) {
-        siteShell.removeAttribute("aria-hidden");
-      } else {
-        siteShell.setAttribute("aria-hidden", previousAriaHidden);
-      }
-
-      if (!previousInert) {
-        siteShell.removeAttribute("inert");
-      }
     };
   }, [dialogRef, initialFocusRef, isOpen, onClose]);
 }

@@ -44,9 +44,6 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
               <p className={styles.packSchool}>{pack.schoolName}</p>
             ) : null}
             <h3 className={styles.packName}>{pack.packName}</h3>
-            {pack.grade ? (
-              <span className={styles.packGrade}>{pack.grade}</span>
-            ) : null}
           </div>
           <div style={{ display: "flex", gap: 6, alignItems: "start" }}>
             <span
@@ -108,9 +105,6 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
           </span>
           <span className={styles.packPrice}>
             {formatCurrency(lineItemTotal)}
-            {pack.packMode === "full" ? (
-              <small> Full pack</small>
-            ) : null}
           </span>
         </div>
       </div>

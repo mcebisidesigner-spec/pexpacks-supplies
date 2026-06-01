@@ -261,11 +261,12 @@
 .removeButton {
   width: 30px;
   height: 30px;
-  border: 1px solid var(--pex-border);
+  border: 0;
   border-radius: 50%;
   background: transparent;
-  color: var(--pex-text-muted);
-  font-size: 18px;
+  color: var(--pex-error);
+  font-size: 22px;
+  font-weight: 800;
   line-height: 0;
   padding: 0;
   box-sizing: border-box;
@@ -277,9 +278,8 @@
 }
 
 .removeButton:hover {
-  border-color: rgba(185, 28, 28, 0.35);
   background: transparent;
-  color: var(--pex-error);
+  color: #8f1515;
 }
 
 .removeButton:focus-visible {
@@ -340,11 +340,41 @@
   background: var(--pex-bg-soft);
 }
 
+.pexcoverToggleLabel:has(.pexcoverCheckbox:checked) {
+  border-color: rgba(33, 158, 154, 0.45);
+  background: rgba(33, 158, 154, 0.08);
+}
+
 .pexcoverCheckbox {
   width: 20px;
   height: 20px;
-  accent-color: var(--pex-primary);
+  appearance: none;
+  border: 1.5px solid var(--pex-border);
+  border-radius: 6px;
+  background: var(--pex-bg);
   cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: var(--interactive-transition);
+}
+
+.pexcoverCheckbox::before {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid var(--pex-bg);
+  border-bottom: 2px solid var(--pex-bg);
+  opacity: 0;
+  transform: rotate(-45deg) translateY(-1px);
+}
+
+.pexcoverCheckbox:checked {
+  border-color: var(--pex-keppel);
+  background: var(--pex-keppel);
+}
+
+.pexcoverCheckbox:checked::before {
+  opacity: 1;
 }
 
 .pexcoverDetails {

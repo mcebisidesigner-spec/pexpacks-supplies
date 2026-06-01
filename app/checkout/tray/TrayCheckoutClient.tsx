@@ -301,14 +301,13 @@ export function TrayCheckoutClient() {
   return (
     <div className={styles.checkoutShell}>
       <div className={styles.checkoutHeader}>
-        <Button
+        <button
           type="button"
-          variant="secondary"
-          className="rounded-full"
+          className={styles.backToOrder}
           onClick={handleBackToOrder}
         >
           Back to Order
-        </Button>
+        </button>
         <a
           href={`https://wa.me/27763456622?text=Hi Pexpacks, I need help with checkout.`}
           target="_blank"
@@ -504,7 +503,7 @@ export function TrayCheckoutClient() {
             </div>
 
             {/* Delivery */}
-            <h2 style={{ color: "var(--pex-primary)", fontFamily: "var(--font-heading)", fontSize: "1.2rem", margin: "24px 0 16px" }}>
+            <h2 className={styles.checkoutSectionTitle}>
               Delivery or Collection
             </h2>
             <div className={styles.formGrid}>
@@ -540,7 +539,7 @@ export function TrayCheckoutClient() {
                           )}
                         </svg>
                       </div>
-                      <div>
+                      <div className={styles.deliveryOptionText}>
                         <strong>{opt}</strong>
                         <small>
                           {opt === "School collection"
@@ -648,7 +647,7 @@ export function TrayCheckoutClient() {
                 label="Order notes (optional)"
                 value={deliveryNotes}
                 onChange={(e) => setDeliveryNotes(e.target.value)}
-                className="col-span-full"
+                className={styles.orderNotesField}
               />
             </div>
 
