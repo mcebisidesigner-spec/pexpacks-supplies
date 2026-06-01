@@ -261,7 +261,7 @@
 .removeButton {
   width: 30px;
   height: 30px;
-  border: 0;
+  border: 1px solid var(--pex-border);
   border-radius: 50%;
   background: transparent;
   color: var(--pex-text-muted);
@@ -277,6 +277,7 @@
 }
 
 .removeButton:hover {
+  border-color: rgba(185, 28, 28, 0.35);
   background: transparent;
   color: var(--pex-error);
 }
