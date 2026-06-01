@@ -4,12 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import heroStyles from "@/components/marketing/HeroSearch.module.css";
-import { SchoolPhaseSelect } from "@/components/schools/SchoolPhaseSelect";
+
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import {
   getSchoolPhaseLabel,
-  isSchoolPhase,
 } from "@/lib/schools/schoolPhase";
 import { slugify } from "@/lib/slugify";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
@@ -22,7 +21,6 @@ const resultLimit = 12;
 
 type SchoolSearchPanelProps = {
   initialQuery?: string;
-  initialPhase?: string;
 };
 
 function HighlightMatch({ text, query }: { text: string; query: string }) {
@@ -50,13 +48,11 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 
 export function SchoolSearchPanel({
   initialQuery = "",
-  initialPhase = "all",
 }: SchoolSearchPanelProps) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const {
     query,
-    phase,
     results,
     total,
     hasMore,
@@ -68,19 +64,15 @@ export function SchoolSearchPanel({
     setPanelOpen,
     fetchResults,
     updateQuery,
-    updatePhase,
   } = usePaginatedSchoolSearch({
     initialQuery,
-    initialPhase,
-    initialPanelOpen:
-      initialQuery.trim().length >= 2 || initialPhase !== "all",
+    initialPanelOpen: initialQuery.trim().length >= 3,
     phaseAllValue: "all",
     resultLimit,
     errorMessage:
       "We couldn't load the school list. Please refresh or contact Pexpacks.",
   });
   const searchActive = panelOpen;
-  const selectedPhaseLabel = isSchoolPhase(phase) ? getSchoolPhaseLabel(phase) : "";
 
   useEffect(() => {
     if (!panelOpen) return;
@@ -108,7 +100,7 @@ export function SchoolSearchPanel({
       <div className={styles.searchFormWrapper}>
         <div
           ref={searchRef}
-          className={styles.searchForm}
+          className={heroStyles.heroSearch}
           role="search"
           onKeyDown={(event) => {
             if (event.key === "Escape") {
@@ -119,34 +111,25 @@ export function SchoolSearchPanel({
           aria-controls="school-search-results"
           data-mobile-search-active={searchActive ? "true" : "false"}
         >
-          <div className={styles.searchFormRow}>
-            <SchoolPhaseSelect
-              id="schoolPhase"
-              value={phase}
-              onChange={updatePhase}
-              className={styles.phaseField}
+          <label
+            className={heroStyles.field}
+            htmlFor="schoolQuery"
+          >
+            <span>School Name</span>
+            <input
+              id="schoolQuery"
+              name="schoolQuery"
+              type="search"
+              value={query}
+              onFocus={() => {
+                setIsSchoolInputFocused(true);
+              }}
+              onBlur={() => setIsSchoolInputFocused(false)}
+              onChange={(event) => updateQuery(event.target.value)}
+              placeholder="Type your school name..."
+              autoComplete="off"
             />
-            <label
-              className={styles.schoolSearchField}
-              htmlFor="schoolQuery"
-            >
-              <span>School Name</span>
-              <input
-                id="schoolQuery"
-                name="schoolQuery"
-                type="search"
-                value={query}
-                onFocus={() => {
-                  setIsSchoolInputFocused(true);
-                  setPanelOpen(true);
-                }}
-                onBlur={() => setIsSchoolInputFocused(false)}
-                onChange={(event) => updateQuery(event.target.value)}
-                placeholder="Search your school..."
-                autoComplete="off"
-              />
-            </label>
-          </div>
+          </label>
           {panelOpen ? (
             <div
               className={heroStyles.heroResultsPanel}
@@ -181,7 +164,6 @@ export function SchoolSearchPanel({
                     <strong>
                       {total === 1 ? "1 school found" : `${total} schools found`}
                     </strong>
-                    {selectedPhaseLabel ? <span>{selectedPhaseLabel}</span> : null}
                     {total > 0 ? (
                       <span>
                         Showing {results.length} of {total}

@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import type { TrayPackItem } from "@/store/usePackTrayStore";
 import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
@@ -389,9 +388,6 @@ export function TrayCheckoutClient() {
         >
           Back to order
         </button>
-        <Link href="/" className={styles.checkoutLogo} aria-label="Pexpacks home">
-          PexPacks
-        </Link>
         <a
           href="https://wa.me/27763456622?text=Hi Pexpacks, I need help with checkout."
           target="_blank"
@@ -403,15 +399,15 @@ export function TrayCheckoutClient() {
       </header>
 
       <main className={styles.checkoutGrid}>
-        <form className={styles.mainColumn} aria-label="Checkout details" onSubmit={(e) => e.preventDefault()}>
-          <section className={`${styles.stepCard} ${styles.checkoutHero}`}>
-            <p className={styles.checkoutKicker}>Checkout</p>
-            <h1 tabIndex={-1}>Review your packs and pay securely.</h1>
-            <p>
-              Add your details, choose delivery or collection, and continue to the secure Paystack payment page.
-            </p>
-          </section>
+        <section className={`${styles.stepCard} ${styles.checkoutHero}`}>
+          <p className={styles.checkoutKicker}>Checkout</p>
+          <h1 tabIndex={-1}>Review your packs and pay securely.</h1>
+          <p>
+            Add your details, choose delivery or collection, and continue to the secure Paystack payment page.
+          </p>
+        </section>
 
+        <form className={styles.mainColumn} aria-label="Checkout details" onSubmit={(e) => e.preventDefault()}>
           <section className={styles.checkoutSection} aria-labelledby="customer-details-heading">
             <div className={styles.sectionHeader}>
               <span className={styles.sectionNumber}>1</span>
@@ -846,7 +842,7 @@ export function TrayCheckoutClient() {
               type="button"
               variant="primary"
               size="lg"
-              className={styles.fullWidth}
+              className={`${styles.fullWidth} ${styles.desktopPayButton}`}
               onClick={handlePay}
               disabled={!canSubmit}
               aria-busy={submitting}

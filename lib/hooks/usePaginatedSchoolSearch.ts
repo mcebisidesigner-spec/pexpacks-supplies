@@ -26,7 +26,7 @@ function shouldSearch(
 ) {
   if (grade !== gradeAllValue) return true;
   if (phase !== phaseAllValue) return true;
-  return debouncedQuery.trim().length >= 2;
+  return debouncedQuery.trim().length >= 3;
 }
 
 export function usePaginatedSchoolSearch({
@@ -55,7 +55,7 @@ export function usePaginatedSchoolSearch({
   const queryReady =
     grade !== gradeAllValue ||
     phase !== phaseAllValue ||
-    debouncedQuery.trim().length >= 2;
+    debouncedQuery.trim().length >= 3;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedQuery(query), 350);

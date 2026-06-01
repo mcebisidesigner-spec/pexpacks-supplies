@@ -1255,20 +1255,10 @@
 }
 
 .checkoutHeader {
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
   max-width: min(1220px, 100%);
   margin-bottom: clamp(20px, 3vw, 34px);
-}
-
-.checkoutLogo {
-  justify-self: center;
-  color: var(--pex-navy);
-  font-family: var(--font-heading);
-  font-weight: 900;
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
-  text-decoration: none;
-  letter-spacing: 0;
 }
 
 .checkoutGrid {
@@ -1283,12 +1273,16 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
+  grid-column: 1;
+  grid-row: 2;
 }
 
 .summaryColumn {
   position: sticky;
   top: 24px;
   min-width: 0;
+  grid-column: 2;
+  grid-row: 1 / span 2;
 }
 
 .stepCard,
@@ -1304,6 +1298,8 @@
 
 .checkoutHero {
   padding: clamp(24px, 4vw, 38px);
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .checkoutHero h1,
@@ -1730,9 +1726,23 @@
     grid-template-columns: 1fr;
   }
 
+  .checkoutHero {
+    grid-column: 1;
+    grid-row: auto;
+    order: 1;
+  }
+
+  .mainColumn {
+    grid-column: 1;
+    grid-row: auto;
+    order: 3;
+  }
+
   .summaryColumn {
     position: static;
-    order: -1;
+    grid-column: 1;
+    grid-row: auto;
+    order: 2;
   }
 }
 
@@ -1746,19 +1756,14 @@
     grid-template-columns: 1fr auto;
   }
 
-  .checkoutLogo {
-    grid-column: 1 / -1;
-    grid-row: 1;
-  }
-
   .backToOrder {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 1;
   }
 
   .helpLink {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 1;
   }
 
   .formGrid,
@@ -1777,6 +1782,10 @@
 
   .payButtonWrapper {
     display: none;
+  }
+
+  .desktopPayButton {
+    display: none !important;
   }
 
   .mobileStickyCta {

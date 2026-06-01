@@ -49,7 +49,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         <SchoolsPageHero>
         <SchoolSearchPanel
           initialQuery={firstValue(params.q) ?? ""}
-          initialPhase={firstValue(params.phase) ?? "all"}
         />
       </SchoolsPageHero>
       </div>

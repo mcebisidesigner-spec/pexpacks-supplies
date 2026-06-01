@@ -3,11 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import { InlineSchoolWaitlist } from "@/components/schools/InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
+
 import { homepagePacks } from "@/data/packs";
 import {
   getSchoolPhaseLabel,
@@ -43,7 +43,6 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 }
 
 export function HeroSearch() {
-  const router = useRouter();
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const {
@@ -81,15 +80,6 @@ export function HeroSearch() {
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, [panelOpen, setPanelOpen]);
 
-  function handleFindPack() {
-    const q = query.trim();
-    if (q.length >= 2) {
-      router.push(`/schools?q=${encodeURIComponent(q)}`);
-    } else {
-      router.push("/schools");
-    }
-  }
-
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
       <div
@@ -119,20 +109,11 @@ export function HeroSearch() {
             value={query}
             onFocus={() => {
               setIsSchoolInputFocused(true);
-              setPanelOpen(true);
             }}
             onBlur={() => setIsSchoolInputFocused(false)}
             onChange={(event) => updateQuery(event.target.value)}
           />
         </label>
-
-        <button
-          type="button"
-          className={styles.findPackButton}
-          onClick={handleFindPack}
-        >
-          Find Your Pack
-        </button>
 
         {panelOpen ? (
           <div
