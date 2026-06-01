@@ -1,22 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { CTASection } from "@/components/marketing/CTASection";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { OrderingWorksSection } from "@/components/marketing/OrderingWorksSection";
+import { SuperpowerSection } from "@/components/marketing/SuperpowerSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { faqs } from "@/data/faqs";
 import { homepagePacks } from "@/data/packs";
-import { testimonials } from "@/data/testimonials";
-import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
-import {
-  BriefcaseIcon,
-  ShieldCheckIcon,
-  WalletIcon,
-} from "@/components/ui/icons";
+import { WalletIcon } from "@/components/ui/icons";
 
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
@@ -83,43 +77,7 @@ export default function HomePage() {
         </Link>
       </section>
 
-      <section className={`${sectionStyles.section} ${homeStyles.guaranteeSection}`}>
-        <div className={sectionStyles.inner}>
-          <div className={homeStyles.guaranteeBox}>
-            <div className={homeStyles.guaranteeContent}>
-              <div className={homeStyles.guaranteeIcon}>
-                <ShieldCheckIcon />
-              </div>
-              <h2>100% Exact List Match Guarantee</h2>
-              <p>
-                We pack exactly what is on your school's official stationery
-                list. No missing items, no incorrect brands. If it's on the
-                list, it's in the box.
-              </p>
-              <Link href="/add-your-school" className={homeStyles.guaranteeLink}>
-                School not listed? Notify us &rarr;
-              </Link>
-            </div>
-          </div>
-
-          <div className={homeStyles.officeCard}>
-            <div className={homeStyles.officeCardIcon}>
-              <BriefcaseIcon />
-            </div>
-            <div>
-              <h3>Office & Business Stationery Packs</h3>
-              <p>
-                Need reliable stationery for your SME or home office? We offer curated packs for daily business administration, including files, paper, notebooks, writing tools, and custom restock options.
-              </p>
-            </div>
-            <div className={homeStyles.officeCardButton}>
-              <Button href="/office" variant="primary">
-                Explore Office Packs
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SuperpowerSection />
 
       <div className={homeStyles.brandMarquee}>
         <div className={homeStyles.brandMarqueeTrack}>
@@ -227,21 +185,44 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={sectionStyles.sectionCream} aria-labelledby="home-testimonials-heading">
+      <section className={sectionStyles.socialProofSection} aria-labelledby="home-social-proof-heading">
         <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Trusted by parents"
-            title="Parents trust Pexpacks for school stationery"
-            text="Hear from parents who have made the smart switch to Pexpacks."
-            headingId="home-testimonials-heading"
-          />
-          <TestimonialMarquee items={testimonials} />
-          <div className={homeStyles.statsRow}>
-            <span>School-accurate stationery lists</span>
-            <span className={homeStyles.statsDot} aria-hidden="true" />
-            <span>Delivered before school opens</span>
-            <span className={homeStyles.statsDot} aria-hidden="true" />
-            <span>Backed by a 100% match promise</span>
+          <div className={sectionStyles.socialProofPanel}>
+            <div className={sectionStyles.socialProofMedia}>
+              <Image
+                src="/images/pex-stationery-box.webp"
+                alt="Happy learners holding Pexpacks branded stationery boxes outside school"
+                fill
+                placeholder="blur"
+                blurDataURL={IMAGE_BLUR_DATA_URL}
+                sizes="(min-width: 1024px) 48vw, 100vw"
+              />
+              <div className={sectionStyles.socialProofSeal} aria-label="Trusted parent validation">
+                <strong>100%</strong>
+                <span>List match promise</span>
+              </div>
+            </div>
+
+            <div className={sectionStyles.socialProofCopy}>
+              <p className={sectionStyles.sectionEyebrow}>Parent validation</p>
+              <h2 id="home-social-proof-heading">
+                Real packs. Real schools. Real peace of mind.
+              </h2>
+              <blockquote>
+                &ldquo;Pexpacks saved me a chaotic Saturday morning at the mall. The customised pack was perfect.&rdquo;
+              </blockquote>
+              <p className={sectionStyles.socialProofAuthor}>
+                Sarah, Grade 4 Parent
+              </p>
+              <div className={sectionStyles.socialProofStats} aria-label="Pexpacks trust highlights">
+                <span>School-accurate lists</span>
+                <span>Named learner packs</span>
+                <span>Delivered before term starts</span>
+              </div>
+              <Button href="/schools#schools-search" variant="primary" size="lg">
+                Find my school pack
+              </Button>
+            </div>
           </div>
         </div>
       </section>

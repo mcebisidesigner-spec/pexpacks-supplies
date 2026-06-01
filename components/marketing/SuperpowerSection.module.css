@@ -1,0 +1,146 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.card {
+  position: relative;
+  padding: 32px 28px;
+  border: var(--card-border);
+  border-radius: 22px;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  display: grid;
+  gap: 14px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.cardAccent {
+  border-color: var(--pex-keppel);
+  background:
+    radial-gradient(circle at 90% 10%, rgba(33, 158, 154, 0.06), transparent 40%),
+    var(--card-bg);
+  box-shadow:
+    var(--card-shadow),
+    0 0 0 1px var(--pex-keppel);
+}
+
+.cardAccent:hover {
+  border-color: var(--pex-keppel);
+  box-shadow:
+    var(--card-shadow-hover),
+    0 0 0 1px var(--pex-keppel);
+}
+
+.iconWrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: rgba(33, 158, 154, 0.1);
+  color: var(--pex-keppel);
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.iconWrap svg {
+  width: 28px;
+  height: 28px;
+}
+
+.card:hover .iconWrap {
+  transform: scale(1.08);
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+}
+
+.iconWrapAccent {
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+}
+
+.number {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--pex-bg-soft);
+  color: var(--pex-text-muted);
+  font-size: 14px;
+  font-weight: 800;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.card:hover .number {
+  background: var(--pex-primary);
+  color: var(--pex-bg);
+}
+
+.title {
+  margin: 0;
+  color: var(--pex-navy);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.text {
+  margin: 0;
+  color: var(--pex-text);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.badge {
+  width: fit-content;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 820px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .card {
+    padding: 26px 22px;
+  }
+
+  .number {
+    top: 22px;
+    right: 22px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .text {
+    font-size: 14px;
+  }
+}
