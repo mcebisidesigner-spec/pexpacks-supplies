@@ -104,6 +104,48 @@ export default function HomePage() {
         </div>
       </div>
 
+      <section className={sectionStyles.socialProofSection} aria-labelledby="home-social-proof-heading">
+        <div className={sectionStyles.inner}>
+          <div className={sectionStyles.socialProofPanel}>
+            <div className={sectionStyles.socialProofMedia}>
+              <Image
+                src="/images/pex-stationery-box.webp"
+                alt="Happy learners holding Pexpacks branded stationery boxes outside school"
+                fill
+                placeholder="blur"
+                blurDataURL={IMAGE_BLUR_DATA_URL}
+                sizes="(min-width: 1024px) 48vw, 100vw"
+              />
+              <div className={sectionStyles.socialProofSeal} aria-label="Trusted parent validation">
+                <strong>100%</strong>
+                <span>List match promise</span>
+              </div>
+            </div>
+
+            <div className={sectionStyles.socialProofCopy}>
+              <p className={sectionStyles.sectionEyebrow}>Parent validation</p>
+              <h2 id="home-social-proof-heading">
+                Real packs. Real schools. Real peace of mind.
+              </h2>
+              <blockquote>
+                &ldquo;Pexpacks saved me a chaotic Saturday morning at the mall. The customised pack was perfect.&rdquo;
+              </blockquote>
+              <p className={sectionStyles.socialProofAuthor}>
+                Sarah, Grade 4 Parent
+              </p>
+              <div className={sectionStyles.socialProofStats} aria-label="Pexpacks trust highlights">
+                <span>School-accurate lists</span>
+                <span>Named learner packs</span>
+                <span>Delivered before term starts</span>
+              </div>
+              <Button href="/schools#schools-search" variant="primary" size="lg">
+                Find my school pack
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <OrderingWorksSection />
 
       <div className={homeStyles.urgencyBar}>
@@ -181,48 +223,6 @@ export default function HomePage() {
             >
               Browse all School Packs
             </Button>
-          </div>
-        </div>
-      </section>
-
-      <section className={sectionStyles.socialProofSection} aria-labelledby="home-social-proof-heading">
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.socialProofPanel}>
-            <div className={sectionStyles.socialProofMedia}>
-              <Image
-                src="/images/pex-stationery-box.webp"
-                alt="Happy learners holding Pexpacks branded stationery boxes outside school"
-                fill
-                placeholder="blur"
-                blurDataURL={IMAGE_BLUR_DATA_URL}
-                sizes="(min-width: 1024px) 48vw, 100vw"
-              />
-              <div className={sectionStyles.socialProofSeal} aria-label="Trusted parent validation">
-                <strong>100%</strong>
-                <span>List match promise</span>
-              </div>
-            </div>
-
-            <div className={sectionStyles.socialProofCopy}>
-              <p className={sectionStyles.sectionEyebrow}>Parent validation</p>
-              <h2 id="home-social-proof-heading">
-                Real packs. Real schools. Real peace of mind.
-              </h2>
-              <blockquote>
-                &ldquo;Pexpacks saved me a chaotic Saturday morning at the mall. The customised pack was perfect.&rdquo;
-              </blockquote>
-              <p className={sectionStyles.socialProofAuthor}>
-                Sarah, Grade 4 Parent
-              </p>
-              <div className={sectionStyles.socialProofStats} aria-label="Pexpacks trust highlights">
-                <span>School-accurate lists</span>
-                <span>Named learner packs</span>
-                <span>Delivered before term starts</span>
-              </div>
-              <Button href="/schools#schools-search" variant="primary" size="lg">
-                Find my school pack
-              </Button>
-            </div>
           </div>
         </div>
       </section>
