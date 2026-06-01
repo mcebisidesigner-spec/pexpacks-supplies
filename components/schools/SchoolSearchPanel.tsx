@@ -108,7 +108,7 @@ export function SchoolSearchPanel({
       <div className={styles.searchFormWrapper}>
         <div
           ref={searchRef}
-          className={`${heroStyles.heroSearch} ${styles.searchForm}`}
+          className={styles.searchForm}
           role="search"
           onKeyDown={(event) => {
             if (event.key === "Escape") {
@@ -119,32 +119,34 @@ export function SchoolSearchPanel({
           aria-controls="school-search-results"
           data-mobile-search-active={searchActive ? "true" : "false"}
         >
-          <SchoolPhaseSelect
-            id="schoolPhase"
-            value={phase}
-            onChange={updatePhase}
-            className={styles.phaseField}
-          />
-          <label
-            className={`${heroStyles.field} ${heroStyles.schoolSearchField} ${styles.schoolSearchField}`}
-            htmlFor="schoolQuery"
-          >
-            <span>School Name</span>
-            <input
-              id="schoolQuery"
-              name="schoolQuery"
-              type="search"
-              value={query}
-              onFocus={() => {
-                setIsSchoolInputFocused(true);
-                setPanelOpen(true);
-              }}
-              onBlur={() => setIsSchoolInputFocused(false)}
-              onChange={(event) => updateQuery(event.target.value)}
-              placeholder="e.g. Westminster School"
-              autoComplete="off"
+          <div className={styles.searchFormRow}>
+            <SchoolPhaseSelect
+              id="schoolPhase"
+              value={phase}
+              onChange={updatePhase}
+              className={styles.phaseField}
             />
-          </label>
+            <label
+              className={styles.schoolSearchField}
+              htmlFor="schoolQuery"
+            >
+              <span>School Name</span>
+              <input
+                id="schoolQuery"
+                name="schoolQuery"
+                type="search"
+                value={query}
+                onFocus={() => {
+                  setIsSchoolInputFocused(true);
+                  setPanelOpen(true);
+                }}
+                onBlur={() => setIsSchoolInputFocused(false)}
+                onChange={(event) => updateQuery(event.target.value)}
+                placeholder="Search your school..."
+                autoComplete="off"
+              />
+            </label>
+          </div>
           {panelOpen ? (
             <div
               className={heroStyles.heroResultsPanel}
@@ -171,11 +173,6 @@ export function SchoolSearchPanel({
               {error ? (
                 <p className={heroStyles.searchError} role="alert">
                   {error}
-                </p>
-              ) : null}
-              {panelOpen && !queryReady && !isLoading ? (
-                <p className={`${heroStyles.heroSearchState} ${heroStyles.emptySearchDrawer}`}>
-                  Type your school name to begin searching
                 </p>
               ) : null}
               {!isLoading && queryReady && hasSearched && !error ? (

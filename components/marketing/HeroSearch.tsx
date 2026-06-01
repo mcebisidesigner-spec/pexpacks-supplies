@@ -3,15 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import { InlineSchoolWaitlist } from "@/components/schools/InlineSchoolWaitlist";
-import { SchoolPhaseSelect } from "@/components/schools/SchoolPhaseSelect";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import { homepagePacks } from "@/data/packs";
 import {
   getSchoolPhaseLabel,
-  isSchoolPhase,
 } from "@/lib/schools/schoolPhase";
 import { slugify } from "@/lib/slugify";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
@@ -44,11 +43,11 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 }
 
 export function HeroSearch() {
+  const router = useRouter();
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const {
     query,
-    phase,
     results,
     total,
     hasMore,
@@ -60,7 +59,6 @@ export function HeroSearch() {
     setPanelOpen,
     fetchResults,
     updateQuery,
-    updatePhase,
   } = usePaginatedSchoolSearch({
     phaseAllValue: "",
     resultLimit,
@@ -68,7 +66,6 @@ export function HeroSearch() {
   });
 
   const searchActive = panelOpen;
-  const selectedPhaseLabel = isSchoolPhase(phase) ? getSchoolPhaseLabel(phase) : "";
 
   useEffect(() => {
     if (!panelOpen) return;
@@ -83,6 +80,15 @@ export function HeroSearch() {
     document.addEventListener("pointerdown", handlePointerDown);
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, [panelOpen, setPanelOpen]);
+
+  function handleFindPack() {
+    const q = query.trim();
+    if (q.length >= 2) {
+      router.push(`/schools?q=${encodeURIComponent(q)}`);
+    } else {
+      router.push("/schools");
+    }
+  }
 
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
@@ -99,11 +105,6 @@ export function HeroSearch() {
           }
         }}
       >
-        <SchoolPhaseSelect
-          id="homeSchoolPhase"
-          value={phase}
-          onChange={updatePhase}
-        />
         <label
           className={`${styles.field} ${styles.schoolSearchField}`}
           htmlFor="homeSchoolQuery"
@@ -113,7 +114,7 @@ export function HeroSearch() {
             id="homeSchoolQuery"
             name="schoolQuery"
             type="search"
-            placeholder="e.g. Westminster School"
+            placeholder="Type your school name..."
             autoComplete="off"
             value={query}
             onFocus={() => {
@@ -124,6 +125,15 @@ export function HeroSearch() {
             onChange={(event) => updateQuery(event.target.value)}
           />
         </label>
+
+        <button
+          type="button"
+          className={styles.findPackButton}
+          onClick={handleFindPack}
+        >
+          Find Your Pack
+        </button>
+
         {panelOpen ? (
           <div
             className={styles.heroResultsPanel}
@@ -152,18 +162,12 @@ export function HeroSearch() {
                   {error}
                 </p>
               ) : null}
-              {panelOpen && !queryReady && !isLoading ? (
-                <p className={`${styles.heroSearchState} ${styles.emptySearchDrawer}`}>
-                  Type your school name to begin searching
-                </p>
-              ) : null}
             {!isLoading && queryReady && hasSearched && !error ? (
               <>
                 <div className={styles.resultsCount}>
                   <strong>
                   {total === 1 ? "1 school found" : `${total} schools found`}
                   </strong>
-                  {selectedPhaseLabel ? <span>{selectedPhaseLabel}</span> : null}
                   {total > 0 ? (
                     <span>
                       Showing {results.length} of {total}

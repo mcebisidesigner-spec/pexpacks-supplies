@@ -13,7 +13,6 @@ import { testimonials } from "@/data/testimonials";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
 import {
-  BookIcon,
   BriefcaseIcon,
   ShieldCheckIcon,
   WalletIcon,
@@ -32,43 +31,14 @@ export default function HomePage() {
       <section className={heroStyles.hero}>
         <div className={heroStyles.heroInner}>
           <div>
-            <p className={heroStyles.eyebrow}>Save time, Pex it.</p>
+            <p className={heroStyles.eyebrow}>Save time today</p>
             <h1 className={heroStyles.heroTitle}>
-              <span className={heroStyles.desktopHeroTitleText}>
-                Stationery, packed and ready
-                <br className={heroStyles.desktopBreak} />
-                for school or office
-              </span>
-              <span className={heroStyles.mobileHeroTitleText}>
-                Stationery, packed and ready
-                <br />
-                for school or office
-              </span>
+              Skip the <br /> Back-to-School <br /> Queues
             </h1>
             <p className={heroStyles.heroLead}>
-No queues. No confusion. No missing items.
+              Your official school stationery list, perfectly packed and delivered to your door. No missing items. No stress.
             </p>
             <HeroSearch />
-            <div className={homeStyles.audienceCards}>
-              <Link href="/schools" className={homeStyles.audienceCard}>
-                <span className={homeStyles.audienceCardIcon}>
-                  <BookIcon />
-                </span>
-                <div>
-                  <strong>I am a parent</strong>
-                  <span>Find my child&rsquo;s school pack</span>
-                </div>
-              </Link>
-              <Link href="/office" className={homeStyles.audienceCard}>
-                <span className={homeStyles.audienceCardIcon}>
-                  <BriefcaseIcon />
-                </span>
-                <div>
-                  <strong>I run a business</strong>
-                  <span>View office stationery packs</span>
-                </div>
-              </Link>
-            </div>
           </div>
 
           <div className={heroStyles.heroVisual}>

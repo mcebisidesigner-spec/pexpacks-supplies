@@ -23,6 +23,29 @@
 }
 
 .searchForm {
+  position: relative;
+  width: 100%;
+  max-width: 1120px;
+  margin-top: 0;
+  padding: 10px 10px 10px 16px;
+  border: var(--card-border);
+  border-radius: 34px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(244, 252, 252, 0.94)),
+    var(--pex-bg);
+  box-shadow:
+    0 24px 58px rgba(26, 42, 64, 0.13),
+    0 1px 0 rgba(255, 255, 255, 0.95) inset;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.searchFormRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: stretch;
+  gap: 0;
 }
 
 .searchHelper {
@@ -32,6 +55,53 @@
 .phaseField {
   position: relative;
   border-right: var(--surface-border-soft);
+  min-width: 0;
+}
+
+.phaseField > button {
+  min-height: 64px;
+}
+
+.schoolSearchField {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  padding: 0 28px;
+  background: transparent;
+}
+
+.schoolSearchField > span {
+  color: var(--pex-primary);
+  font-size: clamp(13px, 1vw, 16px);
+  font-weight: 750;
+  line-height: 1.05;
+}
+
+.schoolSearchField input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: rgba(31, 41, 55, 0.48);
+  font-size: clamp(18px, 1.5vw, 24px);
+  font-weight: 600;
+  line-height: 1.1;
+  padding: 0;
+  transition: color 0.15s ease, font-weight 0.15s ease;
+}
+
+.schoolSearchField input:focus,
+.schoolSearchField input:not(:placeholder-shown) {
+  color: var(--pex-navy);
+  font-weight: 800;
+}
+
+.schoolSearchField input::placeholder {
+  color: rgba(31, 41, 55, 0.4);
+  font-weight: 500;
+  opacity: 1;
 }
 
 .resultsPanel {
@@ -51,6 +121,16 @@
   }
 
   .searchForm {
+    padding: 8px 8px 8px 12px;
+    border-radius: 28px;
+    transition:
+      transform 0.22s ease,
+      border-radius 0.22s ease,
+      box-shadow 0.22s ease;
+  }
+
+  .searchFormRow {
+    grid-template-columns: 1fr;
   }
 
   .phaseField {
@@ -58,25 +138,57 @@
     border-bottom: 1px solid rgba(18, 57, 69, 0.12);
   }
 
-  .resultsPanel {
-    margin: 0;
+  .schoolSearchField {
+    padding: 8px 16px;
+    gap: 6px;
+  }
+
+  .schoolSearchField > span {
+    font-size: clamp(14px, 7vw, 18px);
+  }
+
+  .schoolSearchField input {
+    font-size: 18px;
   }
 
   .searchForm[data-mobile-search-active="true"] {
+    position: fixed;
+    top: max(4px, env(safe-area-inset-top));
+    left: 10px;
+    right: 10px;
+    z-index: 120;
+    width: auto;
+    padding: 8px 12px;
+    border-radius: 24px;
+    box-shadow: 0 18px 42px rgba(12, 26, 43, 0.22);
   }
 
   .searchForm[data-mobile-search-active="true"] .phaseField {
+    max-height: 0;
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+    opacity: 0;
+    transform: translateY(-120%);
+    overflow: hidden;
+    pointer-events: none;
   }
 
   .searchForm[data-mobile-search-active="true"] .schoolSearchField {
+    min-height: 56px;
+    padding: 8px 8px;
   }
 
   .searchForm[data-mobile-search-active="true"] .schoolSearchField span {
+    font-size: clamp(12px, 7vw, 14px);
   }
 
   .searchForm[data-mobile-search-active="true"] .schoolSearchField input {
+    font-size: 16px;
   }
 
-  .searchForm[data-mobile-search-active="true"] .resultsPanel {
+  .resultsPanel {
+    margin: 0;
   }
 }
