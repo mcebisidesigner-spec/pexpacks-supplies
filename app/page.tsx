@@ -112,9 +112,11 @@ export default function HomePage() {
                 src="/images/pex-stationery-box.webp"
                 alt="Happy learners holding Pexpacks branded stationery boxes outside school"
                 fill
+                priority
+                quality={95}
                 placeholder="blur"
                 blurDataURL={IMAGE_BLUR_DATA_URL}
-                sizes="(min-width: 1024px) 48vw, 100vw"
+                sizes="(min-width: 1280px) 700px, (min-width: 820px) 55vw, 100vw"
               />
               <div className={sectionStyles.socialProofSeal} aria-label="Trusted parent validation">
                 <strong>100%</strong>
