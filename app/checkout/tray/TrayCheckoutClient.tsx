@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
+import type { TrayPackItem } from "@/store/usePackTrayStore";
 import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { PEXCOVER_PRICE } from "@/lib/constants";
@@ -12,8 +13,40 @@ import { Input } from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import styles from "@/app/checkout/Checkout.module.css";
 
-type FulfilmentOption = "School collection" | "Delivery" | "Collection point";
+type FulfilmentOption = "school_collection" | "home_delivery" | "arranged_collection";
 type ContactMethod = "whatsapp" | "phone" | "email";
+
+const contactOptions: { value: ContactMethod; label: string }[] = [
+  { value: "whatsapp", label: "WhatsApp" },
+  { value: "phone", label: "Phone call" },
+  { value: "email", label: "Email" },
+];
+
+const fulfilmentOptions: {
+  value: FulfilmentOption;
+  title: string;
+  description: string;
+  note: string;
+}[] = [
+  {
+    value: "school_collection",
+    title: "School collection",
+    description: "Collect from the school or agreed handover point.",
+    note: "Included",
+  },
+  {
+    value: "home_delivery",
+    title: "Home delivery",
+    description: "Receive your pack at home. Delivery may be confirmed separately.",
+    note: "Address required",
+  },
+  {
+    value: "arranged_collection",
+    title: "Arranged collection",
+    description: "We will contact you to confirm the best collection option.",
+    note: "We will confirm",
+  },
+];
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -41,17 +74,120 @@ function isLikelySaPhone(value: string) {
   );
 }
 
+function fulfilmentToApiMethod(option: FulfilmentOption) {
+  if (option === "school_collection") return "school_collection";
+  if (option === "home_delivery") return "delivery";
+  return "collection_point";
+}
+
+function getPackTotal(pack: TrayPackItem) {
+  return pack.totalPrice + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+}
+
+function getItemLineTotal(item: TrayPackItem["items"][number]) {
+  return typeof item.unitPrice === "number" ? item.unitPrice * item.quantity : null;
+}
+
+function getPackItemPreview(pack: TrayPackItem) {
+  return pack.items.slice(0, 4);
+}
+
+function FulfilmentIcon({ option }: { option: FulfilmentOption }) {
+  if (option === "school_collection") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2 2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5" />
+      </svg>
+    );
+  }
+
+  if (option === "home_delivery") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="1" y="3" width="15" height="13" rx="2" />
+        <path d="M16 8h4l3 3v5h-7V8Z" />
+        <circle cx="5.5" cy="18.5" r="2.5" />
+        <circle cx="18.5" cy="18.5" r="2.5" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="M3 10h18M7 15h4" />
+    </svg>
+  );
+}
+
 export function TrayCheckoutClient() {
   const router = useRouter();
   const packs = usePackTrayStore((s) => s.packs);
-  const clearPacks = usePackTrayStore((s) => s.clearPacks);
   const openTray = usePackTrayStore((s) => s.openTray);
   const updatePackDetails = usePackTrayStore((s) => s.updatePackDetails);
 
+  const [expandedPacks, setExpandedPacks] = useState<Record<string, boolean>>({});
   const [editNameIndex, setEditNameIndex] = useState<number | null>(null);
   const [learnerInputs, setLearnerInputs] = useState<string[]>(
     () => packs.map((p) => p.learnerName || "")
   );
+
+  const [fullName, setFullName] = useState("");
+  const [buyerPhone, setBuyerPhone] = useState("");
+  const [buyerEmail, setBuyerEmail] = useState("");
+  const [preferredContactMethod, setPreferredContactMethod] =
+    useState<ContactMethod>("whatsapp");
+  const [consent, setConsent] = useState(false);
+
+  const [fulfilmentOption, setFulfilmentOption] =
+    useState<FulfilmentOption>("school_collection");
+  const [multiSchoolDrop, setMultiSchoolDrop] = useState<string | null>(null);
+  const [address, setAddress] = useState("");
+  const [suburb, setSuburb] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [deliveryNotes, setDeliveryNotes] = useState("");
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const fieldRefs = useRef<Record<string, HTMLInputElement | HTMLTextAreaElement | null>>({});
+
+  const total = useMemo(() => calculateTrayTotal(packs), [packs]);
+
+  const uniqueSchools = useMemo(() => {
+    const map = new Map<string, { name: string; slug: string }>();
+    packs.forEach((p) => {
+      if (p.schoolSlug && p.schoolName && !map.has(p.schoolSlug)) {
+        map.set(p.schoolSlug, { name: p.schoolName, slug: p.schoolSlug });
+      }
+    });
+    return Array.from(map.values());
+  }, [packs]);
+
+  const isSingleSchool = uniqueSchools.length <= 1;
+  const deliveryExpanded = fulfilmentOption === "home_delivery";
+  const canSubmit = packs.length > 0 && total > 0 && !submitting;
+
+  useEffect(() => {
+    setLearnerInputs((prev) => {
+      if (prev.length === packs.length) return prev;
+      return packs.map((pack, index) => prev[index] ?? pack.learnerName ?? "");
+    });
+  }, [packs]);
+
+  useEffect(() => {
+    if (isSingleSchool && fulfilmentOption === "school_collection") {
+      setMultiSchoolDrop(uniqueSchools[0]?.slug ?? null);
+    }
+  }, [fulfilmentOption, isSingleSchool, uniqueSchools]);
+
+  const deliveryAddressSummary = useMemo(() => {
+    return [address, suburb, city, province, postalCode]
+      .filter(Boolean)
+      .join(", ");
+  }, [address, suburb, city, province, postalCode]);
 
   const handleLearnerNameChange = useCallback(
     (index: number, value: string) => {
@@ -69,7 +205,7 @@ export function TrayCheckoutClient() {
       const pack = packs[index];
       if (!pack) return;
       const name = learnerInputs[index]?.trim() || "";
-      if (name && name !== (pack.learnerName || "")) {
+      if (name !== (pack.learnerName || "")) {
         updatePackDetails(pack.id, name, pack.wantsPexcover || false);
       }
       setEditNameIndex(null);
@@ -99,54 +235,6 @@ export function TrayCheckoutClient() {
     router.back();
   }, [openTray, router]);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [buyerPhone, setBuyerPhone] = useState("");
-  const [buyerEmail, setBuyerEmail] = useState("");
-  const [preferredContactMethod] =
-    useState<ContactMethod>("whatsapp");
-  const [consent, setConsent] = useState(false);
-
-  const [fulfilmentOption, setFulfilmentOption] =
-    useState<FulfilmentOption>("School collection");
-  const [multiSchoolDrop, setMultiSchoolDrop] = useState<string | null>(null);
-  const [address, setAddress] = useState("");
-  const [suburb, setSuburb] = useState("");
-  const [city, setCity] = useState("");
-  const [province, setProvince] = useState("");
-  const [postalCode, setPostalCode] = useState("");
-  const [deliveryNotes, setDeliveryNotes] = useState("");
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-
-  const total = useMemo(() => calculateTrayTotal(packs), [packs]);
-
-  const uniqueSchools = useMemo(() => {
-    const map = new Map<string, { name: string; slug: string }>();
-    packs.forEach((p) => {
-      if (p.schoolSlug && p.schoolName && !map.has(p.schoolSlug)) {
-        map.set(p.schoolSlug, { name: p.schoolName, slug: p.schoolSlug });
-      }
-    });
-    return Array.from(map.values());
-  }, [packs]);
-
-  const isSingleSchool = uniqueSchools.length <= 1;
-
-  useEffect(() => {
-    if (isSingleSchool) {
-      setFulfilmentOption("School collection");
-    }
-  }, [isSingleSchool]);
-
-  const deliveryAddressSummary = useMemo(() => {
-    return [address, suburb, city, province, postalCode]
-      .filter(Boolean)
-      .join(", ");
-  }, [address, suburb, city, province, postalCode]);
-
   function clearFieldError(field: string) {
     setErrors((prev) => {
       if (!prev[field]) return prev;
@@ -159,15 +247,14 @@ export function TrayCheckoutClient() {
   function validate(): boolean {
     const nextErrors: Record<string, string> = {};
 
-    if (!firstName.trim() || firstName.trim().length < 2)
-      nextErrors.firstName = "Please enter your first name.";
-    if (!lastName.trim() || lastName.trim().length < 2)
-      nextErrors.lastName = "Please enter your surname.";
+    if (packs.length === 0) nextErrors.packs = "Choose a school pack before checkout.";
+    if (total <= 0) nextErrors.total = "Your order total must be greater than zero.";
+    if (!fullName.trim() || fullName.trim().length < 2)
+      nextErrors.fullName = "Please enter your full name.";
     if (!buyerPhone.trim())
       nextErrors.buyerPhone = "Please enter your phone number.";
     else if (!isLikelySaPhone(buyerPhone))
-      nextErrors.buyerPhone =
-        "Please enter a valid South African phone number.";
+      nextErrors.buyerPhone = "Please enter a valid South African phone number.";
     if (!buyerEmail.trim())
       nextErrors.buyerEmail = "Please enter your email address.";
     else if (!isValidEmail(buyerEmail.trim()))
@@ -179,39 +266,40 @@ export function TrayCheckoutClient() {
       }
     }
 
-    if (fulfilmentOption === "Delivery") {
+    if (deliveryExpanded) {
       if (!address.trim()) nextErrors.address = "Please enter the delivery address.";
       if (!suburb.trim()) nextErrors.suburb = "Please enter the suburb.";
       if (!city.trim()) nextErrors.city = "Please enter the city.";
       if (!province.trim()) nextErrors.province = "Please enter the province.";
     }
 
-    if (fulfilmentOption === "School collection" && uniqueSchools.length > 1 && !multiSchoolDrop) {
+    if (fulfilmentOption === "school_collection" && uniqueSchools.length > 1 && !multiSchoolDrop) {
       nextErrors.multiSchoolDrop = "Select which school the box should be dropped at.";
     }
     if (!consent)
       nextErrors.consent = "Please accept the order processing consent.";
 
     setErrors(nextErrors);
+
+    const firstError = Object.keys(nextErrors)[0];
+    if (firstError) {
+      fieldRefs.current[firstError]?.focus();
+    }
+
     return Object.keys(nextErrors).length === 0;
   }
 
   async function handlePay() {
+    if (submitting) return;
     if (!validate()) return;
 
     setSubmitError(null);
     setSubmitting(true);
 
-
-
     const notes = [
       deliveryNotes.trim() ? `Notes: ${deliveryNotes.trim()}` : "",
-      fulfilmentOption === "Delivery"
-        ? `Address: ${deliveryAddressSummary}`
-        : "",
-      preferredContactMethod
-        ? `Preferred contact: ${preferredContactMethod}`
-        : "",
+      deliveryExpanded ? `Address: ${deliveryAddressSummary}` : "",
+      preferredContactMethod ? `Preferred contact: ${preferredContactMethod}` : "",
     ]
       .filter(Boolean)
       .join(" | ");
@@ -221,7 +309,7 @@ export function TrayCheckoutClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          buyerName: `${firstName.trim()} ${lastName.trim()}`.trim(),
+          buyerName: fullName.trim(),
           buyerEmail: buyerEmail.trim().toLowerCase(),
           buyerPhone: normalisePhone(buyerPhone),
           packs: packs.map((pack, pi) => ({
@@ -245,12 +333,7 @@ export function TrayCheckoutClient() {
           })),
           isTrayOrder: true,
           estimatedTotal: total,
-          deliveryMethod:
-            fulfilmentOption === "School collection"
-              ? "school_collection"
-              : fulfilmentOption === "Delivery"
-                ? "delivery"
-                : "collection_point",
+          deliveryMethod: fulfilmentToApiMethod(fulfilmentOption),
           primarySchoolSlug:
             uniqueSchools.length > 1
               ? multiSchoolDrop
@@ -269,7 +352,6 @@ export function TrayCheckoutClient() {
         throw new Error(msg);
       }
 
-      clearPacks();
       window.location.href = result.checkoutUrl;
     } catch (error) {
       setSubmitError(
@@ -285,14 +367,13 @@ export function TrayCheckoutClient() {
   if (packs.length === 0) {
     return (
       <div className={styles.checkoutShell}>
-        <div className={styles.checkoutGrid}>
-          <div className={styles.stepCard}>
-            <h1>No packs in your order</h1>
-            <p>Add a school pack before checking out.</p>
-            <Link href="/schools" className={styles.backLink}>
-              Find a school pack
-            </Link>
-          </div>
+        <div className={styles.emptyCheckout}>
+          <p className={styles.checkoutKicker}>Checkout</p>
+          <h1>No packs in your order.</h1>
+          <p>Choose a school pack before checkout.</p>
+          <Button href="/schools" variant="primary" size="lg">
+            Find a school pack
+          </Button>
         </div>
       </div>
     );
@@ -300,432 +381,334 @@ export function TrayCheckoutClient() {
 
   return (
     <div className={styles.checkoutShell}>
-      <div className={styles.checkoutHeader}>
+      <header className={styles.checkoutHeader}>
         <button
           type="button"
           className={styles.backToOrder}
           onClick={handleBackToOrder}
         >
-          Back to Order
+          Back to order
         </button>
+        <Link href="/" className={styles.checkoutLogo} aria-label="Pexpacks home">
+          PexPacks
+        </Link>
         <a
-          href={`https://wa.me/27763456622?text=Hi Pexpacks, I need help with checkout.`}
+          href="https://wa.me/27763456622?text=Hi Pexpacks, I need help with checkout."
           target="_blank"
           rel="noopener noreferrer"
           className={styles.helpLink}
         >
-          Need Help?
+          Need help?
         </a>
-      </div>
+      </header>
 
-      <div className={styles.checkoutGrid}>
-        <div className={styles.mainColumn}>
-          <section className={styles.stepCard}>
-            <div className={styles.stepIntro}>
-              <h1 tabIndex={-1}>Complete Your Order</h1>
-              <p>
-                Review all packs, enter your details, and pay securely once.
-              </p>
-            </div>
+      <main className={styles.checkoutGrid}>
+        <form className={styles.mainColumn} aria-label="Checkout details" onSubmit={(e) => e.preventDefault()}>
+          <section className={`${styles.stepCard} ${styles.checkoutHero}`}>
+            <p className={styles.checkoutKicker}>Checkout</p>
+            <h1 tabIndex={-1}>Review your packs and pay securely.</h1>
+            <p>
+              Add your details, choose delivery or collection, and continue to the secure Paystack payment page.
+            </p>
+          </section>
 
-            {/* Learner Packs Review */}
-            <div style={{ display: "grid", gap: 16, marginBottom: 28 }}>
-              <h2 style={{ color: "var(--pex-primary)", fontFamily: "var(--font-heading)", fontSize: "1.2rem", margin: 0 }}>
-                Learner Packs ({packs.length})
-              </h2>
-              {packs.map((pack, index) => (
-                <div
-                  key={pack.id}
-                  style={{
-                    padding: 16,
-                    border: "1px solid var(--pex-border)",
-                    borderRadius: "var(--radius-card)",
-                    background: "var(--pex-bg-soft)",
-                  }}
-                >
-                  <div style={{ display: "grid", gap: 8 }}>
-                    {/* School Name & Grade (Priority 1) */}
-                    <div>
-                      {pack.schoolName ? (
-                        <h3 style={{ margin: 0, color: "var(--pex-navy)", fontSize: 18, fontWeight: 900, fontFamily: "var(--font-heading)", lineHeight: 1.25 }}>
-                          {pack.schoolName}
-                        </h3>
-                      ) : null}
-                      {pack.grade ? (
-                        <span style={{ color: "var(--pex-keppel)", fontSize: 13, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.5px", marginTop: 2, display: "block" }}>
-                          {pack.grade}
-                        </span>
-                      ) : null}
-                    </div>
-
-                    {/* Learner Name (Priority 2) */}
-                    <div style={{ display: "grid", gap: 4 }}>
-                      <p style={{ margin: 0, color: "var(--pex-text-muted)", fontSize: 12, fontWeight: 750, textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                        Learner {index + 1}
-                      </p>
-                      {editNameIndex === index ? (
-                        <Input
-                          type="text"
-                          value={learnerInputs[index] || ""}
-                          onChange={(e) => handleLearnerNameChange(index, e.target.value)}
-                          onBlur={() => handleLearnerNameBlur(index)}
-                          onKeyDown={(e) => handleLearnerNameKeyDown(e, index)}
-                          placeholder="Enter Learner Name"
-                          aria-label={`Learner ${index + 1} name`}
-                          autoFocus
-                          style={{
-                            fontSize: 15,
-                            fontWeight: 700,
-                            textTransform: "capitalize",
-                            color: "var(--pex-primary)",
-                            border: "2px solid var(--pex-keppel)",
-                            borderRadius: "var(--radius-input)",
-                            padding: "6px 10px",
-                            background: "#fff",
-                            width: "100%",
-                            boxSizing: "border-box",
-                          }}
-                        />
-                      ) : (
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <span style={{ color: learnerInputs[index]?.trim() ? "var(--pex-primary)" : "var(--pex-text-muted)", fontSize: 15, fontWeight: 700, textTransform: "capitalize" }}>
-                            {learnerInputs[index]?.trim() || "Enter Learner Name"}
-                          </span>
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            className="rounded-full"
-                            style={{ padding: 6, minWidth: 32, minHeight: 32, height: 32, width: 32 }}
-                            onClick={() => setEditNameIndex(index)}
-                            ariaLabel={`Edit learner ${index + 1} name`}
-                          >
-                            <svg viewBox="0 0 24 24" width={14} height={14} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                            </svg>
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Pack Info & Pexcover Addon */}
-                    <div style={{ display: "grid", gap: 2 }}>
-                      <span style={{ color: "var(--pex-text-muted)", fontSize: 13 }}>
-                        {pack.packName} &middot; {pack.packMode === "full" ? "Full Pack" : "Customised"} &middot; {pack.items.length} {pack.items.length === 1 ? "item" : "items"}
-                      </span>
-                      {pack.wantsPexcover ? (
-                        <span style={{ color: "var(--pex-keppel)", fontSize: 13, fontWeight: 700 }}>
-                          ✓ Includes Pexcover Book Covering (+{formatCurrency(PEXCOVER_PRICE)})
-                        </span>
-                      ) : null}
-                    </div>
-
-                    {/* Line Item Total */}
-                    <strong style={{ color: "var(--pex-coral)", fontSize: 18 }}>
-                      {formatCurrency(pack.totalPrice + (pack.wantsPexcover ? PEXCOVER_PRICE : 0))}
-                    </strong>
-                  </div>
-                </div>
-              ))}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "12px 0",
-                  borderTop: "2px solid var(--pex-coral)",
-                  fontWeight: 900,
-                  fontSize: 20,
-                  color: "var(--pex-primary)",
-                }}
-              >
-                <span>Combined total</span>
-                <span style={{ color: "var(--pex-coral)" }}>{formatCurrency(total)}</span>
+          <section className={styles.checkoutSection} aria-labelledby="customer-details-heading">
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionNumber}>1</span>
+              <div>
+                <h2 id="customer-details-heading">Your details</h2>
+                <p>We use these details for order updates and delivery or collection support.</p>
               </div>
             </div>
-
-            {/* Customer Details */}
-            <h2 style={{ color: "var(--pex-primary)", fontFamily: "var(--font-heading)", fontSize: "1.2rem", margin: "0 0 16px" }}>
-              Customer Details
-            </h2>
             <div className={styles.formGrid}>
               <Input
-                id="firstName"
-                label="First name"
+                id="fullName"
+                ref={(node) => {
+                  fieldRefs.current.fullName = node;
+                }}
+                label="Full name"
+                helper="We use this to confirm your order and payment updates."
                 type="text"
-                value={firstName}
-                onChange={(e) => { setFirstName(e.target.value); clearFieldError("firstName"); }}
-                placeholder="Enter first name"
-                error={errors.firstName}
-                autoComplete="given-name"
+                value={fullName}
+                onChange={(e) => {
+                  setFullName(e.target.value);
+                  clearFieldError("fullName");
+                }}
+                placeholder="e.g. Sarah Dlamini"
+                error={errors.fullName}
+                autoComplete="name"
               />
-              <Input
-                id="lastName"
-                label="Surname"
-                type="text"
-                value={lastName}
-                onChange={(e) => { setLastName(e.target.value); clearFieldError("lastName"); }}
-                placeholder="Enter surname"
-                error={errors.lastName}
-                autoComplete="family-name"
-              />
-
               <Input
                 id="buyerPhone"
+                ref={(node) => {
+                  fieldRefs.current.buyerPhone = node;
+                }}
                 label="Phone number"
+                helper="WhatsApp or call is fastest for support."
                 type="tel"
                 value={buyerPhone}
-                onChange={(e) => { setBuyerPhone(e.target.value); clearFieldError("buyerPhone"); }}
+                onChange={(e) => {
+                  setBuyerPhone(e.target.value);
+                  clearFieldError("buyerPhone");
+                }}
                 placeholder="e.g. 078 003 6048"
                 error={errors.buyerPhone}
                 autoComplete="tel"
               />
-
               <Input
                 id="buyerEmail"
+                ref={(node) => {
+                  fieldRefs.current.buyerEmail = node;
+                }}
                 label="Email address"
+                helper="Used for order updates and payment confirmation."
                 type="email"
                 value={buyerEmail}
-                onChange={(e) => { setBuyerEmail(e.target.value); clearFieldError("buyerEmail"); }}
+                onChange={(e) => {
+                  setBuyerEmail(e.target.value);
+                  clearFieldError("buyerEmail");
+                }}
                 placeholder="name@example.com"
                 error={errors.buyerEmail}
                 autoComplete="email"
               />
-
-              {/* Learner name errors */}
-              {packs.map((pack, index) => {
-                const errKey = `learner_${index}`;
-                return errors[errKey] ? (
-                  <p key={errKey} className={styles.fieldError} style={{ gridColumn: "1 / -1" }}>
-                    Learner {index + 1} ({pack.packName}): {errors[errKey]}
-                  </p>
-                ) : null;
-              })}
-            </div>
-
-            {/* Delivery */}
-            <h2 className={styles.checkoutSectionTitle}>
-              Delivery or Collection
-            </h2>
-            <div className={styles.formGrid}>
-              <div className={styles.optionFieldset} style={{ gridColumn: "1 / -1" }}>
-                <div className={styles.deliveryOptions}>
-                  {(["School collection", "Delivery", "Collection point"] as const).map((opt) => (
+              <fieldset className={styles.contactMethodGroup}>
+                <legend>Preferred contact method</legend>
+                <p>Choose how we should reach you if the order needs a quick check.</p>
+                <div className={styles.segmentedOptions}>
+                  {contactOptions.map((option) => (
                     <label
-                      key={opt}
-                      className={`${styles.deliveryOption} ${fulfilmentOption === opt ? styles.deliveryOptionSelected : ""}`}
+                      key={option.value}
+                      className={`${styles.segmentedOption} ${
+                        preferredContactMethod === option.value ? styles.segmentedOptionActive : ""
+                      }`}
                     >
-                      <Input
+                      <input
                         type="radio"
-                        name="fulfilment"
-                        value={opt}
-                        checked={fulfilmentOption === opt}
-                        onChange={() => setFulfilmentOption(opt)}
-                        className={styles.srOnly}
-                        wrapperClassName="!contents"
+                        name="preferredContactMethod"
+                        value={option.value}
+                        checked={preferredContactMethod === option.value}
+                        onChange={() => setPreferredContactMethod(option.value)}
                       />
-                      <div className={styles.deliveryIcon}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          {opt === "School collection" ? (
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                          ) : opt === "Delivery" ? (
-                            <>
-                              <rect x="1" y="3" width="15" height="13" rx="2" />
-                              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                              <circle cx="5.5" cy="18.5" r="2.5" />
-                              <circle cx="18.5" cy="18.5" r="2.5" />
-                            </>
-                          ) : (
-                            <path d="M21 10V6a2 2 0 00-2-2H5a2 2 0 00-2 2v4m18 0v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6m18 0H3" />
-                          )}
-                        </svg>
-                      </div>
-                      <div className={styles.deliveryOptionText}>
-                        <strong>{opt}</strong>
-                        <small>
-                          {opt === "School collection"
-                            ? `Collect from${isSingleSchool && uniqueSchools[0] ? ` ${uniqueSchools[0].name}` : ""}`
-                            : opt === "Delivery"
-                              ? "Deliver to your address"
-                              : "Pick up from a collection point"}
-                        </small>
-                      </div>
+                      <span>{option.label}</span>
                     </label>
                   ))}
                 </div>
+              </fieldset>
+            </div>
+            {packs.map((pack, index) => {
+              const errKey = `learner_${index}`;
+              return errors[errKey] ? (
+                <p key={errKey} className={styles.fieldError}>
+                  Learner {index + 1} ({pack.packName}): {errors[errKey]}
+                </p>
+              ) : null;
+            })}
+          </section>
+
+          <section className={styles.checkoutSection} aria-labelledby="fulfilment-heading">
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionNumber}>2</span>
+              <div>
+                <h2 id="fulfilment-heading">Delivery or collection</h2>
+                <p>Choose how you want to receive this order.</p>
               </div>
-
-              {fulfilmentOption === "School collection" && uniqueSchools.length > 1 ? (
-                <div className={styles.schoolDropoffGroup} style={{ gridColumn: "1 / -1" }}>
-                  <label className={styles.schoolDropoffLabel}>
-                    Which school should the main box be dropped at?
-                  </label>
-                  <div className={styles.schoolDropoffRow}>
-                    {uniqueSchools.map((s) => {
-                      const isSelected = multiSchoolDrop === s.slug;
-                      return (
-                        <label
-                          key={s.slug}
-                          className={`${styles.schoolDropoffCard} ${isSelected ? styles.schoolDropoffCardActive : ""}`}
-                        >
-                          <Input
-                            type="radio"
-                            name="multiSchoolDrop"
-                            value={s.slug}
-                            checked={isSelected}
-                            onChange={() => setMultiSchoolDrop(s.slug)}
-                            className={styles.schoolDropoffRadio}
-                            wrapperClassName="!contents"
-                          />
-                          <span className={styles.schoolDropoffText}>
-                            {s.name}
-                          </span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                  {errors.multiSchoolDrop ? (
-                    <p className={styles.fieldError} style={{ marginTop: 4 }}>{errors.multiSchoolDrop}</p>
-                  ) : null}
-                </div>
-              ) : null}
-
-              {fulfilmentOption === "Delivery" ? (
-                <>
-                  <div className={styles.fieldGroup}>
-                  <Input
-                    id="address"
-                    label="Street address"
-                    type="text"
-                    value={address}
-                    onChange={(e) => { setAddress(e.target.value); clearFieldError("address"); }}
-                    placeholder="e.g. 42 Main Road"
-                    error={errors.address}
-                    autoComplete="street-address"
-                  />
-                  </div>
-                  <Input
-                    id="suburb"
-                    label="Suburb"
-                    type="text"
-                    value={suburb}
-                    onChange={(e) => { setSuburb(e.target.value); clearFieldError("suburb"); }}
-                    placeholder="e.g. Gardens"
-                    error={errors.suburb}
-                  />
-                  <Input
-                    id="city"
-                    label="City"
-                    type="text"
-                    value={city}
-                    onChange={(e) => { setCity(e.target.value); clearFieldError("city"); }}
-                    placeholder="e.g. Cape Town"
-                    error={errors.city}
-                  />
-                  <Input
-                    id="province"
-                    label="Province"
-                    type="text"
-                    value={province}
-                    onChange={(e) => { setProvince(e.target.value); clearFieldError("province"); }}
-                    placeholder="e.g. Western Cape"
-                    error={errors.province}
-                  />
-                  <Input
-                    id="postalCode"
-                    label="Postal code"
-                    type="text"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
-                    placeholder="e.g. 8001"
-                    autoComplete="postal-code"
-                  />
-                </>
-              ) : null}
-
-              <Textarea
-                id="deliveryNotes"
-                label="Order notes (optional)"
-                value={deliveryNotes}
-                onChange={(e) => setDeliveryNotes(e.target.value)}
-                className={styles.orderNotesField}
-              />
             </div>
 
-            {/* Secure Payment Gateway Trust Card */}
-            <section className={styles.paymentReadyCard} style={{ marginTop: 28, marginBottom: 28 }}>
-              <div className={styles.paymentSecurityHeader}>
-                <svg className={styles.securityLockIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                <div>
-                  <p className={styles.confirmKicker}>Secure Payment Gateway</p>
-                  <h3>Confirm and pay securely with Paystack</h3>
-                </div>
+            <fieldset className={styles.optionFieldset}>
+              <legend className={styles.srOnly}>Delivery or collection method</legend>
+              <div className={styles.deliveryOptions}>
+                {fulfilmentOptions.map((option) => (
+                  <label
+                    key={option.value}
+                    className={`${styles.deliveryOption} ${
+                      fulfilmentOption === option.value ? styles.deliveryOptionSelected : ""
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="fulfilment"
+                      value={option.value}
+                      checked={fulfilmentOption === option.value}
+                      onChange={() => {
+                        setFulfilmentOption(option.value);
+                        clearFieldError("multiSchoolDrop");
+                      }}
+                    />
+                    <span className={styles.deliveryIcon}>
+                      <FulfilmentIcon option={option.value} />
+                    </span>
+                    <span className={styles.deliveryOptionText}>
+                      <strong>{option.title}</strong>
+                      <small>{option.description}</small>
+                      <em>{option.note}</em>
+                    </span>
+                  </label>
+                ))}
               </div>
-              
-              <p className={styles.paymentSubtext}>
-                A secure Paystack window will open directly on this page to process your payment. Pexpacks does not store or see your card details.
-              </p>
+            </fieldset>
 
-              <div className={styles.badgeLabelContainer}>
-                <span>Accepted Payment Methods</span>
+            {fulfilmentOption === "school_collection" && uniqueSchools.length > 1 ? (
+              <div className={styles.schoolDropoffGroup}>
+                <label className={styles.schoolDropoffLabel}>
+                  Which school should the main box be dropped at?
+                </label>
+                <div className={styles.schoolDropoffRow}>
+                  {uniqueSchools.map((school) => {
+                    const isSelected = multiSchoolDrop === school.slug;
+                    return (
+                      <label
+                        key={school.slug}
+                        className={`${styles.schoolDropoffCard} ${isSelected ? styles.schoolDropoffCardActive : ""}`}
+                      >
+                        <input
+                          type="radio"
+                          name="multiSchoolDrop"
+                          value={school.slug}
+                          checked={isSelected}
+                          onChange={() => {
+                            setMultiSchoolDrop(school.slug);
+                            clearFieldError("multiSchoolDrop");
+                          }}
+                          className={styles.schoolDropoffRadio}
+                        />
+                        <span className={styles.schoolDropoffText}>{school.name}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                {errors.multiSchoolDrop ? (
+                  <p className={styles.fieldError}>{errors.multiSchoolDrop}</p>
+                ) : null}
               </div>
+            ) : null}
 
-              <div className={styles.paymentBadgeRow}>
-                <div className={styles.paymentBadgeItem} title="Visa">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/visa.png" alt="Visa" style={{ height: 18, width: "auto" }} />
-                </div>
-                <div className={styles.paymentBadgeItem} title="Mastercard">
-                  <svg viewBox="0 0 32 20" width="28" height="18" aria-hidden="true">
-                    <circle cx="10" cy="10" r="10" fill="#EB001B" />
-                    <circle cx="22" cy="10" r="10" fill="#F79E1B" fillOpacity="0.85" />
-                    <path d="M16 10a9.98 9.98 0 0 0 2-6 9.98 9.98 0 0 0-4 6 9.98 9.98 0 0 0 2 6z" fill="#FF5F00" />
-                  </svg>
-                </div>
-                <div className={styles.paymentBadgeItem} title="Capitec Pay">
-                  <div className={styles.capitecBadge}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                      <circle cx="12" cy="12" r="11" fill="#005B94" />
-                      <path d="M12 1a11 11 0 0 1 0 22v-11z" fill="#E31B23" />
-                    </svg>
-                    <span>Capitec Pay</span>
-                  </div>
-                </div>
-                <div className={styles.paymentBadgeItem} title="SnapScan">
-                  <div className={styles.snapscanBadge}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                      <rect width="24" height="24" rx="6" fill="#1CA9E5" />
-                      <circle cx="12" cy="12" r="6" fill="none" stroke="#FFFFFF" strokeWidth="2.5" />
-                      <circle cx="12" cy="12" r="2.5" fill="#FFFFFF" />
-                      <path d="M12 6.5v2.5M12 15v2.5M6.5 12h2.5M15 12h2.5" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
-                    </svg>
-                    <span>SnapScan</span>
-                  </div>
-                </div>
-                <div className={styles.paymentBadgeItem} title="Instant EFT">
-                  <div className={styles.eftBadge}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <rect x="2" y="5" width="20" height="14" rx="2" />
-                      <line x1="2" y1="10" x2="22" y2="10" />
-                    </svg>
-                    <span>Instant EFT</span>
-                  </div>
-                </div>
+            {deliveryExpanded ? (
+              <div className={styles.addressPanel}>
+                <Input
+                  id="address"
+                  ref={(node) => {
+                    fieldRefs.current.address = node;
+                  }}
+                  label="Address line"
+                  type="text"
+                  value={address}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                    clearFieldError("address");
+                  }}
+                  placeholder="e.g. 42 Main Road"
+                  error={errors.address}
+                  autoComplete="street-address"
+                />
+                <Input
+                  id="suburb"
+                  ref={(node) => {
+                    fieldRefs.current.suburb = node;
+                  }}
+                  label="Suburb"
+                  type="text"
+                  value={suburb}
+                  onChange={(e) => {
+                    setSuburb(e.target.value);
+                    clearFieldError("suburb");
+                  }}
+                  placeholder="e.g. Gardens"
+                  error={errors.suburb}
+                />
+                <Input
+                  id="city"
+                  ref={(node) => {
+                    fieldRefs.current.city = node;
+                  }}
+                  label="City"
+                  type="text"
+                  value={city}
+                  onChange={(e) => {
+                    setCity(e.target.value);
+                    clearFieldError("city");
+                  }}
+                  placeholder="e.g. Cape Town"
+                  error={errors.city}
+                />
+                <Input
+                  id="province"
+                  ref={(node) => {
+                    fieldRefs.current.province = node;
+                  }}
+                  label="Province"
+                  type="text"
+                  value={province}
+                  onChange={(e) => {
+                    setProvince(e.target.value);
+                    clearFieldError("province");
+                  }}
+                  placeholder="e.g. Western Cape"
+                  error={errors.province}
+                />
+                <Input
+                  id="postalCode"
+                  label="Postal code"
+                  type="text"
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
+                  placeholder="e.g. 8001"
+                  autoComplete="postal-code"
+                />
               </div>
-            </section>
+            ) : null}
 
-            {/* Consent checkbox placed directly before pay button */}
-            <div className={styles.consentField} style={{ marginTop: 20, marginBottom: 20 }}>
-              <Input
+            <Textarea
+              id="deliveryNotes"
+              label="Delivery notes (optional)"
+              helper="Add gate codes, collection notes, or anything the PexPacks team should know."
+              value={deliveryNotes}
+              onChange={(e) => setDeliveryNotes(e.target.value)}
+              rows={4}
+            />
+          </section>
+
+          <section className={styles.checkoutSection} aria-labelledby="payment-heading">
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionNumber}>3</span>
+              <div>
+                <h2 id="payment-heading">Secure payment</h2>
+                <p>You will continue to Paystack to complete payment. PexPacks does not store your card details.</p>
+              </div>
+            </div>
+            <div className={styles.paymentConfirmationGrid}>
+              <div className={styles.paymentFact}>
+                <span>Total to pay</span>
+                <strong>{formatCurrency(total)}</strong>
+              </div>
+              <div className={styles.paymentFact}>
+                <span>Status</span>
+                <strong>Pending payment</strong>
+              </div>
+              <div className={styles.paymentFact}>
+                <span>Provider</span>
+                <strong>Paystack</strong>
+              </div>
+            </div>
+            <p className={styles.paymentSecurityNote}>
+              We only use your details to process your order, payment updates, and delivery or collection support.
+            </p>
+          </section>
+
+          <section className={styles.consentCard} aria-label="Consent">
+            <label className={styles.consentField}>
+              <input
+                ref={(node) => {
+                  fieldRefs.current.consent = node;
+                }}
                 type="checkbox"
                 id="consent"
                 checked={consent}
-                onChange={(e) => { setConsent(e.target.checked); clearFieldError("consent"); }}
+                onChange={(e) => {
+                  setConsent(e.target.checked);
+                  clearFieldError("consent");
+                }}
                 aria-invalid={!!errors.consent}
-                className="!w-5 !h-5 !min-h-0"
-                wrapperClassName="!contents"
               />
               <span>
                 I agree that Pexpacks may process my personal information to complete this order, send payment and order updates, and contact me about delivery or collection. I have read and agree to the{" "}
@@ -733,36 +716,159 @@ export function TrayCheckoutClient() {
                 <a href="/terms" target="_blank">terms of use</a>,{" "}
                 <a href="/delivery-policy" target="_blank">delivery policy</a>, and{" "}
                 <a href="/returns-refunds-policy" target="_blank">returns &amp; refunds policy</a>.
-                {errors.consent ? <small style={{ color: "var(--pex-error)", display: "block", marginTop: 4 }}>{errors.consent}</small> : null}
               </span>
+            </label>
+            {errors.consent ? <p className={styles.fieldError}>{errors.consent}</p> : null}
+          </section>
+
+          {submitError ? (
+            <p className={styles.formStatusError} role="alert">
+              {submitError}
+            </p>
+          ) : null}
+        </form>
+
+        <aside className={styles.summaryColumn} aria-labelledby="order-summary-heading">
+          <div className={styles.summaryCard}>
+            <div className={styles.summaryHeader}>
+              <div>
+                <p className={styles.checkoutKicker}>Your order</p>
+                <h2 id="order-summary-heading">Order summary</h2>
+              </div>
+              <span>{packs.length} {packs.length === 1 ? "pack" : "packs"}</span>
             </div>
 
-            {/* Submit error */}
-            {submitError ? (
-              <p className={styles.formStatusError} role="alert" style={{ marginTop: 20 }}>
-                {submitError}
+            <div className={styles.orderSummaryList}>
+              {packs.map((pack, index) => {
+                const isExpanded = !!expandedPacks[pack.id];
+                const previewItems = getPackItemPreview(pack);
+                const hiddenCount = Math.max(pack.items.length - previewItems.length, 0);
+                return (
+                  <article key={pack.id} className={styles.orderPackCard}>
+                    <div className={styles.orderPackTop}>
+                      <div>
+                        <span className={styles.orderPackLearnerLabel}>Learner {index + 1}</span>
+                        {editNameIndex === index ? (
+                          <Input
+                            type="text"
+                            value={learnerInputs[index] || ""}
+                            onChange={(e) => handleLearnerNameChange(index, e.target.value)}
+                            onBlur={() => handleLearnerNameBlur(index)}
+                            onKeyDown={(e) => handleLearnerNameKeyDown(e, index)}
+                            placeholder="Learner name"
+                            aria-label={`Learner ${index + 1} name`}
+                            autoFocus
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            className={styles.orderPackLearnerValue}
+                            onClick={() => setEditNameIndex(index)}
+                            aria-label={`Edit learner ${index + 1} name`}
+                          >
+                            {learnerInputs[index]?.trim() || "Add learner name"}
+                          </button>
+                        )}
+                      </div>
+                      <strong className={styles.orderPackPrice}>{formatCurrency(getPackTotal(pack))}</strong>
+                    </div>
+
+                    <div className={styles.orderPackBody}>
+                      <h3>{pack.packName}</h3>
+                      <p>{pack.schoolName || "School pack"}{pack.grade ? ` · ${pack.grade}` : ""}</p>
+                      <div className={styles.orderPackBadges}>
+                        <span>{pack.packMode === "full" ? "Full pack" : "Customised"}</span>
+                        <span>{pack.items.length} {pack.items.length === 1 ? "item" : "items"}</span>
+                        {pack.wantsPexcover ? <span>Pexcover</span> : null}
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={styles.itemsToggle}
+                      aria-expanded={isExpanded}
+                      aria-controls={`pack-items-${pack.id}`}
+                      onClick={() =>
+                        setExpandedPacks((prev) => ({
+                          ...prev,
+                          [pack.id]: !prev[pack.id],
+                        }))
+                      }
+                    >
+                      <span>{isExpanded ? "Hide items" : "View items"}</span>
+                      <span aria-hidden="true">{isExpanded ? "-" : "+"}</span>
+                    </button>
+
+                    {isExpanded ? (
+                      <ul id={`pack-items-${pack.id}`} className={styles.itemisedList}>
+                        {previewItems.map((item, itemIndex) => {
+                          const lineTotal = getItemLineTotal(item);
+                          return (
+                            <li key={`${pack.id}-${item.name}-${itemIndex}`}>
+                              <span>{item.name}</span>
+                              <span>Qty {item.quantity}</span>
+                              {lineTotal !== null ? <strong>{formatCurrency(lineTotal)}</strong> : null}
+                            </li>
+                          );
+                        })}
+                        {hiddenCount > 0 ? (
+                          <li className={styles.itemisedMore}>+ {hiddenCount} more items in this pack</li>
+                        ) : null}
+                      </ul>
+                    ) : null}
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className={styles.summaryTotals}>
+              <div>
+                <span>Pack subtotal</span>
+                <strong>{formatCurrency(total)}</strong>
+              </div>
+              <div>
+                <span>Delivery fee</span>
+                <strong>To confirm</strong>
+              </div>
+              <div className={styles.summaryGrandTotal}>
+                <span>Final amount</span>
+                <strong>{formatCurrency(total)}</strong>
+              </div>
+            </div>
+
+            {errors.packs || errors.total ? (
+              <p className={styles.formStatusError} role="alert">
+                {errors.packs || errors.total}
               </p>
             ) : null}
 
-            {/* Pay button */}
-            <div className={styles.payButtonWrapper} style={{ marginTop: 24 }}>
-              <Button
-                type="button"
-                variant="primary"
-                size="lg"
-                className={styles.fullWidth}
-                onClick={handlePay}
-                disabled={submitting}
-                aria-busy={submitting}
-              >
-                {submitting
-                  ? "Preparing secure checkout..."
-                  : `Pay Securely ${formatCurrency(total)}`}
-              </Button>
-            </div>
-          </section>
-        </div>
-      </div>
+            <Button
+              type="button"
+              variant="primary"
+              size="lg"
+              className={styles.fullWidth}
+              onClick={handlePay}
+              disabled={!canSubmit}
+              aria-busy={submitting}
+            >
+              {submitting ? "Preparing secure payment..." : "Pay securely with Paystack"}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              className={styles.fullWidth}
+              onClick={handleBackToOrder}
+            >
+              Edit order
+            </Button>
+
+            <p className={styles.summarySecurity}>
+              Secure payment powered by Paystack. PexPacks never stores card details.
+            </p>
+          </div>
+        </aside>
+      </main>
 
       <div className={styles.mobileStickyCta}>
         <Button
@@ -770,11 +876,10 @@ export function TrayCheckoutClient() {
           variant="primary"
           className={styles.fullWidth}
           onClick={handlePay}
-          disabled={submitting}
+          disabled={!canSubmit}
+          aria-busy={submitting}
         >
-          {submitting
-            ? "Preparing..."
-            : `Pay Securely ${formatCurrency(total)}`}
+          {submitting ? "Preparing..." : `Pay securely ${formatCurrency(total)}`}
         </Button>
       </div>
     </div>
