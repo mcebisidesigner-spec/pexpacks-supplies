@@ -104,7 +104,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <section className={sectionStyles.socialProofSection} aria-labelledby="home-social-proof-heading">
+      <section id="social-proof" className={sectionStyles.socialProofSection} aria-labelledby="home-social-proof-heading">
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.socialProofPanel}>
             <div className={sectionStyles.socialProofMedia}>
