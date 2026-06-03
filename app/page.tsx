@@ -110,7 +110,7 @@ export default function HomePage() {
             <div className={sectionStyles.socialProofMedia}>
               <Image
                 src="/images/pex-stationery-box.webp"
-                alt="Happy learners holding Pexpacks branded stationery boxes outside school"
+                alt="Learners holding Pexpacks Stationery Box"
                 fill
                 priority
                 quality={95}
@@ -130,7 +130,7 @@ export default function HomePage() {
                 Real packs. Real schools. Real peace of mind.
               </h2>
               <blockquote>
-                &ldquo;Pexpacks saved me a chaotic Saturday morning at the mall. The customised pack was perfect.&rdquo;
+                &ldquo; Pexpacks delivered the exact pack our daughter needed. List accurate and delivered timeously. Saved us from the usual December mall chaos.&rdquo;
               </blockquote>
               <p className={sectionStyles.socialProofAuthor}>
                 Sarah, Grade 4 Parent
