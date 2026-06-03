@@ -130,10 +130,10 @@ export default function HomePage() {
                 Real packs. Real schools. Real peace of mind.
               </h2>
               <blockquote>
-                &ldquo; Pexpacks delivered the exact pack our daughter needed. List accurate and delivered timeously. Saved us from the usual December mall chaos.&rdquo;
+                &ldquo; Pexpacks delivered the exact pack our daughter needed. List accurate and delivered timeously.&rdquo;
               </blockquote>
               <p className={sectionStyles.socialProofAuthor}>
-                Sarah, Grade 4 Parent
+                Sarah, Grade 10 Parent
               </p>
               <div className={sectionStyles.socialProofStats} aria-label="Pexpacks trust highlights">
                 <span>School-accurate lists</span>
