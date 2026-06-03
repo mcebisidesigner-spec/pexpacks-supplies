@@ -1,4 +1,4 @@
-import React, { SelectHTMLAttributes } from 'react';
+import React, { SelectHTMLAttributes, useId } from 'react';
 
 type SelectOption = {
   value: string;
@@ -23,17 +23,20 @@ export default function Select({
   className = '',
   ...props 
 }: SelectProps) {
+  const generatedId = useId();
+  const selectId = id ?? generatedId;
+
   return (
     <div className={`flex flex-col space-y-2 ${className}`}>
       {label && (
-        <label htmlFor={id} className="text-sm font-bold text-gray-900">
+        <label htmlFor={selectId} className="text-sm font-bold text-gray-900">
           {label}
         </label>
       )}
       
       <div className="relative">
         <select
-          id={id}
+          id={selectId}
           value={value}
           onChange={onChange}
           className={`

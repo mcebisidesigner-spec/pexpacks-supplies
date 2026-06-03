@@ -250,8 +250,9 @@ export function OrderForm() {
             
             <form onSubmit={handleSubmit} className={styles.formGrid}>
               <div className={styles.field}>
-                <label>Your Name</label>
+                <label htmlFor="quote-name">Your Name</label>
                 <input
+                  id="quote-name"
                   type="text"
                   required
                   className={`${styles.input} ${errors.form ? styles.inputError : ""}`}
@@ -264,8 +265,9 @@ export function OrderForm() {
               </div>
 
               <div className={styles.field}>
-                <label>WhatsApp Number</label>
+                <label htmlFor="quote-phone">WhatsApp Number</label>
                 <input
+                  id="quote-phone"
                   type="tel"
                   required
                   className={`${styles.input} ${errors.form ? styles.inputError : ""}`}
@@ -276,8 +278,9 @@ export function OrderForm() {
               </div>
 
               <div className={styles.field}>
-                <label>Email Address (Optional)</label>
+                <label htmlFor="quote-email">Email Address (Optional)</label>
                 <input
+                  id="quote-email"
                   type="email"
                   className={styles.input}
                   value={email}

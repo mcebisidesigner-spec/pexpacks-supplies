@@ -1,5 +1,5 @@
 import type { InputHTMLAttributes } from "react";
-import { forwardRef } from "react";
+import { forwardRef, useId } from "react";
 import styles from "./Input.module.css";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -11,11 +11,14 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, helper, error, showValid, className = "", wrapperClassName = "", ...props }, ref) => {
+  ({ label, helper, error, showValid, className = "", wrapperClassName = "", id, ...props }, ref) => {
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
+
     return (
       <div className={`${styles.wrapper} ${wrapperClassName}`}>
         {label ? (
-          <label className={styles.label} htmlFor={props.id}>
+          <label className={styles.label} htmlFor={inputId}>
             {label}
           </label>
         ) : null}
@@ -23,6 +26,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className={styles.inputWrap}>
           <input
             ref={ref}
+            id={inputId}
             className={`${styles.input} ${className}`}
             aria-invalid={error ? true : undefined}
             {...props}

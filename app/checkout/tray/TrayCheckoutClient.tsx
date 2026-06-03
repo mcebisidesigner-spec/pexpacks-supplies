@@ -546,9 +546,9 @@ export function TrayCheckoutClient() {
 
             {fulfilmentOption === "school_collection" && uniqueSchools.length > 1 ? (
               <div className={styles.schoolDropoffGroup}>
-                <label className={styles.schoolDropoffLabel}>
+                <p className={styles.schoolDropoffLabel}>
                   Which school should the main box be dropped at?
-                </label>
+                </p>
                 <div className={styles.schoolDropoffRow}>
                   {uniqueSchools.map((school) => {
                     const isSelected = multiSchoolDrop === school.slug;

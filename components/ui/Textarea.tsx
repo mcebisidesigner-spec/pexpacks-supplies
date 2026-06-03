@@ -1,4 +1,5 @@
 import type { TextareaHTMLAttributes } from "react";
+import { useId } from "react";
 import styles from "./Textarea.module.css";
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
@@ -19,17 +20,20 @@ export default function Textarea({
   className = '',
   ...props 
 }: TextareaProps) {
+  const generatedId = useId();
+  const textareaId = id ?? generatedId;
+
   return (
     <div className={`${styles.wrapper} ${className}`}>
       {label && (
-        <label htmlFor={id} className={styles.label}>
+        <label htmlFor={textareaId} className={styles.label}>
           {label}
         </label>
       )}
       {helper ? <p className={styles.helper}>{helper}</p> : null}
       
       <textarea
-        id={id}
+        id={textareaId}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
