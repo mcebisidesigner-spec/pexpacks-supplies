@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import Select from "@/components/ui/Select";
 import { endpointPathForFormType, type FormType } from "@/lib/forms/types";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import formStyles from "@/components/marketing/MarketingForms.module.css";
@@ -209,28 +210,27 @@ export function PexpacksEnquiryForm({
             />
             <FieldError id="email-error" message={errors.email} />
           </label>
-          <label className={formStyles.field}>
-            <span>Preferred contact method</span>
-            <select name="preferredContactMethod" defaultValue="whatsapp">
-              <option value="whatsapp">WhatsApp</option>
-              <option value="phone">Phone</option>
-              <option value="email">Email</option>
-            </select>
-          </label>
+          <Select
+            name="preferredContactMethod"
+            label="Preferred contact method"
+            defaultValue="whatsapp"
+            options={[
+              { value: "whatsapp", label: "WhatsApp" },
+              { value: "phone", label: "Phone" },
+              { value: "email", label: "Email" },
+            ]}
+          />
 
           {isContact ? (
-            <label className={formStyles.field}>
-              <span>Enquiry type</span>
-              <select
-                name="enquiryType"
-                value={enquiryType}
-                onChange={(e) => setEnquiryType(e.target.value)}
-              >
-                {contactOptions.map((opt) => (
-                  <option key={opt}>{opt}</option>
-                ))}
-              </select>
-            </label>
+            <Select
+              name="enquiryType"
+              label="Enquiry type"
+              value={enquiryType}
+              onChange={(event) =>
+                setEnquiryType(event.target.value as ContactOption)
+              }
+              options={contactOptions}
+            />
           ) : (
             <>
               <label className={formStyles.field}>
@@ -248,18 +248,13 @@ export function PexpacksEnquiryForm({
                   message={errors.businessName}
                 />
               </label>
-              <label className={formStyles.field}>
-                <span>Partner type</span>
-                <select
-                  name="partnerType"
-                  value={partnerType}
-                  onChange={(e) => setPartnerType(e.target.value)}
-                >
-                  {partnerOptions.map((opt) => (
-                    <option key={opt}>{opt}</option>
-                  ))}
-                </select>
-              </label>
+              <Select
+                name="partnerType"
+                label="Partner type"
+                value={partnerType}
+                onChange={(event) => setPartnerType(event.target.value)}
+                options={partnerOptions}
+              />
             </>
           )}
 

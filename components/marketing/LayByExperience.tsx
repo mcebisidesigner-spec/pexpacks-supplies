@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import Select from "@/components/ui/Select";
 import { endpointPathForFormType } from "@/lib/forms/types";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import styles from "./LayByExperience.module.css";
@@ -545,14 +546,16 @@ export function LayByExperience() {
                         required
                       />
                     </label>
-                    <label className={styles.field}>
-                      <span>Preferred contact method</span>
-                      <select name="preferredContactMethod" defaultValue="whatsapp">
-                        <option value="whatsapp">WhatsApp</option>
-                        <option value="phone">Phone call</option>
-                        <option value="email">Email</option>
-                      </select>
-                    </label>
+                    <Select
+                      name="preferredContactMethod"
+                      label="Preferred contact method"
+                      defaultValue="whatsapp"
+                      options={[
+                        { value: "whatsapp", label: "WhatsApp" },
+                        { value: "phone", label: "Phone call" },
+                        { value: "email", label: "Email" },
+                      ]}
+                    />
                     <label className={`${styles.field} ${styles.formWide}`}>
                       <span>Residential address</span>
                       <input
@@ -588,23 +591,27 @@ export function LayByExperience() {
                         required
                       />
                     </label>
-                    <label className={styles.field}>
-                      <span>Add Pexcover?</span>
-                      <select name="pexcoverRequested" defaultValue="yes">
-                        <option value="yes">Yes, include book covering</option>
-                        <option value="no">No, stationery only</option>
-                        <option value="confirm">Please confirm options</option>
-                      </select>
-                    </label>
-                    <label className={styles.field}>
-                      <span>Delivery / collection preference</span>
-                      <select name="deliveryMethod" defaultValue="school-delivery">
-                        <option value="school-delivery">Deliver to school</option>
-                        <option value="home-delivery">Home delivery</option>
-                        <option value="collection">Collection</option>
-                        <option value="confirm">Confirm with me</option>
-                      </select>
-                    </label>
+                    <Select
+                      name="pexcoverRequested"
+                      label="Add Pexcover?"
+                      defaultValue="yes"
+                      options={[
+                        { value: "yes", label: "Yes, include book covering" },
+                        { value: "no", label: "No, stationery only" },
+                        { value: "confirm", label: "Please confirm options" },
+                      ]}
+                    />
+                    <Select
+                      name="deliveryMethod"
+                      label="Delivery / collection preference"
+                      defaultValue="school-delivery"
+                      options={[
+                        { value: "school-delivery", label: "Deliver to school" },
+                        { value: "home-delivery", label: "Home delivery" },
+                        { value: "collection", label: "Collection" },
+                        { value: "confirm", label: "Confirm with me" },
+                      ]}
+                    />
                   </div>
                 </fieldset>
 
@@ -632,23 +639,18 @@ export function LayByExperience() {
                         required
                       />
                     </label>
-                    <label className={styles.field}>
-                      <span>Preferred payment term</span>
-                      <select name="paymentTerm" defaultValue="5 months">
-                        <option>3 months</option>
-                        <option>4 months</option>
-                        <option>5 months</option>
-                      </select>
-                    </label>
-                    <label className={styles.field}>
-                      <span>Preferred monthly payment date</span>
-                      <select name="debitDate" defaultValue="25th">
-                        <option>1st</option>
-                        <option>15th</option>
-                        <option>25th</option>
-                        <option>Last working day</option>
-                      </select>
-                    </label>
+                    <Select
+                      name="paymentTerm"
+                      label="Preferred payment term"
+                      defaultValue="5 months"
+                      options={["3 months", "4 months", "5 months"]}
+                    />
+                    <Select
+                      name="debitDate"
+                      label="Preferred monthly payment date"
+                      defaultValue="25th"
+                      options={["1st", "15th", "25th", "Last working day"]}
+                    />
                     <label className={`${styles.field} ${styles.formWide}`}>
                       <span>Notes for Pexpacks</span>
                       <textarea

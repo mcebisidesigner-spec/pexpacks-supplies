@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import Select from "@/components/ui/Select";
 import type { OfficePack } from "@/data/officePacks";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { endpointPathForFormType } from "@/lib/forms/types";
@@ -570,23 +571,18 @@ export function OfficeQuoteExperience({
                     ))}
                   </ul>
                   <div className={officeStyles.addItemRow}>
-                    <select
+                    <Select
                       value={selectedItemOption}
                       onChange={(event) =>
                         setSelectedItemOption(event.target.value)
                       }
                       aria-label="Choose an office stationery item to add"
-                    >
-                      {itemOptions.map((item) => (
-                        <option
-                          key={item}
-                          value={item}
-                          disabled={items.includes(item)}
-                        >
-                          {item}
-                        </option>
-                      ))}
-                    </select>
+                      options={itemOptions.map((item) => ({
+                        value: item,
+                        label: item,
+                        disabled: items.includes(item),
+                      }))}
+                    />
                     <button type="button" onClick={() => addItem()}>
                       Add selected item
                     </button>
@@ -701,17 +697,16 @@ export function OfficeQuoteExperience({
                     />
                     <FieldError id="email-error" message={errors.email} />
                   </label>
-                  <label className={formStyles.field}>
-                    <span>Preferred contact method</span>
-                    <select
-                      name="preferredContactMethod"
-                      defaultValue="whatsapp"
-                    >
-                      <option value="whatsapp">WhatsApp</option>
-                      <option value="phone">Phone</option>
-                      <option value="email">Email</option>
-                    </select>
-                  </label>
+                  <Select
+                    name="preferredContactMethod"
+                    label="Preferred contact method"
+                    defaultValue="whatsapp"
+                    options={[
+                      { value: "whatsapp", label: "WhatsApp" },
+                      { value: "phone", label: "Phone" },
+                      { value: "email", label: "Email" },
+                    ]}
+                  />
                   <label className={formStyles.field}>
                     <span>Quantity</span>
                     <input

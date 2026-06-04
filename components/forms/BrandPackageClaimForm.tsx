@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/Button";
+import Select from "@/components/ui/Select";
 import { endpointPathForFormType } from "@/lib/forms/types";
 import { createClient } from "@/lib/supabase/client";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
@@ -219,14 +220,16 @@ export function BrandPackageClaimForm() {
             <FieldError id="email-error" message={errors.email} />
           </label>
 
-          <label className={formStyles.field}>
-            <span>Preferred contact method</span>
-            <select name="preferredContactMethod" defaultValue="whatsapp">
-              <option value="whatsapp">WhatsApp</option>
-              <option value="phone">Phone</option>
-              <option value="email">Email</option>
-            </select>
-          </label>
+          <Select
+            name="preferredContactMethod"
+            label="Preferred contact method"
+            defaultValue="whatsapp"
+            options={[
+              { value: "whatsapp", label: "WhatsApp" },
+              { value: "phone", label: "Phone" },
+              { value: "email", label: "Email" },
+            ]}
+          />
 
           <label className={formStyles.field}>
             <span>Website or social link</span>
