@@ -126,6 +126,7 @@ export default async function OfficePacksPage({
 
       <section
         className={sectionStyles.brandPackageSection}
+        id="brand-packages"
         aria-labelledby="brand-package-heading"
       >
         <div className={sectionStyles.inner}>

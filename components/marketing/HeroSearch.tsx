@@ -109,6 +109,7 @@ export function HeroSearch() {
             value={query}
             onFocus={() => {
               setIsSchoolInputFocused(true);
+              setPanelOpen(true);
             }}
             onBlur={() => setIsSchoolInputFocused(false)}
             onChange={(event) => updateQuery(event.target.value)}

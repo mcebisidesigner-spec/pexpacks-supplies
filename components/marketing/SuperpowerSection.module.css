@@ -66,11 +66,6 @@
   color: var(--pex-bg);
 }
 
-.iconWrapAccent {
-  background: var(--pex-keppel);
-  color: var(--pex-bg);
-}
-
 .number {
   position: absolute;
   top: 28px;

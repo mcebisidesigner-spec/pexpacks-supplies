@@ -110,32 +110,38 @@
   flex: 1;
   padding: 8px 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   background: var(--color-brand-teal);
   color: var(--color-surface);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 150ms ease;
+  transition: var(--button-transition);
 }
 
 .emailSubmit:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
   background: var(--color-brand-navy);
 }
 
 .emailSkip {
   padding: 8px 12px;
   border: 1px solid rgba(26, 42, 64, 0.12);
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   background: none;
   color: var(--pex-text-muted);
   font-size: 13px;
   cursor: pointer;
-  transition: color 150ms ease;
+  transition: var(--interactive-transition);
 }
 
 .emailSkip:hover {
   color: var(--pex-primary);
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
 }
 
 @media (max-width: 640px) {

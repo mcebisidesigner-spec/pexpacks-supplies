@@ -42,13 +42,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: var(--button-transition);
   pointer-events: auto;
 }
 
 .fab:hover {
-  transform: translateY(-1px) scale(1.03);
-  box-shadow: 0 14px 28px rgba(26, 42, 64, 0.2);
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
 }
 
 .fab:focus-visible {
@@ -195,16 +196,19 @@
   font-weight: 600;
   font-size: 14px;
   padding: 10px 24px;
-  border-radius: 24px;
+  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: background-color 0.2s ease;
+  transition: var(--button-transition);
   width: 100%;
   justify-content: center;
 }
 
 .startChatBtn:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
   background-color: #128C7E;
 }
 

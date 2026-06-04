@@ -89,7 +89,7 @@
   justify-content: space-between;
   min-height: 48px;
   border: 1px solid rgba(26, 42, 64, 0.08);
-  border-radius: 14px;
+  border-radius: var(--radius-pill);
   padding: 10px 12px 10px 14px;
   background: #ffffff;
   color: var(--pex-primary);
@@ -97,17 +97,15 @@
   font-size: 14px;
   font-weight: 800;
   cursor: pointer;
-  transition:
-    transform var(--motion-duration) var(--motion-ease),
-    border-color var(--motion-duration) var(--motion-ease),
-    background var(--motion-duration) var(--motion-ease),
-    color var(--motion-duration) var(--motion-ease);
+  transition: var(--button-transition);
 }
 
 .categoryRail button:hover,
 .categoryRail button:focus-visible {
   border-color: rgba(33, 158, 154, 0.32);
-  transform: translateY(-1px);
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
 }
 
 .categoryRail strong {
@@ -330,13 +328,20 @@
 .emptyState button {
   min-height: 42px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 0 16px;
   background: var(--pex-primary);
   color: #ffffff;
   font: inherit;
   font-weight: 900;
   cursor: pointer;
+  transition: var(--button-transition);
+}
+
+.emptyState button:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
 }
 
 @media (max-width: 900px) {

@@ -29,8 +29,8 @@
   width: 64px;
   height: 64px;
   border-radius: 18px;
-  background: linear-gradient(135deg, var(--pex-keppel), #146b68);
-  color: var(--pex-bg);
+  background: rgba(33, 158, 154, 0.1);
+  color: var(--pex-keppel);
   display: grid;
   place-items: center;
 }

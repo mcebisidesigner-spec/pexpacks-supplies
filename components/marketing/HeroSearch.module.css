@@ -181,10 +181,13 @@
   font-size: 12px;
   font-weight: 700;
   text-decoration: none;
-  transition: background 0.15s, color 0.15s;
+  transition: var(--button-transition);
 }
 
 .gradePill:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
   background: var(--pex-keppel);
   color: var(--pex-bg);
 }

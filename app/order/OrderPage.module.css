@@ -114,6 +114,11 @@
   line-height: 1.4;
 }
 
+.formColumn {
+  display: flex;
+  flex-direction: column;
+}
+
 .whatsappFallback {
   margin-top: 48px;
   padding-top: 32px;
@@ -347,10 +352,6 @@
   .container {
     grid-template-columns: 1fr;
     gap: 48px;
-  }
-  
-  .formCard {
-    order: -1;
   }
 }
 

@@ -57,7 +57,7 @@ export function SuperpowerSection() {
           {steps.map((step, idx) => (
             <ScrollReveal key={step.title} delay={idx * 100} as="article">
               <div className={`${styles.card} ${step.accent ? styles.cardAccent : ""}`}>
-                <div className={`${styles.iconWrap} ${step.accent ? styles.iconWrapAccent : ""}`}>
+                <div className={styles.iconWrap}>
                   {step.icon}
                 </div>
                 <div className={styles.number}>{idx + 1}</div>

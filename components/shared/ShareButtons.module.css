@@ -32,10 +32,13 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 180ms ease;
+  transition: var(--button-transition);
 }
 
 .shareBtn:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
   background: var(--pex-keppel);
   color: #fff;
   border-color: var(--pex-keppel);

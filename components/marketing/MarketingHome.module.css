@@ -86,10 +86,13 @@
   font-weight: 800;
   font-size: 15px;
   text-decoration: none;
-  transition: background 0.2s, color 0.2s;
+  transition: var(--button-transition);
 }
 
 .guaranteeLink:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
   background: var(--pex-keppel);
   color: var(--pex-bg);
 }

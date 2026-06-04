@@ -59,6 +59,12 @@ export default function OrderPage() {
             </div>
           </div>
 
+        </div>
+
+        {/* Right Side: The Form */}
+        <div className={styles.formColumn}>
+          <OrderForm />
+
           <div className={styles.whatsappFallback}>
             <p>In a rush or prefer chatting?</p>
             <Button 
@@ -72,9 +78,6 @@ export default function OrderPage() {
             </Button>
           </div>
         </div>
-
-        {/* Right Side: The Form */}
-        <OrderForm />
         
       </div>
     </main>

@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
-import { hasWhatsAppNumber, orderWhatsAppHref } from "@/data/contact";
+import {
+  generalEmail,
+  generalEmailHref,
+  hasWhatsAppNumber,
+  orderWhatsAppHref,
+  phoneHref,
+  phoneNumber,
+} from "@/data/contact";
 import { officialSocialLinks } from "@/data/social";
 import { FooterNav } from "./FooterNav";
 import styles from "./Footer.module.css";
@@ -57,6 +64,16 @@ const policyGroups = [
   },
 ] as const;
 
+function formatPhoneNumber(value: string) {
+  const digits = value.replace(/\D/g, "");
+
+  if (digits.length === 10) {
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+  }
+
+  return value;
+}
+
 function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
   if (icon === "instagram") {
     return (
@@ -90,16 +107,30 @@ export function Footer() {
   return (
     <footer className={styles.footer} id="site-footer">
       <div className={styles.footerInner}>
-        {" "}
         <div className={styles.topSection}>
-          <Link href="/" className={styles.logoLink} aria-label="Pexpacks home">
-            <Logo variant="white" className={styles.logoImage} />
-          </Link>
+          <div className={styles.brandBlock}>
+            <Link href="/" className={styles.logoLink} aria-label="Pexpacks home">
+              <Logo variant="white" className={styles.logoImage} />
+            </Link>
+          </div>
 
           <div className={styles.navGroup}>
             <FooterNav />
 
-            <details className={styles.policyDisclosure}>
+            <div className={styles.infoRow}>
+              <address className={styles.contactDetails} aria-label="Pexpacks contact details">
+                <a href={phoneHref} className={styles.contactLink}>
+                  {formatPhoneNumber(phoneNumber)}
+                </a>
+                <span className={styles.contactDivider} aria-hidden="true">
+                  |
+                </span>
+                <a href={generalEmailHref} className={styles.contactLink}>
+                  {generalEmail}
+                </a>
+              </address>
+
+              <details className={styles.policyDisclosure}>
               <summary className={styles.policySummary}>
                 <span>Pexpacks policies, terms, and customer information:</span>
                 <span className={styles.policyChevron} aria-hidden="true" />
@@ -122,8 +153,11 @@ export function Footer() {
               </div>
             </details>
           </div>
-        </div>{" "}
-        <hr className={styles.divider} />{" "}
+        </div>
+      </div>
+
+        <hr className={styles.divider} />
+
         <div className={styles.bottomSection}>
           <p className={styles.copyright}>
             &copy; {currentYear} Pexpacks. Design:{"  "}

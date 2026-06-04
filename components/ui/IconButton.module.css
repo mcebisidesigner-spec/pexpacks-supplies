@@ -8,7 +8,7 @@
   background: var(--color-surface);
   color: var(--color-text-strong);
   cursor: pointer;
-  transition: var(--interactive-transition);
+  transition: var(--button-transition);
 }
 
 .button svg {
@@ -22,9 +22,11 @@
 }
 
 .button:not(:disabled):hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
   border-color: rgba(33, 158, 154, 0.4);
   color: var(--color-brand-teal);
-  transform: translateY(-1px);
 }
 
 .button:disabled {

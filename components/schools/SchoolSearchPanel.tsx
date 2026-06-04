@@ -66,7 +66,7 @@ export function SchoolSearchPanel({
     updateQuery,
   } = usePaginatedSchoolSearch({
     initialQuery,
-    initialPanelOpen: initialQuery.trim().length >= 3,
+    initialPanelOpen: initialQuery.trim().length >= 1,
     phaseAllValue: "all",
     resultLimit,
     errorMessage:
