@@ -8,7 +8,6 @@ import { InlineSchoolWaitlist } from "@/components/schools/InlineSchoolWaitlist"
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 
-import { homepagePacks } from "@/data/packs";
 import {
   getSchoolPhaseLabel,
 } from "@/lib/schools/schoolPhase";
@@ -244,34 +243,14 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                       schoolName={query}
                       source="home-search"
                     />
-                    <div className={styles.noResultsOrderCta}>
-                      <span>Or skip the wait —</span>
-                      <Link href="/order" className={styles.noResultsOrderLink} onClick={onResultClick}>
-                        Upload your list and we&apos;ll pack it for you
-                      </Link>
-                    </div>
-                    <div className={styles.noResultsPacks}>
-                      <Link href="/schools#school-grade-packs" className={styles.noResultsPacksLabel} onClick={onResultClick}>
-                        Browse standard packs instead
-                      </Link>
-                      <div className={styles.noResultsPackGrid}>
-                        {homepagePacks.map((pack) => (
-                          <Link
-                            key={pack.id}
-                            href={pack.href}
-                            className={styles.noResultsPackCard}
-                            onClick={onResultClick}
-                          >
-                            <span className={styles.noResultsPackName}>
-                              {pack.name}
-                            </span>
-                            <span className={styles.noResultsPackPrice}>
-                              {pack.priceLabel}
-                            </span>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
+                    <Link
+                      href="/order"
+                      className={styles.noResultsDropListLink}
+                      onClick={onResultClick}
+                    >
+                      <span>Drop your list for packing</span>
+                      <span aria-hidden="true">→</span>
+                    </Link>
                   </div>
                 )}
                 <SchoolResultsAutoLoad

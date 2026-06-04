@@ -14,7 +14,6 @@ import { slugify } from "@/lib/slugify";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
-import { homepagePacks } from "@/data/packs";
 import styles from "./SchoolSearchPanel.module.css";
 
 const resultLimit = 12;
@@ -248,23 +247,13 @@ export function SchoolSearchPanel({
                         schoolName={query}
                         source="schools-search"
                       />
-                      <div className={heroStyles.noResultsPacks}>
-                        <Link href="/schools#school-grade-packs" className={heroStyles.noResultsPacksLabel}>
-                          Browse standard packs instead
-                        </Link>
-                        <div className={heroStyles.noResultsPackGrid}>
-                          {homepagePacks.map((pack) => (
-                            <Link
-                              key={pack.id}
-                              href={pack.href}
-                              className={heroStyles.noResultsPackCard}
-                            >
-                              <span className={heroStyles.noResultsPackName}>{pack.name}</span>
-                              <span className={heroStyles.noResultsPackPrice}>{pack.priceLabel}</span>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
+                      <Link
+                        href="/order"
+                        className={heroStyles.noResultsDropListLink}
+                      >
+                        <span>Drop your list for packing</span>
+                        <span aria-hidden="true">→</span>
+                      </Link>
                     </div>
                   )}
                   <SchoolResultsAutoLoad

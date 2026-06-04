@@ -1,16 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import type { FormEvent } from "react";
 import { useId, useState } from "react";
-import { mostPopularPacksHref } from "@/data/packs";
 import styles from "./InlineSchoolWaitlist.module.css";
 
 type InlineSchoolWaitlistProps = {
   schoolName?: string;
   source?: "home-search" | "schools-search" | "schools-cta";
   className?: string;
-  showFallback?: boolean;
 };
 
 type ApiResponse = {
@@ -27,7 +24,6 @@ export function InlineSchoolWaitlist({
   schoolName = "",
   source = "schools-search",
   className,
-  showFallback = true,
 }: InlineSchoolWaitlistProps) {
   const emailId = useId();
   const schoolId = useId();
@@ -156,18 +152,6 @@ export function InlineSchoolWaitlist({
           {pending ? "Saving..." : "Get notified & save 10%"}
         </button>
       </form>
-
-      {showFallback ? (
-        <div className={styles.fallbackLinks}>
-          <Link href="/order" className={styles.fallbackLink}>
-            Upload your list and we'll pack it
-          </Link>
-          <span className={styles.fallbackDivider}>or</span>
-          <Link href={mostPopularPacksHref} className={styles.fallbackLink}>
-            Buy standard pack instead
-          </Link>
-        </div>
-      ) : null}
 
       {status ? (
         <p
