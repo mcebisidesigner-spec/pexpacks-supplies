@@ -27,7 +27,7 @@ export default function HomePage() {
           <div>
             <p className={heroStyles.eyebrow}>Save time today</p>
             <h1 className={heroStyles.heroTitle}>
-              Skip the <br /> Back-to-School <br /> Queues
+            Your School <br />stationery list, <br /> perfectly packed
             </h1>
             <p className={heroStyles.heroLead}>
               Your official school stationery list, perfectly packed and delivered to your door. No missing items. No stress.
@@ -38,8 +38,8 @@ export default function HomePage() {
           <div className={heroStyles.heroVisual}>
             <span className={heroStyles.heroVisualImage}>
               <Image
-                src="/images/hero-school-delivery.webp"
-                alt="Pexpacks stationery pack items arranged neatly"
+                src="/images/hero-school-delivery-packs.webp"
+                alt="Pexpacks Stationery Box"
                 fill
                 priority
                 placeholder="blur"
@@ -47,15 +47,6 @@ export default function HomePage() {
                 sizes="(min-width: 1024px) 44vw, 100vw"
               />
             </span>
-            <div className={heroStyles.productScene}>
-              <div className={heroStyles.brandBox}>
-                <div>
-                  <span>Pexpacks Supplies</span>
-                  <br />
-                  <strong>Ready-packed stationery</strong>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
