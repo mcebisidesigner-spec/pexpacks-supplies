@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
+import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PackTrayItem } from "./PackTrayItem";
 import { PackTrayFooter } from "./PackTrayFooter";
 import styles from "./GlobalPackTray.module.css";
@@ -147,13 +148,10 @@ export function GlobalPackTray() {
                 </svg>
               </div>
               <p>No packs saved yet. Choose a school pack and add it to your order.</p>
-              <Link
-                href="/schools"
-                className={styles.emptyCta}
-                onClick={closeTray}
-              >
-                Find a school pack
-              </Link>
+              <div className={styles.emptySearchContainer}>
+                <h3 className={styles.emptySearchTitle}>Find Your School Pack</h3>
+                <HeroSearch onResultClick={closeTray} />
+              </div>
             </div>
           )}
         </div>

@@ -14,6 +14,7 @@ import styles from "@/app/checkout/Checkout.module.css";
 
 type FulfilmentOption = "school_collection" | "home_delivery" | "arranged_collection";
 type ContactMethod = "whatsapp" | "phone" | "email";
+type CheckoutSummarySection = "details" | "delivery" | "payment";
 
 const contactOptions: { value: ContactMethod; label: string }[] = [
   { value: "whatsapp", label: "WhatsApp" },
@@ -151,9 +152,20 @@ export function TrayCheckoutClient() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [mobileSectionSummaryOpen, setMobileSectionSummaryOpen] = useState<
+    Record<CheckoutSummarySection, boolean>
+  >({
+    details: true,
+    delivery: true,
+    payment: true,
+  });
   const fieldRefs = useRef<Record<string, HTMLInputElement | HTMLTextAreaElement | null>>({});
 
   const total = useMemo(() => calculateTrayTotal(packs), [packs]);
+
+  const pexcoverCount = useMemo(() => packs.filter((p) => p.wantsPexcover).length, [packs]);
+  const pexcoverTotal = pexcoverCount * PEXCOVER_PRICE;
+  const itemsTotal = total - pexcoverTotal;
 
   const uniqueSchools = useMemo(() => {
     const map = new Map<string, { name: string; slug: string }>();
@@ -168,6 +180,21 @@ export function TrayCheckoutClient() {
   const isSingleSchool = uniqueSchools.length <= 1;
   const deliveryExpanded = fulfilmentOption === "home_delivery";
   const canSubmit = packs.length > 0 && total > 0 && !submitting;
+  const detailsSectionHasErrors = Boolean(
+    errors.fullName ||
+      errors.buyerPhone ||
+      errors.buyerEmail ||
+      Object.keys(errors).some((key) => key.startsWith("learner_"))
+  );
+  const showDetailsHiddenWarning =
+    detailsSectionHasErrors && !mobileSectionSummaryOpen.details;
+
+  const toggleMobileSectionSummary = useCallback((section: CheckoutSummarySection) => {
+    setMobileSectionSummaryOpen((current) => ({
+      ...current,
+      [section]: !current[section],
+    }));
+  }, []);
 
   useEffect(() => {
     setLearnerInputs((prev) => {
@@ -408,98 +435,124 @@ export function TrayCheckoutClient() {
         </section>
 
         <form className={styles.mainColumn} aria-label="Checkout details" onSubmit={(e) => e.preventDefault()}>
-          <section className={styles.checkoutSection} aria-labelledby="customer-details-heading">
+          <section
+            className={`${styles.checkoutSection} ${
+              showDetailsHiddenWarning ? styles.checkoutSectionWarning : ""
+            }`}
+            aria-labelledby="customer-details-heading"
+          >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionNumber}>1</span>
               <div>
                 <h2 id="customer-details-heading">Your details</h2>
                 <p>We use these details for order updates and delivery or collection support.</p>
               </div>
+              <button
+                type="button"
+                className={styles.mobileSummaryToggle}
+                onClick={() => toggleMobileSectionSummary("details")}
+                aria-expanded={mobileSectionSummaryOpen.details}
+                aria-controls="customer-details-summary"
+              >
+                {mobileSectionSummaryOpen.details ? "Hide Summary" : "View Summary"}
+              </button>
             </div>
-            <div className={styles.formGrid}>
-              <Input
-                id="fullName"
-                ref={(node) => {
-                  fieldRefs.current.fullName = node;
-                }}
-                label="Full name"
-                helper="We use this to confirm your order and payment updates."
-                type="text"
-                value={fullName}
-                onChange={(e) => {
-                  setFullName(e.target.value);
-                  clearFieldError("fullName");
-                }}
-                placeholder="e.g. Sarah Dlamini"
-                error={errors.fullName}
-                autoComplete="name"
-              />
-              <Input
-                id="buyerPhone"
-                ref={(node) => {
-                  fieldRefs.current.buyerPhone = node;
-                }}
-                label="Phone number"
-                helper="WhatsApp or call is fastest for support."
-                type="tel"
-                value={buyerPhone}
-                onChange={(e) => {
-                  setBuyerPhone(e.target.value);
-                  clearFieldError("buyerPhone");
-                }}
-                placeholder="e.g. 078 003 6048"
-                error={errors.buyerPhone}
-                autoComplete="tel"
-              />
-              <Input
-                id="buyerEmail"
-                ref={(node) => {
-                  fieldRefs.current.buyerEmail = node;
-                }}
-                label="Email address"
-                helper="Used for order updates and payment confirmation."
-                type="email"
-                value={buyerEmail}
-                onChange={(e) => {
-                  setBuyerEmail(e.target.value);
-                  clearFieldError("buyerEmail");
-                }}
-                placeholder="name@example.com"
-                error={errors.buyerEmail}
-                autoComplete="email"
-              />
-              <fieldset className={styles.contactMethodGroup}>
-                <legend>Preferred contact method</legend>
-                <p>Choose how we should reach you if the order needs a quick check.</p>
-                <div className={styles.segmentedOptions}>
-                  {contactOptions.map((option) => (
-                    <label
-                      key={option.value}
-                      className={`${styles.segmentedOption} ${
-                        preferredContactMethod === option.value ? styles.segmentedOptionActive : ""
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="preferredContactMethod"
-                        value={option.value}
-                        checked={preferredContactMethod === option.value}
-                        onChange={() => setPreferredContactMethod(option.value)}
-                      />
-                      <span>{option.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
+            <div
+              id="customer-details-summary"
+              className={`${styles.mobileCollapsibleSummary} ${
+                mobileSectionSummaryOpen.details ? styles.mobileCollapsibleSummaryOpen : ""
+              }`}
+            >
+              <div className={styles.formGrid}>
+                <Input
+                  id="fullName"
+                  ref={(node) => {
+                    fieldRefs.current.fullName = node;
+                  }}
+                  label="Full name"
+                  helper="We use this to confirm your order and payment updates."
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    clearFieldError("fullName");
+                  }}
+                  placeholder="e.g. Sarah Dlamini"
+                  error={errors.fullName}
+                  autoComplete="name"
+                />
+                <Input
+                  id="buyerPhone"
+                  ref={(node) => {
+                    fieldRefs.current.buyerPhone = node;
+                  }}
+                  label="Phone number"
+                  helper="WhatsApp or call is fastest for support."
+                  type="tel"
+                  value={buyerPhone}
+                  onChange={(e) => {
+                    setBuyerPhone(e.target.value);
+                    clearFieldError("buyerPhone");
+                  }}
+                  placeholder="e.g. 078 003 6048"
+                  error={errors.buyerPhone}
+                  autoComplete="tel"
+                />
+                <Input
+                  id="buyerEmail"
+                  ref={(node) => {
+                    fieldRefs.current.buyerEmail = node;
+                  }}
+                  label="Email address"
+                  helper="Used for order updates and payment confirmation."
+                  type="email"
+                  value={buyerEmail}
+                  onChange={(e) => {
+                    setBuyerEmail(e.target.value);
+                    clearFieldError("buyerEmail");
+                  }}
+                  placeholder="name@example.com"
+                  error={errors.buyerEmail}
+                  autoComplete="email"
+                />
+                <fieldset className={styles.contactMethodGroup}>
+                  <legend>Preferred contact method</legend>
+                  <p>Choose how we should reach you if the order needs a quick check.</p>
+                  <div className={styles.segmentedOptions}>
+                    {contactOptions.map((option) => (
+                      <label
+                        key={option.value}
+                        className={`${styles.segmentedOption} ${
+                          preferredContactMethod === option.value ? styles.segmentedOptionActive : ""
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="preferredContactMethod"
+                          value={option.value}
+                          checked={preferredContactMethod === option.value}
+                          onChange={() => setPreferredContactMethod(option.value)}
+                        />
+                        <span>{option.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+              </div>
+              {packs.map((pack, index) => {
+                const errKey = `learner_${index}`;
+                return errors[errKey] ? (
+                  <p key={errKey} className={styles.fieldError}>
+                    Learner {index + 1} ({pack.packName}): {errors[errKey]}
+                  </p>
+                ) : null;
+              })}
             </div>
-            {packs.map((pack, index) => {
-              const errKey = `learner_${index}`;
-              return errors[errKey] ? (
-                <p key={errKey} className={styles.fieldError}>
-                  Learner {index + 1} ({pack.packName}): {errors[errKey]}
-                </p>
-              ) : null;
-            })}
+            {showDetailsHiddenWarning ? (
+              <p className={styles.mobileHiddenSummaryWarning} role="alert">
+                Fill in your details (Click "View Summary")
+              </p>
+            ) : null}
           </section>
 
           <section className={styles.checkoutSection} aria-labelledby="fulfilment-heading">
@@ -509,8 +562,23 @@ export function TrayCheckoutClient() {
                 <h2 id="fulfilment-heading">Delivery or collection</h2>
                 <p>Choose how you want to receive this order.</p>
               </div>
+              <button
+                type="button"
+                className={styles.mobileSummaryToggle}
+                onClick={() => toggleMobileSectionSummary("delivery")}
+                aria-expanded={mobileSectionSummaryOpen.delivery}
+                aria-controls="fulfilment-summary"
+              >
+                {mobileSectionSummaryOpen.delivery ? "Hide Summary" : "View Summary"}
+              </button>
             </div>
 
+            <div
+              id="fulfilment-summary"
+              className={`${styles.mobileCollapsibleSummary} ${
+                mobileSectionSummaryOpen.delivery ? styles.mobileCollapsibleSummaryOpen : ""
+              }`}
+            >
             <fieldset className={styles.optionFieldset}>
               <legend className={styles.srOnly}>Delivery or collection method</legend>
               <div className={styles.deliveryOptions}>
@@ -662,6 +730,7 @@ export function TrayCheckoutClient() {
               onChange={(e) => setDeliveryNotes(e.target.value)}
               rows={4}
             />
+            </div>
           </section>
 
           <section className={styles.checkoutSection} aria-labelledby="payment-heading">
@@ -671,24 +740,40 @@ export function TrayCheckoutClient() {
                 <h2 id="payment-heading">Secure payment</h2>
                 <p>You will continue to Paystack to complete payment. PexPacks does not store your card details.</p>
               </div>
+              <button
+                type="button"
+                className={styles.mobileSummaryToggle}
+                onClick={() => toggleMobileSectionSummary("payment")}
+                aria-expanded={mobileSectionSummaryOpen.payment}
+                aria-controls="payment-summary"
+              >
+                {mobileSectionSummaryOpen.payment ? "Hide Summary" : "View Summary"}
+              </button>
             </div>
-            <div className={styles.paymentConfirmationGrid}>
-              <div className={styles.paymentFact}>
-                <span>Total to pay</span>
-                <strong>{formatCurrency(total)}</strong>
+            <div
+              id="payment-summary"
+              className={`${styles.mobileCollapsibleSummary} ${
+                mobileSectionSummaryOpen.payment ? styles.mobileCollapsibleSummaryOpen : ""
+              }`}
+            >
+              <div className={styles.paymentConfirmationGrid}>
+                <div className={styles.paymentFact}>
+                  <span>Total to pay</span>
+                  <strong>{formatCurrency(total)}</strong>
+                </div>
+                <div className={styles.paymentFact}>
+                  <span>Status</span>
+                  <strong>Pending payment</strong>
+                </div>
+                <div className={styles.paymentFact}>
+                  <span>Provider</span>
+                  <strong>Paystack</strong>
+                </div>
               </div>
-              <div className={styles.paymentFact}>
-                <span>Status</span>
-                <strong>Pending payment</strong>
-              </div>
-              <div className={styles.paymentFact}>
-                <span>Provider</span>
-                <strong>Paystack</strong>
-              </div>
+              <p className={styles.paymentSecurityNote}>
+                We only use your details to process your order, payment updates, and delivery or collection support.
+              </p>
             </div>
-            <p className={styles.paymentSecurityNote}>
-              We only use your details to process your order, payment updates, and delivery or collection support.
-            </p>
           </section>
 
           <section className={styles.consentCard} aria-label="Consent">
@@ -739,11 +824,14 @@ export function TrayCheckoutClient() {
                 const isExpanded = !!expandedPacks[pack.id];
                 const previewItems = getPackItemPreview(pack);
                 const hiddenCount = Math.max(pack.items.length - previewItems.length, 0);
+                const learnerName = learnerInputs[index]?.trim();
+                const learnerLabel = learnerName
+                  ? `Learner ${index + 1}: ${learnerName}`
+                  : `Learner ${index + 1}: Add learner name`;
                 return (
                   <article key={pack.id} className={styles.orderPackCard}>
                     <div className={styles.orderPackTop}>
                       <div>
-                        <span className={styles.orderPackLearnerLabel}>Learner {index + 1}</span>
                         {editNameIndex === index ? (
                           <Input
                             type="text"
@@ -758,11 +846,11 @@ export function TrayCheckoutClient() {
                         ) : (
                           <button
                             type="button"
-                            className={styles.orderPackLearnerValue}
+                            className={styles.orderPackLearnerLabel}
                             onClick={() => setEditNameIndex(index)}
                             aria-label={`Edit learner ${index + 1} name`}
                           >
-                            {learnerInputs[index]?.trim() || "Add learner name"}
+                            {learnerLabel}
                           </button>
                         )}
                       </div>
@@ -807,6 +895,13 @@ export function TrayCheckoutClient() {
                             </li>
                           );
                         })}
+                        {pack.wantsPexcover ? (
+                          <li className={styles.itemisedPexcover}>
+                            <span>Pexcover <em>(Book covering)</em></span>
+                            <span />
+                            <strong>{formatCurrency(PEXCOVER_PRICE)}</strong>
+                          </li>
+                        ) : null}
                         {hiddenCount > 0 ? (
                           <li className={styles.itemisedMore}>+ {hiddenCount} more items in this pack</li>
                         ) : null}
@@ -820,12 +915,20 @@ export function TrayCheckoutClient() {
             <div className={styles.summaryTotals}>
               <div>
                 <span>Pack subtotal</span>
-                <strong>{formatCurrency(total)}</strong>
+                <strong>{formatCurrency(itemsTotal)}</strong>
               </div>
-              <div>
-                <span>Delivery fee</span>
-                <strong>To confirm</strong>
-              </div>
+              {pexcoverCount > 0 ? (
+                <div className={styles.pexcoverSummary}>
+                  <span>Pexcover <em>(Book covering)</em> x{pexcoverCount}</span>
+                  <strong>{formatCurrency(pexcoverTotal)}</strong>
+                </div>
+              ) : null}
+              {fulfilmentOption === "home_delivery" ? (
+                <div>
+                  <span>Delivery fee</span>
+                  <strong>To confirm</strong>
+                </div>
+              ) : null}
               <div className={styles.summaryGrandTotal}>
                 <span>Final amount</span>
                 <strong>{formatCurrency(total)}</strong>

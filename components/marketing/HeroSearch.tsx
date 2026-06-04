@@ -42,7 +42,7 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
   );
 }
 
-export function HeroSearch() {
+export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {}) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const {
@@ -175,7 +175,7 @@ export function HeroSearch() {
                             ) : null}
                             <div className={styles.heroResultSummary}>
                               <h3>
-                                <Link href={`/schools/${school.slug}`}>
+                                <Link href={`/schools/${school.slug}`} onClick={onResultClick}>
                                   <HighlightMatch text={school.name} query={query} />
                                 </Link>
                               </h3>
@@ -192,6 +192,7 @@ export function HeroSearch() {
                                   key={schoolGrade}
                                   href={`/schools/${school.slug}`}
                                   className={styles.gradePill}
+                                  onClick={onResultClick}
                                 >
                                   {schoolGrade}
                                 </Link>
@@ -227,6 +228,7 @@ export function HeroSearch() {
                         <Link
                           href={`/schools/${school.slug}`}
                           className={styles.heroResultLink}
+                          onClick={onResultClick}
                         >
                           View packs
                         </Link>
@@ -244,12 +246,12 @@ export function HeroSearch() {
                     />
                     <div className={styles.noResultsOrderCta}>
                       <span>Or skip the wait —</span>
-                      <Link href="/order" className={styles.noResultsOrderLink}>
+                      <Link href="/order" className={styles.noResultsOrderLink} onClick={onResultClick}>
                         Upload your list and we&apos;ll pack it for you
                       </Link>
                     </div>
                     <div className={styles.noResultsPacks}>
-                      <Link href="/schools#school-grade-packs" className={styles.noResultsPacksLabel}>
+                      <Link href="/schools#school-grade-packs" className={styles.noResultsPacksLabel} onClick={onResultClick}>
                         Browse standard packs instead
                       </Link>
                       <div className={styles.noResultsPackGrid}>
@@ -258,6 +260,7 @@ export function HeroSearch() {
                             key={pack.id}
                             href={pack.href}
                             className={styles.noResultsPackCard}
+                            onClick={onResultClick}
                           >
                             <span className={styles.noResultsPackName}>
                               {pack.name}
