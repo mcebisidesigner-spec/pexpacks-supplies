@@ -53,28 +53,43 @@
 .field {
   min-width: 0;
   display: grid;
-  gap: 6px;
-  padding: 10px 14px;
-  border: 1px solid rgba(18, 57, 69, 0.12);
-  border-radius: 18px;
-  background: var(--pex-bg);
+  gap: var(--form-field-gap);
 }
 
 .field span {
-  color: var(--pex-primary);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1;
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
+  line-height: 1.25;
 }
 
 .field input {
   min-width: 0;
   width: 100%;
-  border: 0;
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
+  font-size: var(--form-control-font-size);
+  transition: var(--interactive-transition);
+}
+
+.field input::placeholder {
+  color: var(--form-control-placeholder);
+  opacity: 1;
+}
+
+.field input:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.field input:focus,
+.field input:focus-visible {
+  border-color: var(--form-control-focus-border);
   outline: 0;
-  background: transparent;
-  color: var(--pex-primary);
-  font-size: 15px;
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .submitButton,

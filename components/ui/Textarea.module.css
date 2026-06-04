@@ -1,52 +1,61 @@
 .wrapper {
   display: grid;
-  gap: 6px;
+  gap: var(--form-field-gap);
 }
 
 .label {
-  color: var(--pex-primary);
-  font-size: 14px;
-  font-weight: 800;
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
+  line-height: 1.25;
 }
 
 .helper {
   margin: 0;
-  color: var(--pex-text-muted);
-  font-size: 13px;
+  color: var(--form-helper-color);
+  font-size: var(--form-helper-size);
   line-height: 1.4;
 }
 
 .textarea {
   width: 100%;
   min-height: 126px;
-  border: 1px solid var(--pex-border);
-  border-radius: var(--radius-field);
-  padding: 14px 16px;
-  background: var(--pex-bg);
-  color: var(--pex-primary);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: var(--form-control-padding-y) var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
   font: inherit;
-  font-size: 15px;
+  font-size: var(--form-control-font-size);
   resize: vertical;
   transition: var(--interactive-transition);
 }
 
 .textarea::placeholder {
-  color: var(--pex-text-muted);
-  opacity: 0.55;
+  color: var(--form-control-placeholder);
+  opacity: 1;
 }
 
-.textarea:focus {
-  border-color: var(--pex-keppel);
-  outline: var(--button-focus-ring);
-  outline-offset: 2px;
+.textarea:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.textarea:focus,
+.textarea:focus-visible {
+  border-color: var(--form-control-focus-border);
+  outline: 0;
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .textarea[aria-invalid="true"] {
-  border-color: var(--color-danger);
+  border-color: var(--form-control-error-border);
+  box-shadow: var(--form-control-error-shadow);
 }
 
 .errorText {
-  color: var(--color-danger);
-  font-size: 13px;
+  margin: 0;
+  color: var(--form-error-color);
+  font-size: var(--form-error-size);
+  font-weight: var(--form-error-weight);
   line-height: 1.4;
 }

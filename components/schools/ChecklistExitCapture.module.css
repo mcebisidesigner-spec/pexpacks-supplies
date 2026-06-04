@@ -79,18 +79,38 @@
 
 .form label {
   display: grid;
-  gap: 7px;
-  color: var(--pex-primary);
-  font-size: 14px;
-  font-weight: 800;
+  gap: var(--form-field-gap);
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
 }
 
 .form input[type="email"] {
-  min-height: 46px;
-  border: 1px solid var(--pex-border);
-  border-radius: var(--radius-card);
-  padding: 0 12px;
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
   font: inherit;
+  font-size: var(--form-control-font-size);
+  transition: var(--interactive-transition);
+}
+
+.form input[type="email"]::placeholder {
+  color: var(--form-control-placeholder);
+  opacity: 1;
+}
+
+.form input[type="email"]:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.form input[type="email"]:focus,
+.form input[type="email"]:focus-visible {
+  border-color: var(--form-control-focus-border);
+  outline: 0;
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .consent {

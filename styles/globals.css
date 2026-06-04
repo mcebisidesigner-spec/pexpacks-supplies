@@ -93,10 +93,11 @@ textarea {
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus,
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus-visible,
+select:focus,
+select:focus-visible,
 textarea:focus,
 textarea:focus-visible {
-  outline: 0 !important;
-  box-shadow: none !important;
+  outline: 0;
 }
 
 button,
@@ -108,6 +109,12 @@ input[type="tel"],
 input[type="search"],
 select {
   min-height: var(--touch-target-min, 48px);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+select,
+textarea {
+  border-radius: var(--form-control-radius);
 }
 
 button {

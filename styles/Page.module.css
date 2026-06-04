@@ -160,24 +160,51 @@
 
 .formStack {
   display: grid;
-  gap: 16px;
+  gap: var(--form-grid-gap);
 }
 
 .formStack label {
   display: grid;
-  gap: 8px;
-  font-weight: 800;
+  gap: var(--form-field-gap);
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
 }
 
 .formStack input,
 .formStack textarea,
 .formStack select {
-  min-height: 52px;
-  border: 1px solid var(--pex-border);
-  border-radius: 16px;
-  padding: 12px 16px;
-  background: var(--pex-bg);
-  color: var(--pex-text);
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: var(--form-control-padding-y) var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
+  font-size: var(--form-control-font-size);
+  transition: var(--interactive-transition);
+}
+
+.formStack input::placeholder,
+.formStack textarea::placeholder {
+  color: var(--form-control-placeholder);
+  opacity: 1;
+}
+
+.formStack input:hover,
+.formStack textarea:hover,
+.formStack select:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.formStack input:focus,
+.formStack input:focus-visible,
+.formStack textarea:focus,
+.formStack textarea:focus-visible,
+.formStack select:focus,
+.formStack select:focus-visible {
+  border-color: var(--form-control-focus-border);
+  outline: 0;
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .formStack textarea {

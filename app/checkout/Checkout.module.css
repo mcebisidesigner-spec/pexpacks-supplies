@@ -258,59 +258,77 @@
 
 .fieldGroup {
   display: grid;
-  gap: 10px;
+  gap: var(--form-field-gap);
   min-width: 0;
 }
 
 .fieldGroup label {
-  color: var(--pex-primary);
-  font-weight: 800;
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
+  line-height: 1.25;
 }
 
 .fieldGroup p {
-  color: var(--pex-text-muted);
-  font-size: 0.9rem;
   margin: 0;
+  color: var(--form-helper-color);
+  font-size: var(--form-helper-size);
+  line-height: 1.4;
 }
 
 .fieldGroup input,
 .fieldGroup select,
 .fieldGroup textarea {
   width: 100%;
-  min-height: 54px;
-  border: 1px solid var(--pex-border);
-  border-radius: var(--radius-field);
-  padding: 0 18px;
-  background: var(--pex-bg);
-  color: var(--pex-primary);
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
   font: inherit;
+  font-size: var(--form-control-font-size);
   transition: var(--interactive-transition);
 }
 
 .fieldGroup textarea {
   min-height: 112px;
-  padding-block: 14px;
+  padding-block: var(--form-control-padding-y);
   resize: vertical;
+}
+
+.fieldGroup input::placeholder,
+.fieldGroup textarea::placeholder {
+  color: var(--form-control-placeholder);
+  opacity: 1;
+}
+
+.fieldGroup input:hover,
+.fieldGroup select:hover,
+.fieldGroup textarea:hover {
+  border-color: var(--form-control-hover-border);
 }
 
 .fieldGroup input:focus,
 .fieldGroup select:focus,
 .fieldGroup textarea:focus {
-  border-color: var(--pex-keppel);
-  outline: var(--focus-ring);
-  outline-offset: 2px;
+  border-color: var(--form-control-focus-border);
+  outline: 0;
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .fieldGroup input[aria-invalid="true"],
 .fieldGroup select[aria-invalid="true"] {
-  border-color: var(--pex-error);
+  border-color: var(--form-control-error-border);
+  box-shadow: var(--form-control-error-shadow);
 }
 
 .fieldError {
-  color: var(--pex-error);
-  font-size: 0.875rem;
-  font-weight: 800;
   margin: 0;
+  color: var(--form-error-color);
+  font-size: var(--form-error-size);
+  font-weight: var(--form-error-weight);
+  line-height: 1.35;
 }
 
 .formStatusError {
@@ -1408,15 +1426,15 @@
 }
 
 .contactMethodGroup legend {
-  color: var(--pex-primary);
-  font-weight: 800;
-  font-size: 14px;
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
 }
 
 .contactMethodGroup p {
   margin: 0;
-  color: var(--pex-text-muted);
-  font-size: 13px;
+  color: var(--form-helper-color);
+  font-size: var(--form-helper-size);
   line-height: 1.4;
 }
 
@@ -1427,11 +1445,11 @@
 }
 
 .segmentedOption {
-  min-height: 54px;
-  border: 1px solid var(--pex-border);
-  border-radius: 18px;
-  background: var(--pex-bg);
-  color: var(--pex-primary);
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-option-radius);
+  background: var(--form-option-bg);
+  color: var(--form-control-color);
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -1446,9 +1464,9 @@
 }
 
 .segmentedOptionActive {
-  border-color: var(--pex-keppel);
-  background: rgba(33, 158, 154, 0.1);
-  color: var(--pex-keppel);
+  border-color: var(--form-option-selected-border);
+  background: var(--form-option-selected-bg);
+  color: var(--form-option-selected-color);
 }
 
 .deliveryOptions {
@@ -1460,9 +1478,9 @@
 .deliveryOption {
   min-height: 168px;
   padding: clamp(20px, 2.4vw, 26px);
-  border: 1.5px solid rgba(26, 42, 64, 0.1);
-  border-radius: 28px;
-  background: #f7f8fa;
+  border: var(--form-control-border);
+  border-radius: var(--radius-card);
+  background: var(--form-option-bg);
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 18px;
@@ -1477,8 +1495,8 @@
 
 .deliveryOption:hover,
 .deliveryOptionSelected {
-  border-color: rgba(255, 111, 89, 0.42);
-  background: rgba(255, 111, 89, 0.07);
+  border-color: var(--form-option-selected-border);
+  background: var(--form-option-selected-bg);
   box-shadow: 0 18px 42px rgba(26, 42, 64, 0.08);
 }
 

@@ -1,4 +1,6 @@
-import React, { SelectHTMLAttributes, useId } from 'react';
+import type { SelectHTMLAttributes } from "react";
+import { useId } from "react";
+import styles from "./Input.module.css";
 
 type SelectOption = {
   value: string;
@@ -27,24 +29,20 @@ export default function Select({
   const selectId = id ?? generatedId;
 
   return (
-    <div className={`flex flex-col space-y-2 ${className}`}>
+    <div className={`${styles.wrapper} ${className}`}>
       {label && (
-        <label htmlFor={selectId} className="text-sm font-bold text-gray-900">
+        <label htmlFor={selectId} className={styles.label}>
           {label}
         </label>
       )}
       
-      <div className="relative">
+      <div className={styles.selectWrap}>
         <select
           id={selectId}
           value={value}
           onChange={onChange}
-          className={`
-            w-full px-4 py-3 bg-white border rounded-xl text-gray-900 appearance-none
-            focus:outline-none focus:ring-2 focus:ring-[#000080]/20 focus:border-[#000080] 
-            transition-all duration-200
-            ${error ? 'border-red-500 bg-red-50/50' : 'border-gray-200 hover:border-gray-300'}
-          `}
+          className={styles.select}
+          aria-invalid={error ? true : undefined}
           {...props}
         >
           <option value="" disabled hidden>{placeholder}</option>
@@ -59,16 +57,15 @@ export default function Select({
           })}
         </select>
         
-        {/* Custom Dropdown Chevron Icon */}
-        <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
-          <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span className={styles.selectChevron} aria-hidden="true">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
           </svg>
-        </div>
+        </span>
       </div>
       
       {error && (
-        <span className="text-xs font-bold text-red-500">
+        <span className={styles.errorText} role="alert">
           {error}
         </span>
       )}

@@ -1,18 +1,19 @@
 .wrapper {
   display: grid;
-  gap: 6px;
+  gap: var(--form-field-gap);
 }
 
 .label {
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--pex-primary);
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
+  line-height: 1.25;
 }
 
 .helper {
   margin: 0;
-  font-size: 13px;
-  color: var(--pex-text-muted);
+  color: var(--form-helper-color);
+  font-size: var(--form-helper-size);
   line-height: 1.4;
 }
 
@@ -23,36 +24,44 @@
 
 .input {
   width: 100%;
-  min-height: 48px;
-  border: 1px solid var(--pex-border);
-  border-radius: var(--radius-field);
-  padding: 0 16px;
-  background: var(--pex-bg);
-  color: var(--pex-primary);
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
   font: inherit;
-  font-size: 15px;
+  font-size: var(--form-control-font-size);
   transition: var(--interactive-transition);
 }
 
 .input::placeholder {
-  color: var(--pex-text-muted);
-  opacity: 0.5;
+  color: var(--form-control-placeholder);
+  opacity: 1;
 }
 
-.input:focus {
-  border-color: var(--pex-keppel);
-  outline: var(--button-focus-ring);
+.input:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.input:focus,
+.input:focus-visible {
+  border-color: var(--form-control-focus-border);
+  outline: 0;
   outline-offset: 2px;
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .input[aria-invalid="true"] {
-  border-color: var(--color-danger);
+  border-color: var(--form-control-error-border);
+  box-shadow: var(--form-control-error-shadow);
 }
 
 .errorText {
   margin: 0;
-  font-size: 13px;
-  color: var(--color-danger);
+  color: var(--form-error-color);
+  font-size: var(--form-error-size);
+  font-weight: var(--form-error-weight);
   line-height: 1.4;
 }
 
@@ -65,4 +74,56 @@
   height: 20px;
   color: var(--pex-success);
   pointer-events: none;
+}
+
+.selectWrap {
+  position: relative;
+  display: grid;
+}
+
+.select {
+  width: 100%;
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 calc(var(--form-control-padding-x) + 28px) 0 var(--form-control-padding-x);
+  appearance: none;
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
+  font: inherit;
+  font-size: var(--form-control-font-size);
+  cursor: pointer;
+  transition: var(--interactive-transition);
+}
+
+.select:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.select:focus,
+.select:focus-visible {
+  border-color: var(--form-control-focus-border);
+  outline: 0;
+  box-shadow: var(--form-control-focus-shadow);
+}
+
+.select[aria-invalid="true"] {
+  border-color: var(--form-control-error-border);
+  box-shadow: var(--form-control-error-shadow);
+}
+
+.selectChevron {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+  color: var(--pex-text-muted);
+  pointer-events: none;
+}
+
+.selectChevron svg {
+  width: 100%;
+  height: 100%;
 }

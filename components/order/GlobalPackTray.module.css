@@ -293,33 +293,38 @@
 }
 
 .learnerLabel {
-  color: var(--pex-primary);
-  font-size: 13px;
-  font-weight: 700;
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
 }
 
 .learnerInput {
   width: 100%;
-  min-height: 42px;
-  border: 1px solid var(--pex-border);
-  border-radius: var(--radius-field);
-  padding: 0 14px;
-  background: var(--pex-bg-soft);
-  color: var(--pex-primary);
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
   font: inherit;
-  font-size: 14px;
+  font-size: var(--form-control-font-size);
   transition: var(--interactive-transition);
 }
 
-.learnerInput:focus {
-  border-color: var(--pex-keppel);
-  outline: var(--focus-ring);
-  outline-offset: 2px;
+.learnerInput:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.learnerInput:focus,
+.learnerInput:focus-visible {
+  border-color: var(--form-control-focus-border);
+  outline: 0;
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .learnerInput::placeholder {
-  color: var(--pex-text-muted);
-  opacity: 0.6;
+  color: var(--form-control-placeholder);
+  opacity: 1;
 }
 
 .pexcoverToggleLabel {

@@ -52,30 +52,38 @@
 .searchLabel {
   display: block;
   margin-bottom: 8px;
-  color: var(--pex-text-muted);
-  font-size: 13px;
-  font-weight: 800;
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
 }
 
 .searchCard input {
   width: 100%;
-  min-height: 52px;
-  border: 1px solid rgba(26, 42, 64, 0.12);
-  border-radius: 14px;
-  padding: 0 16px;
-  background: #ffffff;
-  color: var(--pex-primary);
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
   font: inherit;
-  font-weight: 700;
+  font-size: var(--form-control-font-size);
   outline: none;
-  transition:
-    border-color var(--motion-duration) var(--motion-ease),
-    box-shadow var(--motion-duration) var(--motion-ease);
+  transition: var(--interactive-transition);
 }
 
-.searchCard input:focus {
-  border-color: var(--pex-keppel);
-  box-shadow: 0 0 0 4px rgba(33, 158, 154, 0.14);
+.searchCard input::placeholder {
+  color: var(--form-control-placeholder);
+  opacity: 1;
+}
+
+.searchCard input:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.searchCard input:focus,
+.searchCard input:focus-visible {
+  border-color: var(--form-control-focus-border);
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .categoryRail {

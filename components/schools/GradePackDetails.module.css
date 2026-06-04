@@ -135,6 +135,96 @@
   margin-bottom: 4px;
 }
 
+.pexcoverPanel {
+  margin: 24px 0;
+  padding: var(--card-padding);
+  border: var(--form-card-border);
+  border-radius: var(--form-card-radius);
+  background: var(--form-card-bg);
+  box-shadow: var(--form-card-shadow);
+  display: grid;
+  gap: 18px;
+}
+
+.pexcoverPanel h3 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.1;
+}
+
+.pexcoverPanel p:not(.kicker) {
+  margin: 8px 0 0;
+  color: var(--pex-text-muted);
+  line-height: 1.5;
+}
+
+.pexcoverField {
+  display: grid;
+  gap: var(--form-field-gap);
+}
+
+.pexcoverField span {
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
+  line-height: 1.25;
+}
+
+.pexcoverField input {
+  width: 100%;
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
+  font: inherit;
+  font-size: var(--form-control-font-size);
+  transition: var(--interactive-transition);
+}
+
+.pexcoverField input::placeholder {
+  color: var(--form-control-placeholder);
+  opacity: 1;
+}
+
+.pexcoverField input:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.pexcoverField input:focus,
+.pexcoverField input:focus-visible {
+  border-color: var(--form-control-focus-border);
+  outline: 0;
+  box-shadow: var(--form-control-focus-shadow);
+}
+
+.labelPreview {
+  padding: 14px 16px;
+  border: 1px solid rgba(33, 158, 154, 0.18);
+  border-radius: var(--radius-field);
+  background: rgba(33, 158, 154, 0.08);
+  display: grid;
+  gap: 4px;
+}
+
+.labelPreview span {
+  color: var(--pex-keppel);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.labelPreview strong {
+  color: var(--pex-primary);
+  font-size: 18px;
+}
+
+.labelPreview small {
+  color: var(--pex-text-muted);
+  font-weight: 700;
+}
+
 @media (max-width: 820px) {
   .gradeDetails {
     grid-template-columns: 1fr;

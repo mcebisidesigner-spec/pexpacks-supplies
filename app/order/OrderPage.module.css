@@ -156,38 +156,51 @@
 }
 
 .field label {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--pex-primary);
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
+  line-height: 1.25;
 }
 
 .input {
   width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--pex-border);
-  border-radius: 12px;
-  background: #fff;
-  font-size: 16px;
-  color: var(--pex-primary);
-  transition: all 0.2s ease;
+  min-height: var(--form-control-height);
+  padding: 0 var(--form-control-padding-x);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
+  font-size: var(--form-control-font-size);
+  transition: var(--interactive-transition);
   font-family: inherit;
 }
 
-.input:focus {
+.input::placeholder {
+  color: var(--form-control-placeholder);
+  opacity: 1;
+}
+
+.input:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.input:focus,
+.input:focus-visible {
   outline: none;
-  border-color: var(--pex-keppel);
-  box-shadow: 0 0 0 4px rgba(33, 158, 154, 0.1);
+  border-color: var(--form-control-focus-border);
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .inputError {
-  border-color: #e53e3e;
+  border-color: var(--form-control-error-border);
+  box-shadow: var(--form-control-error-shadow);
 }
 
 .errorText {
-  color: #e53e3e;
-  font-size: 12px;
-  font-weight: 600;
   margin-top: -4px;
+  color: var(--form-error-color);
+  font-size: var(--form-error-size);
+  font-weight: var(--form-error-weight);
 }
 
 /* Category Pills */
@@ -199,10 +212,10 @@
 
 .categoryPill {
   padding: 10px 16px;
-  border: 1px solid var(--pex-border);
-  border-radius: 30px;
-  background: #fff;
-  color: var(--pex-muted);
+  border: var(--form-control-border);
+  border-radius: var(--form-option-radius);
+  background: var(--form-option-bg);
+  color: var(--form-helper-color);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -216,9 +229,9 @@
 }
 
 .categoryPill.active {
-  background: var(--pex-navy);
-  color: #fff;
-  border-color: var(--pex-navy);
+  background: var(--form-option-selected-bg);
+  color: var(--form-option-selected-color);
+  border-color: var(--form-option-selected-border);
 }
 
 /* Tabs for List Input */

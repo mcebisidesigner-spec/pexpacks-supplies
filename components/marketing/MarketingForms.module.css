@@ -9,18 +9,14 @@
 .field {
   min-width: 0;
   display: grid;
-  gap: 7px;
-  padding: 12px 14px;
-  border: 1px solid var(--pex-illustration-soft);
-  border-radius: var(--radius-field);
-  background: var(--pex-bg);
+  gap: var(--form-field-gap);
 }
 
 .field span {
-  color: var(--pex-text-muted);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1;
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
+  line-height: 1.25;
 }
 
 .field input,
@@ -28,21 +24,39 @@
 .field textarea {
   min-width: 0;
   width: 100%;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: var(--pex-primary);
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
   font-size: 15px;
+  transition: var(--interactive-transition);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--form-control-placeholder);
+  opacity: 1;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--form-control-hover-border);
 }
 
 .field input:focus-visible,
 .field select:focus-visible,
 .field textarea:focus-visible {
   outline: 0;
+  border-color: var(--form-control-focus-border);
+  box-shadow: var(--form-control-focus-shadow);
 }
 
 .field textarea {
   min-height: 118px;
+  padding-block: var(--form-control-padding-y);
   resize: vertical;
 }
 
@@ -131,9 +145,9 @@
 }
 
 .fieldError {
-  color: var(--pex-error) !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
+  color: var(--form-error-color) !important;
+  font-size: var(--form-error-size) !important;
+  font-weight: var(--form-error-weight) !important;
   line-height: 1.3 !important;
 }
 

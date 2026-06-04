@@ -76,6 +76,42 @@
   --radius-button: var(--radius-pill);
   --radius-field: 18px;
 
+  /* Form system */
+  --form-card-bg: var(--pex-bg);
+  --form-card-border: 1px solid rgba(26, 42, 64, 0.08);
+  --form-card-radius: var(--radius-card);
+  --form-card-shadow: var(--card-shadow);
+  --form-grid-gap: 22px;
+  --form-field-gap: 8px;
+  --form-label-color: var(--pex-primary);
+  --form-label-size: 14px;
+  --form-label-weight: 800;
+  --form-helper-color: var(--pex-text-muted);
+  --form-helper-size: 13px;
+  --form-control-height: 54px;
+  --form-control-padding-x: 16px;
+  --form-control-padding-y: 14px;
+  --form-control-radius: var(--radius-field);
+  --form-control-bg: var(--pex-bg);
+  --form-control-border: 1px solid var(--pex-border);
+  --form-control-color: var(--pex-primary);
+  --form-control-font-size: 15px;
+  --form-control-placeholder: rgba(77, 90, 93, 0.48);
+  --form-control-hover-border: rgba(26, 42, 64, 0.18);
+  --form-control-focus-border: var(--pex-keppel);
+  --form-control-focus-shadow: 0 0 0 4px rgba(26, 122, 119, 0.12);
+  --form-control-error-border: var(--color-danger);
+  --form-control-error-shadow: 0 0 0 4px rgba(185, 28, 28, 0.1);
+  --form-error-color: var(--color-danger);
+  --form-error-bg: var(--color-error-bg);
+  --form-error-size: 13px;
+  --form-error-weight: 800;
+  --form-option-bg: var(--pex-bg);
+  --form-option-selected-bg: rgba(26, 122, 119, 0.1);
+  --form-option-selected-border: var(--pex-keppel);
+  --form-option-selected-color: var(--pex-keppel);
+  --form-option-radius: var(--radius-field);
+
   /* Cards */
   --card-bg: var(--pex-bg);
   --card-border: 1px solid rgba(225, 231, 234, 0.6);
