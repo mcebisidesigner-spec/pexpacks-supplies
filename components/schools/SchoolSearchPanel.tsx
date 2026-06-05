@@ -48,6 +48,9 @@ export function SchoolSearchPanel({
   initialQuery = "",
 }: SchoolSearchPanelProps) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
+  const [trendingSchools, setTrendingSchools] = useState<{ name: string; slug: string; image?: string | null }[]>([]);
+  const [trendingLoading, setTrendingLoading] = useState(false);
+  const trendingFetched = useRef(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const {
     query,
@@ -71,6 +74,19 @@ export function SchoolSearchPanel({
       "We couldn't load the school list. Please refresh or contact Pexpacks.",
   });
   const searchActive = panelOpen;
+
+  useEffect(() => {
+    if (!isSchoolInputFocused || trendingFetched.current || query.length >= 3) return;
+    trendingFetched.current = true;
+    setTrendingLoading(true);
+    fetch("/api/schools/search?limit=8")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.results) setTrendingSchools(data.results);
+      })
+      .catch(() => {})
+      .finally(() => setTrendingLoading(false));
+  }, [isSchoolInputFocused, query]);
 
   useEffect(() => {
     if (!panelOpen) return;
@@ -128,6 +144,31 @@ export function SchoolSearchPanel({
               autoComplete="off"
             />
           </label>
+          {isSchoolInputFocused && query.length < 3 && trendingSchools.length > 0 ? (
+            <div className={heroStyles.trendingRow}>
+              <span className={heroStyles.trendingLabel}>Trending Near You</span>
+              <div className={heroStyles.trendingTrack}>
+                {trendingSchools.map((school) => (
+                  <Link
+                    key={school.slug}
+                    href={`/schools/${school.slug}`}
+                    className={heroStyles.trendingCard}
+                  >
+                    {school.image ? (
+                      <Image
+                        src={school.image}
+                        alt=""
+                        width={28}
+                        height={28}
+                        className={heroStyles.trendingCardLogo}
+                      />
+                    ) : null}
+                    <span className={heroStyles.trendingCardName}>{school.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : null}
           {panelOpen ? (
             <div
               className={heroStyles.heroResultsPanel}

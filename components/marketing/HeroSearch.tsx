@@ -43,6 +43,9 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {}) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+  const [trendingSchools, setTrendingSchools] = useState<{ name: string; slug: string; image?: string | null }[]>([]);
+  const [trendingLoading, setTrendingLoading] = useState(false);
+  const trendingFetched = useRef(false);
   const {
     query,
     results,
@@ -78,6 +81,19 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, [panelOpen, setPanelOpen]);
 
+  useEffect(() => {
+    if (!isSchoolInputFocused || trendingFetched.current || query.length >= 3) return;
+    trendingFetched.current = true;
+    setTrendingLoading(true);
+    fetch("/api/schools/search?limit=8")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.results) setTrendingSchools(data.results);
+      })
+      .catch(() => {})
+      .finally(() => setTrendingLoading(false));
+  }, [isSchoolInputFocused, query]);
+
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
       <div
@@ -112,6 +128,32 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
             onChange={(event) => updateQuery(event.target.value)}
           />
         </label>
+
+        {isSchoolInputFocused && query.length < 3 && trendingSchools.length > 0 ? (
+          <div className={styles.trendingRow}>
+            <span className={styles.trendingLabel}>Trending Near You</span>
+            <div className={styles.trendingTrack}>
+              {trendingSchools.map((school) => (
+                <Link
+                  key={school.slug}
+                  href={`/schools/${school.slug}`}
+                  className={styles.trendingCard}
+                >
+                  {school.image ? (
+                    <Image
+                      src={school.image}
+                      alt=""
+                      width={28}
+                      height={28}
+                      className={styles.trendingCardLogo}
+                    />
+                  ) : null}
+                  <span className={styles.trendingCardName}>{school.name}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
         {panelOpen ? (
           <div
