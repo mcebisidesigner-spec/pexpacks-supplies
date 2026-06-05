@@ -108,7 +108,6 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
             value={query}
             onFocus={() => {
               setIsSchoolInputFocused(true);
-              setPanelOpen(true);
             }}
             onBlur={() => setIsSchoolInputFocused(false)}
             onChange={(event) => updateQuery(event.target.value)}
