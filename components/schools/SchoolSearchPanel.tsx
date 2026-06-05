@@ -12,18 +12,10 @@ import {
 } from "@/lib/schools/schoolPhase";
 import { slugify } from "@/lib/slugify";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
-import { InlineSchoolWaitlist } from "./InlineSchoolWaitlist";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
-import { homepagePacks } from "@/data/packs";
 import styles from "./SchoolSearchPanel.module.css";
 
 const resultLimit = 12;
-
-const POPULAR_REGIONS = [
-  "Johannesburg",
-  "Tshwane",
-  "Ekurhuleni",
-];
 
 type SchoolSearchPanelProps = {
   initialQuery?: string;
@@ -136,18 +128,6 @@ export function SchoolSearchPanel({
               autoComplete="off"
             />
           </label>
-          <div className={styles.regionRow}>
-            {POPULAR_REGIONS.map((region) => (
-              <button
-                key={region}
-                type="button"
-                className={`${styles.regionPill} ${query.toLowerCase() === region.toLowerCase() ? styles.regionPillActive : ""}`}
-                onClick={() => updateQuery(region)}
-              >
-                {region}
-              </button>
-            ))}
-          </div>
           {panelOpen ? (
             <div
               className={heroStyles.heroResultsPanel}
@@ -189,116 +169,124 @@ export function SchoolSearchPanel({
                     ) : null}
                   </div>
                   {results.length > 0 ? (
-                    <div className={heroStyles.heroResultsList}>
-                      {results.map((school) => (
-                        <article className={heroStyles.heroResultCard} key={school.id}>
-                          <div className={heroStyles.heroResultContent}>
-                            <div className={heroStyles.heroResultRow}>
-                              {school.image ? (
-                                <Image src={school.image} alt={`${school.name} logo`} className={heroStyles.heroResultLogo} width={36} height={36} placeholder="blur" blurDataURL={IMAGE_BLUR_DATA_URL} />
-                              ) : null}
-                              <div className={heroStyles.heroResultSummary}>
-                              <h3>
-                                <Link href={`/schools/${school.slug}`}>
-                                  <HighlightMatch text={school.name} query={query} />
-                                </Link>
-                              </h3>
-                              <p>
-                                {school.region}
-                                {school.province ? `, ${school.province}` : ""}
-                              </p>
-                            </div>
-                            </div>
-                            <div className={heroStyles.heroResultMeta}>
-                              <div className={heroStyles.heroResultGrades}>
-                                {school.grades.slice(0, 4).map((g) => (
-                                  <Link
-                                    key={g}
-                                    href={`/schools/${school.slug}`}
-                                    className={heroStyles.gradePill}
-                                  >
-                                    {g}
-                                  </Link>
-                                ))}
-                                {school.grades.length > 4 ? (
-                                  <span className={heroStyles.gradePillMore}>
-                                    +{school.grades.length - 4} more
+                    <p className={heroStyles.searchMicroCopy}>
+                      Every pack is an exact 100% match to the school's official requirements. Simply select your school, and you can easily add or minus quantities of the required items before checkout.
+                    </p>
+                  ) : null}
+                  {results.length > 0 ? (
+                    <>
+                      <div className={heroStyles.heroResultsList}>
+                        {results.map((school) => (
+                          <article className={heroStyles.heroResultCard} key={school.id}>
+                            <div className={heroStyles.heroResultContent}>
+                              <div className={heroStyles.heroResultRow}>
+                                {school.image ? (
+                                  <Image
+                                    src={school.image}
+                                    alt={`${school.name} logo`}
+                                    className={heroStyles.heroResultLogo}
+                                    width={36}
+                                    height={36}
+                                    placeholder="blur"
+                                    blurDataURL={IMAGE_BLUR_DATA_URL}
+                                  />
+                                ) : null}
+                                <div className={heroStyles.heroResultSummary}>
+                                  <h3>
+                                    <Link href={`/schools/${school.slug}`}>
+                                      <HighlightMatch text={school.name} query={query} />
+                                    </Link>
+                                  </h3>
+                                  <p>
+                                    {school.region}
+                                    {school.province ? `, ${school.province}` : ""}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className={heroStyles.heroResultMeta}>
+                                <div className={heroStyles.heroResultGrades}>
+                                  {school.grades.slice(0, 4).map((g) => (
+                                    <Link
+                                      key={g}
+                                      href={`/schools/${school.slug}`}
+                                      className={heroStyles.gradePill}
+                                    >
+                                      {g}
+                                    </Link>
+                                  ))}
+                                  {school.grades.length > 4 ? (
+                                    <span className={heroStyles.gradePillMore}>
+                                      +{school.grades.length - 4} more
+                                    </span>
+                                  ) : null}
+                                </div>
+                                {school.lowestPrice ? (
+                                  <span className={heroStyles.heroResultPrice}>
+                                    From R{school.lowestPrice}
                                   </span>
                                 ) : null}
+                                {school.phases.length > 0 ? (
+                                  <div className={heroStyles.heroResultBadges}>
+                                    {school.phases.slice(0, 2).map((schoolPhase) => (
+                                      <span key={schoolPhase}>
+                                        {getSchoolPhaseLabel(schoolPhase)}
+                                      </span>
+                                    ))}
+                                  </div>
+                                ) : null}
+                                {school.isFeatured || school.isPartner ? (
+                                  <div className={heroStyles.heroResultBadges}>
+                                    {school.isFeatured ? <span>Featured</span> : null}
+                                    {school.isPartner ? <span>Partner</span> : null}
+                                  </div>
+                                ) : null}
                               </div>
-                              {school.lowestPrice ? (
-                                <span className={heroStyles.heroResultPrice}>
-                                  From R{school.lowestPrice}
-                                </span>
-                              ) : null}
-                              {school.phases.length > 0 ? (
-                                <div className={heroStyles.heroResultBadges}>
-                                  {school.phases.slice(0, 2).map((schoolPhase) => (
-                                    <span key={schoolPhase}>
-                                      {getSchoolPhaseLabel(schoolPhase)}
-                                    </span>
-                                  ))}
-                                </div>
-                              ) : null}
-                              {school.isFeatured || school.isPartner ? (
-                                <div className={heroStyles.heroResultBadges}>
-                                  {school.isFeatured ? <span>Featured</span> : null}
-                                  {school.isPartner ? <span>Partner</span> : null}
-                                </div>
-                              ) : null}
                             </div>
-                          </div>
-                          <Link
-                            href={`/schools/${school.slug}`}
-                            className={heroStyles.heroResultLink}
-                          >
-                            View packs
-                          </Link>
-                        </article>
-                      ))}
-                    </div>
+                            <Link
+                              href={`/schools/${school.slug}`}
+                              className={heroStyles.heroResultLink}
+                            >
+                              View packs
+                            </Link>
+                          </article>
+                        ))}
+                      </div>
+                      <SchoolResultsAutoLoad
+                        hasMore={hasMore}
+                        isLoading={isLoading}
+                        onLoadMore={() => fetchResults(results.length, "append")}
+                        className={heroStyles.loadMoreSentinel}
+                      />
+                      {hasMore && !isLoading ? (
+                        <button
+                          className={heroStyles.loadMoreButton}
+                          type="button"
+                          onClick={() => fetchResults(results.length, "append")}
+                        >
+                          Load more schools
+                        </button>
+                      ) : null}
+                    </>
                   ) : (
                     <div className={heroStyles.noResultsState}>
-                      <p className={heroStyles.heroSearchState}>
-                        No matching schools found.
-                      </p>
-                      <InlineSchoolWaitlist
-                        schoolName={query}
-                        source="schools-search"
-                      />
-                      <div className={heroStyles.noResultsPacks}>
-                        <Link href="/schools#school-grade-packs" className={heroStyles.noResultsPacksLabel}>
-                          Browse standard packs instead
-                        </Link>
-                        <div className={heroStyles.noResultsPackGrid}>
-                          {homepagePacks.map((pack) => (
-                            <Link
-                              key={pack.id}
-                              href={pack.href}
-                              className={heroStyles.noResultsPackCard}
-                            >
-                              <span className={heroStyles.noResultsPackName}>{pack.name}</span>
-                              <span className={heroStyles.noResultsPackPrice}>{pack.priceLabel}</span>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
+                      <p className={heroStyles.heroSearchState}>No matching schools found.</p>
                     </div>
                   )}
-                  <SchoolResultsAutoLoad
-                    hasMore={hasMore}
-                    isLoading={isLoading}
-                    onLoadMore={() => fetchResults(results.length, "append")}
-                    className={heroStyles.loadMoreSentinel}
-                  />
-                  {hasMore && !isLoading ? (
-                    <button
-                      className={heroStyles.loadMoreButton}
-                      type="button"
-                      onClick={() => fetchResults(results.length, "append")}
-                    >
-                      Load more schools
-                    </button>
+                  {results.length === 0 ? (
+                    <div className={heroStyles.searchCatchall}>
+                      <p className={heroStyles.searchCatchallEyebrow}>Edge case? Covered.</p>
+                      <p className={heroStyles.searchCatchallText}>
+                        Don&rsquo;t see your school? Upload your stationery list or send it to us on WhatsApp and we&rsquo;ll pack every item exactly as specified.
+                      </p>
+                      <div className={heroStyles.searchCatchallActions}>
+                        <Link href="/order" className={heroStyles.searchCatchallUpload}>
+                          Upload Your School List
+                        </Link>
+                        <Link href="/add-your-school" className={heroStyles.searchCatchallAddSchool}>
+                          Add your School
+                        </Link>
+                      </div>
+                    </div>
                   ) : null}
                 </>
               ) : null}

@@ -269,6 +269,90 @@
   color: var(--pex-primary);
 }
 
+.searchMicroCopy {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(33, 158, 154, 0.07);
+  color: var(--pex-navy);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.searchCatchall {
+  margin-top: 20px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(255, 111, 89, 0.05);
+  border: 1px solid rgba(255, 111, 89, 0.15);
+  text-align: left;
+}
+
+.searchCatchallEyebrow {
+  margin: 0 0 4px;
+  color: var(--pex-coral);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.searchCatchallText {
+  margin: 0 0 14px;
+  color: var(--pex-navy);
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.searchCatchallActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.searchCatchallUpload {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-coral);
+  color: var(--pex-bg);
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: var(--button-transition);
+}
+
+.searchCatchallUpload:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
+}
+
+.searchCatchallAddSchool {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-navy);
+  color: var(--pex-bg);
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: var(--button-transition);
+}
+
+.searchCatchallAddSchool:hover {
+  filter: brightness(130%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
+}
+
 .loadMoreButton {
   width: 100%;
   margin-top: 12px;
@@ -316,10 +400,14 @@
   color: var(--pex-text-muted);
   font-size: 13px;
   font-weight: 700;
+  text-align: center;
 }
 
 .noResultsState {
+  min-height: 78px;
   padding: 24px 12px;
+  display: grid;
+  place-items: center;
   text-align: center;
 }
 
@@ -475,6 +563,30 @@
     padding: 14px 12px;
     border-radius: 24px;
     overscroll-behavior: contain;
+  }
+
+  .noResultsState {
+    min-height: 96px;
+    padding-block: 26px;
+  }
+
+  .searchCatchall {
+    margin-top: 18px;
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+
+  .searchCatchallActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .searchCatchallUpload,
+  .searchCatchallAddSchool {
+    justify-content: center;
+    min-height: 48px;
+    padding-inline: 12px;
+    text-align: center;
   }
 
   .mobileResultsClose {
