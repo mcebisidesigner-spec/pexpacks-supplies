@@ -416,6 +416,37 @@
   white-space: nowrap;
 }
 
+.deadlineBanner {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 111, 89, 0.07);
+  border: 1px solid rgba(255, 111, 89, 0.18);
+}
+
+.deadlineBannerTitle {
+  margin: 0 0 3px;
+  color: var(--pex-coral);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.deadlineBannerTitle strong {
+  font-weight: 900;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+.deadlineBannerSub {
+  margin: 0;
+  color: var(--pex-navy);
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
 .loadMoreButton {
   width: 100%;
   margin-top: 12px;

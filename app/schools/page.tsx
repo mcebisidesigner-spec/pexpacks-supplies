@@ -5,17 +5,13 @@ import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanne
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
-import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
+import { ConciergeSection } from "@/components/marketing/ConciergeSection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { LayByPromo } from "@/components/shared/LayByPromo";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
 } from "@/lib/schools/schoolSearchData";
-import { testimonials } from "@/data/testimonials";
 import { faqs } from "@/data/faqs";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
 export const metadata: Metadata = buildMetadata(
@@ -73,7 +69,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
 
       <div className={homeStyles.urgencyBar}>
         <p>
-          Order before <strong>30 September 2026</strong> for delivery before school opens in January.
+          Order by <strong>30th October</strong> for delivery before school opens in January.
         </p>
       </div>
 
@@ -82,34 +78,42 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       )}
       <RecentlyViewedSchools />
 
-      <section
-        className={sectionStyles.section}
-        aria-labelledby="school-testimonials"
-      >
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Trusted by parents"
-            title="Hear from our parents"
-            text="Read what other parents are saying about the Pexpacks experience."
-            headingId="school-testimonials"
-          />
-          <TestimonialMarquee items={testimonials} />
+      <section className={homeStyles.accordionSection} aria-label="Frequently asked questions before ordering">
+        <div className={homeStyles.accordionInner}>
+          <details className={homeStyles.accordionItem} name="schools-faq">
+            <summary className={homeStyles.accordionSummary}>
+              Are these lists for the upcoming 2027 academic year?
+            </summary>
+            <p className={homeStyles.accordionAnswer}>
+              Yes, updated directly from the school.
+            </p>
+          </details>
+          <details className={homeStyles.accordionItem} name="schools-faq">
+            <summary className={homeStyles.accordionSummary}>
+              Do I have to buy the whole pack?
+            </summary>
+            <p className={homeStyles.accordionAnswer}>
+              No, click your school and use our system to minus what you already have.
+            </p>
+          </details>
+          <details className={homeStyles.accordionItem} name="schools-faq">
+            <summary className={homeStyles.accordionSummary}>
+              Are the brands high quality?
+            </summary>
+            <p className={homeStyles.accordionAnswer}>
+              Yes, we use teacher-approved brands.
+            </p>
+          </details>
         </div>
       </section>
 
+      <ConciergeSection />
+
       <FaqMarquee
-        faqs={faqs.filter((faq) =>
-          [
-            "school-not-listed",
-            "delivery-timing",
-            "exercise-books",
-            "multiple-learners",
-            "school-list-submission",
-          ].includes(faq.id)
+        faqs={faqs.filter((f) =>
+          ["school-not-listed", "delivery-timing", "exercise-books", "payment-flow", "find-grade-pack"].includes(f.id)
         )}
       />
-
-      <LayByPromo />
     </>
   );
 }

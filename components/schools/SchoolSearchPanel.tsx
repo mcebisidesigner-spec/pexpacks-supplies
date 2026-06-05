@@ -189,6 +189,14 @@ export function SchoolSearchPanel({
                   <path d="m6 6 12 12M18 6 6 18" />
                 </svg>
               </button>
+              <div className={heroStyles.deadlineBanner}>
+                <p className={heroStyles.deadlineBannerTitle}>
+                  Order by <strong>30th October</strong> for guaranteed delivery before Term 1 begins.
+                </p>
+                <p className={heroStyles.deadlineBannerSub}>
+                  Schools are filling up fast. Secure your pack today.
+                </p>
+              </div>
               {!hasSearched && isLoading ? (
                 <p className={heroStyles.heroSearchState}>Loading schools...</p>
               ) : null}

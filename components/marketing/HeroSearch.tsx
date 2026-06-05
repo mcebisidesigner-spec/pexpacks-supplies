@@ -175,6 +175,14 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                 <path d="m6 6 12 12M18 6 6 18" />
               </svg>
             </button>
+            <div className={styles.deadlineBanner}>
+              <p className={styles.deadlineBannerTitle}>
+                Order by <strong>30th October</strong> for guaranteed delivery before Term 1 begins.
+              </p>
+              <p className={styles.deadlineBannerSub}>
+                Schools are filling up fast. Secure your pack today.
+              </p>
+            </div>
             {!hasSearched && isLoading ? (
                 <p className={styles.heroSearchState}>Loading schools...</p>
               ) : null}
