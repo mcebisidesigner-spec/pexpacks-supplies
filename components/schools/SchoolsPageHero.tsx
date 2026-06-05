@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import styles from "./SchoolsPageHero.module.css";
@@ -17,9 +16,9 @@ const stats = [
 export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {
   return (
     <PageHero
-      eyebrow="Pex your pack"
+      eyebrow="Search by school"
       title="Find your pack in 30 seconds"
-      text="Search your child's school, choose the school phase, and get the correct stationery pack delivered before school opens."
+      text="No queues. No confusion. No missing items."
       panelChildren={
         <div className={heroStyles.trustStats}>
           {stats.map((stat) => (
@@ -32,11 +31,6 @@ export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {
       }
     >
       {children}
-      <div className={styles.heroActions}>
-        <Button href="/schools#school-grade-packs" variant="secondary" size="md">
-          Browse Standard Packs
-        </Button>
-      </div>
     </PageHero>
   );
 }

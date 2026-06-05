@@ -242,13 +242,16 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                       schoolName={query}
                       source="home-search"
                     />
+                    <p className={styles.noResultsConciergeCopy}>
+                      Can&apos;t find your exact school pack? No problem.
+                    </p>
                     <Link
                       href="/order"
                       className={styles.noResultsDropListLink}
                       onClick={onResultClick}
                     >
-                      <span>Drop your list for packing</span>
-                      <span aria-hidden="true">→</span>
+                      <span>Let&apos;s pack it for you!</span>
+                      <span aria-hidden="true">&rarr;</span>
                     </Link>
                   </div>
                 )}

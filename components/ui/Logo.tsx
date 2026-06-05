@@ -6,7 +6,7 @@ type LogoProps = Omit<ImageProps, "src" | "alt" | "width" | "height"> & {
   alt?: string;
 };
 
-export function Logo({ variant = "default", alt = "", ...props }: LogoProps) {
+export function Logo({ variant = "default", alt = "Pexpacks", ...props }: LogoProps) {
   return (
     <Image
       src={brandLogoPaths[variant]}

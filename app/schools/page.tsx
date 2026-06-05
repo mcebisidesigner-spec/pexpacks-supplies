@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/components/ui/Button";
-import { CTASection } from "@/components/marketing/CTASection";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
 
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
@@ -12,16 +9,12 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { TestimonialMarquee } from "@/components/shared/TestimonialMarquee";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { LayByPromo } from "@/components/shared/LayByPromo";
-import { FindSchoolBar } from "@/components/schools/FindSchoolBar";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
 } from "@/lib/schools/schoolSearchData";
-import { homepagePacks } from "@/data/packs";
 import { testimonials } from "@/data/testimonials";
 import { faqs } from "@/data/faqs";
-import cardStyles from "@/components/marketing/MarketingCards.module.css";
-import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
@@ -81,72 +74,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       <div className={homeStyles.urgencyBar}>
         <p>
           Order before <strong>30 September 2026</strong> for delivery before school opens in January.
-          <Link href="/schools">Shop now &rarr;</Link>
         </p>
       </div>
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Standard packs"
-            title="Packs by grade"
-            text="Choose a standard grade pack if your school isn't listed or you know exactly what you need."
-            headingId="school-grade-packs"
-          />
-          <div className={cardStyles.packGrid}>
-            {homepagePacks.map((pack, idx) => (
-              <div className={`${cardStyles.packCard} ${idx === 1 ? cardStyles.packCardFeatured : ""}`} key={pack.id}>
-                {idx === 1 ? <div className={cardStyles.packCardAccent} /> : null}
-                {idx === 1 ? <span className={cardStyles.popularPill}>Most popular</span> : null}
-                <div
-                  className={`${cardStyles.packMedia} ${pack.id === "primary-school-pack" ? cardStyles.packMediaGreen : cardStyles.packMediaBlue}`}
-                  aria-hidden="true"
-                >
-                  <span>{pack.subcategory ?? pack.category}</span>
-                </div>
-                <div className={cardStyles.packCardHead}>
-                  <span className={heroStyles.eyebrow}>
-                    {pack.category}
-                    {idx === 1 ? <span className={cardStyles.mostOrderedBadge}>Most ordered</span> : null}
-                  </span>
-                  <h3>{pack.name}</h3>
-                </div>
-                <div className={cardStyles.packCardBody}>
-                  <p className={cardStyles.packDescription}>
-                    {pack.description}
-                  </p>
-                  <div className={cardStyles.packMetaRow}>
-                    <span className={cardStyles.priceBadge}>
-                      {pack.priceLabel}
-                    </span>
-                    <span
-                      className={cardStyles.quickListPreview}
-                      tabIndex={0}
-                      aria-label={`${pack.name} quick list preview: ${pack.includes.join(", ")}`}
-                    >
-                      Quick list preview
-                      <span className={cardStyles.quickListTooltip} role="tooltip">
-                        {pack.includes.map((item) => (
-                          <span key={item}>{item}</span>
-                        ))}
-                      </span>
-                    </span>
-                  </div>
-                </div>
-                <div className={cardStyles.packCardButtonWrap}>
-                  <Button
-                    href={pack.href}
-                    variant="primary"
-                    className={cardStyles.fullWidthButton}
-                  >
-                    {pack.cta}
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {featuredSchools.length > 0 && (
         <FeaturedSchoolsBanner schools={featuredSchools} />
