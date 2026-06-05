@@ -127,7 +127,10 @@ export class SchoolSearchIndex {
     } else {
       // General path: scan with pre-normalised data (no per-request normalisation)
       candidates = this.schools.filter((school) => {
-        if (query && !school.normalisedName.includes(query)) return false;
+        if (query) {
+          const firstWord = school.normalisedName.split(" ")[0];
+          if (!firstWord.startsWith(query)) return false;
+        }
         if (
           grade &&
           !school.lowerGrades.includes(grade.toLowerCase())

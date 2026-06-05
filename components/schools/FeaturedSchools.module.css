@@ -1,9 +1,16 @@
-.featuredSection,
+.featuredSection {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
 .featuredIntro {
   width: 100%;
   max-width: var(--layout-max-width);
   margin-inline: auto;
   padding-inline: var(--gutter-desktop);
+  margin-top: clamp(32px, 4vw, 48px);
 }
 
 .featuredScroller {
