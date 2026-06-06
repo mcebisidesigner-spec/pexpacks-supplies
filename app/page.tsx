@@ -75,13 +75,13 @@ export default function HomePage() {
         <div className={homeStyles.brandMarqueeTrack}>
           {[
             "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "freedom",
+            "post-it", "bantex", "penflex", "freedom",
             "casio", "marlin", "pentel", "rapid", "rexel",
-            "sellotape", "stabilo", "starpie",
+            "sellotape", "stabilo", "sharpie",
             "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "freedom",
+            "post-it", "bantex", "penflex", "freedom",
             "casio", "marlin", "pentel", "rapid", "rexel",
-            "sellotape", "stabilo", "starpie",
+            "sellotape", "stabilo", "sharpie",
           ].map((brand, i) => (
             <span key={i} className={homeStyles.brandChip}>
               <Image

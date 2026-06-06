@@ -1,13 +1,17 @@
 import { redirect, notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 
 type CheckoutPageProps = {
   searchParams: Promise<{ school?: string; grade?: string; phase?: string; pack?: string; draft?: string }>;
 };
 
 export const metadata: Metadata = {
-  title: "Checkout | Pexpacks",
-  description: "Complete your Pexpacks stationery pack order securely.",
+  ...buildMetadata(
+    "Checkout",
+    "Complete your Pexpacks stationery pack order securely.",
+    "/checkout"
+  ),
   robots: {
     index: false,
     follow: false,

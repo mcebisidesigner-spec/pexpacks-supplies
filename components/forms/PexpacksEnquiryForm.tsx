@@ -110,6 +110,14 @@ export function PexpacksEnquiryForm({
     event.preventDefault();
     const form = event.currentTarget;
     const fd = new FormData(form);
+
+    if (!fd.get("consent")) {
+      setErrors({
+        consent: "You must consent to process this request.",
+      });
+      return;
+    }
+
     setPending(true);
     setStatus(null);
     setErrors({});
@@ -176,9 +184,10 @@ export function PexpacksEnquiryForm({
           accurate.
         </p>
         <div className={formStyles.formGrid}>
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="enqFullName">
             <span>Full name</span>
             <input
+              id="enqFullName"
               name="fullName"
               placeholder="Your name"
               autoComplete="name"
@@ -187,9 +196,10 @@ export function PexpacksEnquiryForm({
             />
             <FieldError id="fullName-error" message={errors.fullName} />
           </label>
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="enqPhone">
             <span>Phone</span>
             <input
+              id="enqPhone"
               name="phone"
               type="tel"
               placeholder="078 003 6048"
@@ -199,9 +209,10 @@ export function PexpacksEnquiryForm({
             />
             <FieldError id="phone-error" message={errors.phone} />
           </label>
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="enqEmail">
             <span>Email</span>
             <input
+              id="enqEmail"
               name="email"
               type="email"
               placeholder="name@example.com"
@@ -233,9 +244,10 @@ export function PexpacksEnquiryForm({
             />
           ) : (
             <>
-              <label className={formStyles.field}>
+              <label className={formStyles.field} htmlFor="enqPartnerBusinessName">
                 <span>Organisation</span>
                 <input
+                  id="enqPartnerBusinessName"
                   name="businessName"
                   placeholder="School, business or supplier name"
                   autoComplete="organization"
@@ -260,9 +272,10 @@ export function PexpacksEnquiryForm({
 
           {showSchoolFields ? (
             <>
-              <label className={formStyles.field}>
+              <label className={formStyles.field} htmlFor="enqSchoolName">
                 <span>School name</span>
                 <input
+                  id="enqSchoolName"
                   name="schoolName"
                   placeholder="School name"
                   autoComplete="organization"
@@ -271,9 +284,10 @@ export function PexpacksEnquiryForm({
                 />
                 <FieldError id="schoolName-error" message={errors.schoolName} />
               </label>
-              <label className={formStyles.field}>
+              <label className={formStyles.field} htmlFor="enqGrade">
                 <span>Grade</span>
                 <input
+                  id="enqGrade"
                   name="grade"
                   placeholder="Grade R, Grade 4..."
                   required
@@ -286,9 +300,10 @@ export function PexpacksEnquiryForm({
 
           {showOfficeFields ? (
             <>
-              <label className={formStyles.field}>
+              <label className={formStyles.field} htmlFor="enqOfficeBusinessName">
                 <span>Business name</span>
                 <input
+                  id="enqOfficeBusinessName"
                   name="businessName"
                   placeholder="Business name"
                   autoComplete="organization"
@@ -301,9 +316,10 @@ export function PexpacksEnquiryForm({
                   message={errors.businessName}
                 />
               </label>
-              <label className={formStyles.field}>
+              <label className={formStyles.field} htmlFor="enqOrderQuantity">
                 <span>Order quantity</span>
                 <input
+                  id="enqOrderQuantity"
                   name="orderQuantity"
                   type="number"
                   min="1"
@@ -313,9 +329,10 @@ export function PexpacksEnquiryForm({
             </>
           ) : null}
 
-          <label className={`${formStyles.field} ${formStyles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`} htmlFor="enqMessage">
             <span>Message</span>
             <textarea
+              id="enqMessage"
               name="message"
               placeholder="Tell us what you need"
               defaultValue={initialMessage}
@@ -326,8 +343,9 @@ export function PexpacksEnquiryForm({
           </label>
         </div>
 
-        <label className={formStyles.consentField}>
+        <label className={formStyles.consentField} htmlFor="enqConsent">
           <input
+            id="enqConsent"
             name="consent"
             type="checkbox"
             required
@@ -343,9 +361,9 @@ export function PexpacksEnquiryForm({
         <FieldError id="consent-error" message={errors.consent} />
 
         {/* Honeypot — hidden from real users */}
-        <label className={formStyles.honeypot} aria-hidden="true">
+        <label className={formStyles.honeypot} aria-hidden="true" htmlFor="enqCompanyWebsite">
           Company website
-          <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
+          <input id="enqCompanyWebsite" name="companyWebsite" tabIndex={-1} autoComplete="off" />
         </label>
 
         <Button type="submit" disabled={pending}>

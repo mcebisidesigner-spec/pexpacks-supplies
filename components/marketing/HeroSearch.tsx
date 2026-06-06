@@ -146,7 +146,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                   {school.image ? (
                     <Image
                       src={school.image}
-                      alt=""
+                      alt={`${school.name} logo`}
                       width={28}
                       height={28}
                       className={styles.trendingCardLogo}

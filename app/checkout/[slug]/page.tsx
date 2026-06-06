@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getSchoolBySlug, getGradeBySlug } from "@/lib/school-utils";
 import { phasePacks } from "@/data/phasePacks";
 import { CheckoutForm } from "../CheckoutForm";
+import { buildMetadata } from "@/lib/seo";
 
 type SlugPageProps = {
   params: Promise<{ slug: string }>;
@@ -10,8 +11,11 @@ type SlugPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "Checkout | Pexpacks",
-  description: "Complete your Pexpacks stationery pack order securely.",
+  ...buildMetadata(
+    "Checkout",
+    "Complete your Pexpacks stationery pack order securely.",
+    "/checkout"
+  ),
   robots: {
     index: false,
     follow: false,

@@ -73,60 +73,65 @@ export function AddSchoolForm() {
 
   return (
     <form className={styles.formGrid} onSubmit={handleSubmit}>
-      <label className={styles.field}>
+      <label className={styles.field} htmlFor="addSchoolSchool">
         <span>School name</span>
         <input
+          id="addSchoolSchool"
           name="school"
           type="text"
           placeholder="e.g. Parktown Primary"
           required
         />
       </label>
-      <label className={styles.field}>
+      <label className={styles.field} htmlFor="addSchoolCity">
         <span>City or area</span>
         <input
+          id="addSchoolCity"
           name="city"
           type="text"
           placeholder="e.g. Johannesburg"
           required
         />
       </label>
-      <label className={styles.field}>
+      <label className={styles.field} htmlFor="addSchoolContact">
         <span>Phone or email</span>
         <input
+          id="addSchoolContact"
           name="contact"
           type="text"
           placeholder="078 003 6048 or name@example.com"
           required
         />
       </label>
-      <label className={styles.field}>
+      <label className={styles.field} htmlFor="addSchoolProvince">
         <span>Province</span>
         <input
+          id="addSchoolProvince"
           name="province"
           type="text"
           placeholder="e.g. Gauteng"
           required
         />
       </label>
-      <label className={styles.field}>
+      <label className={styles.field} htmlFor="addSchoolGrade">
         <span>Grade needed</span>
-        <input name="grade" type="text" placeholder="e.g. Grade R" required />
+        <input id="addSchoolGrade" name="grade" type="text" placeholder="e.g. Grade R" required />
       </label>
-      <label className={[styles.field, styles.formWide].join(" ")}>
+      <label className={[styles.field, styles.formWide].join(" ")} htmlFor="addSchoolNotes">
         <span>Stationery list notes</span>
         <textarea
+          id="addSchoolNotes"
           name="notes"
           placeholder="Tell us what grade lists, books or special pack requirements you have."
         />
       </label>
       {/* Honeypot */}
-      <label className={styles.honeypot} aria-hidden="true">
+      <label className={styles.honeypot} aria-hidden="true" htmlFor="addSchoolCompanyWebsite">
         Company website
-        <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
+        <input id="addSchoolCompanyWebsite" name="companyWebsite" tabIndex={-1} autoComplete="off" />
       </label>
-      <label className={[styles.field, styles.formWide].join(" ")} style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
+      <label className={[styles.field, styles.formWide].join(" ")} htmlFor="addSchoolConsent" style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+        <input id="addSchoolConsent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
         <span style={{ fontSize: 13, color: "var(--pex-text-muted)" }}>
           I consent to Pexpacks processing my information to handle this request.
         </span>

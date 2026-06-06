@@ -725,7 +725,7 @@ export function TrayCheckoutClient() {
             <Textarea
               id="deliveryNotes"
               label="Delivery notes (optional)"
-              helper="Add gate codes, collection notes, or anything the PexPacks team should know."
+              helper="Add gate codes, collection notes, or anything the Pexpacks team should know."
               value={deliveryNotes}
               onChange={(e) => setDeliveryNotes(e.target.value)}
               rows={4}
@@ -738,7 +738,7 @@ export function TrayCheckoutClient() {
               <span className={styles.sectionNumber}>3</span>
               <div>
                 <h2 id="payment-heading">Secure payment</h2>
-                <p>You will continue to Paystack to complete payment. PexPacks does not store your card details.</p>
+                <p>You will continue to Paystack to complete payment. Pexpacks does not store your card details.</p>
               </div>
               <button
                 type="button"
@@ -964,7 +964,7 @@ export function TrayCheckoutClient() {
             </Button>
 
             <p className={styles.summarySecurity}>
-              Secure payment powered by Paystack. PexPacks never stores card details.
+              Secure payment powered by Paystack. Pexpacks never stores card details.
             </p>
           </div>
         </aside>

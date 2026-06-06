@@ -106,7 +106,7 @@ export default function LoginPage() {
             </div>
             <div className={cardStyles.packCard}>
               <div className={cardStyles.packCardHead}>
-                <h2 style={{ fontSize: "20px" }}>Office supplies</h2>
+                <h3 style={{ fontSize: "20px" }}>Office supplies</h3>
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>

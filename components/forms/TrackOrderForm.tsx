@@ -76,20 +76,23 @@ export function TrackOrderForm() {
     >
       <p className={page.kicker}>Order tracking</p>
       <h2>Tracking form</h2>
-      <label>
+      <label htmlFor="trackOrderNumber">
         Order number
-        <input name="orderNumber" placeholder="PEX-2026-001" required />
       </label>
-      <label>
+      <input id="trackOrderNumber" name="orderNumber" placeholder="PEX-2026-001" required />
+      
+      <label htmlFor="trackContact">
         Phone or email
-        <input
-          name="contact"
-          placeholder="Phone number or email address"
-          required
-        />
       </label>
-      <label style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10, marginTop: 8 }}>
-        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
+      <input
+        id="trackContact"
+        name="contact"
+        placeholder="Phone number or email address"
+        required
+      />
+      
+      <label htmlFor="trackConsent" style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10, marginTop: 8 }}>
+        <input id="trackConsent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
         <span style={{ fontSize: 13, color: "var(--pex-text-muted)" }}>
           I consent to Pexpacks processing my information to handle this request.
         </span>

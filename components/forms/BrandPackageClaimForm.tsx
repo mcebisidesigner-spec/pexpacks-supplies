@@ -55,6 +55,14 @@ export function BrandPackageClaimForm() {
     const form = event.currentTarget;
 
     const raw = new FormData(form);
+
+    if (!raw.get("consent")) {
+      setErrors({
+        consent: "You must consent to process this request.",
+      });
+      return;
+    }
+
     const payload: Record<string, unknown> = {};
 
     for (const [key, value] of raw.entries()) {
@@ -170,9 +178,10 @@ export function BrandPackageClaimForm() {
         </p>
 
         <div className={formStyles.formGrid}>
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="claimBusinessName">
             <span>Business name</span>
             <input
+              id="claimBusinessName"
               name="businessName"
               placeholder="Business or trading name"
               autoComplete="organization"
@@ -182,9 +191,10 @@ export function BrandPackageClaimForm() {
             <FieldError id="businessName-error" message={errors.businessName} />
           </label>
 
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="claimFullName">
             <span>Contact person</span>
             <input
+              id="claimFullName"
               name="fullName"
               placeholder="Your name"
               autoComplete="name"
@@ -194,9 +204,10 @@ export function BrandPackageClaimForm() {
             <FieldError id="fullName-error" message={errors.fullName} />
           </label>
 
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="claimPhone">
             <span>Phone</span>
             <input
+              id="claimPhone"
               name="phone"
               type="tel"
               placeholder="078 003 6048"
@@ -207,9 +218,10 @@ export function BrandPackageClaimForm() {
             <FieldError id="phone-error" message={errors.phone} />
           </label>
 
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="claimEmail">
             <span>Email</span>
             <input
+              id="claimEmail"
               name="email"
               type="email"
               placeholder="name@example.com"
@@ -231,9 +243,10 @@ export function BrandPackageClaimForm() {
             ]}
           />
 
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="claimWebsite">
             <span>Website or social link</span>
             <input
+              id="claimWebsite"
               name="website"
               type="url"
               placeholder="https://..."
@@ -241,9 +254,10 @@ export function BrandPackageClaimForm() {
             />
           </label>
 
-          <label className={`${formStyles.field} ${formStyles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`} htmlFor="claimBusinessDescription">
             <span>Brief description of the business</span>
             <textarea
+              id="claimBusinessDescription"
               name="businessDescription"
               placeholder="What does the business do, who does it serve, and what should the brand communicate?"
               required
@@ -252,9 +266,10 @@ export function BrandPackageClaimForm() {
             <FieldError id="businessDescription-error" message={errors.businessDescription} />
           </label>
 
-          <label className={`${formStyles.field} ${formStyles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`} htmlFor="claimBrandingPreferences">
             <span>Branding preferences</span>
             <textarea
+              id="claimBrandingPreferences"
               name="brandingPreferences"
               placeholder="Colours, style, tone, references, likes, dislikes, and anything the design must include."
               required
@@ -263,30 +278,33 @@ export function BrandPackageClaimForm() {
             <FieldError id="brandingPreferences-error" message={errors.brandingPreferences} />
           </label>
 
-          <label className={`${formStyles.field} ${formStyles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`} htmlFor="claimExistingBranding">
             <span>Existing branding material</span>
             <textarea
+              id="claimExistingBranding"
               name="existingBranding"
               placeholder="Tell us what you already have: logo, colour palette, fonts, social pages, signage, documents, or none yet."
             />
           </label>
 
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="claimTargetAudience">
             <span>Target audience</span>
             <input
+              id="claimTargetAudience"
               name="targetAudience"
               placeholder="Parents, SMEs, contractors..."
             />
           </label>
 
-          <label className={formStyles.field}>
+          <label className={formStyles.field} htmlFor="claimDeadline">
             <span>Preferred deadline</span>
-            <input name="deadline" placeholder="Flexible, 2 weeks, launch date..." />
+            <input id="claimDeadline" name="deadline" placeholder="Flexible, 2 weeks, launch date..." />
           </label>
 
-          <label className={`${formStyles.field} ${formStyles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`} htmlFor="claimBrandAssets">
             <span>Upload sample branding files</span>
             <input
+              id="claimBrandAssets"
               ref={fileRef}
               name="brandAssets"
               type="file"
@@ -302,17 +320,19 @@ export function BrandPackageClaimForm() {
             <FieldError id="brandAssets-error" message={errors.brandAssets} />
           </label>
 
-          <label className={`${formStyles.field} ${formStyles.formWide}`}>
+          <label className={`${formStyles.field} ${formStyles.formWide}`} htmlFor="claimNotes">
             <span>Additional notes</span>
             <textarea
+              id="claimNotes"
               name="notes"
               placeholder="Anything else we should know before preparing your package?"
             />
           </label>
         </div>
 
-        <label className={formStyles.consentField}>
+        <label className={formStyles.consentField} htmlFor="claimConsent">
           <input
+            id="claimConsent"
             name="consent"
             type="checkbox"
             required
@@ -327,9 +347,9 @@ export function BrandPackageClaimForm() {
         </label>
         <FieldError id="consent-error" message={errors.consent} />
 
-        <label className={formStyles.honeypot} aria-hidden="true">
+        <label className={formStyles.honeypot} aria-hidden="true" htmlFor="claimCompanyWebsite">
           Company website
-          <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
+          <input id="claimCompanyWebsite" name="companyWebsite" tabIndex={-1} autoComplete="off" />
         </label>
 
         <Button type="submit" disabled={pending}>

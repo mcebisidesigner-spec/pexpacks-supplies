@@ -57,6 +57,7 @@ function highlightToneClass(tone: LegalDocumentHighlightTone | undefined) {
 }
 
 export function LegalDocumentPage({
+  pageTitle,
   heroEyebrow,
   heroTitle,
   heroText,
@@ -79,8 +80,8 @@ export function LegalDocumentPage({
     <>
       <PageHero
         eyebrow={heroEyebrow}
-        title={heroTitle}
-        text={heroText}
+        title={pageTitle}
+        text={`${heroTitle}. ${heroText}`}
         panelTitle={heroPanelTitle}
         panelText={heroPanelText}
       />

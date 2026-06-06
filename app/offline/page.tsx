@@ -6,7 +6,7 @@ import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = {
   ...buildMetadata(
-    "Offline | Pexpacks",
+    "Offline",
     "Pexpacks could not reach the network. Previously opened pages may still be available.",
     "/offline"
   ),
