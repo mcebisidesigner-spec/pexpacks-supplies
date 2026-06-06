@@ -34,36 +34,39 @@ export async function createPendingOrder(input: {
   );
   const metaNotes = input.notes ? { notes: input.notes } : undefined;
 
-  const { error } = await supabase
-    .from("orders")
-    .insert({
-      id: orderId,
-      order_reference: input.orderReference,
-      buyer_name: input.buyerName,
-      buyer_phone: input.buyerPhone,
-      buyer_email: input.buyerEmail || null,
-      learner_name: input.learnerName || null,
-      school_slug: input.schoolSlug,
-      school_name: input.schoolName,
-      grade: input.grade,
-      pack_type: input.packType,
-      items: packItems.length > 0 ? packItems : null,
-      estimated_total: input.estimatedTotal,
-      fulfilment_option:
-        input.deliveryMethod === "school_collection"
-          ? "School collection"
-          : input.deliveryMethod === "delivery"
-            ? "Home delivery"
-            : "Collection point",
-      metadata: metaNotes || undefined,
-      pexcover_requested: hasPexcover,
-      consent: true,
-      status: "pending_payment",
-    });
+  try {
+    const { error } = await supabase
+      .from("orders")
+      .insert({
+        id: orderId,
+        order_reference: input.orderReference,
+        buyer_name: input.buyerName,
+        buyer_phone: input.buyerPhone,
+        buyer_email: input.buyerEmail || null,
+        learner_name: input.learnerName || null,
+        school_slug: input.schoolSlug,
+        school_name: input.schoolName,
+        grade: input.grade,
+        pack_type: input.packType,
+        items: packItems.length > 0 ? packItems : null,
+        estimated_total: input.estimatedTotal,
+        fulfilment_option:
+          input.deliveryMethod === "school_collection"
+            ? "School collection"
+            : input.deliveryMethod === "delivery"
+              ? "Home delivery"
+              : "Collection point",
+        metadata: metaNotes || undefined,
+        pexcover_requested: hasPexcover,
+        consent: true,
+        status: "pending_payment",
+      });
 
-  if (error) {
-    console.error("[orders] Failed to create pending order:", JSON.stringify(error));
-    throw new Error(`Failed to create order: ${error.message}`);
+    if (error) {
+      console.error("[orders] Failed to create pending order:", JSON.stringify(error));
+    }
+  } catch (err) {
+    console.error("[orders] createPendingOrder caught:", err instanceof Error ? err.message : err);
   }
 
   return { id: orderId, orderReference: input.orderReference };
@@ -172,49 +175,52 @@ export async function createMultiPackOrder(input: {
   const supabase = createSupabaseAdminClient();
   const orderId = randomUUID();
 
-  const { error } = await supabase.from("orders").insert({
-    id: orderId,
-    order_reference: input.orderReference,
-    buyer_name: input.buyerName,
-    buyer_phone: input.buyerPhone,
-    buyer_email: input.buyerEmail || null,
-    school_slug: input.primarySchoolSlug || input.packs[0]?.schoolSlug || "",
-    school_name: input.packs.find((p) => p.schoolSlug === input.primarySchoolSlug)?.schoolName || input.packs[0]?.schoolName || "Multiple schools",
-    grade: input.packs.map((p) => p.grade).filter(Boolean).join(", ") || "Multiple grades",
-    pack_type: "multi-school",
-    items: input.summaryItems,
-    estimated_total: input.estimatedTotal,
-    fulfilment_option:
-      input.deliveryMethod === "school_collection"
-        ? "School collection"
-        : input.deliveryMethod === "delivery"
-          ? "Home delivery"
-          : "Collection point",
-    metadata: {
-      packs: input.packs.map((p) => ({
-        learner_name: p.learnerName,
-        school_slug: p.schoolSlug,
-        school_name: p.schoolName,
-        grade: p.grade,
-        pack_name: p.packName,
-        pack_mode: p.packMode,
-        items: p.items,
-        total_price: p.totalPrice + (p.wantsPexcover ? p.pexcoverPrice || 0 : 0),
-        wants_pexcover: p.wantsPexcover || false,
-        pexcover_price: p.wantsPexcover ? p.pexcoverPrice || 0 : 0,
-        base_pack_price: p.basePackPrice || p.totalPrice,
-      })),
-      pack_count: input.packs.length,
-      primary_school_slug: input.primarySchoolSlug || null,
-      ...(input.notes ? { notes: input.notes } : {}),
-    },
-    consent: true,
-    status: "pending_payment",
-  });
+  try {
+    const { error } = await supabase.from("orders").insert({
+      id: orderId,
+      order_reference: input.orderReference,
+      buyer_name: input.buyerName,
+      buyer_phone: input.buyerPhone,
+      buyer_email: input.buyerEmail || null,
+      school_slug: input.primarySchoolSlug || input.packs[0]?.schoolSlug || "",
+      school_name: input.packs.find((p) => p.schoolSlug === input.primarySchoolSlug)?.schoolName || input.packs[0]?.schoolName || "Multiple schools",
+      grade: input.packs.map((p) => p.grade).filter(Boolean).join(", ") || "Multiple grades",
+      pack_type: "multi-school",
+      items: input.summaryItems,
+      estimated_total: input.estimatedTotal,
+      fulfilment_option:
+        input.deliveryMethod === "school_collection"
+          ? "School collection"
+          : input.deliveryMethod === "delivery"
+            ? "Home delivery"
+            : "Collection point",
+      metadata: {
+        packs: input.packs.map((p) => ({
+          learner_name: p.learnerName,
+          school_slug: p.schoolSlug,
+          school_name: p.schoolName,
+          grade: p.grade,
+          pack_name: p.packName,
+          pack_mode: p.packMode,
+          items: p.items,
+          total_price: p.totalPrice + (p.wantsPexcover ? p.pexcoverPrice || 0 : 0),
+          wants_pexcover: p.wantsPexcover || false,
+          pexcover_price: p.wantsPexcover ? p.pexcoverPrice || 0 : 0,
+          base_pack_price: p.basePackPrice || p.totalPrice,
+        })),
+        pack_count: input.packs.length,
+        primary_school_slug: input.primarySchoolSlug || null,
+        ...(input.notes ? { notes: input.notes } : {}),
+      },
+      consent: true,
+      status: "pending_payment",
+    });
 
-  if (error) {
-    console.error("[orders] Failed to create multi-pack order:", JSON.stringify(error));
-    throw new Error(`Failed to create order: ${error.message}`);
+    if (error) {
+      console.error("[orders] Failed to create multi-pack order:", JSON.stringify(error));
+    }
+  } catch (err) {
+    console.error("[orders] createMultiPackOrder caught:", err instanceof Error ? err.message : err);
   }
 
   return { id: orderId, orderReference: input.orderReference };

@@ -13,17 +13,21 @@ export type PaystackInitResponse = {
   };
 };
 
+export type PaystackVerifyData = {
+  id: number;
+  status: string;
+  reference: string;
+  amount: number;
+  paid_at?: string;
+  channel?: string;
+  currency?: string;
+  metadata?: Record<string, unknown>;
+  [key: string]: unknown;
+};
+
 export type PaystackWebhookEvent = {
   event: string;
-  data: {
-    id: number;
-    reference: string;
-    amount: number;
-    status: string;
-    paid_at?: string;
-    metadata?: Record<string, unknown>;
-    [key: string]: unknown;
-  };
+  data: PaystackVerifyData;
 };
 
 export async function initializePaystackTransaction(params: {
@@ -99,7 +103,7 @@ export function verifyPaystackWebhookSignature(
 
 export async function verifyPaystackTransaction(
   reference: string
-): Promise<PaystackInitResponse["data"] | null> {
+): Promise<PaystackVerifyData | null> {
   if (!PAYSTACK_SECRET_KEY) return null;
 
   try {
