@@ -8,12 +8,10 @@ import { SchoolsFaqAccordion } from "@/components/schools/SchoolsFaqAccordion";
 import { SchoolsHowItWorks } from "@/components/schools/SchoolsHowItWorks";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
 import { ConciergeSection } from "@/components/marketing/ConciergeSection";
-import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
 } from "@/lib/schools/schoolSearchData";
-import { faqs } from "@/data/faqs";
 import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
 export const metadata: Metadata = buildMetadata(
@@ -45,37 +43,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       </div>
 
       <SchoolsHowItWorks className={homeStyles.schoolsHowItWorksDesktop} />
-
-      <div className={homeStyles.brandMarquee}>
-        <div className={homeStyles.brandMarqueeTrack}>
-          {[
-            "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "freedom",
-            "casio", "marlin", "pentel", "rapid", "rexel",
-            "sellotape", "stabilo", "starpie",
-            "croxley", "bic", "pilot", "pritt", "staedtler",
-            "post-it", "bantex", "freedom",
-            "casio", "marlin", "pentel", "rapid", "rexel",
-            "sellotape", "stabilo", "starpie",
-          ].map((brand, i) => (
-            <span key={i} className={homeStyles.brandChip}>
-              <Image
-                src={`/images/stationery-brands/${brand}.svg`}
-                alt={`${brand} logo`}
-                width={80}
-                height={40}
-                style={{ objectFit: "contain", display: "block" }}
-              />
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className={homeStyles.urgencyBar}>
-        <p>
-          Order by <strong>30th October</strong> for delivery before school opens in January.
-        </p>
-      </div>
 
       {featuredSchools.length > 0 && (
         <FeaturedSchoolsBanner schools={featuredSchools} />
@@ -123,12 +90,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       <SchoolsFaqAccordion />
 
       <ConciergeSection />
-
-      <FaqMarquee
-        faqs={faqs.filter((f) =>
-          ["school-not-listed", "delivery-timing", "exercise-books", "payment-flow", "find-grade-pack"].includes(f.id)
-        )}
-      />
     </>
   );
 }
