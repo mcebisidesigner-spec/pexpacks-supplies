@@ -137,6 +137,24 @@
   text-decoration: underline;
 }
 
+.searchMicroCopy {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 20px var(--gutter-desktop) 0;
+}
+
+.searchMicroCopy p {
+  margin: 0;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: rgba(33, 158, 154, 0.07);
+  color: var(--pex-navy);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
 @media (max-width: 1023px) {
   .pexcoverBannerOuter {
     padding: 32px var(--gutter-mobile) 0;

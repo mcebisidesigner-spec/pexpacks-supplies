@@ -109,6 +109,12 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         </div>
       </div>
 
+      <div className={styles.searchMicroCopy}>
+        <p>
+          Every pack is an exact 100% match to {school.name}&apos;s official requirements. Simply select your grade, and you can easily add or minus quantities of the required items before checkout.
+        </p>
+      </div>
+
       <section className={pageStyles.section}>
         <div className={pageStyles.sectionInner}>
           <GradeSelector school={school} />

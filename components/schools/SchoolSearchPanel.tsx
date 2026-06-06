@@ -50,6 +50,7 @@ export function SchoolSearchPanel({
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const [trendingSchools, setTrendingSchools] = useState<{ name: string; slug: string; image?: string | null }[]>([]);
   const [trendingLoading, setTrendingLoading] = useState(false);
+  const [trendingVisible, setTrendingVisible] = useState(false);
   const trendingFetched = useRef(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const {
@@ -111,6 +112,7 @@ export function SchoolSearchPanel({
       <h2 id="school-search-heading" className="sr-only">
         Search by School, Grade or Region
       </h2>
+      {searchActive && <div className={heroStyles.searchBackdrop} />}
       <div className={styles.searchFormWrapper}>
         <div
           ref={searchRef}
@@ -120,6 +122,7 @@ export function SchoolSearchPanel({
             if (event.key === "Escape") {
               setPanelOpen(false);
               setIsSchoolInputFocused(false);
+              setTrendingVisible(false);
             }
           }}
           aria-controls="school-search-results"
@@ -137,6 +140,7 @@ export function SchoolSearchPanel({
               value={query}
               onFocus={() => {
                 setIsSchoolInputFocused(true);
+                setTrendingVisible(true);
               }}
               onBlur={() => setIsSchoolInputFocused(false)}
               onChange={(event) => updateQuery(event.target.value)}
@@ -144,7 +148,7 @@ export function SchoolSearchPanel({
               autoComplete="off"
             />
           </label>
-          {isSchoolInputFocused && query.length < 3 && trendingSchools.length > 0 ? (
+          {trendingVisible && query.length < 3 && trendingSchools.length > 0 ? (
             <div className={heroStyles.trendingRow}>
               <span className={heroStyles.trendingLabel}>Trending Near You</span>
               <div className={heroStyles.trendingTrack}>
@@ -183,20 +187,13 @@ export function SchoolSearchPanel({
                 onClick={() => {
                   setPanelOpen(false);
                   setIsSchoolInputFocused(false);
+                  setTrendingVisible(false);
                 }}
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path d="m6 6 12 12M18 6 6 18" />
                 </svg>
               </button>
-              <div className={heroStyles.deadlineBanner}>
-                <p className={heroStyles.deadlineBannerTitle}>
-                  Order by <strong>30th October</strong> for guaranteed delivery before Term 1 begins.
-                </p>
-                <p className={heroStyles.deadlineBannerSub}>
-                  Schools are filling up fast. Secure your pack today.
-                </p>
-              </div>
               {!hasSearched && isLoading ? (
                 <p className={heroStyles.heroSearchState}>Loading schools...</p>
               ) : null}
@@ -217,11 +214,6 @@ export function SchoolSearchPanel({
                       </span>
                     ) : null}
                   </div>
-                  {results.length > 0 ? (
-                    <p className={heroStyles.searchMicroCopy}>
-                      Every pack is an exact 100% match to the school's official requirements. Simply select your school, and you can easily add or minus quantities of the required items before checkout.
-                    </p>
-                  ) : null}
                   {results.length > 0 ? (
                     <>
                       <div className={heroStyles.heroResultsList}>
@@ -330,9 +322,6 @@ export function SchoolSearchPanel({
                       <div className={heroStyles.searchCatchallActions}>
                         <Link href="/order" className={heroStyles.searchCatchallUpload}>
                           Upload Your School List
-                        </Link>
-                        <Link href="/add-your-school" className={heroStyles.searchCatchallAddSchool}>
-                          Add your School
                         </Link>
                       </div>
                     </div>

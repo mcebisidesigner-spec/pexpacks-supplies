@@ -45,6 +45,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
   const searchRef = useRef<HTMLDivElement>(null);
   const [trendingSchools, setTrendingSchools] = useState<{ name: string; slug: string; image?: string | null }[]>([]);
   const [trendingLoading, setTrendingLoading] = useState(false);
+  const [trendingVisible, setTrendingVisible] = useState(false);
   const trendingFetched = useRef(false);
   const {
     query,
@@ -96,6 +97,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
 
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
+      {searchActive && <div className={styles.searchBackdrop} />}
       <div
         ref={searchRef}
         className={styles.heroSearch}
@@ -106,6 +108,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
           if (event.key === "Escape") {
             setPanelOpen(false);
             setIsSchoolInputFocused(false);
+            setTrendingVisible(false);
           }
         }}
       >
@@ -123,13 +126,14 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
             value={query}
             onFocus={() => {
               setIsSchoolInputFocused(true);
+              setTrendingVisible(true);
             }}
             onBlur={() => setIsSchoolInputFocused(false)}
             onChange={(event) => updateQuery(event.target.value)}
           />
         </label>
 
-        {isSchoolInputFocused && query.length < 3 && trendingSchools.length > 0 ? (
+        {trendingVisible && query.length < 3 && trendingSchools.length > 0 ? (
           <div className={styles.trendingRow}>
             <span className={styles.trendingLabel}>Trending Near You</span>
             <div className={styles.trendingTrack}>
@@ -169,20 +173,13 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
               onClick={() => {
                 setPanelOpen(false);
                 setIsSchoolInputFocused(false);
+                setTrendingVisible(false);
               }}
             >
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="m6 6 12 12M18 6 6 18" />
               </svg>
             </button>
-            <div className={styles.deadlineBanner}>
-              <p className={styles.deadlineBannerTitle}>
-                Order by <strong>30th October</strong> for guaranteed delivery before Term 1 begins.
-              </p>
-              <p className={styles.deadlineBannerSub}>
-                Schools are filling up fast. Secure your pack today.
-              </p>
-            </div>
             {!hasSearched && isLoading ? (
                 <p className={styles.heroSearchState}>Loading schools...</p>
               ) : null}
@@ -203,11 +200,6 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                     </span>
                   ) : null}
                 </div>
-                {results.length > 0 ? (
-                  <p className={styles.searchMicroCopy}>
-                    Every pack is an exact 100% match to the school's official requirements. Simply select your school, and you can easily add or minus quantities of the required items before checkout.
-                  </p>
-                ) : null}
                 {results.length > 0 ? (
                   <>
                     <div className={styles.heroResultsList}>
@@ -318,9 +310,6 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                     <div className={styles.searchCatchallActions}>
                       <Link href="/order" className={styles.searchCatchallUpload}>
                         Upload Your School List
-                      </Link>
-                      <Link href="/add-your-school" className={styles.searchCatchallAddSchool}>
-                        Add your School
                       </Link>
                     </div>
                   </div>
