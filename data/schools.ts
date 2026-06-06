@@ -13,6 +13,7 @@ export type School = {
   name: string;
   slug: string;
   city: string;
+  metro: string;
   province: string;
   logo: string;
   isPartnerSchool: boolean;
@@ -24,6 +25,7 @@ export type SchoolIndexRecord = {
   name: string;
   slug: string;
   city: string;
+  metro: string;
   province: string;
   logo: string;
   isPartnerSchool: boolean;

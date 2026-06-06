@@ -27,6 +27,7 @@ async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
           slug: school.slug,
           region: school.city,
           city: school.city,
+          metro: school.metro,
           province: school.province,
           grades: school.grades
             .map((g) => g.grade)

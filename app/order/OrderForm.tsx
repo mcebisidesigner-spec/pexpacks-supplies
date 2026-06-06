@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import styles from "./OrderPage.module.css";
 
-type OrderCategory = "Primary School Learner" | "High School Learner" | "Office / Business";
+type OrderCategory = "Primary School Learner" | "High School Learner";
 
 function formatPhoneSA(value: string) {
   const hasPlus = value.startsWith('+');
@@ -135,7 +136,7 @@ export function OrderForm() {
           <div className={styles.animateFadeIn}>
             <h2 className={styles.stepTitle}>Who are we packing for?</h2>
             <div className={styles.verticalOptions}>
-              {(["Primary School Learner", "High School Learner", "Office / Business"] as OrderCategory[]).map((cat) => (
+              {(["Primary School Learner", "High School Learner"] as OrderCategory[]).map((cat) => (
                 <button
                   key={cat}
                   className={`${styles.verticalOptionBtn} ${category === cat ? styles.selected : ""}`}
@@ -152,6 +153,16 @@ export function OrderForm() {
                 </button>
               ))}
             </div>
+
+            <div className={styles.addSchoolContainer}>
+              <Link href="/add-your-school" className={styles.addSchoolLink}>
+                <span>Would you like to add your school?</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+            </div>
+
             {errors.category && <span className={styles.errorText}>{errors.category}</span>}
           </div>
         )}

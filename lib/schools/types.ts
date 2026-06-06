@@ -6,6 +6,7 @@ export type SchoolSearchRecord = {
   slug: string;
   region: string;
   city?: string;
+  metro?: string;
   province?: string;
   grades: string[];
   isFeatured?: boolean;

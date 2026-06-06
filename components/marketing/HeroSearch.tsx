@@ -226,7 +226,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                                 </h3>
                                 <p>
                                   {school.region}
-                                  {school.province ? `, ${school.province}` : ""}
+                                  {school.metro ? `, City of ${school.metro}` : school.province ? `, ${school.province}` : ""}
                                 </p>
                               </div>
                             </div>

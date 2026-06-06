@@ -284,7 +284,7 @@ export function GradePackActions({
                         </span>
                         <span className={styles.itemName}>{item.name}</span>
                         <span className={styles.itemMeta}>
-                          Required quantity: {item.requiredQuantity}
+                          School requires: {item.requiredQuantity}
                           {typeof item.unitPrice === "number"
                             ? ` - ${formatCurrency(item.unitPrice)} each`
                             : ""}

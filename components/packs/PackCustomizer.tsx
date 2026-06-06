@@ -251,7 +251,7 @@ export function PackCustomizer({
                       </span>
                       <span className={styles.itemName}>{item.name}</span>
                       <span className={styles.itemMeta}>
-                        Required quantity: {item.quantity}
+                        School requires: {item.quantity}
                         {item.unitPrice
                           ? ` - ${formatCurrency(item.unitPrice)} each`
                           : ""}

@@ -24,7 +24,7 @@ export function SchoolResultCard({ school }: SchoolResultCardProps) {
         </h3>
         <p>
           {school.region}
-          {school.province ? `, ${school.province}` : ""}
+          {school.metro ? `, City of ${school.metro}` : school.province ? `, ${school.province}` : ""}
         </p>
       </div>
       <span>{gradeLabel(school.grades)}</span>

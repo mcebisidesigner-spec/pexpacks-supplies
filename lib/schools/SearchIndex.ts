@@ -49,7 +49,12 @@ export class SchoolSearchIndex {
     this.schools = records
       .map((school) => ({
         ...school,
-        normalisedName: normaliseSchoolQuery(school.name),
+        normalisedName: normaliseSchoolQuery(school.name)
+          .replace(/\bprimary\b/g, "")
+          .replace(/\bhigh\b/g, "")
+          .replace(/\bschool\b/g, "")
+          .replace(/\s+/g, " ")
+          .trim(),
         lowerGrades: school.grades.map((g) => g.toLowerCase()),
         normalisedRegion: normaliseSchoolQuery(school.region),
         normalisedCity: normaliseSchoolQuery(school.city),
@@ -128,8 +133,7 @@ export class SchoolSearchIndex {
       // General path: scan with pre-normalised data (no per-request normalisation)
       candidates = this.schools.filter((school) => {
         if (query) {
-          const firstWord = school.normalisedName.split(" ")[0];
-          if (!firstWord.startsWith(query)) return false;
+          if (!school.normalisedName.includes(query)) return false;
         }
         if (
           grade &&

@@ -1,4 +1,15 @@
-// Generate 500+ real Gauteng schools for schools.ts
+/**
+ * DEPRECATED — use generate-schools-from-dbe.js instead.
+ *
+ * This file previously contained hand-crafted school data.
+ * The new script reads the official DBE 2025 masterlist XLSX
+ * and generates school-index.json + school-records.json with
+ * 3300+ real Gauteng schools.
+ *
+ * To regenerate:
+ *   node scripts/generate-schools-from-dbe.js
+ */
+
 const fs = require("fs");
 const path = require("path");
 

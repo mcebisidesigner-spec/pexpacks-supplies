@@ -4,13 +4,23 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
-import { getSchoolIndex } from "@/data/schools";
+import {
+  getSchoolIndex,
+  getSchoolRecordMap,
+} from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
 import pageStyles from "@/styles/Page.module.css";
 import styles from "./SchoolDetailPage.module.css";
+
+// Eagerly start loading the full school records at module evaluation time,
+// ahead of component rendering. This gives the 11MB dynamic import a head
+// start so it's more likely to resolve before the async component's first
+// `await`, avoiding a React Suspense interleave that can confuse Next.js's
+// internal performance.mark/measure bookkeeping in dev / Turbopack.
+getSchoolRecordMap();
 
 type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
@@ -66,7 +76,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         ])}
       />
       <PageHero
-        eyebrow={`${school.city}, ${school.province}`}
+        eyebrow={`${school.city}, City of ${school.metro}`}
         title={school.name}
         text="Official stationery packs prepared according to the school stationery list."
         panelChildren={
