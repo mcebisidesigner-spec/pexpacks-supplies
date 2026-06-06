@@ -474,21 +474,29 @@
 .addSchoolContainer {
   margin-top: 24px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .addSchoolLink {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  padding: 18px 24px;
+  border: 2px solid var(--pex-border);
+  border-radius: 16px;
+  background: #fff;
   color: var(--pex-keppel);
   font-weight: 700;
   font-size: 15px;
   text-decoration: none;
-  transition: color var(--motion-duration-fast) var(--motion-ease);
+  cursor: pointer;
+  transition: border-color var(--motion-duration-fast) var(--motion-ease),
+              color var(--motion-duration-fast) var(--motion-ease);
 }
 
 .addSchoolLink:hover {
+  border-color: var(--pex-navy);
   color: var(--pex-coral);
 }
 
