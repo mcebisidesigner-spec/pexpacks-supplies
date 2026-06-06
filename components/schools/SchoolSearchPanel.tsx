@@ -13,6 +13,7 @@ import {
 import { slugify } from "@/lib/slugify";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
+import { SchoolsHowItWorks } from "./SchoolsHowItWorks";
 import styles from "./SchoolSearchPanel.module.css";
 
 const resultLimit = 12;
@@ -107,11 +108,7 @@ export function SchoolSearchPanel({
     <section
       id="school-search"
       className={`${styles.searchExperience} pex-school-search-focus-anchor`}
-      aria-labelledby="school-search-heading"
     >
-      <h2 id="school-search-heading" className="sr-only">
-        Search by School, Grade or Region
-      </h2>
       {searchActive && <div className={heroStyles.searchBackdrop} />}
       <div className={styles.searchFormWrapper}>
         <div
@@ -331,6 +328,7 @@ export function SchoolSearchPanel({
             </div>
           ) : null}
         </div>
+        <SchoolsHowItWorks className={styles.mobileHowItWorks} />
       </div>
 
       <SearchHelperPill

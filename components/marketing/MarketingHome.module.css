@@ -653,8 +653,12 @@
 .howItWorks {
   width: 100%;
   max-width: var(--layout-max-width);
-  margin: 32px auto 0;
+  margin: 32px auto 24px;
   padding-inline: var(--gutter-desktop);
+}
+
+.schoolsHowItWorksDesktop {
+  display: block;
 }
 
 .howItWorksInner {
@@ -737,6 +741,10 @@
 @media (max-width: 860px) {
   .howItWorks {
     padding-inline: var(--gutter-mobile);
+  }
+
+  .schoolsHowItWorksDesktop {
+    display: none;
   }
 }
 
