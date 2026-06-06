@@ -1062,6 +1062,10 @@
   color: var(--pex-primary);
 }
 
+.orderPackLearnerLabelError {
+  color: var(--form-error-color) !important;
+}
+
 .orderPackLearnerValue {
   display: inline-flex;
   align-items: center;

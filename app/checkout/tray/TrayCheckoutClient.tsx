@@ -846,9 +846,10 @@ export function TrayCheckoutClient() {
                         ) : (
                           <button
                             type="button"
-                            className={styles.orderPackLearnerLabel}
+                            className={`${styles.orderPackLearnerLabel}${errors[`learner_${index}`] ? ` ${styles.orderPackLearnerLabelError}` : ""}`}
                             onClick={() => setEditNameIndex(index)}
                             aria-label={`Edit learner ${index + 1} name`}
+                            aria-invalid={!!errors[`learner_${index}`]}
                           >
                             {learnerLabel}
                           </button>

@@ -51,6 +51,7 @@ export class SchoolSearchIndex {
         ...school,
         normalisedName: normaliseSchoolQuery(school.name)
           .replace(/\bprimary\b/g, "")
+          .replace(/\bprivate\b/g, "")
           .replace(/\bhigh\b/g, "")
           .replace(/\bschool\b/g, "")
           .replace(/\s+/g, " ")
