@@ -1,72 +1,233 @@
-.iconBox {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--radius-pill);
-  display: grid;
-  place-items: center;
+/* ── Card ── */
+.card {
+  width: 100%;
+  max-width: 520px;
   margin: 0 auto;
-  font-size: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 48px 32px;
+  border-radius: 24px;
+  background: var(--pex-bg);
+  text-align: center;
 }
 
-.heading {
+/* ── Animated Checkmark ── */
+.checkmarkWrap {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+}
+
+.checkmark {
+  width: 72px;
+  height: 72px;
+}
+
+.checkmarkCircle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke: var(--pex-keppel);
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmarkCheck {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  stroke-width: 3;
+  stroke: var(--pex-keppel);
+  fill: none;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Loading / Alert icon wrap ── */
+.iconWrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--pex-bg-soft);
+  color: var(--pex-text-muted);
+}
+
+/* ── Headings ── */
+.title {
   margin: 0;
   color: var(--pex-primary);
   font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  line-height: 1.08;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  line-height: 1.1;
   text-align: center;
 }
 
-.bodyText {
+.subtitle {
   margin: 0;
   color: var(--pex-text-muted);
+  font-size: 1rem;
   line-height: 1.5;
   text-align: center;
-  max-width: 420px;
+  max-width: 400px;
   margin-inline: auto;
 }
 
-.refBanner {
+/* ── Receipt Box ── */
+.receiptBox {
   display: grid;
-  gap: 8px;
-  padding: 16px 20px;
-  border-radius: var(--radius-card-compact);
+  gap: 6px;
+  width: 100%;
+  padding: 20px 24px;
+  border-radius: 16px;
   background: var(--pex-bg-soft);
   text-align: center;
 }
 
-.refLabel {
+.receiptLabel {
+  margin: 0;
+  color: var(--pex-text-muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.receiptRef {
+  margin: 0;
+  color: var(--pex-primary);
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.receiptNote {
+  margin: 0;
   color: var(--pex-text-muted);
   font-size: 0.85rem;
-  font-weight: 800;
+  line-height: 1.4;
 }
 
-.refValue {
-  color: var(--pex-primary);
-  font-size: 1.1rem;
-  font-family: var(--font-heading);
-}
-
-.orderInfo {
+/* ── Timeline ── */
+.timeline {
   display: grid;
-  gap: 8px;
+  gap: 20px;
+  width: 100%;
+  text-align: left;
+  padding: 24px 0 8px;
+}
+
+.timelineStep {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.stepDot {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--pex-bg-soft);
+  color: var(--pex-keppel);
+  margin-top: 2px;
+}
+
+.stepBody {
+  display: grid;
+  gap: 2px;
+}
+
+.stepBody strong {
+  color: var(--pex-primary);
+  font-size: 0.95rem;
+}
+
+.stepBody p {
+  margin: 0;
+  color: var(--pex-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+/* ── Actions ── */
+.actions {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  padding-top: 8px;
+}
+
+.btnPrimary {
+  display: block;
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 12px;
+  background: var(--pex-navy);
+  color: var(--pex-bg);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btnPrimary:hover {
+  background: color-mix(in srgb, var(--pex-navy) 85%, #000);
+}
+
+.btnShare {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 24px;
+  border: 2px solid var(--pex-keppel);
+  border-radius: 12px;
+  background: var(--pex-bg);
+  color: var(--pex-keppel);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btnShare:hover {
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+}
+
+/* ── Order Meta ── */
+.orderMeta {
+  width: 100%;
   text-align: center;
 }
 
-.orderInfoText {
+.orderMeta p {
   margin: 0;
   color: var(--pex-text-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
-.buttonRow {
-  margin-top: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-}
-
+/* ── Spinner ── */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }

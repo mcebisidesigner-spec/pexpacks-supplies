@@ -4,7 +4,7 @@ import { OrderStatusClient } from "./OrderStatusClient";
 import styles from "./SuccessPage.module.css";
 
 type SuccessPageProps = {
-  searchParams: Promise<{ ref?: string; trxref?: string }>;
+  searchParams: Promise<{ ref?: string; trxref?: string; reference?: string }>;
 };
 
 export const metadata: Metadata = {
