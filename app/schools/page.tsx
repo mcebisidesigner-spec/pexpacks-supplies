@@ -4,6 +4,7 @@ import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanne
 
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
+import { SchoolsFaqAccordion } from "@/components/schools/SchoolsFaqAccordion";
 import { SchoolsHowItWorks } from "@/components/schools/SchoolsHowItWorks";
 import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
 import { ConciergeSection } from "@/components/marketing/ConciergeSection";
@@ -119,34 +120,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         </div>
       </div>
 
-      <section className={homeStyles.accordionSection} aria-label="Frequently asked questions before ordering">
-        <div className={homeStyles.accordionInner}>
-          <details className={homeStyles.accordionItem} name="schools-faq">
-            <summary className={homeStyles.accordionSummary}>
-              Are these lists for the upcoming 2027 academic year?
-            </summary>
-            <p className={homeStyles.accordionAnswer}>
-              Yes, updated directly from the school.
-            </p>
-          </details>
-          <details className={homeStyles.accordionItem} name="schools-faq">
-            <summary className={homeStyles.accordionSummary}>
-              Do I have to buy the whole pack?
-            </summary>
-            <p className={homeStyles.accordionAnswer}>
-              No, click your school and use our system to minus what you already have.
-            </p>
-          </details>
-          <details className={homeStyles.accordionItem} name="schools-faq">
-            <summary className={homeStyles.accordionSummary}>
-              Are the brands high quality?
-            </summary>
-            <p className={homeStyles.accordionAnswer}>
-              Yes, we use teacher-approved brands.
-            </p>
-          </details>
-        </div>
-      </section>
+      <SchoolsFaqAccordion />
 
       <ConciergeSection />
 
