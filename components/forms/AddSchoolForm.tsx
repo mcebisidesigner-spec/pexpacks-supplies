@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { splitContactInput } from "@/lib/forms/contact";
+import { splitContactInput, isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
 import styles from "@/components/marketing/MarketingForms.module.css";
 
 type ApiResponse = {
@@ -25,9 +25,18 @@ export function AddSchoolForm() {
     event.preventDefault();
     const form = event.currentTarget;
     const fd = new FormData(form);
+    const contact = val(fd, "contact").trim();
+
+    if (!isValidEmailAddress(contact) && !isValidSouthAfricanPhone(contact)) {
+      setStatus({
+        success: false,
+        message: "Please enter a valid South African phone number (e.g., 072 123 4567) or email address (e.g., name@example.com).",
+      });
+      return;
+    }
+
     setPending(true);
     setStatus(null);
-    const contact = val(fd, "contact");
     const contactParts = splitContactInput(contact);
 
     const payload = {

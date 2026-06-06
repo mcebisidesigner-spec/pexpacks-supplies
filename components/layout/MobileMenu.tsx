@@ -84,13 +84,13 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
       ref={menuRef}
       id="mobile-menu"
       role="dialog"
-      aria-modal={open ? true : undefined}
+      aria-modal={open ? "true" : "false"}
       aria-label="Navigation menu"
       className={[styles.mobileMenu, open ? styles.mobileMenuOpen : ""]
         .filter(Boolean)
         .join(" ")}
-      inert={!open ? true : undefined}
-      aria-hidden={!open ? true : undefined}
+      inert={!open}
+      aria-hidden={!open ? "true" : undefined}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >

@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -29,7 +28,6 @@ type GradePackActionsProps = {
   downloadLabel?: string;
   autoCustomise?: boolean;
 };
-
 export function GradePackActions({
   pack,
   showDownloadLink = true,
@@ -38,7 +36,6 @@ export function GradePackActions({
   downloadLabel = "Download list (PDF)",
   autoCustomise,
 }: GradePackActionsProps) {
-  const router = useRouter();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
   const triggerButtonRef = useRef<HTMLButtonElement | null>(null);

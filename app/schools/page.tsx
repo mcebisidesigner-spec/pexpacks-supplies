@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
 
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";

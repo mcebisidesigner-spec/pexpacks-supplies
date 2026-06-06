@@ -715,3 +715,86 @@
     transform: none;
   }
 }
+
+/* ─── B2B Hero (Admin Relief) ─── */
+
+.b2bHero {
+  background: var(--pex-navy);
+  padding: clamp(52px, 8vw, 96px) 0 clamp(58px, 8vw, 108px);
+}
+
+.b2bHeroInner {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
+.b2bHeroContent {
+  max-width: 780px;
+}
+
+.b2bHeroTitle {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: clamp(38px, 5.6vw, 66px);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.b2bHeroTitle br {
+  display: none;
+}
+
+.b2bHeroText {
+  max-width: 640px;
+  margin: 22px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: clamp(17px, 2vw, 21px);
+  line-height: 1.5;
+}
+
+.b2bHero .buttonRow {
+  margin-top: 32px;
+}
+
+.b2bHero .buttonRow a:first-child {
+  background: var(--pex-keppel);
+  color: #ffffff;
+  border-color: var(--pex-keppel);
+}
+
+.b2bHero .buttonRow a:last-child {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.b2bHero .buttonRow a:last-child:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 820px) {
+  .b2bHero {
+    padding: clamp(36px, 6vw, 52px) 0 clamp(44px, 8vw, 72px);
+  }
+
+  .b2bHeroInner {
+    padding-inline: var(--gutter-mobile);
+  }
+
+  .b2bHeroTitle {
+    font-size: clamp(32px, 9vw, 42px);
+  }
+
+  .b2bHeroTitle br {
+    display: inline;
+  }
+
+  .b2bHeroText {
+    font-size: 16px;
+  }
+}

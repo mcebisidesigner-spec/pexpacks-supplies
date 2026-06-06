@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
@@ -109,20 +108,25 @@ export default async function OfficePacksPage({
 
   return (
     <>
-      <PageHero
-        eyebrow="Pex your office"
-        title="Office supplies packed for busy SMEs"
-        text="Pexpacks prepares practical stationery and office packs so your team can stay stocked without wasting time on small purchases."
-        panelText="Core message"
-        panelTitle="Office essentials packed and delivered, so your business keeps moving."
-      >
-        <div className={sectionStyles.buttonRow}>
-          <Button href="#contact-enquiry">Request a Quote</Button>
-          <Button href="#contact-enquiry" variant="white">
-            Order a Pack
-          </Button>
+      <section className={sectionStyles.b2bHero}>
+        <div className={sectionStyles.b2bHeroInner}>
+          <div className={sectionStyles.b2bHeroContent}>
+            <h1 className={sectionStyles.b2bHeroTitle}>
+              Stop the Makro runs.<br />
+              Streamline your office procurement.
+            </h1>
+            <p className={sectionStyles.b2bHeroText}>
+              Next-day delivery, automated tax invoices, and zero admin for growing SMEs.
+            </p>
+            <div className={sectionStyles.buttonRow}>
+              <Button href="#contact-enquiry">Shop Office Starter Packs</Button>
+              <Button href="#contact-enquiry" variant="outline">
+                Upload Requisition List
+              </Button>
+            </div>
+          </div>
         </div>
-      </PageHero>
+      </section>
 
       <section
         className={sectionStyles.brandPackageSection}

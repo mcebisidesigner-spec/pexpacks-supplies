@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { endpointPathForFormType } from "@/lib/forms/types";
 import { createClient } from "@/lib/supabase/client";
+import { isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import formStyles from "@/components/marketing/MarketingForms.module.css";
 
@@ -55,11 +56,28 @@ export function BrandPackageClaimForm() {
     const form = event.currentTarget;
 
     const raw = new FormData(form);
+    const validationErrors: Record<string, string> = {};
 
     if (!raw.get("consent")) {
-      setErrors({
-        consent: "You must consent to process this request.",
-      });
+      validationErrors.consent = "You must consent to process this request.";
+    }
+
+    const phoneVal = (raw.get("phone") as string || "").trim();
+    if (!phoneVal) {
+      validationErrors.phone = "Phone number is required.";
+    } else if (!isValidSouthAfricanPhone(phoneVal)) {
+      validationErrors.phone = "Please enter a valid South African phone number (e.g., 072 123 4567).";
+    }
+
+    const emailVal = (raw.get("email") as string || "").trim();
+    if (!emailVal) {
+      validationErrors.email = "Email address is required.";
+    } else if (!isValidEmailAddress(emailVal)) {
+      validationErrors.email = "Please enter a valid email address (e.g., name@example.com).";
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 

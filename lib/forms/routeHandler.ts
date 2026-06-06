@@ -8,7 +8,6 @@ import {
   FORM_SUCCESS_MESSAGE,
   FORM_VALIDATION_MESSAGE,
   type FormEndpointKind,
-  type FormSubmission,
 } from "@/lib/forms/types";
 import {
   isHoneypotSubmission,

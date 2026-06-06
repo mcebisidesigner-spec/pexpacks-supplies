@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { splitContactInput } from "@/lib/forms/contact";
+import { splitContactInput, isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
 import page from "@/styles/Page.module.css";
 
 type ApiResponse = {
@@ -19,16 +19,26 @@ export function TrackOrderForm() {
     event.preventDefault();
     const form = event.currentTarget;
     const fd = new FormData(form);
+
+    const contact =
+      typeof fd.get("contact") === "string"
+        ? (fd.get("contact") as string).trim()
+        : "";
+
+    if (!isValidEmailAddress(contact) && !isValidSouthAfricanPhone(contact)) {
+      setStatus({
+        success: false,
+        message: "Please enter a valid South African phone number (e.g., 072 123 4567) or email address (e.g., name@example.com).",
+      });
+      return;
+    }
+
     setPending(true);
     setStatus(null);
 
     const orderNumber =
       typeof fd.get("orderNumber") === "string"
         ? (fd.get("orderNumber") as string)
-        : "";
-    const contact =
-      typeof fd.get("contact") === "string"
-        ? (fd.get("contact") as string)
         : "";
     const contactParts = splitContactInput(contact);
 

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { endpointPathForFormType, type FormType } from "@/lib/forms/types";
+import { isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import formStyles from "@/components/marketing/MarketingForms.module.css";
 
@@ -110,11 +111,26 @@ export function PexpacksEnquiryForm({
     event.preventDefault();
     const form = event.currentTarget;
     const fd = new FormData(form);
+    const validationErrors: Record<string, string> = {};
 
     if (!fd.get("consent")) {
-      setErrors({
-        consent: "You must consent to process this request.",
-      });
+      validationErrors.consent = "You must consent to process this request.";
+    }
+
+    const phoneVal = (fd.get("phone") as string || "").trim();
+    if (!phoneVal) {
+      validationErrors.phone = "Phone number is required.";
+    } else if (!isValidSouthAfricanPhone(phoneVal)) {
+      validationErrors.phone = "Please enter a valid South African phone number (e.g., 072 123 4567).";
+    }
+
+    const emailVal = (fd.get("email") as string || "").trim();
+    if (emailVal && !isValidEmailAddress(emailVal)) {
+      validationErrors.email = "Please enter a valid email address (e.g., name@example.com).";
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 

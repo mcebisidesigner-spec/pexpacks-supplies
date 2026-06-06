@@ -104,7 +104,6 @@ export function OrderStatusClient({
   const [status, setStatus] = useState<OrderStatusResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [pollCount, setPollCount] = useState(0);
-  const [shareFallback, setShareFallback] = useState(false);
 
   const checkStatus = useCallback(async () => {
     if (!orderReference) {

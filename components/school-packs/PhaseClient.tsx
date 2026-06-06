@@ -13,7 +13,7 @@ import type {
   PackListItem,
 } from "@/components/packs/packListTypes";
 import type { PhasePack, GradePackTemplate } from "@/data/phasePacks";
-import { homepagePacks, mostPopularPacksHref } from "@/data/packs";
+import { homepagePacks } from "@/data/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createFullTrayPack } from "@/lib/order/createTrayPack";
 import { usePackTrayStore } from "@/store/usePackTrayStore";

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { PageHero } from "@/components/marketing/PageHero";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
-import styles from "./SchoolsPageHero.module.css";
 
 type SchoolsPageHeroProps = {
   children: ReactNode;

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
 import styles from "./OrderPage.module.css";
 
 type OrderCategory = "Primary School Learner" | "High School Learner";
@@ -78,8 +79,21 @@ export function OrderForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !phone.replace(/[^0-9+]/g, "")) {
-      setErrors({ form: "Please fill in all required fields" });
+    if (!name.trim()) {
+      setErrors({ form: "Please enter your name" });
+      return;
+    }
+    const cleanPhone = phone.replace(/[^0-9+]/g, "");
+    if (!cleanPhone) {
+      setErrors({ form: "Please enter your WhatsApp number" });
+      return;
+    }
+    if (!isValidSouthAfricanPhone(phone)) {
+      setErrors({ form: "Please enter a valid South African phone number (e.g., 072 123 4567)" });
+      return;
+    }
+    if (email.trim() && !isValidEmailAddress(email)) {
+      setErrors({ form: "Please enter a valid email address (e.g., name@example.com)" });
       return;
     }
 

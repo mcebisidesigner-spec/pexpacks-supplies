@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import Link from "next/link";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { PackTrayItem } from "./PackTrayItem";

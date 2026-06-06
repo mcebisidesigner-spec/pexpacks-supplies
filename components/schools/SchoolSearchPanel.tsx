@@ -10,7 +10,6 @@ import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
 import {
   getSchoolPhaseLabel,
 } from "@/lib/schools/schoolPhase";
-import { slugify } from "@/lib/slugify";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import { SchoolsHowItWorks } from "./SchoolsHowItWorks";
@@ -50,7 +49,6 @@ export function SchoolSearchPanel({
 }: SchoolSearchPanelProps) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const [trendingSchools, setTrendingSchools] = useState<{ name: string; slug: string; image?: string | null }[]>([]);
-  const [trendingLoading, setTrendingLoading] = useState(false);
   const [trendingVisible, setTrendingVisible] = useState(false);
   const trendingFetched = useRef(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -80,14 +78,12 @@ export function SchoolSearchPanel({
   useEffect(() => {
     if (!isSchoolInputFocused || trendingFetched.current || query.length >= 3) return;
     trendingFetched.current = true;
-    setTrendingLoading(true);
     fetch("/api/schools/search?limit=8")
       .then((r) => r.json())
       .then((data) => {
         if (data.results) setTrendingSchools(data.results);
       })
-      .catch(() => {})
-      .finally(() => setTrendingLoading(false));
+      .catch(() => {});
   }, [isSchoolInputFocused, query]);
 
   useEffect(() => {
