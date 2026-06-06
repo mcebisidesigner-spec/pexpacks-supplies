@@ -647,3 +647,207 @@
     padding-inline: var(--gutter-mobile);
   }
 }
+
+/* ─── S-2: How It Works ─── */
+
+.howItWorks {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 32px auto 0;
+  padding-inline: var(--gutter-desktop);
+}
+
+.howItWorksInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-radius: var(--radius-card);
+  background: var(--pex-bg);
+  border: 1px solid var(--pex-border);
+}
+
+.howItWorksStep {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.howItWorksIcon {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(33, 158, 154, 0.08);
+  color: var(--pex-keppel);
+  display: grid;
+  place-items: center;
+}
+
+.howItWorksIcon svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.howItWorksStepContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.howItWorksStepTitle {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--pex-primary);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.howItWorksStepDesc {
+  font-size: 11px;
+  color: var(--pex-text-muted);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.howItWorksArrow {
+  flex: 0 0 auto;
+  color: var(--pex-border);
+  display: grid;
+  place-items: center;
+}
+
+.howItWorksArrow svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 860px) {
+  .howItWorks {
+    padding-inline: var(--gutter-mobile);
+  }
+}
+
+@media (max-width: 700px) {
+  .howItWorksStepDesc {
+    display: none;
+  }
+
+  .howItWorksArrow svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .howItWorksInner {
+    gap: 6px;
+    padding: 12px 16px;
+  }
+
+  .howItWorksIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .howItWorksIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .howItWorksStepTitle {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 440px) {
+  .howItWorksInner {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 16px;
+  }
+
+  .howItWorksArrow {
+    display: none;
+  }
+}
+
+/* ─── S-3: Price-Lock + Payment Badge Row ─── */
+
+.paymentRow {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 20px var(--gutter-desktop) 0;
+}
+
+.paymentRowInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  padding: 14px 24px;
+  border-radius: var(--radius-card);
+  background: rgba(244, 250, 252, 0.5);
+  border: 1px solid var(--pex-border);
+}
+
+.paymentTagline {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pex-primary);
+  white-space: nowrap;
+}
+
+.paymentLogos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.paymentChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-bg);
+  border: 1px solid var(--pex-border);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--pex-text-muted);
+  white-space: nowrap;
+}
+
+.paymentChip svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 860px) {
+  .paymentRow {
+    padding-inline: var(--gutter-mobile);
+  }
+
+  .paymentRowInner {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 18px;
+  }
+
+  .paymentTagline {
+    white-space: normal;
+    text-align: center;
+  }
+}
