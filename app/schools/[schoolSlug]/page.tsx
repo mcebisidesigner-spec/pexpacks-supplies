@@ -98,6 +98,12 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           </div>
         }
       />
+      <div className={styles.searchMicroCopy}>
+        <p>
+          Every pack is an exact 100% match to {school.name}&apos;s official requirements. Simply select your grade, and you can easily add or minus quantities of the required items before checkout.
+        </p>
+      </div>
+
       {/* Subtle Pexcover Advertisement Banner */}
       <div className={styles.pexcoverBannerOuter}>
         <div className={styles.pexcoverBanner}>
@@ -117,12 +123,6 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
             </Link>
           </div>
         </div>
-      </div>
-
-      <div className={styles.searchMicroCopy}>
-        <p>
-          Every pack is an exact 100% match to {school.name}&apos;s official requirements. Simply select your grade, and you can easily add or minus quantities of the required items before checkout.
-        </p>
       </div>
 
       <section className={pageStyles.section}>
