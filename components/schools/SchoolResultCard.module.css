@@ -58,6 +58,17 @@
   font-weight: 800;
 }
 
+.partnerBadge {
+  background: rgba(46, 204, 113, 0.12) !important;
+  color: #1a7a40 !important;
+}
+
+.awaitingBadge {
+  background: transparent !important;
+  color: var(--pex-text-muted) !important;
+  border: 1px solid var(--pex-border);
+}
+
 .resultLink {
   min-height: 42px;
   padding: 10px 16px;

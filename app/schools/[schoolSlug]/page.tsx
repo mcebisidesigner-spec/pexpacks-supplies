@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
+import { Button } from "@/components/ui/Button";
 import {
   getSchoolIndex,
   getSchoolRecordMap,
@@ -66,6 +67,8 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
     notFound();
   }
 
+  const isPartner = school.isPartnerSchool;
+
   return (
     <>
       <JsonLd
@@ -78,12 +81,20 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
       <PageHero
         eyebrow={`${school.city}, City of ${school.metro}`}
         title={school.name}
-        text="Official stationery packs prepared according to the school stationery list."
+        text={
+          isPartner
+            ? "Official stationery packs prepared according to the school stationery list."
+            : `We don't have ${school.name}'s official 2027 lists yet, but we can still pack it for you.`
+        }
         panelChildren={
           <div className={styles.schoolHeroPanel}>
             <div className={styles.schoolHeroCopy}>
-              <span className={styles.schoolHeroLabel}>Prepared with care</span>
-              <span className={styles.schoolHeroTitle}>Ready packed</span>
+              <span className={styles.schoolHeroLabel}>
+                {isPartner ? "Prepared with care" : "We're here to help"}
+              </span>
+              <span className={styles.schoolHeroTitle}>
+                {isPartner ? "Ready packed" : "Just send your list"}
+              </span>
             </div>
             <div className={styles.schoolHeroLogoWrap}>
               <Image
@@ -98,38 +109,85 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           </div>
         }
       />
-      <div className={styles.searchMicroCopy}>
-        <p>
-          Every pack is an exact 100% match to {school.name}&apos;s official requirements. Simply select your grade, and you can easily add or minus quantities of the required items before checkout.
-        </p>
-      </div>
 
-      {/* Subtle Pexcover Advertisement Banner */}
-      <div className={styles.pexcoverBannerOuter}>
-        <div className={styles.pexcoverBanner}>
-          <div className={styles.pexcoverBannerIcon}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-          </div>
-          <div className={styles.pexcoverBannerContent}>
-            <h4 className={styles.pexcoverBannerTitle}>Simplify prep with Pexcover book covering</h4>
-            <p className={styles.pexcoverBannerText}>
-              Add covered books and custom-printed name labels for just <strong>R 350</strong> per pack. 
-              We cover the books and print matching labels so your child is first-day ready.
+      {isPartner ? (
+        <>
+          <div className={styles.searchMicroCopy}>
+            <p>
+              Every pack is an exact 100% match to {school.name}&apos;s official requirements. Simply select your grade, and you can easily add or minus quantities of the required items before checkout.
             </p>
-            <Link href="/blog/what-is-pexcover-book-covering" className={styles.pexcoverBannerLink}>
-              Learn how Pexcover works &rarr;
-            </Link>
           </div>
-        </div>
-      </div>
 
-      <section className={pageStyles.section}>
-        <div className={pageStyles.sectionInner}>
-          <GradeSelector school={school} />
-        </div>
-      </section>
+          {/* Subtle Pexcover Advertisement Banner */}
+          <div className={styles.pexcoverBannerOuter}>
+            <div className={styles.pexcoverBanner}>
+              <div className={styles.pexcoverBannerIcon}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <div className={styles.pexcoverBannerContent}>
+                <h4 className={styles.pexcoverBannerTitle}>Simplify prep with Pexcover book covering</h4>
+                <p className={styles.pexcoverBannerText}>
+                  Add covered books and custom-printed name labels for just <strong>R 350</strong> per pack. 
+                  We cover the books and print matching labels so your child is first-day ready.
+                </p>
+                <Link href="/blog/what-is-pexcover-book-covering" className={styles.pexcoverBannerLink}>
+                  Learn how Pexcover works &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <section className={pageStyles.section}>
+            <div className={pageStyles.sectionInner}>
+              <GradeSelector school={school} />
+            </div>
+          </section>
+        </>
+      ) : (
+        <>
+          <div className={styles.unpartneredCard}>
+            <div className={styles.unpartneredCardBody}>
+              <h2 className={styles.unpartneredCardTitle}>
+                Upload your list, and we&apos;ll pack it exactly.
+              </h2>
+              <p className={styles.unpartneredCardText}>
+                Snap a photo or upload the PDF of your child&apos;s {school.name} stationery list. Our team will digitize it within <strong>2 hours</strong> and send you a secure payment link.
+              </p>
+              <div className={styles.unpartneredCardActions}>
+                <Button href="/order">
+                  Upload Stationery List
+                </Button>
+                <Button href={`https://wa.me/${process.env.NEXT_PUBLIC_PEXPACKS_WHATSAPP_NUMBER || "27791234567"}?text=${encodeURIComponent(`Hi Pexpacks, I'd like to send my ${school.name} stationery list.`)}`} variant="outline">
+                  Send List on WhatsApp
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <section className={styles.advocateSection}>
+            <div className={styles.advocateInner}>
+              <p className={styles.advocateEyebrow}>Support your school</p>
+              <h2 className={styles.advocateTitle}>
+                Want {school.name} to become an official partner?
+              </h2>
+              <p className={styles.advocateText}>
+                Let your school&apos;s principal or SGB know about Pexpacks. Click below to send a pre-written message.
+              </p>
+              <Button
+                href={`https://wa.me/?text=${encodeURIComponent(`Hi Principal, please partner with Pexpacks so we can order our stationery packs online. https://pexpacks.co.za/partnership`)}`}
+                variant="outline"
+              >
+                Send to your Principal
+              </Button>
+              <Link href="/add-your-school" className={styles.advocateLink}>
+                or submit a partnership request directly &rarr;
+              </Link>
+            </div>
+          </section>
+        </>
+      )}
     </>
   );
 }

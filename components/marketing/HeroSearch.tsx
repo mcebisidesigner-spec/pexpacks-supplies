@@ -258,12 +258,13 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                                   ))}
                                 </div>
                               ) : null}
-                              {school.isFeatured || school.isPartner ? (
-                                <div className={styles.heroResultBadges}>
-                                  {school.isFeatured ? <span>Featured</span> : null}
-                                  {school.isPartner ? <span>Partner</span> : null}
-                                </div>
-                              ) : null}
+                              <div className={styles.heroResultBadges}>
+                                {school.isPartner ? (
+                                  <span className={styles.partnerBadge}>Official Partner</span>
+                                ) : (
+                                  <span className={styles.awaitingBadge}>Awaiting Lists</span>
+                                )}
+                              </div>
                             </div>
                           </div>
                           <Link

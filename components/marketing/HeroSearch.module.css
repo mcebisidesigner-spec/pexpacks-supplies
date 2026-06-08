@@ -235,6 +235,17 @@
   color: var(--pex-keppel);
 }
 
+.partnerBadge {
+  background: rgba(46, 204, 113, 0.12) !important;
+  color: #1a7a40 !important;
+}
+
+.awaitingBadge {
+  background: transparent !important;
+  color: var(--pex-text-muted) !important;
+  border: 1px solid var(--pex-border);
+}
+
 .heroResultPrice {
   background: rgba(33, 158, 154, 0.1);
   color: var(--pex-navy);

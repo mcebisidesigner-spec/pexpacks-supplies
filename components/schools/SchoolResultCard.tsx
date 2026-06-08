@@ -35,8 +35,11 @@ export function SchoolResultCard({ school }: SchoolResultCardProps) {
           </span>
         ) : null}
         <div className={styles.resultBadges}>
-          {school.isFeatured ? <span>Featured</span> : null}
-          {school.isPartner ? <span>Partner</span> : null}
+          {school.isPartner ? (
+            <span className={styles.partnerBadge}>Official Partner</span>
+          ) : (
+            <span className={styles.awaitingBadge}>Awaiting Lists</span>
+          )}
         </div>
       </div>
       <Link href={`/schools/${school.slug}`} className={styles.resultLink}>

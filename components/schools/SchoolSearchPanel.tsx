@@ -268,12 +268,13 @@ export function SchoolSearchPanel({
                                     ))}
                                   </div>
                                 ) : null}
-                                {school.isFeatured || school.isPartner ? (
-                                  <div className={heroStyles.heroResultBadges}>
-                                    {school.isFeatured ? <span>Featured</span> : null}
-                                    {school.isPartner ? <span>Partner</span> : null}
-                                  </div>
-                                ) : null}
+                                <div className={heroStyles.heroResultBadges}>
+                                  {school.isPartner ? (
+                                    <span className={heroStyles.partnerBadge}>Official Partner</span>
+                                  ) : (
+                                    <span className={heroStyles.awaitingBadge}>Awaiting Lists</span>
+                                  )}
+                                </div>
                               </div>
                             </div>
                             <Link

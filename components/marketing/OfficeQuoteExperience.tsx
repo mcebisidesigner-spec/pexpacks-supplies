@@ -5,6 +5,7 @@ import type { FormEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
+import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import type { OfficePack } from "@/data/officePacks";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { endpointPathForFormType } from "@/lib/forms/types";
@@ -60,6 +61,8 @@ const itemBrandDetails: Record<string, string> = {
   "Lever arch files": "5x Polypropylene A4 lever arch files (Bantex)",
   Dividers: "5x Sets of A4 10-tab board indexes (Croxley)",
   "Plastic sleeves": "Pack of 100 clear A4 punched pockets",
+  "Highlighters": "Pack of 4 assorted pastel highlighters (Stabilo Boss)",
+  "Flipchart paper": "1x standard 50-sheet flipchart paper pad (A1 size)",
 };
 
 function val(data: FormData, key: string) {
@@ -125,6 +128,14 @@ export function OfficeQuoteExperience({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedItemOption, setSelectedItemOption] = useState("");
   const [companySize, setCompanySize] = useState<string>("all");
+  const [packQuantities, setPackQuantities] = useState<Record<string, number>>(() => {
+    const initial: Record<string, number> = {};
+    officePacks.forEach((p) => {
+      initial[p.id] = 1;
+    });
+    return initial;
+  });
+  const [orderQuantity, setOrderQuantity] = useState(1);
   const formRef = useRef<HTMLElement | null>(null);
   const footerSentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -137,15 +148,11 @@ export function OfficeQuoteExperience({
   const filteredPacks = useMemo(() => {
     if (companySize === "all") return officePacks;
     if (companySize === "solo")
-      return officePacks.filter((p) => p.id === "home-office-starter");
+      return officePacks.filter((p) => p.id === "new-hire-setup");
     if (companySize === "small")
-      return officePacks.filter((p) =>
-        ["small-business-monthly", "retail-shop-admin"].includes(p.id),
-      );
+      return officePacks.filter((p) => p.id === "boardroom-basics");
     if (companySize === "medium")
-      return officePacks.filter((p) =>
-        ["bulk-office-supply", "printer-paper-filing"].includes(p.id),
-      );
+      return officePacks.filter((p) => p.id === "monthly-admin-restock");
     return officePacks;
   }, [officePacks, companySize]);
 
@@ -192,10 +199,11 @@ export function OfficeQuoteExperience({
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function selectPack(pack: OfficePack, nextMode: QuoteMode = "standard") {
+  function selectPack(pack: OfficePack, nextMode: QuoteMode = "standard", qty: number = 1) {
     setSelectedPackId(pack.id);
     setItems(pack.contents);
     setMode(nextMode);
+    setOrderQuantity(qty);
     setStatus(null);
     setErrors({});
     window.setTimeout(scrollToForm, 0);
@@ -412,48 +420,69 @@ export function OfficeQuoteExperience({
           </div>
 
           <div className={cardStyles.officeGrid}>
-            {filteredPacks.map((pack) => (
-              <article className={cardStyles.packCard} key={pack.id}>
-                <div
-                  className={`${cardStyles.packMedia} ${cardStyles.packMediaBlue}`}
-                  aria-hidden="true"
-                >
-                  <span>Office</span>
-                </div>
-                <div className={cardStyles.packBody}>
-                  <p className={cardStyles.packMeta}>SME and office supplies</p>
-                  <h3>{pack.name}</h3>
-                  <p>{pack.description}</p>
-                  <ul className={cardStyles.packList}>
-                    {pack.contents.map((item) => (
-                      <li key={item}>
-                        <strong>{item}</strong>
-                        {itemBrandDetails[item] && (
-                          <span className={officeStyles.cardItemDetail}>
-                            {" "}
-                            — {itemBrandDetails[item]}
+            {filteredPacks.map((pack) => {
+              const qty = packQuantities[pack.id] ?? 1;
+              return (
+                <article className={cardStyles.packCard} key={pack.id}>
+                  <div
+                    className={`${cardStyles.packMedia} ${cardStyles.packMediaBlue}`}
+                    aria-hidden="true"
+                  >
+                    <span>Office</span>
+                  </div>
+                  <div className={cardStyles.packBody}>
+                    <p className={cardStyles.packMeta}>SME and office supplies</p>
+                    <h3>{pack.name}</h3>
+                    <p>{pack.description}</p>
+                    <ul className={cardStyles.packList}>
+                      {pack.contents.map((item) => (
+                        <li key={item}>
+                          <strong>{item}</strong>
+                          {itemBrandDetails[item] && (
+                            <span className={officeStyles.cardItemDetail}>
+                              {" "}
+                              — {itemBrandDetails[item]}
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className={cardStyles.packFooter}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                        <span className={cardStyles.priceLabel}>
+                          {pack.priceFrom === 0
+                            ? "Request quote"
+                            : `${formatCurrency(pack.priceFrom * qty)}`}
+                        </span>
+                        {qty > 1 && pack.priceFrom > 0 && (
+                          <span className={officeStyles.cardItemDetail} style={{ fontSize: "11px", opacity: 0.75 }}>
+                            ({formatCurrency(pack.priceFrom)} each)
                           </span>
                         )}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className={cardStyles.packFooter}>
-                    <span className={cardStyles.priceLabel}>
-                      {pack.priceFrom === 0
-                        ? "Request quote"
-                        : `From ${formatCurrency(pack.priceFrom)}`}
-                    </span>
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={() => selectPack(pack, "standard")}
-                    >
-                      Request Quote
-                    </Button>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <QuantityStepper
+                          value={qty}
+                          onChange={(newQty) =>
+                            setPackQuantities((prev) => ({ ...prev, [pack.id]: newQty }))
+                          }
+                          min={1}
+                          max={99}
+                          ariaLabel={`quantity for ${pack.name}`}
+                        />
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={() => selectPack(pack, "standard", qty)}
+                        >
+                          Request Quote
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -713,7 +742,8 @@ export function OfficeQuoteExperience({
                       name="orderQuantity"
                       type="number"
                       min="1"
-                      placeholder="1"
+                      value={orderQuantity}
+                      onChange={(e) => setOrderQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                     />
                   </label>
                   <label className={`${formStyles.field} ${formStyles.formWide}`}>
