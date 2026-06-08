@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import type { OfficePack } from "@/data/officePacks";
+import { OfficeReconciliationConcierge } from "./OfficeReconciliationConcierge";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { endpointPathForFormType } from "@/lib/forms/types";
 import {
@@ -497,34 +498,7 @@ export function OfficeQuoteExperience({
         </div>
       </section>
 
-      <section className={sectionStyles.sectionCream}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
-            <div>
-              <p className={sectionStyles.sectionEyebrow}>Monthly office support</p>
-              <h2>Keep admin supplies predictable</h2>
-              <p>
-                Set up a recurring office pack for the basics your team uses
-                every month, or request a custom pack when a project, shop or
-                site needs practical supplies quickly.
-              </p>
-              <div className={sectionStyles.buttonRow}>
-                <Button
-                  type="button"
-                  onClick={() => selectPack(selectedPack, "custom")}
-                >
-                  Request Quote
-                </Button>
-              </div>
-            </div>
-            <ul className={sectionStyles.checkList}>
-              {officeBenefits.map((benefit) => (
-                <li key={benefit}>{benefit}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+      <OfficeReconciliationConcierge />
 
       <section className={officeStyles.brandingUpsellSection}>
         <div className={sectionStyles.inner}>
@@ -559,7 +533,7 @@ export function OfficeQuoteExperience({
 
       <section
         id="contact-enquiry"
-        className={sectionStyles.sectionCream}
+        className={sectionStyles.section}
         ref={formRef}
       >
         <div className={sectionStyles.inner}>

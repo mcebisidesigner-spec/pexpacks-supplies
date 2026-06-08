@@ -8,7 +8,7 @@ import cardStyles from "@/components/marketing/MarketingCards.module.css";
 export function OrderingWorksSection() {
   return (
     <section
-      className={sectionStyles.sectionCream}
+      className={sectionStyles.section}
       aria-labelledby="how-it-works-heading"
     >
       <div className={sectionStyles.inner}>

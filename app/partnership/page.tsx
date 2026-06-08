@@ -221,7 +221,7 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={sectionStyles.sectionCream} id="how-it-works">
+      <section className={sectionStyles.section} id="how-it-works">
         <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Simple setup"
@@ -294,7 +294,7 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={sectionStyles.sectionCream} id="partner-form">
+      <section className={sectionStyles.section} id="partner-form">
         <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Partnership Enquiry"

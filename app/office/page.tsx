@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { CTASection } from "@/components/marketing/CTASection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
-import { OfficeReconciliationConcierge } from "@/components/marketing/OfficeReconciliationConcierge";
+
+
 import { officePacks } from "@/data/officePacks";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
@@ -121,7 +121,7 @@ export default async function OfficePacksPage({
             </p>
             <div className={sectionStyles.buttonRow}>
               <Button href="#contact-enquiry">Shop Office Starter Packs</Button>
-              <Button href="#contact-enquiry" variant="outline">
+              <Button href="/office/upload-requisition-list" variant="outline">
                 Upload Requisition List
               </Button>
             </div>
@@ -207,20 +207,10 @@ export default async function OfficePacksPage({
         initialMessage={initialMessage}
       />
 
-      <OfficeReconciliationConcierge />
-
       <FaqMarquee
         faqs={faqs.filter((f) =>
           ["sme-office-packs", "custom-office-quote", "bulk-office-orders", "delivery-timing", "payment-flow"].includes(f.id)
         )}
-      />
-
-      <CTASection
-        eyebrow="Ready to get started"
-        title="Get your office stationery quote"
-        text="Request a custom quote for your business or browse our standard packs for SMEs, home offices, and small teams."
-        primaryHref="#contact-enquiry"
-        primaryLabel="Request a Quote"
       />
 
       <section className={sectionStyles.section}>
