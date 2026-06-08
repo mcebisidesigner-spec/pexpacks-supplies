@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
+import { OfficeReconciliationConcierge } from "@/components/marketing/OfficeReconciliationConcierge";
 import { officePacks } from "@/data/officePacks";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
@@ -112,7 +113,7 @@ export default async function OfficePacksPage({
         <div className={sectionStyles.b2bHeroInner}>
           <div className={sectionStyles.b2bHeroContent}>
             <h1 className={sectionStyles.b2bHeroTitle}>
-              Stop the Makro runs.<br />
+              Office Supply Reconciliation. <br />
               Streamline your office procurement.
             </h1>
             <p className={sectionStyles.b2bHeroText}>
@@ -205,6 +206,8 @@ export default async function OfficePacksPage({
         officeBenefits={officeBenefits}
         initialMessage={initialMessage}
       />
+
+      <OfficeReconciliationConcierge />
 
       <FaqMarquee
         faqs={faqs.filter((f) =>
