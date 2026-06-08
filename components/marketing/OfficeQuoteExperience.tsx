@@ -29,7 +29,6 @@ type QuoteMode = "standard" | "custom";
 
 type OfficeQuoteExperienceProps = {
   officePacks: OfficePack[];
-  officeBenefits: string[];
   initialMessage?: string;
 };
 
@@ -115,7 +114,6 @@ const EditIcon = () => (
 
 export function OfficeQuoteExperience({
   officePacks,
-  officeBenefits,
   initialMessage = "",
 }: OfficeQuoteExperienceProps) {
   const [selectedPackId, setSelectedPackId] = useState(
@@ -367,7 +365,7 @@ export function OfficeQuoteExperience({
         </div>
       </section>
 
-      <section className={sectionStyles.section}>
+      <section className={sectionStyles.section} id="office-pack-types">
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.sectionHeader}>
             <p className={sectionStyles.sectionEyebrow}>Office pack types</p>

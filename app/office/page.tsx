@@ -11,13 +11,6 @@ import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
-const officeBenefits = [
-  "One practical order instead of many small purchases",
-  "Monthly pack planning for recurring supplies",
-  "Custom quotes for teams, shops and admin offices",
-  "Delivery or collection options during the Gauteng pilot",
-];
-
 const BrandIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M12 3l2.5 5.1 5.6.8-4.1 4 1 5.6-5-2.7-5 2.7 1-5.6-4.1-4 5.6-.8L12 3z" />
@@ -203,7 +196,6 @@ export default async function OfficePacksPage({
 
       <OfficeQuoteExperience
         officePacks={officePacks}
-        officeBenefits={officeBenefits}
         initialMessage={initialMessage}
       />
 
