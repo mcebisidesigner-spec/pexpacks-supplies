@@ -1,4 +1,4 @@
-import type { StationeryItem } from "./phasePacks";
+import type { StationeryItem } from "./packTypes";
 
 export const customPackAddOns: StationeryItem[] = [
   {

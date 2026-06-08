@@ -224,7 +224,7 @@ export default async function OfficePacksPage({
               </p>
               <div className={sectionStyles.buttonRow}>
                 <Button href="/schools" variant="primary">Find a School Pack</Button>
-                <Button href="/foundation-phase" variant="white">Browse Grade Packs</Button>
+                <Button href="/schools" variant="white">Browse Grade Packs</Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>

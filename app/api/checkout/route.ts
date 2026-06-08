@@ -3,7 +3,6 @@ import { validateCheckoutPayload } from "@/lib/validation/checkout";
 import { createPendingOrder, createMultiPackOrder, generateOrderReference } from "@/lib/orders";
 import { initializePaystackTransaction } from "@/lib/paystack";
 import { PEXCOVER_PRICE } from "@/lib/constants";
-import { phasePacks } from "@/data/phasePacks";
 import { getGradeBySlug } from "@/lib/school-utils";
 
 export const runtime = "nodejs";
@@ -22,15 +21,6 @@ async function resolveTrustedPack(input: {
     return {
       price: schoolGrade.price,
       items: schoolGrade.contents,
-    };
-  }
-
-  const phase = phasePacks.find((phasePack) => phasePack.slug === input.schoolSlug);
-  const phaseGrade = phase?.gradePacks.find((pack) => pack.id === input.gradeSlug);
-  if (phaseGrade) {
-    return {
-      price: phaseGrade.priceFrom,
-      items: phaseGrade.items.map((item) => `${item.quantity} x ${item.name}`),
     };
   }
 
