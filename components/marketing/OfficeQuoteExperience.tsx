@@ -136,6 +136,16 @@ export function OfficeQuoteExperience({
     return initial;
   });
   const [orderQuantity, setOrderQuantity] = useState(1);
+  const [formNotes, setFormNotes] = useState(initialMessage);
+
+  function handleBrandingClick() {
+    setFormNotes((prev) => {
+      const brandingText = "I would like to enquire about premium corporate branding (logo notebooks, pens, and presentation folders) for our office stationery.";
+      if (prev.includes(brandingText)) return prev;
+      return prev ? `${prev}\n\n${brandingText}` : brandingText;
+    });
+    window.setTimeout(scrollToForm, 0);
+  }
   const formRef = useRef<HTMLElement | null>(null);
   const footerSentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -516,6 +526,37 @@ export function OfficeQuoteExperience({
         </div>
       </section>
 
+      <section className={officeStyles.brandingUpsellSection}>
+        <div className={sectionStyles.inner}>
+          <div className={officeStyles.brandingUpsellCard}>
+            <div className={officeStyles.brandingUpsellContent}>
+              <div className={officeStyles.brandingUpsellIcon} aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg>
+              </div>
+              <div className={officeStyles.brandingUpsellText}>
+                <p className={officeStyles.brandingUpsellEyebrow}>Corporate Identity</p>
+                <h3 className={officeStyles.brandingUpsellTitle}>Custom Branded Stationery</h3>
+                <p className={officeStyles.brandingUpsellDesc}>
+                  Need notebooks, pens, or presentation folders featuring your company logo? We offer premium corporate branding for your office packs.
+                </p>
+              </div>
+            </div>
+            <div className={officeStyles.brandingUpsellAction}>
+              <Button
+                type="button"
+                variant="white"
+                onClick={handleBrandingClick}
+              >
+                Add Corporate Branding
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section
         id="contact-enquiry"
         className={sectionStyles.sectionCream}
@@ -751,7 +792,8 @@ export function OfficeQuoteExperience({
                     <textarea
                       name="message"
                       placeholder="Delivery area, monthly restock needs, preferred brands, or anything else we should know."
-                      defaultValue={initialMessage}
+                      value={formNotes}
+                      onChange={(e) => setFormNotes(e.target.value)}
                     />
                   </label>
                 </div>

@@ -895,3 +895,16 @@
     align-self: flex-start;
   }
 }
+
+.officePortalContainer {
+  /* Soften the playful coral, lean into the trusted corporate navy and teal */
+  --color-primary: var(--color-brand-teal); 
+  --color-secondary: var(--color-brand-navy);
+  --pex-primary: var(--pex-keppel);
+  --pex-accent: var(--pex-keppel);
+  
+  /* Slightly sharper corners for a more formal, structural feel */
+  --radius-card: 0.5rem; 
+  --radius-button: 0.5rem; /* Moving away from the full-pill shape just for B2B */
+}
+

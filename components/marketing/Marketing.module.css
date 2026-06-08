@@ -428,3 +428,112 @@
     padding: 22px;
   }
 }
+
+/* Brand Your Office Upsell Section */
+.brandingUpsellSection {
+  padding: clamp(28px, 6vw, 48px) 0;
+  background: transparent;
+}
+
+.brandingUpsellCard {
+  border-radius: var(--radius-section);
+  background:
+    radial-gradient(circle at 85% 15%, rgba(33, 158, 154, 0.08), transparent 35%),
+    var(--pex-navy);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 48px);
+  padding: clamp(28px, 5vw, 44px);
+  color: #ffffff;
+  border: 1px solid rgba(33, 158, 154, 0.2);
+}
+
+.brandingUpsellContent {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 24px);
+  flex: 1;
+}
+
+.brandingUpsellIcon {
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--pex-keppel);
+}
+
+.brandingUpsellIcon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.brandingUpsellText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.brandingUpsellEyebrow {
+  margin: 0;
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.brandingUpsellTitle {
+  margin: 0;
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.brandingUpsellDesc {
+  margin: 0;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.45;
+}
+
+.brandingUpsellAction {
+  flex-shrink: 0;
+}
+
+@media (max-width: 820px) {
+  .brandingUpsellCard {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    padding: 28px;
+  }
+
+  .brandingUpsellContent {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .brandingUpsellIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+
+  .brandingUpsellIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .brandingUpsellAction button,
+  .brandingUpsellAction a {
+    width: 100%;
+  }
+}

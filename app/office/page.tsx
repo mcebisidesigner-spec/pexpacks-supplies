@@ -108,7 +108,7 @@ export default async function OfficePacksPage({
     : "";
 
   return (
-    <>
+    <div className={sectionStyles.officePortalContainer}>
       <section className={sectionStyles.b2bHero}>
         <div className={sectionStyles.b2bHeroInner}>
           <div className={sectionStyles.b2bHeroContent}>
@@ -255,6 +255,6 @@ export default async function OfficePacksPage({
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
