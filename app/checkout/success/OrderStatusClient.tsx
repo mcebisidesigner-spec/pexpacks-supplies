@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { OrderStatusResponse } from "@/types/orders";
+import heroStyles from "@/components/marketing/HeroBase.module.css";
 import styles from "./OrderStatusClient.module.css";
 
 type OrderStatusClientProps = {
@@ -171,6 +172,7 @@ export function OrderStatusClient({
         <div className={styles.iconWrap}>
           <AlertIcon />
         </div>
+        <p className={heroStyles.eyebrow}>Order reference needed</p>
         <h1 className={styles.title}>No Order Reference</h1>
         <p className={styles.subtitle}>
           We could not find your order reference. If you completed a payment,
@@ -193,6 +195,7 @@ export function OrderStatusClient({
             <AnimatedCheckmark />
           </div>
 
+          <p className={heroStyles.eyebrow}>Payment confirmed</p>
           <h1 className={styles.title}>
             Stationery sorted.
             <br />
@@ -247,6 +250,7 @@ export function OrderStatusClient({
           <div className={styles.iconWrap}>
             <SpinnerIcon />
           </div>
+          <p className={heroStyles.eyebrow}>Secure payment status</p>
           <h1 className={styles.title}>Confirming Your Payment</h1>
           <p className={styles.subtitle}>
             We received your payment request and are waiting for secure payment
@@ -262,6 +266,7 @@ export function OrderStatusClient({
           <div className={styles.iconWrap}>
             <AlertIcon />
           </div>
+          <p className={heroStyles.eyebrow}>Payment status</p>
           <h1 className={styles.title}>Payment Pending</h1>
           <p className={styles.subtitle}>
             We could not confirm your payment yet. If you completed payment,

@@ -5,8 +5,8 @@ import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchool
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsFaqAccordion } from "@/components/schools/SchoolsFaqAccordion";
 import { SchoolsHowItWorks } from "@/components/schools/SchoolsHowItWorks";
-import { SchoolsPageHero } from "@/components/schools/SchoolsPageHero";
 import { ConciergeSection } from "@/components/marketing/ConciergeSection";
+import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
@@ -34,11 +34,17 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
   return (
     <>
       <div id="schools-search">
-        <SchoolsPageHero>
-        <SchoolSearchPanel
-          initialQuery={firstValue(params.q) ?? ""}
-        />
-      </SchoolsPageHero>
+        <PageHero
+          eyebrow="School stationery"
+          title="Find your school pack"
+          text="Select your child&rsquo;s school and grade to order a stationery pack prepared exactly to their official school stationery list and delivered to your door."
+          panelTitle="Fast delivery anywhere in South Africa"
+          panelText="Each pack is packed according to your school&rsquo;s official stationery list."
+        >
+          <SchoolSearchPanel
+            initialQuery={firstValue(params.q) ?? ""}
+          />
+        </PageHero>
       </div>
 
       <RecentlyViewedSchools />

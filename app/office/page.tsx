@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
+import { PageHero } from "@/components/marketing/PageHero";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
 
@@ -32,25 +33,20 @@ export default async function OfficePacksPage({
 
   return (
     <div className={sectionStyles.officePortalContainer}>
-      <section className={sectionStyles.b2bHero}>
-        <div className={sectionStyles.b2bHeroInner}>
-          <div className={sectionStyles.b2bHeroContent}>
-            <h1 className={sectionStyles.b2bHeroTitle}>
-              Stop the Makro runs. <br />
-              Streamline your office procurement.
-            </h1>
-            <p className={sectionStyles.b2bHeroText}>
-              Next-day delivery, automated tax invoices, and zero admin for growing SMEs.
-            </p>
-            <div className={sectionStyles.buttonRow}>
-              <Button href="#office-pack-types">Shop Office Starter Packs</Button>
-              <Button href="/office/upload-requisition-list" variant="outline">
-                Upload Requisition List
-              </Button>
-            </div>
-          </div>
+      <PageHero
+        eyebrow="Office procurement"
+        title="Stop the Makro runs. Streamline your office procurement."
+        text="Next-day delivery, automated tax invoices, and zero admin for growing SMEs."
+        panelText="Trusted by SMEs across South Africa"
+        panelTitle="SARS-compliant invoices, next-day delivery &amp; zero admin"
+      >
+        <div className={sectionStyles.buttonRow}>
+          <Button href="#office-pack-types" variant="primary">Shop Office Starter Packs</Button>
+          <Button href="/office/upload-requisition-list" variant="white">
+            Upload Requisition List
+          </Button>
         </div>
-      </section>
+      </PageHero>
 
       <section className={sectionStyles.accountingTrustBanner}>
         <div className={sectionStyles.accountingTrustInner}>

@@ -10,8 +10,8 @@ import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata(
-  "Back to School Resource Hub | Pexpacks",
-  "Helpful guides, stationery checklists, and tips for parents preparing for the new school year.",
+  "Digital Backpack Resources | Pexpacks",
+  "Free printables, expert parent guides, and study tools to empower your child's academic year.",
   "/blog"
 );
 
@@ -21,9 +21,11 @@ export default function BlogIndex() {
   return (
     <>
       <PageHero
-        eyebrow="Back-to-school resources"
-        title="Back to school hub"
-        text="Practical advice, stationery checklists, and survival guides to help parents prepare for the new school year without the stress."
+        eyebrow="Digital Backpack"
+        title="Everything you need, beyond the box."
+        text="Free printables, expert parent guides, and study tools to empower your child's academic year."
+        panelText="Free resources for parents and learners"
+        panelTitle="Expert guides, printables, study tools &amp; more"
       />
 
       <div className={styles.blogContainer}>

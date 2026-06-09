@@ -14,6 +14,7 @@ import { DetailsStep } from "@/components/checkout/DetailsStep";
 import { DeliveryStep } from "@/components/checkout/DeliveryStep";
 import { PayStep } from "@/components/checkout/PayStep";
 import { OrderSummaryCard } from "@/components/checkout/OrderSummaryCard";
+import heroStyles from "@/components/marketing/HeroBase.module.css";
 import styles from "./Checkout.module.css";
 
 type CheckoutFormProps = {
@@ -507,6 +508,9 @@ export function CheckoutForm({
 
           <section className={styles.stepCard} aria-labelledby="checkout-step-heading">
             <div className={styles.stepIntro}>
+              <p className={`${heroStyles.eyebrow} ${styles.stepEyebrow}`}>
+                Secure checkout
+              </p>
               <h1
                 id="checkout-step-heading"
                 ref={headingRef}

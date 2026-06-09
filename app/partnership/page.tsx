@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PartnerForm } from "@/components/forms/PartnerForm";
 import { InteractiveDemoSection } from "@/components/partnership/InteractiveDemoSection";
 import { Button } from "@/components/ui/Button";
+import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 
 import { buildMetadata } from "@/lib/seo";
@@ -58,20 +59,17 @@ export const dynamic = "force-static";
 export default function PartnerWithSchoolsPage() {
   return (
     <>
-      <section className={pageStyles.executiveHero}>
-        <div className={pageStyles.executiveHeroInner}>
-          <h1 className={pageStyles.executiveHeroTitle}>
-            Your school&rsquo;s stationery admin is now free. <br />
-            For good.
-          </h1>
-          <p className={pageStyles.executiveHeroText}>
-            Pexpacks is a free administrative upgrade for your school — not a stationery supplier. We manage your grade lists, parent ordering, payment collection, and delivery. Your school pays nothing, and your staff does nothing.
-          </p>
-          <a href="#partner-form" className={pageStyles.executiveHeroCta}>
-            Apply to Partner
-          </a>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="School partnership programme"
+        title="Your school&rsquo;s stationery admin is now free. For good."
+        text="Pexpacks is a free administrative upgrade for your school — not a stationery supplier. We manage your grade lists, parent ordering, payment collection, and delivery. Your school pays nothing, and your staff does nothing."
+        panelText="Your school's custom portal includes"
+        panelTitle="Free website, hosting, SSL &amp; parent ordering portal"
+      >
+        <a href="#partner-form" className={pageStyles.executiveHeroCta}>
+          Apply to Partner
+        </a>
+      </PageHero>
 
       <section className={pageStyles.tripleWinSection} aria-labelledby="triple-win-heading">
         <div className={sectionStyles.inner}>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import heroStyles from "@/components/marketing/HeroBase.module.css";
 import styles from "./CancelledPage.module.css";
 
 type CancelledPageProps = {
@@ -44,9 +45,8 @@ export default async function CancelledPage({
             </svg>
           </div>
 
-          <h1 className={styles.heading}>
-            Payment was not completed
-          </h1>
+          <p className={heroStyles.eyebrow}>Payment status</p>
+          <h1 className={styles.heading}>Payment was not completed</h1>
 
           <p className={styles.bodyText}>
             Your payment was not completed. Your order has not been charged. You

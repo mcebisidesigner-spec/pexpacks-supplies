@@ -35,6 +35,11 @@
   line-height: 1.45;
 }
 
+.hero,
+.heroNavy {
+  padding: clamp(34px, 6vw, 78px) 0 clamp(58px, 8vw, 108px);
+}
+
 .hero {
   background:
     radial-gradient(
@@ -43,7 +48,23 @@
       transparent 28%
     ),
     linear-gradient(180deg, #ffffff 0%, var(--pex-bg) 100%);
-  padding: clamp(34px, 6vw, 78px) 0 clamp(58px, 8vw, 108px);
+}
+
+.heroNavy {
+  background: var(--pex-navy);
+  padding: clamp(52px, 8vw, 96px) 0 clamp(58px, 8vw, 108px);
+}
+
+.heroNavy .eyebrow {
+  color: var(--pex-keppel);
+}
+
+.heroNavy .heroTitle {
+  color: #ffffff;
+}
+
+.heroNavy .heroLead {
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .heroInner {
@@ -141,14 +162,36 @@
 }
 
 .pageHero {
-  padding: clamp(34px, 6vw, 78px) 0 clamp(58px, 8vw, 108px);
-  background:
-    radial-gradient(
-      circle at 82% 10%,
-      rgba(33, 158, 154, 0.12),
-      transparent 28%
-    ),
-    linear-gradient(180deg, #ffffff, var(--pex-bg));
+  background: var(--pex-navy);
+  padding: clamp(52px, 8vw, 96px) 0 clamp(58px, 8vw, 108px);
+}
+
+.pageHero .pageTitle {
+  color: #ffffff;
+}
+
+.pageHero .pageLead {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+@media (max-width: 820px) {
+  .pageHero {
+    padding: clamp(36px, 6vw, 52px) 0 clamp(44px, 8vw, 72px);
+  }
+
+  .pageHero .pageTitle {
+    font-size: clamp(32px, 9vw, 42px);
+  }
+
+  .pageHero .pageLead {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .pageHero .pageTitle {
+    font-size: clamp(28px, 8vw, 34px);
+  }
 }
 
 .pageHeroInner {

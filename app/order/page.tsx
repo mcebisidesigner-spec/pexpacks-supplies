@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import styles from "./OrderPage.module.css";
+import heroStyles from "@/components/marketing/HeroBase.module.css";
 import { OrderForm } from "./OrderForm";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
@@ -19,6 +20,7 @@ export default function OrderPage() {
         
         {/* Left Side: The Pitch */}
         <div className={styles.pitchSection}>
+          <p className={heroStyles.eyebrow}>Custom stationery concierge</p>
           <h1>Let us pack it for you.</h1>
           
           <div className={styles.searchPromo}>

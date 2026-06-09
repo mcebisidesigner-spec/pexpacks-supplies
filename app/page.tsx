@@ -23,7 +23,7 @@ import homeStyles from "@/components/marketing/MarketingHome.module.css";
 export default function HomePage() {
   return (
     <>
-      <section className={heroStyles.hero}>
+      <section className={heroStyles.heroNavy}>
         <div className={heroStyles.heroInner}>
           <div>
             <p className={heroStyles.eyebrow}>School stationery made simple</p>
