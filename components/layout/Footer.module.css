@@ -252,6 +252,7 @@
 }
 
 .copyright {
+  min-width: 0;
   margin: 0;
   color: rgba(255, 255, 255, 0.72);
   font-size: 13px;
@@ -383,12 +384,12 @@
   }
 
   .bottomSection {
-    grid-template-columns: 1fr;
-    gap: 22px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
   }
 
   .socialNav {
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 }
 
@@ -459,7 +460,7 @@
   }
 
   .copyright {
-    font-size: 13px;
+    font-size: 12px;
   }
 }
 

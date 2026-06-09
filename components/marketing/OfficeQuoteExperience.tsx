@@ -39,6 +39,22 @@ const trustSignals = [
   "Business-ready admin packs",
 ];
 
+const RocketIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+    <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+  </svg>
+);
+
+const BriefcaseIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+  </svg>
+);
+
 const itemBrandDetails: Record<string, string> = {
   "Notebook set": "3x A4 72-page Feint/Margin books (Croxley)",
   "Ballpoint pens": "Pack of 10 black & blue medium pens (Bic / Pilot)",
@@ -134,7 +150,6 @@ export function OfficeQuoteExperience({
     });
     return initial;
   });
-  const [orderQuantity, setOrderQuantity] = useState(1);
   const [formNotes, setFormNotes] = useState(initialMessage);
 
   function handleBrandingClick() {
@@ -208,11 +223,10 @@ export function OfficeQuoteExperience({
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function selectPack(pack: OfficePack, nextMode: QuoteMode = "standard", qty: number = 1) {
+  function selectPack(pack: OfficePack, nextMode: QuoteMode = "standard") {
     setSelectedPackId(pack.id);
     setItems(pack.contents);
     setMode(nextMode);
-    setOrderQuantity(qty);
     setStatus(null);
     setErrors({});
     window.setTimeout(scrollToForm, 0);
@@ -302,7 +316,6 @@ export function OfficeQuoteExperience({
       preferredContactMethod:
         val(formData, "preferredContactMethod") || undefined,
       businessName: val(formData, "businessName"),
-      orderQuantity: val(formData, "orderQuantity") || undefined,
       enquiryType: "Office pack",
       packType: selectedPack.name,
       packId: selectedPack.id,
@@ -456,12 +469,15 @@ export function OfficeQuoteExperience({
                         </li>
                       ))}
                     </ul>
+                    <div className={officeStyles.urgencyBadge} style={{ margin: "0 22px", width: "fit-content" }}>
+                      Next-day delivery
+                    </div>
                     <div className={cardStyles.packFooter}>
                       <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                         <span className={cardStyles.priceLabel}>
                           {pack.priceFrom === 0
                             ? "Request quote"
-                            : `${formatCurrency(pack.priceFrom * qty)}`}
+                            : `From ${formatCurrency(pack.priceFrom * qty)}`}
                         </span>
                         {qty > 1 && pack.priceFrom > 0 && (
                           <span className={officeStyles.cardItemDetail} style={{ fontSize: "11px", opacity: 0.75 }}>
@@ -482,7 +498,7 @@ export function OfficeQuoteExperience({
                         <Button
                           type="button"
                           size="sm"
-                          onClick={() => selectPack(pack, "standard", qty)}
+                          onClick={() => selectPack(pack, "standard")}
                         >
                           Request Quote
                         </Button>
@@ -500,30 +516,77 @@ export function OfficeQuoteExperience({
 
       <section className={officeStyles.brandingUpsellSection}>
         <div className={sectionStyles.inner}>
-          <div className={officeStyles.brandingUpsellCard}>
-            <div className={officeStyles.brandingUpsellContent}>
-              <div className={officeStyles.brandingUpsellIcon} aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className={sectionStyles.sectionHeader}>
+            <p className={sectionStyles.sectionEyebrow}>Brand your business</p>
+            <h2>Stand out from the start</h2>
+          </div>
+          <div className={officeStyles.brandingGrid}>
+            <div className={officeStyles.brandingCard}>
+              <div className={officeStyles.brandingCardIcon} aria-hidden="true">
+                <RocketIcon />
+              </div>
+              <p className={officeStyles.brandingCardEyebrow}>Special Offer</p>
+              <h3 className={officeStyles.brandingCardTitle}>Business Starter Brand Package</h3>
+              <p className={officeStyles.brandingCardDesc}>
+                Logo, business cards, flyers, letterhead, and a 5-page website — everything you need to launch professionally.
+              </p>
+              <div className={officeStyles.brandingCardPrice}>
+                <span>R3,999.00</span>
+              </div>
+              <div className={officeStyles.brandingCardAction}>
+                <Button href="/business-starter-brand-package" variant="white">
+                  Learn More
+                </Button>
+              </div>
+            </div>
+            <div className={officeStyles.brandingCard}>
+              <div className={officeStyles.brandingCardIcon} aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
                   <path d="M12 20h9" />
                   <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                 </svg>
               </div>
-              <div className={officeStyles.brandingUpsellText}>
-                <p className={officeStyles.brandingUpsellEyebrow}>Corporate Identity</p>
-                <h3 className={officeStyles.brandingUpsellTitle}>Custom Branded Stationery</h3>
-                <p className={officeStyles.brandingUpsellDesc}>
-                  Need notebooks, pens, or presentation folders featuring your company logo? We offer premium corporate branding for your office packs.
-                </p>
+              <p className={officeStyles.brandingCardEyebrow}>Corporate Identity</p>
+              <h3 className={officeStyles.brandingCardTitle}>Custom Branded Stationery</h3>
+              <p className={officeStyles.brandingCardDesc}>
+                Notebooks, pens, and presentation folders featuring your company logo. Premium branding added to any office pack.
+              </p>
+              <div className={officeStyles.brandingCardAction}>
+                <Button
+                  type="button"
+                  variant="white"
+                  onClick={handleBrandingClick}
+                >
+                  Add Corporate Branding
+                </Button>
               </div>
             </div>
-            <div className={officeStyles.brandingUpsellAction}>
-              <Button
-                type="button"
-                variant="white"
-                onClick={handleBrandingClick}
-              >
-                Add Corporate Branding
-              </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className={officeStyles.officeSocialProof} aria-label="Customer testimonials">
+        <div className={officeStyles.officeSocialProofInner}>
+          <div className={officeStyles.officeSocialProofQuote}>
+            <blockquote>
+              We switched from Makro halfway through the year. Pexpacks delivers next day with proper invoices — our bookkeeper was thrilled.
+            </blockquote>
+            <p className={officeStyles.officeSocialProofAuthor}>
+              &mdash; Marius C., Office Manager, Fourways
+            </p>
+          </div>
+          <div className={officeStyles.officeSocialProofStats}>
+            <div className={officeStyles.officeSocialProofStat}>
+              <strong>50+</strong>
+              <span>SMEs served</span>
+            </div>
+            <div className={officeStyles.officeSocialProofStat}>
+              <strong>Next-day</strong>
+              <span>Gauteng delivery</span>
+            </div>
+            <div className={officeStyles.officeSocialProofStat}>
+              <strong>SARS</strong>
+              <span>Compliant invoices</span>
             </div>
           </div>
         </div>
@@ -738,26 +801,6 @@ export function OfficeQuoteExperience({
                       {...errorAttributes(errors, "email")}
                     />
                     <FieldError id="email-error" message={errors.email} />
-                  </label>
-                  <Select
-                    name="preferredContactMethod"
-                    label="Preferred contact method"
-                    defaultValue="whatsapp"
-                    options={[
-                      { value: "whatsapp", label: "WhatsApp" },
-                      { value: "phone", label: "Phone" },
-                      { value: "email", label: "Email" },
-                    ]}
-                  />
-                  <label className={formStyles.field}>
-                    <span>Quantity</span>
-                    <input
-                      name="orderQuantity"
-                      type="number"
-                      min="1"
-                      value={orderQuantity}
-                      onChange={(e) => setOrderQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                    />
                   </label>
                   <label className={`${formStyles.field} ${formStyles.formWide}`}>
                     <span>Notes</span>

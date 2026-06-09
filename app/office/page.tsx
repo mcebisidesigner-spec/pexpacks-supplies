@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
@@ -9,75 +8,6 @@ import { officePacks } from "@/data/officePacks";
 import { faqs } from "@/data/faqs";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
-import cardStyles from "@/components/marketing/MarketingCards.module.css";
-
-const BrandIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M12 3l2.5 5.1 5.6.8-4.1 4 1 5.6-5-2.7-5 2.7 1-5.6-4.1-4 5.6-.8L12 3z" />
-  </svg>
-);
-
-const CardIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <rect x="3" y="6" width="18" height="12" rx="2" />
-    <path d="M3 10h18" />
-    <path d="M7 15h4" />
-  </svg>
-);
-
-const MegaphoneIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M4 14h3l9 4V6L7 10H4v4z" />
-    <path d="M7 14l1 5h3" />
-    <path d="M19 9c1 .7 1.5 1.7 1.5 3s-.5 2.3-1.5 3" />
-  </svg>
-);
-
-const DocumentIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M7 3h7l4 4v14H7V3z" />
-    <path d="M14 3v5h4" />
-    <path d="M10 13h5" />
-    <path d="M10 17h4" />
-  </svg>
-);
-
-const WebsiteIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <rect x="3" y="5" width="18" height="14" rx="2" />
-    <path d="M3 9h18" />
-    <path d="M8 14h3" />
-    <path d="M14 14h2" />
-  </svg>
-);
-
-const brandPackageItems = [
-  {
-    title: "Professional Logo Design",
-    text: "A practical visual identity your customers can recognise quickly.",
-    Icon: BrandIcon,
-  },
-  {
-    title: "Custom Business Cards",
-    text: "Printed cards for owners, staff, sales teams and customer handouts.",
-    Icon: CardIcon,
-  },
-  {
-    title: "Marketing Flyers",
-    text: "Simple promotional flyers for launches, offers and local campaigns.",
-    Icon: MegaphoneIcon,
-  },
-  {
-    title: "Official Company Letterhead",
-    text: "A clean document style for quotes, invoices, proposals and notices.",
-    Icon: DocumentIcon,
-  },
-  {
-    title: "5-Page Website",
-    text: "Hosted free for 12 months so the brand package has a live home.",
-    Icon: WebsiteIcon,
-  },
-];
 
 export const metadata: Metadata = buildMetadata(
   "Office Stationery Packs for SMEs | Pexpacks",
@@ -106,14 +36,14 @@ export default async function OfficePacksPage({
         <div className={sectionStyles.b2bHeroInner}>
           <div className={sectionStyles.b2bHeroContent}>
             <h1 className={sectionStyles.b2bHeroTitle}>
-              Office Supply Reconciliation. <br />
+              Stop the Makro runs. <br />
               Streamline your office procurement.
             </h1>
             <p className={sectionStyles.b2bHeroText}>
               Next-day delivery, automated tax invoices, and zero admin for growing SMEs.
             </p>
             <div className={sectionStyles.buttonRow}>
-              <Button href="#contact-enquiry">Shop Office Starter Packs</Button>
+              <Button href="#office-pack-types">Shop Office Starter Packs</Button>
               <Button href="/office/upload-requisition-list" variant="outline">
                 Upload Requisition List
               </Button>
@@ -147,53 +77,6 @@ export default async function OfficePacksPage({
         </div>
       </section>
 
-      <section
-        className={sectionStyles.brandPackageSection}
-        id="brand-packages"
-        aria-labelledby="brand-package-heading"
-      >
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.brandPackagePanel}>
-            <div className={sectionStyles.brandPackageCopy}>
-              <p className={sectionStyles.sectionEyebrow}>Special Offer</p>
-              <h2 id="brand-package-heading">Business Starter Brand Package</h2>
-              <p>
-                Launch with a professional identity. Pexpacks prepares your
-                essential physical and digital branding in one focused starter
-                package.
-              </p>
-              <div className={sectionStyles.brandPackagePrice}>
-                <span>Complete package</span>
-                <strong>R3,999.00</strong>
-              </div>
-              <div className={sectionStyles.buttonRow}>
-                <Button href="/business-starter-brand-package" variant="white">
-                  Claim This Package
-                </Button>
-              </div>
-            </div>
-
-            <div className={sectionStyles.brandPackageItems}>
-              {brandPackageItems.map(({ title, text, Icon }, index) => (
-                <details
-                  className={sectionStyles.brandPackageItem}
-                  key={title}
-                  open={index === 0}
-                >
-                  <summary>
-                    <span className={sectionStyles.brandPackageIcon}>
-                      <Icon />
-                    </span>
-                    <strong>{title}</strong>
-                  </summary>
-                  <p>{text}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       <OfficeQuoteExperience
         officePacks={officePacks}
         initialMessage={initialMessage}
@@ -204,39 +87,6 @@ export default async function OfficePacksPage({
           ["sme-office-packs", "custom-office-quote", "bulk-office-orders", "delivery-timing", "payment-flow"].includes(f.id)
         )}
       />
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
-            <div>
-              <p className={sectionStyles.sectionEyebrow}>Need school stationery?</p>
-              <h2>Back to school</h2>
-              <p>
-                Pexpacks prepares ready-packed stationery for every grade &mdash; Foundation Phase through to High School.
-              </p>
-              <div className={sectionStyles.buttonRow}>
-                <Button href="/schools" variant="primary">Find a School Pack</Button>
-                <Button href="/schools" variant="white">Browse Grade Packs</Button>
-              </div>
-            </div>
-            <div className={cardStyles.packCard}>
-              <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Partner with Pexpacks</h3>
-              </div>
-              <div className={cardStyles.packCardBody}>
-                <p className={cardStyles.packDescription}>
-                  Schools can submit their stationery lists so parents order grade-specific packs. No admin, no hassle.
-                </p>
-              </div>
-              <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/partnership" className={cardStyles.cardLink}>
-                  Explore partnerships &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
