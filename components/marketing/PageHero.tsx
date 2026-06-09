@@ -4,7 +4,7 @@ import styles from "./HeroBase.module.css";
 type PageHeroProps = {
   eyebrow: string;
   title: string;
-  text: string;
+  text?: string;
   panelTitle?: string;
   panelText?: string;
   panelChildren?: ReactNode;

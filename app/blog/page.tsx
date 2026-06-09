@@ -22,7 +22,6 @@ export default function BlogIndex() {
       <PageHero
         eyebrow="Digital Backpack"
         title="Everything you need, beyond the box."
-        text="Free printables, expert parent guides, and study tools to empower your child's academic year."
         panelText="Free resources for parents and learners"
         panelTitle="Expert guides, printables, study tools &amp; more"
       />

@@ -21,7 +21,6 @@ export default function OfflinePage() {
     <PageHero
       eyebrow="Connection offline"
       title="Connection needed"
-      text="Pexpacks could not reach the network. Previously opened pages may still be available."
     >
       <div className={page.notFoundActions}>
         <Button href="/">Go to homepage</Button>

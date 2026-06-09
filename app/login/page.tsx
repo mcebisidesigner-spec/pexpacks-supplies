@@ -24,7 +24,6 @@ export default function LoginPage() {
       <PageHero
         eyebrow="Parent order hub"
         title="Quick access for Pexpacks parents"
-        text="Use the parent portal entry point to track an order, return to your school pack, or get help from the Pexpacks team."
         panelText="No account needed"
         panelTitle="Track your order with your order reference."
       >

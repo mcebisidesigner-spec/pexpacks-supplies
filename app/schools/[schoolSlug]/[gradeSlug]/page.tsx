@@ -89,7 +89,6 @@ export default async function GradePackPage({ params, searchParams }: GradePageP
       <PageHero
         eyebrow={school.name}
         title={`${grade.grade} Stationery Pack`}
-        text={`Order a ready-packed ${grade.grade} stationery pack for ${school.name}, prepared according to the official school stationery list.`}
         panelText="Pack estimate"
         panelTitle={formatCurrency(grade.price)}
       />

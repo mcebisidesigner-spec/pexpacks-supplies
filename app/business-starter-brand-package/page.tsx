@@ -93,7 +93,6 @@ export default function BusinessStarterBrandPackagePage() {
       <PageHero
         eyebrow="Business starter package"
         title="Claim your brand package"
-        text="Use this dedicated order form to send the information Pexpacks needs to prepare your logo, business cards, flyers, letterhead and starter website."
         panelText="Package value"
         panelTitle="Complete physical and digital branding for R5,500.00."
       />

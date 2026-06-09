@@ -61,8 +61,7 @@ export default function PartnerWithSchoolsPage() {
     <>
       <PageHero
         eyebrow="School partnership programme"
-        title="Your school&rsquo;s stationery admin is now free. For good."
-        text="Pexpacks is a free administrative upgrade for your school — not a stationery supplier. We manage your grade lists, parent ordering, payment collection, and delivery. Your school pays nothing, and your staff does nothing."
+        title="Your school&rsquo;s stationery admin is now free."
         panelText="Your school's custom portal includes"
         panelTitle="Free website, hosting, SSL &amp; parent ordering portal"
       >

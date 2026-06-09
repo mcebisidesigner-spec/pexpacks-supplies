@@ -267,8 +267,7 @@ export default async function BlogPostPage({
       <PageHero
         eyebrow={post.category}
         title={post.title}
-        text={post.excerpt}
-        panelText={`By ${post.author}`}
+            panelText={`By ${post.author}`}
         panelTitle={publishedDate}
       >
         <Link href="/blog" className={styles.backLink}>

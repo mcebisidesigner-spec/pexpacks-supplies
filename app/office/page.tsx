@@ -36,7 +36,6 @@ export default async function OfficePacksPage({
       <PageHero
         eyebrow="Office procurement"
         title="Stop the Makro runs. Streamline your office procurement."
-        text="Next-day delivery, automated tax invoices, and zero admin for growing SMEs."
         panelText="Trusted by SMEs across South Africa"
         panelTitle="SARS-compliant invoices, next-day delivery &amp; zero admin"
       >

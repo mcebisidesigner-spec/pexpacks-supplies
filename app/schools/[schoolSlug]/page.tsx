@@ -81,11 +81,6 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
       <PageHero
         eyebrow={`${school.city}, City of ${school.metro}`}
         title={school.name}
-        text={
-          isPartner
-            ? "Official stationery packs prepared according to the school stationery list."
-            : `We don't have ${school.name}'s official 2027 lists yet, but we can still pack it for you.`
-        }
         panelChildren={
           <div className={styles.schoolHeroPanel}>
             <div className={styles.schoolHeroCopy}>

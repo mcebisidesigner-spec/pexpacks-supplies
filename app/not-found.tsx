@@ -7,7 +7,6 @@ export default function NotFound() {
     <PageHero
       eyebrow="Page not found"
       title="Page not found"
-      text="The page or stationery pack you requested is not available."
     >
       <div className={page.notFoundActions}>
         <Button href="/">Go to homepage</Button>

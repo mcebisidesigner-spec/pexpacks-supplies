@@ -81,7 +81,6 @@ export function LegalDocumentPage({
       <PageHero
         eyebrow={heroEyebrow}
         title={pageTitle}
-        text={`${heroTitle}. ${heroText}`}
         panelTitle={heroPanelTitle}
         panelText={heroPanelText}
       />

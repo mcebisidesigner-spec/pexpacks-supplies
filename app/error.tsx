@@ -14,7 +14,6 @@ export default function GlobalError({
     <PageHero
       eyebrow="Something went wrong"
       title="An unexpected error occurred"
-      text="We could not load this page. Please try again or return to the homepage."
     >
       <div className={page.notFoundActions}>
         <Button href="/">Go to homepage</Button>
