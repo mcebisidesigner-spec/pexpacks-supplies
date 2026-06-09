@@ -334,6 +334,10 @@
 }
 
 @media (max-width: 1040px) {
+  .footerInner {
+    padding-inline: var(--gutter-tablet);
+  }
+
   .topSection {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -411,9 +415,6 @@
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
-  }
-
-  .contactDivider {
   }
 
   .contactLink {

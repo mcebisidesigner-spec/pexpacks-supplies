@@ -6,6 +6,19 @@
   justify-content: center;
 }
 
+@media (max-width: 1024px) {
+  .page {
+    padding-inline: var(--gutter-tablet);
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding-top: 40px;
+    padding-inline: var(--gutter-mobile);
+  }
+}
+
 .inner {
   width: 100%;
   max-width: 560px;

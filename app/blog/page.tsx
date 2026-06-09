@@ -1,12 +1,9 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
 import { CTASection } from "@/components/marketing/CTASection";
 import { PageHero } from "@/components/marketing/PageHero";
 import { blogPosts } from "@/data/blog";
 import styles from "./Blog.module.css";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
-import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata(
@@ -79,39 +76,6 @@ export default function BlogIndex() {
         secondaryHref="/faq"
         secondaryLabel="Read FAQs"
       />
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
-            <div>
-              <p className={sectionStyles.sectionEyebrow}>Need office stationery?</p>
-              <h2>Business supplies</h2>
-              <p>
-                Pexpacks prepares practical office packs for SMEs, home offices, and small teams with custom quotes and bulk pricing.
-              </p>
-              <div className={sectionStyles.buttonRow}>
-                <Button href="/office" variant="primary">View Office Packs</Button>
-                <Button href="/office#contact-enquiry" variant="white">Request a Quote</Button>
-              </div>
-            </div>
-            <div className={cardStyles.packCard}>
-              <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>School partnerships</h3>
-              </div>
-              <div className={cardStyles.packCardBody}>
-                <p className={cardStyles.packDescription}>
-                  Schools can submit stationery lists so parents order grade-specific packs. No admin, no hassle.
-                </p>
-              </div>
-              <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/partnership" className={cardStyles.cardLink}>
-                  Explore partnerships &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className={styles.subscribeSection}>
         <div className={styles.subscribeInner}>

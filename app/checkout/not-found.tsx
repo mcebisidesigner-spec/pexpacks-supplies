@@ -10,7 +10,7 @@ export default function CheckoutNotFound() {
     <main
       style={{
         minHeight: "100vh",
-        padding: "64px var(--gutter-desktop)",
+        padding: "64px var(--gutter-mobile)",
         background: "var(--pex-bg-soft)",
         display: "grid",
         placeItems: "center",

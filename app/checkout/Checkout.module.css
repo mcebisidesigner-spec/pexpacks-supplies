@@ -1792,6 +1792,10 @@
 }
 
 @media (max-width: 1024px) {
+  .checkoutShell {
+    padding-inline: var(--gutter-tablet);
+  }
+
   .checkoutGrid {
     grid-template-columns: 1fr;
   }

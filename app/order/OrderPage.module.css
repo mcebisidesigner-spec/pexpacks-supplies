@@ -365,6 +365,7 @@
   .container {
     grid-template-columns: 1fr;
     gap: 48px;
+    padding: 0 var(--gutter-tablet);
   }
 }
 

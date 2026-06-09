@@ -9,6 +9,18 @@
   padding: 0 var(--gutter-desktop);
 }
 
+@media (max-width: 1024px) {
+  .inner {
+    padding: 0 var(--gutter-tablet);
+  }
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding: 0 var(--gutter-mobile);
+  }
+}
+
 .grid {
   display: grid;
   gap: 40px;

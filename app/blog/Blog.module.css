@@ -767,6 +767,17 @@
   .blogContainer {
     grid-template-columns: 1fr;
     gap: 48px;
+    padding-top: 0;
+  }
+
+  .filterRow {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--pex-bg);
+    padding-top: 16px;
+    padding-bottom: 16px;
+    margin-bottom: 28px;
   }
 
   .stickySidebar {
@@ -785,6 +796,8 @@
   .documentInner {
     grid-template-columns: 1fr;
     gap: 24px;
+    padding-left: var(--gutter-tablet);
+    padding-right: var(--gutter-tablet);
   }
 
   .sidebarShell {
@@ -802,6 +815,18 @@
 }
 
 @media (max-width: 768px) {
+  .blogContainer,
+  .blogGrid,
+  .documentInner,
+  .subscribeInner {
+    padding-left: var(--gutter-mobile);
+    padding-right: var(--gutter-mobile);
+  }
+
+  .blogCard {
+    padding: 24px;
+  }
+
   .blogGrid,
   .articlesGrid {
     grid-template-columns: 1fr;
@@ -852,6 +877,10 @@
   .postCardBody {
     padding: 20px;
     font-size: 15px;
+  }
+
+  .blogCard {
+    padding: 20px;
   }
 
   .documentCard,

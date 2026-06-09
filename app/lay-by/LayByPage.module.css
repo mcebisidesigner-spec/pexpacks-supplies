@@ -5,6 +5,18 @@
   padding-inline: var(--gutter-desktop);
 }
 
+@media (max-width: 1024px) {
+  .inner {
+    padding-inline: var(--gutter-tablet);
+  }
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding-inline: var(--gutter-mobile);
+  }
+}
+
 .priceDemoSection {
   padding: var(--section-padding-y-desktop) 0;
   background:

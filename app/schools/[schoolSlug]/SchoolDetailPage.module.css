@@ -275,6 +275,10 @@
     padding: 32px var(--gutter-mobile) 0;
   }
 
+  .searchMicroCopy {
+    padding: 20px var(--gutter-mobile) 0;
+  }
+
   .unpartneredCard {
     padding: 32px var(--gutter-mobile) 0;
   }

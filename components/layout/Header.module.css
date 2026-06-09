@@ -453,6 +453,7 @@
   .headerInner {
     height: var(--mobile-header-height);
     grid-template-columns: 1fr auto;
+    padding-inline: var(--gutter-tablet);
   }
 
   .logoLink img {

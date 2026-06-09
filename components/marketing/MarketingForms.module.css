@@ -1,5 +1,5 @@
 .inlineTextLink {
-  color: var(--pex-primary);
+  color: var(--pex-keppel);
   font-weight: 800;
   text-decoration: underline;
   text-decoration-thickness: 2px;
@@ -93,6 +93,11 @@
   line-height: 1;
 }
 
+.formStack {
+  display: grid;
+  gap: var(--form-grid-gap);
+}
+
 .formWide {
   grid-column: 1 / -1;
 }
@@ -125,21 +130,26 @@
 .consentField {
   display: grid;
   grid-template-columns: 20px 1fr;
-  gap: 10px;
+  gap: 12px;
   align-items: start;
-  color: var(--pex-primary);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.4;
 }
 
-.consentField .inlineTextLink {
+.consentField span {
+  color: var(--pex-primary);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.consentField span a {
   color: var(--pex-keppel);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .consentField input {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   margin-top: 2px;
   accent-color: var(--pex-keppel);
 }

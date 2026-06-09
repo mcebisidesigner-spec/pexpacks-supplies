@@ -38,7 +38,7 @@ const partnerOptions = ["School", "Supplier", "Office stationery partner"];
 type ContactOption = (typeof contactOptions)[number];
 
 const consentText =
-  "I consent to Pexpacks using my information to contact me about this enquiry and provide related support.";
+  "I consent to Pexpacks using my information to contact me about this enquiry and provide related support. I have read and agree to the";
 
 function resolveContactFormType(enquiryType: string): FormType {
   if (enquiryType === "Parent order") return "school-pack-enquiry";
@@ -199,7 +199,7 @@ export function PexpacksEnquiryForm({
           learner-related information and that the information provided is
           accurate.
         </p>
-        <div className={formStyles.formGrid}>
+        <div className={formStyles.formStack}>
           <label className={formStyles.field} htmlFor="enqFullName">
             <span>Full name</span>
             <input
@@ -345,7 +345,7 @@ export function PexpacksEnquiryForm({
             </>
           ) : null}
 
-          <label className={`${formStyles.field} ${formStyles.formWide}`} htmlFor="enqMessage">
+          <label className={formStyles.field} htmlFor="enqMessage">
             <span>Message</span>
             <textarea
               id="enqMessage"
@@ -369,9 +369,10 @@ export function PexpacksEnquiryForm({
           />
           <span>
             {consentText}{" "}
-            <Link href="/privacy-policy" className={formStyles.inlineTextLink}>
+            <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer" className={formStyles.inlineTextLink}>
               privacy policy
             </Link>
+            .
           </span>
         </label>
         <FieldError id="consent-error" message={errors.consent} />
