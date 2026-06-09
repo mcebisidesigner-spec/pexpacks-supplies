@@ -4,24 +4,11 @@ import { PartnerForm } from "@/components/forms/PartnerForm";
 import { InteractiveDemoSection } from "@/components/partnership/InteractiveDemoSection";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { SchoolPitchDeck } from "@/components/marketing/SchoolPitchDeck";
+
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import pageStyles from "./PartnerWithSchools.module.css";
-
-const pitchStats = [
-  { value: "R35,000+", label: "Annual website & hosting package value (R0 cost)" },
-  { value: "R0.00", label: "Setup, licensing, or monthly maintenance fees" },
-  { value: "5% Cash Back", label: "Rebate on every stationery pack reinvested in your school" },
-];
-
-const pitchFlow = [
-  "Partnership Offer",
-  "Economic Value Calculator",
-  "Interactive Website Preview",
-  "Launch Roadmap",
-];
 
 const schoolBenefits = [
   "Custom domain connection (e.g., yourschool.co.za)",
@@ -30,46 +17,6 @@ const schoolBenefits = [
   "News, calendars, and prospectus download sections",
   "Development fund rebate on stationery sales",
   "Zero setup or ongoing maintenance fees",
-];
-
-const mutualBenefits = [
-  {
-    title: "For Your School",
-    list: [
-      "Modern, secure web presence to support enrolment confidence.",
-      "No server subscription or maintenance workload.",
-      "Stationery admin handled through the Pexpacks workflow.",
-      "Annual development-fund rebate model on pack sales.",
-    ],
-  },
-  {
-    title: "For Your Parents",
-    list: [
-      "Correct stationery items packed from official grade lists.",
-      "Less retail-store hopping and fewer January queues.",
-      "Secure payment options including card, instant EFT, and WhatsApp support.",
-      "Home delivery or organised bulk drop-off at school.",
-    ],
-  },
-];
-
-const launchSteps = [
-  {
-    title: "1. Submit Request",
-    desc: "Share school details and the best contact person for the partnership conversation.",
-  },
-  {
-    title: "2. Share Stationery Lists",
-    desc: "Send approved grade lists so Pexpacks can digitise and prepare pack options.",
-  },
-  {
-    title: "3. Website and Store Setup",
-    desc: "We design the school website, connect the parent portal, and prepare launch content.",
-  },
-  {
-    title: "4. Launch and Earn Rebates",
-    desc: "Parents order from the approved path and your school gains measurable partner value.",
-  },
 ];
 
 const faqItems = [
@@ -114,29 +61,15 @@ export default function PartnerWithSchoolsPage() {
       <section className={pageStyles.executiveHero}>
         <div className={pageStyles.executiveHeroInner}>
           <h1 className={pageStyles.executiveHeroTitle}>
-            Equip your classrooms on Day 1. <br />
-            Zero admin for your school.
+            Your school&rsquo;s stationery admin is now free. <br />
+            For good.
           </h1>
           <p className={pageStyles.executiveHeroText}>
-            Partner with Pexpacks to digitize your official 2027 stationery lists. We deliver exactly what your teachers demand, directly to your parents&rsquo; doors.
+            Pexpacks is a free administrative upgrade for your school — not a stationery supplier. We manage your grade lists, parent ordering, payment collection, and delivery. Your school pays nothing, and your staff does nothing.
           </p>
           <a href="#partner-form" className={pageStyles.executiveHeroCta}>
             Apply to Partner
           </a>
-        </div>
-      </section>
-
-      <section
-        className={pageStyles.pitchStatsSection}
-        aria-label="Partnership highlights"
-      >
-        <div className={pageStyles.pitchStats}>
-          {pitchStats.map((stat) => (
-            <div key={stat.label}>
-              <strong>{stat.value}</strong>
-              <span>{stat.label}</span>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -156,9 +89,9 @@ export default function PartnerWithSchoolsPage() {
                 </svg>
               </div>
               <p className={pageStyles.tripleWinLabel}>For the Administration</p>
-              <h3 className={pageStyles.tripleWinTitle}>Zero Cost, Zero Admin</h3>
+              <h3 className={pageStyles.tripleWinTitle}>You Will Never Receive an Invoice</h3>
               <p className={pageStyles.tripleWinText}>
-                We handle inventory, payments, and logistics. Simply send us your PDFs, and we generate a custom ordering link for your parent newsletters.
+                No setup costs, monthly fees, or hidden charges. Simply approve your grade lists, share one link in your newsletter, and we handle the rest — for free, forever.
               </p>
             </div>
             <div className={pageStyles.tripleWinCard}>
@@ -169,9 +102,9 @@ export default function PartnerWithSchoolsPage() {
                 </svg>
               </div>
               <p className={pageStyles.tripleWinLabel}>For the Teachers</p>
-              <h3 className={pageStyles.tripleWinTitle}>Standardized Classrooms</h3>
+              <h3 className={pageStyles.tripleWinTitle}>No Admin Burden on Staff</h3>
               <p className={pageStyles.tripleWinText}>
-                No more generic substitutes. We enforce your exact list with teacher-approved brands so teaching can begin immediately in Term 1.
+                We collect and pack exactly what each teacher requires, using their approved lists and preferred brands. No bulk orders, no counting, no admin after the first Term 1 email.
               </p>
             </div>
             <div className={pageStyles.tripleWinCard}>
@@ -181,30 +114,70 @@ export default function PartnerWithSchoolsPage() {
                 </svg>
               </div>
               <p className={pageStyles.tripleWinLabel}>For the Parents</p>
-              <h3 className={pageStyles.tripleWinTitle}>Financial Relief</h3>
+              <h3 className={pageStyles.tripleWinTitle}>A Single Link for Everything</h3>
               <p className={pageStyles.tripleWinText}>
-                Parents avoid the January mall panic and only pay for what they need using our unique add/minus customisation system.
+                Parents click one school-branded link, select their child&rsquo;s grade, and receive exactly what&rsquo;s on the official list — delivered to their door. No mall crawling, no guesswork.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className={sectionStyles.sectionAlt} id="pitch-deck">
+      <section className={pageStyles.sgbHookSection} aria-labelledby="sgb-hook-heading">
         <div className={sectionStyles.inner}>
-          <div className={pageStyles.flowIntro}>
-            <SectionHeader
-              eyebrow="Interactive Proposal"
-              title="Explore the benefits of our School Partner Program"
-              text="Walk through the four core pillars of our partnership: the zero-cost managed website, the seamless parent ordering portal, your projected fund earnings, and our simplified launch roadmap."
-            />
-            <ol className={pageStyles.pitchFlow}>
-              {pitchFlow.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ol>
+          <div className={pageStyles.sgbHookBanner}>
+            <p className={pageStyles.sgbHookEyebrow}>Fundraising opportunity</p>
+            <h2 id="sgb-hook-heading" className={pageStyles.sgbHookTitle}>
+              Turn your stationery lists into a fundraising channel.
+            </h2>
+            <p className={pageStyles.sgbHookText}>
+              Official Pexpacks partner schools can opt into our rebate program. For every pack a parent orders through your unique school link, a percentage of the sale is donated directly back into your school&rsquo;s fundraising trust.
+            </p>
           </div>
-          <SchoolPitchDeck />
+        </div>
+      </section>
+
+      <section className={pageStyles.onboardingSection} aria-labelledby="onboarding-heading">
+        <div className={sectionStyles.inner}>
+          <SectionHeader
+            eyebrow="Simple onboarding"
+            title="Go live in 3 steps"
+            text="No IT meetings. No lengthy setup. From list upload to live link in under 48 hours."
+            headingId="onboarding-heading"
+          />
+          <div className={pageStyles.onboardingTimeline}>
+            <div className={pageStyles.onboardingStep}>
+              <div className={pageStyles.onboardingStepNumber} aria-hidden="true">1</div>
+              <h3 className={pageStyles.onboardingStepTitle}>Send Your Lists</h3>
+              <p className={pageStyles.onboardingStepText}>
+                Upload your official grade requirements directly to our portal.
+              </p>
+            </div>
+            <div className={pageStyles.onboardingConnector} aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </div>
+            <div className={pageStyles.onboardingStep}>
+              <div className={pageStyles.onboardingStepNumber} aria-hidden="true">2</div>
+              <h3 className={pageStyles.onboardingStepTitle}>We Digitize</h3>
+              <p className={pageStyles.onboardingStepText}>
+                Our team maps your items to our inventory within 48 hours.
+              </p>
+            </div>
+            <div className={pageStyles.onboardingConnector} aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </div>
+            <div className={pageStyles.onboardingStep}>
+              <div className={pageStyles.onboardingStepNumber} aria-hidden="true">3</div>
+              <h3 className={pageStyles.onboardingStepTitle}>Share Your Link</h3>
+              <p className={pageStyles.onboardingStepText}>
+                We provide a custom URL (e.g., pexpacks.co.za/schools/your-school) to paste into your D6 Communicator or WhatsApp groups.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -239,55 +212,6 @@ export default function PartnerWithSchoolsPage() {
       </section>
 
       <InteractiveDemoSection />
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="The Mutual Benefit"
-            title="A partnership that works for everyone"
-            text="Pexpacks reduces stationery admin for schools while giving parents a simpler, more reliable back-to-school experience."
-          />
-          <div className={cardStyles.infoGrid}>
-            {mutualBenefits.map((benefit) => (
-              <div
-                key={benefit.title}
-                className={`${pageStyles.benefitPanel}`}
-              >
-                <h3 className={pageStyles.benefitTitle}>{benefit.title}</h3>
-                <ul className={sectionStyles.checkList}>
-                  {benefit.list.map((item) => (
-                    <li key={item} className={pageStyles.benefitListItem}>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={sectionStyles.section} id="how-it-works">
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Simple setup"
-            title="Launch in four clear steps"
-            text="The flow is intentionally simple so your team can evaluate the offer, approve the setup, and launch without a heavy IT project."
-          />
-          <div className={sectionStyles.packageClaimLayout}>
-            <div className={sectionStyles.packageClaimSummary}>
-              <ol className={pageStyles.stepsGrid}>
-                {launchSteps.map((step) => (
-                  <li className={pageStyles.stepItem} key={step.title}>
-                    <h4 className={pageStyles.stepTitle}>{step.title}</h4>
-                    <p className={pageStyles.stepDesc}>{step.desc}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className={sectionStyles.sectionAlt} id="partnership-faq">
         <div className={sectionStyles.inner}>
