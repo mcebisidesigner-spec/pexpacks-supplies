@@ -73,7 +73,7 @@ export function ConciergeSection() {
         </div>
         <p className={styles.schoolLink}>
           <Link href="/add-your-school">
-            Is your school not listed? Let us know <span aria-hidden="true">&rarr;</span>
+            Is your school not an official partner yet? Let us know <span aria-hidden="true">&rarr;</span>
           </Link>
         </p>
       </div>
