@@ -41,12 +41,13 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       </SchoolsPageHero>
       </div>
 
+      <RecentlyViewedSchools />
+
       <SchoolsHowItWorks className={homeStyles.schoolsHowItWorksDesktop} />
 
       {featuredSchools.length > 0 && (
         <FeaturedSchoolsBanner schools={featuredSchools} />
       )}
-      <RecentlyViewedSchools />
 
       <div className={homeStyles.paymentRow}>
         <div className={homeStyles.paymentRowInner}>
