@@ -5,6 +5,7 @@
   margin-top: 26px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .searchBackdrop {
@@ -41,6 +42,7 @@
     0 1px 0 rgba(255, 255, 255, 0.95) inset;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .searchHelper {
@@ -351,6 +353,7 @@
 
 .trendingRow {
   margin-top: 12px;
+  min-width: 0;
 }
 
 .trendingLabel {

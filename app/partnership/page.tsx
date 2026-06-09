@@ -3,11 +3,9 @@ import Link from "next/link";
 import { PartnerForm } from "@/components/forms/PartnerForm";
 import { InteractiveDemoSection } from "@/components/partnership/InteractiveDemoSection";
 import { Button } from "@/components/ui/Button";
-import { PageHero } from "@/components/marketing/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { SchoolPitchDeck } from "@/components/marketing/SchoolPitchDeck";
 import { buildMetadata } from "@/lib/seo";
-import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import pageStyles from "./PartnerWithSchools.module.css";
@@ -113,22 +111,20 @@ export const dynamic = "force-static";
 export default function PartnerWithSchoolsPage() {
   return (
     <>
-      <PageHero
-        eyebrow="School partnership programme"
-        title="Partnership with real benefits"
-        text="Pexpacks works with schools to simplify stationery ordering, reduce parent stress, and help learners start the year prepared with the right supplies."
-        panelText="Partner value snapshot"
-        panelTitle="Website + parent ordering + rebate model"
-      >
-        <div className={sectionStyles.buttonRow}>
-          <Button href="#pitch-deck" size="lg">
-            Open benefits presentation
-          </Button>
-          <Button href="#interactive-demo" variant="white" size="lg">
-            Preview demo website
-          </Button>
+      <section className={pageStyles.executiveHero}>
+        <div className={pageStyles.executiveHeroInner}>
+          <h1 className={pageStyles.executiveHeroTitle}>
+            Equip your classrooms on Day 1. <br />
+            Zero admin for your school.
+          </h1>
+          <p className={pageStyles.executiveHeroText}>
+            Partner with Pexpacks to digitize your official 2027 stationery lists. We deliver exactly what your teachers demand, directly to your parents&rsquo; doors.
+          </p>
+          <a href="#partner-form" className={pageStyles.executiveHeroCta}>
+            Apply to Partner
+          </a>
         </div>
-      </PageHero>
+      </section>
 
       <section
         className={pageStyles.pitchStatsSection}
@@ -141,6 +137,56 @@ export default function PartnerWithSchoolsPage() {
               <span>{stat.label}</span>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className={pageStyles.tripleWinSection} aria-labelledby="triple-win-heading">
+        <div className={sectionStyles.inner}>
+          <SectionHeader
+            eyebrow="Three stakeholders, one solution"
+            title="A triple-win for your school community"
+            text="Every decision at your school affects three groups. Our partnership delivers measurable value to each one."
+            headingId="triple-win-heading"
+          />
+          <div className={pageStyles.tripleWinGrid}>
+            <div className={pageStyles.tripleWinCard}>
+              <div className={pageStyles.tripleWinIcon} aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <p className={pageStyles.tripleWinLabel}>For the Administration</p>
+              <h3 className={pageStyles.tripleWinTitle}>Zero Cost, Zero Admin</h3>
+              <p className={pageStyles.tripleWinText}>
+                We handle inventory, payments, and logistics. Simply send us your PDFs, and we generate a custom ordering link for your parent newsletters.
+              </p>
+            </div>
+            <div className={pageStyles.tripleWinCard}>
+              <div className={pageStyles.tripleWinIcon} aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+              </div>
+              <p className={pageStyles.tripleWinLabel}>For the Teachers</p>
+              <h3 className={pageStyles.tripleWinTitle}>Standardized Classrooms</h3>
+              <p className={pageStyles.tripleWinText}>
+                No more generic substitutes. We enforce your exact list with teacher-approved brands so teaching can begin immediately in Term 1.
+              </p>
+            </div>
+            <div className={pageStyles.tripleWinCard}>
+              <div className={pageStyles.tripleWinIcon} aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              </div>
+              <p className={pageStyles.tripleWinLabel}>For the Parents</p>
+              <h3 className={pageStyles.tripleWinTitle}>Financial Relief</h3>
+              <p className={pageStyles.tripleWinText}>
+                Parents avoid the January mall panic and only pay for what they need using our unique add/minus customisation system.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -205,7 +251,7 @@ export default function PartnerWithSchoolsPage() {
             {mutualBenefits.map((benefit) => (
               <div
                 key={benefit.title}
-                className={`${heroStyles.heroPanel} ${pageStyles.benefitPanel}`}
+                className={`${pageStyles.benefitPanel}`}
               >
                 <h3 className={pageStyles.benefitTitle}>{benefit.title}</h3>
                 <ul className={sectionStyles.checkList}>
