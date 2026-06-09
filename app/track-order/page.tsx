@@ -22,7 +22,7 @@ export default function TrackOrderPage() {
   return (
     <>
       <PageHero
-        eyebrow="Pex your pack"
+        eyebrow="Parent order hub"
         title="Check your stationery pack status"
         text="Enter your order reference and contact detail to request an update."
         panelTitle="Order Tracking"

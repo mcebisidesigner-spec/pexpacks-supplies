@@ -27,7 +27,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Campaign Terms",
   metaDescription:
     "Read the Pexpacks campaign terms for promotions, discounts, qualifying schools, and offer limits.",
-  heroEyebrow: "Pex campaign",
+  heroEyebrow: "Campaign terms",
   heroTitle: "Rules for promotions and campaign offers",
   heroText:
     "These terms explain how limited-time campaigns, school promotions, launch offers, and discount mechanics are generally managed across the Pexpacks platform.",

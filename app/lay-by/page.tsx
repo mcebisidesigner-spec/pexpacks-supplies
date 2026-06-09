@@ -22,7 +22,7 @@ export default function LayByPage() {
   return (
     <>
       <PageHero
-        eyebrow="Pex lay-by"
+        eyebrow="Flexible school payments"
         title="Lock in your school pack today, pay over time"
         text="Reserve your child&rsquo;s exact stationery pack now with 0% interest. Spread the cost and arrive in January stress-free."
         panelChildren={

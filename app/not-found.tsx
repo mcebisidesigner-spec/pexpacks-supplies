@@ -5,7 +5,7 @@ import page from "@/styles/Page.module.css";
 export default function NotFound() {
   return (
     <PageHero
-      eyebrow="404 - Not found"
+      eyebrow="Page not found"
       title="Page not found"
       text="The page or stationery pack you requested is not available."
     >

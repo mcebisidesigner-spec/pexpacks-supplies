@@ -24,7 +24,7 @@ export default function FAQPage() {
     <>
       <JsonLd data={faqPageSchema(faqs)} />
       <PageHero
-        eyebrow="Pex answers"
+        eyebrow="Help centre"
         title="Answers without the back-and-forth"
         text="Search school packs, orders, delivery, payment, office supplies and partnership questions in one simple help hub."
         panelTitle={`${faqs.length} practical answers`}

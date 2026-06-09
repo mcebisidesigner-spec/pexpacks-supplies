@@ -27,7 +27,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "School Partnership Terms",
   metaDescription:
     "Read the Pexpacks school partnership terms for collaboration scope, responsibilities, data handling, and campaign delivery.",
-  heroEyebrow: "Pex partnership",
+  heroEyebrow: "School partnership programme",
   heroTitle: "How school partnership arrangements are structured",
   heroText:
     "This page outlines the operating expectations for schools partnering with Pexpacks on stationery fulfilment, campaigns, and related digital or parent-support services.",

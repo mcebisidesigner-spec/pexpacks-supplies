@@ -75,7 +75,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
   return (
     <>
       <PageHero
-        eyebrow="Pex in touch"
+        eyebrow="Pexpacks support desk"
         title="Talk to Pexpacks"
         text="Send an enquiry about parent orders, school partnerships, office packs or supplier opportunities."
         panelText="Service area"

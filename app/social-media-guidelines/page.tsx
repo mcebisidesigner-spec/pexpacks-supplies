@@ -27,7 +27,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Social Media Guidelines",
   metaDescription:
     "Read the Pexpacks social media guidelines for respectful engagement, moderation, and support boundaries.",
-  heroEyebrow: "Pex social",
+  heroEyebrow: "Social media rules",
   heroTitle: "How Pexpacks manages social engagement",
   heroText:
     "These guidelines explain how comments, messages, tags, mentions, and community engagement are moderated across Pexpacks social platforms.",

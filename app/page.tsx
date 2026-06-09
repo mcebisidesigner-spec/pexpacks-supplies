@@ -26,7 +26,7 @@ export default function HomePage() {
       <section className={heroStyles.hero}>
         <div className={heroStyles.heroInner}>
           <div>
-            <p className={heroStyles.eyebrow}>Save time today</p>
+            <p className={heroStyles.eyebrow}>School stationery made simple</p>
             <h1 className={heroStyles.heroTitle}>
             Your School <br />stationery list, <br /> perfectly packed
             </h1>

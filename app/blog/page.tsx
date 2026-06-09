@@ -21,7 +21,7 @@ export default function BlogIndex() {
   return (
     <>
       <PageHero
-        eyebrow="Pex your knowledge"
+        eyebrow="Back-to-school resources"
         title="Back to school hub"
         text="Practical advice, stationery checklists, and survival guides to help parents prepare for the new school year without the stress."
       />

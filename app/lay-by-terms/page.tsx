@@ -24,7 +24,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Lay-by Terms",
   metaDescription:
     "Read the Pexpacks Lay-by Terms governing the lay-by payment plan, structured in accordance with Section 62 of the Consumer Protection Act (CPA) of South Africa.",
-  heroEyebrow: "Pex lay-by terms",
+  heroEyebrow: "Flexible school payments terms",
   heroTitle: "Lay-by agreement terms and conditions",
   heroText:
     "This document outlines the structuring and regulation of the Pexpacks lay-by agreement in accordance with the Consumer Protection Act (CPA) of South Africa, including payment plans, deposit requirements, timelines, and implications of non-compliance.",

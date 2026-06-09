@@ -27,7 +27,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Supplier Terms",
   metaDescription:
     "Read the Pexpacks supplier terms for onboarding, quality standards, delivery expectations, and invoicing.",
-  heroEyebrow: "Pex supply",
+  heroEyebrow: "Supplier terms",
   heroTitle: "Commercial expectations for suppliers",
   heroText:
     "These terms outline the working standards Pexpacks expects from suppliers, service providers, and production partners who support fulfilment or brand delivery.",

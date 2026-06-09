@@ -29,7 +29,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Terms of Use",
   metaDescription:
     "Read the Pexpacks Supplies terms of use for school stationery packs, office packs, Pexcover services, online ordering, delivery, and customer support.",
-  heroEyebrow: "Pex terms",
+  heroEyebrow: "Website terms of use",
   heroTitle: "Clear terms for ordering and using Pexpacks online",
   heroText:
     "These terms explain how Pexpacks handles quotes, orders, payments, school packs, Pexcover services, delivery, cancellations, and your use of the website and web app.",

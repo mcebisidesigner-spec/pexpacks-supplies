@@ -28,7 +28,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Delivery Policy",
   metaDescription:
     "Read the Pexpacks delivery policy for school stationery packs, handover timing, and support.",
-  heroEyebrow: "Pex delivery",
+  heroEyebrow: "Delivery and collection",
   heroTitle: "How delivery and collection work",
   heroText:
     "This document explains how Pexpacks handles collection points, delivery timing, customer handover, and support when fulfilment questions come up.",

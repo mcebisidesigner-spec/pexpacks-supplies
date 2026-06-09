@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function OfflinePage() {
   return (
     <PageHero
-      eyebrow="Offline"
+      eyebrow="Connection offline"
       title="Connection needed"
       text="Pexpacks could not reach the network. Previously opened pages may still be available."
     >
