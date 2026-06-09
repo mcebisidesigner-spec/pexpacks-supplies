@@ -721,4 +721,6 @@
 
   .brandingUpsellAction button,
   .brandingUpsellAction a {
-    widt
+    width: 100%;
+  }
+}
