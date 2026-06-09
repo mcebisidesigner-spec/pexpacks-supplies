@@ -36,10 +36,10 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       <div id="schools-search">
         <PageHero
           eyebrow="School stationery"
-          title="Find your school pack"
+          title="Find your pack"
           text="Select your child&rsquo;s school and grade to order a stationery pack prepared exactly to their official school stationery list and delivered to your door."
-          panelTitle="Fast delivery anywhere in South Africa"
-          panelText="Each pack is packed according to your school&rsquo;s official stationery list."
+          panelTitle="Fast delivery anywhere in Gauteng"
+          panelText="Each pack is packed according to your&nbsp; school&rsquo;s official stationery list."
         >
           <SchoolSearchPanel
             initialQuery={firstValue(params.q) ?? ""}

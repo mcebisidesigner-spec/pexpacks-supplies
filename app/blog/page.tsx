@@ -16,6 +16,8 @@ export const metadata: Metadata = buildMetadata(
 );
 
 import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
+import { BlogFilter } from "./BlogFilter";
+import { SubscribeForm } from "./SubscribeForm";
 
 export default function BlogIndex() {
   return (
@@ -31,31 +33,7 @@ export default function BlogIndex() {
       <div className={styles.blogContainer}>
         {/* PRIMARY COLUMN: ARTICLES */}
         <main className={styles.articlesColumn} aria-label="Resource articles">
-          <div className={styles.articlesGrid}>
-            {blogPosts.map((post) => (
-              <Link
-                href={`/blog/${post.slug}`}
-                className={styles.blogCard}
-                key={post.id}
-              >
-                <span className={styles.blogCategory}>{post.category}</span>
-                <h2 className={styles.blogTitle}>{post.title}</h2>
-                <p className={styles.blogExcerpt}>{post.excerpt}</p>
-                <div className={styles.blogMeta}>
-                  <span>{post.author}</span>
-                  <span>•</span>
-                  <time dateTime={post.date}>
-                    {new Date(post.date).toLocaleDateString("en-ZA", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </time>
-                </div>
-                <span className={styles.readMore}>Read more</span>
-              </Link>
-            ))}
-          </div>
+          <BlogFilter posts={blogPosts} />
         </main>
 
         {/* SIDEBAR COLUMN: CONVERSION WIDGETS */}
@@ -132,6 +110,12 @@ export default function BlogIndex() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className={styles.subscribeSection}>
+        <div className={styles.subscribeInner}>
+          <SubscribeForm />
         </div>
       </section>
     </>

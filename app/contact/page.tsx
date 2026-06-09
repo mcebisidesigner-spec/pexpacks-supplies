@@ -79,7 +79,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         title="Talk to Pexpacks"
         text="Send an enquiry about parent orders, school partnerships, office packs or supplier opportunities."
         panelText="Service area"
-        panelTitle="Gauteng pilot province"
+        panelTitle="We currently service Gauteng"
       >
         <div className={sectionStyles.buttonRow}>
           {hasWhatsAppNumber ? (

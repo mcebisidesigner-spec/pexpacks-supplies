@@ -9,7 +9,7 @@ export function SchoolsPageHero({ children }: SchoolsPageHeroProps) {
   return (
     <section className={styles.schoolsHero}>
       <div className={styles.schoolsHeroInner}>
-        <h1 className={styles.schoolsHeroTitle}>Find your school pack</h1>
+        <h1 className={styles.schoolsHeroTitle}>Find your pack</h1>
         {children}
       </div>
     </section>

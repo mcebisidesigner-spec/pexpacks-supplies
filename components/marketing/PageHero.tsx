@@ -14,7 +14,6 @@ type PageHeroProps = {
 export function PageHero({
   eyebrow,
   title,
-  text,
   panelTitle,
   panelText,
   panelChildren,
@@ -26,7 +25,6 @@ export function PageHero({
         <div className={styles.pageHeroCompact}>
           <p className={styles.eyebrow}>{eyebrow}</p>
           <h1 className={styles.pageTitle}>{title}</h1>
-          <p className={styles.pageLead}>{text}</p>
           {children}
         </div>
         {panelChildren || panelTitle || panelText ? (

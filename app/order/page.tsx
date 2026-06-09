@@ -30,11 +30,6 @@ export default function OrderPage() {
             </p>
           </div>
 
-          <p className={styles.pitchDescription}>
-            Can&apos;t find your exact school or office pack? No problem. 
-            Send us your list and we&apos;ll build it for you at no extra cost.
-          </p>
-
           <div className={styles.steps}>
             <div className={styles.step}>
               <div className={styles.stepIcon}>1</div>

@@ -27,27 +27,41 @@
   padding: 32px;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--card-shadow);
-  border: var(--card-border);
-  transition:
-    transform var(--motion-duration) var(--motion-ease),
-    box-shadow var(--motion-duration) var(--motion-ease);
+  border: 2px solid var(--pex-border);
+  transition: transform 0.25s ease, border-color 0.25s ease;
   text-decoration: none;
 }
 
 .blogCard:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-6px);
+  border-color: var(--pex-keppel);
 }
 
-.blogCategory {
+/* ── Resource image ── */
+.cardImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--pex-bg-soft);
+  margin-bottom: 20px;
+}
+
+.cardImageEl {
+  object-fit: cover;
+}
+
+/* ── Resource tag ── */
+.cardTag {
+  display: block;
   font-family: var(--font-button);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   color: var(--pex-keppel);
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 16px;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
 }
 
 .blogTitle {
@@ -58,38 +72,23 @@
   font-weight: 800;
 }
 
-.blogExcerpt {
-  color: var(--pex-text);
-  font-size: 16px;
-  line-height: 1.5;
-  margin-bottom: 24px;
-  flex-grow: 1;
-}
-
-.blogMeta {
-  display: flex;
+/* ── Resource action link ── */
+.cardAction {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   font-size: 14px;
-  color: var(--pex-text-muted);
-  font-weight: 500;
-  border-top: 1px solid rgba(15, 37, 55, 0.05);
-  padding-top: 16px;
-  margin-bottom: 16px;
-}
-
-.readMore {
+  font-weight: 700;
   color: var(--pex-keppel);
-  font-family: var(--font-button);
-  font-size: 14px;
-  font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  transition: opacity 0.2s;
+  transition: gap 0.2s ease;
 }
 
-.blogCard:hover .readMore {
-  opacity: 0.8;
+.actionArrow {
+  transition: transform 0.2s ease;
+}
+
+.blogCard:hover .cardAction {
+  gap: 10px;
 }
 
 .backLink {
@@ -667,6 +666,102 @@
   margin-bottom: 48px;
 }
 
+/* ── Subscribe card (frosted glass) ── */
+.subscribeSection {
+  padding: var(--section-padding-y-desktop) 0;
+  background: linear-gradient(180deg, var(--pex-bg-soft), var(--pex-bg));
+}
+
+.subscribeInner {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter-desktop);
+}
+
+.subscribeCard {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-section);
+  padding: 48px;
+  box-shadow: 0 24px 48px rgba(26, 42, 64, 0.06);
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.subscribeTitle {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--pex-navy);
+  margin: 0 0 10px;
+}
+
+.subscribeText {
+  color: var(--pex-text);
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0 0 28px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.subscribeForm {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.subscribeField {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: var(--form-field-gap);
+  text-align: left;
+}
+
+.subscribeField label {
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  font-weight: var(--form-label-weight);
+  line-height: 1.25;
+}
+
+.subscribeField input {
+  width: 100%;
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  color: var(--form-control-color);
+  font-size: 15px;
+  transition: var(--interactive-transition);
+}
+
+.subscribeField input:focus-visible {
+  outline: 0;
+  border-color: var(--form-control-focus-border);
+  box-shadow: var(--form-control-focus-shadow);
+}
+
+.subscribeSuccess {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.subscribeSuccessText {
+  color: var(--pex-success);
+  font-weight: 800;
+  font-size: 18px;
+  margin: 0;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .blogContainer {
@@ -764,6 +859,57 @@
   .knowledgeCard {
     border-radius: 20px;
   }
+}
+
+/* ── Blog category filter pills ── */
+.filterRow {
+  margin-bottom: 28px;
+  min-width: 0;
+}
+
+.filterTrack {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0 0 8px;
+}
+
+.filterPill {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 14px;
+  background: var(--pex-bg);
+  border: 1.5px solid var(--pex-border);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pex-navy);
+  white-space: nowrap;
+  transition: var(--button-transition);
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.filterPill:hover {
+  border-color: var(--pex-keppel);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(26, 42, 64, 0.08);
+}
+
+.activePill {
+  background: var(--pex-keppel);
+  border-color: var(--pex-keppel);
+  color: #ffffff;
+}
+
+.activePill:hover {
+  filter: brightness(110%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(33, 158, 154, 0.2);
 }
 
 @media (prefers-reduced-motion: reduce) {
