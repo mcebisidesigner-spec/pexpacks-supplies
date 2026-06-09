@@ -49,6 +49,8 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         <FeaturedSchoolsBanner schools={featuredSchools} />
       )}
 
+      <ConciergeSection />
+
       <div className={homeStyles.paymentRow}>
         <div className={homeStyles.paymentRowInner}>
           <span className={homeStyles.paymentTagline}>Lock in 2026 prices &middot; Pay on delivery &middot; Lay-by available</span>
@@ -87,9 +89,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         </div>
       </div>
 
-      <SchoolsFaqAccordion />
-
-      <ConciergeSection />
+      <SchoolsFaqAccordion className={homeStyles.schoolsAccordionBeforeRating} />
     </>
   );
 }

@@ -270,11 +270,6 @@ export function SchoolSearchPanel({
                                     </span>
                                   ) : null}
                                 </div>
-                                {school.lowestPrice ? (
-                                  <span className={heroStyles.heroResultPrice}>
-                                    From R{school.lowestPrice}
-                                  </span>
-                                ) : null}
                                 {school.phases.length > 0 ? (
                                   <div className={heroStyles.heroResultBadges}>
                                     {school.phases.slice(0, 2).map((schoolPhase) => (

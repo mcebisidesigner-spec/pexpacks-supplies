@@ -31,7 +31,7 @@ export default function HomePage() {
             Your School <br />stationery list, <br /> perfectly packed
             </h1>
             <p className={heroStyles.heroLead}>
-              Your official school stationery list, perfectly packed and delivered to your door. No missing items. No stress.
+              Your official school stationery list, perfectly packed and delivered.
             </p>
             <HeroSearch />
           </div>

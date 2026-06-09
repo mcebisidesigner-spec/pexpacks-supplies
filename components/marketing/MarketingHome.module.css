@@ -570,6 +570,10 @@
   padding: 40px var(--gutter-desktop) 0;
 }
 
+.schoolsAccordionBeforeRating {
+  padding-bottom: clamp(32px, 6vw, 64px);
+}
+
 .accordionInner {
   max-width: 720px;
   margin: 0 auto;

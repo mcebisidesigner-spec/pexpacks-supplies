@@ -3,9 +3,18 @@
 import Link from "next/link";
 import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
-export function SchoolsFaqAccordion() {
+type SchoolsFaqAccordionProps = {
+  className?: string;
+};
+
+export function SchoolsFaqAccordion({ className }: SchoolsFaqAccordionProps) {
   return (
-    <section className={homeStyles.accordionSection} aria-label="Frequently asked questions before ordering">
+    <section
+      className={[homeStyles.accordionSection, className]
+        .filter(Boolean)
+        .join(" ")}
+      aria-label="Frequently asked questions before ordering"
+    >
       <div className={homeStyles.accordionInner}>
         <details className={homeStyles.accordionItem} name="schools-faq">
           <summary className={homeStyles.accordionSummary}>

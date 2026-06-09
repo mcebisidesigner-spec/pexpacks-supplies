@@ -81,15 +81,31 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
   }, [panelOpen, setPanelOpen]);
 
   useEffect(() => {
-    if (!isSchoolInputFocused || trendingFetched.current || query.length >= 3) return;
+    if (trendingFetched.current || query.length >= 3) return;
     trendingFetched.current = true;
     fetch("/api/schools/search?limit=8")
       .then((r) => r.json())
       .then((data) => {
-        if (data.results) setTrendingSchools(data.results);
+        if (data.results) {
+          setTrendingSchools(data.results);
+          setTrendingVisible(true);
+        }
       })
       .catch(() => {});
-  }, [isSchoolInputFocused, query]);
+  }, [query]);
+
+  useEffect(() => {
+    if (!hasSearched || isLoading || results.length > 0) return;
+    const target = document.getElementById("concierge-heading");
+    if (!target) return;
+    setPanelOpen(false);
+    setIsSchoolInputFocused(false);
+    setTrendingVisible(false);
+    const timer = setTimeout(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [hasSearched, isLoading, results.length, setPanelOpen]);
 
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
@@ -244,11 +260,6 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                                   </span>
                                 ) : null}
                               </div>
-                              {school.lowestPrice ? (
-                                <span className={styles.heroResultPrice}>
-                                  From R{school.lowestPrice}
-                                </span>
-                              ) : null}
                               {school.phases.length > 0 ? (
                                 <div className={styles.heroResultBadges}>
                                   {school.phases.slice(0, 2).map((schoolPhase) => (
