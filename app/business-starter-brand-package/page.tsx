@@ -84,7 +84,7 @@ const brandPackageItems = [
 const packageSteps = [
   "Submit your business and branding details.",
   "Upload existing logos, colour palettes or reference material if available.",
-  "Pexpacks reviews the brief and confirms the next steps for your R3,999 package.",
+  "Pexpacks reviews the brief and confirms the next steps for your R5,500 package.",
 ];
 
 export default function BusinessStarterBrandPackagePage() {
@@ -95,7 +95,7 @@ export default function BusinessStarterBrandPackagePage() {
         title="Claim your brand package"
         text="Use this dedicated order form to send the information Pexpacks needs to prepare your logo, business cards, flyers, letterhead and starter website."
         panelText="Package value"
-        panelTitle="Complete physical and digital branding for R3,999.00."
+        panelTitle="Complete physical and digital branding for R5,500.00."
       />
 
       <section
@@ -114,7 +114,7 @@ export default function BusinessStarterBrandPackagePage() {
               </p>
               <div className={sectionStyles.brandPackagePrice}>
                 <span>Complete package</span>
-                <strong>R3,999.00</strong>
+                <strong>R5,500.00</strong>
               </div>
               <div className={sectionStyles.buttonRow}>
                 <Button href="#claim-form" variant="white">

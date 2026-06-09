@@ -799,6 +799,12 @@
   }
 }
 
+@media (max-width: 420px) {
+  .b2bHeroTitle {
+    font-size: clamp(28px, 8vw, 34px);
+  }
+}
+
 .accountingTrustBanner {
   background: var(--pex-keppel);
   color: #ffffff;
@@ -872,6 +878,7 @@
   border-radius: var(--radius-pill);
   background: #ffffff;
   color: var(--pex-keppel);
+  text-align: center;
   font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
@@ -892,7 +899,7 @@
   }
   
   .accountingTrustBadge {
-    align-self: flex-start;
+    align-self: center;
   }
 }
 

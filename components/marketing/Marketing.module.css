@@ -606,6 +606,15 @@
   .officeSocialProofInner {
     grid-template-columns: 1fr;
     padding-inline: var(--gutter-mobile);
+    text-align: center;
+  }
+
+  .officeSocialProofStats {
+    justify-content: center;
+  }
+
+  .officeTrustStrip ul {
+    justify-content: center;
   }
 }
 

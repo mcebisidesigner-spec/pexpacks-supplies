@@ -531,7 +531,7 @@ export function OfficeQuoteExperience({
                 Logo, business cards, flyers, letterhead, and a 5-page website — everything you need to launch professionally.
               </p>
               <div className={officeStyles.brandingCardPrice}>
-                <span>R3,999.00</span>
+                <span>R5,500.00</span>
               </div>
               <div className={officeStyles.brandingCardAction}>
                 <Button href="/business-starter-brand-package" variant="white">
