@@ -11,6 +11,7 @@
   font-family: var(--font-button);
   line-height: 1;
   letter-spacing: 0;
+  text-align: center;
   white-space: nowrap;
   transform-origin: center;
   transition: var(--button-transition);
@@ -19,6 +20,7 @@
 .button > span:first-child {
   min-width: 0;
   overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .button:not(:disabled):hover {
@@ -87,19 +89,19 @@
 
 .sm {
   min-height: 34px;
-  padding: 4px 6px 4px 17px;
+  padding: 4px 17px;
   font-size: 14px;
 }
 
 .md {
   min-height: 44px;
-  padding: 6px 7px 6px 22px;
+  padding: 6px 22px;
   font-size: 16px;
 }
 
 .lg {
   min-height: 56px;
-  padding: 8px 9px 8px 28px;
+  padding: 8px 28px;
   font-size: 20px;
 }
 
@@ -180,13 +182,13 @@
 
   .md {
     min-height: var(--touch-target-min);
-    padding-left: 16px;
+    padding-inline: 16px;
     font-size: 14px;
   }
 
   .lg {
     min-height: var(--touch-target-min);
-    padding-left: 20px;
+    padding-inline: 20px;
     font-size: 16px;
   }
 }

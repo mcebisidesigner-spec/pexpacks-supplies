@@ -22,7 +22,7 @@ import cardStyles from "@/components/marketing/MarketingCards.module.css";
 export const metadata: Metadata = buildMetadata(
   "Contact",
   "Contact Pexpacks for school stationery orders, office pack enquiries, school partnerships and supplier enquiries.",
-  "/contact"
+  "/contact",
 );
 
 export const dynamic = "force-static";
@@ -35,7 +35,9 @@ function firstValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] || "" : value || "";
 }
 
-function resolveContactPrefill(params: Record<string, string | string[] | undefined>) {
+function resolveContactPrefill(
+  params: Record<string, string | string[] | undefined>,
+) {
   const type = firstValue(params.type).trim().toLowerCase();
   const subject = firstValue(params.subject).trim();
   const notes = firstValue(params.notes).trim();
@@ -54,7 +56,10 @@ function resolveContactPrefill(params: Record<string, string | string[] | undefi
               ? "Supplier partnership"
               : "General enquiry";
 
-  const initialMessage = [subject ? `I am enquiring about ${subject}.` : "", notes]
+  const initialMessage = [
+    subject ? `I am enquiring about ${subject}.` : "",
+    notes,
+  ]
     .filter(Boolean)
     .join("\n\n");
 
@@ -81,8 +86,12 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         panelTitle="We currently service Gauteng"
       >
         <div className={sectionStyles.buttonRow}>
-          <Button href="#contact-form" variant="primary">Send a Message</Button>
-          <Button href="#contact-faq" variant="white">Contact FAQs</Button>
+          <Button href="#contact-form" variant="primary">
+            Send a Message
+          </Button>
+          <Button href="#contact-faq" variant="white">
+            Contact FAQs
+          </Button>
         </div>
       </PageHero>
 
@@ -90,7 +99,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         <div className={sectionStyles.inner}>
           <div className={cardStyles.infoGrid}>
             <ContactForm {...prefill} />
-            
+
             <div className={pageStyles.sidebarWrapper}>
               {/* 🟢 LIVE SUPPORT STATUS */}
               <div className={pageStyles.liveStatusCard}>
@@ -98,7 +107,9 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                   <span className={pageStyles.statusPulse} />
                 </div>
                 <div className={pageStyles.statusText}>
-                  <h2 className={pageStyles.statusTitle}>Gauteng Support Desk Active</h2>
+                  <h2 className={pageStyles.statusTitle}>
+                    Gauteng Support Desk Active
+                  </h2>
                   <span className={pageStyles.statusDesc}>
                     Live chat active • WhatsApp response time &lt; 5 mins
                   </span>
@@ -110,38 +121,60 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                 <div className={pageStyles.slaCard}>
                   <span className={pageStyles.slaTitle}>School Partners</span>
                   <h3 className={pageStyles.slaTime}>&lt; 2 Hours</h3>
-                  <span className={pageStyles.slaLabel}>Dedicated School Relations Lead callback.</span>
+                  <span className={pageStyles.slaLabel}>
+                    Dedicated School Relations Lead callback.
+                  </span>
                 </div>
                 <div className={pageStyles.slaCard}>
                   <span className={pageStyles.slaTitle}>Office/Quotes</span>
                   <h3 className={pageStyles.slaTime}>&lt; 4 Hours</h3>
-                  <span className={pageStyles.slaLabel}>Custom line-item quotation prepared.</span>
+                  <span className={pageStyles.slaLabel}>
+                    Custom line-item quotation prepared.
+                  </span>
                 </div>
               </div>
 
               {/* "WHAT HAPPENS NEXT?" TIMELINE */}
               <div className={pageStyles.timelineCard}>
-                <h2 className={pageStyles.timelineTitle}>Your Response Timeline</h2>
+                <h2 className={pageStyles.timelineTitle}>
+                  Your Response Timeline
+                </h2>
                 <div className={pageStyles.timelineSteps}>
-                  <div className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}>
+                  <div
+                    className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}
+                  >
                     <span className={pageStyles.stepIcon}>1</span>
                     <div className={pageStyles.stepDetails}>
                       <h3 className={pageStyles.stepTitle}>Submit Request</h3>
-                      <p className={pageStyles.stepDesc}>Submit your contact form with your exact needs.</p>
+                      <p className={pageStyles.stepDesc}>
+                        Submit your contact form with your exact needs.
+                      </p>
                     </div>
                   </div>
-                  <div className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}>
+                  <div
+                    className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}
+                  >
                     <span className={pageStyles.stepIcon}>2</span>
                     <div className={pageStyles.stepDetails}>
-                      <h3 className={pageStyles.stepTitle}>Gauteng Fast-Track Router</h3>
-                      <p className={pageStyles.stepDesc}>Your request is automatically fast-tracked to the correct department.</p>
+                      <h3 className={pageStyles.stepTitle}>
+                        Gauteng Fast-Track Router
+                      </h3>
+                      <p className={pageStyles.stepDesc}>
+                        Your request is automatically fast-tracked to the
+                        correct department.
+                      </p>
                     </div>
                   </div>
-                  <div className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}>
+                  <div
+                    className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}
+                  >
                     <span className={pageStyles.stepIcon}>3</span>
                     <div className={pageStyles.stepDetails}>
                       <h3 className={pageStyles.stepTitle}>Direct Outreach</h3>
-                      <p className={pageStyles.stepDesc}>A support representative contacts you on WhatsApp or phone to finalize details.</p>
+                      <p className={pageStyles.stepDesc}>
+                        A support representative contacts you on WhatsApp or
+                        phone to finalize details.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -156,7 +189,15 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                 />
                 <div className={pageStyles.channelsGrid}>
                   <div className={pageStyles.channelRow}>
-                    <svg className={pageStyles.channelIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      className={pageStyles.channelIcon}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <rect x="2" y="4" width="20" height="16" rx="2" />
                       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                     </svg>
@@ -164,14 +205,30 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                     <a href={generalEmailHref}>{generalEmail}</a>
                   </div>
                   <div className={pageStyles.channelRow}>
-                    <svg className={pageStyles.channelIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      className={pageStyles.channelIcon}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                     </svg>
                     <strong>Telephone:</strong>
                     <a href={phoneHref}>{phoneNumber}</a>
                   </div>
                   <div className={pageStyles.channelRow}>
-                    <svg className={pageStyles.channelIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      className={pageStyles.channelIcon}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
                     </svg>
                     <strong>WhatsApp:</strong>
@@ -183,39 +240,30 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                   </div>
                 </div>
 
-                <div className={sectionStyles.buttonRow} style={{ marginTop: "12px" }}>
-                  {hasWhatsAppNumber ? (
-                    <Button href={orderWhatsAppHref} variant="white">
-                      WhatsApp us
-                    </Button>
-                  ) : null}
+                <div
+                  className={sectionStyles.buttonRow}
+                  style={{ marginTop: "12px" }}
+                >
                   <Button href="/partnership">Partner With Us</Button>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </section>
-
       <div id="contact-faq">
         <FaqMarquee
           faqs={faqs.filter((f) =>
-            ["school-not-listed", "delivery-timing", "payment-flow", "order-changes", "delivery-areas"].includes(f.id)
+            [
+              "school-not-listed",
+              "delivery-timing",
+              "payment-flow",
+              "order-changes",
+              "delivery-areas",
+            ].includes(f.id),
           )}
         />
       </div>
-
-      <CTASection
-        eyebrow="Still need help?"
-        title="Read our FAQs"
-        text="Find answers to common questions about ordering, delivery, and payments before reaching out."
-        primaryHref="/faq"
-        primaryLabel="Read All FAQs"
-        secondaryHref="/schools"
-        secondaryLabel="Find School Packs"
-      />
-
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.splitBand}>
@@ -223,25 +271,28 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               <p className={sectionStyles.sectionEyebrow}>Quick links</p>
               <h2>Find what you need</h2>
               <p>
-                Browse grade packs, track an existing order, or partner with Pexpacks.
+                Browse grade packs, track an existing order, or partner with
+                Pexpacks.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/schools" variant="primary">Find School Packs</Button>
-                <Button href="/faq" variant="white">Read All FAQs</Button>
+                <Button href="/schools" variant="primary">
+                  Find School Packs
+                </Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>
               <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Track your order</h3>
+                <h3 style={{ fontSize: "20px" }}>Did you know about lay-by?</h3>
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  Check the status of a submitted stationery order using your reference details.
+                  We offer flexible payment terms to help you manage your
+                  budget.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/track-order" className={cardStyles.cardLink}>
-                  Track order &rarr;
+                <Link href="/lay-by" className={cardStyles.cardLink}>
+                  Learn more &rarr;
                 </Link>
               </div>
             </div>

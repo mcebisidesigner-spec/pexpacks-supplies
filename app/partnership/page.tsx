@@ -67,7 +67,7 @@ export default function PartnerWithSchoolsPage() {
       >
         <div className={sectionStyles.buttonRow}>
           <Button href="#partner-form" variant="primary">Apply to Partner</Button>
-          <Button href="#partnership-faq" variant="white">Partnership FAQs</Button>
+          <Button href="#web-development-offer" variant="white">Our Free Offer</Button>
         </div>
       </PageHero>
 
@@ -179,7 +179,7 @@ export default function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={sectionStyles.section}>
+      <section className={sectionStyles.section} id="web-development-offer">
         <div className={sectionStyles.inner}>
           <SectionHeader
             eyebrow="Zero Cost Web Development"

@@ -14,11 +14,12 @@ import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 import formStyles from "@/components/marketing/MarketingForms.module.css";
+import { id } from "zod/locales";
 
 export const metadata: Metadata = buildMetadata(
   "Add Your School",
   "Submit your school details so Pexpacks can prepare a school stationery pack page for your grade lists.",
-  "/add-your-school"
+  "/add-your-school",
 );
 
 export default function AddYourSchoolPage() {
@@ -31,8 +32,11 @@ export default function AddYourSchoolPage() {
         panelTitle="Use a standard grade combo while your school list is being reviewed."
       >
         <div className={sectionStyles.buttonRow}>
-          <Button href="/contact" variant="white">
-            Contact Us
+          <Button href="#school-request-form" variant="primary">
+            Add your school
+          </Button>
+          <Button href="#contact-faq" variant="white">
+            Contact FAQs
           </Button>
         </div>
       </PageHero>
@@ -59,21 +63,26 @@ export default function AddYourSchoolPage() {
                 <li>We help you move to an order or enquiry path.</li>
               </ul>
               <div className={sectionStyles.buttonRow}>
-                <Button href={mostPopularPacksHref} variant="white">
-                  Buy Standard Pack
-                </Button>
+                <Button href="/contact">Talk to Us</Button>
               </div>
             </article>
           </div>
         </div>
       </section>
 
-      <FaqMarquee
-        faqs={faqs.filter((f) =>
-          ["school-not-listed", "school-list-submission", "find-grade-pack", "delivery-timing", "school-rebate"].includes(f.id)
-        )}
-      />
-
+      <div id="contact-faq">
+        <FaqMarquee
+          faqs={faqs.filter((f) =>
+            [
+              "school-not-listed",
+              "school-list-submission",
+              "find-grade-pack",
+              "delivery-timing",
+              "school-rebate",
+            ].includes(f.id),
+          )}
+        />
+      </div>
       <LayByPromo />
 
       <CTASection
@@ -93,11 +102,16 @@ export default function AddYourSchoolPage() {
               <p className={sectionStyles.sectionEyebrow}>Already listed?</p>
               <h2>Find your school pack</h2>
               <p>
-                Search for your school now &mdash; if we already have the list, you can order in seconds.
+                Search for your school now &mdash; if we already have the list,
+                you can order in seconds.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/schools" variant="primary">Search Schools</Button>
-                <Button href="/partnership" variant="white">School Partnerships</Button>
+                <Button href="/schools" variant="primary">
+                  Search Schools
+                </Button>
+                <Button href="/partnership" variant="white">
+                  School Partnerships
+                </Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>
@@ -106,7 +120,8 @@ export default function AddYourSchoolPage() {
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  Questions about the school request process? Reach out to the Pexpacks support team.
+                  Questions about the school request process? Reach out to the
+                  Pexpacks support team.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>
