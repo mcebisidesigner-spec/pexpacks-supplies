@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
@@ -12,7 +11,6 @@ import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { faqs } from "@/data/faqs";
 import { testimonials } from "@/data/testimonials";
 import { LayByPromo } from "@/components/shared/LayByPromo";
-import { WalletIcon } from "@/components/ui/icons";
 
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
@@ -51,25 +49,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <section className={homeStyles.laybySpotlight} aria-label="Lay-by payment option">
-        <Link href="#layby-promo" className={homeStyles.laybySpotlightLink}>
-          <span className={homeStyles.laybySpotlightIcon} aria-hidden="true">
-            <WalletIcon />
-          </span>
-          <span className={homeStyles.laybySpotlightText}>
-            <strong>Lay-by now open</strong>
-            <span>Reserve your school pack today</span>
-          </span>
-          <span className={homeStyles.laybySpotlightAction} aria-hidden="true">
-            <svg viewBox="0 0 24 24" focusable="false">
-              <path d="M7 17 17 7M9 7h8v8" />
-            </svg>
-          </span>
-        </Link>
-      </section>
-
-      <SuperpowerSection />
 
       <div className={homeStyles.brandMarquee}>
         <div className={homeStyles.brandMarqueeTrack}>
@@ -140,9 +119,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <ConciergeSection />
+      <SuperpowerSection />
 
-      <OfficeSegue />
+      <ConciergeSection />
 
       <LayByPromo />
 
@@ -157,6 +136,8 @@ export default function HomePage() {
           <TestimonialMarquee items={testimonials} />
         </div>
       </section>
+
+      <OfficeSegue />
 
       <FaqMarquee
         faqs={faqs.filter((f) =>

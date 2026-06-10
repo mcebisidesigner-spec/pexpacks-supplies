@@ -11,6 +11,7 @@ import { buildMetadata } from "@/lib/seo";
 import {
   getFeaturedSchoolRecords,
 } from "@/lib/schools/schoolSearchData";
+import heroStyles from "@/components/marketing/HeroBase.module.css";
 import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
 export const metadata: Metadata = buildMetadata(
@@ -37,8 +38,9 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
         <PageHero
           eyebrow="School stationery"
           title="Find your pack"
-        panelTitle="Fast delivery anywhere in Gauteng"
+          panelTitle="Fast delivery anywhere in Gauteng"
           panelText="Each pack is packed according to your&nbsp; school&rsquo;s official stationery list."
+          panelClassName={heroStyles.heroPanelSearchAligned}
         >
           <SchoolSearchPanel
             initialQuery={firstValue(params.q) ?? ""}

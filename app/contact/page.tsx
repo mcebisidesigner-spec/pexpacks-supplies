@@ -81,16 +81,12 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         panelTitle="We currently service Gauteng"
       >
         <div className={sectionStyles.buttonRow}>
-          {hasWhatsAppNumber ? (
-            <Button href={orderWhatsAppHref} variant="white">
-              WhatsApp Pexpacks
-            </Button>
-          ) : null}
-          <Button href="/order">Order a Pack</Button>
+          <Button href="#contact-form" variant="primary">Send a Message</Button>
+          <Button href="#contact-faq" variant="white">Contact FAQs</Button>
         </div>
       </PageHero>
 
-      <section className={sectionStyles.section}>
+      <section className={sectionStyles.section} id="contact-form">
         <div className={sectionStyles.inner}>
           <div className={cardStyles.infoGrid}>
             <ContactForm {...prefill} />
@@ -202,11 +198,13 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         </div>
       </section>
 
-      <FaqMarquee
-        faqs={faqs.filter((f) =>
-          ["school-not-listed", "delivery-timing", "payment-flow", "order-changes", "delivery-areas"].includes(f.id)
-        )}
-      />
+      <div id="contact-faq">
+        <FaqMarquee
+          faqs={faqs.filter((f) =>
+            ["school-not-listed", "delivery-timing", "payment-flow", "order-changes", "delivery-areas"].includes(f.id)
+          )}
+        />
+      </div>
 
       <CTASection
         eyebrow="Still need help?"

@@ -26,12 +26,11 @@ export default function AddYourSchoolPage() {
     <>
       <PageHero
         eyebrow="Add your school list"
-        title="Can't find your school? Send us the details."
+        title="Is your not an official partner yet? Add your school now."
         panelText="Need a pack today?"
         panelTitle="Use a standard grade combo while your school list is being reviewed."
       >
         <div className={sectionStyles.buttonRow}>
-          <Button href={mostPopularPacksHref}>Buy Standard Pack</Button>
           <Button href="/contact" variant="white">
             Contact Us
           </Button>

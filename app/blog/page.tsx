@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { CTASection } from "@/components/marketing/CTASection";
+
+import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { blogPosts } from "@/data/blog";
 import styles from "./Blog.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata(
@@ -24,9 +26,14 @@ export default function BlogIndex() {
         title="Everything you need, beyond the box."
         panelText="Free resources for parents and learners"
         panelTitle="Expert guides, printables, study tools &amp; more"
-      />
+      >
+        <div className={sectionStyles.buttonRow}>
+          <Button href="#blog-content" variant="primary">Browse Resources</Button>
+          <Button href="#blog-subscribe" variant="white">Stay Updated</Button>
+        </div>
+      </PageHero>
 
-      <div className={styles.blogContainer}>
+      <div className={styles.blogContainer} id="blog-content">
         {/* PRIMARY COLUMN: ARTICLES */}
         <main className={styles.articlesColumn} aria-label="Resource articles">
           <BlogFilter posts={blogPosts} />
@@ -66,17 +73,7 @@ export default function BlogIndex() {
           </div>
         </aside>
       </div>
-      <CTASection
-        eyebrow="Ready to simplify"
-        title="Find your school pack"
-        text="Search for your school or choose a standard grade pack. Pexpacks delivers the exact stationery your child needs."
-        primaryHref="/schools"
-        primaryLabel="Find Your School Pack"
-        secondaryHref="/faq"
-        secondaryLabel="Read FAQs"
-      />
-
-      <section className={styles.subscribeSection}>
+      <section className={styles.subscribeSection} id="blog-subscribe">
         <div className={styles.subscribeInner}>
           <SubscribeForm />
         </div>

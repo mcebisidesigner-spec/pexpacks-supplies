@@ -41,8 +41,8 @@ export default async function OfficePacksPage({
       >
         <div className={sectionStyles.buttonRow}>
           <Button href="#office-pack-types" variant="primary">Shop Office Starter Packs</Button>
-          <Button href="/office/upload-requisition-list" variant="white">
-            Upload Requisition List
+          <Button href="#office-faq" variant="white">
+            Office Pack FAQs
           </Button>
         </div>
       </PageHero>
@@ -77,11 +77,13 @@ export default async function OfficePacksPage({
         initialMessage={initialMessage}
       />
 
-      <FaqMarquee
-        faqs={faqs.filter((f) =>
-          ["sme-office-packs", "custom-office-quote", "bulk-office-orders", "delivery-timing", "payment-flow"].includes(f.id)
-        )}
-      />
+      <div id="office-faq">
+        <FaqMarquee
+          faqs={faqs.filter((f) =>
+            ["sme-office-packs", "custom-office-quote", "bulk-office-orders", "delivery-timing", "payment-flow"].includes(f.id)
+          )}
+        />
+      </div>
     </div>
   );
 }

@@ -217,6 +217,11 @@
   box-shadow: var(--card-shadow);
 }
 
+.heroPanelSearchAligned {
+  align-self: start;
+  margin-top: clamp(112px, 9vw, 132px);
+}
+
 .heroPanel p {
   margin: 0;
   color: var(--pex-text-muted);
@@ -315,6 +320,10 @@
 
   .heroPanel {
     padding: 22px;
+  }
+
+  .heroPanelSearchAligned {
+    margin-top: 0;
   }
 
   .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus)),

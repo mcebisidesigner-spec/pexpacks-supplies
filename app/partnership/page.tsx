@@ -65,9 +65,10 @@ export default function PartnerWithSchoolsPage() {
         panelText="Your school's custom portal includes"
         panelTitle="Free website, hosting, SSL &amp; parent ordering portal"
       >
-        <a href="#partner-form" className={pageStyles.executiveHeroCta}>
-          Apply to Partner
-        </a>
+        <div className={sectionStyles.buttonRow}>
+          <Button href="#partner-form" variant="primary">Apply to Partner</Button>
+          <Button href="#partnership-faq" variant="white">Partnership FAQs</Button>
+        </div>
       </PageHero>
 
       <section className={pageStyles.tripleWinSection} aria-labelledby="triple-win-heading">

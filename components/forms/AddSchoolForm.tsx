@@ -139,10 +139,11 @@ export function AddSchoolForm() {
         Company website
         <input id="addSchoolCompanyWebsite" name="companyWebsite" tabIndex={-1} autoComplete="off" />
       </label>
-      <label className={[styles.field, styles.formWide].join(" ")} htmlFor="addSchoolConsent" style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+      <label className={[styles.consentField, styles.formWide].join(" ")} htmlFor="addSchoolConsent">
         <input id="addSchoolConsent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
-        <span style={{ fontSize: 13, color: "var(--pex-text-muted)" }}>
-          I consent to Pexpacks processing my information to handle this request.
+        <span>
+          I consent to Pexpacks processing my information to handle this request. I have read and agree to the{" "}
+          <a href="/legal" target="_blank" rel="noopener noreferrer">privacy policy</a>.
         </span>
       </label>
       <div className={styles.formWide}>
