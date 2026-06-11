@@ -1,46 +1,47 @@
-import type { Metadata } from "next";
-import { Button } from "@/components/ui/Button";
-import { PageHero } from "@/components/marketing/PageHero";
-import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { OfficeQuoteExperience } from "@/components/marketing/OfficeQuoteExperience";
+import type { Metadata } from 'next'
+import { Button } from '@/components/ui/Button'
+import { PageHero } from '@/components/marketing/PageHero'
+import { FaqMarquee } from '@/components/shared/FaqMarquee'
+import { OfficeQuoteExperience } from '@/components/marketing/OfficeQuoteExperience'
 
-
-import { officePacks } from "@/data/officePacks";
-import { faqs } from "@/data/faqs";
-import { buildMetadata } from "@/lib/seo";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import { officePacks } from '@/data/officePacks'
+import { faqs } from '@/data/faqs'
+import { buildMetadata } from '@/lib/seo'
+import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 
 export const metadata: Metadata = buildMetadata(
-  "Office Stationery Packs for SMEs | Pexpacks",
-  "Practical office stationery packs for SMEs, home offices, freelancers, admin teams, shops, and small businesses.",
-  "/office",
-);
+  'Office Stationery Packs for SMEs | Pexpacks',
+  'Practical office stationery packs for SMEs, home offices, freelancers, admin teams, shops, and small businesses.',
+  '/office',
+)
 
-export const dynamic = "force-static";
+export const dynamic = 'force-static'
 
 type OfficePacksPageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-};
+  searchParams?: Promise<Record<string, string | string[] | undefined>>
+}
 
 export default async function OfficePacksPage({
   searchParams,
 }: OfficePacksPageProps) {
-  const params = searchParams ? await searchParams : {};
-  const packParam = typeof params.pack === "string" ? params.pack : "";
+  const params = searchParams ? await searchParams : {}
+  const packParam = typeof params.pack === 'string' ? params.pack : ''
   const initialMessage = packParam
     ? `I am interested in the ${packParam} pack.`
-    : "";
+    : ''
 
   return (
     <div className={sectionStyles.officePortalContainer}>
       <PageHero
         eyebrow="Office procurement"
-        title="Stop the Makro runs. Streamline your office procurement."
+        title="End the retail runs. Streamline your stationery."
         panelText="Trusted by SMEs across South Africa"
         panelTitle="SARS-compliant invoices, next-day delivery &amp; zero admin"
       >
         <div className={sectionStyles.buttonRow}>
-          <Button href="#office-pack-types" variant="primary">Shop Office Starter Packs</Button>
+          <Button href="#office-pack-types" variant="primary">
+            Shop Office Starter Packs
+          </Button>
           <Button href="#office-faq" variant="white">
             Office Pack FAQs
           </Button>
@@ -60,9 +61,12 @@ export default async function OfficePacksPage({
               </svg>
             </div>
             <div className={sectionStyles.accountingTrustText}>
-              <h3 className={sectionStyles.accountingTrustTitle}>SARS-Compliant Tax Invoices</h3>
+              <h3 className={sectionStyles.accountingTrustTitle}>
+                SARS-Compliant Tax Invoices
+              </h3>
               <p className={sectionStyles.accountingTrustDesc}>
-                Instantly generated and emailed directly to your accounts department. Say goodbye to faded till slips.
+                Instantly generated and emailed directly to your accounts
+                department. Say goodbye to faded till slips.
               </p>
             </div>
           </div>
@@ -80,10 +84,16 @@ export default async function OfficePacksPage({
       <div id="office-faq">
         <FaqMarquee
           faqs={faqs.filter((f) =>
-            ["sme-office-packs", "custom-office-quote", "bulk-office-orders", "delivery-timing", "payment-flow"].includes(f.id)
+            [
+              'sme-office-packs',
+              'custom-office-quote',
+              'bulk-office-orders',
+              'delivery-timing',
+              'payment-flow',
+            ].includes(f.id),
           )}
         />
       </div>
     </div>
-  );
+  )
 }
