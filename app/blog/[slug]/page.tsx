@@ -417,7 +417,7 @@ export default async function BlogPostPage({
       </section>
 
       <CTASection
-        eyebrow="Skip the hassle"
+        eyebrow="Skip the queues"
         title="Ready to order your school pack?"
         text="Don't spend hours hunting for these items. Let Pexpacks deliver your exact school list straight to your door."
         primaryHref="/schools"

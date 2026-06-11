@@ -172,7 +172,7 @@ export default function HomePage() {
       >
         <div className={sectionStyles.inner}>
           <SectionHeader
-            eyebrow="Trusted by parents"
+            eyebrow="Real parents, real results"
             title="Hear from our parents"
             text="Read what other parents are saying about the Pexpacks experience."
             headingId="home-testimonials"

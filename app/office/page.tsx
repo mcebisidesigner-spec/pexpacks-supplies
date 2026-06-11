@@ -33,7 +33,7 @@ export default async function OfficePacksPage({
   return (
     <div className={sectionStyles.officePortalContainer}>
       <PageHero
-        eyebrow="Office procurement"
+        eyebrow="Office made easy"
         title="End the retail runs. Streamline your stationery."
         panelText="Trusted by SMEs across South Africa"
         panelTitle="SARS-compliant invoices, next-day delivery &amp; zero admin"

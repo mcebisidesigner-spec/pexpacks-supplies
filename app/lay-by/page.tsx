@@ -22,7 +22,7 @@ export default function LayByPage() {
   return (
     <>
       <PageHero
-        eyebrow="Flexible school payments"
+        eyebrow="Pay over time"
         title="Lock in your school pack today, pay over time"
         panelChildren={
           <div className={styles.heroPanelCard}>
@@ -110,7 +110,7 @@ export default function LayByPage() {
       <LayByExperience />
 
       <CTASection
-        eyebrow="Ready when January arrives"
+        eyebrow="January ready?"
         title="Choose the pack now. Pay it down calmly."
         text="Start with your school or grade pack, add Pexcover if you need books covered, and choose Lay-by / Pay Monthly at checkout."
         primaryHref="/schools"

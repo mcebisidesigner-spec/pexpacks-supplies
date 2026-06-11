@@ -91,7 +91,7 @@ export default function BusinessStarterBrandPackagePage() {
   return (
     <>
       <PageHero
-        eyebrow="Business starter package"
+        eyebrow="Starter package"
         title="Claim your brand package"
         panelText="Package value"
         panelTitle="Complete physical and digital branding for R5,500.00."

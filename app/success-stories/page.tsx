@@ -29,7 +29,7 @@ export default function SuccessStoriesPage() {
   return (
     <>
       <PageHero
-        eyebrow="School success stories"
+        eyebrow="Trusted by schools"
         title="Trusted by schools across the country"
         panelTitle="Ready to simplify your school's stationery?"
         panelText="Contact us today to set up a custom portal for your parents."

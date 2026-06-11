@@ -47,7 +47,7 @@ export function SuperpowerSection() {
       <div className={sectionStyles.inner}>
         <ScrollReveal>
           <SectionHeader
-            eyebrow="Your superpower"
+            eyebrow="Skip the scramble"
             title="School lists, simplified."
             text="Skip the stationery scramble. We partner directly with schools so you get the exact list, customise it to what you already own, and have it delivered — no queues, no stress."
             headingId="superpower-heading"

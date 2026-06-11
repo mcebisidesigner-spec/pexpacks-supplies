@@ -29,7 +29,7 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
     >
       <div className={styles.featuredIntro}>
         <SectionHeader
-          eyebrow="Quick start"
+          eyebrow="Most popular"
           title="Popular schools"
           text="Start with one of our popular school pack pages, or search for your school above."
           headingId="featured-schools-heading"

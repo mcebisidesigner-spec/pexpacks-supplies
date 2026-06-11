@@ -22,7 +22,7 @@ export default function TrackOrderPage() {
   return (
     <>
       <PageHero
-        eyebrow="Parent order hub"
+        eyebrow="Track your pack"
         title="Check your stationery pack status"
         panelTitle="Order Tracking"
         panelText="Stay updated on your pack."
@@ -40,7 +40,7 @@ export default function TrackOrderPage() {
       />
 
       <CTASection
-        eyebrow="Need a new pack?"
+        eyebrow="Need another?"
         title="Start your order"
         text="Find your school pack or browse office stationery options for your business."
         primaryHref="/schools"

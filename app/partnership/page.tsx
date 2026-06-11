@@ -60,7 +60,7 @@ export default function PartnerWithSchoolsPage() {
   return (
     <>
       <PageHero
-        eyebrow="School partnership programme"
+        eyebrow="Partner with us"
         title="Your school&rsquo;s stationery admin is now free."
         panelText="Your school's custom portal includes"
         panelTitle="Free website, hosting, SSL &amp; parent ordering portal"
@@ -74,7 +74,7 @@ export default function PartnerWithSchoolsPage() {
       <section className={pageStyles.tripleWinSection} aria-labelledby="triple-win-heading">
         <div className={sectionStyles.inner}>
           <SectionHeader
-            eyebrow="Three stakeholders, one solution"
+            eyebrow="Triple-win"
             title="A triple-win for your school community"
             text="Every decision at your school affects three groups. Our partnership delivers measurable value to each one."
             headingId="triple-win-heading"
@@ -138,7 +138,7 @@ export default function PartnerWithSchoolsPage() {
       <section className={pageStyles.onboardingSection} aria-labelledby="onboarding-heading">
         <div className={sectionStyles.inner}>
           <SectionHeader
-            eyebrow="Simple onboarding"
+            eyebrow="3 steps to go live"
             title="Go live in 3 steps"
             text="No IT meetings. No lengthy setup. From list upload to live link in under 48 hours."
             headingId="onboarding-heading"
@@ -182,7 +182,7 @@ export default function PartnerWithSchoolsPage() {
       <section className={sectionStyles.section} id="web-development-offer">
         <div className={sectionStyles.inner}>
           <SectionHeader
-            eyebrow="Zero Cost Web Development"
+            eyebrow="Website, on us"
             title="Professional web design and hosting, on us"
             text="We handle design, server management, security, updates, and the parent ordering path. Your school gets a premium online hub with less admin load."
           />
@@ -214,7 +214,7 @@ export default function PartnerWithSchoolsPage() {
       <section className={sectionStyles.sectionAlt} id="partnership-faq">
         <div className={sectionStyles.inner}>
           <SectionHeader
-            eyebrow="Common Questions"
+            eyebrow="FAQ"
             title="Partnership reassurance & trust details"
             text="Transparent answers to the questions school boards, principals, and administrative teams ask most."
           />
@@ -265,7 +265,7 @@ export default function PartnerWithSchoolsPage() {
       <section className={sectionStyles.section} id="partner-form">
         <div className={sectionStyles.inner}>
           <SectionHeader
-            eyebrow="Partnership Enquiry"
+            eyebrow="Get started"
             title="Start your partnership today"
             text="Complete the form below and our team will get in touch to discuss the school website, grade packs, and launch path."
           />

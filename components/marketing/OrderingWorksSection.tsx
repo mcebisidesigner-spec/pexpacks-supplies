@@ -14,7 +14,7 @@ export function OrderingWorksSection() {
       <div className={sectionStyles.inner}>
         <ScrollReveal>
           <SectionHeader
-            eyebrow="School-ready support"
+            eyebrow="Order in minutes"
             title="How ordering works"
             text="Pexpacks keeps the school list searchable so parents do not need to scroll through endless stationsery shops. No driving, no queuing, no crossing off lists by hand."
             headingId="how-it-works-heading"

@@ -80,7 +80,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
   return (
     <>
       <PageHero
-        eyebrow="Pexpacks support desk"
+        eyebrow="We're here"
         title="Talk to Pexpacks"
         panelText="Service area"
         panelTitle="We currently service Gauteng"
@@ -183,7 +183,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               {/* CONTACT DETAILS CHANNELS */}
               <div className={pageStyles.contactChannelsCard}>
                 <SectionHeader
-                  eyebrow="Quick connections"
+                  eyebrow="Reach out direct"
                   title="Contact details"
                   text="Reach out directly through standard support paths."
                 />

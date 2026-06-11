@@ -22,7 +22,7 @@ export default function LoginPage() {
   return (
     <>
       <PageHero
-        eyebrow="Parent order hub"
+        eyebrow="Parent dashboard"
         title="Quick access for Pexpacks parents"
         panelText="No account needed"
         panelTitle="Track your order with your order reference."
@@ -40,7 +40,7 @@ export default function LoginPage() {
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
           <SectionHeader
-            eyebrow="Parent actions"
+            eyebrow="Quick actions"
             title="Choose what you need next"
             text="Pexpacks keeps the parent path simple while full account features are being prepared."
           />
@@ -80,7 +80,7 @@ export default function LoginPage() {
       />
 
       <CTASection
-        eyebrow="New here?"
+        eyebrow="First time?"
         title="Find your school pack"
         text="Search for your child's school and grade to get the exact stationery pack delivered."
         primaryHref="/schools"

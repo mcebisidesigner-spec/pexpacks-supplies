@@ -24,14 +24,14 @@ export default function FAQPage() {
     <>
       <JsonLd data={faqPageSchema(faqs)} />
       <PageHero
-        eyebrow="Help centre"
+        eyebrow="Got questions?"
         title="Answers without the back-and-forth"
         panelTitle={`${faqs.length} practical answers`}
         panelText="Start with a category, open what matters, and jump straight to the next action."
       />
       <FAQExperience faqs={faqs} />
       <CTASection
-        eyebrow="Still need help?"
+        eyebrow="Still stuck?"
         title="Send the team the details."
         text="Tell us the school, grade, order or office request and Pexpacks will help you choose the next step."
         primaryHref="/contact"

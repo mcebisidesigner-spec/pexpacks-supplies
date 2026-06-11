@@ -26,7 +26,7 @@ export default function AddYourSchoolPage() {
   return (
     <>
       <PageHero
-        eyebrow="Add your school list"
+        eyebrow="Not listed?"
         title="Is your not an official partner yet? Add your school now."
         panelText="Need a pack today?"
         panelTitle="Use a standard grade combo while your school list is being reviewed."
@@ -52,7 +52,7 @@ export default function AddYourSchoolPage() {
 
             <article className={cardStyles.infoCard}>
               <SectionHeader
-                eyebrow="Review process"
+                eyebrow="How it works"
                 title="What happens next?"
                 text="Pexpacks checks whether the school can be added and whether a standard pack can help while the official list is prepared."
               />
