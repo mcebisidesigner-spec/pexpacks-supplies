@@ -1,22 +1,22 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { CTASection } from "@/components/marketing/CTASection";
-import { LayByExperience } from "@/components/marketing/LayByExperience";
-import { PageHero } from "@/components/marketing/PageHero";
-import { Button } from "@/components/ui/Button";
-import { buildMetadata } from "@/lib/seo";
-import styles from "@/components/marketing/LayByExperience.module.css";
-import pageStyles from "./LayByPage.module.css";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
-import cardStyles from "@/components/marketing/MarketingCards.module.css";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { CTASection } from '@/components/marketing/CTASection'
+import { LayByExperience } from '@/components/marketing/LayByExperience'
+import { PageHero } from '@/components/marketing/PageHero'
+import { Button } from '@/components/ui/Button'
+import { buildMetadata } from '@/lib/seo'
+import styles from '@/components/marketing/LayByExperience.module.css'
+import pageStyles from './LayByPage.module.css'
+import sectionStyles from '@/components/marketing/MarketingSections.module.css'
+import cardStyles from '@/components/marketing/MarketingCards.module.css'
 
 export const metadata: Metadata = buildMetadata(
-  "Lay-by & Pay Monthly | Pexpacks Supplies",
+  'Lay-by & Pay Monthly | Pexpacks Supplies',
   "Secure your child's stationery pack with Pexpacks Lay-by. Spread payments over a few months with zero interest, CPA-compliant terms, and secure South African payment processing.",
-  "/lay-by"
-);
+  '/lay-by',
+)
 
-export const dynamic = "force-static";
+export const dynamic = 'force-static'
 
 export default function LayByPage() {
   return (
@@ -37,11 +37,8 @@ export default function LayByPage() {
           </div>
         }
       >
-        <div className={styles.heroActions}>
-          <Button href="/schools" size="lg">
-            Browse School Packs
-          </Button>
-          <Button href="#layby-details" variant="outline" size="lg">
+        <div className={sectionStyles.buttonRow}>
+          <Button href="#layby-details" size="lg">
             How Lay-by Works
           </Button>
         </div>
@@ -54,21 +51,42 @@ export default function LayByPage() {
               <p className={pageStyles.priceDemoEyebrow}>Example calculation</p>
               <h2>From as little as R110 per month</h2>
               <p>
-                A standard primary school pack costs around <strong>R659</strong>. With lay-by, that&rsquo;s roughly <strong>R132/month</strong> over 5 months &mdash; zero interest, zero hidden fees. The deposit is simply your first month&rsquo;s installment.
+                A standard primary school pack costs around{' '}
+                <strong>R659</strong>. With lay-by, that&rsquo;s roughly{' '}
+                <strong>R132/month</strong> over 5 months &mdash; zero interest,
+                zero hidden fees. The deposit is simply your first month&rsquo;s
+                installment.
               </p>
               <div className={pageStyles.priceDemoRow}>
                 <div className={pageStyles.priceDemoBox}>
-                  <span className={pageStyles.priceDemoLabel}>One-time payment</span>
+                  <span className={pageStyles.priceDemoLabel}>
+                    One-time payment
+                  </span>
                   <span className={pageStyles.priceDemoValue}>R659</span>
                 </div>
                 <div className={pageStyles.priceDemoDivider}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </div>
-                <div className={`${pageStyles.priceDemoBox} ${pageStyles.priceDemoBoxHighlight}`}>
-                  <span className={pageStyles.priceDemoLabel}>Lay-by, 5 months</span>
-                  <span className={pageStyles.priceDemoValue}>R132<span className={pageStyles.priceDemoUnit}>/mo</span></span>
+                <div
+                  className={`${pageStyles.priceDemoBox} ${pageStyles.priceDemoBoxHighlight}`}
+                >
+                  <span className={pageStyles.priceDemoLabel}>
+                    Lay-by, 5 months
+                  </span>
+                  <span className={pageStyles.priceDemoValue}>
+                    R132<span className={pageStyles.priceDemoUnit}>/mo</span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -89,7 +107,9 @@ export default function LayByPage() {
           <div className={pageStyles.trustStatsGrid}>
             <div className={pageStyles.trustStatCard}>
               <strong className={pageStyles.trustStatValue}>0%</strong>
-              <span className={pageStyles.trustStatLabel}>Interest charged</span>
+              <span className={pageStyles.trustStatLabel}>
+                Interest charged
+              </span>
             </div>
             <div className={pageStyles.trustStatCard}>
               <strong className={pageStyles.trustStatValue}>R0</strong>
@@ -97,7 +117,9 @@ export default function LayByPage() {
             </div>
             <div className={pageStyles.trustStatCard}>
               <strong className={pageStyles.trustStatValue}>5</strong>
-              <span className={pageStyles.trustStatLabel}>Months to settle</span>
+              <span className={pageStyles.trustStatLabel}>
+                Months to settle
+              </span>
             </div>
             <div className={pageStyles.trustStatCard}>
               <strong className={pageStyles.trustStatValue}>CPA</strong>
@@ -126,20 +148,26 @@ export default function LayByPage() {
               <p className={sectionStyles.sectionEyebrow}>Any questions?</p>
               <h2>We're here to help</h2>
               <p>
-                Contact the Pexpacks team for lay-by questions, school pack enquiries, or help with your order.
+                Contact the Pexpacks team for lay-by questions, school pack
+                enquiries, or help with your order.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/contact" variant="primary">Contact Us</Button>
-                <Button href="/schools" variant="white">Browse School Packs</Button>
+                <Button href="/contact" variant="primary">
+                  Contact Us
+                </Button>
+                <Button href="/schools" variant="white">
+                  Browse School Packs
+                </Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>
               <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Read the full terms</h3>
+                <h3 style={{ fontSize: '20px' }}>Read the full terms</h3>
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  View the complete lay-by terms and conditions, including CPA compliance details.
+                  View the complete lay-by terms and conditions, including CPA
+                  compliance details.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>
@@ -152,5 +180,5 @@ export default function LayByPage() {
         </div>
       </section>
     </>
-  );
+  )
 }

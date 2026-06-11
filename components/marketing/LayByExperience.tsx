@@ -321,7 +321,7 @@ export function LayByExperience() {
         <div className={styles.inner}>
           <div className={styles.introGrid}>
             <div className={styles.introCopy}>
-              <p className={styles.eyebrow}>Why parents use it</p>
+              <p className={styles.eyebrow}>Pay over time</p>
               <h2 id="layby-intro">January is stressful enough.</h2>
               <p>
                 At Pexpacks Supplies, we believe preparing your child for the
@@ -415,7 +415,7 @@ export function LayByExperience() {
         <div className={styles.inner}>
           <div className={styles.detailsGrid}>
             <div className={styles.detailsCopy}>
-              <p className={styles.eyebrow}>Fine print made simple</p>
+              <p className={styles.eyebrow}>Clear terms</p>
               <h2 id="layby-details-heading">Clear terms, protected funds.</h2>
               <p>
                 We make the financial details easy to understand so parents can
@@ -476,7 +476,7 @@ export function LayByExperience() {
         <div className={styles.inner}>
           <div className={styles.applicationLayout}>
             <aside className={styles.applicationSummary}>
-              <p className={styles.eyebrow}>Lay-by application</p>
+              <p className={styles.eyebrow}>Apply now</p>
               <h2 id="layby-application-heading">
                 Apply with the details needed to sign.
               </h2>
@@ -748,7 +748,7 @@ export function LayByExperience() {
         <div className={styles.inner}>
           <div className={styles.faqLayout}>
             <div>
-              <p className={styles.eyebrow}>Parent questions</p>
+              <p className={styles.eyebrow}>Got questions?</p>
               <h2 id="layby-faq">Quick answers before checkout</h2>
               <p>
                 These are the questions parents usually ask before choosing the

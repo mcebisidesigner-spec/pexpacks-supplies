@@ -1,4 +1,6 @@
 .widgetCard {
+  position: relative;
+  z-index: 1;
   background: var(--card-bg, #ffffff);
   border-radius: var(--radius-card, 20px);
   border: var(--card-border, 1px solid rgba(15, 37, 55, 0.08));
@@ -8,6 +10,11 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.widgetCard[data-results-open="true"],
+.widgetCard:focus-within {
+  z-index: 80;
 }
 
 .widgetCard:hover {
@@ -48,6 +55,7 @@
 
 .inputGroup {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -55,7 +63,7 @@
 
 .schoolResults {
   position: absolute;
-  z-index: 999;
+  z-index: 90;
   inset: calc(100% + 8px) 0 auto;
   max-height: 420px;
   overflow-y: auto;

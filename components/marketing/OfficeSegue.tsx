@@ -7,7 +7,7 @@ export function OfficeSegue() {
       <div className={styles.inner}>
         <div className={styles.panel}>
           <div className={styles.copy}>
-            <p className={styles.eyebrow}>For your business</p>
+            <p className={styles.eyebrow}>Office packs</p>
             <h2>Stocking the Office? <span className={styles.highlight}>We do that too.</span></h2>
             <p className={styles.lead}>
               Streamlined SME stationery procurement with tax invoices and clear follow-ups.

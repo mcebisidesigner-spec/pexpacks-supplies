@@ -131,7 +131,7 @@ export function SchoolPitchDeck() {
         {activeSlide === "overview" && (
           <div className={styles.slidePanel}>
             <div className={styles.slideCopy}>
-              <p className={styles.slideEyebrow}>Exclusive School Program</p>
+              <p className={styles.slideEyebrow}>School program</p>
               <h3>Modern School Web Design &amp; Free Hosting</h3>
               <p>
                 Elevate your school&apos;s digital presence and streamline
@@ -168,7 +168,7 @@ export function SchoolPitchDeck() {
         {activeSlide === "website" && (
           <div className={styles.slidePanel}>
             <div className={styles.slideCopy}>
-              <p className={styles.slideEyebrow}>No-Cost Managed Platform</p>
+              <p className={styles.slideEyebrow}>Free website</p>
               <h3>Everything Your School Needs Online</h3>
               <p>
                 We handle the design, server management, security, and updates.
@@ -214,7 +214,7 @@ export function SchoolPitchDeck() {
         {activeSlide === "calculator" && (
           <div className={styles.slidePanel}>
             <div className={styles.slideCopy}>
-              <p className={styles.slideEyebrow}>Interactive Projection</p>
+              <p className={styles.slideEyebrow}>See the value</p>
               <h3>Calculate Your School Benefits</h3>
               <p>
                 Adjust the sliders to estimate your school&apos;s annual
@@ -279,9 +279,7 @@ export function SchoolPitchDeck() {
         {activeSlide === "parents" && (
           <div className={styles.slidePanel}>
             <div className={styles.slideCopy}>
-              <p className={styles.slideEyebrow}>
-                Stress-Free Back-to-School
-              </p>
+              <p className={styles.slideEyebrow}>Parent perk</p>
               <h3>Parents Buy Correct Grade Packs Fast</h3>
               <p>
                 No retail hopping or long queues in January. Parents get exactly
@@ -322,7 +320,7 @@ export function SchoolPitchDeck() {
         {activeSlide === "roadmap" && (
           <div className={styles.slidePanel}>
             <div className={styles.slideCopy}>
-              <p className={styles.slideEyebrow}>Simple Setup Process</p>
+              <p className={styles.slideEyebrow}>Quick setup</p>
               <h3>How We Launch Your Portal</h3>
               <p>
                 Our team does the heavy lifting, taking you from request to live

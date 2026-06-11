@@ -12,7 +12,7 @@ export function LayByPromo() {
             <WalletIcon />
           </div>
           <div className={styles.body}>
-            <p className={styles.eyebrow}>New — Lay-by available</p>
+            <p className={styles.eyebrow}>Pay over time</p>
             <h2 id="layby-promo" className={styles.title}>
               Reserve your pack now, pay over time
             </h2>

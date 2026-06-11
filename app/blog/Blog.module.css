@@ -248,11 +248,21 @@
 }
 
 .documentCard {
+  position: relative;
   border: 1px solid rgba(225, 231, 234, 0.86);
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: var(--card-shadow);
   overflow: hidden;
+}
+
+.searchWidgetCard {
+  z-index: 30;
+  overflow: visible;
+}
+
+.searchWidgetCard:focus-within {
+  z-index: 90;
 }
 
 .postHeroCard {
@@ -551,6 +561,8 @@
 }
 
 .sidebarColumn {
+  position: relative;
+  z-index: 30;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -560,6 +572,7 @@
 .stickySidebar {
   position: sticky;
   top: calc(var(--header-height-desktop) + 32px);
+  z-index: 40;
   display: flex;
   flex-direction: column;
   gap: 32px;

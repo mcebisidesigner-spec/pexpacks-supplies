@@ -106,6 +106,7 @@ export function SchoolSearchWidget({
   return (
     <article
       className={`${styles.widgetCard} ${compact ? styles.compactWidget : ""}`}
+      data-results-open={open ? "true" : undefined}
     >
       <span className={styles.eyebrow}>Skip the queue</span>
       {headingLevel === "h2" ? (

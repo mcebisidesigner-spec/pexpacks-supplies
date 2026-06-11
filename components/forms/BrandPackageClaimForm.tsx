@@ -188,7 +188,7 @@ export function BrandPackageClaimForm() {
   return (
     <div className={formStyles.formCard}>
       <form onSubmit={handleSubmit} noValidate>
-        <p className={sectionStyles.sectionEyebrow}>Package claim</p>
+        <p className={sectionStyles.sectionEyebrow}>Claim yours</p>
         <h2>Claim the Business Starter Brand Package</h2>
         <p className={formStyles.privacyNotice}>
           Share the business details, creative direction and any existing brand

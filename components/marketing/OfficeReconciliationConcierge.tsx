@@ -10,7 +10,7 @@ export function OfficeReconciliationConcierge() {
       <div className={sectionStyles.inner}>
         <div className={styles.panel}>
           <div className={styles.copy}>
-            <p className={sectionStyles.sectionEyebrow}>Frictionless procurement</p>
+            <p className={sectionStyles.sectionEyebrow}>Office made easy</p>
             <h2 id="concierge-heading">
               Custom Monthly Orders?
               <br />

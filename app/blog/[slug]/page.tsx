@@ -403,7 +403,7 @@ export default async function BlogPostPage({
               </section>
             ) : null}
 
-            <div className={styles.documentCard}>
+            <div className={`${styles.documentCard} ${styles.searchWidgetCard}`}>
               <div className={styles.postCardBody}>
                 <SchoolSearchWidget
                   compact={true}

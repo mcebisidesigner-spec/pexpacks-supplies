@@ -92,7 +92,7 @@ export function InteractiveDemoSection() {
     <section className={styles.section} id="interactive-demo" aria-labelledby="interactive-demo-heading">
       <div className={styles.inner}>
         <div className={styles.header}>
-          <p className={styles.eyebrow}>Interactive Demo</p>
+          <p className={styles.eyebrow}>Live demo</p>
           <h2 id="interactive-demo-heading">
             See What Your School Website Could Look Like
           </h2>
@@ -208,7 +208,7 @@ export function InteractiveDemoSection() {
 
         <div className={styles.ctaCard}>
           <div>
-            <p className={styles.ctaEyebrow}>Website, hosting and support</p>
+            <p className={styles.ctaEyebrow}>Website, on us</p>
             <h3>Ready to give your school a stronger online presence?</h3>
             <p>
               Partner with Pexpacks and let us help your school create a clean,
