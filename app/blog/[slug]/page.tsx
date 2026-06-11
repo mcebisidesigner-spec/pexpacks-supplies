@@ -286,7 +286,7 @@ export default async function BlogPostPage({
             <nav className={styles.sidebarCard} aria-label="Article sections">
               {headings.length > 0 ? (
                 <>
-                  <p className={styles.sidebarEyebrow}>In this article</p>
+                  <p className={styles.sidebarEyebrow}>Jump to</p>
                   <h2 className={styles.sidebarTitle}>Contents</h2>
                   <ol className={styles.sidebarToc}>
                     {headings.map((h) => (
@@ -347,7 +347,7 @@ export default async function BlogPostPage({
               className={styles.knowledgeCard}
               aria-label="Explore more resources"
             >
-              <p className={styles.sidebarEyebrow}>Pex your knowledge</p>
+              <p className={styles.sidebarEyebrow}>Keep digging</p>
               <h2 className={styles.knowledgeTitle}>
                 Dive deeper into related topics
               </h2>
