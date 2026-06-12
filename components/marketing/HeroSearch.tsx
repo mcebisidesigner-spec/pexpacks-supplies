@@ -94,18 +94,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
       .catch(() => {});
   }, [query]);
 
-  useEffect(() => {
-    if (!hasSearched || isLoading || results.length > 0) return;
-    const target = document.getElementById("concierge-heading");
-    if (!target) return;
-    setPanelOpen(false);
-    setIsSchoolInputFocused(false);
-    setTrendingVisible(false);
-    const timer = setTimeout(() => {
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [hasSearched, isLoading, results.length, setPanelOpen]);
+
 
   return (
     <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>

@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
+import { TrayCheckoutClient } from "./TrayCheckoutClient";
 
 type CheckoutPageProps = {
   searchParams: Promise<{ school?: string; grade?: string; phase?: string; pack?: string; draft?: string }>;
@@ -8,8 +9,8 @@ type CheckoutPageProps = {
 
 export const metadata: Metadata = {
   ...buildMetadata(
-    "Checkout",
-    "Complete your Pexpacks stationery pack order securely.",
+    "Checkout | Pexpacks",
+    "Complete your Pexpacks multi-learner order securely.",
     "/checkout"
   ),
   robots: {
@@ -24,7 +25,7 @@ export default async function CheckoutPage({
   const { school, grade, phase, pack, draft } = await searchParams;
 
   if (!school && !grade && !phase && !pack) {
-    notFound();
+    return <TrayCheckoutClient />;
   }
 
   let slug: string;

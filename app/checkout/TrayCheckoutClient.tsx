@@ -599,14 +599,16 @@ export function TrayCheckoutClient() {
                         clearFieldError("multiSchoolDrop");
                       }}
                     />
-                    <span className={styles.deliveryIcon}>
-                      <FulfilmentIcon option={option.value} />
-                    </span>
-                    <span className={styles.deliveryOptionText}>
+                    <div className={styles.deliveryOptionHeader}>
+                      <span className={styles.deliveryIcon}>
+                        <FulfilmentIcon option={option.value} />
+                      </span>
                       <strong>{option.title}</strong>
-                      <small>{option.description}</small>
-                      <em>{option.note}</em>
-                    </span>
+                    </div>
+                    <p className={styles.deliveryDescription}>
+                      {option.description}
+                    </p>
+                    <span className={styles.deliveryBadge}>{option.note}</span>
                   </label>
                 ))}
               </div>

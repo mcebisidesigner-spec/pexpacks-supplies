@@ -19,7 +19,7 @@ export function PackTrayFooter() {
   const handleCheckout = useCallback(() => {
     if (!hasPacks) return;
     closeTray();
-    router.push("/checkout/tray");
+    router.push("/checkout");
   }, [hasPacks, closeTray, router]);
 
   const handleAddAnotherLearner = useCallback(() => {

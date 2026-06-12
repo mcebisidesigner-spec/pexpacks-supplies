@@ -1485,15 +1485,18 @@
 }
 
 .deliveryOption {
-  min-height: 168px;
-  padding: clamp(20px, 2.4vw, 26px);
-  border: var(--form-control-border);
-  border-radius: var(--radius-card);
-  background: var(--form-option-bg);
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 18px;
-  box-shadow: 0 1px 2px rgba(26, 42, 64, 0.04);
+  min-height: 220px;
+  padding: 24px;
+  border: 1.5px solid rgba(26, 42, 64, 0.08);
+  border-radius: 28px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.22s var(--motion-ease);
+  box-shadow: 0 1px 3px rgba(26, 42, 64, 0.03);
+  position: relative;
 }
 
 .deliveryOption input {
@@ -1504,32 +1507,72 @@
 
 .deliveryOption:hover,
 .deliveryOptionSelected {
-  border-color: var(--form-option-selected-border);
-  background: var(--form-option-selected-bg);
+  border-color: #1a5c5a;
+  background: #eef7f6;
   box-shadow: 0 18px 42px rgba(26, 42, 64, 0.08);
+  transform: translateY(-2px);
+}
+
+.deliveryOptionSelected {
+  border-color: #1a5c5a;
+  background: #eef7f6;
+}
+
+.deliveryOptionHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
 }
 
 .deliveryIcon {
   width: 58px;
   height: 58px;
-  color: var(--pex-coral);
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(26, 42, 64, 0.06);
+  flex-shrink: 0;
+  color: #ff6f59;
+  border: 1px solid rgba(26, 42, 64, 0.03);
 }
 
 .deliveryIcon svg {
   width: 28px;
   height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
 }
 
-.deliveryOptionText em {
+.deliveryOptionHeader strong {
+  color: #102a43;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.deliveryDescription {
+  margin: 0;
+  color: #52606d;
+  font-size: 14px;
+  line-height: 1.45;
+  flex: 1;
+}
+
+.deliveryBadge {
   display: inline-flex;
-  margin-top: 12px;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--pex-bg);
-  color: var(--pex-keppel);
+  width: fit-content;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: rgba(33, 158, 154, 0.08);
+  color: #1a7a40;
   font-size: 12px;
-  font-style: normal;
-  font-weight: 900;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .addressPanel {
