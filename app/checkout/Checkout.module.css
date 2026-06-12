@@ -1578,6 +1578,139 @@
   color: var(--pex-primary);
 }
 
+.fulfilmentSection {
+  padding: clamp(38px, 4.2vw, 70px);
+  border-color: rgba(26, 42, 64, 0.04);
+  border-radius: clamp(30px, 3.2vw, 46px);
+  background: var(--pex-bg);
+  box-shadow: 0 22px 58px rgba(26, 42, 64, 0.07);
+}
+
+.fulfilmentSection .sectionHeader {
+  gap: clamp(18px, 2vw, 30px);
+  margin-bottom: clamp(34px, 4vw, 58px);
+}
+
+.fulfilmentSection .sectionNumber {
+  width: clamp(48px, 4.2vw, 62px);
+  height: clamp(48px, 4.2vw, 62px);
+  color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.12);
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2vw, 1.75rem);
+}
+
+.fulfilmentSection .sectionHeader h2 {
+  font-size: clamp(2rem, 3.45vw, 3.35rem);
+  line-height: 1.05;
+}
+
+.fulfilmentSection .sectionHeader p {
+  margin-top: 18px;
+  color: var(--pex-text-muted);
+  font-size: clamp(1.05rem, 1.5vw, 1.55rem);
+  line-height: 1.45;
+}
+
+.fulfilmentSection .deliveryOptions {
+  gap: clamp(20px, 2.9vw, 46px);
+  margin-top: 0;
+}
+
+.fulfilmentSection .deliveryOption {
+  min-height: clamp(230px, 16.5vw, 300px);
+  padding: clamp(30px, 3.3vw, 56px) clamp(24px, 3vw, 50px);
+  border: 2px solid rgba(26, 42, 64, 0.12);
+  border-radius: clamp(24px, 2.4vw, 34px);
+  background: var(--pex-bg);
+  grid-template-columns: auto 1fr;
+  gap: clamp(22px, 2.6vw, 42px);
+  align-items: start;
+  box-shadow: none;
+}
+
+.fulfilmentSection .deliveryOption:hover {
+  border-color: rgba(33, 158, 154, 0.5);
+  background: rgba(33, 158, 154, 0.04);
+  box-shadow: 0 18px 42px rgba(26, 42, 64, 0.07);
+}
+
+.fulfilmentSection .deliveryOptionSelected {
+  border-color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.1);
+  box-shadow: none;
+}
+
+.fulfilmentSection .deliveryIcon {
+  width: clamp(70px, 6.3vw, 96px);
+  height: clamp(70px, 6.3vw, 96px);
+  background: var(--pex-bg);
+  color: var(--pex-coral);
+  box-shadow: 0 16px 34px rgba(26, 42, 64, 0.07);
+}
+
+.fulfilmentSection .deliveryIcon svg {
+  width: clamp(36px, 3.2vw, 50px);
+  height: clamp(36px, 3.2vw, 50px);
+  stroke-width: 1.8;
+}
+
+.fulfilmentSection .deliveryOptionText {
+  padding-top: clamp(8px, 0.9vw, 16px);
+}
+
+.fulfilmentSection .deliveryOption strong {
+  color: var(--pex-navy);
+  font-size: clamp(1.8rem, 3.05vw, 3rem);
+  line-height: 1.02;
+}
+
+.fulfilmentSection .deliveryOption small {
+  margin-top: clamp(22px, 2.3vw, 34px);
+  color: var(--pex-text);
+  font-size: clamp(1rem, 1.45vw, 1.45rem);
+  line-height: 1.35;
+}
+
+.fulfilmentSection .deliveryOptionText em {
+  margin-top: clamp(20px, 2.4vw, 34px);
+  padding: 6px 14px;
+  background: var(--pex-bg);
+  color: var(--pex-keppel);
+  font-size: clamp(0.95rem, 1.2vw, 1.25rem);
+}
+
+.deliveryNotesField {
+  margin-top: clamp(44px, 5vw, 76px);
+}
+
+.deliveryNotesField label {
+  color: #101010;
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1.8vw, 1.7rem);
+  line-height: 1.15;
+}
+
+.deliveryNotesField p {
+  color: #101010;
+  font-size: clamp(1rem, 1.45vw, 1.45rem);
+  line-height: 1.45;
+}
+
+.deliveryNotesField textarea {
+  min-height: clamp(210px, 20vw, 300px);
+  border: 2px solid rgba(26, 42, 64, 0.12);
+  border-radius: clamp(22px, 2vw, 32px);
+  background: var(--pex-bg);
+  box-shadow: none;
+}
+
+.deliveryNotesField textarea:focus,
+.deliveryNotesField textarea:focus-visible {
+  border-color: var(--pex-keppel);
+  box-shadow: 0 0 0 4px rgba(33, 158, 154, 0.12);
+}
+
 .consentCard {
   display: grid;
   gap: 10px;
@@ -1960,6 +2093,131 @@
   .orderPackTop,
   .summaryHeader {
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 900px) {
+  .fulfilmentSection {
+    padding: clamp(24px, 7vw, 38px);
+    border-radius: 28px;
+  }
+
+  .fulfilmentSection .sectionHeader {
+    margin-bottom: 26px;
+  }
+
+  .fulfilmentSection .sectionHeader h2 {
+    font-size: clamp(1.7rem, 7vw, 2.45rem);
+  }
+
+  .fulfilmentSection .sectionHeader p {
+    margin-top: 8px;
+    font-size: 1rem;
+  }
+
+  .fulfilmentSection .deliveryOptions {
+    gap: 14px;
+  }
+
+  .fulfilmentSection .deliveryOption {
+    min-height: 0;
+    padding: 22px;
+    border-radius: 24px;
+    gap: 18px;
+  }
+
+  .fulfilmentSection .deliveryIcon {
+    width: 58px;
+    height: 58px;
+  }
+
+  .fulfilmentSection .deliveryIcon svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .fulfilmentSection .deliveryOptionText {
+    padding-top: 2px;
+  }
+
+  .fulfilmentSection .deliveryOption strong {
+    font-size: clamp(1.45rem, 6vw, 2rem);
+  }
+
+  .fulfilmentSection .deliveryOption small {
+    margin-top: 12px;
+    font-size: 0.98rem;
+  }
+
+  .fulfilmentSection .deliveryOptionText em {
+    margin-top: 14px;
+    font-size: 0.9rem;
+  }
+
+  .deliveryNotesField {
+    margin-top: 28px;
+  }
+
+  .deliveryNotesField label {
+    font-size: 1.18rem;
+  }
+
+  .deliveryNotesField p {
+    font-size: 0.98rem;
+  }
+
+  .deliveryNotesField textarea {
+    min-height: 180px;
+    border-radius: 24px;
+  }
+}
+
+@media (max-width: 520px) {
+  .fulfilmentSection {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .fulfilmentSection .sectionHeader {
+    margin-bottom: 0;
+  }
+
+  .fulfilmentSection .sectionNumber {
+    width: 42px;
+    height: 42px;
+    font-size: 1.15rem;
+  }
+
+  .fulfilmentSection .sectionHeader h2 {
+    font-size: 1.65rem;
+  }
+
+  .fulfilmentSection .deliveryOptions {
+    margin-top: 4px;
+  }
+
+  .fulfilmentSection .deliveryOption {
+    padding: 18px;
+    grid-template-columns: 50px 1fr;
+    border-radius: 20px;
+  }
+
+  .fulfilmentSection .deliveryIcon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .fulfilmentSection .deliveryIcon svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .fulfilmentSection .deliveryOption strong {
+    font-size: 1.38rem;
+  }
+
+  .fulfilmentSection .deliveryOption small {
+    font-size: 0.92rem;
   }
 }
 

@@ -555,7 +555,10 @@ export function TrayCheckoutClient() {
             ) : null}
           </section>
 
-          <section className={styles.checkoutSection} aria-labelledby="fulfilment-heading">
+          <section
+            className={`${styles.checkoutSection} ${styles.fulfilmentSection}`}
+            aria-labelledby="fulfilment-heading"
+          >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionNumber}>2</span>
               <div>
@@ -724,6 +727,7 @@ export function TrayCheckoutClient() {
 
             <Textarea
               id="deliveryNotes"
+              className={styles.deliveryNotesField}
               label="Delivery notes (optional)"
               helper="Add gate codes, collection notes, or anything the Pexpacks team should know."
               value={deliveryNotes}
