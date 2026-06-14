@@ -83,17 +83,6 @@ export default function AddYourSchoolPage() {
           )}
         />
       </div>
-      <LayByPromo />
-
-      <CTASection
-        eyebrow="Ready to order?"
-        title="Find your school pack"
-        text="Search for your school to see if we already have the list, then order in seconds."
-        primaryHref="/schools"
-        primaryLabel="Search Schools"
-        secondaryHref="/faq"
-        secondaryLabel="Read FAQs"
-      />
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>

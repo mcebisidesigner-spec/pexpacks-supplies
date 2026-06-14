@@ -127,12 +127,14 @@ export function GlobalPackTray() {
           </div>
         </div>
 
-        <div className={styles.searchSection}>
-          <div className={styles.searchContainer}>
-            <h3 className={styles.searchTitle}>Find Your School Pack</h3>
-            <HeroSearch onResultClick={closeTray} />
+        {!hasPacks ? (
+          <div className={styles.searchSection}>
+            <div className={styles.searchContainer}>
+              <h3 className={styles.searchTitle}>Find Your School Pack</h3>
+              <HeroSearch onResultClick={closeTray} />
+            </div>
           </div>
-        </div>
+        ) : null}
 
         <div className={styles.content}>
           {hasPacks ? (
