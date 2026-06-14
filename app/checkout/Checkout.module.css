@@ -1486,13 +1486,13 @@
 
 .deliveryOption {
   min-height: 220px;
-  padding: 24px;
+  padding: 22px 18px;
   border: 1.5px solid rgba(26, 42, 64, 0.08);
   border-radius: 28px;
   background: #ffffff;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   cursor: pointer;
   transition: all 0.22s var(--motion-ease);
   box-shadow: 0 1px 3px rgba(26, 42, 64, 0.03);
@@ -1521,27 +1521,27 @@
 .deliveryOptionHeader {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
 }
 
 .deliveryIcon {
-  width: 58px;
-  height: 58px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(26, 42, 64, 0.06);
+  box-shadow: 0 4px 10px rgba(26, 42, 64, 0.05);
   flex-shrink: 0;
   color: #ff6f59;
   border: 1px solid rgba(26, 42, 64, 0.03);
 }
 
 .deliveryIcon svg {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -1550,16 +1550,16 @@
 .deliveryOptionHeader strong {
   color: #102a43;
   font-family: var(--font-heading);
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 800;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .deliveryDescription {
   margin: 0;
   color: #52606d;
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 13.5px;
+  line-height: 1.4;
   flex: 1;
 }
 
