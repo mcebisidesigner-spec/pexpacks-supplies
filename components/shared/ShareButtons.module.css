@@ -53,7 +53,7 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .shareButtons {
     gap: 6px;
   }

@@ -333,7 +333,7 @@
   min-height: 48px;
 }
 
-@media (max-width: 1040px) {
+@media (max-width: 1024px) {
   .footerInner {
     padding-inline: var(--gutter-tablet);
   }
@@ -365,7 +365,7 @@
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .footerInner {
     padding-inline: var(--gutter-tablet);
   }
@@ -397,7 +397,7 @@
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 480px) {
   .footerInner {
     padding: 38px var(--gutter-mobile) 34px;
   }

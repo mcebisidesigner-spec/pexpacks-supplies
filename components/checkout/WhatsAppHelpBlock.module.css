@@ -65,7 +65,7 @@
   stroke: none;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .supportBlock {
     margin-inline: calc(var(--summary-card-pad) * -1);
     padding-inline: 24px;
