@@ -127,6 +127,13 @@ export function GlobalPackTray() {
           </div>
         </div>
 
+        <div className={styles.searchSection}>
+          <div className={styles.searchContainer}>
+            <h3 className={styles.searchTitle}>Find Your School Pack</h3>
+            <HeroSearch onResultClick={closeTray} />
+          </div>
+        </div>
+
         <div className={styles.content}>
           {hasPacks ? (
             packs.map((pack, index) => (
@@ -147,10 +154,6 @@ export function GlobalPackTray() {
                 </svg>
               </div>
               <p>No packs saved yet. Choose a school pack and add it to your order.</p>
-              <div className={styles.emptySearchContainer}>
-                <h3 className={styles.emptySearchTitle}>Find Your School Pack</h3>
-                <HeroSearch onResultClick={closeTray} />
-              </div>
             </div>
           )}
         </div>

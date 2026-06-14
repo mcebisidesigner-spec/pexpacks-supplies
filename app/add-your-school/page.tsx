@@ -1,26 +1,26 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { AddSchoolForm } from "@/components/forms/AddSchoolForm";
-import { Button } from "@/components/ui/Button";
-import { PageHero } from "@/components/marketing/PageHero";
-import { CTASection } from "@/components/marketing/CTASection";
-import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { LayByPromo } from "@/components/shared/LayByPromo";
-import { mostPopularPacksHref } from "@/data/packs";
-import { faqs } from "@/data/faqs";
-import { buildMetadata } from "@/lib/seo";
-import heroStyles from "@/components/marketing/HeroBase.module.css";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
-import cardStyles from "@/components/marketing/MarketingCards.module.css";
-import formStyles from "@/components/marketing/MarketingForms.module.css";
-import { id } from "zod/locales";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { AddSchoolForm } from '@/components/forms/AddSchoolForm'
+import { Button } from '@/components/ui/Button'
+import { PageHero } from '@/components/marketing/PageHero'
+import { CTASection } from '@/components/marketing/CTASection'
+import { SectionHeader } from '@/components/marketing/SectionHeader'
+import { FaqMarquee } from '@/components/shared/FaqMarquee'
+import { LayByPromo } from '@/components/shared/LayByPromo'
+import { mostPopularPacksHref } from '@/data/packs'
+import { faqs } from '@/data/faqs'
+import { buildMetadata } from '@/lib/seo'
+import heroStyles from '@/components/marketing/HeroBase.module.css'
+import sectionStyles from '@/components/marketing/MarketingSections.module.css'
+import cardStyles from '@/components/marketing/MarketingCards.module.css'
+import formStyles from '@/components/marketing/MarketingForms.module.css'
+import { id } from 'zod/locales'
 
 export const metadata: Metadata = buildMetadata(
-  "Add Your School",
-  "Submit your school details so Pexpacks can prepare a school stationery pack page for your grade lists.",
-  "/add-your-school",
-);
+  'Add Your School',
+  'Submit your school details so Pexpacks can prepare a school stationery pack page for your grade lists.',
+  '/add-your-school',
+)
 
 export default function AddYourSchoolPage() {
   return (
@@ -74,11 +74,11 @@ export default function AddYourSchoolPage() {
         <FaqMarquee
           faqs={faqs.filter((f) =>
             [
-              "school-not-listed",
-              "school-list-submission",
-              "find-grade-pack",
-              "delivery-timing",
-              "school-rebate",
+              'school-not-listed',
+              'school-list-submission',
+              'find-grade-pack',
+              'delivery-timing',
+              'school-rebate',
             ].includes(f.id),
           )}
         />
@@ -116,7 +116,7 @@ export default function AddYourSchoolPage() {
             </div>
             <div className={cardStyles.packCard}>
               <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Contact us</h3>
+                <h3 style={{ fontSize: '20px' }}>Contact us</h3>
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
@@ -134,5 +134,5 @@ export default function AddYourSchoolPage() {
         </div>
       </section>
     </>
-  );
+  )
 }

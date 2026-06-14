@@ -306,7 +306,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                       Don&rsquo;t see your school? Upload your stationery list or send it to us on WhatsApp and we&rsquo;ll pack every item exactly as specified.
                     </p>
                     <div className={styles.searchCatchallActions}>
-                      <Link href="/order" className={styles.searchCatchallUpload}>
+                      <Link href="/order" className={styles.searchCatchallUpload} onClick={onResultClick}>
                         Upload Your School List
                       </Link>
                     </div>
