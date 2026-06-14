@@ -456,16 +456,6 @@
     gap: 12px;
   }
 
-  .divider {
-    margin: 34px 0 24px;
-  }
-
-  .copyright {
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 380px) {
   .mainNav {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, auto));
@@ -479,6 +469,14 @@
 
   .navLink {
     font-size: 18px;
+  }
+
+  .divider {
+    margin: 34px 0 24px;
+  }
+
+  .copyright {
+    font-size: 12px;
   }
 }
 

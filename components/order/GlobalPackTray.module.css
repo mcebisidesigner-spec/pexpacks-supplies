@@ -647,7 +647,7 @@
 }
 
 /* Mobile */
-@media (max-width: 760px) {
+@media (max-width: 520px) {
   .tray {
     width: 100%;
   }
