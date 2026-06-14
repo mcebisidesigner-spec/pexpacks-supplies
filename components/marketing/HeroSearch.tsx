@@ -143,6 +143,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                   key={school.slug}
                   href={`/schools/${school.slug}`}
                   className={styles.trendingCard}
+                  onClick={onResultClick}
                 >
                   {school.image ? (
                     <Image

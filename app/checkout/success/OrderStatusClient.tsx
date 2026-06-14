@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { OrderStatusResponse } from "@/types/orders";
+import { usePackTrayStore } from "@/store/usePackTrayStore";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import styles from "./OrderStatusClient.module.css";
 
@@ -141,22 +142,28 @@ export function OrderStatusClient({
     checkStatus();
   }, [checkStatus]);
 
+  const clearedTray = useRef(false);
+
+  useEffect(() => {
+    if (status?.status === "paid" && !clearedTray.current) {
+      clearedTray.current = true;
+      usePackTrayStore.getState().clearPacks();
+    }
+  }, [status]);
+
   const shareUrl = useMemo(() => {
-    const text = [
-      "I just sorted my child's stationery for Term 1 with Pexpacks.",
-      "No queues, no stress.",
-      `Check them out at ${typeof window !== "undefined" ? window.location.origin : "https://pexpacks.co.za"}`,
-    ].join(" ");
+    const site = typeof window !== "undefined" ? window.location.origin : "https://pexpacks.co.za";
+    const text = `Hey! I just sorted my child's school stationery with Pexpacks — no queues, no stress, and everything delivered. You should try them too! 👉 ${site}`;
     return `https://wa.me/?text=${encodeURIComponent(text)}`;
   }, []);
 
   const handleShare = useCallback(async () => {
+    const site = typeof window !== "undefined" ? window.location.origin : "https://pexpacks.co.za";
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({
           title: "Pexpacks – School Stationery Sorted",
-          text: "I just sorted my child's stationery for Term 1 with Pexpacks. No queues, no stress.",
-          url: typeof window !== "undefined" ? window.location.origin : "https://pexpacks.co.za",
+          text: `Hey! I just sorted my child's school stationery with Pexpacks — no queues, no stress, and everything delivered. You should try them too! 👉 ${site}`,
         });
         return;
       } catch {

@@ -462,6 +462,10 @@
   outline-offset: 2px;
 }
 
+.deliveryNotesField {
+  margin-top: 28px;
+}
+
 /* Fulfilment & Confirm Grid */
 .fulfilmentStep,
 .confirmGrid {
