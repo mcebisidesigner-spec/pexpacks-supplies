@@ -4,12 +4,12 @@
 }
 
 .actionRow {
-  display: flex;
+  display: grid;
   gap: 10px;
 }
 
 .actionRow > * {
-  flex: 1;
+  width: 100%;
   min-height: 40px;
 }
 
