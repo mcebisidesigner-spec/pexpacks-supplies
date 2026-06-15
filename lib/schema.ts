@@ -110,41 +110,28 @@ export function onlineStoreSchema() {
       },
     }));
 
-  const officeOffers = officePacks.map((pack) => ({
-    "@type": "Offer",
+  const officeProducts = officePacks.map((pack) => ({
+    "@type": "Product",
+    "@id": `${siteUrl}/office#${pack.slug}`,
     name: pack.name,
-    url: `${siteUrl}/office`,
+    url: `${siteUrl}/office#office-pack-types`,
+    brand: {
+      "@id": organizationId,
+    },
+    image: officePackImage,
     category: "Office stationery pack",
-    availability: "https://schema.org/InStock",
-    priceCurrency: pack.priceFrom > 0 ? "ZAR" : undefined,
-    priceSpecification:
-      pack.priceFrom > 0
-        ? {
-            "@type": "PriceSpecification",
-            minPrice: pack.priceFrom,
-            priceCurrency: "ZAR",
-          }
-        : undefined,
-    itemOffered: {
-      "@type": "Product",
+    description: pack.description,
+    sku: pack.id,
+    offers: {
+      "@type": "Offer",
       name: pack.name,
-      brand: {
+      url: `${siteUrl}/office#office-pack-types`,
+      availability: "https://schema.org/InStock",
+      priceCurrency: "ZAR",
+      price: pack.priceFrom,
+      itemCondition: "https://schema.org/NewCondition",
+      seller: {
         "@id": organizationId,
-      },
-      image: officePackImage,
-      category: "Office stationery pack",
-      description: pack.description,
-      offers: {
-        "@type": "Offer",
-        name: pack.name,
-        url: `${siteUrl}/office`,
-        availability: "https://schema.org/InStock",
-        priceCurrency: pack.priceFrom > 0 ? "ZAR" : undefined,
-        price: pack.priceFrom > 0 ? pack.priceFrom : undefined,
-        itemCondition: "https://schema.org/NewCondition",
-        seller: {
-          "@id": organizationId,
-        },
       },
     },
   }));
@@ -195,7 +182,7 @@ export function onlineStoreSchema() {
           name: "Office stationery packs",
           description:
             "Convenient office stationery packs for SMEs, home offices and admin teams.",
-          itemListElement: officeOffers,
+          itemListElement: officeProducts,
         },
         {
           "@type": "Offer",
