@@ -106,7 +106,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .helper {
     width: 100%;
     max-width: 100%;

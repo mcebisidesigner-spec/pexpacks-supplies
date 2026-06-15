@@ -469,17 +469,12 @@
 }
 
 .footerActions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 10px;
 }
 
-.footerActions > * {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
 .primaryButton {
+  width: 100%;
   min-height: 52px;
   border: 0;
   border-radius: var(--radius-pill);
@@ -521,6 +516,7 @@
 }
 
 .secondaryButton {
+  width: 100%;
   min-height: 48px;
   border: 1px solid var(--pex-border);
   border-radius: var(--radius-pill);
@@ -550,7 +546,7 @@
 
 .tertiaryButton {
   border: 0;
-  padding: 8px 16px;
+  padding: 8px;
   background: transparent;
   color: var(--pex-text-muted);
   font: inherit;
@@ -651,7 +647,7 @@
 }
 
 /* Mobile */
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .tray {
     width: 100%;
   }

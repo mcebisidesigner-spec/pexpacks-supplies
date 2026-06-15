@@ -419,7 +419,7 @@
   background: rgba(33, 158, 154, 0.08);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1080px) {
   .deckGrid {
     grid-template-columns: 1fr;
     min-height: 0;
@@ -447,7 +447,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 720px) {
   .deck {
     overflow: visible;
     border-radius: var(--radius-section);
@@ -508,7 +508,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 430px) {
   .deckTopbar {
     padding-inline: var(--gutter-mobile);
   }

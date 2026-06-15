@@ -407,7 +407,7 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 820px) {
   .audienceCards {
     flex-direction: column;
   }
@@ -422,7 +422,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .laybySpotlight {
     padding-inline: var(--gutter-mobile);
   }
@@ -675,7 +675,7 @@
   color: var(--pex-bg);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .accordionSection {
     padding-inline: var(--gutter-mobile);
   }
@@ -771,7 +771,7 @@
   stroke-linejoin: round;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 860px) {
   .howItWorks {
     padding-inline: var(--gutter-mobile);
   }
@@ -781,7 +781,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   .howItWorksStepDesc {
     display: none;
   }
@@ -811,7 +811,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 440px) {
   .howItWorksInner {
     flex-wrap: wrap;
     justify-content: center;
@@ -876,7 +876,7 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 860px) {
   .paymentRow {
     padding-inline: var(--gutter-mobile);
   }

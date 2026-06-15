@@ -171,7 +171,7 @@
   display: inline;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 820px) {
   .panel {
     grid-template-columns: 1fr;
     gap: 24px;

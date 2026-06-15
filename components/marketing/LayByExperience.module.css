@@ -626,7 +626,7 @@
   overflow: hidden;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .stepExperience,
   .timeline {
     grid-template-columns: 1fr;
@@ -641,7 +641,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 820px) {
   .introSection,
   .stepsSection,
   .detailsSection,
@@ -686,7 +686,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .faqActions {
     display: grid;
   }

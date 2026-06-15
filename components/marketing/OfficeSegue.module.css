@@ -117,7 +117,7 @@
   border: 1px solid var(--pex-border);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 820px) {
   .section {
     padding: var(--section-padding-y-tablet) 0;
   }

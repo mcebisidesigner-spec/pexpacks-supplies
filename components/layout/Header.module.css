@@ -375,7 +375,7 @@
   stroke-linejoin: round;
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1500px) {
   .logoLink img {
     width: 118px;
   }
@@ -394,7 +394,7 @@
   }
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1160px) {
   .headerInner {
     padding-inline: clamp(32px, 4vw, 48px);
   }
@@ -443,7 +443,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   :global(body.menu-open) .siteHeader {
     border-bottom-color: rgba(0, 0, 0, 0.06);
     background: #ffffff;
@@ -553,7 +553,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .siteHeader {
     --mobile-header-height: 84px;
   }

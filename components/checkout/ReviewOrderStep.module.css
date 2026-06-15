@@ -265,13 +265,13 @@
   font-weight: 800;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .reviewGrid {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 760px) {
   .schoolResults {
     left: 0;
     right: 0;

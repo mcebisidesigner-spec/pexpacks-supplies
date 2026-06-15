@@ -144,7 +144,7 @@
   box-shadow: var(--button-hover-shadow);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .link {
     min-height: var(--touch-target-min);
   }

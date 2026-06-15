@@ -41,7 +41,7 @@
   display: block;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .schoolHeroPanel {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 14px;
@@ -270,7 +270,7 @@
   text-decoration: underline;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .pexcoverBannerOuter {
     padding: 32px var(--gutter-mobile) 0;
   }
@@ -292,7 +292,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .pexcoverBannerOuter {
     padding: 24px var(--gutter-mobile) 0;
   }

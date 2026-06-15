@@ -1,4 +1,4 @@
-.actions {
+Ôªø.actions {
   display: grid;
   gap: 10px;
 }
@@ -342,7 +342,7 @@
   outline-offset: 3px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 760px) {
   .drawer {
     width: 100%;
   }
@@ -365,7 +365,7 @@
   }
 }
 
-/* ‘Ú…‘Ú…‘Ú… Actions Card Detail Layout (Prototype Redesign) ‘Ú…‘Ú…‘Ú… */
+/* √î√≤√â√î√≤√â√î√≤√â Actions Card Detail Layout (Prototype Redesign) √î√≤√â√î√≤√â√î√≤√â */
 
 .actionsCard {
   background: var(--pex-bg);
@@ -443,7 +443,7 @@
   color: var(--pex-keppel) !important;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .actionsCard {
     padding: 24px;
     gap: 20px;

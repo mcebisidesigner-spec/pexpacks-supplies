@@ -27,7 +27,7 @@
   display: none !important;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 820px) {
   .mobileHowItWorks {
     display: block !important;
     max-width: 100%;

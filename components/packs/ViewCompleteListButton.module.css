@@ -28,7 +28,7 @@
   color: var(--pex-primary);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .button {
     min-height: var(--touch-target-min);
   }

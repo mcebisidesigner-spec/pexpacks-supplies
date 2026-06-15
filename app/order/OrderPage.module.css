@@ -361,7 +361,7 @@
   line-height: 1.5;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 960px) {
   .container {
     grid-template-columns: 1fr;
     gap: 48px;
@@ -369,7 +369,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .container {
     padding: 0 var(--gutter-mobile);
   }

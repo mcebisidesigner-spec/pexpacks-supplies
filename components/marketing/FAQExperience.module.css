@@ -352,7 +352,7 @@
   box-shadow: var(--button-hover-shadow);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .inner {
     grid-template-columns: 1fr;
     padding-inline: var(--gutter-mobile);
@@ -367,7 +367,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 620px) {
   .categoryRail {
     grid-template-columns: 1fr;
   }

@@ -212,7 +212,7 @@
   background-color: #128C7E;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .widgetContainer {
     right: max(14px, env(safe-area-inset-right));
     bottom: max(14px, env(safe-area-inset-bottom));

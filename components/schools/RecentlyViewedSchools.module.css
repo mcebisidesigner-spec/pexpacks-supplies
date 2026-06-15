@@ -68,7 +68,7 @@
   stroke-linecap: round;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .recentGrid {
     grid-template-columns: 1fr;
   }

@@ -63,13 +63,13 @@
   border-color: var(--pex-keppel);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .packList {
     column-count: 2;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 760px) {
   .packList {
     column-count: 1;
     max-height: 380px;
