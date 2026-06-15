@@ -452,7 +452,8 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: clamp(8px, 2vw, 12px);
 }
 
 .footerTotalLabel {
@@ -580,12 +581,14 @@
 }
 
 .schoolChoiceButtons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .schoolChoiceButton {
+  flex: 1;
+  min-width: 140px;
   min-height: 44px;
   border: 1px solid var(--pex-border);
   border-radius: var(--radius-pill);
@@ -647,7 +650,7 @@
 }
 
 /* Mobile */
-@media (max-width: 520px) {
+@media (max-width: 480px) {
   .tray {
     width: 100%;
   }
@@ -658,10 +661,6 @@
 
   .footer {
     padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  }
-
-  .schoolChoiceButtons {
-    grid-template-columns: 1fr;
   }
 }
 

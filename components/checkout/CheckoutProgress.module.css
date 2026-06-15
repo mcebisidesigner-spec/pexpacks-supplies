@@ -98,7 +98,7 @@
   transition: width var(--motion-duration) var(--motion-ease);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .progress {
     display: none;
   }

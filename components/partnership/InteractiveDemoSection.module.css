@@ -516,7 +516,7 @@
   color: var(--pex-primary);
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
   .demoGrid {
     grid-template-columns: 1fr;
   }
@@ -527,7 +527,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .inner {
     padding-inline: var(--gutter-mobile);
   }
@@ -569,7 +569,7 @@
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .messageCard,
   .ctaCard {
     border-radius: 24px;

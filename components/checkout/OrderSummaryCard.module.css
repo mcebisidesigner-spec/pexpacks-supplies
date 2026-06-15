@@ -110,7 +110,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .summaryColumn {
     position: static;
   }
@@ -123,7 +123,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .summaryCard {
     --summary-card-pad: clamp(20px, 6vw, 28px);
     padding-bottom: 0;

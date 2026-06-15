@@ -38,12 +38,11 @@
 .contactDetails {
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 0;
   color: var(--pex-bg);
   font-style: normal;
-  white-space: nowrap;
 }
 
 .contactLink {
@@ -81,7 +80,7 @@
 .infoRow {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: clamp(12px, 2.5vw, 24px);
   flex-wrap: wrap;
   justify-content: flex-end;
   width: 100%;
@@ -333,14 +332,14 @@
   min-height: 48px;
 }
 
-@media (max-width: 1040px) {
+@media (max-width: 1024px) {
   .footerInner {
     padding-inline: var(--gutter-tablet);
   }
 
   .topSection {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: clamp(20px, 3vw, 28px);
   }
 
   .navGroup {
@@ -365,18 +364,13 @@
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .footerInner {
     padding-inline: var(--gutter-tablet);
   }
 
-  .contactDetails {
-    flex-wrap: wrap;
-    white-space: normal;
-  }
-
   .mainNav {
-    gap: 12px 0;
+    gap: clamp(8px, 1.5vw, 12px) 0;
   }
 
   .separator {
@@ -387,17 +381,12 @@
     grid-template-columns: 1fr;
   }
 
-  .bottomSection {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 14px;
-  }
-
   .socialNav {
     justify-content: flex-end;
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 480px) {
   .footerInner {
     padding: 38px var(--gutter-mobile) 34px;
   }
@@ -410,15 +399,8 @@
     width: var(--logo-width-mobile);
   }
 
-  .contactDetails {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
   .contactLink {
-    font-size: 13px;
+    font-size: clamp(13px, 3vw, 15px);
     font-weight: 700;
     overflow-wrap: anywhere;
   }
@@ -429,19 +411,15 @@
 
   .mainNav {
     width: 100%;
+    gap: 14px 22px;
   }
 
   .navLink {
-    font-size: 15px;
-  }
-
-  .separator {
-    margin-inline: 10px;
-    font-size: 15px;
+    font-size: clamp(15px, 4vw, 18px);
   }
 
   .policySummary {
-    font-size: 13px;
+    font-size: clamp(12px, 3vw, 13px);
     font-weight: 400;
   }
 
@@ -451,24 +429,13 @@
   }
 
   .infoRow {
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: flex-start;
     gap: 12px;
   }
 
-  .mainNav {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, auto));
-    justify-content: start;
-    gap: 14px 22px;
-  }
-
   .separator {
     display: none;
-  }
-
-  .navLink {
-    font-size: 18px;
   }
 
   .divider {
@@ -476,7 +443,7 @@
   }
 
   .copyright {
-    font-size: 12px;
+    font-size: clamp(11px, 2.5vw, 12px);
   }
 }
 

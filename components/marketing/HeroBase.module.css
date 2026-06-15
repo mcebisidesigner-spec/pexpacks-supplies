@@ -174,7 +174,7 @@
   color: rgba(255, 255, 255, 0.78);
 }
 
-@media (max-width: 820px) {
+@media (max-width: 768px) {
   .pageHero {
     padding: clamp(36px, 6vw, 52px) 0 clamp(44px, 8vw, 72px);
   }
@@ -184,13 +184,13 @@
   }
 
   .pageHero .pageLead {
-    font-size: 16px;
+    font-size: clamp(15px, 2.5vw, 16px);
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .pageHero .pageTitle {
-    font-size: clamp(28px, 8vw, 34px);
+    font-size: clamp(28px, 10vw, 34px);
   }
 }
 
@@ -264,7 +264,7 @@
   border-top: 1px solid var(--pex-border);
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1024px) {
   .heroInner,
   .pageHeroInner {
     grid-template-columns: 1fr;
@@ -283,7 +283,7 @@
   }
 }
 
-@media (max-width: 820px) {
+@media (max-width: 768px) {
   .heroInner,
   .pageHeroInner {
     padding-inline: var(--gutter-mobile);
@@ -358,7 +358,7 @@
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .pageTitle {
     font-size: clamp(30px, 12vw, 38px);
     line-height: 1.02;
@@ -376,11 +376,11 @@
   .heroLead,
   .pageLead {
     margin-top: 16px;
-    font-size: 16px;
+    font-size: clamp(15px, 4vw, 16px);
   }
 
   .brandBox strong {
-    font-size: 28px;
+    font-size: clamp(24px, 6vw, 28px);
   }
 }
 

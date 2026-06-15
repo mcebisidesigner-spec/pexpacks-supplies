@@ -3,7 +3,7 @@
   text-align: center;
 }
 
-@media (min-width: 861px) {
+@media (min-width: 1025px) {
   .pageHero {
     padding: 76px 0 58px;
   }
@@ -16,7 +16,7 @@
   padding-inline: var(--gutter-mobile);
 }
 
-@media (min-width: 861px) {
+@media (min-width: 1025px) {
   .pageHeroNarrow {
     padding-inline: var(--gutter-desktop);
   }
@@ -63,7 +63,7 @@
   gap: 12px;
 }
 
-@media (min-width: 861px) {
+@media (min-width: 1025px) {
   .notFoundActions {
     margin-top: 40px;
     display: flex;
@@ -104,7 +104,7 @@
   padding-inline: var(--gutter-mobile);
 }
 
-@media (min-width: 861px) {
+@media (min-width: 1025px) {
   .sectionInner {
     padding-inline: var(--gutter-desktop);
   }

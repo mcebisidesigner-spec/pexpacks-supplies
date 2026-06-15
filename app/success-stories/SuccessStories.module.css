@@ -155,7 +155,7 @@
   font-size: 14px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .storyCard {
     grid-template-columns: 1fr;
     gap: 32px;

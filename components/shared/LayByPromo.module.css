@@ -110,7 +110,7 @@
   color: var(--pex-navy);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .card {
     flex-direction: column;
     text-align: center;
