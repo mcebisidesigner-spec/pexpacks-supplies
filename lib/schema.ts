@@ -89,6 +89,24 @@ export function onlineStoreSchema() {
         image: schoolPackImage,
         category: `${pack.category} stationery pack`,
         description: pack.description,
+        offers: {
+          "@type": "Offer",
+          name: pack.name,
+          url: `${siteUrl}${pack.href}`,
+          availability: "https://schema.org/InStock",
+          priceCurrency: "ZAR",
+          priceSpecification: pack.priceLabel.startsWith("From R ")
+            ? {
+                "@type": "PriceSpecification",
+                minPrice: Number(pack.priceLabel.replace("From R ", "")),
+                priceCurrency: "ZAR",
+              }
+            : undefined,
+          itemCondition: "https://schema.org/NewCondition",
+          seller: {
+            "@id": organizationId,
+          },
+        },
       },
     }));
 
@@ -116,6 +134,18 @@ export function onlineStoreSchema() {
       image: officePackImage,
       category: "Office stationery pack",
       description: pack.description,
+      offers: {
+        "@type": "Offer",
+        name: pack.name,
+        url: `${siteUrl}/office`,
+        availability: "https://schema.org/InStock",
+        priceCurrency: pack.priceFrom > 0 ? "ZAR" : undefined,
+        price: pack.priceFrom > 0 ? pack.priceFrom : undefined,
+        itemCondition: "https://schema.org/NewCondition",
+        seller: {
+          "@id": organizationId,
+        },
+      },
     },
   }));
 
