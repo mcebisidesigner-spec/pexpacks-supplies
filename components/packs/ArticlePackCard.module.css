@@ -95,6 +95,25 @@
   min-width: 0;
 }
 
+.actionSlot > * {
+  display: grid;
+  gap: 10px;
+}
+
+.actionSlot > * > * {
+  min-width: 0;
+}
+
+.actionSlot > * > div {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px;
+}
+
+.actionSlot > * > div > * {
+  width: 100%;
+}
+
 @media (max-width: 768px) {
   .card {
     border-radius: 28px;
