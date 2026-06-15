@@ -365,7 +365,7 @@
   }
 }
 
-/* ÔòÉÔòÉÔòÉ Actions Card Detail Layout (Prototype Redesign) ÔòÉÔòÉÔòÉ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Actions Card Detail Layout (Prototype Redesign) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
 .actionsCard {
   background: var(--pex-bg);
@@ -444,6 +444,16 @@
 }
 
 @media (max-width: 480px) {
+  .actionRow {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .actionRow > * {
+    width: 100%;
+  }
+
   .actionsCard {
     padding: 24px;
     gap: 20px;
