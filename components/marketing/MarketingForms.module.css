@@ -86,7 +86,7 @@
   border-color: var(--form-control-hover-border);
 }
 
-.fileButton {
+.field .fileButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;

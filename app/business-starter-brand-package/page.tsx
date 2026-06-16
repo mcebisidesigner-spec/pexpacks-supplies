@@ -190,7 +190,7 @@ export default function BusinessStarterBrandPackagePage() {
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  A .co.za domain for your business is registered for free as part of this package.
+                  A .co.za domain for your business is registered for free as part of this package, subject to availability.
                 </p>
               </div>
             </div>
