@@ -62,6 +62,8 @@
 
 .field input[type="file"] {
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .fieldHint {

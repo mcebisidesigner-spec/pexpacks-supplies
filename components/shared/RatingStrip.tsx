@@ -4,7 +4,7 @@ type RatingStripProps = {
   text?: string;
 };
 
-export function RatingStrip({ text = "Five-star stationery for every learner" }: RatingStripProps) {
+export function RatingStrip({ text = "Five-star, every time" }: RatingStripProps) {
   return (
     <div className={styles.strip}>
       <span className={styles.stars} aria-hidden="true">★★★★★</span>
