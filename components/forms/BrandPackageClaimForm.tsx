@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { FormEvent } from "react";
+import type { FormEvent, ChangeEvent } from "react";
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
@@ -49,7 +49,18 @@ export function BrandPackageClaimForm() {
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [fileName, setFileName] = useState("No files chosen");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const names = Array.from(files).map((f) => f.name).join(", ");
+      setFileName(names);
+    } else {
+      setFileName("No files chosen");
+    }
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -319,24 +330,29 @@ export function BrandPackageClaimForm() {
             <input id="claimDeadline" name="deadline" placeholder="Flexible, 2 weeks, launch date..." />
           </label>
 
-          <label className={`${formStyles.field} ${formStyles.formWide}`} htmlFor="claimBrandAssets">
+          <div className={`${formStyles.field} ${formStyles.formWide}`}>
             <span>Upload sample branding files</span>
-            <input
-              id="claimBrandAssets"
-              ref={fileRef}
-              name="brandAssets"
-              type="file"
-              multiple
-              accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx,.ppt,.pptx,.svg"
-              {...errorAttributes(errors, "brandAssets")}
-            />
+            <label className={formStyles.fileUpload} htmlFor="claimBrandAssets">
+              <input
+                id="claimBrandAssets"
+                ref={fileRef}
+                name="brandAssets"
+                type="file"
+                multiple
+                accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx,.ppt,.pptx,.svg"
+                onChange={handleFileChange}
+                {...errorAttributes(errors, "brandAssets")}
+              />
+              <span className={formStyles.fileButton}>Choose files</span>
+              <span className={formStyles.fileName}>{fileName}</span>
+            </label>
             <small className={formStyles.fieldHint}>
               Optional. Upload up to 5 files, 5 MB each: logos, colour palettes,
               flyers, references, documents or screenshots. Files upload after the
               form is submitted.
             </small>
             <FieldError id="brandAssets-error" message={errors.brandAssets} />
-          </label>
+          </div>
 
           <label className={`${formStyles.field} ${formStyles.formWide}`} htmlFor="claimNotes">
             <span>Additional notes</span>

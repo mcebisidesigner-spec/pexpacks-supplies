@@ -61,9 +61,51 @@
 }
 
 .field input[type="file"] {
-  cursor: pointer;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fileUpload {
   display: flex;
   align-items: center;
+  gap: 10px;
+  min-height: var(--form-control-height);
+  border: var(--form-control-border);
+  border-radius: var(--form-control-radius);
+  padding: 0 var(--form-control-padding-x);
+  background: var(--form-control-bg);
+  cursor: pointer;
+  transition: var(--interactive-transition);
+}
+
+.fileUpload:hover {
+  border-color: var(--form-control-hover-border);
+}
+
+.fileButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px;
+  border-radius: var(--form-control-radius);
+  background: var(--pex-primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.fileName {
+  color: var(--form-control-placeholder);
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .fieldHint {

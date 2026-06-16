@@ -75,17 +75,17 @@ const brandPackageItems = [
   },
   {
     title: "Custom Business Cards",
-    text: "Printed cards for owners, staff, sales teams and customer handouts.",
+    text: "Digital business card design — printed copies charged separately.",
     Icon: CardIcon,
   },
   {
     title: "Marketing Flyers",
-    text: "Simple promotional flyers for launches, offers and local campaigns.",
+    text: "Digital flyer design — printed copies charged separately.",
     Icon: MegaphoneIcon,
   },
   {
     title: "Official Company Letterhead",
-    text: "A clean document style for quotes, invoices, proposals and notices.",
+    text: "Digital letterhead template — printed copies charged separately.",
     Icon: DocumentIcon,
   },
   {
@@ -182,21 +182,35 @@ export default function BusinessStarterBrandPackagePage() {
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
-          <div className={cardStyles.packCard}>
-            <div className={cardStyles.packCardHead}>
-              <p className={sectionStyles.sectionEyebrow}>Scope limits</p>
-              <h2>What&rsquo;s not included</h2>
+          <div className={sectionStyles.splitBand}>
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <p className={sectionStyles.sectionEyebrow}>What's included</p>
+                <h2>Free .co.za domain</h2>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  A .co.za domain for your business is registered for free as part of this package.
+                </p>
+              </div>
             </div>
-            <div className={cardStyles.packCardBody}>
-              <p className={cardStyles.packDescription}>
-                To keep the branding pack focused and affordable, the
-                following are quoted separately:
-              </p>
-              <ul style={{ margin: "16px 0", paddingLeft: "20px", lineHeight: "1.8" }}>
-                <li>E-commerce functionality on the website</li>
-                <li>Custom payment gateway or booking portal integration</li>
-                <li>Domain registration (initial .co.za domain depends on availability)</li>
-              </ul>
+
+            <div className={cardStyles.packCard}>
+              <div className={cardStyles.packCardHead}>
+                <p className={sectionStyles.sectionEyebrow}>Scope limits</p>
+                <h2>What&rsquo;s not included</h2>
+              </div>
+              <div className={cardStyles.packCardBody}>
+                <p className={cardStyles.packDescription}>
+                  To keep the branding pack focused and affordable, the
+                  following are quoted separately:
+                </p>
+                <ul style={{ margin: "16px 0", paddingLeft: "20px", lineHeight: "1.8" }}>
+                  <li>E-commerce functionality on the website</li>
+                  <li>Custom payment gateway or booking portal integration</li>
+                  <li>Printing of business cards, flyers, and letterhead</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
