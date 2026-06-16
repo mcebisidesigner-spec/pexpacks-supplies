@@ -78,7 +78,7 @@ const config: LegalDocumentConfig = {
         <ul>
           <li>School collection points where a school arrangement exists.</li>
           <li>Home delivery where the area and order qualify.</li>
-          <li>Office delivery for business or approved convenience use cases.</li>
+            <li>Business delivery for approved convenience use cases.</li>
           <li>Customer collection by prior arrangement.</li>
         </ul>
       ),

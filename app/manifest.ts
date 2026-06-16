@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Pexpacks Supplies",
     short_name: siteName,
     description:
-      "School and office stationery packs prepared for South African parents, schools, and SMEs.",
+      "School stationery packs prepared for South African parents and schools.",
     id: "/",
     start_url: "/",
     scope: "/",
@@ -54,10 +54,10 @@ export default function manifest(): MetadataRoute.Manifest {
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
       },
       {
-        name: "Office Packs",
-        short_name: "Office",
-        description: "View office stationery pack options.",
-        url: "/office",
+        name: "Branding Pack",
+        short_name: "Branding",
+        description: "Launch your business with a complete branding package.",
+        url: "/business-starter-brand-package",
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
       },
     ],

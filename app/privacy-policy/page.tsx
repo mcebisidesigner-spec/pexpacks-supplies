@@ -180,7 +180,7 @@ const config: LegalDocumentConfig = {
           </p>
           <p>We use this information to:</p>
           <ul>
-            <li>Process stationery and office supply orders</li>
+            <li>Process stationery and supply orders</li>
             <li>Provide Pexcover book-covering services</li>
             <li>Coordinate collection or delivery</li>
             <li>Manage school and business relationships</li>

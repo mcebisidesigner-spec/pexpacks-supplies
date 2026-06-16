@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
 export const metadata: Metadata = buildMetadata(
-  "Business Starter Brand Package | Pexpacks",
-  "Claim the Pexpacks Business Starter Brand Package and submit your business details, branding preferences and reference files.",
+  "Branding Pack | Pexpacks",
+  "Launch your business professionally for R5,500. CIPC registration, logo, business cards, flyers, letterhead and a 5-page website.",
   "/business-starter-brand-package"
 );
 
@@ -53,7 +54,20 @@ const WebsiteIcon = () => (
   </svg>
 );
 
+const CipcIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M9 12h6" />
+    <path d="M12 9v6" />
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+  </svg>
+);
+
 const brandPackageItems = [
+  {
+    title: "CIPC Registration",
+    text: "Company registration handled so your business is legally recognised from day one.",
+    Icon: CipcIcon,
+  },
   {
     title: "Professional Logo Design",
     text: "A practical visual identity your customers can recognise quickly.",
@@ -91,8 +105,8 @@ export default function BusinessStarterBrandPackagePage() {
   return (
     <>
       <PageHero
-        eyebrow="Starter package"
-        title="Claim your brand package"
+        eyebrow="Branding pack"
+        title="Launch Your Business Professionally for R5,500"
         panelText="Package value"
         panelTitle="Complete physical and digital branding for R5,500.00."
       />
@@ -105,11 +119,11 @@ export default function BusinessStarterBrandPackagePage() {
           <div className={sectionStyles.brandPackagePanel}>
             <div className={sectionStyles.brandPackageCopy}>
               <p className={sectionStyles.sectionEyebrow}>What's included</p>
-              <h2 id="brand-package-heading">Everything in the package</h2>
+              <h2 id="brand-package-heading">Your complete branding kit</h2>
               <p>
-                Launch with a professional identity. Pexpacks prepares your
-                essential physical and digital branding in one focused starter
-                package.
+                Launch with a professional identity. Pexpacks handles your
+                company registration, visual branding and essential print and
+                digital assets in one focused starter package.
               </p>
               <div className={sectionStyles.brandPackagePrice}>
                 <span>Complete package</span>
@@ -162,6 +176,28 @@ export default function BusinessStarterBrandPackagePage() {
                 ))}
               </ol>
             </aside>
+          </div>
+        </div>
+      </section>
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <div className={cardStyles.packCard}>
+            <div className={cardStyles.packCardHead}>
+              <p className={sectionStyles.sectionEyebrow}>Scope limits</p>
+              <h2>What&rsquo;s not included</h2>
+            </div>
+            <div className={cardStyles.packCardBody}>
+              <p className={cardStyles.packDescription}>
+                To keep the branding pack focused and affordable, the
+                following are quoted separately:
+              </p>
+              <ul style={{ margin: "16px 0", paddingLeft: "20px", lineHeight: "1.8" }}>
+                <li>E-commerce functionality on the website</li>
+                <li>Custom payment gateway or booking portal integration</li>
+                <li>Domain registration (initial .co.za domain depends on availability)</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>

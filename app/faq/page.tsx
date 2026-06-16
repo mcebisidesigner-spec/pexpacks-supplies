@@ -13,7 +13,7 @@ import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Frequently Asked Questions",
-  "Answers to common questions about Pexpacks school stationery packs, office packs, delivery, payment and partnerships.",
+  "Answers to common questions about Pexpacks school stationery packs, delivery, payment and partnerships.",
   "/faq"
 );
 
@@ -33,7 +33,7 @@ export default function FAQPage() {
       <CTASection
         eyebrow="Still stuck?"
         title="Send the team the details."
-        text="Tell us the school, grade, order or office request and Pexpacks will help you choose the next step."
+        text="Tell us the school, grade, or order and Pexpacks will help you choose the next step."
         primaryHref="/contact"
         primaryLabel="Contact Pexpacks"
         secondaryHref="/schools"
@@ -50,7 +50,7 @@ export default function FAQPage() {
               </p>
               <div className={sectionStyles.buttonRow}>
                 <Button href="/schools" variant="primary">Find Your School Pack</Button>
-                <Button href="/office" variant="white">View Office Packs</Button>
+                <Button href="/business-starter-brand-package" variant="white">View Branding Pack</Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>

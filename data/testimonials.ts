@@ -38,15 +38,6 @@ export const testimonials: Testimonial[] = [
       "Pexpacks is a game changer for parents. I was able to order everything my daughter needed for school from the comfort of my home and everything was packed clearly and ready before the first day of school.",
   },
   {
-    id: "david-jacobs",
-    name: "David Jacobs",
-    role: "SME Owner",
-    context: "Home office supplies",
-    rating: 5,
-    quote:
-      "The office stationery pack helped me restock quickly without wasting time searching for individual items.",
-  },
-  {
     id: "mpoh-pitso",
     name: "Mpoh Pitso",
     role: "School Administrator",

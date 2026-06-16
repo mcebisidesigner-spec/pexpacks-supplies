@@ -15,7 +15,6 @@ const categories = [
   "Orders",
   "Delivery",
   "Payment",
-  "Office",
   "Schools",
 ] as const;
 
@@ -34,7 +33,7 @@ const quickPaths = [
   },
   {
     label: "Talk to Pexpacks",
-    text: "Still stuck? Send the team your school, grade, or office request.",
+    text: "Still stuck? Send the team your school or grade details.",
     href: "/contact",
   },
 ];

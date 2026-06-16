@@ -18,7 +18,7 @@ import { EFFECTIVE_DATE } from "@/lib/constants";
 
 export const metadata: Metadata = buildMetadata(
   "Terms of Use",
-  "Read the Pexpacks Supplies terms of use for school stationery packs, office packs, Pexcover services, online ordering, delivery, and customer support.",
+  "Read the Pexpacks Supplies terms of use for school stationery packs, Pexcover services, online ordering, delivery, and customer support.",
   "/terms"
 );
 
@@ -28,7 +28,7 @@ const config: LegalDocumentConfig = {
   route: "/terms",
   pageTitle: "Terms of Use",
   metaDescription:
-    "Read the Pexpacks Supplies terms of use for school stationery packs, office packs, Pexcover services, online ordering, delivery, and customer support.",
+  "Read the Pexpacks Supplies terms of use for school stationery packs, Pexcover services, online ordering, delivery, and customer support.",
   heroEyebrow: "Website terms of use",
   heroTitle: "Clear terms for ordering and using Pexpacks online",
   heroText:
@@ -171,7 +171,7 @@ const config: LegalDocumentConfig = {
       eyebrow: "5 - 9",
       title: "Products and services we offer",
       summary:
-        "Pexpacks serves schools, parents, learners, SMEs, offices, and households through organised supply and support services.",
+        "Pexpacks serves schools, parents, learners, and households through organised supply and support services.",
       content: (
         <>
           <p>Pexpacks may provide products and services including:</p>
@@ -182,9 +182,9 @@ const config: LegalDocumentConfig = {
               Pexcover book covering, labelling, sorting, and pack preparation
             </li>
             <li>
-              Office stationery packs, SME packs, and convenience packs
+              Branding packs, SME packs, and convenience packs
             </li>
-            <li>Bulk supply solutions for schools and offices</li>
+            <li>Bulk supply solutions for schools</li>
             <li>
               Online quote requests, online order submissions, and order
               management support
@@ -281,7 +281,7 @@ const config: LegalDocumentConfig = {
           </ul>
           <h3>SME packs and business support services</h3>
           <p>
-            Where Pexpacks provides office packs, branding services, business
+            Where Pexpacks provides branding packages, business
             setup support, or a standard website or web app package, the exact
             scope, revisions, exclusions, ownership terms, and timelines must be
             confirmed in a written quotation, invoice, or service agreement.

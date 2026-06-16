@@ -21,7 +21,7 @@ import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Contact",
-  "Contact Pexpacks for school stationery orders, office pack enquiries, school partnerships and supplier enquiries.",
+  "Contact Pexpacks for school stationery orders, school partnerships and supplier enquiries.",
   "/contact",
 );
 
@@ -44,8 +44,8 @@ function resolveContactPrefill(
   const businessName = firstValue(params.businessName).trim();
 
   const initialEnquiryType =
-    type === "office"
-      ? "Office pack"
+    type === "branding" || type === "business"
+      ? "Branding pack"
       : type === "bulk" || type === "quote"
         ? "Bulk order"
         : type === "partner" || type === "school-partnership"
@@ -67,7 +67,7 @@ function resolveContactPrefill(
     initialEnquiryType,
     initialMessage,
     initialBusinessName:
-      businessName || (initialEnquiryType === "Office pack" ? subject : ""),
+      businessName || (initialEnquiryType === "Branding pack" ? subject : ""),
   };
 }
 
@@ -126,7 +126,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                   </span>
                 </div>
                 <div className={pageStyles.slaCard}>
-                  <span className={pageStyles.slaTitle}>Office/Quotes</span>
+                  <span className={pageStyles.slaTitle}>Branding/Quotes</span>
                   <h3 className={pageStyles.slaTime}>&lt; 4 Hours</h3>
                   <span className={pageStyles.slaLabel}>
                     Custom line-item quotation prepared.

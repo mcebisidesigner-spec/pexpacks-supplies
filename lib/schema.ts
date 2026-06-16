@@ -5,7 +5,6 @@ import {
   internationalPhoneNumber,
   ordersEmail,
 } from "@/data/contact";
-import { officePacks } from "@/data/officePacks";
 import { featuredPacks } from "@/data/packs";
 import { brandLogoUrls } from "@/lib/brand-assets";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -17,7 +16,6 @@ const websiteId = `${siteUrl}/#website`;
 const catalogId = `${siteUrl}/#stationery-pack-catalog`;
 const schoolPackImage = `${siteUrl}/images/hero-school-delivery.webp`;
 const productPackImage = `${siteUrl}/images/unboxing-G7.webp`;
-const officePackImage = `${siteUrl}/images/office-packs.webp`;
 
 const productAvailability = {
   "in-stock": "https://schema.org/InStock",
@@ -37,7 +35,7 @@ export function organizationSchema() {
     image: schoolPackImage,
     slogan: "Save time, Pex it.",
     description:
-      "Pexpacks Supplies prepares exclusive school stationery packs, standard grade combos, office stationery packs and convenience-driven pack services for South African parents, schools and SMEs.",
+      "Pexpacks Supplies prepares exclusive school stationery packs, standard grade combos, and convenience-driven pack services for South African parents and schools.",
     areaServed: {
       "@type": "Country",
       name: "South Africa",
@@ -110,32 +108,6 @@ export function onlineStoreSchema() {
       },
     }));
 
-  const officeProducts = officePacks.map((pack) => ({
-    "@type": "Product",
-    "@id": `${siteUrl}/office#${pack.slug}`,
-    name: pack.name,
-    url: `${siteUrl}/office#office-pack-types`,
-    brand: {
-      "@id": organizationId,
-    },
-    image: officePackImage,
-    category: "Office stationery pack",
-    description: pack.description,
-    sku: pack.id,
-    offers: {
-      "@type": "Offer",
-      name: pack.name,
-      url: `${siteUrl}/office#office-pack-types`,
-      availability: "https://schema.org/InStock",
-      priceCurrency: "ZAR",
-      price: pack.priceFrom,
-      itemCondition: "https://schema.org/NewCondition",
-      seller: {
-        "@id": organizationId,
-      },
-    },
-  }));
-
   return {
     "@context": "https://schema.org",
     "@type": "OnlineStore",
@@ -143,23 +115,21 @@ export function onlineStoreSchema() {
     name: siteName,
     url: siteUrl,
     logo: brandLogoUrls.default,
-    image: [schoolPackImage, productPackImage, officePackImage],
+    image: [schoolPackImage, productPackImage],
     telephone: `+${internationalPhoneNumber}`,
     email: generalEmail,
     parentOrganization: {
       "@id": organizationId,
     },
-    additionalType: "https://schema.org/OfficeEquipmentStore",
     areaServed: {
       "@type": "Country",
       name: "South Africa",
     },
     description:
-      "Online supplier of exclusive school stationery packs, grade-specific school-list packs, standard school combos and practical office stationery packs.",
+      "Online supplier of exclusive school stationery packs and grade-specific school-list packs.",
     knowsAbout: [
       "school stationery packs",
       "grade-specific stationery lists",
-      "office stationery packs",
       "book covering add-ons",
       "school stationery fulfilment",
     ],
@@ -168,7 +138,7 @@ export function onlineStoreSchema() {
       "@id": catalogId,
       name: "Pexpacks stationery pack catalog",
       description:
-        "A catalog of school stationery packs, standard grade packs, office stationery packs and pack preparation services.",
+        "A catalog of school stationery packs, standard grade packs, and pack preparation services.",
       itemListElement: [
         {
           "@type": "OfferCatalog",
@@ -176,13 +146,6 @@ export function onlineStoreSchema() {
           description:
             "Exclusive and grade-specific stationery packs prepared according to school lists.",
           itemListElement: schoolOffers,
-        },
-        {
-          "@type": "OfferCatalog",
-          name: "Office stationery packs",
-          description:
-            "Convenient office stationery packs for SMEs, home offices and admin teams.",
-          itemListElement: officeProducts,
         },
         {
           "@type": "Offer",

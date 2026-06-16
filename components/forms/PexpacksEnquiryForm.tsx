@@ -28,13 +28,13 @@ type PexpacksEnquiryFormProps = {
 const contactOptions = [
   "Parent order",
   "School partnership",
-  "Office pack",
+  "Branding pack",
   "Bulk order",
   "Supplier partnership",
   "General enquiry",
 ];
 
-const partnerOptions = ["School", "Supplier", "Office stationery partner"];
+const partnerOptions = ["School", "Supplier", "Partner"];
 type ContactOption = (typeof contactOptions)[number];
 
 const consentText =
@@ -42,7 +42,7 @@ const consentText =
 
 function resolveContactFormType(enquiryType: string): FormType {
   if (enquiryType === "Parent order") return "school-pack-enquiry";
-  if (enquiryType === "Office pack") return "office-pack-enquiry";
+  if (enquiryType === "Branding pack") return "brand-package-enquiry";
   if (enquiryType === "Bulk order") return "bulk-order";
   if (enquiryType === "School partnership") return "school-partnership";
   return "contact";
@@ -104,8 +104,8 @@ export function PexpacksEnquiryForm({
   const isContact = mode === "contact";
   const showSchoolFields =
     isContact && ["Parent order", "School partnership"].includes(enquiryType);
-  const showOfficeFields =
-    isContact && ["Office pack", "Bulk order"].includes(enquiryType);
+  const showBrandingFields =
+    isContact && ["Branding pack", "Bulk order"].includes(enquiryType);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -314,12 +314,12 @@ export function PexpacksEnquiryForm({
             </>
           ) : null}
 
-          {showOfficeFields ? (
+          {showBrandingFields ? (
             <>
-              <label className={formStyles.field} htmlFor="enqOfficeBusinessName">
+              <label className={formStyles.field} htmlFor="enqBrandingBusinessName">
                 <span>Business name</span>
                 <input
-                  id="enqOfficeBusinessName"
+                  id="enqBrandingBusinessName"
                   name="businessName"
                   placeholder="Business name"
                   autoComplete="organization"

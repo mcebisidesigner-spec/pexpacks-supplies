@@ -368,8 +368,8 @@ export default async function BlogPostPage({
                 <Link href="/faq" className={styles.postKnowledgePill}>
                   Frequently asked questions
                 </Link>
-                <Link href="/office" className={styles.postKnowledgePill}>
-                  Office & business packs
+                <Link href="/business-starter-brand-package" className={styles.postKnowledgePill}>
+                  Branding pack
                 </Link>
                 <Link href="/partnership" className={styles.postKnowledgePill}>
                   School partnerships
@@ -430,18 +430,14 @@ export default async function BlogPostPage({
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.splitBand}>
             <div>
-              <p className={sectionStyles.sectionEyebrow}>Need office stationery?</p>
-              <h2>Business supplies</h2>
+              <p className={sectionStyles.sectionEyebrow}>Start a business?</p>
+              <h2>Branding pack</h2>
               <p>
-                Pexpacks prepares practical office packs for SMEs, home
-                offices, and small teams with custom quotes and bulk pricing.
+                Launch your business professionally with a complete branding package — CIPC registration, logo, business cards, flyers, letterhead and a 5-page website.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/office" variant="primary">
-                  View Office Packs
-                </Button>
-                <Button href="/office#contact-enquiry" variant="white">
-                  Request a Quote
+                <Button href="/business-starter-brand-package" variant="primary">
+                  View Branding Pack
                 </Button>
               </div>
             </div>

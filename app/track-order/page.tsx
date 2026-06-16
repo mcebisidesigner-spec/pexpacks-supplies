@@ -42,11 +42,11 @@ export default function TrackOrderPage() {
       <CTASection
         eyebrow="Need another?"
         title="Start your order"
-        text="Find your school pack or browse office stationery options for your business."
+        text="Find your school pack or launch your business with a complete branding package."
         primaryHref="/schools"
         primaryLabel="Find School Packs"
-        secondaryHref="/office"
-        secondaryLabel="View Office Packs"
+        secondaryHref="/business-starter-brand-package"
+        secondaryLabel="View Branding Pack"
       />
 
       <section className={sectionStyles.section}>
@@ -69,7 +69,7 @@ export default function TrackOrderPage() {
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  Ready to order? Find your school pack or browse office stationery options.
+                  Ready to order? Find your school pack or launch your business with a complete branding package.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>

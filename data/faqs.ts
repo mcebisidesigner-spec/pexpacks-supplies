@@ -1,6 +1,6 @@
 export type FAQ = {
   id: string;
-  category: "School packs" | "Orders" | "Delivery" | "Payment" | "Office" | "Schools";
+  category: "School packs" | "Orders" | "Delivery" | "Payment" | "Schools";
   question: string;
   answer: string;
   links?: {
@@ -79,28 +79,7 @@ export const faqs: FAQ[] = [
       { label: "School partnership terms", href: "/school-partnership-terms" },
     ],
   },
-  {
-    id: "sme-office-packs",
-    category: "Office",
-    question: "Do you supply SME office stationery packs?",
-    answer:
-      "Yes. Pexpacks supplies practical office stationery packs for SMEs, teachers, tutors and home-office buyers.",
-    links: [
-      { label: "Office packs", href: "/office" },
-      { label: "Request a quote", href: "/office#contact-enquiry" },
-    ],
-  },
-  {
-    id: "custom-office-quote",
-    category: "Office",
-    question: "Can I request a custom office quote?",
-    answer:
-      "Yes. Use the office pack or contact enquiry route and include your business name, quantity and stationery requirements.",
-    links: [
-      { label: "Request a quote", href: "/office#contact-enquiry" },
-      { label: "Office packs", href: "/office" },
-    ],
-  },
+
   {
     id: "payment-flow",
     category: "Payment",
@@ -212,17 +191,6 @@ export const faqs: FAQ[] = [
     links: [
       { label: "School partnership", href: "/partnership" },
       { label: "Partnership terms", href: "/school-partnership-terms" },
-    ],
-  },
-  {
-    id: "bulk-office-orders",
-    category: "Office",
-    question: "Can businesses order in bulk?",
-    answer:
-      "Yes. Businesses, tutors, teachers, and offices can request bulk quantities or a custom stationery quote based on their team size and recurring needs.",
-    links: [
-      { label: "Office packs", href: "/office" },
-      { label: "Request a quote", href: "/office#contact-enquiry" },
     ],
   },
 ];

@@ -74,7 +74,7 @@ export const blogPosts: BlogPost[] = [
     date: "2023-11-20",
     author: "Riya Patel",
     category: "Education",
-    image: "/images/office-packs.webp",
+    image: "/images/hero-school-delivery.webp",
   },
   {
     id: "4",

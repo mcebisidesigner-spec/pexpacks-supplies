@@ -116,16 +116,16 @@ export default function SuccessStoriesPage() {
             </div>
             <div className={cardStyles.packCard}>
               <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Need office supplies?</h3>
+                <h3 style={{ fontSize: "20px" }}>Start a business?</h3>
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  Pexpacks also supplies practical office stationery for SMEs, home offices, and small teams.
+                  Launch your business professionally with a complete branding package — CIPC registration, logo, business cards, flyers, letterhead and a 5-page website.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/office" className={cardStyles.cardLink}>
-                  View office packs &rarr;
+                <Link href="/business-starter-brand-package" className={cardStyles.cardLink}>
+                  View branding pack &rarr;
                 </Link>
               </div>
             </div>

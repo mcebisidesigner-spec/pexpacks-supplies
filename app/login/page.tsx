@@ -85,8 +85,8 @@ export default function LoginPage() {
         text="Search for your child's school and grade to get the exact stationery pack delivered."
         primaryHref="/schools"
         primaryLabel="Find School Pack"
-        secondaryHref="/office"
-        secondaryLabel="View Office Packs"
+        secondaryHref="/business-starter-brand-package"
+        secondaryLabel="View Branding Pack"
       />
 
       <section className={sectionStyles.section}>
@@ -96,7 +96,7 @@ export default function LoginPage() {
               <p className={sectionStyles.sectionEyebrow}>Need more help?</p>
               <h2>Get in touch</h2>
               <p>
-                Contact the Pexpacks team for order assistance, school enquiries, or office pack quotes.
+                Contact the Pexpacks team for order assistance or school enquiries.
               </p>
               <div className={sectionStyles.buttonRow}>
                 <Button href="/contact" variant="primary">Contact Us</Button>
@@ -105,16 +105,16 @@ export default function LoginPage() {
             </div>
             <div className={cardStyles.packCard}>
               <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Office supplies</h3>
+                <h3 style={{ fontSize: "20px" }}>Branding pack</h3>
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  Pexpacks also prepares practical office stationery packs for SMEs, home offices, and small teams.
+                  Launch your business with a complete branding package — CIPC registration, logo, business cards, flyers, letterhead and a 5-page website.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/office" className={cardStyles.cardLink}>
-                  View office packs &rarr;
+                <Link href="/business-starter-brand-package" className={cardStyles.cardLink}>
+                  View branding pack &rarr;
                 </Link>
               </div>
             </div>

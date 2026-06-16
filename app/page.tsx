@@ -4,7 +4,6 @@ import { SectionHeader } from '@/components/marketing/SectionHeader'
 import { HeroSearch } from '@/components/marketing/HeroSearch'
 import { ConciergeSection } from '@/components/marketing/ConciergeSection'
 import { SuperpowerSection } from '@/components/marketing/SuperpowerSection'
-import { OfficeSegue } from '@/components/marketing/OfficeSegue'
 import { FaqMarquee } from '@/components/shared/FaqMarquee'
 import { TestimonialMarquee } from '@/components/shared/TestimonialMarquee'
 import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
@@ -180,8 +179,6 @@ export default function HomePage() {
           <TestimonialMarquee items={testimonials} />
         </div>
       </section>
-
-      <OfficeSegue />
 
       <FaqMarquee
         faqs={faqs.filter((f) =>

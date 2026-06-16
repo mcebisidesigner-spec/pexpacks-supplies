@@ -4,7 +4,7 @@ export const siteName = "Pexpacks";
 export const siteUrl = "https://pexpacks.co.za";
 export const defaultOgImage = `${siteUrl}/opengraph-image.jpg`;
 export const defaultTwitterImage = `${siteUrl}/twitter-image.jpg`;
-export const defaultImageAlt = "Pexpacks school and office stationery packs";
+export const defaultImageAlt = "Pexpacks school stationery packs";
 
 function canonicalUrl(path = "/") {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
@@ -26,7 +26,6 @@ export function buildMetadata(
   const baseKeywords = [
     "Pexpacks",
     "school stationery packs",
-    "office supply packs",
     "South Africa",
     "grade specific school supplies",
     "online stationery shop",

@@ -1,7 +1,7 @@
 type Pack = {
   id: string;
   name: string;
-  category: "School" | "Office" | "Pexpacks";
+  category: "School" | "Pexpacks";
   subcategory?: string;
   description: string;
   bestFor: string;
@@ -41,33 +41,12 @@ export const whyChoosePexpacks = [
     text: "Where required by the school, correct exercise books are packed ready for learners.",
   },
   {
-    title: "SME office support",
-    text: "Office packs provide practical stationery for small businesses without wasting time.",
+    title: "Business branding support",
+    text: "Our branding package helps new businesses launch professionally with logo design, print materials, and a starter website.",
   },
 ];
 
-export const featuredPacks: Pack[] = [
-  {
-    id: "office-stationery-pack",
-    name: "Office Stationery Pack",
-    category: "Office",
-    subcategory: "Office",
-    description:
-      "For SMEs and home offices that need reliable stationery, admin supplies, files, paper, pens, and monthly restock support.",
-    bestFor: "SMEs and home offices",
-    includes: [
-      "Notebooks",
-      "Pens",
-      "Sticky notes",
-      "Folders",
-      "Correction tape",
-      "Desk basics",
-    ],
-    priceLabel: "Request quote",
-    cta: "Order This Pack",
-    href: "/office",
-  },
-];
+export const featuredPacks: Pack[] = [];
 
 export const homepagePacks: Pack[] = [];
 

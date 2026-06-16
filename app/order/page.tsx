@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Order a Custom Pack | Pexpacks",
-  description: "Upload your school or office stationery list and we will send you a custom quote.",
+  description: "Upload your school stationery list and we will send you a custom quote.",
 };
 
 const WHATSAPP_NUMBER = "27780036048"; // Standard Pexpacks number, can be changed later

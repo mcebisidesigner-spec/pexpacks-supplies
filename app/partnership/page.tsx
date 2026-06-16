@@ -278,13 +278,13 @@ export default function PartnerWithSchoolsPage() {
           <div className={sectionStyles.splitBand}>
             <div>
               <p className={sectionStyles.sectionEyebrow}>Explore more</p>
-              <h2>Find school packs &amp; office supplies</h2>
+              <h2>Find school packs &amp; branding</h2>
               <p>
-                Pexpacks prepares stationery for every grade and workplace. Search your school or browse our office range.
+                Pexpacks prepares stationery for every grade. Search your school or launch your business with a complete branding package.
               </p>
               <div className={sectionStyles.buttonRow}>
                 <Button href="/schools" variant="primary">Find School Packs</Button>
-                <Button href="/office" variant="white">View Office Packs</Button>
+                <Button href="/business-starter-brand-package" variant="white">View Branding Pack</Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>
