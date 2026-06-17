@@ -1,21 +1,16 @@
 .banner {
-  position: relative;
+  position: fixed;
+  top: var(--header-height-desktop);
+  left: 0;
+  right: 0;
   background: var(--pex-coral);
   color: #fff;
   text-align: center;
-  padding: calc(10px + var(--header-height-mobile)) 48px 10px 16px;
+  padding: 10px 48px 10px 16px;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.4;
   z-index: 99;
-  margin-top: calc(-1 * var(--header-height-mobile));
-}
-
-@media (min-width: 1024px) {
-  .banner {
-    padding-top: calc(10px + var(--header-height-desktop));
-    margin-top: calc(-1 * var(--header-height-desktop));
-  }
 }
 
 .banner a {
@@ -63,6 +58,12 @@
 
 .closeBtn:hover {
   background: rgba(255, 255, 255, 0.35);
+}
+
+@media (max-width: 1024px) {
+  .banner {
+    top: var(--header-height-mobile);
+  }
 }
 
 @media (max-width: 600px) {

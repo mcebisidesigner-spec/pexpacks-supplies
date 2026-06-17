@@ -211,12 +211,12 @@ button:disabled {
 .site-main {
   flex: 1;
   background: var(--pex-bg);
-  padding-top: var(--header-height-mobile);
+  padding-top: calc(var(--header-height-mobile) + 34px);
 }
 
 @media (min-width: 1024px) {
   .site-main {
-    padding-top: var(--header-height-desktop);
+    padding-top: calc(var(--header-height-desktop) + 34px);
   }
 }
 

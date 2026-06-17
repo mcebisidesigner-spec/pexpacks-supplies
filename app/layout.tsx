@@ -127,9 +127,9 @@ export default function RootLayout({
         <JsonLd data={organizationSchema()} />
         <JsonLd data={onlineStoreSchema()} />
         <JsonLd data={websiteSchema()} />
+        <WaitlistBanner />
         <div className="site-shell">
           <Header />
-          <WaitlistBanner />
           <main id="site-main" className="site-main">
             {children}
           </main>
