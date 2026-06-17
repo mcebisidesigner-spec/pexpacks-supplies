@@ -38,33 +38,30 @@
 
 .closeBtn {
   position: absolute;
-  top: 50%;
+  top: 0;
+  bottom: 0;
   right: 12px;
-  transform: translateY(-50%);
+  margin: auto 0;
   width: 28px;
   height: 28px;
   border: none;
   border-radius: 50%;
-  background: var(--pex-navy);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--pex-navy);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   transition: background 0.2s;
   padding: 0;
-  flex-shrink: 0;
 }
 
 .closeBtn:hover {
-  background: var(--pex-primary-dark);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .closeBtn svg {
   width: 14px;
   height: 14px;
-  display: block;
-  flex-shrink: 0;
 }
 
 @media (max-width: 1024px) {
