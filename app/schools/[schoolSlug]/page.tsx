@@ -145,7 +145,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <div className={styles.unpartneredCardBody}>
             <span className={styles.unpartneredBadge}>Not yet an official partner</span>
             <h2 className={styles.unpartneredCardTitle}>
-              {school.name} isn&apos;t partnered with Pexpacks yet.
+              {school.name}{' '}isn&apos;t partnered with Pexpacks yet.
             </h2>
             <p className={styles.unpartneredCardText}>
               You can still order — upload your child&apos;s stationery list and we&apos;ll pack it for you.
