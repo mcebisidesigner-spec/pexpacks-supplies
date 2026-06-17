@@ -6,19 +6,40 @@ import styles from "./WaitlistBanner.module.css";
 
 const STORAGE_KEY = "pex-waitlist-banner-dismissed";
 
+function isDismissed(): boolean {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return false;
+    const dismissedAt = parseInt(stored, 10);
+    if (isNaN(dismissedAt)) return false;
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    return Date.now() - dismissedAt < sevenDays;
+  } catch {
+    return false;
+  }
+}
+
 export function WaitlistBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const dismissed = localStorage.getItem(STORAGE_KEY);
-    if (!dismissed) {
+    if (!isDismissed()) {
       setVisible(true);
+      document.documentElement.classList.add("has-waitlist-banner");
     }
+    return () => {
+      document.documentElement.classList.remove("has-waitlist-banner");
+    };
   }, []);
 
   function handleDismiss() {
     setVisible(false);
-    localStorage.setItem(STORAGE_KEY, "1");
+    document.documentElement.classList.remove("has-waitlist-banner");
+    try {
+      localStorage.setItem(STORAGE_KEY, String(Date.now()));
+    } catch {
+      // localStorage unavailable
+    }
   }
 
   if (!visible) return null;
