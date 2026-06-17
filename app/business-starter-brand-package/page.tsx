@@ -7,7 +7,7 @@ import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
 export const metadata: Metadata = buildMetadata(
-  "Branding Pack | Pexpacks",
+  "BrandPack | Pexpacks",
   "Launch your business professionally for R5,500. CIPC registration, logo, business cards, flyers, letterhead and a 5-page website.",
   "/business-starter-brand-package"
 );
@@ -118,7 +118,7 @@ export default function BusinessStarterBrandPackagePage() {
   return (
     <>
       <PageHero
-        eyebrow="Branding pack"
+            eyebrow="BrandPack"
         title="Launch Your Business Professionally for R5,500"
         panelText="Package value"
         panelTitle="Complete physical and digital branding for R5,500.00."

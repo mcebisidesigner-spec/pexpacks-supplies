@@ -50,7 +50,7 @@ export default function FAQPage() {
               </p>
               <div className={sectionStyles.buttonRow}>
                 <Button href="/schools" variant="primary">Find Your School Pack</Button>
-                <Button href="/business-starter-brand-package" variant="white">View Branding Pack</Button>
+                <Button href="/business-starter-brand-package" variant="white">View BrandPack</Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>

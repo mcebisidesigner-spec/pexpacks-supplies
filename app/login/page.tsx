@@ -86,7 +86,7 @@ export default function LoginPage() {
         primaryHref="/schools"
         primaryLabel="Find School Pack"
         secondaryHref="/business-starter-brand-package"
-        secondaryLabel="View Branding Pack"
+        secondaryLabel="View BrandPack"
       />
 
       <section className={sectionStyles.section}>
@@ -105,7 +105,7 @@ export default function LoginPage() {
             </div>
             <div className={cardStyles.packCard}>
               <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Branding pack</h3>
+                <h3 style={{ fontSize: "20px" }}>BrandPack</h3>
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
@@ -114,7 +114,7 @@ export default function LoginPage() {
               </div>
               <div className={cardStyles.packCardButtonWrap}>
                 <Link href="/business-starter-brand-package" className={cardStyles.cardLink}>
-                  View branding pack &rarr;
+                  View BrandPack &rarr;
                 </Link>
               </div>
             </div>

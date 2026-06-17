@@ -125,7 +125,7 @@ export default function SuccessStoriesPage() {
               </div>
               <div className={cardStyles.packCardButtonWrap}>
                 <Link href="/business-starter-brand-package" className={cardStyles.cardLink}>
-                  View branding pack &rarr;
+                  View BrandPack &rarr;
                 </Link>
               </div>
             </div>

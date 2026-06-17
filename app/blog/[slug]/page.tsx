@@ -369,7 +369,7 @@ export default async function BlogPostPage({
                   Frequently asked questions
                 </Link>
                 <Link href="/business-starter-brand-package" className={styles.postKnowledgePill}>
-                  Branding pack
+                  BrandPack
                 </Link>
                 <Link href="/partnership" className={styles.postKnowledgePill}>
                   School partnerships
@@ -431,13 +431,13 @@ export default async function BlogPostPage({
           <div className={sectionStyles.splitBand}>
             <div>
               <p className={sectionStyles.sectionEyebrow}>Start a business?</p>
-              <h2>Branding pack</h2>
+              <h2>BrandPack</h2>
               <p>
                 Launch your business professionally with a complete branding package — CIPC registration, logo, business cards, flyers, letterhead and a 5-page website.
               </p>
               <div className={sectionStyles.buttonRow}>
                 <Button href="/business-starter-brand-package" variant="primary">
-                  View Branding Pack
+                  View BrandPack
                 </Button>
               </div>
             </div>

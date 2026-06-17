@@ -28,7 +28,7 @@ type PexpacksEnquiryFormProps = {
 const contactOptions = [
   "Parent order",
   "School partnership",
-  "Branding pack",
+  "BrandPack",
   "Bulk order",
   "Supplier partnership",
   "General enquiry",
@@ -42,7 +42,7 @@ const consentText =
 
 function resolveContactFormType(enquiryType: string): FormType {
   if (enquiryType === "Parent order") return "school-pack-enquiry";
-  if (enquiryType === "Branding pack") return "brand-package-enquiry";
+  if (enquiryType === "BrandPack") return "brand-package-enquiry";
   if (enquiryType === "Bulk order") return "bulk-order";
   if (enquiryType === "School partnership") return "school-partnership";
   return "contact";
@@ -105,7 +105,7 @@ export function PexpacksEnquiryForm({
   const showSchoolFields =
     isContact && ["Parent order", "School partnership"].includes(enquiryType);
   const showBrandingFields =
-    isContact && ["Branding pack", "Bulk order"].includes(enquiryType);
+    isContact && ["BrandPack", "Bulk order"].includes(enquiryType);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

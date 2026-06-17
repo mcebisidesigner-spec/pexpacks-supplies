@@ -46,7 +46,7 @@ export default function TrackOrderPage() {
         primaryHref="/schools"
         primaryLabel="Find School Packs"
         secondaryHref="/business-starter-brand-package"
-        secondaryLabel="View Branding Pack"
+        secondaryLabel="View BrandPack"
       />
 
       <section className={sectionStyles.section}>
