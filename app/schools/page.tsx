@@ -8,6 +8,9 @@ import { SchoolsHowItWorks } from "@/components/schools/SchoolsHowItWorks";
 import { ConciergeSection } from "@/components/marketing/ConciergeSection";
 import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
+import { SavingsPlanBanner } from "@/components/savings/SavingsPlanBanner";
+import { SavingsTimeline } from "@/components/savings/SavingsTimeline";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import {
   getFeaturedSchoolRecords,
 } from "@/lib/schools/schoolSearchData";
@@ -57,6 +60,15 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       )}
 
       <ConciergeSection />
+
+      <section className={sectionStyles.section}>
+        <div className={sectionStyles.inner}>
+          <SavingsPlanBanner variant="schoolPage" />
+          <div style={{ marginTop: 20 }}>
+            <SavingsTimeline />
+          </div>
+        </div>
+      </section>
 
       <div className={homeStyles.paymentRow}>
         <div className={homeStyles.paymentRowInner}>

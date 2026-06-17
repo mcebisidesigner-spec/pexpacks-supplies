@@ -1,0 +1,122 @@
+.section {
+  padding: var(--section-padding-y-desktop) 0;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(33, 158, 154, 0.04), transparent 60%),
+    radial-gradient(ellipse at 70% 50%, rgba(255, 111, 89, 0.04), transparent 60%),
+    var(--pex-bg-soft);
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
+.header {
+  max-width: 680px;
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--pex-coral);
+  font-size: var(--section-eyebrow-font-size);
+  font-weight: var(--section-eyebrow-font-weight);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.heading {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.8vw, 44px);
+  font-weight: 800;
+  color: var(--pex-primary);
+  line-height: 1.05;
+}
+
+.intro {
+  margin: 0;
+  color: var(--pex-muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.card {
+  padding: 28px 24px;
+  border-radius: var(--radius-card-compact);
+  background: var(--pex-bg);
+  border: 1px solid var(--pex-border);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.cardIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.cardIconCoral {
+  background: rgba(255, 111, 89, 0.1);
+  color: var(--pex-coral);
+}
+
+.cardIconTeal {
+  background: rgba(33, 158, 154, 0.1);
+  color: var(--pex-keppel);
+}
+
+.cardIconNavy {
+  background: rgba(26, 42, 64, 0.06);
+  color: var(--pex-primary);
+}
+
+.cardTitle {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--pex-primary);
+  line-height: 1.2;
+}
+
+.cardText {
+  margin: 0;
+  font-size: 14px;
+  color: var(--pex-muted);
+  line-height: 1.5;
+}
+
+.cardAction {
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: var(--section-padding-y-mobile) 0;
+  }
+
+  .inner {
+    padding-inline: var(--gutter-mobile);
+  }
+}

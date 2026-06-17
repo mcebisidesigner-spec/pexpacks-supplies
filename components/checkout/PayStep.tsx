@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { Button } from "@/components/ui/Button";
+import { SavingsPlanBanner } from "@/components/savings/SavingsPlanBanner";
 import styles from "@/app/checkout/Checkout.module.css";
 
 type PayStepProps = {
@@ -159,6 +160,30 @@ export const PayStep = memo(function PayStep({
               <span>Instant EFT</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className={styles.paymentReadyCard} style={{ marginTop: 16 }}>
+        <div className={styles.paymentSecurityHeader}>
+          <svg className={styles.securityLockIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
+          </svg>
+          <div>
+            <p className={styles.confirmKicker} style={{ color: 'var(--pex-coral)' }}>Coming Soon</p>
+            <h3>PexPacks Savings Plan</h3>
+          </div>
+        </div>
+        <SavingsPlanBanner variant="checkout" showActions={false} />
+        <div style={{ marginTop: 12 }}>
+          <Button
+            href="/contact?topic=savings-plan"
+            variant="outline"
+            size="md"
+            className={styles.fullWidth}
+          >
+            Register Interest
+          </Button>
         </div>
       </section>
 

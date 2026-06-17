@@ -689,6 +689,98 @@ const config: LegalDocumentConfig = {
         </>
       ),
     },
+    {
+      id: "savings-plan-terms",
+      eyebrow: "Draft",
+      title: "PexPacks Savings Plan",
+      summary:
+        "Terms applying to the optional Pre-Purchase Savings Plan that allows customers to deposit towards stationery packs over time.",
+      content: (
+        <>
+          <div className={legalStyles.noticeBlock}>
+            <p>
+              <strong>Internal legal note:</strong> This section is a draft
+              outline for the Savings Plan. It should be reviewed by a South
+              African legal professional before launch, particularly regarding
+              the Consumer Protection Act (CPA) requirements for future-goods
+              agreements, cooling-off rights, and deposit handling.
+            </p>
+          </div>
+
+          <p>
+            The PexPacks Savings Plan is an optional, non-interest-bearing
+            programme that lets customers contribute funds toward a future
+            stationery pack order. It is not a credit facility, loan, or
+            lay-by agreement as defined in the National Credit Act. Title to
+            the goods remains with Pexpacks until the full order amount is
+            settled and the goods are dispatched.
+          </p>
+
+          <h4>How it works</h4>
+          <ol>
+            <li>
+              The customer selects a savings option during or after order
+              placement and begins contributing deposit amounts.
+            </li>
+            <li>
+              Contributions are recorded but no physical goods are reserved
+              or packed until the balance is settled.
+            </li>
+            <li>
+              Once the saved amount matches or exceeds the order value
+              (value match), or when the customer pays the outstanding
+              balance, Pexpacks will process and dispatch the order.
+            </li>
+          </ol>
+
+          <h4>Deposits and refunds</h4>
+          <ul>
+            <li>
+              All deposits are held as unallocated credits toward the
+              customer&rsquo;s nominated order.
+            </li>
+            <li>
+              The customer may request a full refund of accumulated deposits
+              at any time before the order is value-matched or fulfilled.
+              Refunds will be processed within 14 business days to the
+              original payment method where possible.
+            </li>
+            <li>
+              Once the order is value-matched and dispatched, standard
+              refund and return policies apply.
+            </li>
+          </ul>
+
+          <h4>Cancellation</h4>
+          <ul>
+            <li>
+              The customer may cancel the Savings Plan at any time before
+              value match and receive a full refund of deposits.
+            </li>
+            <li>
+              Pexpacks may cancel the Savings Plan at any time by giving the
+              customer reasonable notice and a full refund of deposits.
+            </li>
+          </ul>
+
+          <h4>Price protection</h4>
+          <p>
+            Prices quoted at the time the Savings Plan is created are not
+            guaranteed. If prices increase before the order is settled, the
+            customer will be notified and may choose to pay the difference
+            or receive a full refund.
+          </p>
+
+          <h4>Availability</h4>
+          <p>
+            The Savings Plan is offered at Pexpacks&rsquo;s discretion and
+            may be withdrawn or modified at any time. Existing plans will be
+            honoured according to the terms in effect when they were
+            created.
+          </p>
+        </>
+      ),
+    },
   ],
   extraContent: (
     <article className={legalStyles.documentCard}>

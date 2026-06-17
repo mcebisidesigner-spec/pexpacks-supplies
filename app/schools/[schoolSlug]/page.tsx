@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
 import { Button } from "@/components/ui/Button";
+import { SavingsPlanBanner } from "@/components/savings/SavingsPlanBanner";
+import { SavingsTimeline } from "@/components/savings/SavingsTimeline";
 import {
   getSchoolIndex,
   getSchoolRecordMap,
@@ -137,6 +139,15 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <section className={pageStyles.section}>
             <div className={pageStyles.sectionInner}>
               <GradeSelector school={school} />
+            </div>
+          </section>
+
+          <section className={pageStyles.section}>
+            <div className={pageStyles.sectionInner}>
+              <SavingsPlanBanner variant="schoolPage" />
+              <div style={{ marginTop: 20 }}>
+                <SavingsTimeline />
+              </div>
             </div>
           </section>
         </>
