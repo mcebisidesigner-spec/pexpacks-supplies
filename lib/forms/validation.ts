@@ -182,6 +182,7 @@ function inferFormType(
   if (endpoint === "office-pack") return "brand-package-enquiry";
   if (endpoint === "school-partnership") return "school-partnership";
   if (endpoint === "quote") return "quote";
+  if (endpoint === "waitlist") return "school-waitlist";
 
   return "contact";
 }

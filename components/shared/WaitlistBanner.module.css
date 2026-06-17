@@ -1,0 +1,73 @@
+.banner {
+  position: relative;
+  background: var(--pex-coral);
+  color: #fff;
+  text-align: center;
+  padding: calc(10px + var(--header-height-mobile)) 48px 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  z-index: 99;
+  margin-top: calc(-1 * var(--header-height-mobile));
+}
+
+@media (min-width: 1024px) {
+  .banner {
+    padding-top: calc(10px + var(--header-height-desktop));
+    margin-top: calc(-1 * var(--header-height-desktop));
+  }
+}
+
+.banner a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+  transition: opacity 0.2s;
+}
+
+.banner a:hover {
+  opacity: 0.85;
+}
+
+.discountBadge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-pill);
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.2s;
+  padding: 0;
+  line-height: 1;
+  font-size: 16px;
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+@media (max-width: 600px) {
+  .banner {
+    font-size: 13px;
+    padding: 8px 40px 8px 12px;
+  }
+}

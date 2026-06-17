@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ClientRuntimeWidgets } from "@/components/layout/ClientRuntimeWidgets";
 import { SiteRatingStrip } from "@/components/shared/SiteRatingStrip";
+import { WaitlistBanner } from "@/components/shared/WaitlistBanner";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { TrayProviders } from "@/components/order/TrayProviders";
 import { buildMetadata } from "@/lib/seo";
@@ -128,6 +129,7 @@ export default function RootLayout({
         <JsonLd data={websiteSchema()} />
         <div className="site-shell">
           <Header />
+          <WaitlistBanner />
           <main id="site-main" className="site-main">
             {children}
           </main>

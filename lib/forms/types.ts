@@ -19,6 +19,7 @@ export const formEndpointKinds = [
   "office-pack",
   "school-partnership",
   "quote",
+  "waitlist",
 ] as const;
 
 export type FormType = (typeof formTypes)[number];
@@ -121,6 +122,10 @@ export function endpointForFormType(formType: FormType): FormEndpointKind {
 
   if (formType === "bulk-order" || formType === "quote") {
     return "quote";
+  }
+
+  if (formType === "school-waitlist") {
+    return "waitlist";
   }
 
   return "contact";

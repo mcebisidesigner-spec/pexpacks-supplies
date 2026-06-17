@@ -10,6 +10,7 @@ import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
 import { faqs } from '@/data/faqs'
 import { testimonials } from '@/data/testimonials'
 import { LayByPromo } from '@/components/shared/LayByPromo'
+import { WaitlistHomeCard } from '@/components/shared/WaitlistHomeCard'
 
 import heroStyles from '@/components/marketing/HeroBase.module.css'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
@@ -162,6 +163,8 @@ export default function HomePage() {
       <SuperpowerSection />
 
       <ConciergeSection />
+
+      <WaitlistHomeCard />
 
       <LayByPromo />
 
