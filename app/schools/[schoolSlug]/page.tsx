@@ -164,9 +164,17 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <div className={styles.unpartneredCardSecondary}>
             <h3>Want to add {school.name} as a partner?</h3>
             <p>Encourage the school to list with us so parents can order grade-specific packs directly.</p>
-            <Button href="/add-your-school" variant="outline">
-              Submit School Partnership Request
-            </Button>
+            <div className={styles.unpartneredCardSecondaryActions}>
+              <Button
+                href={`https://wa.me/?text=${encodeURIComponent(`Hi Principal, please partner with Pexpacks so we can order our stationery packs online. https://pexpacks.co.za/partnership`)}`}
+                variant="outline"
+              >
+                Send to your Principal
+              </Button>
+              <Button href="/add-your-school" variant="outline">
+                Submit School Partnership Request
+              </Button>
+            </div>
           </div>
         </div>
       )}

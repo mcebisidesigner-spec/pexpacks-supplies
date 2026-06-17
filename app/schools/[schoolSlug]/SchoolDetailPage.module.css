@@ -256,6 +256,13 @@
   line-height: 1.5;
 }
 
+.unpartneredCardSecondaryActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
 @media (max-width: 1024px) {
   .pexcoverBannerOuter {
     padding: 32px var(--gutter-mobile) 0;
