@@ -47,7 +47,8 @@ export function WaitlistBanner() {
   return (
     <div className={styles.banner} role="status">
       <span>
-        2027 orders open September 2026 &mdash;{" "}
+        2027 orders open September 2026 &mdash;
+        <br className={styles.mobileBreak} />
         <Link href="/waiting-list">Join the waiting list</Link>
         <span className={styles.discountBadge}>2% off</span>
       </span>

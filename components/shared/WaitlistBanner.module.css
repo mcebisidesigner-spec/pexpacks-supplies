@@ -74,7 +74,15 @@
   color: #fff;
 }
 
+.mobileBreak {
+  display: none;
+}
+
 @media (max-width: 600px) {
+  .mobileBreak {
+    display: inline;
+  }
+
   .closeLabel {
     display: none;
   }
