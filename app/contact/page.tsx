@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { ContactForm } from "@/components/forms/ContactForm";
-import { Button } from "@/components/ui/Button";
-import { PageHero } from "@/components/marketing/PageHero";
-import { SectionHeader } from "@/components/marketing/SectionHeader";
-import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { ContactForm } from '@/components/forms/ContactForm'
+import { Button } from '@/components/ui/Button'
+import { PageHero } from '@/components/marketing/PageHero'
+import { SectionHeader } from '@/components/marketing/SectionHeader'
+import { FaqMarquee } from '@/components/shared/FaqMarquee'
 import {
   generalEmail,
   generalEmailHref,
@@ -12,69 +12,69 @@ import {
   orderWhatsAppHref,
   phoneHref,
   phoneNumber,
-} from "@/data/contact";
-import { faqs } from "@/data/faqs";
-import { buildMetadata } from "@/lib/seo";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
-import cardStyles from "@/components/marketing/MarketingCards.module.css";
+} from '@/data/contact'
+import { faqs } from '@/data/faqs'
+import { buildMetadata } from '@/lib/seo'
+import sectionStyles from '@/components/marketing/MarketingSections.module.css'
+import cardStyles from '@/components/marketing/MarketingCards.module.css'
 
 export const metadata: Metadata = buildMetadata(
-  "Contact",
-  "Contact Pexpacks for school stationery orders, school partnerships and supplier enquiries.",
-  "/contact",
-);
+  'Contact',
+  'Contact Pexpacks for school stationery orders, school partnerships and supplier enquiries.',
+  '/contact',
+)
 
-export const dynamic = "force-static";
+export const dynamic = 'force-static'
 
 type ContactPageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-};
+  searchParams?: Promise<Record<string, string | string[] | undefined>>
+}
 
 function firstValue(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] || "" : value || "";
+  return Array.isArray(value) ? value[0] || '' : value || ''
 }
 
 function resolveContactPrefill(
   params: Record<string, string | string[] | undefined>,
 ) {
-  const type = firstValue(params.type).trim().toLowerCase();
-  const subject = firstValue(params.subject).trim();
-  const notes = firstValue(params.notes).trim();
-  const businessName = firstValue(params.businessName).trim();
+  const type = firstValue(params.type).trim().toLowerCase()
+  const subject = firstValue(params.subject).trim()
+  const notes = firstValue(params.notes).trim()
+  const businessName = firstValue(params.businessName).trim()
 
   const initialEnquiryType =
-    type === "branding" || type === "business"
-      ? "Branding pack"
-      : type === "bulk" || type === "quote"
-        ? "Bulk order"
-        : type === "partner" || type === "school-partnership"
-          ? "School partnership"
-          : type === "parent" || type === "order"
-            ? "Parent order"
-            : type === "supplier"
-              ? "Supplier partnership"
-              : "General enquiry";
+    type === 'branding' || type === 'business'
+      ? 'Branding pack'
+      : type === 'bulk' || type === 'quote'
+        ? 'Bulk order'
+        : type === 'partner' || type === 'school-partnership'
+          ? 'School partnership'
+          : type === 'parent' || type === 'order'
+            ? 'Parent order'
+            : type === 'supplier'
+              ? 'Supplier partnership'
+              : 'General enquiry'
 
   const initialMessage = [
-    subject ? `I am enquiring about ${subject}.` : "",
+    subject ? `I am enquiring about ${subject}.` : '',
     notes,
   ]
     .filter(Boolean)
-    .join("\n\n");
+    .join('\n\n')
 
   return {
     initialEnquiryType,
     initialMessage,
     initialBusinessName:
-      businessName || (initialEnquiryType === "Branding pack" ? subject : ""),
-  };
+      businessName || (initialEnquiryType === 'Branding pack' ? subject : ''),
+  }
 }
 
-import pageStyles from "./ContactPage.module.css";
+import pageStyles from './ContactPage.module.css'
 
 export default async function ContactPage({ searchParams }: ContactPageProps) {
-  const params = searchParams ? await searchParams : {};
-  const prefill = resolveContactPrefill(params);
+  const params = searchParams ? await searchParams : {}
+  const prefill = resolveContactPrefill(params)
 
   return (
     <>
@@ -88,7 +88,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           <Button href="#contact-form" variant="primary">
             Send a Message
           </Button>
-          <Button href="#contact-faq" variant="white">
+          <Button href="/faq" variant="white">
             Contact FAQs
           </Button>
         </div>
@@ -241,7 +241,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
 
                 <div
                   className={sectionStyles.buttonRow}
-                  style={{ marginTop: "12px" }}
+                  style={{ marginTop: '12px' }}
                 >
                   <Button href="/partnership">Partner With Us</Button>
                 </div>
@@ -250,54 +250,6 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           </div>
         </div>
       </section>
-      <div id="contact-faq">
-        <FaqMarquee
-          faqs={faqs.filter((f) =>
-            [
-              "school-not-listed",
-              "delivery-timing",
-              "payment-flow",
-              "order-changes",
-              "delivery-areas",
-            ].includes(f.id),
-          )}
-        />
-      </div>
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
-            <div>
-              <p className={sectionStyles.sectionEyebrow}>Quick links</p>
-              <h2>Find what you need</h2>
-              <p>
-                Browse grade packs, track an existing order, or partner with
-                Pexpacks.
-              </p>
-              <div className={sectionStyles.buttonRow}>
-                <Button href="/schools" variant="primary">
-                  Find School Packs
-                </Button>
-              </div>
-            </div>
-            <div className={cardStyles.packCard}>
-              <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>Did you know about lay-by?</h3>
-              </div>
-              <div className={cardStyles.packCardBody}>
-                <p className={cardStyles.packDescription}>
-                  We offer flexible payment terms to help you manage your
-                  budget.
-                </p>
-              </div>
-              <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/lay-by" className={cardStyles.cardLink}>
-                  Learn more &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </>
-  );
+  )
 }
