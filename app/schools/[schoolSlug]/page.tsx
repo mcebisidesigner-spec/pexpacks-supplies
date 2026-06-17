@@ -85,10 +85,10 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <div className={styles.schoolHeroPanel}>
             <div className={styles.schoolHeroCopy}>
               <span className={styles.schoolHeroLabel}>
-                {isPartner ? "Prepared with care" : "We're here to help"}
+                {isPartner ? "Prepared with care" : "Awaiting the school list"}
               </span>
               <span className={styles.schoolHeroTitle}>
-                {isPartner ? "Ready packed" : "Just send your list"}
+                {isPartner ? "Ready packed" : "or you could send your list"}
               </span>
             </div>
             <div className={styles.schoolHeroLogoWrap}>
