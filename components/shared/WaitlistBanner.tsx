@@ -36,7 +36,10 @@ export function WaitlistBanner() {
         aria-label="Dismiss waiting list banner"
         type="button"
       >
-        &times;
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </svg>
       </button>
     </div>
   );
