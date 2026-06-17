@@ -42,21 +42,51 @@
   bottom: 0;
   right: 12px;
   margin: auto 0;
-  width: 28px;
   height: 28px;
   border: none;
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   background: none;
-  color: var(--pex-navy);
   cursor: pointer;
-  display: grid;
-  place-items: center;
-  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  transition: opacity 0.2s;
+}
+
+.closeBtn:hover {
+  opacity: 0.8;
 }
 
 .closeBtn svg {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
+  color: var(--pex-navy);
+  flex-shrink: 0;
+}
+
+.closeLabel {
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .closeLabel {
+    display: none;
+  }
+
+  .closeBtn {
+    padding: 0 4px;
+  }
+
+  .closeBtn svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 @media (max-width: 1024px) {

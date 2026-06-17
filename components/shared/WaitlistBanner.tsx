@@ -61,6 +61,7 @@ export function WaitlistBanner() {
           <path d="M18 6 6 18" />
           <path d="m6 6 12 12" />
         </svg>
+        <span className={styles.closeLabel}>close</span>
       </button>
     </div>
   );
