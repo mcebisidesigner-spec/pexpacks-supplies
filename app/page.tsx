@@ -9,7 +9,6 @@ import { TestimonialMarquee } from '@/components/shared/TestimonialMarquee'
 import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
 import { faqs } from '@/data/faqs'
 import { testimonials } from '@/data/testimonials'
-import { LayByPromo } from '@/components/shared/LayByPromo'
 import { WaitlistHomeCard } from '@/components/shared/WaitlistHomeCard'
 import { SavingsPlanBanner } from '@/components/savings/SavingsPlanBanner'
 import { SavingsTimeline } from '@/components/savings/SavingsTimeline'
@@ -176,8 +175,6 @@ export default function HomePage() {
       </section>
 
       <WaitlistHomeCard />
-
-      <LayByPromo />
 
       <section
         className={sectionStyles.section}
