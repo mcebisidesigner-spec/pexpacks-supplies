@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { saveSchoolVisit } from "./ReturningParentBanner";
+import { saveSchoolVisit } from "./schoolVisitTracker";
 
 type SaveVisitTrackerProps = {
   schoolName: string;

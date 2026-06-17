@@ -141,47 +141,34 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           </section>
         </>
       ) : (
-        <>
-          <div className={styles.unpartneredCard}>
-            <div className={styles.unpartneredCardBody}>
-              <h2 className={styles.unpartneredCardTitle}>
-                Upload your list, and we&apos;ll pack it exactly.
-              </h2>
-              <p className={styles.unpartneredCardText}>
-                Snap a photo or upload the PDF of your child&apos;s {school.name} stationery list. Our team will digitize it within <strong>2 hours</strong> and send you a secure payment link.
-              </p>
-              <div className={styles.unpartneredCardActions}>
-                <Button href="/order">
-                  Upload Stationery List
-                </Button>
-                <Button href={`https://wa.me/${process.env.NEXT_PUBLIC_PEXPACKS_WHATSAPP_NUMBER || "27791234567"}?text=${encodeURIComponent(`Hi Pexpacks, I'd like to send my ${school.name} stationery list.`)}`} variant="outline">
-                  Send List on WhatsApp
-                </Button>
-              </div>
+        <div className={styles.unpartneredCard}>
+          <div className={styles.unpartneredCardBody}>
+            <span className={styles.unpartneredBadge}>Not yet an official partner</span>
+            <h2 className={styles.unpartneredCardTitle}>
+              {school.name} isn&apos;t partnered with Pexpacks yet.
+            </h2>
+            <p className={styles.unpartneredCardText}>
+              You can still order — upload your child&apos;s stationery list and we&apos;ll pack it for you.
+            </p>
+
+            <div className={styles.unpartneredCardActions}>
+              <Button href="/order" variant="primary">
+                Upload Stationery List
+              </Button>
+              <Button href={`https://wa.me/${process.env.NEXT_PUBLIC_PEXPACKS_WHATSAPP_NUMBER || "27791234567"}?text=${encodeURIComponent(`Hi Pexpacks, I'd like to send my ${school.name} stationery list.`)}`} variant="outline">
+                Send List on WhatsApp
+              </Button>
             </div>
           </div>
 
-          <section className={styles.advocateSection}>
-            <div className={styles.advocateInner}>
-              <p className={styles.advocateEyebrow}>Support your school</p>
-              <h2 className={styles.advocateTitle}>
-                Want {school.name} to become an official partner?
-              </h2>
-              <p className={styles.advocateText}>
-                Let your school&apos;s principal or SGB know about Pexpacks. Click below to send a pre-written message.
-              </p>
-              <Button
-                href={`https://wa.me/?text=${encodeURIComponent(`Hi Principal, please partner with Pexpacks so we can order our stationery packs online. https://pexpacks.co.za/partnership`)}`}
-                variant="outline"
-              >
-                Send to your Principal
-              </Button>
-              <Link href="/add-your-school" className={styles.advocateLink}>
-                or submit a partnership request directly &rarr;
-              </Link>
-            </div>
-          </section>
-        </>
+          <div className={styles.unpartneredCardSecondary}>
+            <h3>Want to add {school.name} as a partner?</h3>
+            <p>Encourage the school to list with us so parents can order grade-specific packs directly.</p>
+            <Button href="/add-your-school" variant="outline">
+              Submit School Partnership Request
+            </Button>
+          </div>
+        </div>
       )}
     </>
   );

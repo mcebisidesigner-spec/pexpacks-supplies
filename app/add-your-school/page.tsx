@@ -3,18 +3,14 @@ import Link from 'next/link'
 import { AddSchoolForm } from '@/components/forms/AddSchoolForm'
 import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
-import { CTASection } from '@/components/marketing/CTASection'
 import { SectionHeader } from '@/components/marketing/SectionHeader'
 import { FaqMarquee } from '@/components/shared/FaqMarquee'
-import { LayByPromo } from '@/components/shared/LayByPromo'
-import { mostPopularPacksHref } from '@/data/packs'
 import { faqs } from '@/data/faqs'
 import { buildMetadata } from '@/lib/seo'
 import heroStyles from '@/components/marketing/HeroBase.module.css'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import cardStyles from '@/components/marketing/MarketingCards.module.css'
 import formStyles from '@/components/marketing/MarketingForms.module.css'
-import { id } from 'zod/locales'
 
 export const metadata: Metadata = buildMetadata(
   'Add Your School',
@@ -27,7 +23,7 @@ export default function AddYourSchoolPage() {
     <>
       <PageHero
         eyebrow="Not listed?"
-        title="Is your not an official partner yet? Add your school now."
+        title="Is your school not an official partner yet? Add your school now."
         panelText="Need a pack today?"
         panelTitle="Use a standard grade combo while your school list is being reviewed."
       >

@@ -8,7 +8,7 @@ import {
   RECENT_SCHOOL_VISITS_EVENT,
   STORAGE_KEY,
   type LastVisit,
-} from "./ReturningParentBanner";
+} from "./schoolVisitTracker";
 import styles from "./RecentlyViewedSchools.module.css";
 
 const RECENT_VISIT_MAX_AGE = 30 * 24 * 60 * 60 * 1000;

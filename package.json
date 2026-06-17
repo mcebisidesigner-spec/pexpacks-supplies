@@ -23,7 +23,6 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "resend": "^6.12.4",
-    "xlsx": "^0.18.5",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },
@@ -39,6 +38,7 @@
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.6",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "xlsx": "^0.18.5"
   }
 }

@@ -59,8 +59,6 @@ function highlightToneClass(tone: LegalDocumentHighlightTone | undefined) {
 export function LegalDocumentPage({
   pageTitle,
   heroEyebrow,
-  heroTitle,
-  heroText,
   heroPanelTitle,
   heroPanelText,
   tocHeading,

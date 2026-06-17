@@ -41,6 +41,7 @@ export function OrderForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   const nextStep = () => {
     // Basic validation before moving
@@ -67,7 +68,7 @@ export function OrderForm() {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
     setPhone(formatPhoneSA(rawValue));
-    if (errors.form) setErrors((prev) => ({ ...prev, form: "" }));
+    if (errors.phone) setErrors((prev) => ({ ...prev, phone: "" }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,28 +80,33 @@ export function OrderForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const nextErrors: Record<string, string> = {};
+
     if (!name.trim()) {
-      setErrors({ form: "Please enter your name" });
-      return;
+      nextErrors.name = "Please enter your name";
     }
     const cleanPhone = phone.replace(/[^0-9+]/g, "");
     if (!cleanPhone) {
-      setErrors({ form: "Please enter your WhatsApp number" });
-      return;
-    }
-    if (!isValidSouthAfricanPhone(phone)) {
-      setErrors({ form: "Please enter a valid South African phone number (e.g., 072 123 4567)" });
-      return;
+      nextErrors.phone = "Please enter your WhatsApp number";
+    } else if (!isValidSouthAfricanPhone(phone)) {
+      nextErrors.phone = "Please enter a valid South African phone number (e.g., 072 123 4567)";
     }
     if (email.trim() && !isValidEmailAddress(email)) {
-      setErrors({ form: "Please enter a valid email address (e.g., name@example.com)" });
+      nextErrors.email = "Please enter a valid email address (e.g., name@example.com)";
+    }
+    if (!consent) {
+      nextErrors.consent = "You must consent to data processing under POPIA.";
+    }
+
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
       return;
     }
 
     setIsSubmitting(true);
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log("Form submitted", { name, email, phone, category, listText, fileName });
+    console.log("Form submitted", { name, email, phone, category, listText, fileName, consent });
     setIsSubmitting(false);
     setIsSuccess(true);
   };
@@ -126,6 +132,8 @@ export function OrderForm() {
             setName("");
             setPhone("");
             setEmail("");
+            setConsent(false);
+            setErrors({});
           }}
           style={{ marginTop: "32px" }}
         >
@@ -280,13 +288,16 @@ export function OrderForm() {
                   id="quote-name"
                   type="text"
                   required
-                  className={`${styles.input} ${errors.form ? styles.inputError : ""}`}
+                  className={`${styles.input} ${errors.name ? styles.inputError : ""}`}
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
-                    setErrors({});
+                    if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
                   }}
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "quote-name-error" : undefined}
                 />
+                {errors.name && <span id="quote-name-error" className={styles.errorText}>{errors.name}</span>}
               </div>
 
               <div className={styles.field}>
@@ -295,11 +306,14 @@ export function OrderForm() {
                   id="quote-phone"
                   type="tel"
                   required
-                  className={`${styles.input} ${errors.form ? styles.inputError : ""}`}
+                  className={`${styles.input} ${errors.phone ? styles.inputError : ""}`}
                   placeholder="e.g. 078 123 4567"
                   value={phone}
                   onChange={handlePhoneChange}
+                  aria-invalid={!!errors.phone}
+                  aria-describedby={errors.phone ? "quote-phone-error" : undefined}
                 />
+                {errors.phone && <span id="quote-phone-error" className={styles.errorText}>{errors.phone}</span>}
               </div>
 
               <div className={styles.field}>
@@ -307,13 +321,35 @@ export function OrderForm() {
                 <input
                   id="quote-email"
                   type="email"
-                  className={styles.input}
+                  className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
+                  }}
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "quote-email-error" : undefined}
                 />
+                {errors.email && <span id="quote-email-error" className={styles.errorText}>{errors.email}</span>}
               </div>
-              
-              {errors.form && <span className={styles.errorText}>{errors.form}</span>}
+
+              <div className={styles.field} style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10, marginTop: 8 }}>
+                <input 
+                  id="quote-consent" 
+                  type="checkbox" 
+                  checked={consent} 
+                  onChange={(e) => {
+                    setConsent(e.target.checked);
+                    if (errors.consent) setErrors((prev) => ({ ...prev, consent: "" }));
+                  }}
+                  aria-invalid={!!errors.consent}
+                  aria-describedby={errors.consent ? "quote-consent-error" : undefined}
+                />
+                <label htmlFor="quote-consent" style={{ fontSize: 13, color: "var(--pex-text-muted)", cursor: "pointer" }}>
+                  I consent to Pexpacks processing my information to handle this request under POPIA guidelines.
+                </label>
+              </div>
+              {errors.consent && <span id="quote-consent-error" className={styles.errorText} style={{ display: "block", marginTop: -8 }}>{errors.consent}</span>}
 
               <div className={styles.formActions}>
                 <button type="button" onClick={prevStep} className={styles.backBtn}>← Back</button>

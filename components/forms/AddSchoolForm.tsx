@@ -90,6 +90,8 @@ export function AddSchoolForm() {
           type="text"
           placeholder="e.g. Parktown Primary"
           required
+          aria-invalid={status && !status.success ? "true" : "false"}
+          aria-describedby={status && !status.success ? "add-school-status-message" : undefined}
         />
       </label>
       <label className={styles.field} htmlFor="addSchoolCity">
@@ -100,6 +102,8 @@ export function AddSchoolForm() {
           type="text"
           placeholder="e.g. Johannesburg"
           required
+          aria-invalid={status && !status.success ? "true" : "false"}
+          aria-describedby={status && !status.success ? "add-school-status-message" : undefined}
         />
       </label>
       <label className={styles.field} htmlFor="addSchoolContact">
@@ -110,6 +114,8 @@ export function AddSchoolForm() {
           type="text"
           placeholder="078 003 6048 or name@example.com"
           required
+          aria-invalid={status && !status.success ? "true" : "false"}
+          aria-describedby={status && !status.success ? "add-school-status-message" : undefined}
         />
       </label>
       <label className={styles.field} htmlFor="addSchoolProvince">
@@ -120,11 +126,21 @@ export function AddSchoolForm() {
           type="text"
           placeholder="e.g. Gauteng"
           required
+          aria-invalid={status && !status.success ? "true" : "false"}
+          aria-describedby={status && !status.success ? "add-school-status-message" : undefined}
         />
       </label>
       <label className={styles.field} htmlFor="addSchoolGrade">
         <span>Grade needed</span>
-        <input id="addSchoolGrade" name="grade" type="text" placeholder="e.g. Grade R" required />
+        <input 
+          id="addSchoolGrade" 
+          name="grade" 
+          type="text" 
+          placeholder="e.g. Grade R" 
+          required 
+          aria-invalid={status && !status.success ? "true" : "false"}
+          aria-describedby={status && !status.success ? "add-school-status-message" : undefined}
+        />
       </label>
       <label className={[styles.field, styles.formWide].join(" ")} htmlFor="addSchoolNotes">
         <span>Stationery list notes</span>
@@ -132,6 +148,8 @@ export function AddSchoolForm() {
           id="addSchoolNotes"
           name="notes"
           placeholder="Tell us what grade lists, books or special pack requirements you have."
+          aria-invalid={status && !status.success ? "true" : "false"}
+          aria-describedby={status && !status.success ? "add-school-status-message" : undefined}
         />
       </label>
       {/* Honeypot */}
@@ -140,7 +158,15 @@ export function AddSchoolForm() {
         <input id="addSchoolCompanyWebsite" name="companyWebsite" tabIndex={-1} autoComplete="off" />
       </label>
       <label className={[styles.consentField, styles.formWide].join(" ")} htmlFor="addSchoolConsent">
-        <input id="addSchoolConsent" type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
+        <input 
+          id="addSchoolConsent" 
+          type="checkbox" 
+          checked={consent} 
+          onChange={(e) => setConsent(e.target.checked)} 
+          required 
+          aria-invalid={status && !status.success ? "true" : "false"}
+          aria-describedby={status && !status.success ? "add-school-status-message" : undefined}
+        />
         <span>
           I consent to Pexpacks processing my information to handle this request. I have read and agree to the{" "}
           <a href="/legal" target="_blank" rel="noopener noreferrer">privacy policy</a>.
@@ -153,6 +179,7 @@ export function AddSchoolForm() {
       </div>
       {status ? (
         <p
+          id="add-school-status-message"
           className={status.success ? styles.statusMessage : styles.statusError}
           role={status.success ? "status" : "alert"}
           aria-live="polite"
