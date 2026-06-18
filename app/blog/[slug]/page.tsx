@@ -212,7 +212,7 @@ function renderContent(content: string[]): ReactNode[] {
         .replace(/\[link_pill:\s*.*?\s*\|\s*.*?\s*\]/g, "")
         .trim();
       if (cleaned) {
-        elements.push(<p key={`p-${i}`}>{cleaned}</p>);
+        elements.push(<p key={`p-${i}`} dangerouslySetInnerHTML={{ __html: cleaned }} />);
       }
       elements.push(
         <div key={`pills-${i}`} className={styles.postLinkPillRow}>
@@ -227,7 +227,7 @@ function renderContent(content: string[]): ReactNode[] {
       continue;
     }
 
-    elements.push(<p key={`p-${i}`}>{line}</p>);
+    elements.push(<p key={`p-${i}`} dangerouslySetInnerHTML={{ __html: line }} />);
   }
 
   flushList();
