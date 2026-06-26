@@ -387,6 +387,10 @@
 }
 
 @media (max-width: 480px) {
+  .hideOnMobile {
+    display: none;
+  }
+
   .footerInner {
     padding: 38px var(--gutter-mobile) 34px;
   }

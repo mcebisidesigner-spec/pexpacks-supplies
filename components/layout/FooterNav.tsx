@@ -7,7 +7,7 @@ export function FooterNav() {
   return (
     <nav className={styles.mainNav} aria-label="Footer navigation">
       {footerNavLinks.map((link, index) => (
-          <span key={link.label} className={styles.navItem}>
+          <span key={link.label} className={`${styles.navItem} ${link.label === "BrandPack" ? styles.hideOnMobile : ""}`}>
             <Link href={link.href} className={styles.navLink}>
               {link.label}
             </Link>
