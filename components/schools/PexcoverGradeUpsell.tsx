@@ -50,6 +50,8 @@ export function PexcoverGradeUpsell({
       <label className={styles.pexcoverField}>
         <span>Child&apos;s name for labels</span>
         <input
+          id="pexcover-grade-upsell-learner-name"
+          name="learnerName"
           value={learnerName}
           onChange={(event) => setLearnerName(event.target.value)}
           placeholder="e.g. John Doe"

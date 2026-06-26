@@ -76,6 +76,8 @@ export function RetailComparisonSlider() {
           <span />
         </div>
         <input
+          id="retail-comparison-position"
+          name="comparisonPosition"
           className={styles.range}
           type="range"
           min="0"

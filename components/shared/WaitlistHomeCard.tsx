@@ -85,6 +85,8 @@ export function WaitlistHomeCard() {
           </p>
           <form className={styles.form} onSubmit={handleSubmit}>
             <input
+              id="waitlist-home-email"
+              name="email"
               className={styles.input}
               type="email"
               placeholder="Your email address"

@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import styles from "./QuantityStepper.module.css";
 
 type QuantityStepperProps = {
@@ -17,6 +18,8 @@ export function QuantityStepper({
   max = 99,
   ariaLabel,
 }: QuantityStepperProps) {
+  const inputId = useId();
+
   return (
     <div className={styles.stepperContainer}>
       <button
@@ -43,6 +46,8 @@ export function QuantityStepper({
         {value}
       </span>
       <input
+        id={inputId}
+        name={inputId}
         type="number"
         className={styles.visuallyHidden}
         value={value}

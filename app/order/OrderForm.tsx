@@ -241,6 +241,8 @@ export function OrderForm() {
                   <strong>Click to upload or drag and drop</strong>
                   <span>PNG, JPG, PDF (Max. 5MB)</span>
                   <input 
+                    id="stationery-list-file"
+                    name="stationeryListFile"
                     type="file" 
                     className={styles.fileInput} 
                     onChange={handleFileChange}
@@ -250,6 +252,8 @@ export function OrderForm() {
               )
             ) : (
               <textarea
+                id="stationery-list-text"
+                name="stationeryListText"
                 className={`${styles.input} ${errors.list ? styles.inputError : ""}`}
                 placeholder="Paste your items here (e.g. 5x HB Pencils, 2x Pritt 43g...)"
                 rows={4}

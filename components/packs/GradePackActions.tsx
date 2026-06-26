@@ -269,6 +269,8 @@ export function GradePackActions({
                   <article className={styles.itemRow} key={item.id}>
                     <label className={styles.itemCheckbox}>
                       <input
+                        id={`custom-pack-item-${item.id}`}
+                        name={`customPackItem-${item.id}`}
                         type="checkbox"
                         checked={item.selected}
                         onChange={(event) =>

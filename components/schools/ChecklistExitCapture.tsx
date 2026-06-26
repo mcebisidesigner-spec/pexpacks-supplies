@@ -132,6 +132,8 @@ export function ChecklistExitCapture({
               <label>
                 <span>Email address</span>
                 <input
+                  id="checklist-capture-email"
+                  name="email"
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
@@ -140,6 +142,8 @@ export function ChecklistExitCapture({
               </label>
               <label className={styles.consent}>
                 <input
+                  id="checklist-capture-consent"
+                  name="consent"
                   type="checkbox"
                   checked={consent}
                   onChange={(event) => setConsent(event.target.checked)}

@@ -232,6 +232,8 @@ export function SchoolPitchDeck() {
                   <span>School Enrollment</span>
                   <strong>{enrollment} students</strong>
                   <input
+                    id="school-pitch-enrollment"
+                    name="enrollment"
                     type="range"
                     min="100"
                     max="1500"
@@ -244,6 +246,8 @@ export function SchoolPitchDeck() {
                   <span>Pack Adoption Rate</span>
                   <strong>{adoption}%</strong>
                   <input
+                    id="school-pitch-adoption"
+                    name="adoption"
                     type="range"
                     min="20"
                     max="100"

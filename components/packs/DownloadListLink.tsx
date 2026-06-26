@@ -125,6 +125,8 @@ export function DownloadListLink({
               Get notified when this list is updated:
             </p>
             <input
+              id="download-list-email"
+              name="email"
               type="email"
               placeholder="Your email (optional)"
               value={email}

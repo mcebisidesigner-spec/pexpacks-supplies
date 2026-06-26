@@ -85,6 +85,8 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
         {/* Pexcover Upsell Toggle */}
         <label className={styles.pexcoverToggleLabel}>
           <input
+            id={`pexcover-${pack.id}`}
+            name={`pexcover-${pack.id}`}
             type="checkbox"
             checked={pack.wantsPexcover || false}
             className={styles.pexcoverCheckbox}
