@@ -35,7 +35,7 @@ export function SavingsExplainer() {
         <div className={styles.header}>
           <p className={styles.eyebrow}>Pre-Purchase Savings Plan</p>
           <h2 id="savings-explain-heading" className={styles.heading}>
-            How the PexPacks Savings Plan works
+            How the Pexpacks Savings Plan works
           </h2>
           <p className={styles.intro}>
             Start saving early toward your child&rsquo;s stationery pack. Your money builds

@@ -151,11 +151,11 @@ const config: LegalDocumentConfig = {
       eyebrow: "5",
       title: "Savings Plan delivery",
       summary:
-        "Orders placed through the PexPacks Savings Plan are dispatched once the balance is fully settled.",
+        "Orders placed through the Pexpacks Savings Plan are dispatched once the balance is fully settled.",
       content: (
         <>
           <p>
-            If you are using the PexPacks Savings Plan, delivery timelines
+            If you are using the Pexpacks Savings Plan, delivery timelines
             start from the date the full order value is confirmed (either
             paid in full or value-matched from accumulated deposits), not
             from the date the Savings Plan was created.

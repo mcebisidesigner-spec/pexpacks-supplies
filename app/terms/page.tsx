@@ -692,7 +692,7 @@ const config: LegalDocumentConfig = {
     {
       id: "savings-plan-terms",
       eyebrow: "Draft",
-      title: "PexPacks Savings Plan",
+      title: "Pexpacks Savings Plan",
       summary:
         "Terms applying to the optional Pre-Purchase Savings Plan that allows customers to deposit towards stationery packs over time.",
       content: (
@@ -708,7 +708,7 @@ const config: LegalDocumentConfig = {
           </div>
 
           <p>
-            The PexPacks Savings Plan is an optional, non-interest-bearing
+            The Pexpacks Savings Plan is an optional, non-interest-bearing
             programme that lets customers contribute funds toward a future
             stationery pack order. It is not a credit facility, loan, or
             lay-by agreement as defined in the National Credit Act. Title to

@@ -185,7 +185,7 @@ export const faqs: FAQ[] = [
   {
     id: "savings-plan-basics",
     category: "Savings Plan",
-    question: "What is the PexPacks Savings Plan?",
+    question: "What is the Pexpacks Savings Plan?",
     answer:
       "The Savings Plan is a non-interest-bearing programme that lets you contribute money toward a future stationery pack order over time. Once your saved amount matches the order value, Pexpacks will pack and dispatch the order. It gives you more flexibility than paying the full amount upfront.",
     links: [

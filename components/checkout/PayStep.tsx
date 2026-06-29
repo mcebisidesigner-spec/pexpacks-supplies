@@ -171,7 +171,7 @@ export const PayStep = memo(function PayStep({
           </svg>
           <div>
             <p className={styles.confirmKicker} style={{ color: 'var(--pex-coral)' }}>Coming Soon</p>
-            <h3>PexPacks Savings Plan</h3>
+            <h3>Pexpacks Savings Plan</h3>
           </div>
         </div>
         <SavingsPlanBanner variant="checkout" showActions={false} />

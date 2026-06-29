@@ -7,7 +7,7 @@ const faqs = [
   {
     question: "Is this a normal lay-by?",
     answer:
-      "It works like a pre-purchase savings plan. PexPacks only prepares your pack once your balance is settled or you confirm a value-matched pack. This is not a traditional lay-by where goods are reserved before payment is complete.",
+      "It works like a pre-purchase savings plan. Pexpacks only prepares your pack once your balance is settled or you confirm a value-matched pack. This is not a traditional lay-by where goods are reserved before payment is complete.",
   },
   {
     question: "When can I start saving?",
@@ -20,12 +20,12 @@ const faqs = [
       "You will have until 15 October to pay the balance, customise your pack to match your saved amount, or request a refund according to the Savings Plan terms.",
   },
   {
-    question: "Will PexPacks keep my money if I do not finish paying?",
+    question: "Will Pexpacks keep my money if I do not finish paying?",
     answer:
       "No. Your balance will be handled according to the Savings Plan terms. You may be able to customise to your saved value or receive a refund subject to the stated cancellation terms.",
   },
   {
-    question: "When does PexPacks start packing?",
+    question: "When does Pexpacks start packing?",
     answer:
       "Packing starts only after your balance is settled or your value-matched pack is confirmed. We do not purchase or pack goods before your account is ready.",
   },

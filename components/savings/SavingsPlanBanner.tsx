@@ -45,7 +45,7 @@ export function SavingsPlanBanner({
       aria-labelledby="savings-banner-title"
     >
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>PexPacks savings plan</p>
+        <p className={styles.eyebrow}>Pexpacks savings plan</p>
         <h2 id="savings-banner-title" className={styles.title}>
           {variant === "checkout"
             ? "Save toward this pack before January"
@@ -57,10 +57,10 @@ export function SavingsPlanBanner({
           {variant === "checkout"
             ? "Start with an activation deposit, top up before October, and confirm your final pack before packing begins. Goods are packed only once your balance is settled or your value-matched pack is confirmed."
             : variant === "schoolPage"
-              ? "Use the PexPacks Savings Plan to save toward this pack from June. By October, settle the balance or customise the pack to match what you saved."
+              ? "Use the Pexpacks Savings Plan to save toward this pack from June. By October, settle the balance or customise the pack to match what you saved."
               : variant === "termsNotice"
                 ? "This is not instant delivery. Your pack is prepared after your balance is settled or after you confirm a value-matched pack."
-                : "Top up your PexPacks balance before October and avoid the January stationery rush. Once your balance is ready, we prepare your pack."}
+                : "Top up your Pexpacks balance before October and avoid the January stationery rush. Once your balance is ready, we prepare your pack."}
         </p>
 
         <div className={styles.chips}>

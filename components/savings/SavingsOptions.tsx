@@ -11,7 +11,7 @@ export function SavingsOptions() {
             You still have options
           </h2>
           <p className={styles.intro}>
-            If your saved amount is less than your target pack price, PexPacks will give you
+            If your saved amount is less than your target pack price, Pexpacks will give you
             a resolution window until 15 October. You can pay the balance, customise your
             pack down to your saved amount, or request a refund according to the plan terms.
           </p>
