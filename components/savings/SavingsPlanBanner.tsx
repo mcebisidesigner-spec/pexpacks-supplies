@@ -22,12 +22,12 @@ const variantStyles: Record<Variant, string> = {
 
 const defaultPrimaryCta = {
   label: "Learn How It Works",
-  href: "/contact?topic=savings-plan",
+  href: "/lay-by",
 };
 
 const defaultSecondaryCta = {
-  label: "Register Interest",
-  href: "/contact?topic=savings-plan",
+  label: "Lay-by Terms",
+  href: "/lay-by-terms",
 };
 
 export function SavingsPlanBanner({
@@ -45,7 +45,7 @@ export function SavingsPlanBanner({
       aria-labelledby="savings-banner-title"
     >
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>PexPacks Savings Plan</p>
+        <p className={styles.eyebrow}>PexPacks savings plan</p>
         <h2 id="savings-banner-title" className={styles.title}>
           {variant === "checkout"
             ? "Save toward this pack before January"

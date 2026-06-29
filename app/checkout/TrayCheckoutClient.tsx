@@ -170,6 +170,15 @@ export function TrayCheckoutClient() {
   const fieldRefs = useRef<
     Record<string, HTMLInputElement | HTMLTextAreaElement | null>
   >({})
+  const sectionRefs = useRef<
+    Record<CheckoutSummarySection, HTMLElement | null>
+  >({
+    details: null,
+    delivery: null,
+    payment: null,
+  })
+  const consentRef = useRef<HTMLElement | null>(null)
+  const summaryRef = useRef<HTMLElement | null>(null)
 
   const total = useMemo(() => calculateTrayTotal(packs), [packs])
 
@@ -286,6 +295,63 @@ export function TrayCheckoutClient() {
     })
   }
 
+  function getSectionForError(field: string): CheckoutSummarySection | null {
+    if (
+      field === 'fullName' ||
+      field === 'buyerPhone' ||
+      field === 'buyerEmail'
+    ) {
+      return 'details'
+    }
+
+    if (
+      field === 'address' ||
+      field === 'suburb' ||
+      field === 'city' ||
+      field === 'province' ||
+      field === 'multiSchoolDrop'
+    ) {
+      return 'delivery'
+    }
+
+    return null
+  }
+
+  function guideToIncompleteField(field: string) {
+    const section = getSectionForError(field)
+    const learnerMatch = field.match(/^learner_(\d+)$/)
+
+    if (section) {
+      setMobileSectionSummaryOpen((current) => ({
+        ...current,
+        [section]: true,
+      }))
+    }
+
+    if (learnerMatch) {
+      setEditNameIndex(Number(learnerMatch[1]))
+    }
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const fieldNode = fieldRefs.current[field]
+        const target =
+          fieldNode ||
+          (learnerMatch ? summaryRef.current : null) ||
+          (field === 'consent' ? consentRef.current : null) ||
+          (section ? sectionRefs.current[section] : null)
+
+        target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+        if (fieldNode) {
+          fieldNode.focus({ preventScroll: true })
+        } else if (target instanceof HTMLElement) {
+          target.focus({ preventScroll: true })
+        }
+      })
+    })
+  }
+
   function validate(): boolean {
     const nextErrors: Record<string, string> = {}
 
@@ -333,7 +399,7 @@ export function TrayCheckoutClient() {
 
     const firstError = Object.keys(nextErrors)[0]
     if (firstError) {
-      fieldRefs.current[firstError]?.focus()
+      guideToIncompleteField(firstError)
     }
 
     return Object.keys(nextErrors).length === 0
@@ -468,6 +534,10 @@ export function TrayCheckoutClient() {
           onSubmit={(e) => e.preventDefault()}
         >
           <section
+            ref={(node) => {
+              sectionRefs.current.details = node
+            }}
+            tabIndex={-1}
             className={`${styles.checkoutSection} ${
               showDetailsHiddenWarning ? styles.checkoutSectionWarning : ''
             }`}
@@ -602,6 +672,10 @@ export function TrayCheckoutClient() {
           </section>
 
           <section
+            ref={(node) => {
+              sectionRefs.current.delivery = node
+            }}
+            tabIndex={-1}
             className={styles.checkoutSection}
             aria-labelledby="fulfilment-heading"
           >
@@ -801,6 +875,10 @@ export function TrayCheckoutClient() {
           </section>
 
           <section
+            ref={(node) => {
+              sectionRefs.current.payment = node
+            }}
+            tabIndex={-1}
             className={styles.checkoutSection}
             aria-labelledby="payment-heading"
           >
@@ -850,7 +928,12 @@ export function TrayCheckoutClient() {
             </div>
           </section>
 
-          <section className={styles.consentCard} aria-label="Consent">
+          <section
+            ref={consentRef}
+            tabIndex={-1}
+            className={styles.consentCard}
+            aria-label="Consent"
+          >
             <label className={styles.consentField}>
               <input
                 ref={(node) => {
@@ -900,6 +983,8 @@ export function TrayCheckoutClient() {
         </form>
 
         <aside
+          ref={summaryRef}
+          tabIndex={-1}
           className={styles.summaryColumn}
           aria-labelledby="order-summary-heading"
         >
@@ -932,6 +1017,9 @@ export function TrayCheckoutClient() {
                       <div>
                         {editNameIndex === index ? (
                           <Input
+                            ref={(node) => {
+                              fieldRefs.current[`learner_${index}`] = node
+                            }}
                             type="text"
                             value={learnerInputs[index] || ''}
                             onChange={(e) =>

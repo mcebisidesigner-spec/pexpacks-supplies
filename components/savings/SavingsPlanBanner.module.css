@@ -38,7 +38,7 @@
   color: var(--pex-coral);
   font-size: var(--section-eyebrow-font-size);
   font-weight: var(--section-eyebrow-font-weight);
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.04em;
 }
 

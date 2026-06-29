@@ -188,9 +188,25 @@ export function CheckoutForm({
     window.requestAnimationFrame(() => headingRef.current?.focus());
   }
 
-  function goToStep(index: number) {
+  function focusFirstInvalid(nextErrors: Record<string, string>) {
+    const first = Object.keys(nextErrors)[0];
+    if (!first) return;
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const target = document.querySelector<HTMLElement>(
+          `[data-field="${first}"], #${first}`
+        );
+        target?.scrollIntoView({ behavior: "smooth", block: "center" });
+        target?.focus({ preventScroll: true });
+      });
+    });
+  }
+
+  function goToStep(index: number, options?: { preserveErrors?: boolean }) {
     const safeIndex = Math.max(0, Math.min(index, STEPS.length - 1));
-    setErrors({});
+    if (!options?.preserveErrors) {
+      setErrors({});
+    }
     setSubmitError(null);
     setActiveStep(safeIndex);
     focusStepHeading();
@@ -206,17 +222,7 @@ export function CheckoutForm({
     });
   }
 
-  function focusFirstInvalid(nextErrors: Record<string, string>) {
-    const first = Object.keys(nextErrors)[0];
-    if (!first) return;
-    window.requestAnimationFrame(() => {
-      document
-        .querySelector<HTMLElement>(`[data-field="${first}"], #${first}`)
-        ?.focus();
-    });
-  }
-
-  function validateStep(step: number): boolean {
+  function getStepErrors(step: number): Record<string, string> {
     const nextErrors: Record<string, string> = {};
 
     if (step === 1) {
@@ -248,6 +254,12 @@ export function CheckoutForm({
         nextErrors.consent = "Please accept the order processing consent.";
     }
 
+    return nextErrors;
+  }
+
+  function validateStep(step: number): boolean {
+    const nextErrors = getStepErrors(step);
+
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
       focusFirstInvalid(nextErrors);
@@ -263,15 +275,19 @@ export function CheckoutForm({
   }
 
   async function handlePay() {
-    const detailsValid = validateStep(1);
-    if (!detailsValid) {
-      goToStep(1);
+    const detailsErrors = getStepErrors(1);
+    if (Object.keys(detailsErrors).length > 0) {
+      setErrors(detailsErrors);
+      goToStep(1, { preserveErrors: true });
+      focusFirstInvalid(detailsErrors);
       return;
     }
 
-    const deliveryValid = validateStep(2);
-    if (!deliveryValid) {
-      goToStep(2);
+    const deliveryErrors = getStepErrors(2);
+    if (Object.keys(deliveryErrors).length > 0) {
+      setErrors(deliveryErrors);
+      goToStep(2, { preserveErrors: true });
+      focusFirstInvalid(deliveryErrors);
       return;
     }
 

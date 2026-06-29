@@ -41,20 +41,41 @@ export async function initializePaystackTransaction(params: {
     throw new Error("PAYSTACK_SECRET_KEY is not configured");
   }
 
-  const response = await fetch(`${PAYSTACK_API}/transaction/initialize`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: params.email,
-      amount: params.amountInCents,
-      reference: params.reference,
-      callback_url: params.callbackUrl,
-      metadata: params.metadata,
-    }),
-  });
+  const requestBody = {
+    email: params.email,
+    amount: params.amountInCents,
+    reference: params.reference,
+    callback_url: params.callbackUrl,
+    metadata: params.metadata,
+  };
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
+  let response: Response;
+
+  try {
+    response = await fetch(`${PAYSTACK_API}/transaction/initialize`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+      signal: controller.signal,
+    });
+  } catch (fetchError) {
+    clearTimeout(timeout);
+    const message =
+      fetchError instanceof Error
+        ? fetchError.name === "AbortError"
+          ? "Paystack request timed out after 15s"
+          : fetchError.message
+        : "Unknown network error";
+    throw new Error(message);
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     const errorBody = await response.text();
@@ -64,7 +85,7 @@ export async function initializePaystackTransaction(params: {
       errorBody.slice(0, 500)
     );
     throw new Error(
-      `Paystack initialization failed with status ${response.status}`
+      `Paystack returned status ${response.status}`
     );
   }
 
@@ -72,7 +93,7 @@ export async function initializePaystackTransaction(params: {
 
   if (!result.status) {
     throw new Error(
-      result.message || "Paystack initialization returned unsuccessful status"
+      `Paystack declined: ${result.message || "unknown error"}`
     );
   }
 
