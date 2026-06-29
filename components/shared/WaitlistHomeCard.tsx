@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { isValidSouthAfricanPhone } from "@/lib/forms/contact";
 import { endpointPathForFormType } from "@/lib/forms/types";
 import styles from "./WaitlistHomeCard.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";

@@ -75,6 +75,27 @@ function parseLinkPills(
   return pills;
 }
 
+function renderInlineContent(text: string): ReactNode {
+  const parts: ReactNode[] = [];
+  const strongPattern = /<strong>\s*([\s\S]*?)\s*<\/strong>/gi;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = strongPattern.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push(<strong key={`strong-${match.index}`}>{match[1]}</strong>);
+    lastIndex = strongPattern.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
 function extractHeadings(
   content: string[]
 ): { id: string; title: string }[] {
@@ -212,7 +233,7 @@ function renderContent(content: string[]): ReactNode[] {
         .replace(/\[link_pill:\s*.*?\s*\|\s*.*?\s*\]/g, "")
         .trim();
       if (cleaned) {
-        elements.push(<p key={`p-${i}`} dangerouslySetInnerHTML={{ __html: cleaned }} />);
+        elements.push(<p key={`p-${i}`}>{renderInlineContent(cleaned)}</p>);
       }
       elements.push(
         <div key={`pills-${i}`} className={styles.postLinkPillRow}>
@@ -227,7 +248,7 @@ function renderContent(content: string[]): ReactNode[] {
       continue;
     }
 
-    elements.push(<p key={`p-${i}`} dangerouslySetInnerHTML={{ __html: line }} />);
+    elements.push(<p key={`p-${i}`}>{renderInlineContent(line)}</p>);
   }
 
   flushList();

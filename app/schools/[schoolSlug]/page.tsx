@@ -35,9 +35,11 @@ export const revalidate = 86400; // 24 hours
 
 export async function generateStaticParams() {
   const schoolIndex = await getSchoolIndex();
-  return schoolIndex.map((school) => ({
-    schoolSlug: school.slug,
-  }));
+  return schoolIndex
+    .filter((school) => school.isFeatured || school.isPartnerSchool)
+    .map((school) => ({
+      schoolSlug: school.slug,
+    }));
 }
 
 export async function generateMetadata({

@@ -1,10 +1,8 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { ContactForm } from '@/components/forms/ContactForm'
 import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
 import { SectionHeader } from '@/components/marketing/SectionHeader'
-import { FaqMarquee } from '@/components/shared/FaqMarquee'
 import {
   generalEmail,
   generalEmailHref,
@@ -13,7 +11,6 @@ import {
   phoneHref,
   phoneNumber,
 } from '@/data/contact'
-import { faqs } from '@/data/faqs'
 import { buildMetadata } from '@/lib/seo'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import cardStyles from '@/components/marketing/MarketingCards.module.css'

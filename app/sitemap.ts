@@ -55,14 +55,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }));
 
-  const gradeEntries = schools.flatMap((school) =>
-    school.grades.map((grade) => ({
-      url: `${siteUrl}/schools/${school.slug}/${grade.gradeSlug}`,
-      lastModified: siteContentUpdatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }))
-  );
-
-  return [...staticEntries, ...blogEntries, ...schoolEntries, ...gradeEntries];
+  return [...staticEntries, ...blogEntries, ...schoolEntries];
 }

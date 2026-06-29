@@ -1,4 +1,5 @@
 import { memo } from "react";
+import Image from "next/image";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { Button } from "@/components/ui/Button";
 import { SavingsPlanBanner } from "@/components/savings/SavingsPlanBanner";
@@ -121,8 +122,7 @@ export const PayStep = memo(function PayStep({
 
         <div className={styles.paymentBadgeRow}>
           <div className={styles.paymentBadgeItem} title="Visa">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/visa.png" alt="Visa" style={{ height: 18, width: "auto" }} />
+            <Image src="/images/visa.svg" alt="Visa" width={44} height={18} />
           </div>
           <div className={styles.paymentBadgeItem} title="Mastercard">
             <svg viewBox="0 0 32 20" width="28" height="18" aria-hidden="true">

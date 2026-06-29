@@ -114,8 +114,6 @@ export default function HomePage() {
                 src="/images/pex-stationery-box.webp"
                 alt="Learners holding Pexpacks Stationery Box"
                 fill
-                priority
-                quality={95}
                 placeholder="blur"
                 blurDataURL={IMAGE_BLUR_DATA_URL}
                 sizes="(min-width: 1280px) 700px, (min-width: 820px) 55vw, 100vw"

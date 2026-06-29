@@ -106,7 +106,6 @@ export function OrderForm() {
     setIsSubmitting(true);
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log("Form submitted", { name, email, phone, category, listText, fileName, consent });
     setIsSubmitting(false);
     setIsSuccess(true);
   };
