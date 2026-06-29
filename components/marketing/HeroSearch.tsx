@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
+import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 

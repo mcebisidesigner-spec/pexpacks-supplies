@@ -32,7 +32,7 @@ export const blogPosts: BlogPost[] = [
     date: "2023-10-15",
     author: "Mcebisi Mhayise",
     category: "Parenting Tips",
-    image: "/images/pex-stationery-checklist.webp",
+    image: "/images/pex-stationery-checklist-v2.webp",
   },
   {
     id: "2",

@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import heroStyles from "@/components/marketing/HeroSearch.module.css";
 
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
-import { usePaginatedSchoolSearch } from "@/lib/hooks/usePaginatedSchoolSearch";
+import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
 import {
   getSchoolPhaseLabel,
 } from "@/lib/schools/schoolPhase";

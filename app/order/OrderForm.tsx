@@ -104,10 +104,39 @@ export function OrderForm() {
     }
 
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setIsSuccess(true);
+    setErrors({});
+
+    const payload = {
+      formType: "quote",
+      fullName: name,
+      phone: phone,
+      email: email || undefined,
+      consent: consent,
+      quoteType: category,
+      message: inputMethod === "upload" ? `Uploaded File: ${fileName}` : listText,
+      sourceUrl: window.location.href,
+      pageUrl: window.location.href,
+      userAgent: navigator.userAgent,
+      submittedAt: new Date().toISOString(),
+    };
+
+    try {
+      const res = await fetch("/api/forms/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await res.json();
+      if (!result.success) {
+        setErrors(result.errors ?? { submit: result.message || "Something went wrong." });
+        return;
+      }
+      setIsSuccess(true);
+    } catch {
+      setErrors({ submit: "We could not submit your request right now. Please try again or contact us directly." });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSuccess) {
@@ -285,6 +314,11 @@ export function OrderForm() {
             <h2 className={styles.stepTitle}>Where should we send your quote?</h2>
             
             <form onSubmit={handleSubmit} className={styles.formGrid}>
+              {errors.submit && (
+                <div style={{ gridColumn: "1 / -1", color: "var(--pex-error)", background: "var(--color-error-bg)", border: "1px solid var(--color-error-border)", padding: "14px 16px", borderRadius: "14px", fontSize: "14px", fontWeight: 500 }}>
+                  {errors.submit}
+                </div>
+              )}
               <div className={styles.field}>
                 <label htmlFor="quote-name">Your Name</label>
                 <input

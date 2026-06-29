@@ -111,7 +111,7 @@ export default function HomePage() {
           <div className={sectionStyles.socialProofPanel}>
             <div className={sectionStyles.socialProofMedia}>
               <Image
-                src="/images/pex-stationery-box.webp"
+                src="/images/pex-stationery-box-v2.webp"
                 alt="Learners holding Pexpacks Stationery Box"
                 fill
                 placeholder="blur"

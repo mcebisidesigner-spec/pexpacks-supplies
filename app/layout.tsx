@@ -120,6 +120,12 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${PexpacksSans.variable} ${PexpacksSansAlt.variable}`}
     >
+      <head>
+        <link rel="dns-prefetch" href="https://js.paystack.co" />
+        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
+          <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+        )}
+      </head>
       <body suppressHydrationWarning>
         <a href="#site-main" className="skip-link">
           Skip to content

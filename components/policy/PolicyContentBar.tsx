@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useHideHeaderOnScroll } from "@/lib/hooks/useHideHeaderOnScroll";
+import { useHideHeaderOnScroll } from "@/hooks/useHideHeaderOnScroll";
 
 type PolicyTopic = {
   id: string;

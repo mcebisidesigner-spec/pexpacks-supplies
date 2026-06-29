@@ -1,6 +1,6 @@
 "use client";
 
-import { useHideHeaderOnScroll } from "@/lib/hooks/useHideHeaderOnScroll";
+import { useHideHeaderOnScroll } from "@/hooks/useHideHeaderOnScroll";
 import styles from "./Header.module.css";
 
 type HeaderScrollWrapperProps = {
