@@ -8,6 +8,7 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import checkoutStyles from "@/app/checkout/Checkout.module.css";
 import styles from "./LaybyCheckout.module.css";
 
 type FulfilmentOption = "school_collection" | "home_delivery" | "arranged_collection";
@@ -211,9 +212,9 @@ export function LaybyCheckoutClient() {
 
   if (packs.length === 0) {
     return (
-      <div className={styles.page}>
-        <div className={styles.empty}>
-          <p className={styles.kicker}>Lay-by Checkout</p>
+      <div className={`${checkoutStyles.checkoutShell} ${styles.page}`}>
+        <div className={checkoutStyles.emptyCheckout}>
+          <p className={checkoutStyles.checkoutKicker}>Lay-by Checkout</p>
           <h1>No packs in your order.</h1>
           <p>Choose a school pack and add it to your order before starting a lay-by plan.</p>
           <Button href="/schools" variant="primary" size="lg">
@@ -225,25 +226,30 @@ export function LaybyCheckoutClient() {
   }
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <button type="button" className={styles.backButton} onClick={handleBackToOrder}>
+    <div className={`${checkoutStyles.checkoutShell} ${styles.page}`}>
+      <header className={checkoutStyles.checkoutHeader}>
+        <button
+          type="button"
+          className={checkoutStyles.backToOrder}
+          onClick={handleBackToOrder}
+        >
           Back to order
         </button>
         <a
           href="https://wa.me/27763456622?text=Hi Pexpacks, I need help with lay-by checkout."
           target="_blank"
           rel="noopener noreferrer"
-          className={styles.helpLink}
+          className={checkoutStyles.helpLink}
         >
           Need help?
         </a>
       </header>
 
-      <main className={styles.grid}>
-        <section className={styles.hero}>
-          <span className={styles.heroBadge}>Lay-by Plan</span>
-          <h1>Pay over time, secure your pack today</h1>
+      <div className={checkoutStyles.checkoutGrid}>
+        {/* ── Hero ── */}
+        <section className={`${checkoutStyles.stepCard} ${checkoutStyles.checkoutHero}`}>
+          <p className={checkoutStyles.checkoutKicker}>Lay-by Plan</p>
+          <h1 tabIndex={-1}>Pay over time, secure your pack today</h1>
           <p>
             Spread the cost of your school stationery over <strong>5 months</strong> with{" "}
             <strong>0% interest</strong>. Your deposit is your first month&rsquo;s payment.
@@ -251,142 +257,149 @@ export function LaybyCheckoutClient() {
           </p>
         </section>
 
-        <div className={styles.mainColumn}>
-          {/* ── Order Summary ── */}
-          <section className={styles.card}>
-            <div className={styles.cardInner}>
-              <div className={styles.cardHeader}>
-                <span className={styles.cardNumber}>1</span>
-                <h2>Your Order</h2>
+        <form
+          className={checkoutStyles.mainColumn}
+          aria-label="Lay-by checkout details"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          {/* ── Order Summary (Section 1) ── */}
+          <section className={checkoutStyles.checkoutSection} aria-labelledby="layby-order-heading">
+            <div className={checkoutStyles.sectionHeader}>
+              <span className={checkoutStyles.sectionNumber}>1</span>
+              <div>
+                <h2 id="layby-order-heading">Your Order</h2>
+                <p>Review the packs included in your lay-by plan.</p>
               </div>
-              <div className={styles.packList}>
-                {packs.map((pack, index) => (
-                  <div key={pack.id} className={styles.packRow}>
-                    <div className={styles.packRowInfo}>
-                      <strong>{pack.packName}</strong>
-                      <span>
-                        {pack.schoolName}
-                        {pack.grade ? ` · ${pack.grade}` : ""}
-                      </span>
-                      {pack.wantsPexcover ? <span className={styles.pexcoverTag}>+Pexcover</span> : null}
-                    </div>
-                    <div className={styles.packRowLearner}>
-                      <label className={styles.learnerLabel} htmlFor={`learner-${pack.id}`}>
-                        Learner name
-                      </label>
-                      <input
-                        id={`learner-${pack.id}`}
-                        className={styles.learnerInput}
-                        type="text"
-                        placeholder="Learner's name"
-                        value={learnerInputs[index] || ""}
-                        onChange={(e) => {
-                          const next = [...learnerInputs];
-                          next[index] = e.target.value;
-                          setLearnerInputs(next);
-                          clearFieldError(`learner_${index}`);
-                        }}
-                      />
-                      {errors[`learner_${index}`] ? (
-                        <p className={styles.fieldError}>{errors[`learner_${index}`]}</p>
-                      ) : null}
-                    </div>
+            </div>
+            <div className={styles.packList}>
+              {packs.map((pack, index) => (
+                <div key={pack.id} className={styles.packRow}>
+                  <div className={styles.packRowInfo}>
+                    <strong>{pack.packName}</strong>
+                    <span>
+                      {pack.schoolName}
+                      {pack.grade ? ` \u00b7 ${pack.grade}` : ""}
+                    </span>
+                    {pack.wantsPexcover ? <span className={styles.pexcoverTag}>+Pexcover</span> : null}
                   </div>
-                ))}
-              </div>
-              <div className={styles.orderTotal}>
-                <span>Pack total</span>
-                <strong>{formatCurrency(total)}</strong>
-              </div>
+                  <div className={styles.packRowLearner}>
+                    <label className={styles.learnerLabel} htmlFor={`learner-${pack.id}`}>
+                      Learner name
+                    </label>
+                    <input
+                      id={`learner-${pack.id}`}
+                      className={styles.learnerInput}
+                      type="text"
+                      placeholder="Learner's name"
+                      value={learnerInputs[index] || ""}
+                      onChange={(e) => {
+                        const next = [...learnerInputs];
+                        next[index] = e.target.value;
+                        setLearnerInputs(next);
+                        clearFieldError(`learner_${index}`);
+                      }}
+                    />
+                    {errors[`learner_${index}`] ? (
+                      <p className={checkoutStyles.fieldError}>{errors[`learner_${index}`]}</p>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className={styles.orderTotal}>
+              <span>Pack total</span>
+              <strong>{formatCurrency(total)}</strong>
             </div>
           </section>
 
-          {/* ── Your Details ── */}
-          <section className={styles.card}>
-            <div className={styles.cardInner}>
-              <div className={styles.cardHeader}>
-                <span className={styles.cardNumber}>2</span>
-                <h2>Your Details</h2>
+          {/* ── Your Details (Section 2) ── */}
+          <section className={checkoutStyles.checkoutSection} aria-labelledby="layby-details-heading">
+            <div className={checkoutStyles.sectionHeader}>
+              <span className={checkoutStyles.sectionNumber}>2</span>
+              <div>
+                <h2 id="layby-details-heading">Your details</h2>
+                <p>We use these for order updates and payment confirmations.</p>
               </div>
-              <p className={styles.cardHelp}>
-                We use these for order updates and payment confirmations.
-              </p>
-              <div className={styles.formGrid}>
-                <Input
-                  id="fullName"
-                  label="Full name"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => {
-                    setFullName(e.target.value);
-                    clearFieldError("fullName");
-                  }}
-                  placeholder="e.g. Sarah Dlamini"
-                  error={errors.fullName}
-                  autoComplete="name"
-                />
-                <Input
-                  id="buyerPhone"
-                  label="Phone number"
-                  type="tel"
-                  value={buyerPhone}
-                  onChange={(e) => {
-                    setBuyerPhone(e.target.value);
-                    clearFieldError("buyerPhone");
-                  }}
-                  placeholder="e.g. 078 003 6048"
-                  error={errors.buyerPhone}
-                  autoComplete="tel"
-                />
-                <Input
-                  id="buyerEmail"
-                  label="Email address"
-                  type="email"
-                  value={buyerEmail}
-                  onChange={(e) => {
-                    setBuyerEmail(e.target.value);
-                    clearFieldError("buyerEmail");
-                  }}
-                  placeholder="name@example.com"
-                  error={errors.buyerEmail}
-                  autoComplete="email"
-                />
-              </div>
+            </div>
+            <div className={checkoutStyles.formGrid}>
+              <Input
+                id="fullName"
+                label="Full name"
+                type="text"
+                value={fullName}
+                onChange={(e) => {
+                  setFullName(e.target.value);
+                  clearFieldError("fullName");
+                }}
+                placeholder="e.g. Sarah Dlamini"
+                error={errors.fullName}
+                autoComplete="name"
+              />
+              <Input
+                id="buyerPhone"
+                label="Phone number"
+                type="tel"
+                value={buyerPhone}
+                onChange={(e) => {
+                  setBuyerPhone(e.target.value);
+                  clearFieldError("buyerPhone");
+                }}
+                placeholder="e.g. 078 003 6048"
+                error={errors.buyerPhone}
+                autoComplete="tel"
+              />
+              <Input
+                id="buyerEmail"
+                label="Email address"
+                type="email"
+                value={buyerEmail}
+                onChange={(e) => {
+                  setBuyerEmail(e.target.value);
+                  clearFieldError("buyerEmail");
+                }}
+                placeholder="name@example.com"
+                error={errors.buyerEmail}
+                autoComplete="email"
+              />
             </div>
           </section>
 
-          {/* ── Delivery / Collection ── */}
-          <section className={styles.card}>
-            <div className={styles.cardInner}>
-              <div className={styles.cardHeader}>
-                <span className={styles.cardNumber}>3</span>
-                <h2>Delivery or Collection</h2>
+          {/* ── Delivery / Collection (Section 3) ── */}
+          <section className={checkoutStyles.checkoutSection} aria-labelledby="layby-fulfilment-heading">
+            <div className={checkoutStyles.sectionHeader}>
+              <span className={checkoutStyles.sectionNumber}>3</span>
+              <div>
+                <h2 id="layby-fulfilment-heading">Delivery or collection</h2>
+                <p>Choose how you want to receive your pack once the balance is settled.</p>
               </div>
-              <p className={styles.cardHelp}>
-                Choose how you want to receive your pack once the balance is settled.
-              </p>
-              <div className={styles.deliveryOptions}>
+            </div>
+            <fieldset className={checkoutStyles.optionFieldset}>
+              <legend className={checkoutStyles.srOnly}>Delivery or collection method</legend>
+              <div className={checkoutStyles.deliveryOptions}>
                 {[
                   {
                     value: "school_collection" as const,
                     title: "School collection",
                     desc: "Collect from the school or agreed handover point.",
+                    note: "Included",
                   },
                   {
                     value: "home_delivery" as const,
                     title: "Home delivery",
                     desc: "Receive your pack at home. Address required.",
+                    note: "Address required",
                   },
                   {
                     value: "arranged_collection" as const,
                     title: "Arranged collection",
                     desc: "We will contact you to confirm the best option.",
+                    note: "We will confirm",
                   },
                 ].map((opt) => (
                   <label
                     key={opt.value}
-                    className={`${styles.deliveryOption} ${
-                      fulfilmentOption === opt.value ? styles.deliveryOptionSelected : ""
+                    className={`${checkoutStyles.deliveryOption} ${
+                      fulfilmentOption === opt.value ? checkoutStyles.deliveryOptionSelected : ""
                     }`}
                   >
                     <input
@@ -396,137 +409,152 @@ export function LaybyCheckoutClient() {
                       checked={fulfilmentOption === opt.value}
                       onChange={() => setFulfilmentOption(opt.value)}
                     />
-                    <strong>{opt.title}</strong>
-                    <p>{opt.desc}</p>
+                    <div className={checkoutStyles.deliveryOptionHeader}>
+                      <span className={checkoutStyles.deliveryIcon}>
+                        {opt.value === "school_collection" ? (
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2 2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5" />
+                          </svg>
+                        ) : opt.value === "home_delivery" ? (
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="1" y="3" width="15" height="13" rx="2" />
+                            <path d="M16 8h4l3 3v5h-7V8Z" />
+                            <circle cx="5.5" cy="18.5" r="2.5" />
+                            <circle cx="18.5" cy="18.5" r="2.5" />
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="3" y="5" width="18" height="14" rx="2" />
+                            <path d="M3 10h18M7 15h4" />
+                          </svg>
+                        )}
+                      </span>
+                      <strong>{opt.title}</strong>
+                    </div>
+                    <p className={checkoutStyles.deliveryDescription}>{opt.desc}</p>
+                    <span className={checkoutStyles.deliveryBadge}>{opt.note}</span>
                   </label>
                 ))}
               </div>
+            </fieldset>
 
-              {deliveryExpanded ? (
-                <div className={styles.addressGrid}>
-                  <Input
-                    id="address"
-                    label="Address line"
-                    type="text"
-                    value={address}
-                    onChange={(e) => {
-                      setAddress(e.target.value);
-                      clearFieldError("address");
-                    }}
-                    placeholder="e.g. 42 Main Road"
-                    error={errors.address}
-                  />
-                  <Input
-                    id="suburb"
-                    label="Suburb"
-                    type="text"
-                    value={suburb}
-                    onChange={(e) => {
-                      setSuburb(e.target.value);
-                      clearFieldError("suburb");
-                    }}
-                    placeholder="e.g. Gardens"
-                    error={errors.suburb}
-                  />
-                  <Input
-                    id="city"
-                    label="City"
-                    type="text"
-                    value={city}
-                    onChange={(e) => {
-                      setCity(e.target.value);
-                      clearFieldError("city");
-                    }}
-                    placeholder="e.g. Cape Town"
-                    error={errors.city}
-                  />
-                  <Input
-                    id="province"
-                    label="Province"
-                    type="text"
-                    value={province}
-                    onChange={(e) => {
-                      setProvince(e.target.value);
-                      clearFieldError("province");
-                    }}
-                    placeholder="e.g. Western Cape"
-                    error={errors.province}
-                  />
-                  <Input
-                    id="postalCode"
-                    label="Postal code"
-                    type="text"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
-                    placeholder="e.g. 8001"
-                  />
-                </div>
-              ) : null}
-
-              <div className={styles.notesField}>
-                <label htmlFor="deliveryNotes">Delivery notes (optional)</label>
-                <textarea
-                  id="deliveryNotes"
-                  value={deliveryNotes}
-                  onChange={(e) => setDeliveryNotes(e.target.value)}
-                  placeholder="Gate codes, collection notes, or anything the team should know."
-                  rows={3}
+            {deliveryExpanded ? (
+              <div className={checkoutStyles.addressPanel}>
+                <Input
+                  id="address"
+                  label="Address line"
+                  type="text"
+                  value={address}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                    clearFieldError("address");
+                  }}
+                  placeholder="e.g. 42 Main Road"
+                  error={errors.address}
+                />
+                <Input
+                  id="suburb"
+                  label="Suburb"
+                  type="text"
+                  value={suburb}
+                  onChange={(e) => {
+                    setSuburb(e.target.value);
+                    clearFieldError("suburb");
+                  }}
+                  placeholder="e.g. Gardens"
+                  error={errors.suburb}
+                />
+                <Input
+                  id="city"
+                  label="City"
+                  type="text"
+                  value={city}
+                  onChange={(e) => {
+                    setCity(e.target.value);
+                    clearFieldError("city");
+                  }}
+                  placeholder="e.g. Cape Town"
+                  error={errors.city}
+                />
+                <Input
+                  id="province"
+                  label="Province"
+                  type="text"
+                  value={province}
+                  onChange={(e) => {
+                    setProvince(e.target.value);
+                    clearFieldError("province");
+                  }}
+                  placeholder="e.g. Western Cape"
+                  error={errors.province}
+                />
+                <Input
+                  id="postalCode"
+                  label="Postal code"
+                  type="text"
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
+                  placeholder="e.g. 8001"
                 />
               </div>
-            </div>
+            ) : null}
           </section>
 
           {/* ── Consent ── */}
-          <section className={styles.card}>
-            <div className={styles.cardInner}>
-              <label className={styles.consentField}>
-                <input
-                  type="checkbox"
-                  checked={consent}
-                  onChange={(e) => {
-                    setConsent(e.target.checked);
-                    clearFieldError("consent");
-                  }}
-                />
-                <span>
-                  I agree that Pexpacks may process my personal information to complete this
-                  lay-by plan, send payment reminders, and arrange delivery or collection. I
-                  have read and agree to the{" "}
-                  <a href="/privacy-policy" target="_blank">
-                    privacy policy
-                  </a>
-                  ,{" "}
-                  <a href="/lay-by-terms" target="_blank">
-                    lay-by terms
-                  </a>
-                  , and{" "}
-                  <a href="/delivery-policy" target="_blank">
-                    delivery policy
-                  </a>
-                  .
-                </span>
-              </label>
-              {errors.consent ? (
-                <p className={styles.fieldError}>{errors.consent}</p>
-              ) : null}
-            </div>
+          <section className={checkoutStyles.consentCard} aria-label="Consent">
+            <label className={`${checkoutStyles.consentField} ${styles.consentFieldAligned}`}>
+              <input
+                type="checkbox"
+                id="layby-consent"
+                checked={consent}
+                onChange={(e) => {
+                  setConsent(e.target.checked);
+                  clearFieldError("consent");
+                }}
+                aria-invalid={!!errors.consent}
+              />
+              <span>
+                I agree that Pexpacks may process my personal information to complete this
+                lay-by plan, send payment reminders, and arrange delivery or collection. I
+                have read and agree to the{" "}
+                <a href="/privacy-policy" target="_blank">
+                  privacy policy
+                </a>
+                ,{" "}
+                <a href="/lay-by-terms" target="_blank">
+                  lay-by terms
+                </a>
+                , and{" "}
+                <a href="/delivery-policy" target="_blank">
+                  delivery policy
+                </a>
+                .
+              </span>
+            </label>
+            {errors.consent ? (
+              <p className={checkoutStyles.fieldError}>{errors.consent}</p>
+            ) : null}
           </section>
 
           {submitError ? (
-            <p className={styles.formError} role="alert">
+            <p className={checkoutStyles.formStatusError} role="alert">
               {submitError}
             </p>
           ) : null}
-        </div>
+        </form>
 
         {/* ── Sidebar ── */}
-        <aside className={styles.sidebar}>
-          <div className={styles.summaryCard}>
-            <div className={styles.summaryHeader}>
-              <span className={styles.kicker}>Payment Plan</span>
-              <h2>Lay-by Summary</h2>
+        <aside className={checkoutStyles.summaryColumn}>
+          <div className={`${checkoutStyles.summaryCard} ${styles.summaryCardLayby}`}>
+            <div className={checkoutStyles.summaryHeader}>
+              <div>
+                <p className={checkoutStyles.checkoutKicker}>Payment Plan</p>
+                <h2>Lay-by Summary</h2>
+              </div>
+              <span>{MONTH_COUNT} months</span>
             </div>
 
+            {/* ── Deposit Card ── */}
             <div className={styles.depositCard}>
               <span className={styles.depositLabel}>Deposit due today</span>
               <strong className={styles.depositAmount}>
@@ -534,31 +562,23 @@ export function LaybyCheckoutClient() {
               </strong>
               <p className={styles.depositNote}>
                 Your pack total of {formatCurrency(total)} is split into{" "}
-                {MONTH_COUNT} equal payments with{" "}
-                <strong>0% interest</strong>.
+                {MONTH_COUNT} payments with <strong>0% interest</strong>.
               </p>
             </div>
 
-            {/* ── Schedule Timeline ── */}
+            {/* ── Schedule ── */}
             <div className={styles.schedule}>
               <span className={styles.scheduleTitle}>Payment Schedule</span>
               {SCHEDULE_MONTHS.map((month, i) => {
                 const amount = i === 0 ? plan.deposit : i < MONTH_COUNT - 1 ? plan.instalments[0] : plan.final;
                 const isDeposit = i === 0;
-                const isPast = false;
                 return (
                   <div
                     key={month.label}
-                    className={`${styles.scheduleRow} ${isDeposit ? styles.scheduleRowActive : ""} ${isPast ? styles.scheduleRowPast : ""}`}
+                    className={`${styles.scheduleRow} ${isDeposit ? styles.scheduleRowActive : ""}`}
                   >
                     <div className={styles.scheduleDot}>
-                      {isPast ? (
-                        <svg viewBox="0 0 16 16" fill="currentColor">
-                          <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm3.36 5.19l-4 4a.75.75 0 01-1.06 0l-2-2a.75.75 0 011.06-1.06L6.9 8.63l3.46-3.5a.75.75 0 011.06 1.06z" />
-                        </svg>
-                      ) : (
-                        <span>{i + 1}</span>
-                      )}
+                      <span>{i + 1}</span>
                     </div>
                     <div className={styles.scheduleInfo}>
                       <strong>
@@ -575,9 +595,11 @@ export function LaybyCheckoutClient() {
               })}
             </div>
 
-            <div className={styles.summaryTotal}>
-              <span>Full pack total</span>
-              <strong>{formatCurrency(total)}</strong>
+            <div className={checkoutStyles.summaryTotals}>
+              <div className={styles.summaryTotalRow}>
+                <span>Full pack total</span>
+                <strong>{formatCurrency(total)}</strong>
+              </div>
             </div>
 
             <div className={styles.summaryFooter}>
@@ -596,7 +618,7 @@ export function LaybyCheckoutClient() {
               type="button"
               variant="primary"
               size="lg"
-              className={styles.payButton}
+              className={checkoutStyles.fullWidth}
               onClick={handlePayDeposit}
               disabled={submitting}
               aria-busy={submitting}
@@ -606,18 +628,18 @@ export function LaybyCheckoutClient() {
                 : `Pay Deposit ${formatCurrency(plan.deposit)}`}
             </Button>
 
-            <p className={styles.securityNote}>
+            <p className={checkoutStyles.summarySecurity}>
               Secure payment via Paystack. Pexpacks never stores your card details.
             </p>
           </div>
         </aside>
-      </main>
+      </div>
 
-      <div className={styles.mobileCta}>
+      <div className={checkoutStyles.mobileStickyCta}>
         <Button
           type="button"
           variant="primary"
-          className={styles.fullWidth}
+          className={checkoutStyles.fullWidth}
           onClick={handlePayDeposit}
           disabled={submitting}
           aria-busy={submitting}

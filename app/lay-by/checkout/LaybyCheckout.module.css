@@ -1,154 +1,23 @@
 .page {
-  width: 100%;
   min-height: 100vh;
-  padding: 34px var(--gutter-desktop) var(--section-padding-y-desktop);
-  background: var(--pex-bg-soft);
-  font-family: var(--font-body);
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: var(--layout-max-width);
-  margin: 0 auto 34px;
-}
-
-.backButton {
-  border: 0;
-  padding: 8px 16px;
-  background: var(--pex-bg);
-  border: 1px solid var(--pex-border);
-  border-radius: var(--radius-pill);
+/* ── Empty State ── */
+.empty h1 {
+  margin: 0;
   color: var(--pex-primary);
-  font: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: var(--interactive-transition);
-}
-
-.backButton:hover {
-  border-color: var(--pex-keppel);
-  color: var(--pex-keppel);
-}
-
-.helpLink {
-  color: var(--pex-text-muted);
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.helpLink:hover {
-  color: var(--pex-keppel);
-}
-
-.grid {
-  max-width: var(--layout-max-width);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 32px;
-  align-items: start;
-}
-
-.hero {
-  grid-column: 1 / -1;
-  padding: 32px 36px;
-  border-radius: var(--radius-card);
-  background: var(--pex-bg);
-  border: 1px solid var(--pex-border);
-  box-shadow: var(--card-shadow);
-}
-
-.heroBadge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  background: var(--pex-keppel);
-  color: var(--pex-bg);
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  margin-bottom: 12px;
-}
-
-.hero h1 {
-  margin: 0 0 10px;
-  color: var(--pex-primary);
-  font-size: clamp(24px, 3.5vw, 32px);
+  font-size: 24px;
   font-weight: 900;
-  line-height: 1.15;
 }
 
-.hero p {
-  margin: 0;
-  color: var(--pex-muted);
-  font-size: 15px;
-  line-height: 1.6;
-  max-width: 600px;
-}
-
-.hero p strong {
-  color: var(--pex-primary);
-}
-
-.mainColumn {
-  display: grid;
-  gap: 20px;
-  min-width: 0;
-}
-
-.card {
-  border-radius: var(--radius-card);
-  background: var(--pex-bg);
-  border: 1px solid var(--pex-border);
-  box-shadow: var(--card-shadow);
-}
-
-.cardInner {
-  padding: 24px 28px;
-  display: grid;
-  gap: 16px;
-}
-
-.cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.cardNumber {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--pex-navy);
-  color: var(--pex-bg);
-  font-size: 14px;
-  font-weight: 800;
-  flex-shrink: 0;
-}
-
-.cardHeader h2 {
-  margin: 0;
-  color: var(--pex-primary);
-  font-size: 18px;
-  font-weight: 800;
-}
-
-.cardHelp {
+.empty p {
   margin: 0;
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
+/* ── Pack List ── */
 .packList {
   display: grid;
   gap: 12px;
@@ -172,7 +41,7 @@
   font-size: 16px;
 }
 
-.packRowInfo span {
+.packRowInfo > span {
   color: var(--pex-text-muted);
   font-size: 13px;
 }
@@ -245,185 +114,13 @@
   font-weight: 900;
 }
 
-.formGrid {
-  display: grid;
-  gap: 16px;
+/* ── Consent ── */
+.consentFieldAligned {
+  grid-template-columns: 22px 1fr;
 }
 
-.deliveryOptions {
-  display: grid;
-  gap: 10px;
-}
-
-.deliveryOption {
-  display: grid;
-  gap: 4px;
-  padding: 16px;
-  border: 1px solid var(--pex-border);
-  border-radius: var(--radius-card);
-  cursor: pointer;
-  transition: var(--interactive-transition);
-}
-
-.deliveryOption:hover {
-  border-color: var(--pex-keppel);
-}
-
-.deliveryOptionSelected {
-  border-color: var(--pex-keppel);
-  background: rgba(33, 158, 154, 0.04);
-}
-
-.deliveryOption input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.deliveryOption strong {
-  color: var(--pex-primary);
-  font-size: 15px;
-}
-
-.deliveryOption p {
-  margin: 0;
-  color: var(--pex-text-muted);
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.addressGrid {
-  display: grid;
-  gap: 14px;
-  padding-top: 8px;
-}
-
-.notesField {
-  display: grid;
-  gap: 6px;
-}
-
-.notesField label {
-  color: var(--form-label-color);
-  font-size: var(--form-label-size);
-  font-weight: var(--form-label-weight);
-}
-
-.notesField textarea {
-  width: 100%;
-  min-height: 80px;
-  border: var(--form-control-border);
-  border-radius: var(--form-control-radius);
-  padding: var(--form-control-padding-x);
-  background: var(--form-control-bg);
-  color: var(--form-control-color);
-  font: inherit;
-  font-size: var(--form-control-font-size);
-  transition: var(--interactive-transition);
-  box-sizing: border-box;
-  resize: vertical;
-}
-
-.notesField textarea:focus {
-  border-color: var(--form-control-focus-border);
-  outline: 0;
-  box-shadow: var(--form-control-focus-shadow);
-}
-
-.consentField {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  cursor: pointer;
-}
-
-.consentField input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin-top: 2px;
-  flex-shrink: 0;
-  appearance: none;
-  border: 1.5px solid var(--pex-border);
-  border-radius: 6px;
-  background: var(--pex-bg);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition: var(--interactive-transition);
-}
-
-.consentField input[type="checkbox"]:checked {
-  border-color: var(--pex-keppel);
-  background: var(--pex-keppel);
-}
-
-.consentField span {
-  color: var(--pex-muted);
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.consentField a {
-  color: var(--pex-keppel);
-  text-decoration: underline;
-}
-
-.fieldError {
-  margin: 0;
-  color: var(--pex-error, #d32f2f);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.formError {
-  margin: 0;
-  padding: 14px 18px;
-  border-radius: var(--radius-field);
-  background: rgba(211, 47, 47, 0.08);
-  border: 1px solid rgba(211, 47, 47, 0.2);
-  color: var(--pex-error, #d32f2f);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-/* ── Sidebar ── */
-.sidebar {
-  position: sticky;
-  top: 100px;
-}
-
-.summaryCard {
-  border-radius: var(--radius-card);
-  background: var(--pex-bg);
-  border: 1px solid var(--pex-border);
-  box-shadow: var(--card-shadow);
-  overflow: hidden;
-}
-
-.summaryHeader {
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--pex-border);
-}
-
-.summaryHeader h2 {
-  margin: 6px 0 0;
-  color: var(--pex-primary);
-  font-size: 18px;
-  font-weight: 800;
-}
-
-.kicker {
-  display: block;
-  color: var(--pex-coral);
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
+/* ── Deposit Card ── */
 .depositCard {
-  margin: 16px 20px;
   padding: 20px;
   border-radius: var(--radius-card);
   background: linear-gradient(135deg, var(--pex-navy) 0%, #1a3550 100%);
@@ -458,8 +155,10 @@
   color: var(--pex-keppel);
 }
 
+/* ── Schedule ── */
 .schedule {
-  padding: 0 20px 16px;
+  display: grid;
+  gap: 0;
 }
 
 .scheduleTitle {
@@ -489,11 +188,6 @@
   font-weight: 900;
 }
 
-.scheduleRowPast .scheduleInfo strong {
-  color: var(--pex-text-muted);
-  text-decoration: line-through;
-}
-
 .scheduleDot {
   width: 28px;
   height: 28px;
@@ -511,16 +205,6 @@
 .scheduleRowActive .scheduleDot {
   background: var(--pex-coral);
   color: var(--pex-bg);
-}
-
-.scheduleRowPast .scheduleDot {
-  background: var(--pex-keppel);
-  color: var(--pex-bg);
-}
-
-.scheduleRowPast .scheduleDot svg {
-  width: 14px;
-  height: 14px;
 }
 
 .scheduleInfo {
@@ -547,34 +231,25 @@
   white-space: nowrap;
 }
 
-.summaryTotal {
+.summaryTotalRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 20px;
-  border-top: 1px solid var(--pex-border);
-  background: var(--pex-bg-soft);
-}
-
-.summaryTotal span {
+  gap: 14px;
   color: var(--pex-text-muted);
-  font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-.summaryTotal strong {
-  color: var(--pex-primary);
-  font-size: 18px;
-  font-weight: 900;
+.summaryTotalRow strong {
+  color: var(--pex-navy);
 }
 
+/* ── Summary Footer ── */
 .summaryFooter {
-  padding: 16px 20px;
+  padding: 16px 0;
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  background: rgba(33, 158, 154, 0.04);
-  border-top: 1px solid rgba(33, 158, 154, 0.12);
 }
 
 .summaryFooterIcon {
@@ -601,93 +276,8 @@
   line-height: 1.5;
 }
 
-.payButton {
-  margin: 0 20px 16px;
-  width: calc(100% - 40px);
-  min-height: 52px;
-  font-size: 17px;
-}
-
-.securityNote {
-  margin: 0;
-  padding: 0 20px 20px;
-  color: var(--pex-text-muted);
-  font-size: 12px;
-  line-height: 1.4;
-  text-align: center;
-}
-
-.mobileCta {
-  display: none;
-}
-
-.fullWidth {
-  width: 100%;
-}
-
-/* ── Empty State ── */
-.empty {
-  max-width: 480px;
-  margin: 80px auto;
-  text-align: center;
-  display: grid;
-  gap: 12px;
-  justify-items: center;
-}
-
-.empty h1 {
-  margin: 0;
-  color: var(--pex-primary);
-  font-size: 24px;
-  font-weight: 900;
-}
-
-.empty p {
-  margin: 0;
-  color: var(--pex-text-muted);
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-/* ── Responsive ── */
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    position: static;
-  }
-
-  .mobileCta {
-    display: block;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    padding: 12px 16px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    background: var(--pex-bg);
-    border-top: 1px solid var(--pex-border);
-    box-shadow: 0 -8px 24px rgba(26, 42, 64, 0.1);
-  }
-}
-
-@media (max-width: 600px) {
-  .page {
-    padding: 20px var(--gutter-mobile) 100px;
-  }
-
-  .header {
-    margin-bottom: 20px;
-  }
-
-  .hero {
-    padding: 24px 20px;
-  }
-
-  .cardInner {
-    padding: 20px 16px;
+@media (max-width: 480px) {
+  .depositAmount {
+    font-size: 28px;
   }
 }
