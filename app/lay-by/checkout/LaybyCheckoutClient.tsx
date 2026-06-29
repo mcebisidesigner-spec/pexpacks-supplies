@@ -1063,14 +1063,6 @@ export function LaybyCheckoutClient() {
       >
         <Button
           type="button"
-          variant="outline"
-          className={`${checkoutStyles.fullWidth} ${styles.mobileEditOrderButton}`}
-          onClick={handleBackToOrder}
-        >
-          Edit order
-        </Button>
-        <Button
-          type="button"
           variant="primary"
           className={checkoutStyles.fullWidth}
           onClick={handlePayDeposit}

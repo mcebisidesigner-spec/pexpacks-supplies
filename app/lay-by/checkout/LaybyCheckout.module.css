@@ -315,13 +315,6 @@
   box-shadow: none !important;
 }
 
-.mobileEditOrderButton {
-  min-height: 42px;
-  border-color: var(--pex-navy) !important;
-  background: var(--pex-bg) !important;
-  color: var(--pex-navy) !important;
-}
-
 .mobileStickyActions {
   display: grid !important;
   gap: 8px;
