@@ -17,7 +17,7 @@ type FulfilmentOption =
   | 'home_delivery'
   | 'arranged_collection'
 type ContactMethod = 'whatsapp' | 'phone' | 'email'
-type CheckoutSummarySection = 'details' | 'delivery' | 'payment'
+type CheckoutSummarySection = 'details' | 'delivery'
 
 const contactOptions: { value: ContactMethod; label: string }[] = [
   { value: 'whatsapp', label: 'WhatsApp' },
@@ -165,7 +165,6 @@ export function TrayCheckoutClient() {
   >({
     details: true,
     delivery: true,
-    payment: true,
   })
   const fieldRefs = useRef<
     Record<string, HTMLInputElement | HTMLTextAreaElement | null>
@@ -175,7 +174,6 @@ export function TrayCheckoutClient() {
   >({
     details: null,
     delivery: null,
-    payment: null,
   })
   const consentRef = useRef<HTMLElement | null>(null)
   const summaryRef = useRef<HTMLElement | null>(null)
@@ -871,60 +869,6 @@ export function TrayCheckoutClient() {
                 rows={4}
                 className={styles.deliveryNotesField}
               />
-            </div>
-          </section>
-
-          <section
-            ref={(node) => {
-              sectionRefs.current.payment = node
-            }}
-            tabIndex={-1}
-            className={styles.checkoutSection}
-            aria-labelledby="payment-heading"
-          >
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionNumber}>3</span>
-              <div>
-                <h2 id="payment-heading">Secure payment</h2>
-                <p>
-                  Pexpacks does not store your credit/debit card details, and
-                  our payment gateway is secure.
-                </p>
-              </div>
-              <button
-                type="button"
-                className={styles.mobileSummaryToggle}
-                onClick={() => toggleMobileSectionSummary('payment')}
-                aria-expanded={mobileSectionSummaryOpen.payment}
-                aria-controls="payment-summary"
-              >
-                {mobileSectionSummaryOpen.payment
-                  ? 'Hide Summary'
-                  : 'View Summary'}
-              </button>
-            </div>
-            <div
-              id="payment-summary"
-              className={`${styles.mobileCollapsibleSummary} ${
-                mobileSectionSummaryOpen.payment
-                  ? styles.mobileCollapsibleSummaryOpen
-                  : ''
-              }`}
-            >
-              <div className={styles.paymentConfirmationGrid}>
-                <div className={styles.paymentFact}>
-                  <span>Total to pay</span>
-                  <strong>{formatCurrency(total)}</strong>
-                </div>
-                <div className={styles.paymentFact}>
-                  <span>Status</span>
-                  <strong>Pending payment</strong>
-                </div>
-                <div className={styles.paymentFact}>
-                  <span>Lay-by</span>
-                  <strong>PayFlex</strong>
-                </div>
-              </div>
             </div>
           </section>
 

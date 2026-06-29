@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -12,6 +12,7 @@ import checkoutStyles from "@/app/checkout/Checkout.module.css";
 import styles from "./LaybyCheckout.module.css";
 
 type FulfilmentOption = "school_collection" | "home_delivery" | "arranged_collection";
+type CheckoutSummarySection = "order" | "details" | "delivery";
 
 const SCHEDULE_MONTHS = [
   { label: "June", subtitle: "Deposit" },
@@ -79,6 +80,32 @@ export function LaybyCheckoutClient() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [mobileSectionSummaryOpen, setMobileSectionSummaryOpen] = useState<
+    Record<CheckoutSummarySection, boolean>
+  >({
+    order: true,
+    details: true,
+    delivery: true,
+  });
+  const fieldRefs = useRef<
+    Record<string, HTMLInputElement | HTMLTextAreaElement | null>
+  >({});
+  const sectionRefs = useRef<
+    Record<CheckoutSummarySection, HTMLElement | null>
+  >({
+    order: null,
+    details: null,
+    delivery: null,
+  });
+  const consentRef = useRef<HTMLElement | null>(null);
+  const summaryRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setLearnerInputs((prev) => {
+      if (prev.length === packs.length) return prev;
+      return packs.map((pack, index) => prev[index] ?? pack.learnerName ?? "");
+    });
+  }, [packs]);
 
   const total = useMemo(() => calculateTrayTotal(packs), [packs]);
   const plan = useMemo(() => computeInstalmentplan(total), [total]);
@@ -107,6 +134,66 @@ export function LaybyCheckoutClient() {
       const next = { ...prev };
       delete next[field];
       return next;
+    });
+  }
+
+  const orderSectionHasErrors = Object.keys(errors).some((key) =>
+    key.startsWith("learner_"),
+  );
+  const detailsSectionHasErrors = Boolean(
+    errors.fullName || errors.buyerPhone || errors.buyerEmail,
+  );
+  const deliverySectionHasErrors = Boolean(
+    errors.address || errors.suburb || errors.city || errors.province,
+  );
+  const showOrderHiddenWarning =
+    orderSectionHasErrors && !mobileSectionSummaryOpen.order;
+  const showDetailsHiddenWarning =
+    detailsSectionHasErrors && !mobileSectionSummaryOpen.details;
+  const showDeliveryHiddenWarning =
+    deliverySectionHasErrors && !mobileSectionSummaryOpen.delivery;
+
+  const toggleMobileSectionSummary = useCallback(
+    (section: CheckoutSummarySection) => {
+      setMobileSectionSummaryOpen((current) => ({
+        ...current,
+        [section]: !current[section],
+      }));
+    },
+    [],
+  );
+
+  function getSectionForError(field: string): CheckoutSummarySection | null {
+    if (field.startsWith("learner_")) return "order";
+    if (field === "fullName" || field === "buyerPhone" || field === "buyerEmail")
+      return "details";
+    if (field === "address" || field === "suburb" || field === "city" || field === "province")
+      return "delivery";
+    return null;
+  }
+
+  function guideToIncompleteField(field: string) {
+    const section = getSectionForError(field);
+    if (section) {
+      setMobileSectionSummaryOpen((current) => ({
+        ...current,
+        [section]: true,
+      }));
+    }
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const fieldNode = fieldRefs.current[field];
+        const target =
+          fieldNode ||
+          (section ? sectionRefs.current[section] : null) ||
+          (field === "consent" ? consentRef.current : null);
+        target?.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (fieldNode) {
+          fieldNode.focus({ preventScroll: true });
+        } else if (target instanceof HTMLElement) {
+          target.focus({ preventScroll: true });
+        }
+      });
     });
   }
 
@@ -140,6 +227,12 @@ export function LaybyCheckoutClient() {
     if (!consent) next.consent = "Please accept the order processing consent.";
 
     setErrors(next);
+
+    const firstError = Object.keys(next)[0];
+    if (firstError) {
+      guideToIncompleteField(firstError);
+    }
+
     return Object.keys(next).length === 0;
   }
 
@@ -263,14 +356,38 @@ export function LaybyCheckoutClient() {
           onSubmit={(e) => e.preventDefault()}
         >
           {/* ── Order Summary (Section 1) ── */}
-          <section className={checkoutStyles.checkoutSection} aria-labelledby="layby-order-heading">
+          <section
+            ref={(node) => { sectionRefs.current.order = node }}
+            tabIndex={-1}
+            className={`${checkoutStyles.checkoutSection} ${
+              showOrderHiddenWarning ? checkoutStyles.checkoutSectionWarning : ""
+            }`}
+            aria-labelledby="layby-order-heading"
+          >
             <div className={checkoutStyles.sectionHeader}>
               <span className={checkoutStyles.sectionNumber}>1</span>
               <div>
                 <h2 id="layby-order-heading">Your Order</h2>
                 <p>Review the packs included in your lay-by plan.</p>
               </div>
+              <button
+                type="button"
+                className={checkoutStyles.mobileSummaryToggle}
+                onClick={() => toggleMobileSectionSummary("order")}
+                aria-expanded={mobileSectionSummaryOpen.order}
+                aria-controls="layby-order-summary"
+              >
+                {mobileSectionSummaryOpen.order ? "Hide Summary" : "View Summary"}
+              </button>
             </div>
+            <div
+              id="layby-order-summary"
+              className={`${checkoutStyles.mobileCollapsibleSummary} ${
+                mobileSectionSummaryOpen.order
+                  ? checkoutStyles.mobileCollapsibleSummaryOpen
+                  : ""
+              }`}
+            >
             <div className={styles.packList}>
               {packs.map((pack, index) => (
                 <div key={pack.id} className={styles.packRow}>
@@ -288,6 +405,7 @@ export function LaybyCheckoutClient() {
                     </label>
                     <input
                       id={`learner-${pack.id}`}
+                      ref={(node) => { fieldRefs.current[`learner_${index}`] = node }}
                       className={styles.learnerInput}
                       type="text"
                       placeholder="Learner's name"
@@ -310,20 +428,51 @@ export function LaybyCheckoutClient() {
               <span>Pack total</span>
               <strong>{formatCurrency(total)}</strong>
             </div>
+            </div>
+            {showOrderHiddenWarning ? (
+              <p className={checkoutStyles.mobileHiddenSummaryWarning} role="alert">
+                Fill in learner names (Click "View Summary")
+              </p>
+            ) : null}
           </section>
 
           {/* ── Your Details (Section 2) ── */}
-          <section className={checkoutStyles.checkoutSection} aria-labelledby="layby-details-heading">
+          <section
+            ref={(node) => { sectionRefs.current.details = node }}
+            tabIndex={-1}
+            className={`${checkoutStyles.checkoutSection} ${
+              showDetailsHiddenWarning ? checkoutStyles.checkoutSectionWarning : ""
+            }`}
+            aria-labelledby="layby-details-heading"
+          >
             <div className={checkoutStyles.sectionHeader}>
               <span className={checkoutStyles.sectionNumber}>2</span>
               <div>
                 <h2 id="layby-details-heading">Your details</h2>
                 <p>We use these for order updates and payment confirmations.</p>
               </div>
+              <button
+                type="button"
+                className={checkoutStyles.mobileSummaryToggle}
+                onClick={() => toggleMobileSectionSummary("details")}
+                aria-expanded={mobileSectionSummaryOpen.details}
+                aria-controls="layby-details-summary"
+              >
+                {mobileSectionSummaryOpen.details ? "Hide Summary" : "View Summary"}
+              </button>
             </div>
+            <div
+              id="layby-details-summary"
+              className={`${checkoutStyles.mobileCollapsibleSummary} ${
+                mobileSectionSummaryOpen.details
+                  ? checkoutStyles.mobileCollapsibleSummaryOpen
+                  : ""
+              }`}
+            >
             <div className={checkoutStyles.formGrid}>
               <Input
                 id="fullName"
+                ref={(node) => { fieldRefs.current.fullName = node }}
                 label="Full name"
                 type="text"
                 value={fullName}
@@ -337,6 +486,7 @@ export function LaybyCheckoutClient() {
               />
               <Input
                 id="buyerPhone"
+                ref={(node) => { fieldRefs.current.buyerPhone = node }}
                 label="Phone number"
                 type="tel"
                 value={buyerPhone}
@@ -350,6 +500,7 @@ export function LaybyCheckoutClient() {
               />
               <Input
                 id="buyerEmail"
+                ref={(node) => { fieldRefs.current.buyerEmail = node }}
                 label="Email address"
                 type="email"
                 value={buyerEmail}
@@ -362,17 +513,47 @@ export function LaybyCheckoutClient() {
                 autoComplete="email"
               />
             </div>
+            </div>
+            {showDetailsHiddenWarning ? (
+              <p className={checkoutStyles.mobileHiddenSummaryWarning} role="alert">
+                Fill in your details (Click "View Summary")
+              </p>
+            ) : null}
           </section>
 
           {/* ── Delivery / Collection (Section 3) ── */}
-          <section className={checkoutStyles.checkoutSection} aria-labelledby="layby-fulfilment-heading">
+          <section
+            ref={(node) => { sectionRefs.current.delivery = node }}
+            tabIndex={-1}
+            className={`${checkoutStyles.checkoutSection} ${
+              showDeliveryHiddenWarning ? checkoutStyles.checkoutSectionWarning : ""
+            }`}
+            aria-labelledby="layby-fulfilment-heading"
+          >
             <div className={checkoutStyles.sectionHeader}>
               <span className={checkoutStyles.sectionNumber}>3</span>
               <div>
                 <h2 id="layby-fulfilment-heading">Delivery or collection</h2>
                 <p>Choose how you want to receive your pack once the balance is settled.</p>
               </div>
+              <button
+                type="button"
+                className={checkoutStyles.mobileSummaryToggle}
+                onClick={() => toggleMobileSectionSummary("delivery")}
+                aria-expanded={mobileSectionSummaryOpen.delivery}
+                aria-controls="layby-fulfilment-summary"
+              >
+                {mobileSectionSummaryOpen.delivery ? "Hide Summary" : "View Summary"}
+              </button>
             </div>
+            <div
+              id="layby-fulfilment-summary"
+              className={`${checkoutStyles.mobileCollapsibleSummary} ${
+                mobileSectionSummaryOpen.delivery
+                  ? checkoutStyles.mobileCollapsibleSummaryOpen
+                  : ""
+              }`}
+            >
             <fieldset className={checkoutStyles.optionFieldset}>
               <legend className={checkoutStyles.srOnly}>Delivery or collection method</legend>
               <div className={checkoutStyles.deliveryOptions}>
@@ -442,6 +623,7 @@ export function LaybyCheckoutClient() {
               <div className={checkoutStyles.addressPanel}>
                 <Input
                   id="address"
+                  ref={(node) => { fieldRefs.current.address = node }}
                   label="Address line"
                   type="text"
                   value={address}
@@ -454,6 +636,7 @@ export function LaybyCheckoutClient() {
                 />
                 <Input
                   id="suburb"
+                  ref={(node) => { fieldRefs.current.suburb = node }}
                   label="Suburb"
                   type="text"
                   value={suburb}
@@ -466,6 +649,7 @@ export function LaybyCheckoutClient() {
                 />
                 <Input
                   id="city"
+                  ref={(node) => { fieldRefs.current.city = node }}
                   label="City"
                   type="text"
                   value={city}
@@ -478,6 +662,7 @@ export function LaybyCheckoutClient() {
                 />
                 <Input
                   id="province"
+                  ref={(node) => { fieldRefs.current.province = node }}
                   label="Province"
                   type="text"
                   value={province}
@@ -498,12 +683,24 @@ export function LaybyCheckoutClient() {
                 />
               </div>
             ) : null}
+            </div>
+            {showDeliveryHiddenWarning ? (
+              <p className={checkoutStyles.mobileHiddenSummaryWarning} role="alert">
+                Fill in delivery details (Click "View Summary")
+              </p>
+            ) : null}
           </section>
 
           {/* ── Consent ── */}
-          <section className={checkoutStyles.consentCard} aria-label="Consent">
+          <section
+            ref={consentRef}
+            tabIndex={-1}
+            className={checkoutStyles.consentCard}
+            aria-label="Consent"
+          >
             <label className={`${checkoutStyles.consentField} ${styles.consentFieldAligned}`}>
               <input
+                ref={(node) => { fieldRefs.current.consent = node }}
                 type="checkbox"
                 id="layby-consent"
                 checked={consent}
@@ -514,19 +711,27 @@ export function LaybyCheckoutClient() {
                 aria-invalid={!!errors.consent}
               />
               <span>
-                I agree that Pexpacks may process my personal information to complete this
-                lay-by plan, send payment reminders, and arrange delivery or collection. I
-                have read and agree to the{" "}
+                I agree that Pexpacks may process my personal information to
+                complete this order, send payment and order updates, and contact
+                me about delivery or collection. I have read and agree to the{" "}
                 <a href="/privacy-policy" target="_blank">
                   privacy policy
+                </a>
+                ,{" "}
+                <a href="/terms" target="_blank">
+                  terms of use
+                </a>
+                ,{" "}
+                <a href="/delivery-policy" target="_blank">
+                  delivery policy
                 </a>
                 ,{" "}
                 <a href="/lay-by-terms" target="_blank">
                   lay-by terms
                 </a>
                 , and{" "}
-                <a href="/delivery-policy" target="_blank">
-                  delivery policy
+                <a href="/returns-refunds-policy" target="_blank">
+                  returns &amp; refunds policy
                 </a>
                 .
               </span>
@@ -544,7 +749,7 @@ export function LaybyCheckoutClient() {
         </form>
 
         {/* ── Sidebar ── */}
-        <aside className={checkoutStyles.summaryColumn}>
+        <aside ref={summaryRef} tabIndex={-1} className={checkoutStyles.summaryColumn}>
           <div className={`${checkoutStyles.summaryCard} ${styles.summaryCardLayby}`}>
             <div className={checkoutStyles.summaryHeader}>
               <div>
@@ -618,7 +823,7 @@ export function LaybyCheckoutClient() {
               type="button"
               variant="primary"
               size="lg"
-              className={checkoutStyles.fullWidth}
+              className={`${checkoutStyles.fullWidth} ${checkoutStyles.desktopPayButton}`}
               onClick={handlePayDeposit}
               disabled={submitting}
               aria-busy={submitting}
