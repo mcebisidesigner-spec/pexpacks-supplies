@@ -22,6 +22,12 @@ export function PackTrayFooter() {
     router.push("/checkout");
   }, [hasPacks, closeTray, router]);
 
+  const handleLayby = useCallback(() => {
+    if (!hasPacks) return;
+    closeTray();
+    router.push("/lay-by/checkout");
+  }, [hasPacks, closeTray, router]);
+
   const handleAddAnotherLearner = useCallback(() => {
     setShowSchoolChoice(true);
   }, []);
@@ -85,7 +91,14 @@ export function PackTrayFooter() {
           className={styles.primaryButton}
           onClick={handleCheckout}
         >
-          Checkout &amp; Pay Securely
+          Checkout &amp; Pay Now
+        </button>
+        <button
+          type="button"
+          className={styles.laybyButton}
+          onClick={handleLayby}
+        >
+          Start Lay-by Plan
         </button>
         <button
           type="button"

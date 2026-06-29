@@ -545,6 +545,35 @@
   outline-offset: 3px;
 }
 
+.laybyButton {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--button-transition);
+}
+
+.laybyButton:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+  box-shadow: var(--button-hover-shadow);
+}
+
+.laybyButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 3px;
+}
+
 .tertiaryButton {
   border: 0;
   padding: 8px;
