@@ -259,6 +259,10 @@ export const DeliveryStep = memo(function DeliveryStep({
           <a href="/delivery-policy" target="_blank" rel="noopener noreferrer">
             delivery policy
           </a>
+          ,{" "}
+          <a href="/lay-by-terms" target="_blank" rel="noopener noreferrer">
+            lay-by terms
+          </a>
           , and{" "}
           <a href="/returns-refunds-policy" target="_blank" rel="noopener noreferrer">
             returns & refunds policy
