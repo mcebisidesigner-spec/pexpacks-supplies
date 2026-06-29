@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMultiPackOrder, generateOrderReference } from "@/lib/orders";
 import { initializePaystackTransaction } from "@/lib/paystack";
-import { PEXCOVER_PRICE } from "@/lib/constants";
 
 export const runtime = "nodejs";
 

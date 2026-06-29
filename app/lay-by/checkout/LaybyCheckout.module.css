@@ -2,6 +2,48 @@
   min-height: 100vh;
 }
 
+.orderLearnerLine {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--pex-text-muted);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.orderLearnerLine label {
+  flex-shrink: 0;
+}
+
+.orderLearnerInput {
+  width: min(180px, 42vw);
+  min-height: 22px;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--pex-text-muted);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  outline: none;
+}
+
+.orderLearnerInput::placeholder {
+  color: var(--pex-text-muted);
+  opacity: 1;
+}
+
+.orderLearnerInput:focus {
+  color: var(--pex-primary);
+}
+
+.orderLearnerInputError,
+.orderLearnerInputError::placeholder {
+  color: var(--form-error-color);
+}
+
 /* ── Empty State ── */
 .empty h1 {
   margin: 0;
@@ -231,49 +273,58 @@
   white-space: nowrap;
 }
 
-.summaryTotalRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.finalAmountPanel {
+  display: grid;
   gap: 14px;
-  color: var(--pex-text-muted);
-  font-weight: 700;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 111, 89, 0.22);
 }
 
-.summaryTotalRow strong {
-  color: var(--pex-navy);
-}
-
-/* ── Summary Footer ── */
-.summaryFooter {
-  padding: 16px 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.summaryFooterIcon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(33, 158, 154, 0.1);
-  color: var(--pex-keppel);
+.finalAmountRow {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  justify-content: space-between;
+  gap: 14px;
+  color: var(--pex-navy);
+  font-size: 14px;
+  font-weight: 750;
 }
 
-.summaryFooterIcon svg {
-  width: 16px;
-  height: 16px;
+.finalAmountRow strong {
+  color: var(--pex-navy);
+  font-size: 15px;
+  font-weight: 900;
+  white-space: nowrap;
 }
 
-.summaryFooter p {
-  margin: 0;
-  color: var(--pex-muted);
-  font-size: 13px;
-  line-height: 1.5;
+.finalAmountGrand {
+  padding-top: 2px;
+}
+
+.finalAmountGrand strong {
+  color: var(--pex-coral);
+  font-size: 18px;
+}
+
+.editOrderButton {
+  width: 100%;
+  min-height: 44px;
+  border-color: var(--pex-navy) !important;
+  color: var(--pex-navy) !important;
+  background: var(--pex-bg) !important;
+  box-shadow: none !important;
+}
+
+.mobileEditOrderButton {
+  min-height: 42px;
+  border-color: var(--pex-navy) !important;
+  background: var(--pex-bg) !important;
+  color: var(--pex-navy) !important;
+}
+
+.mobileStickyActions {
+  display: grid !important;
+  gap: 8px;
 }
 
 @media (max-width: 480px) {

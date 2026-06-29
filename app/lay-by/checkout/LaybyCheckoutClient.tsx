@@ -8,11 +8,19 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import Textarea from "@/components/ui/Textarea";
 import checkoutStyles from "@/app/checkout/Checkout.module.css";
 import styles from "./LaybyCheckout.module.css";
 
 type FulfilmentOption = "school_collection" | "home_delivery" | "arranged_collection";
+type ContactMethod = "whatsapp" | "phone" | "email";
 type CheckoutSummarySection = "order" | "details" | "delivery";
+
+const contactOptions: { value: ContactMethod; label: string }[] = [
+  { value: "whatsapp", label: "WhatsApp" },
+  { value: "phone", label: "Phone call" },
+  { value: "email", label: "Email" },
+];
 
 const SCHEDULE_MONTHS = [
   { label: "June", subtitle: "Deposit" },
@@ -57,6 +65,14 @@ function isLikelySaPhone(value: string) {
   );
 }
 
+function getPackTotal(pack: ReturnType<typeof usePackTrayStore.getState>["packs"][number]) {
+  return pack.totalPrice + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+}
+
+function getPackItemPreview(pack: ReturnType<typeof usePackTrayStore.getState>["packs"][number]) {
+  return pack.items.slice(0, 4);
+}
+
 export function LaybyCheckoutClient() {
   const router = useRouter();
   const packs = usePackTrayStore((s) => s.packs);
@@ -69,7 +85,10 @@ export function LaybyCheckoutClient() {
   const [fullName, setFullName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
+  const [preferredContactMethod, setPreferredContactMethod] =
+    useState<ContactMethod>("whatsapp");
   const [fulfilmentOption, setFulfilmentOption] = useState<FulfilmentOption>("school_collection");
+  const [multiSchoolDrop, setMultiSchoolDrop] = useState<string | null>(null);
   const [address, setAddress] = useState("");
   const [suburb, setSuburb] = useState("");
   const [city, setCity] = useState("");
@@ -80,6 +99,9 @@ export function LaybyCheckoutClient() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [expandedPacks, setExpandedPacks] = useState<Record<string, boolean>>(
+    {},
+  );
   const [mobileSectionSummaryOpen, setMobileSectionSummaryOpen] = useState<
     Record<CheckoutSummarySection, boolean>
   >({
@@ -123,6 +145,14 @@ export function LaybyCheckoutClient() {
     return Array.from(map.values());
   }, [packs]);
 
+  const isSingleSchool = uniqueSchools.length <= 1;
+
+  useEffect(() => {
+    if (isSingleSchool && fulfilmentOption === "school_collection") {
+      setMultiSchoolDrop(uniqueSchools[0]?.slug ?? null);
+    }
+  }, [fulfilmentOption, isSingleSchool, uniqueSchools]);
+
   const handleBackToOrder = useCallback(() => {
     openTray();
     router.back();
@@ -144,7 +174,11 @@ export function LaybyCheckoutClient() {
     errors.fullName || errors.buyerPhone || errors.buyerEmail,
   );
   const deliverySectionHasErrors = Boolean(
-    errors.address || errors.suburb || errors.city || errors.province,
+    errors.address ||
+      errors.suburb ||
+      errors.city ||
+      errors.province ||
+      errors.multiSchoolDrop,
   );
   const showOrderHiddenWarning =
     orderSectionHasErrors && !mobileSectionSummaryOpen.order;
@@ -167,7 +201,13 @@ export function LaybyCheckoutClient() {
     if (field.startsWith("learner_")) return "order";
     if (field === "fullName" || field === "buyerPhone" || field === "buyerEmail")
       return "details";
-    if (field === "address" || field === "suburb" || field === "city" || field === "province")
+    if (
+      field === "address" ||
+      field === "suburb" ||
+      field === "city" ||
+      field === "province" ||
+      field === "multiSchoolDrop"
+    )
       return "delivery";
     return null;
   }
@@ -224,6 +264,15 @@ export function LaybyCheckoutClient() {
       if (!province.trim()) next.province = "Please enter the province.";
     }
 
+    if (
+      fulfilmentOption === "school_collection" &&
+      uniqueSchools.length > 1 &&
+      !multiSchoolDrop
+    ) {
+      next.multiSchoolDrop =
+        "Select which school the box should be dropped at.";
+    }
+
     if (!consent) next.consent = "Please accept the order processing consent.";
 
     setErrors(next);
@@ -278,8 +327,19 @@ export function LaybyCheckoutClient() {
               : fulfilmentOption === "home_delivery"
                 ? "delivery"
                 : "collection_point",
-          primarySchoolSlug: uniqueSchools[0]?.slug || packs[0]?.schoolSlug || "",
-          notes: deliveryNotes.trim() ? deliveryNotes.trim() : undefined,
+          primarySchoolSlug:
+            uniqueSchools.length > 1
+              ? multiSchoolDrop
+              : uniqueSchools[0]?.slug || packs[0]?.schoolSlug || "",
+          notes: [
+            deliveryNotes.trim() ? `Notes: ${deliveryNotes.trim()}` : "",
+            deliveryExpanded ? `Address: ${deliveryAddressSummary}` : "",
+            preferredContactMethod
+              ? `Preferred contact: ${preferredContactMethod}`
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" | ") || undefined,
         }),
       });
 
@@ -388,46 +448,122 @@ export function LaybyCheckoutClient() {
                   : ""
               }`}
             >
-            <div className={styles.packList}>
-              {packs.map((pack, index) => (
-                <div key={pack.id} className={styles.packRow}>
-                  <div className={styles.packRowInfo}>
-                    <strong>{pack.packName}</strong>
-                    <span>
-                      {pack.schoolName}
-                      {pack.grade ? ` \u00b7 ${pack.grade}` : ""}
-                    </span>
-                    {pack.wantsPexcover ? <span className={styles.pexcoverTag}>+Pexcover</span> : null}
-                  </div>
-                  <div className={styles.packRowLearner}>
-                    <label className={styles.learnerLabel} htmlFor={`learner-${pack.id}`}>
-                      Learner name
-                    </label>
-                    <input
-                      id={`learner-${pack.id}`}
-                      ref={(node) => { fieldRefs.current[`learner_${index}`] = node }}
-                      className={styles.learnerInput}
-                      type="text"
-                      placeholder="Learner's name"
-                      value={learnerInputs[index] || ""}
-                      onChange={(e) => {
-                        const next = [...learnerInputs];
-                        next[index] = e.target.value;
-                        setLearnerInputs(next);
-                        clearFieldError(`learner_${index}`);
-                      }}
-                    />
-                    {errors[`learner_${index}`] ? (
-                      <p className={checkoutStyles.fieldError}>{errors[`learner_${index}`]}</p>
-                    ) : null}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className={styles.orderTotal}>
-              <span>Pack total</span>
-              <strong>{formatCurrency(total)}</strong>
-            </div>
+              <div className={checkoutStyles.orderSummaryList}>
+                {packs.map((pack, index) => {
+                  const isExpanded = !!expandedPacks[pack.id];
+                  const previewItems = getPackItemPreview(pack);
+                  const hiddenCount = Math.max(
+                    pack.items.length - previewItems.length,
+                    0,
+                  );
+                  return (
+                    <article key={pack.id} className={checkoutStyles.orderPackCard}>
+                      <div className={checkoutStyles.orderPackTop}>
+                        <div className={styles.orderLearnerLine}>
+                          <label htmlFor={`learner-${pack.id}`}>
+                            Learner {index + 1}:
+                          </label>
+                          <input
+                            id={`learner-${pack.id}`}
+                            ref={(node) => {
+                              fieldRefs.current[`learner_${index}`] = node;
+                            }}
+                            className={`${styles.orderLearnerInput} ${
+                              errors[`learner_${index}`] ? styles.orderLearnerInputError : ""
+                            }`}
+                            type="text"
+                            placeholder="Add learner name"
+                            value={learnerInputs[index] || ""}
+                            onBlur={() => {
+                              const name = learnerInputs[index]?.trim() || "";
+                              if (name !== (pack.learnerName || "")) {
+                                updatePackDetails(
+                                  pack.id,
+                                  name,
+                                  pack.wantsPexcover || false,
+                                );
+                              }
+                            }}
+                            onChange={(e) => {
+                              const next = [...learnerInputs];
+                              next[index] = e.target.value;
+                              setLearnerInputs(next);
+                              clearFieldError(`learner_${index}`);
+                            }}
+                          />
+                        </div>
+                        <strong className={checkoutStyles.orderPackPrice}>
+                          {formatCurrency(getPackTotal(pack))}
+                        </strong>
+                      </div>
+                      <div className={checkoutStyles.orderPackBody}>
+                        <h3>{pack.packName}</h3>
+                        <p>
+                          {pack.schoolName || "School pack"}
+                          {pack.grade ? ` \u00b7 ${pack.grade}` : ""}
+                        </p>
+                        <div className={checkoutStyles.orderPackBadges}>
+                          <span>
+                            {pack.packMode === "full"
+                              ? "Full pack"
+                              : "Customised"}
+                          </span>
+                          <span>
+                            {pack.items.length}{" "}
+                            {pack.items.length === 1 ? "item" : "items"}
+                          </span>
+                          {pack.wantsPexcover ? <span>Pexcover</span> : null}
+                        </div>
+                        {errors[`learner_${index}`] ? (
+                          <p className={checkoutStyles.fieldError}>
+                            {errors[`learner_${index}`]}
+                          </p>
+                        ) : null}
+                        <button
+                          type="button"
+                          className={checkoutStyles.itemsToggle}
+                          onClick={() =>
+                            setExpandedPacks((current) => ({
+                              ...current,
+                              [pack.id]: !current[pack.id],
+                            }))
+                          }
+                          aria-expanded={isExpanded}
+                          aria-controls={`layby-pack-items-${pack.id}`}
+                        >
+                          <span>{isExpanded ? "Hide items" : "View items"}</span>
+                          <span aria-hidden="true">{isExpanded ? "-" : "+"}</span>
+                        </button>
+                        {isExpanded ? (
+                          <ul
+                            id={`layby-pack-items-${pack.id}`}
+                            className={checkoutStyles.itemisedList}
+                          >
+                            {previewItems.map((item) => (
+                              <li key={item.id}>
+                                <span>{item.name}</span>
+                                <span>x{item.quantity}</span>
+                                <strong>
+                                  {typeof item.unitPrice === "number"
+                                    ? formatCurrency(
+                                        item.unitPrice * item.quantity,
+                                      )
+                                    : "Included"}
+                                </strong>
+                              </li>
+                            ))}
+                            {hiddenCount > 0 ? (
+                              <li className={checkoutStyles.itemisedMore}>
+                                +{hiddenCount} more items
+                              </li>
+                            ) : null}
+                          </ul>
+                        ) : null}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
             {showOrderHiddenWarning ? (
               <p className={checkoutStyles.mobileHiddenSummaryWarning} role="alert">
@@ -512,6 +648,36 @@ export function LaybyCheckoutClient() {
                 error={errors.buyerEmail}
                 autoComplete="email"
               />
+              <fieldset className={checkoutStyles.contactMethodGroup}>
+                <legend>Preferred contact method</legend>
+                <p>
+                  Choose how we should reach you about lay-by reminders and
+                  pack updates.
+                </p>
+                <div className={checkoutStyles.segmentedOptions}>
+                  {contactOptions.map((option) => (
+                    <label
+                      key={option.value}
+                      className={`${checkoutStyles.segmentedOption} ${
+                        preferredContactMethod === option.value
+                          ? checkoutStyles.segmentedOptionActive
+                          : ""
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="preferredContactMethod"
+                        value={option.value}
+                        checked={preferredContactMethod === option.value}
+                        onChange={() =>
+                          setPreferredContactMethod(option.value)
+                        }
+                      />
+                      <span>{option.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
             </div>
             </div>
             {showDetailsHiddenWarning ? (
@@ -619,6 +785,48 @@ export function LaybyCheckoutClient() {
               </div>
             </fieldset>
 
+            {fulfilmentOption === "school_collection" &&
+            uniqueSchools.length > 1 ? (
+              <div className={checkoutStyles.schoolDropoffGroup}>
+                <p className={checkoutStyles.schoolDropoffLabel}>
+                  Which school should the main box be dropped at?
+                </p>
+                <div className={checkoutStyles.schoolDropoffRow}>
+                  {uniqueSchools.map((school) => {
+                    const isSelected = multiSchoolDrop === school.slug;
+                    return (
+                      <label
+                        key={school.slug}
+                        className={`${checkoutStyles.schoolDropoffCard} ${
+                          isSelected ? checkoutStyles.schoolDropoffCardActive : ""
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="multiSchoolDrop"
+                          value={school.slug}
+                          checked={isSelected}
+                          onChange={() => {
+                            setMultiSchoolDrop(school.slug);
+                            clearFieldError("multiSchoolDrop");
+                          }}
+                          className={checkoutStyles.schoolDropoffRadio}
+                        />
+                        <span className={checkoutStyles.schoolDropoffText}>
+                          {school.name}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+                {errors.multiSchoolDrop ? (
+                  <p className={checkoutStyles.fieldError}>
+                    {errors.multiSchoolDrop}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+
             {deliveryExpanded ? (
               <div className={checkoutStyles.addressPanel}>
                 <Input
@@ -683,6 +891,15 @@ export function LaybyCheckoutClient() {
                 />
               </div>
             ) : null}
+            <Textarea
+              id="deliveryNotes"
+              label="Delivery notes (optional)"
+              helper="Add gate codes, collection notes, or anything the Pexpacks team should know."
+              value={deliveryNotes}
+              onChange={(e) => setDeliveryNotes(e.target.value)}
+              rows={4}
+              className={checkoutStyles.deliveryNotesField}
+            />
             </div>
             {showDeliveryHiddenWarning ? (
               <p className={checkoutStyles.mobileHiddenSummaryWarning} role="alert">
@@ -800,23 +1017,23 @@ export function LaybyCheckoutClient() {
               })}
             </div>
 
-            <div className={checkoutStyles.summaryTotals}>
-              <div className={styles.summaryTotalRow}>
-                <span>Full pack total</span>
+            <div className={styles.finalAmountPanel}>
+              <div className={styles.finalAmountRow}>
+                <span>Pack subtotal</span>
                 <strong>{formatCurrency(total)}</strong>
               </div>
-            </div>
-
-            <div className={styles.summaryFooter}>
-              <div className={styles.summaryFooterIcon}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
+              <div className={`${styles.finalAmountRow} ${styles.finalAmountGrand}`}>
+                <span>Final amount</span>
+                <strong>{formatCurrency(total)}</strong>
               </div>
-              <p>
-                Your pack is secured once the deposit is paid. We pack your items after the
-                balance is settled by the end of October.
-              </p>
+              <Button
+                type="button"
+                variant="outline"
+                className={styles.editOrderButton}
+                onClick={handleBackToOrder}
+              >
+                Edit order
+              </Button>
             </div>
 
             <Button
@@ -834,13 +1051,24 @@ export function LaybyCheckoutClient() {
             </Button>
 
             <p className={checkoutStyles.summarySecurity}>
-              Secure payment via Paystack. Pexpacks never stores your card details.
+              Secure payment via Paystack. Pexpacks never stores your card
+              details.
             </p>
           </div>
         </aside>
       </div>
 
-      <div className={checkoutStyles.mobileStickyCta}>
+      <div
+        className={`${checkoutStyles.mobileStickyCta} ${styles.mobileStickyActions}`}
+      >
+        <Button
+          type="button"
+          variant="outline"
+          className={`${checkoutStyles.fullWidth} ${styles.mobileEditOrderButton}`}
+          onClick={handleBackToOrder}
+        >
+          Edit order
+        </Button>
         <Button
           type="button"
           variant="primary"
