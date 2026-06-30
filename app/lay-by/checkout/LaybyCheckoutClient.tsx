@@ -22,20 +22,19 @@ const contactOptions: { value: ContactMethod; label: string }[] = [
   { value: "email", label: "Email" },
 ];
 
-const SCHEDULE_MONTHS = [
-  { label: "June", subtitle: "Deposit" },
-  { label: "July", subtitle: "Instalment" },
-  { label: "August", subtitle: "Instalment" },
-  { label: "September", subtitle: "Instalment" },
-  { label: "October", subtitle: "Final" },
-] as const;
+const MONTH_LABELS = ["June", "July", "August", "September", "October"] as const;
 
-const MONTH_COUNT = SCHEDULE_MONTHS.length;
+function getScheduleMonths(term: number) {
+  return MONTH_LABELS.slice(0, term).map((label, i) => ({
+    label,
+    subtitle: i === 0 ? "Deposit" : i === term - 1 ? "Final" : "Instalment",
+  }));
+}
 
-function computeInstalmentplan(total: number) {
-  const base = Math.ceil(total / MONTH_COUNT);
-  const remainder = total - base * (MONTH_COUNT - 1);
-  const instalments = Array.from({ length: MONTH_COUNT - 1 }, () => base);
+function computeInstalmentplan(total: number, term: number) {
+  const base = Math.ceil(total / term);
+  const remainder = total - base * (term - 1);
+  const instalments = Array.from({ length: term - 1 }, () => base);
   return { deposit: base, instalments, final: remainder > 0 ? remainder : base };
 }
 
@@ -99,6 +98,8 @@ export function LaybyCheckoutClient() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [selectedTerm, setSelectedTerm] = useState(5);
+  const [scheduleExpanded, setScheduleExpanded] = useState(true);
   const [expandedPacks, setExpandedPacks] = useState<Record<string, boolean>>(
     {},
   );
@@ -130,7 +131,8 @@ export function LaybyCheckoutClient() {
   }, [packs]);
 
   const total = useMemo(() => calculateTrayTotal(packs), [packs]);
-  const plan = useMemo(() => computeInstalmentplan(total), [total]);
+  const plan = useMemo(() => computeInstalmentplan(total, selectedTerm), [total, selectedTerm]);
+  const scheduleMonths = useMemo(() => getScheduleMonths(selectedTerm), [selectedTerm]);
 
   const deliveryExpanded = fulfilmentOption === "home_delivery";
   const deliveryAddressSummary = [address, suburb, city, province, postalCode].filter(Boolean).join(", ");
@@ -982,7 +984,30 @@ export function LaybyCheckoutClient() {
                 <p className={checkoutStyles.checkoutKicker}>Payment Plan</p>
                 <h2>Lay-by Summary</h2>
               </div>
-              <span>{MONTH_COUNT} months</span>
+            </div>
+
+            {/* ── Term Selector ── */}
+            <div className={styles.termSelector}>
+              <span className={styles.termLabel}>Payment term</span>
+              <div className={styles.termOptions}>
+                {[3, 4, 5].map((term) => (
+                  <label
+                    key={term}
+                    className={`${styles.termOption} ${
+                      selectedTerm === term ? styles.termOptionActive : ""
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="layby-term"
+                      value={term}
+                      checked={selectedTerm === term}
+                      onChange={() => setSelectedTerm(term)}
+                    />
+                    <span>{term} months</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             {/* ── Deposit Card ── */}
@@ -993,37 +1018,51 @@ export function LaybyCheckoutClient() {
               </strong>
               <p className={styles.depositNote}>
                 Your pack total of {formatCurrency(total)} is split into{" "}
-                {MONTH_COUNT} payments with <strong>0% interest</strong>.
+                {selectedTerm} payments with <strong>0% interest</strong>.
               </p>
             </div>
 
             {/* ── Schedule ── */}
             <div className={styles.schedule}>
-              <span className={styles.scheduleTitle}>Payment Schedule</span>
-              {SCHEDULE_MONTHS.map((month, i) => {
-                const amount = i === 0 ? plan.deposit : i < MONTH_COUNT - 1 ? plan.instalments[0] : plan.final;
-                const isDeposit = i === 0;
-                return (
-                  <div
-                    key={month.label}
-                    className={`${styles.scheduleRow} ${isDeposit ? styles.scheduleRowActive : ""}`}
-                  >
-                    <div className={styles.scheduleDot}>
-                      <span>{i + 1}</span>
-                    </div>
-                    <div className={styles.scheduleInfo}>
-                      <strong>
-                        {month.label}
-                        {isDeposit ? " (Today)" : ""}
-                      </strong>
-                      <span>{month.subtitle}</span>
-                    </div>
-                    <span className={styles.scheduleAmount}>
-                      {formatCurrency(amount)}
-                    </span>
-                  </div>
-                );
-              })}
+              <div className={styles.scheduleHeader}>
+                <span className={styles.scheduleTitle}>Payment Schedule</span>
+                <button
+                  type="button"
+                  className={styles.scheduleToggle}
+                  onClick={() => setScheduleExpanded((v) => !v)}
+                  aria-expanded={scheduleExpanded}
+                >
+                  {scheduleExpanded ? "Hide Summary" : "View Summary"}
+                </button>
+              </div>
+              {scheduleExpanded ? (
+                <div>
+                  {scheduleMonths.map((month, i) => {
+                    const amount = i === 0 ? plan.deposit : i < selectedTerm - 1 ? plan.instalments[0] : plan.final;
+                    const isDeposit = i === 0;
+                    return (
+                      <div
+                        key={month.label}
+                        className={`${styles.scheduleRow} ${isDeposit ? styles.scheduleRowActive : ""}`}
+                      >
+                        <div className={styles.scheduleDot}>
+                          <span>{i + 1}</span>
+                        </div>
+                        <div className={styles.scheduleInfo}>
+                          <strong>
+                            {month.label}
+                            {isDeposit ? " (Today)" : ""}
+                          </strong>
+                          <span>{month.subtitle}</span>
+                        </div>
+                        <span className={styles.scheduleAmount}>
+                          {formatCurrency(amount)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : null}
             </div>
 
             <div className={styles.finalAmountPanel}>

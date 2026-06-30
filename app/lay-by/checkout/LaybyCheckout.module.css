@@ -161,6 +161,91 @@
   grid-template-columns: 22px 1fr;
 }
 
+/* ── Term Selector ── */
+.termSelector {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.termLabel {
+  color: var(--pex-text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.termOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.termOption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  border: 2px solid var(--pex-border);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pex-primary);
+  transition: var(--interactive-transition);
+}
+
+.termOption:hover {
+  border-color: var(--pex-keppel);
+}
+
+.termOptionActive {
+  border-color: var(--pex-keppel);
+  background: rgba(33, 158, 154, 0.08);
+}
+
+.termOption input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--pex-border);
+  border-radius: 50%;
+  margin: 0;
+  flex-shrink: 0;
+  transition: var(--interactive-transition);
+}
+
+.termOptionActive input {
+  border-color: var(--pex-keppel);
+  background: var(--pex-keppel);
+  box-shadow: inset 0 0 0 3px white;
+}
+
+/* ── Schedule Header ── */
+.scheduleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.scheduleToggle {
+  background: none;
+  border: 0;
+  color: var(--pex-keppel);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.scheduleToggle:hover {
+  text-decoration: underline;
+}
+
 /* ── Deposit Card ── */
 .depositCard {
   padding: 20px;
