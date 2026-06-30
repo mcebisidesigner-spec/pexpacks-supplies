@@ -404,6 +404,13 @@
   white-space: nowrap;
 }
 
+.scheduleNote {
+  margin: 0;
+  color: var(--pex-placeholder);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .finalAmountPanel {
   display: grid;
   gap: 14px;

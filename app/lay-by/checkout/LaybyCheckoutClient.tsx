@@ -1253,6 +1253,14 @@ export function LaybyCheckoutClient() {
               </div>
             </div>
 
+            <p className={styles.scheduleNote}>
+              You can settle this lay-by in full before the{" "}
+              {scheduleMonths.length}-month term ends at any time. Packs and
+              stationery <strong>will not be packed or dispatched</strong> until
+              the full payment is confirmed and received by Pexpacks in the
+              holding account.
+            </p>
+
             <div className={styles.finalAmountPanel}>
               <div className={styles.finalAmountRow}>
                 <span>Pack subtotal</span>
