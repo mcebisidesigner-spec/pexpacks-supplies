@@ -1,7 +1,10 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import https from "node:https";
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 const PAYSTACK_API = "https://api.paystack.co";
+
+const httpsAgent = new https.Agent({ keepAlive: true });
 
 export type PaystackInitResponse = {
   status: boolean;
@@ -30,6 +33,39 @@ export type PaystackWebhookEvent = {
   data: PaystackVerifyData;
 };
 
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit & { agent?: https.Agent },
+  retries = 2,
+): Promise<Response> {
+  let lastError: Error | undefined;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
+      try {
+        const res = await fetch(url, {
+          ...options,
+          signal: controller.signal,
+          // @ts-expect-error - agent is a Node.js option not in TS types
+          agent: httpsAgent,
+        });
+        return res;
+      } finally {
+        clearTimeout(timeout);
+      }
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < retries) {
+        const delay = Math.min(1000 * Math.pow(2, attempt), 4000);
+        console.error(`[paystack] Fetch attempt ${attempt + 1} failed, retrying in ${delay}ms: ${lastError.message}`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+  throw lastError!;
+}
+
 export async function initializePaystackTransaction(params: {
   email: string;
   amountInCents: number;
@@ -49,32 +85,23 @@ export async function initializePaystackTransaction(params: {
     metadata: params.metadata,
   };
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+  const fullUrl = `${PAYSTACK_API}/transaction/initialize`;
 
   let response: Response;
 
   try {
-    response = await fetch(`${PAYSTACK_API}/transaction/initialize`, {
+    response = await fetchWithRetry(fullUrl, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
-      signal: controller.signal,
     });
   } catch (fetchError) {
-    clearTimeout(timeout);
-    const message =
-      fetchError instanceof Error
-        ? fetchError.name === "AbortError"
-          ? "Paystack request timed out after 15s"
-          : fetchError.message
-        : "Unknown network error";
-    throw new Error(message);
-  } finally {
-    clearTimeout(timeout);
+    const msg = fetchError instanceof Error ? fetchError.message : String(fetchError);
+    console.error("[paystack] All fetch attempts failed:", msg);
+    throw new Error(msg);
   }
 
   if (!response.ok) {
