@@ -552,6 +552,15 @@ export function LaybyCheckoutClient() {
                                 </strong>
                               </li>
                             ))}
+                            {pack.wantsPexcover ? (
+                              <li className={checkoutStyles.itemisedPexcover}>
+                                <span>
+                                  Pexcover <em>(Book covering)</em>
+                                </span>
+                                <span />
+                                <strong>{formatCurrency(PEXCOVER_PRICE)}</strong>
+                              </li>
+                            ) : null}
                             {hiddenCount > 0 ? (
                               <li className={checkoutStyles.itemisedMore}>
                                 +{hiddenCount} more items

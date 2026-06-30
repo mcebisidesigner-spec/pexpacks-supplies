@@ -316,8 +316,14 @@
 }
 
 .mobileStickyActions {
-  display: grid !important;
-  gap: 8px;
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .mobileStickyActions {
+    display: grid;
+    gap: 8px;
+  }
 }
 
 @media (max-width: 480px) {
