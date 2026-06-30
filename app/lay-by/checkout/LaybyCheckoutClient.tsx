@@ -94,7 +94,12 @@ export function LaybyCheckoutClient() {
   const [province, setProvince] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [deliveryNotes, setDeliveryNotes] = useState("");
+  const [ageConfirmation, setAgeConfirmation] = useState(false);
+  const [settlementConfirmation, setSettlementConfirmation] = useState(false);
+  const [cancellationConfirmation, setCancellationConfirmation] = useState(false);
   const [consent, setConsent] = useState(false);
+  const [typedSignature, setTypedSignature] = useState("");
+  const [signatureDate, setSignatureDate] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -275,7 +280,18 @@ export function LaybyCheckoutClient() {
         "Select which school the box should be dropped at.";
     }
 
-    if (!consent) next.consent = "Please accept the order processing consent.";
+    if (!ageConfirmation)
+      next.ageConfirmation = "Please confirm that you are authorised to enter this lay-by agreement.";
+    if (!settlementConfirmation)
+      next.settlementConfirmation = "Please confirm that the lay-by settlement date is understood.";
+    if (!cancellationConfirmation)
+      next.cancellationConfirmation = "Please confirm that the cancellation terms are understood.";
+    if (!consent)
+      next.consent = "Please accept the lay-by processing and legal terms consent.";
+    if (!typedSignature.trim() || typedSignature.trim().length < 2)
+      next.typedSignature = "Please type your full legal name.";
+    if (!signatureDate)
+      next.signatureDate = "Please select the signature date.";
 
     setErrors(next);
 
@@ -339,6 +355,8 @@ export function LaybyCheckoutClient() {
             preferredContactMethod
               ? `Preferred contact: ${preferredContactMethod}`
               : "",
+            typedSignature.trim() ? `Signed by: ${typedSignature.trim()}` : "",
+            signatureDate ? `Signature date: ${signatureDate}` : "",
           ]
             .filter(Boolean)
             .join(" | ") || undefined,
@@ -919,54 +937,175 @@ export function LaybyCheckoutClient() {
             ) : null}
           </section>
 
-          {/* ── Consent ── */}
+          {/* ── Declarations and signature ── */}
           <section
             ref={consentRef}
             tabIndex={-1}
-            className={checkoutStyles.consentCard}
-            aria-label="Consent"
+            className={styles.declarationCard}
+            aria-labelledby="layby-declarations-heading"
           >
-            <label className={`${checkoutStyles.consentField} ${styles.consentFieldAligned}`}>
-              <input
-                ref={(node) => { fieldRefs.current.consent = node }}
-                type="checkbox"
-                id="layby-consent"
-                checked={consent}
-                onChange={(e) => {
-                  setConsent(e.target.checked);
-                  clearFieldError("consent");
+            <h2 id="layby-declarations-heading">Declarations and signature</h2>
+            <div className={styles.declarationList}>
+              <label className={styles.declarationOption}>
+                <input
+                  ref={(node) => {
+                    fieldRefs.current.ageConfirmation = node;
+                  }}
+                  type="checkbox"
+                  id="ageConfirmation"
+                  name="ageConfirmation"
+                  checked={ageConfirmation}
+                  onChange={(e) => {
+                    setAgeConfirmation(e.target.checked);
+                    clearFieldError("ageConfirmation");
+                  }}
+                  aria-invalid={!!errors.ageConfirmation}
+                />
+                <span>
+                  I confirm that I am 18 years or older and authorised to enter
+                  into this lay-by agreement.
+                </span>
+              </label>
+              {errors.ageConfirmation ? (
+                <p className={checkoutStyles.fieldError}>{errors.ageConfirmation}</p>
+              ) : null}
+
+              <label className={styles.declarationOption}>
+                <input
+                  ref={(node) => {
+                    fieldRefs.current.settlementConfirmation = node;
+                  }}
+                  type="checkbox"
+                  id="settlementConfirmation"
+                  name="settlementConfirmation"
+                  checked={settlementConfirmation}
+                  onChange={(e) => {
+                    setSettlementConfirmation(e.target.checked);
+                    clearFieldError("settlementConfirmation");
+                  }}
+                  aria-invalid={!!errors.settlementConfirmation}
+                />
+                <span>
+                  I understand that the lay-by must be fully settled by October
+                  31st for January packing and delivery.
+                </span>
+              </label>
+              {errors.settlementConfirmation ? (
+                <p className={checkoutStyles.fieldError}>
+                  {errors.settlementConfirmation}
+                </p>
+              ) : null}
+
+              <label className={styles.declarationOption}>
+                <input
+                  ref={(node) => {
+                    fieldRefs.current.cancellationConfirmation = node;
+                  }}
+                  type="checkbox"
+                  id="cancellationConfirmation"
+                  name="cancellationConfirmation"
+                  checked={cancellationConfirmation}
+                  onChange={(e) => {
+                    setCancellationConfirmation(e.target.checked);
+                    clearFieldError("cancellationConfirmation");
+                  }}
+                  aria-invalid={!!errors.cancellationConfirmation}
+                />
+                <span>
+                  I understand that cancellation before completion allows a
+                  refund of instalments paid, less the standard 1% cancellation
+                  penalty permitted by law.
+                </span>
+              </label>
+              {errors.cancellationConfirmation ? (
+                <p className={checkoutStyles.fieldError}>
+                  {errors.cancellationConfirmation}
+                </p>
+              ) : null}
+
+              <label className={styles.declarationOption}>
+                <input
+                  ref={(node) => {
+                    fieldRefs.current.consent = node;
+                  }}
+                  type="checkbox"
+                  id="layby-consent"
+                  name="consent"
+                  checked={consent}
+                  onChange={(e) => {
+                    setConsent(e.target.checked);
+                    clearFieldError("consent");
+                  }}
+                  aria-invalid={!!errors.consent}
+                />
+                <span>
+                  I consent to Pexpacks processing this information to prepare
+                  and manage my lay-by application, in line with the{" "}
+                  <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                    privacy policy
+                  </a>
+                  ,{" "}
+                  <a href="/terms" target="_blank" rel="noopener noreferrer">
+                    terms of use
+                  </a>
+                  ,{" "}
+                  <a href="/delivery-policy" target="_blank" rel="noopener noreferrer">
+                    delivery policy
+                  </a>
+                  ,{" "}
+                  <a href="/lay-by-terms" target="_blank" rel="noopener noreferrer">
+                    lay-by terms
+                  </a>
+                  , and{" "}
+                  <a
+                    href="/returns-refunds-policy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    returns &amp; refunds policy
+                  </a>
+                  .
+                </span>
+              </label>
+              {errors.consent ? (
+                <p className={checkoutStyles.fieldError}>{errors.consent}</p>
+              ) : null}
+            </div>
+
+            <div className={styles.signatureGrid}>
+              <Input
+                id="typedSignature"
+                name="typedSignature"
+                ref={(node) => {
+                  fieldRefs.current.typedSignature = node;
                 }}
-                aria-invalid={!!errors.consent}
+                label="Typed signature"
+                type="text"
+                value={typedSignature}
+                onChange={(e) => {
+                  setTypedSignature(e.target.value);
+                  clearFieldError("typedSignature");
+                }}
+                placeholder="Type your full legal name"
+                error={errors.typedSignature}
+                autoComplete="name"
               />
-              <span>
-                I agree that Pexpacks may process my personal information to
-                complete this order, send payment and order updates, and contact
-                me about delivery or collection. I have read and agree to the{" "}
-                <a href="/privacy-policy" target="_blank">
-                  privacy policy
-                </a>
-                ,{" "}
-                <a href="/terms" target="_blank">
-                  terms of use
-                </a>
-                ,{" "}
-                <a href="/delivery-policy" target="_blank">
-                  delivery policy
-                </a>
-                ,{" "}
-                <a href="/lay-by-terms" target="_blank">
-                  lay-by terms
-                </a>
-                , and{" "}
-                <a href="/returns-refunds-policy" target="_blank">
-                  returns &amp; refunds policy
-                </a>
-                .
-              </span>
-            </label>
-            {errors.consent ? (
-              <p className={checkoutStyles.fieldError}>{errors.consent}</p>
-            ) : null}
+              <Input
+                id="signatureDate"
+                name="signatureDate"
+                ref={(node) => {
+                  fieldRefs.current.signatureDate = node;
+                }}
+                label="Signature date"
+                type="date"
+                value={signatureDate}
+                onChange={(e) => {
+                  setSignatureDate(e.target.value);
+                  clearFieldError("signatureDate");
+                }}
+                error={errors.signatureDate}
+              />
+            </div>
           </section>
 
           {submitError ? (
