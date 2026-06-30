@@ -147,12 +147,10 @@ export async function POST(request: NextRequest) {
           },
         });
       } catch (paystackError) {
-        console.error(
-          "[checkout] Paystack initialization failed for tray:",
-          paystackError instanceof Error ? paystackError.message : paystackError
-        );
+        const msg = paystackError instanceof Error ? paystackError.message : String(paystackError);
+        console.error("[checkout] Paystack initialization failed for tray:", msg);
         return NextResponse.json(
-          { success: false, error: "We could not connect to the payment gateway. Please try again." },
+          { success: false, error: msg },
           { status: 502 }
         );
       }
@@ -233,17 +231,10 @@ export async function POST(request: NextRequest) {
         },
       });
     } catch (paystackError) {
-      console.error(
-        "[checkout] Paystack initialization failed:",
-        paystackError instanceof Error ? paystackError.message : paystackError
-      );
-
+      const msg = paystackError instanceof Error ? paystackError.message : String(paystackError);
+      console.error("[checkout] Paystack initialization failed:", msg);
       return NextResponse.json(
-        {
-          success: false,
-          error:
-            "We could not connect to the payment gateway. Please try again.",
-        },
+        { success: false, error: msg },
         { status: 502 }
       );
     }

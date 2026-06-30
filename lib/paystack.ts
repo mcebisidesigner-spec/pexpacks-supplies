@@ -78,18 +78,30 @@ export async function initializePaystackTransaction(params: {
   }
 
   if (!response.ok) {
-    const errorBody = await response.text();
+    let errorDetail = "";
+    try {
+      errorDetail = await response.text();
+    } catch {}
+    const snippet = errorDetail.slice(0, 500);
     console.error(
       "[paystack] Initialize transaction failed:",
       response.status,
-      errorBody.slice(0, 500)
+      snippet
     );
+    const paystackMsg = snippet ? ` — ${snippet}` : "";
     throw new Error(
-      `Paystack returned status ${response.status}`
+      `Paystack returned status ${response.status}${paystackMsg}`
     );
   }
 
-  const result: PaystackInitResponse = await response.json();
+  let result: PaystackInitResponse;
+  try {
+    result = await response.json();
+  } catch (parseError) {
+    const body = await response.text().catch(() => "");
+    console.error("[paystack] Failed to parse response:", body.slice(0, 500));
+    throw new Error("Paystack returned an invalid response");
+  }
 
   if (!result.status) {
     throw new Error(
