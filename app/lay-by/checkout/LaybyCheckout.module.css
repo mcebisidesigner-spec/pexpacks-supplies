@@ -216,6 +216,12 @@
   gap: 14px;
 }
 
+.dateSelectsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
 /* ── Term Selector ── */
 .termSelector {
   display: grid;
@@ -284,21 +290,6 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
-}
-
-.scheduleToggle {
-  background: none;
-  border: 0;
-  color: var(--pex-keppel);
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-
-.scheduleToggle:hover {
-  text-decoration: underline;
 }
 
 /* ── Deposit Card ── */
@@ -469,6 +460,11 @@
 @media (max-width: 480px) {
   .signatureGrid {
     grid-template-columns: 1fr;
+  }
+
+  .dateSelectsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .depositAmount {

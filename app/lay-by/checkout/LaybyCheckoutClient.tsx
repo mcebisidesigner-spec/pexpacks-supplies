@@ -8,6 +8,7 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
 import Textarea from "@/components/ui/Textarea";
 import checkoutStyles from "@/app/checkout/Checkout.module.css";
 import styles from "./LaybyCheckout.module.css";
@@ -99,12 +100,18 @@ export function LaybyCheckoutClient() {
   const [cancellationConfirmation, setCancellationConfirmation] = useState(false);
   const [consent, setConsent] = useState(false);
   const [typedSignature, setTypedSignature] = useState("");
-  const [signatureDate, setSignatureDate] = useState("");
+  const [signatureDay, setSignatureDay] = useState("");
+  const [signatureMonth, setSignatureMonth] = useState("");
+  const [signatureYear, setSignatureYear] = useState("");
+  const signatureDate = useMemo(() => {
+    if (!signatureDay || !signatureMonth || !signatureYear) return "";
+    const dd = signatureDay.padStart(2, "0");
+    return `${signatureYear}-${signatureMonth}-${dd}`;
+  }, [signatureDay, signatureMonth, signatureYear]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [selectedTerm, setSelectedTerm] = useState(5);
-  const [scheduleExpanded, setScheduleExpanded] = useState(true);
   const [expandedPacks, setExpandedPacks] = useState<Record<string, boolean>>(
     {},
   );
@@ -138,6 +145,23 @@ export function LaybyCheckoutClient() {
   const total = useMemo(() => calculateTrayTotal(packs), [packs]);
   const plan = useMemo(() => computeInstalmentplan(total, selectedTerm), [total, selectedTerm]);
   const scheduleMonths = useMemo(() => getScheduleMonths(selectedTerm), [selectedTerm]);
+
+  const dateDayOptions = useMemo(() => Array.from({ length: 31 }, (_, i) => String(i + 1)), []);
+  const dateMonthOptions = [
+    { value: "01", label: "January" },
+    { value: "02", label: "February" },
+    { value: "03", label: "March" },
+    { value: "04", label: "April" },
+    { value: "05", label: "May" },
+    { value: "06", label: "June" },
+    { value: "07", label: "July" },
+    { value: "08", label: "August" },
+    { value: "09", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
+  ];
+  const dateYearOptions = ["2026"];
 
   const deliveryExpanded = fulfilmentOption === "home_delivery";
   const deliveryAddressSummary = [address, suburb, city, province, postalCode].filter(Boolean).join(", ");
@@ -290,8 +314,12 @@ export function LaybyCheckoutClient() {
       next.consent = "Please accept the lay-by processing and legal terms consent.";
     if (!typedSignature.trim() || typedSignature.trim().length < 2)
       next.typedSignature = "Please type your full legal name.";
-    if (!signatureDate)
-      next.signatureDate = "Please select the signature date.";
+    if (!signatureDay)
+      next.signatureDay = "Please select the signature day.";
+    if (!signatureMonth)
+      next.signatureMonth = "Please select the signature month.";
+    if (!signatureYear)
+      next.signatureYear = "Please select the signature year.";
 
     setErrors(next);
 
@@ -1090,21 +1118,47 @@ export function LaybyCheckoutClient() {
                 error={errors.typedSignature}
                 autoComplete="name"
               />
-              <Input
-                id="signatureDate"
-                name="signatureDate"
-                ref={(node) => {
-                  fieldRefs.current.signatureDate = node;
-                }}
-                label="Signature date"
-                type="date"
-                value={signatureDate}
-                onChange={(e) => {
-                  setSignatureDate(e.target.value);
-                  clearFieldError("signatureDate");
-                }}
-                error={errors.signatureDate}
-              />
+              <div className={styles.dateSelectsGrid}>
+                <Select
+                  id="signatureDay"
+                  name="signatureDay"
+                  label="Day"
+                  placeholder="Day"
+                  options={dateDayOptions}
+                  value={signatureDay}
+                  onValueChange={(v) => {
+                    setSignatureDay(v);
+                    clearFieldError("signatureDay");
+                  }}
+                  error={errors.signatureDay}
+                />
+                <Select
+                  id="signatureMonth"
+                  name="signatureMonth"
+                  label="Month"
+                  placeholder="Month"
+                  options={dateMonthOptions}
+                  value={signatureMonth}
+                  onValueChange={(v) => {
+                    setSignatureMonth(v);
+                    clearFieldError("signatureMonth");
+                  }}
+                  error={errors.signatureMonth}
+                />
+                <Select
+                  id="signatureYear"
+                  name="signatureYear"
+                  label="Year"
+                  placeholder="Year"
+                  options={dateYearOptions}
+                  value={signatureYear}
+                  onValueChange={(v) => {
+                    setSignatureYear(v);
+                    clearFieldError("signatureYear");
+                  }}
+                  error={errors.signatureYear}
+                />
+              </div>
             </div>
           </section>
 
@@ -1165,43 +1219,38 @@ export function LaybyCheckoutClient() {
             <div className={styles.schedule}>
               <div className={styles.scheduleHeader}>
                 <span className={styles.scheduleTitle}>Payment Schedule</span>
-                <button
-                  type="button"
-                  className={styles.scheduleToggle}
-                  onClick={() => setScheduleExpanded((v) => !v)}
-                  aria-expanded={scheduleExpanded}
-                >
-                  {scheduleExpanded ? "Hide Summary" : "View Summary"}
-                </button>
               </div>
-              {scheduleExpanded ? (
-                <div>
-                  {scheduleMonths.map((month, i) => {
-                    const amount = i === 0 ? plan.deposit : i < selectedTerm - 1 ? plan.instalments[0] : plan.final;
-                    const isDeposit = i === 0;
-                    return (
-                      <div
-                        key={month.label}
-                        className={`${styles.scheduleRow} ${isDeposit ? styles.scheduleRowActive : ""}`}
-                      >
-                        <div className={styles.scheduleDot}>
-                          <span>{i + 1}</span>
-                        </div>
-                        <div className={styles.scheduleInfo}>
-                          <strong>
-                            {month.label}
-                            {isDeposit ? " (Today)" : ""}
-                          </strong>
-                          <span>{month.subtitle}</span>
-                        </div>
-                        <span className={styles.scheduleAmount}>
-                          {formatCurrency(amount)}
-                        </span>
+              <div>
+                {scheduleMonths.map((month, i) => {
+                  const amount =
+                    i === 0
+                      ? plan.deposit
+                      : i < selectedTerm - 1
+                        ? plan.instalments[0]
+                        : plan.final;
+                  const isDeposit = i === 0;
+                  return (
+                    <div
+                      key={month.label}
+                      className={`${styles.scheduleRow} ${isDeposit ? styles.scheduleRowActive : ""}`}
+                    >
+                      <div className={styles.scheduleDot}>
+                        <span>{i + 1}</span>
                       </div>
-                    );
-                  })}
-                </div>
-              ) : null}
+                      <div className={styles.scheduleInfo}>
+                        <strong>
+                          {month.label}
+                          {isDeposit ? " (Today)" : ""}
+                        </strong>
+                        <span>{month.subtitle}</span>
+                      </div>
+                      <span className={styles.scheduleAmount}>
+                        {formatCurrency(amount)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <div className={styles.finalAmountPanel}>
