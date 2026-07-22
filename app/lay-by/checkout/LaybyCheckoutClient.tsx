@@ -790,7 +790,7 @@ export function LaybyCheckoutClient() {
                   {
                     value: "home_delivery" as const,
                     title: "Home delivery",
-                    desc: "Receive your pack at home. Address required.",
+                    desc: "Receive your packs at home. Address required.",
                     note: "Address required",
                   },
                   {
@@ -883,6 +883,14 @@ export function LaybyCheckoutClient() {
                 ) : null}
               </div>
             ) : null}
+
+            {deliveryExpanded && (
+              <p className={styles.deliveryCostNote}>
+                Please note that home delivery incurs a separate fee based on
+                your location.<span className={styles.brDesktop} />We will
+                WhatsApp you to confirm the exact courier costs.
+              </p>
+            )}
 
             {deliveryExpanded ? (
               <div className={checkoutStyles.addressPanel}>
