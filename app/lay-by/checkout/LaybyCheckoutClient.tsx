@@ -790,7 +790,7 @@ export function LaybyCheckoutClient() {
                   {
                     value: "home_delivery" as const,
                     title: "Home delivery",
-                    desc: "Receive your packs at home. Address required.",
+                    desc: "Receive your packs at home. Delivered to your door.",
                     note: "Address required",
                   },
                   {
