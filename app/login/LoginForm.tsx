@@ -43,7 +43,7 @@ export function LoginForm({ error, message }: LoginFormProps) {
     try {
       const res = await requestPasswordReset(forgotEmail.trim());
       if (res.success) {
-        setForgotSuccessMessage(res.message);
+        setForgotSuccessMessage(res.message || "Your password renewal request has been sent to IT Admin (pexpacks@gmail.com). They will respond ASAP.");
       } else {
         setForgotError(res.error || "Failed to submit request.");
       }
