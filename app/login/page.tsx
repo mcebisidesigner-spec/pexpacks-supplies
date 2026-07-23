@@ -77,9 +77,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
         <div className={styles.footer}>
           <p>
-            Looking to track a stationery order instead?{" "}
-            <Link href="/track-order" className={styles.link}>
-              Track Order
+            <Link href="/contact" className={styles.link}>
+              Forgot Password?
+            </Link>
+          </p>
+          <p style={{ marginTop: "0.5rem" }}>
+            Do you need an account?{" "}
+            <Link href="/contact" className={styles.link}>
+              Contact Administrator
             </Link>
           </p>
         </div>
