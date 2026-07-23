@@ -784,19 +784,19 @@ export function LaybyCheckoutClient() {
                   {
                     value: "school_collection" as const,
                     title: "School collection",
-                    desc: "Collect from the school or agreed handover point.",
+                    desc: "Please pick up your stationery pack from the school or the designated handover point.",
                     note: "Included",
                   },
                   {
                     value: "home_delivery" as const,
                     title: "Home delivery",
-                    desc: "Receive your packs at home. Delivered to your door.",
+                    desc: "Home delivery will incur additional charges, which will be confirmed separately.",
                     note: "Address required",
                   },
                   {
                     value: "arranged_collection" as const,
                     title: "Arranged collection",
-                    desc: "We will contact you to confirm the best option.",
+                    desc: "You can choose your own delivery location. We will contact you to confirm your preferred option.",
                     note: "We will confirm",
                   },
                 ].map((opt) => (
@@ -883,14 +883,6 @@ export function LaybyCheckoutClient() {
                 ) : null}
               </div>
             ) : null}
-
-            {deliveryExpanded && (
-              <p className={styles.deliveryCostNote}>
-                Please note that home delivery incurs a separate fee based on
-                your location.<span className={styles.brDesktop} />We will
-                WhatsApp you to confirm the exact courier costs.
-              </p>
-            )}
 
             {deliveryExpanded ? (
               <div className={checkoutStyles.addressPanel}>

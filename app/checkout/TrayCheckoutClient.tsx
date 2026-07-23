@@ -34,20 +34,20 @@ const fulfilmentOptions: {
   {
     value: 'school_collection',
     title: 'School collection',
-    description: 'Collect from the school or agreed handover point.',
+    description: 'Please pick up your stationery pack from the school or the designated handover point.',
     note: 'Included',
   },
   {
     value: 'home_delivery',
     title: 'Home delivery',
     description:
-      'Receive your pack at home. Delivery may be confirmed separately.',
+      'Home delivery will incur additional charges, which will be confirmed separately.',
     note: 'Address required',
   },
   {
     value: 'arranged_collection',
     title: 'Arranged collection',
-    description: 'We will contact you to confirm the best collection option.',
+    description: 'You can choose your own delivery location. We will contact you to confirm your preferred option.',
     note: 'We will confirm',
   },
 ]

@@ -404,24 +404,6 @@
   white-space: nowrap;
 }
 
-.deliveryCostNote {
-  display: block;
-  margin: 8px 0 12px;
-  color: var(--pex-placeholder);
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.brDesktop {
-  display: block;
-}
-
-@media (max-width: 480px) {
-  .brDesktop {
-    display: none;
-  }
-}
-
 .scheduleNote {
   margin: 0;
   color: var(--pex-placeholder);
