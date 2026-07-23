@@ -43,7 +43,7 @@ export function LoginForm({ error, message }: LoginFormProps) {
     try {
       const res = await requestPasswordReset(forgotEmail.trim());
       if (res.success) {
-        setForgotSuccessMessage(res.message || "Your password renewal request has been sent to IT Admin (pexpacks@gmail.com). They will respond ASAP.");
+        setForgotSuccessMessage(res.message || "Your password renewal request has been sent to Administrator. They will respond ASAP.");
       } else {
         setForgotError(res.error || "Failed to submit request.");
       }
@@ -124,12 +124,6 @@ export function LoginForm({ error, message }: LoginFormProps) {
               Forgot Password?
             </button>
           </p>
-          <p style={{ marginTop: "0.625rem" }}>
-            Do you need an account?{" "}
-            <Link href="/contact" className={styles.link}>
-              Contact Administrator
-            </Link>
-          </p>
         </div>
       </div>
 
@@ -153,7 +147,7 @@ export function LoginForm({ error, message }: LoginFormProps) {
                     <path d="m5 13 4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className={styles.modalTitle}>Request Sent to IT Admin</h3>
+                <h3 className={styles.modalTitle}>Request Sent to Administrator</h3>
                 <p className={styles.modalSuccessText}>{forgotSuccessMessage}</p>
                 <Button
                   type="button"
@@ -170,7 +164,7 @@ export function LoginForm({ error, message }: LoginFormProps) {
                   Request Password Renewal
                 </h3>
                 <p className={styles.modalSubtitle}>
-                  Enter your email address below. A renewal request will automatically be sent to **IT Admin (pexpacks@gmail.com)**.
+                  Enter your email address below to request a password renewal from the Administrator.
                 </p>
 
                 {forgotError && (

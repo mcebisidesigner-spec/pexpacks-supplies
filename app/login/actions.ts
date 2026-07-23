@@ -117,6 +117,6 @@ export async function requestPasswordReset(email: string) {
 
   return {
     success: true,
-    message: "Your password renewal request has been sent to IT Admin (pexpacks@gmail.com). They will respond ASAP.",
+    message: "Your password renewal request has been sent to Administrator. They will respond ASAP.",
   };
 }
