@@ -13,36 +13,49 @@ export async function login(formData: FormData) {
     return redirect("/login?error=Please+provide+both+email+and+password.");
   }
 
-  const cookieStore = await cookies();
+  let isSuccess = false;
+  let errorMessage = "";
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
+  try {
+    const cookieStore = await cookies();
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // ignore — called from Server Action
+            }
+          },
         },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // ignore — called from Server Action
-          }
-        },
-      },
+      }
+    );
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      errorMessage = error.message || "Invalid credentials";
+    } else {
+      isSuccess = true;
     }
-  );
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    return redirect(`/login?error=${encodeURIComponent(error.message || "Invalid credentials")}`);
+  } catch (err: any) {
+    errorMessage = err?.message || "Invalid login credentials";
   }
 
-  redirect("/admin");
+  if (isSuccess) {
+    redirect("/admin");
+  } else {
+    redirect(`/login?error=${encodeURIComponent(errorMessage || "Invalid credentials")}`);
+  }
 }
 
 export async function logout() {

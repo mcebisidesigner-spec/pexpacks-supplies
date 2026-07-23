@@ -12,10 +12,14 @@ export default async function AdminDashboard() {
   )
 
   // Fetch real-time orders directly from Supabase
-  const { data: orders } = await supabase
+  const { data: orders, error } = await supabase
     .from('orders')
     .select('*')
     .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error("Supabase Query Error:", error.message)
+  }
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -33,7 +37,7 @@ export default async function AdminDashboard() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {orders && orders.map((order) => (
+            {(orders || []).map((order) => (
               <tr key={order.id} className="hover:bg-slate-50/50">
                 <td className="p-4 font-mono font-bold text-slate-900">{order.order_reference}</td>
                 <td className="p-4">
