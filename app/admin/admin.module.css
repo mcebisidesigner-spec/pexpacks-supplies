@@ -1,156 +1,210 @@
-.container {
-  min-height: 85vh;
-  padding: clamp(1.5rem, 4vw, 3rem) 1rem;
-  background: var(--pex-bg-secondary, #f8fafc);
+.adminContainer {
+  min-height: 80vh;
+  width: 100%;
+  max-width: var(--layout-max-width, 1280px);
+  margin-inline: auto;
+  padding-inline: clamp(48px, 5vw, 88px);
+  padding-top: clamp(36px, 5vw, 64px);
+  padding-bottom: clamp(48px, 6vw, 96px);
 }
 
-.inner {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 1.5rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--pex-border, #e2e8f0);
-}
-
-.eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--pex-primary, #0284c7);
+.headerSection {
+  margin-bottom: clamp(28px, 4vw, 44px);
 }
 
 .title {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: var(--pex-text-main, #0f172a);
-  margin: 0.25rem 0 0 0;
-  letter-spacing: -0.02em;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 2.5rem;
-}
-
-.statCard {
-  background: #ffffff;
-  border: 1px solid var(--pex-border, #e2e8f0);
-  border-radius: 0.875rem;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-}
-
-.statLabel {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--pex-text-muted, #64748b);
-}
-
-.statValue {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--pex-text-main, #0f172a);
-  margin: 0.25rem 0;
-}
-
-.statMeta {
-  font-size: 0.75rem;
-  color: var(--pex-text-muted, #94a3b8);
-}
-
-.section {
-  background: #ffffff;
-  border: 1px solid var(--pex-border, #e2e8f0);
-  border-radius: 0.875rem;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-}
-
-.sectionHeader {
-  margin-bottom: 1rem;
-}
-
-.sectionHeader h2 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--pex-text-main, #0f172a);
   margin: 0;
+  font-family: var(--font-heading, inherit);
+  font-size: clamp(32px, 4.5vw, 48px);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--pex-navy, #1a2a40);
+  letter-spacing: 0;
+}
+
+.subtitle {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 1.5;
+  color: var(--pex-muted, #4d5a5d);
+}
+
+.tableCard {
+  background: var(--card-bg, #ffffff);
+  border: var(--card-border, 1px solid rgba(225, 231, 234, 0.8));
+  border-radius: var(--radius-card, 24px);
+  box-shadow: var(--card-shadow, 0 12px 32px rgba(26, 42, 64, 0.05));
+  overflow: hidden;
 }
 
 .tableWrapper {
+  width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table {
   width: 100%;
+  min-width: 700px;
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.875rem;
+  font-size: 15px;
+}
+
+.table thead {
+  background: var(--pex-bg-soft, #f4f5f7);
+  border-bottom: 1px solid var(--pex-border, #e1e7ea);
 }
 
 .table th {
-  padding: 0.75rem 1rem;
-  background: #f8fafc;
-  font-weight: 600;
-  color: #475569;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  font-family: var(--font-button, inherit);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--pex-navy, #1a2a40);
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--pex-border, #e1e7ea);
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(33, 158, 154, 0.03);
 }
 
 .table td {
-  padding: 0.875rem 1rem;
-  border-bottom: 1px solid #f1f5f9;
-  color: #334155;
+  padding: 18px 24px;
+  vertical-align: middle;
+  color: var(--pex-text, #172326);
+}
+
+.orderRef {
+  font-family: var(--font-mono, monospace);
+  font-weight: 800;
+  color: var(--pex-navy, #1a2a40);
+}
+
+.buyerName {
+  font-weight: 700;
+  color: var(--pex-navy, #1a2a40);
+}
+
+.schoolName {
+  font-size: 13px;
+  color: var(--pex-muted, #4d5a5d);
+  margin-top: 2px;
+}
+
+.learnerName {
+  color: var(--pex-text, #172326);
+}
+
+.gradeText {
+  font-size: 13px;
+  color: var(--pex-muted, #4d5a5d);
+  margin-top: 2px;
+}
+
+.totalPrice {
+  font-weight: 800;
+  color: var(--pex-navy, #1a2a40);
 }
 
 .badge {
-  display: inline-block;
-  padding: 0.25rem 0.625rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill, 999px);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
   text-transform: capitalize;
 }
 
-.badge.pending_payment {
-  background: #fef3c7;
-  color: #92400e;
+.badgePaid {
+  background: rgba(47, 133, 90, 0.12);
+  color: #1e6b45;
 }
 
-.badge.paid {
-  background: #dcfce7;
-  color: #166534;
+.badgePending {
+  background: rgba(245, 166, 35, 0.15);
+  color: #a16207;
 }
 
-.badge.layby_active {
-  background: #e0f2fe;
-  color: #075985;
-}
-
-.badge.default {
-  background: #f1f5f9;
-  color: #475569;
-}
-
-.emptyState {
-  padding: 2.5rem 1rem;
+.emptyStateContainer {
+  padding: clamp(48px, 8vw, 80px) 24px;
   text-align: center;
-  color: #64748b;
-  font-size: 0.875rem;
-  background: #f8fafc;
-  border-radius: 0.5rem;
-  border: 1px dashed #cbd5e1;
+}
+
+.emptyStateInner {
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.emptyIconWrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--pex-bg-soft, #f4f5f7);
+  color: var(--pex-keppel, #1a7a77);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.emptyIconWrapper svg {
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.emptyStateTitle {
+  margin: 0 0 6px;
+  font-family: var(--font-heading, inherit);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--pex-navy, #1a2a40);
+}
+
+.emptyStateText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--pex-muted, #4d5a5d);
+}
+
+@media (max-width: 1280px) {
+  .adminContainer {
+    padding-inline: clamp(32px, 4vw, 48px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .adminContainer {
+    padding-inline: var(--gutter-tablet, 32px);
+  }
+}
+
+@media (max-width: 480px) {
+  .adminContainer {
+    padding-inline: var(--gutter-mobile, 20px);
+  }
+
+  .table th,
+  .table td {
+    padding: 14px 16px;
+  }
 }
