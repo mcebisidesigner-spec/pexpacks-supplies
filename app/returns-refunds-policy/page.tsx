@@ -19,7 +19,7 @@ export const metadata: Metadata = buildMetadata(
 
 export const dynamic = "force-static";
 
-const supportEmail = "support@pexpacks.co.za";
+const supportEmail = "care@pexpacks.co.za";
 const supportEmailHref = `mailto:${supportEmail}`;
 
 const config: LegalDocumentConfig = {
