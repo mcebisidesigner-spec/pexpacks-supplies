@@ -9,14 +9,12 @@ import {
   LegalDocumentPage,
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, siteUrl } from "@/lib/seo";
 import { EFFECTIVE_DATE } from "@/lib/constants";
-
-
 
 export const metadata: Metadata = buildMetadata(
   "Supplier Terms",
-  "Read the Pexpacks supplier terms for onboarding, quality standards, delivery expectations, and invoicing.",
+  "Pexpacks Supplier Terms & Conditions — Commercial and legal terms governing vendor onboarding, product quality warranties under CPA, POPIA operator compliance, and delivery standards.",
   "/supplier-terms"
 );
 
@@ -24,108 +22,114 @@ export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/supplier-terms",
-  pageTitle: "Supplier Terms",
+  pageTitle: "Supplier Terms & Commercial Standards",
   metaDescription:
-    "Read the Pexpacks supplier terms for onboarding, quality standards, delivery expectations, and invoicing.",
-  heroEyebrow: "Supplier terms",
-  heroTitle: "Commercial expectations for suppliers",
+    "Pexpacks Supplier Terms & Conditions — Commercial and legal terms governing vendor onboarding, product quality warranties under CPA, POPIA operator compliance, and delivery standards.",
+  heroEyebrow: "Commercial Procurement Standards",
+  heroTitle: "Supplier & Vendor Terms of Supply",
   heroText:
-    "These terms outline the working standards Pexpacks expects from suppliers, service providers, and production partners who support fulfilment or brand delivery.",
+    "These terms establish the mandatory legal and commercial requirements governing all suppliers, manufacturers, distributors, and logistics partners supplying goods or services to Pexpacks Supplies.",
   heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
-  heroPanelText: "Operational, quality, and invoicing expectations.",
-  tocHeading: "Supplier contents",
+  heroPanelText: "CPA & POPIA Aligned — Republic of South Africa",
+  tocHeading: "Supplier Terms Contents",
   tocAriaLabel: "Supplier terms contents",
-  summaryKicker: "Supplier overview",
-  summaryTitle: "Supply quality and timing matter directly to customer trust",
+  summaryKicker: "Procurement Notice",
+  summaryTitle: "Quality Assurances and Supply Chain Reliability",
   summaryText:
-    "Pexpacks depends on accurate stock, dependable delivery, and quality consistency. Suppliers should treat order readiness, product accuracy, and communication as core commercial obligations.",
+    "Pexpacks requires all suppliers to deliver high-quality stationery products complying with South African safety standards, CPA merchantability warranties, agreed delivery lead times, and POPIA operator safeguards.",
   highlights: [
     {
-      title: "Quality first",
+      title: "CPA Merchantability Guarantee",
       content:
-        "Goods that are incorrect, damaged, substituted without approval, or late may be rejected or escalated.",
-      tone: "warning",
-    },
-    {
-      title: "Supplier contact",
-      content: (
-        <>
-          Email <a href={generalEmailHref}>{generalEmail}</a> or call{" "}
-          <a href={phoneHref}>{phoneNumber}</a> for supplier coordination.
-        </>
-      ),
+        "Suppliers warrant that all supplied goods are free of defects, authentic, and compliant with Section 55 of the Consumer Protection Act.",
       tone: "accent",
     },
     {
-      title: "Confidentiality",
+      title: "POPIA Operator Duty",
       content:
-        "Customer, school, pricing, and fulfilment information should not be reused outside the supplier relationship.",
+        "Suppliers handling customer delivery data are bound by strict statutory operator obligations under Sections 20 & 21 of POPIA.",
+      tone: "warning",
     },
   ],
   sections: [
     {
       id: "supplier-onboarding",
       eyebrow: "1",
-      title: "Onboarding and compliance",
+      title: "Vendor Onboarding & Legal Compliance",
       summary:
-        "Suppliers should be properly authorised, contactable, and able to meet agreed trading requirements.",
+        "Requirements for supplier registration, SARS compliance, and lawful sourcing.",
       content: (
-        <ul>
-          <li>Provide accurate company, banking, and invoicing details.</li>
-          <li>Disclose relevant registration, VAT, or compliance information where applicable.</li>
-          <li>Maintain lawful sourcing and product rights for supplied goods.</li>
-          <li>Notify Pexpacks promptly if capacity or compliance changes materially.</li>
-        </ul>
+        <>
+          <p>Suppliers supplying Pexpacks must:</p>
+          <ul>
+            <li>Be duly registered corporate entities or legal traders in South Africa;</li>
+            <li>Provide accurate CIPC details, SARS VAT registration certificates (where applicable), and verified banking details;</li>
+            <li>Warrant that all products are lawfully sourced, genuine, and free from third-party IP infringement.</li>
+          </ul>
+        </>
       ),
     },
     {
-      id: "purchase-orders-pricing",
+      id: "quality-warranties",
       eyebrow: "2",
-      title: "Pricing, quotes, and purchase instructions",
+      title: "Product Quality & CPA Warranties (CPA Section 55)",
       summary:
-        "Quoted prices and approved purchase instructions should remain clear, traceable, and commercially reliable.",
-      content: (
-        <ul>
-          <li>Pricing should be quoted in writing and state any exclusions clearly.</li>
-          <li>No substitution or major change should happen without approval.</li>
-          <li>Lead times should be realistic and updated if risk emerges.</li>
-          <li>Urgent or peak-season constraints must be flagged early.</li>
-        </ul>
-      ),
-    },
-    {
-      id: "quality-delivery",
-      eyebrow: "3",
-      title: "Quality, packaging, and delivery standards",
-      summary:
-        "Products should arrive fit for purpose, correctly packed, and aligned with the confirmed order specification.",
-      content: (
-        <ul>
-          <li>Deliver the correct quantity, specification, and condition.</li>
-          <li>Use packaging suitable for handling and onward fulfilment.</li>
-          <li>Mark cartons or consignments clearly where sorting is required.</li>
-          <li>Communicate shortages or delays before the committed date where possible.</li>
-        </ul>
-      ),
-    },
-    {
-      id: "invoicing-confidentiality",
-      eyebrow: "4",
-      title: "Invoicing, confidentiality, and conduct",
-      summary:
-        "Invoices must be accurate and suppliers should protect confidential commercial or customer information.",
+        "Statutory quality requirements and supplier indemnity for defective stock.",
       content: (
         <>
           <p>
-            Suppliers should issue accurate invoices linked to the relevant
-            order or commercial reference. Incorrect or unsupported invoices
-            may be delayed until clarified.
+            Suppliers warrant that all stationery products, paper goods, and materials supplied to Pexpacks comply with Section 55 of the CPA, are of good quality, free of defects, and suitable for educational use.
           </p>
           <p>
-            Confidential pricing, customer information, school details, and
-            operational processes should not be disclosed or reused outside the
-            supplier relationship without permission.
+            Suppliers shall indemnify Pexpacks against all claims, losses, or costs arising from defective, unsafe, or sub-standard goods supplied.
           </p>
+        </>
+      ),
+    },
+    {
+      id: "delivery-lead-times",
+      eyebrow: "3",
+      title: "Delivery Timelines, Packaging, & Stock Rejection",
+      summary:
+        "Delivery schedules, peak season deadlines, and stock rejection procedures.",
+      content: (
+        <>
+          <p>
+            Timely delivery is essential for peak school preparation (October to January). Goods delivered after agreed purchase order dates or containing unapproved brand substitutions may be rejected at the supplier's expense.
+          </p>
+        </>
+      ),
+    },
+    {
+      id: "popia-confidentiality",
+      eyebrow: "4",
+      title: "Confidentiality & POPIA Operator Agreement",
+      summary:
+        "Statutory non-disclosure duties and POPIA Section 21 operator safeguards.",
+      content: (
+        <>
+          <p>
+            Suppliers receiving delivery addresses or customer details act as POPIA Operators and must maintain strict confidentiality, enforce technical security safeguards, and process data solely for fulfilling Pexpacks purchase orders.
+          </p>
+        </>
+      ),
+    },
+    {
+      id: "governing-law",
+      eyebrow: "5",
+      title: "Governing Law & Contact",
+      summary:
+        "South African legal jurisdiction and procurement contact details.",
+      content: (
+        <>
+          <p>
+            Supplier terms are governed by the laws of the <strong>Republic of South Africa</strong>. For vendor management or procurement enquiries:
+          </p>
+          <ul>
+            <li><strong>Procurement Email:</strong> <a href={generalEmailHref}>{generalEmail}</a></li>
+            <li><strong>Telephone:</strong> <a href={phoneHref}>{phoneNumber}</a></li>
+            <li><strong>Official Website:</strong> <a href={siteUrl}>{siteUrl}</a></li>
+          </ul>
         </>
       ),
     },

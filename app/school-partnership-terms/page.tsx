@@ -9,14 +9,12 @@ import {
   LegalDocumentPage,
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, siteUrl } from "@/lib/seo";
 import { EFFECTIVE_DATE } from "@/lib/constants";
-
-
 
 export const metadata: Metadata = buildMetadata(
   "School Partnership Terms",
-  "Read the Pexpacks school partnership terms for collaboration scope, responsibilities, data handling, and campaign delivery.",
+  "Pexpacks School Partnership Terms & Conditions — Official statutory terms governing educational institution partnerships, stationery list collation, bulk fulfillment, and POPIA learner data protection.",
   "/school-partnership-terms"
 );
 
@@ -26,106 +24,125 @@ const config: LegalDocumentConfig = {
   route: "/school-partnership-terms",
   pageTitle: "School Partnership Terms",
   metaDescription:
-    "Read the Pexpacks school partnership terms for collaboration scope, responsibilities, data handling, and campaign delivery.",
-  heroEyebrow: "School partnership programme",
-  heroTitle: "How school partnership arrangements are structured",
+    "Pexpacks School Partnership Terms & Conditions — Official statutory terms governing educational institution partnerships, stationery list collation, bulk fulfillment, and POPIA learner data protection.",
+  heroEyebrow: "Institutional Collaboration Framework",
+  heroTitle: "School Partnership Terms and Operating Framework",
   heroText:
-    "This page outlines the operating expectations for schools partnering with Pexpacks on stationery fulfilment, campaigns, and related digital or parent-support services.",
+    "This document establishes the official terms regulating institutional collaborations between Pexpacks Supplies and South African schools, governing stationery list curation, campaign fulfillment, and POPIA learner privacy.",
   heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
-  heroPanelText: "School-facing collaboration terms.",
-  tocHeading: "Partnership contents",
+  heroPanelText: "POPIA & CPA Compliant — Republic of South Africa",
+  tocHeading: "Partnership Terms Contents",
   tocAriaLabel: "School partnership terms contents",
-  summaryKicker: "Partnership summary",
-  summaryTitle: "Each school partnership should still be confirmed in writing",
+  summaryKicker: "Institutional Governance",
+  summaryTitle: "Formalizing School Stationery Campaigns",
   summaryText:
-    "This page sets the standard framework, but final responsibilities, launch dates, service levels, and data boundaries should be confirmed in a school-specific agreement, proposal, or written approval chain.",
+    "Pexpacks partners with primary and secondary schools to streamline stationery procurement for parents. Each partnership is governed by these standard terms, supplemented by written campaign proposals and school authorizations.",
   highlights: [
     {
-      title: "Data care",
+      title: "POPIA Learner Data Protection",
       content:
-        "Learner, parent, and school data must be used only for the agreed partnership purpose and handled carefully.",
-      tone: "warning",
-    },
-    {
-      title: "Contact",
-      content: (
-        <>
-          Email <a href={generalEmailHref}>{generalEmail}</a> or call{" "}
-          <a href={phoneHref}>{phoneNumber}</a>.
-        </>
-      ),
+        "All learner lists, grade data, and parent contact details supplied by partner schools are processed strictly under written operator duties pursuant to POPIA.",
       tone: "accent",
     },
     {
-      title: "Scope control",
+      title: "Intellectual Property Rights",
       content:
-        "Digital, fulfilment, and campaign work should be approved against a written scope before launch.",
+        "Schools grant Pexpacks a non-exclusive license to display official school crests and stationery lists solely for parent ordering portals.",
+      tone: "warning",
     },
   ],
   sections: [
     {
       id: "scope-of-partnership",
       eyebrow: "1",
-      title: "What a school partnership can include",
+      title: "Scope of School Partnership Arrangements",
       summary:
-        "Partnerships can cover stationery fulfilment, Pexcover, digital campaign support, or related parent-facing coordination.",
-      content: (
-        <ul>
-          <li>School stationery pack rollout support.</li>
-          <li>Grade-level or learner-group fulfilment campaigns.</li>
-          <li>Pexcover preparation, bundling, or collection coordination.</li>
-          <li>School microsites, digital pages, or parent communication support where offered.</li>
-        </ul>
-      ),
-    },
-    {
-      id: "school-responsibilities",
-      eyebrow: "2",
-      title: "School responsibilities",
-      summary:
-        "Schools should provide clear, approved information and timely operational coordination.",
-      content: (
-        <ul>
-          <li>Supply accurate stationery lists, grade structures, and key dates.</li>
-          <li>Confirm who is authorised to approve partnership decisions.</li>
-          <li>Provide permitted logos, wording, and distribution guidance where needed.</li>
-          <li>Communicate changes early if school requirements shift.</li>
-        </ul>
-      ),
-    },
-    {
-      id: "Pexpacks-responsibilities",
-      eyebrow: "3",
-      title: "Pexpacks responsibilities",
-      summary:
-        "Pexpacks is responsible for the agreed supply, communication, and fulfilment work within the written scope.",
-      content: (
-        <ul>
-          <li>Prepare and coordinate packs within the agreed operational model.</li>
-          <li>Support school and parent communication where this forms part of the scope.</li>
-          <li>Handle partnership data only for the agreed purpose.</li>
-          <li>Escalate stock, timing, or fulfilment issues as soon as reasonably possible.</li>
-        </ul>
-      ),
-    },
-    {
-      id: "commercial-and-ending",
-      eyebrow: "4",
-      title: "Commercial terms, review, and ending the partnership",
-      summary:
-        "Commercial arrangements, payment routes, renewal periods, and termination rights should be agreed in writing.",
+        "Framework governing school-approved stationery supply rollouts, Pexcover™, and digital portals.",
       content: (
         <>
           <p>
-            Some partnerships may be school-funded, parent-paid, mixed, or tied
-            to campaign-specific structures. The exact commercial model should
-            be documented clearly before launch.
+            Pexpacks collaborates with partner schools to offer tailored stationery pack solutions, including:
           </p>
+          <ul>
+            <li>Official school stationery list digital curation and online parent ordering portals</li>
+            <li>Bulk school pack assembly, class-by-class sorting, and school handover logistics</li>
+            <li>Pexcover™ book-covering and personalized learner name-labelling programs</li>
+            <li>School fundraising rebates, promotional packages, or digital school assets where agreed</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      id: "school-duties",
+      eyebrow: "2",
+      title: "Partner School Duties & List Accuracy",
+      summary:
+        "School obligations regarding stationery list validation, authority, and logos.",
+      content: (
+        <>
+          <p>Partner schools agree to:</p>
+          <ul>
+            <li>Provide final, approved grade stationery lists prior to the end of June each year;</li>
+            <li>Designate authorized school representatives for campaign sign-off and handover coordination;</li>
+            <li>Grant Pexpacks permission to utilize the school name and logo for parent ordering portals;</li>
+            <li>Notify Pexpacks promptly of any changes to subject lists, book requirements, or school calendars.</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      id: "pexpacks-duties",
+      eyebrow: "3",
+      title: "Pexpacks Fulfillment & Quality Assurances",
+      summary:
+        "Pexpacks operational standards for partner school campaigns.",
+      content: (
+        <>
+          <p>Pexpacks undertakes to:</p>
+          <ul>
+            <li>Source high-quality stationery items matching approved school specifications;</li>
+            <li>Package and label stationery packs according to learner grade and school distribution instructions;</li>
+            <li>Deliver bulk orders to designated school collection points or coordinate doorstep delivery prior to term opening;</li>
+            <li>Provide transparent pricing, Lay-by options, and dedicated customer support to parents.</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      id: "popia-compliance",
+      eyebrow: "4",
+      title: "POPIA Operator Obligations & Learner Data Privacy",
+      summary:
+        "Statutory data operator duties under Sections 20 & 21 of POPIA.",
+      content: (
+        <>
           <p>
-            Either party may usually request a review or end the arrangement
-            subject to the written terms already accepted, operational
-            commitments underway, and any live order obligations.
+            Where a school provides learner or parent contact lists to Pexpacks, Pexpacks acts as an <strong>Operator</strong> under Section 20 of the Protection of Personal Information Act (POPIA 4 of 2013).
           </p>
+          <ul>
+            <li>Pexpacks shall process learner information strictly for stationery pack fulfillment and delivery;</li>
+            <li>Pexpacks enforces strict technical and organizational safeguards (POPIA Section 19);</li>
+            <li>Pexpacks will never sell, lease, or monetize learner or parent data to third parties.</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      id: "governing-law",
+      eyebrow: "5",
+      title: "Governing Law & Contact",
+      summary:
+        "South African legal jurisdiction and partnership support contact details.",
+      content: (
+        <>
+          <p>
+            School partnership agreements are governed by the laws of the <strong>Republic of South Africa</strong>. For institutional enquiries or to formalize a school partnership, contact our Institutional Team:
+          </p>
+          <ul>
+            <li><strong>Institutional Email:</strong> <a href={generalEmailHref}>{generalEmail}</a></li>
+            <li><strong>Telephone:</strong> <a href={phoneHref}>{phoneNumber}</a></li>
+            <li><strong>Official Website:</strong> <a href={siteUrl}>{siteUrl}</a></li>
+          </ul>
         </>
       ),
     },

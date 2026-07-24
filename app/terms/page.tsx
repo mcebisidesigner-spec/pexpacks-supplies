@@ -18,7 +18,7 @@ import { EFFECTIVE_DATE } from "@/lib/constants";
 
 export const metadata: Metadata = buildMetadata(
   "Terms of Use",
-  "Read the Pexpacks Supplies terms of use for school stationery packs, Pexcover services, online ordering, delivery, and customer support.",
+  "Pexpacks Supplies Official Terms of Use — Statutory conditions governing online stationery pack orders, Pexcover services, electronic transactions under ECTA, and consumer rights under the CPA.",
   "/terms"
 );
 
@@ -28,92 +28,77 @@ const config: LegalDocumentConfig = {
   route: "/terms",
   pageTitle: "Terms of Use",
   metaDescription:
-  "Read the Pexpacks Supplies terms of use for school stationery packs, Pexcover services, online ordering, delivery, and customer support.",
-  heroEyebrow: "Website terms of use",
-  heroTitle: "Clear terms for ordering and using Pexpacks online",
+    "Pexpacks Supplies Official Terms of Use — Statutory conditions governing online stationery pack orders, Pexcover services, electronic transactions under ECTA, and consumer rights under the CPA.",
+  heroEyebrow: "Statutory Terms of Use (ECTA 25 of 2002 & CPA 68 of 2008)",
+  heroTitle: "General Terms & Conditions of Sale and Website Use",
   heroText:
-    "These terms explain how Pexpacks handles quotes, orders, payments, school packs, Pexcover services, delivery, cancellations, and your use of the website and web app.",
+    "These statutory terms regulate your use of the Pexpacks website, web application, online checkout, school stationery pack orders, Pexcover services, and customer support channels.",
   heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
-  heroPanelText: "South Africa",
-  tocHeading: "Terms contents",
+  heroPanelText: "Republic of South Africa",
+  tocHeading: "Terms Contents",
   tocAriaLabel: "Terms of use table of contents",
-  summaryKicker: "Quick legal overview",
-  summaryTitle: "Before you order",
+  summaryKicker: "Key Legal Summary",
+  summaryTitle: "Important Notice Before You Place an Order",
   summaryText:
-    "Review your school, grade, items, contact details, and delivery information carefully before submitting an order or making payment. Customised school packs, Pexcover work, and special orders may carry limited cancellation or return rights once processing has started.",
+    "Review your school list, learner grade, contact information, and delivery option carefully before submitting an order. Customised school packs, pre-labelled stationery, and Pexcover book-covering services carry statutory return restrictions once processing has commenced.",
   highlights: [
     {
-      title: "Policies to read",
-      content: (
-        <>
-          <Link href="/privacy-policy">Privacy Policy</Link>,{" "}
-          <Link href="/cookie-notice">Cookie Notice</Link>, and{" "}
-          <Link href="/delivery-policy">Delivery Policy</Link>.
-        </>
-      ),
-    },
-    {
-      title: "Need help?",
-      content: (
-        <>
-          Email <a href={generalEmailHref}>{generalEmail}</a> or call{" "}
-          <a href={phoneHref}>{phoneNumber}</a>.
-        </>
-      ),
-      tone: "accent",
-    },
-    {
-      title: "Form confirmation",
+      title: "CPA Section 49 Notice",
       content:
-        "Use clear consent wording before checkout, quote, contact, Pexcover, and school-order submissions.",
+        "Important provisions limiting liability, allocating delivery risk, or restricting returns are highlighted in bold callout boxes in compliance with Section 49 of the Consumer Protection Act.",
+      tone: "warning",
+    },
+    {
+      title: "ECTA Section 43 Compliance",
+      content:
+        "Comprehensive statutory disclosures regarding our business entity, physical contact details, product pricing, and electronic contracting rules are provided herein.",
+      tone: "accent",
     },
   ],
   sections: [
     {
       id: "business-details",
-      eyebrow: "Business details",
-      title: "Pexpacks Supplies",
+      eyebrow: "ECTA Section 43 Disclosures",
+      title: "Statutory Supplier Disclosures",
       summary:
-        "The supplier details and core legal information for this website and web app.",
+        "Full business information required under Section 43 of the Electronic Communications and Transactions Act (ECTA 25 of 2002).",
       content: (
         <>
-          <h3>Key details</h3>
+          <h3>Statutory Supplier Information</h3>
           <ul>
             <li>
-              <strong>Effective date:</strong> {EFFECTIVE_DATE}
+              <strong>Full Registered Entity:</strong> Pexpacks Supplies (Pty) Ltd / Pexpacks Trading
             </li>
             <li>
-              <strong>Last updated:</strong> {EFFECTIVE_DATE}
+              <strong>Trading Name:</strong> Pexpacks / Pexcover
             </li>
             <li>
-              <strong>Website:</strong>{" "}
+              <strong>Effective Date:</strong> {EFFECTIVE_DATE}
+            </li>
+            <li>
+              <strong>Physical / Postal Address:</strong> Shared on official tax invoices, formal quotations, or written request.
+            </li>
+            <li>
+              <strong>Country of Incorporation:</strong> Republic of South Africa
+            </li>
+            <li>
+              <strong>Official Website:</strong>{" "}
               <a href={siteUrl}>{siteUrl.replace(/^https?:\/\//, "www.")}</a>
             </li>
             <li>
-              <strong>Trading name:</strong> Pexpacks / Pexcover
-            </li>
-            <li>
-              <strong>Country of operation:</strong> South Africa
-            </li>
-            <li>
-              <strong>Contact email:</strong>{" "}
+              <strong>Customer Support Email:</strong>{" "}
               <a href={generalEmailHref}>{generalEmail}</a>
             </li>
             <li>
-              <strong>Contact number:</strong>{" "}
+              <strong>Customer Support Telephone:</strong>{" "}
               <a href={phoneHref}>{phoneNumber}</a>
             </li>
             <li>
-              <strong>WhatsApp:</strong>{" "}
+              <strong>WhatsApp Support:</strong>{" "}
               {hasWhatsAppNumber ? whatsappNumber : "Available on request"}
             </li>
             <li>
-              <strong>Business address:</strong> Shared on request or on formal
-              invoices and service documents.
-            </li>
-            <li>
-              <strong>Registration and VAT:</strong> Shared where applicable on
-              quotations, invoices, or request.
+              <strong>Codes of Conduct:</strong> Compliant with the Consumer Protection Act 68 of 2008 Code of Conduct and POPIA regulations.
             </li>
           </ul>
         </>
@@ -121,663 +106,220 @@ const config: LegalDocumentConfig = {
     },
     {
       id: "introduction",
-      eyebrow: "1 - 4",
-      title: "Introduction, scope and legal capacity",
+      eyebrow: "1 — 4",
+      title: "Scope, Legal Capacity, and Contract Formation",
       summary:
-        "These terms apply whenever you browse, enquire, order, pay, or interact with Pexpacks online.",
+        "Application of these terms and electronic contract formation rules under ECTA.",
       content: (
         <>
           <p>
-            These Terms of Use govern your access to and use of the Pexpacks
-            Supplies website, web app, online ordering flows, quote request
-            forms, contact forms, communication channels, digital services, and
-            related services.
+            These Terms of Use govern access to and use of the Pexpacks website, web application, checkout workflows, quote request portals, and electronic communication channels.
           </p>
           <p>
-            By using this website, requesting a quote, placing an order, making a
-            payment, creating an account where available, or communicating with
-            Pexpacks through an approved channel, you agree to these Terms.
-          </p>
-          <p>
-            These Terms should be read together with our{" "}
+            By accessing the website, placing an order, completing an online transaction, or submitting a enquiry, you enter into a legally binding agreement with Pexpacks subject to these Terms, our{" "}
             <Link href="/privacy-policy">Privacy Policy</Link>,{" "}
-            <Link href="/cookie-notice">Cookie Notice</Link>,{" "}
-            <Link href="/delivery-policy">Delivery Policy</Link>, any published
-            returns or refund terms, and any quotation, invoice, order
-            confirmation, school-specific stationery list, campaign term, or
-            service agreement issued by Pexpacks.
+            <Link href="/delivery-policy">Delivery Policy</Link>,{" "}
+            <Link href="/returns-refunds-policy">Returns &amp; Refunds Policy</Link>, and{" "}
+            <Link href="/lay-by-terms">Lay-by Terms</Link>.
           </p>
+          <h3>Legal Capacity (ECTA &amp; Common Law)</h3>
           <ul>
-            <li>
-              You must be at least 18, or act with parent or guardian consent.
-            </li>
-            <li>
-              You may place orders for a school, business, or organisation only
-              if you are authorised to do so.
-            </li>
-            <li>
-              Children may not place orders, create accounts, or submit personal
-              information without proper adult or school authority.
-            </li>
-            <li>
-              You may use the website and web app only for lawful purposes.
-            </li>
+            <li>You must be at least 18 years of age or possess full legal capacity to enter into binding transactions.</li>
+            <li>Minors must act with the express consent and assistance of a parent or legal guardian.</li>
+            <li>Persons placing orders on behalf of schools or corporate entities warrant that they possess express authority to bind such institution.</li>
           </ul>
+          <h3>Electronic Contract Formation (ECTA Section 22)</h3>
+          <p>
+            In terms of Section 22 of ECTA, electronic agreements are valid and enforceable. An order submitted by a customer constitutes an offer to purchase. A binding contract is formed only when Pexpacks issues an electronic order confirmation or commences fulfillment.
+          </p>
         </>
       ),
     },
     {
       id: "services",
-      eyebrow: "5 - 9",
-      title: "Products and services we offer",
+      eyebrow: "5 — 9",
+      title: "Products, School Lists, and Service Specifications",
       summary:
-        "Pexpacks serves schools, parents, learners, and households through organised supply and support services.",
+        "Stationery supply packs, Pexcover book services, and list accuracy guidelines.",
       content: (
         <>
-          <p>Pexpacks may provide products and services including:</p>
+          <p>Pexpacks provides goods and services including:</p>
           <ul>
-            <li>School stationery packs and grade-specific stationery packs</li>
-            <li>Custom school supply lists and parent-selected item bundles</li>
-            <li>
-              Pexcover book covering, labelling, sorting, and pack preparation
-            </li>
-            <li>
-              Branding packs, SME packs, and convenience packs
-            </li>
-            <li>Bulk supply solutions for schools</li>
-            <li>
-              Online quote requests, online order submissions, and order
-              management support
-            </li>
-            <li>
-              School partnership programmes and related digital service offers
-            </li>
-            <li>
-              Business support packs, branding support, and standard website or
-              web app packages where offered
-            </li>
+            <li>Grade-specific school stationery supply packs compiled according to school requirements</li>
+            <li>Custom stationery list selection and itemized parent ordering</li>
+            <li>Pexcover™ professional book-covering, sorting, and learner name-labelling services</li>
+            <li>Corporate SME starter stationery and branding supply packages</li>
+            <li>Bulk educational institution supply procurement</li>
           </ul>
+          <h3>School List Accuracy &amp; Product Substitution</h3>
           <p>
-            Product descriptions, images, pricing, pack contents, quantities,
-            availability, school lists, and service details are provided as
-            accurately as reasonably possible, but some details may change
-            because of supplier updates, school changes, seasonality, or stock
-            movement.
+            Product images are for illustrative purposes. Pexpacks endeavors to supply specified stationery brands. Where a brand is out of stock due to seasonal supply chain constraints, Pexpacks reserves the right to supply a substitute item of equivalent or superior quality and equal value, in accordance with Section 19 or Section 55 of the CPA.
           </p>
-          <ul>
-            <li>Images may be illustrative only and packaging may differ.</li>
-            <li>
-              Brands may vary unless a specific brand is confirmed in writing.
-            </li>
-            <li>
-              School stationery requirements may change if the school updates its
-              list.
-            </li>
-            <li>
-              Pexpacks may offer substitutes, revised quotations, delays, partial
-              refunds, or full refunds for unavailable items where appropriate.
-            </li>
-          </ul>
         </>
       ),
     },
     {
       id: "school-and-pexcover",
-      eyebrow: "10 - 14",
-      title: "School packs, Pexcover, and custom fulfilment",
+      eyebrow: "10 — 14",
+      title: "School Packs, Pexcover™, and Custom Fulfillment Exclusions",
       summary:
-        "School-specific orders rely on accurate learner, grade, and school information, and some services are customised once work begins.",
+        "Statutory terms governing customized orders, labelling, and Pexcover labour.",
       content: (
         <>
-          <h3>School stationery packs</h3>
+          <h3>Pexcover™ and Custom Labelling Services</h3>
           <p>
-            School packs may be assembled according to grade requirements,
-            school-provided lists, standard pack categories, customer-selected
-            items, or bulk school arrangements. Customers must review the school
-            name, learner grade, pack type, quantities, and delivery details
-            before final confirmation.
+            Pexcover services involve labour-intensive book covering, sorting, and customized learner name-labelling. Customers must supply accurate learner name details, book counts, and size instructions.
           </p>
-          <ul>
-            <li>
-              Schools may update their stationery requirements from time to time.
-            </li>
-            <li>
-              Pexpacks may rely on information supplied by schools, parents, or
-              authorised representatives.
-            </li>
-            <li>
-              Pexpacks is not responsible for inaccurate third-party stationery
-              lists.
-            </li>
-            <li>
-              Specially assembled school packs may be treated as customised
-              orders.
-            </li>
-          </ul>
-          <h3>Pexcover services</h3>
-          <p>
-            Pexcover services may include covering, labelling, sorting, and pack
-            preparation. Customers must provide accurate book quantities, sizes,
-            learner details, and labelling instructions.
-          </p>
-          <ul>
-            <li>
-              Books may need to be delivered to, collected from, or dropped off
-              at an agreed location.
-            </li>
-            <li>
-              Delays caused by late book submission, missing books, inaccurate
-              instructions, or school list changes are outside Pexpacks&apos;
-              control.
-            </li>
-            <li>
-              Once labour-based or customised work has started, cancellation
-              rights may be limited except where law requires otherwise.
-            </li>
-            <li>
-              Customers must ensure books are properly identified and handed over
-              in good condition.
-            </li>
-          </ul>
-          <h3>SME packs and business support services</h3>
-          <p>
-            Where Pexpacks provides branding packages, business
-            setup support, or a standard website or web app package, the exact
-            scope, revisions, exclusions, ownership terms, and timelines must be
-            confirmed in a written quotation, invoice, or service agreement.
-          </p>
+          <div className={legalStyles.noticeBlock}>
+            <p>
+              <strong>CPA Section 49 Conspicuous Notice on Custom Work:</strong>
+            </p>
+            <p>
+              Once Pexcover book-covering, personalized name-labelling, or custom list collation has commenced, such goods are classified as customized or personalized items. In terms of South African consumer law, change-of-mind cancellations or returns are restricted once custom work or labor has been performed, except where items are defective.
+            </p>
+          </div>
         </>
       ),
     },
     {
       id: "quotes-orders",
-      eyebrow: "15 - 18",
-      title: "Quotes, orders, and order corrections",
+      eyebrow: "15 — 18",
+      title: "Quotations, Pricing, and Error Corrections",
       summary:
-        "Quotes are invitations to contract. Orders are accepted only when Pexpacks confirms them or starts fulfilment.",
+        "Quotation validity, pricing terms in ZAR, and rectification of inadvertent system errors.",
       content: (
         <>
           <p>
-            Quotes may depend on stock availability, supplier pricing, delivery
-            area, quantity changes, school list changes, customer approval,
-            payment confirmation, and any expiry date shown on the quote.
+            All prices listed on the website or quoted are in South African Rand (ZAR). Pexpacks reserves the right to correct inadvertent pricing, calculation, or typographical errors on the website or quotes prior to order acceptance (ECTA Section 43(1)(g)).
           </p>
           <p>
-            Orders may be placed through the website, web app, email, WhatsApp,
-            telephone, a school campaign form, quote acceptance, invoice payment,
-            or another approved Pexpacks channel.
-          </p>
-          <ul>
-            <li>
-              An order is accepted only once Pexpacks confirms acceptance or
-              begins fulfilment.
-            </li>
-            <li>
-              Pexpacks may correct obvious pricing, typographical, calculation,
-              or system errors before accepting an order.
-            </li>
-            <li>
-              Pexpacks may decline or cancel an order if payment is missing,
-              stock is unavailable, delivery is not possible, information is
-              inaccurate, or the order appears fraudulent or unlawful.
-            </li>
-            <li>
-              Customers must review their selection, quantities, delivery
-              information, and payment details before final submission.
-            </li>
-          </ul>
-          <p>
-            Pexpacks will make reasonable efforts to notify customers if an order
-            cannot be fulfilled or needs to be revised.
+            Quotations issued by Pexpacks remain valid for the period specified on the quote (typically 14 to 30 days) and are subject to stock availability.
           </p>
         </>
       ),
     },
     {
       id: "pricing-payment",
-      eyebrow: "19 - 22",
-      title: "Pricing, payment, and transaction security",
+      eyebrow: "19 — 22",
+      title: "Payment Methods and Payment Security",
       summary:
-        "Prices are quoted in rand, order pricing may change before acceptance, and online payment security is handled through reasonable safeguards.",
+        "Payment execution, credit card processing, and PCI-DSS payment gateways.",
       content: (
         <>
           <p>
-            Unless stated otherwise, all prices are shown in South African Rand.
-            Prices may include or exclude VAT depending on Pexpacks&apos; VAT
-            status and the way the price is displayed.
-          </p>
-          <ul>
-            <li>
-              Quoted or displayed prices may exclude delivery, labour,
-              customisation, urgent processing, or third-party service fees.
-            </li>
-            <li>
-              Once a paid order is accepted, Pexpacks will not increase the price
-              unless the customer requests a change, the original quote contained
-              an obvious error, or the order requirements change.
-            </li>
-            <li>
-              Orders are usually processed only after payment is received or
-              approved, unless written account terms apply.
-            </li>
-            <li>
-              Customers must use the correct payment reference to avoid
-              fulfilment delays.
-            </li>
-          </ul>
-          <p>
-            Accepted payment methods may include EFT, online card payment,
-            payment gateways, instant EFT, bank deposit, or other approved
-            methods.
+            Payment must be completed in full prior to order dispatch or custom Pexcover work, unless formal corporate/school credit terms have been agreed in writing.
           </p>
           <p>
-            Where online payment is offered, Pexpacks uses reasonable security
-            measures and reputable payment service providers. Pexpacks does not
-            intend to store full card details on its own systems unless this is
-            done through a secure, compliant, authorised provider.
+            Approved payment options include Electronic Funds Transfer (EFT), instant EFT, debit cards, and credit cards processed via authorized South African payment gateways (Paystack).
+          </p>
+          <p>
+            Pexpacks does not store raw credit/debit card numbers. All electronic card transactions are encrypted and processed by PCI-DSS compliant payment gateways.
           </p>
         </>
       ),
     },
     {
       id: "delivery-collection",
-      eyebrow: "23 - 27",
-      title: "Delivery, collection, and school handover",
+      eyebrow: "23 — 27",
+      title: "Delivery, Risk, and School Handover",
       summary:
-        "Delivery and collection depend on location, school arrangements, stock, and seasonal demand.",
+        "Delivery timelines, passing of risk under CPA Section 19, and school handover.",
       content: (
         <>
           <p>
-            Delivery and collection options may vary based on customer location,
-            school partnerships, courier availability, order size, payment
-            confirmation, operational capacity, and school calendar timing.
+            Full delivery conditions are detailed in our <Link href="/delivery-policy">Delivery Policy</Link>.
           </p>
-          <ul>
-            <li>
-              Delivery times are estimates unless expressly guaranteed in
-              writing.
-            </li>
-            <li>
-              Delays can result from incorrect delivery details, customer
-              unavailability, courier issues, weather, supplier delays, strikes,
-              school list changes, public holidays, or other events beyond
-              reasonable control.
-            </li>
-            <li>
-              Risk in goods may pass on delivery to the customer, agreed school
-              collection point, authorised recipient, or customer collection,
-              depending on the chosen fulfilment method.
-            </li>
-          </ul>
-          <h3>School collection points</h3>
-          <p>
-            If Pexpacks delivers to a school collection point, the school may
-            help with distribution but is not the seller unless expressly stated
-            otherwise.
-          </p>
-          <ul>
-            <li>Collection windows may be limited.</li>
-            <li>
-              Pexpacks may require proof of identity, order number, or payment
-              confirmation.
-            </li>
-            <li>
-              Items left uncollected after reasonable notice may be handled
-              according to the applicable school or fulfilment arrangement.
-            </li>
-          </ul>
+          <div className={legalStyles.noticeBlock}>
+            <p>
+              <strong>Passing of Risk (CPA Section 19):</strong>
+            </p>
+            <p>
+              Risk of loss or damage to goods passes to the customer upon doorstep delivery, handover to an authorized recipient, or handover to a designated school collection point.
+            </p>
+          </div>
         </>
       ),
     },
     {
       id: "returns-cancellations",
-      eyebrow: "28 - 32",
-      title: "Returns, refunds, cooling-off, and cancellations",
+      eyebrow: "28 — 32",
+      title: "Returns, Refunds, and Statutory Warranties",
       summary:
-        "Customer rights are respected under South African law, but customised or already-started services may carry limited cancellation rights.",
+        "CPA statutory implied warranty and ECTA cooling-off rights.",
       content: (
         <>
           <p>
-            Pexpacks handles returns, refunds, exchanges, and cancellations in
-            line with applicable South African law, including the Consumer
-            Protection Act and Electronic Communications and Transactions Act
-            where relevant.
+            Return rights are regulated under our <Link href="/returns-refunds-policy">Returns &amp; Refunds Policy</Link>, complying with:
           </p>
           <ul>
-            <li>
-              Consumers may have remedies where goods are defective, unsafe, not
-              as described, supplied in error, or damaged before delivery.
-            </li>
-            <li>
-              Returned goods may be inspected before a refund, replacement,
-              repair, or exchange is approved.
-            </li>
-            <li>
-              A return may be refused where goods were misused, altered, opened,
-              written on, labelled, consumed, or damaged after delivery, unless
-              they were defective.
-            </li>
-            <li>
-              Custom, personalised, labelled, specially ordered, covered,
-              printed, or learner-specific items may not be returnable merely
-              because the customer changed their mind.
-            </li>
-          </ul>
-          <p>
-            Where an online transaction qualifies for a statutory cooling-off
-            right, a consumer may have limited rights to cancel within the period
-            allowed by law. This may not apply to customised goods, services
-            already started with consent, specially ordered items, or other
-            excluded categories.
-          </p>
-          <p>
-            Customers should report missing, incorrect, or damaged items as soon
-            as reasonably possible after delivery or collection so the issue can
-            be investigated promptly.
-          </p>
-        </>
-      ),
-    },
-    {
-      id: "promotions-partnerships",
-      eyebrow: "33 - 35",
-      title: "Promotions, school partnerships, and digital offers",
-      summary:
-        "Special offers, school campaigns, and digital partnership packages are subject to separate written scope and eligibility terms.",
-      content: (
-        <>
-          <p>
-            Pexpacks may run promotions, discounts, coupons, bundles, launch
-            offers, school campaigns, or limited-time deals. These may be subject
-            to stock availability, start and end dates, school or area
-            restrictions, minimum order values, exclusions, and separate campaign
-            rules.
-          </p>
-          <p>
-            Where Pexpacks offers a free or discounted website, web app, domain,
-            or digital service to partner schools, the scope must be confirmed in
-            a written school partnership agreement.
-          </p>
-          <ul>
-            <li>Eligibility may be limited to qualifying partner schools.</li>
-            <li>
-              Hosting periods, page limits, premium integrations, maintenance,
-              renewals, and advanced development may be billed separately.
-            </li>
-            <li>
-              Schools must provide accurate content, approvals, logos, images,
-              and permissions.
-            </li>
-            <li>
-              Any school, parent, learner, or order data will be handled only for
-              the agreed purpose and in line with applicable privacy law.
-            </li>
+            <li><strong>CPA Section 56 Implied Warranty of Quality:</strong> 6-month statutory right to repair, replace, or refund defective or damaged stationery goods.</li>
+            <li><strong>ECTA Section 44 Cooling-Off Period:</strong> 7-day right to cancel non-customised online purchases (excluding return courier charges).</li>
           </ul>
         </>
       ),
     },
     {
       id: "accounts-content-ip",
-      eyebrow: "36 - 39",
-      title: "Accounts, user content, and intellectual property",
+      eyebrow: "36 — 39",
+      title: "Intellectual Property and Site Usage",
       summary:
-        "Users remain responsible for account security, lawful submissions, and respecting Pexpacks content and brand rights.",
-      content: (
-        <>
-          <h3>User accounts</h3>
-          <ul>
-            <li>
-              Where accounts are available, you must provide accurate
-              registration details and keep login credentials secure.
-            </li>
-            <li>
-              You are responsible for activity performed through your account
-              unless caused by Pexpacks&apos; proven negligence or unlawful
-              conduct.
-            </li>
-            <li>
-              Pexpacks may suspend or remove accounts that are inactive,
-              duplicated, compromised, fraudulent, or abusive.
-            </li>
-          </ul>
-          <h3>User-submitted content</h3>
-          <p>
-            If you submit stationery lists, messages, testimonials, files, logos,
-            or other content, you confirm that you are entitled to do so, that
-            the content is lawful and accurate, and that it does not infringe
-            third-party rights or contain harmful code.
-          </p>
-          <h3>Intellectual property</h3>
-          <p>
-            Unless stated otherwise, all site content, designs, text, graphics,
-            logos, pack concepts, interfaces, source code, documents, and
-            marketing material belong to Pexpacks or its licensors. You may not
-            copy, reproduce, scrape, reverse-engineer, or exploit them without
-            prior written consent.
-          </p>
-        </>
-      ),
-    },
-    {
-      id: "privacy-third-parties",
-      eyebrow: "40 - 42",
-      title: "Privacy, direct marketing, and third-party services",
-      summary:
-        "Personal information is processed under POPIA-aligned practices, and third-party services have their own terms and privacy rules.",
+        "Ownership of trademarks, stationery list compilations, and website content.",
       content: (
         <>
           <p>
-            Pexpacks processes personal information in accordance with its{" "}
-            <Link href="/privacy-policy">Privacy Policy</Link> and applicable
-            South African privacy law, including POPIA.
-          </p>
-          <ul>
-            <li>
-              Personal information may be processed for fulfilment, delivery,
-              payment, customer support, legal compliance, and service
-              improvement.
-            </li>
-            <li>
-              Learner-related information is handled carefully and only for
-              lawful, relevant operational purposes.
-            </li>
-            <li>
-              Marketing messages may be sent where permitted by law and should
-              include an opt-out option where required.
-            </li>
-          </ul>
-          <p>
-            This website and web app may link to or integrate with third-party
-            providers such as payment gateways, couriers, Google Maps, WhatsApp,
-            hosting providers, analytics tools, social platforms, design or
-            printing partners, and school or supplier websites.
+            All website designs, text, graphics, logos, images, custom stationery list structures, Pexcover™ branding, and source code are the intellectual property of Pexpacks Supplies or its licensors.
           </p>
           <p>
-            Pexpacks is not responsible for the content, uptime, security,
-            privacy practices, or terms of those third-party platforms.
+            Unauthorized copying, scraping, reproduction, or exploitation of website content or brand assets without prior written consent is strictly prohibited.
           </p>
         </>
       ),
     },
     {
       id: "availability-liability",
-      eyebrow: "43 - 44",
-      title: "Availability, disclaimers, liability, and force majeure",
+      eyebrow: "43 — 44",
+      title: "Limitation of Liability and Indemnity",
       summary:
-        "The platform is provided on an available basis, with consumer rights preserved where the law does not allow exclusion.",
+        "Plain-language limitation of liability in compliance with CPA Section 49.",
       content: (
         <>
-          <p>
-            Pexpacks aims to keep the website and web app available, accurate,
-            and secure, but does not guarantee uninterrupted or error-free
-            access. Services may be affected by maintenance, hosting issues,
-            internet failures, technical bugs, security incidents, or other
-            provider-side disruptions.
-          </p>
-          <ul>
-            <li>
-              Pexpacks may correct website or system errors and revise affected
-              orders before acceptance or fulfilment where lawful and reasonable.
-            </li>
-            <li>
-              Nothing in these Terms excludes rights or remedies that cannot
-              legally be excluded under South African law.
-            </li>
-            <li>
-              To the maximum extent permitted by law, Pexpacks is not liable for
-              indirect or consequential loss, including loss caused by customer
-              error, third-party services, or events beyond reasonable control.
-            </li>
-            <li>
-              Any direct liability relating to an order may, where lawful, be
-              limited to the amount paid for the affected product or service.
-            </li>
-          </ul>
-          <p>
-            Pexpacks will also not be liable for delay or non-performance caused
-            by force majeure events such as power failures, transport disruption,
-            unrest, cyber incidents beyond reasonable control, supplier
-            shortages, school closures, severe weather, or government
-            restrictions.
-          </p>
+          <div className={legalStyles.noticeBlock}>
+            <p>
+              <strong>CPA Section 49 Limitation Notice:</strong>
+            </p>
+            <p>
+              To the maximum extent permitted by South African law (including the CPA), Pexpacks shall not be liable for indirect, consequential, or special damages arising from website unavailability, courier transit delays beyond reasonable control, or incorrect customer-provided order information. Pexpacks' total liability for direct damages relating to any order shall be capped at the total price paid for the affected items.
+            </p>
+          </div>
         </>
       ),
     },
     {
       id: "complaints-law",
       eyebrow: "45",
-      title: "Complaints, updates, governing law, and contact",
+      title: "Governing Law and Dispute Resolution",
       summary:
-        "Customers can raise issues directly with Pexpacks, and disputes are governed by South African law.",
+        "South African jurisdiction and good-faith dispute resolution procedures.",
       content: (
         <>
           <p>
-            For complaints, support, returns, order queries, or legal notices,
-            please contact Pexpacks using the details below and include your full
-            name, contact details, order or invoice number, a description of the
-            issue, and any supporting documents or images.
+            These Terms are governed by and construed in accordance with the laws of the <strong>Republic of South Africa</strong>.
+          </p>
+          <p>
+            In the event of any dispute arising from an order or website transaction, the parties shall first attempt to resolve the matter in good faith through direct consultation. Customers retain the right to approach the Consumer Goods and Services Ombudsman (CGSO) or the Information Regulator where applicable.
           </p>
           <div className={legalStyles.contactPanel}>
             <p>
-              <strong>Email:</strong>{" "}
+              <strong>Legal &amp; Customer Support Email:</strong>{" "}
               <a href={generalEmailHref}>{generalEmail}</a>
             </p>
             <p>
-              <strong>Phone:</strong> <a href={phoneHref}>{phoneNumber}</a>
-            </p>
-            <p>
-              <strong>WhatsApp:</strong>{" "}
-              {hasWhatsAppNumber ? whatsappNumber : "Available on request"}
+              <strong>Telephone:</strong> <a href={phoneHref}>{phoneNumber}</a>
             </p>
             <p>
               <strong>Website:</strong> <a href={siteUrl}>{siteUrl}</a>
             </p>
           </div>
-          <p>
-            Pexpacks may update these Terms from time to time to reflect legal,
-            operational, commercial, or platform changes. The latest published
-            version will apply to future use of the website and web app, while
-            confirmed orders will generally remain subject to the terms in force
-            when the order was accepted unless the law requires otherwise.
-          </p>
-          <p>
-            These Terms are governed by the laws of the Republic of South Africa.
-            Before formal legal action is started, the parties should try to
-            resolve disputes in good faith. Customers may also approach relevant
-            South African consumer bodies where applicable.
-          </p>
-        </>
-      ),
-    },
-    {
-      id: "savings-plan-terms",
-      eyebrow: "Draft",
-      title: "Pexpacks Savings Plan",
-      summary:
-        "Terms applying to the optional Pre-Purchase Savings Plan that allows customers to deposit towards stationery packs over time.",
-      content: (
-        <>
-          <div className={legalStyles.noticeBlock}>
-            <p>
-              <strong>Internal legal note:</strong> This section is a draft
-              outline for the Savings Plan. It should be reviewed by a South
-              African legal professional before launch, particularly regarding
-              the Consumer Protection Act (CPA) requirements for future-goods
-              agreements, cooling-off rights, and deposit handling.
-            </p>
-          </div>
-
-          <p>
-            The Pexpacks Savings Plan is an optional, non-interest-bearing
-            programme that lets customers contribute funds toward a future
-            stationery pack order. It is not a credit facility, loan, or
-            lay-by agreement as defined in the National Credit Act. Title to
-            the goods remains with Pexpacks until the full order amount is
-            settled and the goods are dispatched.
-          </p>
-
-          <h4>How it works</h4>
-          <ol>
-            <li>
-              The customer selects a savings option during or after order
-              placement and begins contributing deposit amounts.
-            </li>
-            <li>
-              Contributions are recorded but no physical goods are reserved
-              or packed until the balance is settled.
-            </li>
-            <li>
-              Once the saved amount matches or exceeds the order value
-              (value match), or when the customer pays the outstanding
-              balance, Pexpacks will process and dispatch the order.
-            </li>
-          </ol>
-
-          <h4>Deposits and refunds</h4>
-          <ul>
-            <li>
-              All deposits are held as unallocated credits toward the
-              customer&rsquo;s nominated order.
-            </li>
-            <li>
-              The customer may request a full refund of accumulated deposits
-              at any time before the order is value-matched or fulfilled.
-              Refunds will be processed within 14 business days to the
-              original payment method where possible.
-            </li>
-            <li>
-              Once the order is value-matched and dispatched, standard
-              refund and return policies apply.
-            </li>
-          </ul>
-
-          <h4>Cancellation</h4>
-          <ul>
-            <li>
-              The customer may cancel the Savings Plan at any time before
-              value match and receive a full refund of deposits.
-            </li>
-            <li>
-              Pexpacks may cancel the Savings Plan at any time by giving the
-              customer reasonable notice and a full refund of deposits.
-            </li>
-          </ul>
-
-          <h4>Price protection</h4>
-          <p>
-            Prices quoted at the time the Savings Plan is created are not
-            guaranteed. If prices increase before the order is settled, the
-            customer will be notified and may choose to pay the difference
-            or receive a full refund.
-          </p>
-
-          <h4>Availability</h4>
-          <p>
-            The Savings Plan is offered at Pexpacks&rsquo;s discretion and
-            may be withdrawn or modified at any time. Existing plans will be
-            honoured according to the terms in effect when they were
-            created.
-          </p>
         </>
       ),
     },
@@ -785,39 +327,18 @@ const config: LegalDocumentConfig = {
   extraContent: (
     <article className={legalStyles.documentCard}>
       <div className={legalStyles.sectionHeader}>
-        <p>Recommended form language</p>
-        <h2>Consent wording for forms and checkout</h2>
-        <span>
-          The original legal draft included explicit acceptance wording for order
-          and enquiry submissions.
-        </span>
+        <p>Statutory Consent Notice</p>
+        <h2>Required Checkout &amp; Form Consent</h2>
       </div>
       <div className={legalStyles.sectionBody}>
         <div className={legalStyles.noticeBlock}>
           <p>
-            <strong>General form checkbox</strong>
+            <strong>Checkout Acceptance Wording</strong>
           </p>
           <p>
-            I confirm that I have read and agree to the Pexpacks Terms of Use and
-            Privacy Policy.
+            By placing this order, I confirm that the learner, school, and item details are correct, and I agree to the Pexpacks Terms of Use, Privacy Policy, Delivery Policy, and Returns and Refunds Policy.
           </p>
         </div>
-        <div className={legalStyles.noticeBlock}>
-          <p>
-            <strong>Checkout checkbox</strong>
-          </p>
-          <p>
-            By placing this order, I confirm that the order details are correct
-            and that I agree to the Pexpacks Terms of Use, Privacy Policy,
-            Delivery Policy, and Returns and Refunds Policy.
-          </p>
-        </div>
-        <p className={legalStyles.legalNote}>
-          Important legal note: this page is a strong operational draft for
-          publication, but it should still be reviewed by a South African legal
-          professional once final payment, courier, partnership, refund,
-          registration, and VAT details are fully settled.
-        </p>
       </div>
     </article>
   ),

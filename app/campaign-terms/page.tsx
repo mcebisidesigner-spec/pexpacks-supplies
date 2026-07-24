@@ -9,14 +9,12 @@ import {
   LegalDocumentPage,
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, siteUrl } from "@/lib/seo";
 import { EFFECTIVE_DATE } from "@/lib/constants";
-
-
 
 export const metadata: Metadata = buildMetadata(
   "Campaign Terms",
-  "Read the Pexpacks campaign terms for promotions, discounts, qualifying schools, and offer limits.",
+  "Pexpacks Campaign & Promotional Terms — Official statutory terms regulating promotions, discounts, promotional offers under CPA Section 36, and school campaign rules.",
   "/campaign-terms"
 );
 
@@ -24,109 +22,92 @@ export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/campaign-terms",
-  pageTitle: "Campaign Terms",
+  pageTitle: "Campaign & Promotional Terms",
   metaDescription:
-    "Read the Pexpacks campaign terms for promotions, discounts, qualifying schools, and offer limits.",
-  heroEyebrow: "Campaign terms",
-  heroTitle: "Rules for promotions and campaign offers",
+    "Pexpacks Campaign & Promotional Terms — Official statutory terms regulating promotions, discounts, promotional offers under CPA Section 36, and school campaign rules.",
+  heroEyebrow: "Statutory Promotional Offers (CPA Section 36)",
+  heroTitle: "Promotional Campaign Terms & Conditions",
   heroText:
-    "These terms explain how limited-time campaigns, school promotions, launch offers, and discount mechanics are generally managed across the Pexpacks platform.",
+    "These terms regulate all promotional campaigns, discount coupons, school bundle offers, and seasonal launch deals offered by Pexpacks Supplies in terms of the Consumer Protection Act.",
   heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
-  heroPanelText: "Offer eligibility, limits, and fair-use conditions.",
-  tocHeading: "Campaign contents",
+  heroPanelText: "CPA Section 36 Compliant — Republic of South Africa",
+  tocHeading: "Campaign Terms Contents",
   tocAriaLabel: "Campaign terms contents",
-  summaryKicker: "Offer summary",
-  summaryTitle: "Promotions can change by date, area, school, and stock",
+  summaryKicker: "Promotions & CPA Section 36",
+  summaryTitle: "Fair, Transparent Promotional Rules",
   summaryText:
-    "Every campaign depends on availability and the published rules for that offer. Customers should check dates, eligibility, exclusions, and any minimum requirements before relying on a promotion.",
+    "Pexpacks conducts promotional offers and campaigns in strict compliance with Section 36 of the Consumer Protection Act. Every campaign specifies clear start/end dates, eligibility criteria, qualifying school lists, and stock availability terms.",
   highlights: [
     {
-      title: "Offer limits",
+      title: "CPA Section 36 Disclosures",
       content:
-        "Campaigns may end early, be paused, or change if stock, budget, fraud risk, or operational capacity requires it.",
-      tone: "warning",
-    },
-    {
-      title: "Support",
-      content: (
-        <>
-          Email <a href={generalEmailHref}>{generalEmail}</a> or call{" "}
-          <a href={phoneHref}>{phoneNumber}</a> if a campaign question needs
-          review.
-        </>
-      ),
+        "Full details regarding nature of prize/offer, qualifying criteria, and campaign duration are disclosed prior to participation.",
       tone: "accent",
     },
     {
-      title: "Check before ordering",
+      title: "Stock Availability Limits",
       content:
-        "Review the applicable dates, exclusions, and order conditions before final checkout or payment.",
+        "Promotional discounts apply while stock lasts or until the advertised campaign expiry date.",
+      tone: "warning",
     },
   ],
   sections: [
     {
       id: "eligibility",
       eyebrow: "1",
-      title: "Eligibility and qualifying conditions",
+      title: "Promotional Offer Eligibility & CPA Section 36",
       summary:
-        "Campaigns may be restricted by geography, qualifying schools, order type, or launch period.",
+        "Statutory requirements for promotional offers under CPA Section 36.",
       content: (
-        <ul>
-          <li>Some offers apply only to selected schools, grades, or regions.</li>
-          <li>Some offers require minimum order values or qualifying pack types.</li>
-          <li>Promotions may be limited to one use per customer, school, or account.</li>
-          <li>Expired or withdrawn offers cannot be honoured automatically.</li>
-        </ul>
+        <>
+          <p>
+            In accordance with Section 36 of the Consumer Protection Act (CPA 68 of 2008), every promotional offer, discount code, or campaign voucher issued by Pexpacks discloses:
+          </p>
+          <ul>
+            <li>The exact nature and value of the promotional offer or discount;</li>
+            <li>The specific qualifying school, grade, product category, or order minimum;</li>
+            <li>The commencement and closing dates of the promotional period;</li>
+            <li>The channel through which the offer may be redeemed.</li>
+          </ul>
+        </>
       ),
     },
     {
       id: "discount-rules",
       eyebrow: "2",
-      title: "Discounts, bundles, and exclusions",
+      title: "Discount Code Stacking & Exclusion Rules",
       summary:
-        "Campaign value must be read together with any exclusions, combinations, or bundle rules.",
-      content: (
-        <ul>
-          <li>Offers may exclude custom work, courier add-ons, or special-order items.</li>
-          <li>Unless stated otherwise, one campaign cannot be stacked with every other discount.</li>
-          <li>Coupon or code use may depend on entering the correct code before checkout.</li>
-          <li>Displayed savings may be based on a defined comparison method or campaign mechanic.</li>
-        </ul>
-      ),
-    },
-    {
-      id: "fair-use-fraud",
-      eyebrow: "3",
-      title: "Fair use and misuse prevention",
-      summary:
-        "Pexpacks may suspend or reject campaign use where abuse, automation, or manipulation is suspected.",
+        "Stacking rules, custom item exclusions, and coupon validity.",
       content: (
         <>
           <p>
-            Promotions are intended for legitimate customer use. Orders,
-            accounts, or code patterns that appear abusive, automated,
-            duplicated, or fraudulent may be reviewed, adjusted, or cancelled.
+            Unless explicitly stated otherwise in writing:
           </p>
-          <p>
-            Pexpacks may also reverse a discount that was clearly applied in
-            error before the order is accepted.
-          </p>
+          <ul>
+            <li>Promotional codes cannot be combined or stacked with other concurrent discounts;</li>
+            <li>Discounts apply to eligible stationery pack items and exclude courier fees or customized Pexcover™ labour;</li>
+            <li>Coupon codes are non-transferable and cannot be exchanged for cash.</li>
+          </ul>
         </>
       ),
     },
     {
-      id: "changes-disputes",
-      eyebrow: "4",
-      title: "Changes, interruption, and dispute handling",
+      id: "governing-law",
+      eyebrow: "3",
+      title: "Governing Law & Enquiries",
       summary:
-        "Operational issues, supplier changes, or errors may require an offer to be revised or withdrawn.",
+        "South African jurisdiction and campaign support contact details.",
       content: (
-        <p>
-          Pexpacks may update campaign wording, timing, stock allocation, or
-          operational handling where a genuine business or system need exists.
-          If a dispute arises, the customer should contact Pexpacks directly so
-          the relevant campaign rules and order facts can be reviewed.
-        </p>
+        <>
+          <p>
+            Campaign terms are governed by the laws of the <strong>Republic of South Africa</strong>. For campaign enquiries:
+          </p>
+          <ul>
+            <li><strong>Campaign Email:</strong> <a href={generalEmailHref}>{generalEmail}</a></li>
+            <li><strong>Telephone:</strong> <a href={phoneHref}>{phoneNumber}</a></li>
+            <li><strong>Official Website:</strong> <a href={siteUrl}>{siteUrl}</a></li>
+          </ul>
+        </>
       ),
     },
   ],

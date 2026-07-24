@@ -13,11 +13,9 @@ import {
 import { buildMetadata } from "@/lib/seo";
 import { EFFECTIVE_DATE } from "@/lib/constants";
 
-
-
 export const metadata: Metadata = buildMetadata(
   "Delivery Policy",
-  "Read the Pexpacks delivery policy for school stationery packs, handover timing, and support.",
+  "Pexpacks Delivery Policy — Official delivery, courier dispatch, school handover, and risk-allocation rules pursuant to Section 19 of the Consumer Protection Act (CPA 68 of 2008).",
   "/delivery-policy"
 );
 
@@ -25,162 +23,91 @@ export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/delivery-policy",
-  pageTitle: "Delivery Policy",
+  pageTitle: "Delivery & Fulfillment Policy",
   metaDescription:
-    "Read the Pexpacks delivery policy for school stationery packs, handover timing, and support.",
-  heroEyebrow: "Delivery and collection",
-  heroTitle: "How delivery and collection work",
+    "Pexpacks Delivery Policy — Official delivery, courier dispatch, school handover, and risk-allocation rules pursuant to Section 19 of the Consumer Protection Act (CPA 68 of 2008).",
+  heroEyebrow: "Statutory Delivery Rules (CPA Section 19)",
+  heroTitle: "Delivery, Fulfillment, and School Handover Terms",
   heroText:
-    "This document explains how Pexpacks handles collection points, delivery timing, customer handover, and support when fulfilment questions come up.",
+    "This policy outlines how Pexpacks manages doorstep courier delivery, school collection points, dispatch lead times, and statutory risk allocation under South African law.",
   heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
-  heroPanelText: "School packs, home delivery, and collection support.",
-  tocHeading: "Delivery contents",
+  heroPanelText: "CPA Section 19 Aligned — Republic of South Africa",
+  tocHeading: "Delivery Policy Contents",
   tocAriaLabel: "Delivery policy contents",
-  summaryKicker: "Delivery snapshot",
-  summaryTitle: "Delivery timing is confirmed after order and stock review",
+  summaryKicker: "Delivery & Risk Notice",
+  summaryTitle: "Clear Fulfillment Schedules and Passing of Risk",
   summaryText:
-    "Pexpacks confirms the final fulfilment route after checking school, grade, stock readiness, payment status, and the agreed collection or delivery method.",
+    "Pexpacks coordinates fulfillment via doorstep courier delivery or designated school handover points. Delivery timelines are communicated prior to dispatch, and risk of loss or damage passes upon delivery in compliance with Section 19 of the Consumer Protection Act.",
   highlights: [
     {
-      title: "Contact",
-      content: (
-        <>
-          Email <a href={generalEmailHref}>{generalEmail}</a> or call{" "}
-          <a href={phoneHref}>{phoneNumber}</a>.
-        </>
-      ),
+      title: "Risk Allocation (CPA s19)",
+      content:
+        "Risk of loss or damage to goods passes to the customer upon delivery at the specified address or handover at an agreed school collection point.",
       tone: "accent",
     },
     {
-      title: "Important",
-      content:
-        "Delivery windows are estimates unless Pexpacks confirms a fixed timeline in writing.",
-      tone: "warning",
-    },
-    {
-      title: "Tracking help",
+      title: "Tracking Support",
       content: (
         <>
-          Use the <Link href="/track-order">track order page</Link> if you need
-          help after an order is submitted.
+          Use our <Link href="/track-order">Order Tracking Portal</Link> or contact support if you have questions regarding your dispatch status.
         </>
       ),
+      tone: "warning",
     },
   ],
   sections: [
     {
-      id: "delivery-options",
+      id: "statutory-delivery-rules",
       eyebrow: "1",
-      title: "Delivery and collection options",
+      title: "Statutory Supplier Delivery Duties (CPA Section 19)",
       summary:
-        "Available fulfilment methods depend on the pack type, the school, the area, and operational timing.",
+        "Legal framework governing delivery obligations, agreed times, and risk of loss.",
       content: (
-        <ul>
-          <li>School collection points where a school arrangement exists.</li>
-          <li>Home delivery where the area and order qualify.</li>
-            <li>Business delivery for approved convenience use cases.</li>
-          <li>Customer collection by prior arrangement.</li>
-        </ul>
+        <>
+          <p>
+            In terms of Section 19 of the Consumer Protection Act (CPA 68 of 2008), Pexpacks is responsible for delivering stationery goods on the agreed date, within the agreed time frame, or within a reasonable time after order completion and payment confirmation.
+          </p>
+          <h3>Passing of Risk (Section 19(2))</h3>
+          <p>
+            Goods remain at Pexpacks' risk until the customer, an authorized representative, or a designated school handover official has accepted delivery or collection. Once delivered or handed over, risk of loss or damage passes to the customer.
+          </p>
+        </>
       ),
     },
     {
-      id: "timing-and-preparation",
+      id: "delivery-channels",
       eyebrow: "2",
-      title: "Preparation, lead times, and timing",
+      title: "Fulfillment Channels and Logistics Options",
       summary:
-        "Fulfilment timing depends on stock, list verification, custom work, and seasonal demand.",
+        "Available fulfillment methods across South Africa.",
       content: (
         <>
+          <h3>1. School Handover &amp; Collection Points</h3>
           <p>
-            Pexpacks usually confirms timing only after order details have been
-            reviewed. Peak school periods, supplier lead times, list changes,
-            and custom services such as Pexcover can affect preparation time.
+            Where Pexpacks operates an official school partnership campaign, stationery packs may be delivered in bulk to a designated school collection point for organized handover prior to the opening of the school term in January.
           </p>
+          <h3>2. Doorstep Courier Delivery</h3>
           <p>
-            Delivery or collection windows may also depend on school calendars,
-            courier routes, public holidays, and customer availability.
+            For individual orders or non-partner school packs, delivery is conducted via contracted courier services directly to the customer's specified physical address. Standard doorstep delivery fees apply as quoted at checkout.
           </p>
         </>
       ),
     },
     {
-      id: "handover-and-risk",
+      id: "delays-and-remedies",
       eyebrow: "3",
-      title: "Handover, collection, and responsibility",
+      title: "Delivery Delays and Consumer Remedies",
       summary:
-        "Orders should be checked promptly after handover so issues can be resolved quickly.",
-      content: (
-        <ul>
-          <li>
-            A delivery may be handed to the customer, an authorised recipient,
-            or an approved school collection point.
-          </li>
-          <li>
-            Customers should review pack contents, visible damage, and obvious
-            shortages as soon as reasonably possible.
-          </li>
-          <li>
-            If nobody is available for an agreed delivery, a second attempt,
-            collection instruction, or support follow-up may be required.
-          </li>
-        </ul>
-      ),
-    },
-    {
-      id: "delivery-support",
-      eyebrow: "4",
-      title: "Late delivery, failed delivery, and support",
-      summary:
-        "Delivery issues should be raised quickly with enough detail for Pexpacks to trace the order.",
+        "Statutory rights under CPA Section 19(2) if delivery is unreasonably delayed.",
       content: (
         <>
           <p>
-            Delays can happen because of incorrect addresses, school changes,
-            weather, courier disruption, or supplier-side stock movement.
-          </p>
-          <p>
-            When you contact Pexpacks about a delayed or failed delivery,
-            include your name, order reference, school, grade, and the best
-            callback or email contact so the fulfilment team can investigate.
-          </p>
-        </>
-      ),
-    },
-    {
-      id: "savings-plan-delivery",
-      eyebrow: "5",
-      title: "Savings Plan delivery",
-      summary:
-        "Orders placed through the Pexpacks Savings Plan are dispatched once the balance is fully settled.",
-      content: (
-        <>
-          <p>
-            If you are using the Pexpacks Savings Plan, delivery timelines
-            start from the date the full order value is confirmed (either
-            paid in full or value-matched from accumulated deposits), not
-            from the date the Savings Plan was created.
-          </p>
-          <p>
-            Standard delivery timeframes and options listed in this policy
-            apply once the balance is settled. Pexpacks will contact you
-            before dispatch to confirm the delivery address and any relevant
-            timing preferences.
-          </p>
-          <p>
-            Partial deposits do not reserve inventory, trigger packing, or
-            start delivery timelines.
+            If Pexpacks fails to deliver the goods on the agreed date or within a reasonable period, the customer is entitled, in terms of CPA Section 19(2)(a), to give notice demanding delivery within a reasonable time, or cancel the order without penalty and receive a full refund of payments made for the undelivered items.
           </p>
         </>
       ),
     },
   ],
-  notice: (
-    <p>
-      If delivery details change after an order is submitted, notify Pexpacks
-      immediately. Incorrect delivery information can delay fulfilment or
-      collection.
-    </p>
-  ),
 };
 
 export default function DeliveryPolicyPage() {

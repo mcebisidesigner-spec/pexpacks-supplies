@@ -12,11 +12,9 @@ import {
 import { buildMetadata } from "@/lib/seo";
 import { EFFECTIVE_DATE } from "@/lib/constants";
 
-
-
 export const metadata: Metadata = buildMetadata(
   "Cookie Policy",
-  "Read the Pexpacks cookie notice for website functionality, analytics, and browser controls.",
+  "Pexpacks Cookie Policy — Official notice explaining our use of essential, performance, and functional cookies under South African privacy laws (POPIA).",
   "/cookie-notice"
 );
 
@@ -24,62 +22,46 @@ export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/cookie-notice",
-  pageTitle: "Cookie Policy",
+  pageTitle: "Cookie Policy & Web Identifiers Notice",
   metaDescription:
-    "Read the Pexpacks cookie notice for website functionality, analytics, and browser controls.",
-  heroEyebrow: "Cookie notice",
-  heroTitle: "How cookies support the Pexpacks website",
+    "Pexpacks Cookie Policy — Official notice explaining our use of essential, performance, and functional cookies under South African privacy laws (POPIA).",
+  heroEyebrow: "Web Identifiers & POPIA Notice",
+  heroTitle: "How Cookies & Digital Identifiers Operate on Pexpacks",
   heroText:
-    "A readable guide to the cookies and similar tools used to keep the website working, measure performance, and improve the browsing experience.",
+    "This notice explains the categories of cookies and web identifiers utilized on the Pexpacks website and web app, why we use them, and your statutory rights to control them.",
   heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
-  heroPanelText: "Functional, performance, and limited analytics use.",
-  tocHeading: "Cookie contents",
-  tocAriaLabel: "Cookie notice contents",
-  summaryKicker: "At a glance",
-  summaryTitle: "Cookies are used for function first, not for spam",
+  heroPanelText: "POPIA Aligned — Republic of South Africa",
+  tocHeading: "Cookie Notice Contents",
+  tocAriaLabel: "Cookie notice table of contents",
+  summaryKicker: "Cookie Usage Summary",
+  summaryTitle: "Privacy-First Essential & Analytics Cookies",
   summaryText:
-    "Pexpacks uses a narrow cookie approach: keep the site stable, remember useful preferences, and understand core usage trends so the search and order journey stays reliable.",
+    "Pexpacks uses cookies primarily to enable secure checkout sessions, preserve stationery tray selections, maintain site security, and measure aggregated usage trends.",
   highlights: [
     {
-      title: "Contact",
-      content: (
-        <>
-          Email <a href={generalEmailHref}>{generalEmail}</a> or call{" "}
-          <a href={phoneHref}>{phoneNumber}</a>.
-        </>
-      ),
+      title: "Consent & Controls",
+      content:
+        "Essential cookies are required for website operation. Non-essential cookies may be managed or disabled via your browser settings.",
       tone: "accent",
     },
     {
-      title: "Browser control",
+      title: "No Third-Party Ad Tracking",
       content:
-        "You can remove or block non-essential cookies through your browser settings at any time.",
+        "Pexpacks does not use invasive cross-site advertising cookies or sell browser tracking profiles to third parties.",
       tone: "warning",
-    },
-    {
-      title: "Important",
-      content:
-        "Blocking all cookies can affect search helpers, forms, and other convenience features that rely on short browser storage.",
     },
   ],
   sections: [
     {
       id: "what-cookies-are",
       eyebrow: "1",
-      title: "What cookies and similar tools are",
+      title: "What Cookies & Web Identifiers Are",
       summary:
-        "Cookies are small files or browser-based identifiers that help the site recognise useful state between visits.",
+        "Definition of cookies, local browser storage, and session tokens under POPIA.",
       content: (
         <>
           <p>
-            Cookies are small text files stored on your device by your browser.
-            Similar technologies can include local storage, pixels, or session
-            identifiers. They help websites remember state, secure forms, and
-            measure how pages perform.
-          </p>
-          <p>
-            Pexpacks uses these tools to support school search, document
-            browsing, form reliability, and core operational insight.
+            Cookies are small text files placed on your computer or mobile device when accessing websites. Similar technologies include local storage, session storage tokens, and web beacons. Under the <strong>Protection of Personal Information Act (POPIA 4 of 2013)</strong>, technical identifiers associated with devices constitute personal information where they identify an individual or household.
           </p>
         </>
       ),
@@ -87,92 +69,43 @@ const config: LegalDocumentConfig = {
     {
       id: "cookie-categories",
       eyebrow: "2",
-      title: "Cookie categories we may use",
+      title: "Categories of Cookies We Utilize",
       summary:
-        "Not every browser session uses every category, but each category has a limited operational purpose.",
+        "Essential, functional, and performance cookie breakdown.",
       content: (
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Category</th>
-              <th scope="col">Purpose</th>
-              <th scope="col">Examples</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Essential</td>
-              <td>Keep the site and forms working correctly.</td>
-              <td>Session state, routing stability, and spam protection.</td>
-            </tr>
-            <tr>
-              <td>Functional</td>
-              <td>Remember basic preferences that improve usability.</td>
-              <td>Helper dismissal state and interface preferences.</td>
-            </tr>
-            <tr>
-              <td>Performance</td>
-              <td>Help us understand which pages and flows perform well.</td>
-              <td>Page visits, interaction trends, and referral paths.</td>
-            </tr>
-          </tbody>
-        </table>
-      ),
-    },
-    {
-      id: "cookie-usage",
-      eyebrow: "3",
-      title: "How Pexpacks uses cookies",
-      summary:
-        "Cookies are used to support browsing, quoting, search, and operational improvements.",
-      content: (
-        <ul>
-          <li>Keep forms stable while you complete quote or order enquiries.</li>
-          <li>Maintain secure browsing sessions and reduce abuse.</li>
-          <li>
-            Understand whether users find school packs, legal documents, and
-            support pages easily.
-          </li>
-          <li>
-            Improve mobile usability and reduce repeated prompts where
-            appropriate.
-          </li>
-        </ul>
+        <>
+          <h3>1. Strictly Necessary &amp; Essential Cookies</h3>
+          <p>
+            Required to enable core website functionalities such as navigation, shopping tray persistence, payment gateway security, and form CSRF protection. The website cannot function properly without these cookies.
+          </p>
+          <h3>2. Functional &amp; Preference Cookies</h3>
+          <p>
+            Enable the website to remember user preferences, selected school search filters, or user dashboard state between sessions.
+          </p>
+          <h3>3. Performance &amp; Analytics Cookies</h3>
+          <p>
+            Collect aggregated, anonymous statistics regarding page visits, navigation flows, and server load times (e.g. Google Analytics) to optimize website performance.
+          </p>
+        </>
       ),
     },
     {
       id: "managing-cookies",
-      eyebrow: "4",
-      title: "Managing and disabling cookies",
+      eyebrow: "3",
+      title: "Managing and Disabling Cookies",
       summary:
-        "You stay in control of browser storage, but disabling essential cookies can affect the website.",
+        "Browser configuration instructions for managing cookies.",
       content: (
         <>
           <p>
-            Most browsers let you review, delete, or block cookies through
-            privacy settings. If you disable essential or session cookies, some
-            parts of the search, enquiry, checkout, or legal document
-            experience may not function correctly.
-          </p>
-          <p>
-            If you need help understanding how cookie settings affect your use
-            of Pexpacks, contact us through the footer or the contact page.
+            You can configure your browser to block or alert you about cookies. Disabling essential cookies may impair checkout workflows or form submissions. For privacy assistance, email our Information Officer at <a href="mailto:privacy@pexpacks.co.za">privacy@pexpacks.co.za</a> or <a href={generalEmailHref}>{generalEmail}</a>.
           </p>
         </>
       ),
     },
   ],
-  notice: (
-    <p>
-      This cookie notice works together with the Privacy Policy and the wider
-      website terms. If the site later adds extra analytics or marketing tools,
-      this page should be updated before those tools go live.
-    </p>
-  ),
 };
 
 export default function CookieNoticePage() {
   return <LegalDocumentPage {...config} />;
 }
-
-

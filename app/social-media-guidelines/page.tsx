@@ -9,14 +9,12 @@ import {
   LegalDocumentPage,
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, siteUrl } from "@/lib/seo";
 import { EFFECTIVE_DATE } from "@/lib/constants";
-
-
 
 export const metadata: Metadata = buildMetadata(
   "Social Media Guidelines",
-  "Read the Pexpacks social media guidelines for respectful engagement, moderation, and support boundaries.",
+  "Pexpacks Social Media & Community Guidelines — Official rules governing online community engagement, content moderation, and POPIA privacy protection on social channels.",
   "/social-media-guidelines"
 );
 
@@ -24,41 +22,32 @@ export const dynamic = "force-static";
 
 const config: LegalDocumentConfig = {
   route: "/social-media-guidelines",
-  pageTitle: "Social Media Guidelines",
+  pageTitle: "Social Media & Community Guidelines",
   metaDescription:
-    "Read the Pexpacks social media guidelines for respectful engagement, moderation, and support boundaries.",
-  heroEyebrow: "Social media rules",
-  heroTitle: "How Pexpacks manages social engagement",
+    "Pexpacks Social Media & Community Guidelines — Official rules governing online community engagement, content moderation, and POPIA privacy protection on social channels.",
+  heroEyebrow: "Community Engagement & Moderation",
+  heroTitle: "Social Media Guidelines & Moderation Policy",
   heroText:
-    "These guidelines explain how comments, messages, tags, mentions, and community engagement are moderated across Pexpacks social platforms.",
+    "These guidelines regulate user conduct, content submissions, and comment moderation across all official Pexpacks social media pages and community channels.",
   heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
-  heroPanelText: "Respectful communication and clear moderation boundaries.",
-  tocHeading: "Social contents",
+  heroPanelText: "Cybercrimes Act & POPIA Aligned — South Africa",
+  tocHeading: "Social Guidelines Contents",
   tocAriaLabel: "Social media guidelines contents",
-  summaryKicker: "Community standard",
-  summaryTitle: "Keep interactions useful, lawful, and respectful",
+  summaryKicker: "Community Safety Notice",
+  summaryTitle: "Respectful, Constructive Digital Channels",
   summaryText:
-    "Pexpacks welcomes genuine product, service, and support conversations, but the platform is not a place for abuse, spam, threats, or unlawful content.",
+    "Pexpacks welcomes community engagement and genuine customer feedback. To maintain a safe environment for parents, learners, and schools, interactions must adhere to South African laws governing online safety and privacy.",
   highlights: [
     {
-      title: "Support route",
+      title: "POPIA Privacy Safeguard",
       content:
-        "Order-specific issues are usually resolved faster through direct contact channels than public comment threads.",
-    },
-    {
-      title: "Contact",
-      content: (
-        <>
-          Email <a href={generalEmailHref}>{generalEmail}</a> or call{" "}
-          <a href={phoneHref}>{phoneNumber}</a>.
-        </>
-      ),
+        "Never post personal details, learner names, or order numbers publicly. Use direct, private support channels for account enquiries.",
       tone: "accent",
     },
     {
-      title: "Moderation",
+      title: "Cybercrimes Act Moderation",
       content:
-        "Harmful, misleading, or privacy-invasive content may be hidden, removed, or escalated.",
+        "Hate speech, harassment, threats, or harmful electronic communications under the Cybercrimes Act 19 of 2020 will be removed immediately.",
       tone: "warning",
     },
   ],
@@ -66,71 +55,56 @@ const config: LegalDocumentConfig = {
     {
       id: "expected-conduct",
       eyebrow: "1",
-      title: "Expected conduct on Pexpacks channels",
+      title: "Community Conduct & Online Respect",
       summary:
-        "Public and private interactions should remain relevant, respectful, and lawful.",
-      content: (
-        <ul>
-          <li>Stay courteous when discussing service, orders, or feedback.</li>
-          <li>Protect personal, learner, and payment information.</li>
-          <li>Keep comments relevant to the post, service, or support issue.</li>
-          <li>Use direct channels for sensitive or account-specific support.</li>
-        </ul>
-      ),
-    },
-    {
-      id: "restricted-content",
-      eyebrow: "2",
-      title: "Content that may be removed",
-      summary:
-        "Pexpacks may remove or hide harmful, misleading, or abusive content.",
-      content: (
-        <ul>
-          <li>Threats, harassment, hate speech, or discriminatory remarks.</li>
-          <li>Spam, scams, malicious links, or repeated irrelevant promotion.</li>
-          <li>False claims presented as fact without a valid basis.</li>
-          <li>Posts exposing personal, learner, school, or payment information.</li>
-        </ul>
-      ),
-    },
-    {
-      id: "moderation-and-response",
-      eyebrow: "3",
-      title: "Moderation and response approach",
-      summary:
-        "Pexpacks may moderate, limit, or escalate interactions where necessary to protect users and the brand.",
+        "Standards for respectful communication across official Pexpacks social platforms.",
       content: (
         <>
-          <p>
-            Pexpacks may hide, delete, report, or restrict content that breaks
-            these guidelines or puts users at risk. Serious cases may be
-            escalated to platform providers or the relevant authorities.
-          </p>
-          <p>
-            Response times can vary. A public social message is not a guaranteed
-            immediate support channel.
-          </p>
+          <p>Users engaging with Pexpacks on social media channels agree to:</p>
+          <ul>
+            <li>Maintain respectful, courteous language in public comments and direct messages;</li>
+            <li>Protect personal privacy by withholding order references, phone numbers, or learner names from public posts;</li>
+            <li>Use official email or phone support channels for urgent order or fulfillment inquiries.</li>
+          </ul>
         </>
       ),
     },
     {
-      id: "reviews-and-user-content",
-      eyebrow: "4",
-      title: "Reviews, mentions, and shared content",
+      id: "moderation-rules",
+      eyebrow: "2",
+      title: "Content Moderation & Prohibited Content",
       summary:
-        "Feedback may be quoted or reshared where lawful and appropriate, but misleading or harmful material may be challenged.",
+        "Legal grounds for hiding, deleting, or blocking abusive social media content.",
       content: (
         <>
           <p>
-            By tagging or submitting feedback to Pexpacks on a public platform,
-            you may allow the brand to engage with, repost, or reference that
-            content in context, subject to platform rules and applicable law.
+            In accordance with the <strong>Cybercrimes Act 19 of 2020</strong> and POPIA, Pexpacks reserves the right to moderate, hide, delete, or report comments containing:
           </p>
+          <ul>
+            <li>Hate speech, harassment, defamation, threats, or abusive language;</li>
+            <li>Unauthorized disclosure of children's, learners', or parents' personal information;</li>
+            <li>Commercial spam, unauthorized advertising, or fraudulent links;</li>
+            <li>False or malicious statements intended to mislead the public.</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      id: "governing-law",
+      eyebrow: "3",
+      title: "Official Customer Support Channels",
+      summary:
+        "Direct contact channels for verified support inquiries.",
+      content: (
+        <>
           <p>
-            If you want content removed because it creates a legitimate privacy
-            or safety concern, contact Pexpacks directly with the relevant post
-            or message details.
+            For order resolution, return claims, or formal customer support, please contact our support team directly:
           </p>
+          <ul>
+            <li><strong>Support Email:</strong> <a href={generalEmailHref}>{generalEmail}</a></li>
+            <li><strong>Telephone:</strong> <a href={phoneHref}>{phoneNumber}</a></li>
+            <li><strong>Official Website:</strong> <a href={siteUrl}>{siteUrl}</a></li>
+          </ul>
         </>
       ),
     },
