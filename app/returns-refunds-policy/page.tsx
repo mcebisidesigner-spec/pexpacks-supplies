@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  legalEmail as generalEmail,
-  legalEmailHref as generalEmailHref,
   phoneHref,
   phoneNumber,
 } from "@/data/contact";
@@ -12,144 +10,210 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
-import { EFFECTIVE_DATE } from "@/lib/constants";
 
 export const metadata: Metadata = buildMetadata(
-  "Returns & Refunds Policy",
-  "Pexpacks Returns & Refunds Policy — Official consumer protection guidelines governing product returns, CPA Section 56 statutory warranties, ECTA cooling-off rights, and customized item exclusions.",
+  "Refund & Return Policy",
+  "Pexpacks Supplies Refund and Return Policy — Clear, CPA-aligned guidelines on pre-order cancellations, 14-day standard returns, damaged items, and Paystack refund timelines.",
   "/returns-refunds-policy"
 );
 
 export const dynamic = "force-static";
 
+const supportEmail = "support@pexpacks.co.za";
+const supportEmailHref = `mailto:${supportEmail}`;
+
 const config: LegalDocumentConfig = {
   route: "/returns-refunds-policy",
-  pageTitle: "Returns & Refunds Policy",
+  pageTitle: "Refund and Return Policy",
   metaDescription:
-    "Pexpacks Returns & Refunds Policy — Official consumer protection guidelines governing product returns, CPA Section 56 statutory warranties, ECTA cooling-off rights, and customized item exclusions.",
-  heroEyebrow: "Statutory Consumer Protections (CPA 68 of 2008 & ECTA 25 of 2002)",
-  heroTitle: "Returns, Refunds, and Statutory Warranty Rights",
+    "Pexpacks Supplies Refund and Return Policy — Clear, CPA-aligned guidelines on pre-order cancellations, 14-day standard returns, damaged items, and Paystack refund timelines.",
+  heroEyebrow: "Paystack & CPA Compliant Merchant Policy",
+  heroTitle: "Refund and Return Policy",
   heroText:
-    "This policy outlines your legal rights regarding returns, exchanges, refunds, and statutory warranties when purchasing school stationery packs and services from Pexpacks.",
-  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
-  heroPanelText: "CPA & ECTA Aligned — South Africa",
-  tocHeading: "Returns Policy Contents",
-  tocAriaLabel: "Returns and refunds policy contents",
-  summaryKicker: "Key Consumer Summary",
-  summaryTitle: "Defects vs. Customized Work Returns",
+    "At Pexpacks Supplies, we strive to deliver high-quality, grade-specific stationery packs and educational supplies across South Africa. This policy outlines your rights and our exact procedures regarding order cancellations, returns, and refunds.",
+  heroPanelTitle: "Effective Date: July 2026",
+  heroPanelText: "Applies to: All Online & Direct Orders | Merchant: Pexpacks Supplies",
+  tocHeading: "Policy Contents",
+  tocAriaLabel: "Refund and Return policy contents",
+  summaryKicker: "At a Glance",
+  summaryTitle: "Fair, Transparent Refunds & Returns",
   summaryText:
-    "All stationery products enjoy a 6-month statutory warranty against defects under CPA Section 56. However, personalized learner labels, customized school pack collations, and Pexcover™ book-covering services are legally restricted from change-of-mind returns once processing has commenced.",
+    "We want your ordering experience to be completely worry-free. Whether you need to cancel a pre-order before school dispatch or request a replacement for a damaged item, our clear rules protect your purchase every step of the way.",
   highlights: [
     {
-      title: "6-Month CPA Warranty",
+      title: "100% Pre-Order Refund Window",
       content:
-        "Defective, damaged, or unsafe goods qualify for repair, replacement, or refund under Section 56 of the Consumer Protection Act.",
+        "Full refunds are available for pre-orders cancelled up to 14 days before scheduled school delivery or dispatch.",
       tone: "accent",
     },
     {
-      title: "7-Day ECTA Cooling-Off Right",
+      title: "Paystack Secure Processing",
       content:
-        "Non-customized online orders carry a 7-day statutory cooling-off period under ECTA Section 44.",
+        "Refunds are credited back directly to your original payment method (Credit Card, Debit Card, or EFT) via Paystack within 3 to 7 business days.",
       tone: "warning",
     },
   ],
   sections: [
     {
-      id: "statutory-warranties",
+      id: "pre-orders-cancellations",
       eyebrow: "1",
-      title: "Statutory Warranty of Quality (CPA Section 55 & 56)",
+      title: "Pre-Orders & Order Cancellations",
       summary:
-        "Your statutory 6-month consumer rights regarding defective or substandard stationery goods.",
+        "How pre-order cancellations work before inventory purchasing and pack assembly.",
       content: (
         <>
           <p>
-            In accordance with Sections 55 and 56 of the Consumer Protection Act (CPA 68 of 2008), all stationery products supplied by Pexpacks carry an implied statutory warranty that the goods are reasonably suitable for the purposes for which they are generally intended, of good quality, in working order, and free of defects.
-          </p>
-          <h3>Statutory 6-Month Remedy</h3>
-          <p>
-            If goods supplied by Pexpacks fail to comply with these statutory requirements within <strong>6 months</strong> after delivery, the consumer is entitled to return the goods at Pexpacks' risk and expense. The consumer may elect to:
+            Because Pexpacks operates primarily on a pre-order model aligned with the annual South African school calendar, inventory purchasing and customized kit assembly are scheduled based on customer demand.
           </p>
           <ul>
-            <li>Have the defective item repaired;</li>
-            <li>Have the defective item replaced with a new matching item; or</li>
-            <li>Receive a full refund of the price paid for the defective item.</li>
+            <li>
+              <strong>Pre-Order Cancellation Window:</strong> You may cancel your pre-order for a <strong>100% full refund</strong> up to <strong>14 calendar days</strong> prior to the start of scheduled school deliveries or parcel dispatch.
+            </li>
+            <li>
+              <strong>Late Cancellations:</strong> Cancellations requested within 14 calendar days of scheduled school dispatch may incur a <strong>10% administrative and repacking fee</strong> if kit assembly has already commenced.
+            </li>
+            <li>
+              <strong>How to Cancel:</strong> To cancel an unfulfilled pre-order, simply email <a href={supportEmailHref}>{supportEmail}</a> with your order reference number and contact details.
+            </li>
           </ul>
-          <p>
-            <em>Exclusion:</em> This statutory warranty does not apply to defect caused by normal wear and tear, intentional damage, misuse, neglect, or failure to follow product care instructions after delivery.
-          </p>
         </>
       ),
     },
     {
-      id: "cooling-off-rights",
+      id: "standard-returns",
       eyebrow: "2",
-      title: "ECTA 7-Day Online Cooling-Off Rights (Section 44)",
+      title: "Standard Returns (Change of Mind)",
       summary:
-        "Unconditional cancellation rights for non-customised electronic purchases.",
+        "Return parameters for unused, intact stationery items within 14 days of receipt.",
       content: (
         <>
           <p>
-            In terms of Section 44 of the Electronic Communications and Transactions Act (ECTA 25 of 2002), a consumer is entitled to cancel any online purchase of standard, non-customised stationery goods without reason and without penalty within <strong>7 days</strong> after receipt of the goods.
+            If you are not fully satisfied with your stationery purchase after receiving it, you may request a standard return under the following conditions:
           </p>
-          <h3>Cooling-Off Execution &amp; Return Costs</h3>
           <ul>
-            <li>The consumer must notify Pexpacks in writing within the 7-day period.</li>
-            <li>Goods must be returned unused, unopened, and in their original packaging.</li>
-            <li>In terms of ECTA Section 44(2), the direct cost of returning the goods via courier shall be borne by the consumer.</li>
-            <li>Pexpacks will process the refund within 30 days of receiving the returned goods.</li>
+            <li>
+              <strong>Return Window:</strong> Return requests must be logged within <strong>14 calendar days</strong> of receiving your package.
+            </li>
+            <li>
+              <strong>Item Condition:</strong> Items must be unused, unopened, complete in their original packaging, and in resaleable condition. Individual stationery items removed from sealed grade packs cannot be returned individually.
+            </li>
+            <li>
+              <strong>Return Shipping Costs:</strong> For change-of-mind returns, the customer is responsible for return shipping or courier costs back to Pexpacks Supplies.
+            </li>
           </ul>
         </>
       ),
     },
     {
-      id: "customised-exclusions",
+      id: "damaged-defective-incorrect",
       eyebrow: "3",
-      title: "Customised Goods & Pexcover™ Exclusions",
+      title: "Damaged, Defective, or Incorrect Items",
       summary:
-        "Statutory restrictions on change-of-mind returns for personalized and labor-based work.",
+        "Full replacement or 100% refund guarantee at zero extra cost for defective or damaged items.",
       content: (
         <>
           <p>
-            In accordance with Section 42(2)(f) of ECTA and Section 20(3)(a) of the CPA, statutory change-of-mind cooling-off rights do not apply to goods that are made to the consumer's specifications, clearly personalized, or assembled to custom order.
+            We take extreme care in assembling and packaging each grade kit. However, if you receive a damaged product, manufacturing defect, or incorrect item:
           </p>
+          <ul>
+            <li>
+              <strong>Notification Period:</strong> Please notify us within <strong>7 calendar days</strong> of receiving your order by emailing <a href={supportEmailHref}>{supportEmail}</a>. Please attach clear photos of the issue and your order confirmation.
+            </li>
+            <li>
+              <strong>Resolution:</strong> Upon verification, Pexpacks will arrange a replacement, exchange, or 100% full refund at <strong>zero additional cost</strong> to you. We will cover all associated collection and re-delivery courier fees.
+            </li>
+          </ul>
+
           <div className={legalStyles.noticeBlock}>
             <p>
-              <strong>Custom &amp; Pexcover™ Restrictions:</strong>
+              <strong>Summary of Terms &amp; Conditions Matrix:</strong>
             </p>
-            <ul>
-              <li><strong>Pexcover™ Book-Covering:</strong> Books that have been plastic-wrapped, fitted with protective covers, or custom-cut to individual learner specifications.</li>
-              <li><strong>Personalized Learner Labelling:</strong> Stationery items or books bearing customized learner names, grade labels, or custom school identification.</li>
-              <li><strong>Special-Order List Assembly:</strong> Grade-specific stationery packs that have undergone custom collation once fulfillment has commenced.</li>
-            </ul>
-            <p>
-              Customised work cannot be returned or refunded merely due to a change of mind or grade transfer, unless the items themselves are defective under CPA Section 56.
-            </p>
+            <table className={legalStyles.summaryTable}>
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th>Timeframe</th>
+                  <th>Refund / Action</th>
+                  <th>Courier Fee</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pre-Order Cancellation</strong></td>
+                  <td>Up to 14 days before dispatch</td>
+                  <td>100% Full Refund</td>
+                  <td>N/A</td>
+                </tr>
+                <tr>
+                  <td><strong>Standard Return (Unopened)</strong></td>
+                  <td>Within 14 days of receipt</td>
+                  <td>Full Item Refund</td>
+                  <td>Customer Pays</td>
+                </tr>
+                <tr>
+                  <td><strong>Damaged / Incorrect Item</strong></td>
+                  <td>Within 7 days of receipt</td>
+                  <td>Replacement or 100% Refund</td>
+                  <td>Pexpacks Pays</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </>
       ),
     },
     {
-      id: "claim-procedure",
+      id: "non-returnable-items",
       eyebrow: "4",
-      title: "Step-by-Step Return Claim Procedure",
+      title: "Non-Returnable Items",
       summary:
-        "How to log a return or defect claim with our customer support team.",
+        "Customized and opened items excluded from standard change-of-mind returns.",
       content: (
         <>
-          <ol>
+          <p>
+            The following items are excluded from standard change-of-mind returns unless they arrive damaged or defective:
+          </p>
+          <ul>
+            <li>Custom-personalized items (e.g. printed bag tags, custom-labeled stationery packs, or custom-cut Pexcover™ book covers).</li>
+            <li>Opened or partially used stationery items, unsealed glue sticks, or used markers.</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      id: "refund-processing-timelines",
+      eyebrow: "5",
+      title: "Refund Processing & Timelines via Paystack",
+      summary:
+        "Secure payment reversal back to original payment methods.",
+      content: (
+        <>
+          <p>
+            All approved refunds are processed back through our primary payment processor (Paystack) to the original payment method used during checkout (Credit Card, Debit Card, or Instant EFT) to prevent fraud.
+          </p>
+          <ul>
             <li>
-              <strong>Log a Claim:</strong> Email <a href={generalEmailHref}>{generalEmail}</a> or call <a href={phoneHref}>{phoneNumber}</a> within 48 hours of delivery for transit damage/shortages, or within the statutory warranty period for defects.
+              <strong>Processing Timeline:</strong> Once a refund or return is approved, refunds are initiated within <strong>2 business days</strong>.
             </li>
             <li>
-              <strong>Provide Details:</strong> Include your order reference number, description of the issue, and clear photograph/video evidence of damaged or incorrect items.
+              <strong>Bank Settlement:</strong> Depending on your banking institution, funds typically reflect in your account within <strong>3 to 7 business days</strong> after initiation.
             </li>
             <li>
-              <strong>Assessment &amp; Authorization:</strong> Pexpacks will review the claim within 2 business days and issue return shipping instructions or dispatch a replacement courier.
+              <strong>Notification:</strong> You will receive an automated email confirmation from Paystack and Pexpacks as soon as your refund has been initiated.
             </li>
-            <li>
-              <strong>Refund Settlement:</strong> Refunds are processed to the original payment method within 14 business days of claim approval.
-            </li>
-          </ol>
+          </ul>
+
+          <div className={legalStyles.contactPanel}>
+            <p>
+              <strong>Need to Log a Return or Cancel an Order?</strong>
+            </p>
+            <p>
+              <strong>Support Email:</strong> <a href={supportEmailHref}>{supportEmail}</a>
+            </p>
+            <p>
+              <strong>Contact Number:</strong> <a href={phoneHref}>{phoneNumber}</a>
+            </p>
+          </div>
         </>
       ),
     },
