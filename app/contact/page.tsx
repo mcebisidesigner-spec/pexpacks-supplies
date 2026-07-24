@@ -10,6 +10,10 @@ import {
   orderWhatsAppHref,
   phoneHref,
   phoneNumber,
+  layByEmail,
+  layByEmailHref,
+  ordersEmail,
+  ordersEmailHref,
 } from '@/data/contact'
 import { buildMetadata } from '@/lib/seo'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
@@ -197,8 +201,40 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                       <rect x="2" y="4" width="20" height="16" rx="2" />
                       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                     </svg>
-                    <strong>Email:</strong>
+                    <strong>General enquiries:</strong>
                     <a href={generalEmailHref}>{generalEmail}</a>
+                  </div>
+                  <div className={pageStyles.channelRow}>
+                    <svg
+                      className={pageStyles.channelIcon}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect x="2" y="4" width="20" height="16" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                    <strong>Place an order:</strong>
+                    <a href={ordersEmailHref}>{ordersEmail}</a>
+                  </div>
+                  <div className={pageStyles.channelRow}>
+                    <svg
+                      className={pageStyles.channelIcon}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect x="2" y="4" width="20" height="16" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                    <strong>Lay-by enquiries:</strong>
+                    <a href={layByEmailHref}>{layByEmail}</a>
                   </div>
                   <div className={pageStyles.channelRow}>
                     <svg

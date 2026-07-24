@@ -3,6 +3,8 @@ import Link from "next/link";
 import {
   phoneHref,
   phoneNumber,
+  ordersEmail,
+  ordersEmailHref,
 } from "@/data/contact";
 import {
   LegalDocumentPage,
@@ -21,6 +23,8 @@ export const dynamic = "force-static";
 
 const supportEmail = "care@pexpacks.co.za";
 const supportEmailHref = `mailto:${supportEmail}`;
+const orderEmail = ordersEmail;
+const orderEmailHref = ordersEmailHref;
 
 const config: LegalDocumentConfig = {
   route: "/delivery-policy",
@@ -179,7 +183,7 @@ const config: LegalDocumentConfig = {
           </p>
           <div className={legalStyles.contactPanel}>
             <p>
-              <strong>Logistics Support Email:</strong> <a href={supportEmailHref}>{supportEmail}</a>
+              <strong>Logistics Support Email:</strong> <a href={orderEmailHref}>{orderEmail}</a>
             </p>
             <p>
               <strong>Contact Number:</strong> <a href={phoneHref}>{phoneNumber}</a>

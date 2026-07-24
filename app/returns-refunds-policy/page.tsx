@@ -3,6 +3,8 @@ import Link from "next/link";
 import {
   phoneHref,
   phoneNumber,
+  ordersEmail,
+  ordersEmailHref,
 } from "@/data/contact";
 import {
   LegalDocumentPage,
@@ -21,6 +23,8 @@ export const dynamic = "force-static";
 
 const supportEmail = "care@pexpacks.co.za";
 const supportEmailHref = `mailto:${supportEmail}`;
+const orderEmail = ordersEmail;
+const orderEmailHref = ordersEmailHref;
 
 const config: LegalDocumentConfig = {
   route: "/returns-refunds-policy",
@@ -73,7 +77,7 @@ const config: LegalDocumentConfig = {
               <strong>Late Cancellations:</strong> Cancellations requested within 14 calendar days of scheduled school dispatch may incur a <strong>10% administrative and repacking fee</strong> if kit assembly has already commenced.
             </li>
             <li>
-              <strong>How to Cancel:</strong> To cancel an unfulfilled pre-order, simply email <a href={supportEmailHref}>{supportEmail}</a> with your order reference number and contact details.
+              <strong>How to Cancel:</strong> To cancel an unfulfilled pre-order, simply email <a href={orderEmailHref}>{orderEmail}</a> with your order reference number and contact details.
             </li>
           </ul>
         </>
@@ -117,7 +121,7 @@ const config: LegalDocumentConfig = {
           </p>
           <ul>
             <li>
-              <strong>Notification Period:</strong> Please notify us within <strong>7 calendar days</strong> of receiving your order by emailing <a href={supportEmailHref}>{supportEmail}</a>. Please attach clear photos of the issue and your order confirmation.
+              <strong>Notification Period:</strong> Please notify us within <strong>7 calendar days</strong> of receiving your order by emailing <a href={orderEmailHref}>{orderEmail}</a>. Please attach clear photos of the issue and your order confirmation.
             </li>
             <li>
               <strong>Resolution:</strong> Upon verification, Pexpacks will arrange a replacement, exchange, or 100% full refund at <strong>zero additional cost</strong> to you. We will cover all associated collection and re-delivery courier fees.
