@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {
-  generalEmail,
-  generalEmailHref,
+  legalEmail as generalEmail,
+  legalEmailHref as generalEmailHref,
   phoneHref,
   phoneNumber,
 } from "@/data/contact";

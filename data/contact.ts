@@ -1,8 +1,10 @@
-export const generalEmail = "hello@pexpacks.co.za";
+export const generalEmail = "helpme@pexpacks.co.za";
+export const legalEmail = "care@pexpacks.co.za";
 export const ordersEmail = "orders@pexpacks.co.za";
 export const phoneNumber = "0780036048";
 
 export const generalEmailHref = `mailto:${generalEmail}`;
+export const legalEmailHref = `mailto:${legalEmail}`;
 export const ordersEmailHref = `mailto:${ordersEmail}`;
 
 export function normalizeSouthAfricanPhoneNumber(value: string) {

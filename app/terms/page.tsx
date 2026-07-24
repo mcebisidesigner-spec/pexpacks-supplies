@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  generalEmail,
-  generalEmailHref,
+  legalEmail as generalEmail,
+  legalEmailHref as generalEmailHref,
   hasWhatsAppNumber,
   phoneHref,
   phoneNumber,
