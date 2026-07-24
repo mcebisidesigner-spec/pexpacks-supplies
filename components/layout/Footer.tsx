@@ -7,10 +7,6 @@ import {
   orderWhatsAppHref,
   phoneHref,
   phoneNumber,
-  layByEmail,
-  layByEmailHref,
-  ordersEmail,
-  ordersEmailHref,
 } from "@/data/contact";
 import { officialSocialLinks } from "@/data/social";
 import { FooterNav } from "./FooterNav";
@@ -131,18 +127,6 @@ export function Footer() {
                 </span>
                 <a href={generalEmailHref} className={styles.contactLink}>
                   {generalEmail}
-                </a>
-                <span className={styles.contactDivider} aria-hidden="true">
-                  |
-                </span>
-                <a href={ordersEmailHref} className={styles.contactLink}>
-                  {ordersEmail}
-                </a>
-                <span className={styles.contactDivider} aria-hidden="true">
-                  |
-                </span>
-                <a href={layByEmailHref} className={styles.contactLink}>
-                  {layByEmail}
                 </a>
               </address>
 
