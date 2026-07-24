@@ -29,7 +29,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Promotion of Access to Information Act Manual",
   heroText:
     "This statutory manual sets out the procedures for requesting access to records held by Pexpacks Supplies in terms of the Promotion of Access to Information Act and POPIA.",
-  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
+  heroPanelTitle: `Last Updated: ${EFFECTIVE_DATE}`,
   heroPanelText: "PAIA Section 51 Manual — Republic of South Africa",
   tocHeading: "PAIA Manual Contents",
   tocAriaLabel: "PAIA manual contents",

@@ -35,7 +35,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Delivery & Fulfillment Policy",
   heroText:
     "This policy outlines how Pexpacks Supplies handles seasonal school pre-orders, year-round order fulfillment, carrier dispatch via Paxi Couriers and door-to-door couriers, tracking updates, and delivery timelines across South Africa.",
-  heroPanelTitle: "Effective Date: July 2026",
+  heroPanelTitle: "Last Updated: October 2025",
   heroPanelText: "Applies to: All Online & Direct Orders | Merchant: Pexpacks Supplies",
   tocHeading: "Policy Contents",
   tocAriaLabel: "Delivery policy contents",

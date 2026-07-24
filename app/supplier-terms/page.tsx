@@ -29,7 +29,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Supplier & Vendor Terms of Supply",
   heroText:
     "These terms establish the mandatory legal and commercial requirements governing all suppliers, manufacturers, distributors, and logistics partners supplying goods or services to Pexpacks Supplies.",
-  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
+  heroPanelTitle: `Last Updated: ${EFFECTIVE_DATE}`,
   heroPanelText: "CPA & POPIA Aligned — Republic of South Africa",
   tocHeading: "Supplier Terms Contents",
   tocAriaLabel: "Supplier terms contents",

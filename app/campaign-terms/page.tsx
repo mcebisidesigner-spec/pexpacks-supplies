@@ -29,7 +29,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Promotional Campaign Terms & Conditions",
   heroText:
     "These terms regulate all promotional campaigns, discount coupons, school bundle offers, and seasonal launch deals offered by Pexpacks Supplies in terms of the Consumer Protection Act.",
-  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
+  heroPanelTitle: `Last Updated: ${EFFECTIVE_DATE}`,
   heroPanelText: "CPA Section 36 Compliant — Republic of South Africa",
   tocHeading: "Campaign Terms Contents",
   tocAriaLabel: "Campaign terms contents",

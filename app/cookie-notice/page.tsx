@@ -29,7 +29,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "How Cookies & Digital Identifiers Operate on Pexpacks",
   heroText:
     "This notice explains the categories of cookies and web identifiers utilized on the Pexpacks website and web app, why we use them, and your statutory rights to control them.",
-  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
+  heroPanelTitle: `Last Updated: ${EFFECTIVE_DATE}`,
   heroPanelText: "POPIA Aligned — Republic of South Africa",
   tocHeading: "Cookie Notice Contents",
   tocAriaLabel: "Cookie notice table of contents",

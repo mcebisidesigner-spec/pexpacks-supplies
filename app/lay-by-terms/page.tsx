@@ -27,7 +27,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Interest-Free School Stationery Lay-By Terms",
   heroText:
     "This document sets out the legal conditions governing Pexpacks interest-free lay-by payment plans for school stationery packs, in strict compliance with Section 62 of the Consumer Protection Act.",
-  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
+  heroPanelTitle: `Last Updated: ${EFFECTIVE_DATE}`,
   heroPanelText: "CPA Section 62 Compliant — Republic of South Africa",
   tocHeading: "Lay-by Terms Contents",
   tocAriaLabel: "Lay-by terms contents",

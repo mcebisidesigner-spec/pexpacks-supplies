@@ -35,7 +35,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Refund and Return Policy",
   heroText:
     "At Pexpacks Supplies, we strive to deliver high-quality, grade-specific stationery packs and educational supplies across South Africa. This policy outlines your rights and our exact procedures regarding order cancellations, returns, and refunds.",
-  heroPanelTitle: "Effective Date: July 2026",
+  heroPanelTitle: "Last Updated: October 2025",
   heroPanelText: "Applies to: All Online & Direct Orders | Merchant: Pexpacks Supplies",
   tocHeading: "Policy Contents",
   tocAriaLabel: "Refund and Return policy contents",

@@ -30,7 +30,7 @@ const config: LegalDocumentConfig = {
   heroText:
     "This privacy policy sets out how Pexpacks Supplies collects, processes, protects, and retains personal information in strict compliance with South African privacy laws.",
   heroPanelTitle: "POPIA & PAIA Aligned",
-  heroPanelText: `Effective ${EFFECTIVE_DATE}, Republic of South Africa`,
+  heroPanelText: `Last Updated: ${EFFECTIVE_DATE}, Republic of South Africa`,
   tocHeading: "Privacy Policy Contents",
   tocAriaLabel: "Privacy policy table of contents",
   summaryKicker: "Information Officer Contact",
@@ -74,7 +74,7 @@ const config: LegalDocumentConfig = {
               <strong>Trading Names:</strong> Pexpacks / Pexcover
             </li>
             <li>
-              <strong>Effective Date:</strong> {EFFECTIVE_DATE}
+              <strong>Last Updated:</strong> October 2025
             </li>
             <li>
               <strong>Jurisdiction:</strong> Republic of South Africa

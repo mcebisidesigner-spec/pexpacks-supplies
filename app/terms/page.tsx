@@ -33,7 +33,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "General Terms & Conditions of Sale and Website Use",
   heroText:
     "These statutory terms regulate your use of the Pexpacks website, web application, online checkout, school stationery pack orders, Pexcover services, and customer support channels.",
-  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
+  heroPanelTitle: `Last Updated: ${EFFECTIVE_DATE}`,
   heroPanelText: "Republic of South Africa",
   tocHeading: "Terms Contents",
   tocAriaLabel: "Terms of use table of contents",
@@ -73,7 +73,7 @@ const config: LegalDocumentConfig = {
               <strong>Trading Name:</strong> Pexpacks / Pexcover
             </li>
             <li>
-              <strong>Effective Date:</strong> {EFFECTIVE_DATE}
+              <strong>Last Updated:</strong> October 2025
             </li>
             <li>
               <strong>Physical / Postal Address:</strong> Shared on official tax invoices, formal quotations, or written request.

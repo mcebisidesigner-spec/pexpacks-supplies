@@ -29,7 +29,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "School Partnership Terms and Operating Framework",
   heroText:
     "This document establishes the official terms regulating institutional collaborations between Pexpacks Supplies and South African schools, governing stationery list curation, campaign fulfillment, and POPIA learner privacy.",
-  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
+  heroPanelTitle: `Last Updated: ${EFFECTIVE_DATE}`,
   heroPanelText: "POPIA & CPA Compliant — Republic of South Africa",
   tocHeading: "Partnership Terms Contents",
   tocAriaLabel: "School partnership terms contents",

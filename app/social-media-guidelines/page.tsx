@@ -29,7 +29,7 @@ const config: LegalDocumentConfig = {
   heroTitle: "Social Media Guidelines & Moderation Policy",
   heroText:
     "These guidelines regulate user conduct, content submissions, and comment moderation across all official Pexpacks social media pages and community channels.",
-  heroPanelTitle: `Effective ${EFFECTIVE_DATE}`,
+  heroPanelTitle: `Last Updated: ${EFFECTIVE_DATE}`,
   heroPanelText: "Cybercrimes Act & POPIA Aligned — South Africa",
   tocHeading: "Social Guidelines Contents",
   tocAriaLabel: "Social media guidelines contents",
