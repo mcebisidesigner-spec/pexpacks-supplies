@@ -1,14 +1,14 @@
 .shareRow {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
   margin-top: 20px;
-  padding-top: 16px;
+  padding-top: var(--space-4);
   border-top: 1px solid var(--pex-border, rgba(26, 42, 64, 0.1));
 }
 
 .shareLabel {
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 700;
   color: var(--pex-text-muted);
   letter-spacing: 0.02em;
@@ -16,7 +16,7 @@
 
 .shareButtons {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
@@ -24,12 +24,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: var(--space-2) 14px;
   border: 1px solid rgba(26, 42, 64, 0.12);
   border-radius: var(--radius-pill);
   background: var(--pex-bg);
   color: var(--pex-text);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 600;
   cursor: pointer;
   transition: var(--button-transition);
@@ -59,7 +59,7 @@
   }
 
   .shareBtn {
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
     font-size: 12px;
   }
 }

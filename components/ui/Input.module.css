@@ -167,7 +167,7 @@
   gap: 6px;
   max-height: min(320px, 56vh);
   overflow: auto;
-  padding: 8px;
+  padding: var(--space-2);
   border: 1px solid rgba(9, 119, 113, 0.16);
   border-radius: calc(var(--form-control-radius) - 4px);
   background:
@@ -179,11 +179,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
   width: 100%;
   min-height: 44px;
   border: 1px solid transparent;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   padding: 10px 14px;
   background: transparent;
   color: var(--pex-ink);
@@ -204,8 +204,8 @@
 
 .selectOption span:last-child {
   flex: 0 0 auto;
-  border-radius: 999px;
-  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  padding: 4px var(--space-2);
   background: rgba(9, 119, 113, 0.1);
   color: var(--pex-teal);
   font-size: 0.72rem;

@@ -1,6 +1,6 @@
 .trackContainer {
   position: relative;
-  margin-top: 16px;
+  margin-top: var(--space-4);
   padding-top: 14px;
   border-top: 2px dashed rgba(26, 42, 64, 0.1);
 }

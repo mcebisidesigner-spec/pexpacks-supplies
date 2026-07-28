@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import clsx from "clsx";
 import styles from "./StickyOrderBar.module.css";
 
 type StickyOrderBarProps = {
@@ -52,7 +53,7 @@ export function StickyOrderBar({
 
   return (
     <div
-      className={`${styles.stickyBar} ${isVisible ? styles.visible : ""}`}
+      className={clsx(styles.stickyBar, isVisible && styles.visible)}
       aria-hidden={!isVisible}
     >
       <div className={styles.inner}>

@@ -14,7 +14,7 @@
 }
 
 .eyebrow {
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
   color: var(--pex-coral);
   font-size: var(--section-eyebrow-font-size);
   font-weight: var(--section-eyebrow-font-weight);
@@ -23,7 +23,7 @@
 }
 
 .title {
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
   font-size: clamp(22px, 3.2vw, 32px);
   font-weight: 800;
   color: var(--pex-primary);
@@ -44,7 +44,7 @@
 
 .form {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   max-width: 440px;
   margin: 0 auto;
 }
@@ -55,7 +55,7 @@
   min-height: var(--form-control-height);
   border: var(--form-control-border);
   border-radius: var(--radius-pill);
-  padding: 0 16px;
+  padding: 0 var(--space-4);
   background: var(--form-control-bg);
   color: var(--form-control-color);
   font-size: 15px;
@@ -76,13 +76,13 @@
 .error {
   margin: 10px 0 0;
   color: var(--form-error-color);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 700;
 }
 
 .fineprint {
   margin: 14px 0 0;
-  font-size: 13px;
+  font-size: var(--text-2xs);
   color: var(--pex-muted);
 }
 

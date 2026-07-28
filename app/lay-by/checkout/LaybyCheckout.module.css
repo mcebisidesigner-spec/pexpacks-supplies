@@ -8,7 +8,7 @@
   align-items: center;
   gap: 3px;
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 750;
 }
 
@@ -25,7 +25,7 @@
   background: transparent;
   color: var(--pex-text-muted);
   font: inherit;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 750;
   outline: none;
 }
@@ -62,11 +62,11 @@
 /* ── Pack List ── */
 .packList {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .packRow {
-  padding: 16px;
+  padding: var(--space-4);
   border: 1px solid var(--pex-border);
   border-radius: var(--radius-card);
   display: grid;
@@ -80,18 +80,18 @@
 
 .packRowInfo strong {
   color: var(--pex-primary);
-  font-size: 16px;
+  font-size: var(--text-base);
 }
 
 .packRowInfo > span {
   color: var(--pex-text-muted);
-  font-size: 13px;
+  font-size: var(--text-2xs);
 }
 
 .pexcoverTag {
   display: inline-block;
   width: fit-content;
-  padding: 2px 8px;
+  padding: 2px var(--space-2);
   border-radius: var(--radius-pill);
   background: rgba(33, 158, 154, 0.1);
   color: var(--pex-keppel);
@@ -140,7 +140,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 12px;
+  padding-top: var(--space-3);
   border-top: 1px solid var(--pex-border);
 }
 
@@ -152,7 +152,7 @@
 
 .orderTotal strong {
   color: var(--pex-primary);
-  font-size: 20px;
+  font-size: var(--text-xl);
   font-weight: 900;
 }
 
@@ -162,7 +162,7 @@
   gap: 14px;
   padding: clamp(18px, 3vw, 24px);
   border: 1px solid rgba(26, 42, 64, 0.1);
-  border-radius: 24px;
+  border-radius: var(--radius-card);
   background: var(--pex-bg);
   box-shadow: 0 18px 48px rgba(26, 42, 64, 0.04);
 }
@@ -171,7 +171,7 @@
   margin: 0;
   color: var(--pex-navy);
   font-family: var(--font-heading);
-  font-size: 18px;
+  font-size: var(--text-lg);
   line-height: 1.2;
 }
 
@@ -184,14 +184,14 @@
   display: grid;
   grid-template-columns: 20px 1fr;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--space-3);
   min-height: 58px;
   padding: 14px;
-  border: 1px solid rgba(33, 158, 154, 0.2);
-  border-radius: 18px;
-  background: #ffffff;
+  border: 1px solid var(--color-teal-border);
+  border-radius: var(--radius-card-compact);
+  background: var(--pex-bg);
   color: var(--pex-navy);
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.45;
 }
 
@@ -225,8 +225,8 @@
 /* ── Term Selector ── */
 .termSelector {
   display: grid;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
 }
 
 .termLabel {
@@ -240,7 +240,7 @@
 .termOptions {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .termOption {
@@ -251,7 +251,7 @@
   border: 2px solid var(--pex-border);
   border-radius: var(--radius-card);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--pex-primary);
   transition: var(--interactive-transition);
@@ -263,7 +263,7 @@
 
 .termOptionActive {
   border-color: var(--pex-keppel);
-  background: rgba(33, 158, 154, 0.08);
+  background: var(--color-teal-subtle);
 }
 
 .termOption input {
@@ -289,7 +289,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
 }
 
 /* ── Deposit Card ── */
@@ -303,7 +303,7 @@
 
 .depositLabel {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 600;
   opacity: 0.8;
   margin-bottom: 4px;
@@ -319,7 +319,7 @@
 
 .depositNote {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-2xs);
   line-height: 1.5;
   opacity: 0.85;
 }
@@ -341,13 +341,13 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
 }
 
 .scheduleRow {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   padding: 10px 0;
   border-bottom: 1px solid var(--pex-border);
 }
@@ -388,7 +388,7 @@
 
 .scheduleInfo strong {
   color: var(--pex-primary);
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.2;
 }
 
@@ -414,7 +414,7 @@
 .finalAmountPanel {
   display: grid;
   gap: 14px;
-  padding-top: 12px;
+  padding-top: var(--space-3);
   border-top: 1px solid rgba(255, 111, 89, 0.22);
 }
 
@@ -424,7 +424,7 @@
   justify-content: space-between;
   gap: 14px;
   color: var(--pex-navy);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 750;
 }
 
@@ -441,7 +441,7 @@
 
 .finalAmountGrand strong {
   color: var(--pex-coral);
-  font-size: 18px;
+  font-size: var(--text-lg);
 }
 
 .editOrderButton {
@@ -460,7 +460,7 @@
 @media (max-width: 1024px) {
   .mobileStickyActions {
     display: grid;
-    gap: 8px;
+    gap: var(--space-2);
   }
 }
 
@@ -471,7 +471,7 @@
 
   .dateSelectsGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .depositAmount {

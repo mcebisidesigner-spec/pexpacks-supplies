@@ -1,9 +1,10 @@
+import clsx from "clsx";
 import page from "@/styles/Page.module.css";
 
 export default function Loading() {
   return (
     <section className={page.pageHero}>
-      <div className={`${page.pageHeroNarrow} ${page.loadingState}`}>
+      <div className={clsx(page.pageHeroNarrow, page.loadingState)}>
         <div
           aria-label="Loading"
           role="status"

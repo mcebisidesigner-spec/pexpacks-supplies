@@ -35,12 +35,12 @@
   max-width: 580px;
   margin: 14px 0 0;
   color: rgba(255, 255, 255, 0.82);
-  font-size: 18px;
+  font-size: var(--text-lg);
 }
 
 .buttonRow {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 

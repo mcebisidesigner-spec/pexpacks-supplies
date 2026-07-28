@@ -11,7 +11,7 @@
 }
 
 .searchExperience h2 {
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-4);
   color: var(--pex-navy);
   font-family: var(--font-heading);
   font-weight: 800;
@@ -31,7 +31,7 @@
   .mobileHowItWorks {
     display: block !important;
     max-width: 100%;
-    margin-top: 12px;
+    margin-top: var(--space-3);
     padding-inline: 0 !important;
   }
 }

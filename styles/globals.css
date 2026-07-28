@@ -26,7 +26,7 @@ body {
   background: var(--pex-body-bg);
   color: var(--pex-text);
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: var(--text-base);
   line-height: var(--line-body);
   text-rendering: optimizeLegibility;
   overflow-x: clip;
@@ -54,7 +54,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #156966;
+  background: var(--pex-keppel-dark);
 }
 
 body.menu-open {
@@ -156,13 +156,13 @@ button:disabled {
 .skip-link {
   position: absolute;
   top: -100%;
-  left: 16px;
+  left: var(--space-4);
   z-index: 9999;
-  padding: 12px 24px;
+  padding: var(--space-3) var(--space-5);
   background: var(--pex-primary);
   color: var(--pex-bg);
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-sm);
   border-radius: var(--radius-pill);
   text-decoration: none;
   transition: top 0.2s ease;
@@ -231,14 +231,14 @@ html.has-waitlist-banner .site-main {
 .site-rating-strip {
   display: flex;
   justify-content: center;
-  padding: 20px var(--gutter-mobile) 24px;
+  padding: var(--space-5) var(--gutter-mobile) var(--space-5);
   background: var(--pex-bg);
   border-top: 1px solid var(--pex-border);
 }
 
 @media (min-width: 769px) {
   .site-rating-strip {
-    padding: 20px var(--gutter-desktop) 24px;
+    padding: var(--space-5) var(--gutter-desktop) var(--space-5);
   }
 }
 

@@ -14,7 +14,7 @@
   background: none;
   font: inherit;
   color: var(--pex-text-muted);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 700;
   line-height: 1;
   text-decoration: underline;
@@ -55,7 +55,7 @@
   bottom: calc(100% + 8px);
   z-index: 10;
   min-width: 280px;
-  padding: 16px;
+  padding: var(--space-4);
   border-radius: var(--radius-card);
   background: var(--card-bg);
   border: var(--card-border);
@@ -82,17 +82,17 @@
 
 .emailPrompt {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 700;
   color: var(--color-text-strong);
 }
 
 .emailInput {
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   border: 1px solid rgba(26, 42, 64, 0.15);
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: var(--radius-xs);
+  font-size: var(--text-2xs);
   outline: none;
   transition: border-color 150ms ease;
 }
@@ -103,17 +103,17 @@
 
 .emailActions {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .emailSubmit {
   flex: 1;
-  padding: 8px 14px;
+  padding: var(--space-2) 14px;
   border: none;
   border-radius: var(--radius-pill);
   background: var(--color-brand-teal);
   color: var(--color-surface);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 700;
   cursor: pointer;
   transition: var(--button-transition);
@@ -127,12 +127,12 @@
 }
 
 .emailSkip {
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   border: 1px solid rgba(26, 42, 64, 0.12);
   border-radius: var(--radius-pill);
   background: none;
   color: var(--pex-text-muted);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   cursor: pointer;
   transition: var(--interactive-transition);
 }

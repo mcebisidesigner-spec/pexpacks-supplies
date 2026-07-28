@@ -29,7 +29,7 @@
   max-width: 700px;
   margin: 0 auto;
   padding: 40px 44px;
-  border-radius: 24px;
+  border-radius: var(--radius-card);
   background: var(--pex-bg);
   border: 1px solid var(--pex-border);
   box-shadow: 0 8px 32px rgba(26, 42, 64, 0.06);
@@ -54,7 +54,7 @@
 
 .priceDemoContent p {
   margin: 0 0 28px;
-  font-size: 16px;
+  font-size: var(--text-base);
   color: var(--pex-text);
   line-height: 1.6;
   max-width: 480px;
@@ -78,20 +78,20 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 20px 32px;
-  border-radius: 16px;
+  padding: 20px var(--space-6);
+  border-radius: var(--radius-md);
   background: var(--pex-bg-soft);
   border: 2px solid var(--pex-border);
   min-width: 160px;
 }
 
 .priceDemoBoxHighlight {
-  background: rgba(33, 158, 154, 0.08);
+  background: var(--color-teal-subtle);
   border-color: var(--pex-keppel);
 }
 
 .priceDemoLabel {
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 700;
   color: var(--pex-muted);
   text-transform: uppercase;
@@ -110,7 +110,7 @@
 }
 
 .priceDemoUnit {
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 700;
   color: var(--pex-muted);
 }
@@ -128,12 +128,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: var(--space-4);
   flex-wrap: wrap;
 }
 
 .demoLink {
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 800;
   color: var(--pex-keppel);
   text-decoration: none;
@@ -152,13 +152,13 @@
 .trustStatsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .trustStatCard {
   text-align: center;
-  padding: 24px 16px;
-  border-radius: 16px;
+  padding: var(--space-5) var(--space-4);
+  border-radius: var(--radius-md);
   background: var(--pex-bg-soft);
   border: 1px solid var(--pex-border);
 }
@@ -174,7 +174,7 @@
 }
 
 .trustStatLabel {
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--pex-muted);
 }
@@ -195,7 +195,7 @@
 
   .priceDemoRow {
     flex-direction: column;
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .priceDemoDivider {

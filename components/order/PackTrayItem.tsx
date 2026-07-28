@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import clsx from "clsx";
 import type { TrayPackItem } from "@/store/usePackTrayStore";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -47,11 +48,7 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
           </div>
           <div style={{ display: "flex", gap: 6, alignItems: "start" }}>
             <span
-              className={`${styles.packModeBadge} ${
-                pack.packMode === "full"
-                  ? styles.packModeFull
-                  : styles.packModeCustomised
-              }`}
+              className={clsx(styles.packModeBadge, pack.packMode === "full" ? styles.packModeFull : styles.packModeCustomised)}
             >
               {pack.packMode === "full" ? "Full Pack" : "Customised"}
             </span>

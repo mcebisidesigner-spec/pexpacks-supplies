@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import clsx from "clsx";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import styles from "./HeaderOrderIcon.module.css";
@@ -46,7 +47,7 @@ export function HeaderOrderIcon() {
   return (
     <button
       type="button"
-      className={`${styles.iconButton} ${animate ? styles.iconPop : ""}`}
+      className={clsx(styles.iconButton, animate && styles.iconPop)}
       onClick={handleClick}
       aria-label={`Open saved order (${packCount} pack${packCount === 1 ? "" : "s"})`}
     >

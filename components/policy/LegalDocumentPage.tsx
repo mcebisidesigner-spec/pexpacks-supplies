@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import clsx from "clsx";
 import { PageHero } from "@/components/marketing/PageHero";
 import page from "@/styles/Page.module.css";
 import { PolicyContentBar } from "./PolicyContentBar";
@@ -83,8 +84,8 @@ export function LegalDocumentPage({
         panelText={heroPanelText}
       />
 
-      <section className={`${page.section} ${styles.documentSection}`}>
-        <div className={`${page.sectionInner} ${styles.documentInner}`}>
+      <section className={clsx(page.section, styles.documentSection)}>
+        <div className={clsx(page.sectionInner, styles.documentInner)}>
           <PolicyContentBar
             ariaLabel={tocAriaLabel}
             classNames={{
@@ -109,9 +110,7 @@ export function LegalDocumentPage({
                 <div className={styles.highlightGrid}>
                   {highlights.map((highlight) => (
                     <div
-                      className={`${styles.highlightCard} ${highlightToneClass(
-                        highlight.tone
-                      )}`.trim()}
+                      className={clsx(styles.highlightCard, highlightToneClass(highlight.tone))}
                       key={highlight.title}
                     >
                       <strong>{highlight.title}</strong>

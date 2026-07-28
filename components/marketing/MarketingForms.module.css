@@ -90,11 +90,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 16px;
+  padding: 6px var(--space-4);
   border-radius: var(--form-control-radius);
   background: var(--pex-primary);
   color: #fff;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
   white-space: nowrap;
   line-height: 1;
@@ -102,7 +102,7 @@
 
 .fileName {
   color: var(--form-control-placeholder);
-  font-size: 14px;
+  font-size: var(--text-sm);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -135,7 +135,7 @@
 }
 
 .formCard h2 {
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
   color: var(--pex-primary);
   font-size: 30px;
   line-height: 1;
@@ -152,8 +152,8 @@
 
 .statusMessage {
   margin: 4px 0 0;
-  border-radius: 16px;
-  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) 14px;
   background: rgba(47, 133, 90, 0.12);
   color: var(--pex-success);
   font-weight: 800;
@@ -161,8 +161,8 @@
 
 .statusError {
   margin: 4px 0 0;
-  border-radius: 16px;
-  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) 14px;
   background: rgba(185, 28, 28, 0.1);
   color: var(--pex-error);
   font-weight: 800;
@@ -171,20 +171,20 @@
 .privacyNotice {
   margin: 0;
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.45;
 }
 
 .consentField {
   display: grid;
   grid-template-columns: 20px 1fr;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: start;
 }
 
 .consentField span {
   color: var(--pex-primary);
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.45;
 }
 

@@ -14,7 +14,7 @@
 
 .soft {
   background: var(--pex-bg-soft);
-  border-color: rgba(26, 42, 64, 0.08);
+  border-color: var(--color-navy-subtle);
   padding: var(--card-padding);
 }
 

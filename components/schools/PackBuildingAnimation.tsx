@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import clsx from "clsx";
 import styles from "./PackBuildingAnimation.module.css";
 
 type PackBuildingAnimationProps = {
@@ -43,9 +44,9 @@ export function PackBuildingAnimation({
       {isBuilding ? (
         <div className={styles.animationWrapper} aria-live="polite">
           <div className={styles.boxContainer} aria-hidden="true">
-            <div className={`${styles.item} ${styles.item1}`}></div>
-            <div className={`${styles.item} ${styles.item2}`}></div>
-            <div className={`${styles.item} ${styles.item3}`}></div>
+            <div className={clsx(styles.item, styles.item1)}></div>
+            <div className={clsx(styles.item, styles.item2)}></div>
+            <div className={clsx(styles.item, styles.item3)}></div>
             <div className={styles.box}>
               <div className={styles.boxFront}>
                 <span className={styles.boxLabel}>Pexpacks</span>

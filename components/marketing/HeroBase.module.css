@@ -1,8 +1,8 @@
 .eyebrow {
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-4);
   color: var(--pex-keppel);
   font-weight: 800;
-  font-size: 14px;
+  font-size: var(--text-sm);
   letter-spacing: 0;
 }
 
@@ -128,10 +128,10 @@
 
 .brandBox {
   width: fit-content;
-  padding: 24px 32px;
+  padding: var(--space-5) var(--space-6);
   border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.92);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-glass);
   color: var(--pex-primary);
   box-shadow: 0 22px 44px rgba(0, 0, 0, 0.18);
   display: grid;
@@ -255,7 +255,7 @@
 
 .trustStat span {
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
 }
 
@@ -291,7 +291,7 @@
 
   .heroVisual {
     min-height: 390px;
-    border-radius: 24px;
+    border-radius: var(--radius-card);
     animation: none;
   }
 
@@ -300,7 +300,7 @@
   }
 
   .brandBox {
-    padding: 20px 24px;
+    padding: 20px var(--space-5);
   }
 
   .heroTitle,
@@ -329,7 +329,7 @@
   .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus)),
   .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus)) {
     padding-top: 18px;
-    padding-bottom: 24px;
+    padding-bottom: var(--space-5);
   }
 
   .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus))
@@ -375,7 +375,7 @@
 
   .heroLead,
   .pageLead {
-    margin-top: 16px;
+    margin-top: var(--space-4);
     font-size: clamp(15px, 4vw, 16px);
   }
 

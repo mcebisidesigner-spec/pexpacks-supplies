@@ -13,12 +13,12 @@
   color: var(--pex-primary);
   font-size: clamp(24px, 4vw, 32px);
   font-weight: 800;
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
 }
 
 .accordionHeader p {
   color: var(--pex-text);
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 500;
   margin: 0;
 }
@@ -26,12 +26,12 @@
 .accordionList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .accordionItem {
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: var(--radius-image);
   border: 1px solid rgba(26, 42, 64, 0.1);
   box-shadow: 0 12px 34px rgba(26, 42, 64, 0.06);
   overflow: hidden;
@@ -57,7 +57,7 @@
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 18px;
-  padding: 20px 24px;
+  padding: 20px var(--space-5);
   background: none;
   border: none;
   cursor: pointer;
@@ -67,7 +67,7 @@
 
 .questionText {
   color: var(--pex-primary);
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 900;
   line-height: 1.25;
 }
@@ -88,7 +88,7 @@
   left: 50%;
   width: 15px;
   height: 2px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: currentColor;
   transform: translate(-50%, -50%);
   transition: transform var(--motion-duration) var(--motion-ease);
@@ -125,9 +125,9 @@
 }
 
 .answerInner {
-  padding: 0 24px 22px;
+  padding: 0 var(--space-5) 22px;
   color: var(--pex-text);
-  font-size: 16px;
+  font-size: var(--text-base);
   line-height: 1.6;
   font-weight: 500;
 }
@@ -139,7 +139,7 @@
 .relatedLinks {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   margin-top: 14px;
 }
 
@@ -147,12 +147,12 @@
   display: inline-flex;
   align-items: center;
   min-height: 32px;
-  border: 1px solid rgba(33, 158, 154, 0.2);
+  border: 1px solid var(--color-teal-border);
   border-radius: var(--radius-pill);
   padding: 6px 11px;
-  background: rgba(33, 158, 154, 0.08);
+  background: var(--color-teal-subtle);
   color: var(--pex-primary);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
   line-height: 1.2;
   text-decoration: none;

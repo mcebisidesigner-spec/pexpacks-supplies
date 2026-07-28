@@ -1,6 +1,7 @@
 import type { TextareaHTMLAttributes } from "react";
 import { useId } from "react";
 import styles from "./Textarea.module.css";
+import clsx from "clsx";
 
 type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label?: string;
@@ -24,7 +25,7 @@ export default function Textarea({
   const textareaId = id ?? generatedId;
 
   return (
-    <div className={`${styles.wrapper} ${className}`}>
+    <div className={clsx(styles.wrapper, className)}>
       {label && (
         <label htmlFor={textareaId} className={styles.label}>
           {label}

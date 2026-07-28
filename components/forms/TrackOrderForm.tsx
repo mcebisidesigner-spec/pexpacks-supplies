@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { splitContactInput, isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
+import clsx from "clsx";
 import page from "@/styles/Page.module.css";
 
 type ApiResponse = {
@@ -81,7 +82,7 @@ export function TrackOrderForm() {
 
   return (
     <form
-      className={`${page.formCard} ${page.formStack}`}
+      className={clsx(page.formCard, page.formStack)}
       onSubmit={handleSubmit}
     >
       <p className={page.kicker}>Order tracking</p>

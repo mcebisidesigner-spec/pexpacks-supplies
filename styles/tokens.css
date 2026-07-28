@@ -2,6 +2,7 @@
   /* Master brand palette */
   --pex-navy: #1a2a40;
   --pex-keppel: #1a7a77;
+  --pex-keppel-dark: #156966;
   --pex-coral: #ff6f59;
   --pex-coral-hover: #e85e4b;
 
@@ -29,6 +30,11 @@
   --color-focus: var(--pex-keppel);
   --color-overlay: rgba(15, 37, 55, 0.52);
   --color-overlay-soft: rgba(26, 42, 64, 0.48);
+  --color-navy-subtle: rgba(26, 42, 64, 0.08);
+  --color-navy-border: rgba(26, 42, 64, 0.1);
+  --color-teal-subtle: rgba(33, 158, 154, 0.08);
+  --color-teal-border: rgba(33, 158, 154, 0.2);
+  --color-surface-glass: rgba(255, 255, 255, 0.92);
 
   /* Pexcover sub-palette */
   --pexcover-lavender: #b19cd9;
@@ -40,16 +46,28 @@
   --pex-sme-mint: #81d4b5;
   --pex-sme-amber: #f5a623;
 
+  /* Brand partner colours */
+  --color-whatsapp: #25D366;
+  --color-whatsapp-dark: #128C7E;
+  --color-whatsapp-hover: #20c45f;
+  --color-whatsapp-bg: #e5ddd5;
+
   /* System colours */
   --pex-success: #2f855a;
   --pex-error: #b91c1c;
   --color-success: var(--pex-success);
+  --color-success-bg: #f0fdf4;
+  --color-success-border: #bbf7d0;
   --color-warning: var(--pex-sme-amber);
+  --color-warning-bg: #fefce8;
+  --color-warning-border: #fef08a;
   --color-danger: var(--pex-error);
+  --color-danger-bg: #fef2f2;
+  --color-danger-border: #fecaca;
   --color-disabled: #6b7280;
   --color-disabled-bg: #e5e7eb;
-  --color-error-bg: #fef2f2;
-  --color-error-border: #fecaca;
+  --color-error-bg: var(--color-danger-bg);
+  --color-error-border: var(--color-danger-border);
 
   /* Legacy aliases */
   --pex-primary: var(--pex-navy);
@@ -75,6 +93,9 @@
   --radius-section: 24px;
   --radius-button: var(--radius-pill);
   --radius-field: 18px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-xs: 8px;
 
   /* Form system */
   --form-card-bg: var(--pex-bg);
@@ -156,6 +177,7 @@
   --section-eyebrow-margin: 0 0 16px;
 
   --text-xs: 0.75rem;
+  --text-2xs: 13px;
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
@@ -177,6 +199,7 @@
   --button-disabled-opacity: 0.62;
   --button-focus-ring: var(--focus-ring);
   --button-focus-ring-offset: 3px;
+  --transition-fast: 150ms ease-in-out;
   --motion-duration-fast: 160ms;
   --motion-duration: 220ms;
   --motion-duration-slow: 320ms;

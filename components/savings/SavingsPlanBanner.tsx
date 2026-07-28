@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/Button";
+import clsx from "clsx";
 import styles from "./SavingsPlanBanner.module.css";
 
 type Variant = "compact" | "full" | "checkout" | "schoolPage" | "homepage" | "termsNotice";
@@ -41,7 +42,7 @@ export function SavingsPlanBanner({
 
   return (
     <section
-      className={`${styles.banner} ${variantClass} ${className}`}
+      className={clsx(styles.banner, variantClass, className)}
       aria-labelledby="savings-banner-title"
     >
       <div className={styles.inner}>
@@ -64,10 +65,10 @@ export function SavingsPlanBanner({
         </p>
 
         <div className={styles.chips}>
-          <span className={`${styles.chip} ${styles.chipCoral}`}>June: Start</span>
-          <span className={`${styles.chip} ${styles.chipTeal}`}>Jul–Sep: Top up</span>
-          <span className={`${styles.chip} ${styles.chipNavy}`}>1 Oct: Balance check</span>
-          <span className={`${styles.chip} ${styles.chipCoral}`}>15 Oct: Final decision</span>
+          <span className={clsx(styles.chip, styles.chipCoral)}>June: Start</span>
+          <span className={clsx(styles.chip, styles.chipTeal)}>Jul–Sep: Top up</span>
+          <span className={clsx(styles.chip, styles.chipNavy)}>1 Oct: Balance check</span>
+          <span className={clsx(styles.chip, styles.chipCoral)}>15 Oct: Final decision</span>
         </div>
 
         {showActions ? (

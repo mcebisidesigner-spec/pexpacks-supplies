@@ -12,6 +12,7 @@ import Select from "@/components/ui/Select";
 import Textarea from "@/components/ui/Textarea";
 import checkoutStyles from "@/app/checkout/Checkout.module.css";
 import styles from "./LaybyCheckout.module.css";
+import clsx from "clsx";
 
 type FulfilmentOption = "school_collection" | "home_delivery" | "arranged_collection";
 type ContactMethod = "whatsapp" | "phone" | "email";
@@ -413,7 +414,7 @@ export function LaybyCheckoutClient() {
 
   if (packs.length === 0) {
     return (
-      <div className={`${checkoutStyles.checkoutShell} ${styles.page}`}>
+      <div className={clsx(checkoutStyles.checkoutShell, styles.page)}>
         <div className={checkoutStyles.emptyCheckout}>
           <p className={checkoutStyles.checkoutKicker}>Lay-by Checkout</p>
           <h1>No packs in your order.</h1>
@@ -427,7 +428,7 @@ export function LaybyCheckoutClient() {
   }
 
   return (
-    <div className={`${checkoutStyles.checkoutShell} ${styles.page}`}>
+    <div className={clsx(checkoutStyles.checkoutShell, styles.page)}>
       <header className={checkoutStyles.checkoutHeader}>
         <button
           type="button"
@@ -448,7 +449,7 @@ export function LaybyCheckoutClient() {
 
       <div className={checkoutStyles.checkoutGrid}>
         {/* ── Hero ── */}
-        <section className={`${checkoutStyles.stepCard} ${checkoutStyles.checkoutHero}`}>
+        <section className={clsx(checkoutStyles.stepCard, checkoutStyles.checkoutHero)}>
           <p className={checkoutStyles.checkoutKicker}>Lay-by Plan</p>
           <h1 tabIndex={-1}>Pay over time, secure your pack today</h1>
           <p>
@@ -467,9 +468,7 @@ export function LaybyCheckoutClient() {
           <section
             ref={(node) => { sectionRefs.current.order = node }}
             tabIndex={-1}
-            className={`${checkoutStyles.checkoutSection} ${
-              showOrderHiddenWarning ? checkoutStyles.checkoutSectionWarning : ""
-            }`}
+            className={clsx(checkoutStyles.checkoutSection, showOrderHiddenWarning && checkoutStyles.checkoutSectionWarning)}
             aria-labelledby="layby-order-heading"
           >
             <div className={checkoutStyles.sectionHeader}>
@@ -490,11 +489,7 @@ export function LaybyCheckoutClient() {
             </div>
             <div
               id="layby-order-summary"
-              className={`${checkoutStyles.mobileCollapsibleSummary} ${
-                mobileSectionSummaryOpen.order
-                  ? checkoutStyles.mobileCollapsibleSummaryOpen
-                  : ""
-              }`}
+              className={clsx(checkoutStyles.mobileCollapsibleSummary, mobileSectionSummaryOpen.order && checkoutStyles.mobileCollapsibleSummaryOpen)}
             >
               <div className={checkoutStyles.orderSummaryList}>
                 {packs.map((pack, index) => {
@@ -516,9 +511,7 @@ export function LaybyCheckoutClient() {
                             ref={(node) => {
                               fieldRefs.current[`learner_${index}`] = node;
                             }}
-                            className={`${styles.orderLearnerInput} ${
-                              errors[`learner_${index}`] ? styles.orderLearnerInputError : ""
-                            }`}
+                            className={clsx(styles.orderLearnerInput, errors[`learner_${index}`] && styles.orderLearnerInputError)}
                             type="text"
                             placeholder="Add learner name"
                             value={learnerInputs[index] || ""}
@@ -633,9 +626,7 @@ export function LaybyCheckoutClient() {
           <section
             ref={(node) => { sectionRefs.current.details = node }}
             tabIndex={-1}
-            className={`${checkoutStyles.checkoutSection} ${
-              showDetailsHiddenWarning ? checkoutStyles.checkoutSectionWarning : ""
-            }`}
+            className={clsx(checkoutStyles.checkoutSection, showDetailsHiddenWarning && checkoutStyles.checkoutSectionWarning)}
             aria-labelledby="layby-details-heading"
           >
             <div className={checkoutStyles.sectionHeader}>
@@ -656,11 +647,7 @@ export function LaybyCheckoutClient() {
             </div>
             <div
               id="layby-details-summary"
-              className={`${checkoutStyles.mobileCollapsibleSummary} ${
-                mobileSectionSummaryOpen.details
-                  ? checkoutStyles.mobileCollapsibleSummaryOpen
-                  : ""
-              }`}
+              className={clsx(checkoutStyles.mobileCollapsibleSummary, mobileSectionSummaryOpen.details && checkoutStyles.mobileCollapsibleSummaryOpen)}
             >
             <div className={checkoutStyles.formGrid}>
               <Input
@@ -715,11 +702,7 @@ export function LaybyCheckoutClient() {
                   {contactOptions.map((option) => (
                     <label
                       key={option.value}
-                      className={`${checkoutStyles.segmentedOption} ${
-                        preferredContactMethod === option.value
-                          ? checkoutStyles.segmentedOptionActive
-                          : ""
-                      }`}
+                      className={clsx(checkoutStyles.segmentedOption, preferredContactMethod === option.value && checkoutStyles.segmentedOptionActive)}
                     >
                       <input
                         type="radio"
@@ -748,9 +731,7 @@ export function LaybyCheckoutClient() {
           <section
             ref={(node) => { sectionRefs.current.delivery = node }}
             tabIndex={-1}
-            className={`${checkoutStyles.checkoutSection} ${
-              showDeliveryHiddenWarning ? checkoutStyles.checkoutSectionWarning : ""
-            }`}
+            className={clsx(checkoutStyles.checkoutSection, showDeliveryHiddenWarning && checkoutStyles.checkoutSectionWarning)}
             aria-labelledby="layby-fulfilment-heading"
           >
             <div className={checkoutStyles.sectionHeader}>
@@ -771,11 +752,7 @@ export function LaybyCheckoutClient() {
             </div>
             <div
               id="layby-fulfilment-summary"
-              className={`${checkoutStyles.mobileCollapsibleSummary} ${
-                mobileSectionSummaryOpen.delivery
-                  ? checkoutStyles.mobileCollapsibleSummaryOpen
-                  : ""
-              }`}
+              className={clsx(checkoutStyles.mobileCollapsibleSummary, mobileSectionSummaryOpen.delivery && checkoutStyles.mobileCollapsibleSummaryOpen)}
             >
             <fieldset className={checkoutStyles.optionFieldset}>
               <legend className={checkoutStyles.srOnly}>Delivery or collection method</legend>
@@ -802,9 +779,7 @@ export function LaybyCheckoutClient() {
                 ].map((opt) => (
                   <label
                     key={opt.value}
-                    className={`${checkoutStyles.deliveryOption} ${
-                      fulfilmentOption === opt.value ? checkoutStyles.deliveryOptionSelected : ""
-                    }`}
+                    className={clsx(checkoutStyles.deliveryOption, fulfilmentOption === opt.value && checkoutStyles.deliveryOptionSelected)}
                   >
                     <input
                       type="radio"
@@ -854,9 +829,7 @@ export function LaybyCheckoutClient() {
                     return (
                       <label
                         key={school.slug}
-                        className={`${checkoutStyles.schoolDropoffCard} ${
-                          isSelected ? checkoutStyles.schoolDropoffCardActive : ""
-                        }`}
+                        className={clsx(checkoutStyles.schoolDropoffCard, isSelected && checkoutStyles.schoolDropoffCardActive)}
                       >
                         <input
                           type="radio"
@@ -1171,7 +1144,7 @@ export function LaybyCheckoutClient() {
 
         {/* ── Sidebar ── */}
         <aside ref={summaryRef} tabIndex={-1} className={checkoutStyles.summaryColumn}>
-          <div className={`${checkoutStyles.summaryCard} ${styles.summaryCardLayby}`}>
+          <div className={clsx(checkoutStyles.summaryCard, styles.summaryCardLayby)}>
             <div className={checkoutStyles.summaryHeader}>
               <div>
                 <p className={checkoutStyles.checkoutKicker}>Payment Plan</p>
@@ -1186,9 +1159,7 @@ export function LaybyCheckoutClient() {
                 {[3, 4, 5].map((term) => (
                   <label
                     key={term}
-                    className={`${styles.termOption} ${
-                      selectedTerm === term ? styles.termOptionActive : ""
-                    }`}
+                    className={clsx(styles.termOption, selectedTerm === term && styles.termOptionActive)}
                   >
                     <input
                       type="radio"
@@ -1232,7 +1203,7 @@ export function LaybyCheckoutClient() {
                   return (
                     <div
                       key={month.label}
-                      className={`${styles.scheduleRow} ${isDeposit ? styles.scheduleRowActive : ""}`}
+                      className={clsx(styles.scheduleRow, isDeposit && styles.scheduleRowActive)}
                     >
                       <div className={styles.scheduleDot}>
                         <span>{i + 1}</span>
@@ -1266,7 +1237,7 @@ export function LaybyCheckoutClient() {
                 <span>Pack subtotal</span>
                 <strong>{formatCurrency(total)}</strong>
               </div>
-              <div className={`${styles.finalAmountRow} ${styles.finalAmountGrand}`}>
+              <div className={clsx(styles.finalAmountRow, styles.finalAmountGrand)}>
                 <span>Final amount</span>
                 <strong>{formatCurrency(total)}</strong>
               </div>
@@ -1284,7 +1255,7 @@ export function LaybyCheckoutClient() {
               type="button"
               variant="primary"
               size="lg"
-              className={`${checkoutStyles.fullWidth} ${checkoutStyles.desktopPayButton}`}
+              className={clsx(checkoutStyles.fullWidth, checkoutStyles.desktopPayButton)}
               onClick={handlePayDeposit}
               disabled={submitting}
               aria-busy={submitting}
@@ -1303,7 +1274,7 @@ export function LaybyCheckoutClient() {
       </div>
 
       <div
-        className={`${checkoutStyles.mobileStickyCta} ${styles.mobileStickyActions}`}
+        className={clsx(checkoutStyles.mobileStickyCta, styles.mobileStickyActions)}
       >
         <Button
           type="button"

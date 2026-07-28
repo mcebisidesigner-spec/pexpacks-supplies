@@ -21,7 +21,7 @@
 }
 
 .addonCard p {
-  margin: 8px 0 0;
+  margin: var(--space-2) 0 0;
   color: var(--pex-text);
   line-height: var(--line-body);
 }
@@ -29,7 +29,7 @@
 .addonCheckbox {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   min-height: 48px;
   color: var(--pex-primary);
   font-weight: 900;

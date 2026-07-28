@@ -21,12 +21,12 @@
 }
 
 .sectionHeader h2[id] {
-  scroll-margin-top: calc(var(--header-height-desktop) + 24px);
+  scroll-margin-top: calc(var(--header-height-desktop) + var(--space-5));
 }
 
 .sectionHeader p:not(.eyebrow) {
   margin: 14px 0 0;
   color: var(--pex-text-muted);
-  font-size: 18px;
+  font-size: var(--text-lg);
   line-height: 1.45;
 }

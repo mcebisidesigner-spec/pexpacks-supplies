@@ -2,10 +2,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--space-4);
   min-height: 66px;
   margin: 26px calc(var(--summary-card-pad) * -1) 0;
-  padding: 12px 32px;
+  padding: var(--space-3) var(--space-6);
   border-radius: 0 0 var(--radius-card-lg) var(--radius-card-lg);
   background: var(--pex-primary);
   color: var(--pex-bg);
@@ -42,8 +42,8 @@
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  border-radius: 999px;
-  background: #25d366;
+  border-radius: var(--radius-pill);
+  background: var(--color-whatsapp);
   color: var(--pex-bg);
   text-decoration: none;
   box-shadow: 0 10px 20px rgba(12, 28, 49, 0.22);
@@ -52,7 +52,7 @@
 
 .supportIconLink:hover,
 .supportIconLink:focus-visible {
-  background: #20c45f;
+  background: var(--color-whatsapp-hover);
   outline: 3px solid rgba(37, 211, 102, 0.28);
   outline-offset: 4px;
   transform: translateY(-1px);
@@ -68,7 +68,7 @@
 @media (max-width: 768px) {
   .supportBlock {
     margin-inline: calc(var(--summary-card-pad) * -1);
-    padding-inline: 24px;
+    padding-inline: var(--space-5);
   }
   .supportIconLink {
     width: 42px;

@@ -2,6 +2,7 @@
 
 import type { SelectHTMLAttributes } from "react";
 import { useEffect, useId, useRef, useState } from "react";
+import clsx from "clsx";
 import styles from "./Input.module.css";
 
 type SelectOption = {
@@ -130,7 +131,7 @@ export default function Select({
   }
 
   return (
-    <div className={`${styles.wrapper} ${className}`} ref={wrapperRef}>
+    <div className={clsx(styles.wrapper, className)} ref={wrapperRef}>
       {label && (
         <label htmlFor={selectId} className={styles.label}>
           {label}
@@ -150,9 +151,7 @@ export default function Select({
         <button
           id={selectId}
           type="button"
-          className={`${styles.select} ${styles.selectButton} ${open ? styles.selectButtonOpen : ""} ${
-            !hasSelection ? styles.selectPlaceholder : ""
-          }`}
+          className={clsx(styles.select, styles.selectButton, open && styles.selectButtonOpen, !hasSelection && styles.selectPlaceholder)}
           data-invalid={error ? "true" : undefined}
           aria-haspopup="listbox"
           aria-expanded={open}
@@ -203,9 +202,7 @@ export default function Select({
                   role="option"
                   aria-selected={selected}
                   disabled={option.disabled}
-                  className={`${styles.selectOption} ${
-                    selected ? styles.selectOptionSelected : ""
-                  }`}
+                  className={clsx(styles.selectOption, selected && styles.selectOptionSelected)}
                   onClick={() => commitValue(option.value)}
                 >
                   <span>{option.label}</span>

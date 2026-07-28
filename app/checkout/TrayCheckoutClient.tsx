@@ -10,6 +10,7 @@ import { PEXCOVER_PRICE } from '@/lib/constants'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
+import clsx from 'clsx'
 import styles from '@/app/checkout/Checkout.module.css'
 
 type FulfilmentOption =
@@ -517,7 +518,7 @@ export function TrayCheckoutClient() {
       </header>
 
       <main className={styles.checkoutGrid}>
-        <section className={`${styles.stepCard} ${styles.checkoutHero}`}>
+        <section className={clsx(styles.stepCard, styles.checkoutHero)}>
           <p className={styles.checkoutKicker}>Checkout</p>
           <h1 tabIndex={-1}>Review your packs and pay securely.</h1>
           <p>
@@ -536,9 +537,7 @@ export function TrayCheckoutClient() {
               sectionRefs.current.details = node
             }}
             tabIndex={-1}
-            className={`${styles.checkoutSection} ${
-              showDetailsHiddenWarning ? styles.checkoutSectionWarning : ''
-            }`}
+            className={clsx(styles.checkoutSection, showDetailsHiddenWarning && styles.checkoutSectionWarning)}
             aria-labelledby="customer-details-heading"
           >
             <div className={styles.sectionHeader}>
@@ -564,11 +563,7 @@ export function TrayCheckoutClient() {
             </div>
             <div
               id="customer-details-summary"
-              className={`${styles.mobileCollapsibleSummary} ${
-                mobileSectionSummaryOpen.details
-                  ? styles.mobileCollapsibleSummaryOpen
-                  : ''
-              }`}
+              className={clsx(styles.mobileCollapsibleSummary, mobileSectionSummaryOpen.details && styles.mobileCollapsibleSummaryOpen)}
             >
               <div className={styles.formGrid}>
                 <Input
@@ -632,11 +627,7 @@ export function TrayCheckoutClient() {
                     {contactOptions.map((option) => (
                       <label
                         key={option.value}
-                        className={`${styles.segmentedOption} ${
-                          preferredContactMethod === option.value
-                            ? styles.segmentedOptionActive
-                            : ''
-                        }`}
+                        className={clsx(styles.segmentedOption, preferredContactMethod === option.value && styles.segmentedOptionActive)}
                       >
                         <input
                           type="radio"
@@ -698,11 +689,7 @@ export function TrayCheckoutClient() {
 
             <div
               id="fulfilment-summary"
-              className={`${styles.mobileCollapsibleSummary} ${
-                mobileSectionSummaryOpen.delivery
-                  ? styles.mobileCollapsibleSummaryOpen
-                  : ''
-              }`}
+              className={clsx(styles.mobileCollapsibleSummary, mobileSectionSummaryOpen.delivery && styles.mobileCollapsibleSummaryOpen)}
             >
               <fieldset className={styles.optionFieldset}>
                 <legend className={styles.srOnly}>
@@ -712,11 +699,7 @@ export function TrayCheckoutClient() {
                   {fulfilmentOptions.map((option) => (
                     <label
                       key={option.value}
-                      className={`${styles.deliveryOption} ${
-                        fulfilmentOption === option.value
-                          ? styles.deliveryOptionSelected
-                          : ''
-                      }`}
+                      className={clsx(styles.deliveryOption, fulfilmentOption === option.value && styles.deliveryOptionSelected)}
                     >
                       <input
                         type="radio"
@@ -757,7 +740,7 @@ export function TrayCheckoutClient() {
                       return (
                         <label
                           key={school.slug}
-                          className={`${styles.schoolDropoffCard} ${isSelected ? styles.schoolDropoffCardActive : ''}`}
+                          className={clsx(styles.schoolDropoffCard, isSelected && styles.schoolDropoffCardActive)}
                         >
                           <input
                             type="radio"
@@ -984,7 +967,7 @@ export function TrayCheckoutClient() {
                         ) : (
                           <button
                             type="button"
-                            className={`${styles.orderPackLearnerLabel}${errors[`learner_${index}`] ? ` ${styles.orderPackLearnerLabelError}` : ''}`}
+                            className={clsx(styles.orderPackLearnerLabel, errors[`learner_${index}`] && styles.orderPackLearnerLabelError)}
                             onClick={() => setEditNameIndex(index)}
                             aria-label={`Edit learner ${index + 1} name`}
                           >
@@ -1106,7 +1089,7 @@ export function TrayCheckoutClient() {
               type="button"
               variant="primary"
               size="lg"
-              className={`${styles.fullWidth} ${styles.desktopPayButton}`}
+              className={clsx(styles.fullWidth, styles.desktopPayButton)}
               onClick={handlePay}
               disabled={!canSubmit}
               aria-busy={submitting}

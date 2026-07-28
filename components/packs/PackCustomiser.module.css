@@ -26,7 +26,7 @@
   gap: 6px;
   width: fit-content;
   color: var(--pex-text-muted);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -81,14 +81,14 @@
   backdrop-filter: blur(12px);
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 16px;
+  gap: var(--space-4);
   align-items: start;
 }
 
 .header p {
   margin: 0 0 4px;
   color: var(--pex-keppel);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
 }
 
@@ -104,7 +104,7 @@
   display: block;
   margin-top: 6px;
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
@@ -145,7 +145,7 @@
 
 .summaryCard,
 .itemRow {
-  border: 1px solid rgba(26, 42, 64, 0.08);
+  border: 1px solid var(--color-navy-subtle);
   border-radius: var(--radius-card);
   background: var(--pex-bg-soft);
 }
@@ -153,13 +153,13 @@
 .summaryCard {
   padding: 18px 20px;
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .summaryLabel {
   display: block;
   color: var(--pex-keppel);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
 }
 
@@ -174,7 +174,7 @@
 .quoteNote {
   margin: 0;
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.45;
 }
 
@@ -195,7 +195,7 @@
   min-width: 0;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--space-3);
   cursor: pointer;
 }
 
@@ -225,7 +225,7 @@
   display: block;
   color: var(--pex-primary);
   font-weight: 800;
-  font-size: 16px;
+  font-size: var(--text-base);
   line-height: 1.2;
 }
 
@@ -233,14 +233,14 @@
   display: block;
   margin-top: 4px;
   color: var(--pex-text-muted);
-  font-size: 13px;
+  font-size: var(--text-2xs);
 }
 
 .lineTotal {
   display: block;
   margin-top: 4px;
   color: var(--pex-coral);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
 }
 
@@ -249,14 +249,14 @@
   bottom: 0;
   z-index: 4;
   margin-top: auto;
-  padding: 16px clamp(16px, 3vw, 24px);
-  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding: var(--space-4) clamp(16px, 3vw, 24px);
+  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--pex-border);
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 -16px 34px rgba(15, 37, 55, 0.08);
   backdrop-filter: blur(12px);
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .footerSummary {
@@ -266,12 +266,12 @@
 
 .footerSummary strong {
   color: var(--pex-primary);
-  font-size: 20px;
+  font-size: var(--text-xl);
 }
 
 .footerSummary span {
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
 }
 
@@ -285,7 +285,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-2);
   transition: var(--button-transition);
 }
 
@@ -348,7 +348,7 @@
   }
 
   .header {
-    padding-top: max(16px, env(safe-area-inset-top));
+    padding-top: max(var(--space-4), env(safe-area-inset-top));
   }
 
   .itemRow {
@@ -356,7 +356,7 @@
   }
 
   .footer {
-    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
   }
 
   .resetButton,
@@ -369,21 +369,21 @@
 
 .actionsCard {
   background: var(--pex-bg);
-  border: 1px solid rgba(26, 42, 64, 0.08);
+  border: 1px solid var(--color-navy-subtle);
   border-radius: 28px;
   box-shadow: 0 10px 30px rgba(26, 42, 64, 0.04);
-  padding: 32px;
+  padding: var(--space-6);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-5);
 }
 
 .priceRow {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 16px;
-  border-bottom: 1px dashed rgba(26, 42, 64, 0.08);
+  gap: var(--space-4);
+  border-bottom: 1px dashed var(--color-navy-subtle);
   padding-bottom: 20px;
 }
 
@@ -405,9 +405,9 @@
   min-height: 54px !important;
   position: relative !important;
   justify-content: center !important;
-  font-size: 18px !important;
-  padding-left: 24px !important;
-  padding-right: 24px !important;
+  font-size: var(--text-lg) !important;
+  padding-left: var(--space-5) !important;
+  padding-right: var(--space-5) !important;
 }
 
 .detailButton > span:first-child {
@@ -435,7 +435,7 @@
   text-underline-offset: 4px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   transition: var(--interactive-transition);
 }
 
@@ -445,7 +445,7 @@
 
 @media (max-width: 480px) {
   .actionsCard {
-    padding: 24px;
+    padding: var(--space-5);
     gap: 20px;
   }
 

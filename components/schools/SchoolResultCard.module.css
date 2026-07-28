@@ -1,19 +1,19 @@
 .resultCard {
-  padding: 16px 18px;
-  border-radius: 18px;
+  padding: var(--space-4) 18px;
+  border-radius: var(--radius-card-compact);
   display: grid;
   grid-template-columns:
     minmax(0, 1.5fr) minmax(160px, 1fr) minmax(120px, 0.8fr)
     auto;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
   background: var(--pex-bg);
 }
 
 .resultCard h3 {
   margin: 0;
   color: var(--pex-primary);
-  font-size: 20px;
+  font-size: var(--text-xl);
   line-height: 1.1;
 }
 
@@ -27,7 +27,7 @@
 .resultMeta {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
@@ -71,7 +71,7 @@
 
 .resultLink {
   min-height: 42px;
-  padding: 10px 16px;
+  padding: 10px var(--space-4);
   border: 0;
   border-radius: var(--radius-pill);
   background: var(--pex-primary);
@@ -106,8 +106,8 @@
     display: grid;
     grid-template-columns: 1fr;
     align-items: start;
-    gap: 8px;
-    padding: 16px;
+    gap: var(--space-2);
+    padding: var(--space-4);
   }
 
   .resultLink {

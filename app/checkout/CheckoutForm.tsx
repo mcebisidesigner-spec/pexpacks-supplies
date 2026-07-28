@@ -16,6 +16,7 @@ import { PayStep } from "@/components/checkout/PayStep";
 import { OrderSummaryCard } from "@/components/checkout/OrderSummaryCard";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import styles from "./Checkout.module.css";
+import clsx from "clsx";
 
 type CheckoutFormProps = {
   schoolSlug: string;
@@ -466,7 +467,7 @@ export function CheckoutForm({
             <Button
               type="button"
               variant="secondary"
-              className={`${styles.desktopOnly} rounded-full`}
+              className={clsx(styles.desktopOnly, "rounded-full")}
               onClick={handleBackToOrder}
             >
               Back to Order
@@ -474,7 +475,7 @@ export function CheckoutForm({
             <Button
               type="button"
               variant="secondary"
-              className={`${styles.mobileOnly} rounded-full`}
+              className={clsx(styles.mobileOnly, "rounded-full")}
               onClick={() => goToStep(activeStep - 1)}
             >
               Back
@@ -491,7 +492,7 @@ export function CheckoutForm({
           </Button>
         )}
         <div
-          className={`${styles.stickyHeaderButton} ${isSticky ? styles.isSticky : ""}`}
+          className={clsx(styles.stickyHeaderButton, isSticky && styles.isSticky)}
         >
           <Button
             variant="white"
@@ -524,7 +525,7 @@ export function CheckoutForm({
 
           <section className={styles.stepCard} aria-labelledby="checkout-step-heading">
             <div className={styles.stepIntro}>
-              <p className={`${heroStyles.eyebrow} ${styles.stepEyebrow}`}>
+              <p className={clsx(heroStyles.eyebrow, styles.stepEyebrow)}>
                 Secure checkout
               </p>
               <h1

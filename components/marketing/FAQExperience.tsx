@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import clsx from "clsx";
 import type { FAQ } from "@/data/faqs";
 import styles from "./FAQExperience.module.css";
 
@@ -134,9 +135,7 @@ export function FAQExperience({ faqs }: FAQExperienceProps) {
 
                 return (
                   <article
-                    className={`${styles.faqItem} ${
-                      isOpen ? styles.faqItemOpen : ""
-                    }`}
+                    className={clsx(styles.faqItem, isOpen && styles.faqItemOpen)}
                     key={faq.id}
                   >
                     <button

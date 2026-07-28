@@ -1,6 +1,6 @@
 .preview {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .list {
@@ -9,7 +9,7 @@
   margin: 2px 0 0;
   padding: 0;
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   list-style: none;
 }
@@ -33,7 +33,7 @@
 .empty {
   margin: 0;
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.45;
 }
 

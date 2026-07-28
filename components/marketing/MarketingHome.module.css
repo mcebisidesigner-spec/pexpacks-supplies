@@ -33,14 +33,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .guaranteeIcon {
   width: 62px;
   height: 62px;
   border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 20px;
+  border-radius: var(--radius-image);
   background:
     linear-gradient(135deg, rgba(33, 158, 154, 0.9), rgba(26, 42, 64, 0.92)),
     var(--pex-navy);
@@ -66,7 +66,7 @@
 .guaranteeContent p {
   margin: 0;
   color: var(--pex-primary);
-  font-size: 18px;
+  font-size: var(--text-lg);
   line-height: 1.5;
   font-weight: 700;
 }
@@ -99,14 +99,14 @@
 
 .audienceCards {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   margin-top: 20px;
 }
 
 .audienceCard {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   flex: 1;
   padding: 14px 18px;
   border-radius: var(--radius-section);
@@ -132,7 +132,7 @@
   height: 42px;
   display: grid;
   place-items: center;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   background: rgba(33, 158, 154, 0.1);
   color: var(--pex-keppel);
 }
@@ -155,7 +155,7 @@
 }
 
 .audienceCard span:not(.audienceCardIcon) {
-  font-size: 13px;
+  font-size: var(--text-2xs);
   color: var(--pex-muted);
 }
 
@@ -179,7 +179,7 @@
   border: none;
   border-radius: var(--radius-pill);
   background:
-    linear-gradient(135deg, #1a2a40 0%, #1a7a77 100%);
+    linear-gradient(135deg, var(--pex-navy) 0%, var(--pex-keppel) 100%);
   color: var(--pex-bg);
   text-decoration: none;
   box-shadow:
@@ -213,7 +213,7 @@
   z-index: -1;
   border-radius: inherit;
   background:
-    linear-gradient(90deg, rgba(33, 158, 154, 0.08), rgba(255, 111, 89, 0.2), rgba(33, 158, 154, 0.08));
+    linear-gradient(90deg, var(--color-teal-subtle), rgba(255, 111, 89, 0.2), var(--color-teal-subtle));
   opacity: 0;
   transform: scale(0.96);
   animation: laybyCtaHalo 2.4s ease-out infinite;
@@ -374,7 +374,7 @@
   height: 52px;
   display: grid;
   place-items: center;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   background: var(--pex-keppel);
   color: var(--pex-bg);
 }
@@ -428,7 +428,7 @@
   }
 
   .laybySpotlightLink {
-    gap: 8px;
+    gap: var(--space-2);
     min-height: 50px;
     padding: 6px 10px;
   }
@@ -444,7 +444,7 @@
   }
 
   .laybySpotlightText strong {
-    font-size: 16px;
+    font-size: var(--text-base);
     white-space: normal;
   }
 
@@ -509,7 +509,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  padding: 0 24px;
+  padding: 0 var(--space-5);
   opacity: 0.65;
   transition: opacity 0.3s;
 }
@@ -522,8 +522,8 @@
   background: linear-gradient(135deg, var(--pex-coral), #c8452b);
   color: var(--pex-bg);
   text-align: center;
-  padding: 10px 24px;
-  font-size: 14px;
+  padding: 10px var(--space-5);
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
@@ -547,10 +547,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-2);
   flex-wrap: wrap;
   margin-top: 28px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--pex-muted);
 }
@@ -597,10 +597,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--space-4);
   padding: 18px 22px;
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 700;
   color: var(--pex-navy);
   cursor: pointer;
@@ -623,7 +623,7 @@
   border-radius: 50%;
   background: var(--pex-bg-soft);
   color: var(--pex-keppel);
-  font-size: 18px;
+  font-size: var(--text-lg);
   font-weight: 700;
   transition: transform 0.2s ease, background 0.2s ease;
 }
@@ -639,8 +639,8 @@
 }
 
 .accordionAnswer {
-  padding: 16px 22px 22px;
-  font-size: 14px;
+  padding: var(--space-4) 22px 22px;
+  font-size: var(--text-sm);
   line-height: 1.6;
   color: var(--pex-text-muted);
 }
@@ -653,12 +653,12 @@
   display: inline-flex;
   align-items: center;
   min-height: 32px;
-  border: 1px solid rgba(33, 158, 154, 0.2);
+  border: 1px solid var(--color-teal-border);
   border-radius: var(--radius-pill);
   padding: 6px 11px;
-  background: rgba(33, 158, 154, 0.08);
+  background: var(--color-teal-subtle);
   color: var(--pex-primary);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
   line-height: 1.2;
   text-decoration: none;
@@ -686,7 +686,7 @@
 .howItWorks {
   width: 100%;
   max-width: var(--layout-max-width);
-  margin: 32px auto 24px;
+  margin: var(--space-6) auto var(--space-5);
   padding-inline: var(--gutter-desktop);
 }
 
@@ -698,8 +698,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 14px 24px;
+  gap: var(--space-3);
+  padding: 14px var(--space-5);
   border-radius: var(--radius-card);
   background: var(--pex-bg);
   border: 1px solid var(--pex-border);
@@ -717,7 +717,7 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: rgba(33, 158, 154, 0.08);
+  background: var(--color-teal-subtle);
   color: var(--pex-keppel);
   display: grid;
   place-items: center;
@@ -740,7 +740,7 @@
 }
 
 .howItWorksStepTitle {
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
   color: var(--pex-primary);
   line-height: 1.2;
@@ -793,7 +793,7 @@
 
   .howItWorksInner {
     gap: 6px;
-    padding: 12px 16px;
+    padding: var(--space-3) var(--space-4);
   }
 
   .howItWorksIcon {
@@ -815,7 +815,7 @@
   .howItWorksInner {
     flex-wrap: wrap;
     justify-content: center;
-    gap: 4px 16px;
+    gap: 4px var(--space-4);
   }
 
   .howItWorksArrow {
@@ -837,15 +837,15 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 14px 24px;
-  padding: 14px 24px;
+  gap: 14px var(--space-5);
+  padding: 14px var(--space-5);
   border-radius: var(--radius-card);
   background: rgba(244, 250, 252, 0.5);
   border: 1px solid var(--pex-border);
 }
 
 .paymentTagline {
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 700;
   color: var(--pex-primary);
   white-space: nowrap;
@@ -854,7 +854,7 @@
 .paymentLogos {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 

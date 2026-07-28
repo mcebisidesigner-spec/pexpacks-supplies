@@ -11,6 +11,7 @@ import {
   getSchoolPhaseLabel,
 } from "@/lib/schools/schoolPhase";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
+import clsx from "clsx";
 import styles from "./HeroSearch.module.css";
 
 const resultLimit = 12;
@@ -97,7 +98,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
 
 
   return (
-    <div className={`${styles.heroSearchWrapper} pex-search-focus-anchor`}>
+    <div className={clsx(styles.heroSearchWrapper, "pex-search-focus-anchor")}>
       {searchActive && <div className={styles.searchBackdrop} />}
       <div
         ref={searchRef}
@@ -114,7 +115,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
         }}
       >
         <label
-          className={`${styles.field} ${styles.schoolSearchField}`}
+          className={clsx(styles.field, styles.schoolSearchField)}
           htmlFor="homeSchoolQuery"
         >
           <span>School Name</span>

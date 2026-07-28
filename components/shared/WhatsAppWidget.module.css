@@ -34,7 +34,7 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background-color: #25D366; /* WhatsApp Green */
+  background-color: var(--color-whatsapp); /* WhatsApp Green */
   color: white;
   border: none;
   box-shadow: 0 12px 24px rgba(26, 42, 64, 0.18);
@@ -88,7 +88,7 @@
   right: 0;
   width: min(300px, calc(100vw - 32px));
   background: white;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   opacity: 0;
@@ -105,9 +105,9 @@
 }
 
 .popupHeader {
-  background-color: #128C7E;
+  background-color: var(--color-whatsapp-dark);
   color: white;
-  padding: 16px;
+  padding: var(--space-4);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -119,7 +119,7 @@
 }
 
 .headerInfo strong {
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 600;
 }
 
@@ -144,8 +144,8 @@
 }
 
 .popupBody {
-  padding: 20px 16px;
-  background-color: #e5ddd5; /* Classic WA background color */
+  padding: 20px var(--space-4);
+  background-color: var(--color-whatsapp-bg); /* Classic WA background color */
   position: relative;
 }
 
@@ -160,9 +160,9 @@
 
 .chatBubble {
   background: white;
-  padding: 12px 16px;
-  border-radius: 8px 8px 8px 0;
-  font-size: 14px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-xs) var(--radius-xs) var(--radius-xs) 0;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: #333;
   position: relative;
@@ -183,23 +183,23 @@
 }
 
 .popupFooter {
-  padding: 16px;
+  padding: var(--space-4);
   background: white;
   display: flex;
   justify-content: center;
 }
 
 .startChatBtn {
-  background-color: #25D366;
+  background-color: var(--color-whatsapp);
   color: white;
   text-decoration: none;
   font-weight: 600;
-  font-size: 14px;
-  padding: 10px 24px;
+  font-size: var(--text-sm);
+  padding: 10px var(--space-5);
   border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   transition: var(--button-transition);
   width: 100%;
   justify-content: center;
@@ -209,7 +209,7 @@
   filter: brightness(110%);
   transform: var(--button-hover-transform);
   box-shadow: var(--button-hover-shadow);
-  background-color: #128C7E;
+  background-color: var(--color-whatsapp-dark);
 }
 
 @media (max-width: 768px) {

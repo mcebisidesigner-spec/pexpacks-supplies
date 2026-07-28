@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import styles from "./SavingsTimeline.module.css";
 
 const steps = [
@@ -15,7 +16,7 @@ export function SavingsTimeline() {
     <div className={styles.timeline} role="list" aria-label="Savings plan timeline">
       {steps.map((step, i) => (
         <div className={styles.step} role="listitem" key={step.date}>
-          <span className={`${styles.badge} ${styles[badgeStyles[i]]}`}>
+          <span className={clsx(styles.badge, styles[badgeStyles[i]])}>
             {i + 1}
           </span>
           <div className={styles.stepBody}>

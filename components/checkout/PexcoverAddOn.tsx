@@ -3,6 +3,7 @@
 import { formatCurrency } from "@/lib/formatCurrency";
 import { Input } from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
+import clsx from "clsx";
 import styles from "./PexcoverAddOn.module.css";
 
 type PexcoverAddOnProps = {
@@ -34,7 +35,7 @@ export function PexcoverAddOn({
 }: PexcoverAddOnProps) {
   return (
     <section
-      className={`${styles.addonCard} ${selected ? styles.addonCardActive : ""}`}
+      className={clsx(styles.addonCard, selected && styles.addonCardActive)}
       aria-labelledby="pexcover-heading"
     >
       <div>

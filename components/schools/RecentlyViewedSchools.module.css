@@ -1,25 +1,25 @@
 .recentHeader {
-  margin-bottom: 24px;
+  margin-bottom: var(--space-5);
 }
 
 .recentHeader h2 {
   margin: 0;
   color: var(--pex-primary);
-  font-size: 20px;
+  font-size: var(--text-xl);
   line-height: 1.1;
 }
 
 .recentHeader p {
   margin: 4px 0 0;
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
 }
 
 .recentGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .recentCard {
@@ -28,7 +28,7 @@
 }
 
 .recentTitle {
-  font-size: 18px !important;
+  font-size: var(--text-lg) !important;
 }
 
 .removeButton {

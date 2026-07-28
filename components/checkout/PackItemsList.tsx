@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import clsx from "clsx";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { Button } from "@/components/ui/Button";
 import styles from "./PackItemsList.module.css";
@@ -28,7 +29,7 @@ export function PackItemsList({ items, price }: PackItemsListProps) {
         <Button
           type="button"
           variant="secondary"
-          className={`${styles.packListToggle} rounded-full`}
+          className={clsx(styles.packListToggle, "rounded-full")}
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
         >

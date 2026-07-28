@@ -8,6 +8,7 @@ import { PackItemsList } from "./PackItemsList";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import styles from "./ReviewOrderStep.module.css";
+import clsx from "clsx";
 
 type SchoolResult = {
   slug: string;
@@ -137,7 +138,7 @@ export const ReviewOrderStep = memo(function ReviewOrderStep({
                         key={s.slug}
                         type="button"
                         variant="secondary"
-                        className={`${styles.schoolResultItem} rounded-full`}
+                        className={clsx(styles.schoolResultItem, "rounded-full")}
                         onClick={() => {
                           const firstGrade = s.grades?.[0];
                           if (firstGrade) navigateToCheckout(s.slug, firstGrade);
@@ -169,7 +170,7 @@ export const ReviewOrderStep = memo(function ReviewOrderStep({
                 </Button>
               </div>
             ) : (
-              <div className={`${styles.reviewSchoolDisplay} ${styles.hasValue}`}>
+              <div className={clsx(styles.reviewSchoolDisplay, styles.hasValue)}>
                 <h3>{schoolName}</h3>
                 <Button
                   type="button"
@@ -195,7 +196,7 @@ export const ReviewOrderStep = memo(function ReviewOrderStep({
             <Button
               type="button"
               variant="secondary"
-              className={`${styles.gradeDrawerTrigger} ${styles.hasValue} rounded-full justify-between w-full`}
+              className={clsx(styles.gradeDrawerTrigger, styles.hasValue, "rounded-full", "justify-between", "w-full")}
               onClick={() => setShowGradeDrawer(!showGradeDrawer)}
               aria-expanded={showGradeDrawer}
               aria-controls="grade-drawer-panel"
@@ -231,7 +232,7 @@ export const ReviewOrderStep = memo(function ReviewOrderStep({
                     key={g.gradeSlug}
                     type="button"
                     variant="secondary"
-                    className={`${styles.gradeDrawerItem} ${g.gradeSlug === gradeSlug ? styles.gradeDrawerItemActive : ""} rounded-full justify-between w-full`}
+                    className={clsx(styles.gradeDrawerItem, g.gradeSlug === gradeSlug && styles.gradeDrawerItemActive, "rounded-full", "justify-between", "w-full")}
                     onClick={() => {
                       setShowGradeDrawer(false);
                       if (g.gradeSlug !== gradeSlug)

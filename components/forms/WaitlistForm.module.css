@@ -58,14 +58,14 @@
   color: var(--form-error-color);
   background: var(--form-error-bg);
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-xs);
 }
 
 .consentField {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--text-2xs);
   color: var(--pex-muted);
   line-height: 1.5;
   cursor: pointer;
@@ -96,19 +96,19 @@
 }
 
 .discountNote {
-  margin: 12px 0 0;
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: rgba(33, 158, 154, 0.08);
-  border: 1px solid rgba(33, 158, 154, 0.2);
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--color-teal-subtle);
+  border: 1px solid var(--color-teal-border);
   color: var(--pex-keppel);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 800;
   text-align: center;
 }
 
 .successMessage {
-  padding: 24px;
+  padding: var(--space-5);
   border-radius: var(--radius-card);
   background: rgba(47, 133, 90, 0.08);
   border: 1px solid rgba(47, 133, 90, 0.2);
@@ -118,7 +118,7 @@
 .successMessage h3 {
   margin: 0 0 6px;
   color: var(--pex-success);
-  font-size: 20px;
+  font-size: var(--text-xl);
 }
 
 .successMessage p {
@@ -129,12 +129,12 @@
 }
 
 .errorMessage {
-  padding: 16px;
+  padding: var(--space-4);
   border-radius: var(--radius-card);
   background: var(--form-error-bg);
   border: 1px solid var(--form-error-border);
   text-align: center;
   color: var(--form-error-color);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: 700;
 }

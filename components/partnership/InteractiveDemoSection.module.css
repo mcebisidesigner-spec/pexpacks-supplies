@@ -16,7 +16,7 @@
   top: 72px;
   width: 172px;
   aspect-ratio: 1;
-  border: 18px solid rgba(33, 158, 154, 0.08);
+  border: 18px solid var(--color-teal-subtle);
   border-radius: 42px;
   transform: rotate(18deg);
   z-index: -1;
@@ -98,7 +98,7 @@
 
 .messageCard {
   display: grid;
-  gap: 16px;
+  gap: var(--space-4);
   border-radius: 30px;
   padding: clamp(22px, 4vw, 32px);
 }
@@ -108,10 +108,10 @@
   width: fit-content;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   min-height: 34px;
   border-radius: var(--radius-pill);
-  padding: 7px 12px;
+  padding: 7px var(--space-3);
   background: rgba(255, 111, 89, 0.12);
   color: var(--pex-coral);
   font-size: 12px;
@@ -166,7 +166,7 @@
   border: 1px solid rgba(33, 158, 154, 0.18);
   border-radius: var(--radius-pill);
   padding: 7px 11px;
-  background: rgba(33, 158, 154, 0.08);
+  background: var(--color-teal-subtle);
   color: var(--pex-primary);
   font-size: 12px;
   font-weight: 900;
@@ -180,7 +180,7 @@
 
 .benefitCard {
   min-width: 0;
-  border-radius: 24px;
+  border-radius: var(--radius-card);
   padding: 20px;
   transition:
     transform var(--motion-duration) var(--motion-ease),
@@ -200,7 +200,7 @@
   margin-bottom: 14px;
   display: grid;
   place-items: center;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   background: rgba(33, 158, 154, 0.1);
   color: var(--pex-keppel);
 }
@@ -216,12 +216,12 @@
 }
 
 .benefitCard h3 {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   font-size: 19px;
 }
 
 .benefitCard p {
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 .demoCard {
@@ -241,13 +241,13 @@
 
 .browserTop {
   min-height: 50px;
-  padding: 12px 14px;
+  padding: var(--space-3) 14px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 12px;
+  gap: var(--space-3);
   align-items: center;
   background: #ffffff;
-  border-bottom: 1px solid rgba(26, 42, 64, 0.08);
+  border-bottom: 1px solid var(--color-navy-subtle);
 }
 
 .browserDots {
@@ -280,10 +280,10 @@
   display: inline-flex;
   align-items: center;
   border-radius: var(--radius-pill);
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   background: rgba(26, 42, 64, 0.05);
   color: var(--pex-text-muted);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -298,7 +298,7 @@
   text-decoration: none;
   background:
     linear-gradient(135deg, rgba(26, 42, 64, 0.92), rgba(33, 158, 154, 0.82)),
-    #152238;
+    var(--pex-sme-navy);
 }
 
 .previewHero {
@@ -335,8 +335,8 @@
 
 .previewNav {
   display: flex;
-  gap: 8px;
-  padding: 13px 16px;
+  gap: var(--space-2);
+  padding: 13px var(--space-4);
   overflow: hidden;
   background: rgba(255, 255, 255, 0.94);
 }
@@ -347,7 +347,7 @@
   align-items: center;
   border-radius: var(--radius-pill);
   padding: 5px 10px;
-  background: rgba(33, 158, 154, 0.08);
+  background: var(--color-teal-subtle);
   color: var(--pex-primary);
   font-size: 12px;
   font-weight: 900;
@@ -358,16 +358,16 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  padding: 16px;
+  padding: var(--space-4);
   background: #ffffff;
 }
 
 .previewPanel {
   min-height: 120px;
-  border-radius: 18px;
-  padding: 16px;
+  border-radius: var(--radius-card-compact);
+  padding: var(--space-4);
   background: linear-gradient(180deg, rgba(244, 248, 248, 0.94), #ffffff);
-  border: 1px solid rgba(26, 42, 64, 0.08);
+  border: 1px solid var(--color-navy-subtle);
 }
 
 .previewPanel span {
@@ -381,18 +381,18 @@
 
 .previewPanel strong {
   color: var(--pex-primary);
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.3;
 }
 
 .demoCardBody {
-  padding: 8px clamp(20px, 4vw, 28px) clamp(22px, 4vw, 30px);
+  padding: var(--space-2) clamp(20px, 4vw, 28px) clamp(22px, 4vw, 30px);
   display: grid;
   gap: 18px;
 }
 
 .demoCardBody h3 {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   font-size: clamp(24px, 3vw, 32px);
 }
 
@@ -411,10 +411,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-2);
   border-radius: var(--radius-pill);
-  padding: 12px 18px;
-  font-size: 14px;
+  padding: var(--space-3) 18px;
+  font-size: var(--text-sm);
   font-weight: 900;
   text-decoration: none;
   transition:
@@ -482,7 +482,7 @@
   padding: clamp(24px, 4vw, 34px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px;
+  gap: var(--space-5);
   align-items: center;
   background:
     linear-gradient(135deg, rgba(26, 42, 64, 0.96), rgba(26, 42, 64, 0.9)),
@@ -572,7 +572,7 @@
 @media (max-width: 480px) {
   .messageCard,
   .ctaCard {
-    border-radius: 24px;
+    border-radius: var(--radius-card);
     padding: 20px;
   }
 

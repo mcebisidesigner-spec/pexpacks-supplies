@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import styles from "./admin.module.css";
+import clsx from "clsx";
 
 export default async function AdminDashboard() {
   const cookieStore = await cookies();
@@ -71,11 +72,7 @@ export default async function AdminDashboard() {
                     </td>
                     <td>
                       <span
-                        className={`${styles.badge} ${
-                          order.status === "paid"
-                            ? styles.badgePaid
-                            : styles.badgePending
-                        }`}
+                        className={clsx(styles.badge, order.status === "paid" ? styles.badgePaid : styles.badgePending)}
                       >
                         {order.status}
                       </span>

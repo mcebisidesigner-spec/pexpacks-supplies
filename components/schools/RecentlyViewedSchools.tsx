@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import clsx from "clsx";
 import pageStyles from "@/styles/Page.module.css";
 import heroStyles from "@/components/marketing/HeroSearch.module.css";
 import {
@@ -86,7 +87,7 @@ export function RecentlyViewedSchools() {
         <div className={styles.recentGrid}>
           {recentVisits.map((visit) => (
             <article
-              className={`${heroStyles.heroResultCard} ${styles.recentCard}`}
+              className={clsx(heroStyles.heroResultCard, styles.recentCard)}
               key={`${visit.schoolSlug}-${visit.gradeSlug}`}
             >
               <button

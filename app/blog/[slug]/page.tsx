@@ -11,6 +11,7 @@ import { blogPosts, getPostBySlug } from "@/data/blog";
 import { buildMetadata, siteUrl } from "@/lib/seo";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { articleSchema } from "@/lib/schema";
+import clsx from "clsx";
 import styles from "../Blog.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -424,7 +425,7 @@ export default async function BlogPostPage({
               </section>
             ) : null}
 
-            <div className={`${styles.documentCard} ${styles.searchWidgetCard}`}>
+            <div className={clsx(styles.documentCard, styles.searchWidgetCard)}>
               <div className={styles.postCardBody}>
                 <SchoolSearchWidget
                   compact={true}

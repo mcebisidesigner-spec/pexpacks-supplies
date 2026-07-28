@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import clsx from "clsx";
 import heroStyles from "@/components/marketing/HeroSearch.module.css";
 
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
@@ -108,7 +109,7 @@ export function SchoolSearchPanel({
   return (
     <section
       id="school-search"
-      className={`${styles.searchExperience} pex-school-search-focus-anchor`}
+      className={clsx(styles.searchExperience, "pex-school-search-focus-anchor")}
     >
       {searchActive && <div className={heroStyles.searchBackdrop} />}
       <div className={styles.searchFormWrapper}>

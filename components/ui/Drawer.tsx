@@ -4,6 +4,7 @@ import { useRef, useCallback } from "react";
 import type { ReactNode, RefObject } from "react";
 import { useDialogFocusTrap } from "@/components/packs/useDialogFocusTrap";
 import styles from "./Drawer.module.css";
+import clsx from "clsx";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -53,7 +54,7 @@ export function Drawer({
   return (
     <div className={styles.overlay} role="presentation" onMouseDown={handleOverlayClick}>
       <div
-        className={`${styles.dialog} ${className}`}
+        className={clsx(styles.dialog, className)}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

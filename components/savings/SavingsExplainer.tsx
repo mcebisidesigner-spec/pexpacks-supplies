@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import styles from "./SavingsExplainer.module.css";
 
 const steps = [
@@ -46,7 +47,7 @@ export function SavingsExplainer() {
         <div className={styles.steps}>
           {steps.map((step, i) => (
             <div className={styles.stepCard} key={step.date}>
-              <span className={`${styles.stepNumber} ${styles[step.style]}`}>
+              <span className={clsx(styles.stepNumber, styles[step.style])}>
                 {i + 1}
               </span>
               <div className={styles.stepTitle}>{step.date}</div>

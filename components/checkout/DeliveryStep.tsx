@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import clsx from "clsx";
 import { Input } from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import styles from "@/app/checkout/Checkout.module.css";
@@ -113,7 +114,7 @@ export const DeliveryStep = memo(function DeliveryStep({
           {FULFILMENT_OPTIONS.map((option) => (
             <label
               key={option.value}
-              className={`${styles.deliveryOption} ${fulfilmentOption === option.value ? styles.deliveryOptionSelected : ""}`}
+              className={clsx(styles.deliveryOption, fulfilmentOption === option.value && styles.deliveryOptionSelected)}
             >
               <Input
                 type="radio"

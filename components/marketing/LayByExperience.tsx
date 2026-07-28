@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { endpointPathForFormType } from "@/lib/forms/types";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
+import clsx from "clsx";
 import styles from "./LayByExperience.module.css";
 
 type IconName = "cart" | "checkout" | "deposit" | "calendar" | "box" | "shield";
@@ -370,9 +371,7 @@ export function LayByExperience() {
             <div className={styles.timeline} aria-label="Lay-by steps">
               {steps.map((step, index) => (
                 <button
-                  className={`${styles.stepCard} ${
-                    activeStep === index ? styles.stepCardActive : ""
-                  }`}
+                  className={clsx(styles.stepCard, activeStep === index && styles.stepCardActive)}
                   key={step.title}
                   type="button"
                   onClick={() => setActiveStep(index)}
@@ -442,9 +441,7 @@ export function LayByExperience() {
 
                 return (
                   <article
-                    className={`${styles.detailItem} ${
-                      isOpen ? styles.detailItemOpen : ""
-                    }`}
+                    className={clsx(styles.detailItem, isOpen && styles.detailItemOpen)}
                     data-tone={detail.tone}
                     key={detail.title}
                   >
@@ -556,7 +553,7 @@ export function LayByExperience() {
                         { value: "email", label: "Email" },
                       ]}
                     />
-                    <label className={`${styles.field} ${styles.formWide}`}>
+                    <label className={clsx(styles.field, styles.formWide)}>
                       <span>Residential address</span>
                       <input
                         name="address"
@@ -651,7 +648,7 @@ export function LayByExperience() {
                       defaultValue="25th"
                       options={["1st", "15th", "25th", "Last working day"]}
                     />
-                    <label className={`${styles.field} ${styles.formWide}`}>
+                    <label className={clsx(styles.field, styles.formWide)}>
                       <span>Notes for Pexpacks</span>
                       <textarea
                         name="notes"
@@ -768,9 +765,7 @@ export function LayByExperience() {
 
                 return (
                   <article
-                    className={`${styles.faqItem} ${
-                      isOpen ? styles.faqItemOpen : ""
-                    }`}
+                    className={clsx(styles.faqItem, isOpen && styles.faqItemOpen)}
                     key={faq.question}
                   >
                     <button

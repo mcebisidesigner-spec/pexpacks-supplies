@@ -90,19 +90,19 @@
 .sm {
   min-height: 34px;
   padding: 4px 17px;
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 .md {
   min-height: 44px;
   padding: 6px 22px;
-  font-size: 16px;
+  font-size: var(--text-base);
 }
 
 .lg {
   min-height: 56px;
-  padding: 8px 28px;
-  font-size: 20px;
+  padding: var(--space-2) 28px;
+  font-size: var(--text-xl);
 }
 
 .primary {
@@ -130,7 +130,7 @@
   padding: 4px 0;
   background: transparent;
   color: var(--pex-text-muted);
-  font-size: 14px;
+  font-size: var(--text-sm);
   text-decoration: underline;
   text-decoration-thickness: 1.5px;
   text-underline-offset: 4px;
@@ -182,13 +182,13 @@
 
   .md {
     min-height: var(--touch-target-min);
-    padding-inline: 16px;
-    font-size: 14px;
+    padding-inline: var(--space-4);
+    font-size: var(--text-sm);
   }
 
   .lg {
     min-height: var(--touch-target-min);
     padding-inline: 20px;
-    font-size: 16px;
+    font-size: var(--text-base);
   }
 }

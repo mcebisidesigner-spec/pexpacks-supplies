@@ -20,19 +20,19 @@
 }
 
 .gradeDetails p {
-  font-size: 16px;
+  font-size: var(--text-base);
   line-height: 1.45;
 }
 
 .gradeActionPanel {
-  margin-top: 16px;
+  margin-top: var(--space-4);
 }
 
 .deliveryPanel {
-  margin-top: 16px;
-  margin-bottom: 32px;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-6);
   padding: 14px 18px;
-  border: 1px solid rgba(33, 158, 154, 0.2);
+  border: 1px solid var(--color-teal-border);
   border-radius: var(--radius-card);
   background: rgba(33, 158, 154, 0.07);
 }
@@ -42,21 +42,21 @@
 }
 
 .kicker {
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
   color: var(--pex-keppel);
   font-weight: 800;
 }
 
 .contentsCard .kicker {
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
   color: var(--pex-keppel);
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.2;
 }
 
 .contentsCard {
   scroll-margin-top: 96px;
-  padding: 24px;
+  padding: var(--space-5);
   border: var(--card-border);
   border-radius: var(--radius-card);
   background: var(--card-bg);
@@ -71,12 +71,12 @@
 }
 
 .contentsCard ul {
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-4);
   padding-left: 20px;
 }
 
 .contentsCard li {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   font-size: 15px;
   display: grid;
   gap: 5px;
@@ -84,7 +84,7 @@
 
 .itemBadge {
   width: fit-content;
-  padding: 4px 8px;
+  padding: 4px var(--space-2);
   border-radius: var(--radius-pill);
   background: rgba(33, 158, 154, 0.1);
   color: var(--pex-keppel);
@@ -96,13 +96,13 @@
 .verifiedBadge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   margin-bottom: 10px;
-  padding: 7px 12px;
+  padding: 7px var(--space-3);
   border-radius: var(--radius-pill);
-  background: rgba(33, 158, 154, 0.08);
+  background: var(--color-teal-subtle);
   color: var(--pex-keppel);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 700;
 }
 
@@ -114,15 +114,15 @@
 .urgencyBadge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   margin-top: 20px;
   margin-bottom: 14px;
-  padding: 8px 14px;
+  padding: var(--space-2) 14px;
   border-radius: var(--radius-card);
   background: rgba(244, 124, 106, 0.08);
   border: 1px solid rgba(244, 124, 106, 0.2);
   color: var(--pex-coral);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 600;
 }
 
@@ -131,12 +131,12 @@
 }
 
 .shareSection {
-  margin-top: 16px;
+  margin-top: var(--space-4);
   margin-bottom: 4px;
 }
 
 .pexcoverPanel {
-  margin: 24px 0;
+  margin: var(--space-5) 0;
   padding: var(--card-padding);
   border: var(--form-card-border);
   border-radius: var(--form-card-radius);
@@ -154,7 +154,7 @@
 }
 
 .pexcoverPanel p:not(.kicker) {
-  margin: 8px 0 0;
+  margin: var(--space-2) 0 0;
   color: var(--pex-text-muted);
   line-height: 1.5;
 }
@@ -201,10 +201,10 @@
 }
 
 .labelPreview {
-  padding: 14px 16px;
+  padding: 14px var(--space-4);
   border: 1px solid rgba(33, 158, 154, 0.18);
   border-radius: var(--radius-field);
-  background: rgba(33, 158, 154, 0.08);
+  background: var(--color-teal-subtle);
   display: grid;
   gap: 4px;
 }
@@ -217,7 +217,7 @@
 
 .labelPreview strong {
   color: var(--pex-primary);
-  font-size: 18px;
+  font-size: var(--text-lg);
 }
 
 .labelPreview small {

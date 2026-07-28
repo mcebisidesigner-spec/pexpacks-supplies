@@ -6,9 +6,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
-  padding: 48px 32px;
-  border-radius: 24px;
+  gap: var(--space-5);
+   padding: var(--space-6);
+  border-radius: var(--radius-card);
   background: var(--pex-bg);
   text-align: center;
 }
@@ -55,7 +55,7 @@
 .iconWrap {
   width: 60px;
   height: 60px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   display: grid;
   place-items: center;
   background: var(--pex-bg-soft);
@@ -87,8 +87,8 @@
   display: grid;
   gap: 6px;
   width: 100%;
-  padding: 20px 24px;
-  border-radius: 16px;
+  padding: 20px var(--space-5);
+  border-radius: var(--radius-md);
   background: var(--pex-bg-soft);
   text-align: center;
 }
@@ -124,7 +124,7 @@
   gap: 20px;
   width: 100%;
   text-align: left;
-  padding: 24px 0 8px;
+   padding: var(--space-5) 0 var(--space-2);
 }
 
 .timelineStep {
@@ -137,7 +137,7 @@
   flex-shrink: 0;
   width: 36px;
   height: 36px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   display: grid;
   place-items: center;
   background: var(--pex-bg-soft);
@@ -165,17 +165,17 @@
 /* ── Actions ── */
 .actions {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
   width: 100%;
-  padding-top: 8px;
+   padding-top: var(--space-2);
 }
 
 .btnPrimary {
   display: block;
   width: 100%;
-  padding: 14px 24px;
+  padding: 14px var(--space-5);
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   background: var(--pex-navy);
   color: var(--pex-bg);
   font-family: var(--font-body);
@@ -197,9 +197,9 @@
   justify-content: center;
   gap: 10px;
   width: 100%;
-  padding: 14px 24px;
+  padding: 14px var(--space-5);
   border: 2px solid var(--pex-keppel);
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   background: var(--pex-bg);
   color: var(--pex-keppel);
   font-family: var(--font-body);

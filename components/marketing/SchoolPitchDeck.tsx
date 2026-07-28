@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import clsx from "clsx";
 import styles from "./SchoolPitchDeck.module.css";
 import { Button } from "@/components/ui/Button";
 
@@ -118,7 +119,7 @@ export function SchoolPitchDeck() {
           {slides.map((slide, idx) => (
             <button
               key={slide.id}
-              className={`${styles.slideNavButton} ${activeSlide === slide.id ? styles.slideNavButtonActive : ""}`}
+              className={clsx(styles.slideNavButton, activeSlide === slide.id && styles.slideNavButtonActive)}
               onClick={() => handleSlideChange(slide.id)}
             >
               <span>0{idx + 1}</span>

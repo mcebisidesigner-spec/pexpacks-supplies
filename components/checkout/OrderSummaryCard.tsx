@@ -2,6 +2,7 @@ import { PEXCOVER_PRICE } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { TrustChecklist } from "./TrustChecklist";
 import { WhatsAppHelpBlock } from "./WhatsAppHelpBlock";
+import clsx from "clsx";
 import styles from "./OrderSummaryCard.module.css";
 
 type OrderSummaryCardProps = {
@@ -30,7 +31,7 @@ export function OrderSummaryCard({
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">
       <div
-        className={`${styles.summaryCard} ${summaryOpen ? styles.summaryCardOpen : ""}`}
+        className={clsx(styles.summaryCard, summaryOpen && styles.summaryCardOpen)}
         id="checkout-order-summary"
       >
         <p className={styles.confirmKicker}>Order summary</p>

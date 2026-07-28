@@ -25,14 +25,14 @@
 
 .featuredCard {
   min-height: 280px;
-  padding: 24px;
-  border: 1px solid rgba(26, 42, 64, 0.08);
+  padding: var(--space-5);
+  border: 1px solid var(--color-navy-subtle);
   border-radius: var(--radius-card);
   background: var(--pex-bg);
-  box-shadow: 0 12px 32px rgba(26, 42, 64, 0.08);
+  box-shadow: 0 12px 32px var(--color-navy-subtle);
   display: grid;
   align-content: start;
-  gap: 12px;
+  gap: var(--space-3);
   transform-origin: center;
   transition: all 0.3s ease;
 }
@@ -70,13 +70,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-5);
 }
 
 .featuredIcon {
   width: 54px;
   height: 54px;
-  border-radius: 18px;
+  border-radius: var(--radius-card-compact);
   background: var(--pex-bg);
   color: var(--pex-keppel);
   display: grid;
@@ -88,14 +88,14 @@
 .featuredLogo {
   width: 54px;
   height: 54px;
-  border-radius: 18px;
+  border-radius: var(--radius-card-compact);
   object-fit: contain;
   background: var(--pex-bg);
 }
 
 .featuredMeta {
   color: var(--pex-keppel);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
 }
 
@@ -103,7 +103,7 @@
   width: fit-content;
   min-height: 44px;
   margin-top: 10px;
-  padding: 8px 8px 8px 20px;
+  padding: var(--space-2) var(--space-2) var(--space-2) 20px;
   border-radius: var(--radius-pill);
   background: var(--pex-coral);
   color: var(--pex-bg);
@@ -170,7 +170,7 @@
 
   .featuredGrid {
     padding-inline: var(--gutter-mobile);
-    gap: 16px;
+    gap: var(--space-4);
   }
 }
 

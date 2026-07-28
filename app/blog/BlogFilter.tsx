@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import clsx from "clsx";
 import type { BlogPost } from "@/data/blog";
 import styles from "./Blog.module.css";
 
@@ -47,7 +48,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
               key={cat.key}
               type="button"
               onClick={() => setActive(cat.key)}
-              className={`${styles.filterPill} ${active === cat.key ? styles.activePill : ""}`}
+              className={clsx(styles.filterPill, active === cat.key && styles.activePill)}
             >
               {cat.label}
             </button>

@@ -20,7 +20,7 @@
 .inner {
   max-width: var(--layout-max-width);
   margin: 0 auto;
-  padding: 16px var(--gutter-desktop);
+  padding: var(--space-4) var(--gutter-desktop);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,7 +35,7 @@
 
 .title {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 700;
   color: white;
   display: -webkit-box;
@@ -46,7 +46,7 @@
 
 .price {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--pex-keppel);
   font-weight: 800;
 }
@@ -56,9 +56,9 @@
   color: white;
   border: none;
   border-radius: var(--radius-pill);
-  padding: 12px 24px;
+  padding: var(--space-3) var(--space-5);
   font-family: var(--font-button);
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
@@ -72,15 +72,15 @@
 
 @media (max-width: 768px) {
   .inner {
-    padding: 12px 16px;
+    padding: var(--space-3) var(--space-4);
   }
   
   .title {
-    font-size: 14px;
+    font-size: var(--text-sm);
   }
   
   .orderButton {
-    padding: 10px 16px;
-    font-size: 14px;
+    padding: 10px var(--space-4);
+    font-size: var(--text-sm);
   }
 }

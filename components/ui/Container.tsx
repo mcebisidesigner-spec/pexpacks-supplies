@@ -1,5 +1,6 @@
 import type { ReactNode, HTMLAttributes } from "react";
 import styles from "./Container.module.css";
+import clsx from "clsx";
 
 type ContainerProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
@@ -14,7 +15,7 @@ export function Container({
   ...props
 }: ContainerProps) {
   return (
-    <Tag className={`${styles.container} ${className}`} {...props}>
+    <Tag className={clsx(styles.container, className)} {...props}>
       {children}
     </Tag>
   );

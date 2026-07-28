@@ -1,4 +1,5 @@
 import type { ReactNode, HTMLAttributes } from "react";
+import clsx from "clsx";
 import styles from "./Card.module.css";
 
 const paddingMap: Record<string, string> = {
@@ -23,7 +24,7 @@ export function Card({
 }: CardProps) {
   return (
     <div
-      className={`${styles.card} ${styles[variant]} ${paddingMap[padding]} ${className}`}
+      className={clsx(styles.card, styles[variant], paddingMap[padding], className)}
       {...props}
     >
       {children}

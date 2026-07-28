@@ -3,6 +3,7 @@
 import type { CSSProperties, ChangeEvent } from "react";
 import { useState } from "react";
 import { AnimatedVehicle } from "./AnimatedVehicle";
+import clsx from "clsx";
 import styles from "./RetailComparisonSlider.module.css";
 
 const retailPoints = [
@@ -41,7 +42,7 @@ export function RetailComparisonSlider() {
 
       <div className={styles.stage}>
         <div
-          className={`${styles.pane} ${styles.retailPane}`}
+          className={clsx(styles.pane, styles.retailPane)}
           style={{ transform: `scale(${retailScale})` }}
         >
           <span className={styles.paneLabel}>Retail shopping</span>
@@ -57,7 +58,7 @@ export function RetailComparisonSlider() {
         </div>
 
         <div
-          className={`${styles.pane} ${styles.pexpacksPane}`}
+          className={clsx(styles.pane, styles.pexpacksPane)}
           style={{ transform: `scale(${pexpacksScale})` }}
         >
           <span className={styles.paneLabel}>Pexpacks experience</span>

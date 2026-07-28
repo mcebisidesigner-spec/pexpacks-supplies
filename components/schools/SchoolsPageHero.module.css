@@ -11,7 +11,7 @@
 }
 
 .schoolsHeroTitle {
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
   color: #ffffff;
   font-family: var(--font-heading);
   font-size: clamp(38px, 5.6vw, 66px);

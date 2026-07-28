@@ -1,5 +1,6 @@
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
+import clsx from "clsx";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import styles from "./SuperpowerSection.module.css";
 
@@ -56,7 +57,7 @@ export function SuperpowerSection() {
         <div className={styles.grid}>
           {steps.map((step, idx) => (
             <ScrollReveal key={step.title} delay={idx * 100} as="article">
-              <div className={`${styles.card} ${step.accent ? styles.cardAccent : ""}`}>
+              <div className={clsx(styles.card, step.accent && styles.cardAccent)}>
                 <div className={styles.iconWrap}>
                   {step.icon}
                 </div>

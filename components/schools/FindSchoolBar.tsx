@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import clsx from "clsx";
 import styles from "./FindSchoolBar.module.css";
 
 export function FindSchoolBar() {
@@ -31,7 +32,7 @@ export function FindSchoolBar() {
 
   return (
     <div
-      className={`${styles.bar} ${visible ? styles.visible : ""}`}
+      className={clsx(styles.bar, visible && styles.visible)}
       aria-hidden={!visible}
     >
       <button className={styles.form} onClick={handleClick} type="button">

@@ -44,22 +44,22 @@
   padding: 10px 14px;
   background: rgba(255, 255, 255, 0.94);
   color: var(--pex-primary);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
-  box-shadow: 0 10px 24px rgba(26, 42, 64, 0.08);
+  box-shadow: 0 10px 24px var(--color-navy-subtle);
 }
 
 .body {
   display: grid;
   flex: 1;
   gap: 13px;
-  padding: 26px 24px 12px;
+  padding: 26px var(--space-5) var(--space-3);
 }
 
 .bestFor {
   margin: 0;
   color: var(--pex-keppel);
-  font-size: 13px;
+  font-size: var(--text-2xs);
   font-weight: 800;
 }
 
@@ -79,9 +79,9 @@
 
 .footer {
   display: grid;
-  gap: 16px;
+  gap: var(--space-4);
   margin-top: auto;
-  padding: 14px 24px 24px;
+  padding: 14px var(--space-5) var(--space-5);
 }
 
 .price {
@@ -125,7 +125,7 @@
   }
 
   .body {
-    padding: 24px 20px 10px;
+    padding: var(--space-5) 20px 10px;
   }
 
   .footer {

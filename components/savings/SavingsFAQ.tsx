@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import clsx from "clsx";
 import styles from "./SavingsFAQ.module.css";
 
 const faqs = [
@@ -59,14 +60,14 @@ export function SavingsFAQ() {
             return (
               <article className={styles.item} key={faq.question}>
                 <button
-                  className={`${styles.question} ${isOpen ? styles.questionOpen : ""}`}
+                  className={clsx(styles.question, isOpen && styles.questionOpen)}
                   type="button"
                   onClick={() => toggle(index)}
                   aria-expanded={isOpen}
                 >
                   <span>{faq.question}</span>
                   <svg
-                    className={`${styles.icon} ${isOpen ? styles.iconOpen : ""}`}
+                    className={clsx(styles.icon, isOpen && styles.iconOpen)}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"

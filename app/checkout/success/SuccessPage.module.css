@@ -23,5 +23,5 @@
   width: 100%;
   max-width: 560px;
   display: grid;
-  gap: 24px;
+  gap: var(--space-5);
 }

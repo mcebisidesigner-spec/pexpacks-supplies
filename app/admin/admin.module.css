@@ -58,7 +58,7 @@
 }
 
 .table th {
-  padding: 16px 24px;
+  padding: var(--space-4) var(--space-5);
   font-family: var(--font-button, inherit);
   font-size: 12px;
   font-weight: 800;
@@ -81,7 +81,7 @@
 }
 
 .table td {
-  padding: 18px 24px;
+  padding: 18px var(--space-5);
   vertical-align: middle;
   color: var(--pex-text, #172326);
 }
@@ -98,7 +98,7 @@
 }
 
 .schoolName {
-  font-size: 13px;
+  font-size: var(--text-2xs);
   color: var(--pex-muted, #4d5a5d);
   margin-top: 2px;
 }
@@ -108,7 +108,7 @@
 }
 
 .gradeText {
-  font-size: 13px;
+  font-size: var(--text-2xs);
   color: var(--pex-muted, #4d5a5d);
   margin-top: 2px;
 }
@@ -121,7 +121,7 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 5px 12px;
+  padding: 5px var(--space-3);
   border-radius: var(--radius-pill, 999px);
   font-size: 12px;
   font-weight: 700;
@@ -140,7 +140,7 @@
 }
 
 .emptyStateContainer {
-  padding: clamp(48px, 8vw, 80px) 24px;
+  padding: clamp(48px, 8vw, 80px) var(--space-5);
   text-align: center;
 }
 
@@ -158,7 +158,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
+  margin: 0 auto var(--space-4);
 }
 
 .emptyIconWrapper svg {
@@ -174,14 +174,14 @@
 .emptyStateTitle {
   margin: 0 0 6px;
   font-family: var(--font-heading, inherit);
-  font-size: 18px;
+  font-size: var(--text-lg);
   font-weight: 800;
   color: var(--pex-navy, #1a2a40);
 }
 
 .emptyStateText {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 1.5;
   color: var(--pex-muted, #4d5a5d);
 }
@@ -205,6 +205,6 @@
 
   .table th,
   .table td {
-    padding: 14px 16px;
+    padding: 14px var(--space-4);
   }
 }

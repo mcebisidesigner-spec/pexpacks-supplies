@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
+import clsx from "clsx";
 import styles from "./OrderPage.module.css";
 
 type OrderCategory = "Primary School Learner" | "High School Learner";
@@ -141,7 +142,7 @@ export function OrderForm() {
 
   if (isSuccess) {
     return (
-      <div className={`${styles.formCard} ${styles.successState}`}>
+      <div className={clsx(styles.formCard, styles.successState)}>
         <div className={styles.successIcon}>✓</div>
         <h2>List Received!</h2>
         <p>
@@ -175,9 +176,9 @@ export function OrderForm() {
     <div className={styles.formCard}>
       {/* Progress Indicator */}
       <div className={styles.progressBar}>
-        <div className={`${styles.progressStep} ${step >= 1 ? styles.active : ""}`}></div>
-        <div className={`${styles.progressStep} ${step >= 2 ? styles.active : ""}`}></div>
-        <div className={`${styles.progressStep} ${step >= 3 ? styles.active : ""}`}></div>
+        <div className={clsx(styles.progressStep, step >= 1 && styles.active)}></div>
+        <div className={clsx(styles.progressStep, step >= 2 && styles.active)}></div>
+        <div className={clsx(styles.progressStep, step >= 3 && styles.active)}></div>
       </div>
 
       <div className={styles.stepContainer}>
@@ -189,7 +190,7 @@ export function OrderForm() {
               {(["Primary School Learner", "High School Learner"] as OrderCategory[]).map((cat) => (
                 <button
                   key={cat}
-                  className={`${styles.verticalOptionBtn} ${category === cat ? styles.selected : ""}`}
+                  className={clsx(styles.verticalOptionBtn, category === cat && styles.selected)}
                   onClick={() => {
                     setCategory(cat);
                     setErrors({});
@@ -224,14 +225,14 @@ export function OrderForm() {
             <div className={styles.tabs}>
               <button 
                 type="button"
-                className={`${styles.tab} ${inputMethod === "upload" ? styles.active : ""}`}
+                className={clsx(styles.tab, inputMethod === "upload" && styles.active)}
                 onClick={() => setInputMethod("upload")}
               >
                 Upload Photo/PDF
               </button>
               <button 
                 type="button"
-                className={`${styles.tab} ${inputMethod === "type" ? styles.active : ""}`}
+                className={clsx(styles.tab, inputMethod === "type" && styles.active)}
                 onClick={() => setInputMethod("type")}
               >
                 Paste / Type List
@@ -253,7 +254,7 @@ export function OrderForm() {
                 </div>
               ) : (
                 <div 
-                  className={`${styles.uploadArea} ${isDragging ? styles.dragging : ""}`}
+                  className={clsx(styles.uploadArea, isDragging && styles.dragging)}
                   onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                   onDragLeave={() => setIsDragging(false)}
                   onDrop={(e) => {
@@ -282,7 +283,7 @@ export function OrderForm() {
               <textarea
                 id="stationery-list-text"
                 name="stationeryListText"
-                className={`${styles.input} ${errors.list ? styles.inputError : ""}`}
+                className={clsx(styles.input, errors.list && styles.inputError)}
                 placeholder="Paste your items here (e.g. 5x HB Pencils, 2x Pritt 43g...)"
                 rows={4}
                 value={listText}
@@ -325,7 +326,7 @@ export function OrderForm() {
                   id="quote-name"
                   type="text"
                   required
-                  className={`${styles.input} ${errors.name ? styles.inputError : ""}`}
+                  className={clsx(styles.input, errors.name && styles.inputError)}
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
@@ -343,7 +344,7 @@ export function OrderForm() {
                   id="quote-phone"
                   type="tel"
                   required
-                  className={`${styles.input} ${errors.phone ? styles.inputError : ""}`}
+                  className={clsx(styles.input, errors.phone && styles.inputError)}
                   placeholder="e.g. 078 123 4567"
                   value={phone}
                   onChange={handlePhoneChange}
@@ -358,7 +359,7 @@ export function OrderForm() {
                 <input
                   id="quote-email"
                   type="email"
-                  className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
+                  className={clsx(styles.input, errors.email && styles.inputError)}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);

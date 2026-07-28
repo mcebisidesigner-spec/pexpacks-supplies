@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import clsx from "clsx";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import styles from "./OrderSavedToast.module.css";
@@ -67,7 +68,7 @@ export function OrderSavedToast() {
 
   return (
     <div
-      className={`${styles.toast} ${closing ? styles.toastClosing : ""}`}
+      className={clsx(styles.toast, closing && styles.toastClosing)}
       role="status"
       aria-live="polite"
     >
