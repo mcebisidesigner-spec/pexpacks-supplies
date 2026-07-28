@@ -76,7 +76,7 @@ export function ChecklistExitCapture({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          formType: "school-waitlist",
+          formType: "school-pack-enquiry",
           fullName: "Checklist request",
           email,
           schoolName: school.name,

@@ -182,7 +182,6 @@ function inferFormType(
   if (endpoint === "office-pack") return "brand-package-enquiry";
   if (endpoint === "school-partnership") return "school-partnership";
   if (endpoint === "quote") return "quote";
-  if (endpoint === "waitlist") return "school-waitlist";
 
   return "contact";
 }
@@ -350,11 +349,6 @@ function validateEndpointRules(
     if (!data.schoolName) add("schoolName", "School name is required.");
     if (!data.city) add("city", "City or area is required.");
     if (!data.grade) add("grade", "Grade is required.");
-  }
-
-  if (data.formType === "school-waitlist") {
-    if (!data.schoolName) add("schoolName", "School name is required.");
-    if (!data.email) add("email", "Email address is required.");
   }
 
   if (data.formType === "readiness-quiz" && !data.email) {
