@@ -11,17 +11,12 @@ import { faqs } from '@/data/faqs'
 import { testimonials } from '@/data/testimonials'
 import { SavingsPlanBanner } from '@/components/savings/SavingsPlanBanner'
 import { SavingsTimeline } from '@/components/savings/SavingsTimeline'
-import { TrendingNearYou } from '@/components/home/TrendingNearYou'
-import { getPartneredSchools } from '@/lib/schools/nearby'
 
 import heroStyles from '@/components/marketing/HeroBase.module.css'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import homeStyles from '@/components/marketing/MarketingHome.module.css'
 
-export const revalidate = 86400;
-
-export default async function HomePage() {
-  const trendingSchools = await getPartneredSchools(6)
+export default function HomePage() {
   return (
     <>
       <section className={heroStyles.heroNavy}>
@@ -105,8 +100,6 @@ export default async function HomePage() {
           ))}
         </div>
       </div>
-
-      <TrendingNearYou initialSchools={trendingSchools} />
 
       <section
         id="social-proof"
