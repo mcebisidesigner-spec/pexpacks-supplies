@@ -273,67 +273,25 @@
   line-height: 1.6;
 }
 
-.contactPanel,
-.noticeBlock {
-  border: 1px solid rgba(225, 231, 234, 0.86);
-  border-radius: var(--radius-image);
-  background: rgba(255, 255, 255, 0.9);
-  padding: 18px;
-}
 
-.contactPanel {
-  display: grid;
-  gap: var(--space-2);
-  margin: 0 0 18px;
-}
 
-.contactPanel p,
-.noticeBlock p {
-  margin: 0;
-}
 
-.noticeBlock + .noticeBlock {
-  margin-top: 14px;
-}
 
-.legalNote {
-  margin-top: 20px;
-  border-left: 4px solid rgba(33, 158, 154, 0.55);
-  padding-left: 14px;
-  color: var(--pex-text-muted);
-}
 
-.tableWrap {
-  overflow-x: auto;
-  border: 1px solid rgba(225, 231, 234, 0.86);
-  border-radius: var(--radius-image);
-}
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 560px;
-}
 
-.table th,
-.table td {
-  padding: 14px var(--space-4);
-  text-align: left;
-  border-bottom: 1px solid rgba(225, 231, 234, 0.86);
-  vertical-align: top;
-}
 
-.table th {
-  background: var(--pex-bg-soft);
-  color: var(--pex-primary);
-  font-size: var(--text-2xs);
-  font-weight: 800;
-  text-transform: uppercase;
-}
 
-.table tr:last-child td {
-  border-bottom: 0;
-}
+
+
+
+
+
+
+
+
+
+
 
 @media (max-width: 1024px) {
   .highlightGrid {
@@ -461,9 +419,7 @@
     line-height: 1.62;
   }
 
-  .table {
-    min-width: 0;
-  }
+
 }
 
 @supports not (height: 100dvh) {

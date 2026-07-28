@@ -14,7 +14,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata(
   "Refund & Return Policy",
-  "Pexpacks Supplies Refund and Return Policy — Clear, CPA-aligned guidelines on pre-order cancellations, 14-day standard returns, damaged items, and Paystack refund timelines.",
+  "Pexpacks Supplies Refund and Return Policy — Clear, CPA-aligned guidelines on pre-order cancellations, 14-day standard returns, damaged items, and refund timelines.",
   "/returns-refunds-policy"
 );
 
@@ -29,8 +29,8 @@ const config: LegalDocumentConfig = {
   route: "/returns-refunds-policy",
   pageTitle: "Refund and Return Policy",
   metaDescription:
-    "Pexpacks Supplies Refund and Return Policy — Clear, CPA-aligned guidelines on pre-order cancellations, 14-day standard returns, damaged items, and Paystack refund timelines.",
-  heroEyebrow: "Paystack & CPA Compliant Merchant Policy",
+    "Pexpacks Supplies Refund and Return Policy — Clear, CPA-aligned guidelines on pre-order cancellations, 14-day standard returns, damaged items, and refund timelines.",
+  heroEyebrow: "CPA Compliant Merchant Policy",
   heroTitle: "Refund and Return Policy",
   heroText:
     "At Pexpacks Supplies, we strive to deliver high-quality, grade-specific stationery packs and educational supplies across South Africa. This policy outlines your rights and our exact procedures regarding order cancellations, returns, and refunds.",
@@ -50,9 +50,9 @@ const config: LegalDocumentConfig = {
       tone: "accent",
     },
     {
-      title: "Paystack Secure Processing",
+      title: "Secure Payment Processing",
       content:
-        "Refunds are credited back directly to your original payment method (Credit Card, Debit Card, or EFT) via Paystack within 3 to 7 business days.",
+        "Refunds are credited back directly to your original payment method (Credit Card, Debit Card, or EFT) within 3 to 7 business days.",
       tone: "warning",
     },
   ],
@@ -186,13 +186,13 @@ const config: LegalDocumentConfig = {
     {
       id: "refund-processing-timelines",
       eyebrow: "5",
-      title: "Refund Processing & Timelines via Paystack",
+      title: "Refund Processing & Timelines",
       summary:
         "Secure payment reversal back to original payment methods.",
       content: (
         <>
           <p>
-            All approved refunds are processed back through our primary payment processor (Paystack) to the original payment method used during checkout (Credit Card, Debit Card, or Instant EFT) to prevent fraud.
+            All approved refunds are processed back through our payment processor to the original payment method used during checkout (Credit Card, Debit Card, or Instant EFT) to prevent fraud.
           </p>
           <ul>
             <li>
@@ -202,7 +202,7 @@ const config: LegalDocumentConfig = {
               <strong>Bank Settlement:</strong> Depending on your banking institution, funds typically reflect in your account within <strong>3 to 7 business days</strong> after initiation.
             </li>
             <li>
-              <strong>Notification:</strong> You will receive an automated email confirmation from Paystack and Pexpacks as soon as your refund has been initiated.
+              <strong>Notification:</strong> You will receive an automated email confirmation from Pexpacks as soon as your refund has been initiated.
             </li>
           </ul>
 

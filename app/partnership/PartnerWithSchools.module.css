@@ -1,87 +1,24 @@
-.executiveHeroCta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: var(--space-6);
-  min-height: 54px;
-  padding: 0 34px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--pex-coral);
-  color: #ffffff;
-  font-family: var(--font-button);
-  font-size: var(--text-base);
-  font-weight: 800;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    filter 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
 
-.executiveHeroCta:hover {
-  filter: brightness(110%);
-  transform: translateY(-2px);
-  box-shadow: 0 18px 34px rgba(26, 42, 64, 0.18);
-}
+
+
 
 @media (max-width: 1024px) {
-  .executiveHeroCta {
-    width: 100%;
-    margin-top: var(--space-5);
-  }
+
 }
 
-.pitchStatsSection {
-  padding: clamp(22px, 4vw, 34px) 0 0;
-  background: var(--pex-bg);
-}
 
-.pitchStats {
-  width: min(var(--layout-max-width), calc(100% - (var(--gutter-desktop) * 2)));
-  margin-inline: auto;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
 
-.pitchStats div {
-  min-width: 0;
-  padding: 26px;
-  display: grid;
-  gap: var(--space-2);
-  border: var(--card-border);
-  border-radius: var(--radius-card);
-  background: var(--card-bg);
-  box-shadow: var(--card-shadow);
-}
 
-.pitchStats strong {
-  color: var(--pex-navy);
-  font-size: clamp(30px, 4.2vw, 48px);
-  font-weight: 800;
-  line-height: 1;
-}
 
-.pitchStats span {
-  color: var(--pex-text-muted);
-  font-size: var(--text-2xs);
-  font-weight: 800;
-  line-height: 1.35;
-}
 
-.buttonRowMargin {
-  margin-top: var(--space-5);
-}
 
-.faqGrid {
-  display: grid;
-  gap: var(--space-4);
-  margin-top: 36px;
-  max-width: 860px;
-  margin-inline: auto;
-}
+
+
+
+
+
+
+
 
 .faqItem {
   border: var(--card-border);
@@ -98,71 +35,25 @@
   border-color: rgba(33, 158, 154, 0.4);
 }
 
-.faqQuestion {
-  padding: 22px 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-  cursor: pointer;
-  color: var(--pex-navy);
-  font-size: var(--text-base);
-  font-weight: 800;
-  list-style: none;
-  user-select: none;
-}
 
-.faqQuestion::-webkit-details-marker {
-  display: none;
-}
 
-.faqIcon {
-  width: 26px;
-  height: 26px;
-  display: grid;
-  place-items: center;
-  position: relative;
-  flex-shrink: 0;
-}
 
-.faqIcon::before,
-.faqIcon::after {
-  content: "";
-  position: absolute;
-  background: var(--pex-keppel);
-  transition: transform 0.28s var(--motion-ease);
-}
 
-.faqIcon::before {
-  width: 14px;
-  height: 2px;
-}
 
-.faqIcon::after {
-  width: 2px;
-  height: 14px;
-}
 
-details[open] .faqIcon::after {
-  transform: rotate(90deg) scaleX(0);
-}
 
-details[open] .faqIcon::before {
-  transform: rotate(180deg);
-}
 
-.faqAnswer {
-  padding: 0 28px 22px;
-  color: var(--color-text-muted);
-  font-size: 15px;
-  line-height: 1.6;
-  border-top: 1px solid rgba(26, 42, 64, 0.04);
-  animation: slideDown 0.3s var(--motion-ease);
-}
 
-.faqAnswer p {
-  margin: var(--space-3) 0 0;
-}
+
+
+
+
+
+
+
+
+
+
 
 .faqLinks {
   display: flex;
@@ -206,253 +97,82 @@ details[open] .faqIcon::before {
 }
 
 @media (max-width: 1024px) {
-  .pitchStats {
-    width: calc(100% - (var(--gutter-mobile) * 2));
-  }
+
 }
 
 @media (max-width: 768px) {
-  .pitchStats {
-    grid-template-columns: 1fr;
-  }
+
 }
 
 /* ─── Triple Win Grid ─── */
 
-.tripleWinSection {
-  padding: var(--section-padding-y-desktop) 0;
-  background: var(--pex-bg);
-}
 
-.tripleWinGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 22px;
-  margin-top: 38px;
-}
 
-.tripleWinCard {
-  padding: var(--space-6);
-  border: var(--card-border);
-  border-radius: var(--radius-card);
-  background: var(--card-bg);
-  box-shadow: var(--card-shadow);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-}
 
-.tripleWinCard:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--card-shadow-hover);
-}
 
-.tripleWinIcon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: var(--pex-bg-warm);
-  color: var(--pex-keppel);
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-}
 
-.tripleWinIcon svg {
-  width: 24px;
-  height: 24px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
 
-.tripleWinLabel {
-  margin: 0;
-  color: var(--pex-navy);
-  font-size: var(--text-sm);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
 
-.tripleWinTitle {
-  margin: 0;
-  color: var(--pex-primary);
-  font-size: clamp(20px, 2.5vw, 26px);
-  font-weight: 800;
-  line-height: 1.1;
-}
 
-.tripleWinText {
-  margin: 0;
-  color: var(--pex-text);
-  font-size: 15px;
-  line-height: 1.55;
-}
+
+
+
+
+
+
+
+
+
 
 @media (max-width: 1024px) {
-  .tripleWinGrid {
-    gap: var(--space-4);
-    margin-top: var(--space-5);
-  }
 
-  .tripleWinCard {
-    padding: var(--space-5);
-  }
+
+
 }
 
 /* ─── SGB Hook Banner ─── */
 
-.sgbHookSection {
-  padding: 0;
-  background: transparent;
-}
 
-.sgbHookBanner {
-  width: 100%;
-  padding: clamp(32px, 5vw, 48px) clamp(24px, 4vw, 44px);
-  border-radius: var(--radius-section);
-  background: var(--pex-keppel);
-  color: #ffffff;
-  text-align: center;
-}
 
-.sgbHookEyebrow {
-  margin: 0 0 var(--space-3);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: var(--text-2xs);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
 
-.sgbHookTitle {
-  margin: 0 auto;
-  max-width: 760px;
-  color: #ffffff;
-  font-family: var(--font-heading);
-  font-size: clamp(28px, 4vw, 44px);
-  font-weight: 800;
-  line-height: 1.05;
-}
 
-.sgbHookText {
-  max-width: 680px;
-  margin: 18px auto 0;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: clamp(15px, 1.6vw, 18px);
-  line-height: 1.55;
-}
+
+
+
+
+
 
 @media (max-width: 1024px) {
-  .sgbHookBanner {
-    border-radius: 0;
-    padding: clamp(28px, 5vw, 36px) var(--gutter-mobile);
-  }
 
-  .sgbHookTitle {
-    font-size: clamp(24px, 6vw, 32px);
-  }
+
+
 }
 
 /* ─── 3-Step Onboarding Timeline ─── */
 
-.onboardingSection {
-  padding: var(--section-padding-y-desktop) 0;
-  background: var(--pex-bg-soft);
-}
 
-.onboardingTimeline {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0;
-  margin-top: 38px;
-}
 
-.onboardingStep {
-  flex: 1;
-  max-width: 340px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
 
-.onboardingStepNumber {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: var(--pex-keppel);
-  color: #ffffff;
-  font-size: 22px;
-  font-weight: 800;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-}
 
-.onboardingStepTitle {
-  margin: 0;
-  color: var(--pex-navy);
-  font-size: clamp(18px, 1.8vw, 22px);
-  font-weight: 800;
-  line-height: 1.15;
-}
 
-.onboardingStepText {
-  margin: 0;
-  color: var(--pex-text-muted);
-  font-size: var(--text-sm);
-  line-height: 1.5;
-  max-width: 280px;
-}
 
-.onboardingConnector {
-  flex-shrink: 0;
-  width: 48px;
-  padding-top: 14px;
-  color: var(--pex-keppel);
-  opacity: 0.35;
-}
 
-.onboardingConnector svg {
-  width: 24px;
-  height: 24px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
+
+
+
+
+
+
+
+
 
 @media (max-width: 1024px) {
-  .onboardingTimeline {
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-5);
-    margin-top: var(--space-5);
-  }
 
-  .onboardingStep {
-    max-width: 100%;
-    gap: 10px;
-  }
 
-  .onboardingStepText {
-    max-width: 100%;
-  }
 
-  .onboardingConnector {
-    width: auto;
-    padding-top: 0;
-    transform: rotate(90deg);
-  }
+
+
+
+
 }
 

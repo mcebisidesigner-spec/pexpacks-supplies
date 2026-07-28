@@ -72,56 +72,6 @@ export async function createPendingOrder(input: {
   return { id: orderId, orderReference: input.orderReference };
 }
 
-export async function markOrderPaid(
-  reference: string,
-  gatewayData: {
-    gatewayReference: string;
-    paidAt: string;
-    amount: number;
-  }
-): Promise<{ updated: boolean; message: string }> {
-  const admin = createSupabaseAdminClient();
-
-  const { data: existing } = await admin
-    .from("orders")
-    .select("id, status, estimated_total")
-    .eq("order_reference", reference)
-    .single();
-
-  if (!existing) {
-    return { updated: false, message: "Order not found" };
-  }
-
-  if (existing.status === "paid") {
-    return { updated: true, message: "Order already marked as paid" };
-  }
-
-  const expectedAmount = Number(existing.estimated_total) * 100;
-  if (Math.abs(expectedAmount - gatewayData.amount) > 1) {
-    console.error(
-      `[orders] Amount mismatch for ${reference}: expected ${expectedAmount}, got ${gatewayData.amount}`
-    );
-    return { updated: false, message: "Amount mismatch" };
-  }
-
-  const { error } = await admin
-    .from("orders")
-    .update({
-      status: "paid",
-      paid_at: gatewayData.paidAt,
-      gateway_reference: gatewayData.gatewayReference,
-      payment_gateway: "paystack",
-    })
-    .eq("order_reference", reference);
-
-  if (error) {
-    console.error("[orders] Failed to update order to paid:", error);
-    return { updated: false, message: "Database update failed" };
-  }
-
-  return { updated: true, message: "Order updated to paid" };
-}
-
 export async function getOrderByReference(reference: string) {
   const supabase = createSupabaseAdminClient();
 
@@ -145,7 +95,6 @@ export async function getOrderByReference(reference: string) {
   };
 }
 
-export type OrderStatusInfo = Awaited<ReturnType<typeof getOrderByReference>>;
 
 export async function createMultiPackOrder(input: {
   orderReference: string;

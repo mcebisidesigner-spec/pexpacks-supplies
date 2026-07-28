@@ -247,7 +247,7 @@ export const DeliveryStep = memo(function DeliveryStep({
         />
         <span>
           I agree that Pexpacks may process my personal information to complete
-          this order, send payment and order updates, and contact me about
+          this order, send order updates, and contact me about
           delivery or collection. I have read and agree to the{" "}
           <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
             privacy policy

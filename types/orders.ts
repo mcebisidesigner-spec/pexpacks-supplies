@@ -23,12 +23,6 @@ export type CheckoutPayload = {
   notes?: string;
 };
 
-export type CheckoutResponse = {
-  success: boolean;
-  checkoutUrl?: string;
-  orderReference?: string;
-  error?: string;
-};
 
 export type OrderStatusResponse = {
   success: boolean;

@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 export const siteName = "Pexpacks";
 export const siteUrl = "https://pexpacks.co.za";
 export const defaultOgImage = `${siteUrl}/opengraph-image.jpg`;
-export const defaultTwitterImage = `${siteUrl}/twitter-image.jpg`;
-export const defaultImageAlt = "Pexpacks school stationery packs";
+const defaultTwitterImage = `${siteUrl}/twitter-image.jpg`;
+const defaultImageAlt = "Pexpacks school stationery packs";
 
 function canonicalUrl(path = "/") {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;

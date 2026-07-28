@@ -167,9 +167,7 @@
   color: var(--pex-navy);
 }
 
-.fullWidth {
-  width: 100%;
-}
+
 .outline:hover {
   background: var(--pex-bg-soft);
 }

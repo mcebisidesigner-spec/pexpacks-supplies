@@ -1,6 +1,6 @@
 import type { PackSelectionItem } from "./types";
 
-export function hasPackPricing(items: PackSelectionItem[]) {
+function hasPackPricing(items: PackSelectionItem[]) {
   return items.some((item) => typeof item.unitPrice === "number");
 }
 

@@ -9,7 +9,7 @@ export const legalEmailHref = `mailto:${legalEmail}`;
 export const ordersEmailHref = `mailto:${ordersEmail}`;
 export const layByEmailHref = `mailto:${layByEmail}`;
 
-export function normalizeSouthAfricanPhoneNumber(value: string) {
+function normalizeSouthAfricanPhoneNumber(value: string) {
   const digits = value.replace(/\D/g, "");
 
   if (digits.startsWith("0")) {

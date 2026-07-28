@@ -12,7 +12,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://raw.githubusercontent.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.supabase.co https://api.paystack.co https://*.google-analytics.com",
+  "connect-src 'self' https://*.supabase.co https://*.google-analytics.com",
   "worker-src 'self'",
   "manifest-src 'self'",
   "object-src 'none'",

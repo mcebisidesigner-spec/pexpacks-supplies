@@ -67,13 +67,7 @@
   color: var(--pex-primary);
 }
 
-.pitchDescription {
-  color: var(--pex-text);
-  font-size: clamp(16px, 2vw, 18px);
-  line-height: 1.5;
-  margin: 0 0 40px;
-  max-width: 480px;
-}
+
 
 .steps {
   display: grid;
@@ -204,35 +198,13 @@
 }
 
 /* Category Pills */
-.categoryPills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
 
-.categoryPill {
-  padding: 10px var(--space-4);
-  border: var(--form-control-border);
-  border-radius: var(--form-option-radius);
-  background: var(--form-option-bg);
-  color: var(--form-helper-color);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  user-select: none;
-}
 
-.categoryPill:hover {
-  border-color: var(--pex-keppel);
-  color: var(--pex-primary);
-}
 
-.categoryPill.active {
-  background: var(--form-option-selected-bg);
-  color: var(--form-option-selected-color);
-  border-color: var(--form-option-selected-border);
-}
+
+
+
+
 
 /* Tabs for List Input */
 .tabs {
@@ -340,10 +312,7 @@
 }
 
 /* Submit Button */
-.submitBtn {
-  margin-top: var(--space-3);
-  width: 100%;
-}
+
 
 .successState {
   text-align: center;

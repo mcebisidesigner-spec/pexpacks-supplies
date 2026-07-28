@@ -1,6 +1,6 @@
 const DEVICE_ID_KEY = "pex-device-id";
 
-export function getDeviceId(): string {
+function getDeviceId(): string {
   try {
     let id = localStorage.getItem(DEVICE_ID_KEY);
     if (!id) {

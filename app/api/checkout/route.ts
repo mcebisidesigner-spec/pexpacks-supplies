@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateCheckoutPayload } from "@/lib/validation/checkout";
 import { createPendingOrder, createMultiPackOrder, generateOrderReference } from "@/lib/orders";
-import { initializePaystackTransaction } from "@/lib/paystack";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { getGradeBySlug } from "@/lib/school-utils";
 import {
@@ -29,15 +28,6 @@ async function resolveTrustedPack(input: {
   }
 
   return null;
-}
-
-function buildBaseUrl(request: NextRequest): string {
-  const host = request.headers.get("host") || request.headers.get("x-forwarded-host");
-  const proto = request.headers.get("x-forwarded-proto") || "https";
-  if (host) {
-    return `${proto}://${host}`;
-  }
-  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 }
 
 export async function POST(request: NextRequest) {
@@ -73,20 +63,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.PAYSTACK_SECRET_KEY) {
-      console.error("[checkout] Missing PAYSTACK_SECRET_KEY");
-      return NextResponse.json(
-        { success: false, error: "Payment service is not configured." },
-        { status: 500 }
-      );
-    }
-
-    const baseUrl = buildBaseUrl(request);
-
     const isTrayOrder = body.isTrayOrder === true;
 
     if (isTrayOrder) {
-      // ── TRAY / MULTI-PACK ORDER ──
       const buyerName = typeof body.buyerName === "string" ? body.buyerName.trim() : "";
       const buyerEmail = typeof body.buyerEmail === "string" ? body.buyerEmail.trim().toLowerCase() : "";
       const buyerPhone = typeof body.buyerPhone === "string" ? body.buyerPhone.trim() : "";
@@ -131,7 +110,6 @@ export async function POST(request: NextRequest) {
         basePackPrice: typeof p.basePackPrice === "number" ? p.basePackPrice : 0,
       }));
 
-      // Server-side price verification
       let verifiedTotal = 0;
       for (const pack of packs) {
         if (pack.packMode === "full") {
@@ -144,7 +122,6 @@ export async function POST(request: NextRequest) {
           }
           verifiedTotal += serverPack.price + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
         } else {
-          // Custom pack: sum items by unit price, fall back to client total if no unit prices
           const hasUnitPrices = pack.items.some((i) => i.unitPrice !== undefined && i.unitPrice !== null);
           if (hasUnitPrices) {
             const itemsTotal = pack.items.reduce((sum, i) => sum + (i.unitPrice ?? 0) * i.quantity, 0);
@@ -163,9 +140,6 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Use server-verified total for the Paystack transaction
-      const finalTotal = verifiedTotal;
-
       const orderReference = generateOrderReference();
 
       const summaryItems = packs.flatMap((pack) => [
@@ -183,45 +157,19 @@ export async function POST(request: NextRequest) {
         buyerEmail,
         buyerPhone,
         packs,
-        estimatedTotal: finalTotal,
+        estimatedTotal: verifiedTotal,
         deliveryMethod,
         primarySchoolSlug,
         notes,
         summaryItems,
       });
 
-      let paystackResult;
-
-      try {
-        paystackResult = await initializePaystackTransaction({
-          email: buyerEmail,
-          amountInCents: Math.round(finalTotal * 100),
-          reference: orderReference,
-          callbackUrl: `${baseUrl}/checkout/success?ref=${orderReference}`,
-          metadata: {
-            order_reference: orderReference,
-            buyer_name: buyerName,
-            pack_count: String(packs.length),
-            source: "pexpacks_tray_checkout",
-          },
-        });
-      } catch (paystackError) {
-        const msg = paystackError instanceof Error ? paystackError.message : String(paystackError);
-        console.error("[checkout] Paystack initialization failed for tray:", msg);
-        return NextResponse.json(
-          { success: false, error: msg },
-          { status: 502 }
-        );
-      }
-
       return NextResponse.json({
         success: true,
-        checkoutUrl: paystackResult.data.authorization_url,
         orderReference,
       });
     }
 
-    // ── SINGLE-PACK ORDER (existing flow) ──
     const validated = validateCheckoutPayload(body);
 
     if (validated.errors) {
@@ -272,35 +220,8 @@ export async function POST(request: NextRequest) {
       notes: data.notes,
     });
 
-    let paystackResult;
-
-    try {
-      paystackResult = await initializePaystackTransaction({
-        email: data.buyerEmail,
-        amountInCents: Math.round(trustedTotal * 100),
-        reference: orderReference,
-        callbackUrl: `${baseUrl}/checkout/success?ref=${orderReference}`,
-        metadata: {
-          order_reference: orderReference,
-          buyer_name: data.buyerName,
-          school_name: data.schoolName,
-          grade: data.grade,
-          pexcover_selected: data.pexcoverSelected ? "true" : "false",
-          source: "pexpacks_checkout",
-        },
-      });
-    } catch (paystackError) {
-      const msg = paystackError instanceof Error ? paystackError.message : String(paystackError);
-      console.error("[checkout] Paystack initialization failed:", msg);
-      return NextResponse.json(
-        { success: false, error: msg },
-        { status: 502 }
-      );
-    }
-
     return NextResponse.json({
       success: true,
-      checkoutUrl: paystackResult.data.authorization_url,
       orderReference,
     });
   } catch (error) {

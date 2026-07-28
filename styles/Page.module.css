@@ -30,20 +30,14 @@
   font-weight: 800;
 }
 
-.infoCard .kicker,
-.packCard .kicker,
-.formCard .kicker,
-.faqItem .kicker {
+.packCard .kicker, .formCard .kicker{
   margin: 24px 0 10px;
   color: var(--pex-keppel);
   font-size: var(--text-sm);
   font-weight: 800;
 }
 
-.infoCard .kicker:first-child,
-.packCard .kicker:first-child,
-.formCard .kicker:first-child,
-.faqItem .kicker:first-child {
+.packCard .kicker:first-child, .formCard .kicker:first-child{
   margin-top: 0;
 }
 
@@ -116,9 +110,7 @@
   }
 }
 
-.infoCard,
-.packCard,
-.formCard {
+.packCard, .formCard{
   padding: 28px;
   border: var(--card-border);
   border-radius: var(--radius-card);
@@ -126,37 +118,27 @@
   box-shadow: var(--card-shadow);
 }
 
-.infoCard h2,
-.packCard h2,
-.formCard h2 {
+.packCard h2, .formCard h2{
   margin: 0 0 var(--space-4);
   font-size: 30px;
   line-height: 1.05;
 }
 
-.infoCard p,
-.packCard p {
+.packCard p{
   margin: 0 0 18px;
   color: var(--pex-text);
 }
 
-.infoCard ul,
-.packCard ul {
+.packCard ul{
   margin: 0;
   padding-left: 20px;
 }
 
-.infoCard li,
-.packCard li {
+.packCard li{
   margin-bottom: 10px;
 }
 
-.packPrice {
-  margin: 18px 0;
-  color: var(--pex-coral);
-  font-size: 28px;
-  font-weight: 800;
-}
+
 
 .formStack {
   display: grid;
@@ -212,62 +194,20 @@
   resize: vertical;
 }
 
-.faqList {
-  display: grid;
-  gap: var(--space-4);
-}
-
-.faqItem {
-  padding: 24px 28px;
-  border: var(--card-border);
-  border-radius: var(--radius-card);
-  background: var(--card-bg);
-  box-shadow: var(--card-shadow);
-}
-
-.faqItem h2 {
-  margin: 0 0 10px;
-  font-size: 24px;
-}
-
-.faqItem p {
-  margin: 0;
-}
-
-.faqLinks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-4);
-}
-
-.faqLinks a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  border: 1px solid var(--color-teal-border);
-  border-radius: var(--radius-pill);
-  padding: 7px 12px;
-  background: var(--color-teal-subtle);
-  color: var(--pex-primary);
-  font-size: var(--text-2xs);
-  font-weight: 800;
-  text-decoration: none;
-  transition:
-    background var(--motion-duration) var(--motion-ease),
-    border-color var(--motion-duration) var(--motion-ease),
-    color var(--motion-duration) var(--motion-ease);
-}
-
-.faqLinks a:hover,
-.faqLinks a:focus-visible {
-  border-color: var(--pex-keppel);
-  background: var(--pex-keppel);
-  color: var(--pex-bg);
-}
 
 
 
-.bgAlt {
-  background: var(--pex-bg);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

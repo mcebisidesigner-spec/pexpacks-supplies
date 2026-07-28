@@ -112,7 +112,7 @@ export const DetailsStep = memo(function DetailsStep({
     <div className={styles.formGrid}>
       <div style={{ gridColumn: "1 / -1" }}>
         <p style={{ margin: 0, color: "var(--pex-text-muted)", fontSize: "0.9rem" }}>
-          We use this to confirm your order and payment updates.
+          We use this to confirm your order and send updates.
         </p>
       </div>
 

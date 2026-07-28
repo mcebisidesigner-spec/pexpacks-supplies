@@ -27,27 +27,5 @@ export const orderingWorksSteps = [
   },
 ];
 
-export const whyChoosePexpacks = [
-  {
-    title: "Ready-packed stationery",
-    text: "We prepare complete stationery packs so you do not need to buy items one by one.",
-  },
-  {
-    title: "School-list accuracy",
-    text: "School packs are prepared according to official stationery lists and grade requirements — guaranteed.",
-  },
-  {
-    title: "Exercise books included",
-    text: "Where required by the school, correct exercise books are packed ready for learners.",
-  },
-  {
-    title: "Business branding support",
-    text: "Our branding package helps new businesses launch professionally with logo design, print materials, and a starter website.",
-  },
-];
-
 export const featuredPacks: Pack[] = [];
 
-export const homepagePacks: Pack[] = [];
-
-export const mostPopularPacksHref = "/schools#school-grade-packs";

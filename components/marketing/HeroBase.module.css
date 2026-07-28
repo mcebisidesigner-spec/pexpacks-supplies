@@ -18,13 +18,9 @@
   overflow-wrap: anywhere;
 }
 
-.desktopHeroTitleText {
-  display: inline;
-}
 
-.mobileHeroTitleText {
-  display: none;
-}
+
+
 
 .heroLead,
 .pageLead {
@@ -117,49 +113,17 @@
   object-fit: cover;
 }
 
-.productScene {
-  position: absolute;
-  inset: 32px;
-  display: grid;
-  align-content: end;
-  gap: 18px;
-  color: var(--pex-bg);
-}
 
-.brandBox {
-  width: fit-content;
-  padding: var(--space-5) var(--space-6);
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: var(--radius-card);
-  background: var(--color-surface-glass);
-  color: var(--pex-primary);
-  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.18);
-  display: grid;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  transform-origin: left bottom;
-  animation: brandBoxGlow 3.5s ease-in-out infinite;
-}
 
-.brandBox:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.24);
-}
 
-.brandBox strong {
-  font-size: 34px;
-  line-height: 1;
-}
 
-.brandBox span {
-  color: var(--pex-keppel);
-  font-weight: 800;
-}
 
-.brandBox p {
-  margin: 26px 0 0;
-  color: var(--pex-text);
-  font-weight: 700;
-}
+
+
+
+
+
+
 
 .pageHero {
   background: var(--pex-navy);
@@ -236,33 +200,15 @@
   line-height: 1;
 }
 
-.trustStats {
-  display: grid;
-  gap: 18px;
-}
 
-.trustStat {
-  display: grid;
-  gap: 2px;
-}
 
-.trustStat strong {
-  color: var(--pex-primary);
-  font-size: 28px;
-  font-weight: 900;
-  line-height: 1;
-}
 
-.trustStat span {
-  color: var(--pex-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 700;
-}
 
-.trustStat + .trustStat {
-  padding-top: 18px;
-  border-top: 1px solid var(--pex-border);
-}
+
+
+
+
+
 
 @media (max-width: 1024px) {
   .heroInner,
@@ -274,13 +220,9 @@
     min-height: 440px;
   }
 
-  .desktopBreak {
-    display: none;
-  }
 
-  .mobileInlineSpace {
-    display: inline;
-  }
+
+
 }
 
 @media (max-width: 768px) {
@@ -295,13 +237,9 @@
     animation: none;
   }
 
-  .productScene {
-    inset: 20px;
-  }
 
-  .brandBox {
-    padding: 20px var(--space-5);
-  }
+
+
 
   .heroTitle,
   .pageTitle {
@@ -310,13 +248,9 @@
     overflow-wrap: normal;
   }
 
-  .desktopHeroTitleText {
-    display: none;
-  }
 
-  .mobileHeroTitleText {
-    display: inline;
-  }
+
+
 
   .heroPanel {
     padding: 22px;
@@ -326,36 +260,11 @@
     margin-top: 0;
   }
 
-  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus)),
-  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus)) {
-    padding-top: 18px;
-    padding-bottom: var(--space-5);
-  }
 
-  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus))
-    .heroInner,
-  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
-    .pageHeroInner {
-    align-items: start;
-    gap: 0;
-  }
 
-  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus))
-    .eyebrow,
-  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus))
-    .heroTitle,
-  .hero:has(:global(.pex-search-focus-anchor input[name="q"]:focus))
-    .heroLead,
-  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
-    .eyebrow,
-  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
-    .pageTitle,
-  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
-    .pageLead,
-  .pageHero:has(:global(.pex-school-search-focus-anchor #schoolQuery:focus))
-    .heroPanel {
-    display: none;
-  }
+
+
+
 }
 
 @media (max-width: 480px) {
@@ -369,9 +278,7 @@
     font-size: clamp(36px, 16vw, 42px);
   }
 
-  .mobileBreak {
-    display: inline;
-  }
+
 
   .heroLead,
   .pageLead {
@@ -379,18 +286,14 @@
     font-size: clamp(15px, 4vw, 16px);
   }
 
-  .brandBox strong {
-    font-size: clamp(24px, 6vw, 28px);
-  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
   .heroVisual {
     animation: none;
   }
-  .brandBox {
-    animation: none;
-  }
+
 }
 
 @keyframes brandBoxGlow {

@@ -8,10 +8,7 @@
   background: var(--pex-bg);
 }
 
-.sectionCream {
-  padding: var(--section-padding-y-desktop) 0;
-  background: var(--pex-bg);
-}
+
 
 .socialProofSection {
   padding: var(--section-padding-y-desktop) 0;
@@ -34,27 +31,11 @@
   gap: var(--space-3);
 }
 
-.sectionHeader {
-  max-width: 760px;
-  margin: 0 0 34px;
-}
 
-.sectionHeader h2 {
-  margin: 0;
-  color: var(--pex-primary);
-  font-family: var(--font-heading);
-  font-size: clamp(34px, 4.8vw, 58px);
-  font-weight: var(--font-weight-heading);
-  line-height: 1;
-  overflow-wrap: anywhere;
-}
 
-.sectionHeader p:not(.sectionEyebrow) {
-  margin: 14px 0 0;
-  color: var(--pex-text-muted);
-  font-size: var(--text-lg);
-  line-height: 1.45;
-}
+
+
+
 
 .sectionEyebrow {
   margin: var(--section-eyebrow-margin);
@@ -104,9 +85,7 @@
   gap: 10px;
 }
 
-.checkListSpaced {
-  margin-top: var(--space-5);
-}
+
 
 .checkList li {
   position: relative;
@@ -503,48 +482,15 @@
   font-weight: 800;
 }
 
-.trendingPills {
-  max-width: var(--layout-max-width);
-  margin: var(--space-5) auto 0;
-  padding: 0 var(--gutter-desktop);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-.trendingLabel {
-  flex-shrink: 0;
-  color: var(--pex-text-muted);
-  font-size: var(--text-2xs);
-  font-weight: 700;
-}
 
-.pillRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
 
-.trendingPill {
-  padding: 6px 14px;
-  border: 1px solid var(--pex-border);
-  border-radius: var(--radius-pill);
-  background: var(--pex-bg);
-  color: var(--pex-text);
-  font-size: var(--text-2xs);
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: var(--button-transition);
-}
 
-.trendingPill:hover {
-  filter: brightness(110%);
-  transform: var(--button-hover-transform);
-  box-shadow: var(--button-hover-shadow);
-  border-color: var(--pex-keppel);
-  color: var(--pex-keppel);
-}
+
+
+
+
+
 
 @media (max-width: 1024px) {
   .inner {
@@ -553,14 +499,11 @@
 }
 
 @media (max-width: 1024px) {
-  .trendingPills {
-    display: none;
-  }
+
 
   .section,
   .sectionAlt,
-  .sectionCream,
-  .socialProofSection {
+.socialProofSection{
     padding: var(--section-padding-y-tablet) 0;
   }
 
@@ -626,8 +569,7 @@
 @media (max-width: 480px) {
   .section,
   .sectionAlt,
-  .sectionCream,
-  .socialProofSection {
+.socialProofSection{
     padding: var(--section-padding-y-mobile) 0;
   }
 
@@ -724,200 +666,67 @@
 
 /* ─── B2B Hero (Admin Relief) ─── */
 
-.b2bHero {
-  background: var(--pex-navy);
-  padding: clamp(52px, 8vw, 96px) 0 clamp(58px, 8vw, 108px);
-}
 
-.b2bHeroInner {
-  width: 100%;
-  max-width: var(--layout-max-width);
-  margin-inline: auto;
-  padding-inline: var(--gutter-desktop);
-}
 
-.b2bHeroContent {
-  max-width: 780px;
-}
 
-.b2bHeroTitle {
-  margin: 0;
-  color: #ffffff;
-  font-family: var(--font-heading);
-  font-size: clamp(38px, 5.6vw, 66px);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
-}
 
-.b2bHeroTitle br {
-  display: none;
-}
 
-.b2bHeroText {
-  max-width: 640px;
-  margin: 22px 0 0;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: clamp(17px, 2vw, 21px);
-  line-height: 1.5;
-}
 
-.b2bHero .buttonRow {
-  margin-top: var(--space-6);
-}
 
-.b2bHero .buttonRow a:first-child {
-  background: var(--pex-keppel);
-  color: #ffffff;
-  border-color: var(--pex-keppel);
-}
 
-.b2bHero .buttonRow a:last-child {
-  background: transparent;
-  color: rgba(255, 255, 255, 0.9);
-  border-color: rgba(255, 255, 255, 0.35);
-}
 
-.b2bHero .buttonRow a:last-child:hover {
-  border-color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.06);
-}
+
+
+
+
+
+
+
+
+
+
 
 @media (max-width: 1024px) {
-  .b2bHero {
-    padding: clamp(36px, 6vw, 52px) 0 clamp(44px, 8vw, 72px);
-  }
 
-  .b2bHeroInner {
-    padding-inline: var(--gutter-mobile);
-  }
 
-  .b2bHeroTitle {
-    font-size: clamp(32px, 9vw, 42px);
-  }
 
-  .b2bHeroTitle br {
-    display: inline;
-  }
 
-  .b2bHeroText {
-    font-size: var(--text-base);
-  }
+
+
+
+
+
 }
 
 @media (max-width: 480px) {
-  .b2bHeroTitle {
-    font-size: clamp(28px, 8vw, 34px);
-  }
+
 }
 
-.accountingTrustBanner {
-  background: var(--pex-keppel);
-  color: #ffffff;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
 
-.accountingTrustInner {
-  width: 100%;
-  max-width: var(--layout-max-width);
-  margin-inline: auto;
-  padding-inline: var(--gutter-desktop);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-5);
-}
 
-.accountingTrustContent {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  flex: 1;
-}
 
-.accountingTrustIcon {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-}
 
-.accountingTrustIcon svg {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
 
-.accountingTrustText {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
 
-.accountingTrustTitle {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: #ffffff;
-}
 
-.accountingTrustDesc {
-  margin: 0;
-  font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.4;
-}
 
-.accountingTrustBadge {
-  flex-shrink: 0;
-  padding: 5px var(--space-3);
-  border-radius: var(--radius-pill);
-  background: #ffffff;
-  color: var(--pex-keppel);
-  text-align: center;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
+
+
+
+
+
+
+
+
+
 
 @media (max-width: 1024px) {
-  .accountingTrustInner {
-    flex-direction: column;
-    align-items: flex-start;
-  gap: var(--space-4);
-  padding-inline: var(--gutter-mobile);
-  }
+
   
-  .accountingTrustContent {
-    align-items: flex-start;
-  }
+
   
-  .accountingTrustBadge {
-    align-self: center;
-  }
+
 }
 
-.officePortalContainer {
-  /* Soften the playful coral, lean into the trusted corporate navy and teal */
-  --color-primary: var(--color-brand-teal); 
-  --color-secondary: var(--color-brand-navy);
-  --pex-primary: var(--pex-keppel);
-  --pex-accent: var(--pex-keppel);
-  
-  /* Slightly sharper corners for a more formal, structural feel */
-  --radius-card: 0.5rem; 
-  --radius-button: 0.5rem; /* Moving away from the full-pill shape just for B2B */
-}
+
 

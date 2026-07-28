@@ -20,7 +20,7 @@ export type School = {
   grades: GradePack[];
 };
 
-export type SchoolIndexRecord = {
+type SchoolIndexRecord = {
   id: string;
   name: string;
   slug: string;

@@ -1,21 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMultiPackOrder, generateOrderReference } from "@/lib/orders";
-import { initializePaystackTransaction } from "@/lib/paystack";
 import {
   isSameOriginRequest,
   rateLimitRequest,
 } from "@/lib/security/requestGuards";
 
 export const runtime = "nodejs";
-
-function buildBaseUrl(request: NextRequest): string {
-  const host = request.headers.get("host") || request.headers.get("x-forwarded-host");
-  const proto = request.headers.get("x-forwarded-proto") || "https";
-  if (host) {
-    return `${proto}://${host}`;
-  }
-  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-}
 
 export async function POST(request: NextRequest) {
   if (!isSameOriginRequest(request)) {
@@ -49,16 +39,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    if (!process.env.PAYSTACK_SECRET_KEY) {
-      console.error("[layby-deposit] Missing PAYSTACK_SECRET_KEY");
-      return NextResponse.json(
-        { success: false, error: "Payment service is not configured." },
-        { status: 500 }
-      );
-    }
-
-    const baseUrl = buildBaseUrl(request);
 
     const buyerName = typeof body.buyerName === "string" ? body.buyerName.trim() : "";
     const buyerEmail = typeof body.buyerEmail === "string" ? body.buyerEmail.trim().toLowerCase() : "";
@@ -126,8 +106,6 @@ export async function POST(request: NextRequest) {
       ]),
     ].filter(Boolean);
 
-    // Create order with deposit as estimated_total (Paystack verification matches this amount)
-    // Full total is stored in metadata for reference
     await createMultiPackOrder({
       orderReference,
       buyerName,
@@ -141,36 +119,8 @@ export async function POST(request: NextRequest) {
       summaryItems,
     });
 
-    let paystackResult;
-
-    try {
-      paystackResult = await initializePaystackTransaction({
-        email: buyerEmail,
-        amountInCents: Math.round(depositAmount * 100),
-        reference: orderReference,
-        callbackUrl: `${baseUrl}/checkout/success?ref=${orderReference}`,
-        metadata: {
-          order_reference: orderReference,
-          buyer_name: buyerName,
-          pack_count: String(packs.length),
-          payment_type: "layby_deposit",
-          full_total: String(fullTotal),
-          deposit_amount: String(depositAmount),
-          source: "pexpacks_layby_deposit",
-        },
-      });
-    } catch (paystackError) {
-      const msg = paystackError instanceof Error ? paystackError.message : String(paystackError);
-      console.error("[layby-deposit] Paystack initialization failed:", msg);
-      return NextResponse.json(
-        { success: false, error: msg },
-        { status: 502 }
-      );
-    }
-
     return NextResponse.json({
       success: true,
-      checkoutUrl: paystackResult.data.authorization_url,
       orderReference,
       depositAmount,
       fullTotal,

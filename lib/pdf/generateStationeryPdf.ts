@@ -30,7 +30,7 @@ const COL_QTY = MARGIN_LEFT + 12;
 const COL_ITEM = MARGIN_LEFT + 30;
 const COL_SPEC = MARGIN_LEFT + 118;
 
-export type StationeryListItem = {
+type StationeryListItem = {
   name: string;
   quantity: number | string;
   specification?: string;

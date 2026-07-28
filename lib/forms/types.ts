@@ -83,10 +83,6 @@ export type FormSubmission = {
   honeypot?: string;
 };
 
-export type ValidationResult =
-  | { success: true; data: FormSubmission }
-  | { success: false; errors: Record<string, string> };
-
 export const FORM_SUCCESS_MESSAGE =
   "Thank you. Your message has been sent successfully.";
 

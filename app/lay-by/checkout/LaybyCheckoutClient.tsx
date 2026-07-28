@@ -112,6 +112,8 @@ export function LaybyCheckoutClient() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [orderSubmitted, setOrderSubmitted] = useState(false);
+  const [orderReference, setOrderReference] = useState<string | null>(null);
   const [selectedTerm, setSelectedTerm] = useState(5);
   const [expandedPacks, setExpandedPacks] = useState<Record<string, boolean>>(
     {},
@@ -394,13 +396,14 @@ export function LaybyCheckoutClient() {
 
       const result = await response.json();
 
-      if (!response.ok || !result.checkoutUrl) {
+      if (!response.ok) {
         throw new Error(
           result.error || "We could not process your deposit. Please try again."
         );
       }
 
-      window.location.href = result.checkoutUrl;
+      setOrderSubmitted(true);
+      setOrderReference(result.orderReference);
     } catch (error) {
       setSubmitError(
         error instanceof Error
@@ -410,6 +413,22 @@ export function LaybyCheckoutClient() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (orderSubmitted && orderReference) {
+    return (
+      <div className={clsx(checkoutStyles.checkoutShell, styles.page)}>
+        <div className={checkoutStyles.emptyCheckout}>
+          <p className={checkoutStyles.checkoutKicker}>Lay-by Order Confirmed</p>
+          <h1>Thank you for your lay-by order!</h1>
+          <p>Your order reference is <strong>{orderReference}</strong>.</p>
+          <p>We will be in touch shortly with payment and delivery details.</p>
+          <Button href="/schools" variant="primary" size="lg">
+            Browse more packs
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   if (packs.length === 0) {
@@ -633,7 +652,7 @@ export function LaybyCheckoutClient() {
               <span className={checkoutStyles.sectionNumber}>2</span>
               <div>
                 <h2 id="layby-details-heading">Your details</h2>
-                <p>We use these for order updates and payment confirmations.</p>
+                <p>We use these for order updates and delivery confirmations.</p>
               </div>
               <button
                 type="button"
@@ -1261,13 +1280,13 @@ export function LaybyCheckoutClient() {
               aria-busy={submitting}
             >
               {submitting
-                ? "Preparing secure deposit..."
-                : `Pay Deposit ${formatCurrency(plan.deposit)}`}
+                ? "Confirming your deposit..."
+                : `Confirm Deposit ${formatCurrency(plan.deposit)}`}
             </Button>
 
             <p className={checkoutStyles.summarySecurity}>
-              Secure payment via Paystack. Pexpacks never stores your card
-              details.
+              Your order details are secure. Pexpacks will never share your
+              information.
             </p>
           </div>
         </aside>
@@ -1286,7 +1305,7 @@ export function LaybyCheckoutClient() {
         >
           {submitting
             ? "Preparing..."
-            : `Pay Deposit ${formatCurrency(plan.deposit)}`}
+            : `Confirm Deposit ${formatCurrency(plan.deposit)}`}
         </Button>
       </div>
     </div>

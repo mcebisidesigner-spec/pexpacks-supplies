@@ -6,7 +6,7 @@ function validateEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-export type ValidationErrors = Record<string, string>;
+type ValidationErrors = Record<string, string>;
 
 export function validateCheckoutPayload(
   raw: Record<string, unknown>

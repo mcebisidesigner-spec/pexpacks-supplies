@@ -1,20 +1,10 @@
 .gridThree,
-.benefitGrid,
-.packGrid,
-.officeGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
 
-.benefitGrid {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-}
+
+
 
 .stepCard,
-.benefitCard,
-.packCard,
-.infoCard {
+.packCard, .infoCard{
   border: var(--card-border);
   border-radius: var(--radius-card);
   background: var(--card-bg);
@@ -31,21 +21,11 @@
 
 .packCard h3,
 .infoCard h3,
-.benefitCard h3 {
-  margin: 0;
-  color: var(--pex-navy);
-  font-size: 24px;
-  line-height: 1.08;
-  font-weight: 800;
-}
+
 
 .packCard p,
 .infoCard p,
-.benefitCard p {
-  margin: var(--space-3) 0 0;
-  color: var(--pex-text);
-  line-height: 1.45;
-}
+
 
 .cardLink {
   margin-top: var(--space-5);
@@ -127,58 +107,19 @@
   }
 }
 
-.benefitCard {
-  padding: var(--space-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(15, 37, 55, 0.08);
-}
 
-.benefitCard:hover {
-  transform: translateY(-6px);
-  box-shadow:
-    0 16px 40px rgba(33, 158, 154, 0.12),
-    0 0 0 1px var(--pex-keppel);
-  border-color: var(--pex-keppel);
-}
 
-.benefitIconWrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: var(--pex-bg-warm);
-  color: var(--pex-keppel);
-  display: grid;
-  place-items: center;
-  transition:
-    transform 0.3s ease,
-    background 0.3s ease,
-    color 0.3s ease;
-}
 
-.benefitIconWrapper svg {
-  width: 24px;
-  height: 24px;
-}
 
-.benefitCard:hover .benefitIconWrapper {
-  background: var(--pex-keppel);
-  color: var(--pex-bg);
-  transform: scale(1.1);
-}
 
-.benefitCard h3 {
-  font-size: var(--text-xl);
-  margin: 0;
-}
 
-.benefitCard p {
-  color: var(--pex-text-muted);
-  font-size: 15px;
-  margin: 0;
-}
+
+
+
+
+
+
+
 
 .packCard {
   overflow: hidden;
@@ -187,71 +128,27 @@
   position: relative;
 }
 
-.packCardFeatured {
-  border: 2px solid var(--pex-keppel);
-  box-shadow:
-    0 8px 32px rgba(33, 158, 154, 0.14),
-    var(--card-shadow);
-  transform: scale(1.02);
-}
 
-.packCardFeatured:hover {
-  transform: scale(1.02) translateY(-4px);
-  box-shadow:
-    0 16px 48px var(--color-teal-border),
-    var(--card-shadow-hover);
-}
+
+
 
 .packCardHead {
   padding: var(--space-5) var(--space-5) var(--space-3);
   min-width: 0;
 }
 
-.packCardFeatured .packCardHead {
-  padding-top: var(--space-6);
-}
 
-.packCardAccent {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--pex-keppel);
-  border-radius: var(--radius-card) var(--radius-card) 0 0;
-}
 
-.packCardFeatured .packCardAccent {
-  height: 0;
-}
 
-.popularPill {
-  position: absolute;
-  top: 14px;
-  right: -38px;
-  z-index: 2;
-  width: 148px;
-  padding: 7px var(--space-3);
-  background: linear-gradient(90deg, var(--pex-coral), #be9340, var(--pex-coral));
-  color: var(--pex-bg);
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  line-height: 1.4;
-  text-align: center;
-  transform: rotate(34deg);
-  box-shadow: 0 10px 22px rgba(190, 147, 64, 0.24);
-}
+
+
+
+
 
 @media (max-width: 1024px) {
-  .packCardFeatured {
-    transform: none;
-  }
 
-  .packCardFeatured:hover {
-    transform: translateY(-4px);
-  }
+
+
 }
 
 .packCardBody {
@@ -273,9 +170,7 @@
   padding: 0 var(--space-5) var(--space-5);
 }
 
-.fullWidthButton {
-  width: 100%;
-}
+
 
 .packCardHead h3 {
   margin: var(--space-2) 0 0;
@@ -288,163 +183,43 @@
   flex-wrap: wrap;
 }
 
-.mostOrderedBadge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--pex-coral);
-  color: var(--pex-bg);
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  line-height: 1.4;
-}
 
-.priceBadge {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  background: var(--pex-navy);
-  color: var(--pex-bg);
-  font-size: var(--text-sm);
-  font-weight: 800;
-}
 
-.packMetaRow {
-  position: relative;
-  margin-top: auto;
-  padding-top: 2px;
-  padding-bottom: 22px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
 
-.quickListPreview {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  border: 1px solid var(--color-teal-border);
-  border-radius: var(--radius-pill);
-  padding: 5px 10px;
-  background: var(--color-teal-subtle);
-  color: var(--pex-primary);
-  font-size: 12px;
-  font-weight: 800;
-  cursor: default;
-}
 
-.quickListTooltip {
-  position: absolute;
-  z-index: 4;
-  left: 0;
-  bottom: calc(100% + 10px);
-  width: min(260px, 78vw);
-  display: grid;
-  gap: 6px;
-  border: var(--card-border);
-  border-radius: 14px;
-  padding: var(--space-3);
-  background: var(--pex-bg);
-  color: var(--pex-text);
-  box-shadow: var(--card-shadow-hover);
-  opacity: 0;
-  transform: translateY(6px);
-  pointer-events: none;
-  transition:
-    opacity var(--motion-duration) var(--motion-ease),
-    transform var(--motion-duration) var(--motion-ease);
-}
 
-.quickListTooltip span {
-  color: var(--pex-text);
-  font-size: 12px;
-  font-weight: 700;
-}
 
-.quickListPreview:hover .quickListTooltip,
-.quickListPreview:focus-visible .quickListTooltip {
-  opacity: 1;
-  transform: translateY(0);
-}
+
+
+
+
+
+
+
 
 @media (max-width: 1024px) {
-  .quickListTooltip {
-    width: 280px;
-  }
+
 }
 
-.packMedia {
-  min-height: 156px;
-  padding: 18px;
-  background:
-    linear-gradient(135deg, rgba(33, 158, 154, 0.82), rgba(26, 42, 64, 0.72)),
-    var(--pex-bg-soft);
-  display: flex;
-  align-items: flex-end;
-}
 
-.packMediaBlue {
-  background:
-    linear-gradient(135deg, rgba(21, 34, 56, 0.88), rgba(26, 42, 64, 0.86)),
-    var(--pex-navy);
-}
 
-.packMediaGreen {
-  background:
-    linear-gradient(135deg, rgba(33, 158, 154, 0.78), rgba(26, 42, 64, 0.62)),
-    var(--pex-keppel);
-}
 
-.packMedia span {
-  border-radius: var(--radius-pill);
-  padding: 9px var(--space-3);
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--pex-primary);
-  font-size: var(--text-2xs);
-  font-weight: 800;
-}
 
-.packBody {
-  padding: 22px;
-  display: grid;
-  gap: 14px;
-  flex: 1;
-}
 
-.packMeta {
-  margin: 0;
-  color: var(--pex-keppel);
-  font-size: var(--text-2xs);
-  font-weight: 800;
-}
 
-.packList {
-  margin: 0;
-  padding-left: 18px;
-  color: var(--pex-text-muted);
-  font-size: var(--text-sm);
-}
 
-.packList li {
-  margin-bottom: 6px;
-}
 
-.packFooter {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
 
-.priceLabel {
-  color: var(--pex-primary);
-  font-weight: 800;
-}
+
+
+
+
+
+
+
+
+
+
 
 .infoGrid {
   display: grid;
@@ -457,57 +232,38 @@
 }
 
 @media (max-width: 1024px) {
-  .benefitGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+
 }
 
 @media (max-width: 1024px) {
   .gridThree,
-  .officeGrid,
-  .infoGrid {
+.infoGrid{
     grid-template-columns: 1fr;
   }
 
-  .packGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
-  .benefitGrid {
-    grid-template-columns: 1fr;
-  }
+
+
 }
 
 @media (max-width: 768px) {
-  .packGrid {
-    grid-template-columns: 1fr;
-  }
+
 }
 
 @media (max-width: 480px) {
   .infoCard,
   .stepCard,
-  .benefitCard {
-    padding: 22px;
-  }
 
-  .packMedia {
-    min-height: 120px;
-  }
 
-  .packBody,
-  .packCardHead {
+
+
+.packCardHead{
     padding-inline: 18px;
   }
 
-  .packFooter {
-    align-items: stretch;
-    flex-direction: column;
-  }
 
-  .packFooter > * {
-    width: 100%;
-  }
+
+
 }
 
 

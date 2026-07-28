@@ -25,7 +25,7 @@ export default function HomePage() {
           <div>
             <p className={heroStyles.eyebrow}>School stationery made simple</p>
             <h1 className={heroStyles.heroTitle}>
-              Your School <br />
+              Your school <br />
               stationery list, <br /> perfectly packed.
             </h1>
             <p className={heroStyles.heroLead}>

@@ -161,6 +161,9 @@ export function TrayCheckoutClient() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [orderSubmitted, setOrderSubmitted] = useState(false)
+  const [orderReference, setOrderReference] = useState<string | null>(null)
+
   const [mobileSectionSummaryOpen, setMobileSectionSummaryOpen] = useState<
     Record<CheckoutSummarySection, boolean>
   >({
@@ -462,24 +465,41 @@ export function TrayCheckoutClient() {
 
       const result = await response.json()
 
-      if (!response.ok || !result.checkoutUrl) {
+      if (!response.ok || !result.orderReference) {
         const msg =
           result.errors && typeof result.errors === 'object'
             ? Object.values(result.errors).join('. ')
-            : result.error || 'Unable to continue to Paystack'
+            : result.error || 'Unable to submit your order'
         throw new Error(msg)
       }
 
-      window.location.href = result.checkoutUrl
+      setOrderReference(result.orderReference)
+      setOrderSubmitted(true)
     } catch (error) {
       setSubmitError(
         error instanceof Error
           ? error.message
-          : 'We could not continue to Paystack right now. Please try again or contact Pexpacks on WhatsApp.',
+          : 'We could not submit your order right now. Please try again or contact Pexpacks on WhatsApp.',
       )
     } finally {
       setSubmitting(false)
     }
+  }
+
+  if (orderSubmitted && orderReference) {
+    return (
+      <div className={styles.checkoutShell}>
+        <div className={styles.emptyCheckout}>
+          <p className={styles.checkoutKicker}>Order Confirmed</p>
+          <h1>Thank you for your order!</h1>
+          <p>Your order reference is <strong>{orderReference}</strong>.</p>
+          <p>We will be in touch shortly with payment and delivery details.</p>
+          <Button href="/schools" variant="primary" size="lg">
+            Browse more packs
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   if (packs.length === 0) {
@@ -520,10 +540,10 @@ export function TrayCheckoutClient() {
       <div className={styles.checkoutGrid}>
         <section className={clsx(styles.stepCard, styles.checkoutHero)}>
           <p className={styles.checkoutKicker}>Checkout</p>
-          <h1>Review your packs and pay securely.</h1>
+          <h1>Review your packs and confirm your order.</h1>
           <p>
-            Add your details, choose delivery or collection, and continue to the
-            secure Paystack payment page.
+            Add your details, choose delivery or collection, and submit your
+            order. We will be in touch with payment details.
           </p>
         </section>
 
@@ -877,7 +897,7 @@ export function TrayCheckoutClient() {
               />
               <span>
                 I agree that Pexpacks may process my personal information to
-                complete this order, send payment and order updates, and contact
+                complete this order, send order updates, and contact
                 me about delivery or collection. I have read and agree to the{' '}
                 <a href="/privacy-policy" target="_blank">
                   privacy policy
@@ -1095,8 +1115,8 @@ export function TrayCheckoutClient() {
               aria-busy={submitting}
             >
               {submitting
-                ? 'Preparing secure payment...'
-                : 'Pay securely with Paystack'}
+                ? 'Preparing your order...'
+                : 'Confirm Order'}
             </Button>
 
             <Button
@@ -1109,8 +1129,8 @@ export function TrayCheckoutClient() {
             </Button>
 
             <p className={styles.summarySecurity}>
-              Secure payment powered by Paystack. Pexpacks never stores card
-              details.
+              Your order details are secure. Pexpacks will never share your
+              information.
             </p>
           </div>
         </aside>
@@ -1127,7 +1147,7 @@ export function TrayCheckoutClient() {
         >
           {submitting
             ? 'Preparing...'
-            : `Pay securely ${formatCurrency(total)}`}
+            : `Confirm Order ${formatCurrency(total)}`}
         </Button>
       </div>
     </div>

@@ -210,7 +210,7 @@ const config: LegalDocumentConfig = {
             Payment must be completed in full prior to order dispatch or custom Pexcover work, unless formal corporate/school credit terms have been agreed in writing.
           </p>
           <p>
-            Approved payment options include Electronic Funds Transfer (EFT), instant EFT, debit cards, and credit cards processed via authorized South African payment gateways (Paystack).
+            Approved payment options include Electronic Funds Transfer (EFT), instant EFT, debit cards, and credit cards processed via authorized South African payment gateways.
           </p>
           <p>
             Pexpacks does not store raw credit/debit card numbers. All electronic card transactions are encrypted and processed by PCI-DSS compliant payment gateways.

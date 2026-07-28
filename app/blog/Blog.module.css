@@ -1,25 +1,9 @@
 /* ── Index page styles ── */
-.blogHeader h1 {
-  color: var(--pex-navy);
-  font-size: clamp(36px, 6vw, 56px);
-  line-height: 1.1;
-  margin-bottom: var(--space-5);
-}
 
-.blogHeader p {
-  color: var(--pex-text);
-  font-size: clamp(18px, 3vw, 22px);
-  line-height: 1.5;
-}
 
-.blogGrid {
-  padding: clamp(40px, 6vw, 80px) var(--gutter-desktop);
-  max-width: var(--layout-max-width);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--space-6);
-}
+
+
+
 
 .blogCard {
   background: var(--card-bg);
@@ -341,12 +325,7 @@
   display: block;
 }
 
-.postContent p:first-of-type {
-  font-size: var(--text-xl);
-  line-height: 1.6;
-  color: var(--pex-navy);
-  font-weight: 500;
-}
+
 
 .postHeading {
   margin-top: 40px;
@@ -678,10 +657,7 @@
   color: var(--pex-keppel);
 }
 
-.postInlineWidget {
-  margin-top: 48px;
-  margin-bottom: 48px;
-}
+
 
 /* ── Subscribe card (frosted glass) ── */
 .subscribeSection {
@@ -833,9 +809,7 @@
 
 @media (max-width: 768px) {
   .blogContainer,
-  .blogGrid,
-  .documentInner,
-  .subscribeInner {
+.documentInner, .subscribeInner{
     padding-left: var(--gutter-mobile);
     padding-right: var(--gutter-mobile);
   }
@@ -844,8 +818,7 @@
     padding: var(--space-5);
   }
 
-  .blogGrid,
-  .articlesGrid {
+.articlesGrid{
     grid-template-columns: 1fr;
     gap: var(--space-5);
   }

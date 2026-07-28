@@ -218,7 +218,7 @@ const config: LegalDocumentConfig = {
             <li>To assemble, pack, custom-label, and fulfill school stationery orders</li>
             <li>To execute Pexcover book-covering and custom protective book services</li>
             <li>To coordinate doorstep courier delivery or school-handover distribution</li>
-            <li>To process online payment confirmations via authorized payment gateways (Paystack)</li>
+            <li>To process online payment confirmations via authorized payment gateways</li>
             <li>To communicate order status updates, delivery schedules, and Lay-by installment reminders</li>
             <li>To respond to customer enquiries, quotations, and support requests</li>
             <li>To comply with statutory accounting, tax (SARS), and regulatory record-keeping duties</li>
@@ -242,7 +242,7 @@ const config: LegalDocumentConfig = {
             Pexpacks engages vetted third-party service providers (&ldquo;Operators&rdquo;) to perform essential operational services. Operators process data strictly under written operator agreements pursuant to Section 20 & 21 of POPIA:
           </p>
           <ul>
-            <li><strong>Payment Gateways:</strong> Paystack (Pty) Ltd for secure payment processing.</li>
+            <li><strong>Payment Gateways:</strong> Authorized payment processors for secure payment processing.</li>
             <li><strong>Logistics Partners:</strong> Contracted courier services for doorstep delivery.</li>
             <li><strong>Infrastructure & Hosting:</strong> Vercel Inc. and Supabase Inc. for secure cloud hosting, web app operation, and database maintenance.</li>
           </ul>

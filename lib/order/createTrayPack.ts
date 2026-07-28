@@ -49,17 +49,3 @@ export function createFullTrayPack(input: CreateFullTrayPackInput): TrayPackItem
   };
 }
 
-type CreateCustomTrayPackInput = CreateFullTrayPackInput & {
-  modifications?: Record<string, number>;
-  addOns?: TrayPackLineItem[];
-};
-
-export function createCustomTrayPack(input: CreateCustomTrayPackInput): TrayPackItem {
-  const pack = createFullTrayPack(input);
-  return {
-    ...pack,
-    packMode: "customised",
-    modifications: input.modifications,
-    addOns: input.addOns,
-  };
-}

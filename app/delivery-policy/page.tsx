@@ -29,7 +29,7 @@ const config: LegalDocumentConfig = {
   pageTitle: "Delivery and Fulfillment Policy",
   metaDescription:
     "Pexpacks Supplies Delivery Policy — Clear fulfillment schedules, seasonal pre-order timelines, logistics partners (Paxi Couriers), tracking, and delivery scope across South Africa.",
-  heroEyebrow: "Paystack Compliant Logistics & Delivery Policy",
+  heroEyebrow: "Compliant Logistics & Delivery Policy",
   heroTitle: "Delivery & Fulfillment Policy",
   heroText:
     "This policy outlines how Pexpacks Supplies handles seasonal school pre-orders, year-round order fulfillment, carrier dispatch via Paxi Couriers and door-to-door couriers, tracking updates, and delivery timelines across South Africa.",

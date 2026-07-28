@@ -12,7 +12,6 @@ import { CheckoutProgress } from "@/components/checkout/CheckoutProgress";
 import { ReviewOrderStep } from "@/components/checkout/ReviewOrderStep";
 import { DetailsStep } from "@/components/checkout/DetailsStep";
 import { DeliveryStep } from "@/components/checkout/DeliveryStep";
-import { PayStep } from "@/components/checkout/PayStep";
 import { OrderSummaryCard } from "@/components/checkout/OrderSummaryCard";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import styles from "./Checkout.module.css";
@@ -149,6 +148,8 @@ export function CheckoutForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [orderSubmitted, setOrderSubmitted] = useState(false);
+  const [orderReference, setOrderReference] = useState<string | null>(null);
 
   useEffect(() => {
     if (!draftId || draftLoaded) return;
@@ -343,20 +344,21 @@ export function CheckoutForm({
 
       const result = await response.json();
 
-      if (!response.ok || !result.checkoutUrl) {
+      if (!response.ok || !result.orderReference) {
         const msg =
           result.errors && typeof result.errors === "object"
             ? Object.values(result.errors).join(". ")
-            : result.error || "Unable to continue to Paystack";
+            : result.error || "Unable to submit your order.";
         throw new Error(msg);
       }
 
-      window.location.href = result.checkoutUrl;
+      setOrderSubmitted(true);
+      setOrderReference(result.orderReference);
     } catch (error) {
       setSubmitError(
         error instanceof Error
           ? error.message
-          : "We could not continue to Paystack right now. Please try again or contact Pexpacks on WhatsApp."
+          : "We could not submit your order right now. Please try again or contact Pexpacks on WhatsApp."
       );
     } finally {
       setSubmitting(false);
@@ -435,28 +437,77 @@ export function CheckoutForm({
         );
       case 3:
         return (
-          <PayStep
-            schoolName={schoolName}
-            grade={grade}
-            buyerName={`${firstName.trim()} ${lastName.trim()}`.trim()}
-            buyerPhone={buyerPhone}
-            buyerEmail={buyerEmail}
-            fulfilmentOption={fulfilmentOption}
-            deliveryAddressSummary={deliveryAddressSummary}
-            itemCount={itemCount}
-            hasPexcover={hasPexcover}
-            totalToPay={totalToPay}
-            submitting={submitting}
-            submitError={submitError}
-            onEditPack={() => goToStep(0)}
-            onEditCustomer={() => goToStep(1)}
-            onEditDelivery={() => goToStep(2)}
-            onPay={handlePay}
-          />
+          <div className={styles.confirmGrid}>
+            <section className={styles.reviewBlock}>
+              <div className={styles.reviewBlockContent}>
+                <p className={styles.reviewBlockTitle}>Order Summary</p>
+                <strong>{schoolName} - {grade}</strong>
+                <span>{itemCount} items{hasPexcover ? " + Pexcover" : ""}</span>
+              </div>
+            </section>
+
+            <section className={styles.reviewBlock}>
+              <div className={styles.reviewBlockContent}>
+                <p className={styles.reviewBlockTitle}>Customer</p>
+                <strong>{`${firstName.trim()} ${lastName.trim()}`.trim() || "Name required"}</strong>
+                <span>{buyerPhone || "Phone required"} - {buyerEmail || "Email required"}</span>
+              </div>
+            </section>
+
+            <section className={styles.reviewBlock}>
+              <div className={styles.reviewBlockContent}>
+                <p className={styles.reviewBlockTitle}>Delivery / Collection</p>
+                <strong>{fulfilmentOption}</strong>
+                <span>
+                  {fulfilmentOption === "Delivery"
+                    ? deliveryAddressSummary || "Address required"
+                    : "Pexpacks will confirm the handover details."}
+                </span>
+              </div>
+            </section>
+
+            <section className={styles.paymentReadyCard}>
+              <div className={styles.paymentSecurityHeader}>
+                <svg className={styles.securityLockIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <div>
+                  <p className={styles.confirmKicker}>Confirm Your Order</p>
+                  <h3>Review and confirm</h3>
+                </div>
+              </div>
+              <p className={styles.paymentSubtext}>
+                We will send you payment details and delivery information after you confirm your order.
+              </p>
+            </section>
+
+            {submitError ? (
+              <p className={styles.formStatusError} role="alert">
+                {submitError}
+              </p>
+            ) : null}
+          </div>
         );
       default:
         return null;
     }
+  }
+
+  if (orderSubmitted && orderReference) {
+    return (
+      <div className={styles.checkoutShell}>
+        <div className={styles.emptyCheckout}>
+          <p className={styles.checkoutKicker}>Order Confirmed</p>
+          <h1>Thank you for your order!</h1>
+          <p>Your order reference is <strong>{orderReference}</strong>.</p>
+          <p>We will be in touch shortly with payment and delivery details.</p>
+          <Button href="/schools" variant="primary" size="lg">
+            Browse more packs
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -546,7 +597,7 @@ export function CheckoutForm({
                   ? "Choose how you want to receive your pack."
                   : null}
                 {activeStep === 3
-                  ? "Review everything before continuing to Paystack."
+                  ? "Review everything before confirming your order."
                   : null}
               </p>
             </div>
