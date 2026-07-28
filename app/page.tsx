@@ -51,7 +51,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className={homeStyles.brandMarquee}>
+      <div className={homeStyles.brandMarquee} aria-hidden="true">
         <div className={homeStyles.brandMarqueeTrack}>
           {[
             'croxley',

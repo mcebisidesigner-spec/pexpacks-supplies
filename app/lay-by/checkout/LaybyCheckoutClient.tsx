@@ -451,7 +451,7 @@ export function LaybyCheckoutClient() {
         {/* ── Hero ── */}
         <section className={clsx(checkoutStyles.stepCard, checkoutStyles.checkoutHero)}>
           <p className={checkoutStyles.checkoutKicker}>Lay-by Plan</p>
-          <h1 tabIndex={-1}>Pay over time, secure your pack today</h1>
+          <h1>Pay over time, secure your pack today</h1>
           <p>
             Spread the cost of your school stationery over <strong>5 months</strong> with{" "}
             <strong>0% interest</strong>. Your deposit is your first month&rsquo;s payment.

@@ -66,6 +66,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .progressCurrent {
+    animation: none;
+  }
+}
+
 .mobileProgress {
   display: none;
 }

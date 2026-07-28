@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { buildMetadata } from "@/lib/seo";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
@@ -10,9 +11,15 @@ type CancelledPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "Payment Cancelled | Pexpacks",
-  description:
+  ...buildMetadata(
+    "Payment Cancelled | Pexpacks",
     "Your payment was cancelled. You can retry or contact us for assistance.",
+    "/checkout/cancelled"
+  ),
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function CancelledPage({

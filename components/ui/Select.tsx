@@ -63,6 +63,7 @@ export default function Select({
   const generatedId = useId();
   const selectId = id ?? generatedId;
   const listboxId = `${selectId}-listbox`;
+  const errorId = `${selectId}-error`;
   const normalisedOptions = options.map(normaliseOption);
   const isControlled = value !== undefined;
   const [internalValue, setInternalValue] = useState(defaultValue);
@@ -146,13 +147,14 @@ export default function Select({
             value={selectedValue ?? ""}
             disabled={disabled}
             required={required}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? errorId : undefined}
           />
         ) : null}
         <button
           id={selectId}
           type="button"
           className={clsx(styles.select, styles.selectButton, open && styles.selectButtonOpen, !hasSelection && styles.selectPlaceholder)}
-          data-invalid={error ? "true" : undefined}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={listboxId}
@@ -215,7 +217,7 @@ export default function Select({
       </div>
       
       {error && (
-        <span className={styles.errorText} role="alert">
+        <span id={errorId} className={styles.errorText} role="alert">
           {error}
         </span>
       )}

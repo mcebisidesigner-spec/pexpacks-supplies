@@ -1,5 +1,3 @@
-"use client";
-
 import { RatingStrip } from "@/components/shared/RatingStrip";
 
 export function SiteRatingStrip() {

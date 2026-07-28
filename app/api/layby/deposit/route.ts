@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMultiPackOrder, generateOrderReference } from "@/lib/orders";
 import { initializePaystackTransaction } from "@/lib/paystack";
+import {
+  isSameOriginRequest,
+  rateLimitRequest,
+} from "@/lib/security/requestGuards";
 
 export const runtime = "nodejs";
 
@@ -14,6 +18,26 @@ function buildBaseUrl(request: NextRequest): string {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json(
+      { success: false, error: "Invalid request origin." },
+      { status: 403 }
+    );
+  }
+
+  const limit = rateLimitRequest(request, {
+    keyPrefix: "layby-deposit",
+    windowMs: 10 * 60 * 1000,
+    max: 5,
+  });
+
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { success: false, error: "Too many deposit attempts. Please wait a few minutes and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+    );
+  }
+
   try {
     let body: Record<string, unknown>;
 

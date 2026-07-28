@@ -1836,6 +1836,12 @@
   .orderPackCard {
     transition: none;
   }
+  .payButtonSpinner {
+    animation: none;
+  }
+  .securityLockIcon {
+    animation: none;
+  }
 }
 
 @media (max-width: 1024px) {

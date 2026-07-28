@@ -517,10 +517,10 @@ export function TrayCheckoutClient() {
         </a>
       </header>
 
-      <main className={styles.checkoutGrid}>
+      <div className={styles.checkoutGrid}>
         <section className={clsx(styles.stepCard, styles.checkoutHero)}>
           <p className={styles.checkoutKicker}>Checkout</p>
-          <h1 tabIndex={-1}>Review your packs and pay securely.</h1>
+          <h1>Review your packs and pay securely.</h1>
           <p>
             Add your details, choose delivery or collection, and continue to the
             secure Paystack payment page.
@@ -1114,7 +1114,7 @@ export function TrayCheckoutClient() {
             </p>
           </div>
         </aside>
-      </main>
+      </div>
 
       <div className={styles.mobileStickyCta}>
         <Button

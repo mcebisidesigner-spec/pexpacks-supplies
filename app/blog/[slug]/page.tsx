@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
+import { JsonLd } from "@/components/ui/JsonLd";
 import { CTASection } from "@/components/marketing/CTASection";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
@@ -282,10 +283,7 @@ export default async function BlogPostPage({
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema(post)) }}
-      />
+      <JsonLd data={articleSchema(post)} />
       <PageHero
         eyebrow={post.category}
         title={post.title}

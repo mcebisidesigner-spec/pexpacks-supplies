@@ -85,6 +85,10 @@
   .button:hover > span:last-child {
     transform: none;
   }
+
+  .spinner {
+    animation: none;
+  }
 }
 
 .sm {

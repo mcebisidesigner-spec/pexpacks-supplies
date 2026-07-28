@@ -4,6 +4,10 @@ import { createPendingOrder, createMultiPackOrder, generateOrderReference } from
 import { initializePaystackTransaction } from "@/lib/paystack";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { getGradeBySlug } from "@/lib/school-utils";
+import {
+  isSameOriginRequest,
+  rateLimitRequest,
+} from "@/lib/security/requestGuards";
 
 export const runtime = "nodejs";
 
@@ -37,6 +41,26 @@ function buildBaseUrl(request: NextRequest): string {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json(
+      { success: false, error: "Invalid request origin." },
+      { status: 403 }
+    );
+  }
+
+  const limit = rateLimitRequest(request, {
+    keyPrefix: "checkout",
+    windowMs: 10 * 60 * 1000,
+    max: 5,
+  });
+
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { success: false, error: "Too many checkout attempts. Please wait a few minutes and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+    );
+  }
+
   try {
     let body: Record<string, unknown>;
 
@@ -107,6 +131,41 @@ export async function POST(request: NextRequest) {
         basePackPrice: typeof p.basePackPrice === "number" ? p.basePackPrice : 0,
       }));
 
+      // Server-side price verification
+      let verifiedTotal = 0;
+      for (const pack of packs) {
+        if (pack.packMode === "full") {
+          const serverPack = await getGradeBySlug(pack.schoolSlug, pack.gradeSlug);
+          if (!serverPack) {
+            return NextResponse.json(
+              { success: false, error: `Pack not found: ${pack.schoolSlug}/${pack.gradeSlug}. Please re-select your school.` },
+              { status: 400 }
+            );
+          }
+          verifiedTotal += serverPack.price + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+        } else {
+          // Custom pack: sum items by unit price, fall back to client total if no unit prices
+          const hasUnitPrices = pack.items.some((i) => i.unitPrice !== undefined && i.unitPrice !== null);
+          if (hasUnitPrices) {
+            const itemsTotal = pack.items.reduce((sum, i) => sum + (i.unitPrice ?? 0) * i.quantity, 0);
+            verifiedTotal += itemsTotal + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+          } else {
+            verifiedTotal += pack.totalPrice + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+          }
+        }
+      }
+
+      if (Math.abs(verifiedTotal - estimatedTotal) > 1) {
+        console.error("[checkout] Tray price mismatch:", { clientTotal: estimatedTotal, serverTotal: verifiedTotal });
+        return NextResponse.json(
+          { success: false, error: "Prices have changed since you added items. Please refresh your pack tray." },
+          { status: 400 }
+        );
+      }
+
+      // Use server-verified total for the Paystack transaction
+      const finalTotal = verifiedTotal;
+
       const orderReference = generateOrderReference();
 
       const summaryItems = packs.flatMap((pack) => [
@@ -124,7 +183,7 @@ export async function POST(request: NextRequest) {
         buyerEmail,
         buyerPhone,
         packs,
-        estimatedTotal,
+        estimatedTotal: finalTotal,
         deliveryMethod,
         primarySchoolSlug,
         notes,
@@ -136,7 +195,7 @@ export async function POST(request: NextRequest) {
       try {
         paystackResult = await initializePaystackTransaction({
           email: buyerEmail,
-          amountInCents: Math.round(estimatedTotal * 100),
+          amountInCents: Math.round(finalTotal * 100),
           reference: orderReference,
           callbackUrl: `${baseUrl}/checkout/success?ref=${orderReference}`,
           metadata: {

@@ -1,7 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import {
+  isSameOriginRequest,
+  rateLimitRequest,
+} from "@/lib/security/requestGuards";
 
 export async function POST(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json(
+      { success: false, message: "Invalid request origin." },
+      { status: 403 }
+    );
+  }
+
+  const limit = rateLimitRequest(request, {
+    keyPrefix: "draft-write",
+    windowMs: 10 * 60 * 1000,
+    max: 5,
+  });
+
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { success: false, message: "Too many requests. Please wait and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+    );
+  }
+
   try {
     const body = await request.json();
     const { device_id, state } = body;
@@ -75,6 +99,26 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json(
+      { success: false, message: "Invalid request origin." },
+      { status: 403 }
+    );
+  }
+
+  const limit = rateLimitRequest(request, {
+    keyPrefix: "draft-read",
+    windowMs: 10 * 60 * 1000,
+    max: 10,
+  });
+
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { success: false, message: "Too many requests. Please wait and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const deviceId = searchParams.get("device_id");
 
@@ -113,6 +157,26 @@ export async function GET(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json(
+      { success: false, message: "Invalid request origin." },
+      { status: 403 }
+    );
+  }
+
+  const limit = rateLimitRequest(request, {
+    keyPrefix: "draft-delete",
+    windowMs: 10 * 60 * 1000,
+    max: 3,
+  });
+
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { success: false, message: "Too many requests. Please wait and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const deviceId = searchParams.get("device_id");
 

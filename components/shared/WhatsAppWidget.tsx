@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { buildWhatsAppHref } from "@/data/contact";
+import { useDialogFocusTrap } from "@/components/packs/useDialogFocusTrap";
 import styles from "./WhatsAppWidget.module.css";
 
 export function WhatsAppWidget() {
@@ -10,6 +11,13 @@ export function WhatsAppWidget() {
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  useDialogFocusTrap({
+    isOpen,
+    dialogRef: popupRef,
+    onClose: () => setIsOpen(false),
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -73,9 +81,11 @@ export function WhatsAppWidget() {
       aria-hidden={!show}
     >
       <div
+        ref={popupRef}
         className={[styles.chatPopup, isOpen ? styles.open : ""]
           .filter(Boolean)
           .join(" ")}
+        tabIndex={-1}
       >
         <div className={styles.popupHeader}>
           <div className={styles.headerInfo}>

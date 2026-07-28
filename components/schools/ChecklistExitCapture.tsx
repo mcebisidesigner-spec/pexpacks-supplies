@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { GradePack, School } from "@/data/schools";
+import { useDialogFocusTrap } from "@/components/packs/useDialogFocusTrap";
 import styles from "./ChecklistExitCapture.module.css";
 
 const DISMISSED_PREFIX = "Pexpacks:checklist-capture:";
@@ -22,6 +23,22 @@ export function ChecklistExitCapture({
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
   );
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  function dismiss() {
+    try {
+      sessionStorage.setItem(storageKey, "dismissed");
+    } catch {
+      // Ignore storage failures.
+    }
+    setIsOpen(false);
+  }
+
+  useDialogFocusTrap({
+    isOpen,
+    dialogRef,
+    onClose: dismiss,
+  });
 
   useEffect(() => {
     let dismissed = false;
@@ -44,15 +61,6 @@ export function ChecklistExitCapture({
     document.addEventListener("mouseout", handleMouseOut);
     return () => document.removeEventListener("mouseout", handleMouseOut);
   }, [isOpen, storageKey]);
-
-  function dismiss() {
-    try {
-      sessionStorage.setItem(storageKey, "dismissed");
-    } catch {
-      // Ignore storage failures.
-    }
-    setIsOpen(false);
-  }
 
   async function submitChecklistRequest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -107,6 +115,7 @@ export function ChecklistExitCapture({
       {isOpen ? (
         <div className={styles.overlay} role="presentation">
           <section
+            ref={dialogRef}
             className={styles.dialog}
             role="dialog"
             aria-modal="true"

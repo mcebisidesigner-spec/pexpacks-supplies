@@ -15,6 +15,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, helper, error, showValid, className = "", wrapperClassName = "", id, ...props }, ref) => {
     const generatedId = useId();
     const inputId = id ?? generatedId;
+    const errorId = `${inputId}-error`;
 
     return (
       <div className={clsx(styles.wrapper, wrapperClassName)}>
@@ -30,6 +31,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             className={clsx(styles.input, className)}
             aria-invalid={error ? true : undefined}
+            aria-describedby={error ? errorId : undefined}
             {...props}
           />
           {showValid ? (
@@ -40,7 +42,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             </span>
           ) : null}
         </div>
-        {error ? <p className={styles.errorText} role="alert">{error}</p> : null}
+        {error ? <p id={errorId} className={styles.errorText} role="alert">{error}</p> : null}
       </div>
     );
   }

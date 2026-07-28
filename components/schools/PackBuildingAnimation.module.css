@@ -122,3 +122,15 @@
     transform: translateY(0);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .dropIn,
+  .dropInDelayed,
+  .dropInDelayedMore {
+    animation: none;
+  }
+  .fadeIn,
+  .contentWhileBuilding {
+    animation: none;
+  }
+}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { buildMetadata } from "@/lib/seo";
 import { OrderStatusClient } from "./OrderStatusClient";
 import styles from "./SuccessPage.module.css";
 
@@ -8,8 +9,15 @@ type SuccessPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "Payment Confirmed | Pexpacks",
-  description: "Your payment has been confirmed. Your order is being prepared.",
+  ...buildMetadata(
+    "Payment Confirmed | Pexpacks",
+    "Your payment has been confirmed. Your order is being prepared.",
+    "/checkout/success"
+  ),
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function SuccessPage({

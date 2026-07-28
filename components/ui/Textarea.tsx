@@ -23,6 +23,7 @@ export default function Textarea({
 }: TextareaProps) {
   const generatedId = useId();
   const textareaId = id ?? generatedId;
+  const errorId = `${textareaId}-error`;
 
   return (
     <div className={clsx(styles.wrapper, className)}>
@@ -41,11 +42,12 @@ export default function Textarea({
         rows={rows}
         className={styles.textarea}
         aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
         {...props}
       />
       
       {error && (
-        <span className={styles.errorText} role="alert">
+        <span id={errorId} className={styles.errorText} role="alert">
           {error}
         </span>
       )}
