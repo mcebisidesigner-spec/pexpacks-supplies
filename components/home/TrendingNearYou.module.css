@@ -1,0 +1,412 @@
+/* ─── Section ─── */
+.section {
+  padding: var(--section-padding-y-desktop) 0;
+  background:
+    linear-gradient(180deg, var(--pex-bg-soft), var(--pex-bg) 40%);
+}
+
+.sectionInner {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
+/* ─── Header Row ─── */
+.headerRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.headerCopy {
+  max-width: 640px;
+}
+
+.headerCopy .eyebrow {
+  margin: var(--section-eyebrow-margin);
+  color: var(--section-eyebrow-color);
+  font-weight: var(--section-eyebrow-font-weight);
+  font-size: var(--section-eyebrow-font-size);
+  letter-spacing: var(--section-eyebrow-letter-spacing);
+}
+
+.headerCopy h2 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(34px, 4.8vw, 58px);
+  font-weight: var(--font-weight-heading);
+  line-height: 1;
+}
+
+.headerCopy p:not(.eyebrow) {
+  margin: 12px 0 0;
+  color: var(--pex-text-muted);
+  font-size: var(--text-lg);
+  line-height: 1.45;
+}
+
+/* ─── Controls Row ─── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* ─── Location Badge ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-2xs);
+  font-weight: 800;
+  white-space: nowrap;
+  transition: all var(--motion-duration) var(--motion-ease);
+}
+
+.badgeGps {
+  background: var(--color-teal-subtle);
+  color: var(--pex-keppel);
+  border: 1px solid var(--color-teal-border);
+}
+
+.badgeIp {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.badgeDefault {
+  background: rgba(255, 111, 89, 0.08);
+  color: var(--pex-coral);
+  border: 1px solid rgba(255, 111, 89, 0.18);
+}
+
+/* ─── Location Button ─── */
+.locationBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 18px;
+  border: 1.5px solid var(--pex-border);
+  border-radius: var(--radius-pill);
+  background: var(--pex-bg);
+  color: var(--pex-primary);
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--motion-duration) var(--motion-ease);
+}
+
+.locationBtn:hover {
+  border-color: var(--pex-keppel);
+  color: var(--pex-keppel);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(26, 42, 64, 0.08);
+}
+
+.locationBtn:focus-visible {
+  outline: var(--focus-ring);
+}
+
+.locationBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.locationBtnIcon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.locationBtnSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--pex-border);
+  border-top-color: var(--pex-keppel);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Card Grid ─── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--card-gap);
+}
+
+/* ─── School Card ─── */
+.card {
+  min-height: 260px;
+  padding: var(--space-5);
+  border: 1px solid var(--color-navy-subtle);
+  border-radius: var(--radius-card);
+  background: var(--pex-bg);
+  box-shadow: 0 12px 32px var(--color-navy-subtle);
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  transform-origin: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(26, 42, 64, 0.12);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.cardIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-card-compact);
+  background: var(--pex-bg-soft);
+  color: var(--pex-keppel);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  font-weight: 800;
+  overflow: hidden;
+}
+
+.cardLogo {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-card-compact);
+  object-fit: contain;
+  background: var(--pex-bg-soft);
+}
+
+.partnerBadge {
+  background: rgba(33, 158, 154, 0.12);
+  color: var(--pex-keppel);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cardCity {
+  color: var(--pex-keppel);
+  font-size: var(--text-2xs);
+  font-weight: 800;
+}
+
+.card h3 {
+  margin: 0;
+  color: var(--pex-primary);
+  font-size: 22px;
+  line-height: 1.1;
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+}
+
+.cardGrades {
+  margin: 0;
+  color: var(--pex-text-muted);
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+
+.cardCta {
+  width: fit-content;
+  min-height: 40px;
+  margin-top: 8px;
+  padding: var(--space-2) 18px var(--space-2) 18px;
+  border-radius: var(--radius-pill);
+  background: var(--pex-coral);
+  color: var(--pex-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 10px 20px rgba(255, 111, 89, 0.18);
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.card:hover .cardCta {
+  background: var(--pex-coral-hover);
+  box-shadow: var(--button-hover-shadow);
+  transform: translateY(-1px);
+}
+
+.cardCtaArrow {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--pex-bg);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23ff6f59' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M9 7h8v8'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+  flex: 0 0 auto;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .cardCtaArrow {
+  transform: scale(1.15);
+}
+
+/* ─── Skeleton Loader ─── */
+.skeleton {
+  min-height: 260px;
+  padding: var(--space-5);
+  border: 1px solid var(--color-navy-subtle);
+  border-radius: var(--radius-card);
+  background: var(--pex-bg);
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+}
+
+.skelBlock {
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--pex-bg-soft) 25%,
+    #e8eaed 50%,
+    var(--pex-bg-soft) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+.skelIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-card-compact);
+}
+
+.skelLine {
+  height: 14px;
+}
+
+.skelLineShort {
+  height: 14px;
+  width: 60%;
+}
+
+.skelLineTitle {
+  height: 22px;
+  width: 80%;
+}
+
+.skelCta {
+  height: 36px;
+  width: 100px;
+  border-radius: var(--radius-pill);
+  margin-top: 8px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Micro-text ─── */
+.microText {
+  margin-top: var(--space-4);
+  color: var(--pex-text-muted);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 1024px) {
+  .sectionInner {
+    padding-inline: var(--gutter-tablet);
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .controls {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--card-gap-mobile);
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: var(--section-padding-y-mobile) 0;
+  }
+
+  .sectionInner {
+    padding-inline: var(--gutter-mobile);
+  }
+
+  .headerCopy h2 {
+    font-size: clamp(28px, 12vw, 38px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cardCta,
+  .locationBtn,
+  .badge {
+    transition: none;
+  }
+
+  .card:hover,
+  .card:hover .cardCta {
+    transform: none;
+  }
+
+  .locationBtn:hover {
+    transform: none;
+  }
+
+  .skelBlock {
+    animation: none;
+  }
+}
