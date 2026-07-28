@@ -1,15 +1,13 @@
 /* ─── Section ─── */
 .section {
-  padding: var(--section-padding-y-desktop) 0;
-  background:
-    linear-gradient(180deg, var(--pex-bg-soft), var(--pex-bg) 40%);
-}
-
-.sectionInner {
   width: 100%;
   max-width: var(--layout-max-width);
   margin-inline: auto;
   padding-inline: var(--gutter-desktop);
+  padding-top: var(--section-padding-y-desktop);
+  padding-bottom: var(--section-padding-y-desktop);
+  background:
+    linear-gradient(180deg, var(--pex-bg-soft), var(--pex-bg) 40%);
 }
 
 /* ─── Header Row ─── */
@@ -350,7 +348,7 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 1024px) {
-  .sectionInner {
+  .section {
     padding-inline: var(--gutter-tablet);
   }
 
@@ -377,11 +375,9 @@
 
 @media (max-width: 480px) {
   .section {
-    padding: var(--section-padding-y-mobile) 0;
-  }
-
-  .sectionInner {
     padding-inline: var(--gutter-mobile);
+    padding-top: var(--section-padding-y-mobile);
+    padding-bottom: var(--section-padding-y-mobile);
   }
 
   .headerCopy h2 {

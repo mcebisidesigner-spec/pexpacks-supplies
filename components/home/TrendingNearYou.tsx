@@ -211,58 +211,56 @@ export function TrendingNearYou({ initialSchools }: TrendingNearYouProps) {
       className={styles.section}
       aria-labelledby="trending-near-you-heading"
     >
-      <div className={styles.sectionInner}>
-        <div className={styles.headerRow}>
-          <div className={styles.headerCopy}>
-            <p className={styles.eyebrow}>Schools near you</p>
-            <h2 id="trending-near-you-heading">Trending near you</h2>
-            <p>
-              Find your school and order the exact stationery pack your child
-              needs.
-            </p>
-          </div>
-
-          <div className={styles.controls}>
-            <Badge source={source} city={city} />
-
-            {showBtn && (
-              <button
-                type="button"
-                className={styles.locationBtn}
-                onClick={handleUseLocation}
-                disabled={btnDisabled}
-              >
-                {isLoading ? (
-                  <span className={styles.locationBtnSpinner} />
-                ) : (
-                  <span className={styles.locationBtnIcon} aria-hidden="true">
-                    📍
-                  </span>
-                )}
-                Use my current location
-              </button>
-            )}
-          </div>
+      <div className={styles.headerRow}>
+        <div className={styles.headerCopy}>
+          <p className={styles.eyebrow}>Schools near you</p>
+          <h2 id="trending-near-you-heading">Trending near you</h2>
+          <p>
+            Find your school and order the exact stationery pack your child
+            needs.
+          </p>
         </div>
 
-        <div className={styles.grid} role="list">
-          {isLoading ? (
-            <SkeletonCards />
-          ) : (
-            schools.map((school) => (
-              <div role="listitem" key={school.id}>
-                <SchoolCard school={school} />
-              </div>
-            ))
+        <div className={styles.controls}>
+          <Badge source={source} city={city} />
+
+          {showBtn && (
+            <button
+              type="button"
+              className={styles.locationBtn}
+              onClick={handleUseLocation}
+              disabled={btnDisabled}
+            >
+              {isLoading ? (
+                <span className={styles.locationBtnSpinner} />
+              ) : (
+                <span className={styles.locationBtnIcon} aria-hidden="true">
+                  📍
+                </span>
+              )}
+              Use my current location
+            </button>
           )}
         </div>
+      </div>
 
-        {!isLoading && source !== "initial" && source !== "default" && (
-          <p className={styles.microText}>
-            Showing schools in your area
-          </p>
+      <div className={styles.grid} role="list">
+        {isLoading ? (
+          <SkeletonCards />
+        ) : (
+          schools.map((school) => (
+            <div role="listitem" key={school.id}>
+              <SchoolCard school={school} />
+            </div>
+          ))
         )}
       </div>
+
+      {!isLoading && source !== "initial" && source !== "default" && (
+        <p className={styles.microText}>
+          Showing schools in your area
+        </p>
+      )}
     </section>
   );
 }
