@@ -124,7 +124,7 @@ export async function initializePaystackTransaction(params: {
   let result: PaystackInitResponse;
   try {
     result = await response.json();
-  } catch (parseError) {
+  } catch {
     const body = await response.text().catch(() => "");
     console.error("[paystack] Failed to parse response:", body.slice(0, 500));
     throw new Error("Paystack returned an invalid response");

@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import {
   legalEmail as generalEmail,
   legalEmailHref as generalEmailHref,
-  phoneHref,
-  phoneNumber,
 } from "@/data/contact";
 import {
   LegalDocumentPage,

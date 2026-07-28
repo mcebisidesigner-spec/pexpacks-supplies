@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 import {
-  phoneHref,
-  phoneNumber,
-} from "@/data/contact";
-import {
   LegalDocumentPage,
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";

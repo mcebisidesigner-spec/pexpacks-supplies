@@ -47,8 +47,9 @@ export async function login(formData: FormData) {
     } else {
       isSuccess = true;
     }
-  } catch (err: any) {
-    errorMessage = err?.message || "Invalid login credentials";
+  } catch (err: unknown) {
+    const errorObj = err as { message?: string };
+    errorMessage = errorObj?.message || "Invalid login credentials";
   }
 
   if (isSuccess) {
@@ -94,13 +95,12 @@ export async function requestPasswordReset(email: string) {
 
   // 1. Log password renewal request into Supabase form_submissions table
   await saveFormSubmission({
-    formType: "password_reset_request",
+    formType: "contact",
     fullName: "Password Reset Requester",
     email: targetEmail,
     notes: `Password renewal request sent for ${targetEmail} to IT Admin (pexpacks@gmail.com)`,
-    targetAdmin: "pexpacks@gmail.com",
-    requestedAt: new Date().toISOString(),
-  } as any);
+    consent: true,
+  });
 
   // 2. Trigger standard Supabase Auth reset email if configured
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
