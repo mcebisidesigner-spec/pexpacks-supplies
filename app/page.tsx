@@ -19,6 +19,18 @@ import homeStyles from '@/components/marketing/MarketingHome.module.css'
 export default function HomePage() {
   return (
     <>
+      {/* Announcement/urgency bar */}
+      <div className={homeStyles.announcementBar}>
+        <p className={homeStyles.announcementText}>
+          <span aria-hidden="true">🎒</span>
+          {' '}Free delivery on orders over R500
+          <span className={homeStyles.announcementDivider} aria-hidden="true" />
+          <span>Pay on delivery</span>
+          <span className={homeStyles.announcementDivider} aria-hidden="true" />
+          <span>Lay-by available</span>
+        </p>
+      </div>
+
       <section className={heroStyles.heroNavy}>
         <div className={heroStyles.heroInner}>
           <div>
@@ -28,10 +40,32 @@ export default function HomePage() {
               stationery list, <br /> perfectly packed.
             </h1>
             <p className={heroStyles.heroLead}>
-              Your official school stationery list, perfectly packed and
-              delivered.
+              We match your school&rsquo;s official list exactly &mdash; no
+              hunting, no guessing. <strong>Packs from R249.</strong>
             </p>
             <HeroSearch />
+            <div className={homeStyles.heroTrustRow}>
+              <span className={homeStyles.heroTrustItem}>
+                <span className={homeStyles.heroTrustIcon} aria-hidden="true">🏆</span>
+                Trusted by 10,000+ parents
+              </span>
+              <span className={homeStyles.heroTrustItem}>
+                <span className={homeStyles.heroTrustIcon} aria-hidden="true">🏫</span>
+                3,000+ schools covered
+              </span>
+              <span className={homeStyles.heroTrustItem}>
+                <span className={homeStyles.heroTrustIcon} aria-hidden="true">✅</span>
+                100% list match guarantee
+              </span>
+            </div>
+            <div className={homeStyles.heroActions}>
+              <a href="/track-order" className={homeStyles.heroSecondaryLink}>
+                <span aria-hidden="true">📦</span> Track your order
+              </a>
+              <a href="/lay-by" className={homeStyles.heroSecondaryLink}>
+                <span aria-hidden="true">💳</span> Pay in 3 with lay-by
+              </a>
+            </div>
           </div>
 
           <div className={heroStyles.heroVisual}>
@@ -100,6 +134,30 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* Trust metrics */}
+      <section className={homeStyles.trustStrip} aria-label="Pexpacks by the numbers">
+        <div className={homeStyles.trustInner}>
+          <div className={homeStyles.trustGrid}>
+            <div className={homeStyles.trustCard}>
+              <strong className={homeStyles.trustCardValue}>3,342+</strong>
+              <span className={homeStyles.trustCardLabel}>Schools covered across Gauteng</span>
+            </div>
+            <div className={homeStyles.trustCard}>
+              <strong className={homeStyles.trustCardValue}>10,000+</strong>
+              <span className={homeStyles.trustCardLabel}>Packs delivered to parents</span>
+            </div>
+            <div className={homeStyles.trustCard}>
+              <strong className={homeStyles.trustCardValue}>269</strong>
+              <span className={homeStyles.trustCardLabel}>Official school partners</span>
+            </div>
+            <div className={homeStyles.trustCard}>
+              <strong className={homeStyles.trustCardValue}>100%</strong>
+              <span className={homeStyles.trustCardLabel}>List match guarantee</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section
         id="social-proof"
