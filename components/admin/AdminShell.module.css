@@ -356,9 +356,9 @@
 .topbar {
   display: none;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   padding: 14px 20px;
-  background: #fbfcfd;
+  background: #ffffff;
   border-bottom: 1px solid var(--pex-border, #e1e7ea);
   position: sticky;
   top: 0;
@@ -369,11 +369,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--pex-border, #e1e7ea);
-  border-radius: var(--radius-sm, 12px);
-  background: #fff;
+  border-radius: 14px;
+  background: #ffffff;
   color: var(--pex-navy, #1a2a40);
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -385,7 +385,7 @@
 
 .topbarTitle {
   font-family: var(--font-heading, inherit);
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 800;
   color: var(--pex-navy, #1a2a40);
 }
@@ -395,7 +395,7 @@
   width: 100%;
   max-width: 1400px;
   margin-inline: auto;
-  padding: clamp(12px, 1.5vw, 24px) clamp(20px, 3vw, 44px) clamp(32px, 4vw, 56px);
+  padding: clamp(24px, 3vw, 36px) clamp(24px, 3.5vw, 44px) clamp(32px, 4vw, 56px);
   box-sizing: border-box;
 }
 
@@ -424,6 +424,6 @@
   }
 
   .content {
-    padding: clamp(16px, 3vw, 24px) clamp(16px, 3vw, 24px) clamp(28px, 4vw, 40px);
+    padding: 20px 16px 36px;
   }
 }

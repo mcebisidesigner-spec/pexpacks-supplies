@@ -77,7 +77,7 @@ export default async function AdminDashboardPage() {
         />
         <StatCard
           label="Revenue"
-          value={formatCurrency(stats.orders.revenue)}
+          value={formatCurrency(stats.orders.revenue, { allowQuote: false })}
           hint="Paid orders"
           icon="wallet"
           tone="coral"

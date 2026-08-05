@@ -220,6 +220,10 @@ button:disabled {
   }
 }
 
+.site-main-admin {
+  padding-top: 0 !important;
+}
+
 .site-rating-strip {
   display: flex;
   justify-content: center;

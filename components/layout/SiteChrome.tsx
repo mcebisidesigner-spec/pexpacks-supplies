@@ -16,7 +16,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   const isAdmin = pathname.startsWith("/admin");
 
   if (isAdmin) {
-    return <main id="site-main" className="site-main">{children}</main>;
+    return <main id="site-main" className="site-main site-main-admin">{children}</main>;
   }
 
   return (
