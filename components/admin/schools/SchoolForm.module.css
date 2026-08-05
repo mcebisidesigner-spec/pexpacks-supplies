@@ -1,0 +1,211 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 860px;
+}
+
+.section {
+  background: #fff;
+  border: 1px solid var(--pex-border, #e2e8f0);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--pex-navy, #1a2a40);
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 18px;
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #33475b;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  border: 1px solid var(--pex-border, #dbe3ec);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 14px;
+  color: #1a2a40;
+  background: #fff;
+  font-family: inherit;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--pex-keppel, #1a7a77);
+  box-shadow: 0 0 0 3px rgba(26, 122, 119, 0.15);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--pex-muted, #6b7a86);
+}
+
+.error {
+  font-size: 12px;
+  color: #c0392b;
+}
+
+.success {
+  font-size: 14px;
+  color: #1a7a77;
+  background: #e9f6f5;
+  border: 1px solid #bfe6e3;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #33475b;
+  cursor: pointer;
+}
+
+.checkbox input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--pex-keppel, #1a7a77);
+}
+
+.logoRow {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.logoBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border: 1px dashed var(--pex-border, #c6d0da);
+  border-radius: 12px;
+  background: #f7f9fb;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.logoPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+}
+
+.logoPlaceholder {
+  font-size: 12px;
+  color: var(--pex-muted, #6b7a86);
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.logoHint {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.logoHint p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--pex-muted, #6b7a86);
+}
+
+.removeLogo {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c0392b;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.saveButton {
+  background: var(--pex-keppel, #1a7a77);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background: #fff;
+  color: #33475b;
+  border: 1px solid var(--pex-border, #dbe3ec);
+  border-radius: 8px;
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: inherit;
+}
