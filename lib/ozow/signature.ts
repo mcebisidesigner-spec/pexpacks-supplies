@@ -9,7 +9,18 @@ export function getOzowConfig() {
   const apiKey = process.env.OZOW_API_KEY ?? "";
   const isTest = process.env.OZOW_IS_TEST === "true";
 
-  if (!siteCode || !privateKey || !apiKey) {
+  const missingKeys: string[] = [];
+  if (!siteCode) missingKeys.push("OZOW_SITE_CODE");
+  if (!privateKey) missingKeys.push("OZOW_PRIVATE_KEY");
+  if (!apiKey) missingKeys.push("OZOW_API_KEY");
+
+  if (missingKeys.length > 0) {
+    console.error(
+      `[ozow] Missing environment variable(s): ${missingKeys.join(", ")}. ` +
+        "These are read from the server environment at runtime and are NOT " +
+        "deployed from .env.local — set them in your hosting provider's " +
+        "environment settings, then rebuild/redeploy."
+    );
     return null;
   }
 

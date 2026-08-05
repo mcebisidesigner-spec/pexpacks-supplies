@@ -57,6 +57,11 @@ export async function initiateOzowPayment(
   const base = appUrl();
 
   if (!base) {
+    console.error(
+      "[ozow] Missing app URL: neither NEXT_PUBLIC_APP_URL nor NEXT_PUBLIC_SITE_URL " +
+        "is set in the server environment. Set it in your hosting provider's " +
+        "environment settings and rebuild/redeploy."
+    );
     throw new OzowCheckoutError(
       "Payments are temporarily unavailable. Please try again later."
     );
