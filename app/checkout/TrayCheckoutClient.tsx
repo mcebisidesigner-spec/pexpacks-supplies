@@ -1121,7 +1121,7 @@ export function TrayCheckoutClient() {
             >
               {submitting
                 ? 'Preparing your order...'
-                : 'Confirm Order'}
+                : `Pay Now ${formatCurrency(total)}`}
             </Button>
 
             <Button
@@ -1152,7 +1152,7 @@ export function TrayCheckoutClient() {
         >
           {submitting
             ? 'Preparing...'
-            : `Confirm Order ${formatCurrency(total)}`}
+            : `Pay Now ${formatCurrency(total)}`}
         </Button>
       </div>
     </div>

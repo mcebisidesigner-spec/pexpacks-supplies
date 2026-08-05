@@ -4,6 +4,26 @@ const OZOW_POST_PAYMENT_URL = "https://api.ozow.com/postpaymentrequest";
 
 export class OzowCheckoutError extends Error {}
 
+function extractOzowErrorMessage(
+  result: Record<string, unknown> | null
+): string {
+  if (!result) {
+    return "";
+  }
+
+  const candidate =
+    result.errorMessage ??
+    result.message ??
+    result.Error ??
+    (result.error !== null && typeof result.error === "object"
+      ? (result.error as Record<string, unknown>).Message
+      : result.error);
+
+  return typeof candidate === "string" && candidate.trim()
+    ? candidate.trim()
+    : "";
+}
+
 function appUrl(): string {
   return (
     process.env.NEXT_PUBLIC_APP_URL ||
@@ -51,7 +71,7 @@ export async function initiateOzowPayment(
     input.orderReference
   )}`;
   const notifyUrl = `${base}/api/ozow/webhook`;
-  const bankReference = `PEX ${input.orderReference}`.slice(0, 34);
+  const bankReference = input.orderReference.slice(0, 20);
 
   const hashCheck = ozowCheckoutHash({
     siteCode: config.siteCode,
@@ -68,7 +88,7 @@ export async function initiateOzowPayment(
     privateKey: config.privateKey,
   });
 
-  const payload: Record<string, string | boolean | number> = {
+  const payload: Record<string, string | boolean> = {
     siteCode: config.siteCode,
     countryCode: config.countryCode,
     currencyCode: config.currencyCode,
@@ -81,8 +101,6 @@ export async function initiateOzowPayment(
     notifyUrl,
     isTest: config.isTest,
     hashCheck,
-    customerEmail: input.buyerEmail,
-    isBnpl: input.isBnpl,
   };
 
   if (input.isBnpl) {
@@ -99,30 +117,43 @@ export async function initiateOzowPayment(
     body: JSON.stringify(payload),
   });
 
-  const result = await ozowResponse.json().catch(() => null);
+  const rawBody = await ozowResponse.text();
+  let result: Record<string, unknown> | null = null;
+
+  try {
+    result = rawBody ? JSON.parse(rawBody) : null;
+  } catch {
+    result = null;
+  }
 
   if (!ozowResponse.ok || !result) {
     console.error(
       "[ozow] Ozow returned an error:",
       ozowResponse.status,
-      JSON.stringify(result)
+      rawBody
     );
+
+    const ozowMessage = extractOzowErrorMessage(result);
     throw new OzowCheckoutError(
-      "The payment provider could not start your payment. Please try again."
+      ozowMessage
+        ? `The payment provider could not start your payment. ${ozowMessage}`
+        : "The payment provider could not start your payment. Please try again."
     );
   }
 
   const paymentUrl =
-    typeof result.paymentUrl === "string"
-      ? result.paymentUrl
-      : typeof result.PaymentUrl === "string"
-        ? result.PaymentUrl
-        : "";
+    typeof result.url === "string"
+      ? result.url
+      : typeof result.paymentUrl === "string"
+        ? result.paymentUrl
+        : typeof result.PaymentUrl === "string"
+          ? result.PaymentUrl
+          : "";
 
   if (!paymentUrl) {
     console.error(
       "[ozow] Ozow response missing payment URL:",
-      JSON.stringify(result)
+      rawBody
     );
     throw new OzowCheckoutError(
       "The payment provider did not return a payment link. Please try again."

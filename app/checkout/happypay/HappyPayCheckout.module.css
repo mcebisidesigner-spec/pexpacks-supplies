@@ -259,6 +259,19 @@
   .formGrid {
     grid-template-columns: 1fr;
   }
+
+  .heroLogo {
+    gap: 4px;
+  }
+
+  .heroLogo svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .heroLogo span {
+    font-size: 12px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

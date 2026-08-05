@@ -212,7 +212,7 @@ export function HappyPayCheckoutClient() {
         <section className={clsx(checkoutStyles.stepCard, checkoutStyles.checkoutHero, styles.hero)}>
           <div className={styles.heroTop}>
             <p className={checkoutStyles.checkoutKicker}>Buy Now Pay Later</p>
-            <HappyPayLogo tone="dark" />
+            <HappyPayLogo tone="dark" className={styles.heroLogo} />
           </div>
           <h1>
             Split in 2 with Happy Pay &mdash; Pay {formatInstalment(instalment)}{" "}
