@@ -14,11 +14,11 @@ const DynamicPwaLifecycle = dynamic(
 
 export function ClientRuntimeWidgets() {
   const pathname = usePathname();
-  const isCheckoutFlow = pathname?.startsWith("/checkout");
+  const hideWhatsApp = pathname?.startsWith("/checkout") || pathname?.startsWith("/admin");
 
   return (
     <>
-      {isCheckoutFlow ? null : <DynamicWhatsAppWidget />}
+      {hideWhatsApp ? null : <DynamicWhatsAppWidget />}
       <DynamicPwaLifecycle />
     </>
   );
