@@ -23,12 +23,12 @@ const variantStyles: Record<Variant, string> = {
 
 const defaultPrimaryCta = {
   label: "Learn How It Works",
-  href: "/lay-by",
+  href: "/faq#savings-plan-basics",
 };
 
 const defaultSecondaryCta = {
-  label: "Lay-by Terms",
-  href: "/lay-by-terms",
+  label: "Happy Pay Terms",
+  href: "/happy-pay-terms",
 };
 
 export function SavingsPlanBanner({

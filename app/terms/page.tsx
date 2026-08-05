@@ -120,7 +120,7 @@ const config: LegalDocumentConfig = {
             <Link href="/privacy-policy">Privacy Policy</Link>,{" "}
             <Link href="/delivery-policy">Delivery Policy</Link>,{" "}
             <Link href="/returns-refunds-policy">Returns &amp; Refunds Policy</Link>, and{" "}
-            <Link href="/lay-by-terms">Lay-by Terms</Link>.
+            <Link href="/happy-pay-terms">Happy Pay Terms</Link>.
           </p>
           <h3>Legal Capacity (ECTA &amp; Common Law)</h3>
           <ul>

@@ -6,6 +6,7 @@ import { ShareButtons } from "@/components/shared/ShareButtons";
 import { ChecklistExitCapture } from "@/components/schools/ChecklistExitCapture";
 import { PexcoverGradeUpsell } from "@/components/schools/PexcoverGradeUpsell";
 import { StickyOrderBar } from "@/components/schools/StickyOrderBar";
+import { HappyPayGradePackWidget } from "@/components/packs/HappyPayGradePackWidget";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
 import styles from "./GradePackDetails.module.css";
@@ -88,6 +89,7 @@ export function GradePackDetails({ school, grade, autoCustomise }: GradePackDeta
 
         <div className={styles.gradeActionPanel} id="grade-actions">
           <GradePackActions pack={pack} layout="detail" autoCustomise={autoCustomise} />
+          <HappyPayGradePackWidget pack={pack} amount={grade.price} />
         </div>
 
         <PexcoverGradeUpsell school={school} grade={grade} />

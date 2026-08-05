@@ -49,7 +49,7 @@ const policyGroups = [
     links: [
       { label: "Delivery Policy", href: "/delivery-policy" },
       { label: "Returns & Refunds Policy", href: "/returns-refunds-policy" },
-      { label: "Lay-by Terms", href: "/lay-by-terms" },
+      { label: "Happy Pay Terms", href: "/happy-pay-terms" },
       { label: "Social Media Guidelines", href: "/social-media-guidelines" },
       { label: "Contact / Complaints", href: "/contact" },
     ],

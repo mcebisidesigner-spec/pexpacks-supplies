@@ -23,6 +23,8 @@ export async function createPendingOrder(input: {
   estimatedTotal: number;
   deliveryMethod: string;
   notes?: string;
+  paymentGateway?: string;
+  gatewayMetadata?: Record<string, string | number | boolean | null>;
 }) {
   const supabase = createSupabaseAdminClient();
 
@@ -33,6 +35,12 @@ export async function createPendingOrder(input: {
     (item) => typeof item === "string" && item.toLowerCase().includes("pexcover")
   );
   const metaNotes = input.notes ? { notes: input.notes } : undefined;
+  const metaGateway = input.gatewayMetadata
+    ? { gateway: input.gatewayMetadata }
+    : undefined;
+  const meta = metaNotes || metaGateway
+    ? { ...metaNotes, ...metaGateway }
+    : undefined;
 
   try {
     const { error } = await supabase
@@ -56,9 +64,10 @@ export async function createPendingOrder(input: {
             : input.deliveryMethod === "delivery"
               ? "Home delivery"
               : "Collection point",
-        metadata: metaNotes || undefined,
+        metadata: meta,
         pexcover_requested: hasPexcover,
         consent: true,
+        payment_gateway: input.paymentGateway ?? null,
         status: "pending_payment",
       });
 
@@ -95,6 +104,36 @@ export async function getOrderByReference(reference: string) {
   };
 }
 
+export async function markOrderPaid(input: {
+  orderReference: string;
+  paymentGateway?: string;
+  gatewayReference?: string;
+}) {
+  const supabase = createSupabaseAdminClient();
+
+  try {
+    const { error } = await supabase
+      .from("orders")
+      .update({
+        status: "paid",
+        paid_at: new Date().toISOString(),
+        payment_gateway: input.paymentGateway ?? null,
+        gateway_reference: input.gatewayReference ?? null,
+      })
+      .eq("order_reference", input.orderReference);
+
+    if (error) {
+      console.error("[orders] Failed to mark order paid:", JSON.stringify(error));
+      return { success: false, error };
+    }
+  } catch (err) {
+    console.error("[orders] markOrderPaid caught:", err instanceof Error ? err.message : err);
+    return { success: false, error: err };
+  }
+
+  return { success: true };
+}
+
 
 export async function createMultiPackOrder(input: {
   orderReference: string;
@@ -120,6 +159,8 @@ export async function createMultiPackOrder(input: {
   primarySchoolSlug?: string;
   notes?: string;
   summaryItems: string[];
+  paymentGateway?: string;
+  gatewayMetadata?: Record<string, string | number | boolean | null>;
 }) {
   const supabase = createSupabaseAdminClient();
   const orderId = randomUUID();
@@ -160,7 +201,9 @@ export async function createMultiPackOrder(input: {
         pack_count: input.packs.length,
         primary_school_slug: input.primarySchoolSlug || null,
         ...(input.notes ? { notes: input.notes } : {}),
+        ...(input.gatewayMetadata ? { gateway: input.gatewayMetadata } : {}),
       },
+      payment_gateway: input.paymentGateway ?? null,
       consent: true,
       status: "pending_payment",
     });
@@ -173,4 +216,38 @@ export async function createMultiPackOrder(input: {
   }
 
   return { id: orderId, orderReference: input.orderReference };
+}
+
+export async function getOrderForReceipt(reference: string) {
+  const supabase = createSupabaseAdminClient();
+
+  const { data, error } = await supabase
+    .from("orders")
+    .select(
+      "order_reference, status, buyer_name, buyer_email, buyer_phone, learner_name, school_name, grade, pack_type, items, estimated_total, fulfilment_option, payment_gateway, gateway_reference, paid_at, metadata, created_at"
+    )
+    .eq("order_reference", reference)
+    .single();
+
+  if (error || !data) return null;
+
+  return data as {
+    order_reference: string;
+    status: string;
+    buyer_name: string;
+    buyer_email: string | null;
+    buyer_phone: string;
+    learner_name: string | null;
+    school_name: string;
+    grade: string;
+    pack_type: string;
+    items: unknown;
+    estimated_total: number | null;
+    fulfilment_option: string | null;
+    payment_gateway: string | null;
+    gateway_reference: string | null;
+    paid_at: string | null;
+    metadata: unknown;
+    created_at: string;
+  };
 }

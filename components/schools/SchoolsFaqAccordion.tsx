@@ -18,11 +18,11 @@ export function SchoolsFaqAccordion({ className }: SchoolsFaqAccordionProps) {
       <div className={homeStyles.accordionInner}>
         <details className={homeStyles.accordionItem} name="schools-faq">
           <summary className={homeStyles.accordionSummary}>
-            How does the Lay-by work?
+            Can I split my pack payments?
           </summary>
           <div className={homeStyles.accordionAnswer}>
-            <p>Spread the cost over 5 months with zero interest. Pay a deposit, then monthly instalments &mdash; fully CPA-compliant.</p>
-            <Link href="/lay-by" className={homeStyles.accordionPill} onClick={(e) => e.stopPropagation()}>Learn about Lay-by</Link>
+            <p>Yes &mdash; split the total into 2 interest-free payments with Happy Pay. Pay 50% today, and the rest is auto-deducted 30 days later.</p>
+            <Link href="/checkout/happypay" className={homeStyles.accordionPill} onClick={(e) => e.stopPropagation()}>Split my pack in 2</Link>
           </div>
         </details>
         <details className={homeStyles.accordionItem} name="schools-faq">

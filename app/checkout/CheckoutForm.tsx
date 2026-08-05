@@ -352,6 +352,11 @@ export function CheckoutForm({
         throw new Error(msg);
       }
 
+      if (typeof result.url === "string" && result.url) {
+        window.location.href = result.url;
+        return;
+      }
+
       setOrderSubmitted(true);
       setOrderReference(result.orderReference);
     } catch (error) {

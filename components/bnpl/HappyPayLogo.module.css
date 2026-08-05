@@ -1,0 +1,39 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.mark {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.markBg {
+  fill: var(--pex-coral);
+}
+
+.markDot {
+  fill: #ffffff;
+}
+
+.markSmile {
+  stroke: #ffffff;
+}
+
+.light .wordmark {
+  color: #ffffff;
+}
+
+.dark .wordmark {
+  color: var(--pex-keppel);
+}
+
+.wordmark {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}

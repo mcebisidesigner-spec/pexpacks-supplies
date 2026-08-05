@@ -473,6 +473,11 @@ export function TrayCheckoutClient() {
         throw new Error(msg)
       }
 
+      if (typeof result.url === 'string' && result.url) {
+        window.location.href = result.url
+        return
+      }
+
       setOrderReference(result.orderReference)
       setOrderSubmitted(true)
     } catch (error) {
@@ -911,8 +916,8 @@ export function TrayCheckoutClient() {
                   delivery policy
                 </a>
                 ,{' '}
-                <a href="/lay-by-terms" target="_blank">
-                  lay-by terms
+                <a href="/happy-pay-terms" target="_blank">
+                  Happy Pay terms
                 </a>
                 , and{' '}
                 <a href="/returns-refunds-policy" target="_blank">

@@ -18,7 +18,6 @@ import {
   saveFormSubmission,
   saveOrderRecord,
   saveBrandPackageRecord,
-  saveLayByRecord,
 } from "@/lib/supabase/forms";
 
 function json(body: unknown, status: number) {
@@ -112,7 +111,6 @@ export async function handlePexpacksFormRequest(
     await Promise.allSettled([
       saveOrderRecord(data, saved.submission_id),
       saveBrandPackageRecord(data, saved.submission_id),
-      saveLayByRecord(data, saved.submission_id),
     ]);
   }
 

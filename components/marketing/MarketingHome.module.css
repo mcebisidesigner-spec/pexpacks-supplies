@@ -62,53 +62,7 @@
 
 
 
-@keyframes laybyCtaHeartbeat {
-  0%,
-  56%,
-  100% {
-    transform: scale(1);
-  }
 
-  12% {
-    transform: scale(1.035);
-  }
-
-  20% {
-    transform: scale(0.992);
-  }
-
-  30% {
-    transform: scale(1.02);
-  }
-}
-
-@keyframes laybyCtaShimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-@keyframes laybyCtaHalo {
-  0%,
-  58%,
-  100% {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-
-  16% {
-    opacity: 1;
-    transform: scale(1.04);
-  }
-
-  34% {
-    opacity: 0;
-    transform: scale(1.12);
-  }
-}
 
 
 

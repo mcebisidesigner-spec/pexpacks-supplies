@@ -35,7 +35,7 @@ export default async function AdminDashboard() {
       <div className={styles.headerSection}>
         <h1 className={styles.title}>Pexpacks Order Management</h1>
         <p className={styles.subtitle}>
-          Live orders, pre-lay-by schedules, and fulfillment statuses.
+          Live orders, savings plan schedules, and fulfillment statuses.
         </p>
       </div>
 

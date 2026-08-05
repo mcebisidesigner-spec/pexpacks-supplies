@@ -7,6 +7,7 @@ import {
   isSameOriginRequest,
   rateLimitRequest,
 } from "@/lib/security/requestGuards";
+import { initiateOzowPayment, OzowCheckoutError } from "@/lib/ozow/checkout";
 
 export const runtime = "nodejs";
 
@@ -162,11 +163,25 @@ export async function POST(request: NextRequest) {
         primarySchoolSlug,
         notes,
         summaryItems,
+        paymentGateway: "ozow",
+        gatewayMetadata: {
+          method: "Ozow",
+          is_bnpl: false,
+          amount: verifiedTotal,
+        },
+      });
+
+      const { url } = await initiateOzowPayment({
+        orderReference,
+        amount: verifiedTotal,
+        buyerEmail,
+        isBnpl: false,
       });
 
       return NextResponse.json({
         success: true,
         orderReference,
+        url,
       });
     }
 
@@ -218,13 +233,34 @@ export async function POST(request: NextRequest) {
       estimatedTotal: trustedTotal,
       deliveryMethod: data.deliveryMethod,
       notes: data.notes,
+      paymentGateway: "ozow",
+      gatewayMetadata: {
+        method: "Ozow",
+        is_bnpl: false,
+        amount: trustedTotal,
+      },
+    });
+
+    const { url } = await initiateOzowPayment({
+      orderReference,
+      amount: trustedTotal,
+      buyerEmail: data.buyerEmail,
+      isBnpl: false,
     });
 
     return NextResponse.json({
       success: true,
       orderReference,
+      url,
     });
   } catch (error) {
+    if (error instanceof OzowCheckoutError) {
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 502 }
+      );
+    }
+
     console.error(
       "[checkout] Unexpected error:",
       error instanceof Error ? error.message : error

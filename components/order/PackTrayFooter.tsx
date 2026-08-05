@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { happyPayInstalment, formatInstalment } from "@/lib/order/happyPay";
+import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
 import styles from "./GlobalPackTray.module.css";
 
 export function PackTrayFooter() {
@@ -15,6 +17,7 @@ export function PackTrayFooter() {
 
   const total = calculateTrayTotal(packs);
   const hasPacks = packs.length > 0;
+  const instalment = happyPayInstalment(total);
 
   const handleCheckout = useCallback(() => {
     if (!hasPacks) return;
@@ -22,10 +25,10 @@ export function PackTrayFooter() {
     router.push("/checkout");
   }, [hasPacks, closeTray, router]);
 
-  const handleLayby = useCallback(() => {
+  const handleHappyPay = useCallback(() => {
     if (!hasPacks) return;
     closeTray();
-    router.push("/lay-by/checkout");
+    router.push("/checkout/happypay");
   }, [hasPacks, closeTray, router]);
 
   const handleAddAnotherLearner = useCallback(() => {
@@ -93,13 +96,28 @@ export function PackTrayFooter() {
         >
           Checkout &amp; Pay Now
         </button>
-        <button
-          type="button"
-          className={styles.laybyButton}
-          onClick={handleLayby}
-        >
-          Start Lay-by Plan
-        </button>
+        <div className={styles.happyPayGroup}>
+          <span className={styles.happyPayTooltip} role="tooltip">
+            Buy Now Pay Later
+          </span>
+          <button
+            type="button"
+            className={styles.happyPayButton}
+            onClick={handleHappyPay}
+          >
+            <HappyPayLogo tone="light" showLabel={false} />
+            <span className={styles.happyPayLabels}>
+              <span className={styles.happyPayLabel}>Happy Pay (BNPL)</span>
+              <span className={styles.happyPayLabelAlt}>
+                Buy Now Pay Later
+              </span>
+            </span>
+          </button>
+          <p className={styles.happyPayTrust}>
+            Split your pay into 2 interest-free payments of{" "}
+            {formatInstalment(instalment)}
+          </p>
+        </div>
         <button
           type="button"
           className={styles.secondaryButton}

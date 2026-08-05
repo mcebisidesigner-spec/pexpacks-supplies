@@ -379,8 +379,8 @@ export default async function BlogPostPage({
                 <Link href="/schools" className={styles.postKnowledgePill}>
                   Browse school packs
                 </Link>
-                <Link href="/lay-by" className={styles.postKnowledgePill}>
-                  Lay-by payment plans
+                <Link href="/checkout/happypay" className={styles.postKnowledgePill}>
+                  Split in 2 with Happy Pay
                 </Link>
                 <Link href="/add-your-school" className={styles.postKnowledgePill}>
                   Request your school

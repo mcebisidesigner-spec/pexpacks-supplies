@@ -10,8 +10,6 @@ import {
   orderWhatsAppHref,
   phoneHref,
   phoneNumber,
-  layByEmail,
-  layByEmailHref,
   ordersEmail,
   ordersEmailHref,
 } from '@/data/contact'
@@ -233,8 +231,8 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                       <rect x="2" y="4" width="20" height="16" rx="2" />
                       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                     </svg>
-                    <strong>Lay-by enquiries:</strong>
-                    <a href={layByEmailHref}>{layByEmail}</a>
+                    <strong>Happy Pay &amp; payment enquiries:</strong>
+                    <a href={generalEmailHref}>{generalEmail}</a>
                   </div>
                   <div className={pageStyles.channelRow}>
                     <svg

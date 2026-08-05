@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createMultiPackOrder, generateOrderReference } from "@/lib/orders";
+import {
+  createMultiPackOrder,
+  generateOrderReference,
+} from "@/lib/orders";
+import { PEXCOVER_PRICE } from "@/lib/constants";
+import { getGradeBySlug } from "@/lib/school-utils";
 import {
   isSameOriginRequest,
   rateLimitRequest,
 } from "@/lib/security/requestGuards";
+import { initiateOzowPayment, OzowCheckoutError } from "@/lib/ozow/checkout";
+import { getOzowConfig } from "@/lib/ozow/signature";
 
 export const runtime = "nodejs";
 
@@ -16,15 +23,25 @@ export async function POST(request: NextRequest) {
   }
 
   const limit = rateLimitRequest(request, {
-    keyPrefix: "layby-deposit",
+    keyPrefix: "ozow-checkout",
     windowMs: 10 * 60 * 1000,
     max: 5,
   });
 
   if (!limit.allowed) {
     return NextResponse.json(
-      { success: false, error: "Too many deposit attempts. Please wait a few minutes and try again." },
+      { success: false, error: "Too many checkout attempts. Please wait a few minutes and try again." },
       { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+    );
+  }
+
+  const config = getOzowConfig();
+
+  if (!config) {
+    console.error("[ozow/checkout] Missing Ozow configuration.");
+    return NextResponse.json(
+      { success: false, error: "Payments are temporarily unavailable. Please try again later." },
+      { status: 503 }
     );
   }
 
@@ -40,12 +57,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const isBnpl = body.isBnpl === true;
+    const isTrayOrder = body.isTrayOrder === true;
+
+    if (!isTrayOrder) {
+      return NextResponse.json(
+        { success: false, error: "Ozow is only available for pack orders." },
+        { status: 400 }
+      );
+    }
+
     const buyerName = typeof body.buyerName === "string" ? body.buyerName.trim() : "";
     const buyerEmail = typeof body.buyerEmail === "string" ? body.buyerEmail.trim().toLowerCase() : "";
     const buyerPhone = typeof body.buyerPhone === "string" ? body.buyerPhone.trim() : "";
     const estimatedTotal = typeof body.estimatedTotal === "number" ? body.estimatedTotal : 0;
-    const depositAmount = typeof body.depositAmount === "number" ? body.depositAmount : 0;
-    const fullTotal = typeof body.fullTotal === "number" ? body.fullTotal : estimatedTotal;
     const deliveryMethod = typeof body.deliveryMethod === "string" ? body.deliveryMethod : "school_collection";
     const primarySchoolSlug = typeof body.primarySchoolSlug === "string" ? body.primarySchoolSlug : undefined;
     const notes = typeof body.notes === "string" ? body.notes : undefined;
@@ -63,11 +88,8 @@ export async function POST(request: NextRequest) {
     if (packsRaw.length === 0) {
       return NextResponse.json({ success: false, error: "No packs in order." }, { status: 400 });
     }
-    if (!fullTotal || fullTotal <= 0) {
+    if (!estimatedTotal || estimatedTotal <= 0) {
       return NextResponse.json({ success: false, error: "Invalid total." }, { status: 400 });
-    }
-    if (!depositAmount || depositAmount <= 0) {
-      return NextResponse.json({ success: false, error: "Invalid deposit amount." }, { status: 400 });
     }
 
     const packs = packsRaw.map((p: Record<string, unknown>) => ({
@@ -89,12 +111,45 @@ export async function POST(request: NextRequest) {
       basePackPrice: typeof p.basePackPrice === "number" ? p.basePackPrice : 0,
     }));
 
+    let verifiedTotal = 0;
+    for (const pack of packs) {
+      if (pack.packMode === "full") {
+        const serverPack = await getGradeBySlug(pack.schoolSlug, pack.gradeSlug);
+        if (!serverPack) {
+          return NextResponse.json(
+            { success: false, error: `Pack not found: ${pack.schoolSlug}/${pack.gradeSlug}. Please re-select your school.` },
+            { status: 400 }
+          );
+        }
+        verifiedTotal += serverPack.price + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+      } else {
+        const hasUnitPrices = pack.items.some((i) => i.unitPrice !== undefined && i.unitPrice !== null);
+        if (hasUnitPrices) {
+          const itemsTotal = pack.items.reduce((sum, i) => sum + (i.unitPrice ?? 0) * i.quantity, 0);
+          verifiedTotal += itemsTotal + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+        } else {
+          verifiedTotal += pack.totalPrice + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+        }
+      }
+    }
+
+    if (Math.abs(verifiedTotal - estimatedTotal) > 1) {
+      console.error("[ozow/checkout] Tray price mismatch:", { clientTotal: estimatedTotal, serverTotal: verifiedTotal });
+      return NextResponse.json(
+        { success: false, error: "Prices have changed since you added items. Please refresh your pack tray." },
+        { status: 400 }
+      );
+    }
+
     const orderReference = generateOrderReference();
+    const amount = verifiedTotal.toFixed(2);
 
     const summaryItems = [
-      "LAY-BY DEPOSIT",
-      `Full total: R${fullTotal} | Deposit: R${depositAmount}`,
-      `Remaining: R${fullTotal - depositAmount} (4 monthly instalments)`,
+      isBnpl ? "HAPPY PAY SPLIT PAYMENT" : "OZOW PAYMENT",
+      isBnpl
+        ? "Payment method: Happy Pay (2 x interest-free instalments)"
+        : "Payment method: Ozow (Pay Now)",
+      `Total: R${amount}`,
       "---",
       ...packs.flatMap((pack) => [
         `Learner: ${pack.learnerName || "Unnamed"}`,
@@ -112,22 +167,42 @@ export async function POST(request: NextRequest) {
       buyerEmail,
       buyerPhone,
       packs,
-      estimatedTotal: depositAmount,
+      estimatedTotal: verifiedTotal,
       deliveryMethod,
       primarySchoolSlug,
       notes,
       summaryItems,
+      paymentGateway: "ozow",
+      gatewayMetadata: {
+        method: isBnpl ? "HappyPay" : "Ozow",
+        is_bnpl: isBnpl,
+        ...(isBnpl ? { split_instalments: 2 } : {}),
+        amount: verifiedTotal,
+      },
+    });
+
+    const { url } = await initiateOzowPayment({
+      orderReference,
+      amount: verifiedTotal,
+      buyerEmail,
+      isBnpl,
     });
 
     return NextResponse.json({
       success: true,
       orderReference,
-      depositAmount,
-      fullTotal,
+      url,
     });
   } catch (error) {
+    if (error instanceof OzowCheckoutError) {
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 502 }
+      );
+    }
+
     console.error(
-      "[layby-deposit] Unexpected error:",
+      "[ozow/checkout] Unexpected error:",
       error instanceof Error ? error.message : error
     );
     return NextResponse.json(

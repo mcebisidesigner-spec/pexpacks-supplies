@@ -261,8 +261,8 @@ export const DeliveryStep = memo(function DeliveryStep({
             delivery policy
           </a>
           ,{" "}
-          <a href="/lay-by-terms" target="_blank" rel="noopener noreferrer">
-            lay-by terms
+          <a href="/happy-pay-terms" target="_blank" rel="noopener noreferrer">
+            Happy Pay terms
           </a>
           , and{" "}
           <a href="/returns-refunds-policy" target="_blank" rel="noopener noreferrer">

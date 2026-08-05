@@ -1,0 +1,96 @@
+import { createHash } from "node:crypto";
+
+const OZOW_COUNTRY_CODE = "ZA";
+const OZOW_CURRENCY_CODE = "ZAR";
+
+export function getOzowConfig() {
+  const siteCode = process.env.OZOW_SITE_CODE ?? "";
+  const privateKey = process.env.OZOW_PRIVATE_KEY ?? "";
+  const apiKey = process.env.OZOW_API_KEY ?? "";
+  const isTest = process.env.OZOW_IS_TEST !== "false";
+
+  if (!siteCode || !privateKey || !apiKey) {
+    return null;
+  }
+
+  return {
+    siteCode,
+    privateKey,
+    apiKey,
+    isTest,
+    countryCode: OZOW_COUNTRY_CODE,
+    currencyCode: OZOW_CURRENCY_CODE,
+  };
+}
+
+export function ozowCheckoutHash(input: {
+  siteCode: string;
+  countryCode: string;
+  currencyCode: string;
+  amount: string;
+  transactionReference: string;
+  bankReference: string;
+  cancelUrl: string;
+  errorUrl: string;
+  successUrl: string;
+  notifyUrl: string;
+  isTest: boolean;
+  privateKey: string;
+}): string {
+  const raw = [
+    input.siteCode,
+    input.countryCode,
+    input.currencyCode,
+    input.amount,
+    input.transactionReference,
+    input.bankReference,
+    input.cancelUrl,
+    input.errorUrl,
+    input.successUrl,
+    input.notifyUrl,
+    String(input.isTest),
+    input.privateKey,
+  ]
+    .join("")
+    .toLowerCase();
+
+  return createHash("sha512").update(raw, "utf8").digest("hex");
+}
+
+export function ozowWebhookHash(input: {
+  siteCode: string;
+  transactionId: string;
+  transactionReference: string;
+  amount: string;
+  status: string;
+  optional1: string;
+  optional2: string;
+  optional3: string;
+  optional4: string;
+  optional5: string;
+  currencyCode: string;
+  isTest: string;
+  statusMessage: string;
+  privateKey: string;
+}): string {
+  const raw = [
+    input.siteCode,
+    input.transactionId,
+    input.transactionReference,
+    input.amount,
+    input.status,
+    input.optional1,
+    input.optional2,
+    input.optional3,
+    input.optional4,
+    input.optional5,
+    input.currencyCode,
+    input.isTest,
+    input.statusMessage,
+    input.privateKey,
+  ]
+    .join("")
+    .toLowerCase();
+
+  return createHash("sha512").update(raw, "utf8").digest("hex");
+}
