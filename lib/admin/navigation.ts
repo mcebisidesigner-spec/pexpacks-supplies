@@ -27,8 +27,8 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     title: "Catalogue",
     items: [
       { label: "Schools", href: "/admin/schools", icon: "school", permission: "schools.view", ready: true },
-      { label: "School Packs", href: "/admin/packs", icon: "pack", permission: "packs.view", ready: false },
-      { label: "Stationery Items", href: "/admin/items", icon: "items", permission: "items.view", ready: false },
+      { label: "School Packs", href: "/admin/packs", icon: "pack", permission: "packs.view", ready: true },
+      { label: "Stationery Items", href: "/admin/items", icon: "items", permission: "items.view", ready: true },
     ],
   },
   {

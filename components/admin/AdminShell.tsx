@@ -152,7 +152,7 @@ export function AdminShell({
                   return (
                     <span
                       key={item.href}
-                      className={styles.navItemDisabled}
+                      className={clsx(styles.navItem, styles.navItemDisabled)}
                       title="Coming soon"
                       aria-disabled="true"
                     >

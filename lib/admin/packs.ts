@@ -9,10 +9,12 @@ import {
   type AdminSession,
 } from "@/lib/admin/rbac";
 import { slugify } from "@/lib/slugify";
+import { PACK_DELIVERY_TYPES } from "@/lib/admin/pack-constants";
+
 export type PackRow = Database["public"]["Tables"]["stationery_packs"]["Row"];
 export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"];
 
-export const PACK_DELIVERY_TYPES = ["School collection", "Courier", "BrandPack"] as const;
+export { PACK_DELIVERY_TYPES };
 
 const optString = (max: number, label: string) =>
   z
