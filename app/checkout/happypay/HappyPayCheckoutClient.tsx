@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -50,15 +50,31 @@ export function HappyPayCheckoutClient() {
   const router = useRouter();
   const packs = usePackTrayStore((s) => s.packs);
   const openTray = usePackTrayStore((s) => s.openTray);
+  const updatePackDetails = usePackTrayStore((s) => s.updatePackDetails);
 
   const [fullName, setFullName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
   const [consent, setConsent] = useState(false);
 
+  // Per-pack learner names — inline edit-on-click pattern
+  const [learnerInputs, setLearnerInputs] = useState<string[]>(() =>
+    packs.map((p) => p.learnerName || "")
+  );
+  const [editNameIndex, setEditNameIndex] = useState<number | null>(null);
+  const fieldRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Keep learnerInputs in sync when packs change (e.g. pack removed)
+  useEffect(() => {
+    setLearnerInputs((prev) => {
+      if (prev.length === packs.length) return prev;
+      return packs.map((pack, index) => prev[index] ?? pack.learnerName ?? "");
+    });
+  }, [packs]);
 
   const total = useMemo(() => calculateTrayTotal(packs), [packs]);
   const instalment = happyPayInstalment(total);
@@ -79,6 +95,48 @@ export function HappyPayCheckoutClient() {
     openTray();
     router.back();
   }, [openTray, router]);
+
+  // ── Learner name handlers ────────────────────────────────────────────────
+  const handleLearnerNameChange = useCallback(
+    (index: number, value: string) => {
+      setLearnerInputs((prev) => {
+        const next = [...prev];
+        next[index] = value;
+        return next;
+      });
+    },
+    []
+  );
+
+  const handleLearnerNameBlur = useCallback(
+    (index: number) => {
+      const pack = packs[index];
+      if (!pack) return;
+      const name = learnerInputs[index]?.trim() || "";
+      if (name !== (pack.learnerName || "")) {
+        updatePackDetails(pack.id, name, pack.wantsPexcover || false);
+      }
+      setEditNameIndex(null);
+    },
+    [packs, learnerInputs, updatePackDetails]
+  );
+
+  const handleLearnerNameKeyDown = useCallback(
+    (e: React.KeyboardEvent, index: number) => {
+      if (e.key === "Enter") {
+        (e.target as HTMLInputElement).blur();
+      }
+      if (e.key === "Escape") {
+        setLearnerInputs((prev) => {
+          const next = [...prev];
+          next[index] = packs[index]?.learnerName || "";
+          return next;
+        });
+        setEditNameIndex(null);
+      }
+    },
+    [packs]
+  );
 
   function clearFieldError(field: string) {
     setErrors((prev) => {
@@ -105,6 +163,14 @@ export function HappyPayCheckoutClient() {
       nextErrors.buyerEmail = "Please enter a valid email address.";
     if (!consent) nextErrors.consent = "Please accept the Happy Pay terms consent.";
 
+    // Validate each learner name
+    packs.forEach((_, index) => {
+      const name = learnerInputs[index]?.trim() || "";
+      if (!name || name.length < 2) {
+        nextErrors[`learner_${index}`] = `Please enter learner ${index + 1}'s name.`;
+      }
+    });
+
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   }
@@ -124,8 +190,8 @@ export function HappyPayCheckoutClient() {
           buyerName: fullName.trim(),
           buyerEmail: buyerEmail.trim().toLowerCase(),
           buyerPhone: normalisePhone(buyerPhone),
-          packs: packs.map((pack) => ({
-            learnerName: pack.learnerName?.trim() || "",
+          packs: packs.map((pack, pi) => ({
+            learnerName: learnerInputs[pi]?.trim() || pack.learnerName?.trim() || "",
             schoolSlug: pack.schoolSlug || "",
             schoolName: pack.schoolName || "",
             grade: pack.grade || "",
@@ -305,11 +371,51 @@ export function HappyPayCheckoutClient() {
             </div>
           </section>
 
+          {/* ── Learner details ─────────────────────────────────────── */}
+          <section className={styles.detailsSection} aria-labelledby="hp-learners-heading">
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionNumber}>2</span>
+              <div>
+                <h2 id="hp-learners-heading">Learner details</h2>
+                <p>Add a name for each learner so we know which pack belongs to whom.</p>
+              </div>
+            </div>
+
+            <div className={styles.formGrid}>
+              {packs.map((pack, index) => (
+                <div key={pack.id}>
+                  <Input
+                    ref={(node) => {
+                      fieldRefs.current[`learner_${index}`] = node;
+                    }}
+                    id={`learnerName_${index}`}
+                    label={
+                      packs.length === 1
+                        ? "Learner name"
+                        : `Learner ${index + 1} name`
+                    }
+                    helper={`For: ${pack.packName}${pack.grade ? ` · ${pack.grade}` : ""}`}
+                    type="text"
+                    value={learnerInputs[index] || ""}
+                    onChange={(e) => {
+                      handleLearnerNameChange(index, e.target.value);
+                      clearFieldError(`learner_${index}`);
+                    }}
+                    onBlur={() => handleLearnerNameBlur(index)}
+                    placeholder="e.g. Amahle Dlamini"
+                    error={errors[`learner_${index}`]}
+                    autoComplete="off"
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+
           <section className={styles.consentCard} aria-label="Happy Pay consent">
             <label className={styles.consentField}>
               <input
                 type="checkbox"
-                id="consent"
+                id="hp-consent"
                 checked={consent}
                 onChange={(e) => {
                   setConsent(e.target.checked);
@@ -362,19 +468,54 @@ export function HappyPayCheckoutClient() {
             </div>
 
             <div className={styles.summaryPacks}>
-              {packs.map((pack, index) => (
-                <div key={pack.id} className={styles.summaryPack}>
-                  <div className={styles.summaryPackTop}>
-                    <strong>{pack.packName}</strong>
-                    <span>{formatCurrency(getPackTotal(pack))}</span>
+              {packs.map((pack, index) => {
+                const lName = learnerInputs[index]?.trim();
+                const learnerLabel = lName
+                  ? `Learner ${index + 1}: ${lName}`
+                  : `Learner ${index + 1}: Add name`;
+                return (
+                  <div key={pack.id} className={styles.summaryPack}>
+                    <div className={styles.summaryPackTop}>
+                      <div>
+                        {editNameIndex === index ? (
+                          <Input
+                            ref={(node) => {
+                              fieldRefs.current[`learner_${index}`] = node;
+                            }}
+                            type="text"
+                            value={learnerInputs[index] || ""}
+                            onChange={(e) =>
+                              handleLearnerNameChange(index, e.target.value)
+                            }
+                            onBlur={() => handleLearnerNameBlur(index)}
+                            onKeyDown={(e) => handleLearnerNameKeyDown(e, index)}
+                            placeholder="Learner name"
+                            aria-label={`Learner ${index + 1} name`}
+                            autoFocus
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            className={clsx(
+                              styles.learnerLabel,
+                              errors[`learner_${index}`] && styles.learnerLabelError
+                            )}
+                            onClick={() => setEditNameIndex(index)}
+                            aria-label={`Edit learner ${index + 1} name`}
+                          >
+                            {learnerLabel}
+                          </button>
+                        )}
+                      </div>
+                      <span>{formatCurrency(getPackTotal(pack))}</span>
+                    </div>
+                    <p>
+                      {pack.schoolName || "School pack"}
+                      {pack.grade ? ` · ${pack.grade}` : ""}
+                    </p>
                   </div>
-                  <p>
-                    {pack.schoolName || "School pack"}
-                    {pack.grade ? ` · ${pack.grade}` : ""}
-                    {index >= 0 ? ` · Learner ${index + 1}` : ""}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className={styles.splitSummary}>

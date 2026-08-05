@@ -215,6 +215,34 @@
   line-height: 1.4;
 }
 
+/* Inline edit-on-click learner name label inside summary card */
+.learnerLabel {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: var(--pex-navy);
+  font-family: var(--font-heading);
+  font-size: 0.975rem;
+  font-weight: 700;
+  line-height: 1.25;
+  border-bottom: 1.5px dashed var(--pex-keppel);
+  padding-bottom: 1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.learnerLabel:hover,
+.learnerLabel:focus-visible {
+  color: var(--pex-keppel);
+}
+
+.learnerLabelError {
+  color: var(--pex-error, #e53e3e) !important;
+  border-bottom-color: var(--pex-error, #e53e3e) !important;
+}
+
+
 .splitSummary {
   display: grid;
   gap: 10px;
