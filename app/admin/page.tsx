@@ -1,5 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { logout } from "../login/actions";
 import styles from "./admin.module.css";
 import clsx from "clsx";
 
@@ -17,6 +19,18 @@ export default async function AdminDashboard() {
     }
   );
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const userMeta = user.user_metadata ?? {};
+  const signedInName =
+    userMeta.full_name || userMeta.name || user.email || "Admin";
+
   // Fetch orders from Supabase
   const { data: orders, error } = await supabase
     .from("orders")
@@ -33,10 +47,25 @@ export default async function AdminDashboard() {
     <div className={styles.adminContainer}>
       {/* Header Section */}
       <div className={styles.headerSection}>
-        <h1 className={styles.title}>Pexpacks Order Management</h1>
-        <p className={styles.subtitle}>
-          Live orders, savings plan schedules, and fulfillment statuses.
-        </p>
+        <div className={styles.headerRow}>
+          <div>
+            <h1 className={styles.title}>Pexpacks Order Management</h1>
+            <p className={styles.subtitle}>
+              Live orders, savings plan schedules, and fulfillment statuses.
+            </p>
+            <p className={styles.signedInAs}>Signed in as {signedInName}</p>
+          </div>
+          <form action={logout}>
+            <button type="submit" className={styles.logoutButton}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <path d="M16 17l5-5-5-5" />
+                <path d="M21 12H9" />
+              </svg>
+              Log out
+            </button>
+          </form>
+        </div>
       </div>
 
       {/* Orders Table Container */}

@@ -48,6 +48,10 @@
   align-items: center;
 }
 
+.headerInnerAdmin {
+  grid-template-columns: 1fr auto;
+}
+
 .logoLink {
   display: inline-flex;
   align-items: center;

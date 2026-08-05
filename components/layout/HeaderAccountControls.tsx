@@ -1,0 +1,165 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { logout } from "@/app/login/actions";
+import { HeaderOrderIcon } from "@/components/order/HeaderOrderIcon";
+import headerStyles from "./Header.module.css";
+import styles from "./HeaderAccountControls.module.css";
+
+type HeaderAccountControlsProps = {
+  variant: "desktop" | "mobile";
+};
+
+type AccountUser = {
+  name: string;
+  username: string;
+};
+
+function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "A";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+export function HeaderAccountControls({ variant }: HeaderAccountControlsProps) {
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
+  const [user, setUser] = useState<AccountUser | null>(null);
+  const [loading, setLoading] = useState(isAdmin);
+  const [open, setOpen] = useState(false);
+  const [isLoggingOut, startLogoutTransition] = useTransition();
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    let cancelled = false;
+
+    (async () => {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getUser();
+      if (cancelled) return;
+
+      if (data?.user) {
+        const meta = data.user.user_metadata ?? {};
+        const name =
+          meta.full_name || meta.name || data.user.email || "Admin";
+        const username =
+          meta.username ||
+          meta.user_name ||
+          data.user.email?.split("@")[0] ||
+          "admin";
+        setUser({ name, username });
+      }
+      setLoading(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAdmin]);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  if (isAdmin) {
+    return (
+      <div ref={wrapRef} className={styles.accountControls}>
+        <button
+          type="button"
+          className={styles.profileButton}
+          onClick={() => setOpen((v) => !v)}
+          aria-label={
+            user ? `Account menu for ${user.name}` : "Open account menu"
+          }
+          aria-haspopup="menu"
+          aria-expanded={open}
+        >
+          {user && !loading ? (
+            <span className={styles.avatar}>{getInitials(user.name)}</span>
+          ) : (
+            <span className={[styles.avatar, styles.avatarSilhouette].join(" ")}>
+              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                <circle cx="12" cy="8" r="3.5" />
+                <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
+              </svg>
+            </span>
+          )}
+        </button>
+
+        {open && user ? (
+          <div className={styles.dropdown} role="menu">
+            <div className={styles.dropdownHeader}>
+              <div className={styles.dropdownName}>{user.name}</div>
+              <div className={styles.dropdownUsername}>@{user.username}</div>
+            </div>
+            <div className={styles.dropdownDivider} role="separator" />
+            <button
+              type="button"
+              className={styles.logoutButton}
+              role="menuitem"
+              onClick={() => startLogoutTransition(() => logout())}
+              disabled={isLoggingOut}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <path d="M16 17l5-5-5-5" />
+                <path d="M21 12H9" />
+              </svg>
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </button>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (variant === "desktop") {
+    return (
+      <div className={styles.accountControls}>
+        <HeaderOrderIcon />
+        <Link className={headerStyles.desktopLogin} href="/login" aria-label="Login" title="Login">
+          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.5" />
+            <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
+          </svg>
+          <span className="sr-only">Login</span>
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.accountControls}>
+      <HeaderOrderIcon />
+    </div>
+  );
+}
