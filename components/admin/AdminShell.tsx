@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import type { AdminNavGroup } from "@/lib/admin/navigation";
 import { AdminIcon } from "@/components/admin/icons";
+import { createClient } from "@/lib/supabase/client";
 import styles from "./AdminShell.module.css";
 
 function initials(name: string) {
@@ -34,18 +35,46 @@ export function AdminShell({
   children: ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  async function handleSignOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+  }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        setProfileOpen(false);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Close profile dropdown on outside click
+  useEffect(() => {
+    if (!profileOpen) return;
+    function onOutsideClick(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onOutsideClick);
+    return () => document.removeEventListener("mousedown", onOutsideClick);
+  }, [profileOpen]);
+
   useEffect(() => {
     setOpen(false);
+    setProfileOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -56,6 +85,7 @@ export function AdminShell({
   }, [open]);
 
   const roleLabels = userRoles.length > 0 ? userRoles.join(", ") : "Staff";
+  const avatarInitials = initials(userName);
 
   return (
     <div className={styles.shell}>
@@ -69,12 +99,47 @@ export function AdminShell({
         className={clsx(styles.sidebar, open && styles.sidebarOpen)}
         aria-label="Admin navigation"
       >
-        <div className={styles.brand}>
-          <span className={styles.brandMark} aria-hidden="true" />
+        {/* ── Brand + Profile trigger ── */}
+        <div className={styles.brand} ref={profileRef}>
+          <button
+            type="button"
+            className={clsx(styles.brandMark, profileOpen && styles.brandMarkActive)}
+            onClick={() => setProfileOpen((v) => !v)}
+            aria-haspopup="true"
+            aria-expanded={profileOpen}
+            aria-label="Profile menu"
+          >
+            <span className={styles.brandMarkInitials}>{avatarInitials}</span>
+          </button>
           <div>
             <div className={styles.brandName}>Pexpacks</div>
             <div className={styles.brandSub}>Admin Console</div>
           </div>
+
+          {/* Profile dropdown */}
+          {profileOpen && (
+            <div className={styles.profileDropdown} role="menu" aria-label="User profile">
+              <div className={styles.profileHeader}>
+                <span className={styles.profileAvatar}>{avatarInitials}</span>
+                <div className={styles.profileMeta}>
+                  <span className={styles.profileName}>{userName}</span>
+                  <span className={styles.profileEmail}>{userEmail}</span>
+                  <span className={styles.profileRole}>{roleLabels}</span>
+                </div>
+              </div>
+              <div className={styles.profileDivider} />
+              <button
+                type="button"
+                className={styles.signOutButton}
+                onClick={handleSignOut}
+                disabled={signingOut}
+                role="menuitem"
+              >
+                <AdminIcon name="close" size={15} />
+                {signingOut ? "Signing out…" : "Sign out"}
+              </button>
+            </div>
+          )}
         </div>
 
         <nav className={styles.nav}>

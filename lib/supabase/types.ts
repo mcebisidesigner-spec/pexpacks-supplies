@@ -818,6 +818,7 @@ export interface Database {
           updated_by: string | null;
           created_at: string;
           updated_at: string;
+          search_vector: string | null;
         };
         Insert: {
           id?: string;
@@ -837,6 +838,7 @@ export interface Database {
           updated_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          search_vector?: string | null;
         };
         Update: {
           id?: string;
@@ -856,6 +858,7 @@ export interface Database {
           updated_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          search_vector?: string | null;
         };
         Relationships: [
           {
@@ -881,6 +884,7 @@ export interface Database {
           created_by: string | null;
           created_at: string;
           updated_at: string;
+          search_vector: string | null;
         };
         Insert: {
           id?: string;
@@ -895,6 +899,7 @@ export interface Database {
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          search_vector?: string | null;
         };
         Update: {
           id?: string;
@@ -909,6 +914,7 @@ export interface Database {
           created_by?: string | null;
           created_at?: string;
           updated_at?: string;
+          search_vector?: string | null;
         };
         Relationships: [
           {

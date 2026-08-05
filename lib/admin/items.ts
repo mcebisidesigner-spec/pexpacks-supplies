@@ -1,0 +1,463 @@
+import { z } from "zod";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import type { Database } from "@/lib/supabase/types";
+import {
+  getAdminUser,
+  hasPermission,
+  writeAuditLog,
+  type PermissionKey,
+  type AdminSession,
+} from "@/lib/admin/rbac";
+
+export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"];
+
+const optString = (max: number, label: string) =>
+  z
+    .union([z.literal(""), z.string().trim().max(max, `${label} is too long`)])
+    .transform((v) => (v === "" ? null : v));
+
+const moneyField = z
+  .union([
+    z.literal(""),
+    z.string().trim().regex(/^\d+(\.\d{1,2})?$/, "Enter a valid price"),
+  ])
+  .transform((v) => (v === "" ? null : Number(v)));
+
+const countField = z.coerce
+  .number()
+  .int("Must be a whole number")
+  .min(0, "Cannot be negative")
+  .max(1_000_000, "Value is too large");
+
+export const itemSchema = z.object({
+  pack_id: z.string().uuid("Invalid pack id"),
+  name: z.string().trim().min(1, "Enter an item name").max(200, "Name is too long"),
+  description: optString(2000, "description"),
+  quantity: countField,
+  unit_price: moneyField,
+  image: optString(2000, "image URL"),
+  visible: z.boolean().default(false),
+  sort_order: countField,
+});
+
+export type ItemFormData = z.infer<typeof itemSchema>;
+
+export type ParsedItemForm =
+  | { ok: true; data: ItemFormData }
+  | { ok: false; errors: Record<string, string> };
+
+export type ItemFormResult =
+  | { ok: true; item: ItemRow }
+  | { ok: false; errors: Record<string, string>; message?: string };
+
+export type ItemFormState = {
+  ok?: boolean;
+  message?: string;
+  errors?: Record<string, string>;
+};
+
+function raw(formData: FormData, key: string): string {
+  const v = formData.get(key);
+  return typeof v === "string" ? v : "";
+}
+
+export function parseItemForm(formData: FormData): ParsedItemForm {
+  const parsed = itemSchema.safeParse({
+    pack_id: raw(formData, "pack_id"),
+    name: raw(formData, "name"),
+    description: raw(formData, "description"),
+    quantity: raw(formData, "quantity") || "1",
+    unit_price: raw(formData, "unit_price"),
+    image: raw(formData, "image"),
+    visible: formData.has("visible"),
+    sort_order: raw(formData, "sort_order") || "0",
+  });
+
+  if (!parsed.success) {
+    const errors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      const key = String(issue.path[0]);
+      if (!errors[key]) errors[key] = issue.message;
+    }
+    return { ok: false, errors };
+  }
+  return { ok: true, data: parsed.data };
+}
+
+async function assertCan(permission: PermissionKey): Promise<AdminSession> {
+  const session = await getAdminUser();
+  if (!session || !hasPermission(session, permission)) {
+    const err = new Error("You don't have permission to do that.");
+    (err as Error & { status?: number }).status = 403;
+    throw err;
+  }
+  return session;
+}
+
+export interface ItemListFilters {
+  q?: string;
+  pack_id?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface ItemListItem extends ItemRow {
+  pack_title: string | null;
+}
+
+export interface ItemListResult {
+  items: ItemListItem[];
+  total: number;
+  page: number;
+  pageCount: number;
+}
+
+export async function listItems(filters: ItemListFilters = {}): Promise<ItemListResult> {
+  const admin = createSupabaseAdminClient();
+  const page = Math.max(1, filters.page ?? 1);
+  const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  let query = admin
+    .from("stationery_items")
+    .select(
+      "id,pack_id,name,description,quantity,unit_price,image,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
+      { count: "exact" }
+    );
+
+  if (filters.q) {
+    const q = filters.q.replace(/%/g, "").trim();
+    if (q) query = query.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
+  }
+  if (filters.pack_id) query = query.eq("pack_id", filters.pack_id);
+
+  const { data, count, error } = await query
+    .order("name", { ascending: true })
+    .range(from, to);
+
+  if (error) {
+    console.error("[items] list failed:", error);
+    return { items: [], total: 0, page, pageCount: 0 };
+  }
+
+  const rows = (data ?? []) as (ItemRow & { stationery_packs?: { title: string | null } | null })[];
+
+  return {
+    items: rows.map((row) => ({
+      ...row,
+      pack_title: row.stationery_packs?.title ?? null,
+    })),
+    total: count ?? 0,
+    page,
+    pageCount: Math.max(1, Math.ceil((count ?? 0) / pageSize)),
+  };
+}
+
+export async function getItem(id: string): Promise<ItemRow | null> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin.from("stationery_items").select("*").eq("id", id).maybeSingle();
+  if (error) {
+    console.error("[items] get failed:", error);
+    return null;
+  }
+  return data;
+}
+
+export async function createItem(formData: FormData): Promise<ItemFormResult> {
+  const actor = await assertCan("items.create");
+  const parsed = parseItemForm(formData);
+  if (!parsed.ok) return { ok: false, errors: parsed.errors };
+
+  const admin = createSupabaseAdminClient();
+
+  try {
+    const { data: created, error } = await admin
+      .from("stationery_items")
+      .insert({ ...parsed.data, created_by: actor.user.id })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    void writeAuditLog({
+      actorId: actor.user.id,
+      actorName: actor.user.email,
+      action: "items.create",
+      entityType: "item",
+      entityId: created.id,
+      summary: `Created item "${created.name}"`,
+    });
+
+    return { ok: true, item: created };
+  } catch (err) {
+    console.error("[items] create failed:", err);
+    return { ok: false, errors: {}, message: "Failed to create item. Please try again." };
+  }
+}
+
+export async function updateItem(id: string, formData: FormData): Promise<ItemFormResult> {
+  const actor = await assertCan("items.edit");
+  const parsed = parseItemForm(formData);
+  if (!parsed.ok) return { ok: false, errors: parsed.errors };
+
+  const admin = createSupabaseAdminClient();
+  const existing = await admin.from("stationery_items").select("id").eq("id", id).maybeSingle();
+  if (existing.error || !existing.data) {
+    return { ok: false, errors: {}, message: "Item not found." };
+  }
+
+  try {
+    const { data: updated, error } = await admin
+      .from("stationery_items")
+      .update(parsed.data)
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    void writeAuditLog({
+      actorId: actor.user.id,
+      actorName: actor.user.email,
+      action: "items.edit",
+      entityType: "item",
+      entityId: updated.id,
+      summary: `Updated item "${updated.name}"`,
+    });
+
+    return { ok: true, item: updated };
+  } catch (err) {
+    console.error("[items] update failed:", err);
+    return { ok: false, errors: {}, message: "Failed to update item. Please try again." };
+  }
+}
+
+export async function deleteItem(id: string): Promise<{ ok: boolean; message?: string }> {
+  const actor = await assertCan("items.delete");
+  const admin = createSupabaseAdminClient();
+
+  const { data: existing } = await admin.from("stationery_items").select("id, name").eq("id", id).single();
+  if (!existing) return { ok: false, message: "Item not found." };
+
+  const { error } = await admin.from("stationery_items").delete().eq("id", id);
+  if (error) {
+    console.error("[items] delete failed:", error);
+    return { ok: false, message: "Failed to delete item." };
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "items.delete",
+    entityType: "item",
+    entityId: id,
+    summary: `Deleted item "${existing.name}"`,
+  });
+
+  return { ok: true };
+}
+
+export async function reorderItems(
+  packId: string,
+  orderedIds: string[]
+): Promise<{ ok: boolean; message?: string }> {
+  const actor = await assertCan("items.reorder");
+  const admin = createSupabaseAdminClient();
+
+  const { data: existing } = await admin.from("stationery_items").select("id").eq("pack_id", packId);
+  if (!existing) return { ok: false, message: "No items found in this pack." };
+
+  const idSet = new Set(orderedIds);
+  const valid = existing.filter((item) => idSet.has(item.id));
+  if (valid.length !== existing.length) {
+    return { ok: false, message: "The item list changed. Refresh and try again." };
+  }
+
+  try {
+    const updates = orderedIds.map((id, index) =>
+      admin.from("stationery_items").update({ sort_order: index + 1 }).eq("id", id)
+    );
+    await Promise.all(updates);
+
+    void writeAuditLog({
+      actorId: actor.user.id,
+      actorName: actor.user.email,
+      action: "items.reorder",
+      entityType: "pack",
+      entityId: packId,
+      summary: `Reordered ${updates.length} items in a pack`,
+    });
+
+    return { ok: true };
+  } catch (err) {
+    console.error("[items] reorder failed:", err);
+    return { ok: false, message: "Failed to reorder items." };
+  }
+}
+
+export interface ImportItemsResult {
+  ok: boolean;
+  created: number;
+  updated: number;
+  errors: string[];
+}
+
+export function parseCsv(text: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let field = "";
+  let inQuotes = false;
+  const src = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  for (let i = 0; i < src.length; i++) {
+    const c = src[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (src[i + 1] === '"') {
+          field += '"';
+          i += 1;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        field += c;
+      }
+    } else if (c === '"') {
+      inQuotes = true;
+    } else if (c === ",") {
+      row.push(field);
+      field = "";
+    } else if (c === "\n") {
+      row.push(field);
+      field = "";
+      if (row.some((f) => f.trim() !== "")) rows.push(row);
+      row = [];
+    } else {
+      field += c;
+    }
+  }
+  row.push(field);
+  if (row.some((f) => f.trim() !== "")) rows.push(row);
+  return rows;
+}
+
+const CSV_ALIASES: Record<string, string> = {
+  name: "name",
+  item: "name",
+  itemname: "name",
+  quantity: "quantity",
+  qty: "quantity",
+  qtyperlearner: "quantity",
+  unitprice: "unit_price",
+  price: "unit_price",
+  description: "description",
+  notes: "description",
+  visible: "visible",
+  sortorder: "sort_order",
+  order: "sort_order",
+};
+
+function cleanHeader(value: string): string {
+  return value.replace(/[^a-z]/g, "").toLowerCase();
+}
+
+export async function importItemsCsv(packId: string, csvText: string): Promise<ImportItemsResult> {
+  const actor = await assertCan("items.import");
+  const admin = createSupabaseAdminClient();
+
+  const result: ImportItemsResult = { ok: true, created: 0, updated: 0, errors: [] };
+  const rows = parseCsv(csvText);
+  if (rows.length === 0) {
+    result.ok = false;
+    result.errors.push("The CSV file is empty.");
+    return result;
+  }
+
+  const first = rows[0].map((h) => cleanHeader(h));
+  const headerMap = new Map<string, number>();
+  const hasHeader = first.some((h) => CSV_ALIASES[h]);
+  if (hasHeader) {
+    first.forEach((h, i) => {
+      const key = CSV_ALIASES[h];
+      if (key && !headerMap.has(key)) headerMap.set(key, i);
+    });
+    rows.shift();
+  } else {
+    headerMap.set("name", 0);
+    headerMap.set("quantity", 1);
+    headerMap.set("unit_price", 2);
+    headerMap.set("description", 3);
+  }
+
+  if (!headerMap.has("name")) {
+    result.ok = false;
+    result.errors.push('The CSV needs a "name" column.');
+    return result;
+  }
+
+  const { data: existing } = await admin.from("stationery_items").select("id, name").eq("pack_id", packId);
+  const byName = new Map((existing ?? []).map((item) => [item.name.toLowerCase(), item.id]));
+
+  const parseRow = (row: string[], lineNumber: number): ItemFormData | null => {
+    const field = (key: string): string => {
+      const idx = headerMap.get(key);
+      return idx === undefined ? "" : (row[idx] ?? "").trim();
+    };
+    const candidate: Record<string, unknown> = {
+      pack_id: packId,
+      name: field("name"),
+      description: field("description"),
+      quantity: field("quantity") || "1",
+      unit_price: field("unit_price"),
+      image: "",
+      visible: ["true", "1", "yes", "y"].includes(field("visible").toLowerCase()),
+      sort_order: field("sort_order") || "0",
+    };
+    const parsed = itemSchema.safeParse(candidate);
+    if (!parsed.success) {
+      const message = parsed.error.issues.map((issue) => `${String(issue.path[0])}: ${issue.message}`).join("; ");
+      result.errors.push(`Row ${lineNumber}: ${message}`);
+      return null;
+    }
+    return parsed.data;
+  };
+
+  for (let i = 0; i < rows.length; i++) {
+    const lineNumber = i + (hasHeader ? 2 : 1);
+    const data = parseRow(rows[i], lineNumber);
+    if (!data) continue;
+
+    const key = data.name.toLowerCase();
+    const existingId = byName.get(key);
+
+    try {
+      if (existingId) {
+        const { error } = await admin.from("stationery_items").update(data).eq("id", existingId);
+        if (error) throw error;
+        result.updated += 1;
+      } else {
+        const { error } = await admin
+          .from("stationery_items")
+          .insert({ ...data, created_by: actor.user.id });
+        if (error) throw error;
+        byName.set(key, "new");
+        result.created += 1;
+      }
+    } catch (err) {
+      console.error("[items] csv row failed:", err);
+      result.errors.push(`Row ${lineNumber}: failed to save item "${data.name}".`);
+    }
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "items.import",
+    entityType: "pack",
+    entityId: packId,
+    summary: `Imported items CSV: ${result.created} created, ${result.updated} updated, ${result.errors.length} errors`,
+  });
+
+  return result;
+}

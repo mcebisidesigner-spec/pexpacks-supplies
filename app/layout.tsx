@@ -1,9 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { ClientRuntimeWidgets } from "@/components/layout/ClientRuntimeWidgets";
-import { SiteRatingStrip } from "@/components/shared/SiteRatingStrip";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { TrayProviders } from "@/components/order/TrayProviders";
 import { buildMetadata } from "@/lib/seo";
@@ -132,12 +130,7 @@ export default function RootLayout({
         <JsonLd data={onlineStoreSchema()} />
         <JsonLd data={websiteSchema()} />
         <div className="site-shell">
-          <Header />
-          <main id="site-main" className="site-main">
-            {children}
-          </main>
-          <SiteRatingStrip />
-          <Footer />
+          <SiteChrome>{children}</SiteChrome>
           <ClientRuntimeWidgets />
           <TrayProviders />
         </div>
