@@ -31,7 +31,7 @@ export default async function AdminDashboardPage() {
   const name = displayName(session.user);
 
   return (
-    <div>
+    <div className={adminStyles.adminContainer}>
       <header className={adminStyles.headerSection}>
         <h1 className={adminStyles.title}>Dashboard</h1>
         <p className={adminStyles.subtitle}>

@@ -1,11 +1,7 @@
 .adminContainer {
-  min-height: 80vh;
   width: 100%;
-  max-width: var(--layout-max-width, 1280px);
+  max-width: 100%;
   margin-inline: auto;
-  padding-inline: clamp(48px, 5vw, 88px);
-  padding-top: clamp(36px, 5vw, 64px);
-  padding-bottom: clamp(48px, 6vw, 96px);
 }
 
 .headerSection {
@@ -199,23 +195,7 @@
   color: var(--pex-muted, #4d5a5d);
 }
 
-@media (max-width: 1280px) {
-  .adminContainer {
-    padding-inline: clamp(32px, 4vw, 48px);
-  }
-}
-
-@media (max-width: 1024px) {
-  .adminContainer {
-    padding-inline: var(--gutter-tablet, 32px);
-  }
-}
-
 @media (max-width: 480px) {
-  .adminContainer {
-    padding-inline: var(--gutter-mobile, 20px);
-  }
-
   .table th,
   .table td {
     padding: 14px var(--space-4);

@@ -178,18 +178,6 @@ export function AdminShell({
           ))}
         </nav>
 
-        <div className={styles.sidebarFooter}>
-          <div className={styles.userChip}>
-            <span className={styles.userAvatar}>{initials(userName)}</span>
-            <span className={styles.userMeta}>
-              <span className={styles.userName}>{userName}</span>
-              <span className={styles.userEmail}>{userEmail}</span>
-              <span className={styles.userRoles} title={roleLabels}>
-                {roleLabels}
-              </span>
-            </span>
-          </div>
-        </div>
       </aside>
 
       <div className={styles.main}>
