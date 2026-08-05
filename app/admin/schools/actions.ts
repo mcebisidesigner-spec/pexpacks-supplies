@@ -19,6 +19,10 @@ export async function createSchoolAction(
   if (result.ok) {
     revalidatePath("/admin/schools");
     revalidatePath("/admin");
+    revalidatePath("/schools");
+    if (result.school.slug) {
+      revalidatePath(`/schools/${result.school.slug}`);
+    }
     return { ok: true, message: `School "${result.school.name}" created.` };
   }
   return { ok: false, errors: result.errors, message: result.message };
@@ -34,6 +38,10 @@ export async function updateSchoolAction(
   if (result.ok) {
     revalidatePath("/admin/schools");
     revalidatePath(`/admin/schools/${id}`);
+    revalidatePath("/schools");
+    if (result.school.slug) {
+      revalidatePath(`/schools/${result.school.slug}`);
+    }
     return { ok: true, message: `School "${result.school.name}" updated.` };
   }
   return { ok: false, errors: result.errors, message: result.message };
@@ -43,16 +51,19 @@ export async function archiveSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.archive" });
   await setSchoolStatus(id, "archived");
   revalidatePath("/admin/schools");
+  revalidatePath("/schools");
 }
 
 export async function restoreSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.restore" });
   await setSchoolStatus(id, "active");
   revalidatePath("/admin/schools");
+  revalidatePath("/schools");
 }
 
 export async function deleteSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.delete" });
   await deleteSchool(id);
   revalidatePath("/admin/schools");
+  revalidatePath("/schools");
 }
