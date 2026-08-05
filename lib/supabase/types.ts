@@ -368,12 +368,24 @@ export interface Database {
           is_featured: boolean;
           lowest_price: number | null;
           grades: Json | null;
+          district: string | null;
+          address: string | null;
+          email: string | null;
+          telephone: string | null;
+          principal: string | null;
+          description: string | null;
+          status: string;
+          partner_since: string | null;
+          latitude: number | null;
+          longitude: number | null;
+          published: boolean;
+          updated_by: string | null;
           search_vector: string | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
-          id: string;
+          id?: string;
           name: string;
           slug: string;
           city?: string | null;
@@ -383,6 +395,18 @@ export interface Database {
           is_featured?: boolean;
           lowest_price?: number | null;
           grades?: Json | null;
+          district?: string | null;
+          address?: string | null;
+          email?: string | null;
+          telephone?: string | null;
+          principal?: string | null;
+          description?: string | null;
+          status?: string;
+          partner_since?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          published?: boolean;
+          updated_by?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -397,10 +421,504 @@ export interface Database {
           is_featured?: boolean;
           lowest_price?: number | null;
           grades?: Json | null;
+          district?: string | null;
+          address?: string | null;
+          email?: string | null;
+          telephone?: string | null;
+          principal?: string | null;
+          description?: string | null;
+          status?: string;
+          partner_since?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          published?: boolean;
+          updated_by?: string | null;
           created_at?: string;
           updated_at?: string;
         };
         Relationships: [];
+      };
+      roles: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          description: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          description?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          slug?: string;
+          description?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      permissions: {
+        Row: {
+          id: string;
+          key: string;
+          name: string;
+          description: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          key: string;
+          name: string;
+          description?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          key?: string;
+          name?: string;
+          description?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      role_permissions: {
+        Row: {
+          role_id: string;
+          permission_id: string;
+        };
+        Insert: {
+          role_id: string;
+          permission_id: string;
+        };
+        Update: {
+          role_id?: string;
+          permission_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_role_id_fkey";
+            columns: ["role_id"];
+            isOneToOne: false;
+            referencedRelation: "roles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "role_permissions_permission_id_fkey";
+            columns: ["permission_id"];
+            isOneToOne: false;
+            referencedRelation: "permissions";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      user_roles: {
+        Row: {
+          user_id: string;
+          role_id: string;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          role_id: string;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          role_id?: string;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_role_id_fkey";
+            columns: ["role_id"];
+            isOneToOne: false;
+            referencedRelation: "roles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      user_permissions: {
+        Row: {
+          user_id: string;
+          permission_id: string;
+          granted: boolean;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          permission_id: string;
+          granted?: boolean;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          permission_id?: string;
+          granted?: boolean;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_permissions_permission_id_fkey";
+            columns: ["permission_id"];
+            isOneToOne: false;
+            referencedRelation: "permissions";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      assigned_forms: {
+        Row: {
+          id: string;
+          user_id: string;
+          form_key: string;
+          label: string;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          form_key: string;
+          label: string;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          form_key?: string;
+          label?: string;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      website_content: {
+        Row: {
+          id: string;
+          key: string;
+          title: string;
+          value: Json;
+          updated_by: string | null;
+          updated_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          key: string;
+          title?: string;
+          value?: Json;
+          updated_by?: string | null;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          key?: string;
+          title?: string;
+          value?: Json;
+          updated_by?: string | null;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      testimonials: {
+        Row: {
+          id: string;
+          name: string;
+          role: string;
+          quote: string;
+          rating: number;
+          visible: boolean;
+          sort_order: number;
+          updated_by: string | null;
+          updated_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          role?: string;
+          quote: string;
+          rating?: number;
+          visible?: boolean;
+          sort_order?: number;
+          updated_by?: string | null;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          role?: string;
+          quote?: string;
+          rating?: number;
+          visible?: boolean;
+          sort_order?: number;
+          updated_by?: string | null;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      faqs: {
+        Row: {
+          id: string;
+          question: string;
+          answer: string;
+          category: string;
+          visible: boolean;
+          sort_order: number;
+          updated_by: string | null;
+          updated_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          question: string;
+          answer: string;
+          category?: string;
+          visible?: boolean;
+          sort_order?: number;
+          updated_by?: string | null;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          question?: string;
+          answer?: string;
+          category?: string;
+          visible?: boolean;
+          sort_order?: number;
+          updated_by?: string | null;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      assets: {
+        Row: {
+          id: string;
+          name: string;
+          bucket: string;
+          folder: string;
+          path: string;
+          public_url: string | null;
+          mime_type: string | null;
+          size_bytes: number;
+          width: number | null;
+          height: number | null;
+          alt_text: string | null;
+          uploaded_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          bucket?: string;
+          folder?: string;
+          path: string;
+          public_url?: string | null;
+          mime_type?: string | null;
+          size_bytes?: number;
+          width?: number | null;
+          height?: number | null;
+          alt_text?: string | null;
+          uploaded_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          bucket?: string;
+          folder?: string;
+          path?: string;
+          public_url?: string | null;
+          mime_type?: string | null;
+          size_bytes?: number;
+          width?: number | null;
+          height?: number | null;
+          alt_text?: string | null;
+          uploaded_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      audit_logs: {
+        Row: {
+          id: number;
+          created_at: string;
+          actor_id: string | null;
+          actor_name: string | null;
+          action: string;
+          entity_type: string;
+          entity_id: string | null;
+          summary: string;
+          details: Json | null;
+          ip: string | null;
+          user_agent: string | null;
+        };
+        Insert: {
+          id?: number;
+          created_at?: string;
+          actor_id?: string | null;
+          actor_name?: string | null;
+          action: string;
+          entity_type: string;
+          entity_id?: string | null;
+          summary: string;
+          details?: Json | null;
+          ip?: string | null;
+          user_agent?: string | null;
+        };
+        Update: {
+          id?: number;
+          created_at?: string;
+          actor_id?: string | null;
+          actor_name?: string | null;
+          action?: string;
+          entity_type?: string;
+          entity_id?: string | null;
+          summary?: string;
+          details?: Json | null;
+          ip?: string | null;
+          user_agent?: string | null;
+        };
+        Relationships: [];
+      };
+      stationery_packs: {
+        Row: {
+          id: string;
+          school_id: string | null;
+          title: string;
+          slug: string | null;
+          description: string | null;
+          price: number;
+          stock: number;
+          featured: boolean;
+          visible: boolean;
+          academic_year: string | null;
+          delivery_type: string;
+          pack_image: string | null;
+          sort_order: number;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          school_id?: string | null;
+          title: string;
+          slug?: string | null;
+          description?: string | null;
+          price?: number;
+          stock?: number;
+          featured?: boolean;
+          visible?: boolean;
+          academic_year?: string | null;
+          delivery_type?: string;
+          pack_image?: string | null;
+          sort_order?: number;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          school_id?: string | null;
+          title?: string;
+          slug?: string | null;
+          description?: string | null;
+          price?: number;
+          stock?: number;
+          featured?: boolean;
+          visible?: boolean;
+          academic_year?: string | null;
+          delivery_type?: string;
+          pack_image?: string | null;
+          sort_order?: number;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stationery_packs_school_id_fkey";
+            columns: ["school_id"];
+            isOneToOne: false;
+            referencedRelation: "schools";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      stationery_items: {
+        Row: {
+          id: string;
+          pack_id: string;
+          name: string;
+          description: string | null;
+          quantity: number;
+          unit_price: number | null;
+          image: string | null;
+          visible: boolean;
+          sort_order: number;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          pack_id: string;
+          name: string;
+          description?: string | null;
+          quantity?: number;
+          unit_price?: number | null;
+          image?: string | null;
+          visible?: boolean;
+          sort_order?: number;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          pack_id?: string;
+          name?: string;
+          description?: string | null;
+          quantity?: number;
+          unit_price?: number | null;
+          image?: string | null;
+          visible?: boolean;
+          sort_order?: number;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stationery_items_pack_id_fkey";
+            columns: ["pack_id"];
+            isOneToOne: false;
+            referencedRelation: "stationery_packs";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       blog_posts: {
         Row: {
@@ -446,7 +964,33 @@ export interface Database {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      is_admin: { Args: Record<string, never>; Returns: boolean };
+      is_staff: { Args: Record<string, never>; Returns: boolean };
+      has_permission: { Args: { p_key: string }; Returns: boolean };
+      set_user_as_admin: { Args: { target_user_id: string }; Returns: undefined };
+      grant_role: {
+        Args: { target_user_id: string; role_slug: string; granted_by?: string | null };
+        Returns: undefined;
+      };
+      revoke_role: { Args: { target_user_id: string; role_slug: string }; Returns: undefined };
+      set_user_permission: {
+        Args: { target_user_id: string; permission_key: string; granted: boolean; granted_by?: string | null };
+        Returns: undefined;
+      };
+      get_orders_daily: {
+        Args: { from_date: string; to_date: string };
+        Returns: { day: string; order_count: number; revenue: number }[];
+      };
+      get_orders_by_pack_type: {
+        Args: Record<string, never>;
+        Returns: { pack_type: string; order_count: number }[];
+      };
+      get_schools_by_city: {
+        Args: Record<string, never>;
+        Returns: { city: string | null; school_count: number }[];
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };

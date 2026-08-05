@@ -1,0 +1,228 @@
+/* ---- Stat cards ---- */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4, 16px);
+  margin-bottom: clamp(20px, 3vw, 28px);
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid var(--pex-border, #e1e7ea);
+  border-radius: var(--radius-card-compact, 18px);
+  box-shadow: var(--card-shadow, 0 12px 32px rgba(26, 42, 64, 0.05));
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 148px;
+}
+
+.statCardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.statIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statIconKeppel {
+  background: var(--color-teal-subtle, rgba(33, 158, 154, 0.1));
+  color: var(--pex-keppel, #1a7a77);
+}
+
+.statIconCoral {
+  background: rgba(255, 111, 89, 0.12);
+  color: var(--pex-coral, #ff6f59);
+}
+
+.statIconNavy {
+  background: rgba(26, 42, 64, 0.08);
+  color: var(--pex-navy, #1a2a40);
+}
+
+.statBadge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--pex-bg-soft, #f4f5f7);
+  color: var(--pex-muted, #4d5a5d);
+}
+
+.statValue {
+  font-family: var(--font-heading, inherit);
+  font-size: clamp(26px, 2.6vw, 34px);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--pex-navy, #1a2a40);
+  letter-spacing: -0.01em;
+}
+
+.statLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pex-muted, #4d5a5d);
+}
+
+.statHint {
+  font-size: 12px;
+  color: var(--pex-muted, #4d5a5d);
+  margin-top: 2px;
+}
+
+/* ---- Cards & charts ---- */
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-4, 16px);
+  margin-bottom: clamp(20px, 3vw, 28px);
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--pex-border, #e1e7ea);
+  border-radius: var(--radius-card-compact, 18px);
+  box-shadow: var(--card-shadow, 0 12px 32px rgba(26, 42, 64, 0.05));
+  padding: 22px;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: var(--font-heading, inherit);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--pex-navy, #1a2a40);
+}
+
+.cardSubtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--pex-muted, #4d5a5d);
+}
+
+.verticalBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 190px;
+  margin-top: 18px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--pex-border, #e1e7ea);
+  position: relative;
+}
+
+.bar {
+  flex: 1;
+  min-width: 3px;
+  border-radius: 4px 4px 0 0;
+  background: var(--pex-keppel, #1a7a77);
+  transition: opacity 0.15s ease;
+  cursor: pointer;
+}
+
+.bar:hover {
+  opacity: 0.72;
+}
+
+.barCoral {
+  background: var(--pex-coral, #ff6f59);
+}
+
+.barLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--pex-muted, #4d5a5d);
+  padding-top: 6px;
+}
+
+.barLabelHidden {
+  visibility: hidden;
+}
+
+.chartTotal {
+  margin-top: 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.chartTotalValue {
+  font-family: var(--font-heading, inherit);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--pex-navy, #1a2a40);
+}
+
+.chartTotalLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pex-muted, #4d5a5d);
+}
+
+/* ---- Horizontal bar lists ---- */
+.hbar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.hbarRow {
+  display: grid;
+  grid-template-columns: 96px 1fr 44px;
+  align-items: center;
+  gap: 12px;
+}
+
+.hbarLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pex-text, #172326);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hbarTrack {
+  height: 10px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--pex-bg-soft, #f4f5f7);
+  overflow: hidden;
+}
+
+.hbarFill {
+  height: 100%;
+  border-radius: var(--radius-pill, 999px);
+  background: linear-gradient(90deg, var(--pex-keppel, #1a7a77), #33b5b0);
+}
+
+.hbarFillCoral {
+  background: linear-gradient(90deg, var(--pex-coral, #ff6f59), #ff9a8a);
+}
+
+.hbarValue {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--pex-navy, #1a2a40);
+  text-align: right;
+}
+
+.emptyNote {
+  margin: 0;
+  padding: 24px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--pex-muted, #4d5a5d);
+}

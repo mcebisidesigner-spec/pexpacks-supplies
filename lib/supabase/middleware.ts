@@ -39,10 +39,25 @@ export async function updateSession(request: NextRequest) {
 
   // Guard all /admin routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
-    const role = user?.app_metadata?.role;
+    const appMeta = user?.app_metadata as Record<string, unknown> | undefined;
+    const role = appMeta?.role;
+    const roles = Array.isArray(appMeta?.roles) ? appMeta.roles : [];
+    const isStaff =
+      role === "admin" ||
+      roles.some((r) =>
+        [
+          "super_admin",
+          "administrator",
+          "content_manager",
+          "school_manager",
+          "office_manager",
+          "order_manager",
+          "viewer",
+        ].includes(r as string)
+      );
 
-    // If user is not logged in OR is not an admin, mask route with 404
-    if (!user || role !== "admin") {
+    // If the user is not logged in OR is not staff, mask the route with 404.
+    if (!user || !isStaff) {
       const url = request.nextUrl.clone();
       url.pathname = "/404";
       return NextResponse.rewrite(url);
