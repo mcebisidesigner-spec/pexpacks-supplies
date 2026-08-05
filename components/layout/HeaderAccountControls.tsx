@@ -3,19 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { logout } from "@/app/login/actions";
 import { HeaderOrderIcon } from "@/components/order/HeaderOrderIcon";
 import headerStyles from "./Header.module.css";
 import styles from "./HeaderAccountControls.module.css";
 
-type HeaderAccountControlsProps = {
-  variant: "desktop" | "mobile";
-};
-
-type AccountUser = {
+export type AdminUser = {
   name: string;
   username: string;
+};
+
+type HeaderAccountControlsProps = {
+  variant: "desktop" | "mobile";
+  adminUser: AdminUser | null;
+  adminUserLoading: boolean;
 };
 
 function getInitials(name: string) {
@@ -25,43 +26,16 @@ function getInitials(name: string) {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-export function HeaderAccountControls({ variant }: HeaderAccountControlsProps) {
+export function HeaderAccountControls({
+  variant,
+  adminUser,
+  adminUserLoading,
+}: HeaderAccountControlsProps) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
-  const [user, setUser] = useState<AccountUser | null>(null);
-  const [loading, setLoading] = useState(isAdmin);
   const [open, setOpen] = useState(false);
   const [isLoggingOut, startLogoutTransition] = useTransition();
   const wrapRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!isAdmin) return;
-
-    let cancelled = false;
-
-    (async () => {
-      const supabase = createClient();
-      const { data } = await supabase.auth.getUser();
-      if (cancelled) return;
-
-      if (data?.user) {
-        const meta = data.user.user_metadata ?? {};
-        const name =
-          meta.full_name || meta.name || data.user.email || "Admin";
-        const username =
-          meta.username ||
-          meta.user_name ||
-          data.user.email?.split("@")[0] ||
-          "admin";
-        setUser({ name, username });
-      }
-      setLoading(false);
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isAdmin]);
 
   useEffect(() => {
     setOpen(false);
@@ -91,6 +65,8 @@ export function HeaderAccountControls({ variant }: HeaderAccountControlsProps) {
   }, [open]);
 
   if (isAdmin) {
+    const user = adminUser;
+
     return (
       <div ref={wrapRef} className={styles.accountControls}>
         <button
@@ -103,7 +79,7 @@ export function HeaderAccountControls({ variant }: HeaderAccountControlsProps) {
           aria-haspopup="menu"
           aria-expanded={open}
         >
-          {user && !loading ? (
+          {user && !adminUserLoading ? (
             <span className={styles.avatar}>{getInitials(user.name)}</span>
           ) : (
             <span className={[styles.avatar, styles.avatarSilhouette].join(" ")}>

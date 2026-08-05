@@ -52,6 +52,26 @@
   grid-template-columns: 1fr auto;
 }
 
+.adminBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.adminUserTitle {
+  font-family: var(--font-button);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--pex-navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: min(280px, 38vw);
+}
+
 .logoLink {
   display: inline-flex;
   align-items: center;
