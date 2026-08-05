@@ -1,0 +1,76 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill, 999px);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.tonePaid {
+  background: rgba(47, 133, 90, 0.12);
+  color: #1e6b45;
+}
+
+.tonePending {
+  background: rgba(245, 166, 35, 0.15);
+  color: #a16207;
+}
+
+.toneInfo {
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+}
+
+.toneDanger {
+  background: rgba(220, 38, 38, 0.1);
+  color: #b42318;
+}
+
+.toneMuted {
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569;
+}
+
+.statusForm {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.statusSelect {
+  padding: 9px 12px;
+  border: 1px solid var(--pex-border, #dbe3ec);
+  border-radius: 10px;
+  font-size: 14px;
+  background: #fff;
+  color: var(--pex-navy, #1a2a40);
+}
+
+.saveButton {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--pex-keppel, #1a7a77);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

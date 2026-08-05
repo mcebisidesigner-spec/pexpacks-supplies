@@ -34,8 +34,8 @@ export const ADMIN_NAV: AdminNavGroup[] = [
   {
     title: "Commerce",
     items: [
-      { label: "Orders", href: "/admin/orders", icon: "orders", permission: "orders.view", ready: false },
-      { label: "Payments", href: "/admin/payments", icon: "payments", permission: "payments.view", ready: false },
+      { label: "Orders", href: "/admin/orders", icon: "orders", permission: "orders.view", ready: true },
+      { label: "Payments", href: "/admin/payments", icon: "payments", permission: "payments.view", ready: true },
     ],
   },
   {
