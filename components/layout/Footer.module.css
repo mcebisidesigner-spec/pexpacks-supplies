@@ -452,7 +452,7 @@
   .happyPayMobile {
     display: inline-flex;
     align-self: flex-start;
-    width: clamp(104px, 28vw, 132px);
+    width: clamp(72px, 20vw, 92px);
     margin-left: auto;
   }
 

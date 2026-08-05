@@ -7,10 +7,16 @@ export function getOzowConfig() {
   const siteCode = process.env.OZOW_SITE_CODE ?? "";
   const privateKey = process.env.OZOW_PRIVATE_KEY ?? "";
   const apiKey = process.env.OZOW_API_KEY ?? "";
-  const isTest = process.env.OZOW_IS_TEST !== "false";
+  const isTest = process.env.OZOW_IS_TEST === "true";
 
   if (!siteCode || !privateKey || !apiKey) {
     return null;
+  }
+
+  if (isTest) {
+    console.warn(
+      "[ozow] Test mode is ON (OZOW_IS_TEST=true). Live payments will be rejected by Ozow's payment API."
+    );
   }
 
   return {

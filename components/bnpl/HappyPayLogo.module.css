@@ -37,3 +37,14 @@
   font-size: 15px;
   letter-spacing: -0.01em;
 }
+
+@media (max-width: 640px) {
+  .mark {
+    width: 17px;
+    height: 17px;
+  }
+
+  .wordmark {
+    font-size: 12px;
+  }
+}
