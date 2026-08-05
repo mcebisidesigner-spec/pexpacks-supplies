@@ -211,7 +211,7 @@ export function HappyPayCheckoutClient() {
       <div className={checkoutStyles.checkoutGrid}>
         <section className={clsx(checkoutStyles.stepCard, checkoutStyles.checkoutHero, styles.hero)}>
           <div className={styles.heroTop}>
-            <p className={checkoutStyles.checkoutKicker}>Happy Pay BNPL</p>
+            <p className={checkoutStyles.checkoutKicker}>Buy Now Pay Later</p>
             <HappyPayLogo tone="dark" />
           </div>
           <h1>
@@ -324,7 +324,7 @@ export function HappyPayCheckoutClient() {
                 is an independent company and Pexpacks acts only as a referral
                 consultant. I have read and agree to the{" "}
                 <a href="/happy-pay-terms" target="_blank">
-                  Happy Pay terms
+                  happy pay terms
                 </a>
                 ,{" "}
                 <a href="/privacy-policy" target="_blank">

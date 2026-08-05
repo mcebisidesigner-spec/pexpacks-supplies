@@ -9,8 +9,8 @@ import { TestimonialMarquee } from '@/components/shared/TestimonialMarquee'
 import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
 import { faqs } from '@/data/faqs'
 import { testimonials } from '@/data/testimonials'
-import { SavingsPlanBanner } from '@/components/savings/SavingsPlanBanner'
-import { SavingsTimeline } from '@/components/savings/SavingsTimeline'
+import { HappyPayBanner } from '@/components/bnpl/HappyPayBanner'
+import { HappyPaySteps } from '@/components/bnpl/HappyPaySteps'
 
 import heroStyles from '@/components/marketing/HeroBase.module.css'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
@@ -101,6 +101,15 @@ export default function HomePage() {
         </div>
       </div>
 
+      <section className={sectionStyles.section} style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+        <div className={sectionStyles.inner}>
+          <HappyPayBanner variant="homepage" />
+          <div style={{ marginTop: 24 }}>
+            <HappyPaySteps />
+          </div>
+        </div>
+      </section>
+
       <section
         id="social-proof"
         className={sectionStyles.socialProofSection}
@@ -161,15 +170,6 @@ export default function HomePage() {
       <SuperpowerSection />
 
       <ConciergeSection />
-
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <SavingsPlanBanner variant="homepage" />
-          <div style={{ marginTop: 24 }}>
-            <SavingsTimeline />
-          </div>
-        </div>
-      </section>
 
 
       <section

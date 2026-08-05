@@ -97,21 +97,13 @@ export function PackTrayFooter() {
           Checkout &amp; Pay Now
         </button>
         <div className={styles.happyPayGroup}>
-          <span className={styles.happyPayTooltip} role="tooltip">
-            Buy Now Pay Later
-          </span>
           <button
             type="button"
             className={styles.happyPayButton}
             onClick={handleHappyPay}
           >
             <HappyPayLogo tone="light" showLabel={false} />
-            <span className={styles.happyPayLabels}>
-              <span className={styles.happyPayLabel}>Happy Pay (BNPL)</span>
-              <span className={styles.happyPayLabelAlt}>
-                Buy Now Pay Later
-              </span>
-            </span>
+            <span className={styles.happyPayLabel}>Buy Now Pay Later</span>
           </button>
           <p className={styles.happyPayTrust}>
             Split your pay into 2 interest-free payments of{" "}

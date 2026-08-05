@@ -578,53 +578,8 @@
   outline-offset: 3px;
 }
 
-.happyPayLabels {
-  display: grid;
-  place-items: center;
-}
-
-.happyPayLabel,
-.happyPayLabelAlt {
-  grid-area: 1 / 1;
-}
-
-.happyPayLabelAlt {
-  display: none;
-}
-
-.happyPayTooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  background: var(--pex-primary);
-  color: var(--pex-bg);
-  font-size: var(--text-2xs);
-  font-weight: 700;
-  line-height: 1.2;
-  white-space: nowrap;
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 6;
-  transition: opacity 150ms ease, transform 150ms ease;
-}
-
-.happyPayTooltip::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: var(--pex-primary);
-}
-
-.happyPayGroup:hover .happyPayTooltip,
-.happyPayGroup:focus-within .happyPayTooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+.happyPayLabel {
+  display: block;
 }
 
 .happyPayTrust {
@@ -634,31 +589,6 @@
   font-weight: 600;
   line-height: 1.4;
   text-align: center;
-}
-
-@keyframes happyPayLabelSwap {
-  0%, 42% { opacity: 1; transform: translateY(0); }
-  46%, 92% { opacity: 0; transform: translateY(-6px); }
-  96%, 100% { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 480px) {
-  .happyPayLabel,
-  .happyPayLabelAlt {
-    animation: happyPayLabelSwap 7s ease-in-out infinite;
-  }
-
-  .happyPayLabelAlt {
-    display: block;
-    animation-delay: 3.5s;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .happyPayLabel,
-  .happyPayLabelAlt {
-    animation: none;
-  }
 }
 
 .tertiaryButton {

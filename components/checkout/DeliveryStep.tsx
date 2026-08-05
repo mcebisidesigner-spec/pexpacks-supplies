@@ -262,7 +262,7 @@ export const DeliveryStep = memo(function DeliveryStep({
           </a>
           ,{" "}
           <a href="/happy-pay-terms" target="_blank" rel="noopener noreferrer">
-            Happy Pay terms
+            happy pay terms
           </a>
           , and{" "}
           <a href="/returns-refunds-policy" target="_blank" rel="noopener noreferrer">

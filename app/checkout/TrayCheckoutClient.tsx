@@ -917,7 +917,7 @@ export function TrayCheckoutClient() {
                 </a>
                 ,{' '}
                 <a href="/happy-pay-terms" target="_blank">
-                  Happy Pay terms
+                  happy pay terms
                 </a>
                 , and{' '}
                 <a href="/returns-refunds-policy" target="_blank">

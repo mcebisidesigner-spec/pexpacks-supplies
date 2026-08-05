@@ -9,6 +9,7 @@ import {
   phoneNumber,
 } from "@/data/contact";
 import { officialSocialLinks } from "@/data/social";
+import { FooterHappyPayLink } from "./FooterHappyPayLink";
 import { FooterNav } from "./FooterNav";
 import styles from "./Footer.module.css";
 
@@ -112,6 +113,7 @@ export function Footer() {
             <Link href="/" className={styles.logoLink} aria-label="Pexpacks home">
               <Logo variant="white" className={styles.logoImage} />
             </Link>
+            <FooterHappyPayLink className={styles.happyPayMobile} />
           </div>
 
           <div className={styles.navGroup}>
@@ -171,20 +173,24 @@ export function Footer() {
             </a>
           </p>
 
-          <nav className={styles.socialNav} aria-label="Social media">
-            {socialLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className={styles.socialLink}
-                aria-label={link.label}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <SocialIcon icon={link.icon} />
-              </a>
-            ))}
-          </nav>
+          <div className={styles.bottomActions}>
+            <FooterHappyPayLink className={styles.happyPayDesktop} />
+
+            <nav className={styles.socialNav} aria-label="Social media">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className={styles.socialLink}
+                  aria-label={link.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SocialIcon icon={link.icon} />
+                </a>
+              ))}
+            </nav>
+          </div>
         </div>
       </div>
     </footer>

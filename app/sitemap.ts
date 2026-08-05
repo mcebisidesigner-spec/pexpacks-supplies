@@ -17,6 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/add-your-school",
     "/faq",
     "/contact",
+    "/happy-pay",
     "/privacy-policy",
     "/terms",
     "/happy-pay-terms",

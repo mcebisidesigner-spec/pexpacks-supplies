@@ -18,7 +18,9 @@
 }
 
 .brandBlock {
-  display: grid;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 18px;
   min-width: 0;
 }
@@ -168,6 +170,7 @@
 .navLink:focus-visible,
 .policyLink:focus-visible,
 .socialLink:focus-visible,
+.happyPayLink:focus-visible,
 .designerLink:focus-visible,
 .contactLink:focus-visible {
   outline: 2px solid var(--pex-coral);
@@ -250,6 +253,13 @@
   gap: 18px;
 }
 
+.bottomActions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: clamp(22px, 3vw, 36px);
+}
+
 .copyright {
   min-width: 0;
   margin: 0;
@@ -272,6 +282,31 @@
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-thickness: 2px;
+}
+
+.happyPayLink {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: clamp(88px, 6.5vw, 108px);
+  flex: 0 0 auto;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.happyPayLogo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.happyPayMobile {
+  display: none;
+}
+
+.happyPayDesktop {
+  display: inline-flex;
 }
 
 .socialNav {
@@ -321,6 +356,7 @@
 .policySummary::after,
 .policyLink::after,
 .socialLink::after,
+.happyPayLink::after,
 .designerLink::after,
 .contactLink::after {
   content: "";
@@ -362,6 +398,10 @@
   .infoRow {
     justify-content: flex-start;
   }
+
+  .bottomActions {
+    justify-content: flex-end;
+  }
 }
 
 @media (max-width: 768px) {
@@ -396,11 +436,24 @@
   }
 
   .brandBlock {
+    align-items: flex-start;
     gap: var(--space-4);
+    width: 100%;
   }
 
   .logoImage {
     width: var(--logo-width-mobile);
+  }
+
+  .happyPayDesktop {
+    display: none;
+  }
+
+  .happyPayMobile {
+    display: inline-flex;
+    align-self: flex-start;
+    width: clamp(104px, 28vw, 132px);
+    margin-left: auto;
   }
 
   .contactLink {
@@ -449,6 +502,16 @@
   .copyright {
     font-size: clamp(11px, 2.5vw, 12px);
   }
+
+  .bottomSection {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .bottomActions {
+    gap: var(--space-3);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -458,6 +521,7 @@
   .policyChevron,
   .policyLink,
   .socialLink,
+  .happyPayLink,
   .designerLink {
     transition: none;
   }

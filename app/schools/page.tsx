@@ -8,8 +8,8 @@ import { SchoolsHowItWorks } from "@/components/schools/SchoolsHowItWorks";
 import { ConciergeSection } from "@/components/marketing/ConciergeSection";
 import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
-import { SavingsPlanBanner } from "@/components/savings/SavingsPlanBanner";
-import { SavingsTimeline } from "@/components/savings/SavingsTimeline";
+import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
+import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import {
   getFeaturedSchoolRecords,
@@ -63,9 +63,9 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
 
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
-          <SavingsPlanBanner variant="schoolPage" />
+          <HappyPayBanner variant="schoolPage" />
           <div style={{ marginTop: 20 }}>
-            <SavingsTimeline />
+            <HappyPaySteps />
           </div>
         </div>
       </section>
