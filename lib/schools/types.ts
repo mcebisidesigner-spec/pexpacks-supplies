@@ -11,7 +11,7 @@ export type SchoolSearchRecord = {
   grades: string[];
   isFeatured?: boolean;
   isPartner?: boolean;
-  image?: string;
+  image?: string | null;
   customBadge?: string | null;
   phases: SchoolPhase[];
   /** Lowest grade pack price for this school (in ZAR cents) */

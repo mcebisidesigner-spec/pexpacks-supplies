@@ -73,18 +73,6 @@
   margin-bottom: var(--space-5);
 }
 
-.featuredIcon {
-  width: 54px;
-  height: 54px;
-  border-radius: var(--radius-card-compact);
-  background: var(--pex-bg);
-  color: var(--pex-keppel);
-  display: grid;
-  place-items: center;
-  font-size: 28px;
-  font-weight: 800;
-}
-
 .featuredLogo {
   width: 54px;
   height: 54px;

@@ -1069,7 +1069,6 @@ for (const [city, types] of Object.entries(gautengSchools)) {
       slug,
       city,
       province: "Gauteng",
-      logo: "/images/school-logo-placeholder.svg",
       isPartnerSchool: seededRandom() < 0.08,
       grades: grades.map((g) => ({
         id: `${slug}-${slugify(g.grade)}`,
@@ -1103,7 +1102,6 @@ for (const [city, types] of Object.entries(gautengSchools)) {
       slug,
       city,
       province: "Gauteng",
-      logo: "/images/school-logo-placeholder.svg",
       isPartnerSchool: seededRandom() < 0.05,
       grades: grades.map((g) => ({
         id: `${slug}-${slugify(g.grade)}`,
@@ -1135,7 +1133,7 @@ export type School = {
   slug: string;
   city: string;
   province: string;
-  logo: string;
+  logo?: string | null;
   isPartnerSchool: boolean;
   grades: GradePack[];
 };

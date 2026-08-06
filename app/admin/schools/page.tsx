@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { listSchools, type SchoolListFilters } from "@/lib/admin/schools";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import {
   archiveSchoolAction,
   restoreSchoolAction,
@@ -188,7 +189,11 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                               className={styles.logoThumb}
                             />
                           ) : (
-                            <span className={styles.logoThumb} aria-hidden="true" />
+                            <SchoolLogoPlaceholder
+                              className={styles.logoThumb}
+                              width={40}
+                              height={40}
+                            />
                           )}
                           <div>
                             <div className={styles.schoolName}>{school.name}</div>

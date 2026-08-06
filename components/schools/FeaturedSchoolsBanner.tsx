@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
+import { SchoolLogoPlaceholder } from "./SchoolLogoPlaceholder";
 import styles from "./FeaturedSchools.module.css";
 
 function gradeRangeLabel(grades: string[]) {
@@ -46,9 +47,10 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
               {school.image ? (
                 <Image src={school.image} alt={`${school.name} logo`} className={styles.featuredLogo} width={54} height={54} placeholder="blur" blurDataURL={IMAGE_BLUR_DATA_URL} />
               ) : (
-                <span className={styles.featuredIcon}>
-                  {school.name.charAt(0)}
-                </span>
+                <SchoolLogoPlaceholder
+                  className={styles.featuredLogo}
+                  title={`${school.name} logo`}
+                />
               )}
               {school.isPartner && (
                 <span className={styles.partnerBadge}>

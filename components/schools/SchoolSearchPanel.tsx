@@ -12,6 +12,7 @@ import {
   getSchoolPhaseLabel,
 } from "@/lib/schools/schoolPhase";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
+import { SchoolLogoPlaceholder } from "./SchoolLogoPlaceholder";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import { SchoolsHowItWorks } from "./SchoolsHowItWorks";
 import styles from "./SchoolSearchPanel.module.css";
@@ -165,7 +166,14 @@ export function SchoolSearchPanel({
                         height={28}
                         className={heroStyles.trendingCardLogo}
                       />
-                    ) : null}
+                    ) : (
+                      <SchoolLogoPlaceholder
+                        className={heroStyles.trendingCardLogo}
+                        width={28}
+                        height={28}
+                        title={`${school.name} logo`}
+                      />
+                    )}
                     <span className={heroStyles.trendingCardName}>{school.name}</span>
                   </Link>
                 ))}
@@ -230,7 +238,14 @@ export function SchoolSearchPanel({
                                     placeholder="blur"
                                     blurDataURL={IMAGE_BLUR_DATA_URL}
                                   />
-                                ) : null}
+                                ) : (
+                                  <SchoolLogoPlaceholder
+                                    className={heroStyles.heroResultLogo}
+                                    width={36}
+                                    height={36}
+                                    title={`${school.name} logo`}
+                                  />
+                                )}
                                 <div className={heroStyles.heroResultSummary}>
                                   <h3>
                                     <Link href={`/schools/${school.slug}`}>

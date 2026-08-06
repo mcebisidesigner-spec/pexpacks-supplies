@@ -9,7 +9,7 @@ type SchoolIndexRecord = {
   city: string;
   metro: string;
   province: string;
-  logo: string;
+  logo?: string | null;
   isPartnerSchool: boolean;
   isFeatured?: boolean;
   lowestPrice?: number;

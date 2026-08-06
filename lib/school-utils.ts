@@ -19,7 +19,7 @@ export async function getSchoolBySlug(slug: string) {
         city: dbSchool.city || staticRecord?.city || "",
         metro: dbSchool.district || staticRecord?.metro || "",
         province: dbSchool.province || staticRecord?.province || "",
-        logo: dbSchool.logo || staticRecord?.logo || "/images/school-logo-placeholder.svg",
+        logo: dbSchool.logo ?? staticRecord?.logo ?? null,
         isPartnerSchool: dbSchool.is_partner ?? staticRecord?.isPartnerSchool ?? false,
         grades: staticRecord?.grades || [],
       };

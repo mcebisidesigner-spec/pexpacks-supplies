@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
+import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import { Button } from "@/components/ui/Button";
 import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
 import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
@@ -100,14 +101,21 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
               </span>
             </div>
             <div className={styles.schoolHeroLogoWrap}>
-              <Image
-                src={school.logo || "/images/school-logo-placeholder.svg"}
-                alt={`${school.name} logo`}
-                width={136}
-                height={136}
-                className={styles.schoolHeroLogo}
-                priority
-              />
+              {school.logo ? (
+                <Image
+                  src={school.logo}
+                  alt={`${school.name} logo`}
+                  width={136}
+                  height={136}
+                  className={styles.schoolHeroLogo}
+                  priority
+                />
+              ) : (
+                <SchoolLogoPlaceholder
+                  className={styles.schoolHeroLogo}
+                  title={`${school.name} logo`}
+                />
+              )}
             </div>
           </div>
         }

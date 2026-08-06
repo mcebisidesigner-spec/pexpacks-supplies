@@ -60,7 +60,7 @@ export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
   return index.map((school): SchoolSearchRecord => {
     const dbSchool = dbSchoolMap.get(school.slug);
     const schoolName = dbSchool?.name || school.name;
-    const logoUrl = dbSchool?.logo || school.logo || "/images/school-logo-placeholder.svg";
+    const logoUrl = dbSchool?.logo ?? school.logo ?? null;
 
     return {
       id: dbSchool?.id || school.id,

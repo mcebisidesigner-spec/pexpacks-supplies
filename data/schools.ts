@@ -15,7 +15,7 @@ export type School = {
   city: string;
   metro: string;
   province: string;
-  logo: string;
+  logo?: string | null;
   isPartnerSchool: boolean;
   grades: GradePack[];
 };
@@ -27,7 +27,7 @@ type SchoolIndexRecord = {
   city: string;
   metro: string;
   province: string;
-  logo: string;
+  logo?: string | null;
   isPartnerSchool: boolean;
   isFeatured?: boolean;
   lowestPrice?: number;

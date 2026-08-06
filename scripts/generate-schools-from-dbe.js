@@ -273,7 +273,6 @@ for (const row of active) {
     city,
     metro,
     province: "Gauteng",
-    logo: "/images/school-logo-placeholder.svg",
     isPartnerSchool: isPartner,
     grades: grades.map((g) => ({
       id: g.id,
@@ -290,7 +289,6 @@ for (const row of active) {
     city,
     metro,
     province: "Gauteng",
-    logo: "/images/school-logo-placeholder.svg",
     isPartnerSchool: isPartner,
     grades,
   });

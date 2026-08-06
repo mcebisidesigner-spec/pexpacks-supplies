@@ -139,11 +139,6 @@
   background: #fff;
 }
 
-.logoPlaceholder {
-  font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
-}
-
 .fileInput {
   position: absolute;
   inset: 0;

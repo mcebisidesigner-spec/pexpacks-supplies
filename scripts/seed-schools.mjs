@@ -34,7 +34,6 @@ async function seed() {
     status: "active",
     published: true,
   }));
-
   const BATCH_SIZE = 500;
   let inserted = 0;
 

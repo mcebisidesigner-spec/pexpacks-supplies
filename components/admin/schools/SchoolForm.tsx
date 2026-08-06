@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
 import { SCHOOL_STATUSES } from "@/lib/admin/school-constants";
+import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import styles from "./SchoolForm.module.css";
 
 interface SchoolFormProps {
@@ -352,7 +353,11 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 className={styles.logoPreview}
               />
             ) : (
-              <span className={styles.logoPlaceholder}>No logo</span>
+              <SchoolLogoPlaceholder
+                className={styles.logoPreview}
+                width={120}
+                height={120}
+              />
             )}
             <input
               type="file"
@@ -371,6 +376,10 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
           </label>
           <div className={styles.logoHint}>
             <p>PNG, WebP, SVG or JPG — max 10 MB.</p>
+            <p>
+              No logo? The default placeholder is used automatically until you
+              upload one.
+            </p>
             {logoPreview ? (
               <button
                 type="button"

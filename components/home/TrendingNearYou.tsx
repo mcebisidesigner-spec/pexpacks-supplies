@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { reverseGeocode } from "@/lib/geocoding";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
+import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import styles from "./TrendingNearYou.module.css";
 
 type LocationSource = "initial" | "gps" | "ip" | "default";
@@ -86,9 +87,10 @@ function SchoolCard({ school }: { school: SchoolSearchRecord }) {
             height={50}
           />
         ) : (
-          <span className={styles.cardIcon}>
-            {school.name.charAt(0)}
-          </span>
+          <SchoolLogoPlaceholder
+            className={styles.cardLogo}
+            title={`${school.name} logo`}
+          />
         )}
         {school.isPartner && (
           <span className={styles.partnerBadge}>★ Official Partner</span>
