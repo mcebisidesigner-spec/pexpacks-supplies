@@ -1,34 +1,36 @@
 import type { jsPDF } from "jspdf";
 
-// ── Brand colours ──
-const NAVY = "#1a2a40";
-const KEPPEL = "#3fb8a0";
-const CORAL = "#f47c6a";
-const MUTED = "#6b7a8d";
-const BORDER = "#dde3ea";
+// ── Brand colours (matching Pexpacks design system & sample screenshot) ──
+const NAVY = "#0f172a";
+const KEPPEL = "#23b4b0";
+const CORAL = "#ff6b52";
+const MUTED = "#64748b";
+const BORDER = "#e2e8f0";
+const HEADER_BG = "#f4f6f8";
+const ROW_ALT_BG = "#fafbfc";
 
 // ── A4 dimensions in mm ──
 const PAGE_W = 210;
 const PAGE_H = 297;
-const MARGIN_LEFT = 22;
-const MARGIN_RIGHT = 22;
+const MARGIN_LEFT = 20;
+const MARGIN_RIGHT = 20;
 const CONTENT_W = PAGE_W - MARGIN_LEFT - MARGIN_RIGHT;
 
 // ── Font sizes in pt ──
-const FONT_BODY = 14;
-const FONT_SMALL = 10;
+const FONT_BODY = 13;
+const FONT_SMALL = 9.5;
 const FONT_FOOTER = 8;
 
-// ── Checkbox dimensions (larger for easy ticking on paper) ──
+// ── Checkbox dimensions (matching sample screenshot) ──
 const CHECKBOX_SIZE = 5.5;
-const CHECKBOX_RADIUS = 1;
+const CHECKBOX_RADIUS = 1.2;
 
 // ── Row / column layout ──
-const ROW_HEIGHT = 11; // increased vertical gap between items
+const ROW_HEIGHT = 11;
 const COL_CHECK = MARGIN_LEFT;
 const COL_QTY = MARGIN_LEFT + 12;
-const COL_ITEM = MARGIN_LEFT + 30;
-const COL_SPEC = MARGIN_LEFT + 118;
+const COL_ITEM = MARGIN_LEFT + 34;
+const COL_SPEC = MARGIN_LEFT + 115;
 
 type StationeryListItem = {
   name: string;
@@ -103,36 +105,53 @@ async function loadLogoBase64(): Promise<string | null> {
 }
 
 // ═══════════════════════════════════════════════
-// Render branded title text using PexSans (Grota Sans)
-// via Canvas → embed as image in PDF
+// Render title text in exact Grota Sans / Grota Sans Alt typography
+// via High-Resolution Canvas → embedded in PDF
 // ═══════════════════════════════════════════════
 
-async function renderBrandedTitle(text: string): Promise<string | null> {
+async function renderBrandedTitleBlock(
+  schoolName: string
+): Promise<{ base64: string; width: number; height: number } | null> {
   try {
-    // Ensure the PexSans font is loaded before rendering
     await document.fonts.ready;
 
-    const fontSize = 52; // px — renders large for crisp downscaling
+    const fontSize = 48; // px
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
 
-    ctx.font = `bold ${fontSize}px "PexSans Alt", "PexSans", sans-serif`;
-    const metrics = ctx.measureText(text);
-    const textWidth = Math.ceil(metrics.width) + 4;
-    const textHeight = Math.ceil(fontSize * 1.3);
+    // Use Grota Sans / Alt typography matching the Pexpacks design system
+    const fontString = `800 ${fontSize}px "Grota Sans Alt", "Grota Sans", "PexSans Alt", "PexSans", -apple-system, sans-serif`;
+    ctx.font = fontString;
 
-    canvas.width = textWidth * 2;
-    canvas.height = textHeight * 2;
-    ctx.scale(2, 2);
+    const line1 = schoolName.toUpperCase().trim();
+    const line2 = "STATIONERY LIST";
 
-    // Re-set font after resize
-    ctx.font = `bold ${fontSize}px "PexSans Alt", "PexSans", sans-serif`;
+    const m1 = ctx.measureText(line1);
+    const m2 = ctx.measureText(line2);
+    const maxTextWidth = Math.max(m1.width, m2.width) + 12;
+    const lineHeight = fontSize * 1.18;
+    const totalHeight = lineHeight * 2 + 8;
+
+    const scale = 3; // 3x scaling for ultra-sharp vector-like rendering in PDF
+    canvas.width = Math.ceil(maxTextWidth * scale);
+    canvas.height = Math.ceil(totalHeight * scale);
+    ctx.scale(scale, scale);
+
+    ctx.font = fontString;
     ctx.fillStyle = NAVY;
     ctx.textBaseline = "top";
-    ctx.fillText(text, 0, fontSize * 0.1);
 
-    return canvas.toDataURL("image/png");
+    ctx.fillText(line1, 0, 0);
+    ctx.fillText(line2, 0, lineHeight);
+
+    const base64 = canvas.toDataURL("image/png");
+
+    // Convert dimensions from px (at 96 dpi) to mm for jsPDF
+    const widthMm = (maxTextWidth / 96) * 25.4;
+    const heightMm = (totalHeight / 96) * 25.4;
+
+    return { base64, width: widthMm, height: heightMm };
   } catch {
     return null;
   }
@@ -150,7 +169,7 @@ function drawRoundedRect(
 }
 
 function drawTableHeader(doc: jsPDF, y: number) {
-  doc.setFillColor("#f4f6f8");
+  doc.setFillColor(HEADER_BG);
   doc.rect(MARGIN_LEFT - 2, y - 5, CONTENT_W + 4, 9, "F");
 
   doc.setFontSize(FONT_SMALL);
@@ -169,27 +188,30 @@ function drawTableHeader(doc: jsPDF, y: number) {
 export async function generateStationeryPdf(options: StationeryPdfOptions) {
   const { schoolName, grade, items, estimatedPrice, fileName } = options;
 
-  const [logoBase64, titleImage] = await Promise.all([
+  const [logoBase64, titleBlock] = await Promise.all([
     options.logoBase64 ? Promise.resolve(options.logoBase64) : loadLogoBase64(),
-    renderBrandedTitle(`${schoolName.toUpperCase()} STATIONERY LIST`),
+    renderBrandedTitleBlock(schoolName),
   ]);
 
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ unit: "mm", format: "a4" });
-  let y = 18;
+  let y = 16;
+
+  // ═══════════════════════════════════════════════
+  // TOP ACCENT BAR
+  // ═══════════════════════════════════════════════
+
+  doc.setFillColor(KEPPEL);
+  doc.rect(0, 0, PAGE_W, 3.5, "F");
 
   // ═══════════════════════════════════════════════
   // HEADER / LETTERHEAD
   // ═══════════════════════════════════════════════
 
-  // Top accent bar
-  doc.setFillColor(KEPPEL);
-  doc.rect(0, 0, PAGE_W, 3.5, "F");
-
-  // Logo
+  // Logo (Left side)
   if (logoBase64) {
     try {
-      doc.addImage(logoBase64, "PNG", MARGIN_LEFT, y, 50, 20);
+      doc.addImage(logoBase64, "PNG", MARGIN_LEFT, y, 48, 19);
     } catch {
       doc.setFontSize(18);
       doc.setTextColor(NAVY);
@@ -203,21 +225,21 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
     doc.text("Pexpacks Supplies", MARGIN_LEFT, y + 12);
   }
 
-  // Right-aligned contact details (including phone number)
+  // Right-aligned contact details (exact match to sample screenshot)
   doc.setFontSize(FONT_SMALL);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(MUTED);
   const contactX = PAGE_W - MARGIN_RIGHT;
-  doc.text("www.pexpacks.co.za", contactX, y + 4, { align: "right" });
-  doc.text("orders@pexpacks.co.za", contactX, y + 9, { align: "right" });
-  doc.text("078 003 6048", contactX, y + 14, { align: "right" });
-  doc.text("Gauteng, South Africa", contactX, y + 19, { align: "right" });
+  doc.text("www.pexpacks.co.za", contactX, y + 3, { align: "right" });
+  doc.text("orders@pexpacks.co.za", contactX, y + 8, { align: "right" });
+  doc.text("078 003 6048", contactX, y + 13, { align: "right" });
+  doc.text("Gauteng, South Africa", contactX, y + 18, { align: "right" });
 
-  y += 30;
+  y += 28;
 
   // Divider line
   doc.setDrawColor(BORDER);
-  doc.setLineWidth(0.5);
+  doc.setLineWidth(0.4);
   doc.line(MARGIN_LEFT, y, PAGE_W - MARGIN_RIGHT, y);
   y += 12;
 
@@ -225,50 +247,44 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
   // TITLE: "{SCHOOL NAME} STATIONERY LIST" in Grota Sans
   // ═══════════════════════════════════════════════
 
-  if (titleImage) {
+  if (titleBlock) {
     try {
-      // Calculate image dimensions to fit within content width
-      const titleImg = new Image();
-      titleImg.src = titleImage;
-      const aspectRatio = titleImg.naturalHeight / titleImg.naturalWidth;
-      const imgWidth = Math.min(CONTENT_W, 160);
-      const imgHeight = imgWidth * aspectRatio;
-      doc.addImage(titleImage, "PNG", MARGIN_LEFT, y - 4, imgWidth, imgHeight);
-      y += imgHeight + 4;
+      const maxW = Math.min(CONTENT_W, 165);
+      const scaleFactor = Math.min(1, maxW / titleBlock.width);
+      const displayW = titleBlock.width * scaleFactor;
+      const displayH = titleBlock.height * scaleFactor;
+
+      doc.addImage(titleBlock.base64, "PNG", MARGIN_LEFT, y - 2, displayW, displayH);
+      y += displayH + 4;
     } catch {
-      // Fallback to helvetica if canvas rendering failed
-      doc.setFontSize(20);
+      doc.setFontSize(18);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(NAVY);
-      doc.text(
-        `${schoolName.toUpperCase()} STATIONERY LIST`,
-        MARGIN_LEFT,
-        y
-      );
+      doc.text(`${schoolName.toUpperCase()} STATIONERY LIST`, MARGIN_LEFT, y);
       y += 10;
     }
   } else {
-    doc.setFontSize(20);
+    doc.setFontSize(18);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(NAVY);
     const titleLines = doc.splitTextToSize(
-      `${schoolName.toUpperCase()} STATIONERY LIST`,
+      `${schoolName.toUpperCase()}\nSTATIONERY LIST`,
       CONTENT_W
     );
     doc.text(titleLines, MARGIN_LEFT, y);
-    y += titleLines.length * 8 + 2;
+    y += titleLines.length * 7 + 2;
   }
 
-  // Grade (bold)
+  // Grade Subtitle
   doc.setFontSize(FONT_BODY);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(NAVY);
   doc.text(grade, MARGIN_LEFT, y);
-  y += 6;
+  y += 5;
 
-  // Decorative accent under title
+  // Coral accent bar under title (exact match to sample screenshot)
   doc.setFillColor(CORAL);
-  doc.rect(MARGIN_LEFT, y, 45, 1.2, "F");
+  doc.rect(MARGIN_LEFT, y, 45, 1.8, "F");
   y += 10;
 
   // ═══════════════════════════════════════════════
@@ -283,10 +299,10 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
   // ═══════════════════════════════════════════════
 
   doc.setFontSize(FONT_BODY);
-  const maxY = PAGE_H - 30;
+  const maxY = PAGE_H - 35;
 
   for (let i = 0; i < items.length; i++) {
-    // New page if needed
+    // Page overflow handling
     if (y + ROW_HEIGHT > maxY) {
       drawPageFooter(doc, doc.getCurrentPageInfo().pageNumber);
       doc.addPage();
@@ -298,13 +314,13 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
 
     const item = items[i];
 
-    // Alternating row background
+    // Alternating row background shading
     if (i % 2 === 0) {
-      doc.setFillColor("#fafbfc");
+      doc.setFillColor(ROW_ALT_BG);
       doc.rect(MARGIN_LEFT - 2, y - 5.5, CONTENT_W + 4, ROW_HEIGHT, "F");
     }
 
-    // Checkbox (bigger)
+    // Rounded square checkbox
     doc.setDrawColor(NAVY);
     doc.setLineWidth(0.45);
     drawRoundedRect(
@@ -316,7 +332,7 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
       CHECKBOX_RADIUS
     );
 
-    // Quantity
+    // Quantity (Bold e.g. 15x)
     doc.setFont("helvetica", "bold");
     doc.setTextColor(NAVY);
     const qty =
@@ -326,16 +342,17 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
     doc.text(qty, COL_QTY, y);
 
     // Item name
-    doc.setFont("helvetica", "normal");
+    doc.setFont("helvetica", "bold");
     doc.setTextColor(NAVY);
-    const itemName = doc.splitTextToSize(item.name, 82);
+    const itemName = doc.splitTextToSize(item.name, 78);
     doc.text(itemName[0], COL_ITEM, y);
 
-    // Specification
+    // Specification (soft muted text)
     if (item.specification) {
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(FONT_SMALL);
       doc.setTextColor(MUTED);
-      const specText = doc.splitTextToSize(item.specification, 48);
+      const specText = doc.splitTextToSize(item.specification, 55);
       doc.text(specText[0], COL_SPEC, y);
       doc.setFontSize(FONT_BODY);
     }
@@ -344,33 +361,46 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
   }
 
   // ═══════════════════════════════════════════════
-  // PRICE & NOTES
+  // PRICE & NOTES SECTION
   // ═══════════════════════════════════════════════
 
-  y += 8;
+  y += 6;
   doc.setDrawColor(BORDER);
-  doc.setLineWidth(0.3);
+  doc.setLineWidth(0.4);
   doc.line(MARGIN_LEFT, y, PAGE_W - MARGIN_RIGHT, y);
-  y += 10;
+  y += 12;
 
+  // Estimated Pack Price (bold Navy + Coral Price with Coral underline)
   if (estimatedPrice) {
-    doc.setFontSize(FONT_BODY);
+    doc.setFontSize(15);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(NAVY);
-    doc.text(`Estimated Pack Price: ${estimatedPrice}`, MARGIN_LEFT, y);
-    y += 10;
+    doc.text("Estimated Pack Price: ", MARGIN_LEFT, y);
+
+    const priceLabelWidth = doc.getTextWidth("Estimated Pack Price: ");
+    const priceX = MARGIN_LEFT + priceLabelWidth;
+
+    doc.setFontSize(18);
+    doc.setTextColor(CORAL);
+    doc.text(estimatedPrice, priceX, y);
+
+    const priceWidth = doc.getTextWidth(estimatedPrice);
+    doc.setFillColor(CORAL);
+    doc.rect(priceX, y + 1.5, priceWidth, 1.2, "F");
+
+    y += 12;
   }
 
-  // Notes
+  // Microcopy Notes (exact match to sample screenshot)
   doc.setFontSize(FONT_SMALL);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(MUTED);
   doc.text(
-    "Use the tick boxes above to check off items as you pack your learner's bag.",
+    "Use the tick boxes above to check off items as you evaluate your learner's bag.",
     MARGIN_LEFT,
     y
   );
-  y += 6;
+  y += 5;
   doc.text(
     "For queries or to order, visit www.Pexpacks.co.za or call 078 003 6048",
     MARGIN_LEFT,
@@ -446,9 +476,9 @@ function drawPageFooter(
   pageNumber: number,
   totalPages?: number
 ) {
-  const footerY = PAGE_H - 12;
+  const footerY = PAGE_H - 10;
 
-  // Bottom accent bar
+  // Solid dark navy bottom bar
   doc.setFillColor(NAVY);
   doc.rect(0, PAGE_H - 5, PAGE_W, 5, "F");
 
@@ -458,9 +488,8 @@ function drawPageFooter(
   doc.setTextColor(MUTED);
   doc.text(
     "Pexpacks Supplies  •  www.pexpacks.co.za  •  orders@pexpacks.co.za  •  078 003 6048",
-    PAGE_W / 2,
-    footerY,
-    { align: "center" }
+    MARGIN_LEFT,
+    footerY
   );
 
   if (totalPages) {
