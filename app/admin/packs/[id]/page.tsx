@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getPack, listPackSchools } from "@/lib/admin/packs";
@@ -5,6 +6,7 @@ import { PackForm } from "@/components/admin/packs/PackForm";
 import { ItemsManager } from "@/components/admin/packs/ItemsManager";
 import { updatePackAction } from "../actions";
 import adminStyles from "../../admin.module.css";
+import shared from "../../schools/schools.module.css";
 
 interface EditPackPageProps {
   params: Promise<{ id: string }>;
@@ -19,6 +21,11 @@ export default async function EditPackPage({ params }: EditPackPageProps) {
 
   return (
     <div className={adminStyles.adminContainer}>
+      <p>
+        <Link href="/admin/packs" className={shared.resetLink}>
+          ← Back to packs
+        </Link>
+      </p>
       <div className={adminStyles.headerSection}>
         <h1 className={adminStyles.title}>Edit pack</h1>
         <p className={adminStyles.subtitle}>{pack.title}</p>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { TestimonialForm } from "@/components/admin/content/TestimonialForm";
 import adminStyles from "../../../admin.module.css";
@@ -12,6 +13,11 @@ export default async function NewTestimonialPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
+      <p className={styles.backRow}>
+        <Link href="/admin/content/testimonials" className={styles.backLink}>
+          ← Back to testimonials
+        </Link>
+      </p>
       <div className={styles.headerRow}>
         <div>
           <h1 className={styles.pageTitle}>New testimonial</h1>

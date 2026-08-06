@@ -16,9 +16,11 @@ import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import homeStyles from '@/components/marketing/MarketingHome.module.css'
 
 export default async function HomePage() {
-  const testimonials = await getTestimonials()
-  const allFaqs = await getFaqs()
-  const content = await getWebsiteContent()
+  const [testimonials, allFaqs, content] = await Promise.all([
+    getTestimonials(),
+    getFaqs(),
+    getWebsiteContent(),
+  ])
   const hero = content['homepage.hero']
   const heroEyebrow =
     typeof hero.eyebrow === 'string' && hero.eyebrow

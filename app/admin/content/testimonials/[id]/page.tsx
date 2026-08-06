@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getTestimonial } from "@/lib/admin/content";
@@ -21,6 +22,11 @@ export default async function EditTestimonialPage({
 
   return (
     <div className={adminStyles.adminContainer}>
+      <p className={styles.backRow}>
+        <Link href="/admin/content/testimonials" className={styles.backLink}>
+          ← Back to testimonials
+        </Link>
+      </p>
       <div className={styles.headerRow}>
         <div>
           <h1 className={styles.pageTitle}>Edit testimonial</h1>
