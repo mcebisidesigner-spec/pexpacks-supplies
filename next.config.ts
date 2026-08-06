@@ -10,7 +10,7 @@ const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://raw.githubusercontent.com",
+  "img-src 'self' data: blob: https://raw.githubusercontent.com https://*.supabase.co https://rjuvicgqwryztwytnauo.supabase.co",
   "font-src 'self' data:",
   "connect-src 'self' https://*.supabase.co https://*.google-analytics.com",
   "worker-src 'self'",
@@ -24,6 +24,16 @@ const csp = [
 const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
+      },
+    ],
   },
   async redirects() {
     return [
