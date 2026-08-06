@@ -25,9 +25,7 @@ export async function saveFormSubmission(
         id: submissionId,
         form_type: data.formType,
         status: "new",
-        data: data as unknown as Json,
-        source_url: data.sourceUrl || data.pageUrl || null,
-        user_agent: data.userAgent || null,
+        payload: data as unknown as Json,
       });
 
     if (error) {

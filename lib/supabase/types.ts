@@ -14,9 +14,10 @@ export interface Database {
           id: string;
           form_type: string;
           status: string;
-          data: Json;
-          source_url: string | null;
-          user_agent: string | null;
+          payload: Json;
+          data?: Json;
+          source_url?: string | null;
+          user_agent?: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -24,7 +25,8 @@ export interface Database {
           id?: string;
           form_type: string;
           status?: string;
-          data: Json;
+          payload?: Json;
+          data?: Json;
           source_url?: string | null;
           user_agent?: string | null;
           created_at?: string;
@@ -34,6 +36,7 @@ export interface Database {
           id?: string;
           form_type?: string;
           status?: string;
+          payload?: Json;
           data?: Json;
           source_url?: string | null;
           user_agent?: string | null;

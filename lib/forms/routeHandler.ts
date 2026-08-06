@@ -14,11 +14,8 @@ import {
   readFormBody,
   validateFormSubmission,
 } from "@/lib/forms/validation";
-import {
-  saveFormSubmission,
-  saveOrderRecord,
-  saveBrandPackageRecord,
-} from "@/lib/supabase/forms";
+import { saveFormSubmission, saveOrderRecord, saveBrandPackageRecord } from "@/lib/supabase/forms";
+import { sendFormNotificationEmail } from "@/lib/email/formNotification";
 
 function json(body: unknown, status: number) {
   return NextResponse.json(body, { status });
@@ -111,6 +108,7 @@ export async function handlePexpacksFormRequest(
     await Promise.allSettled([
       saveOrderRecord(data, saved.submission_id),
       saveBrandPackageRecord(data, saved.submission_id),
+      sendFormNotificationEmail(data),
     ]);
   }
 
