@@ -121,6 +121,16 @@
   margin-top: -2px;
 }
 
+.itemIconEmpty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 13px;
+  color: var(--pex-muted, #c4cdd4);
+}
+
 .iconPicker {
   display: flex;
   flex-wrap: wrap;

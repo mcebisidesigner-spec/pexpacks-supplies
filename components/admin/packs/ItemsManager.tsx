@@ -276,6 +276,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
             <thead>
               <tr>
                 <th>#</th>
+                <th>Icon</th>
                 <th>Item</th>
                 <th>Qty</th>
                 <th>Visible</th>
@@ -308,12 +309,21 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                     </div>
                   </td>
                   <td>
+                    {item.icon && isPackItemIconKey(item.icon) ? (
+                      <span className={styles.itemIcon}>
+                        <ItemIcon name={item.icon} size={20} />
+                      </span>
+                    ) : (
+                      <span
+                        className={styles.itemIconEmpty}
+                        aria-hidden="true"
+                      >
+                        —
+                      </span>
+                    )}
+                  </td>
+                  <td>
                     <div className={styles.itemCell}>
-                      {item.icon && isPackItemIconKey(item.icon) ? (
-                        <span className={styles.itemIcon}>
-                          <ItemIcon name={item.icon} size={20} />
-                        </span>
-                      ) : null}
                       <div>
                         <div className={styles.itemName}>{item.name}</div>
                         {item.description ? (

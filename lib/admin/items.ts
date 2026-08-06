@@ -117,7 +117,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
   let query = admin
     .from("stationery_items")
     .select(
-      "id,pack_id,name,description,quantity,image,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
+      "id,pack_id,name,description,quantity,image,icon,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
       { count: "exact" }
     );
 
