@@ -203,9 +203,18 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
   };
 }
 
-export async function listPackSchools(): Promise<{ id: string; name: string }[]> {
+export interface PackSchool {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export async function listPackSchools(): Promise<PackSchool[]> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("schools").select("id, name").order("name", { ascending: true });
+  const { data, error } = await admin
+    .from("schools")
+    .select("id, name, slug")
+    .order("name", { ascending: true });
   if (error || !data) return [];
   return data;
 }
@@ -220,48 +229,7 @@ export async function listPacksForFilter(): Promise<{ id: string; title: string 
   return data;
 }
 
-export interface TemplatePack {
-  id: string;
-  title: string;
-  school_name: string | null;
-  academic_year: number | null;
-  delivery_type: string | null;
-  description: string | null;
-  price: number | null;
-  sort_order: number | null;
-}
-
-export async function listTemplatePacks(): Promise<TemplatePack[]> {
-  const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
-    .from("stationery_packs")
-    .select("id, title, academic_year, delivery_type, description, price, sort_order, schools(name)")
-    .order("title", { ascending: true });
-  if (error || !data) return [];
-  return (
-    data as {
-      id: string;
-      title: string;
-      academic_year: number | null;
-      delivery_type: string | null;
-      description: string | null;
-      price: number | null;
-      sort_order: number | null;
-      schools?: { name: string | null } | null;
-    }[]
-  ).map((pack) => ({
-    id: pack.id,
-    title: pack.title,
-    school_name: pack.schools?.name ?? null,
-    academic_year: pack.academic_year,
-    delivery_type: pack.delivery_type,
-    description: pack.description,
-    price: pack.price,
-    sort_order: pack.sort_order,
-  }));
-}
-
-async function nextSortOrder(
+export async function nextSortOrder(
   admin: ReturnType<typeof createSupabaseAdminClient>,
   schoolId: string | null
 ): Promise<number> {
@@ -274,43 +242,6 @@ async function nextSortOrder(
     .limit(1);
   const max = data?.[0]?.sort_order ?? 0;
   return max + 1;
-}
-
-async function copyItemsFromTemplate(
-  admin: ReturnType<typeof createSupabaseAdminClient>,
-  templatePackId: string,
-  newPackId: string,
-  actorUserId: string
-): Promise<void> {
-  const { data: source } = await admin
-    .from("stationery_packs")
-    .select("school_id")
-    .eq("id", templatePackId)
-    .maybeSingle();
-  if (!source) return;
-
-  const { data: items } = await admin
-    .from("stationery_items")
-    .select("name, description, quantity, image, icon, visible, sort_order")
-    .eq("pack_id", templatePackId)
-    .order("sort_order", { ascending: true });
-
-  if (!items || items.length === 0) return;
-
-  const { error } = await admin.from("stationery_items").insert(
-    items.map((item) => ({
-      pack_id: newPackId,
-      name: item.name,
-      description: item.description,
-      quantity: item.quantity,
-      image: item.image,
-      icon: item.icon,
-      visible: item.visible,
-      sort_order: item.sort_order,
-      created_by: actorUserId,
-    }))
-  );
-  if (error) throw error;
 }
 
 async function listDeliveryTypes(): Promise<string[]> {
@@ -359,42 +290,96 @@ async function ensureUniqueSlug(
   }
 }
 
+const createPackSchema = z.object({
+  school_id: z.string().min(1, "Choose a school"),
+  grade: z
+    .string()
+    .trim()
+    .min(1, "Enter a grade, e.g. Grade 10 or R")
+    .max(30, "Grade is too long"),
+  featured: z.boolean().default(false),
+  visible: z.boolean().default(false),
+});
+
+type CreatePackFormData = z.infer<typeof createPackSchema>;
+
+/**
+ * Turns a user-entered grade ("Grade 10", "10", "GRADE R", "R") into the
+ * `${schoolSlug}-grade-<r|n>` slug segment used by the public grade pages.
+ */
+function gradeToSlug(grade: string): string {
+  const cleaned = grade.trim().toLowerCase();
+  const match = cleaned.match(/grade\s*([r\d]+)/);
+  if (match) return `grade-${match[1]}`;
+  const bare = cleaned.match(/^([r\d]+)$/);
+  if (bare) return `grade-${bare[1]}`;
+  return "grade";
+}
+
 export async function createPack(formData: FormData): Promise<PackFormResult> {
   const actor = await assertCan("packs.create");
-  const parsed = parsePackForm(formData);
-  if (!parsed.ok) return { ok: false, errors: parsed.errors };
+
+  const parsed = createPackSchema.safeParse({
+    school_id: raw(formData, "school_id"),
+    grade: raw(formData, "grade"),
+    featured: formData.has("featured"),
+    visible: formData.has("visible"),
+  });
+  if (!parsed.success) {
+    const errors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      const key = String(issue.path[0]);
+      if (!errors[key]) errors[key] = issue.message;
+    }
+    return { ok: false, errors };
+  }
 
   const admin = createSupabaseAdminClient();
-  const copyFromPackId = raw(formData, "copy_from_pack_id") || null;
-  let data = parsed.data;
+  const { data: school } = await admin
+    .from("schools")
+    .select("id, name, slug")
+    .eq("id", parsed.data.school_id)
+    .maybeSingle();
+  if (!school) {
+    return { ok: false, errors: { school_id: "Choose a school." } };
+  }
 
   try {
-    const file = formData.get("pack_image_file");
-    if (file instanceof File && file.size > 0) {
-      const uploaded = await uploadPackImage(file);
-      data = { ...data, pack_image: uploaded.publicUrl };
-    }
+    const data: CreatePackFormData = parsed.data;
+    const grade = data.grade.trim();
+    const title = `${school.name} ${grade} Pack`;
+    const slug = await ensureUniqueSlug(admin, `${school.slug}-${gradeToSlug(grade)}`);
+    const sort_order = await nextSortOrder(admin, school.id);
 
-    if (!data.sort_order || data.sort_order <= 0) {
-      data = { ...data, sort_order: await nextSortOrder(admin, data.school_id) };
-    }
-
-    const slug = await ensureUniqueSlug(admin, data.slug || slugify(data.title) || "pack");
     const { data: created, error } = await admin
       .from("stationery_packs")
-      .insert({ ...data, slug, created_by: actor.user.id, updated_by: actor.user.id })
+      .insert({
+        school_id: school.id,
+        title,
+        slug,
+        description: null,
+        price: 0,
+        stock: 1,
+        featured: data.featured,
+        visible: data.visible,
+        academic_year: null,
+        delivery_type: PACK_DELIVERY_TYPES[0],
+        pack_image: null,
+        sort_order,
+        created_by: actor.user.id,
+        updated_by: actor.user.id,
+      })
       .select()
       .single();
 
     if (error) {
       if (error.code === "23505") {
-        return { ok: false, errors: { slug: "A pack with this slug already exists." } };
+        return {
+          ok: false,
+          errors: { school_id: "A pack for this school and grade already exists." },
+        };
       }
       throw error;
-    }
-
-    if (copyFromPackId) {
-      await copyItemsFromTemplate(admin, copyFromPackId, created.id, actor.user.id);
     }
 
     void writeAuditLog({
@@ -403,7 +388,7 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
       action: "packs.create",
       entityType: "pack",
       entityId: created.id,
-      summary: `Created pack "${created.title}"${copyFromPackId ? " (copied items from template)" : ""}`,
+      summary: `Created pack "${created.title}"`,
     });
 
     return { ok: true, pack: created };

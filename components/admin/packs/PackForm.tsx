@@ -1,352 +1,254 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useActionState } from "react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import type { PackFormState, PackRow, TemplatePack } from "@/lib/admin/packs";
-import { PACK_DELIVERY_TYPES } from "@/lib/admin/pack-constants";
-import styles from "../schools/SchoolForm.module.css";
-
-interface PackFormProps {
-  pack: PackRow | null;
-  schools: { id: string; name: string }[];
-  templatePacks?: TemplatePack[];
-  action: (prev: PackFormState, formData: FormData) => Promise<PackFormState>;
-}
+import clsx from "clsx";
+import type { PackFormState, PackSchool } from "@/lib/admin/packs";
+import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
+import type { PackListItem } from "@/components/packs/packListTypes";
+import { formatCurrency } from "@/lib/formatCurrency";
+import formStyles from "../schools/SchoolForm.module.css";
+import styles from "./PackForm.module.css";
 
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" className={styles.saveButton} disabled={pending}>
-      {pending ? "Saving…" : label}
+    <button type="submit" className={formStyles.saveButton} disabled={pending}>
+      {pending ? "Creating…" : label}
     </button>
   );
 }
 
-function str(v: string | number | null | undefined): string {
-  return v == null ? "" : String(v);
+function displayGrade(raw: string): string {
+  const cleaned = raw.trim();
+  if (!cleaned) return "Grade";
+  if (/^r$/i.test(cleaned)) return "Grade R";
+  if (/^\d+$/.test(cleaned)) return `Grade ${cleaned}`;
+  return cleaned;
 }
 
-export function PackForm({ pack, schools, templatePacks, action }: PackFormProps) {
+interface SchoolPickerProps {
+  schools: PackSchool[];
+  value: string;
+  onChange: (id: string) => void;
+  error?: string;
+}
+
+function SchoolPicker({ schools, value, onChange, error }: SchoolPickerProps) {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const selected = schools.find((school) => school.id === value) ?? null;
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return schools;
+    return schools.filter((school) => school.name.toLowerCase().includes(q));
+  }, [schools, query]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const inputValue = open ? query : (selected?.name ?? "");
+
+  return (
+    <div className={styles.picker} ref={wrapperRef}>
+      <input
+        type="text"
+        id="school_picker"
+        className={formStyles.input}
+        placeholder="Search or select a school…"
+        value={inputValue}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setOpen(true);
+        }}
+        onFocus={(e) => {
+          setOpen(true);
+          e.currentTarget.select();
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setOpen(false);
+        }}
+        role="combobox"
+        aria-expanded={open}
+        aria-controls="school-picker-listbox"
+        aria-autocomplete="list"
+        autoComplete="off"
+      />
+      <input type="hidden" name="school_id" value={value} />
+      {open ? (
+        <div
+          id="school-picker-listbox"
+          className={styles.pickerMenu}
+          role="listbox"
+        >
+          {filtered.length ? (
+            filtered.map((school) => (
+              <button
+                key={school.id}
+                type="button"
+                role="option"
+                aria-selected={school.id === value}
+                className={clsx(
+                  styles.pickerOption,
+                  school.id === value && styles.pickerOptionSelected
+                )}
+                onClick={() => {
+                  onChange(school.id);
+                  setQuery("");
+                  setOpen(false);
+                }}
+              >
+                {school.name}
+              </button>
+            ))
+          ) : (
+            <p className={styles.pickerEmpty}>
+              No schools match &ldquo;{query.trim()}&rdquo;.
+            </p>
+          )}
+        </div>
+      ) : null}
+      {error ? (
+        <span className={formStyles.error} role="alert">
+          {error}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+interface PackFormProps {
+  schools: PackSchool[];
+  action: (prev: PackFormState, formData: FormData) => Promise<PackFormState>;
+}
+
+export function PackForm({ schools, action }: PackFormProps) {
   const [state, formAction] = useActionState<PackFormState, FormData>(action, {
     ok: false,
   });
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    pack?.pack_image ?? null
-  );
-  const [imageValue, setImageValue] = useState<string>(pack?.pack_image ?? "");
-  const [templatePackId, setTemplatePackId] = useState<string>("");
+  const [schoolId, setSchoolId] = useState("");
+  const [grade, setGrade] = useState("");
 
-  const academicYearRef = useRef<HTMLInputElement | null>(null);
-  const deliveryTypeRef = useRef<HTMLSelectElement | null>(null);
-  const priceRef = useRef<HTMLInputElement | null>(null);
-  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
+  const selectedSchool = schools.find((school) => school.id === schoolId) ?? null;
+  const previewGrade = displayGrade(grade);
+  const previewItems: PackListItem[] = [];
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
-      <span className={styles.error} role="alert">
+      <span className={formStyles.error} role="alert">
         {state.errors[field]}
       </span>
     ) : null;
 
-  const selectedTemplate =
-    templatePacks?.find((t) => t.id === templatePackId) ?? null;
-
-  function handleTemplateChange(packId: string) {
-    setTemplatePackId(packId);
-    const template = templatePacks?.find((t) => t.id === packId);
-    if (!template) return;
-    if (academicYearRef.current) {
-      academicYearRef.current.value = str(template.academic_year);
-    }
-    if (deliveryTypeRef.current) {
-      deliveryTypeRef.current.value = template.delivery_type ?? "School collection";
-    }
-    if (priceRef.current) {
-      priceRef.current.value = str(template.price);
-    }
-    if (descriptionRef.current) {
-      descriptionRef.current.value = template.description ?? "";
-    }
-  }
-
   return (
-    <form action={formAction} className={styles.form}>
+    <form action={formAction} className={formStyles.form}>
       {state?.ok ? (
-        <p className={styles.success} role="status">
+        <p className={formStyles.success} role="status">
           {state.message}
         </p>
       ) : state?.message ? (
-        <p className={styles.error} role="alert">
+        <p className={formStyles.error} role="alert">
           {state.message}
         </p>
       ) : null}
 
-      <input type="hidden" name="pack_image" value={imageValue} />
-      <input type="hidden" name="copy_from_pack_id" value={templatePackId} />
+      <div className={formStyles.section}>
+        <h2 className={formStyles.sectionTitle}>Pack details</h2>
 
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Pack details</h2>
-
-        {templatePacks && templatePacks.length > 0 ? (
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="template_pack">
-              Copy layout &amp; items from an existing pack
-            </label>
-            <select
-              id="template_pack"
-              className={styles.input}
-              value={templatePackId}
-              onChange={(e) => handleTemplateChange(e.target.value)}
-            >
-              <option value="">Start with an empty pack</option>
-              {templatePacks.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.title}
-                  {t.school_name ? ` — ${t.school_name}` : ""}
-                </option>
-              ))}
-            </select>
-            <span className={styles.hint}>
-              The new pack adopts the selected pack&apos;s layout and copies its
-              items as a starting point.
-            </span>
-            {selectedTemplate ? (
-              <span className={styles.hint}>
-                Template selected. It pre-fills academic year, delivery type,
-                price and description. You can still change these, and you only
-                need to pick the school for the new pack.
-              </span>
-            ) : null}
-          </div>
-        ) : null}
-
-        <div className={styles.grid}>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="title">
-              Title *
-            </label>
-            <input
-              id="title"
-              name="title"
-              className={styles.input}
-              defaultValue={pack?.title ?? ""}
-              placeholder="e.g. Grade 1 Stationery Pack"
-              required
-            />
-            {err("title")}
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="slug">
-              Slug
-            </label>
-            <input
-              id="slug"
-              name="slug"
-              className={styles.input}
-              defaultValue={str(pack?.slug)}
-              placeholder="auto-generated from title"
-            />
-            <span className={styles.hint}>
-              Used in public URLs. Leave blank to auto-generate.
-            </span>
-            {err("slug")}
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="school_id">
-              School
-            </label>
-            <select
-              id="school_id"
-              name="school_id"
-              className={styles.input}
-              defaultValue={str(pack?.school_id)}
-            >
-              <option value="">No school</option>
-              {schools.map((school) => (
-                <option key={school.id} value={school.id}>
-                  {school.name}
-                </option>
-              ))}
-            </select>
-            {err("school_id")}
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="academic_year">
-              Academic year
-            </label>
-            <input
-              id="academic_year"
-              name="academic_year"
-              className={styles.input}
-              defaultValue={str(pack?.academic_year)}
-              placeholder="e.g. 2026"
-              ref={academicYearRef}
-            />
-            {err("academic_year")}
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="delivery_type">
-              Delivery type
-            </label>
-            <select
-              id="delivery_type"
-              name="delivery_type"
-              className={styles.input}
-              defaultValue={pack?.delivery_type ?? "School collection"}
-              ref={deliveryTypeRef}
-            >
-              {PACK_DELIVERY_TYPES.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-            {err("delivery_type")}
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="price">
-              Price (R)
-            </label>
-            <input
-              id="price"
-              name="price"
-              className={styles.input}
-              inputMode="decimal"
-              defaultValue={str(pack?.price)}
-              placeholder="0.00"
-              ref={priceRef}
-            />
-            {err("price")}
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="stock">
-              Stock
-            </label>
-            <input
-              id="stock"
-              name="stock"
-              className={styles.input}
-              inputMode="numeric"
-              defaultValue={str(pack?.stock)}
-              placeholder="0"
-            />
-            {err("stock")}
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="sort_order">
-              Sort order
-            </label>
-            <input
-              id="sort_order"
-              name="sort_order"
-              className={styles.input}
-              inputMode="numeric"
-              defaultValue={str(pack?.sort_order)}
-              placeholder="0"
-            />
-            <span className={styles.hint}>
-              Lower numbers show first on the school page. Leave 0 on a new pack
-              to auto-assign the next number.
-            </span>
-            {err("sort_order")}
-          </div>
+        <div className={formStyles.field}>
+          <label className={formStyles.label} htmlFor="school_picker">
+            Which school *
+          </label>
+          <SchoolPicker
+            schools={schools}
+            value={schoolId}
+            onChange={setSchoolId}
+            error={state?.errors?.school_id}
+          />
+          {err("school_id")}
         </div>
 
-        <div className={styles.checkboxes}>
-          <label className={styles.checkbox}>
-            <input
-              type="checkbox"
-              name="visible"
-              defaultChecked={pack?.visible ?? false}
-            />
+        <div className={formStyles.field}>
+          <label className={formStyles.label} htmlFor="grade">
+            Grade *
+          </label>
+          <input
+            id="grade"
+            name="grade"
+            className={formStyles.input}
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+            placeholder="e.g. Grade 10, 10 or R"
+            required
+          />
+          <span className={formStyles.hint}>
+            The grade shown on the pack card, e.g. Grade 10.
+          </span>
+          {err("grade")}
+        </div>
+
+        <div className={formStyles.checkboxes}>
+          <label className={formStyles.checkbox}>
+            <input type="checkbox" name="visible" defaultChecked />
             Visible on site
           </label>
-          <label className={styles.checkbox}>
-            <input
-              type="checkbox"
-              name="featured"
-              defaultChecked={pack?.featured ?? false}
-            />
+          <label className={formStyles.checkbox}>
+            <input type="checkbox" name="featured" />
             Featured pack
           </label>
         </div>
+      </div>
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="description">
-            Description
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            className={styles.textarea}
-            rows={4}
-            defaultValue={str(pack?.description)}
-            ref={descriptionRef}
+      <div className={formStyles.section}>
+        <h2 className={formStyles.sectionTitle}>Preview — public pack card</h2>
+        <p className={formStyles.hint}>
+          This is how the pack appears on the school page. The card and its list
+          are populated automatically by the web app — only the school, grade and
+          price drive what it shows.
+        </p>
+        {selectedSchool ? (
+          <p className={styles.previewSchool}>{selectedSchool.name}</p>
+        ) : null}
+        <div className={styles.previewCard}>
+          <ArticlePackCard
+            gradeLabel={previewGrade}
+            bestFor={`Best for ${previewGrade} learners`}
+            title={`${previewGrade} Stationery Pack`}
+            description="Prepared according to the official school list."
+            priceLabel={`From ${formatCurrency(0)}`}
+            items={previewItems}
+            viewCompleteAriaLabel="Preview complete stationery list"
+            onViewCompleteList={() => {}}
+            actions={<span className={styles.previewAction}>Preview</span>}
           />
-          {err("description")}
         </div>
+        {selectedSchool && grade.trim() ? (
+          <p className={styles.previewTitle}>
+            Will be created as &ldquo;{selectedSchool.name} {grade.trim()} Pack&rdquo;.
+          </p>
+        ) : null}
       </div>
 
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Pack image</h2>
-        <div className={styles.logoRow}>
-          <label className={styles.logoBox}>
-            {imagePreview ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={imagePreview}
-                alt="Pack image preview"
-                className={styles.logoPreview}
-              />
-            ) : (
-              <span className={styles.logoPlaceholder}>No image</span>
-            )}
-            <input
-              type="file"
-              name="pack_image_file"
-              accept="image/png,image/webp,image/svg+xml,image/jpeg"
-              className={styles.fileInput}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  const url = URL.createObjectURL(file);
-                  setImagePreview(url);
-                  setImageValue("");
-                }
-              }}
-            />
-          </label>
-          <div className={styles.logoHint}>
-            <p>PNG, WebP, SVG or JPG — max 10 MB.</p>
-            {imagePreview ? (
-              <button
-                type="button"
-                className={styles.removeLogo}
-                onClick={() => {
-                  setImagePreview(null);
-                  setImageValue("");
-                }}
-              >
-                Remove image
-              </button>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.actions}>
-        <Link href="/admin/packs" className={styles.cancelButton}>
+      <div className={formStyles.actions}>
+        <Link href="/admin/packs" className={formStyles.cancelButton}>
           Cancel
         </Link>
-        <SubmitButton label={pack ? "Save changes" : "Create pack"} />
+        <SubmitButton label="Create pack" />
       </div>
     </form>
   );
