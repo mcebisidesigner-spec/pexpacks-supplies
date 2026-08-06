@@ -27,6 +27,7 @@ export async function createItemAction(
   if (!result.ok) {
     return { ok: false, errors: result.errors, message: result.message };
   }
+  revalidatePath("/admin/items");
   revalidatePath(`/admin/packs/${result.item.pack_id}`);
   await revalidatePackPublicPage(result.item.pack_id);
   return { ok: true };
@@ -42,6 +43,7 @@ export async function updateItemAction(
   if (!result.ok) {
     return { ok: false, errors: result.errors, message: result.message };
   }
+  revalidatePath("/admin/items");
   revalidatePath(`/admin/packs/${result.item.pack_id}`);
   await revalidatePackPublicPage(result.item.pack_id);
   return { ok: true };

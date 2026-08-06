@@ -2,6 +2,8 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { listItems, type ItemListFilters } from "@/lib/admin/items";
 import { listPacksForFilter } from "@/lib/admin/packs";
+import { deleteItemAction } from "./actions";
+import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import shared from "../schools/schools.module.css";
 import adminStyles from "../admin.module.css";
 import styles from "../packs/packs.module.css";
@@ -27,6 +29,10 @@ function buildHref(
   }
   const s = qs.toString();
   return s ? `/admin/items?${s}` : "/admin/items";
+}
+
+function money(v: number | null): string {
+  return v == null ? "—" : `R ${v.toFixed(2)}`;
 }
 
 export default async function ItemsPage({ searchParams }: ItemsPageProps) {
@@ -56,6 +62,9 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
               {total} {total === 1 ? "item" : "items"}
             </span>
           </h1>
+          <Link href="/admin/items/new" className={shared.addButton}>
+            + Add item
+          </Link>
         </div>
 
         <form method="get" action="/admin/items" className={shared.filterForm}>
@@ -101,7 +110,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
               <p className={adminStyles.emptyStateText}>
                 {hasFilters
                   ? "Try clearing your filters."
-                  : "Add items from a pack's edit page, or import a CSV."}
+                  : "Add a new item, or add items from a pack's edit page."}
               </p>
             </div>
           </div>
@@ -112,9 +121,10 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
             <table className={adminStyles.table}>
               <thead>
                 <tr>
-                  <th>Item</th>
+                  <th>Item Name</th>
                   <th>Pack</th>
-                  <th>Qty</th>
+                  <th>Pack-Qty</th>
+                  <th>Total Price</th>
                   <th>Visible</th>
                   <th>Actions</th>
                 </tr>
@@ -142,6 +152,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                       )}
                     </td>
                     <td>{item.quantity}</td>
+                    <td className={styles.priceCell}>{money(item.unit_price)}</td>
                     <td>
                       <span
                         className={`${shared.flag} ${
@@ -152,12 +163,22 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                       </span>
                     </td>
                     <td>
-                      <Link
-                        href={`/admin/packs/${item.pack_id}`}
-                        className={shared.actionLink}
-                      >
-                        Open pack
-                      </Link>
+                      <div className={shared.actions}>
+                        <Link
+                          href={`/admin/items/${item.id}`}
+                          className={shared.actionLink}
+                        >
+                          Edit
+                        </Link>
+                        <form action={deleteItemAction.bind(null, item.id)}>
+                          <ConfirmButton
+                            label="Delete"
+                            confirmText={`Permanently delete "${item.name}"? This cannot be undone.`}
+                            busyLabel="Deleting…"
+                            className={`${shared.rowButton} ${shared.rowButtonDelete}`}
+                          />
+                        </form>
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -24,6 +24,20 @@ const countField = z.coerce
 
 const iconField = optString(60, "icon");
 
+const priceField = z.preprocess(
+  (v) => {
+    if (v === "" || v == null) return null;
+    if (typeof v === "number") return v;
+    const n = Number(String(v).trim().replace(",", "."));
+    return Number.isFinite(n) ? n : v;
+  },
+  z
+    .number({ message: "Enter a valid price" })
+    .min(0, "Cannot be negative")
+    .max(99_999_999, "Value is too large")
+    .nullable()
+);
+
 export const itemSchema = z.object({
   pack_id: z.string().uuid("Invalid pack id"),
   name: z.string().trim().min(1, "Enter an item name").max(200, "Name is too long"),
@@ -31,6 +45,7 @@ export const itemSchema = z.object({
   quantity: countField,
   image: optString(2000, "image URL"),
   icon: iconField,
+  price: priceField,
   visible: z.boolean().default(false),
   sort_order: countField,
 });
@@ -56,6 +71,13 @@ function raw(formData: FormData, key: string): string {
   return typeof v === "string" ? v : "";
 }
 
+/** ItemFormData minus the `price` key, which maps to the `unit_price` column. */
+function restOf(data: ItemFormData): Omit<ItemFormData, "price"> {
+  const { price, ...rest } = data;
+  void price;
+  return rest;
+}
+
 export function parseItemForm(formData: FormData): ParsedItemForm {
   const parsed = itemSchema.safeParse({
     pack_id: raw(formData, "pack_id"),
@@ -64,6 +86,7 @@ export function parseItemForm(formData: FormData): ParsedItemForm {
     quantity: raw(formData, "quantity") || "1",
     image: raw(formData, "image"),
     icon: raw(formData, "icon"),
+    price: raw(formData, "price"),
     visible: formData.has("visible"),
     sort_order: raw(formData, "sort_order") || "0",
   });
@@ -117,7 +140,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
   let query = admin
     .from("stationery_items")
     .select(
-      "id,pack_id,name,description,quantity,image,icon,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
+      "id,pack_id,name,description,quantity,image,icon,unit_price,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
       { count: "exact" }
     );
 
@@ -181,7 +204,7 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
 
     const { data: created, error } = await admin
       .from("stationery_items")
-      .insert({ ...data, created_by: actor.user.id })
+      .insert({ ...restOf(data), unit_price: data.price, created_by: actor.user.id })
       .select()
       .single();
 
@@ -217,7 +240,7 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
   try {
     const { data: updated, error } = await admin
       .from("stationery_items")
-      .update(parsed.data)
+      .update({ ...restOf(parsed.data), unit_price: parsed.data.price })
       .eq("id", id)
       .select()
       .single();
@@ -359,6 +382,9 @@ const CSV_ALIASES: Record<string, string> = {
   description: "description",
   notes: "description",
   icon: "icon",
+  price: "price",
+  unitprice: "price",
+  totalprice: "price",
   visible: "visible",
   sortorder: "sort_order",
   order: "sort_order",
@@ -416,6 +442,7 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
       quantity: field("quantity") || "1",
       image: "",
       icon: field("icon"),
+      price: field("price"),
       visible: ["true", "1", "yes", "y"].includes(field("visible").toLowerCase()),
       sort_order: field("sort_order") || "0",
     };
@@ -438,13 +465,16 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
 
     try {
       if (existingId) {
-        const { error } = await admin.from("stationery_items").update(data).eq("id", existingId);
+        const { error } = await admin
+          .from("stationery_items")
+          .update({ ...restOf(data), unit_price: data.price })
+          .eq("id", existingId);
         if (error) throw error;
         result.updated += 1;
       } else {
         const { error } = await admin
           .from("stationery_items")
-          .insert({ ...data, created_by: actor.user.id });
+          .insert({ ...restOf(data), unit_price: data.price, created_by: actor.user.id });
         if (error) throw error;
         byName.set(key, "new");
         result.created += 1;
