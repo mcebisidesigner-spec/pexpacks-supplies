@@ -467,6 +467,46 @@ export async function updatePack(id: string, formData: FormData): Promise<PackFo
   }
 }
 
+export async function updatePackPrice(
+  id: string,
+  price: number
+): Promise<{ ok: boolean; message?: string }> {
+  const actor = await assertCan("packs.edit");
+  const admin = createSupabaseAdminClient();
+
+  const parsed = moneyField.safeParse(price);
+  if (!parsed.success) {
+    return { ok: false, message: "Enter a valid price." };
+  }
+
+  const { data: existing } = await admin
+    .from("stationery_packs")
+    .select("id, title")
+    .eq("id", id)
+    .maybeSingle();
+  if (!existing) return { ok: false, message: "Pack not found." };
+
+  const { error } = await admin
+    .from("stationery_packs")
+    .update({ price: parsed.data, updated_by: actor.user.id })
+    .eq("id", id);
+  if (error) {
+    console.error("[packs] price update failed:", error);
+    return { ok: false, message: "Failed to update price." };
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "packs.edit",
+    entityType: "pack",
+    entityId: id,
+    summary: `Updated price for pack "${existing.title}"`,
+  });
+
+  return { ok: true };
+}
+
 export async function setPackVisible(
   id: string,
   visible: boolean

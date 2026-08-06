@@ -6,9 +6,11 @@ import { requireAdmin } from "@/lib/admin/rbac";
 import {
   createPack,
   updatePack,
+  updatePackPrice,
   deletePack,
   duplicatePack,
   setPackVisible,
+  getPublicGradePackPath,
   type PackFormState,
 } from "@/lib/admin/packs";
 
@@ -42,6 +44,32 @@ export async function updatePackAction(
   revalidatePath("/schools");
   revalidatePath("/", "layout");
   return { ok: true };
+}
+
+export async function updatePackPriceAction(
+  id: string,
+  _prev: PackFormState,
+  formData: FormData
+): Promise<PackFormState> {
+  await requireAdmin({ permission: "packs.edit" });
+  const rawPrice = formData.get("price");
+  const price = typeof rawPrice === "string" ? Number(rawPrice) : Number.NaN;
+  if (!Number.isFinite(price)) {
+    return { ok: false, errors: { price: "Enter a valid price." } };
+  }
+
+  const result = await updatePackPrice(id, price);
+  if (!result.ok) {
+    return { ok: false, errors: { price: result.message ?? "Failed to update price." } };
+  }
+
+  revalidatePath(`/admin/packs/${id}`);
+  revalidatePath("/admin/packs");
+  revalidatePath("/schools");
+  revalidatePath("/", "layout");
+  const path = await getPublicGradePackPath(id);
+  if (path) revalidatePath(path);
+  return { ok: true, message: "Price saved and synced to the public pages." };
 }
 
 export async function deletePackAction(id: string): Promise<void> {

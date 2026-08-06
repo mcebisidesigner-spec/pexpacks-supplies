@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
-import { getPack, listPackSchools } from "@/lib/admin/packs";
-import { PackForm } from "@/components/admin/packs/PackForm";
+import { getPack } from "@/lib/admin/packs";
+import { PackPriceForm } from "@/components/admin/packs/PackPriceForm";
 import { ItemsManager } from "@/components/admin/packs/ItemsManager";
-import { updatePackAction } from "../actions";
 import adminStyles from "../../admin.module.css";
 import shared from "../../schools/schools.module.css";
 
@@ -17,7 +16,6 @@ export default async function EditPackPage({ params }: EditPackPageProps) {
   const { id } = await params;
   const { pack, items } = await getPack(id);
   if (!pack) notFound();
-  const schools = await listPackSchools();
 
   return (
     <div className={adminStyles.adminContainer}>
@@ -31,7 +29,7 @@ export default async function EditPackPage({ params }: EditPackPageProps) {
         <p className={adminStyles.subtitle}>{pack.title}</p>
       </div>
       <div className={adminStyles.stack}>
-        <PackForm pack={pack} schools={schools} action={updatePackAction.bind(null, id)} />
+        <PackPriceForm packId={pack.id} price={pack.price} />
         <ItemsManager packId={pack.id} items={items} />
       </div>
     </div>
