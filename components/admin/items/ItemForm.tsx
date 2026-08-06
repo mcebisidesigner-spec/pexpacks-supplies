@@ -64,29 +64,33 @@ export function ItemForm({ item, packs }: ItemFormProps) {
       <input type="hidden" name="icon" value={icon} />
 
       <div className={formStyles.section}>
-        <div className={formStyles.field}>
-          <label className={formStyles.label} htmlFor="pack_id">
-            Pack *
-          </label>
-          <select
-            id="pack_id"
-            name="pack_id"
-            className={formStyles.select}
-            defaultValue={item?.pack_id ?? ""}
-            required
-          >
-            <option value="">Select a pack…</option>
-            {packs.map((pack) => (
-              <option key={pack.id} value={pack.id}>
-                {pack.title}
-              </option>
-            ))}
-          </select>
-          <span className={formStyles.hint}>
-            The item appears in this pack&apos;s stationery list.
-          </span>
-          {err("pack_id")}
-        </div>
+        {item ? (
+          <input type="hidden" name="pack_id" value={item.pack_id} />
+        ) : (
+          <div className={formStyles.field}>
+            <label className={formStyles.label} htmlFor="pack_id">
+              Pack *
+            </label>
+            <select
+              id="pack_id"
+              name="pack_id"
+              className={formStyles.select}
+              defaultValue=""
+              required
+            >
+              <option value="">Select a pack…</option>
+              {packs.map((pack) => (
+                <option key={pack.id} value={pack.id}>
+                  {pack.title}
+                </option>
+              ))}
+            </select>
+            <span className={formStyles.hint}>
+              The item appears in this pack&apos;s stationery list.
+            </span>
+            {err("pack_id")}
+          </div>
+        )}
 
         <div className={formStyles.field}>
           <label className={formStyles.label} htmlFor="name">
