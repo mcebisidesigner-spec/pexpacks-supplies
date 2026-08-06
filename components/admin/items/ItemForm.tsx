@@ -64,33 +64,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
       <input type="hidden" name="icon" value={icon} />
 
       <div className={formStyles.section}>
-        {item ? (
-          <input type="hidden" name="pack_id" value={item.pack_id} />
-        ) : (
-          <div className={formStyles.field}>
-            <label className={formStyles.label} htmlFor="pack_id">
-              Pack *
-            </label>
-            <select
-              id="pack_id"
-              name="pack_id"
-              className={formStyles.select}
-              defaultValue=""
-              required
-            >
-              <option value="">Select a pack…</option>
-              {packs.map((pack) => (
-                <option key={pack.id} value={pack.id}>
-                  {pack.title}
-                </option>
-              ))}
-            </select>
-            <span className={formStyles.hint}>
-              The item appears in this pack&apos;s stationery list.
-            </span>
-            {err("pack_id")}
-          </div>
-        )}
+        <input type="hidden" name="pack_id" value={item?.pack_id ?? packs[0]?.id ?? ""} />
 
         <div className={formStyles.field}>
           <label className={formStyles.label} htmlFor="name">
@@ -181,25 +155,6 @@ export function ItemForm({ item, packs }: ItemFormProps) {
             defaultValue={item?.description ?? ""}
           />
           {err("description")}
-        </div>
-
-        <div className={formStyles.field}>
-          <label className={formStyles.label} htmlFor="specification">
-            Specification
-          </label>
-          <textarea
-            id="specification"
-            name="specification"
-            className={formStyles.textarea}
-            rows={3}
-            defaultValue={item?.specification ?? ""}
-          />
-          <span className={formStyles.hint}>
-            Shown in the &quot;Specification&quot; column on the public
-            complete-list drawer and the downloadable PDF. Falls back to the
-            description when empty.
-          </span>
-          {err("specification")}
         </div>
 
         <div className={formStyles.checkboxes}>
