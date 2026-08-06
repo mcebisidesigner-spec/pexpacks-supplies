@@ -22,11 +22,34 @@ export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
 
   try {
     const supabase = createSupabaseAdminClient();
-    const { data: dbSchools } = await supabase
-      .from("schools")
-      .select("id, slug, name, city, province, district, logo, is_partner, is_featured, lowest_price");
+    let dbSchools: Array<{
+      id: string;
+      slug: string;
+      name: string;
+      city: string | null;
+      province: string | null;
+      district: string | null;
+      logo: string | null;
+      is_partner: boolean | null;
+      is_featured: boolean | null;
+      lowest_price: number | null;
+    }> = [];
+    let from = 0;
+    const PAGE_SIZE = 1000;
 
-    if (dbSchools) {
+    while (true) {
+      const { data: page, error } = await supabase
+        .from("schools")
+        .select("id, slug, name, city, province, district, logo, is_partner, is_featured, lowest_price")
+        .range(from, from + PAGE_SIZE - 1);
+
+      if (error || !page || page.length === 0) break;
+      dbSchools = dbSchools.concat(page);
+      if (page.length < PAGE_SIZE) break;
+      from += PAGE_SIZE;
+    }
+
+    if (dbSchools.length > 0) {
       dbSchoolMap = new Map(dbSchools.map((s) => [s.slug, s]));
     }
   } catch {

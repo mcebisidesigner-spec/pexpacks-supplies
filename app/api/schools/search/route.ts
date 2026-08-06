@@ -54,9 +54,8 @@ export async function GET(request: NextRequest) {
     },
     {
       headers: {
-        // Cache search results for 60s on CDN, allow stale for 5 min
         "Cache-Control":
-          "public, s-maxage=60, stale-while-revalidate=300",
+          "public, s-maxage=0, stale-while-revalidate=10",
       },
     }
   );
