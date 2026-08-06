@@ -1,15 +1,16 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import type { PackFormState, PackRow } from "@/lib/admin/packs";
+import type { PackFormState, PackRow, TemplatePack } from "@/lib/admin/packs";
 import { PACK_DELIVERY_TYPES } from "@/lib/admin/pack-constants";
 import styles from "../schools/SchoolForm.module.css";
 
 interface PackFormProps {
   pack: PackRow | null;
   schools: { id: string; name: string }[];
+  templatePacks?: TemplatePack[];
   action: (prev: PackFormState, formData: FormData) => Promise<PackFormState>;
 }
 
@@ -26,7 +27,7 @@ function str(v: string | number | null | undefined): string {
   return v == null ? "" : String(v);
 }
 
-export function PackForm({ pack, schools, action }: PackFormProps) {
+export function PackForm({ pack, schools, templatePacks, action }: PackFormProps) {
   const [state, formAction] = useActionState<PackFormState, FormData>(action, {
     ok: false,
   });
@@ -34,6 +35,12 @@ export function PackForm({ pack, schools, action }: PackFormProps) {
     pack?.pack_image ?? null
   );
   const [imageValue, setImageValue] = useState<string>(pack?.pack_image ?? "");
+  const [templatePackId, setTemplatePackId] = useState<string>("");
+
+  const academicYearRef = useRef<HTMLInputElement | null>(null);
+  const deliveryTypeRef = useRef<HTMLSelectElement | null>(null);
+  const priceRef = useRef<HTMLInputElement | null>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
@@ -41,6 +48,27 @@ export function PackForm({ pack, schools, action }: PackFormProps) {
         {state.errors[field]}
       </span>
     ) : null;
+
+  const selectedTemplate =
+    templatePacks?.find((t) => t.id === templatePackId) ?? null;
+
+  function handleTemplateChange(packId: string) {
+    setTemplatePackId(packId);
+    const template = templatePacks?.find((t) => t.id === packId);
+    if (!template) return;
+    if (academicYearRef.current) {
+      academicYearRef.current.value = str(template.academic_year);
+    }
+    if (deliveryTypeRef.current) {
+      deliveryTypeRef.current.value = template.delivery_type ?? "School collection";
+    }
+    if (priceRef.current) {
+      priceRef.current.value = str(template.price);
+    }
+    if (descriptionRef.current) {
+      descriptionRef.current.value = template.description ?? "";
+    }
+  }
 
   return (
     <form action={formAction} className={styles.form}>
@@ -55,9 +83,44 @@ export function PackForm({ pack, schools, action }: PackFormProps) {
       ) : null}
 
       <input type="hidden" name="pack_image" value={imageValue} />
+      <input type="hidden" name="copy_from_pack_id" value={templatePackId} />
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Pack details</h2>
+
+        {templatePacks && templatePacks.length > 0 ? (
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="template_pack">
+              Copy layout &amp; items from an existing pack
+            </label>
+            <select
+              id="template_pack"
+              className={styles.input}
+              value={templatePackId}
+              onChange={(e) => handleTemplateChange(e.target.value)}
+            >
+              <option value="">Start with an empty pack</option>
+              {templatePacks.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.title}
+                  {t.school_name ? ` — ${t.school_name}` : ""}
+                </option>
+              ))}
+            </select>
+            <span className={styles.hint}>
+              The new pack adopts the selected pack&apos;s layout and copies its
+              items as a starting point.
+            </span>
+            {selectedTemplate ? (
+              <span className={styles.hint}>
+                Template selected. It pre-fills academic year, delivery type,
+                price and description. You can still change these, and you only
+                need to pick the school for the new pack.
+              </span>
+            ) : null}
+          </div>
+        ) : null}
+
         <div className={styles.grid}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="title">
@@ -121,6 +184,7 @@ export function PackForm({ pack, schools, action }: PackFormProps) {
               className={styles.input}
               defaultValue={str(pack?.academic_year)}
               placeholder="e.g. 2026"
+              ref={academicYearRef}
             />
             {err("academic_year")}
           </div>
@@ -134,6 +198,7 @@ export function PackForm({ pack, schools, action }: PackFormProps) {
               name="delivery_type"
               className={styles.input}
               defaultValue={pack?.delivery_type ?? "School collection"}
+              ref={deliveryTypeRef}
             >
               {PACK_DELIVERY_TYPES.map((d) => (
                 <option key={d} value={d}>
@@ -155,6 +220,7 @@ export function PackForm({ pack, schools, action }: PackFormProps) {
               inputMode="decimal"
               defaultValue={str(pack?.price)}
               placeholder="0.00"
+              ref={priceRef}
             />
             {err("price")}
           </div>
@@ -186,6 +252,10 @@ export function PackForm({ pack, schools, action }: PackFormProps) {
               defaultValue={str(pack?.sort_order)}
               placeholder="0"
             />
+            <span className={styles.hint}>
+              Lower numbers show first on the school page. Leave 0 on a new pack
+              to auto-assign the next number.
+            </span>
             {err("sort_order")}
           </div>
         </div>
@@ -219,6 +289,7 @@ export function PackForm({ pack, schools, action }: PackFormProps) {
             className={styles.textarea}
             rows={4}
             defaultValue={str(pack?.description)}
+            ref={descriptionRef}
           />
           {err("description")}
         </div>

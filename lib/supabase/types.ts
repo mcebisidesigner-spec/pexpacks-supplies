@@ -923,6 +923,7 @@ export interface Database {
           quantity: number;
           unit_price: number | null;
           image: string | null;
+          icon: string | null;
           visible: boolean;
           sort_order: number;
           created_by: string | null;
@@ -938,6 +939,7 @@ export interface Database {
           quantity?: number;
           unit_price?: number | null;
           image?: string | null;
+          icon?: string | null;
           visible?: boolean;
           sort_order?: number;
           created_by?: string | null;
@@ -953,6 +955,7 @@ export interface Database {
           quantity?: number;
           unit_price?: number | null;
           image?: string | null;
+          icon?: string | null;
           visible?: boolean;
           sort_order?: number;
           created_by?: string | null;

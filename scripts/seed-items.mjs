@@ -12,6 +12,23 @@ if (!supabaseUrl || !serviceRoleKey) {
 
 const supabase = createClient(supabaseUrl, serviceRoleKey);
 
+function inferIcon(name) {
+  const value = name.toLowerCase();
+  if (/(book|scrapbook)/.test(value)) return "notebook";
+  if (/(pad|paper)/.test(value)) return "pad";
+  if (/(file|sleeve|folder)/.test(value)) return "file";
+  if (/(pen|marker)/.test(value)) return "pen";
+  if (/(pencil|crayon|colour|color)/.test(value)) return "pencil";
+  if (/glue/.test(value)) return "glue";
+  if (/scissor/.test(value)) return "scissors";
+  if (/ruler/.test(value)) return "ruler";
+  if (/eraser/.test(value)) return "eraser";
+  if (/sharpener/.test(value)) return "sharpener";
+  if (/highlighter/.test(value)) return "highlighter";
+  if (/calculator/.test(value)) return "calculator";
+  return "box";
+}
+
 async function seedItems() {
   console.log("Fetching ALL stationery packs from Supabase DB to map pack slug -> pack ID...");
   let allPacks = [];
@@ -53,6 +70,7 @@ async function seedItems() {
           quantity: 1,
           visible: true,
           sort_order: index,
+          icon: inferIcon(itemName),
         });
       });
     }

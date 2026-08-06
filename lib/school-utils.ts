@@ -55,10 +55,15 @@ export async function getSchoolBySlug(slug: string) {
           .eq("visible", true)
           .order("sort_order", { ascending: true });
 
-        const itemsByPack = new Map<string, Array<{ name: string; quantity: number }>>();
+        const itemsByPack = new Map<string, Array<{ name: string; quantity: number; icon?: string | null; description?: string | null }>>();
         for (const item of dbItems ?? []) {
           const list = itemsByPack.get(item.pack_id) ?? [];
-          list.push(item);
+          list.push({
+            name: item.name,
+            quantity: item.quantity,
+            icon: item.icon,
+            description: item.description,
+          });
           itemsByPack.set(item.pack_id, list);
         }
 
@@ -76,6 +81,12 @@ export async function getSchoolBySlug(slug: string) {
             gradeSlug,
             price: pack.price ?? 0,
             contents,
+            packItems: packItems.map((i) => ({
+              name: i.name,
+              quantity: i.quantity,
+              icon: i.icon,
+              description: i.description,
+            })),
             deliveryNote: pack.description || "Prepared for delivery before school starts.",
             availability: (pack.stock ?? 1) > 0 ? "in-stock" : "pre-order",
           };

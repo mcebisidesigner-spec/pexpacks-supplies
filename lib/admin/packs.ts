@@ -220,6 +220,99 @@ export async function listPacksForFilter(): Promise<{ id: string; title: string 
   return data;
 }
 
+export interface TemplatePack {
+  id: string;
+  title: string;
+  school_name: string | null;
+  academic_year: number | null;
+  delivery_type: string | null;
+  description: string | null;
+  price: number | null;
+  sort_order: number | null;
+}
+
+export async function listTemplatePacks(): Promise<TemplatePack[]> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("stationery_packs")
+    .select("id, title, academic_year, delivery_type, description, price, sort_order, schools(name)")
+    .order("title", { ascending: true });
+  if (error || !data) return [];
+  return (
+    data as {
+      id: string;
+      title: string;
+      academic_year: number | null;
+      delivery_type: string | null;
+      description: string | null;
+      price: number | null;
+      sort_order: number | null;
+      schools?: { name: string | null } | null;
+    }[]
+  ).map((pack) => ({
+    id: pack.id,
+    title: pack.title,
+    school_name: pack.schools?.name ?? null,
+    academic_year: pack.academic_year,
+    delivery_type: pack.delivery_type,
+    description: pack.description,
+    price: pack.price,
+    sort_order: pack.sort_order,
+  }));
+}
+
+async function nextSortOrder(
+  admin: ReturnType<typeof createSupabaseAdminClient>,
+  schoolId: string | null
+): Promise<number> {
+  if (!schoolId) return 0;
+  const { data } = await admin
+    .from("stationery_packs")
+    .select("sort_order")
+    .eq("school_id", schoolId)
+    .order("sort_order", { ascending: false })
+    .limit(1);
+  const max = data?.[0]?.sort_order ?? 0;
+  return max + 1;
+}
+
+async function copyItemsFromTemplate(
+  admin: ReturnType<typeof createSupabaseAdminClient>,
+  templatePackId: string,
+  newPackId: string,
+  actorUserId: string
+): Promise<void> {
+  const { data: source } = await admin
+    .from("stationery_packs")
+    .select("school_id")
+    .eq("id", templatePackId)
+    .maybeSingle();
+  if (!source) return;
+
+  const { data: items } = await admin
+    .from("stationery_items")
+    .select("name, description, quantity, image, icon, visible, sort_order")
+    .eq("pack_id", templatePackId)
+    .order("sort_order", { ascending: true });
+
+  if (!items || items.length === 0) return;
+
+  const { error } = await admin.from("stationery_items").insert(
+    items.map((item) => ({
+      pack_id: newPackId,
+      name: item.name,
+      description: item.description,
+      quantity: item.quantity,
+      image: item.image,
+      icon: item.icon,
+      visible: item.visible,
+      sort_order: item.sort_order,
+      created_by: actorUserId,
+    }))
+  );
+  if (error) throw error;
+}
+
 async function listDeliveryTypes(): Promise<string[]> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin.from("stationery_packs").select("delivery_type");
@@ -272,6 +365,7 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
   if (!parsed.ok) return { ok: false, errors: parsed.errors };
 
   const admin = createSupabaseAdminClient();
+  const copyFromPackId = raw(formData, "copy_from_pack_id") || null;
   let data = parsed.data;
 
   try {
@@ -279,6 +373,10 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
     if (file instanceof File && file.size > 0) {
       const uploaded = await uploadPackImage(file);
       data = { ...data, pack_image: uploaded.publicUrl };
+    }
+
+    if (!data.sort_order || data.sort_order <= 0) {
+      data = { ...data, sort_order: await nextSortOrder(admin, data.school_id) };
     }
 
     const slug = await ensureUniqueSlug(admin, data.slug || slugify(data.title) || "pack");
@@ -295,13 +393,17 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
       throw error;
     }
 
+    if (copyFromPackId) {
+      await copyItemsFromTemplate(admin, copyFromPackId, created.id, actor.user.id);
+    }
+
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
       action: "packs.create",
       entityType: "pack",
       entityId: created.id,
-      summary: `Created pack "${created.title}"`,
+      summary: `Created pack "${created.title}"${copyFromPackId ? " (copied items from template)" : ""}`,
     });
 
     return { ok: true, pack: created };
@@ -438,6 +540,7 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
           description: item.description,
           quantity: item.quantity,
           image: item.image,
+          icon: item.icon,
           visible: item.visible,
           sort_order: item.sort_order,
           created_by: actor.user.id,
@@ -516,7 +619,7 @@ export async function getPublicGradePackPath(packId: string): Promise<string | n
     const gradeSlug = pack.slug.startsWith(`${school.slug}-grade-`)
       ? pack.slug.slice(school.slug.length + 1)
       : null;
-    if (!gradeSlug || !/^grade-[0-9rR]$/.test(gradeSlug)) return null;
+    if (!gradeSlug || !/^grade-(r|[0-9]{1,2})$/i.test(gradeSlug)) return null;
 
     return `/schools/${school.slug}/${gradeSlug}`;
   } catch {

@@ -22,12 +22,15 @@ const countField = z.coerce
   .min(0, "Cannot be negative")
   .max(1_000_000, "Value is too large");
 
+const iconField = optString(60, "icon");
+
 export const itemSchema = z.object({
   pack_id: z.string().uuid("Invalid pack id"),
   name: z.string().trim().min(1, "Enter an item name").max(200, "Name is too long"),
   description: optString(2000, "description"),
   quantity: countField,
   image: optString(2000, "image URL"),
+  icon: iconField,
   visible: z.boolean().default(false),
   sort_order: countField,
 });
@@ -60,6 +63,7 @@ export function parseItemForm(formData: FormData): ParsedItemForm {
     description: raw(formData, "description"),
     quantity: raw(formData, "quantity") || "1",
     image: raw(formData, "image"),
+    icon: raw(formData, "icon"),
     visible: formData.has("visible"),
     sort_order: raw(formData, "sort_order") || "0",
   });
@@ -163,9 +167,21 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
   const admin = createSupabaseAdminClient();
 
   try {
+    let data = parsed.data;
+    if (!data.sort_order || data.sort_order <= 0) {
+      const { data: rows } = await admin
+        .from("stationery_items")
+        .select("sort_order")
+        .eq("pack_id", data.pack_id)
+        .order("sort_order", { ascending: false })
+        .limit(1);
+      const max = rows?.[0]?.sort_order ?? 0;
+      data = { ...data, sort_order: max + 1 };
+    }
+
     const { data: created, error } = await admin
       .from("stationery_items")
-      .insert({ ...parsed.data, created_by: actor.user.id })
+      .insert({ ...data, created_by: actor.user.id })
       .select()
       .single();
 
@@ -342,6 +358,7 @@ const CSV_ALIASES: Record<string, string> = {
   qtyperlearner: "quantity",
   description: "description",
   notes: "description",
+  icon: "icon",
   visible: "visible",
   sortorder: "sort_order",
   order: "sort_order",
@@ -398,6 +415,7 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
       description: field("description"),
       quantity: field("quantity") || "1",
       image: "",
+      icon: field("icon"),
       visible: ["true", "1", "yes", "y"].includes(field("visible").toLowerCase()),
       sort_order: field("sort_order") || "0",
     };

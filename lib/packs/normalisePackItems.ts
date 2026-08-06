@@ -1,5 +1,6 @@
 import { slugify } from "@/lib/slugify";
 import type { GradePack, School } from "@/data/schools";
+import { isPackItemIconKey } from "./itemIcons";
 import type { GradePackForCustomisation, PackItem } from "./types";
 
 const quantityPattern = /^(\d+)\s*(?:x|X)\s+(.+)$/;
@@ -108,7 +109,16 @@ export function createSchoolGradePack(
   grade: GradePack,
   descriptions?: Record<string, string>
 ): GradePackForCustomisation {
-  const items = normalisePackItems(grade.contents, grade.id);
+  const items = grade.packItems
+    ? grade.packItems.map((item) => ({
+        id: `${grade.id}-${slugify(item.name) || 0}`,
+        name: item.name,
+        category: inferCategory(item.name),
+        icon: item.icon && isPackItemIconKey(item.icon) ? item.icon : inferIcon(item.name),
+        requiredQuantity: item.quantity,
+        isRequired: true,
+      }))
+    : normalisePackItems(grade.contents, grade.id);
   const totalRequiredQuantity = items.reduce(
     (total, item) => total + item.requiredQuantity,
     0

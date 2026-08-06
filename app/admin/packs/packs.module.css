@@ -46,6 +46,11 @@
   color: #33475b;
 }
 
+.sortCell {
+  font-weight: 600;
+  color: #33475b;
+}
+
 .badgeVisible {
   background: rgba(47, 133, 90, 0.12);
   color: #1e6b45;

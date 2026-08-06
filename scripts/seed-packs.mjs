@@ -33,6 +33,22 @@ async function seedPacks() {
   const schoolMap = new Map(allSchools.map((s) => [s.slug, s.id]));
   console.log(`Mapped ALL ${schoolMap.size} schools by slug.`);
 
+  const gradeSortOrders = {
+    "grade-r": 0,
+    "grade-1": 1,
+    "grade-2": 2,
+    "grade-3": 3,
+    "grade-4": 4,
+    "grade-5": 5,
+    "grade-6": 6,
+    "grade-7": 7,
+    "grade-8": 8,
+    "grade-9": 9,
+    "grade-10": 10,
+    "grade-11": 11,
+    "grade-12": 12,
+  };
+
   console.log("Reading data/school-records.json...");
   const rawRecords = fs.readFileSync("./data/school-records.json", "utf8");
   const schoolsWithGrades = JSON.parse(rawRecords);
@@ -55,6 +71,7 @@ async function seedPacks() {
         visible: true,
         academic_year: "2026",
         delivery_type: "School collection",
+        sort_order: gradeSortOrders[g.gradeSlug] ?? 0,
       });
     }
   }

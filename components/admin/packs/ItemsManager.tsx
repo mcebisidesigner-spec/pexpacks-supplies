@@ -13,6 +13,8 @@ import {
   importItemsAction,
 } from "@/app/admin/items/actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { ItemIcon } from "@/components/ui/ItemIcon";
+import { PACK_ITEM_ICONS, isPackItemIconKey } from "@/lib/packs/itemIcons";
 import styles from "./ItemsManager.module.css";
 
 function str(v: string | number | null | undefined): string {
@@ -36,6 +38,9 @@ function ItemForm({ packId, item, onDone, onSuccess }: ItemFormProps) {
     ok: false,
   });
   const { pending } = useFormStatus();
+  const [icon, setIcon] = useState<string>(
+    item?.icon && isPackItemIconKey(item.icon) ? item.icon : ""
+  );
 
   useEffect(() => {
     if (state?.ok) onSuccess();
@@ -57,11 +62,36 @@ function ItemForm({ packId, item, onDone, onSuccess }: ItemFormProps) {
     >
       <input type="hidden" name="pack_id" value={packId} />
       <input type="hidden" name="sort_order" value={item?.sort_order ?? 0} />
+      <input type="hidden" name="icon" value={icon} />
       {state?.message ? (
         <p className={styles.error} role="alert">
           {state.message}
         </p>
       ) : null}
+
+      <div className={styles.field}>
+        <label className={styles.label}>Icon</label>
+        <div className={styles.iconPicker} role="group" aria-label="Pick an icon">
+          {PACK_ITEM_ICONS.map((option) => (
+            <button
+              key={option.key}
+              type="button"
+              className={`${styles.iconOption} ${
+                icon === option.key ? styles.iconOptionActive : ""
+              }`}
+              onClick={() => setIcon(icon === option.key ? "" : option.key)}
+              title={option.label}
+              aria-pressed={icon === option.key}
+            >
+              <ItemIcon name={option.key} size={22} />
+            </button>
+          ))}
+        </div>
+        <span className={styles.hint}>
+          Optional. Shown next to the item on the public page. Picking again
+          clears the icon.
+        </span>
+      </div>
 
       <div className={styles.formGrid}>
         <div className={styles.field}>
@@ -278,10 +308,19 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                     </div>
                   </td>
                   <td>
-                    <div className={styles.itemName}>{item.name}</div>
-                    {item.description ? (
-                      <div className={styles.itemDesc}>{item.description}</div>
-                    ) : null}
+                    <div className={styles.itemCell}>
+                      {item.icon && isPackItemIconKey(item.icon) ? (
+                        <span className={styles.itemIcon}>
+                          <ItemIcon name={item.icon} size={20} />
+                        </span>
+                      ) : null}
+                      <div>
+                        <div className={styles.itemName}>{item.name}</div>
+                        {item.description ? (
+                          <div className={styles.itemDesc}>{item.description}</div>
+                        ) : null}
+                      </div>
+                    </div>
                   </td>
                   <td>{item.quantity}</td>
                   <td>
@@ -351,7 +390,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
         <h4 className={styles.importTitle}>Bulk import (CSV)</h4>
         <ImportForm packId={packId} onImported={refresh} />
         <p className={styles.importHint}>
-          Columns: name, quantity, description, visible, sort_order.
+          Columns: name, quantity, description, visible, sort_order, icon.
           Existing items are matched by name and updated.
         </p>
       </div>

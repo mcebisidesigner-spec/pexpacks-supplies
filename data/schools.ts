@@ -6,6 +6,14 @@ export type GradePack = {
   contents: string[];
   deliveryNote: string;
   availability: "in-stock" | "pre-order" | "seasonal";
+  packItems?: SchoolPackItem[];
+};
+
+export type SchoolPackItem = {
+  name: string;
+  quantity: number;
+  icon?: string | null;
+  description?: string | null;
 };
 
 export type School = {

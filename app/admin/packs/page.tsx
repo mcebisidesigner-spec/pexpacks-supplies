@@ -161,6 +161,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                 <th>Stock</th>
                 <th>Items</th>
                 <th>Year</th>
+                <th>Sort</th>
                 <th>Flags</th>
                 <th>Actions</th>
               </tr>
@@ -193,6 +194,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                   </td>
                   <td className={styles.itemCount}>{pack.item_count}</td>
                   <td>{pack.academic_year ?? "—"}</td>
+                  <td className={styles.sortCell}>{pack.sort_order ?? 0}</td>
                   <td>
                     <div className={shared.flags}>
                       <span
