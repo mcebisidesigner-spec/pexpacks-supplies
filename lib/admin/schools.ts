@@ -90,6 +90,7 @@ export const schoolSchema = z.object({
   longitude: numberField("longitude"),
   grades: gradesField,
   logo: optString(2000, "logo URL"),
+  custom_badge: optString(60, "custom badge"),
 });
 
 export type SchoolFormData = z.infer<typeof schoolSchema>;
@@ -135,6 +136,7 @@ export function parseSchoolForm(formData: FormData): ParsedSchoolForm {
     longitude: raw(formData, "longitude"),
     grades: raw(formData, "grades"),
     logo: raw(formData, "logo"),
+    custom_badge: raw(formData, "custom_badge"),
   });
 
   if (!parsed.success) {

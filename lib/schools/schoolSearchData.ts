@@ -33,6 +33,7 @@ export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
       is_partner: boolean | null;
       is_featured: boolean | null;
       lowest_price: number | null;
+      custom_badge: string | null;
     }> = [];
     let from = 0;
     const PAGE_SIZE = 1000;
@@ -40,7 +41,7 @@ export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
     while (true) {
       const { data: page, error } = await supabase
         .from("schools")
-        .select("id, slug, name, city, province, district, logo, is_partner, is_featured, lowest_price")
+        .select("id, slug, name, city, province, district, logo, is_partner, is_featured, lowest_price, custom_badge")
         .range(from, from + PAGE_SIZE - 1);
 
       if (error || !page || page.length === 0) break;
@@ -79,6 +80,7 @@ export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
       isFeatured: dbSchool ? Boolean(dbSchool.is_featured) : Boolean("isFeatured" in school && school.isFeatured),
       isPartner: dbSchool ? Boolean(dbSchool.is_partner) : school.isPartnerSchool,
       image: logoUrl,
+      customBadge: dbSchool?.custom_badge || "2026 Packs",
       lowestPrice: dbSchool?.lowest_price ?? school.lowestPrice,
     };
   });

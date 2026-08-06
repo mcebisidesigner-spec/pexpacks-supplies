@@ -12,6 +12,7 @@ export type SchoolSearchRecord = {
   isFeatured?: boolean;
   isPartner?: boolean;
   image?: string;
+  customBadge?: string | null;
   phases: SchoolPhase[];
   /** Lowest grade pack price for this school (in ZAR cents) */
   lowestPrice?: number;

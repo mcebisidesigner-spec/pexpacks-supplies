@@ -221,6 +221,21 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
           </div>
 
           <div className={styles.field}>
+            <label className={styles.label} htmlFor="custom_badge">
+              Search Pill Badge
+            </label>
+            <input
+              id="custom_badge"
+              name="custom_badge"
+              className={styles.input}
+              defaultValue={str(school?.custom_badge) || "2026 Packs"}
+              placeholder="e.g. 2026 Packs"
+            />
+            <span className={styles.hint}>Custom badge pill shown on search card (e.g. 2026 Packs).</span>
+            {err("custom_badge")}
+          </div>
+
+          <div className={styles.field}>
             <label className={styles.label} htmlFor="lowest_price">
               Lowest pack price (R)
             </label>

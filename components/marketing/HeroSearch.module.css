@@ -248,6 +248,13 @@
   border: 1px solid var(--pex-border);
 }
 
+.customPillBadge {
+  background: #ede6db !important;
+  color: #1a2a40 !important;
+  font-weight: 800 !important;
+  border-radius: var(--radius-pill);
+}
+
 .heroResultPrice {
   background: rgba(33, 158, 154, 0.1);
   color: var(--pex-navy);

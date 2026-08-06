@@ -260,21 +260,20 @@ export function SchoolSearchPanel({
                                     </span>
                                   ) : null}
                                 </div>
-                                {school.phases.length > 0 ? (
-                                  <div className={heroStyles.heroResultBadges}>
-                                    {school.phases.slice(0, 2).map((schoolPhase) => (
-                                      <span key={schoolPhase}>
-                                        {getSchoolPhaseLabel(schoolPhase)}
-                                      </span>
-                                    ))}
-                                  </div>
-                                ) : null}
                                 <div className={heroStyles.heroResultBadges}>
+                                  {school.phases.slice(0, 2).map((schoolPhase) => (
+                                    <span key={schoolPhase}>
+                                      {getSchoolPhaseLabel(schoolPhase)}
+                                    </span>
+                                  ))}
                                   {school.isPartner ? (
                                     <span className={heroStyles.partnerBadge}>Official Partner</span>
                                   ) : (
                                     <span className={heroStyles.awaitingBadge}>Awaiting Lists</span>
                                   )}
+                                  <span className={heroStyles.customPillBadge}>
+                                    {school.customBadge || "2026 Packs"}
+                                  </span>
                                 </div>
                               </div>
                             </div>

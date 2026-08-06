@@ -168,6 +168,7 @@ export class SchoolSearchIndex {
         isFeatured: s.isFeatured,
         isPartner: s.isPartner,
         image: s.image,
+        customBadge: s.customBadge,
         phases: s.phases,
         lowestPrice: s.lowestPrice,
       })),

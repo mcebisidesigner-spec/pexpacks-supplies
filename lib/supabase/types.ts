@@ -406,8 +406,8 @@ export interface Database {
           latitude: number | null;
           longitude: number | null;
           published: boolean;
-          updated_by: string | null;
           search_vector: string | null;
+          custom_badge: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -434,6 +434,7 @@ export interface Database {
           longitude?: number | null;
           published?: boolean;
           updated_by?: string | null;
+          custom_badge?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -460,6 +461,7 @@ export interface Database {
           longitude?: number | null;
           published?: boolean;
           updated_by?: string | null;
+          custom_badge?: string | null;
           created_at?: string;
           updated_at?: string;
         };
