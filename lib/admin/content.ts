@@ -181,6 +181,50 @@ export async function deleteTestimonial(id: string): Promise<ContentFormState> {
   }
 }
 
+export async function reorderTestimonial(
+  id: string,
+  direction: "up" | "down"
+): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const rows = await listTestimonials();
+  const from = rows.findIndex((row) => row.id === id);
+  if (from < 0) return { ok: false, message: "Testimonial not found." };
+  const to = from + (direction === "up" ? -1 : 1);
+  if (to < 0 || to >= rows.length) {
+    return { ok: false, message: "This item is already at the edge of the list." };
+  }
+
+  const reordered = [...rows];
+  const [moved] = reordered.splice(from, 1);
+  reordered.splice(to, 0, moved);
+
+  const admin = createSupabaseAdminClient();
+  const updates = reordered.map((row, index) =>
+    admin
+      .from("testimonials")
+      .update({ sort_order: index + 1, updated_by: actor.user.id })
+      .eq("id", row.id)
+  );
+  const results = await Promise.all(updates);
+  const failed = results.find((result) => result.error);
+  if (failed?.error) {
+    console.error("[content] reorder testimonials failed:", failed.error);
+    return { ok: false, message: "Failed to reorder testimonials." };
+  }
+
+  revalidateTag(CMS_TAGS.testimonials, { expire: 0 });
+  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.testimonial.reorder",
+    entityType: "testimonial",
+    entityId: id,
+    summary: `Moved testimonial ${moved.name} ${direction}`,
+  });
+  return { ok: true, message: `Testimonial moved ${direction}.` };
+}
+
 // ---------------------------------------------------------------------------
 // FAQs
 // ---------------------------------------------------------------------------
@@ -327,6 +371,50 @@ export async function deleteFaq(id: string): Promise<ContentFormState> {
     console.error("[content] delete faq failed:", err);
     return { ok: false, message: "Failed to delete FAQ." };
   }
+}
+
+export async function reorderFaq(
+  id: string,
+  direction: "up" | "down"
+): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const rows = await listFaqs();
+  const from = rows.findIndex((row) => row.id === id);
+  if (from < 0) return { ok: false, message: "FAQ not found." };
+  const to = from + (direction === "up" ? -1 : 1);
+  if (to < 0 || to >= rows.length) {
+    return { ok: false, message: "This item is already at the edge of the list." };
+  }
+
+  const reordered = [...rows];
+  const [moved] = reordered.splice(from, 1);
+  reordered.splice(to, 0, moved);
+
+  const admin = createSupabaseAdminClient();
+  const updates = reordered.map((row, index) =>
+    admin
+      .from("faqs")
+      .update({ sort_order: index + 1, updated_by: actor.user.id })
+      .eq("id", row.id)
+  );
+  const results = await Promise.all(updates);
+  const failed = results.find((result) => result.error);
+  if (failed?.error) {
+    console.error("[content] reorder faqs failed:", failed.error);
+    return { ok: false, message: "Failed to reorder FAQs." };
+  }
+
+  revalidateTag(CMS_TAGS.faqs, { expire: 0 });
+  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.faq.reorder",
+    entityType: "faq",
+    entityId: id,
+    summary: `Moved FAQ ${moved.question} ${direction}`,
+  });
+  return { ok: true, message: `FAQ moved ${direction}.` };
 }
 
 // ---------------------------------------------------------------------------

@@ -7,9 +7,11 @@ import {
   saveTestimonial,
   setTestimonialVisible,
   deleteTestimonial,
+  reorderTestimonial,
   saveFaq,
   setFaqVisible,
   deleteFaq,
+  reorderFaq,
   updateWebsiteContent,
   testimonialInputSchema,
   faqInputSchema,
@@ -105,6 +107,15 @@ export async function deleteTestimonialAction(id: string): Promise<void> {
   if (result.ok) revalidatePath("/admin/content/testimonials");
 }
 
+export async function reorderTestimonialAction(
+  id: string,
+  direction: "up" | "down"
+): Promise<void> {
+  await requireAdmin({ permission: "content.manage" });
+  const result = await reorderTestimonial(id, direction);
+  if (result.ok) revalidatePath("/admin/content/testimonials");
+}
+
 // ---------------------------------------------------------------------------
 // FAQs
 // ---------------------------------------------------------------------------
@@ -131,6 +142,15 @@ export async function setFaqVisibleAction(id: string, visible: boolean): Promise
 export async function deleteFaqAction(id: string): Promise<void> {
   await requireAdmin({ permission: "content.manage" });
   const result = await deleteFaq(id);
+  if (result.ok) revalidatePath("/admin/content/faqs");
+}
+
+export async function reorderFaqAction(
+  id: string,
+  direction: "up" | "down"
+): Promise<void> {
+  await requireAdmin({ permission: "content.manage" });
+  const result = await reorderFaq(id, direction);
   if (result.ok) revalidatePath("/admin/content/faqs");
 }
 

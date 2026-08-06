@@ -147,6 +147,12 @@ const PATHS: Record<string, ReactNode> = {
       <path d="M21 12H9" />
     </>
   ),
+  "chevron-up": (
+    <path d="m18 15-6-6-6 6" />
+  ),
+  "chevron-down": (
+    <path d="m6 9 6 6 6-6" />
+  ),
 };
 
 export function AdminIcon({

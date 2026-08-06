@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listFaqs } from "@/lib/admin/content";
-import { setFaqVisibleAction, deleteFaqAction } from "../actions";
+import { setFaqVisibleAction, deleteFaqAction, reorderFaqAction } from "../actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { ReorderPanel } from "@/components/admin/ReorderPanel";
 import adminStyles from "../../admin.module.css";
 import styles from "../content.module.css";
+import reorderStyles from "../reorder.module.css";
 
 export const metadata = {
   title: "FAQs | Admin | Pexpacks",
@@ -64,86 +66,96 @@ export default async function FaqsPage() {
           </div>
         </div>
       ) : (
-        <div className={adminStyles.tableCard}>
-          <div className={adminStyles.tableWrapper}>
-            <table className={adminStyles.table}>
-              <thead>
-                <tr>
-                  <th>Slug</th>
-                  <th>Question</th>
-                  <th>Category</th>
-                  <th>Links</th>
-                  <th>Sort</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {faqs.map((f) => (
-                  <tr key={f.id}>
-                    <td>
-                      <span className={styles.slug}>{f.slug ?? "—"}</span>
-                    </td>
-                    <td>{f.question}</td>
-                    <td>
-                      <span className={adminStyles.badge + " " + adminStyles.badgeInfo}>
-                        {f.category}
-                      </span>
-                    </td>
-                    <td>
-                      <div className={styles.linksList}>
-                        {linkCount(f.links) > 0
-                          ? `${linkCount(f.links)} link${linkCount(f.links) === 1 ? "" : "s"}`
-                          : "—"}
-                      </div>
-                    </td>
-                    <td>{f.sort_order}</td>
-                    <td>
-                      <span
-                        className={`${adminStyles.badge} ${
-                          f.visible ? adminStyles.badgePaid : adminStyles.badgeMuted
-                        }`}
-                      >
-                        {f.visible ? "Live" : "Hidden"}
-                      </span>
-                    </td>
-                    <td>
-                      {canManage ? (
-                        <div className={styles.actions}>
-                          <Link
-                            href={`/admin/content/faqs/${f.id}`}
-                            className={styles.actionLink}
-                          >
-                            Edit
-                          </Link>
-                          <form action={setFaqVisibleAction.bind(null, f.id, !f.visible)}>
-                            <button
-                              type="submit"
-                              className={`${styles.rowButton} ${
-                                f.visible ? styles.rowButtonHide : styles.rowButtonShow
-                              }`}
-                            >
-                              {f.visible ? "Hide" : "Show"}
-                            </button>
-                          </form>
-                          <form action={deleteFaqAction.bind(null, f.id)}>
-                            <ConfirmButton
-                              label="Delete"
-                              confirmText={`Delete the FAQ "${f.question}"? This cannot be undone.`}
-                              busyLabel="Deleting…"
-                              className={`${styles.rowButton} ${styles.rowButtonDelete}`}
-                            />
-                          </form>
-                        </div>
-                      ) : (
-                        <span className={styles.emptyNote}>View only</span>
-                      )}
-                    </td>
+        <div className={canManage ? reorderStyles.layout : undefined}>
+          <div className={adminStyles.tableCard}>
+            <div className={adminStyles.tableWrapper}>
+              <table className={adminStyles.table}>
+                <thead>
+                  <tr>
+                    <th>Slug</th>
+                    <th>Question</th>
+                    <th>Category</th>
+                    <th>Links</th>
+                    <th>Sort</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {faqs.map((f) => (
+                    <tr key={f.id}>
+                      <td>
+                        <span className={styles.slug}>{f.slug ?? "—"}</span>
+                      </td>
+                      <td>{f.question}</td>
+                      <td>
+                        <span className={adminStyles.badge + " " + adminStyles.badgeInfo}>
+                          {f.category}
+                        </span>
+                      </td>
+                      <td>
+                        <div className={styles.linksList}>
+                          {linkCount(f.links) > 0
+                            ? `${linkCount(f.links)} link${linkCount(f.links) === 1 ? "" : "s"}`
+                            : "—"}
+                        </div>
+                      </td>
+                      <td>{f.sort_order}</td>
+                      <td>
+                        <span
+                          className={`${adminStyles.badge} ${
+                            f.visible ? adminStyles.badgePaid : adminStyles.badgeMuted
+                          }`}
+                        >
+                          {f.visible ? "Live" : "Hidden"}
+                        </span>
+                      </td>
+                      <td>
+                        {canManage ? (
+                          <div className={styles.actions}>
+                            <Link
+                              href={`/admin/content/faqs/${f.id}`}
+                              className={styles.actionLink}
+                            >
+                              Edit
+                            </Link>
+                            <form action={setFaqVisibleAction.bind(null, f.id, !f.visible)}>
+                              <button
+                                type="submit"
+                                className={`${styles.rowButton} ${
+                                  f.visible ? styles.rowButtonHide : styles.rowButtonShow
+                                }`}
+                              >
+                                {f.visible ? "Hide" : "Show"}
+                              </button>
+                            </form>
+                            <form action={deleteFaqAction.bind(null, f.id)}>
+                              <ConfirmButton
+                                label="Delete"
+                                confirmText={`Delete the FAQ "${f.question}"? This cannot be undone.`}
+                                busyLabel="Deleting…"
+                                className={`${styles.rowButton} ${styles.rowButtonDelete}`}
+                              />
+                            </form>
+                          </div>
+                        ) : (
+                          <span className={styles.emptyNote}>View only</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
+          {canManage ? (
+            <ReorderPanel
+              title="Order"
+              subtitle="Use the arrows to slide FAQs up and down. The order is saved automatically and updates the FAQ page and marquees."
+              items={faqs.map((f) => ({ id: f.id, label: f.question, visible: f.visible }))}
+              onReorder={reorderFaqAction}
+            />
+          ) : null}
         </div>
       )}
     </div>
