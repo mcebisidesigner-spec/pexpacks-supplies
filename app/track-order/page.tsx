@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { faqs } from "@/data/faqs";
+import { getFaqs } from "@/lib/cms";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -16,9 +16,8 @@ export const metadata: Metadata = buildMetadata(
   "/track-order"
 );
 
-export const dynamic = "force-static";
-
-export default function TrackOrderPage() {
+export default async function TrackOrderPage() {
+  const faqs = await getFaqs();
   return (
     <>
       <PageHero

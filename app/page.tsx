@@ -7,8 +7,7 @@ import { SuperpowerSection } from '@/components/marketing/SuperpowerSection'
 import { FaqMarquee } from '@/components/shared/FaqMarquee'
 import { TestimonialMarquee } from '@/components/shared/TestimonialMarquee'
 import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
-import { faqs } from '@/data/faqs'
-import { testimonials } from '@/data/testimonials'
+import { getFaqs, getTestimonials } from '@/lib/cms'
 import { HappyPayBanner } from '@/components/bnpl/HappyPayBanner'
 import { HappyPaySteps } from '@/components/bnpl/HappyPaySteps'
 
@@ -16,7 +15,9 @@ import heroStyles from '@/components/marketing/HeroBase.module.css'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import homeStyles from '@/components/marketing/MarketingHome.module.css'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const testimonials = await getTestimonials()
+  const allFaqs = await getFaqs()
   return (
     <>
       <section className={heroStyles.heroNavy}>
@@ -172,23 +173,25 @@ export default function HomePage() {
       <ConciergeSection />
 
 
-      <section
-        className={sectionStyles.section}
-        aria-labelledby="home-testimonials"
-      >
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Real parents, real results"
-            title="Hear from our parents"
-            text="Read what other parents are saying about the Pexpacks experience."
-            headingId="home-testimonials"
-          />
-          <TestimonialMarquee items={testimonials} />
-        </div>
-      </section>
+      {testimonials.length > 0 ? (
+        <section
+          className={sectionStyles.section}
+          aria-labelledby="home-testimonials"
+        >
+          <div className={sectionStyles.inner}>
+            <SectionHeader
+              eyebrow="Real parents, real results"
+              title="Hear from our parents"
+              text="Read what other parents are saying about the Pexpacks experience."
+              headingId="home-testimonials"
+            />
+            <TestimonialMarquee items={testimonials} />
+          </div>
+        </section>
+      ) : null}
 
       <FaqMarquee
-        faqs={faqs.filter((f) =>
+        faqs={allFaqs.filter((f) =>
           [
             'school-not-listed',
             'delivery-timing',

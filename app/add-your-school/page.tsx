@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
 import { SectionHeader } from '@/components/marketing/SectionHeader'
 import { FaqMarquee } from '@/components/shared/FaqMarquee'
-import { faqs } from '@/data/faqs'
+import { getFaqs } from '@/lib/cms'
 import { buildMetadata } from '@/lib/seo'
 import heroStyles from '@/components/marketing/HeroBase.module.css'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
@@ -18,7 +18,8 @@ export const metadata: Metadata = buildMetadata(
   '/add-your-school',
 )
 
-export default function AddYourSchoolPage() {
+export default async function AddYourSchoolPage() {
+  const faqs = await getFaqs()
   return (
     <>
       <PageHero

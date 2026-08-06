@@ -1,0 +1,89 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--pex-navy, #1a2a40);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.input {
+  border: 1px solid var(--pex-border, #dbe3ec);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1a2a40;
+  background: #fff;
+  width: 100%;
+  max-width: 480px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--pex-keppel, #1a7a77);
+  box-shadow: 0 0 0 3px rgba(26, 122, 119, 0.15);
+}
+
+.fileInput {
+  font-family: inherit;
+  font-size: 14px;
+  color: #1a2a40;
+}
+
+.success {
+  background: rgba(47, 133, 90, 0.1);
+  color: #1e6b45;
+  border: 1px solid rgba(47, 133, 90, 0.25);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.error {
+  background: rgba(220, 38, 38, 0.08);
+  color: #b42318;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.saveButton {
+  background: var(--pex-keppel, #1a7a77);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

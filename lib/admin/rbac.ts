@@ -49,6 +49,7 @@ export const PERMISSION_CATALOG = {
   "assets.upload": { name: "Upload Assets", group: "Assets" },
   "assets.manage": { name: "Manage Assets", group: "Assets" },
   "reports.view": { name: "View Reports", group: "Reports" },
+  "reports.export": { name: "Export Reports", group: "Reports" },
   "settings.manage": { name: "Manage Settings", group: "Settings" },
   "audit.view": { name: "View Audit Logs", group: "Audit" },
   "audit.export": { name: "Export Audit Logs", group: "Audit" },

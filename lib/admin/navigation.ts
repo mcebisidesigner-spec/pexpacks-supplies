@@ -48,9 +48,9 @@ export const ADMIN_NAV: AdminNavGroup[] = [
   {
     title: "Growth",
     items: [
-      { label: "Website Content", href: "/admin/content", icon: "content", permission: "content.view", ready: false },
-      { label: "Assets", href: "/admin/assets", icon: "assets", permission: "assets.view", ready: false },
-      { label: "Reports", href: "/admin/reports", icon: "reports", permission: "reports.view", ready: false },
+      { label: "Website Content", href: "/admin/content", icon: "content", permission: "content.view", ready: true },
+      { label: "Assets", href: "/admin/assets", icon: "assets", permission: "assets.view", ready: true },
+      { label: "Reports", href: "/admin/reports", icon: "reports", permission: "reports.view", ready: true },
     ],
   },
   {

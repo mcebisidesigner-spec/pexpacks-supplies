@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { faqs } from "@/data/faqs";
+import { getFaqs } from "@/lib/cms";
 import { FAQExperience } from "@/components/marketing/FAQExperience";
 import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
@@ -17,9 +17,8 @@ export const metadata: Metadata = buildMetadata(
   "/faq"
 );
 
-export const dynamic = "force-static";
-
-export default function FAQPage() {
+export default async function FAQPage() {
+  const faqs = await getFaqs();
   return (
     <>
       <JsonLd data={faqPageSchema(faqs)} />

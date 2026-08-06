@@ -666,7 +666,9 @@ export interface Database {
           id: string;
           name: string;
           role: string;
+          context: string;
           quote: string;
+          avatar: string | null;
           rating: number;
           visible: boolean;
           sort_order: number;
@@ -678,7 +680,9 @@ export interface Database {
           id?: string;
           name: string;
           role?: string;
+          context?: string;
           quote: string;
+          avatar?: string | null;
           rating?: number;
           visible?: boolean;
           sort_order?: number;
@@ -690,7 +694,9 @@ export interface Database {
           id?: string;
           name?: string;
           role?: string;
+          context?: string;
           quote?: string;
+          avatar?: string | null;
           rating?: number;
           visible?: boolean;
           sort_order?: number;
@@ -703,9 +709,11 @@ export interface Database {
       faqs: {
         Row: {
           id: string;
+          slug: string | null;
           question: string;
           answer: string;
           category: string;
+          links: Json;
           visible: boolean;
           sort_order: number;
           updated_by: string | null;
@@ -714,9 +722,11 @@ export interface Database {
         };
         Insert: {
           id?: string;
+          slug?: string | null;
           question: string;
           answer: string;
           category?: string;
+          links?: Json;
           visible?: boolean;
           sort_order?: number;
           updated_by?: string | null;
@@ -725,9 +735,11 @@ export interface Database {
         };
         Update: {
           id?: string;
+          slug?: string | null;
           question?: string;
           answer?: string;
           category?: string;
+          links?: Json;
           visible?: boolean;
           sort_order?: number;
           updated_by?: string | null;
@@ -1046,6 +1058,29 @@ export interface Database {
       get_schools_by_city: {
         Args: Record<string, never>;
         Returns: { city: string | null; school_count: number }[];
+      };
+      get_orders_summary: {
+        Args: { from_date: string; to_date: string };
+        Returns: {
+          total_orders: number;
+          paid_orders: number;
+          refunded_orders: number;
+          cancelled_orders: number;
+          revenue: number;
+          avg_order_value: number;
+        }[];
+      };
+      get_orders_by_status_range: {
+        Args: { from_date: string; to_date: string };
+        Returns: { status: string; order_count: number; revenue: number }[];
+      };
+      get_orders_by_pack_type_range: {
+        Args: { from_date: string; to_date: string };
+        Returns: { pack_type: string; order_count: number }[];
+      };
+      get_top_schools: {
+        Args: { from_date: string; to_date: string; result_limit?: number };
+        Returns: { school_name: string | null; order_count: number; revenue: number }[];
       };
     };
     Enums: Record<string, never>;
