@@ -122,7 +122,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
               <thead>
                 <tr>
                   <th>Item Name</th>
-                  <th>Pack</th>
+                  <th>Description</th>
                   <th>Pack-Qty</th>
                   <th>Total Price</th>
                   <th>Visible</th>
@@ -136,21 +136,10 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                       <div className={styles.packCell}>
                         <div>
                           <div className={styles.packName}>{item.name}</div>
-                          {item.description ? (
-                            <div className={styles.packSlug}>{item.description}</div>
-                          ) : null}
                         </div>
                       </div>
                     </td>
-                    <td>
-                      {item.pack_title ? (
-                        <Link href={`/admin/packs/${item.pack_id}`} className={shared.actionLink}>
-                          {item.pack_title}
-                        </Link>
-                      ) : (
-                        "—"
-                      )}
-                    </td>
+                    <td>{item.description || "—"}</td>
                     <td>{item.quantity}</td>
                     <td className={styles.priceCell}>{money(item.unit_price)}</td>
                     <td>

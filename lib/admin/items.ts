@@ -42,6 +42,7 @@ export const itemSchema = z.object({
   pack_id: z.string().uuid("Invalid pack id"),
   name: z.string().trim().min(1, "Enter an item name").max(200, "Name is too long"),
   description: optString(2000, "description"),
+  specification: optString(2000, "specification"),
   quantity: countField,
   image: optString(2000, "image URL"),
   icon: iconField,
@@ -83,6 +84,7 @@ export function parseItemForm(formData: FormData): ParsedItemForm {
     pack_id: raw(formData, "pack_id"),
     name: raw(formData, "name"),
     description: raw(formData, "description"),
+    specification: raw(formData, "specification"),
     quantity: raw(formData, "quantity") || "1",
     image: raw(formData, "image"),
     icon: raw(formData, "icon"),
@@ -140,7 +142,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
   let query = admin
     .from("stationery_items")
     .select(
-      "id,pack_id,name,description,quantity,image,icon,unit_price,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
+      "id,pack_id,name,description,specification,quantity,image,icon,unit_price,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
       { count: "exact" }
     );
 
@@ -381,6 +383,8 @@ const CSV_ALIASES: Record<string, string> = {
   qtyperlearner: "quantity",
   description: "description",
   notes: "description",
+  specification: "specification",
+  spec: "specification",
   icon: "icon",
   price: "price",
   unitprice: "price",
@@ -439,6 +443,7 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
       pack_id: packId,
       name: field("name"),
       description: field("description"),
+      specification: field("specification"),
       quantity: field("quantity") || "1",
       image: "",
       icon: field("icon"),

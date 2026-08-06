@@ -150,6 +150,25 @@ function ItemForm({ packId, item, onDone, onSuccess }: ItemFormProps) {
         {err("description")}
       </div>
 
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor="specification">
+          Specification
+        </label>
+        <textarea
+          id="specification"
+          name="specification"
+          className={styles.textarea}
+          rows={2}
+          defaultValue={str(item?.specification)}
+        />
+        <span className={styles.hint}>
+          Shown in the &quot;Specification&quot; column on the public
+          complete-list drawer and the downloadable PDF. Falls back to the
+          description when empty.
+        </span>
+        {err("specification")}
+      </div>
+
       <div className={styles.formFooter}>
         <label className={styles.checkbox}>
           <input
@@ -279,6 +298,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                 <th>Icon</th>
                 <th>Item</th>
                 <th>Qty</th>
+                <th>Specification</th>
                 <th>Visible</th>
                 <th>Actions</th>
               </tr>
@@ -333,6 +353,13 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                     </div>
                   </td>
                   <td>{item.quantity}</td>
+                  <td>
+                    {item.specification ? (
+                      <span className={styles.itemSpec}>{item.specification}</span>
+                    ) : (
+                      <span className={styles.itemSpecEmpty}>—</span>
+                    )}
+                  </td>
                   <td>
                     <span
                       className={`${styles.badge} ${
@@ -400,8 +427,8 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
         <h4 className={styles.importTitle}>Bulk import (CSV)</h4>
         <ImportForm packId={packId} onImported={refresh} />
         <p className={styles.importHint}>
-          Columns: name, quantity, description, visible, sort_order, icon.
-          Existing items are matched by name and updated.
+          Columns: name, quantity, description, specification, visible,
+          sort_order, icon. Existing items are matched by name and updated.
         </p>
       </div>
     </div>

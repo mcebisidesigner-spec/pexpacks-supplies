@@ -64,7 +64,7 @@ export function GradePackActions({
   const pdfItems = pack.items.map((item) => ({
     name: item.name,
     quantity: item.requiredQuantity,
-    specification: "",
+    specification: item.specification,
   }));
 
   const closeCustomiser = useCallback(() => {

@@ -920,6 +920,7 @@ export interface Database {
           pack_id: string;
           name: string;
           description: string | null;
+          specification: string | null;
           quantity: number;
           unit_price: number | null;
           image: string | null;
@@ -936,6 +937,7 @@ export interface Database {
           pack_id: string;
           name: string;
           description?: string | null;
+          specification?: string | null;
           quantity?: number;
           unit_price?: number | null;
           image?: string | null;
@@ -952,6 +954,7 @@ export interface Database {
           pack_id?: string;
           name?: string;
           description?: string | null;
+          specification?: string | null;
           quantity?: number;
           unit_price?: number | null;
           image?: string | null;

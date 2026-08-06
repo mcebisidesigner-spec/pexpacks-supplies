@@ -116,6 +116,7 @@ export function createSchoolGradePack(
         category: inferCategory(item.name),
         icon: item.icon && isPackItemIconKey(item.icon) ? item.icon : inferIcon(item.name),
         requiredQuantity: item.quantity,
+        specification: item.specification ?? undefined,
         isRequired: true,
       }))
     : normalisePackItems(grade.contents, grade.id);

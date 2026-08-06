@@ -9,6 +9,7 @@ export type PackItem = {
   isRequired?: boolean;
   notes?: string;
   description?: string;
+  specification?: string;
 };
 
 export type GradePackForCustomisation = {

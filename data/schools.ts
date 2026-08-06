@@ -14,6 +14,7 @@ export type SchoolPackItem = {
   quantity: number;
   icon?: string | null;
   description?: string | null;
+  specification?: string | null;
 };
 
 export type School = {

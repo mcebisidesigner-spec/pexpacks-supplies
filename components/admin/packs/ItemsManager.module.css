@@ -175,6 +175,17 @@
   max-width: 320px;
 }
 
+.itemSpec {
+  font-size: 13px;
+  color: var(--pex-navy, #1a2a40);
+  max-width: 280px;
+  display: inline-block;
+}
+
+.itemSpecEmpty {
+  color: var(--pex-muted, #c4cdd4);
+}
+
 .badge {
   font-size: 11px;
   font-weight: 700;

@@ -64,8 +64,6 @@ export function ItemForm({ item, packs }: ItemFormProps) {
       <input type="hidden" name="icon" value={icon} />
 
       <div className={formStyles.section}>
-        <h2 className={formStyles.sectionTitle}>Item details</h2>
-
         <div className={formStyles.field}>
           <label className={formStyles.label} htmlFor="pack_id">
             Pack *
@@ -179,6 +177,25 @@ export function ItemForm({ item, packs }: ItemFormProps) {
             defaultValue={item?.description ?? ""}
           />
           {err("description")}
+        </div>
+
+        <div className={formStyles.field}>
+          <label className={formStyles.label} htmlFor="specification">
+            Specification
+          </label>
+          <textarea
+            id="specification"
+            name="specification"
+            className={formStyles.textarea}
+            rows={3}
+            defaultValue={item?.specification ?? ""}
+          />
+          <span className={formStyles.hint}>
+            Shown in the &quot;Specification&quot; column on the public
+            complete-list drawer and the downloadable PDF. Falls back to the
+            description when empty.
+          </span>
+          {err("specification")}
         </div>
 
         <div className={formStyles.checkboxes}>

@@ -27,6 +27,7 @@ function toSchoolListItems(pack: GradePackForCustomisation): PackListItem[] {
     icon: item.icon,
     category: item.category,
     description: item.description,
+    specification: item.specification,
   }));
 }
 

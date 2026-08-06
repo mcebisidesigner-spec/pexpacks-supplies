@@ -55,7 +55,7 @@ export async function getSchoolBySlug(slug: string) {
           .eq("visible", true)
           .order("sort_order", { ascending: true });
 
-        const itemsByPack = new Map<string, Array<{ name: string; quantity: number; icon?: string | null; description?: string | null }>>();
+        const itemsByPack = new Map<string, Array<{ name: string; quantity: number; icon?: string | null; description?: string | null; specification?: string | null }>>();
         for (const item of dbItems ?? []) {
           const list = itemsByPack.get(item.pack_id) ?? [];
           list.push({
@@ -63,6 +63,7 @@ export async function getSchoolBySlug(slug: string) {
             quantity: item.quantity,
             icon: item.icon,
             description: item.description,
+            specification: item.specification,
           });
           itemsByPack.set(item.pack_id, list);
         }
@@ -86,6 +87,7 @@ export async function getSchoolBySlug(slug: string) {
               quantity: i.quantity,
               icon: i.icon,
               description: i.description,
+              specification: i.specification,
             })),
             deliveryNote: pack.description || "Prepared for delivery before school starts.",
             availability: (pack.stock ?? 1) > 0 ? "in-stock" : "pre-order",
