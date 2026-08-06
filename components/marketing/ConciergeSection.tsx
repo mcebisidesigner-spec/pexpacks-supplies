@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { buildWhatsAppHref } from "@/data/contact";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import styles from "./ConciergeSection.module.css";
 
-const WHATSAPP_LINK = "https://wa.me/27791234567?text=Hi%20Pexpacks%2C%20I%20want%20to%20send%20my%20school%20stationery%20list%20for%20packing.";
+const WHATSAPP_LINK = buildWhatsAppHref("Hi Pexpacks, I want to send my school stationery list for packing.");
 
 export function ConciergeSection() {
   return (

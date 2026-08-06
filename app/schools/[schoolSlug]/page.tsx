@@ -15,6 +15,7 @@ import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
 import { getSchoolBySlug } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
+import { buildWhatsAppHref } from "@/data/contact";
 import pageStyles from "@/styles/Page.module.css";
 import styles from "./SchoolDetailPage.module.css";
 
@@ -168,7 +169,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
               <Button href="/order" variant="primary">
                 Upload Stationery List
               </Button>
-              <Button href={`https://wa.me/${process.env.NEXT_PUBLIC_PEXPACKS_WHATSAPP_NUMBER || "27791234567"}?text=${encodeURIComponent(`Hi Pexpacks, I'd like to send my ${school.name} stationery list.`)}`} variant="outline">
+              <Button href={buildWhatsAppHref(`Hi Pexpacks, I'd like to send my ${school.name} stationery list.`)} variant="outline">
                 Send List on WhatsApp
               </Button>
             </div>

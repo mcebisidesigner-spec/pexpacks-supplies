@@ -137,9 +137,10 @@ export async function listUsers(filters: UserListFilters = {}): Promise<UserList
   const from = (page - 1) * pageSize;
   const sorted = filtered.sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""));
   const slice = sorted.slice(from, from + pageSize);
+  for (const u of slice) delete (u as UserListItem & { __search?: string }).__search;
 
   return {
-    users: slice.map(({ __search: _omit, ...user }) => user),
+    users: slice,
     total,
     page,
     pageCount,
@@ -259,6 +260,13 @@ export async function syncUserRoles(userId: string, roleSlugs: string[]): Promis
   // Never allow a super admin to remove their own super_admin role (lockout guard).
   if (userId === actor.user.id && current.roleSlugs.includes("super_admin") && !roleSlugs.includes("super_admin")) {
     return { ok: false, message: "You cannot remove your own Super Admin role." };
+  }
+
+  // Only super admins may grant or remove the super_admin role.
+  const superAdminChanged =
+    current.roleSlugs.includes("super_admin") !== roleSlugs.includes("super_admin");
+  if (superAdminChanged && !actor.isSuperAdmin) {
+    return { ok: false, message: "Only Super Admins can change the Super Admin role." };
   }
 
   const target = new Set(roleSlugs);

@@ -41,8 +41,8 @@ export const ADMIN_NAV: AdminNavGroup[] = [
   {
     title: "People",
     items: [
-      { label: "Users", href: "/admin/users", icon: "users", permission: "users.view", ready: false },
-      { label: "Roles", href: "/admin/roles", icon: "roles", permission: "roles.manage", ready: false },
+      { label: "Users", href: "/admin/users", icon: "users", permission: "users.view", ready: true },
+      { label: "Roles", href: "/admin/roles", icon: "roles", permission: "roles.manage", ready: true },
     ],
   },
   {
@@ -56,8 +56,8 @@ export const ADMIN_NAV: AdminNavGroup[] = [
   {
     title: "System",
     items: [
-      { label: "Settings", href: "/admin/settings", icon: "settings", permission: "settings.manage", ready: false },
-      { label: "Audit Logs", href: "/admin/audit", icon: "audit", permission: "audit.view", ready: false },
+      { label: "Settings", href: "/admin/settings", icon: "settings", permission: "settings.manage", ready: true },
+      { label: "Audit Logs", href: "/admin/audit", icon: "audit", permission: "audit.view", ready: true },
     ],
   },
 ];

@@ -10,6 +10,7 @@ import { PEXCOVER_PRICE } from '@/lib/constants'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
+import { buildWhatsAppHref } from '@/data/contact'
 import clsx from 'clsx'
 import styles from '@/app/checkout/Checkout.module.css'
 
@@ -533,7 +534,7 @@ export function TrayCheckoutClient() {
           Back to order
         </button>
         <a
-          href="https://wa.me/27763456622?text=Hi Pexpacks, I need help with checkout."
+          href={buildWhatsAppHref('Hi Pexpacks, I need help with checkout.')}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.helpLink}

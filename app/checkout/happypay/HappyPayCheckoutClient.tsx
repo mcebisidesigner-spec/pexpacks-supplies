@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
 import clsx from "clsx";
+import { buildWhatsAppHref } from "@/data/contact";
 import styles from "./HappyPayCheckout.module.css";
 import checkoutStyles from "@/app/checkout/Checkout.module.css";
 
@@ -265,7 +266,7 @@ export function HappyPayCheckoutClient() {
           Back to order
         </button>
         <a
-          href="https://wa.me/27763456622?text=Hi Pexpacks, I need help with Happy Pay checkout."
+          href={buildWhatsAppHref("Hi Pexpacks, I need help with Happy Pay checkout.")}
           target="_blank"
           rel="noopener noreferrer"
           className={checkoutStyles.helpLink}

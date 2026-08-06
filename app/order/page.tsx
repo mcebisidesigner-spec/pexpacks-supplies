@@ -5,13 +5,14 @@ import { OrderForm } from "./OrderForm";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 
+import { buildWhatsAppHref } from "@/data/contact";
+
 export const metadata: Metadata = {
   title: "Order a Custom Pack | Pexpacks",
   description: "Upload your school stationery list and we will send you a custom quote.",
 };
 
-const WHATSAPP_NUMBER = "27780036048"; // Standard Pexpacks number, can be changed later
-const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi Pexpacks! I'd like to order a custom stationery pack. Here is my list:")}`;
+const WHATSAPP_URL = buildWhatsAppHref("Hi Pexpacks! I'd like to order a custom stationery pack. Here is my list:");
 
 export default function OrderPage() {
   return (

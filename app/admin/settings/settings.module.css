@@ -1,0 +1,33 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--pex-border, #e1e7ea);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.cardHeader {
+  padding: 20px 22px 0;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--pex-navy, #1a2a40);
+}
+
+.cardSubtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--pex-muted, #6b7a86);
+}
+
+.cardBody {
+  padding: 16px 22px 22px;
+}
