@@ -8,6 +8,7 @@ export type PackItem = {
   icon?: string;
   isRequired?: boolean;
   notes?: string;
+  description?: string;
 };
 
 export type GradePackForCustomisation = {

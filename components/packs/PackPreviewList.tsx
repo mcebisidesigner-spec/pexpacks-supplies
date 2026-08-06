@@ -31,7 +31,12 @@ export function PackPreviewList({
           {visibleItems.map((item, index) => (
             <li key={`${item.id}-${index}`}>
               <ItemIcon name={item.icon} size={17} className={styles.icon} />
-              <span>{item.name}</span>
+              <span className={styles.itemText}>
+                <span>{item.name}</span>
+                {item.description ? (
+                  <span className={styles.itemDescription}>{item.description}</span>
+                ) : null}
+              </span>
             </li>
           ))}
         </ul>

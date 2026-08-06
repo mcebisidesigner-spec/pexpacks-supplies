@@ -82,3 +82,51 @@ export async function getGradePackItemDescriptions(
     return {};
   }
 }
+
+/**
+ * Loads item descriptions for every grade pack of a school in one go. Returns a
+ * map keyed by gradeSlug: `{ [gradeSlug]: { [itemName]: description } }`. Uses
+ * the seeded `${schoolSlug}-${gradeSlug}` pack slug convention.
+ */
+export async function getSchoolGradeDescriptions(
+  schoolSlug: string,
+  gradeSlugs: string[]
+): Promise<Record<string, Record<string, string>>> {
+  const result: Record<string, Record<string, string>> = {};
+  if (!schoolSlug || !gradeSlugs.length) return result;
+
+  try {
+    const supabase = createSupabaseAdminClient();
+    const { data: packs } = await supabase
+      .from("stationery_packs")
+      .select("id, slug")
+      .in("slug", gradeSlugs.map((gradeSlug) => `${schoolSlug}-${gradeSlug}`));
+
+    if (!packs || !packs.length) return result;
+
+    const packIds = packs.map((pack) => pack.id);
+    const { data: items } = await supabase
+      .from("stationery_items")
+      .select("pack_id, name, description")
+      .in("pack_id", packIds)
+      .eq("visible", true);
+
+    const slugByPack = new Map(packs.map((pack) => [pack.id, pack.slug]));
+    for (const item of items ?? []) {
+      const packSlug = slugByPack.get(item.pack_id);
+      if (!packSlug) continue;
+      const gradeSlug = packSlug.startsWith(`${schoolSlug}-`)
+        ? packSlug.slice(schoolSlug.length + 1)
+        : null;
+      if (!gradeSlug) continue;
+      const description = (item.description ?? "").trim();
+      if (!description) continue;
+      const map = result[gradeSlug] ?? (result[gradeSlug] = {});
+      if (!map[item.name]) map[item.name] = description;
+    }
+  } catch {
+    // Fall back to no descriptions if the DB is unreachable.
+  }
+
+  return result;
+}

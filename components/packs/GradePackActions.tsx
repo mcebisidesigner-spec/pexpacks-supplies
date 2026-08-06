@@ -282,6 +282,11 @@ export function GradePackActions({
                           {item.category}
                         </span>
                         <span className={styles.itemName}>{item.name}</span>
+                        {item.description ? (
+                          <span className={styles.itemDescription}>
+                            {item.description}
+                          </span>
+                        ) : null}
                         <span className={styles.itemMeta}>
                           School requires: {item.requiredQuantity}
                           {typeof item.unitPrice === "number"

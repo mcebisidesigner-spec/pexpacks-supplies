@@ -15,6 +15,7 @@ import styles from "./GradeSelector.module.css";
 
 type GradeSelectorProps = {
   school: School;
+  gradeDescriptions?: Record<string, Record<string, string>>;
   onGradeIntent?: () => void;
 };
 
@@ -25,6 +26,7 @@ function toSchoolListItems(pack: GradePackForCustomisation): PackListItem[] {
     quantity: item.requiredQuantity,
     icon: item.icon,
     category: item.category,
+    description: item.description,
   }));
 }
 
@@ -51,7 +53,7 @@ function buildCompleteListPack(
   };
 }
 
-export function GradeSelector({ school, onGradeIntent }: GradeSelectorProps) {
+export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: GradeSelectorProps) {
   const [selectedGradeId, setSelectedGradeId] = useState<string | null>(null);
   const viewListTriggerRef = useRef<HTMLButtonElement | null>(null);
 
@@ -91,7 +93,11 @@ export function GradeSelector({ school, onGradeIntent }: GradeSelectorProps) {
     ? school.grades.find((grade) => grade.id === selectedGradeId)
     : undefined;
   const selectedPack = selectedGrade
-    ? createSchoolGradePack(school, selectedGrade)
+    ? createSchoolGradePack(
+        school,
+        selectedGrade,
+        gradeDescriptions?.[selectedGrade.gradeSlug]
+      )
     : null;
   const selectedListPack =
     selectedGrade && selectedPack
@@ -120,7 +126,11 @@ export function GradeSelector({ school, onGradeIntent }: GradeSelectorProps) {
         onClickCapture={handleGradeInteraction}
       >
         {school.grades.map((grade) => {
-          const pack = createSchoolGradePack(school, grade);
+          const pack = createSchoolGradePack(
+            school,
+            grade,
+            gradeDescriptions?.[grade.gradeSlug]
+          );
 
           return (
             <ArticlePackCard

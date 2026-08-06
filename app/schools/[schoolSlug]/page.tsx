@@ -13,7 +13,7 @@ import {
 } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
-import { getSchoolBySlug } from "@/lib/school-utils";
+import { getSchoolBySlug, getSchoolGradeDescriptions } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildWhatsAppHref } from "@/data/contact";
 import pageStyles from "@/styles/Page.module.css";
@@ -72,6 +72,10 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   }
 
   const isPartner = school.isPartnerSchool;
+  const gradeDescriptions = await getSchoolGradeDescriptions(
+    school.slug,
+    school.grades.map((grade) => grade.gradeSlug)
+  );
 
   return (
     <>
@@ -140,7 +144,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
 
           <section className={pageStyles.section}>
             <div className={pageStyles.sectionInner}>
-              <GradeSelector school={school} />
+              <GradeSelector school={school} gradeDescriptions={gradeDescriptions} />
             </div>
           </section>
 

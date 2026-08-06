@@ -105,7 +105,8 @@ export function normalisePackItems(
 
 export function createSchoolGradePack(
   school: School,
-  grade: GradePack
+  grade: GradePack,
+  descriptions?: Record<string, string>
 ): GradePackForCustomisation {
   const items = normalisePackItems(grade.contents, grade.id);
   const totalRequiredQuantity = items.reduce(
@@ -124,10 +125,14 @@ export function createSchoolGradePack(
     gradeSlug: grade.gradeSlug,
     packName: `${grade.grade} Stationery Pack`,
     slug: `${school.slug}/${grade.gradeSlug}`,
-    items: items.map((item) => ({
-      ...item,
-      unitPrice: estimatedUnitPrice,
-    })),
+    items: items.map((item) => {
+      const description = descriptions?.[item.name]?.trim();
+      return {
+        ...item,
+        unitPrice: estimatedUnitPrice,
+        description: description || undefined,
+      };
+    }),
     fullPackPrice: grade.price,
     deliveryNote: grade.deliveryNote,
     isCustomisable: true,

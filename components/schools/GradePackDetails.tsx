@@ -35,7 +35,7 @@ function teacherPreferredBadge(item: string) {
 }
 
 export function GradePackDetails({ school, grade, descriptions, autoCustomise }: GradePackDetailsProps) {
-  const pack = createSchoolGradePack(school, grade);
+  const pack = createSchoolGradePack(school, grade, descriptions);
 
   return (
     <article className={styles.gradeDetails}>

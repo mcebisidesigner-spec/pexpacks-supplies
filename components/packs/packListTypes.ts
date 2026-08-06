@@ -8,6 +8,7 @@ export type PackListItem = {
   category?: string;
   icon?: string;
   specification?: string;
+  description?: string;
 };
 
 export type CompleteListPack = {

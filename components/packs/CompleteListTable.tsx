@@ -35,7 +35,7 @@ export function CompleteListTable({ items, label }: CompleteListTableProps) {
               </td>
               <td className={styles.itemName}>{item.name}</td>
               <td className={styles.specification}>
-                {item.specification?.trim() || "-"}
+                {(item.specification ?? item.description)?.trim() || "-"}
               </td>
             </tr>
           ))}
