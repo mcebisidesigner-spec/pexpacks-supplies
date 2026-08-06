@@ -1,6 +1,29 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSchoolBySlug as getSchoolRecordBySlug } from "@/data/schools";
 
+function extractGradeName(title: string | null | undefined, slug: string | null | undefined): string {
+  const safeTitle = title || "";
+  const safeSlug = slug || "";
+  const match = safeTitle.match(/Grade\s+([R\d]+)/i) || safeSlug.match(/grade-([r\d]+)/i);
+  if (match) {
+    return `Grade ${match[1].toUpperCase()}`;
+  }
+  const generalMatch = safeTitle.match(/(Grade\s+[\w-]+)/i);
+  if (generalMatch) {
+    return generalMatch[1];
+  }
+  return safeTitle || "Stationery Pack";
+}
+
+function extractGradeSlug(grade: string, slug: string | null | undefined): string {
+  const safeSlug = slug || "";
+  const slugMatch = safeSlug.match(/grade-[r\d]+/i);
+  if (slugMatch) {
+    return slugMatch[0].toLowerCase();
+  }
+  return grade.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
 export async function getSchoolBySlug(slug: string) {
   try {
     const supabase = createSupabaseAdminClient();
@@ -12,6 +35,53 @@ export async function getSchoolBySlug(slug: string) {
 
     if (dbSchool) {
       const staticRecord = await getSchoolRecordBySlug(slug);
+
+      const { data: dbPacks } = await supabase
+        .from("stationery_packs")
+        .select("*")
+        .eq("school_id", dbSchool.id)
+        .eq("visible", true)
+        .order("sort_order", { ascending: true })
+        .order("title", { ascending: true });
+
+      let grades = staticRecord?.grades || [];
+
+      if (dbPacks && dbPacks.length > 0) {
+        const packIds = dbPacks.map((p) => p.id);
+        const { data: dbItems } = await supabase
+          .from("stationery_items")
+          .select("*")
+          .in("pack_id", packIds)
+          .eq("visible", true)
+          .order("sort_order", { ascending: true });
+
+        const itemsByPack = new Map<string, Array<{ name: string; quantity: number }>>();
+        for (const item of dbItems ?? []) {
+          const list = itemsByPack.get(item.pack_id) ?? [];
+          list.push(item);
+          itemsByPack.set(item.pack_id, list);
+        }
+
+        grades = dbPacks.map((pack) => {
+          const packItems = itemsByPack.get(pack.id) ?? [];
+          const grade = extractGradeName(pack.title, pack.slug);
+          const gradeSlug = extractGradeSlug(grade, pack.slug);
+          const contents = packItems.map((i) =>
+            i.quantity > 1 ? `${i.quantity}x ${i.name}` : i.name
+          );
+
+          return {
+            id: pack.id,
+            grade,
+            gradeSlug,
+            price: pack.price ?? 0,
+            contents,
+            deliveryNote: pack.description || "Prepared for delivery before school starts.",
+            availability: (pack.stock ?? 1) > 0 ? "in-stock" : "pre-order",
+          };
+        });
+      }
+
       return {
         id: dbSchool.id,
         name: dbSchool.name,
@@ -21,7 +91,7 @@ export async function getSchoolBySlug(slug: string) {
         province: dbSchool.province || staticRecord?.province || "",
         logo: dbSchool.logo ?? staticRecord?.logo ?? null,
         isPartnerSchool: dbSchool.is_partner ?? staticRecord?.isPartnerSchool ?? false,
-        grades: staticRecord?.grades || [],
+        grades,
       };
     }
   } catch {

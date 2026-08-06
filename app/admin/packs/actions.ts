@@ -22,6 +22,8 @@ export async function createPackAction(
     return { ok: false, errors: result.errors, message: result.message };
   }
   revalidatePath("/admin/packs");
+  revalidatePath("/schools");
+  revalidatePath("/", "layout");
   redirect(`/admin/packs/${result.pack.id}`);
 }
 
@@ -37,6 +39,8 @@ export async function updatePackAction(
   }
   revalidatePath(`/admin/packs/${result.pack.id}`);
   revalidatePath("/admin/packs");
+  revalidatePath("/schools");
+  revalidatePath("/", "layout");
   return { ok: true };
 }
 
@@ -44,6 +48,8 @@ export async function deletePackAction(id: string): Promise<void> {
   await requireAdmin({ permission: "packs.delete" });
   await deletePack(id);
   revalidatePath("/admin/packs");
+  revalidatePath("/schools");
+  revalidatePath("/", "layout");
   redirect("/admin/packs");
 }
 
@@ -52,6 +58,8 @@ export async function duplicatePackAction(id: string): Promise<{ ok: boolean; pa
   const result = await duplicatePack(id);
   if (!result.ok) return { ok: false };
   revalidatePath("/admin/packs");
+  revalidatePath("/schools");
+  revalidatePath("/", "layout");
   return { ok: true, packId: result.packId };
 }
 
@@ -60,4 +68,6 @@ export async function setPackVisibleAction(id: string, visible: boolean): Promis
   await setPackVisible(id, visible);
   revalidatePath("/admin/packs");
   revalidatePath(`/admin/packs/${id}`);
+  revalidatePath("/schools");
+  revalidatePath("/", "layout");
 }
