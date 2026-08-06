@@ -136,19 +136,7 @@ function ItemForm({ packId, item, onDone, onSuccess }: ItemFormProps) {
         </div>
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="description">
-          Description
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          className={styles.textarea}
-          rows={2}
-          defaultValue={str(item?.description)}
-        />
-        {err("description")}
-      </div>
+      <input type="hidden" name="description" value={str(item?.description)} />
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor="specification">
