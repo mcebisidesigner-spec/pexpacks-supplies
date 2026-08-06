@@ -16,13 +16,6 @@ const optString = (max: number, label: string) =>
     .union([z.literal(""), z.string().trim().max(max, `${label} is too long`)])
     .transform((v) => (v === "" ? null : v));
 
-const moneyField = z
-  .union([
-    z.literal(""),
-    z.string().trim().regex(/^\d+(\.\d{1,2})?$/, "Enter a valid price"),
-  ])
-  .transform((v) => (v === "" ? null : Number(v)));
-
 const countField = z.coerce
   .number()
   .int("Must be a whole number")
@@ -34,7 +27,6 @@ export const itemSchema = z.object({
   name: z.string().trim().min(1, "Enter an item name").max(200, "Name is too long"),
   description: optString(2000, "description"),
   quantity: countField,
-  unit_price: moneyField,
   image: optString(2000, "image URL"),
   visible: z.boolean().default(false),
   sort_order: countField,
@@ -67,7 +59,6 @@ export function parseItemForm(formData: FormData): ParsedItemForm {
     name: raw(formData, "name"),
     description: raw(formData, "description"),
     quantity: raw(formData, "quantity") || "1",
-    unit_price: raw(formData, "unit_price"),
     image: raw(formData, "image"),
     visible: formData.has("visible"),
     sort_order: raw(formData, "sort_order") || "0",
@@ -122,7 +113,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
   let query = admin
     .from("stationery_items")
     .select(
-      "id,pack_id,name,description,quantity,unit_price,image,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
+      "id,pack_id,name,description,quantity,image,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
       { count: "exact" }
     );
 
@@ -233,11 +224,11 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
   }
 }
 
-export async function deleteItem(id: string): Promise<{ ok: boolean; message?: string }> {
+export async function deleteItem(id: string): Promise<{ ok: boolean; message?: string; packId?: string }> {
   const actor = await assertCan("items.delete");
   const admin = createSupabaseAdminClient();
 
-  const { data: existing } = await admin.from("stationery_items").select("id, name").eq("id", id).single();
+  const { data: existing } = await admin.from("stationery_items").select("id, name, pack_id").eq("id", id).single();
   if (!existing) return { ok: false, message: "Item not found." };
 
   const { error } = await admin.from("stationery_items").delete().eq("id", id);
@@ -255,7 +246,7 @@ export async function deleteItem(id: string): Promise<{ ok: boolean; message?: s
     summary: `Deleted item "${existing.name}"`,
   });
 
-  return { ok: true };
+  return { ok: true, packId: existing.pack_id };
 }
 
 export async function reorderItems(
@@ -349,8 +340,6 @@ const CSV_ALIASES: Record<string, string> = {
   quantity: "quantity",
   qty: "quantity",
   qtyperlearner: "quantity",
-  unitprice: "unit_price",
-  price: "unit_price",
   description: "description",
   notes: "description",
   visible: "visible",
@@ -386,8 +375,7 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
   } else {
     headerMap.set("name", 0);
     headerMap.set("quantity", 1);
-    headerMap.set("unit_price", 2);
-    headerMap.set("description", 3);
+    headerMap.set("description", 2);
   }
 
   if (!headerMap.has("name")) {
@@ -409,7 +397,6 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
       name: field("name"),
       description: field("description"),
       quantity: field("quantity") || "1",
-      unit_price: field("unit_price"),
       image: "",
       visible: ["true", "1", "yes", "y"].includes(field("visible").toLowerCase()),
       sort_order: field("sort_order") || "0",

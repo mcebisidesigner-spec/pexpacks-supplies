@@ -437,7 +437,6 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
           name: item.name,
           description: item.description,
           quantity: item.quantity,
-          unit_price: item.unit_price,
           image: item.image,
           visible: item.visible,
           sort_order: item.sort_order,
@@ -489,6 +488,40 @@ export async function deletePack(id: string): Promise<{ ok: boolean; message?: s
   });
 
   return { ok: true };
+}
+
+/**
+ * Maps a pack to its public grade pack page path (`/schools/<schoolSlug>/<gradeSlug>`)
+ * using the seeded `${schoolSlug}-${gradeSlug}` pack slug convention. Returns null
+ * when the pack or its school can't be resolved, or the slug doesn't follow the
+ * convention (e.g. a duplicated/custom pack).
+ */
+export async function getPublicGradePackPath(packId: string): Promise<string | null> {
+  try {
+    const admin = createSupabaseAdminClient();
+    const { data: pack } = await admin
+      .from("stationery_packs")
+      .select("slug, school_id")
+      .eq("id", packId)
+      .maybeSingle();
+    if (!pack || !pack.slug || !pack.school_id) return null;
+
+    const { data: school } = await admin
+      .from("schools")
+      .select("slug")
+      .eq("id", pack.school_id)
+      .maybeSingle();
+    if (!school?.slug) return null;
+
+    const gradeSlug = pack.slug.startsWith(`${school.slug}-grade-`)
+      ? pack.slug.slice(school.slug.length + 1)
+      : null;
+    if (!gradeSlug || !/^grade-[0-9rR]$/.test(gradeSlug)) return null;
+
+    return `/schools/${school.slug}/${gradeSlug}`;
+  } catch {
+    return null;
+  }
 }
 
 const IMAGE_MIME_TYPES = new Set(["image/png", "image/webp", "image/svg+xml", "image/jpeg"]);

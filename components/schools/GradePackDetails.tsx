@@ -14,6 +14,7 @@ import styles from "./GradePackDetails.module.css";
 type GradePackDetailsProps = {
   school: School;
   grade: GradePack;
+  descriptions?: Record<string, string>;
   autoCustomise?: boolean;
 };
 
@@ -33,7 +34,7 @@ function teacherPreferredBadge(item: string) {
   return "";
 }
 
-export function GradePackDetails({ school, grade, autoCustomise }: GradePackDetailsProps) {
+export function GradePackDetails({ school, grade, descriptions, autoCustomise }: GradePackDetailsProps) {
   const pack = createSchoolGradePack(school, grade);
 
   return (
@@ -112,10 +113,14 @@ export function GradePackDetails({ school, grade, autoCustomise }: GradePackDeta
           <ul>
             {grade.contents.map((item) => {
               const badge = teacherPreferredBadge(item);
+              const description = descriptions?.[item];
 
               return (
                 <li key={item}>
                   <span>{item}</span>
+                  {description ? (
+                    <span className={styles.itemDescription}>{description}</span>
+                  ) : null}
                   {badge ? (
                     <span className={styles.itemBadge}>{badge}</span>
                   ) : null}

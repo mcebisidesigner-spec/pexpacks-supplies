@@ -82,6 +82,12 @@
   gap: 5px;
 }
 
+.itemDescription {
+  color: var(--pex-text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .itemBadge {
   width: fit-content;
   padding: 4px var(--space-2);

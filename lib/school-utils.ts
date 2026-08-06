@@ -40,3 +40,45 @@ export async function getGradeBySlug(schoolSlug: string, gradeSlug: string) {
 
   return school.grades.find((grade) => grade.gradeSlug === gradeSlug);
 }
+
+/**
+ * Looks up the matching admin-managed pack in the DB (pack slug follows the
+ * `${schoolSlug}-${gradeSlug}` convention) and returns a map of item name to
+ * description so the public grade pack can show descriptions. Falls back to an
+ * empty map when no pack exists or the DB is unreachable.
+ */
+export async function getGradePackItemDescriptions(
+  schoolSlug: string,
+  gradeSlug: string
+): Promise<Record<string, string>> {
+  if (!schoolSlug || !gradeSlug) return {};
+
+  try {
+    const supabase = createSupabaseAdminClient();
+    const { data: pack } = await supabase
+      .from("stationery_packs")
+      .select("id")
+      .eq("slug", `${schoolSlug}-${gradeSlug}`)
+      .maybeSingle();
+
+    if (!pack) return {};
+
+    const { data: items } = await supabase
+      .from("stationery_items")
+      .select("name, description")
+      .eq("pack_id", pack.id)
+      .eq("visible", true)
+      .order("sort_order", { ascending: true });
+
+    const descriptions: Record<string, string> = {};
+    for (const item of items ?? []) {
+      const desc = (item.description ?? "").trim();
+      if (desc && !descriptions[item.name]) {
+        descriptions[item.name] = desc;
+      }
+    }
+    return descriptions;
+  } catch {
+    return {};
+  }
+}

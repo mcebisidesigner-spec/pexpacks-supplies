@@ -29,10 +29,6 @@ function buildHref(
   return s ? `/admin/items?${s}` : "/admin/items";
 }
 
-function money(v: number | null): string {
-  return v == null ? "—" : `R ${v.toFixed(2)}`;
-}
-
 export default async function ItemsPage({ searchParams }: ItemsPageProps) {
   await requireAdmin({ permission: "items.view" });
   const params = await searchParams;
@@ -119,8 +115,6 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                   <th>Item</th>
                   <th>Pack</th>
                   <th>Qty</th>
-                  <th>Unit price</th>
-                  <th>Line total</th>
                   <th>Visible</th>
                   <th>Actions</th>
                 </tr>
@@ -148,10 +142,6 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                       )}
                     </td>
                     <td>{item.quantity}</td>
-                    <td>{money(item.unit_price)}</td>
-                    <td className={styles.priceCell}>
-                      {money((item.unit_price ?? 0) * item.quantity)}
-                    </td>
                     <td>
                       <span
                         className={`${shared.flag} ${

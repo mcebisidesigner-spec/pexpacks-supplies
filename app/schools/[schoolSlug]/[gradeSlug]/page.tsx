@@ -9,7 +9,7 @@ import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { breadcrumbSchema, productSchema } from "@/lib/schema";
-import { getGradeBySlug, getSchoolBySlug } from "@/lib/school-utils";
+import { getGradeBySlug, getGradePackItemDescriptions, getSchoolBySlug } from "@/lib/school-utils";
 import page from "@/styles/Page.module.css";
 
 type GradePageProps = {
@@ -66,6 +66,8 @@ export default async function GradePackPage({ params, searchParams }: GradePageP
     notFound();
   }
 
+  const descriptions = await getGradePackItemDescriptions(school.slug, grade.gradeSlug);
+
   return (
     <>
       <JsonLd data={productSchema(school, grade)} />
@@ -94,7 +96,7 @@ export default async function GradePackPage({ params, searchParams }: GradePageP
       />
       <section className={page.section}>
         <PackBuildingAnimation schoolName={school.name}>
-          <GradePackDetails school={school} grade={grade} autoCustomise={autoCustomise} />
+          <GradePackDetails school={school} grade={grade} descriptions={descriptions} autoCustomise={autoCustomise} />
         </PackBuildingAnimation>
       </section>
     </>

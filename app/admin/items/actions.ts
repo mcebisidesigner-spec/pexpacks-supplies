@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/rbac";
+import { getPublicGradePackPath } from "@/lib/admin/packs";
 import {
   createItem,
   updateItem,
@@ -11,6 +12,11 @@ import {
   type ItemFormState,
   type ImportItemsResult,
 } from "@/lib/admin/items";
+
+async function revalidatePackPublicPage(packId: string) {
+  const path = await getPublicGradePackPath(packId);
+  if (path) revalidatePath(path);
+}
 
 export async function createItemAction(
   _prev: ItemFormState,
@@ -22,6 +28,7 @@ export async function createItemAction(
     return { ok: false, errors: result.errors, message: result.message };
   }
   revalidatePath(`/admin/packs/${result.item.pack_id}`);
+  await revalidatePackPublicPage(result.item.pack_id);
   return { ok: true };
 }
 
@@ -36,14 +43,16 @@ export async function updateItemAction(
     return { ok: false, errors: result.errors, message: result.message };
   }
   revalidatePath(`/admin/packs/${result.item.pack_id}`);
+  await revalidatePackPublicPage(result.item.pack_id);
   return { ok: true };
 }
 
 export async function deleteItemAction(id: string): Promise<void> {
   const result = await requireAdmin({ permission: "items.delete" });
-  await deleteItem(id);
+  const deleted = await deleteItem(id);
   revalidatePath(`/admin/packs`);
   revalidatePath(`/admin/items`);
+  if (deleted.packId) await revalidatePackPublicPage(deleted.packId);
   void result;
 }
 
@@ -51,6 +60,7 @@ export async function reorderItemsAction(packId: string, orderedIds: string[]): 
   await requireAdmin({ permission: "items.reorder" });
   await reorderItems(packId, orderedIds);
   revalidatePath(`/admin/packs/${packId}`);
+  await revalidatePackPublicPage(packId);
 }
 
 export async function importItemsAction(
@@ -60,5 +70,6 @@ export async function importItemsAction(
   await requireAdmin({ permission: "items.import" });
   const result = await importItemsCsv(packId, csvText);
   revalidatePath(`/admin/packs/${packId}`);
+  await revalidatePackPublicPage(packId);
   return result;
 }

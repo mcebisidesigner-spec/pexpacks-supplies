@@ -19,11 +19,6 @@ function str(v: string | number | null | undefined): string {
   return v == null ? "" : String(v);
 }
 
-function money(v: number | null | undefined): string {
-  if (v == null) return "—";
-  return `R ${v.toFixed(2)}`;
-}
-
 interface ItemFormProps {
   packId: string;
   item: ItemRow | null;
@@ -95,19 +90,6 @@ function ItemForm({ packId, item, onDone, onSuccess }: ItemFormProps) {
             defaultValue={item?.quantity ?? 1}
           />
           {err("quantity")}
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="unit_price">
-            Unit price (R)
-          </label>
-          <input
-            id="unit_price"
-            name="unit_price"
-            className={styles.input}
-            inputMode="decimal"
-            defaultValue={str(item?.unit_price)}
-          />
-          {err("unit_price")}
         </div>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="sort_order">
@@ -247,17 +229,12 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
     router.refresh();
   }
 
-  const total = items.reduce(
-    (sum, item) => sum + (item.unit_price ?? 0) * item.quantity,
-    0
-  );
-
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
         <h3 className={styles.title}>Items</h3>
         <span className={styles.count}>
-          {items.length} {items.length === 1 ? "item" : "items"} · {money(total)}
+          {items.length} {items.length === 1 ? "item" : "items"}
         </span>
       </div>
 
@@ -271,8 +248,6 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                 <th>#</th>
                 <th>Item</th>
                 <th>Qty</th>
-                <th>Unit price</th>
-                <th>Line total</th>
                 <th>Visible</th>
                 <th>Actions</th>
               </tr>
@@ -309,8 +284,6 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                     ) : null}
                   </td>
                   <td>{item.quantity}</td>
-                  <td>{money(item.unit_price)}</td>
-                  <td>{money((item.unit_price ?? 0) * item.quantity)}</td>
                   <td>
                     <span
                       className={`${styles.badge} ${
@@ -378,7 +351,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
         <h4 className={styles.importTitle}>Bulk import (CSV)</h4>
         <ImportForm packId={packId} onImported={refresh} />
         <p className={styles.importHint}>
-          Columns: name, quantity, unit_price, description, visible, sort_order.
+          Columns: name, quantity, description, visible, sort_order.
           Existing items are matched by name and updated.
         </p>
       </div>
