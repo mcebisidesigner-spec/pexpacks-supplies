@@ -17,6 +17,14 @@
   align-items: start;
 }
 
+.aboutText {
+  max-width: 640px;
+  margin: 0 0 28px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
 .brandBlock {
   display: flex;
   align-items: flex-start;

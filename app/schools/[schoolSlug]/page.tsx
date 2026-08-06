@@ -30,9 +30,8 @@ type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
 };
 
-export const dynamicParams = true;
-
-export const revalidate = 86400; // 24 hours
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateStaticParams() {
   const schoolIndex = await getSchoolIndex();

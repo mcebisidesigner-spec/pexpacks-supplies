@@ -1,0 +1,21 @@
+.bar {
+  background: var(--pex-keppel);
+  color: var(--pex-navy);
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding: 8px var(--gutter-desktop);
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+@media (max-width: 640px) {
+  .inner {
+    padding: 8px var(--gutter-mobile);
+  }
+}

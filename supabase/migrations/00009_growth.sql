@@ -75,7 +75,7 @@ insert into public.website_content (key, title, value) values
   (
     'company_info',
     'Company information',
-    '{"site_name":"Pexpacks","support_email":"hello@pexpacks.co.za","support_phone":"","site_url":"https://pexpacks.co.za"}'::jsonb
+    '{"site_name":"Pexpacks","support_email":"helpme@pexpacks.co.za","support_phone":"0780036048","site_url":"https://pexpacks.co.za"}'::jsonb
   ),
   (
     'footer',
@@ -85,7 +85,7 @@ insert into public.website_content (key, title, value) values
   (
     'seo_defaults',
     'SEO defaults',
-    '{"default_title":"Pexpacks Supplies","default_description":"School stationery packs, listed and delivered."}'::jsonb
+    '{"default_title":"Pexpacks | School Stationery Packs","default_description":"School stationery made simple. Find your school pack, choose your grade, and get your learner''s stationery delivered."}'::jsonb
   )
 on conflict (key) do nothing;
 

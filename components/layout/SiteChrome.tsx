@@ -4,14 +4,36 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { AnnouncementBar } from "./AnnouncementBar";
 import { SiteRatingStrip } from "@/components/shared/SiteRatingStrip";
+
+export type SiteContentProps = {
+  announcement?: { enabled: boolean; text: string };
+  company?: {
+    site_name?: string;
+    support_email?: string;
+    support_phone?: string;
+    site_url?: string;
+  };
+  footer?: {
+    about_text?: string;
+    copyright_text?: string;
+  };
+};
 
 /**
  * SiteChrome renders the public site Header, Footer, and SiteRatingStrip.
  * On /admin routes the AdminShell provides its own navigation, so these
  * elements are suppressed here to avoid a double-header / double-footer.
  */
-export function SiteChrome({ children }: { children: ReactNode }) {
+export function SiteChrome({
+  children,
+  announcement,
+  company,
+  footer,
+}: {
+  children: ReactNode;
+} & SiteContentProps) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
 
@@ -21,12 +43,13 @@ export function SiteChrome({ children }: { children: ReactNode }) {
 
   return (
     <>
+      {announcement?.enabled ? <AnnouncementBar text={announcement.text ?? ""} /> : null}
       <Header />
       <main id="site-main" className="site-main">
         {children}
       </main>
       <SiteRatingStrip />
-      <Footer />
+      <Footer company={company} footer={footer} />
     </>
   );
 }

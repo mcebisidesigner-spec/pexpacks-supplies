@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database, Json } from "@/lib/supabase/types";
 import {
@@ -9,7 +9,11 @@ import {
   type PermissionKey,
   type AdminSession,
 } from "@/lib/admin/rbac";
-import { CMS_TAGS } from "@/lib/cms";
+import {
+  CMS_PUBLIC_PATHS,
+  CMS_TAGS,
+  WEBSITE_CONTENT_DEFAULTS as contentDefaults,
+} from "@/lib/cms";
 import { FAQ_CATEGORIES } from "@/lib/admin/content-constants";
 
 /**
@@ -36,10 +40,6 @@ async function assertCan(permission: PermissionKey): Promise<AdminSession> {
     throw err;
   }
   return session;
-}
-
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
 }
 
 // ---------------------------------------------------------------------------
@@ -116,7 +116,8 @@ export async function saveTestimonial(
     return { ok: false, message: "Failed to save testimonial." };
   }
 
-  revalidateTag(CMS_TAGS.testimonials, "max");
+  revalidateTag(CMS_TAGS.testimonials, { expire: 0 });
+  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
   void writeAuditLog({
     actorId: actor.user.id,
     actorName: actor.user.email,
@@ -140,7 +141,8 @@ export async function setTestimonialVisible(id: string, visible: boolean): Promi
       .maybeSingle();
     if (error) throw error;
     if (!data) return { ok: false, message: "Testimonial not found." };
-    revalidateTag(CMS_TAGS.testimonials, "max");
+    revalidateTag(CMS_TAGS.testimonials, { expire: 0 });
+  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -162,7 +164,8 @@ export async function deleteTestimonial(id: string): Promise<ContentFormState> {
   try {
     const { error } = await admin.from("testimonials").delete().eq("id", id);
     if (error) throw error;
-    revalidateTag(CMS_TAGS.testimonials, "max");
+    revalidateTag(CMS_TAGS.testimonials, { expire: 0 });
+  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -261,7 +264,8 @@ export async function saveFaq(input: FaqInput, id?: string): Promise<ContentForm
     return { ok: false, message: msg };
   }
 
-  revalidateTag(CMS_TAGS.faqs, "max");
+  revalidateTag(CMS_TAGS.faqs, { expire: 0 });
+  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
   void writeAuditLog({
     actorId: actor.user.id,
     actorName: actor.user.email,
@@ -285,7 +289,8 @@ export async function setFaqVisible(id: string, visible: boolean): Promise<Conte
       .maybeSingle();
     if (error) throw error;
     if (!data) return { ok: false, message: "FAQ not found." };
-    revalidateTag(CMS_TAGS.faqs, "max");
+    revalidateTag(CMS_TAGS.faqs, { expire: 0 });
+  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -307,7 +312,8 @@ export async function deleteFaq(id: string): Promise<ContentFormState> {
   try {
     const { error } = await admin.from("faqs").delete().eq("id", id);
     if (error) throw error;
-    revalidateTag(CMS_TAGS.faqs, "max");
+    revalidateTag(CMS_TAGS.faqs, { expire: 0 });
+  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -417,30 +423,7 @@ const BOOLEAN_FIELDS: Record<string, string[]> = {
   "homepage.announcement": ["enabled"],
 };
 
-const contentDefaults: Record<WebsiteContentKey, Record<string, unknown>> = {
-  "homepage.hero": {
-    eyebrow: "School stationery made simple",
-    title: "Your school stationery list, perfectly packed.",
-    lead: "Your official school stationery list, perfectly packed and delivered.",
-  },
-  "homepage.announcement": { enabled: false, text: "" },
-  company_info: {
-    site_name: "Pexpacks",
-    support_email: "hello@pexpacks.co.za",
-    support_phone: "",
-    site_url: "https://pexpacks.co.za",
-  },
-  footer: {
-    about_text: "School stationery, packed and delivered.",
-    copyright_text: "Pexpacks Supplies. All rights reserved.",
-  },
-  seo_defaults: {
-    default_title: "Pexpacks Supplies",
-    default_description: "School stationery packs, listed and delivered.",
-  },
-};
-
-export function contentSections(): ContentSection[] {
+export async function contentSections(): Promise<ContentSection[]> {
   return (Object.keys(contentDefs) as WebsiteContentKey[]).map((key) => ({
     key,
     label: contentDefs[key].label,
@@ -520,7 +503,10 @@ export async function updateWebsiteContent(
       entityId: key,
       summary: `Updated ${def.label} content`,
     });
-    return { ok: true, message: `${def.label} saved. Live ${today()}.` };
+
+    revalidateTag(CMS_TAGS.websiteContent, { expire: 0 });
+    revalidatePath("/");
+    return { ok: true, message: `${def.label} saved and live.` };
   } catch (err) {
     console.error("[content] update section failed:", err);
     return { ok: false, message: "Failed to save content." };

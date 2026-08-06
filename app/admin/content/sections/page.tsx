@@ -11,8 +11,8 @@ export const metadata = {
 
 export default async function ContentSectionsPage() {
   const session = await requireAdmin({ permission: "content.view" });
-  const sections = contentSections();
-  const values = await getWebsiteContent();
+  const sections = await contentSections();
+  const values = (await getWebsiteContent()) as Record<string, Record<string, unknown>>;
   const canManage = hasPermission(session, "content.manage");
 
   return (

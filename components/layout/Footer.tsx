@@ -2,16 +2,33 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import {
   generalEmail,
-  generalEmailHref,
   hasWhatsAppNumber,
   orderWhatsAppHref,
-  phoneHref,
   phoneNumber,
 } from "@/data/contact";
 import { officialSocialLinks } from "@/data/social";
 import { FooterHappyPayLink } from "./FooterHappyPayLink";
 import { FooterNav } from "./FooterNav";
 import styles from "./Footer.module.css";
+
+export type FooterContent = {
+  company?: {
+    site_name?: string;
+    support_email?: string;
+    support_phone?: string;
+    site_url?: string;
+  };
+  footer?: {
+    about_text?: string;
+    copyright_text?: string;
+  };
+};
+
+function telHref(value: string) {
+  const digits = value.replace(/\D/g, "");
+  const intl = digits.startsWith("0") ? `27${digits.slice(1)}` : digits;
+  return `tel:+${intl}`;
+}
 
 const socialLinks = [
   {
@@ -102,15 +119,26 @@ function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
   );
 }
 
-export function Footer() {
+export function Footer({ company, footer }: FooterContent) {
   const currentYear = new Date().getFullYear();
+  const siteName = company?.site_name || "Pexpacks";
+  const email = company?.support_email || generalEmail;
+  const emailHref = `mailto:${email}`;
+  const phone = company?.support_phone || phoneNumber;
+  const phoneHrefLocal = phone ? telHref(phone) : "#";
+  const aboutText =
+    footer?.about_text || "School stationery, packed and delivered.";
+  const copyrightText =
+    footer?.copyright_text || "Pexpacks Supplies. All rights reserved.";
 
   return (
     <footer className={styles.footer} id="site-footer">
       <div className={styles.footerInner}>
+        <p className={styles.aboutText}>{aboutText}</p>
+
         <div className={styles.topSection}>
           <div className={styles.brandBlock}>
-            <Link href="/" className={styles.logoLink} aria-label="Pexpacks home">
+            <Link href="/" className={styles.logoLink} aria-label={`${siteName} home`}>
               <Logo variant="white" className={styles.logoImage} />
             </Link>
             <FooterHappyPayLink className={styles.happyPayMobile} />
@@ -120,21 +148,25 @@ export function Footer() {
             <FooterNav />
 
             <div className={styles.infoRow}>
-              <address className={styles.contactDetails} aria-label="Pexpacks contact details">
-                <a href={phoneHref} className={styles.contactLink}>
-                  {formatPhoneNumber(phoneNumber)}
-                </a>
-                <span className={styles.contactDivider} aria-hidden="true">
-                  |
-                </span>
-                <a href={generalEmailHref} className={styles.contactLink}>
-                  {generalEmail}
+              <address className={styles.contactDetails} aria-label={`${siteName} contact details`}>
+                {phone ? (
+                  <>
+                    <a href={phoneHrefLocal} className={styles.contactLink}>
+                      {formatPhoneNumber(phone)}
+                    </a>
+                    <span className={styles.contactDivider} aria-hidden="true">
+                      |
+                    </span>
+                  </>
+                ) : null}
+                <a href={emailHref} className={styles.contactLink}>
+                  {email}
                 </a>
               </address>
 
               <details className={styles.policyDisclosure}>
               <summary className={styles.policySummary}>
-                <span>Pexpacks policies, terms, and customer information:</span>
+                <span>{siteName} policies, terms, and customer information:</span>
                 <span className={styles.policyChevron} aria-hidden="true" />
               </summary>
               <div className={styles.policyPanel}>
@@ -162,7 +194,7 @@ export function Footer() {
 
         <div className={styles.bottomSection}>
           <p className={styles.copyright}>
-            &copy; {currentYear} Pexpacks. Design:{"  "}
+            &copy; {currentYear} {siteName}. {copyrightText} Design:{"  "}
             <a
               href="https://mcebisih.co.za/"
               target="_blank"
