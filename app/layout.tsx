@@ -5,6 +5,7 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { TrayProviders } from "@/components/order/TrayProviders";
 import { buildMetadata } from "@/lib/seo";
+import { getWebsiteContent } from "@/lib/cms";
 import {
   onlineStoreSchema,
   organizationSchema,
@@ -71,46 +72,98 @@ export const viewport: Viewport = {
   interactiveWidget: "resizes-content",
 };
 
-export const metadata: Metadata = {
-  ...buildMetadata(
-    "Pexpacks | School Stationery Packs",
-    "School stationery made simple. Find your school pack, choose your grade, and get your learner's stationery delivered."
-  ),
-  title: {
-    default: "Pexpacks | School Stationery Packs",
-    template: "%s",
-  },
-  applicationName: "Pexpacks Supplies",
-  manifest: "/manifest.webmanifest",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Pexpacks",
-  },
-  formatDetection: {
-    telephone: false,
-  },
-  icons: {
-    icon: [
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [
-      {
-        url: "/icons/apple-touch-icon.png",
-        sizes: "180x180",
-        type: "image/png",
-      },
-    ],
-  },
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ?? "",
-  },
+const seoFallbacks = {
+  title: "Pexpacks | School Stationery Packs",
+  description:
+    "School stationery made simple. Find your school pack, choose your grade, and get your learner's stationery delivered.",
 };
 
-export default function RootLayout({
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getWebsiteContent();
+  const seo = content.seo_defaults;
+  const title =
+    typeof seo.default_title === "string" && seo.default_title.trim()
+      ? seo.default_title
+      : seoFallbacks.title;
+  const description =
+    typeof seo.default_description === "string" &&
+    seo.default_description.trim()
+      ? seo.default_description
+      : seoFallbacks.description;
+
+  return {
+    ...buildMetadata(title, description),
+    title: {
+      default: title,
+      template: "%s",
+    },
+    applicationName: "Pexpacks Supplies",
+    manifest: "/manifest.webmanifest",
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "black-translucent",
+      title: "Pexpacks",
+    },
+    formatDetection: {
+      telephone: false,
+    },
+    icons: {
+      icon: [
+        { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+        { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      ],
+      apple: [
+        {
+          url: "/icons/apple-touch-icon.png",
+          sizes: "180x180",
+          type: "image/png",
+        },
+      ],
+    },
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ?? "",
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const content = await getWebsiteContent();
+
+  const announcementValue = content["homepage.announcement"];
+  const announcement = {
+    enabled: announcementValue.enabled === true,
+    text:
+      typeof announcementValue.text === "string" ? announcementValue.text : "",
+  };
+
+  const companyInfo = content.company_info;
+  const company = {
+    site_name:
+      typeof companyInfo.site_name === "string" ? companyInfo.site_name : "",
+    support_email:
+      typeof companyInfo.support_email === "string"
+        ? companyInfo.support_email
+        : "",
+    support_phone:
+      typeof companyInfo.support_phone === "string"
+        ? companyInfo.support_phone
+        : "",
+    site_url:
+      typeof companyInfo.site_url === "string" ? companyInfo.site_url : "",
+  };
+
+  const footerValue = content.footer;
+  const footer = {
+    about_text:
+      typeof footerValue.about_text === "string" ? footerValue.about_text : "",
+    copyright_text:
+      typeof footerValue.copyright_text === "string"
+        ? footerValue.copyright_text
+        : "",
+  };
+
   return (
     <html
       lang="en-ZA"
@@ -130,7 +183,9 @@ export default function RootLayout({
         <JsonLd data={onlineStoreSchema()} />
         <JsonLd data={websiteSchema()} />
         <div className="site-shell">
-          <SiteChrome>{children}</SiteChrome>
+          <SiteChrome announcement={announcement} company={company} footer={footer}>
+            {children}
+          </SiteChrome>
           <ClientRuntimeWidgets />
           <TrayProviders />
         </div>

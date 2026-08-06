@@ -7,7 +7,7 @@ import { SuperpowerSection } from '@/components/marketing/SuperpowerSection'
 import { FaqMarquee } from '@/components/shared/FaqMarquee'
 import { TestimonialMarquee } from '@/components/shared/TestimonialMarquee'
 import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
-import { getFaqs, getTestimonials } from '@/lib/cms'
+import { getFaqs, getTestimonials, getWebsiteContent } from '@/lib/cms'
 import { HappyPayBanner } from '@/components/bnpl/HappyPayBanner'
 import { HappyPaySteps } from '@/components/bnpl/HappyPaySteps'
 
@@ -18,20 +18,28 @@ import homeStyles from '@/components/marketing/MarketingHome.module.css'
 export default async function HomePage() {
   const testimonials = await getTestimonials()
   const allFaqs = await getFaqs()
+  const content = await getWebsiteContent()
+  const hero = content['homepage.hero']
+  const heroEyebrow =
+    typeof hero.eyebrow === 'string' && hero.eyebrow
+      ? hero.eyebrow
+      : 'School stationery made simple'
+  const heroTitle =
+    typeof hero.title === 'string' && hero.title
+      ? hero.title
+      : 'Your school stationery list, perfectly packed.'
+  const heroLead =
+    typeof hero.lead === 'string' && hero.lead
+      ? hero.lead
+      : 'Your official school stationery list, perfectly packed and delivered.'
   return (
     <>
       <section className={heroStyles.heroNavy}>
         <div className={heroStyles.heroInner}>
           <div>
-            <p className={heroStyles.eyebrow}>School stationery made simple</p>
-            <h1 className={heroStyles.heroTitle}>
-              Your school <br />
-              stationery list, <br /> perfectly packed.
-            </h1>
-            <p className={heroStyles.heroLead}>
-              Your official school stationery list, perfectly packed and
-              delivered.
-            </p>
+            <p className={heroStyles.eyebrow}>{heroEyebrow}</p>
+            <h1 className={heroStyles.heroTitle}>{heroTitle}</h1>
+            <p className={heroStyles.heroLead}>{heroLead}</p>
             <HeroSearch />
           </div>
 
