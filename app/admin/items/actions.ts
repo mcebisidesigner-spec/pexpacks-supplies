@@ -70,8 +70,18 @@ export async function importItemsAction(
   csvText: string
 ): Promise<ImportItemsResult> {
   await requireAdmin({ permission: "items.import" });
-  const result = await importItemsCsv(packId, csvText);
-  revalidatePath(`/admin/packs/${packId}`);
-  await revalidatePackPublicPage(packId);
-  return result;
+  try {
+    const result = await importItemsCsv(packId, csvText);
+    revalidatePath(`/admin/packs/${packId}`);
+    await revalidatePackPublicPage(packId);
+    return result;
+  } catch (err) {
+    console.error("[items] csv import failed:", err);
+    return {
+      ok: false,
+      created: 0,
+      updated: 0,
+      errors: [err instanceof Error ? err.message : "CSV import failed."],
+    };
+  }
 }
