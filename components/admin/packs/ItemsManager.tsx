@@ -202,17 +202,20 @@ function ImportForm({ packId, onImported }: { packId: string; onImported: () => 
     try {
       const text = await file.text();
       const result = await importItemsAction(packId, text);
-      if (result.errors.length > 0) {
+      if (result.errors && result.errors.length > 0) {
         setError(result.errors.slice(0, 5).join(" · "));
       }
-      setMessage(
-        `${result.created} created · ${result.updated} updated${
-          result.errors.length > 0 ? ` · ${result.errors.length} errors` : ""
-        }`
-      );
-      if (result.created > 0 || result.updated > 0) onImported();
-    } catch {
-      setError("Could not import the CSV file.");
+      if (result.created > 0 || result.updated > 0) {
+        setMessage(
+          `${result.created} created · ${result.updated} updated${
+            result.errors.length > 0 ? ` · ${result.errors.length} errors` : ""
+          }`
+        );
+        onImported();
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Could not import the CSV file.";
+      setError(msg);
     } finally {
       setBusy(false);
     }

@@ -343,7 +343,15 @@ export function parseCsv(text: string): string[][] {
   let row: string[] = [];
   let field = "";
   let inQuotes = false;
-  const src = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const src = text.replace(/^\ufeff/, "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  const firstLine = src.split("\n")[0] || "";
+  let delimiter = ",";
+  if (!firstLine.includes(",") && firstLine.includes(";")) {
+    delimiter = ";";
+  } else if (!firstLine.includes(",") && firstLine.includes("\t")) {
+    delimiter = "\t";
+  }
 
   for (let i = 0; i < src.length; i++) {
     const c = src[i];
@@ -360,7 +368,7 @@ export function parseCsv(text: string): string[][] {
       }
     } else if (c === '"') {
       inQuotes = true;
-    } else if (c === ",") {
+    } else if (c === delimiter) {
       row.push(field);
       field = "";
     } else if (c === "\n") {
@@ -381,24 +389,32 @@ const CSV_ALIASES: Record<string, string> = {
   name: "name",
   item: "name",
   itemname: "name",
+  stationeryname: "name",
+  product: "name",
+  title: "name",
   quantity: "quantity",
   qty: "quantity",
   qtyperlearner: "quantity",
+  count: "quantity",
   description: "description",
   notes: "description",
+  descr: "description",
   specification: "specification",
   spec: "specification",
+  specs: "specification",
   icon: "icon",
   price: "price",
   unitprice: "price",
   totalprice: "price",
+  cost: "price",
   visible: "visible",
   sortorder: "sort_order",
   order: "sort_order",
+  sort: "sort_order",
 };
 
 function cleanHeader(value: string): string {
-  return value.replace(/[^a-z]/g, "").toLowerCase();
+  return value.replace(/^\ufeff/, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
 }
 
 export async function importItemsCsv(packId: string, csvText: string): Promise<ImportItemsResult> {
@@ -442,16 +458,29 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
       const idx = headerMap.get(key);
       return idx === undefined ? "" : (row[idx] ?? "").trim();
     };
+    const rawName = field("name");
+    if (!rawName) return null;
+
+    const rawQty = field("quantity");
+    const qtyMatch = rawQty.match(/\d+/);
+    const parsedQty = qtyMatch ? qtyMatch[0] : "1";
+
+    const rawPrice = field("price");
+    const cleanedPrice = rawPrice ? rawPrice.replace(/[^\d.,]/g, "").replace(",", ".") : "";
+
+    const rawVis = field("visible").toLowerCase();
+    const isVisible = rawVis === "" ? true : ["true", "1", "yes", "y"].includes(rawVis);
+
     const candidate: Record<string, unknown> = {
       pack_id: packId,
-      name: field("name"),
+      name: rawName,
       description: field("description"),
       specification: field("specification"),
-      quantity: field("quantity") || "1",
+      quantity: parsedQty,
       image: "",
       icon: field("icon"),
-      price: field("price"),
-      visible: ["true", "1", "yes", "y"].includes(field("visible").toLowerCase()),
+      price: cleanedPrice || null,
+      visible: isVisible,
       sort_order: field("sort_order") || "0",
     };
     const parsed = itemSchema.safeParse(candidate);
