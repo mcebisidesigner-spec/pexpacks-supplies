@@ -99,3 +99,23 @@ export async function setPackVisibleAction(id: string, visible: boolean): Promis
   revalidatePath("/schools");
   revalidatePath("/", "layout");
 }
+
+export async function setSchoolPacksVisibleAction(schoolId: string, visible: boolean): Promise<void> {
+  await requireAdmin({ permission: "packs.edit" });
+  const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
+  const admin = createSupabaseAdminClient();
+  await admin.from("stationery_packs").update({ visible }).eq("school_id", schoolId);
+  revalidatePath("/admin/packs");
+  revalidatePath("/schools");
+  revalidatePath("/", "layout");
+}
+
+export async function deleteSchoolPacksAction(schoolId: string): Promise<void> {
+  await requireAdmin({ permission: "packs.delete" });
+  const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
+  const admin = createSupabaseAdminClient();
+  await admin.from("stationery_packs").delete().eq("school_id", schoolId);
+  revalidatePath("/admin/packs");
+  revalidatePath("/schools");
+  revalidatePath("/", "layout");
+}

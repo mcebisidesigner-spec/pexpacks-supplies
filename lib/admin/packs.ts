@@ -203,6 +203,106 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
   };
 }
 
+export interface SchoolGroupedSummary {
+  school_id: string;
+  school_name: string;
+  school_slug: string;
+  grade_packs_count: number;
+  last_edited: string;
+  visible: boolean;
+}
+
+export interface SchoolGroupedResult {
+  schoolsSummary: SchoolGroupedSummary[];
+  totalGradePacks: number;
+  totalSchools: number;
+  page: number;
+  pageCount: number;
+  schools: { id: string; name: string }[];
+  deliveryTypes: string[];
+}
+
+export async function listSchoolGroupedSummary(
+  filters: PackListFilters = {}
+): Promise<SchoolGroupedResult> {
+  const admin = createSupabaseAdminClient();
+  const page = Math.max(1, filters.page ?? 1);
+  const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
+
+  const [{ data: dbSchools }, { data: dbPacks, count: totalGradePacks }] = await Promise.all([
+    admin.from("schools").select("id, name, slug, updated_at").order("name", { ascending: true }),
+    admin.from("stationery_packs").select("id, school_id, visible, updated_at", { count: "exact" }),
+  ]);
+
+  const [allSchools, deliveryTypes] = await Promise.all([
+    listPackSchools(),
+    listDeliveryTypes(),
+  ]);
+
+  if (!dbSchools || !dbPacks) {
+    return {
+      schoolsSummary: [],
+      totalGradePacks: 0,
+      totalSchools: 0,
+      page: 1,
+      pageCount: 0,
+      schools: allSchools,
+      deliveryTypes,
+    };
+  }
+
+  const qLower = (filters.q || "").toLowerCase().trim();
+
+  let groupedList: SchoolGroupedSummary[] = dbSchools
+    .map((s) => {
+      const sPacks = dbPacks.filter((p) => p.school_id === s.id);
+      if (sPacks.length === 0) return null;
+
+      const isVisible = sPacks.some((p) => p.visible);
+      const latestUpdate = sPacks.reduce(
+        (max, p) => (p.updated_at && p.updated_at > max ? p.updated_at : max),
+        s.updated_at || ""
+      );
+
+      return {
+        school_id: s.id,
+        school_name: s.name,
+        school_slug: s.slug,
+        grade_packs_count: sPacks.length,
+        last_edited: latestUpdate,
+        visible: isVisible,
+      };
+    })
+    .filter(Boolean) as SchoolGroupedSummary[];
+
+  if (qLower) {
+    groupedList = groupedList.filter((s) =>
+      s.school_name.toLowerCase().includes(qLower) || s.school_slug.toLowerCase().includes(qLower)
+    );
+  }
+
+  if (filters.visible === "true") {
+    groupedList = groupedList.filter((s) => s.visible);
+  } else if (filters.visible === "false") {
+    groupedList = groupedList.filter((s) => !s.visible);
+  }
+
+  const totalSchools = groupedList.length;
+  const pageCount = Math.max(1, Math.ceil(totalSchools / pageSize));
+  const from = (page - 1) * pageSize;
+  const paginatedList = groupedList.slice(from, from + pageSize);
+
+  return {
+    schoolsSummary: paginatedList,
+    totalGradePacks: totalGradePacks ?? dbPacks.length,
+    totalSchools,
+    page,
+    pageCount,
+    schools: allSchools,
+    deliveryTypes,
+  };
+}
+
 export interface PackSchool {
   id: string;
   name: string;
