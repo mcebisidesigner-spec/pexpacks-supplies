@@ -72,9 +72,9 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
       <div className={shared.toolbar}>
         <div className={shared.headerRow}>
           <h1 className={shared.pageTitle}>
-            School Packs
+            Grade Packs
             <span className={shared.count}>
-              {total} {total === 1 ? "pack" : "packs"}
+              {total} {total === 1 ? "Grade pack" : "Grade packs"}
             </span>
           </h1>
           <Link href="/admin/packs/new" className={shared.addButton}>
@@ -155,8 +155,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
             <table className={adminStyles.table}>
             <thead>
               <tr>
-                <th>Pack</th>
-                <th>School</th>
+                <th>School Name</th>
                 <th>Price</th>
                 <th>Stock</th>
                 <th>Items</th>
@@ -171,21 +170,19 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                 <tr key={pack.id}>
                   <td>
                     <div className={styles.packCell}>
-                      {pack.pack_image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={pack.pack_image} alt="" className={styles.thumb} />
-                      ) : (
-                        <span className={styles.thumb} aria-hidden="true" />
-                      )}
                       <div>
-                        <div className={styles.packName}>{pack.title}</div>
-                        <div className={styles.packSlug}>
-                          /{pack.slug ?? "—"} · {pack.delivery_type}
-                        </div>
+                        <Link
+                          href={`/admin/packs/${pack.id}`}
+                          className={styles.schoolNameLink}
+                        >
+                          {pack.school_name || pack.title}
+                        </Link>
+                        {pack.title && pack.school_name && pack.title !== pack.school_name ? (
+                          <div className={styles.packSubtitle}>{pack.title}</div>
+                        ) : null}
                       </div>
                     </div>
                   </td>
-                  <td>{pack.school_name ?? "—"}</td>
                   <td className={styles.priceCell}>{money(pack.price)}</td>
                   <td className={styles.stockCell}>
                     <span className={pack.stock === 0 ? styles.stockLow : undefined}>
@@ -242,7 +239,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
       {pageCount > 1 ? (
         <div className={shared.pagination}>
           <span className={shared.paginationInfo}>
-            Page {page} of {pageCount} · {total} packs
+            Page {page} of {pageCount} · {total} Grade packs
           </span>
           <div className={shared.pageNav}>
             <Link

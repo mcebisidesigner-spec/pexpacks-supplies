@@ -39,7 +39,7 @@ export async function getSchoolBySlug(slug: string) {
       const { data: dbPacks } = await supabase
         .from("stationery_packs")
         .select("*")
-        .eq("school_id", dbSchool.id)
+        .or(`school_id.eq.${dbSchool.id},slug.ilike.${dbSchool.slug}-%`)
         .eq("visible", true)
         .order("sort_order", { ascending: true })
         .order("title", { ascending: true });
