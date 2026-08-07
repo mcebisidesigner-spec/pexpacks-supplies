@@ -102,7 +102,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
 
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="price">
-              Total Price (R)
+              Price (R)
             </label>
             <input
               id="price"
@@ -145,7 +145,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
 
         <div className={formStyles.field}>
           <label className={formStyles.label} htmlFor="description">
-            Description
+            Descr
           </label>
           <textarea
             id="description"

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/rbac";
-import { listItems, type ItemListFilters } from "@/lib/admin/items";
-import { listPacksForFilter } from "@/lib/admin/packs";
+import { listItems, listDistinctStationeryItems, type ItemListFilters } from "@/lib/admin/items";
 import { deleteItemAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import shared from "../schools/schools.module.css";
@@ -48,7 +47,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
   };
 
   const { items, total, pageCount } = await listItems(filters);
-  const packs = await listPacksForFilter();
+  const inventoryItems = await listDistinctStationeryItems();
   const baseParams = { q: filters.q, pack_id: filters.pack_id };
   const hasFilters = Boolean(filters.q || filters.pack_id);
 
@@ -76,11 +75,11 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
             className={`${shared.filterInput} ${shared.searchInput}`}
             aria-label="Search items"
           />
-          <select name="pack_id" defaultValue={filters.pack_id ?? ""} className={shared.filterInput}>
-            <option value="">All packs</option>
-            {packs.map((pack) => (
-              <option key={pack.id} value={pack.id}>
-                {pack.title}
+          <select name="q" defaultValue={filters.q ?? ""} className={shared.filterInput}>
+            <option value="">All Stationery Items</option>
+            {inventoryItems.map((itemName) => (
+              <option key={itemName} value={itemName}>
+                {itemName}
               </option>
             ))}
           </select>
@@ -122,9 +121,9 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
               <thead>
                 <tr>
                   <th>Item Name</th>
-                  <th>Description</th>
+                  <th>Descr</th>
                   <th>Pack-Qty</th>
-                  <th>Total Price</th>
+                  <th>Price</th>
                   <th>Visible</th>
                   <th>Actions</th>
                 </tr>

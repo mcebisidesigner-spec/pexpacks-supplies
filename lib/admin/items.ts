@@ -501,3 +501,19 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
 
   return result;
 }
+
+export async function listDistinctStationeryItems(): Promise<string[]> {
+  try {
+    const admin = createSupabaseAdminClient();
+    const { data } = await admin
+      .from("stationery_items")
+      .select("name")
+      .order("name", { ascending: true });
+
+    if (!data) return [];
+    return Array.from(new Set(data.map((item) => item.name.trim()).filter(Boolean))).sort();
+  } catch (err) {
+    console.error("[items] listDistinctStationeryItems failed:", err);
+    return [];
+  }
+}
