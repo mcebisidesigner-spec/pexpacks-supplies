@@ -118,7 +118,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
             type="search"
             name="q"
             defaultValue={filters.q ?? ""}
-            placeholder="Search title, slug or year…"
+            placeholder="Search by School name"
             className={`${shared.filterInput} ${shared.searchInput}`}
             aria-label="Search packs"
           />

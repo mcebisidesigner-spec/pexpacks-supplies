@@ -159,7 +159,21 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
   if (filters.q) {
     const q = filters.q.replace(/%/g, "").trim();
     if (q) {
-      query = query.or(`title.ilike.%${q}%,slug.ilike.%${q}%,description.ilike.%${q}%,academic_year.ilike.%${q}%`);
+      const { data: matchedSchools } = await admin
+        .from("schools")
+        .select("id")
+        .or(`name.ilike.%${q}%,slug.ilike.%${q}%`);
+
+      const schoolIds = (matchedSchools ?? []).map((s) => s.id);
+      if (schoolIds.length > 0) {
+        query = query.or(
+          `school_id.in.(${schoolIds.join(",")}),title.ilike.%${q}%,slug.ilike.%${q}%,description.ilike.%${q}%,academic_year.ilike.%${q}%`
+        );
+      } else {
+        query = query.or(
+          `title.ilike.%${q}%,slug.ilike.%${q}%,description.ilike.%${q}%,academic_year.ilike.%${q}%`
+        );
+      }
     }
   }
   if (filters.school_id) query = query.eq("school_id", filters.school_id);
@@ -228,10 +242,24 @@ export async function listSchoolGroupedSummary(
   const admin = createSupabaseAdminClient();
   const page = Math.max(1, filters.page ?? 1);
   const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
+  const q = (filters.q || "").replace(/%/g, "").trim();
+
+  let schoolQuery = admin
+    .from("schools")
+    .select("id, name, slug, updated_at")
+    .order("name", { ascending: true })
+    .limit(10000);
+
+  if (q) {
+    schoolQuery = schoolQuery.or(`name.ilike.%${q}%,slug.ilike.%${q}%`);
+  }
 
   const [{ data: dbSchools }, { data: dbPacks, count: totalGradePacks }] = await Promise.all([
-    admin.from("schools").select("id, name, slug, updated_at").order("name", { ascending: true }),
-    admin.from("stationery_packs").select("id, school_id, visible, updated_at", { count: "exact" }),
+    schoolQuery,
+    admin
+      .from("stationery_packs")
+      .select("id, title, slug, school_id, visible, updated_at", { count: "exact" })
+      .limit(50000),
   ]);
 
   const [allSchools, deliveryTypes] = await Promise.all([
@@ -251,8 +279,6 @@ export async function listSchoolGroupedSummary(
     };
   }
 
-  const qLower = (filters.q || "").toLowerCase().trim();
-
   let groupedList: SchoolGroupedSummary[] = dbSchools
     .map((s) => {
       const sPacks = dbPacks.filter((p) => p.school_id === s.id);
@@ -267,19 +293,13 @@ export async function listSchoolGroupedSummary(
       return {
         school_id: s.id,
         school_name: s.name,
-        school_slug: s.slug,
+        school_slug: s.slug ?? "",
         grade_packs_count: sPacks.length,
         last_edited: latestUpdate,
         visible: isVisible,
       };
     })
     .filter(Boolean) as SchoolGroupedSummary[];
-
-  if (qLower) {
-    groupedList = groupedList.filter((s) =>
-      s.school_name.toLowerCase().includes(qLower) || s.school_slug.toLowerCase().includes(qLower)
-    );
-  }
 
   if (filters.visible === "true") {
     groupedList = groupedList.filter((s) => s.visible);
