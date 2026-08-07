@@ -20,6 +20,8 @@ import { buildWhatsAppHref } from "@/data/contact";
 import pageStyles from "@/styles/Page.module.css";
 import styles from "./SchoolDetailPage.module.css";
 
+export const revalidate = 3600; // Edge ISR cache for 1 hour, auto-revalidated on dashboard edit
+
 // Eagerly start loading the full school records at module evaluation time,
 // ahead of component rendering. This gives the 11MB dynamic import a head
 // start so it's more likely to resolve before the async component's first
@@ -30,9 +32,6 @@ getSchoolRecordMap();
 type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
 };
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 export async function generateStaticParams() {
   const schoolIndex = await getSchoolIndex();
