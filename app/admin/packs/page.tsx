@@ -61,6 +61,16 @@ function formatShortDate(dateStr: string | null | undefined): string {
   }
 }
 
+function extractGradeLabel(title: string, slug?: string | null): string {
+  const text = `${title} ${slug ?? ""}`;
+  const match = text.match(/grade\s*([r\d]+)/i);
+  if (match) {
+    const val = match[1].toUpperCase();
+    return val === "R" ? "Grade R" : `Grade ${val}`;
+  }
+  return "Grade Pack";
+}
+
 export default async function PacksPage({ searchParams }: PacksPageProps) {
   await requireAdmin({ permission: "packs.view" });
   const params = await searchParams;
@@ -288,74 +298,79 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                     <th>PRICE</th>
                     <th>STOCK</th>
                     <th>ITEMS</th>
-                    <th>YEAR</th>
-                    <th>SORT</th>
                     <th>FLAGS</th>
                     <th>ACTIONS</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {packResult.packs.map((pack) => (
-                    <tr key={pack.id}>
-                      <td>
-                        <div className={styles.packCell}>
-                          <div>
+                  {packResult.packs.map((pack) => {
+                    const rawSchoolName = pack.school_name || pack.title;
+                    const schoolName = rawSchoolName
+                      .replace(/\s*grade\s*[r\d]+\s*pack/i, "")
+                      .trim();
+                    const gradeLabel = extractGradeLabel(pack.title, pack.slug);
+
+                    return (
+                      <tr key={pack.id}>
+                        <td>
+                          <div className={styles.packCell}>
+                            <div>
+                              <Link
+                                href={`/admin/packs/${pack.id}`}
+                                className={styles.schoolNameLink}
+                              >
+                                {schoolName}
+                              </Link>
+                              <div className={styles.gradeSublabel}>{gradeLabel}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className={styles.priceCell}>{money(pack.price)}</td>
+                        <td className={styles.stockCell}>
+                          <span className={pack.stock === 0 ? styles.stockLow : undefined}>
+                            {pack.stock}
+                          </span>
+                        </td>
+                        <td className={styles.itemCount}>{pack.item_count}</td>
+                        <td>
+                          <div className={shared.flags}>
+                            <span
+                              className={`${shared.flag} ${
+                                pack.visible ? styles.badgeVisible : styles.badgeHidden
+                              }`}
+                            >
+                              {pack.visible ? "Visible" : "Hidden"}
+                            </span>
+                            {pack.featured ? (
+                              <span className={`${shared.flag} ${styles.badgeFeatured}`}>
+                                Featured
+                              </span>
+                            ) : null}
+                          </div>
+                        </td>
+                        <td>
+                          <div className={shared.actions}>
                             <Link
                               href={`/admin/packs/${pack.id}`}
-                              className={styles.schoolNameLink}
+                              className={shared.actionLink}
                             >
-                              {pack.school_name || pack.title}
+                              Edit
                             </Link>
+                            <VisibleToggle id={pack.id} visible={pack.visible} />
+                            <DuplicateButton id={pack.id} title={pack.title} />
+                            <form action={deletePackAction.bind(null, pack.id)}>
+                              <ConfirmButton
+                                label="Delete"
+                                confirmText={`Permanently delete "${pack.title}" and its items? This cannot be undone.`}
+                                busyLabel="Deleting…"
+                                className={`${shared.rowButton} ${shared.rowButtonDelete}`}
+                              />
+                            </form>
                           </div>
-                        </div>
-                      </td>
-                      <td className={styles.priceCell}>{money(pack.price)}</td>
-                      <td className={styles.stockCell}>
-                        <span className={pack.stock === 0 ? styles.stockLow : undefined}>
-                          {pack.stock}
-                        </span>
-                      </td>
-                      <td className={styles.itemCount}>{pack.item_count}</td>
-                      <td>{pack.academic_year ?? "—"}</td>
-                      <td className={styles.sortCell}>{pack.sort_order ?? 0}</td>
-                      <td>
-                        <div className={shared.flags}>
-                          <span
-                            className={`${shared.flag} ${
-                              pack.visible ? styles.badgeVisible : styles.badgeHidden
-                            }`}
-                          >
-                            {pack.visible ? "Visible" : "Hidden"}
-                          </span>
-                          {pack.featured ? (
-                            <span className={`${shared.flag} ${styles.badgeFeatured}`}>
-                              Featured
-                            </span>
-                          ) : null}
-                        </div>
-                      </td>
-                      <td>
-                        <div className={shared.actions}>
-                          <Link
-                            href={`/admin/packs/${pack.id}`}
-                            className={shared.actionLink}
-                          >
-                            Edit
-                          </Link>
-                          <VisibleToggle id={pack.id} visible={pack.visible} />
-                          <DuplicateButton id={pack.id} title={pack.title} />
-                          <form action={deletePackAction.bind(null, pack.id)}>
-                            <ConfirmButton
-                              label="Delete"
-                              confirmText={`Permanently delete "${pack.title}" and its items? This cannot be undone.`}
-                              busyLabel="Deleting…"
-                              className={`${shared.rowButton} ${shared.rowButtonDelete}`}
-                            />
-                          </form>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

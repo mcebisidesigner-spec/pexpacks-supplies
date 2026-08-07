@@ -32,6 +32,13 @@
   color: var(--pex-teal, #23b4b0);
 }
 
+.gradeSublabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pex-teal, #23b4b0);
+  margin-top: 2px;
+}
+
 .packSubtitle {
   font-size: 12px;
   color: var(--pex-muted, #6b7a86);
