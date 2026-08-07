@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { requireAdmin, displayName } from "@/lib/admin/rbac";
 import { filterNav } from "@/lib/admin/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { IdleLogout } from "@/components/admin/IdleLogout";
 
 export const metadata: Metadata = {
   title: "Admin | Pexpacks",
@@ -22,6 +23,7 @@ export default async function AdminLayout({
       userEmail={session.user.email ?? ""}
       userRoles={session.roles}
     >
+      <IdleLogout />
       {children}
     </AdminShell>
   );

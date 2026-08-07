@@ -147,7 +147,10 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
     );
 
   if (filters.q) {
-    const q = filters.q.replace(/%/g, "").trim();
+    const rawQ = Array.isArray(filters.q)
+      ? ((filters.q as unknown as string[]).find((x) => x && String(x).trim()) || "")
+      : String(filters.q);
+    const q = rawQ.replace(/%/g, "").trim();
     if (q) query = query.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
   }
   if (filters.pack_id) query = query.eq("pack_id", filters.pack_id);

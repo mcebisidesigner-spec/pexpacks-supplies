@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { saveFormSubmission } from "@/lib/supabase/forms";
+import { ADMIN_LAST_ACTIVITY_COOKIE } from "@/lib/admin/idle";
 
 export async function login(formData: FormData) {
   const email = (formData.get("email") as string)?.trim();
@@ -53,6 +54,11 @@ export async function login(formData: FormData) {
   }
 
   if (isSuccess) {
+    try {
+      cookieStore.delete(ADMIN_LAST_ACTIVITY_COOKIE);
+    } catch {
+      // ignore — set during a Server Action
+    }
     redirect("/admin");
   } else {
     redirect(`/login?error=${encodeURIComponent(errorMessage || "Invalid credentials")}`);
@@ -82,6 +88,17 @@ export async function logout() {
       },
     }
   );
+
+  try {
+    cookieStore.set({
+      name: ADMIN_LAST_ACTIVITY_COOKIE,
+      value: "",
+      path: "/",
+      expires: new Date(0),
+    });
+  } catch {
+    // ignore — set during a Server Action
+  }
 
   await supabase.auth.signOut();
   redirect("/login");

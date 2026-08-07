@@ -1,5 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  ADMIN_IDLE_MS,
+  ADMIN_LAST_ACTIVITY_COOKIE,
+} from "@/lib/admin/idle";
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
@@ -60,8 +64,45 @@ export async function updateSession(request: NextRequest) {
     if (!user || !isStaff) {
       const url = request.nextUrl.clone();
       url.pathname = "/404";
-      return NextResponse.rewrite(url);
+      const masked = NextResponse.rewrite(url);
+      masked.cookies.set(ADMIN_LAST_ACTIVITY_COOKIE, "", { path: "/", maxAge: 0 });
+      return masked;
     }
+
+    // Auto sign-out after 15 minutes of continuous inactivity so the admin
+    // panel does not stay logged in on unattended or shared browsers.
+    const now = Date.now();
+    const lastRaw = request.cookies.get(ADMIN_LAST_ACTIVITY_COOKIE)?.value;
+    const last = lastRaw ? Number(lastRaw) : NaN;
+    if (Number.isFinite(last) && now - last > ADMIN_IDLE_MS) {
+      try {
+        await supabase.auth.signOut();
+      } catch (err) {
+        console.error("[auth] idle sign out failed:", err);
+      }
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/login";
+      loginUrl.search = "";
+      const redirected = NextResponse.redirect(loginUrl);
+      response.cookies.getAll().forEach((cookie) =>
+        redirected.cookies.set(cookie.name, cookie.value, {
+          path: "/",
+          httpOnly: cookie.httpOnly,
+          secure: cookie.secure,
+          sameSite: cookie.sameSite,
+          maxAge: cookie.maxAge,
+        })
+      );
+      return redirected;
+    }
+
+    response.cookies.set(ADMIN_LAST_ACTIVITY_COOKIE, String(now), {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+    });
   }
 
   return response;

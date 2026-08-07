@@ -9,13 +9,19 @@ import styles from "../packs/packs.module.css";
 
 interface ItemsPageProps {
   searchParams: Promise<{
-    q?: string;
+    q?: string | string[];
+    search?: string | string[];
     pack_id?: string;
     page?: string;
   }>;
 }
 
 const PAGE_SIZE = 30;
+
+function parseParam(v: string | string[] | undefined): string {
+  if (Array.isArray(v)) return v.find((x) => x && String(x).trim())?.trim() || "";
+  return typeof v === "string" ? v.trim() : "";
+}
 
 function buildHref(
   params: Record<string, string | undefined>,
@@ -38,10 +44,11 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
   await requireAdmin({ permission: "items.view" });
   const params = await searchParams;
 
-  const page = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
+  const queryStr = parseParam(params.q) || parseParam(params.search);
+  const page = Math.max(1, parseInt(parseParam(params.page) || "1", 10) || 1);
   const filters: ItemListFilters = {
-    q: params.q?.trim() || undefined,
-    pack_id: params.pack_id || undefined,
+    q: queryStr || undefined,
+    pack_id: parseParam(params.pack_id) || undefined,
     page,
     pageSize: PAGE_SIZE,
   };
@@ -69,13 +76,13 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
         <form method="get" action="/admin/items" className={shared.filterForm}>
           <input
             type="search"
-            name="q"
-            defaultValue={filters.q ?? ""}
+            name="search"
+            defaultValue={queryStr}
             placeholder="Search item name or description…"
             className={`${shared.filterInput} ${shared.searchInput}`}
             aria-label="Search items"
           />
-          <select name="q" defaultValue={filters.q ?? ""} className={shared.filterInput}>
+          <select name="q" defaultValue={queryStr} className={shared.filterInput}>
             <option value="">All Stationery Items</option>
             {inventoryItems.map((itemName) => (
               <option key={itemName} value={itemName}>
