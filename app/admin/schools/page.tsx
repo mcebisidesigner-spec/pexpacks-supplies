@@ -36,15 +36,6 @@ function buildHref(
   return s ? `/admin/schools?${s}` : "/admin/schools";
 }
 
-function formatDate(value: string | null): string {
-  if (!value) return "—";
-  return new Date(value).toLocaleDateString("en-ZA", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
-
 export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
   await requireAdmin({ permission: "schools.view" });
   const params = await searchParams;
@@ -158,17 +149,11 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                   <th>City</th>
                   <th>Province</th>
                   <th>Status</th>
-                  <th>Flags</th>
-                  <th>Grades</th>
-                  <th>Updated</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {schools.map((school) => {
-                  const gradeCount = Array.isArray(school.grades)
-                    ? school.grades.length
-                    : 0;
                   const statusClass =
                     school.status === "active"
                       ? styles.badgeActive
@@ -197,9 +182,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                           )}
                           <div>
                             <div className={styles.schoolName}>{school.name}</div>
-                            <div className={styles.schoolSlug}>
-                              /schools/{school.slug ?? "—"}
-                            </div>
                           </div>
                         </div>
                       </td>
@@ -210,25 +192,6 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                           {school.status}
                         </span>
                       </td>
-                      <td>
-                        <div className={styles.flags}>
-                          {school.is_featured ? (
-                            <span className={`${styles.flag} ${styles.flagFeatured}`}>
-                              Featured
-                            </span>
-                          ) : null}
-                          {school.is_partner ? (
-                            <span className={`${styles.flag} ${styles.flagPartner}`}>
-                              Partner
-                            </span>
-                          ) : null}
-                          {!school.published ? (
-                            <span className={styles.flag}>Unpublished</span>
-                          ) : null}
-                        </div>
-                      </td>
-                      <td>{gradeCount || "—"}</td>
-                      <td>{formatDate(school.updated_at)}</td>
                       <td>
                         <div className={styles.actions}>
                           <Link
