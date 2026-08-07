@@ -1,5 +1,6 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSchoolBySlug as getSchoolRecordBySlug } from "@/data/schools";
+import { getGradeOrder } from "@/lib/grade-utils";
 
 function extractGradeName(title: string | null | undefined, slug: string | null | undefined): string {
   const safeTitle = title || "";
@@ -47,6 +48,12 @@ export async function getSchoolBySlug(slug: string) {
       let grades = staticRecord?.grades || [];
 
       if (dbPacks && dbPacks.length > 0) {
+        dbPacks.sort((a, b) => {
+          const orderA = getGradeOrder(`${a.title} ${a.slug ?? ""}`);
+          const orderB = getGradeOrder(`${b.title} ${b.slug ?? ""}`);
+          if (orderA !== orderB) return orderA - orderB;
+          return (a.sort_order ?? 0) - (b.sort_order ?? 0);
+        });
         const packIds = dbPacks.map((p) => p.id);
         const { data: dbItems } = await supabase
           .from("stationery_items")

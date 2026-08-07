@@ -10,6 +10,7 @@ import {
 } from "@/lib/admin/rbac";
 import { slugify } from "@/lib/slugify";
 import { PACK_DELIVERY_TYPES } from "@/lib/admin/pack-constants";
+import { getGradeOrder } from "@/lib/grade-utils";
 
 export type PackRow = Database["public"]["Tables"]["stationery_packs"]["Row"];
 export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"];
@@ -197,6 +198,13 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
     schools?: { name: string | null } | null;
     stationery_items?: { count: number }[] | null;
   })[];
+
+  rows.sort((a, b) => {
+    const orderA = getGradeOrder(`${a.title} ${a.slug ?? ""}`);
+    const orderB = getGradeOrder(`${b.title} ${b.slug ?? ""}`);
+    if (orderA !== orderB) return orderA - orderB;
+    return (a.sort_order ?? 0) - (b.sort_order ?? 0);
+  });
 
   const [schools, deliveryTypes] = await Promise.all([
     listPackSchools(),
