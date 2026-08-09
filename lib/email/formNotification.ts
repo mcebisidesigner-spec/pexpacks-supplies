@@ -97,7 +97,7 @@ export async function sendFormNotificationEmail(
 
   try {
     // Primary attempt: Send to official email + account email
-    const recipients = ["orders@pexpacks.co.za", officialEmail, "mcebisidesigner@gmail.com"];
+    const recipients = ["orders@pexpacks.co.za", officialEmail, "pexpacks@gmail.com"];
     const uniqueRecipients = [...new Set(recipients.filter(Boolean))];
 
     // Attempt 1: Custom domain from address
