@@ -1,7 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import { invalidateSchoolSearchCache } from "@/lib/schools/schoolSearchData";
+import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
   createPack,
@@ -23,6 +25,8 @@ export async function createPackAction(
   if (!result.ok) {
     return { ok: false, errors: result.errors, message: result.message };
   }
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
@@ -39,6 +43,8 @@ export async function updatePackAction(
   if (!result.ok) {
     return { ok: false, errors: result.errors, message: result.message };
   }
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath(`/admin/packs/${result.pack.id}`);
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
@@ -63,6 +69,8 @@ export async function updatePackPriceAction(
     return { ok: false, errors: { price: result.message ?? "Failed to update price." } };
   }
 
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath(`/admin/packs/${id}`);
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
@@ -75,6 +83,8 @@ export async function updatePackPriceAction(
 export async function deletePackAction(id: string): Promise<void> {
   await requireAdmin({ permission: "packs.delete" });
   await deletePack(id);
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
@@ -85,6 +95,8 @@ export async function duplicatePackAction(id: string): Promise<{ ok: boolean; pa
   await requireAdmin({ permission: "packs.duplicate" });
   const result = await duplicatePack(id);
   if (!result.ok) return { ok: false };
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
@@ -94,6 +106,8 @@ export async function duplicatePackAction(id: string): Promise<{ ok: boolean; pa
 export async function setPackVisibleAction(id: string, visible: boolean): Promise<void> {
   await requireAdmin({ permission: "packs.edit" });
   await setPackVisible(id, visible);
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
   revalidatePath(`/admin/packs/${id}`);
   revalidatePath("/schools");
@@ -105,6 +119,8 @@ export async function setSchoolPacksVisibleAction(schoolId: string, visible: boo
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const admin = createSupabaseAdminClient();
   await admin.from("stationery_packs").update({ visible }).eq("school_id", schoolId);
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
@@ -115,6 +131,8 @@ export async function deleteSchoolPacksAction(schoolId: string): Promise<void> {
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const admin = createSupabaseAdminClient();
   await admin.from("stationery_packs").delete().eq("school_id", schoolId);
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
   revalidatePath("/", "layout");

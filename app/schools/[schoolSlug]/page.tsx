@@ -14,7 +14,7 @@ import {
 } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema } from "@/lib/schema";
-import { getSchoolBySlug, getSchoolGradeDescriptions } from "@/lib/school-utils";
+import { getCachedSchoolBySlug, getSchoolGradeDescriptions } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildWhatsAppHref } from "@/data/contact";
 import pageStyles from "@/styles/Page.module.css";
@@ -46,7 +46,7 @@ export async function generateMetadata({
   params,
 }: SchoolPageProps): Promise<Metadata> {
   const { schoolSlug } = await params;
-  const school = await getSchoolBySlug(schoolSlug);
+  const school = await getCachedSchoolBySlug(schoolSlug);
 
   if (!school) {
     return buildMetadata(
@@ -65,7 +65,7 @@ export async function generateMetadata({
 
 export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   const { schoolSlug } = await params;
-  const school = await getSchoolBySlug(schoolSlug);
+  const school = await getCachedSchoolBySlug(schoolSlug);
 
   if (!school) {
     notFound();

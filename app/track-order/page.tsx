@@ -16,6 +16,8 @@ export const metadata: Metadata = buildMetadata(
   "/track-order"
 );
 
+import { Suspense } from "react";
+
 export default async function TrackOrderPage() {
   const faqs = await getFaqs();
   return (
@@ -28,7 +30,9 @@ export default async function TrackOrderPage() {
       />
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
-          <TrackOrderForm />
+          <Suspense fallback={<div style={{ minHeight: 300, display: "grid", placeItems: "center" }}>Loading tracker...</div>}>
+            <TrackOrderForm />
+          </Suspense>
         </div>
       </section>
 

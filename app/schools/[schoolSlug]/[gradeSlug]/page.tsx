@@ -9,7 +9,10 @@ import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { breadcrumbSchema, productSchema } from "@/lib/schema";
-import { getGradeBySlug, getGradePackItemDescriptions, getSchoolBySlug } from "@/lib/school-utils";
+import {
+  getCachedSchoolBySlug,
+  getGradePackItemDescriptions,
+} from "@/lib/school-utils";
 import page from "@/styles/Page.module.css";
 
 type GradePageProps = {
@@ -19,7 +22,7 @@ type GradePageProps = {
 
 export const dynamicParams = true;
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Edge ISR cache for 1 hour, auto-revalidated on dashboard edit
 
 export async function generateStaticParams() {
   const schoolIndex = await getSchoolIndex();
@@ -37,8 +40,8 @@ export async function generateMetadata({
   params,
 }: GradePageProps): Promise<Metadata> {
   const { schoolSlug, gradeSlug } = await params;
-  const school = await getSchoolBySlug(schoolSlug);
-  const grade = await getGradeBySlug(schoolSlug, gradeSlug);
+  const school = await getCachedSchoolBySlug(schoolSlug);
+  const grade = school?.grades.find((g) => g.gradeSlug === gradeSlug);
 
   if (!school || !grade) {
     return buildMetadata(
@@ -59,8 +62,8 @@ export default async function GradePackPage({ params, searchParams }: GradePageP
   const { schoolSlug, gradeSlug } = await params;
   const search = await searchParams;
   const autoCustomise = search?.customize === "1";
-  const school = await getSchoolBySlug(schoolSlug);
-  const grade = await getGradeBySlug(schoolSlug, gradeSlug);
+  const school = await getCachedSchoolBySlug(schoolSlug);
+  const grade = school?.grades.find((g) => g.gradeSlug === gradeSlug);
 
   if (!school || !grade) {
     notFound();

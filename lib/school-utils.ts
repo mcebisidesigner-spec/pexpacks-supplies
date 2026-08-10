@@ -1,6 +1,17 @@
+import { unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSchoolBySlug as getSchoolRecordBySlug } from "@/data/schools";
 import { getGradeOrder } from "@/lib/grade-utils";
+
+/**
+ * Data-cache tag for public school/pack reads. Admin server actions call
+ * revalidateTag(SCHOOL_DATA_TAG) after mutating schools, packs or items so the
+ * cached public pages refresh immediately.
+ */
+export const SCHOOL_DATA_TAG = "school-data";
+
+/** How long public school reads stay in the Next.js Data Cache. */
+export const SCHOOL_DATA_REVALIDATE_SECONDS = 300;
 
 function extractGradeName(title: string | null | undefined, slug: string | null | undefined): string {
   const safeTitle = title || "";
@@ -30,7 +41,7 @@ export async function getSchoolBySlug(slug: string) {
     const supabase = createSupabaseAdminClient();
     const { data: dbSchool } = await supabase
       .from("schools")
-      .select("*")
+      .select("id, name, slug, city, district, province, logo, is_partner")
       .eq("slug", slug)
       .single();
 
@@ -39,7 +50,7 @@ export async function getSchoolBySlug(slug: string) {
 
       const { data: dbPacks } = await supabase
         .from("stationery_packs")
-        .select("*")
+        .select("id, title, slug, price, description, stock, sort_order")
         .or(`school_id.eq.${dbSchool.id},slug.ilike.${dbSchool.slug}-%`)
         .eq("visible", true)
         .order("sort_order", { ascending: true })
@@ -57,7 +68,7 @@ export async function getSchoolBySlug(slug: string) {
         const packIds = dbPacks.map((p) => p.id);
         const { data: dbItems } = await supabase
           .from("stationery_items")
-          .select("*")
+          .select("pack_id, name, quantity, icon, description, specification")
           .in("pack_id", packIds)
           .eq("visible", true)
           .order("sort_order", { ascending: true });
@@ -132,91 +143,107 @@ export async function getGradeBySlug(schoolSlug: string, gradeSlug: string) {
 }
 
 /**
+ * Cached variant of {@link getSchoolBySlug} for public marketing pages. Kept
+ * separate from the raw function so checkout/payment routes continue to read
+ * fresh prices for validation. Invalidated via revalidateTag(SCHOOL_DATA_TAG).
+ */
+export const getCachedSchoolBySlug = unstable_cache(
+  async (slug: string) => getSchoolBySlug(slug) ?? null,
+  ["public-school-by-slug"],
+  { revalidate: SCHOOL_DATA_REVALIDATE_SECONDS, tags: [SCHOOL_DATA_TAG] }
+);
+
+/**
  * Looks up the matching admin-managed pack in the DB (pack slug follows the
  * `${schoolSlug}-${gradeSlug}` convention) and returns a map of item name to
  * description so the public grade pack can show descriptions. Falls back to an
  * empty map when no pack exists or the DB is unreachable.
  */
-export async function getGradePackItemDescriptions(
-  schoolSlug: string,
-  gradeSlug: string
-): Promise<Record<string, string>> {
-  if (!schoolSlug || !gradeSlug) return {};
+export const getGradePackItemDescriptions = unstable_cache(
+  async (schoolSlug: string, gradeSlug: string): Promise<Record<string, string>> => {
+    if (!schoolSlug || !gradeSlug) return {};
 
-  try {
-    const supabase = createSupabaseAdminClient();
-    const { data: pack } = await supabase
-      .from("stationery_packs")
-      .select("id")
-      .eq("slug", `${schoolSlug}-${gradeSlug}`)
-      .maybeSingle();
+    try {
+      const supabase = createSupabaseAdminClient();
+      const { data: pack } = await supabase
+        .from("stationery_packs")
+        .select("id")
+        .eq("slug", `${schoolSlug}-${gradeSlug}`)
+        .maybeSingle();
 
-    if (!pack) return {};
+      if (!pack) return {};
 
-    const { data: items } = await supabase
-      .from("stationery_items")
-      .select("name, description")
-      .eq("pack_id", pack.id)
-      .eq("visible", true)
-      .order("sort_order", { ascending: true });
+      const { data: items } = await supabase
+        .from("stationery_items")
+        .select("name, description")
+        .eq("pack_id", pack.id)
+        .eq("visible", true)
+        .order("sort_order", { ascending: true });
 
-    const descriptions: Record<string, string> = {};
-    for (const item of items ?? []) {
-      const desc = (item.description ?? "").trim();
-      if (desc && !descriptions[item.name]) {
-        descriptions[item.name] = desc;
+      const descriptions: Record<string, string> = {};
+      for (const item of items ?? []) {
+        const desc = (item.description ?? "").trim();
+        if (desc && !descriptions[item.name]) {
+          descriptions[item.name] = desc;
+        }
       }
+      return descriptions;
+    } catch {
+      return {};
     }
-    return descriptions;
-  } catch {
-    return {};
-  }
-}
+  },
+  ["grade-pack-item-descriptions"],
+  { revalidate: SCHOOL_DATA_REVALIDATE_SECONDS, tags: [SCHOOL_DATA_TAG] }
+);
 
 /**
  * Loads item descriptions for every grade pack of a school in one go. Returns a
  * map keyed by gradeSlug: `{ [gradeSlug]: { [itemName]: description } }`. Uses
  * the seeded `${schoolSlug}-${gradeSlug}` pack slug convention.
  */
-export async function getSchoolGradeDescriptions(
-  schoolSlug: string,
-  gradeSlugs: string[]
-): Promise<Record<string, Record<string, string>>> {
-  const result: Record<string, Record<string, string>> = {};
-  if (!schoolSlug || !gradeSlugs.length) return result;
+export const getSchoolGradeDescriptions = unstable_cache(
+  async (
+    schoolSlug: string,
+    gradeSlugs: string[]
+  ): Promise<Record<string, Record<string, string>>> => {
+    const result: Record<string, Record<string, string>> = {};
+    if (!schoolSlug || !gradeSlugs.length) return result;
 
-  try {
-    const supabase = createSupabaseAdminClient();
-    const { data: packs } = await supabase
-      .from("stationery_packs")
-      .select("id, slug")
-      .in("slug", gradeSlugs.map((gradeSlug) => `${schoolSlug}-${gradeSlug}`));
+    try {
+      const supabase = createSupabaseAdminClient();
+      const { data: packs } = await supabase
+        .from("stationery_packs")
+        .select("id, slug")
+        .in("slug", gradeSlugs.map((gradeSlug) => `${schoolSlug}-${gradeSlug}`));
 
-    if (!packs || !packs.length) return result;
+      if (!packs || !packs.length) return result;
 
-    const packIds = packs.map((pack) => pack.id);
-    const { data: items } = await supabase
-      .from("stationery_items")
-      .select("pack_id, name, description")
-      .in("pack_id", packIds)
-      .eq("visible", true);
+      const packIds = packs.map((pack) => pack.id);
+      const { data: items } = await supabase
+        .from("stationery_items")
+        .select("pack_id, name, description")
+        .in("pack_id", packIds)
+        .eq("visible", true);
 
-    const slugByPack = new Map(packs.map((pack) => [pack.id, pack.slug]));
-    for (const item of items ?? []) {
-      const packSlug = slugByPack.get(item.pack_id);
-      if (!packSlug) continue;
-      const gradeSlug = packSlug.startsWith(`${schoolSlug}-`)
-        ? packSlug.slice(schoolSlug.length + 1)
-        : null;
-      if (!gradeSlug) continue;
-      const description = (item.description ?? "").trim();
-      if (!description) continue;
-      const map = result[gradeSlug] ?? (result[gradeSlug] = {});
-      if (!map[item.name]) map[item.name] = description;
+      const slugByPack = new Map(packs.map((pack) => [pack.id, pack.slug]));
+      for (const item of items ?? []) {
+        const packSlug = slugByPack.get(item.pack_id);
+        if (!packSlug) continue;
+        const gradeSlug = packSlug.startsWith(`${schoolSlug}-`)
+          ? packSlug.slice(schoolSlug.length + 1)
+          : null;
+        if (!gradeSlug) continue;
+        const description = (item.description ?? "").trim();
+        if (!description) continue;
+        const map = result[gradeSlug] ?? (result[gradeSlug] = {});
+        if (!map[item.name]) map[item.name] = description;
+      }
+    } catch {
+      // Fall back to no descriptions if the DB is unreachable.
     }
-  } catch {
-    // Fall back to no descriptions if the DB is unreachable.
-  }
 
-  return result;
-}
+    return result;
+  },
+  ["school-grade-descriptions"],
+  { revalidate: SCHOOL_DATA_REVALIDATE_SECONDS, tags: [SCHOOL_DATA_TAG] }
+);

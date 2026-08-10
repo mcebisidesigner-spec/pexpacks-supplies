@@ -12,37 +12,38 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          response = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
-  // IMPORTANT: Avoid writing logic between createServerClient and getUser.
-  // getUser() refreshes expired tokens and retrieves authenticated user metadata.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Guard all /admin routes
+  // Guard all /admin routes. Auth is only needed for the admin panel, so the
+  // getUser() network round-trip is skipped for every public page/API request.
   if (request.nextUrl.pathname.startsWith("/admin")) {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) =>
+              request.cookies.set(name, value)
+            );
+            response = NextResponse.next({
+              request,
+            });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              response.cookies.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    // IMPORTANT: Avoid writing logic between createServerClient and getUser.
+    // getUser() refreshes expired tokens and retrieves authenticated user metadata.
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     const appMeta = user?.app_metadata as Record<string, unknown> | undefined;
     const role = appMeta?.role;
     const roles = Array.isArray(appMeta?.roles) ? appMeta.roles : [];

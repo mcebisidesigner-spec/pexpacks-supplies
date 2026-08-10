@@ -16,7 +16,48 @@ function gradeRank(grade: string) {
   return Number.isFinite(number) ? number : 99;
 }
 
+const SEARCH_DATA_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+let searchableSchoolsCache: {
+  promise: Promise<SchoolSearchRecord[]>;
+  expiresAt: number;
+} | null = null;
+
+let searchIndexCache: {
+  promise: Promise<SchoolSearchIndex>;
+  expiresAt: number;
+} | null = null;
+
+/**
+ * Drops the in-memory search caches so the next call re-reads schools from the
+ * database. Called by admin server actions after school/pack mutations.
+ */
+export function invalidateSchoolSearchCache() {
+  searchableSchoolsCache = null;
+  searchIndexCache = null;
+}
+
 export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
+  const now = Date.now();
+  if (searchableSchoolsCache && searchableSchoolsCache.expiresAt > now) {
+    return searchableSchoolsCache.promise;
+  }
+
+  const promise = loadSearchableSchools();
+  searchableSchoolsCache = {
+    promise,
+    expiresAt: now + SEARCH_DATA_TTL_MS,
+  };
+
+  try {
+    return await promise;
+  } catch (error) {
+    searchableSchoolsCache = null;
+    throw error;
+  }
+}
+
+async function loadSearchableSchools(): Promise<SchoolSearchRecord[]> {
   const index = await getSchoolIndex();
   let dbSchoolMap = new Map();
 
@@ -87,7 +128,25 @@ export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
 }
 
 export async function getSearchIndex() {
-  return new SchoolSearchIndex(await getSearchableSchools());
+  const now = Date.now();
+  if (searchIndexCache && searchIndexCache.expiresAt > now) {
+    return searchIndexCache.promise;
+  }
+
+  const promise = getSearchableSchools().then(
+    (schools) => new SchoolSearchIndex(schools)
+  );
+  searchIndexCache = {
+    promise,
+    expiresAt: now + SEARCH_DATA_TTL_MS,
+  };
+
+  try {
+    return await promise;
+  } catch (error) {
+    searchIndexCache = null;
+    throw error;
+  }
 }
 
 export async function getSchoolSearchOptions() {

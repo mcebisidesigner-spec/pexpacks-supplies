@@ -1,6 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { invalidateSchoolSearchCache } from "@/lib/schools/schoolSearchData";
+import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
   createSchool,
@@ -17,6 +19,8 @@ export async function createSchoolAction(
   await requireAdmin({ permission: "schools.create" });
   const result = await createSchool(formData);
   if (result.ok) {
+    invalidateSchoolSearchCache();
+    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
     revalidatePath("/admin/schools");
     revalidatePath("/admin");
     revalidatePath("/schools");
@@ -36,6 +40,8 @@ export async function updateSchoolAction(
   await requireAdmin({ permission: "schools.edit" });
   const result = await updateSchool(id, formData);
   if (result.ok) {
+    invalidateSchoolSearchCache();
+    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
     revalidatePath("/admin/schools");
     revalidatePath(`/admin/schools/${id}`);
     revalidatePath("/schools");
@@ -50,6 +56,8 @@ export async function updateSchoolAction(
 export async function archiveSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.archive" });
   await setSchoolStatus(id, "archived");
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/schools");
   revalidatePath("/schools");
 }
@@ -57,6 +65,8 @@ export async function archiveSchoolAction(id: string): Promise<void> {
 export async function restoreSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.restore" });
   await setSchoolStatus(id, "active");
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/schools");
   revalidatePath("/schools");
 }
@@ -64,6 +74,8 @@ export async function restoreSchoolAction(id: string): Promise<void> {
 export async function deleteSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.delete" });
   await deleteSchool(id);
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/schools");
   revalidatePath("/schools");
 }

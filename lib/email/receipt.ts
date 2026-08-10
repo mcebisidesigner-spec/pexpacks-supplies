@@ -3,6 +3,8 @@ import { formatCurrency } from "@/lib/formatCurrency";
 
 export type ReceiptOrder = {
   order_reference: string;
+  unique_customer_id?: string | null;
+  tracking_token?: string | null;
   status: string;
   buyer_name: string;
   buyer_email: string | null;
@@ -100,6 +102,9 @@ function renderItems(order: ReceiptOrder): string {
 function buildReceiptHtml(order: ReceiptOrder): string {
   const total = order.estimated_total ?? 0;
   const itemsHtml = renderItems(order);
+  const encodedEmail = encodeURIComponent(order.buyer_email || "");
+  const token = encodeURIComponent(order.tracking_token || "");
+  const trackingUrl = `https://pexpacks.co.za/track-order?ref=${encodeURIComponent(order.order_reference)}&email=${encodedEmail}&token=${token}`;
 
   return `<!doctype html>
 <html lang="en-ZA">
@@ -158,6 +163,14 @@ function buildReceiptHtml(order: ReceiptOrder): string {
                       <td style="padding:14px 18px;background:#f8fafc;border-top-right-radius:10px;border-bottom-right-radius:10px;font-size:14px;font-weight:800;color:#1e293b;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.order_reference)}</td>
                     </tr>
                     <tr>
+                      <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Customer email</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.buyer_email || "N/A")}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Unique customer ID</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.unique_customer_id || "CUST-GUEST")}</td>
+                    </tr>
+                    <tr>
                       <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Date</td>
                       <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(formatDate(order.paid_at || order.created_at))}</td>
                     </tr>
@@ -174,6 +187,13 @@ function buildReceiptHtml(order: ReceiptOrder): string {
                       <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.fulfilment_option || "To be confirmed")}</td>
                     </tr>
                   </table>
+
+                  <!-- Track Order Magic Link Button -->
+                  <div style="margin:20px 0 28px;text-align:center;">
+                    <a href="${trackingUrl}" target="_blank" style="display:inline-block;padding:14px 28px;background:#219e9b;color:#ffffff;text-decoration:none;border-radius:30px;font-weight:800;font-size:15px;box-shadow:0 4px 12px rgba(33,158,155,0.25);">
+                      <u>Click to track your order</u>
+                    </a>
+                  </div>
 
                   <h3 style="margin:24px 0 12px;color:#1e293b;font-size:15px;font-weight:800;font-family:Arial,Helvetica,sans-serif;">Order summary</h3>
                   ${itemsHtml}

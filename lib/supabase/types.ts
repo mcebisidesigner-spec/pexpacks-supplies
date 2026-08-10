@@ -81,6 +81,11 @@ export interface Database {
           city: string | null;
           province: string | null;
           postal_code: string | null;
+          unique_customer_id: string | null;
+          tracking_token: string | null;
+          courier_name: string | null;
+          waybill_number: string | null;
+          estimated_delivery: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -119,6 +124,11 @@ export interface Database {
           city?: string | null;
           province?: string | null;
           postal_code?: string | null;
+          unique_customer_id?: string | null;
+          tracking_token?: string | null;
+          courier_name?: string | null;
+          waybill_number?: string | null;
+          estimated_delivery?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -157,6 +167,11 @@ export interface Database {
           city?: string | null;
           province?: string | null;
           postal_code?: string | null;
+          unique_customer_id?: string | null;
+          tracking_token?: string | null;
+          courier_name?: string | null;
+          waybill_number?: string | null;
+          estimated_delivery?: string | null;
           created_at?: string;
           updated_at?: string;
         };

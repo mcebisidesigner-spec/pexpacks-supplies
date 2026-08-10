@@ -1,10 +1,19 @@
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { createSupabaseAdminClient } from "./supabase/admin";
 
 function generateOrderReference(): string {
   const timestamp = Date.now().toString(36).toUpperCase();
   const suffix = randomUUID().slice(0, 6).toUpperCase();
   return `PEX-${timestamp}-${suffix}`;
+}
+
+export function generateUniqueCustomerId(): string {
+  const num = Math.floor(10000 + Math.random() * 90000);
+  return `CUST-${num}`;
+}
+
+export function generateTrackingToken(): string {
+  return randomBytes(32).toString("hex");
 }
 
 export { generateOrderReference };
@@ -29,6 +38,8 @@ export async function createPendingOrder(input: {
   const supabase = createSupabaseAdminClient();
 
   const orderId = randomUUID();
+  const uniqueCustomerId = generateUniqueCustomerId();
+  const trackingToken = generateTrackingToken();
 
   const packItems = Array.isArray(input.items) ? input.items : [];
   const hasPexcover = packItems.some(
@@ -48,6 +59,8 @@ export async function createPendingOrder(input: {
       .insert({
         id: orderId,
         order_reference: input.orderReference,
+        unique_customer_id: uniqueCustomerId,
+        tracking_token: trackingToken,
         buyer_name: input.buyerName,
         buyer_phone: input.buyerPhone,
         buyer_email: input.buyerEmail || null,
@@ -78,7 +91,7 @@ export async function createPendingOrder(input: {
     console.error("[orders] createPendingOrder caught:", err instanceof Error ? err.message : err);
   }
 
-  return { id: orderId, orderReference: input.orderReference };
+  return { id: orderId, orderReference: input.orderReference, uniqueCustomerId, trackingToken };
 }
 
 export async function getOrderByReference(reference: string) {
@@ -87,7 +100,7 @@ export async function getOrderByReference(reference: string) {
   const { data, error } = await supabase
     .from("orders")
     .select(
-      "order_reference, status, school_name, grade, estimated_total, buyer_name"
+      "order_reference, status, school_name, grade, estimated_total, buyer_name, unique_customer_id, tracking_token"
     )
     .eq("order_reference", reference)
     .single();
@@ -101,6 +114,8 @@ export async function getOrderByReference(reference: string) {
     grade: string;
     estimated_total: number;
     buyer_name: string;
+    unique_customer_id?: string;
+    tracking_token?: string;
   };
 }
 
@@ -214,11 +229,15 @@ export async function createMultiPackOrder(input: {
 }) {
   const supabase = createSupabaseAdminClient();
   const orderId = randomUUID();
+  const uniqueCustomerId = generateUniqueCustomerId();
+  const trackingToken = generateTrackingToken();
 
   try {
     const { error } = await supabase.from("orders").insert({
       id: orderId,
       order_reference: input.orderReference,
+      unique_customer_id: uniqueCustomerId,
+      tracking_token: trackingToken,
       buyer_name: input.buyerName,
       buyer_phone: input.buyerPhone,
       buyer_email: input.buyerEmail || null,
@@ -265,7 +284,7 @@ export async function createMultiPackOrder(input: {
     console.error("[orders] createMultiPackOrder caught:", err instanceof Error ? err.message : err);
   }
 
-  return { id: orderId, orderReference: input.orderReference };
+  return { id: orderId, orderReference: input.orderReference, uniqueCustomerId, trackingToken };
 }
 
 export async function getOrderForReceipt(reference: string) {
@@ -274,7 +293,7 @@ export async function getOrderForReceipt(reference: string) {
   const { data, error } = await supabase
     .from("orders")
     .select(
-      "order_reference, status, buyer_name, buyer_email, buyer_phone, learner_name, school_name, grade, pack_type, items, estimated_total, fulfilment_option, payment_gateway, gateway_reference, paid_at, metadata, created_at"
+      "order_reference, unique_customer_id, tracking_token, status, buyer_name, buyer_email, buyer_phone, learner_name, school_name, grade, pack_type, items, estimated_total, fulfilment_option, payment_gateway, gateway_reference, paid_at, metadata, created_at"
     )
     .eq("order_reference", reference)
     .single();
@@ -283,6 +302,8 @@ export async function getOrderForReceipt(reference: string) {
 
   return data as {
     order_reference: string;
+    unique_customer_id?: string | null;
+    tracking_token?: string | null;
     status: string;
     buyer_name: string;
     buyer_email: string | null;
