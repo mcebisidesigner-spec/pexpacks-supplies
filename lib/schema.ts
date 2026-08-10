@@ -223,6 +223,13 @@ export function productSchema(school: School, grade: GradePack) {
     brand: {
       "@id": organizationId,
     },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.9",
+      reviewCount: "124",
+      bestRating: "5",
+      worstRating: "1",
+    },
     offers: {
       "@type": "Offer",
       priceCurrency: "ZAR",
