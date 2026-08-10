@@ -124,7 +124,7 @@ export async function generateMetadata(): Promise<Metadata> {
       google:
         process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ||
         process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
-        "",
+        "Rfa_la0VOcRlIrVQFE8xh5wiubIR3IbOO6HQKsq1zw0",
     },
   };
 }
