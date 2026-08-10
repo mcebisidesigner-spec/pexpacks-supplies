@@ -144,14 +144,14 @@ export function TrackOrderForm() {
         <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
           <div>
             <label htmlFor="trackOrderRef" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6 }}>
-              Order Reference
+              Order Reference (PEX-XXXXX)
             </label>
             <input
               id="trackOrderRef"
               name="ref"
               value={orderRef}
               onChange={(e) => setOrderRef(e.target.value)}
-              placeholder="e.g. PEX-2026-89412"
+              placeholder="PEX-XXXXX"
               required
             />
           </div>
@@ -173,14 +173,14 @@ export function TrackOrderForm() {
 
           <div>
             <label htmlFor="trackUniqueId" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6 }}>
-              Unique Customer ID
+              Unique Customer ID (CUST-XXXXX)
             </label>
             <input
               id="trackUniqueId"
               name="uniqueId"
               value={uniqueId}
               onChange={(e) => setUniqueId(e.target.value)}
-              placeholder="e.g. CUST-98421"
+              placeholder="CUST-XXXXX"
               required
             />
           </div>
