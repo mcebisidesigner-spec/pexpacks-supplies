@@ -175,13 +175,10 @@
 
 .heroPanel {
   border: var(--card-border);
-  border-radius: 28px;
-  padding: 32px clamp(24px, 3vw, 36px);
+  border-radius: var(--radius-section);
+  padding: 28px;
   background: var(--card-bg);
   box-shadow: var(--card-shadow);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
 .heroPanelSearchAligned {
@@ -191,21 +188,16 @@
 
 .heroPanel p {
   margin: 0;
-  color: #334155;
-  font-size: 15px;
-  font-weight: 600;
+  color: var(--pex-text-muted);
   line-height: 1.45;
 }
 
 .heroPanel strong {
   display: block;
-  margin-top: 32px;
-  color: var(--pex-navy);
-  font-family: var(--font-heading);
-  font-size: clamp(24px, 2.4vw, 32px);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  margin-top: 14px;
+  color: var(--pex-primary);
+  font-size: 28px;
+  line-height: 1;
 }
 
 
