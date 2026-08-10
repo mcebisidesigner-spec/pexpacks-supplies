@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { saveBlogPostAction } from "@/app/admin/blog/actions";
+import { ContentBlocks } from "./ContentBlocks";
 import type { BlogPostFormState } from "@/lib/admin/blog";
 import styles from "./blog-form.module.css";
 
@@ -168,27 +169,8 @@ export function BlogForm({ id, defaults }: { id: string | null; defaults?: BlogF
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="content">
-          Content
-        </label>
-        <textarea
-          id="content"
-          name="content"
-          rows={18}
-          className={styles.contentArea}
-          defaultValue={(defaults?.content ?? []).join("\n")}
-          placeholder={"One paragraph per line.\n\n## Sub-heading\n\n> A highlighted quote\n\n- Bullet list item\n- Another item\n\n1. Numbered item\n2. Next item\n\n![Image alt text](/images/example.webp)\n\n[link_pill: Button label|/schools]"}
-        />
-        <div className={styles.contentHelp}>
-          <span>One paragraph per line. Supported syntax:</span>
-          <code>## Heading</code>
-          <code>&gt; quote</code>
-          <code>- bullet</code>
-          <code>1. numbered</code>
-          <code>![alt](/image.webp)</code>
-          <code>[link_pill: Label|/path]</code>
-          <code>&lt;strong&gt;bold&lt;/strong&gt;</code>
-        </div>
+        <label className={styles.label}>Content</label>
+        <ContentBlocks name="content" defaultValue={defaults?.content ?? []} />
         {err("content")}
       </div>
 

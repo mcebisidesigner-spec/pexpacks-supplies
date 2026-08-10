@@ -43,23 +43,9 @@
   line-height: 1.5;
 }
 
-.contentArea {
-  border: 1px solid var(--pex-border, #dbe3ec);
-  border-radius: 10px;
-  padding: 12px 14px;
-  font-size: 14px;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  color: #1a2a40;
-  background: #fbfcfd;
-  width: 100%;
-  resize: vertical;
-  line-height: 1.55;
-}
-
 .input:focus,
 .select:focus,
-.textarea:focus,
-.contentArea:focus {
+.textarea:focus {
   outline: none;
   border-color: var(--pex-keppel, #1a7a77);
   box-shadow: 0 0 0 3px rgba(26, 122, 119, 0.15);
@@ -76,23 +62,6 @@
   font-weight: 700;
   color: var(--pex-muted, #6b7a86);
   white-space: nowrap;
-}
-
-.contentHelp {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
-}
-
-.contentHelp code {
-  background: #eef2f5;
-  border-radius: 6px;
-  padding: 2px 7px;
-  font-size: 11px;
-  color: var(--pex-navy, #1a2a40);
 }
 
 .checkboxRow {
