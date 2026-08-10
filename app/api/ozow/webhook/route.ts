@@ -114,10 +114,20 @@ export async function POST(request: NextRequest) {
   }
 
   if (Status === "Complete") {
+    const isHappyPay = (Optional1 || "").includes("HappyPay") || (Optional2 || "").includes("HappyPay");
+    const numAmount = Amount ? parseFloat(Amount) : null;
+
     const result = await markOrderPaid({
       orderReference: TransactionReference,
       paymentGateway: "ozow",
       gatewayReference: TransactionId ?? null,
+      amount: numAmount,
+      metadata: {
+        ozowStatusMessage: StatusMessage || "Complete",
+        isTest: IsTest === "true",
+        method: isHappyPay ? "HappyPay" : "Ozow",
+        ...(isHappyPay ? { instalments: 2 } : {}),
+      },
     });
 
     if (!result.success) {

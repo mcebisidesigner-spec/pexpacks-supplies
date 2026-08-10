@@ -207,13 +207,14 @@ export async function sendPurchaseReceipt(
   }
 
   const from =
-    process.env.RESEND_FROM_EMAIL || "Pexpacks <receipts@pexpacks.co.za>";
+    process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
 
   const resend = new Resend(apiKey);
 
   const { error } = await resend.emails.send({
     from,
     to: [order.buyer_email],
+    bcc: ["orders@pexpacks.co.za", "pexpacks@gmail.com"],
     subject: `Your Pexpacks receipt ${order.order_reference}`,
     html: buildReceiptHtml(order),
     replyTo: process.env.RESEND_REPLY_TO_EMAIL || "helpme@pexpacks.co.za",

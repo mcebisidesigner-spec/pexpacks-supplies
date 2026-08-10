@@ -108,24 +108,74 @@ export async function markOrderPaid(input: {
   orderReference: string;
   paymentGateway?: string;
   gatewayReference?: string;
+  amount?: number | null;
+  metadata?: Record<string, unknown> | null;
 }) {
   const supabase = createSupabaseAdminClient();
 
   try {
-    const { error } = await supabase
+    // 1. Fetch current order for idempotency check
+    const { data: existingOrder } = await supabase
+      .from("orders")
+      .select("id, status, estimated_total, metadata")
+      .eq("order_reference", input.orderReference)
+      .maybeSingle();
+
+    if (existingOrder?.status === "paid") {
+      console.log(`[orders] Order ${input.orderReference} is already marked as paid. Idempotent skip.`);
+      return { success: true, alreadyPaid: true };
+    }
+
+    // 2. Update order status
+    const mergedMetadata = {
+      ...((existingOrder?.metadata as Record<string, unknown>) || {}),
+      ...(input.metadata || {}),
+    };
+
+    const { error: updateError } = await supabase
       .from("orders")
       .update({
         status: "paid",
         paid_at: new Date().toISOString(),
-        payment_gateway: input.paymentGateway ?? null,
+        payment_gateway: input.paymentGateway ?? "ozow",
         gateway_reference: input.gatewayReference ?? null,
+        metadata: mergedMetadata as any,
       })
       .eq("order_reference", input.orderReference);
 
-    if (error) {
-      console.error("[orders] Failed to mark order paid:", JSON.stringify(error));
-      return { success: false, error };
+    if (updateError) {
+      console.error("[orders] Failed to mark order paid:", JSON.stringify(updateError));
+      return { success: false, error: updateError };
     }
+
+    // 3. Insert record into payments ledger
+    const paymentAmount = input.amount ?? existingOrder?.estimated_total ?? 0;
+    const { error: paymentError } = await supabase
+      .from("payments" as any)
+      .insert({
+        order_reference: input.orderReference,
+        gateway_reference: input.gatewayReference ?? null,
+        amount: paymentAmount,
+        currency: "ZAR",
+        payment_gateway: input.paymentGateway ?? "ozow",
+        status: "Complete",
+        metadata: mergedMetadata as any,
+      });
+
+    if (paymentError) {
+      console.warn("[orders] Payments table insert warning:", paymentError.message);
+    }
+
+    // 4. Record audit log
+    await supabase.from("audit_logs" as any).insert({
+      actor_id: "system",
+      actor_name: "Ozow Webhook Pipeline",
+      action: "payment.completed",
+      entity_type: "order",
+      entity_id: input.orderReference,
+      summary: `Payment confirmed for ${input.orderReference}: R${paymentAmount} via ${input.paymentGateway || "ozow"}`
+    });
+
   } catch (err) {
     console.error("[orders] markOrderPaid caught:", err instanceof Error ? err.message : err);
     return { success: false, error: err };
