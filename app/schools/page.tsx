@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
-
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsFaqAccordion } from "@/components/schools/SchoolsFaqAccordion";
@@ -40,10 +39,23 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
       <div id="schools-search">
         <PageHero
           eyebrow="Pack finder"
-          title="Find your pack"
-          panelTitle="Fast delivery anywhere in Gauteng"
-          panelText="Each pack is packed according to your&nbsp; school&rsquo;s official stationery list."
+          title="Find your school pack"
           panelClassName={heroStyles.heroPanelSearchAligned}
+          panelChildren={
+            <>
+              <div>
+                <p>
+                  Each stationery pack is thoughtfully assembled in accordance
+                  with your school&apos;s official stationery list.
+                </p>
+                <p style={{ marginTop: 20 }}>
+                  Ensuring that every item you receive is tailored to meet the
+                  specific requirements for your school curriculum.
+                </p>
+              </div>
+              <strong>Fast delivery anywhere in Gauteng</strong>
+            </>
+          }
         >
           <SchoolSearchPanel
             initialQuery={firstValue(params.q) ?? ""}
