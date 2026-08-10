@@ -152,7 +152,6 @@ export function TrackOrderForm() {
               value={orderRef}
               onChange={(e) => setOrderRef(e.target.value)}
               placeholder="PEX-XXXXX"
-              style={{ textAlign: "center" }}
               required
             />
           </div>
@@ -168,7 +167,6 @@ export function TrackOrderForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
-              style={{ textAlign: "center" }}
               required
             />
           </div>
@@ -183,7 +181,6 @@ export function TrackOrderForm() {
               value={uniqueId}
               onChange={(e) => setUniqueId(e.target.value)}
               placeholder="CUST-XXXXX"
-              style={{ textAlign: "center" }}
               required
             />
           </div>
