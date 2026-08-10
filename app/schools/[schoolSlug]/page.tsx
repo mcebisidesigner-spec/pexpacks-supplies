@@ -13,7 +13,7 @@ import {
   getSchoolRecordMap,
 } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, productSchema } from "@/lib/schema";
 import { getCachedSchoolBySlug, getSchoolGradeDescriptions } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildWhatsAppHref } from "@/data/contact";
@@ -56,9 +56,13 @@ export async function generateMetadata({
     );
   }
 
+  const titleName = school.name.toLowerCase().includes("school")
+    ? school.name
+    : `${school.name} School`;
+
   return buildMetadata(
-    `${school.name} School Stationery Packs`,
-    `View ready-to-use stationery packs for ${school.name}, prepared by grade and matched to school stationery requirements.`,
+    `${titleName} Stationery Packs & Grade Lists 2026 | Pexpacks`,
+    `Order official ${school.name} stationery packs online in ${school.city}. 100% grade-matched stationery lists with optional Pexcover book covering & fast delivery.`,
     `/schools/${school.slug}`,
   );
 }
@@ -86,6 +90,12 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           { name: school.name, path: `/schools/${school.slug}` },
         ])}
       />
+      {school.grades.map((grade) => (
+        <JsonLd
+          key={grade.id}
+          data={productSchema(school, grade)}
+        />
+      ))}
       <PageHero
         eyebrow={`${school.city}, City of ${school.metro}`}
         title={school.name}
