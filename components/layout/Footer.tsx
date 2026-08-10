@@ -192,7 +192,7 @@ export function Footer({ company, footer }: FooterContent) {
 
         <div className={styles.bottomSection}>
           <p className={styles.copyright}>
-            &copy; {currentYear} Pexpacks (PTY) LTD. All rights reserved. Design:{"  "}
+            &copy; {currentYear} Pexpacks (Pty) Ltd. All rights reserved. Design:{"  "}
             <a
               href="https://mcebisih.co.za/"
               target="_blank"

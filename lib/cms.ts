@@ -45,7 +45,7 @@ export const WEBSITE_CONTENT_DEFAULTS: WebsiteContentValue = {
   },
   footer: {
     about_text: "",
-    copyright_text: "Pexpacks (PTY) LTD. All rights reserved.",
+    copyright_text: "Pexpacks (Pty) Ltd. All rights reserved.",
   },
   seo_defaults: {
     default_title: "Pexpacks | School Stationery Packs",
