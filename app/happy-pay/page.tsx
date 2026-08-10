@@ -212,7 +212,7 @@ export default function HappyPayPage() {
 
           <div className={styles.heroActions}>
             <Button
-              href="/checkout/happypay"
+              href="/schools"
               variant="primary"
               size="lg"
               iconDirection="right"
@@ -340,7 +340,7 @@ export default function HappyPayPage() {
           </p>
           <div className={styles.ctaActions}>
             <Button
-              href="/checkout/happypay"
+              href="/schools"
               variant="primary"
               size="lg"
               iconDirection="right"

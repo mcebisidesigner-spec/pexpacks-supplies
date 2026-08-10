@@ -179,7 +179,6 @@ function inferFormType(
   }
 
   if (endpoint === "order") return "school-pack-enquiry";
-  if (endpoint === "office-pack") return "brand-package-enquiry";
   if (endpoint === "school-partnership") return "school-partnership";
   if (endpoint === "quote") return "quote";
 
@@ -312,21 +311,6 @@ function validateEndpointRules(
     if (!data.schoolName) add("schoolName", "School name is required.");
     if (!data.grade) add("grade", "Grade is required.");
     if (!data.packType && !data.packName) add("packType", "Pack is required.");
-  }
-
-  if (endpoint === "office-pack") {
-    if (!data.businessName) add("businessName", "Business name is required.");
-    if (!data.fullName) add("fullName", "Contact name is required.");
-    if (!data.phone) add("phone", "Phone number is required.");
-    if (data.formType === "brand-package-enquiry") {
-      if (!data.email) add("email", "Email address is required.");
-      if (!data.businessDescription) {
-        add("businessDescription", "Please describe the business.");
-      }
-      if (!data.brandingPreferences) {
-        add("brandingPreferences", "Please share your branding preferences.");
-      }
-    }
   }
 
   if (endpoint === "school-partnership") {

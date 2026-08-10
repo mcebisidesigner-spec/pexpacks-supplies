@@ -2,8 +2,6 @@ export const formTypes = [
   "school-pack-enquiry",
   "full-pack-enquiry",
   "custom-pack-enquiry",
-  "office-pack-enquiry",
-  "brand-package-enquiry",
   "bulk-order",
   "school-partnership",
   "readiness-quiz",
@@ -15,7 +13,6 @@ export const formTypes = [
 export const formEndpointKinds = [
   "contact",
   "order",
-  "office-pack",
   "school-partnership",
   "quote",
 ] as const;
@@ -104,10 +101,6 @@ export function endpointForFormType(formType: FormType): FormEndpointKind {
     formType === "track-order-interest"
   ) {
     return "order";
-  }
-
-  if (formType === "office-pack-enquiry" || formType === "brand-package-enquiry") {
-    return "office-pack";
   }
 
   if (formType === "school-partnership") {

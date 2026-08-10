@@ -382,7 +382,7 @@ export default async function BlogPostPage({
                 <Link href="/schools" className={styles.postKnowledgePill}>
                   Browse school packs
                 </Link>
-                <Link href="/checkout/happypay" className={styles.postKnowledgePill}>
+                <Link href="/happy-pay" className={styles.postKnowledgePill}>
                   Split in 2 with Happy Pay
                 </Link>
                 <Link href="/add-your-school" className={styles.postKnowledgePill}>
@@ -390,9 +390,6 @@ export default async function BlogPostPage({
                 </Link>
                 <Link href="/faq" className={styles.postKnowledgePill}>
                   Frequently asked questions
-                </Link>
-                <Link href="/business-starter-brand-package" className={styles.postKnowledgePill}>
-                  BrandPack
                 </Link>
                 <Link href="/partnership" className={styles.postKnowledgePill}>
                   School partnerships
@@ -453,14 +450,15 @@ export default async function BlogPostPage({
         <div className={sectionStyles.inner}>
           <div className={sectionStyles.splitBand}>
             <div>
-              <p className={sectionStyles.sectionEyebrow}>Start a business?</p>
-              <h2>BrandPack</h2>
+              <p className={sectionStyles.sectionEyebrow}>Beat Janu-worry</p>
+              <h2>Plan ahead, pay at your own pace</h2>
               <p>
-                Launch your business professionally with a complete branding package — CIPC registration, logo, business cards, flyers, letterhead and a 5-page website.
+                Find your child&rsquo;s school pack early, lock in your list,
+                and order at your own pace so back-to-school is stress-free.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/business-starter-brand-package" variant="primary">
-                  View BrandPack
+                <Button href="/schools" variant="primary">
+                  Find Your School Pack
                 </Button>
               </div>
             </div>

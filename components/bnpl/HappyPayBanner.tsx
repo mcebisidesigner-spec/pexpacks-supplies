@@ -83,7 +83,7 @@ export function HappyPayBanner({
             >
               Learn How It Works
             </Button>
-            <Button href="/checkout/happypay" variant="white" size="md">
+            <Button href="/checkout" variant="white" size="md">
               Split my pack in 2
             </Button>
           </div>

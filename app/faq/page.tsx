@@ -49,7 +49,7 @@ export default async function FAQPage() {
               </p>
               <div className={sectionStyles.buttonRow}>
                 <Button href="/schools" variant="primary">Find Your School Pack</Button>
-                <Button href="/business-starter-brand-package" variant="white">View BrandPack</Button>
+                <Button href="/partnership" variant="white">Partner With Us</Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>

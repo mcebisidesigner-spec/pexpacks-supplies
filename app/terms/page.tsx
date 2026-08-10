@@ -148,7 +148,6 @@ const config: LegalDocumentConfig = {
             <li>Grade-specific school stationery supply packs compiled according to school requirements</li>
             <li>Custom stationery list selection and itemized parent ordering</li>
             <li>Pexcover™ professional book-covering, sorting, and learner name-labelling services</li>
-            <li>Corporate SME starter stationery and branding supply packages</li>
             <li>Bulk educational institution supply procurement</li>
           </ul>
           <h3>School List Accuracy &amp; Product Substitution</h3>

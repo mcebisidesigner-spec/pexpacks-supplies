@@ -28,8 +28,6 @@ type PexpacksEnquiryFormProps = {
 const contactOptions = [
   "Parent order",
   "School partnership",
-  "BrandPack",
-  "Bulk order",
   "Supplier partnership",
   "General enquiry",
 ];
@@ -42,8 +40,6 @@ const consentText =
 
 function resolveContactFormType(enquiryType: string): FormType {
   if (enquiryType === "Parent order") return "school-pack-enquiry";
-  if (enquiryType === "BrandPack") return "brand-package-enquiry";
-  if (enquiryType === "Bulk order") return "bulk-order";
   if (enquiryType === "School partnership") return "school-partnership";
   return "contact";
 }
@@ -104,8 +100,6 @@ export function PexpacksEnquiryForm({
   const isContact = mode === "contact";
   const showSchoolFields =
     isContact && ["Parent order", "School partnership"].includes(enquiryType);
-  const showBrandingFields =
-    isContact && ["BrandPack", "Bulk order"].includes(enquiryType);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -310,37 +304,6 @@ export function PexpacksEnquiryForm({
                   {...errorAttributes(errors, "grade")}
                 />
                 <FieldError id="grade-error" message={errors.grade} />
-              </label>
-            </>
-          ) : null}
-
-          {showBrandingFields ? (
-            <>
-              <label className={formStyles.field} htmlFor="enqBrandingBusinessName">
-                <span>Business name</span>
-                <input
-                  id="enqBrandingBusinessName"
-                  name="businessName"
-                  placeholder="Business name"
-                  autoComplete="organization"
-                  defaultValue={initialBusinessName}
-                  required
-                  {...errorAttributes(errors, "businessName")}
-                />
-                <FieldError
-                  id="businessName-error"
-                  message={errors.businessName}
-                />
-              </label>
-              <label className={formStyles.field} htmlFor="enqOrderQuantity">
-                <span>Order quantity</span>
-                <input
-                  id="enqOrderQuantity"
-                  name="orderQuantity"
-                  type="number"
-                  min="1"
-                  placeholder="10"
-                />
               </label>
             </>
           ) : null}

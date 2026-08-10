@@ -545,45 +545,8 @@
   outline-offset: 3px;
 }
 
-.happyPayGroup {
-  position: relative;
-}
-
-.happyPayButton {
-  width: 100%;
-  min-height: 48px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--pex-keppel);
-  color: var(--pex-bg);
-  font: inherit;
-  font-size: 15px;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  transition: var(--button-transition);
-}
-
-.happyPayButton:hover {
-  filter: brightness(110%);
-  transform: var(--button-hover-transform);
-  box-shadow: var(--button-hover-shadow);
-}
-
-.happyPayButton:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: 3px;
-}
-
-.happyPayLabel {
-  display: block;
-}
-
-.happyPayTrust {
-  margin: 8px 0 0;
+.trustSubtext {
+  margin: 4px 0 var(--space-1);
   color: var(--pex-text-muted);
   font-size: var(--text-2xs);
   font-weight: 600;

@@ -53,13 +53,6 @@ export default function manifest(): MetadataRoute.Manifest {
         url: "/order",
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
       },
-      {
-        name: "BrandPack",
-        short_name: "BrandPack",
-        description: "Launch your business with a complete branding package.",
-        url: "/business-starter-brand-package",
-        icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
-      },
     ],
     related_applications: [],
   };

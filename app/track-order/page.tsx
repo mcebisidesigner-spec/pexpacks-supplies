@@ -41,11 +41,11 @@ export default async function TrackOrderPage() {
       <CTASection
         eyebrow="Need another?"
         title="Start your order"
-        text="Find your school pack or launch your business with a complete branding package."
+        text="Find your school pack or have your school list packed exactly as specified."
         primaryHref="/schools"
         primaryLabel="Find School Packs"
-        secondaryHref="/business-starter-brand-package"
-        secondaryLabel="View BrandPack"
+        secondaryHref="/order"
+        secondaryLabel="Upload Your School List"
       />
 
       <section className={sectionStyles.section}>
@@ -68,7 +68,7 @@ export default async function TrackOrderPage() {
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  Ready to order? Find your school pack or launch your business with a complete branding package.
+                  Ready to order? Find your school pack or have your school list packed exactly as specified.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>

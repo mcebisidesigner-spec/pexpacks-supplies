@@ -1,11 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
 import type { GradePackForCustomisation } from "@/lib/packs/types";
-import { createFullTrayPack } from "@/lib/order/createTrayPack";
-import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { formatInstalment, happyPayInstalment } from "@/lib/order/happyPay";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
 import styles from "./HappyPayGradePackWidget.module.css";
@@ -17,25 +14,22 @@ type HappyPayGradePackWidgetProps = {
 
 const HOW_IT_WORKS_STEPS = [
   {
-    title: "Choose Happy Pay at checkout",
-    body: "Select Happy Pay when you confirm your order. Approval takes less than 60 seconds.",
+    title: "Proceed to checkout",
+    body: "Add your pack to cart and proceed to the unified checkout page.",
   },
   {
-    title: "Pay 50% today",
-    body: "Your first payment covers half the pack. Your pack is reserved and prepared for dispatch.",
+    title: "Select Happy Pay in Ozow modal",
+    body: "On the secure Ozow checkout screen, choose Happy Pay (Pay in 2).",
   },
   {
-    title: "Pay the rest in 30 days",
-    body: "The remaining 50% is taken automatically next month. 0% interest, no hidden fees.",
+    title: "Pay 50% today, 50% in 30 days",
+    body: "Pay half today and the rest next month. 0% interest, no application fees, no impact on credit score.",
   },
 ];
 
 export function HappyPayGradePackWidget({
-  pack,
   amount,
 }: HappyPayGradePackWidgetProps) {
-  const router = useRouter();
-  const addPack = usePackTrayStore((s) => s.addPack);
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -60,30 +54,6 @@ export function HappyPayGradePackWidget({
 
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isOpen]);
-
-  const handleSplitNow = useCallback(() => {
-    const trayPack = createFullTrayPack({
-      packId: pack.id,
-      basePackId: pack.id,
-      packName: pack.packName || `${pack.grade} Stationery Pack`,
-      schoolId: pack.schoolId,
-      schoolSlug: pack.schoolSlug,
-      schoolName: pack.schoolName,
-      grade: pack.grade,
-      gradeSlug: pack.gradeSlug,
-      items: pack.items.map((item) => ({
-        id: item.id,
-        name: item.name,
-        category: item.category,
-        quantity: item.requiredQuantity,
-        unitPrice: item.unitPrice,
-      })),
-      totalPrice: pack.fullPackPrice ?? 0,
-      sourcePath: window.location.pathname,
-    });
-    addPack(trayPack);
-    router.push("/checkout/happypay");
-  }, [pack, addPack, router]);
 
   const modal = isMounted && isOpen ? (
     createPortal(
@@ -114,7 +84,7 @@ export function HappyPayGradePackWidget({
               &times;
             </button>
           </div>
-          <h2 id="happy-pay-how-it-works-title">How Happy Pay works</h2>
+          <h2 id="happy-pay-how-it-works-title">How Happy Pay via Ozow works</h2>
           <ol className={styles.steps}>
             {HOW_IT_WORKS_STEPS.map((step, index) => (
               <li key={step.title} className={styles.step}>
@@ -127,17 +97,14 @@ export function HappyPayGradePackWidget({
             ))}
           </ol>
           <p className={styles.modalNote}>
-            0% interest. No application fees. No impact on your credit score.
+            0% interest. No application fees. Select Happy Pay directly inside the Ozow payment modal.
           </p>
           <button
             type="button"
             className={styles.modalCta}
-            onClick={() => {
-              setIsOpen(false);
-              handleSplitNow();
-            }}
+            onClick={() => setIsOpen(false)}
           >
-            Split my pack in 2
+            Got it, thanks!
           </button>
         </section>
       </div>,
@@ -150,12 +117,9 @@ export function HappyPayGradePackWidget({
       <div className={styles.logoRow}>
         <HappyPayLogo tone="dark" />
         <span className={styles.payLabel}>
-          Pay 2 x {formatInstalment(instalment)}
+          Pay 2 x {formatInstalment(instalment)} via Ozow
         </span>
       </div>
-      <button type="button" className={styles.splitButton} onClick={handleSplitNow}>
-        Split in 2 with Happy Pay
-      </button>
       <button
         type="button"
         className={styles.howItWorksButton}

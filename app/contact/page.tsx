@@ -42,17 +42,15 @@ function resolveContactPrefill(
   const businessName = firstValue(params.businessName).trim()
 
   const initialEnquiryType =
-    type === 'branding' || type === 'business'
-      ? 'BrandPack'
-      : type === 'bulk' || type === 'quote'
-        ? 'Bulk order'
-        : type === 'partner' || type === 'school-partnership'
-          ? 'School partnership'
-          : type === 'parent' || type === 'order'
-            ? 'Parent order'
-            : type === 'supplier'
-              ? 'Supplier partnership'
-              : 'General enquiry'
+    type === 'bulk' || type === 'quote'
+      ? 'General enquiry'
+      : type === 'partner' || type === 'school-partnership'
+        ? 'School partnership'
+        : type === 'parent' || type === 'order'
+          ? 'Parent order'
+          : type === 'supplier'
+            ? 'Supplier partnership'
+            : 'General enquiry'
 
   const initialMessage = [
     subject ? `I am enquiring about ${subject}.` : '',
@@ -64,8 +62,7 @@ function resolveContactPrefill(
   return {
     initialEnquiryType,
     initialMessage,
-    initialBusinessName:
-      businessName || (initialEnquiryType === 'BrandPack' ? subject : ''),
+    initialBusinessName: businessName,
   }
 }
 
@@ -124,7 +121,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                   </span>
                 </div>
                 <div className={pageStyles.slaCard}>
-                  <span className={pageStyles.slaTitle}>BrandPack/Quotes</span>
+                  <span className={pageStyles.slaTitle}>Bulk / Quotes</span>
                   <h3 className={pageStyles.slaTime}>&lt; 4 Hours</h3>
                   <span className={pageStyles.slaLabel}>
                     Custom line-item quotation prepared.

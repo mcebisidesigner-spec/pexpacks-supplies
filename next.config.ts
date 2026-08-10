@@ -68,16 +68,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/office",
-        destination: "/business-starter-brand-package",
-        permanent: true,
-      },
-      {
-        source: "/office-packs",
-        destination: "/business-starter-brand-package",
-        permanent: true,
-      },
-      {
         source: "/deliveries",
         destination: "/delivery-policy",
         permanent: true,

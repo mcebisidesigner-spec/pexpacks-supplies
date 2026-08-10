@@ -64,7 +64,7 @@ export function validateCheckoutPayload(
   const gradeSlug = typeof raw.gradeSlug === "string" ? raw.gradeSlug.trim() : "";
 
   const packType = typeof raw.packType === "string" ? raw.packType.trim() : "";
-  if (!["full", "custom", "office"].includes(packType)) {
+  if (!["full", "custom"].includes(packType)) {
     errors.packType = "Invalid pack type.";
   }
 

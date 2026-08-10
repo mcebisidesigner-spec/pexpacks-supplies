@@ -14,7 +14,7 @@ export type CheckoutPayload = {
   schoolName: string;
   grade: string;
   gradeSlug: string;
-  packType: "full" | "custom" | "office";
+  packType: "full" | "custom";
   items: string[];
   estimatedTotal: number;
   pexcoverSelected?: boolean;

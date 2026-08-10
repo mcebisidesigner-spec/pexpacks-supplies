@@ -23,7 +23,6 @@ export async function sendFormNotificationEmail(
     "school-pack-enquiry": "School Stationery Pack Enquiry",
     "full-pack-enquiry": "Full School Pack Enquiry",
     "custom-pack-enquiry": "Custom School Pack Enquiry",
-    "brand-package-enquiry": "Brand Package Enquiry",
     "school-partnership": "School Partnership Enquiry",
     contact: "Contact Form Query",
   };

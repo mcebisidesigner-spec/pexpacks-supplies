@@ -68,10 +68,8 @@ export async function initiateOzowPayment(
   }
 
   const amount = input.amount.toFixed(2);
-  const returnPath = input.isBnpl ? "/checkout/happypay" : "/checkout";
-
-  const cancelUrl = `${base}${returnPath}?cancelled=1`;
-  const errorUrl = `${base}${returnPath}?error=1`;
+  const cancelUrl = `${base}/checkout?cancelled=1`;
+  const errorUrl = `${base}/checkout?error=1`;
   const successUrl = `${base}/checkout/success?ref=${encodeURIComponent(
     input.orderReference
   )}`;
