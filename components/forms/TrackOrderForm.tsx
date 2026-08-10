@@ -143,8 +143,8 @@ export function TrackOrderForm() {
 
         <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
           <div>
-            <label htmlFor="trackOrderRef" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
-              Order Reference
+            <label htmlFor="trackOrderRef" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6 }}>
+              Order Reference (PEX-XXXXX)
             </label>
             <input
               id="trackOrderRef"
@@ -157,7 +157,7 @@ export function TrackOrderForm() {
           </div>
 
           <div>
-            <label htmlFor="trackEmail" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
+            <label htmlFor="trackEmail" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6 }}>
               Customer Email
             </label>
             <input
@@ -172,8 +172,8 @@ export function TrackOrderForm() {
           </div>
 
           <div>
-            <label htmlFor="trackUniqueId" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
-              Unique Customer ID
+            <label htmlFor="trackUniqueId" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6 }}>
+              Unique Customer ID (CUST-XXXXX)
             </label>
             <input
               id="trackUniqueId"
