@@ -66,13 +66,12 @@ function escapeHtml(value: string): string {
 function formatDate(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString("en-ZA", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const day = date.getDate();
+  const month = date.toLocaleString("en-ZA", { month: "long" });
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${day} ${month} ${year} at ${hours}:${minutes}`;
 }
 
 function renderItems(order: ReceiptOrder): string {
@@ -109,69 +108,94 @@ function buildReceiptHtml(order: ReceiptOrder): string {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Your Pexpacks Receipt</title>
   </head>
-  <body style="margin:0;padding:0;background:#f4f6fa;font-family:Arial,Helvetica,sans-serif;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6fa;padding:24px 0;">
+  <body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:32px 0;">
       <tr>
         <td align="center">
           <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
             <tr>
-              <td style="background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(26,42,64,0.08);">
-                <div style="background:#1a7a77;padding:24px 32px;text-align:center;">
-                  <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:800;">Pexpacks</h1>
-                  <p style="margin:6px 0 0;color:#d9f2f1;font-size:13px;">Payment Receipt &amp; Order Confirmation</p>
-                </div>
+              <td style="background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 12px 32px rgba(15,23,42,0.08);">
+                <!-- Header Block -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#152338;">
+                  <tr>
+                    <td style="padding:28px 32px;vertical-align:middle;">
+                      <table role="presentation" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="vertical-align:middle;padding-right:12px;">
+                            <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M20 3L35 12V28L20 37L5 28V12L20 3Z" stroke="#FFFFFF" stroke-width="2.5" fill="none"/>
+                              <circle cx="20" cy="20" r="6" fill="#FFFFFF"/>
+                              <path d="M20 8V14M20 26V32M8 20H14M26 20H32" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                          </td>
+                          <td style="vertical-align:middle;">
+                            <span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:800;color:#ffffff;line-height:1.1;display:block;">Pexpacks</span>
+                            <span style="font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:700;color:#ffffff;line-height:1.1;display:block;">Supplies</span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td style="padding:28px 32px;text-align:right;vertical-align:middle;">
+                      <div style="font-family:Arial,Helvetica,sans-serif;color:#ffffff;font-size:15px;font-weight:500;line-height:1.35;">Payment Receipt &amp;</div>
+                      <div style="font-family:Arial,Helvetica,sans-serif;color:#ffffff;font-size:17px;font-weight:800;line-height:1.35;">Order Confirmation</div>
+                    </td>
+                  </tr>
+                </table>
+                <div style="height:4px;background:#219e9b;width:100%;"></div>
+
+                <!-- Body Content -->
                 <div style="padding:32px;">
-                  <p style="margin:0 0 4px;color:#33475b;font-size:16px;font-weight:700;">
+                  <h2 style="margin:0 0 8px;color:#1e293b;font-size:17px;font-weight:800;font-family:Arial,Helvetica,sans-serif;">
                     Thank you for your order, ${escapeHtml(order.buyer_name)}!
-                  </p>
-                  <p style="margin:0 0 20px;color:#66788f;font-size:14px;">
+                  </h2>
+                  <p style="margin:0 0 24px;color:#64748b;font-size:14px;line-height:1.5;font-family:Arial,Helvetica,sans-serif;">
                     Your payment was successful and we have started preparing your packs.
                   </p>
 
-                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border-collapse:separate;border-spacing:0 2px;">
                     <tr>
-                      <td style="padding:10px 12px;background:#f8fafc;border-radius:8px;font-size:13px;color:#66788f;">Order reference</td>
-                      <td style="padding:10px 12px;background:#f8fafc;border-radius:8px;font-size:13px;font-weight:700;color:#1a2a40;text-align:right;">${escapeHtml(order.order_reference)}</td>
+                      <td style="padding:14px 18px;background:#f8fafc;border-top-left-radius:10px;border-bottom-left-radius:10px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Order reference</td>
+                      <td style="padding:14px 18px;background:#f8fafc;border-top-right-radius:10px;border-bottom-right-radius:10px;font-size:14px;font-weight:800;color:#1e293b;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.order_reference)}</td>
                     </tr>
                     <tr>
-                      <td style="padding:10px 12px;font-size:13px;color:#66788f;">Date</td>
-                      <td style="padding:10px 12px;font-size:13px;color:#1a2a40;text-align:right;">${escapeHtml(formatDate(order.paid_at || order.created_at))}</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Date</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(formatDate(order.paid_at || order.created_at))}</td>
                     </tr>
                     <tr>
-                      <td style="padding:10px 12px;font-size:13px;color:#66788f;">Payment method</td>
-                      <td style="padding:10px 12px;font-size:13px;color:#1a2a40;text-align:right;">${escapeHtml(paymentMethodLabel(order))}</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Payment method</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(paymentMethodLabel(order))}</td>
                     </tr>
                     <tr>
-                      <td style="padding:10px 12px;font-size:13px;color:#66788f;">School</td>
-                      <td style="padding:10px 12px;font-size:13px;color:#1a2a40;text-align:right;">${escapeHtml(order.school_name)}${order.grade ? ` &middot; ${escapeHtml(order.grade)}` : ""}</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">School</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.school_name)}${order.grade ? ` &middot; ${escapeHtml(order.grade)}` : ""}</td>
                     </tr>
                     <tr>
-                      <td style="padding:10px 12px;font-size:13px;color:#66788f;">Fulfilment</td>
-                      <td style="padding:10px 12px;font-size:13px;color:#1a2a40;text-align:right;">${escapeHtml(order.fulfilment_option || "To be confirmed")}</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Fulfilment</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.fulfilment_option || "To be confirmed")}</td>
                     </tr>
                   </table>
 
-                  <h2 style="margin:0 0 12px;color:#1a2a40;font-size:15px;font-weight:700;">Order summary</h2>
+                  <h3 style="margin:24px 0 12px;color:#1e293b;font-size:15px;font-weight:800;font-family:Arial,Helvetica,sans-serif;">Order summary</h3>
                   ${itemsHtml}
 
-                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 0;border-top:2px solid #1a2a40;padding-top:14px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0 0;border-top:2px solid #1e293b;padding-top:16px;">
                     <tr>
-                      <td style="color:#33475b;font-size:15px;font-weight:700;">Total paid</td>
-                      <td style="color:#1a7a77;font-size:18px;font-weight:800;text-align:right;">${escapeHtml(formatCurrency(total))}</td>
+                      <td style="color:#1e293b;font-size:15px;font-weight:800;font-family:Arial,Helvetica,sans-serif;">Total paid</td>
+                      <td style="color:#219e9b;font-size:18px;font-weight:800;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(formatCurrency(total))}</td>
                     </tr>
                   </table>
 
-                  <div style="margin:28px 0 0;padding:16px;background:#f0fbfa;border:1px solid #cdeeea;border-radius:10px;">
-                    <p style="margin:0 0 6px;color:#1a7a77;font-size:14px;font-weight:700;">What happens next?</p>
-                    <p style="margin:0;color:#33475b;font-size:13px;line-height:1.6;">
+                  <div style="margin:28px 0 0;padding:18px;background:#f0fbfa;border:1px solid #cdeeea;border-radius:12px;">
+                    <p style="margin:0 0 6px;color:#1a7a77;font-size:14px;font-weight:700;font-family:Arial,Helvetica,sans-serif;">What happens next?</p>
+                    <p style="margin:0;color:#33475b;font-size:13px;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">
                       We will be in touch shortly with your order updates and delivery details. For Happy Pay orders,
                       your second instalment of 50% is managed directly by Happy Pay.
                     </p>
                   </div>
 
-                  <p style="margin:24px 0 0;color:#9aa7b8;font-size:12px;line-height:1.6;">
-                    Need help? Email <a href="mailto:helpme@pexpacks.co.za" style="color:#1a7a77;">helpme@pexpacks.co.za</a> or
-                    call <a href="tel:0780036048" style="color:#1a7a77;">078 003 6048</a>.<br />
+                  <p style="margin:28px 0 0;color:#94a3b8;font-size:12px;line-height:1.6;text-align:center;font-family:Arial,Helvetica,sans-serif;">
+                    Need help? Email <a href="mailto:helpme@pexpacks.co.za" style="color:#219e9b;text-decoration:none;font-weight:600;">helpme@pexpacks.co.za</a> or
+                    call <a href="tel:0780036048" style="color:#219e9b;text-decoration:none;font-weight:600;">078 003 6048</a>.<br />
                     Pexpacks Supplies &middot; Pexcover book-covering &middot; School stationery packs
                   </p>
                 </div>
