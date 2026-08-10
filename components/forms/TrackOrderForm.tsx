@@ -141,10 +141,10 @@ export function TrackOrderForm() {
           Enter your receipt proof details below to check live order status without logging in.
         </p>
 
-        <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
-          <div>
-            <label htmlFor="trackOrderRef" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6 }}>
-              Order Reference (PEX-XXXXX)
+        <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", alignItems: "end" }}>
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center" }}>
+            <label htmlFor="trackOrderRef" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
+              Order Reference
             </label>
             <input
               id="trackOrderRef"
@@ -152,12 +152,13 @@ export function TrackOrderForm() {
               value={orderRef}
               onChange={(e) => setOrderRef(e.target.value)}
               placeholder="PEX-XXXXX"
+              style={{ width: "100%" }}
               required
             />
           </div>
 
-          <div>
-            <label htmlFor="trackEmail" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6 }}>
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center" }}>
+            <label htmlFor="trackEmail" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
               Customer Email
             </label>
             <input
@@ -167,13 +168,14 @@ export function TrackOrderForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
+              style={{ width: "100%" }}
               required
             />
           </div>
 
-          <div>
-            <label htmlFor="trackUniqueId" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6 }}>
-              Unique Customer ID (CUST-XXXXX)
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center" }}>
+            <label htmlFor="trackUniqueId" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
+              Unique Customer ID
             </label>
             <input
               id="trackUniqueId"
@@ -181,6 +183,7 @@ export function TrackOrderForm() {
               value={uniqueId}
               onChange={(e) => setUniqueId(e.target.value)}
               placeholder="CUST-XXXXX"
+              style={{ width: "100%" }}
               required
             />
           </div>
