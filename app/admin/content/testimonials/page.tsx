@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listTestimonials } from "@/lib/admin/content";
-import { setTestimonialVisibleAction, deleteTestimonialAction, reorderTestimonialAction } from "../actions";
+import { setTestimonialVisibleAction, deleteTestimonialAction } from "../actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
-import { ReorderPanel } from "@/components/admin/ReorderPanel";
 import adminStyles from "../../admin.module.css";
 import styles from "../content.module.css";
-import reorderStyles from "../reorder.module.css";
 
 export const metadata = {
   title: "Testimonials | Admin | Pexpacks",
@@ -60,92 +58,82 @@ export default async function TestimonialsPage() {
           </div>
         </div>
       ) : (
-        <div className={canManage ? reorderStyles.layout : undefined}>
-          <div className={adminStyles.tableCard}>
-            <div className={adminStyles.tableWrapper}>
-              <table className={adminStyles.table}>
-                <thead>
-                  <tr>
-                    <th>Person</th>
-                    <th>Quote</th>
-                    <th>Rating</th>
-                    <th>Sort</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {testimonials.map((t) => (
-                    <tr key={t.id}>
-                      <td>
-                        <strong>{t.name}</strong>
-                        <div className={adminStyles.schoolName}>
-                          {[t.role, t.context].filter(Boolean).join(" · ") || "—"}
-                        </div>
-                      </td>
-                      <td>
-                        <div className={styles.quote}>
-                          “{t.quote.slice(0, 90)}
-                          {t.quote.length > 90 ? "…" : ""}”
-                        </div>
-                      </td>
-                      <td>{"★".repeat(t.rating)}</td>
-                      <td>{t.sort_order}</td>
-                      <td>
-                        <span
-                          className={`${adminStyles.badge} ${
-                            t.visible ? adminStyles.badgePaid : adminStyles.badgeMuted
-                          }`}
-                        >
-                          {t.visible ? "Live" : "Hidden"}
-                        </span>
-                      </td>
-                      <td>
-                        {canManage ? (
-                          <div className={styles.actions}>
-                            <Link
-                              href={`/admin/content/testimonials/${t.id}`}
-                              className={styles.actionLink}
+        <div className={adminStyles.tableCard}>
+          <div className={adminStyles.tableWrapper}>
+            <table className={adminStyles.table}>
+              <thead>
+                <tr>
+                  <th>Person</th>
+                  <th>Quote</th>
+                  <th>Rating</th>
+                  <th>Sort</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {testimonials.map((t) => (
+                  <tr key={t.id}>
+                    <td>
+                      <strong>{t.name}</strong>
+                      <div className={adminStyles.schoolName}>
+                        {[t.role, t.context].filter(Boolean).join(" · ") || "—"}
+                      </div>
+                    </td>
+                    <td>
+                      <div className={styles.quote}>
+                        “{t.quote.slice(0, 90)}
+                        {t.quote.length > 90 ? "…" : ""}”
+                      </div>
+                    </td>
+                    <td>{"★".repeat(t.rating)}</td>
+                    <td>{t.sort_order}</td>
+                    <td>
+                      <span
+                        className={`${adminStyles.badge} ${
+                          t.visible ? adminStyles.badgePaid : adminStyles.badgeMuted
+                        }`}
+                      >
+                        {t.visible ? "Live" : "Hidden"}
+                      </span>
+                    </td>
+                    <td>
+                      {canManage ? (
+                        <div className={styles.actions}>
+                          <Link
+                            href={`/admin/content/testimonials/${t.id}`}
+                            className={styles.actionLink}
+                          >
+                            Edit
+                          </Link>
+                          <form action={setTestimonialVisibleAction.bind(null, t.id, !t.visible)}>
+                            <button
+                              type="submit"
+                              className={`${styles.rowButton} ${
+                                t.visible ? styles.rowButtonHide : styles.rowButtonShow
+                              }`}
                             >
-                              Edit
-                            </Link>
-                            <form action={setTestimonialVisibleAction.bind(null, t.id, !t.visible)}>
-                              <button
-                                type="submit"
-                                className={`${styles.rowButton} ${
-                                  t.visible ? styles.rowButtonHide : styles.rowButtonShow
-                                }`}
-                              >
-                                {t.visible ? "Hide" : "Show"}
-                              </button>
-                            </form>
-                            <form action={deleteTestimonialAction.bind(null, t.id)}>
-                              <ConfirmButton
-                                label="Delete"
-                                confirmText={`Delete the testimonial from ${t.name}? This cannot be undone.`}
-                                busyLabel="Deleting…"
-                                className={`${styles.rowButton} ${styles.rowButtonDelete}`}
-                              />
-                            </form>
-                          </div>
-                        ) : (
-                          <span className={styles.emptyNote}>View only</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                              {t.visible ? "Hide" : "Show"}
+                            </button>
+                          </form>
+                          <form action={deleteTestimonialAction.bind(null, t.id)}>
+                            <ConfirmButton
+                              label="Delete"
+                              confirmText={`Delete the testimonial from ${t.name}? This cannot be undone.`}
+                              busyLabel="Deleting…"
+                              className={`${styles.rowButton} ${styles.rowButtonDelete}`}
+                            />
+                          </form>
+                        </div>
+                      ) : (
+                        <span className={styles.emptyNote}>View only</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          {canManage ? (
-            <ReorderPanel
-              title="Order"
-              subtitle="Use the arrows to slide testimonials up and down. The order is saved automatically and updates the homepage marquee."
-              items={testimonials.map((t) => ({ id: t.id, label: t.name, visible: t.visible }))}
-              onReorder={reorderTestimonialAction}
-            />
-          ) : null}
         </div>
       )}
     </div>
