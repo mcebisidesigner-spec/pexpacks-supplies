@@ -38,7 +38,15 @@ export default async function TrackOrderPage() {
 
       <FaqMarquee
         faqs={faqs.filter((f) =>
-          ["delivery-timing", "order-changes", "proof-of-payment", "payment-flow", "delivery-areas"].includes(f.id)
+          [
+            "track-order-how",
+            "track-order-status-meaning",
+            "delivery-timing",
+            "order-changes",
+            "proof-of-payment",
+            "delivery-areas",
+            "track-order-missing-ref",
+          ].includes(f.id)
         )}
       />
 

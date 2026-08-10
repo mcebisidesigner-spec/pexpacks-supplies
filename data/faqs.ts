@@ -147,6 +147,37 @@ export const faqs: FAQ[] = [
     ],
   },
   {
+    id: "track-order-how",
+    category: "Orders",
+    question: "How do I track my stationery order status?",
+    answer:
+      "Enter your Order Reference, Customer Email, or Unique Customer ID in the tracking form above to view your live order status, packing stage, and delivery updates instantly.",
+    links: [
+      { label: "Track an order", href: "/track-order" },
+      { label: "Contact support", href: "/contact" },
+    ],
+  },
+  {
+    id: "track-order-status-meaning",
+    category: "Orders",
+    question: "What do the different order tracking statuses mean?",
+    answer:
+      "Order Placed means your order was received. Processing & Packed means items are being assembled. Handed to Courier means your pack is in transit. Out for Delivery means it is arriving today. Delivered means receipt is confirmed.",
+    links: [
+      { label: "Contact support", href: "/contact" },
+    ],
+  },
+  {
+    id: "track-order-missing-ref",
+    category: "Orders",
+    question: "What if I cannot find my order reference or customer ID?",
+    answer:
+      "Check your order confirmation email or SMS receipt for your Order Reference or Unique Customer ID. If you still cannot locate your details, contact Pexpacks support with your buyer email or proof of payment.",
+    links: [
+      { label: "Contact support", href: "/contact" },
+    ],
+  },
+  {
     id: "payment-before-packing",
     category: "Payment",
     question: "Do I pay before the pack is prepared?",
