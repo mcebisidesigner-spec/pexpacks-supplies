@@ -337,6 +337,7 @@ export function OrderForm() {
                 <input
                   id="quote-name"
                   type="text"
+                  autoComplete="name"
                   required
                   className={clsx(styles.input, errors.name && styles.inputError)}
                   value={name}
@@ -355,6 +356,7 @@ export function OrderForm() {
                 <input
                   id="quote-phone"
                   type="tel"
+                  autoComplete="tel"
                   required
                   className={clsx(styles.input, errors.phone && styles.inputError)}
                   placeholder="e.g. 078 123 4567"
@@ -371,6 +373,7 @@ export function OrderForm() {
                 <input
                   id="quote-email"
                   type="email"
+                  autoComplete="email"
                   className={clsx(styles.input, errors.email && styles.inputError)}
                   value={email}
                   onChange={(e) => {

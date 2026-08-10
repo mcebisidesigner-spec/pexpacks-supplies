@@ -825,6 +825,7 @@ export function TrayCheckoutClient() {
                     }}
                     label="Suburb"
                     type="text"
+                    autoComplete="address-level2"
                     value={suburb}
                     onChange={(e) => {
                       setSuburb(e.target.value)
@@ -840,6 +841,7 @@ export function TrayCheckoutClient() {
                     }}
                     label="City"
                     type="text"
+                    autoComplete="address-level2"
                     value={city}
                     onChange={(e) => {
                       setCity(e.target.value)
@@ -855,6 +857,7 @@ export function TrayCheckoutClient() {
                     }}
                     label="Province"
                     type="text"
+                    autoComplete="address-level1"
                     value={province}
                     onChange={(e) => {
                       setProvince(e.target.value)

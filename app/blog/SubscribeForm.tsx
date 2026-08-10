@@ -38,6 +38,7 @@ export function SubscribeForm() {
           <input
             id="subscribe-email"
             type="email"
+            autoComplete="email"
             required
             placeholder="parent@example.com"
             value={email}

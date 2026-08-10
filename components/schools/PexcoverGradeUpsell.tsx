@@ -52,6 +52,7 @@ export function PexcoverGradeUpsell({
         <input
           id="pexcover-grade-upsell-learner-name"
           name="learnerName"
+          autoComplete="off"
           value={learnerName}
           onChange={(event) => setLearnerName(event.target.value)}
           placeholder="e.g. John Doe"

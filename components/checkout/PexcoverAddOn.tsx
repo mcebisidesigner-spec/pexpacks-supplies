@@ -63,6 +63,7 @@ export function PexcoverAddOn({
           <Input
             id="pexcover-name"
             label="Learner name for labels"
+            autoComplete="off"
             value={pexcoverName}
             placeholder="Optional"
             onChange={(event) => onNameChange(event.target.value)}

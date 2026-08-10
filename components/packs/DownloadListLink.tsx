@@ -128,6 +128,7 @@ export function DownloadListLink({
               id="download-list-email"
               name="email"
               type="email"
+              autoComplete="email"
               placeholder="Your email (optional)"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

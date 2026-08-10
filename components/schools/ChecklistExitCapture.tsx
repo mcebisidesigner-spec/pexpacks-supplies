@@ -144,6 +144,7 @@ export function ChecklistExitCapture({
                   id="checklist-capture-email"
                   name="email"
                   type="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   required

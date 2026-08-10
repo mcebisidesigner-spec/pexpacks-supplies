@@ -200,6 +200,7 @@ export function LoginForm({ error, message }: LoginFormProps) {
                   <Input
                     id="forgot-email"
                     type="email"
+                    autoComplete="email"
                     label="Your Account Email"
                     placeholder="name@pexpacks.co.za"
                     value={forgotEmail}
