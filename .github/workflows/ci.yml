@@ -35,6 +35,9 @@ jobs:
       - name: Lint & type-check
         run: npm run lint
 
+      - name: Check image budget
+        run: npm run check:images
+
       - name: Build
         run: npm run build
 

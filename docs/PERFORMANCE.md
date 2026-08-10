@@ -13,41 +13,41 @@ All timings on local production build (`next build` + `next start`, port 3105). 
 
 ### Route timings (first load, local)
 
-| Route | Status | TTFB cold | TTFB warm | HTML size |
-|---|---|---|---|---|
-| `/` (home) | 200 | 306ms | — | ~123KB |
-| `/schools` | 200 | 3,268ms | 2,552ms | ~94KB |
-| `/schools/wit-deep-primary-school` | 200 | 229ms | — | ~113KB |
-| `/schools/wit-deep-primary-school/grade-1` | **308 → school page** | — | — | — |
-| `/faq` | 200 | 178ms | — | — |
-| `/blog` | 200 | 211ms | — | — |
-| `/track-order` | 200 | 140ms | — | — |
-| `/api/schools/search?q=park&limit=8` | 200 | 2,842ms | 2,717ms | 3.2KB |
-| `/api/schools/search` (trending, empty q) | 200 | — | 26ms | — |
+| Route                                      | Status                | TTFB cold | TTFB warm | HTML size |
+| ------------------------------------------ | --------------------- | --------- | --------- | --------- |
+| `/` (home)                                 | 200                   | 306ms     | —         | ~123KB    |
+| `/schools`                                 | 200                   | 3,268ms   | 2,552ms   | ~94KB     |
+| `/schools/wit-deep-primary-school`         | 200                   | 229ms     | —         | ~113KB    |
+| `/schools/wit-deep-primary-school/grade-1` | **308 → school page** | —         | —         | —         |
+| `/faq`                                     | 200                   | 178ms     | —         | —         |
+| `/blog`                                    | 200                   | 211ms     | —         | —         |
+| `/track-order`                             | 200                   | 140ms     | —         | —         |
+| `/api/schools/search?q=park&limit=8`       | 200                   | 2,842ms   | 2,717ms   | 3.2KB     |
+| `/api/schools/search` (trending, empty q)  | 200                   | —         | 26ms      | —         |
 
 Cold dominance: search API and `/schools` rebuild a search index on first hit (`lib/schools/SearchIndex.ts`, LRU 64 / TTL 30s) — ~2.7–3.3s.
 
 ### Static output (production build)
 
-| Artifact | Size | Notes |
-|---|---|---|
-| Static HTML pages | 297 pages, 30.2MB (avg 104KB) | School pages 154KB each; grade pages 0 (dynamic) |
-| Client JS chunks | 2,160KB across 59 files | See largest below |
-| CSS chunks | 404KB across 27 files | Largest 114KB |
-| `data/school-index.json` | 3.80MB | 3,342 schools |
-| `data/school-records.json` | 10.83MB | Full records (sitemap, page lookups) |
-| Images (`public/images`) | 3.68MB, 20 files | Largest: `pex-stationery-box.webp` 1,965KB |
-| Fonts | 7× PexSans/PexSans Alt woff2, 38–44KB each (~287KB total) | `next/font/local`, self-hosted |
+| Artifact                   | Size                                                      | Notes                                                              |
+| -------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------ |
+| Static HTML pages          | 297 pages, 30.2MB (avg 104KB)                             | School pages 154KB each; grade pages 0 (dynamic)                   |
+| Client JS chunks           | 2,160KB across 59 files                                   | See largest below                                                  |
+| CSS chunks                 | 404KB across 27 files                                     | Largest 114KB                                                      |
+| `data/school-index.json`   | 3.80MB                                                    | 3,342 schools                                                      |
+| `data/school-records.json` | 10.83MB                                                   | Full records (sitemap, page lookups)                               |
+| Images (`public/images`)   | 1.19MB, 18 files (top-level)                              | Largest: `pexcover-img-01.webp` 145KB; 1.48MB / 44 files recursive |
+| Fonts                      | 7× PexSans/PexSans Alt woff2, 38–44KB each (~287KB total) | `next/font/local`, self-hosted                                     |
 
 ### Largest client chunks
 
-| Chunk | Size | Cause |
-|---|---|---|
-| `0-ffyljgbmlek.js` | 409KB | jspdf — dynamic-imported by `components/packs/DownloadListLink.tsx:28` (OK: lazy) |
+| Chunk              | Size  | Cause                                                                                  |
+| ------------------ | ----- | -------------------------------------------------------------------------------------- |
+| `0-ffyljgbmlek.js` | 409KB | jspdf — dynamic-imported by `components/packs/DownloadListLink.tsx:28` (OK: lazy)      |
 | `0d5.30~-_rbwq.js` | 236KB | Supabase — static `createClient` in `components/layout/Header.tsx:12` (NOT OK: global) |
-| `0l35comsgyljn.js` | 222KB | unknown shared chunk (verify) |
-| `107vq_b-3xprk.js` | 193KB | unknown shared chunk (verify) |
-| `0-esz.j.vq9et.js` | 154KB | unknown shared chunk (verify) |
+| `0l35comsgyljn.js` | 222KB | unknown shared chunk (verify)                                                          |
+| `107vq_b-3xprk.js` | 193KB | unknown shared chunk (verify)                                                          |
+| `0-esz.j.vq9et.js` | 154KB | unknown shared chunk (verify)                                                          |
 
 ### Component metrics
 
@@ -55,10 +55,10 @@ Cold dominance: search API and `/schools` rebuild a search index on first hit (`
 
 ### Existing DB indexes (already present — do not duplicate)
 
-Schools: `schools_slug_unique`, `idx_schools_slug`, `idx_schools_status`, `schools_city_idx`, `schools_province_idx`, `schools_featured_idx`, `idx_schools_name` (lower), `idx_schools_grades` (GIN), `schools_search_idx` (GIN search_vector), `idx_schools_location`.
+Schools: `schools_slug_unique`, `idx_schools_slug`, `idx_schools_status`, `schools_city_idx`, `schools_province_idx`, `schools_featured_idx`, `idx_schools_name` (lower), `idx_schools_grades` (GIN), `schools_search_idx` (GIN search*vector), `idx_schools_location`.
 Packs/items: `idx_stationery_packs_school`, `idx_stationery_items_pack`, `idx_stationery_packs_featured`, `idx_stationery_packs_school_visible`, `idx_stationery_items_pack_visible`, `stationery_packs_search_idx` (GIN), `stationery_items_search_idx` (GIN).
 Orders: `idx_orders_status`, `idx_orders_buyer_email`, `idx_orders_paid_at`, `idx_orders_pack_type`, `idx_orders_created_status`, `idx_orders_created_pack_type`, `idx_orders_created_school`.
-Content/other: `idx_testimonials_visible_sort`, `idx_faqs_visible_sort`, `idx_website_content_updated`, `idx_assets_folder`, `idx_assets_created`, `idx_audit_logs_*`; rate limiting is file-persisted (`lib/security/requestGuards.ts`).
+Content/other: `idx_testimonials_visible_sort`, `idx_faqs_visible_sort`, `idx_website_content_updated`, `idx_assets_folder`, `idx_assets_created`, `idx_audit_logs*\*`; rate limiting is file-persisted (`lib/security/requestGuards.ts`).
 
 ---
 
@@ -74,7 +74,7 @@ Content/other: `idx_testimonials_visible_sort`, `idx_faqs_visible_sort`, `idx_we
 
 - **H1 — 236KB Supabase chunk in the global client bundle.** `components/layout/Header.tsx` statically imports `createClient` (`@/lib/supabase/client`) → pulled into every page. Move to server component boundary or lazy-load; Supabase is only needed for authed actions.
 - **H2 — 3s cold search + `/schools`.** First-hit index build (`SearchIndex.ts` LRU rebuild) costs ~2.7–3.3s. Warm the index at build/startup (module-level precompute, or generate static search index at build time) instead of per-process first request.
-- **H3 — 1,965KB `pex-stationery-box.webp`.** Largest image; resize/re-encode (target <300KB) and prefer `next/image` with `sizes`/AVIF. 20 files / 3.68MB total in `public/images` should be re-encoded.
+- **H3 — Image weight (RESOLVED 2026-08-10).** Largest image was 1,965KB `pex-stationery-box.webp`. Removed two dead assets (`pex-stationery-box.webp`, `pex-stationery-checklist.webp`, both unreferenced in code) → largest is now `pexcover-img-01.webp` 145KB, total 1.19MB top-level / 1.48MB recursive. Remaining surfaces already use `next/image` with `fill`, `sizes`, `placeholder="blur"`, `priority` on LCP. Budget now enforced by `npm run check:images` (CI gate, default 300KB/file, 3MB total).
 - **H4 — 154KB HTML per school page.** Partly inlined next/font + large components; consider streaming/layout reduction and verifying CSS sharing.
 
 ### MEDIUM
@@ -100,7 +100,7 @@ Order = impact / risk:
 3. **P1 — Consolidate checkout endpoints (C2):** single handler, unified rate limit (still 5/10min total).
 4. **P1 — Server boundary for Supabase (H1):** strip 236KB from global bundle.
 5. **P2 — Warm search index (H2):** target cold ≈ warm; add metrics.
-6. **P2 — Image budget (H3):** re-encode + `next/image` sizes; add CI size guard.
+6. **P2 — Image budget (H3):** DONE (2026-08-10) — dead assets removed; largest 145KB; CI size guard `npm run check:images` added to workflow.
 7. **P2 — CSS cleanup (M1) + proxy migration (M2).**
 8. **P3 — DB index additions** (additive migration only): profile cold queries (`explain analyze`) for search/orders/school pages; add missing indexes; never drop existing.
 9. **P3 — Capacity plan:** document limits (Upstash rate limits, Supabase connections, build size), re-measure full suite.
@@ -108,11 +108,12 @@ Order = impact / risk:
 
 ### Progress (implementation log)
 
-| Item | Status | Notes |
-|---|---|---|
-| C3 — remove grade 308 redirect | Done (2026-08-10) | `next.config.ts`: dropped `/schools/:schoolSlug/:gradeSlug → /schools/:schoolSlug`; grade route now reachable. |
-| C1 — order idempotency | Done (2026-08-10) | `supabase/migrations/00015_order_idempotency.sql` adds `orders.idempotency_key` + partial unique index; `lib/orders.ts` (`createPendingOrder`, `createMultiPackOrder`) write it and throw on insert error; `getOrderByIdempotencyKey` lookup; client `crypto.randomUUID()` per submit in `TrayCheckoutClient.tsx`, `CheckoutForm.tsx`, `HappyPayCheckoutClient.tsx`; API returns `reused: true` on replay. |
-| C2 — consolidate checkout endpoints | Done (2026-08-10) | Shared handler `lib/checkout/trayCheckout.ts` (`handleTrayCheckout` + `TrayCheckoutError` + `trayErrorResponse`); `app/api/checkout/route.ts` tray branch and `app/api/ozow/checkout/route.ts` delegate to it; both use one rate-limit bucket (`keyPrefix: "checkout"`, 5/10min total). |
+| Item                                | Status            | Notes                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ----------------------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C3 — remove grade 308 redirect      | Done (2026-08-10) | `next.config.ts`: dropped `/schools/:schoolSlug/:gradeSlug → /schools/:schoolSlug`; grade route now reachable.                                                                                                                                                                                                                                                                                             |
+| C1 — order idempotency              | Done (2026-08-10) | `supabase/migrations/00015_order_idempotency.sql` adds `orders.idempotency_key` + partial unique index; `lib/orders.ts` (`createPendingOrder`, `createMultiPackOrder`) write it and throw on insert error; `getOrderByIdempotencyKey` lookup; client `crypto.randomUUID()` per submit in `TrayCheckoutClient.tsx`, `CheckoutForm.tsx`, `HappyPayCheckoutClient.tsx`; API returns `reused: true` on replay. |
+| C2 — consolidate checkout endpoints | Done (2026-08-10) | Shared handler `lib/checkout/trayCheckout.ts` (`handleTrayCheckout` + `TrayCheckoutError` + `trayErrorResponse`); `app/api/checkout/route.ts` tray branch and `app/api/ozow/checkout/route.ts` delegate to it; both use one rate-limit bucket (`keyPrefix: "checkout"`, 5/10min total).                                                                                                                    |
+| H3 — image budget                   | Done (2026-08-10) | Deleted unused `pex-stationery-box.webp` (1,965KB) + `pex-stationery-checklist.webp` (594KB); added `scripts/check-image-budget.cjs` (`npm run check:images`, env `IMAGE_MAX_KB`/`IMAGE_TOTAL_KB`/`IMAGE_DIR`) and a CI step; largest image now 145KB, total 1.19MB top-level.                                                                                                                             |
 
 ---
 
