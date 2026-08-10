@@ -134,8 +134,6 @@ export function Footer({ company, footer }: FooterContent) {
   return (
     <footer className={styles.footer} id="site-footer">
       <div className={styles.footerInner}>
-        <p className={styles.aboutText}>{aboutText}</p>
-
         <div className={styles.topSection}>
           <div className={styles.brandBlock}>
             <Link href="/" className={styles.logoLink} aria-label={`${siteName} home`}>
@@ -194,7 +192,7 @@ export function Footer({ company, footer }: FooterContent) {
 
         <div className={styles.bottomSection}>
           <p className={styles.copyright}>
-            &copy; {currentYear} {siteName}. {copyrightText} Design:{"  "}
+            &copy; {currentYear} Pexpacks (PTY) LTD. All rights reserved. Design:{"  "}
             <a
               href="https://mcebisih.co.za/"
               target="_blank"

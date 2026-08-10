@@ -18,11 +18,7 @@
 }
 
 .aboutText {
-  max-width: 640px;
-  margin: 0 0 28px;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: var(--text-sm);
-  line-height: 1.5;
+  display: none;
 }
 
 .brandBlock {
@@ -35,14 +31,19 @@
 
 .logoLink {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
+  line-height: 0;
   width: fit-content;
+  margin: 0;
+  padding: 0;
 }
 
 .logoImage {
   display: block;
   width: var(--logo-width-desktop);
   height: auto;
+  margin: 0;
+  padding: 0;
 }
 
 .contactDetails {
@@ -301,12 +302,16 @@
   flex: 0 0 auto;
   line-height: 0;
   text-decoration: none;
+  margin: 0;
+  padding: 0;
 }
 
 .happyPayLogo {
   display: block;
   width: 100%;
   height: auto;
+  margin: 0;
+  padding: 0;
 }
 
 .happyPayMobile {
@@ -444,13 +449,29 @@
   }
 
   .brandBlock {
+    display: flex;
     align-items: flex-start;
+    justify-content: space-between;
     gap: var(--space-4);
     width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .logoLink {
+    display: inline-flex;
+    align-items: flex-start;
+    line-height: 0;
+    margin: 0;
+    padding: 0;
   }
 
   .logoImage {
+    display: block;
     width: var(--logo-width-mobile);
+    height: auto;
+    margin: 0;
+    padding: 0;
   }
 
   .happyPayDesktop {
@@ -459,9 +480,14 @@
 
   .happyPayMobile {
     display: inline-flex;
+    align-items: flex-start;
     align-self: flex-start;
     width: clamp(72px, 20vw, 92px);
+    margin-top: 0;
+    margin-bottom: 0;
     margin-left: auto;
+    padding: 0;
+    line-height: 0;
   }
 
   .contactLink {

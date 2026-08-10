@@ -44,8 +44,8 @@ export const WEBSITE_CONTENT_DEFAULTS: WebsiteContentValue = {
     site_url: "https://pexpacks.co.za",
   },
   footer: {
-    about_text: "School stationery, packed and delivered.",
-    copyright_text: "Pexpacks Supplies. All rights reserved.",
+    about_text: "",
+    copyright_text: "Pexpacks (PTY) LTD. All rights reserved.",
   },
   seo_defaults: {
     default_title: "Pexpacks | School Stationery Packs",
