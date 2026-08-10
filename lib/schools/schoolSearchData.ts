@@ -58,6 +58,7 @@ export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
 }
 
 async function loadSearchableSchools(): Promise<SchoolSearchRecord[]> {
+  const started = Date.now();
   const index = await getSchoolIndex();
   let dbSchoolMap = new Map();
 
@@ -98,7 +99,7 @@ async function loadSearchableSchools(): Promise<SchoolSearchRecord[]> {
     // Ignore DB fetch failure, fallback to JSON index
   }
 
-  return index.map((school): SchoolSearchRecord => {
+  const records = index.map((school): SchoolSearchRecord => {
     const dbSchool = dbSchoolMap.get(school.slug);
     const schoolName = dbSchool?.name || school.name;
     const logoUrl = dbSchool?.logo ?? school.logo ?? null;
@@ -125,6 +126,11 @@ async function loadSearchableSchools(): Promise<SchoolSearchRecord[]> {
       lowestPrice: dbSchool?.lowest_price ?? school.lowestPrice,
     };
   });
+
+  console.info(
+    `[performance] searchable schools loaded in ${Date.now() - started}ms`
+  );
+  return records;
 }
 
 export async function getSearchIndex() {
@@ -142,7 +148,11 @@ export async function getSearchIndex() {
   };
 
   try {
-    return await promise;
+    const index = await promise;
+    console.info(
+      `[performance] search index ready in ${Date.now() - now}ms`
+    );
+    return index;
   } catch (error) {
     searchIndexCache = null;
     throw error;

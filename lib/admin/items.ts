@@ -549,3 +549,46 @@ export async function listDistinctStationeryItems(): Promise<string[]> {
     return [];
   }
 }
+
+export interface StationeryInventoryItem {
+  name: string;
+  unit_price: number | null;
+}
+
+/**
+ * Inventory suggestions for the pack item autocomplete: the distinct
+ * stationery item names already used across packs, each with a representative
+ * unit price (from the most recently created row of that name). When a prefix
+ * is given, only names starting with it are returned.
+ */
+export async function listStationeryInventory(prefix?: string): Promise<StationeryInventoryItem[]> {
+  try {
+    const admin = createSupabaseAdminClient();
+    const q = (prefix ?? "").replace(/[%_]/g, "").trim();
+
+    let query = admin
+      .from("stationery_items")
+      .select("name, unit_price")
+      .order("name", { ascending: true })
+      .order("created_at", { ascending: false });
+
+    if (q) query = query.ilike("name", `${q}%`);
+
+    const { data } = await query.limit(500);
+    if (!data) return [];
+
+    const seen = new Set<string>();
+    const out: StationeryInventoryItem[] = [];
+    for (const row of data) {
+      const name = row.name.trim();
+      if (!name || seen.has(name.toLowerCase())) continue;
+      seen.add(name.toLowerCase());
+      out.push({ name, unit_price: row.unit_price });
+      if (out.length >= 50) break;
+    }
+    return out;
+  } catch (err) {
+    console.error("[items] listStationeryInventory failed:", err);
+    return [];
+  }
+}

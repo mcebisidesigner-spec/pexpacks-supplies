@@ -10,8 +10,10 @@ import {
   deleteItem,
   reorderItems,
   importItemsCsv,
+  listStationeryInventory,
   type ItemFormState,
   type ImportItemsResult,
+  type StationeryInventoryItem,
 } from "@/lib/admin/items";
 
 async function revalidatePackPublicPage(packId: string) {
@@ -86,4 +88,11 @@ export async function importItemsAction(
       errors: [err instanceof Error ? err.message : "CSV import failed."],
     };
   }
+}
+
+export async function searchStationeryInventoryAction(
+  prefix: string
+): Promise<StationeryInventoryItem[]> {
+  await requireAdmin({ permission: "items.view" });
+  return listStationeryInventory(prefix);
 }

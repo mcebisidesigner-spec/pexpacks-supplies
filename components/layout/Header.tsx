@@ -9,7 +9,6 @@ import { HeaderMenu } from "./HeaderMenu";
 import { HeaderScrollWrapper } from "./HeaderScrollWrapper";
 import { mainNavLinks } from "@/data/navigation";
 import { HeaderAccountControls } from "./HeaderAccountControls";
-import { createClient } from "@/lib/supabase/client";
 import { PackageIcon } from "@/components/ui/icons";
 import styles from "./Header.module.css";
 
@@ -33,6 +32,7 @@ export function Header() {
     setAdminUserLoading(true);
 
     (async () => {
+      const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
       const { data } = await supabase.auth.getUser();
       if (cancelled) return;

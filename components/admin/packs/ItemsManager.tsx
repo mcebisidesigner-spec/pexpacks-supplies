@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import type { ItemRow, ItemFormState } from "@/lib/admin/items";
+import type { ItemRow, ItemFormState, StationeryInventoryItem } from "@/lib/admin/items";
 import {
   createItemAction,
   updateItemAction,
   deleteItemAction,
   reorderItemsAction,
   importItemsAction,
+  searchStationeryInventoryAction,
 } from "@/app/admin/items/actions";
+import { formatCurrency } from "@/lib/formatCurrency";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PACK_ITEM_ICONS, isPackItemIconKey } from "@/lib/packs/itemIcons";
@@ -41,10 +43,69 @@ function ItemForm({ packId, item, onDone, onSuccess }: ItemFormProps) {
   const [icon, setIcon] = useState<string>(
     item?.icon && isPackItemIconKey(item.icon) ? item.icon : ""
   );
+  const [name, setName] = useState<string>(item?.name ?? "");
+  const [price, setPrice] = useState<string>(
+    item?.unit_price != null ? String(item.unit_price) : ""
+  );
+  const [suggestions, setSuggestions] = useState<StationeryInventoryItem[]>([]);
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const debounceRef = useRef<number | null>(null);
+  const nameWrapRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (state?.ok) onSuccess();
   }, [state, onSuccess]);
+
+  useEffect(() => {
+    if (!open) return;
+    function onClickOutside(e: MouseEvent) {
+      if (nameWrapRef.current && !nameWrapRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [open]);
+
+  useEffect(
+    () => () => {
+      if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    },
+    []
+  );
+
+  function handleNameChange(value: string) {
+    setName(value);
+    setOpen(false);
+    if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    const q = value.trim();
+    if (q.length < 3) {
+      setSuggestions([]);
+      return;
+    }
+    debounceRef.current = window.setTimeout(async () => {
+      setBusy(true);
+      try {
+        const found = await searchStationeryInventoryAction(q);
+        setSuggestions(found);
+        setOpen(found.length > 0);
+      } catch {
+        setSuggestions([]);
+        setOpen(false);
+      } finally {
+        setBusy(false);
+      }
+    }, 300);
+  }
+
+  function pickSuggestion(suggestion: StationeryInventoryItem) {
+    setName(suggestion.name);
+    setPrice(suggestion.unit_price != null ? String(suggestion.unit_price) : "");
+    setOpen(false);
+    setSuggestions([]);
+    if (debounceRef.current) window.clearTimeout(debounceRef.current);
+  }
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
@@ -94,18 +155,48 @@ function ItemForm({ packId, item, onDone, onSuccess }: ItemFormProps) {
       </div>
 
       <div className={styles.formGrid}>
-        <div className={styles.field}>
+        <div className={styles.field} ref={nameWrapRef}>
           <label className={styles.label} htmlFor="name">
             Name *
           </label>
-          <input
-            id="name"
-            name="name"
-            className={styles.input}
-            defaultValue={item?.name ?? ""}
-            placeholder="e.g. A4 Exercise Book"
-            required
-          />
+          <div className={styles.autocomplete}>
+            <input
+              id="name"
+              name="name"
+              className={styles.input}
+              value={name}
+              onChange={(e) => handleNameChange(e.target.value)}
+              placeholder="e.g. A4 Exercise Book"
+              required
+              autoComplete="off"
+            />
+            {busy ? (
+              <span className={styles.suggestBusy} aria-hidden="true">
+                …
+              </span>
+            ) : null}
+            {open && suggestions.length > 0 ? (
+              <ul className={styles.suggestList} role="listbox" aria-label="Matching inventory items">
+                {suggestions.map((s) => (
+                  <li key={s.name} role="option" aria-selected={false}>
+                    <button
+                      type="button"
+                      className={styles.suggestItem}
+                      onClick={() => pickSuggestion(s)}
+                    >
+                      <span className={styles.suggestName}>{s.name}</span>
+                      <span className={styles.suggestPrice}>
+                        {s.unit_price != null ? formatCurrency(s.unit_price) : ""}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+          <span className={styles.hint}>
+            Type at least 3 characters to pick from existing stationery items.
+          </span>
           {err("name")}
         </div>
         <div className={styles.field}>
@@ -120,6 +211,21 @@ function ItemForm({ packId, item, onDone, onSuccess }: ItemFormProps) {
             defaultValue={item?.quantity ?? 1}
           />
           {err("quantity")}
+        </div>
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="price">
+            Price (R)
+          </label>
+          <input
+            id="price"
+            name="price"
+            className={styles.input}
+            inputMode="decimal"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="0.00"
+          />
+          {err("price")}
         </div>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="sort_order">
@@ -257,6 +363,11 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
     setEditingId(null);
   };
 
+  const subtotal = items.reduce(
+    (sum, it) => sum + (it.unit_price ?? 0) * it.quantity,
+    0
+  );
+
   async function move(index: number, direction: -1 | 1) {
     const next = [...items];
     const target = index + direction;
@@ -281,109 +392,123 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
       {items.length === 0 ? (
         <p className={styles.empty}>No items in this pack yet.</p>
       ) : (
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Icon</th>
-                <th>Item</th>
-                <th>Qty</th>
-                <th>Specification</th>
-                <th>Visible</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item, index) => (
-                <tr key={item.id}>
-                  <td>
-                    <div className={styles.reorder}>
-                      <button
-                        type="button"
-                        className={styles.reorderButton}
-                        onClick={() => move(index, -1)}
-                        disabled={index === 0}
-                        aria-label="Move up"
-                      >
-                        ↑
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.reorderButton}
-                        onClick={() => move(index, 1)}
-                        disabled={index === items.length - 1}
-                        aria-label="Move down"
-                      >
-                        ↓
-                      </button>
-                    </div>
-                  </td>
-                  <td>
-                    {item.icon && isPackItemIconKey(item.icon) ? (
-                      <span className={styles.itemIcon}>
-                        <ItemIcon name={item.icon} size={20} />
-                      </span>
-                    ) : (
-                      <span
-                        className={styles.itemIconEmpty}
-                        aria-hidden="true"
-                      >
-                        —
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    <div className={styles.itemCell}>
-                      <div>
-                        <div className={styles.itemName}>{item.name}</div>
-                        {item.description ? (
-                          <div className={styles.itemDesc}>{item.description}</div>
-                        ) : null}
-                      </div>
-                    </div>
-                  </td>
-                  <td>{item.quantity}</td>
-                  <td>
-                    {item.specification ? (
-                      <span className={styles.itemSpec}>{item.specification}</span>
-                    ) : (
-                      <span className={styles.itemSpecEmpty}>—</span>
-                    )}
-                  </td>
-                  <td>
-                    <span
-                      className={`${styles.badge} ${
-                        item.visible ? styles.badgeVisible : styles.badgeHidden
-                      }`}
-                    >
-                      {item.visible ? "Visible" : "Hidden"}
-                    </span>
-                  </td>
-                  <td>
-                    <div className={styles.actions}>
-                      <button
-                        type="button"
-                        className={styles.actionLink}
-                        onClick={() => setEditingId(item.id)}
-                      >
-                        Edit
-                      </button>
-                      <form action={deleteItemAction.bind(null, item.id)}>
-                        <ConfirmButton
-                          label="Delete"
-                          confirmText={`Delete "${item.name}"?`}
-                          busyLabel="Deleting…"
-                          className={styles.deleteButton}
-                        />
-                      </form>
-                    </div>
-                  </td>
+        <>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Icon</th>
+                  <th>Item</th>
+                  <th>Qty</th>
+                  <th>Price</th>
+                  <th>Specification</th>
+                  <th>Visible</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {items.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>
+                      <div className={styles.reorder}>
+                        <button
+                          type="button"
+                          className={styles.reorderButton}
+                          onClick={() => move(index, -1)}
+                          disabled={index === 0}
+                          aria-label="Move up"
+                        >
+                          ↑
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.reorderButton}
+                          onClick={() => move(index, 1)}
+                          disabled={index === items.length - 1}
+                          aria-label="Move down"
+                        >
+                          ↓
+                        </button>
+                      </div>
+                    </td>
+                    <td>
+                      {item.icon && isPackItemIconKey(item.icon) ? (
+                        <span className={styles.itemIcon}>
+                          <ItemIcon name={item.icon} size={20} />
+                        </span>
+                      ) : (
+                        <span
+                          className={styles.itemIconEmpty}
+                          aria-hidden="true"
+                        >
+                          —
+                        </span>
+                      )}
+                    </td>
+                    <td>
+                      <div className={styles.itemCell}>
+                        <div>
+                          <div className={styles.itemName}>{item.name}</div>
+                          {item.description ? (
+                            <div className={styles.itemDesc}>{item.description}</div>
+                          ) : null}
+                        </div>
+                      </div>
+                    </td>
+                    <td>{item.quantity}</td>
+                    <td className={styles.priceCell}>
+                      {item.unit_price != null ? formatCurrency(item.unit_price) : "—"}
+                    </td>
+                    <td>
+                      {item.specification ? (
+                        <span className={styles.itemSpec}>{item.specification}</span>
+                      ) : (
+                        <span className={styles.itemSpecEmpty}>—</span>
+                      )}
+                    </td>
+                    <td>
+                      <span
+                        className={`${styles.badge} ${
+                          item.visible ? styles.badgeVisible : styles.badgeHidden
+                        }`}
+                      >
+                        {item.visible ? "Visible" : "Hidden"}
+                      </span>
+                    </td>
+                    <td>
+                      <div className={styles.actions}>
+                        <button
+                          type="button"
+                          className={styles.actionLink}
+                          onClick={() => setEditingId(item.id)}
+                        >
+                          Edit
+                        </button>
+                        <form action={deleteItemAction.bind(null, item.id)}>
+                          <ConfirmButton
+                            label="Delete"
+                            confirmText={`Delete "${item.name}"?`}
+                            busyLabel="Deleting…"
+                            className={styles.deleteButton}
+                          />
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className={styles.subtotalRow}>
+            <span className={styles.subtotalLabel}>Items subtotal</span>
+            <span className={styles.subtotalValue}>{formatCurrency(subtotal)}</span>
+            <span className={styles.hint}>
+              Unit price × quantity for each item. Use this as a guide when
+              setting the pack total price above.
+            </span>
+          </div>
+        </>
       )}
 
       {showAdd ? (

@@ -17,6 +17,11 @@ export default async function EditPackPage({ params }: EditPackPageProps) {
   const { pack, items } = await getPack(id);
   if (!pack) notFound();
 
+  const subtotal = items.reduce(
+    (sum, item) => sum + (item.unit_price ?? 0) * item.quantity,
+    0
+  );
+
   return (
     <div className={adminStyles.adminContainer}>
       <p>
@@ -29,7 +34,7 @@ export default async function EditPackPage({ params }: EditPackPageProps) {
         <p className={adminStyles.subtitle}>{pack.title}</p>
       </div>
       <div className={adminStyles.stack}>
-        <PackPriceForm packId={pack.id} price={pack.price} />
+        <PackPriceForm packId={pack.id} price={pack.price} subtotal={subtotal} />
         <ItemsManager packId={pack.id} items={items} />
       </div>
     </div>

@@ -288,6 +288,102 @@
   gap: 4px;
 }
 
+.autocomplete {
+  position: relative;
+}
+
+.suggestList {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--pex-border, #dbe3ec);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(20, 40, 60, 0.12);
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.suggestItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1a2a40;
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestItem:hover {
+  background: rgba(26, 122, 119, 0.08);
+  color: var(--pex-keppel, #1a7a77);
+}
+
+.suggestName {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.suggestPrice {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pex-muted, #6b7a86);
+  white-space: nowrap;
+}
+
+.suggestBusy {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pex-muted, #6b7a86);
+}
+
+.priceCell {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.subtotalRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: #f6faf9;
+  border: 1px solid #d9ebe8;
+  border-radius: 10px;
+}
+
+.subtotalLabel {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--pex-navy, #1a2a40);
+}
+
+.subtotalValue {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--pex-keppel, #1a7a77);
+}
+
 .label {
   font-size: 12px;
   font-weight: 700;
