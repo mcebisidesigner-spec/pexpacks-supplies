@@ -25,7 +25,7 @@ All timings on local production build (`next build` + `next start`, port 3105). 
 | `/api/schools/search?q=park&limit=8`       | 200                   | 2,842ms   | 2,717ms   | 3.2KB     |
 | `/api/schools/search` (trending, empty q)  | 200                   | —         | 26ms      | —         |
 
-Cold dominance: search API and `/schools` rebuild a search index on first hit (`lib/schools/SearchIndex.ts`, LRU 64 / TTL 30s) — ~2.7–3.3s.
+Cold dominance: search API and `/schools` rebuild a search index on first hit (`lib/schools/SearchIndex.ts`) — ~2.7–3.3s. NOTE (2026-08-11): Next 16 runs the instrumentation register in the main process while route handlers run in a separate worker, so `instrumentation.ts` warm-up does NOT populate the request worker's cache — the first request per worker still builds once. The steady-state TTL-expiry stall (every 5 min) is eliminated by stale-while-revalidate (see H2).
 
 ### Static output (production build)
 
@@ -72,15 +72,15 @@ Content/other: `idx_testimonials_visible_sort`, `idx_faqs_visible_sort`, `idx_we
 
 ### HIGH
 
-- **H1 — 236KB Supabase chunk in the global client bundle.** `components/layout/Header.tsx` statically imports `createClient` (`@/lib/supabase/client`) → pulled into every page. Move to server component boundary or lazy-load; Supabase is only needed for authed actions.
-- **H2 — 3s cold search + `/schools`.** First-hit index build (`SearchIndex.ts` LRU rebuild) costs ~2.7–3.3s. Warm the index at build/startup (module-level precompute, or generate static search index at build time) instead of per-process first request.
-- **H3 — Image weight (RESOLVED 2026-08-10).** Largest image was 1,965KB `pex-stationery-box.webp`. Removed two dead assets (`pex-stationery-box.webp`, `pex-stationery-checklist.webp`, both unreferenced in code) → largest is now `pexcover-img-01.webp` 145KB, total 1.19MB top-level / 1.48MB recursive. Remaining surfaces already use `next/image` with `fill`, `sizes`, `placeholder="blur"`, `priority` on LCP. Budget now enforced by `npm run check:images` (CI gate, default 300KB/file, 3MB total).
+- **H1 — 236KB Supabase chunk in the global client bundle (RESOLVED 2026-08-11).** `Header.tsx` now dynamic-imports `@/lib/supabase/client` inside the admin-only effect; the only remaining static import is admin-only `components/admin/AdminShell.tsx:9`. No longer shipped on public pages.
+- **H2 — 3s cold search + `/schools` (PARTLY RESOLVED 2026-08-11).** First-hit index build (`SearchIndex.ts` LRU rebuild) costs ~2.7–3.3s. The recurring every-5-min TTL stall is eliminated: `getSearchIndex()`/`getSearchableSchools()` now use stale-while-revalidate (`lib/schools/schoolSearchData.ts`) — expired caches are served instantly while a deduped background refresh rebuilds (keeps serving the old cache on failure). Measured: warm search 26–40ms, warm `/schools` 87ms. Remaining: cold first request per worker still pays ~2.8s because Next 16 runs instrumentation in the main process, not the request worker; next step is a build-time static search index.
+- **H3 — 1,965KB `pex-stationery-box.webp`.** Largest image; resize/re-encode (target <300KB) and prefer `next/image` with `sizes`/AVIF. 20 files / 3.68MB total in `public/images` should be re-encoded.
 - **H4 — 154KB HTML per school page.** Partly inlined next/font + large components; consider streaming/layout reduction and verifying CSS sharing.
 
 ### MEDIUM
 
 - **M1 — 404KB CSS total (largest 114KB).** Audit for unused CSS, split critical vs deferred.
-- **M2 — `middleware.ts` deprecated convention** (Next 16: use `proxy.ts`). Zero-friction move, no behavior change.
+- **M2 — `middleware.ts` deprecated convention (RESOLVED 2026-08-11).** Root file renamed to `proxy.ts` (Next 16 convention; build now reports `ƒ Proxy (Middleware)`). Zero behavior change.
 - **M3 — Sitemap builds from 10.83MB `school-records.json`** on every request path touched; confirm ISR/caching.
 - **M4 — Deprecated `next/image` remotePatterns / CSP entries to prune** (already partly fixed in `6321653`).
 
@@ -98,8 +98,8 @@ Order = impact / risk:
 1. **P0 — Fix duplicate orders (C1):** idempotency key + unique constraint; regression test double-submit.
 2. **P0 — Resolve grade 308 (C3):** confirm with product; remove redirect if grade pages are live.
 3. **P1 — Consolidate checkout endpoints (C2):** single handler, unified rate limit (still 5/10min total).
-4. **P1 — Server boundary for Supabase (H1):** strip 236KB from global bundle.
-5. **P2 — Warm search index (H2):** target cold ≈ warm; add metrics.
+4. **P1 — Server boundary for Supabase (H1):** DONE (2026-08-11) — Header dynamic-imports supabase; only admin `AdminShell` statically imports it.
+5. **P2 — Warm search index (H2):** PARTLY DONE (2026-08-11) — SWR kills the 5-min-TTL stall (warm search 26–40ms). Open: cold first request per worker (~2.8s) — build-time static index.
 6. **P2 — Image budget (H3):** DONE (2026-08-10) — dead assets removed; largest 145KB; CI size guard `npm run check:images` added to workflow.
 7. **P2 — CSS cleanup (M1) + proxy migration (M2).**
 8. **P3 — DB index additions** (additive migration only): profile cold queries (`explain analyze`) for search/orders/school pages; add missing indexes; never drop existing.
@@ -114,6 +114,9 @@ Order = impact / risk:
 | C1 — order idempotency              | Done (2026-08-10) | `supabase/migrations/00015_order_idempotency.sql` adds `orders.idempotency_key` + partial unique index; `lib/orders.ts` (`createPendingOrder`, `createMultiPackOrder`) write it and throw on insert error; `getOrderByIdempotencyKey` lookup; client `crypto.randomUUID()` per submit in `TrayCheckoutClient.tsx`, `CheckoutForm.tsx`, `HappyPayCheckoutClient.tsx`; API returns `reused: true` on replay. |
 | C2 — consolidate checkout endpoints | Done (2026-08-10) | Shared handler `lib/checkout/trayCheckout.ts` (`handleTrayCheckout` + `TrayCheckoutError` + `trayErrorResponse`); `app/api/checkout/route.ts` tray branch and `app/api/ozow/checkout/route.ts` delegate to it; both use one rate-limit bucket (`keyPrefix: "checkout"`, 5/10min total).                                                                                                                    |
 | H3 — image budget                   | Done (2026-08-10) | Deleted unused `pex-stationery-box.webp` (1,965KB) + `pex-stationery-checklist.webp` (594KB); added `scripts/check-image-budget.cjs` (`npm run check:images`, env `IMAGE_MAX_KB`/`IMAGE_TOTAL_KB`/`IMAGE_DIR`) and a CI step; largest image now 145KB, total 1.19MB top-level.                                                                                                                             |
+| H1 — Supabase bundle                | Done (2026-08-11) | `Header.tsx` dynamic-imports `@/lib/supabase/client` (admin-only); verified no static import on public pages.                                                                                                                                                                                                                                                                                              |
+| H2 — search index SWR               | Done (2026-08-11) | `lib/schools/schoolSearchData.ts`: stale-while-revalidate for `getSearchableSchools`/`getSearchIndex` — expired caches served instantly, deduped background refresh, stale kept on failure. Warm search 26–40ms, warm `/schools` 87ms. Cold first request per worker still ~2.8s (instrumentation runs outside the request worker in Next 16).                                                             |
+| M2 — proxy convention               | Done (2026-08-11) | `git mv middleware.ts proxy.ts`, export renamed to `proxy`; build reports `ƒ Proxy (Middleware)`.                                                                                                                                                                                                                                                                                                          |
 
 ---
 
