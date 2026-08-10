@@ -86,6 +86,7 @@ export interface Database {
           courier_name: string | null;
           waybill_number: string | null;
           estimated_delivery: string | null;
+          idempotency_key: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -129,6 +130,7 @@ export interface Database {
           courier_name?: string | null;
           waybill_number?: string | null;
           estimated_delivery?: string | null;
+          idempotency_key?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -172,6 +174,7 @@ export interface Database {
           courier_name?: string | null;
           waybill_number?: string | null;
           estimated_delivery?: string | null;
+          idempotency_key?: string | null;
           created_at?: string;
           updated_at?: string;
         };

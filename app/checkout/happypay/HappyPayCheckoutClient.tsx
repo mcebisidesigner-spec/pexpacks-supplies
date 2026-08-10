@@ -68,6 +68,7 @@ export function HappyPayCheckoutClient() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const idempotencyKeyRef = useRef<string | null>(null);
 
   // Keep learnerInputs in sync when packs change (e.g. pack removed)
   useEffect(() => {
@@ -184,6 +185,10 @@ export function HappyPayCheckoutClient() {
     setSubmitting(true);
 
     try {
+      if (!idempotencyKeyRef.current) {
+        idempotencyKeyRef.current = crypto.randomUUID();
+      }
+
       const response = await fetch("/api/ozow/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -217,6 +222,7 @@ export function HappyPayCheckoutClient() {
           primarySchoolSlug:
             uniqueSchools.length > 0 ? uniqueSchools[0].slug : packs[0]?.schoolSlug || "",
           notes: "Happy Pay split payment (2 x instalments)",
+          idempotencyKey: idempotencyKeyRef.current,
         }),
       });
 

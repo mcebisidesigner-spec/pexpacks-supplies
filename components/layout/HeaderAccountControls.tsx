@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { logout } from "@/app/login/actions";
 import { HeaderOrderIcon } from "@/components/order/HeaderOrderIcon";
+import { PackageIcon } from "@/components/ui/icons";
 import headerStyles from "./Header.module.css";
 import styles from "./HeaderAccountControls.module.css";
 
@@ -135,6 +136,14 @@ export function HeaderAccountControls({
 
   return (
     <div className={styles.accountControls}>
+      <Link
+        href="/track-order"
+        className={styles.mobileTrackLink}
+        aria-label="Track Your Pack"
+        title="Track Your Pack"
+      >
+        <PackageIcon aria-hidden="true" />
+      </Link>
       <HeaderOrderIcon />
     </div>
   );

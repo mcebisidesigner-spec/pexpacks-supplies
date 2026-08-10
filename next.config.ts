@@ -92,11 +92,6 @@ const nextConfig: NextConfig = {
         destination: "/",
         permanent: true,
       },
-      {
-        source: "/schools/:schoolSlug/:gradeSlug",
-        destination: "/schools/:schoolSlug",
-        permanent: true,
-      },
     ];
   },
   async headers() {

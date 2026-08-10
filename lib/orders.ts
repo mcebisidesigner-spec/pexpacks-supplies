@@ -34,6 +34,7 @@ export async function createPendingOrder(input: {
   notes?: string;
   paymentGateway?: string;
   gatewayMetadata?: Record<string, string | number | boolean | null>;
+  idempotencyKey?: string;
 }) {
   const supabase = createSupabaseAdminClient();
 
@@ -53,45 +54,67 @@ export async function createPendingOrder(input: {
     ? { ...metaNotes, ...metaGateway }
     : undefined;
 
-  try {
-    const { error } = await supabase
-      .from("orders")
-      .insert({
-        id: orderId,
-        order_reference: input.orderReference,
-        unique_customer_id: uniqueCustomerId,
-        tracking_token: trackingToken,
-        buyer_name: input.buyerName,
-        buyer_phone: input.buyerPhone,
-        buyer_email: input.buyerEmail || null,
-        learner_name: input.learnerName || null,
-        school_slug: input.schoolSlug,
-        school_name: input.schoolName,
-        grade: input.grade,
-        pack_type: input.packType,
-        items: packItems.length > 0 ? packItems : null,
-        estimated_total: input.estimatedTotal,
-        fulfilment_option:
-          input.deliveryMethod === "school_collection"
-            ? "School collection"
-            : input.deliveryMethod === "delivery"
-              ? "Home delivery"
-              : "Collection point",
-        metadata: meta,
-        pexcover_requested: hasPexcover,
-        consent: true,
-        payment_gateway: input.paymentGateway ?? null,
-        status: "pending_payment",
-      });
+  const { error } = await supabase
+    .from("orders")
+    .insert({
+      id: orderId,
+      order_reference: input.orderReference,
+      unique_customer_id: uniqueCustomerId,
+      tracking_token: trackingToken,
+      buyer_name: input.buyerName,
+      buyer_phone: input.buyerPhone,
+      buyer_email: input.buyerEmail || null,
+      learner_name: input.learnerName || null,
+      school_slug: input.schoolSlug,
+      school_name: input.schoolName,
+      grade: input.grade,
+      pack_type: input.packType,
+      items: packItems.length > 0 ? packItems : null,
+      estimated_total: input.estimatedTotal,
+      fulfilment_option:
+        input.deliveryMethod === "school_collection"
+          ? "School collection"
+          : input.deliveryMethod === "delivery"
+            ? "Home delivery"
+            : "Collection point",
+      metadata: meta,
+      pexcover_requested: hasPexcover,
+      consent: true,
+      payment_gateway: input.paymentGateway ?? null,
+      status: "pending_payment",
+      idempotency_key: input.idempotencyKey ?? null,
+    });
 
-    if (error) {
-      console.error("[orders] Failed to create pending order:", JSON.stringify(error));
-    }
-  } catch (err) {
-    console.error("[orders] createPendingOrder caught:", err instanceof Error ? err.message : err);
+  if (error) {
+    console.error("[orders] Failed to create pending order:", JSON.stringify(error));
+    throw new Error(`Failed to create order: ${error.message}`);
   }
 
   return { id: orderId, orderReference: input.orderReference, uniqueCustomerId, trackingToken };
+}
+
+export async function getOrderByIdempotencyKey(idempotencyKey: string) {
+  const supabase = createSupabaseAdminClient();
+
+  const { data, error } = await supabase
+    .from("orders")
+    .select("id, order_reference, unique_customer_id, tracking_token")
+    .eq("idempotency_key", idempotencyKey)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[orders] getOrderByIdempotencyKey failed:", JSON.stringify(error));
+    return null;
+  }
+
+  if (!data) return null;
+
+  return {
+    id: data.id as string,
+    orderReference: data.order_reference as string,
+    uniqueCustomerId: data.unique_customer_id as string,
+    trackingToken: data.tracking_token as string,
+  };
 }
 
 export async function getOrderByReference(reference: string) {
@@ -226,14 +249,14 @@ export async function createMultiPackOrder(input: {
   summaryItems: string[];
   paymentGateway?: string;
   gatewayMetadata?: Record<string, string | number | boolean | null>;
+  idempotencyKey?: string;
 }) {
   const supabase = createSupabaseAdminClient();
   const orderId = randomUUID();
   const uniqueCustomerId = generateUniqueCustomerId();
   const trackingToken = generateTrackingToken();
 
-  try {
-    const { error } = await supabase.from("orders").insert({
+  const { error } = await supabase.from("orders").insert({
       id: orderId,
       order_reference: input.orderReference,
       unique_customer_id: uniqueCustomerId,
@@ -275,14 +298,13 @@ export async function createMultiPackOrder(input: {
       payment_gateway: input.paymentGateway ?? null,
       consent: true,
       status: "pending_payment",
+      idempotency_key: input.idempotencyKey ?? null,
     });
 
     if (error) {
       console.error("[orders] Failed to create multi-pack order:", JSON.stringify(error));
+      throw new Error(`Failed to create order: ${error.message}`);
     }
-  } catch (err) {
-    console.error("[orders] createMultiPackOrder caught:", err instanceof Error ? err.message : err);
-  }
 
   return { id: orderId, orderReference: input.orderReference, uniqueCustomerId, trackingToken };
 }

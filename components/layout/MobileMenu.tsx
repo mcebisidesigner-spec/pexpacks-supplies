@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { mainNavLinks } from "@/data/navigation";
 import { isActivePath } from "@/lib/isActivePath";
+import { PackageIcon } from "@/components/ui/icons";
 import styles from "./Header.module.css";
 
 type MobileMenuProps = {
@@ -145,16 +146,13 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
           </Link>
 
           <Link
-            href="/schools#school-search"
+            href="/track-order"
             className={styles.mobileMenuCta}
             onClick={onClose}
-            aria-label="Find your Pexpacks pack"
           >
-            <span>Find Your Pack</span>
+            <span>Track Your Pack</span>
             <span className={styles.mobileMenuCtaIcon}>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7 17 17 7M9 7h8v8" />
-              </svg>
+              <PackageIcon aria-hidden="true" />
             </span>
           </Link>
         </div>

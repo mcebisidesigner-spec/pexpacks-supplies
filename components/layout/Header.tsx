@@ -10,6 +10,7 @@ import { HeaderScrollWrapper } from "./HeaderScrollWrapper";
 import { mainNavLinks } from "@/data/navigation";
 import { HeaderAccountControls } from "./HeaderAccountControls";
 import { createClient } from "@/lib/supabase/client";
+import { PackageIcon } from "@/components/ui/icons";
 import styles from "./Header.module.css";
 
 export function Header() {
@@ -89,12 +90,10 @@ export function Header() {
             adminUserLoading={adminUserLoading}
           />
           {!isAdmin && (
-            <Link className={styles.desktopOrder} href="/schools#school-search" aria-label="Find your Pexpacks pack">
-              <span>Find Your Pack</span>
+            <Link className={styles.desktopOrder} href="/track-order">
+              <span>Track Your Pack</span>
               <span className={styles.orderIcon} aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false">
-                  <path d="M7 17 17 7M9 7h8v8" />
-                </svg>
+                <PackageIcon />
               </span>
             </Link>
           )}

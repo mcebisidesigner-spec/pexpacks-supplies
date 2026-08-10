@@ -2,6 +2,44 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  gap: 2px;
+}
+
+.mobileTrackLink {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-pill);
+  display: inline-grid;
+  place-items: center;
+  background: transparent;
+  color: var(--pex-navy);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: var(--button-transition);
+}
+
+.mobileTrackLink:hover {
+  color: var(--pex-keppel);
+  filter: none;
+  transform: none;
+  box-shadow: none;
+}
+
+.mobileTrackLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.mobileTrackLink svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .profileButton {

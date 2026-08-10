@@ -164,6 +164,7 @@ export function TrayCheckoutClient() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [orderSubmitted, setOrderSubmitted] = useState(false)
   const [orderReference, setOrderReference] = useState<string | null>(null)
+  const idempotencyKeyRef = useRef<string | null>(null)
 
   const [mobileSectionSummaryOpen, setMobileSectionSummaryOpen] = useState<
     Record<CheckoutSummarySection, boolean>
@@ -426,6 +427,10 @@ export function TrayCheckoutClient() {
       .join(' | ')
 
     try {
+      if (!idempotencyKeyRef.current) {
+        idempotencyKeyRef.current = crypto.randomUUID()
+      }
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -461,6 +466,7 @@ export function TrayCheckoutClient() {
               ? multiSchoolDrop
               : uniqueSchools[0]?.slug || packs[0]?.schoolSlug || '',
           notes: notes || undefined,
+          idempotencyKey: idempotencyKeyRef.current,
         }),
       })
 

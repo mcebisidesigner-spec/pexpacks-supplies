@@ -147,6 +147,7 @@ export function CheckoutForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const idempotencyKeyRef = useRef<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [orderReference, setOrderReference] = useState<string | null>(null);
@@ -311,6 +312,10 @@ export function CheckoutForm({
       .join(" | ");
 
     try {
+      if (!idempotencyKeyRef.current) {
+        idempotencyKeyRef.current = crypto.randomUUID();
+      }
+
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -339,6 +344,7 @@ export function CheckoutForm({
           pexcoverSubjects: pexcoverSubjects.trim() || undefined,
           pexcoverLabelFormat: pexcoverLabelFormat.trim() || undefined,
           pexcoverNotes: pexcoverNotes.trim() || undefined,
+          idempotencyKey: idempotencyKeyRef.current,
         }),
       });
 
