@@ -362,8 +362,8 @@ type ReadFormBodyResult = {
 };
 
 const MAX_ATTACHMENT_COUNT = 5;
-const MAX_ATTACHMENT_SIZE = 4 * 1024 * 1024;
-const MAX_TOTAL_ATTACHMENT_SIZE = 10 * 1024 * 1024;
+const MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024;
+const MAX_TOTAL_ATTACHMENT_SIZE = 25 * 1024 * 1024;
 
 function formatFileSize(bytes: number) {
   if (bytes >= 1024 * 1024) {

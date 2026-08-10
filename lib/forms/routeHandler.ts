@@ -65,16 +65,18 @@ export async function handlePexpacksFormRequest(
   }
 
   let raw: Record<string, unknown>;
+  let attachments: import("@/lib/forms/validation").SubmittedFormAttachment[] = [];
 
   try {
     const body = await readFormBody(request);
     raw = withRequestMetadata(request, body.raw);
+    attachments = body.attachments || [];
     if (body.fileError) {
       return json(
         {
           success: false,
           message: FORM_VALIDATION_MESSAGE,
-          errors: { brandAssets: body.fileError },
+          errors: { list: body.fileError, brandAssets: body.fileError },
         },
         400
       );
@@ -107,7 +109,7 @@ export async function handlePexpacksFormRequest(
   if (saved.submission_id) {
     await Promise.allSettled([
       saveOrderRecord(data, saved.submission_id),
-      sendFormNotificationEmail(data),
+      sendFormNotificationEmail(data, attachments),
     ]);
   }
 

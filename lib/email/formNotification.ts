@@ -1,8 +1,10 @@
 import { Resend } from "resend";
 import type { FormSubmission } from "@/lib/forms/types";
+import type { SubmittedFormAttachment } from "@/lib/forms/validation";
 
 export async function sendFormNotificationEmail(
-  data: FormSubmission
+  data: FormSubmission,
+  attachments: SubmittedFormAttachment[] = []
 ): Promise<{ success: boolean; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
 
@@ -81,6 +83,13 @@ export async function sendFormNotificationEmail(
         <div class="field-label">Stationery List / Message</div>
         <div class="message-box">${data.message || data.notes || "No message content"}</div>
       </div>
+      ${attachments.length > 0 ? `
+      <div class="field-card" style="background: #e0f2fe; border: 1px solid #bae6fd;">
+        <div class="field-label" style="color: #0369a1;">Attached Files (${attachments.length})</div>
+        <div class="field-value" style="color: #0c4a6e;">
+          ${attachments.map((att) => `📎 <strong>${att.filename}</strong> (${(att.size / 1024).toFixed(1)} KB)`).join("<br/>")}
+        </div>
+      </div>` : ""}
       <div style="font-size: 12px; color: #64748b; margin-top: 16px;">
         Submitted at: ${data.submittedAt || new Date().toISOString()}<br/>
         POPIA Consent: ${data.consent ? "Granted" : "Not granted"}
@@ -99,6 +108,11 @@ export async function sendFormNotificationEmail(
     const recipients = ["orders@pexpacks.co.za", officialEmail, "pexpacks@gmail.com"];
     const uniqueRecipients = [...new Set(recipients.filter(Boolean))];
 
+    const resendAttachments = attachments.map((att) => ({
+      filename: att.filename,
+      content: att.content,
+    }));
+
     // Attempt 1: Custom domain from address
     let sendResult = await resend.emails.send({
       from: configuredFrom,
@@ -106,6 +120,7 @@ export async function sendFormNotificationEmail(
       replyTo: data.email || officialEmail,
       subject,
       html,
+      attachments: resendAttachments.length > 0 ? resendAttachments : undefined,
     });
 
     // Attempt 2: Fallback to test onboarding sender if domain is unverified on Resend
@@ -116,6 +131,7 @@ export async function sendFormNotificationEmail(
         replyTo: data.email || officialEmail,
         subject,
         html,
+        attachments: resendAttachments.length > 0 ? resendAttachments : undefined,
       });
     }
 

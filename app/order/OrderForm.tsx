@@ -35,6 +35,7 @@ export function OrderForm() {
   const [category, setCategory] = useState<OrderCategory | null>(null);
   
   const [inputMethod, setInputMethod] = useState<"upload" | "type">("upload");
+  const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [listText, setListText] = useState("");
   
@@ -74,7 +75,9 @@ export function OrderForm() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFileName(e.target.files[0].name);
+      const selected = e.target.files[0];
+      setFile(selected);
+      setFileName(selected.name);
       if (errors.list) setErrors((prev) => ({ ...prev, list: "" }));
     }
   };
@@ -107,25 +110,29 @@ export function OrderForm() {
     setIsSubmitting(true);
     setErrors({});
 
-    const payload = {
-      formType: "quote",
-      fullName: name,
-      phone: phone,
-      email: email || undefined,
-      consent: consent,
-      quoteType: category,
-      message: inputMethod === "upload" ? `Uploaded File: ${fileName}` : listText,
-      sourceUrl: window.location.href,
-      pageUrl: window.location.href,
-      userAgent: navigator.userAgent,
-      submittedAt: new Date().toISOString(),
-    };
+    const formData = new FormData();
+    formData.append("formType", "quote");
+    formData.append("fullName", name.trim());
+    formData.append("phone", phone);
+    if (email.trim()) formData.append("email", email.trim());
+    formData.append("consent", String(consent));
+    if (category) formData.append("quoteType", category);
+    formData.append("sourceUrl", window.location.href);
+    formData.append("pageUrl", window.location.href);
+    formData.append("userAgent", navigator.userAgent);
+    formData.append("submittedAt", new Date().toISOString());
+
+    if (inputMethod === "upload" && file) {
+      formData.append("stationeryListFile", file, file.name);
+      formData.append("message", `Uploaded stationery list file: ${file.name}`);
+    } else {
+      formData.append("message", listText.trim());
+    }
 
     try {
       const res = await fetch("/api/forms/quote", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: formData,
       });
       const result = await res.json();
       if (!result.success) {
@@ -155,6 +162,7 @@ export function OrderForm() {
           onClick={() => {
             setIsSuccess(false);
             setStep(1);
+            setFile(null);
             setFileName(null);
             setListText("");
             setCategory(null);
@@ -246,7 +254,10 @@ export function OrderForm() {
                   <strong>{fileName}</strong>
                   <button 
                     type="button" 
-                    onClick={() => setFileName(null)}
+                    onClick={() => {
+                      setFile(null);
+                      setFileName(null);
+                    }}
                     style={{ display: "block", margin: "8px auto 0", background: "none", border: "none", color: "var(--pex-coral)", textDecoration: "underline", cursor: "pointer" }}
                   >
                     Remove file
@@ -261,21 +272,22 @@ export function OrderForm() {
                     e.preventDefault();
                     setIsDragging(false);
                     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                      setFileName(e.dataTransfer.files[0].name);
+                      const selected = e.dataTransfer.files[0];
+                      setFile(selected);
+                      setFileName(selected.name);
                       if (errors.list) setErrors({});
                     }
                   }}
                 >
                   <div className={styles.uploadIcon}>📄</div>
                   <strong>Click to upload or drag and drop</strong>
-                  <span>PNG, JPG, PDF (Max. 5MB)</span>
+                  <span>All file types supported (PNG, JPG, PDF, Word, Excel, etc. Max 10MB)</span>
                   <input 
                     id="stationery-list-file"
                     name="stationeryListFile"
                     type="file" 
                     className={styles.fileInput} 
                     onChange={handleFileChange}
-                    accept="image/png, image/jpeg, application/pdf"
                   />
                 </div>
               )
