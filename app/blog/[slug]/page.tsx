@@ -8,7 +8,7 @@ import { JsonLd } from "@/components/ui/JsonLd";
 import { CTASection } from "@/components/marketing/CTASection";
 import { PageHero } from "@/components/marketing/PageHero";
 import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
-import { blogPosts, getPostBySlug } from "@/data/blog";
+import { listBlogPosts, getBlogPost } from "@/lib/blog";
 import { buildMetadata, siteUrl } from "@/lib/seo";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { articleSchema } from "@/lib/schema";
@@ -17,8 +17,11 @@ import styles from "../Blog.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
+export const revalidate = 300;
+
 export async function generateStaticParams() {
-  return blogPosts.map((post) => ({
+  const posts = await listBlogPosts();
+  return posts.map((post) => ({
     slug: post.slug,
   }));
 }
@@ -29,7 +32,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const post = getPostBySlug(resolvedParams.slug);
+  const post = await getBlogPost(resolvedParams.slug);
 
   if (!post) {
     return buildMetadata("Post Not Found | Pexpacks", "", "/blog");
@@ -264,7 +267,7 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const resolvedParams = await params;
-  const post = getPostBySlug(resolvedParams.slug);
+  const post = await getBlogPost(resolvedParams.slug);
 
   if (!post) {
     notFound();
@@ -277,7 +280,7 @@ export default async function BlogPostPage({
   });
 
   const headings = extractHeadings(post.content);
-  const relatedPosts = blogPosts
+  const relatedPosts = (await listBlogPosts())
     .filter((p) => p.slug !== post.slug)
     .slice(0, 3);
 

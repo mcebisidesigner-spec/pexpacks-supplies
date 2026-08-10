@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
-import { blogPosts } from "@/data/blog";
+import { listBlogPosts } from "@/lib/blog";
 import styles from "./Blog.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import { buildMetadata } from "@/lib/seo";
@@ -18,7 +18,11 @@ import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
 import { BlogFilter } from "./BlogFilter";
 import { SubscribeForm } from "./SubscribeForm";
 
-export default function BlogIndex() {
+export const revalidate = 300;
+
+export default async function BlogIndex() {
+  const posts = await listBlogPosts();
+
   return (
     <>
       <PageHero
@@ -36,7 +40,7 @@ export default function BlogIndex() {
       <div className={styles.blogContainer} id="blog-content">
         {/* PRIMARY COLUMN: ARTICLES */}
         <main className={styles.articlesColumn} aria-label="Resource articles">
-          <BlogFilter posts={blogPosts} />
+          <BlogFilter posts={posts} />
         </main>
 
         {/* SIDEBAR COLUMN: CONVERSION WIDGETS */}

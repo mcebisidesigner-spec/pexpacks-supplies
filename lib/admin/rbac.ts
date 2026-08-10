@@ -45,6 +45,8 @@ export const PERMISSION_CATALOG = {
   "forms.assign": { name: "Assign Forms", group: "Access" },
   "content.view": { name: "View Website Content", group: "Content" },
   "content.manage": { name: "Manage Website Content", group: "Content" },
+  "blog.view": { name: "View Blog", group: "Content" },
+  "blog.manage": { name: "Manage Blog", group: "Content" },
   "assets.view": { name: "View Assets", group: "Assets" },
   "assets.upload": { name: "Upload Assets", group: "Assets" },
   "assets.manage": { name: "Manage Assets", group: "Assets" },

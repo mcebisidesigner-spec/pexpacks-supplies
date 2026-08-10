@@ -64,6 +64,13 @@ const PATHS: Record<string, ReactNode> = {
       <path d="M9 13h6M9 17h6" />
     </>
   ),
+  blog: (
+    <>
+      <rect x="3" y="4" width="18" height="17" rx="2" />
+      <path d="M7 4V2h10v2" />
+      <path d="M8 9h8M8 13h8M8 17h5" />
+    </>
+  ),
   assets: (
     <>
       <rect x="3" y="3" width="18" height="18" rx="2" />
