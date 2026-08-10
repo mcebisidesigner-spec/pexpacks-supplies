@@ -40,6 +40,11 @@ export function organizationSchema() {
       "@type": "Country",
       name: "South Africa",
     },
+    sameAs: [
+      siteUrl,
+      `https://wa.me/${internationalPhoneNumber}`,
+      process.env.NEXT_PUBLIC_GOOGLE_BUSINESS_PROFILE_URL || "",
+    ].filter(Boolean),
     contactPoint: [
       {
         "@type": "ContactPoint",

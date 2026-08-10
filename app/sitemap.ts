@@ -32,8 +32,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const schools = await getFullSchoolRecords();
 
-  const schoolRoutes = schools.map((school) => `/schools/${school.slug}`);
-
   const staticEntries = staticRoutes.map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: siteContentUpdatedAt,
@@ -48,12 +46,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.65,
   }));
 
-  const schoolEntries = schoolRoutes.map((route) => ({
-    url: `${siteUrl}${route}`,
+  const schoolEntries = schools.map((school) => ({
+    url: `${siteUrl}/schools/${school.slug}`,
     lastModified: siteContentUpdatedAt,
     changeFrequency: "weekly" as const,
-    priority: 0.75,
+    priority: school.isPartnerSchool ? 0.9 : 0.75,
   }));
 
-  return [...staticEntries, ...blogEntries, ...schoolEntries];
+  const gradeEntries = schools.flatMap((school) =>
+    school.grades.map((grade) => ({
+      url: `${siteUrl}/schools/${school.slug}/${grade.gradeSlug}`,
+      lastModified: siteContentUpdatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }))
+  );
+
+  return [...staticEntries, ...blogEntries, ...schoolEntries, ...gradeEntries];
 }
