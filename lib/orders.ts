@@ -46,12 +46,15 @@ export async function createPendingOrder(input: {
   const hasPexcover = packItems.some(
     (item) => typeof item === "string" && item.toLowerCase().includes("pexcover")
   );
+  const metaIdempotency = input.idempotencyKey
+    ? { idempotency_key: input.idempotencyKey }
+    : undefined;
   const metaNotes = input.notes ? { notes: input.notes } : undefined;
   const metaGateway = input.gatewayMetadata
     ? { gateway: input.gatewayMetadata }
     : undefined;
-  const meta = metaNotes || metaGateway
-    ? { ...metaNotes, ...metaGateway }
+  const meta = metaNotes || metaGateway || metaIdempotency
+    ? { ...metaNotes, ...metaGateway, ...metaIdempotency }
     : undefined;
 
   const { error } = await supabase
@@ -82,7 +85,6 @@ export async function createPendingOrder(input: {
       consent: true,
       payment_gateway: input.paymentGateway ?? null,
       status: "pending_payment",
-      idempotency_key: input.idempotencyKey ?? null,
     });
 
   if (error) {
@@ -94,16 +96,17 @@ export async function createPendingOrder(input: {
 }
 
 export async function getOrderByIdempotencyKey(idempotencyKey: string) {
+  if (!idempotencyKey) return null;
   const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("orders")
     .select("id, order_reference, unique_customer_id, tracking_token")
-    .eq("idempotency_key", idempotencyKey)
+    .filter("metadata->>idempotency_key", "eq", idempotencyKey)
     .maybeSingle();
 
   if (error) {
-    console.error("[orders] getOrderByIdempotencyKey failed:", JSON.stringify(error));
+    console.warn("[orders] getOrderByIdempotencyKey notice:", error.message);
     return null;
   }
 
@@ -292,13 +295,13 @@ export async function createMultiPackOrder(input: {
         })),
         pack_count: input.packs.length,
         primary_school_slug: input.primarySchoolSlug || null,
+        ...(input.idempotencyKey ? { idempotency_key: input.idempotencyKey } : {}),
         ...(input.notes ? { notes: input.notes } : {}),
         ...(input.gatewayMetadata ? { gateway: input.gatewayMetadata } : {}),
       },
       payment_gateway: input.paymentGateway ?? null,
       consent: true,
       status: "pending_payment",
-      idempotency_key: input.idempotencyKey ?? null,
     });
 
     if (error) {
