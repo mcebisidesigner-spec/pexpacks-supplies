@@ -22,13 +22,19 @@ export const TrackPackIcon = (props: SVGProps<SVGSVGElement>) => (
     strokeLinejoin="round"
     {...props}
   >
-    <path d="M9 5V3.5A1.5 1.5 0 0 1 10.5 2h3A1.5 1.5 0 0 1 15 3.5V5" />
-    <path d="M5 9a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v3" />
-    <path d="M5 9v9a2 2 0 0 0 2 2h5.5" />
-    <path d="M5 11h14" />
-    <path d="M8 15h4" />
-    <circle cx="15.5" cy="15.5" r="3.5" />
-    <path d="M18 18l3.5 3.5" />
+    {/* Motion lines */}
+    <path d="M2 8h3" />
+    <path d="M1 12h4" />
+    <path d="M2 16h3" />
+    {/* Truck cargo body */}
+    <path d="M7 17H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v10" />
+    {/* Cabin & Windshield */}
+    <path d="M15 9h3.5a1.5 1.5 0 0 1 1.2.6L22 13v3a1 1 0 0 1-1 1h-1" />
+    <path d="M15 13h7" />
+    {/* Wheels & Underside */}
+    <circle cx="9" cy="17" r="2" />
+    <circle cx="18" cy="17" r="2" />
+    <path d="M11 17h5" />
   </svg>
 );
 
