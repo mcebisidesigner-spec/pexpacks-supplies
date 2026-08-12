@@ -25,7 +25,7 @@ export async function GET() {
         const link = `${siteUrl}/schools/${school.slug}/${grade.gradeSlug}`;
         const imageLink = school.logo
           ? `${siteUrl}${school.logo}`
-          : `${siteUrl}/images/hero-school-delivery.webp`;
+          : `${siteUrl}/images/hero-school-delivery-packs.webp`;
 
         return `
     <item>
