@@ -217,6 +217,9 @@ export function HappyPayCheckoutClient() {
           })),
           isTrayOrder: true,
           isBnpl: true,
+          orderId: idempotencyKeyRef.current,
+          amount: total,
+          customerEmail: buyerEmail.trim().toLowerCase(),
           estimatedTotal: total,
           deliveryMethod: "school_collection",
           primarySchoolSlug:
@@ -226,20 +229,26 @@ export function HappyPayCheckoutClient() {
         }),
       });
 
-      const result = await response.json();
+      const data = await response.json();
 
-      if (!response.ok || !result.success || !result.url) {
-        throw new Error(
-          result.error || "We could not start your Happy Pay payment right now."
-        );
+      if (!response.ok || !data.url) {
+        console.error("Ozow Checkout Error Response:", response.status, data);
+        const errorMessage =
+          data.error ||
+          data.message ||
+          "Failed to initialize Happy Pay payment.";
+        setSubmitError(errorMessage);
+        return;
       }
 
-      window.location.href = result.url;
+      window.location.href = data.url;
+      return;
     } catch (error) {
+      console.error("Ozow Checkout Exception:", error);
       setSubmitError(
         error instanceof Error
           ? error.message
-          : "We could not start your payment right now. Please try again or contact Pexpacks on WhatsApp."
+          : "Failed to initialize payment."
       );
     } finally {
       setSubmitting(false);

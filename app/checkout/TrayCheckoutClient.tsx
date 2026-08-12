@@ -431,10 +431,13 @@ export function TrayCheckoutClient() {
         idempotencyKeyRef.current = crypto.randomUUID()
       }
 
-      const response = await fetch('/api/checkout', {
+      const response = await fetch('/api/ozow/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          orderId: idempotencyKeyRef.current,
+          amount: total,
+          customerEmail: buyerEmail.trim().toLowerCase(),
           buyerName: fullName.trim(),
           buyerEmail: buyerEmail.trim().toLowerCase(),
           buyerPhone: normalisePhone(buyerPhone),
@@ -470,28 +473,28 @@ export function TrayCheckoutClient() {
         }),
       })
 
-      const result = await response.json()
+      const data = await response.json()
 
-      if (!response.ok || !result.orderReference) {
-        const msg =
-          result.errors && typeof result.errors === 'object'
-            ? Object.values(result.errors).join('. ')
-            : result.error || 'Unable to submit your order'
-        throw new Error(msg)
-      }
-
-      if (typeof result.url === 'string' && result.url) {
-        window.location.href = result.url
+      if (!response.ok || !data.url) {
+        console.error("Ozow Checkout Error Response:", response.status, data)
+        const errorMessage =
+          data.error ||
+          data.message ||
+          (data.errors && typeof data.errors === 'object'
+            ? Object.values(data.errors).join('. ')
+            : 'Failed to initialize Ozow payment.')
+        setSubmitError(errorMessage)
         return
       }
 
-      setOrderReference(result.orderReference)
-      setOrderSubmitted(true)
+      window.location.href = data.url
+      return
     } catch (error) {
+      console.error("Ozow Checkout Exception:", error)
       setSubmitError(
         error instanceof Error
           ? error.message
-          : 'We could not submit your order right now. Please try again or contact Pexpacks on WhatsApp.',
+          : 'Failed to initialize Ozow payment.',
       )
     } finally {
       setSubmitting(false)

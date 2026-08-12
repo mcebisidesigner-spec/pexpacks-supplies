@@ -7,19 +7,21 @@ export function getOzowConfig() {
   const siteCode = process.env.OZOW_SITE_CODE ?? "";
   const privateKey = process.env.OZOW_PRIVATE_KEY ?? "";
   const apiKey = process.env.OZOW_API_KEY ?? "";
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "";
   const isTest = process.env.OZOW_IS_TEST === "true";
 
   const missingKeys: string[] = [];
   if (!siteCode) missingKeys.push("OZOW_SITE_CODE");
   if (!privateKey) missingKeys.push("OZOW_PRIVATE_KEY");
   if (!apiKey) missingKeys.push("OZOW_API_KEY");
+  if (!appUrl) missingKeys.push("NEXT_PUBLIC_APP_URL");
 
   if (missingKeys.length > 0) {
     console.error(
-      `[ozow] Missing environment variable(s): ${missingKeys.join(", ")}. ` +
-        "These are read from the server environment at runtime and are NOT " +
-        "deployed from .env.local — set them in your hosting provider's " +
-        "environment settings, then rebuild/redeploy."
+      `[ozow] Missing environment variable(s): ${missingKeys.join(", ")}.`
     );
     return null;
   }
@@ -34,6 +36,7 @@ export function getOzowConfig() {
     siteCode,
     privateKey,
     apiKey,
+    appUrl,
     isTest,
     countryCode: OZOW_COUNTRY_CODE,
     currencyCode: OZOW_CURRENCY_CODE,

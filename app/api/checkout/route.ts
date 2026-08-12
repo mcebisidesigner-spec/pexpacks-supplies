@@ -240,10 +240,13 @@ export async function POST(request: NextRequest) {
 
     console.error(
       "[checkout] Unexpected error:",
-      error instanceof Error ? error.message : error
+      error instanceof Error ? (error.stack || error.message) : error
     );
     return NextResponse.json(
-      { success: false, error: "An unexpected error occurred." },
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "An error occurred during checkout.",
+      },
       { status: 500 }
     );
   }

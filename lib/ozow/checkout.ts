@@ -130,17 +130,11 @@ export async function initiateOzowPayment(
   }
 
   if (!ozowResponse.ok || !result) {
-    console.error(
-      "[ozow] Ozow returned an error:",
-      ozowResponse.status,
-      rawBody
-    );
+    console.error("Ozow Gateway API Reject:", ozowResponse.status, result || rawBody);
 
     const ozowMessage = extractOzowErrorMessage(result);
     throw new OzowCheckoutError(
-      ozowMessage
-        ? `The payment provider could not start your payment. ${ozowMessage}`
-        : "The payment provider could not start your payment. Please try again."
+      ozowMessage || "Ozow gateway error"
     );
   }
 
@@ -155,8 +149,9 @@ export async function initiateOzowPayment(
 
   if (!paymentUrl) {
     console.error(
-      "[ozow] Ozow response missing payment URL:",
-      rawBody
+      "Ozow Gateway API Reject: missing payment URL",
+      ozowResponse.status,
+      result || rawBody
     );
     throw new OzowCheckoutError(
       "The payment provider did not return a payment link. Please try again."
