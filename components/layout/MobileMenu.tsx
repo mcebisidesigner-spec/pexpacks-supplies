@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { mainNavLinks } from "@/data/navigation";
 import { isActivePath } from "@/lib/isActivePath";
-import { PackageIcon } from "@/components/ui/icons";
+import { TrackPackIcon } from "@/components/ui/icons";
 import styles from "./Header.module.css";
 
 type MobileMenuProps = {
@@ -152,7 +152,7 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
           >
             <span>Track Your Pack</span>
             <span className={styles.mobileMenuCtaIcon}>
-              <PackageIcon aria-hidden="true" />
+              <TrackPackIcon aria-hidden="true" />
             </span>
           </Link>
         </div>

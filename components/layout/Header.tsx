@@ -9,7 +9,7 @@ import { HeaderMenu } from "./HeaderMenu";
 import { HeaderScrollWrapper } from "./HeaderScrollWrapper";
 import { mainNavLinks } from "@/data/navigation";
 import { HeaderAccountControls } from "./HeaderAccountControls";
-import { PackageIcon } from "@/components/ui/icons";
+import { TrackPackIcon } from "@/components/ui/icons";
 import styles from "./Header.module.css";
 
 export function Header() {
@@ -93,7 +93,7 @@ export function Header() {
             <Link className={styles.desktopOrder} href="/track-order">
               <span>Track Your Pack</span>
               <span className={styles.orderIcon} aria-hidden="true">
-                <PackageIcon />
+                <TrackPackIcon />
               </span>
             </Link>
           )}
