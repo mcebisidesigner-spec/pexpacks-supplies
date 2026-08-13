@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import useSWR from "swr";
-import { Search, Plus, Trash2, Package, Check, Sparkles, AlertCircle } from "lucide-react";
+import { Search, Trash2, Package, Check, AlertCircle } from "lucide-react";
+import styles from "./GradePackItemSelector.module.css";
 
 export interface StationeryItem {
   id: string;
@@ -35,7 +36,7 @@ export interface GradePackItemSelectorProps {
   busy?: boolean;
   showSave?: boolean;
   onItemsChange?: (lines: PackItem[]) => void;
-  onSave?: (lines?: any) => void | Promise<void>;
+  onSave?: (lines: PackItem[]) => void | Promise<void>;
   onSavePack?: (items: PackItem[], totalPrice: number) => void;
 }
 
@@ -163,16 +164,16 @@ export function GradePackItemSelector({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6 text-slate-100">
+    <div className={styles.root}>
       {/* 1. Item Search & Auto-Populate Bar */}
-      <div className="relative space-y-2" ref={dropdownRef}>
-        <label className="block text-sm font-semibold text-slate-200">
+      <div className={styles.searchBlock} ref={dropdownRef}>
+        <label className={styles.fieldLabel}>
           Add Stationery Item to Grade Pack
         </label>
 
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-slate-400" />
+        <div className={styles.searchWrap}>
+          <div className={styles.searchIconWrap}>
+            <Search className={styles.searchIconGlyph} />
           </div>
 
           <input
@@ -184,20 +185,20 @@ export function GradePackItemSelector({
             }}
             onFocus={() => setIsDropdownOpen(true)}
             placeholder="Type item name or description (e.g., '2H Pencil', '70gsm A4 Box', 'Hardcover Notebook')..."
-            className="w-full pl-11 pr-10 min-h-[48px] bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+            className={styles.searchInput}
             aria-label="Search stationery items by name or description"
           />
 
           {isLoading && (
-            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-              <div className="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+            <div className={styles.spinnerWrap}>
+              <div className={styles.spinner} />
             </div>
           )}
         </div>
 
         {/* Search Results Dropdown Overlay */}
         {isDropdownOpen && searchResults && searchResults.length > 0 && (
-          <div className="absolute z-30 w-full mt-1 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden max-h-72 overflow-y-auto divide-y divide-slate-800/60">
+          <div className={styles.results}>
             {searchResults.map((item) => {
               const itemTitle = item.title || item.name || "Stationery Item";
               const itemPrice = item.unit_price ?? item.price ?? 0;
@@ -206,24 +207,24 @@ export function GradePackItemSelector({
                   key={item.id}
                   type="button"
                   onClick={() => handleSelectItem(item)}
-                  className="w-full p-3.5 text-left hover:bg-slate-800/80 transition-colors flex items-center justify-between group min-h-[52px]"
+                  className={styles.resultButton}
                 >
-                  <div className="space-y-0.5 pr-4">
-                    <p className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                  <div className={styles.resultInfo}>
+                    <p className={styles.resultTitle}>
                       {itemTitle}
                     </p>
                     {item.description && (
-                      <p className="text-xs text-slate-400 line-clamp-1">
+                      <p className={styles.resultDesc}>
                         {item.description}
                       </p>
                     )}
                   </div>
 
-                  <div className="text-right shrink-0">
-                    <span className="text-sm font-bold text-emerald-400">
+                  <div className={styles.resultPriceBlock}>
+                    <span className={styles.resultPrice}>
                       R {itemPrice.toFixed(2)}
                     </span>
-                    <p className="text-[10px] text-slate-500">Auto-filled</p>
+                    <p className={styles.resultPriceTag}>Auto-filled</p>
                   </div>
                 </button>
               );
@@ -232,66 +233,66 @@ export function GradePackItemSelector({
         )}
 
         {isDropdownOpen && debouncedQuery.length >= 2 && searchResults?.length === 0 && !isLoading && (
-          <div className="absolute z-30 w-full mt-1 bg-slate-900 border border-slate-800 rounded-xl p-4 text-center text-sm text-slate-400 shadow-xl">
-            <AlertCircle className="w-5 h-5 text-amber-400 mx-auto mb-1 inline mr-2" />
+          <div className={styles.resultEmpty}>
+            <AlertCircle className={styles.emptyIcon} />
             No matching stationery items found for &quot;{debouncedQuery}&quot;.
           </div>
         )}
       </div>
 
       {/* 2. Assembled Grade Pack Inventory List */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div className="flex items-center gap-2">
-            <Package className="w-5 h-5 text-emerald-400" />
-            <h3 className="font-bold text-white text-base">Assembled Grade Pack Inventory</h3>
+      <div className={styles.packBlock}>
+        <div className={styles.packHeader}>
+          <div className={styles.packHeading}>
+            <Package className={styles.packIcon} />
+            <h3 className={styles.packTitle}>Assembled Grade Pack Inventory</h3>
           </div>
-          <span className="text-xs font-medium text-slate-400">
+          <span className={styles.packCount}>
             {selectedItems.length} {selectedItems.length === 1 ? "item" : "items"} added
           </span>
         </div>
 
         {selectedItems.length === 0 ? (
-          <div className="py-8 text-center text-slate-500 text-sm space-y-2">
-            <p>No items added to this grade pack yet.</p>
-            <p className="text-xs text-slate-600">
+          <div className={styles.emptyNote}>
+            <p className={styles.emptyNoteMain}>No items added to this grade pack yet.</p>
+            <p className={styles.emptyNoteSub}>
               Use the search bar above to auto-populate prices and build your pack.
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className={styles.lineList}>
             {selectedItems.map((item) => {
               const displayTitle = item.title || item.name || "Stationery Item";
               const unitPrice = item.unit_price ?? item.price ?? 0;
               return (
                 <div
                   key={item.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-950/60 border border-slate-800/80 rounded-xl gap-3"
+                  className={styles.lineItem}
                 >
                   {/* Item Details */}
-                  <div className="space-y-0.5">
-                    <h4 className="text-sm font-semibold text-white">{displayTitle}</h4>
-                    {item.description && <p className="text-xs text-slate-400">{item.description}</p>}
+                  <div className={styles.lineInfo}>
+                    <h4 className={styles.lineName}>{displayTitle}</h4>
+                    {item.description && <p className={styles.lineDesc}>{item.description}</p>}
                   </div>
 
                   {/* Quantity Controls & Line Total */}
-                  <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0">
-                    <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 rounded-lg p-1">
+                  <div className={styles.lineControls}>
+                    <div className={styles.qtyStepper}>
                       <button
                         type="button"
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="w-8 h-8 flex items-center justify-center text-slate-300 hover:bg-slate-800 rounded text-sm font-bold transition-colors min-h-[44px] min-w-[44px]"
+                        className={styles.stepBtn}
                         aria-label={`Decrease quantity of ${displayTitle}`}
                       >
                         -
                       </button>
-                      <span className="w-8 text-center text-sm font-semibold text-white">
+                      <span className={styles.qtyValue}>
                         {item.quantity}
                       </span>
                       <button
                         type="button"
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="w-8 h-8 flex items-center justify-center text-slate-300 hover:bg-slate-800 rounded text-sm font-bold transition-colors min-h-[44px] min-w-[44px]"
+                        className={styles.stepBtn}
                         aria-label={`Increase quantity of ${displayTitle}`}
                       >
                         +
@@ -299,11 +300,11 @@ export function GradePackItemSelector({
                     </div>
 
                     {/* Price Auto-Calculated */}
-                    <div className="text-right min-w-[90px]">
-                      <p className="text-xs text-slate-400">
+                    <div className={styles.priceBlock}>
+                      <p className={styles.priceUnit}>
                         R {unitPrice.toFixed(2)} ea
                       </p>
-                      <p className="text-sm font-bold text-emerald-400">
+                      <p className={styles.priceTotal}>
                         R {(unitPrice * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -312,11 +313,11 @@ export function GradePackItemSelector({
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
-                      className="p-2 text-slate-500 hover:text-red-400 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      className={styles.removeBtn}
                       title="Remove Item"
                       aria-label={`Remove ${displayTitle} from pack`}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className={styles.removeIcon} />
                     </button>
                   </div>
                 </div>
@@ -325,10 +326,10 @@ export function GradePackItemSelector({
 
             {/* 3. Total Pack Summary Footer */}
             {showSave && (
-              <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div className={styles.totalRow}>
                 <div>
-                  <p className="text-xs text-slate-400">Total Pack Cost</p>
-                  <p className="text-2xl font-extrabold text-emerald-400">
+                  <p className={styles.totalLabel}>Total Pack Cost</p>
+                  <p className={styles.totalValue}>
                     R {totalPrice.toFixed(2)}
                   </p>
                 </div>
@@ -337,9 +338,9 @@ export function GradePackItemSelector({
                   type="button"
                   onClick={handleSave}
                   disabled={busy}
-                  className="min-h-[44px] px-6 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg transition-all flex items-center gap-2 disabled:opacity-50"
+                  className={styles.saveBtn}
                 >
-                  <Check className="w-4 h-4" />
+                  <Check className={styles.saveBtnIcon} />
                   {busy ? "Saving..." : saveSuccess ? "Pack Saved!" : submitLabel}
                 </button>
               </div>

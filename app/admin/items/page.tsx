@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { requireAdmin } from "@/lib/admin/rbac";
+import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listItems, listDistinctStationeryItems, type ItemListFilters } from "@/lib/admin/items";
+import { listPacksForFilter } from "@/lib/admin/packs";
 import { deleteItemAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import shared from "../schools/schools.module.css";
 import adminStyles from "../admin.module.css";
 import styles from "../packs/packs.module.css";
@@ -41,7 +43,7 @@ function money(v: number | null): string {
 }
 
 export default async function ItemsPage({ searchParams }: ItemsPageProps) {
-  await requireAdmin({ permission: "items.view" });
+  const session = await requireAdmin({ permission: "items.view" });
   const params = await searchParams;
 
   const queryStr = parseParam(params.q) || parseParam(params.search);
@@ -207,6 +209,12 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
             </Link>
           </div>
         </div>
+      ) : null}
+
+      {hasPermission(session, "items.import") ? (
+        <section aria-label="Bulk CSV stationery import">
+          <CSVStationeryImporter packs={await listPacksForFilter()} />
+        </section>
       ) : null}
     </div>
   );

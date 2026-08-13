@@ -1,7 +1,8 @@
 "use server";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/admin/rbac";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export interface CSVStationeryRow {
   sku?: string;
@@ -11,24 +12,20 @@ export interface CSVStationeryRow {
   category?: string;
 }
 
-export async function bulkImportStationeryAction(items: CSVStationeryRow[]) {
-  const supabase = await createSupabaseServerClient();
-
-  // 1. Verify user authentication
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-  if (authError || !user) {
-    throw new Error("Unauthorized access");
-  }
+export async function bulkImportStationeryAction(items: CSVStationeryRow[], packId: string) {
+  // Only authenticated staff with the items.import permission may bulk-import.
+  await requireAdmin({ permission: "items.import" });
 
   if (!items || items.length === 0) {
     throw new Error("No items provided for import.");
   }
+  if (!packId) {
+    throw new Error("A target grade pack is required for import.");
+  }
 
   // 2. Format & sanitize payload
   const formattedItems = items.map((item) => ({
+    pack_id: packId,
     name: item.title.trim(),
     description: item.description?.trim() || null,
     unit_price: Math.max(0, Number(item.unit_price) || 0),
@@ -37,10 +34,12 @@ export async function bulkImportStationeryAction(items: CSVStationeryRow[]) {
     updated_at: new Date().toISOString(),
   }));
 
-  // 3. Batch Upsert to Supabase
-  const { data, error } = await supabase
+  // 3. Batch Upsert to Supabase (service role bypasses RLS; the RBAC gate above
+  // is the security boundary)
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
     .from("stationery_items")
-    .upsert(formattedItems as any, {
+    .upsert(formattedItems, {
       ignoreDuplicates: false,
     })
     .select("id");

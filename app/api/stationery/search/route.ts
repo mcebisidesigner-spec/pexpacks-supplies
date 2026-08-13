@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -7,6 +8,15 @@ export async function GET(request: Request) {
 
   if (!query || query.trim().length < 2) {
     return NextResponse.json([]);
+  }
+
+  // Only authenticated staff with item access may search the inventory.
+  const session = await getAdminUser();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
+  }
+  if (!hasPermission(session, "items.view")) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {

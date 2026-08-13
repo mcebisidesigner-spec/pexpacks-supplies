@@ -15,6 +15,9 @@ import {
   bulkImportStationeryAction,
   type CSVStationeryRow,
 } from "@/app/actions/stationery-import";
+import styles from "./CSVStationeryImporter.module.css";
+
+type CsvRow = Record<string, string | number | undefined>;
 
 interface ParsedRecord {
   data: CSVStationeryRow;
@@ -22,11 +25,16 @@ interface ParsedRecord {
   rowNumber: number;
 }
 
-export function CSVStationeryImporter() {
+export interface CSVStationeryImporterProps {
+  packs?: { id: string; title: string }[];
+}
+
+export function CSVStationeryImporter({ packs = [] }: CSVStationeryImporterProps) {
   const [file, setFile] = useState<File | null>(null);
   const [parsedRows, setParsedRows] = useState<ParsedRecord[]>([]);
   const [isParsing, setIsParsing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [targetPackId, setTargetPackId] = useState<string>(packs[0]?.id ?? "");
   const [uploadSuccess, setUploadSuccess] = useState<{ count: number } | null>(
     null
   );
@@ -58,25 +66,25 @@ export function CSVStationeryImporter() {
     setGlobalError(null);
     setIsParsing(true);
 
-    Papa.parse(selectedFile, {
+    Papa.parse<CsvRow>(selectedFile, {
       header: true,
       skipEmptyLines: true,
       dynamicTyping: true,
       complete: (results) => {
         const processed: ParsedRecord[] = [];
 
-        results.data.forEach((row: any, index: number) => {
+        results.data.forEach((row, index) => {
           const rowNum = index + 2; // Accounting for header row
 
           // Validation checks
-          const title = row.title || row.Title || row.ITEM_NAME || row.name;
-          const rawPrice =
-            row.unit_price || row.price || row.Price || row.UNIT_PRICE;
-          const price = parseFloat(rawPrice);
+          const title =
+            row.title || row.Title || row.ITEM_NAME || row.name || "";
+          const rawPrice = row.unit_price ?? row.price ?? row.Price ?? row.UNIT_PRICE;
+          const price = parseFloat(String(rawPrice ?? ""));
 
           let errorMsg: string | undefined;
 
-          if (!title) {
+          if (!String(title).trim()) {
             errorMsg = 'Missing required "title" column';
           } else if (isNaN(price) || price < 0) {
             errorMsg = 'Invalid or missing "unit_price"';
@@ -87,7 +95,7 @@ export function CSVStationeryImporter() {
             error: errorMsg,
             data: {
               sku: row.sku ? String(row.sku).trim() : undefined,
-              title: String(title || "").trim(),
+              title: String(title).trim(),
               description: row.description
                 ? String(row.description).trim()
                 : undefined,
@@ -120,14 +128,16 @@ export function CSVStationeryImporter() {
     setGlobalError(null);
 
     try {
-      const res = await bulkImportStationeryAction(validItems);
+      const res = await bulkImportStationeryAction(validItems, targetPackId);
       if (res.success) {
         setUploadSuccess({ count: res.importedCount });
         setFile(null);
         setParsedRows([]);
       }
-    } catch (err: any) {
-      setGlobalError(err.message || "An unexpected import error occurred.");
+    } catch (err) {
+      setGlobalError(
+        err instanceof Error ? err.message : "An unexpected import error occurred."
+      );
     } finally {
       setIsUploading(false);
     }
@@ -137,16 +147,16 @@ export function CSVStationeryImporter() {
   const invalidCount = parsedRows.filter((r) => r.error).length;
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6 text-slate-100">
+    <div className={styles.root}>
       {/* Top Header Card */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-          <div>
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <FileSpreadsheet className="w-5 h-5 text-emerald-400" />
+      <div className={styles.card}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardTitleBlock}>
+            <h2 className={styles.cardTitle}>
+              <FileSpreadsheet className={styles.titleIcon} />
               Bulk CSV Stationery Importer
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className={styles.cardSub}>
               Upload or update master stationery items in bulk using a CSV file.
             </p>
           </div>
@@ -154,33 +164,37 @@ export function CSVStationeryImporter() {
           <button
             onClick={downloadTemplate}
             type="button"
-            className="min-h-[44px] px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold flex items-center gap-2 transition-colors self-start sm:self-auto"
+            className={styles.templateBtn}
           >
-            <Download className="w-4 h-4 text-emerald-400" />
+            <Download className={styles.templateIcon} />
             Download Sample CSV Template
           </button>
         </div>
 
         {/* File Dropzone area */}
-        <div className="relative border-2 border-dashed border-slate-800 hover:border-emerald-500/50 bg-slate-950/50 rounded-xl p-8 text-center transition-colors group">
+        <div className={styles.dropzone}>
           <input
             type="file"
             accept=".csv"
             onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+            className={styles.dropzoneInput}
             aria-label="Upload CSV file"
           />
-          <div className="space-y-3 pointer-events-none">
-            <div className="w-12 h-12 bg-slate-900 border border-slate-800 group-hover:border-emerald-500/40 rounded-2xl flex items-center justify-center mx-auto transition-colors">
-              <Upload className="w-6 h-6 text-emerald-400" />
+          <div className={styles.dropzoneContent}>
+            <div className={styles.dropzoneIconWrap}>
+              <Upload className={styles.dropzoneIcon} />
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">
-                {file ? file.name : "Click to upload or drag & drop CSV file"}
+              <p className={styles.dropzoneTitle}>
+                {isParsing
+                  ? "Parsing CSV…"
+                  : file
+                    ? file.name
+                    : "Click to upload or drag & drop CSV file"}
               </p>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className={styles.dropzoneHint}>
                 Supports columns:{" "}
-                <span className="text-slate-400">
+                <span className={styles.dropzoneHintStrong}>
                   sku, title, description, unit_price, category
                 </span>
               </p>
@@ -188,30 +202,58 @@ export function CSVStationeryImporter() {
           </div>
         </div>
 
+        {/* Target Grade Pack Selector */}
+        {packs.length > 0 ? (
+          <div className={styles.packSelectRow}>
+            <label htmlFor="csv-target-pack" className={styles.packSelectLabel}>
+              Import into Grade Pack
+            </label>
+            <select
+              id="csv-target-pack"
+              value={targetPackId}
+              onChange={(e) => setTargetPackId(e.target.value)}
+              className={styles.packSelect}
+            >
+              {packs.map((pack) => (
+                <option key={pack.id} value={pack.id}>
+                  {pack.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <div className={styles.errorBanner}>
+            <div className={styles.errorBannerInner}>
+              <AlertTriangle className={styles.errorIcon} />
+              <span>No grade packs exist yet. Create a pack first.</span>
+            </div>
+          </div>
+        )}
+
         {/* Global Error Notice */}
         {globalError && (
-          <div className="p-4 bg-red-950/40 border border-red-800/80 rounded-xl text-red-300 text-xs flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+          <div className={styles.errorBanner}>
+            <div className={styles.errorBannerInner}>
+              <AlertTriangle className={styles.errorIcon} />
               <span>{globalError}</span>
             </div>
             <button
               onClick={() => setGlobalError(null)}
-              className="text-red-400 hover:text-red-300"
+              className={styles.dismissBtn}
               aria-label="Dismiss error"
             >
-              <X className="w-4 h-4" />
+              <X className={styles.dismissIcon} />
             </button>
           </div>
         )}
 
         {/* Import Success Banner */}
         {uploadSuccess && (
-          <div className="p-4 bg-emerald-950/40 border border-emerald-800/80 rounded-xl text-emerald-300 text-xs flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+          <div className={styles.successBanner}>
+            <CheckCircle2 className={styles.successIcon} />
             <div>
-              <p className="font-bold">Import Successful!</p>
-              <p>
+              <p className={styles.successTitle}>Import Successful!</p>
+              <p className={styles.successText}>
                 Successfully processed and upserted {uploadSuccess.count}{" "}
                 stationery items into Supabase.
               </p>
@@ -222,17 +264,15 @@ export function CSVStationeryImporter() {
 
       {/* Preview Table & Validation Step */}
       {parsedRows.length > 0 && (
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
-            <div className="flex items-center gap-3">
-              <h3 className="font-bold text-white text-base">
-                CSV Validation Preview
-              </h3>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+        <div className={styles.previewCard}>
+          <div className={styles.previewHeader}>
+            <div className={styles.previewHeaderLeft}>
+              <h3 className={styles.previewTitle}>CSV Validation Preview</h3>
+              <span className={`${styles.pill} ${styles.pillValid}`}>
                 {validCount} Valid
               </span>
               {invalidCount > 0 && (
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
+                <span className={`${styles.pill} ${styles.pillInvalid}`}>
                   {invalidCount} Invalid
                 </span>
               )}
@@ -241,18 +281,18 @@ export function CSVStationeryImporter() {
             {/* Execute Import Action Button */}
             <button
               onClick={handleExecuteImport}
-              disabled={isUploading || validCount === 0}
+              disabled={isUploading || validCount === 0 || !targetPackId}
               type="button"
-              className="min-h-[44px] px-6 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-bold text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
+              className={styles.importBtn}
             >
               {isUploading ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <RefreshCw className={`${styles.importBtnIcon} ${styles.spin}`} />
                   Upserting to Supabase...
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 className={styles.importBtnIcon} />
                   Import {validCount} Items Now
                 </>
               )}
@@ -260,48 +300,50 @@ export function CSVStationeryImporter() {
           </div>
 
           {/* Records Table Preview */}
-          <div className="overflow-x-auto border border-slate-800 rounded-xl max-h-80 overflow-y-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950 text-slate-400 uppercase tracking-wider text-[10px] sticky top-0 z-10 border-b border-slate-800">
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead className={styles.tableHead}>
                 <tr>
-                  <th className="p-3">Row</th>
-                  <th className="p-3">SKU</th>
-                  <th className="p-3">Title</th>
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Unit Price</th>
-                  <th className="p-3">Status</th>
+                  <th className={styles.th}>Row</th>
+                  <th className={styles.th}>SKU</th>
+                  <th className={styles.th}>Title</th>
+                  <th className={styles.th}>Category</th>
+                  <th className={styles.th}>Unit Price</th>
+                  <th className={styles.th}>Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 bg-slate-900/40">
+              <tbody className={styles.tableBody}>
                 {parsedRows.map((row, idx) => (
                   <tr
                     key={idx}
-                    className={
-                      row.error ? "bg-red-950/20" : "hover:bg-slate-800/40"
-                    }
+                    className={`${styles.tableRow} ${
+                      row.error ? styles.tableRowError : styles.tableRowHover
+                    }`}
                   >
-                    <td className="p-3 text-slate-500 font-mono">
+                    <td className={`${styles.td} ${styles.tdMono}`}>
                       #{row.rowNumber}
                     </td>
-                    <td className="p-3 font-mono text-slate-400">
+                    <td className={`${styles.td} ${styles.tdMono}`}>
                       {row.data.sku || "—"}
                     </td>
-                    <td className="p-3 font-semibold text-white">
+                    <td className={`${styles.td} ${styles.tdTitle}`}>
                       {row.data.title || "—"}
                     </td>
-                    <td className="p-3 text-slate-400">{row.data.category}</td>
-                    <td className="p-3 font-bold text-emerald-400">
+                    <td className={`${styles.td} ${styles.tdCategory}`}>
+                      {row.data.category}
+                    </td>
+                    <td className={`${styles.td} ${styles.tdPrice}`}>
                       R {row.data.unit_price.toFixed(2)}
                     </td>
-                    <td className="p-3">
+                    <td className={styles.td}>
                       {row.error ? (
-                        <span className="text-red-400 font-medium flex items-center gap-1">
-                          <AlertTriangle className="w-3.5 h-3.5" />
+                        <span className={styles.statusError}>
+                          <AlertTriangle className={styles.statusIcon} />
                           {row.error}
                         </span>
                       ) : (
-                        <span className="text-emerald-400 font-medium flex items-center gap-1">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span className={styles.statusReady}>
+                          <CheckCircle2 className={styles.statusIcon} />
                           Ready
                         </span>
                       )}
