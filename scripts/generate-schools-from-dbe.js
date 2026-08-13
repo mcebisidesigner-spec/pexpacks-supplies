@@ -14,18 +14,39 @@
  * Schools are mapped to city/area using DMunName (metro) + Town_City + EIDistrict.
  */
 
-const XLSX = require("xlsx");
+const ExcelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
 
-// ── 1. Read DBE XLSX ──
-const xlsxPath = path.join(__dirname, "..", "tmp", "gauteng-dbe-2025.xlsx");
-const wb = XLSX.readFile(xlsxPath);
-const ws = wb.Sheets[wb.SheetNames[0]];
-const raw = XLSX.utils.sheet_to_json(ws, { defval: "" });
+async function parseXlsxToJson(filePath) {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.readFile(filePath);
+  const worksheet = workbook.worksheets[0];
 
-const active = raw.filter((r) => String(r.Status) === "OPEN");
-console.log(`Total OPEN schools: ${active.length}`);
+  const rows = [];
+  let headers = [];
+
+  worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+    if (rowNumber === 1) {
+      headers = row.values.slice(1).map((v) => String(v ?? "").trim());
+    } else {
+      const rowObj = {};
+      row.values.slice(1).forEach((val, colIdx) => {
+        const header = headers[colIdx];
+        if (header) {
+          let cellValue = val;
+          if (cellValue && typeof cellValue === "object") {
+            cellValue = cellValue.result !== undefined ? cellValue.result : cellValue.text ?? "";
+          }
+          rowObj[header] = cellValue !== undefined && cellValue !== null ? cellValue : "";
+        }
+      });
+      rows.push(rowObj);
+    }
+  });
+
+  return rows;
+}
 
 // ── 2. Town → City mapping ──
 const townToCity = {
@@ -110,7 +131,7 @@ const dmunToMetro = {
 
 function normalizeTown(t) {
   if (!t) return "";
-  return t
+  return String(t)
     .trim()
     .toUpperCase()
     .replace(/'/g, "")
@@ -171,7 +192,7 @@ function mapCity(row) {
   return { city: "Gauteng", metro: "Other" };
 }
 
-// ── 4. Grade templates (from original generator) ──
+// ── 4. Grade templates ──
 const primaryGrades = [
   { grade: "Grade R", price: 679, contents: ["Exercise books", "Wax crayons", "Glue stick", "Safety scissors", "Scrapbook", "Pencils"] },
   { grade: "Grade 1", price: 699, contents: ["Exercise books", "Pencils", "Crayons", "Glue stick", "Scissors", "Eraser"] },
@@ -206,132 +227,119 @@ function seededRandom() {
   return (seed - 1) / 2147483646;
 }
 
-// Assign grades deterministically for reproducibility
-// For real schools, assign ALL grade packs for their phase (or most of them)
 function getSchoolGrades(phase) {
   if (phase === "PRIMARY SCHOOL" || phase === "INTERMEDIATE SCHOOL") return primaryGrades;
   if (phase === "SECONDARY SCHOOL") return highGrades;
   if (phase === "COMBINED SCHOOL") {
-    // Combined: pick a mix of primary and high grades
     return [
-      ...primaryGrades.slice(0, 4), // Grade R-4
-      ...highGrades.slice(2, 5), // Grade 10-12
+      ...primaryGrades.slice(0, 4),
+      ...highGrades.slice(2, 5),
     ];
   }
   if (phase === "SPECIAL NEEDS EDUCATION SCHOOL") return primaryGrades.slice(0, 4);
   return primaryGrades;
 }
 
-const schoolIndex = [];
-const schoolRecords = [];
-const usedSlugs = new Set();
-
-for (const row of active) {
-  const rawName = row.Official_Institution_Name || "";
-  // Clean up the name: title case
-  const name = rawName
-    .split(/\s+/)
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-    .join(" ");
-
-  if (!name) continue;
-
-  const { city, metro } = mapCity(row);
-  const phase = row.Phase_PED || "";
-
-  let slug = slugify(name);
-  if (usedSlugs.has(slug)) {
-    slug = `${slug}-${Math.random().toString(36).slice(2, 6)}`;
+async function main() {
+  const xlsxPath = path.join(__dirname, "..", "tmp", "gauteng-dbe-2025.xlsx");
+  if (!fs.existsSync(xlsxPath)) {
+    console.error(`[error] File not found: ${xlsxPath}`);
+    process.exit(1);
   }
-  usedSlugs.add(slug);
 
-  const grades = getSchoolGrades(phase).map((g) => ({
-    id: `${slug}-${slugify(g.grade)}`,
-    grade: g.grade,
-    gradeSlug: slugify(g.grade),
-    price: g.price + Math.floor(seededRandom() * 6) * 10 - 20,
-    contents: g.contents,
-    deliveryNote:
-      seededRandom() < 0.3
-        ? "Prepared for delivery before school starts."
-        : "Availability confirmed during order follow-up.",
-    availability: seededRandom() < 0.15
-      ? "in-stock"
-      : seededRandom() < 0.3
-        ? "seasonal"
-        : "pre-order",
-  }));
+  const raw = await parseXlsxToJson(xlsxPath);
+  const active = raw.filter((r) => String(r.Status) === "OPEN");
+  console.log(`Total OPEN schools: ${active.length}`);
 
-  const id = `school-${slug}`;
-  const isPartner = seededRandom() < (phase === "SECONDARY SCHOOL" ? 0.05 : 0.08);
-  const lowestPrice = Math.min(...grades.map((g) => g.price));
+  const schoolIndex = [];
+  const schoolRecords = [];
+  const usedSlugs = new Set();
 
-  schoolIndex.push({
-    id,
-    name,
-    slug,
-    city,
-    metro,
-    province: "Gauteng",
-    isPartnerSchool: isPartner,
-    grades: grades.map((g) => ({
-      id: g.id,
+  for (const row of active) {
+    const rawName = String(row.Official_Institution_Name || "");
+    const name = rawName
+      .split(/\s+/)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(" ");
+
+    if (!name) continue;
+
+    const { city, metro } = mapCity(row);
+    const phase = String(row.Phase_PED || "");
+
+    let slug = slugify(name);
+    if (usedSlugs.has(slug)) {
+      slug = `${slug}-${Math.random().toString(36).slice(2, 6)}`;
+    }
+    usedSlugs.add(slug);
+
+    const grades = getSchoolGrades(phase).map((g) => ({
+      id: `${slug}-${slugify(g.grade)}`,
       grade: g.grade,
-      gradeSlug: g.gradeSlug,
-    })),
-    lowestPrice,
-  });
+      gradeSlug: slugify(g.grade),
+      price: g.price + Math.floor(seededRandom() * 6) * 10 - 20,
+      contents: g.contents,
+      deliveryNote:
+        seededRandom() < 0.3
+          ? "Prepared for delivery before school starts."
+          : "Availability confirmed during order follow-up.",
+      availability: seededRandom() < 0.15
+        ? "in-stock"
+        : seededRandom() < 0.3
+          ? "seasonal"
+          : "pre-order",
+    }));
 
-  schoolRecords.push({
-    id,
-    name,
-    slug,
-    city,
-    metro,
-    province: "Gauteng",
-    isPartnerSchool: isPartner,
-    grades,
-  });
+    const id = `school-${slug}`;
+    const isPartner = seededRandom() < (phase === "SECONDARY SCHOOL" ? 0.05 : 0.08);
+    const lowestPrice = Math.min(...grades.map((g) => g.price));
+
+    schoolIndex.push({
+      id,
+      name,
+      slug,
+      city,
+      metro,
+      province: "Gauteng",
+      isPartnerSchool: isPartner,
+      grades: grades.map((g) => ({
+        id: g.id,
+        grade: g.grade,
+        gradeSlug: g.gradeSlug,
+      })),
+      lowestPrice,
+    });
+
+    schoolRecords.push({
+      id,
+      name,
+      slug,
+      city,
+      metro,
+      province: "Gauteng",
+      isPartnerSchool: isPartner,
+      grades,
+    });
+  }
+
+  // ── 6. Write output files ──
+  const dataDir = path.join(__dirname, "..", "data");
+
+  fs.writeFileSync(
+    path.join(dataDir, "school-index.json"),
+    JSON.stringify(schoolIndex, null, 2),
+    "utf-8"
+  );
+
+  fs.writeFileSync(
+    path.join(dataDir, "school-records.json"),
+    JSON.stringify(schoolRecords, null, 2),
+    "utf-8"
+  );
+
+  console.log(`\n✅ Generated ${schoolIndex.length} schools`);
+  console.log(`   Cities: ${[...new Set(schoolIndex.map((s) => s.city))].join(", ")}`);
+  console.log(`   Metro: ${[...new Set(schoolIndex.map((s) => s.metro))].join(", ")}`);
 }
 
-// ── 6. Write output files ──
-const dataDir = path.join(__dirname, "..", "data");
-
-fs.writeFileSync(
-  path.join(dataDir, "school-index.json"),
-  JSON.stringify(schoolIndex, null, 2),
-  "utf-8"
-);
-
-fs.writeFileSync(
-  path.join(dataDir, "school-records.json"),
-  JSON.stringify(schoolRecords, null, 2),
-  "utf-8"
-);
-
-console.log(`\n✅ Generated ${schoolIndex.length} schools`);
-console.log(`   Cities: ${[...new Set(schoolIndex.map((s) => s.city))].join(", ")}`);
-console.log(`   Metro: ${[...new Set(schoolIndex.map((s) => s.metro))].join(", ")}`);
-
-// Stats by city
-const cityStats = {};
-schoolIndex.forEach((s) => {
-  if (!cityStats[s.city]) cityStats[s.city] = { primary: 0, high: 0, combined: 0 };
-  const rec = schoolRecords.find((r) => r.id === s.id);
-  if (rec) {
-    const grades = rec.grades.map((g) => g.grade);
-    const hasPrimary = grades.some((g) => g.startsWith("Grade ") && parseInt(g.split(" ")[1]) <= 7);
-    const hasHigh = grades.some((g) => parseInt(g.split(" ")[1]) >= 8);
-    if (hasPrimary && hasHigh) cityStats[s.city].combined++;
-    else if (hasHigh) cityStats[s.city].high++;
-    else cityStats[s.city].primary++;
-  }
-});
-
-console.log(`\n   Breakdown:`);
-Object.entries(cityStats)
-  .sort((a, b) => b[1].primary + b[1].high + b[1].combined - (a[1].primary + a[1].high + a[1].combined))
-  .forEach(([city, stats]) => {
-    const total = stats.primary + stats.high + stats.combined;
-    console.log(`   ${city}: ${total} (P:${stats.primary} H:${stats.high} C:${stats.combined})`);
-  });
+main().catch(console.error);
