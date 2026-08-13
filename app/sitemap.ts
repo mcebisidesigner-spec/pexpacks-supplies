@@ -17,6 +17,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/faq",
     "/contact",
     "/happy-pay",
+    "/opengraph-image.jpg",
+    "/twitter-image.jpg",
     "/privacy-policy",
     "/terms",
     "/happy-pay-terms",

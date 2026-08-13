@@ -57,8 +57,8 @@ export function buildMetadata(
       images: [
         {
           url: imageToUse,
-          width: 1200,
-          height: 630,
+          width: 512,
+          height: 512,
           alt: defaultImageAlt,
         },
       ],
@@ -71,6 +71,8 @@ export function buildMetadata(
       images: [
         {
           url: twitterImageToUse,
+          width: 512,
+          height: 512,
           alt: defaultImageAlt,
         },
       ],
