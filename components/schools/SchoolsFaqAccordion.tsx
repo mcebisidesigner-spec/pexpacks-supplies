@@ -40,7 +40,7 @@ export function SchoolsFaqAccordion({ className }: SchoolsFaqAccordionProps) {
           </summary>
           <div className={homeStyles.accordionAnswer}>
             <p>No. Select your school, then use our system to add or remove items before checkout.</p>
-            <Link href="/schools" className={homeStyles.accordionPill} onClick={(e) => e.stopPropagation()}>Find your school</Link>
+            <Link href="/schools" className={homeStyles.accordionPill} onClick={(e: React.MouseEvent) => e.stopPropagation()}>Find your school</Link>
           </div>
         </details>
         <details className={homeStyles.accordionItem} name="schools-faq">
@@ -49,7 +49,7 @@ export function SchoolsFaqAccordion({ className }: SchoolsFaqAccordionProps) {
           </summary>
           <div className={homeStyles.accordionAnswer}>
             <p>Yes, we use teacher-approved brands like Croxley, BIC, Pritt, Staedtler, and Pilot.</p>
-            <Link href="/schools" className={homeStyles.accordionPill} onClick={(e) => e.stopPropagation()}>Browse packs</Link>
+            <Link href="/schools" className={homeStyles.accordionPill} onClick={(e: React.MouseEvent) => e.stopPropagation()}>Browse packs</Link>
           </div>
         </details>
       </div>

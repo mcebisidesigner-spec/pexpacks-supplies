@@ -85,7 +85,7 @@ export async function updateSession(request: NextRequest) {
       loginUrl.pathname = "/login";
       loginUrl.search = "";
       const redirected = NextResponse.redirect(loginUrl);
-      response.cookies.getAll().forEach((cookie) =>
+      response.cookies.getAll().forEach((cookie: { name: string; value: string; httpOnly?: boolean; secure?: boolean; sameSite?: true | false | "lax" | "strict" | "none"; maxAge?: number }) =>
         redirected.cookies.set(cookie.name, cookie.value, {
           path: "/",
           httpOnly: cookie.httpOnly,

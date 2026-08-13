@@ -181,11 +181,18 @@ export async function getAdminUser(): Promise<AdminSession | null> {
  * - authenticated but not staff → masked 404
  * - lacks an optional required permission → masked 404
  */
-export async function requireAdmin(options?: { permission?: PermissionKey }) {
+export async function requireAdmin(options?: { permission?: PermissionKey }): Promise<AdminSession> {
   const session = await getAdminUser();
-  if (!session) redirect("/login");
-  if (!session.isSuperAdmin && session.roles.length === 0) notFound();
-  if (options?.permission && !session.permissions.has(options.permission)) notFound();
+  if (!session) {
+    redirect("/login");
+    throw new Error("Unauthenticated");
+  }
+  if (!session.isSuperAdmin && session.roles.length === 0) {
+    notFound();
+  }
+  if (options?.permission && !session.permissions.has(options.permission)) {
+    notFound();
+  }
   return session;
 }
 
