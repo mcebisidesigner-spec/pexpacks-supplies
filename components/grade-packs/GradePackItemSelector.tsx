@@ -1,337 +1,354 @@
-/**
- * Grade-pack item selector — dark, mobile-first, accessible.
- * Debounced SWR typeahead over the stationery inventory (reuses the same
- * server action as the admin ItemsManager) with auto price population, line
- * totals and a keyboard-navigable listbox. Intended as the shared line-item
- * builder for the grade-pack creation/editing forms.
- */
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import useSWR from "swr";
-import { Search, X } from "lucide-react";
-import { searchStationeryInventoryAction } from "@/app/admin/items/actions";
-import type { StationeryInventoryItem } from "@/lib/admin/items";
-import "@/styles/admin-dark.css";
-import styles from "./GradePackItemSelector.module.css";
+import { Search, Plus, Trash2, Package, Check, Sparkles, AlertCircle } from "lucide-react";
 
-export interface PackLine {
+export interface StationeryItem {
+  id: string;
+  name?: string;
+  title?: string;
+  description?: string | null;
+  unit_price?: number | null;
+  price?: number | null;
+  sku?: string;
+  category?: string;
+}
+
+export interface PackItem {
   id: string;
   name: string;
-  description: string | null;
-  unit_price: number | null;
+  title?: string;
+  description?: string | null;
+  unit_price?: number | null;
+  price?: number | null;
+  sku?: string;
+  category?: string;
   quantity: number;
 }
 
-interface GradePackItemSelectorProps {
-  initialItems?: PackLine[];
+export type PackLine = PackItem;
+
+export interface GradePackItemSelectorProps {
+  initialItems?: PackItem[];
   submitLabel?: string;
   busy?: boolean;
   showSave?: boolean;
-  onItemsChange?: (items: PackLine[]) => void;
-  onSave: (items: PackLine[]) => void | Promise<void>;
+  onItemsChange?: (lines: PackItem[]) => void;
+  onSave?: (lines?: any) => void | Promise<void>;
+  onSavePack?: (items: PackItem[], totalPrice: number) => void;
 }
 
-export default function GradePackItemSelector({
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+export function GradePackItemSelector({
   initialItems = [],
-  submitLabel = "Save grade pack",
+  submitLabel = "Save Grade Pack",
   busy = false,
   showSave = true,
   onItemsChange,
   onSave,
+  onSavePack,
 }: GradePackItemSelectorProps) {
-  const [query, setQuery] = useState("");
-  const [debounced, setDebounced] = useState("");
-  const [items, setItems] = useState<PackLine[]>(initialItems);
-  const [open, setOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);
-  const [announcement, setAnnouncement] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const announceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [selectedItems, setSelectedItems] = useState<PackItem[]>(initialItems);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Debounce input typing (150ms) to prevent unnecessary DB spam
   useEffect(() => {
-    const t = setTimeout(() => setDebounced(query), 150);
-    return () => clearTimeout(t);
-  }, [query]);
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchTerm);
+    }, 150);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
-  useEffect(() => {
-    if (announceTimer.current) clearTimeout(announceTimer.current);
-    if (!announcement) return;
-    announceTimer.current = setTimeout(() => setAnnouncement(""), 2000);
-    return () => {
-      if (announceTimer.current) clearTimeout(announceTimer.current);
-    };
-  }, [announcement]);
-
-  const searchKey = debounced.trim().length >= 2 ? ["stationery-inventory", debounced.trim()] : null;
-
-  const { data: results, isValidating } = useSWR<StationeryInventoryItem[]>(
-    searchKey,
-    ([, q]) => searchStationeryInventoryAction(q),
-    { keepPreviousData: true }
+  // SWR query fetches matching items
+  const { data: searchResults, isLoading } = useSWR<StationeryItem[]>(
+    debouncedQuery.length >= 2
+      ? `/api/stationery/search?q=${encodeURIComponent(debouncedQuery)}`
+      : null,
+    fetcher
   );
 
+  // Close dropdown when clicking outside
   useEffect(() => {
-    if (!open && query.trim().length >= 2) setOpen(true);
-    if (open && results && results.length > 0 && activeIndex === -1) setActiveIndex(0);
-  }, [open, results, query, activeIndex]);
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  function announce(message: string) {
-    setAnnouncement(message);
-  }
+  const notifyChange = (items: PackItem[]) => {
+    if (onItemsChange) {
+      onItemsChange(items);
+    }
+  };
 
-  function updateItems(next: PackLine[]) {
-    setItems(next);
-    onItemsChange?.(next);
-  }
+  // Add item to current Grade Pack and auto-populate unit price
+  const handleSelectItem = (item: StationeryItem) => {
+    const priceVal = item.unit_price ?? item.price ?? 0;
+    const titleVal = item.title || item.name || "Stationery Item";
 
-  function addItem(suggestion: StationeryInventoryItem) {
-    const lower = suggestion.name.toLowerCase();
-    const existing = items.find((i) => i.name.toLowerCase() === lower);
+    const newItem: PackItem = {
+      id: item.id,
+      title: titleVal,
+      name: titleVal,
+      description: item.description,
+      unit_price: priceVal,
+      price: priceVal,
+      quantity: 1,
+    };
 
-    updateItems(
-      existing
-        ? items.map((i) =>
-            i.name.toLowerCase() === lower ? { ...i, quantity: i.quantity + 1 } : i
-          )
-        : [
-            ...items,
-            {
-              id: suggestion.id,
-              name: suggestion.name,
-              description: suggestion.description,
-              unit_price: suggestion.unit_price,
-              quantity: 1,
-            },
-          ]
-    );
+    setSelectedItems((prev) => {
+      const existing = prev.find((i) => i.id === item.id);
+      let updated: PackItem[];
+      if (existing) {
+        updated = prev.map((i) =>
+          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+        );
+      } else {
+        updated = [...prev, newItem];
+      }
+      notifyChange(updated);
+      return updated;
+    });
 
-    announce(existing ? `Increased quantity of ${suggestion.name}` : `Added ${suggestion.name}`);
-    setQuery("");
-    setOpen(false);
-    inputRef.current?.focus();
-  }
+    setSearchTerm("");
+    setIsDropdownOpen(false);
+  };
 
-  function changeQuantity(name: string, delta: number) {
-    const lower = name.toLowerCase();
-    const target = items.find((i) => i.name.toLowerCase() === lower);
-    if (!target) return;
-
-    const quantity = target.quantity + delta;
-    if (quantity <= 0) {
-      updateItems(items.filter((i) => i.name.toLowerCase() !== lower));
-      announce(`Removed ${name}`);
+  // Adjust item quantity inside pack
+  const updateQuantity = (id: string, qty: number) => {
+    if (qty <= 0) {
+      removeItem(id);
       return;
     }
-    updateItems(items.map((i) => (i.name.toLowerCase() === lower ? { ...i, quantity } : i)));
-  }
+    setSelectedItems((prev) => {
+      const updated = prev.map((item) => (item.id === id ? { ...item, quantity: qty } : item));
+      notifyChange(updated);
+      return updated;
+    });
+  };
 
-  function removeItem(name: string) {
-    const lower = name.toLowerCase();
-    updateItems(items.filter((i) => i.name.toLowerCase() !== lower));
-    announce(`Removed ${name}`);
-  }
+  // Remove item from pack
+  const removeItem = (id: string) => {
+    setSelectedItems((prev) => {
+      const updated = prev.filter((item) => item.id !== id);
+      notifyChange(updated);
+      return updated;
+    });
+  };
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (!open || !results || results.length === 0) {
-      if (e.key === "Escape") setOpen(false);
-      return;
+  // Calculate total price of the grade pack
+  const totalPrice = selectedItems.reduce(
+    (sum, item) => sum + (item.unit_price ?? item.price ?? 0) * item.quantity,
+    0
+  );
+
+  const handleSave = async () => {
+    if (onSave) {
+      await onSave(selectedItems);
     }
-    switch (e.key) {
-      case "ArrowDown":
-        e.preventDefault();
-        setOpen(true);
-        setActiveIndex((i) => (i + 1) % results.length);
-        break;
-      case "ArrowUp":
-        e.preventDefault();
-        setActiveIndex((i) => (i - 1 + results.length) % results.length);
-        break;
-      case "Enter":
-        e.preventDefault();
-        if (activeIndex >= 0 && activeIndex < results.length) {
-          addItem(results[activeIndex]);
-        }
-        break;
-      case "Escape":
-        e.preventDefault();
-        setOpen(false);
-        break;
-      default:
-        break;
+    if (onSavePack) {
+      onSavePack(selectedItems, totalPrice);
     }
-  }
-
-  const lines = items.map((i) => ({
-    ...i,
-    lineTotal: i.unit_price != null ? i.unit_price * i.quantity : null,
-  }));
-  const grandTotal = lines.reduce((sum, i) => sum + (i.lineTotal ?? 0), 0);
-  const totalCount = items.reduce((sum, i) => sum + i.quantity, 0);
-
-  async function handleSave() {
-    await onSave(items);
-  }
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 3000);
+  };
 
   return (
-    <div className={`admin-dark ${styles.root}`}>
-      <div className={styles.searchBlock}>
-        <label className={styles.fieldLabel} htmlFor="pack-item-search">
-          Search stationery
+    <div className="w-full max-w-4xl mx-auto space-y-6 text-slate-100">
+      {/* 1. Item Search & Auto-Populate Bar */}
+      <div className="relative space-y-2" ref={dropdownRef}>
+        <label className="block text-sm font-semibold text-slate-200">
+          Add Stationery Item to Grade Pack
         </label>
-        <div className={styles.searchField}>
-          <Search size={18} />
+
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-slate-400" />
+          </div>
+
           <input
-            id="pack-item-search"
-            ref={inputRef}
-            className={styles.searchInput}
-            type="search"
-            placeholder="Type at least 2 characters, e.g. “4mm ruler”"
-            autoComplete="off"
-            value={query}
+            type="text"
+            value={searchTerm}
             onChange={(e) => {
-              setQuery(e.target.value);
-              setActiveIndex(-1);
+              setSearchTerm(e.target.value);
+              setIsDropdownOpen(true);
             }}
-            onFocus={() => {
-              if (debounced.trim().length >= 2) setOpen(true);
-            }}
-            onBlur={() => {
-              setTimeout(() => setOpen(false), 120);
-            }}
-            onKeyDown={handleKeyDown}
-            role="combobox"
-            aria-expanded={open}
-            aria-controls="pack-item-results"
-            aria-autocomplete="list"
-            aria-activedescendant={
-              open && activeIndex >= 0 ? `pack-item-option-${activeIndex}` : undefined
-            }
+            onFocus={() => setIsDropdownOpen(true)}
+            placeholder="Type item name or description (e.g., '2H Pencil', '70gsm A4 Box', 'Hardcover Notebook')..."
+            className="w-full pl-11 pr-10 min-h-[48px] bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+            aria-label="Search stationery items by name or description"
           />
-          {isValidating ? <span className={styles.searching}>Searching…</span> : null}
-        </div>
-        {open && query.trim().length >= 2 ? (
-          <ul
-            id="pack-item-results"
-            className={styles.results}
-            role="listbox"
-            aria-label="Stationery results"
-          >
-            {results && results.length > 0
-              ? results.map((r, i) => (
-                  <li
-                    key={r.id}
-                    id={`pack-item-option-${i}`}
-                    role="option"
-                    aria-selected={i === activeIndex}
-                    className={`${styles.resultItem} ${i === activeIndex ? styles.resultActive : ""}`}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      addItem(r);
-                    }}
-                    onMouseEnter={() => setActiveIndex(i)}
-                  >
-                    <span className={styles.resultName}>{r.name}</span>
-                    <span className={styles.resultPrice}>
-                      {r.unit_price != null ? `R ${r.unit_price}` : "Price on request"}
-                    </span>
-                    {r.description ? (
-                      <span className={styles.resultDesc}>{r.description}</span>
-                    ) : null}
-                  </li>
-                ))
-              : isValidating
-                ? null
-                : (
-                    <li className={styles.resultEmpty} role="presentation">
-                      No matching items found.
-                    </li>
-                  )}
-          </ul>
-        ) : null}
-      </div>
 
-      <div className={styles.packBlock}>
-        <div className={styles.packHeader}>
-          <h2 className={styles.packTitle}>Pack contents</h2>
-          <span className={styles.packCount}>{totalCount} item{totalCount === 1 ? "" : "s"}</span>
+          {isLoading && (
+            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+              <div className="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
         </div>
 
-        {lines.length === 0 ? (
-          <p className={styles.emptyNote}>No items yet — search above to add stationery.</p>
-        ) : (
-          <ul className={styles.lineList}>
-            {lines.map((line) => (
-              <li key={line.name} className={styles.lineItem}>
-                <div className={styles.lineInfo}>
-                  <span className={styles.lineName}>{line.name}</span>
-                  <span className={styles.linePrice}>
-                    {line.unit_price != null ? `R ${line.unit_price} each` : "Price on request"}
-                  </span>
-                </div>
-                <div className={styles.lineControls}>
-                  <div className={styles.qtyStepper} aria-label={`Quantity of ${line.name}`}>
-                    <button
-                      type="button"
-                      className={styles.stepBtn}
-                      onClick={() => changeQuantity(line.name, -1)}
-                      aria-label={`Decrease quantity of ${line.name}`}
-                    >
-                      <span aria-hidden="true">−</span>
-                    </button>
-                    <span className={styles.qtyValue} aria-live="polite">
-                      {line.quantity}
-                    </span>
-                    <button
-                      type="button"
-                      className={styles.stepBtn}
-                      onClick={() => changeQuantity(line.name, 1)}
-                      aria-label={`Increase quantity of ${line.name}`}
-                    >
-                      <span aria-hidden="true">+</span>
-                    </button>
+        {/* Search Results Dropdown Overlay */}
+        {isDropdownOpen && searchResults && searchResults.length > 0 && (
+          <div className="absolute z-30 w-full mt-1 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden max-h-72 overflow-y-auto divide-y divide-slate-800/60">
+            {searchResults.map((item) => {
+              const itemTitle = item.title || item.name || "Stationery Item";
+              const itemPrice = item.unit_price ?? item.price ?? 0;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleSelectItem(item)}
+                  className="w-full p-3.5 text-left hover:bg-slate-800/80 transition-colors flex items-center justify-between group min-h-[52px]"
+                >
+                  <div className="space-y-0.5 pr-4">
+                    <p className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                      {itemTitle}
+                    </p>
+                    {item.description && (
+                      <p className="text-xs text-slate-400 line-clamp-1">
+                        {item.description}
+                      </p>
+                    )}
                   </div>
-                  <span className={styles.lineTotal}>
-                    {line.lineTotal != null ? `R ${line.lineTotal}` : "—"}
-                  </span>
-                  <button
-                    type="button"
-                    className={styles.removeBtn}
-                    onClick={() => removeItem(line.name)}
-                    aria-label={`Remove ${line.name}`}
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+
+                  <div className="text-right shrink-0">
+                    <span className="text-sm font-bold text-emerald-400">
+                      R {itemPrice.toFixed(2)}
+                    </span>
+                    <p className="text-[10px] text-slate-500">Auto-filled</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         )}
 
-        {lines.length > 0 ? (
-          <div className={styles.totalRow}>
-            <span className={styles.totalLabel}>Estimated total</span>
-            <span className={styles.totalValue}>R {grandTotal}</span>
+        {isDropdownOpen && debouncedQuery.length >= 2 && searchResults?.length === 0 && !isLoading && (
+          <div className="absolute z-30 w-full mt-1 bg-slate-900 border border-slate-800 rounded-xl p-4 text-center text-sm text-slate-400 shadow-xl">
+            <AlertCircle className="w-5 h-5 text-amber-400 mx-auto mb-1 inline mr-2" />
+            No matching stationery items found for &quot;{debouncedQuery}&quot;.
           </div>
-        ) : null}
-
-        {showSave ? (
-          <div className={styles.footer}>
-            <button
-              type="button"
-              className={styles.saveBtn}
-              onClick={() => void handleSave()}
-              disabled={busy || lines.length === 0}
-            >
-              {busy ? "Saving…" : submitLabel}
-            </button>
-          </div>
-        ) : null}
+        )}
       </div>
 
-      <div className={styles.visuallyHidden} aria-live="polite">
-        {announcement}
+      {/* 2. Assembled Grade Pack Inventory List */}
+      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="flex items-center gap-2">
+            <Package className="w-5 h-5 text-emerald-400" />
+            <h3 className="font-bold text-white text-base">Assembled Grade Pack Inventory</h3>
+          </div>
+          <span className="text-xs font-medium text-slate-400">
+            {selectedItems.length} {selectedItems.length === 1 ? "item" : "items"} added
+          </span>
+        </div>
+
+        {selectedItems.length === 0 ? (
+          <div className="py-8 text-center text-slate-500 text-sm space-y-2">
+            <p>No items added to this grade pack yet.</p>
+            <p className="text-xs text-slate-600">
+              Use the search bar above to auto-populate prices and build your pack.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {selectedItems.map((item) => {
+              const displayTitle = item.title || item.name || "Stationery Item";
+              const unitPrice = item.unit_price ?? item.price ?? 0;
+              return (
+                <div
+                  key={item.id}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-950/60 border border-slate-800/80 rounded-xl gap-3"
+                >
+                  {/* Item Details */}
+                  <div className="space-y-0.5">
+                    <h4 className="text-sm font-semibold text-white">{displayTitle}</h4>
+                    {item.description && <p className="text-xs text-slate-400">{item.description}</p>}
+                  </div>
+
+                  {/* Quantity Controls & Line Total */}
+                  <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0">
+                    <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 rounded-lg p-1">
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        className="w-8 h-8 flex items-center justify-center text-slate-300 hover:bg-slate-800 rounded text-sm font-bold transition-colors min-h-[44px] min-w-[44px]"
+                        aria-label={`Decrease quantity of ${displayTitle}`}
+                      >
+                        -
+                      </button>
+                      <span className="w-8 text-center text-sm font-semibold text-white">
+                        {item.quantity}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="w-8 h-8 flex items-center justify-center text-slate-300 hover:bg-slate-800 rounded text-sm font-bold transition-colors min-h-[44px] min-w-[44px]"
+                        aria-label={`Increase quantity of ${displayTitle}`}
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    {/* Price Auto-Calculated */}
+                    <div className="text-right min-w-[90px]">
+                      <p className="text-xs text-slate-400">
+                        R {unitPrice.toFixed(2)} ea
+                      </p>
+                      <p className="text-sm font-bold text-emerald-400">
+                        R {(unitPrice * item.quantity).toFixed(2)}
+                      </p>
+                    </div>
+
+                    {/* Remove CTA */}
+                    <button
+                      type="button"
+                      onClick={() => removeItem(item.id)}
+                      className="p-2 text-slate-500 hover:text-red-400 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      title="Remove Item"
+                      aria-label={`Remove ${displayTitle} from pack`}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* 3. Total Pack Summary Footer */}
+            {showSave && (
+              <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-400">Total Pack Cost</p>
+                  <p className="text-2xl font-extrabold text-emerald-400">
+                    R {totalPrice.toFixed(2)}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={busy}
+                  className="min-h-[44px] px-6 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg transition-all flex items-center gap-2 disabled:opacity-50"
+                >
+                  <Check className="w-4 h-4" />
+                  {busy ? "Saving..." : saveSuccess ? "Pack Saved!" : submitLabel}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
+export default GradePackItemSelector;
