@@ -1,0 +1,35 @@
+/* ===================================================
+   Pexpacks Supplies — Admin Dark Theme Tokens
+   Scoped under `.admin-dark` so it can NEVER leak into the
+   public, light-only site. Apply the class to any admin
+   subtree to adopt the dark theme.
+
+   Palette: slate neutrals (slate-950/900/800) + emerald
+   accent, matching the approved admin dark theme.
+   =================================================== */
+
+.admin-dark {
+  --admin-bg: #020617; /* slate-950 */
+  --admin-surface: #0f172a; /* slate-900 */
+  --admin-surface-2: #1e293b; /* slate-800 */
+  --admin-border: #1e293b; /* slate-800 */
+  --admin-border-strong: #334155; /* slate-700 */
+  --admin-text: #f8fafc; /* slate-50 */
+  --admin-text-2: #cbd5e1; /* slate-300 */
+  --admin-text-3: #94a3b8; /* slate-400 */
+  --admin-accent: #10b981; /* emerald-500 */
+  --admin-accent-strong: #34d399; /* emerald-400 */
+  --admin-accent-text: #022c22; /* emerald-950, for text on accent */
+  --admin-accent-subtle: rgba(16, 185, 129, 0.14);
+  --admin-info: #38bdf8; /* sky-400 */
+  --admin-info-subtle: rgba(56, 189, 248, 0.14);
+  --admin-amber: #fbbf24; /* amber-400 */
+  --admin-amber-subtle: rgba(251, 191, 36, 0.14);
+  --admin-red: #f87171; /* red-400 */
+  --admin-red-subtle: rgba(248, 113, 113, 0.14);
+  --admin-muted: #64748b; /* slate-500 */
+  --admin-muted-subtle: rgba(100, 116, 139, 0.16);
+  --admin-radius: 16px;
+  --admin-radius-sm: 10px;
+  --admin-focus: #34d399;
+}

@@ -551,30 +551,34 @@ export async function listDistinctStationeryItems(): Promise<string[]> {
 }
 
 export interface StationeryInventoryItem {
+  id: string;
   name: string;
+  description: string | null;
   unit_price: number | null;
 }
 
 /**
  * Inventory suggestions for the pack item autocomplete: the distinct
  * stationery item names already used across packs, each with a representative
- * unit price (from the most recently created row of that name). When a prefix
- * is given, only names starting with it are returned.
+ * unit price (from the most recently created row of that name). When a query
+ * is given, names or descriptions containing it (case-insensitive) are
+ * returned, so typing any part of an item name — not just its start — matches.
+ * Backed by the pg_trgm GIN index from migration 00021.
  */
-export async function listStationeryInventory(prefix?: string): Promise<StationeryInventoryItem[]> {
+export async function listStationeryInventory(query?: string): Promise<StationeryInventoryItem[]> {
   try {
     const admin = createSupabaseAdminClient();
-    const q = (prefix ?? "").replace(/[%_]/g, "").trim();
+    const q = (query ?? "").replace(/[%_]/g, "").trim();
 
-    let query = admin
+    let dbQuery = admin
       .from("stationery_items")
-      .select("name, unit_price")
+      .select("id, name, description, unit_price")
       .order("name", { ascending: true })
       .order("created_at", { ascending: false });
 
-    if (q) query = query.ilike("name", `${q}%`);
+    if (q) dbQuery = dbQuery.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
 
-    const { data } = await query.limit(500);
+    const { data } = await dbQuery.limit(500);
     if (!data) return [];
 
     const seen = new Set<string>();
@@ -583,7 +587,7 @@ export async function listStationeryInventory(prefix?: string): Promise<Statione
       const name = row.name.trim();
       if (!name || seen.has(name.toLowerCase())) continue;
       seen.add(name.toLowerCase());
-      out.push({ name, unit_price: row.unit_price });
+      out.push({ id: row.id, name, description: row.description, unit_price: row.unit_price });
       if (out.length >= 50) break;
     }
     return out;
