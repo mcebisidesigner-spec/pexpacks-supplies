@@ -40,7 +40,7 @@ export async function GET() {
       <g:brand>Pexpacks</g:brand>
       <g:product_type>Office Supplies &gt; General Supplies &gt; Stationery Packs</g:product_type>
     </item>`;
-      })
+      }),
     )
     .join("");
 
