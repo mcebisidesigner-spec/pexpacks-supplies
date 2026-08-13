@@ -193,7 +193,7 @@ export default async function RootLayout({
           <ClientRuntimeWidgets />
           <TrayProviders />
         </div>
-        <Analytics />
+        <Analytics mode="production" />
       </body>
     </html>
   );

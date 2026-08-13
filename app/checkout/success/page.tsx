@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
 import { buildMetadata } from "@/lib/seo";
 import { getOrderByReference } from "@/lib/orders";
+import { CheckoutSuccessTracker } from "./CheckoutSuccessTracker";
 import styles from "@/app/checkout/Checkout.module.css";
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
   if (!ref) {
     return (
       <div className={styles.checkoutShell}>
+        <CheckoutSuccessTracker orderReference="unknown" />
         <div className={styles.emptyCheckout}>
           <p className={styles.checkoutKicker}>Payment Confirmed</p>
           <h1>Order placed</h1>
@@ -45,6 +47,12 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
 
   return (
     <div className={styles.checkoutShell}>
+      <CheckoutSuccessTracker
+        orderReference={ref}
+        school={order?.school_name}
+        grade={order?.grade}
+        amount={typeof order?.estimated_total === "number" ? order.estimated_total : undefined}
+      />
       <div className={styles.emptyCheckout}>
         <p className={styles.checkoutKicker}>Payment Confirmed</p>
         <h1>Thank you for your order!</h1>

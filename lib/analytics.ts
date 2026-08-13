@@ -6,6 +6,7 @@ export const AnalyticsEvents = {
   initiatePreOrder: "Initiate Pre-Order",
   proceedToCheckout: "Proceed to Checkout",
   paymentInitiated: "Payment Initiated",
+  checkoutCompleted: "Checkout Completed",
 } as const;
 
 export function trackInitiatePreOrder({
@@ -54,5 +55,25 @@ export function trackPaymentInitiated({
     totalPrice,
     currency: "ZAR",
     paymentMethod: "Ozow",
+  });
+}
+
+export function trackCheckoutCompleted({
+  orderReference,
+  school,
+  grade,
+  amount,
+}: {
+  orderReference: string;
+  school?: string;
+  grade?: string;
+  amount?: number;
+}) {
+  track(AnalyticsEvents.checkoutCompleted, {
+    orderReference,
+    school: school ?? null,
+    grade: grade ?? null,
+    amount: amount ?? null,
+    currency: "ZAR",
   });
 }
