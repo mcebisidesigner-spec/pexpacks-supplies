@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { track } from "@vercel/analytics/server";
 import { markOrderPaid, getOrderForReceipt } from "@/lib/orders";
 import { getOzowConfig, ozowWebhookHash } from "@/lib/ozow/signature";
@@ -162,14 +162,24 @@ export async function POST(request: NextRequest) {
     const order = await getOrderForReceipt(TransactionReference);
 
     if (order) {
-      const receiptResult = await sendPurchaseReceipt(order);
-      if (!receiptResult.success) {
-        console.warn(
-          "[ozow/webhook] Receipt email not sent for",
-          TransactionReference,
-          receiptResult.error
-        );
-      }
+      after(async () => {
+        try {
+          const receiptResult = await sendPurchaseReceipt(order);
+          if (!receiptResult.success) {
+            console.warn(
+              "[ozow/webhook] Receipt email not sent for",
+              TransactionReference,
+              receiptResult.error
+            );
+          }
+        } catch (err) {
+          console.error(
+            "[ozow/webhook] Receipt email exception for",
+            TransactionReference,
+            err
+          );
+        }
+      });
     } else {
       console.warn(
         "[ozow/webhook] Order not found for receipt:",

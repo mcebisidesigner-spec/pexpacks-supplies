@@ -15,6 +15,23 @@ export type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
 const ORDER_LIST_FIELDS =
   "id,order_reference,buyer_name,buyer_email,buyer_phone,school_name,grade,learner_name,pack_type,items,estimated_total,status,payment_gateway,gateway_reference,paid_at,created_at,updated_at,fulfilment_option,school_slug";
 
+const ORDER_DETAIL_FIELDS = [
+  ORDER_LIST_FIELDS,
+  "metadata",
+  "delivery_address",
+  "preferred_contact_method",
+  "delivery_type",
+  "pexcover_requested",
+  "street_address",
+  "suburb",
+  "city",
+  "province",
+  "postal_code",
+  "payment_reference",
+  "unique_customer_id",
+  "tracking_token",
+].join(",");
+
 export interface OrderListFilters {
   q?: string;
   status?: string;
@@ -118,19 +135,23 @@ export async function listOrders(
 
 export async function listOrderPackTypes(): Promise<string[]> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("orders").select("pack_type");
+  const { data, error } = await admin.rpc("get_order_pack_types");
   if (error || !data) return [];
-  return [...new Set(data.map((r) => r.pack_type).filter(Boolean))].sort();
+  return data.map((r) => r.pack_type).filter(Boolean);
 }
 
 export async function getOrder(id: string): Promise<OrderRow | null> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("orders").select("*").eq("id", id).maybeSingle();
+  const { data, error } = await admin
+    .from("orders")
+    .select(ORDER_DETAIL_FIELDS)
+    .eq("id", id)
+    .maybeSingle();
   if (error || !data) {
     console.error("[orders] get failed:", error);
     return null;
   }
-  return data as OrderRow;
+  return data as unknown as OrderRow;
 }
 
 export async function updateOrderStatus(id: string, status: string): Promise<{ ok: boolean; message?: string }> {

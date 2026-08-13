@@ -1005,6 +1005,18 @@ export interface Database {
         Args: { from_date: string; to_date: string; result_limit?: number };
         Returns: { school_name: string | null; order_count: number; revenue: number }[];
       };
+      get_revenue_total: {
+        Args: Record<string, never>;
+        Returns: { revenue: number }[];
+      };
+      get_assets_size: {
+        Args: Record<string, never>;
+        Returns: { size_bytes: number }[];
+      };
+      get_order_pack_types: {
+        Args: Record<string, never>;
+        Returns: { pack_type: string }[];
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

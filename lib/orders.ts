@@ -1,5 +1,7 @@
 import { randomBytes, randomUUID } from "node:crypto";
+import { revalidateTag } from "next/cache";
 import { createSupabaseAdminClient } from "./supabase/admin";
+import { DASHBOARD_STATS_TAG } from "./admin/dashboard";
 
 function generateOrderReference(): string {
   const timestamp = Date.now().toString(36).toUpperCase();
@@ -222,6 +224,7 @@ export async function markOrderPaid(input: {
     return { success: false, error: err };
   }
 
+  revalidateTag(DASHBOARD_STATS_TAG, { expire: 0 });
   return { success: true };
 }
 

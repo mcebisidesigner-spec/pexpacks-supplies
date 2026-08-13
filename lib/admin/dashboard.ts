@@ -1,4 +1,7 @@
+import { unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+
+export const DASHBOARD_STATS_TAG = "admin-dashboard-stats";
 
 export interface DailyPoint {
   day: string;
@@ -61,7 +64,7 @@ function last30Days(): { start: string; end: string; days: string[] } {
   };
 }
 
-export async function getDashboardStats(): Promise<DashboardStats> {
+async function fetchDashboardStats(): Promise<DashboardStats> {
   const admin = createSupabaseAdminClient();
 
   // Schools counts (status filter)
@@ -108,14 +111,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .gte("created_at", monthStart.toISOString());
     thisMonth = m ?? 0;
 
-    const { data: paid } = await admin
-      .from("orders")
-      .select("estimated_total")
-      .eq("status", "paid");
-    revenue = (paid ?? []).reduce(
-      (sum, o) => sum + (o.estimated_total ?? 0),
-      0
-    );
+    const { data: revenueRows } = await admin.rpc("get_revenue_total");
+    revenue = revenueRows?.[0]?.revenue ?? 0;
   } catch (err) {
     console.error("[dashboard] order aggregates failed:", err);
   }
@@ -135,11 +132,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   // Assets size
   let assetsSize = 0;
   try {
-    const { data: sizes } = await admin.from("assets").select("size_bytes");
-    assetsSize = (sizes ?? []).reduce(
-      (sum, a) => sum + (a.size_bytes ?? 0),
-      0
-    );
+    const { data: sizes } = await admin.rpc("get_assets_size");
+    assetsSize = sizes?.[0]?.size_bytes ?? 0;
   } catch (err) {
     console.error("[dashboard] asset sizes failed:", err);
   }
@@ -222,3 +216,12 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     recentOrders,
   };
 }
+
+export const getDashboardStats = unstable_cache(
+  fetchDashboardStats,
+  ["admin-dashboard-stats"],
+  {
+    revalidate: 60,
+    tags: [DASHBOARD_STATS_TAG],
+  }
+);
