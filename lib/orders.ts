@@ -1,7 +1,7 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import { revalidateTag } from "next/cache";
 import { createSupabaseAdminClient } from "./supabase/admin";
-import { DASHBOARD_STATS_TAG } from "./admin/dashboard";
+import { DASHBOARD_STATS_TAG, DASHBOARD_SUMMARY_TAG } from "./admin/dashboard";
 
 function generateOrderReference(): string {
   const timestamp = Date.now().toString(36).toUpperCase();
@@ -219,12 +219,24 @@ export async function markOrderPaid(input: {
       summary: `Payment confirmed for ${input.orderReference}: R${paymentAmount} via ${input.paymentGateway || "ozow"}`
     });
 
+    // 5. Refresh the pre-aggregated dashboard summary on demand so the admin
+    // dashboard reflects this sale immediately (cron also refreshes every 5 min).
+    try {
+      await supabase.rpc("refresh_all_dashboard_summaries");
+    } catch (summaryErr) {
+      console.warn(
+        "[orders] dashboard summary refresh warning:",
+        summaryErr instanceof Error ? summaryErr.message : summaryErr
+      );
+    }
+
   } catch (err) {
     console.error("[orders] markOrderPaid caught:", err instanceof Error ? err.message : err);
     return { success: false, error: err };
   }
 
   revalidateTag(DASHBOARD_STATS_TAG, { expire: 0 });
+  revalidateTag(DASHBOARD_SUMMARY_TAG, { expire: 0 });
   return { success: true };
 }
 

@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/lib/supabase/types";
 
 export const DASHBOARD_STATS_TAG = "admin-dashboard-stats";
+export const DASHBOARD_SUMMARY_TAG = "admin-dashboard-summary";
 
 const SUMMARY_FRESH_MS = 10 * 60 * 1000;
 
