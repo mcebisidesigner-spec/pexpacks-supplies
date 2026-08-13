@@ -51,10 +51,16 @@ export async function generateMetadata({
     );
   }
 
+  const ogUrl = new URL("/api/og", "https://pexpacks.co.za");
+  ogUrl.searchParams.set("school", school.name);
+  ogUrl.searchParams.set("grade", grade.grade);
+  if (grade.price) ogUrl.searchParams.set("price", grade.price.toString());
+
   return buildMetadata(
     `${grade.grade} Stationery Pack for ${school.name}`,
     `Order a ready-to-use ${grade.grade} stationery pack for ${school.name}, prepared according to school stationery requirements and delivery planning.`,
-    `/schools/${school.slug}/${grade.gradeSlug}`
+    `/schools/${school.slug}/${grade.gradeSlug}`,
+    ogUrl.toString()
   );
 }
 

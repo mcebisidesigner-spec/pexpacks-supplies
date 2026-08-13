@@ -37,8 +37,8 @@ export function buildMetadata(
     ? [...new Set([...baseKeywords, ...customKeywords])]
     : baseKeywords;
 
-  const imageToUse = imageUrl || defaultOgImage;
-  const twitterImageToUse = imageUrl || defaultTwitterImage;
+  const imgWidth = imageUrl ? 1200 : 512;
+  const imgHeight = imageUrl ? 630 : 512;
 
   return {
     metadataBase: new URL(siteUrl),
@@ -57,8 +57,8 @@ export function buildMetadata(
       images: [
         {
           url: imageToUse,
-          width: 512,
-          height: 512,
+          width: imgWidth,
+          height: imgHeight,
           alt: defaultImageAlt,
         },
       ],
@@ -71,8 +71,8 @@ export function buildMetadata(
       images: [
         {
           url: twitterImageToUse,
-          width: 512,
-          height: 512,
+          width: imgWidth,
+          height: imgHeight,
           alt: defaultImageAlt,
         },
       ],
