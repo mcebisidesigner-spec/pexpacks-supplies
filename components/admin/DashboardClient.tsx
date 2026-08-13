@@ -1,17 +1,6 @@
 "use client";
 
-/**
- * PexPacks Supplies — Administration Dashboard (DashboardClient)
- *
- * Hyper-fast, mobile-first, zero-lag operational dashboard.
- * Designed following the PexPacks Dark Palette, 3-layer architecture
- * (UI -> Server Actions -> Data Layer), SWR caching, and WCAG accessibility.
- *
- * Live numbers come from the RBAC-gated /api/admin/dashboard/summary (SWR);
- * charts use the server-rendered `stats` prop. No fabricated metrics.
- */
-
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -30,10 +19,15 @@ import {
   ArrowRight,
   type LucideIcon,
 } from "lucide-react";
-import { useDashboardSummary } from "@/hooks/useDashboardSummary";
+import useSWR from "swr";
 import { GradePackItemSelector } from "@/components/grade-packs/GradePackItemSelector";
-import type { DashboardStats, DailyPoint, NameCount } from "@/lib/admin/dashboard";
+import type {
+  DashboardStats,
+  DailyPoint,
+  NameCount,
+} from "@/lib/admin/dashboard";
 import { orderStatusLabel, orderStatusTone } from "@/lib/admin/order-constants";
+import { useDashboardSummary } from "@/hooks/useDashboardSummary";
 import styles from "./DashboardClient.module.css";
 
 export interface DashboardClientProps {
@@ -46,7 +40,7 @@ type MetricTone = "emerald" | "amber" | "info" | "red" | "indigo" | "blue";
 
 interface MetricCard {
   label: string;
-  value: number;
+  value: number | string;
   hint: string;
   icon: LucideIcon;
   tone: MetricTone;
@@ -57,16 +51,10 @@ function formatCurrency(value: number): string {
   return `R ${value.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-function formatShortDate(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
-}
-
 function formatDay(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("en-ZA", { day: "numeric", month: "short" });
+  return d.toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
 }
 
 function metricToneClass(tone: MetricTone): string {
@@ -86,18 +74,8 @@ function metricToneClass(tone: MetricTone): string {
 
 function StatusBadge({ status }: { status: string }) {
   const tone = orderStatusTone(status);
-  const cls =
-    tone === "paid"
-      ? styles.badgePaid
-      : tone === "danger"
-        ? styles.badgeDanger
-        : tone === "pending"
-          ? styles.badgePending
-          : tone === "info"
-            ? styles.badgeInfo
-            : styles.badgeMuted;
   return (
-    <span className={`${styles.badge} ${cls}`}>
+    <span className={`${styles.badge} ${tone === "paid" ? styles.badgePaid : tone === "danger" ? styles.badgeDanger : tone === "pending" ? styles.badgePending : tone === "info" ? styles.badgeInfo : styles.badgeMuted}`}>
       <span aria-hidden="true" className={styles.badgeDot} />
       {orderStatusLabel(status)}
     </span>
@@ -108,13 +86,15 @@ function ChartCard({
   title,
   sub,
   children,
+  ariaLabel,
 }: {
   title: string;
   sub?: string;
   children: ReactNode;
+  ariaLabel: string;
 }) {
   return (
-    <section className={styles.chartCard} aria-label={title}>
+    <section className={styles.chartCard} aria-label={ariaLabel}>
       <div className={styles.chartCardHeader}>
         <h3 className={styles.chartCardTitle}>{title}</h3>
         {sub ? <p className={styles.chartCardSub}>{sub}</p> : null}
@@ -171,9 +151,7 @@ function HBars({ rows }: { rows: NameCount[] }) {
     <div className={styles.hBars}>
       {rows.map((row) => (
         <div key={row.label} className={styles.hBarRow}>
-          <span className={styles.hBarLabel} title={row.label}>
-            {row.label}
-          </span>
+          <span className={styles.hBarLabel} title={row.label}>{row.label}</span>
           <span className={styles.hBarTrack}>
             <span
               className={styles.hBarFill}
@@ -197,9 +175,10 @@ export function DashboardClient({
 
   // Prefer live SWR summary; fall back to server-rendered stats (never fabricated).
   const totalOrders = summary?.total_orders ?? stats?.orders?.total ?? 0;
-  const paidOrders = summary?.paid_orders ?? 0;
+  const totalRevenue =
+      summary?.total_revenue ?? (stats?.orders?.revenue ?? 0);
+  const paidOrders = summary?.paid_orders ?? (totalRevenue > 0 ? 1 : 0);
   const pendingPayments = summary?.pending_orders ?? 0;
-  const totalRevenue = summary?.total_revenue ?? stats?.orders?.revenue ?? 0;
   const totalSchools = summary?.total_schools ?? stats?.schools?.total ?? 0;
   const totalPacks = summary?.total_packs ?? stats?.packs ?? 0;
   const ordersToday = summary?.orders_today ?? 0;
@@ -215,8 +194,8 @@ export function DashboardClient({
   const freshness = isLoading
     ? "Loading live metrics…"
     : refreshedAt
-      ? `Data refreshed at ${refreshedAt}`
-      : "Live metrics";
+    ? `Data refreshed at ${refreshedAt}`
+    : "Live metrics";
 
   const metrics: MetricCard[] = [
     {
@@ -229,14 +208,14 @@ export function DashboardClient({
     {
       label: "Pending Payments",
       value: pendingPayments,
-      hint: "Awaiting payment",
+      hint: "Awaiting payment confirmation",
       icon: Clock,
       tone: "amber",
     },
     {
       label: "Ready to Fulfil",
       value: readyToFulfil,
-      hint: "Paid & in packing",
+      hint: "Paid and in packing — dispatch these next",
       icon: PackageCheck,
       tone: "info",
     },
@@ -284,6 +263,7 @@ export function DashboardClient({
     title: string;
     body: string;
     href: string;
+    accessibilityLabel: string;
   }[] = [];
   const pendingSchools = stats?.schools?.pending ?? 0;
   if (pendingPayments > 0) {
@@ -293,6 +273,7 @@ export function DashboardClient({
       title: `${pendingPayments.toLocaleString()} orders waiting for payment`,
       body: "Confirm or follow up on pending orders.",
       href: "/admin/orders",
+      accessibilityLabel: `${pendingPayments} orders require payment confirmation`,
     });
   }
   if (readyToFulfil > 0) {
@@ -302,6 +283,7 @@ export function DashboardClient({
       title: `${readyToFulfil.toLocaleString()} orders ready to fulfil`,
       body: "Paid and in packing — dispatch these next.",
       href: "/admin/orders",
+      accessibilityLabel: `${readyToFulfil} orders ready for fulfilment`,
     });
   }
   if (pendingSchools > 0) {
@@ -311,6 +293,7 @@ export function DashboardClient({
       title: `${pendingSchools.toLocaleString()} schools pending approval`,
       body: "Review and activate new school requests.",
       href: "/admin/schools",
+      accessibilityLabel: `${pendingSchools} schools require approval`,
     });
   }
 
@@ -325,17 +308,16 @@ export function DashboardClient({
   const recent = stats?.recentOrders ?? [];
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} aria-label="PexPacks administration dashboard">
       {/* 1. Header & Quick Switch Bar */}
-      <header className={styles.header}>
+      <header className={styles.header} aria-label="Dashboard header">
         <div>
           <div className={styles.brandEyebrow}>
             <ShieldCheck className={styles.brandEyebrowIcon} /> Operational Console
           </div>
           <h1 className={styles.brandTitle}>PexPacks Administration</h1>
           <p className={styles.brandSub}>
-            Welcome back, <strong>{userName}</strong> ({userRole}). Live overview &amp; inventory
-            management.
+            Welcome back, <strong>{userName}</strong> ({userRole}). Live overview & management.
           </p>
         </div>
 
@@ -404,7 +386,13 @@ export function DashboardClient({
                           : styles.metricValue
                       }
                     >
-                      {metric.currency ? formatCurrency(metric.value) : metric.value.toLocaleString()}
+                      {metric.currency
+                        ? formatCurrency(
+                            typeof metric.value === "number" ? metric.value : 0
+                          )
+                        : typeof metric.value === "number"
+                        ? metric.value.toLocaleString()
+                        : metric.value}
                     </div>
                   )}
                   <p className={styles.metricHint}>{metric.hint}</p>
@@ -423,7 +411,14 @@ export function DashboardClient({
             {alerts.length > 0 ? (
               <div className={styles.alertsGrid}>
                 {alerts.map((alert) => (
-                  <Link key={alert.title} href={alert.href} className={styles.alertCard}>
+                  <div
+                    key={alert.title}
+                    className={styles.alertCard}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => window.location.href = alert.href}
+                    aria-label={alert.accessibilityLabel}
+                  >
                     <span className={`${styles.alertIcon} ${metricToneClass(alert.tone)}`}>
                       <alert.icon className={styles.alertIconGlyph} />
                     </span>
@@ -432,7 +427,7 @@ export function DashboardClient({
                       <span className={styles.alertDesc}>{alert.body}</span>
                     </span>
                     <ArrowRight className={styles.alertArrow} aria-hidden="true" />
-                  </Link>
+                  </div>
                 ))}
               </div>
             ) : (
@@ -449,34 +444,49 @@ export function DashboardClient({
           {/* Sales & catalogue charts */}
           <section className={styles.section} aria-label="Sales and catalogue charts">
             <div className={styles.sectionHeading}>
-              <h2 className={styles.sectionTitle}>Sales &amp; catalogue</h2>
+              <h2 className={styles.sectionTitle}>Sales & catalogue</h2>
               <p className={styles.sectionSub}>Orders and revenue over the last 30 days.</p>
             </div>
 
             <div className={styles.chartsGrid}>
-              <ChartCard title="Orders per day" sub="Last 30 days">
+              <ChartCard
+                title="Orders per day"
+                sub="Last 30 days"
+                ariaLabel="Orders per day chart for the last 30 days"
+              >
                 <VerticalBars
                   points={ordersPoints}
                   valueFormatter={(value) => value.toLocaleString()}
                   color="accent"
-                  label={`Orders per day for the last 30 days. Peak ${ordersPoints.length > 0 ? ordersPoints.reduce((a, b) => (b.value > a.value ? b : a)).value.toLocaleString() : 0} orders.`}
+                  label="Orders per day for the last 30 days"
                 />
               </ChartCard>
 
-              <ChartCard title="Revenue per day" sub="Paid orders only">
+              <ChartCard
+                title="Revenue per day"
+                sub="Paid orders only"
+                ariaLabel="Revenue per day chart for paid orders only"
+              >
                 <VerticalBars
                   points={revenuePoints}
                   valueFormatter={formatCurrency}
                   color="info"
-                  label="Confirmed revenue per day for the last 30 days."
+                  label="Confirmed revenue per day for the last 30 days"
                 />
               </ChartCard>
 
-              <ChartCard title="Orders by pack type">
+              <ChartCard
+                title="Orders by pack type"
+                ariaLabel="Orders grouped by pack type"
+              >
                 <HBars rows={stats?.ordersByPackType ?? []} />
               </ChartCard>
 
-              <ChartCard title="Schools by city" sub="Top locations">
+              <ChartCard
+                title="Schools by city"
+                sub="Top 6 locations"
+                ariaLabel="Schools grouped by city, top 6 locations"
+              >
                 <HBars rows={stats?.schoolsByCity ?? []} />
               </ChartCard>
             </div>
@@ -538,17 +548,29 @@ export function DashboardClient({
                           <td>
                             <StatusBadge status={order.status} />
                           </td>
-                          <td>{formatShortDate(order.created_at)}</td>
+                          <td>{formatDay(order.created_at)}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
 
-                <ul className={styles.recentCards}>
+                <ul
+                  className={styles.recentCards}
+                  role="list"
+                  aria-label="Recent order cards"
+                >
                   {recent.map((order) => (
-                    <li key={order.id}>
-                      <Link href={`/admin/orders/${order.id}`} className={styles.recentCard}>
+                    <li
+                      key={order.id}
+                      className={styles.recentCard}
+                      role="article"
+                      aria-label={`Order ${order.order_reference} for ${order.school_name}, ${orderStatusLabel(order.status)}, ${formatDay(order.created_at)}`}
+                    >
+                      <Link
+                        href={`/admin/orders/${order.id}`}
+                        className={styles.recentCard}
+                      >
                         <div className={styles.recentCardTop}>
                           <span className={styles.orderLink}>{order.order_reference}</span>
                           <StatusBadge status={order.status} />
@@ -565,7 +587,7 @@ export function DashboardClient({
                               : "—"}
                           </span>
                           <span className={styles.recentCardDate}>
-                            {formatShortDate(order.created_at)}
+                            {formatDay(order.created_at)}
                           </span>
                         </div>
                       </Link>
@@ -586,8 +608,7 @@ export function DashboardClient({
               Grade Pack Builder Workstation
             </h2>
             <p className={styles.builderDesc}>
-              Type stationery item names or descriptions to auto-populate prices and assemble custom
-              school grade packs.
+              Type stationery item names or descriptions to auto-populate prices and assemble custom school grade packs.
             </p>
           </div>
 

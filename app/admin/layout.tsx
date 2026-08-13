@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@/styles/admin-dark.css";
 import { requireAdmin, displayName } from "@/lib/admin/rbac";
 import { filterNav } from "@/lib/admin/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";

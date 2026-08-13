@@ -12,7 +12,16 @@
    - Typography: High-contrast white headings (#ffffff), slate-300 body (#cbd5e1), slate-400 subtitles (#94a3b8)
    =================================================== */
 
+html:has(.admin-dark),
+body:has(.admin-dark) {
+  background-color: #020617 !important;
+  color: #cbd5e1 !important;
+}
+
 .admin-dark {
+  background-color: #020617;
+  color: #cbd5e1;
+  min-height: 100vh;
   --admin-bg: #020617; /* slate-950 */
   --admin-surface: #0f172a; /* slate-900 */
   --admin-surface-2: #1e293b; /* slate-800 */
