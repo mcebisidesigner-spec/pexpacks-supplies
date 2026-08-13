@@ -954,6 +954,39 @@ export interface Database {
         };
         Relationships: [];
       };
+      dashboard_summaries: {
+        Row: {
+          id: string;
+          total_orders: number;
+          paid_orders: number;
+          pending_orders: number;
+          total_revenue: number;
+          total_schools: number;
+          total_packs: number;
+          last_updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          total_orders?: number;
+          paid_orders?: number;
+          pending_orders?: number;
+          total_revenue?: number;
+          total_schools?: number;
+          total_packs?: number;
+          last_updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          total_orders?: number;
+          paid_orders?: number;
+          pending_orders?: number;
+          total_revenue?: number;
+          total_schools?: number;
+          total_packs?: number;
+          last_updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -1016,6 +1049,10 @@ export interface Database {
       get_order_pack_types: {
         Args: Record<string, never>;
         Returns: { pack_type: string }[];
+      };
+      refresh_all_dashboard_summaries: {
+        Args: Record<string, never>;
+        Returns: undefined;
       };
     };
     Enums: Record<string, never>;

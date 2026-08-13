@@ -1,7 +1,11 @@
 import { unstable_cache } from "next/cache";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import type { Database } from "@/lib/supabase/types";
 
 export const DASHBOARD_STATS_TAG = "admin-dashboard-stats";
+
+const SUMMARY_FRESH_MS = 10 * 60 * 1000;
 
 export interface DailyPoint {
   day: string;
@@ -47,6 +51,32 @@ async function count(table: "schools" | "stationery_packs" | "orders" | "assets"
   }
 }
 
+type DashboardSummaryRow = Pick<
+  Database["public"]["Tables"]["dashboard_summaries"]["Row"],
+  "total_orders" | "paid_orders" | "pending_orders" | "total_revenue" | "total_schools" | "total_packs" | "last_updated_at"
+>;
+
+async function readDashboardSummary(
+  admin: SupabaseClient<Database>
+): Promise<DashboardSummaryRow | null> {
+  try {
+    const { data } = await admin
+      .from("dashboard_summaries")
+      .select(
+        "total_orders, paid_orders, pending_orders, total_revenue, total_schools, total_packs, last_updated_at"
+      )
+      .eq("id", "global")
+      .maybeSingle();
+    if (!data) return null;
+    const age = Date.now() - new Date(data.last_updated_at).getTime();
+    if (Number.isNaN(age) || age > SUMMARY_FRESH_MS) return null;
+    return data;
+  } catch (err) {
+    console.error("[dashboard] summary read failed:", err);
+    return null;
+  }
+}
+
 function last30Days(): { start: string; end: string; days: string[] } {
   const end = new Date();
   const start = new Date(end);
@@ -66,6 +96,11 @@ function last30Days(): { start: string; end: string; days: string[] } {
 
 async function fetchDashboardStats(): Promise<DashboardStats> {
   const admin = createSupabaseAdminClient();
+
+  // Pre-aggregated totals (O(1) single-row read). Falls back to exact counts
+  // + RPCs when the summary table is absent (migration 00019 not applied yet)
+  // or stale (no pg_cron schedule / manual refresh).
+  const summary = await readDashboardSummary(admin);
 
   // Schools counts (status filter)
   let featured = 0;
@@ -91,16 +126,32 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     console.error("[dashboard] schools counts failed:", err);
   }
 
-  const [schoolsTotal, packs, ordersTotal, assetsTotal] = await Promise.all([
-    count("schools"),
-    count("stationery_packs"),
-    count("orders"),
-    count("assets"),
-  ]);
+  let schoolsTotal: number;
+  let packs: number;
+  let ordersTotal: number;
+  let assetsTotal: number;
+
+  if (summary) {
+    schoolsTotal = summary.total_schools;
+    packs = summary.total_packs;
+    ordersTotal = summary.total_orders;
+    assetsTotal = await count("assets");
+  } else {
+    const [s, p, o, a] = await Promise.all([
+      count("schools"),
+      count("stationery_packs"),
+      count("orders"),
+      count("assets"),
+    ]);
+    schoolsTotal = s;
+    packs = p;
+    ordersTotal = o;
+    assetsTotal = a;
+  }
 
   // Orders this month + revenue
   let thisMonth = 0;
-  let revenue = 0;
+  let revenue = summary?.total_revenue ?? 0;
   try {
     const monthStart = new Date();
     monthStart.setDate(1);
@@ -111,8 +162,10 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
       .gte("created_at", monthStart.toISOString());
     thisMonth = m ?? 0;
 
-    const { data: revenueRows } = await admin.rpc("get_revenue_total");
-    revenue = revenueRows?.[0]?.revenue ?? 0;
+    if (!summary) {
+      const { data: revenueRows } = await admin.rpc("get_revenue_total");
+      revenue = revenueRows?.[0]?.revenue ?? 0;
+    }
   } catch (err) {
     console.error("[dashboard] order aggregates failed:", err);
   }
