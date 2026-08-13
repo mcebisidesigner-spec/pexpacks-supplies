@@ -49,10 +49,10 @@
   justify-content: center;
   min-height: 44px;
   padding: 0 22px;
-  border: 1px solid var(--pex-border, #e1e7ea);
+  border: 1px solid var(--admin-border-strong);
   border-radius: 999px;
-  background: #fff;
-  color: var(--pex-navy, #1a2a40);
+  background: var(--pex-bg);
+  color: var(--admin-heading);
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
@@ -83,7 +83,7 @@
   font-size: clamp(32px, 4.5vw, 48px);
   font-weight: 800;
   line-height: 1.1;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   letter-spacing: 0;
 }
 
@@ -129,7 +129,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-text-3);
 }
 
 .table tbody tr {
@@ -154,12 +154,12 @@
 .orderRef {
   font-family: var(--font-mono, monospace);
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .buyerName {
   font-weight: 700;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .schoolName {
@@ -180,7 +180,7 @@
 
 .totalPrice {
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .badge {
@@ -195,28 +195,28 @@
 }
 
 .badgePaid {
-  background: rgba(47, 133, 90, 0.12);
-  color: #1e6b45;
+  background: var(--badge-paid-bg, rgba(47, 133, 90, 0.12));
+  color: var(--badge-paid-fg, #1e6b45);
 }
 
 .badgePending {
-  background: rgba(245, 166, 35, 0.15);
-  color: #a16207;
+  background: var(--badge-pending-bg, rgba(245, 166, 35, 0.15));
+  color: var(--badge-pending-fg, #a16207);
 }
 
 .badgeInfo {
-  background: rgba(37, 99, 235, 0.12);
-  color: #1d4ed8;
+  background: var(--badge-info-bg, rgba(37, 99, 235, 0.12));
+  color: var(--badge-info-fg, #1d4ed8);
 }
 
 .badgeDanger {
-  background: rgba(220, 38, 38, 0.1);
-  color: #b42318;
+  background: var(--badge-danger-bg, rgba(220, 38, 38, 0.1));
+  color: var(--badge-danger-fg, #b42318);
 }
 
 .badgeMuted {
-  background: rgba(100, 116, 139, 0.12);
-  color: #475569;
+  background: var(--badge-muted-bg, rgba(100, 116, 139, 0.12));
+  color: var(--badge-muted-fg, #475569);
 }
 
 .emptyStateContainer {
@@ -256,7 +256,7 @@
   font-family: var(--font-heading, inherit);
   font-size: var(--text-lg);
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .emptyStateText {

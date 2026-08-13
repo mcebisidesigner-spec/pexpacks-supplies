@@ -16,7 +16,7 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 20px;
   font-weight: 700;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .created {
@@ -69,7 +69,7 @@
   text-align: right;
   font-weight: 500;
   word-break: break-word;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .itemList {
@@ -110,13 +110,13 @@
 
 .amountLabel {
   font-weight: 600;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .amountValue {
   font-weight: 700;
   font-size: 18px;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .refundForm {
@@ -134,7 +134,7 @@
   font-size: 14px;
   resize: vertical;
   min-height: 56px;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .metaBlock {
@@ -192,7 +192,7 @@
 .summaryValue {
   font-size: 18px;
   font-weight: 700;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .packBlock {
@@ -210,7 +210,7 @@
 .packHeading {
   font-weight: 700;
   font-size: 14px;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   margin: 0 0 8px;
 }
 

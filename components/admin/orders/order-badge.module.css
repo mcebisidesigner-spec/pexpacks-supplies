@@ -18,28 +18,28 @@
 }
 
 .tonePaid {
-  background: rgba(47, 133, 90, 0.12);
-  color: #1e6b45;
+  background: var(--badge-paid-bg, rgba(47, 133, 90, 0.12));
+  color: var(--badge-paid-fg, #1e6b45);
 }
 
 .tonePending {
-  background: rgba(245, 166, 35, 0.15);
-  color: #a16207;
+  background: var(--badge-pending-bg, rgba(245, 166, 35, 0.15));
+  color: var(--badge-pending-fg, #a16207);
 }
 
 .toneInfo {
-  background: rgba(37, 99, 235, 0.12);
-  color: #1d4ed8;
+  background: var(--badge-info-bg, rgba(37, 99, 235, 0.12));
+  color: var(--badge-info-fg, #1d4ed8);
 }
 
 .toneDanger {
-  background: rgba(220, 38, 38, 0.1);
-  color: #b42318;
+  background: var(--badge-danger-bg, rgba(220, 38, 38, 0.1));
+  color: var(--badge-danger-fg, #b42318);
 }
 
 .toneMuted {
-  background: rgba(100, 116, 139, 0.12);
-  color: #475569;
+  background: var(--badge-muted-bg, rgba(100, 116, 139, 0.12));
+  color: var(--badge-muted-fg, #475569);
 }
 
 .statusForm {
@@ -54,8 +54,8 @@
   border: 1px solid var(--pex-border, #dbe3ec);
   border-radius: 10px;
   font-size: 14px;
-  background: #fff;
-  color: var(--pex-navy, #1a2a40);
+  background: var(--pex-bg);
+  color: var(--admin-heading);
 }
 
 .saveButton {

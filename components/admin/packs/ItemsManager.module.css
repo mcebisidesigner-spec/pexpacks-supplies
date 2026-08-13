@@ -16,7 +16,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .count {
@@ -28,7 +28,7 @@
 .empty {
   font-size: 14px;
   color: var(--pex-muted, #6b7a86);
-  background: #fff;
+  background: var(--pex-bg);
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 12px;
   padding: 20px;
@@ -36,7 +36,7 @@
 
 .tableWrap {
   overflow-x: auto;
-  background: #fff;
+  background: var(--pex-bg);
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 12px;
 }
@@ -99,7 +99,7 @@
 
 .itemName {
   font-weight: 700;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .itemCell {
@@ -145,7 +145,7 @@
   height: 38px;
   border: 1px solid var(--pex-border, #dbe3ec);
   border-radius: 8px;
-  background: #fff;
+  background: var(--pex-bg);
   color: #33475b;
   cursor: pointer;
   font-family: inherit;
@@ -177,7 +177,7 @@
 
 .itemSpec {
   font-size: 13px;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   max-width: 280px;
   display: inline-block;
 }
@@ -243,7 +243,7 @@
 
 .addButton {
   align-self: flex-start;
-  background: #fff;
+  background: var(--pex-bg);
   border: 1px dashed var(--pex-border, #dbe3ec);
   border-radius: 8px;
   padding: 8px 16px;
@@ -263,7 +263,7 @@
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 12px;
   padding: 16px;
-  background: #fff;
+  background: var(--pex-bg);
 }
 
 .itemForm {
@@ -273,7 +273,7 @@
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 12px;
   padding: 16px;
-  background: #fff;
+  background: var(--pex-bg);
 }
 
 .formGrid {
@@ -301,7 +301,7 @@
   margin: 0;
   padding: 4px;
   list-style: none;
-  background: #fff;
+  background: var(--pex-bg);
   border: 1px solid var(--pex-border, #dbe3ec);
   border-radius: 8px;
   box-shadow: 0 6px 20px rgba(20, 40, 60, 0.12);
@@ -321,7 +321,7 @@
   border-radius: 6px;
   font-size: 14px;
   font-family: inherit;
-  color: #1a2a40;
+  color: var(--admin-heading);
   text-align: left;
   cursor: pointer;
 }
@@ -375,7 +375,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .subtotalValue {
@@ -397,8 +397,8 @@
   padding: 8px 12px;
   font-size: 14px;
   font-family: inherit;
-  color: #1a2a40;
-  background: #fff;
+  color: var(--admin-heading);
+  background: var(--pex-bg);
 }
 
 .input:focus,
@@ -478,7 +478,7 @@
   margin: 0 0 8px;
   font-size: 13px;
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .importForm {

@@ -8,7 +8,7 @@
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  background: #f4f5f7;
+  background: var(--pex-bg-soft);
   border: 1px solid var(--pex-border, #e1e7ea);
   object-fit: cover;
   flex-shrink: 0;
@@ -16,13 +16,13 @@
 
 .packName {
   font-weight: 700;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .schoolNameLink {
   font-weight: 700;
   font-size: 15px;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   text-decoration: underline;
   text-underline-offset: 3px;
   transition: color 0.15s ease;
@@ -53,7 +53,7 @@
 
 .priceCell {
   font-weight: 700;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   white-space: nowrap;
 }
 

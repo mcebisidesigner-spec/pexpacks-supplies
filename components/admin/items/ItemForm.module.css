@@ -25,7 +25,7 @@
   height: 38px;
   border: 1px solid var(--pex-border, #dbe3ec);
   border-radius: 8px;
-  background: #fff;
+  background: var(--pex-bg);
   color: #33475b;
   cursor: pointer;
   font-family: inherit;

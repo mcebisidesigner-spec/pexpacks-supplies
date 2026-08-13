@@ -19,7 +19,7 @@
 .label {
   font-size: 13px;
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -32,8 +32,8 @@
   padding: 10px 14px;
   font-size: 14px;
   font-family: inherit;
-  color: #1a2a40;
-  background: #fff;
+  color: var(--admin-heading);
+  background: var(--pex-bg);
   width: 100%;
 }
 
@@ -86,7 +86,7 @@
   display: block;
   font-size: 14px;
   font-weight: 700;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .checkHelp {

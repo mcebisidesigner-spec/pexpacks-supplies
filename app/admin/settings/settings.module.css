@@ -5,7 +5,7 @@
 }
 
 .card {
-  background: #fff;
+  background: var(--pex-bg);
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 16px;
   overflow: hidden;
@@ -19,7 +19,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .cardSubtitle {

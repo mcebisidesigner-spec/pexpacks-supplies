@@ -17,7 +17,7 @@
   margin: 0;
   font-size: clamp(22px, 3vw, 28px);
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .subtitle {
@@ -34,7 +34,7 @@
 }
 
 .uploadCard {
-  background: #fff;
+  background: var(--pex-bg);
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 16px;
   padding: 22px;
@@ -45,7 +45,7 @@
   margin: 0 0 4px;
   font-size: 18px;
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .uploadSubtitle {
@@ -59,7 +59,7 @@
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
-  background: #fff;
+  background: var(--pex-bg);
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 12px;
   padding: 12px;
@@ -71,8 +71,8 @@
   padding: 8px 12px;
   font-size: 14px;
   font-family: inherit;
-  color: #1a2a40;
-  background: #fff;
+  color: var(--admin-heading);
+  background: var(--pex-bg);
 }
 
 .filterInput:focus {
@@ -139,7 +139,7 @@
 
 .assetName {
   font-weight: 700;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   word-break: break-all;
 }
 

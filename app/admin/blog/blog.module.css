@@ -5,7 +5,7 @@
 .titleLink {
   font-weight: 700;
   font-size: 14px;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   text-decoration: none;
 }
 

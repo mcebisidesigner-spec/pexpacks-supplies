@@ -4,10 +4,46 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
+import {
+  Menu,
+  X,
+  LogOut,
+  LayoutDashboard,
+  School,
+  Package,
+  PackageSearch,
+  ClipboardList,
+  CreditCard,
+  Users,
+  Shield,
+  FileText,
+  Newspaper,
+  Image,
+  BarChart3,
+  Settings,
+  ShieldCheck,
+  type LucideIcon,
+} from "lucide-react";
 import type { AdminNavGroup } from "@/lib/admin/navigation";
-import { AdminIcon } from "@/components/admin/icons";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./AdminShell.module.css";
+
+const NAV_ICONS: Record<string, LucideIcon> = {
+  dashboard: LayoutDashboard,
+  school: School,
+  pack: Package,
+  items: PackageSearch,
+  orders: ClipboardList,
+  payments: CreditCard,
+  users: Users,
+  roles: Shield,
+  content: FileText,
+  blog: Newspaper,
+  assets: Image,
+  reports: BarChart3,
+  settings: Settings,
+  audit: ShieldCheck,
+};
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -88,7 +124,7 @@ export function AdminShell({
   const avatarInitials = initials(userName);
 
   return (
-    <div className={styles.shell}>
+    <div className={`${styles.shell} admin-dark`}>
       <div
         className={clsx(styles.overlay, open && styles.overlayVisible)}
         aria-hidden="true"
@@ -135,7 +171,7 @@ export function AdminShell({
                 disabled={signingOut}
                 role="menuitem"
               >
-                <AdminIcon name="close" size={15} />
+                <LogOut size={15} />
                 {signingOut ? "Signing out…" : "Sign out"}
               </button>
             </div>
@@ -148,6 +184,7 @@ export function AdminShell({
               <div className={styles.navGroupTitle}>{group.title}</div>
               {group.items.map((item) => {
                 const active = isActive(item.href, pathname, item.end);
+                const NavIcon = NAV_ICONS[item.icon] ?? FileText;
                 if (!item.ready) {
                   return (
                     <span
@@ -156,7 +193,7 @@ export function AdminShell({
                       title="Coming soon"
                       aria-disabled="true"
                     >
-                      <AdminIcon name={item.icon} size={18} />
+                      <NavIcon size={18} />
                       <span>{item.label}</span>
                       <span className={styles.navItemSoon}>Soon</span>
                     </span>
@@ -169,7 +206,7 @@ export function AdminShell({
                     className={clsx(styles.navItem, active && styles.navItemActive)}
                     aria-current={active ? "page" : undefined}
                   >
-                    <AdminIcon name={item.icon} size={18} />
+                    <NavIcon size={18} />
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -190,7 +227,7 @@ export function AdminShell({
             aria-expanded={open}
             aria-controls="admin-sidebar"
           >
-            <AdminIcon name={open ? "close" : "menu"} size={20} />
+            {open ? <X size={20} /> : <Menu size={20} />}
           </button>
           <span className={styles.topbarTitle}>Pexpacks Admin</span>
         </div>

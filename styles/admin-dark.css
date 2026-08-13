@@ -32,4 +32,104 @@
   --admin-radius: 16px;
   --admin-radius-sm: 10px;
   --admin-focus: #34d399;
+
+  /* Headings + strong text in the admin = light, not navy */
+  --admin-heading: #f8fafc;
+
+  /* Status badge palettes (light fallbacks live in admin.module.css) */
+  --badge-paid-bg: rgba(16, 185, 129, 0.14);
+  --badge-paid-fg: #34d399;
+  --badge-pending-bg: rgba(251, 191, 36, 0.14);
+  --badge-pending-fg: #fbbf24;
+  --badge-info-bg: rgba(56, 189, 248, 0.14);
+  --badge-info-fg: #7dd3fc;
+  --badge-danger-bg: rgba(248, 113, 113, 0.14);
+  --badge-danger-fg: #f87171;
+  --badge-muted-bg: rgba(100, 116, 139, 0.16);
+  --badge-muted-fg: #cbd5e1;
+
+  /* ---- Remap the shared --pex-* / --color-* tokens to dark values.
+     Existing admin CSS modules consume these tokens, so this single
+     block darkens every admin page. Scoped here, so the public,
+     light-only site is untouched. ---- */
+  --pex-bg: var(--admin-surface);
+  --pex-body-bg: var(--admin-bg);
+  --pex-bg-soft: var(--admin-surface-2);
+  --pex-text: var(--admin-text-2);
+  --pex-muted: var(--admin-text-3);
+  --pex-border: var(--admin-border);
+  --pex-keppel: #2dd4bf;
+  --pex-keppel-dark: #2dd4bf;
+  --pex-coral: #ff8a76;
+  --pex-coral-hover: #ff9b89;
+
+  --color-brand-navy: var(--admin-heading);
+  --color-text: var(--admin-text-2);
+  --color-text-strong: var(--admin-heading);
+  --color-text-muted: var(--admin-text-3);
+  --color-border: var(--admin-border);
+  --color-background: var(--admin-surface);
+  --color-background-soft: var(--admin-surface-2);
+  --color-page-background: var(--admin-bg);
+  --color-surface: var(--admin-surface);
+  --color-surface-soft: var(--admin-surface-2);
+  --color-focus: var(--admin-accent-strong);
+  --color-overlay: rgba(2, 6, 23, 0.66);
+  --color-overlay-soft: rgba(2, 6, 23, 0.6);
+  --color-navy-subtle: rgba(148, 163, 184, 0.1);
+  --color-navy-border: rgba(148, 163, 184, 0.16);
+  --color-teal-subtle: rgba(45, 212, 191, 0.14);
+  --color-teal-border: rgba(45, 212, 191, 0.3);
+  --color-surface-glass: rgba(15, 23, 42, 0.92);
+
+  --color-success: #34d399;
+  --color-success-bg: rgba(16, 185, 129, 0.12);
+  --color-success-border: rgba(16, 185, 129, 0.3);
+  --color-warning: #fbbf24;
+  --color-warning-bg: rgba(251, 191, 36, 0.12);
+  --color-warning-border: rgba(251, 191, 36, 0.3);
+  --color-danger: #f87171;
+  --color-danger-bg: rgba(248, 113, 113, 0.12);
+  --color-danger-border: rgba(248, 113, 113, 0.3);
+  --color-disabled: #94a3b8;
+  --color-disabled-bg: #1e293b;
+
+  --pex-success: #34d399;
+  --pex-error: #f87171;
+  --pex-primary: var(--admin-heading);
+  --pex-accent: var(--pex-coral);
+  --pex-accent-hover: var(--pex-coral-hover);
+  --pex-text-muted: var(--admin-text-3);
+  --pex-illustration-soft: var(--admin-border);
+  --pex-soft-gold: var(--admin-surface-2);
+  --pex-bg-warm: var(--admin-surface-2);
+
+  --card-bg: var(--admin-surface);
+  --card-border: 1px solid var(--admin-border);
+  --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  --card-shadow-hover: 0 20px 48px rgba(0, 0, 0, 0.55);
+  --surface-border-soft: 1px solid var(--admin-border);
+  --surface-border-teal: 1px solid var(--color-teal-border);
+
+  --form-card-bg: var(--admin-surface);
+  --form-card-border: 1px solid var(--admin-border);
+  --form-label-color: var(--admin-text-2);
+  --form-helper-color: var(--admin-text-3);
+  --form-control-bg: var(--admin-surface);
+  --form-control-border: 1px solid var(--admin-border-strong);
+  --form-control-color: var(--admin-text);
+  --form-control-placeholder: rgba(148, 163, 184, 0.55);
+  --form-control-hover-border: var(--admin-border-strong);
+  --form-control-focus-border: var(--admin-accent);
+  --form-control-focus-shadow: 0 0 0 4px rgba(16, 185, 129, 0.18);
+  --form-option-bg: var(--admin-surface);
+  --form-option-selected-bg: rgba(16, 185, 129, 0.16);
+  --form-option-selected-border: var(--admin-accent);
+  --form-option-selected-color: var(--admin-accent-strong);
+
+  --color-shadow: rgba(0, 0, 0, 0.5);
+  --focus-ring: 3px solid rgba(52, 211, 153, 0.55);
+  --shadow-soft: 0 14px 32px rgba(0, 0, 0, 0.45);
+  --shadow-pill: 0 9px 18px rgba(0, 0, 0, 0.5);
+  --button-hover-shadow: 0 14px 24px rgba(0, 0, 0, 0.5);
 }

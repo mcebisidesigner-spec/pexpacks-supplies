@@ -17,7 +17,7 @@
   margin: 0;
   font-size: clamp(22px, 3vw, 28px);
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .count {
@@ -46,7 +46,7 @@
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
-  background: #fff;
+  background: var(--pex-bg);
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 12px;
   padding: 12px;
@@ -58,8 +58,8 @@
   padding: 8px 12px;
   font-size: 14px;
   font-family: inherit;
-  color: #1a2a40;
-  background: #fff;
+  color: var(--admin-heading);
+  background: var(--pex-bg);
 }
 
 .filterInput:focus {
@@ -107,7 +107,7 @@
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  background: #f4f5f7;
+  background: var(--pex-bg-soft);
   border: 1px solid var(--pex-border, #e1e7ea);
   object-fit: contain;
   flex-shrink: 0;
@@ -115,7 +115,7 @@
 
 .schoolName {
   font-weight: 700;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .schoolSlug {
@@ -241,7 +241,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #fff;
+  background: var(--pex-bg);
   color: #33475b;
   border: 1px solid var(--pex-border, #dbe3ec);
   border-radius: 8px;

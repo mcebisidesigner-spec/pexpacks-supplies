@@ -14,8 +14,8 @@
   width: 264px;
   display: flex;
   flex-direction: column;
-  background: #fbfcfd;
-  border-right: 1px solid var(--pex-border, #e1e7ea);
+  background: var(--admin-surface);
+  border-right: 1px solid var(--admin-border);
   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -86,10 +86,10 @@
   left: 0;
   z-index: 200;
   width: 240px;
-  background: #fff;
-  border: 1px solid var(--pex-border, #e1e7ea);
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border-strong);
   border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(26, 42, 64, 0.14), 0 2px 8px rgba(26, 42, 64, 0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4);
   padding: 0;
   overflow: hidden;
   animation: dropdownIn 0.18s cubic-bezier(0.4, 0, 0.2, 1);
@@ -132,7 +132,7 @@
 .profileName {
   font-size: 14px;
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -195,7 +195,7 @@
   font-family: var(--font-heading, inherit);
   font-size: 18px;
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   line-height: 1.1;
 }
 
@@ -241,13 +241,13 @@
 }
 
 .navItem:hover {
-  background: var(--pex-bg-soft, #f4f5f7);
-  color: var(--pex-navy, #1a2a40);
+  background: var(--admin-surface-2);
+  color: var(--admin-heading);
 }
 
 .navItemActive {
   background: var(--color-teal-subtle, rgba(33, 158, 154, 0.1));
-  color: var(--pex-keppel-dark, #156966);
+  color: var(--admin-accent-strong);
   font-weight: 800;
 }
 
@@ -311,7 +311,7 @@
 .userName {
   font-size: 13px;
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -358,8 +358,8 @@
   align-items: center;
   gap: 14px;
   padding: 14px 20px;
-  background: #ffffff;
-  border-bottom: 1px solid var(--pex-border, #e1e7ea);
+  background: var(--admin-surface);
+  border-bottom: 1px solid var(--admin-border);
   position: sticky;
   top: 0;
   z-index: 40;
@@ -371,23 +371,23 @@
   justify-content: center;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--pex-border, #e1e7ea);
+  border: 1px solid var(--admin-border-strong);
   border-radius: 14px;
-  background: #ffffff;
-  color: var(--pex-navy, #1a2a40);
+  background: var(--admin-surface);
+  color: var(--admin-text-2);
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
 .menuButton:hover {
-  background: var(--pex-bg-soft, #f4f5f7);
+  background: var(--admin-surface-2);
 }
 
 .topbarTitle {
   font-family: var(--font-heading, inherit);
   font-size: 18px;
   font-weight: 800;
-  color: var(--pex-navy, #1a2a40);
+  color: var(--admin-heading);
 }
 
 .content {

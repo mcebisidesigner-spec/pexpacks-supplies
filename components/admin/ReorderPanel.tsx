@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { AdminIcon } from "@/components/admin/icons";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import styles from "@/app/admin/content/reorder.module.css";
 
 export type ReorderItem = {
@@ -40,8 +40,8 @@ export function ReorderPanel({
     <aside className={styles.panel} aria-label="Reorder content">
       <div className={styles.panelHeader}>
         <div className={styles.panelIcon}>
-          <AdminIcon name="chevron-up" size={16} />
-          <AdminIcon name="chevron-down" size={16} />
+          <ChevronUp size={16} />
+          <ChevronDown size={16} />
         </div>
         <div>
           <h2 className={styles.panelTitle}>{title}</h2>
@@ -81,7 +81,7 @@ export function ReorderPanel({
                     aria-label={`Move up ${item.label}`}
                     aria-disabled={atTop || isPending}
                   >
-                    <AdminIcon name="chevron-up" size={16} />
+                    <ChevronUp size={16} />
                   </button>
                   <button
                     type="button"
@@ -91,7 +91,7 @@ export function ReorderPanel({
                     aria-label={`Move down ${item.label}`}
                     aria-disabled={atBottom || isPending}
                   >
-                    <AdminIcon name="chevron-down" size={16} />
+                    <ChevronDown size={16} />
                   </button>
                 </div>
                 {isBusy ? <span className={styles.busy} aria-live="polite" /> : null}
