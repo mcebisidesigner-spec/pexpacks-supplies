@@ -11,6 +11,7 @@ import {
 import { slugify } from "@/lib/slugify";
 import { PACK_DELIVERY_TYPES } from "@/lib/admin/pack-constants";
 import { getGradeOrder } from "@/lib/grade-utils";
+import { createPackItems, packLineSchema, type PackLineInput } from "@/lib/admin/items";
 
 export type PackRow = Database["public"]["Tables"]["stationery_packs"]["Row"];
 export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"];
@@ -432,6 +433,31 @@ const createPackSchema = z.object({
 type CreatePackFormData = z.infer<typeof createPackSchema>;
 
 /**
+ * Parses the serialized `items` hidden field produced by the GradePackItemSelector
+ * in the pack creation form. Returns an empty line list when no items were chosen.
+ */
+function parsePackItems(formData: FormData): { lines: PackLineInput[]; error?: string } {
+  const rawItems = raw(formData, "items");
+  if (!rawItems.trim()) return { lines: [] };
+
+  let value: unknown;
+  try {
+    value = JSON.parse(rawItems);
+  } catch {
+    return { lines: [], error: "The items list is not valid. Refresh and try again." };
+  }
+
+  const parsed = z.array(packLineSchema).safeParse(value);
+  if (!parsed.success) {
+    return {
+      lines: [],
+      error: "One of the items is not valid. Check names, quantities and prices.",
+    };
+  }
+  return { lines: parsed.data };
+}
+
+/**
  * Turns a user-entered grade ("Grade 10", "10", "GRADE R", "R") into the
  * `${schoolSlug}-grade-<r|n>` slug segment used by the public grade pages.
  */
@@ -462,6 +488,11 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
     return { ok: false, errors };
   }
 
+  const packItems = parsePackItems(formData);
+  if (packItems.error) {
+    return { ok: false, errors: { items: packItems.error } };
+  }
+
   const admin = createSupabaseAdminClient();
   const { data: school } = await admin
     .from("schools")
@@ -471,6 +502,12 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
   if (!school) {
     return { ok: false, errors: { school_id: "Choose a school." } };
   }
+
+  const itemsTotal = packItems.lines.reduce(
+    (sum, line) => sum + (line.unit_price ?? 0) * line.quantity,
+    0
+  );
+  const defaultPrice = Math.round(itemsTotal * 100) / 100;
 
   try {
     const data: CreatePackFormData = parsed.data;
@@ -486,7 +523,7 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
         title,
         slug,
         description: null,
-        price: 0,
+        price: defaultPrice,
         stock: 1,
         featured: data.featured,
         visible: data.visible,
@@ -508,6 +545,13 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
         };
       }
       throw error;
+    }
+
+    if (packItems.lines.length > 0) {
+      const itemResult = await createPackItems(created.id, packItems.lines, actor.user.id);
+      if (!itemResult.ok) {
+        console.error("[packs] failed to create items for new pack", created.id);
+      }
     }
 
     void writeAuditLog({

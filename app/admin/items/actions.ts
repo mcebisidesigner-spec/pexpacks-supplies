@@ -10,10 +10,12 @@ import {
   deleteItem,
   reorderItems,
   importItemsCsv,
+  reconcilePackItems,
   listStationeryInventory,
   type ItemFormState,
   type ImportItemsResult,
   type StationeryInventoryItem,
+  type PackLineInput,
 } from "@/lib/admin/items";
 
 async function revalidatePackPublicPage(packId: string) {
@@ -88,6 +90,21 @@ export async function importItemsAction(
       errors: [err instanceof Error ? err.message : "CSV import failed."],
     };
   }
+}
+
+export async function savePackItemsAction(
+  packId: string,
+  lines: PackLineInput[]
+): Promise<{ ok: boolean; message?: string }> {
+  await requireAdmin({ permission: "items.edit" });
+  const result = await reconcilePackItems(packId, lines);
+  if (!result.ok) {
+    return { ok: false, message: result.message ?? "Failed to save items." };
+  }
+  revalidatePath(`/admin/packs/${packId}`);
+  revalidatePath("/admin/items");
+  await revalidatePackPublicPage(packId);
+  return { ok: true };
 }
 
 export async function searchStationeryInventoryAction(

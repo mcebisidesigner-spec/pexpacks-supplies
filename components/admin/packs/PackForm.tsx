@@ -8,6 +8,9 @@ import clsx from "clsx";
 import type { PackFormState, PackSchool } from "@/lib/admin/packs";
 import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
 import type { PackListItem } from "@/components/packs/packListTypes";
+import GradePackItemSelector, {
+  type PackLine,
+} from "@/components/grade-packs/GradePackItemSelector";
 import { formatCurrency } from "@/lib/formatCurrency";
 import formStyles from "../schools/SchoolForm.module.css";
 import styles from "./PackForm.module.css";
@@ -143,10 +146,22 @@ export function PackForm({ schools, action }: PackFormProps) {
   });
   const [schoolId, setSchoolId] = useState("");
   const [grade, setGrade] = useState("");
+  const itemsRef = useRef<PackLine[]>([]);
+  const itemsInputRef = useRef<HTMLInputElement>(null);
 
   const selectedSchool = schools.find((school) => school.id === schoolId) ?? null;
   const previewGrade = displayGrade(grade);
   const previewItems: PackListItem[] = [];
+
+  function handleItemsChange(lines: PackLine[]) {
+    itemsRef.current = lines;
+  }
+
+  function handleSubmit() {
+    if (itemsInputRef.current) {
+      itemsInputRef.current.value = JSON.stringify(itemsRef.current);
+    }
+  }
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
@@ -156,7 +171,14 @@ export function PackForm({ schools, action }: PackFormProps) {
     ) : null;
 
   return (
-    <form action={formAction} className={formStyles.form}>
+    <form action={formAction} onSubmit={handleSubmit} className={formStyles.form}>
+      <input
+        type="hidden"
+        name="items"
+        ref={itemsInputRef}
+        defaultValue="[]"
+        aria-hidden="true"
+      />
       {state?.ok ? (
         <p className={formStyles.success} role="status">
           {state.message}
@@ -242,6 +264,22 @@ export function PackForm({ schools, action }: PackFormProps) {
             Will be created as &ldquo;{selectedSchool.name} {grade.trim()} Pack&rdquo;.
           </p>
         ) : null}
+      </div>
+
+      <div className={formStyles.section}>
+        <h2 className={formStyles.sectionTitle}>Items (optional)</h2>
+        <p className={formStyles.hint}>
+          Search the stationery inventory to add items to this pack now. The pack
+          price is set from their total and can be adjusted afterwards. You can
+          also add, edit or import items after the pack is created.
+        </p>
+        <GradePackItemSelector
+          initialItems={[]}
+          showSave={false}
+          onItemsChange={handleItemsChange}
+          onSave={() => {}}
+        />
+        {err("items")}
       </div>
 
       <div className={formStyles.actions}>

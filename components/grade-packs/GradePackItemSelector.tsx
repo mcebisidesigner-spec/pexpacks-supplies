@@ -27,6 +27,8 @@ interface GradePackItemSelectorProps {
   initialItems?: PackLine[];
   submitLabel?: string;
   busy?: boolean;
+  showSave?: boolean;
+  onItemsChange?: (items: PackLine[]) => void;
   onSave: (items: PackLine[]) => void | Promise<void>;
 }
 
@@ -34,6 +36,8 @@ export default function GradePackItemSelector({
   initialItems = [],
   submitLabel = "Save grade pack",
   busy = false,
+  showSave = true,
+  onItemsChange,
   onSave,
 }: GradePackItemSelectorProps) {
   const [query, setQuery] = useState("");
@@ -76,11 +80,16 @@ export default function GradePackItemSelector({
     setAnnouncement(message);
   }
 
+  function updateItems(next: PackLine[]) {
+    setItems(next);
+    onItemsChange?.(next);
+  }
+
   function addItem(suggestion: StationeryInventoryItem) {
     const lower = suggestion.name.toLowerCase();
     const existing = items.find((i) => i.name.toLowerCase() === lower);
 
-    setItems(
+    updateItems(
       existing
         ? items.map((i) =>
             i.name.toLowerCase() === lower ? { ...i, quantity: i.quantity + 1 } : i
@@ -110,16 +119,16 @@ export default function GradePackItemSelector({
 
     const quantity = target.quantity + delta;
     if (quantity <= 0) {
-      setItems(items.filter((i) => i.name.toLowerCase() !== lower));
+      updateItems(items.filter((i) => i.name.toLowerCase() !== lower));
       announce(`Removed ${name}`);
       return;
     }
-    setItems(items.map((i) => (i.name.toLowerCase() === lower ? { ...i, quantity } : i)));
+    updateItems(items.map((i) => (i.name.toLowerCase() === lower ? { ...i, quantity } : i)));
   }
 
   function removeItem(name: string) {
     const lower = name.toLowerCase();
-    setItems(items.filter((i) => i.name.toLowerCase() !== lower));
+    updateItems(items.filter((i) => i.name.toLowerCase() !== lower));
     announce(`Removed ${name}`);
   }
 
@@ -306,16 +315,18 @@ export default function GradePackItemSelector({
           </div>
         ) : null}
 
-        <div className={styles.footer}>
-          <button
-            type="button"
-            className={styles.saveBtn}
-            onClick={() => void handleSave()}
-            disabled={busy || lines.length === 0}
-          >
-            {busy ? "Saving…" : submitLabel}
-          </button>
-        </div>
+        {showSave ? (
+          <div className={styles.footer}>
+            <button
+              type="button"
+              className={styles.saveBtn}
+              onClick={() => void handleSave()}
+              disabled={busy || lines.length === 0}
+            >
+              {busy ? "Saving…" : submitLabel}
+            </button>
+          </div>
+        ) : null}
       </div>
 
       <div className={styles.visuallyHidden} aria-live="polite">

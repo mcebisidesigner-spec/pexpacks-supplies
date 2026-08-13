@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getPack } from "@/lib/admin/packs";
 import { PackPriceForm } from "@/components/admin/packs/PackPriceForm";
-import { ItemsManager } from "@/components/admin/packs/ItemsManager";
+import { PackItemsSection } from "@/components/admin/packs/PackItemsSection";
 import adminStyles from "../../admin.module.css";
 import shared from "../../schools/schools.module.css";
 
@@ -35,7 +35,7 @@ export default async function EditPackPage({ params }: EditPackPageProps) {
       </div>
       <div className={adminStyles.stack}>
         <PackPriceForm packId={pack.id} price={pack.price} subtotal={subtotal} />
-        <ItemsManager packId={pack.id} items={items} />
+        <PackItemsSection packId={pack.id} items={items} />
       </div>
     </div>
   );

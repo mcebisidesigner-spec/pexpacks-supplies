@@ -534,6 +534,156 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
   return result;
 }
 
+export const packLineSchema = z.object({
+  name: z.string().trim().min(1, "Item name is required").max(200, "Item name is too long"),
+  description: z
+    .union([z.string().trim().max(2000, "Description is too long"), z.null(), z.literal("")])
+    .optional(),
+  unit_price: z.union([z.number().min(0).max(99_999_999), z.null()]).optional(),
+  quantity: z
+    .number()
+    .int("Quantity must be a whole number")
+    .min(1, "Quantity must be at least 1")
+    .max(1_000_000, "Quantity is too large"),
+});
+
+export type PackLineInput = z.infer<typeof packLineSchema>;
+
+/**
+ * Creates pack item rows in one insert from selector lines. Used when a pack is
+ * created together with its items (PackForm → createPack).
+ */
+export async function createPackItems(
+  packId: string,
+  lines: PackLineInput[],
+  createdBy: string
+): Promise<{ ok: boolean; created: number }> {
+  if (lines.length === 0) return { ok: true, created: 0 };
+
+  const parsed = z.array(packLineSchema).safeParse(lines);
+  if (!parsed.success) return { ok: false, created: 0 };
+
+  const admin = createSupabaseAdminClient();
+  const rows = parsed.data.map((line, index) => ({
+    pack_id: packId,
+    name: line.name.trim(),
+    description: line.description || null,
+    unit_price: line.unit_price ?? null,
+    quantity: line.quantity,
+    icon: null,
+    visible: true,
+    sort_order: index + 1,
+    created_by: createdBy,
+  }));
+
+  const { error } = await admin.from("stationery_items").insert(rows);
+  if (error) {
+    console.error("[items] bulk create failed:", error);
+    return { ok: false, created: 0 };
+  }
+  return { ok: true, created: rows.length };
+}
+
+/**
+ * Reconciles a pack's items to the given selector lines: lines whose name no
+ * longer appears are deleted, matching items get their quantity/price/order
+ * updated (specification, icon and visibility are preserved), and new lines
+ * are inserted. Sort order follows the order of the lines.
+ */
+export async function reconcilePackItems(
+  packId: string,
+  lines: PackLineInput[]
+): Promise<{ ok: boolean; created: number; updated: number; deleted: number; message?: string }> {
+  const actor = await assertCan("items.edit");
+  const parsed = z.array(packLineSchema).safeParse(lines);
+  if (!parsed.success) {
+    return { ok: false, created: 0, updated: 0, deleted: 0, message: "One of the items is not valid." };
+  }
+
+  const admin = createSupabaseAdminClient();
+  const { data: existingRows, error: loadError } = await admin
+    .from("stationery_items")
+    .select("id, name, description, quantity, unit_price, sort_order")
+    .eq("pack_id", packId);
+  if (loadError) {
+    console.error("[items] reconcile load failed:", loadError);
+    return { ok: false, created: 0, updated: 0, deleted: 0, message: "Failed to load items." };
+  }
+
+  const remaining = new Map(
+    (existingRows ?? []).map((row) => [row.name.trim().toLowerCase(), row])
+  );
+
+  let created = 0;
+  let updated = 0;
+  let deleted = 0;
+
+  for (let index = 0; index < parsed.data.length; index++) {
+    const line = parsed.data[index];
+    const key = line.name.trim().toLowerCase();
+    const current = remaining.get(key);
+    const sortOrder = index + 1;
+
+    if (current) {
+      const patch: Partial<ItemRow> = {
+        quantity: line.quantity,
+        unit_price: line.unit_price ?? null,
+        sort_order: sortOrder,
+      };
+      const nextDescription = line.description?.trim();
+      if (nextDescription && nextDescription !== current.description) {
+        patch.description = nextDescription;
+      }
+      const { error } = await admin.from("stationery_items").update(patch).eq("id", current.id);
+      if (error) {
+        console.error("[items] reconcile update failed:", error);
+      } else {
+        updated += 1;
+      }
+      remaining.delete(key);
+    } else {
+      const { error } = await admin.from("stationery_items").insert({
+        pack_id: packId,
+        name: line.name.trim(),
+        description: line.description || null,
+        unit_price: line.unit_price ?? null,
+        quantity: line.quantity,
+        icon: null,
+        visible: true,
+        sort_order: sortOrder,
+        created_by: actor.user.id,
+      });
+      if (error) {
+        console.error("[items] reconcile insert failed:", error);
+      } else {
+        created += 1;
+      }
+    }
+  }
+
+  for (const row of remaining.values()) {
+    const { error } = await admin.from("stationery_items").delete().eq("id", row.id);
+    if (error) {
+      console.error("[items] reconcile delete failed:", error);
+    } else {
+      deleted += 1;
+    }
+  }
+
+  if (created > 0 || updated > 0 || deleted > 0) {
+    void writeAuditLog({
+      actorId: actor.user.id,
+      actorName: actor.user.email,
+      action: "items.edit",
+      entityType: "pack",
+      entityId: packId,
+      summary: `Synced pack items: ${created} created, ${updated} updated, ${deleted} removed`,
+    });
+  }
+
+  return { ok: true, created, updated, deleted };
+}
+
 export async function listDistinctStationeryItems(): Promise<string[]> {
   try {
     const admin = createSupabaseAdminClient();
