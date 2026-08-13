@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { track } from "@vercel/analytics/server";
 import { markOrderPaid, getOrderForReceipt } from "@/lib/orders";
 import { getOzowConfig, ozowWebhookHash } from "@/lib/ozow/signature";
 import { sendPurchaseReceipt } from "@/lib/email/receipt";
@@ -149,6 +150,14 @@ export async function POST(request: NextRequest) {
       "statusMessage",
       StatusMessage
     );
+
+    track("Pre-Order Completed", {
+      orderReference: TransactionReference,
+      amount: numAmount ?? null,
+      currency: CurrencyCode || "ZAR",
+      paymentMethod: isHappyPay ? "HappyPay" : "Ozow",
+      isTest: IsTest === "true",
+    });
 
     const order = await getOrderForReceipt(TransactionReference);
 

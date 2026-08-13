@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/react";
 import { ClientRuntimeWidgets } from "@/components/layout/ClientRuntimeWidgets";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import { JsonLd } from "@/components/ui/JsonLd";
@@ -192,6 +193,7 @@ export default async function RootLayout({
           <ClientRuntimeWidgets />
           <TrayProviders />
         </div>
+        <Analytics />
       </body>
     </html>
   );

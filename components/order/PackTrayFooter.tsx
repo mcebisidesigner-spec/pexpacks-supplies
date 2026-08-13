@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { trackProceedToCheckout } from "@/lib/analytics";
 import styles from "./GlobalPackTray.module.css";
 
 export function PackTrayFooter() {
@@ -18,9 +19,10 @@ export function PackTrayFooter() {
 
   const handleCheckout = useCallback(() => {
     if (!hasPacks) return;
+    trackProceedToCheckout({ packCount: packs.length, totalPrice: total });
     closeTray();
     router.push("/checkout");
-  }, [hasPacks, closeTray, router]);
+  }, [hasPacks, packs, total, closeTray, router]);
 
   const handleAddAnotherLearner = useCallback(() => {
     setShowSchoolChoice(true);

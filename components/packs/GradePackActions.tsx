@@ -13,6 +13,7 @@ import {
 import { useDialogFocusTrap } from "./useDialogFocusTrap";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { createFullTrayPack } from "@/lib/order/createTrayPack";
+import { trackInitiatePreOrder } from "@/lib/analytics";
 import type {
   GradePackForCustomisation,
   PackSelectionItem,
@@ -95,6 +96,12 @@ export function GradePackActions({
       sourcePath: window.location.pathname,
     });
     addPack(trayPack);
+    trackInitiatePreOrder({
+      school: pack.schoolName,
+      grade: pack.grade,
+      packMode: "full",
+      totalPrice: pack.fullPackPrice ?? 0,
+    });
     openTray();
   }, [pack, addPack, openTray]);
 
@@ -142,6 +149,12 @@ export function GradePackActions({
     };
 
     addPack(customPack);
+    trackInitiatePreOrder({
+      school: pack.schoolName,
+      grade: pack.grade,
+      packMode: "customised",
+      totalPrice: customTotal,
+    });
     closeCustomiser();
     openTray();
   }, [selectedCount, selection, pack, addPack, closeCustomiser, openTray]);

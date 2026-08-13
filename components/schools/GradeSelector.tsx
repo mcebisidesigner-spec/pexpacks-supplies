@@ -11,6 +11,7 @@ import type { GradePackForCustomisation } from "@/lib/packs/types";
 import type { CompleteListPack, PackListItem } from "@/components/packs/packListTypes";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { createFullTrayPack } from "@/lib/order/createTrayPack";
+import { trackInitiatePreOrder } from "@/lib/analytics";
 import styles from "./GradeSelector.module.css";
 
 type GradeSelectorProps = {
@@ -86,6 +87,12 @@ export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: Grad
       sourcePath: window.location.pathname,
     });
     usePackTrayStore.getState().addPack(trayPack);
+    trackInitiatePreOrder({
+      school: school.name,
+      grade: grade.grade,
+      packMode: "full",
+      totalPrice: grade.price ?? 0,
+    });
     usePackTrayStore.getState().openTray();
     closeCompleteList();
   }, [school, closeCompleteList]);

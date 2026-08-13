@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
 import { buildWhatsAppHref } from '@/data/contact'
 import clsx from 'clsx'
+import { trackPaymentInitiated } from '@/lib/analytics'
 import styles from '@/app/checkout/Checkout.module.css'
 
 type FulfilmentOption =
@@ -487,6 +488,12 @@ export function TrayCheckoutClient() {
         return
       }
 
+      if (idempotencyKeyRef.current) {
+        trackPaymentInitiated({
+          orderId: idempotencyKeyRef.current,
+          totalPrice: total,
+        })
+      }
       window.location.href = data.url
       return
     } catch (error) {
