@@ -8,8 +8,8 @@ export const size = {
 };
 export const contentType = "image/png";
 
-// Edge runtime ensures execution in sub-10ms
-export const runtime = "edge";
+// Node runtime: next/og bundles exceed Vercel's 1 MB Edge Function size limit.
+export const runtime = "nodejs";
 
 export default async function Image({
   params,

@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
+// Node runtime: next/og bundles exceed Vercel's 1 MB Edge Function size limit.
+export const runtime = "nodejs";
 
 export async function GET(request: Request) {
   try {
