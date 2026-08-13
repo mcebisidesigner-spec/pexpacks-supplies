@@ -47,3 +47,7 @@ create index if not exists idx_audit_logs_action_created
 
 create index if not exists idx_form_submissions_created
   on public.form_submissions (created_at desc);
+
+-- Add custom_badge column to schools table for custom search tray pill text
+alter table public.schools add column if not exists custom_badge text default '2026 Packs';
+
