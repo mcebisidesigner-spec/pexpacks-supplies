@@ -963,6 +963,11 @@ export interface Database {
           total_revenue: number;
           total_schools: number;
           total_packs: number;
+          orders_today: number;
+          orders_this_week: number;
+          awaiting_fulfilment: number;
+          completed_orders: number;
+          active_packs: number;
           last_updated_at: string;
         };
         Insert: {
@@ -973,6 +978,11 @@ export interface Database {
           total_revenue?: number;
           total_schools?: number;
           total_packs?: number;
+          orders_today?: number;
+          orders_this_week?: number;
+          awaiting_fulfilment?: number;
+          completed_orders?: number;
+          active_packs?: number;
           last_updated_at?: string;
         };
         Update: {
@@ -983,6 +993,11 @@ export interface Database {
           total_revenue?: number;
           total_schools?: number;
           total_packs?: number;
+          orders_today?: number;
+          orders_this_week?: number;
+          awaiting_fulfilment?: number;
+          completed_orders?: number;
+          active_packs?: number;
           last_updated_at?: string;
         };
         Relationships: [];

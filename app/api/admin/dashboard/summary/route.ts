@@ -14,6 +14,11 @@ interface SummaryRow {
   total_revenue: number | null;
   total_schools: number;
   total_packs: number;
+  orders_today: number;
+  orders_this_week: number;
+  awaiting_fulfilment: number;
+  completed_orders: number;
+  active_packs: number;
   last_updated_at: string;
 }
 
@@ -23,7 +28,7 @@ async function readSummary(): Promise<SummaryRow | null> {
     const { data } = await admin
       .from("dashboard_summaries")
       .select(
-        "id, total_orders, paid_orders, pending_orders, total_revenue, total_schools, total_packs, last_updated_at"
+        "id, total_orders, paid_orders, pending_orders, total_revenue, total_schools, total_packs, orders_today, orders_this_week, awaiting_fulfilment, completed_orders, active_packs, last_updated_at"
       )
       .eq("id", "global")
       .maybeSingle();

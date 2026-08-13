@@ -24,7 +24,7 @@ import {
   ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
-import type { AdminNavGroup } from "@/lib/admin/navigation";
+import type { AdminNavGroup, AdminNavItem } from "@/lib/admin/navigation";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./AdminShell.module.css";
 
@@ -56,6 +56,14 @@ function isActive(href: string, pathname: string, end?: boolean) {
   if (end) return pathname === href;
   return pathname === href || pathname.startsWith(href + "/");
 }
+
+const BOTTOM_NAV_PRIORITY = [
+  "/admin",
+  "/admin/schools",
+  "/admin/packs",
+  "/admin/orders",
+  "/admin/settings",
+];
 
 export function AdminShell({
   groups,
@@ -122,6 +130,11 @@ export function AdminShell({
 
   const roleLabels = userRoles.length > 0 ? userRoles.join(", ") : "Staff";
   const avatarInitials = initials(userName);
+
+  const readyItems = groups.flatMap((group) => group.items).filter((item) => item.ready);
+  const bottomNavItems = BOTTOM_NAV_PRIORITY.map((href) =>
+    readyItems.find((item) => item.href === href)
+  ).filter((item): item is AdminNavItem => Boolean(item));
 
   return (
     <div className={`${styles.shell} admin-dark`}>
@@ -235,6 +248,26 @@ export function AdminShell({
           {children}
         </main>
       </div>
+
+      {bottomNavItems.length > 0 && (
+        <nav className={styles.bottomNav} aria-label="Primary navigation">
+          {bottomNavItems.map((item) => {
+            const active = isActive(item.href, pathname, item.end);
+            const NavIcon = NAV_ICONS[item.icon] ?? FileText;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={clsx(styles.bottomNavItem, active && styles.bottomNavItemActive)}
+                aria-current={active ? "page" : undefined}
+              >
+                <NavIcon size={19} aria-hidden="true" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      )}
     </div>
   );
 }

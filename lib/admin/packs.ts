@@ -12,6 +12,7 @@ import { slugify } from "@/lib/slugify";
 import { PACK_DELIVERY_TYPES } from "@/lib/admin/pack-constants";
 import { getGradeOrder } from "@/lib/grade-utils";
 import { createPackItems, packLineSchema, type PackLineInput } from "@/lib/admin/items";
+import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 
 export type PackRow = Database["public"]["Tables"]["stationery_packs"]["Row"];
 export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"];
@@ -563,6 +564,8 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
       summary: `Created pack "${created.title}"`,
     });
 
+    revalidateCatalog();
+
     return { ok: true, pack: created };
   } catch (err) {
     console.error("[packs] create failed:", err);
@@ -617,6 +620,8 @@ export async function updatePack(id: string, formData: FormData): Promise<PackFo
       summary: `Updated pack "${updated.title}"`,
     });
 
+    revalidateCatalog();
+
     return { ok: true, pack: updated };
   } catch (err) {
     console.error("[packs] update failed:", err);
@@ -661,6 +666,8 @@ export async function updatePackPrice(
     summary: `Updated price for pack "${existing.title}"`,
   });
 
+  revalidateCatalog();
+
   return { ok: true };
 }
 
@@ -691,6 +698,8 @@ export async function setPackVisible(
     entityId: updated.id,
     summary: `Set pack "${updated.title}" visibility to ${updated.visible ? "visible" : "hidden"}`,
   });
+
+  revalidateCatalog();
 
   return { ok: true };
 }
@@ -755,6 +764,8 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
       summary: `Duplicated pack "${source.title}"`,
     });
 
+    revalidateCatalog();
+
     return { ok: true, packId: copy.id };
   } catch (err) {
     console.error("[packs] duplicate failed:", err);
@@ -786,6 +797,8 @@ export async function deletePack(id: string): Promise<{ ok: boolean; message?: s
     entityId: id,
     summary: `Deleted pack "${existing.title}"`,
   });
+
+  revalidateCatalog();
 
   return { ok: true };
 }

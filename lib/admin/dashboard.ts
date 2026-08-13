@@ -54,7 +54,18 @@ async function count(table: "schools" | "stationery_packs" | "orders" | "assets"
 
 type DashboardSummaryRow = Pick<
   Database["public"]["Tables"]["dashboard_summaries"]["Row"],
-  "total_orders" | "paid_orders" | "pending_orders" | "total_revenue" | "total_schools" | "total_packs" | "last_updated_at"
+  | "total_orders"
+  | "paid_orders"
+  | "pending_orders"
+  | "total_revenue"
+  | "total_schools"
+  | "total_packs"
+  | "orders_today"
+  | "orders_this_week"
+  | "awaiting_fulfilment"
+  | "completed_orders"
+  | "active_packs"
+  | "last_updated_at"
 >;
 
 async function readDashboardSummary(
@@ -64,7 +75,7 @@ async function readDashboardSummary(
     const { data } = await admin
       .from("dashboard_summaries")
       .select(
-        "total_orders, paid_orders, pending_orders, total_revenue, total_schools, total_packs, last_updated_at"
+        "total_orders, paid_orders, pending_orders, total_revenue, total_schools, total_packs, orders_today, orders_this_week, awaiting_fulfilment, completed_orders, active_packs, last_updated_at"
       )
       .eq("id", "global")
       .maybeSingle();

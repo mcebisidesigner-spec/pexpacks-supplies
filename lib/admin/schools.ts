@@ -9,6 +9,7 @@ import {
   type AdminSession,
 } from "@/lib/admin/rbac";
 import { SCHOOL_STATUSES, type SchoolStatus } from "@/lib/admin/school-constants";
+import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 
 export type SchoolRow = Database["public"]["Tables"]["schools"]["Row"];
 export type { SchoolStatus };
@@ -317,6 +318,8 @@ export async function createSchool(
       summary: `Created school "${created.name}"`,
     });
 
+    revalidateCatalog({ schoolSlug: created.slug });
+
     return { ok: true, school: created };
   } catch (err) {
     console.error("[schools] create failed:", err);
@@ -378,6 +381,11 @@ export async function updateSchool(
       summary: `Updated school "${updated.name}"`,
     });
 
+    revalidateCatalog({ schoolSlug: existing.slug });
+    if (updated.slug && updated.slug !== existing.slug) {
+      revalidateCatalog({ schoolSlug: updated.slug });
+    }
+
     return { ok: true, school: updated };
   } catch (err) {
     console.error("[schools] update failed:", err);
@@ -398,7 +406,7 @@ export async function setSchoolStatus(
     .from("schools")
     .update({ status, updated_by: actor.user.id })
     .eq("id", id)
-    .select("id, name, status")
+    .select("id, name, status, slug")
     .single();
 
   if (error) {
@@ -415,6 +423,8 @@ export async function setSchoolStatus(
     summary: `Set school "${updated.name}" status to ${updated.status}`,
   });
 
+  revalidateCatalog({ schoolSlug: updated.slug });
+
   return { ok: true };
 }
 
@@ -422,7 +432,7 @@ export async function deleteSchool(id: string): Promise<{ ok: boolean; message?:
   const actor = await assertCan("schools.delete");
   const admin = createSupabaseAdminClient();
 
-  const { data: existing } = await admin.from("schools").select("id, name").eq("id", id).single();
+  const { data: existing } = await admin.from("schools").select("id, name, slug").eq("id", id).single();
   if (!existing) return { ok: false, message: "School not found." };
 
   const { error } = await admin.from("schools").delete().eq("id", id);
@@ -442,6 +452,8 @@ export async function deleteSchool(id: string): Promise<{ ok: boolean; message?:
     entityId: id,
     summary: `Deleted school "${existing.name}"`,
   });
+
+  revalidateCatalog({ schoolSlug: existing.slug });
 
   return { ok: true };
 }

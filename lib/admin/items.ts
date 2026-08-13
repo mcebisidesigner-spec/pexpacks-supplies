@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { revalidateTag } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/lib/supabase/types";
 import {
@@ -8,6 +9,7 @@ import {
   type PermissionKey,
   type AdminSession,
 } from "@/lib/admin/rbac";
+import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 
 export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"];
 
@@ -224,6 +226,8 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
       summary: `Created item "${created.name}"`,
     });
 
+    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+
     return { ok: true, item: created };
   } catch (err) {
     console.error("[items] create failed:", err);
@@ -261,6 +265,8 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
       summary: `Updated item "${updated.name}"`,
     });
 
+    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+
     return { ok: true, item: updated };
   } catch (err) {
     console.error("[items] update failed:", err);
@@ -289,6 +295,8 @@ export async function deleteItem(id: string): Promise<{ ok: boolean; message?: s
     entityId: id,
     summary: `Deleted item "${existing.name}"`,
   });
+
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 
   return { ok: true, packId: existing.pack_id };
 }
@@ -323,6 +331,8 @@ export async function reorderItems(
       entityId: packId,
       summary: `Reordered ${updates.length} items in a pack`,
     });
+
+    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 
     return { ok: true };
   } catch (err) {
@@ -531,6 +541,8 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
     summary: `Imported items CSV: ${result.created} created, ${result.updated} updated, ${result.errors.length} errors`,
   });
 
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+
   return result;
 }
 
@@ -680,6 +692,8 @@ export async function reconcilePackItems(
       summary: `Synced pack items: ${created} created, ${updated} updated, ${deleted} removed`,
     });
   }
+
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 
   return { ok: true, created, updated, deleted };
 }

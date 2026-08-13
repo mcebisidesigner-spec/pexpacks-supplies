@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { requireAdmin } from "@/lib/admin/rbac";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { requireAdmin, writeAuditLog } from "@/lib/admin/rbac";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 
 export interface CSVStationeryRow {
   sku?: string;
@@ -14,7 +15,7 @@ export interface CSVStationeryRow {
 
 export async function bulkImportStationeryAction(items: CSVStationeryRow[], packId: string) {
   // Only authenticated staff with the items.import permission may bulk-import.
-  await requireAdmin({ permission: "items.import" });
+  const actor = await requireAdmin({ permission: "items.import" });
 
   if (!items || items.length === 0) {
     throw new Error("No items provided for import.");
@@ -48,6 +49,15 @@ export async function bulkImportStationeryAction(items: CSVStationeryRow[], pack
     throw new Error(`Database import failed: ${error.message}`);
   }
 
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "items.import",
+    entityType: "pack",
+    entityId: packId,
+    summary: `Bulk-imported stationery: ${data?.length ?? formattedItems.length} items`,
+  });
   revalidatePath("/admin/items");
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   return { success: true, importedCount: data?.length ?? formattedItems.length };
 }
