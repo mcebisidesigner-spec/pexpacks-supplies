@@ -27,6 +27,7 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "resend": "^6.12.4",
+    "swr": "^2.5.1",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },
@@ -42,8 +43,8 @@
     "cross-env": "^10.1.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.3.0",
+    "exceljs": "^4.4.0",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.3",
-    "exceljs": "^4.4.0"
+    "typescript": "^5.9.3"
   }
 }

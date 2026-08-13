@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
@@ -91,12 +92,14 @@ export default async function GradePackPage({ params, searchParams }: GradePageP
           },
         ])}
       />
-      <SaveVisitTracker
-        schoolName={school.name}
-        schoolSlug={school.slug}
-        grade={grade.grade}
-        gradeSlug={grade.gradeSlug}
-      />
+      <Suspense fallback={null}>
+        <SaveVisitTracker
+          schoolName={school.name}
+          schoolSlug={school.slug}
+          grade={grade.grade}
+          gradeSlug={grade.gradeSlug}
+        />
+      </Suspense>
       <PageHero
         eyebrow={school.name}
         title={`${grade.grade} Stationery Pack`}

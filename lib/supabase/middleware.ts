@@ -104,6 +104,13 @@ export async function updateSession(request: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24 * 30,
     });
+
+    // Inject Vercel Edge CDN Caching Directives with Strict Session Isolation
+    response.headers.set(
+      "Cache-Control",
+      "private, s-maxage=10, stale-while-revalidate=59"
+    );
+    response.headers.set("Vary", "Cookie, Authorization");
   }
 
   return response;

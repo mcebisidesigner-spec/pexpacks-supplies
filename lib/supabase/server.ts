@@ -2,6 +2,12 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "./types";
 
+/**
+ * Creates a server-side Supabase client with cookie management.
+ * Note: Under high concurrency (1,500+ users), @supabase/ssr utilizes
+ * Supabase's HTTP REST Gateway (Kong) which automatically manages 
+ * pooled PostgreSQL connections via Supavisor Transaction Pooler.
+ */
 export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
 
