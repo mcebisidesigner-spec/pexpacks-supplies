@@ -252,6 +252,41 @@
   font-weight: 800;
 }
 
+.qtyControls {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.qtyBtn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--pex-border);
+  border-radius: 6px;
+  background: var(--pex-bg);
+  color: var(--pex-text);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+
+.qtyBtn:hover {
+  background: var(--pex-bg-subtle);
+}
+
+.qtyBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.qtyValue {
+  margin: 0 8px;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--pex-primary);
+}
+
 .footer {
   position: sticky;
   bottom: 0;

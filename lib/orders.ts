@@ -165,7 +165,6 @@ export async function markOrderPaid(input: {
       .maybeSingle();
 
     if (existingOrder?.status === "paid") {
-      console.log(`[orders] Order ${input.orderReference} is already marked as paid. Idempotent skip.`);
       return { success: true, alreadyPaid: true };
     }
 

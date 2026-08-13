@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { IconCircle } from "./IconCircle";
 import styles from "./Button.module.css";
 
 type BaseProps = {
@@ -45,9 +44,19 @@ export function Button({
     <span className={styles.spinner} aria-hidden="true" />
   ) : (
     <>
-      {iconDirection === "left" ? <IconCircle tone={iconTone} direction={iconDirection} /> : null}
+      {iconDirection === "left" ? (
+        <span
+          className={styles.iconCircle}
+          aria-hidden="true"
+        />
+      ) : null}
       <span>{children}</span>
-      {iconDirection && iconDirection !== "left" && iconDirection !== "none" ? <IconCircle tone={iconTone} direction={iconDirection} /> : null}
+      {iconDirection && iconDirection !== "left" && iconDirection !== "none" ? (
+        <span
+          className={styles.iconCircle}
+          aria-hidden="true"
+        />
+      ) : null}
     </>
   );
 

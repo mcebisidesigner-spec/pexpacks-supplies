@@ -273,6 +273,5 @@ export async function sendPurchaseReceipt(
     return { success: false, error: error.message };
   }
 
-  console.log("[email] Receipt sent for", order.order_reference);
   return { success: true };
 }

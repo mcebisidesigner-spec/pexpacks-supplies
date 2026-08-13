@@ -140,7 +140,6 @@ export async function sendFormNotificationEmail(
       return { success: false, error: sendResult.error.message };
     }
 
-    console.log(`[email] Resend notification sent successfully:`, sendResult.data);
     return { success: true };
   } catch (err) {
     console.error("[email] Unexpected error sending Resend notification:", err);

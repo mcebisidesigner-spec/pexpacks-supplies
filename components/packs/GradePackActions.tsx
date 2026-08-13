@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
-import { QuantityStepper } from "@/components/ui/QuantityStepper";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { calculatePackTotal } from "@/lib/packs/calculatePackTotal";
 import {
@@ -313,11 +312,27 @@ export function GradePackActions({
                         ) : null}
                       </span>
                     </label>
-                    <QuantityStepper
-                      value={item.selectedQuantity}
-                      onChange={(value) => setItemQuantity(item.id, value)}
-                      ariaLabel={`quantity for ${item.name}`}
-                    />
+                    <div className={styles.qtyControls}>
+                        <button
+                          type="button"
+                          className={styles.qtyBtn}
+                          onClick={() => setItemQuantity(item.id, item.selectedQuantity - 1)}
+                          aria-label={`Decrease quantity for ${item.name}`}
+                        >
+                          -
+                        </button>
+                        <span className={styles.qtyValue}>
+                          {item.selectedQuantity}
+                        </span>
+                        <button
+                          type="button"
+                          className={styles.qtyBtn}
+                          onClick={() => setItemQuantity(item.id, item.selectedQuantity + 1)}
+                          aria-label={`Increase quantity for ${item.name}`}
+                        >
+                          +
+                        </button>
+                      </div>
                   </article>
                 );
               })}
