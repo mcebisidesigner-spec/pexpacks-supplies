@@ -39,6 +39,8 @@ export function buildMetadata(
 
   const imgWidth = imageUrl ? 1200 : 512;
   const imgHeight = imageUrl ? 630 : 512;
+  const imageToUse = imageUrl || defaultOgImage;
+  const twitterImageToUse = imageUrl || defaultTwitterImage;
 
   return {
     metadataBase: new URL(siteUrl),
