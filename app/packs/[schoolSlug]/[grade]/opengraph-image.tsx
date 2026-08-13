@@ -90,7 +90,7 @@ export default async function Image({
               color: "#38BDF8",
             }}
           >
-            {gradeText} Pack
+            {`${gradeText} Pack`}
           </div>
         </div>
 
