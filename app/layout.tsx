@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ClientRuntimeWidgets } from "@/components/layout/ClientRuntimeWidgets";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import { JsonLd } from "@/components/ui/JsonLd";
@@ -194,6 +195,7 @@ export default async function RootLayout({
           <TrayProviders />
         </div>
         <Analytics mode="production" />
+        <SpeedInsights />
       </body>
     </html>
   );
