@@ -215,7 +215,7 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                     <td>
                       <div className={shared.actions}>
                         <Link
-                          href={`/admin/orders/${order.id}`}
+                          href={`/admin/orders/${order.order_reference || order.id}`}
                           className={shared.actionLink}
                         >
                           View

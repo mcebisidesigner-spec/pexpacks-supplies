@@ -140,13 +140,19 @@ export async function listOrderPackTypes(): Promise<string[]> {
   return data.map((r) => r.pack_type).filter(Boolean);
 }
 
-export async function getOrder(id: string): Promise<OrderRow | null> {
+export async function getOrder(idOrRef: string): Promise<OrderRow | null> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
-    .from("orders")
-    .select(ORDER_DETAIL_FIELDS)
-    .eq("id", id)
-    .maybeSingle();
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrRef);
+
+  let query = admin.from("orders").select(ORDER_DETAIL_FIELDS);
+
+  if (isUuid) {
+    query = query.eq("id", idOrRef);
+  } else {
+    query = query.ilike("order_reference", idOrRef);
+  }
+
+  const { data, error } = await query.maybeSingle();
   if (error || !data) {
     console.error("[orders] get failed:", error);
     return null;

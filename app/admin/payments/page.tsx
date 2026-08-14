@@ -206,7 +206,7 @@ export default async function PaymentsPage({ searchParams }: PaymentsPageProps) 
                     <td>
                       <div className={shared.actions}>
                         <Link
-                          href={`/admin/orders/${p.id}`}
+                          href={`/admin/orders/${p.order_reference || p.id}`}
                           className={shared.actionLink}
                         >
                           View

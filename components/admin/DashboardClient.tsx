@@ -534,7 +534,7 @@ export function DashboardClient({
                       {recent.map((order) => (
                         <tr key={order.id}>
                           <td>
-                            <Link className={styles.orderLink} href={`/admin/orders/${order.id}`}>
+                            <Link className={styles.orderLink} href={`/admin/orders/${order.order_reference || order.id}`}>
                               {order.order_reference}
                             </Link>
                           </td>
@@ -568,7 +568,7 @@ export function DashboardClient({
                       aria-label={`Order ${order.order_reference} for ${order.school_name}, ${orderStatusLabel(order.status)}, ${formatDay(order.created_at)}`}
                     >
                       <Link
-                        href={`/admin/orders/${order.id}`}
+                        href={`/admin/orders/${order.order_reference || order.id}`}
                         className={styles.recentCard}
                       >
                         <div className={styles.recentCardTop}>
