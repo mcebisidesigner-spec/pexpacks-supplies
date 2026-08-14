@@ -243,34 +243,56 @@ export async function refundOrder(
 }
 
 export async function deleteOrder(
-  id: string,
+  idOrRef: string,
   permission: PermissionKey = "orders.delete"
 ): Promise<{ ok: boolean; message?: string }> {
   const session = await assertCan(permission);
   const admin = createSupabaseAdminClient();
 
-  const { data: existing } = await admin
-    .from("orders")
-    .select("id, order_reference, buyer_name")
-    .eq("id", id)
-    .maybeSingle();
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrRef);
+
+  let findQuery = admin.from("orders").select("id, order_reference, buyer_name");
+  if (isUuid) {
+    findQuery = findQuery.eq("id", idOrRef);
+  } else {
+    findQuery = findQuery.ilike("order_reference", idOrRef);
+  }
+
+  const { data: existing } = await findQuery.maybeSingle();
   if (!existing) return { ok: false, message: "Order not found." };
 
+  // 1. Purge associated payment records from payments table
+  if (existing.order_reference) {
+    await admin
+      .from("payments")
+      .delete()
+      .ilike("order_reference", existing.order_reference);
+  }
+
+  // 2. Delete primary order record from orders table
   const { error } = await admin
     .from("orders")
     .delete()
-    .eq("id", id);
+    .eq("id", existing.id);
 
   if (error) {
     console.error("[orders] delete failed:", error);
     return { ok: false, message: error.message };
   }
 
+  // 3. Recalculate pre-aggregated dashboard summaries immediately
+  try {
+    await admin.rpc("refresh_all_dashboard_summaries");
+  } catch (err) {
+    console.warn("[orders] refresh_all_dashboard_summaries warning:", err);
+  }
+
+  // 4. Record audit log
   await writeAuditLog({
     action: "orders.delete",
     entityType: "order",
-    entityId: id,
-    summary: `Deleted order ${existing.order_reference} (${existing.buyer_name ?? "Unknown"})`,
+    entityId: existing.id,
+    summary: `Permanently deleted order ${existing.order_reference} (${existing.buyer_name ?? "Unknown"}) across all system tables`,
     details: { order_reference: existing.order_reference },
     actorId: session.user.id,
     actorName: session.user.email ?? null,
