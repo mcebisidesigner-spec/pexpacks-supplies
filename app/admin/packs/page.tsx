@@ -226,7 +226,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                         <div className={styles.packCell}>
                           <div>
                             <Link
-                              href={`/admin/packs?school_id=${item.school_slug || item.school_id}`}
+                              href={`/admin/packs/${item.school_slug || item.school_id}`}
                               className={styles.schoolNameLink}
                             >
                               {item.school_name}
@@ -248,7 +248,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                       <td>
                         <div className={shared.actions}>
                           <Link
-                            href={`/admin/packs?school_id=${item.school_slug || item.school_id}`}
+                            href={`/admin/packs/${item.school_slug || item.school_id}`}
                             className={styles.schoolNameLink}
                             style={{ fontSize: "14px", textDecoration: "none" }}
                           >
