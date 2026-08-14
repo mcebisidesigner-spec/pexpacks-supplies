@@ -32,17 +32,19 @@ export default async function NestedEditPackPage({ params }: NestedEditPackPageP
 
   return (
     <div className={adminStyles.adminContainer}>
-      <p style={{ marginBottom: 12 }}>
+      <p style={{ marginBottom: 16 }}>
         <Link href={backHref} className={shared.resetLink}>
           ← Back to school packs
         </Link>
       </p>
-      <div className={adminStyles.headerSection}>
-        <h1 className={adminStyles.title}>Edit pack</h1>
-        <p className={adminStyles.subtitle}>{pack.title}</p>
-      </div>
       <div className={adminStyles.stack}>
-        <PackPriceForm packId={pack.id} price={pack.price} subtotal={subtotal} />
+        <PackPriceForm
+          packId={pack.id}
+          price={pack.price}
+          subtotal={subtotal}
+          schoolName={school?.name || ""}
+          packTitle={pack.title}
+        />
         <PackItemsSection packId={pack.id} items={items} />
       </div>
     </div>

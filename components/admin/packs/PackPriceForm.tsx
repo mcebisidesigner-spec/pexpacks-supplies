@@ -21,9 +21,11 @@ interface PackPriceFormProps {
   packId: string;
   price: number;
   subtotal?: number | null;
+  schoolName?: string;
+  packTitle?: string;
 }
 
-export function PackPriceForm({ packId, price, subtotal }: PackPriceFormProps) {
+export function PackPriceForm({ packId, price, subtotal, schoolName, packTitle }: PackPriceFormProps) {
   const action = updatePackPriceAction.bind(null, packId);
   const [state, formAction] = useActionState<PackFormState, FormData>(action, {
     ok: false,
@@ -34,10 +36,28 @@ export function PackPriceForm({ packId, price, subtotal }: PackPriceFormProps) {
   const differs =
     suggested != null && Math.abs(suggested - price) > 0.01;
 
+  const fullTitle = schoolName
+    ? `${schoolName} ${packTitle || ""}`
+    : packTitle || "";
+
   return (
     <form action={formAction} className={styles.form}>
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Total price</h2>
+      <div className={styles.headerRow} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px", flexWrap: "wrap", marginBottom: "8px" }}>
+        <div>
+          <h1 style={{ fontSize: "32px", fontWeight: 800, color: "var(--admin-text, #ffffff)", margin: 0, letterSpacing: "-0.02em" }}>
+            Edit pack
+          </h1>
+          <p style={{ fontSize: "14px", fontWeight: 500, color: "var(--admin-text-3, #94a3b8)", margin: "4px 0 0" }}>
+            {fullTitle}
+          </p>
+        </div>
+        <SubmitButton />
+      </div>
+
+      <div className={styles.section} style={{ background: "var(--admin-surface, #0f172a)", border: "1px solid var(--admin-border, #1e293b)", borderRadius: "16px", padding: "24px" }}>
+        <h2 className={styles.sectionTitle} style={{ fontSize: "12px", fontWeight: 800, color: "var(--admin-text-3, #94a3b8)", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 16px" }}>
+          TOTAL PRICE
+        </h2>
         {state?.ok ? (
           <p className={styles.success} role="status">
             {state.message}
@@ -49,7 +69,7 @@ export function PackPriceForm({ packId, price, subtotal }: PackPriceFormProps) {
         ) : null}
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="price">
+          <label className={styles.label} htmlFor="price" style={{ fontSize: "12px", fontWeight: 600, color: "var(--admin-text-2, #cbd5e1)", marginBottom: "6px", display: "block" }}>
             Price (R)
           </label>
           <input
@@ -59,11 +79,12 @@ export function PackPriceForm({ packId, price, subtotal }: PackPriceFormProps) {
             inputMode="decimal"
             value={value}
             onChange={(e) => setValue(e.target.value)}
+            style={{ width: "100%", height: "48px", background: "rgba(2, 6, 23, 0.5)", border: "1px solid var(--admin-border-strong, #334155)", borderRadius: "10px", padding: "0 16px", color: "#ffffff", fontSize: "16px", fontWeight: 600 }}
             required
           />
           {suggested != null ? (
-            <div className={styles.hintRow}>
-              <span className={styles.hint}>
+            <div className={styles.hintRow} style={{ marginTop: "10px" }}>
+              <span className={styles.hint} style={{ fontSize: "12px", color: "var(--admin-text-3, #94a3b8)", lineHeight: 1.5 }}>
                 Items subtotal: {formatCurrency(suggested)}. Shown as
                 &ldquo;From {formatCurrency(price)}&rdquo; on the public pack
                 card. Saving updates the live school pages immediately.
@@ -79,15 +100,11 @@ export function PackPriceForm({ packId, price, subtotal }: PackPriceFormProps) {
               ) : null}
             </div>
           ) : (
-            <span className={styles.hint}>
+            <span className={styles.hint} style={{ fontSize: "12px", color: "var(--admin-text-3, #94a3b8)", marginTop: "10px", display: "block" }}>
               Shown as &ldquo;From {formatCurrency(price)}&rdquo; on the public
               pack card. Saving updates the live school pages immediately.
             </span>
           )}
-        </div>
-
-        <div className={styles.actions}>
-          <SubmitButton />
         </div>
       </div>
     </form>

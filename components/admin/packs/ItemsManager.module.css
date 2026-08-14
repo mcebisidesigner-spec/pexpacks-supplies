@@ -35,10 +35,10 @@
 }
 
 .tableWrap {
-  overflow-x: auto;
-  background: var(--pex-bg);
-  border: 1px solid var(--pex-border, #e1e7ea);
-  border-radius: 12px;
+  overflow: hidden;
+  background: var(--admin-surface, #0f172a);
+  border: 1px solid var(--admin-border, #1e293b);
+  border-radius: 16px;
 }
 
 .table {
@@ -50,20 +50,21 @@
 .table th {
   text-align: left;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--pex-muted, #6b7a86);
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--pex-border, #e1e7ea);
-  background: #fafbfc;
+  letter-spacing: 0.05em;
+  color: #0f172a;
+  padding: 14px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--pex-border, #e1e7ea);
-  vertical-align: top;
-  color: #243447;
+  padding: 16px;
+  border-bottom: 1px solid var(--admin-border, #1e293b);
+  vertical-align: middle;
+  color: var(--admin-text, #ffffff);
+  background: var(--admin-surface, #0f172a);
 }
 
 .table tr:last-child td {
@@ -195,13 +196,13 @@
 }
 
 .badgeVisible {
-  background: rgba(47, 133, 90, 0.12);
-  color: #1e6b45;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
 }
 
 .badgeHidden {
-  background: rgba(96, 108, 120, 0.12);
-  color: #3d4a57;
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
 }
 
 .actions {
@@ -217,7 +218,7 @@
   padding: 0;
   font-size: 13px;
   font-weight: 700;
-  color: var(--pex-keppel, #1a7a77);
+  color: #10b981;
   cursor: pointer;
   font-family: inherit;
 }
@@ -232,7 +233,7 @@
   padding: 0;
   font-size: 13px;
   font-weight: 700;
-  color: #a93226;
+  color: #ef4444;
   cursor: pointer;
   font-family: inherit;
 }
@@ -243,20 +244,20 @@
 
 .addButton {
   align-self: flex-start;
-  background: var(--pex-bg);
-  border: 1px dashed var(--pex-border, #dbe3ec);
+  background: #10b981;
+  color: #ffffff;
+  border: none;
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 10px 20px;
   font-size: 14px;
   font-weight: 700;
-  color: var(--pex-keppel, #1a7a77);
   cursor: pointer;
   font-family: inherit;
+  transition: background 0.15s ease;
 }
 
 .addButton:hover {
-  border-color: var(--pex-keppel, #1a7a77);
-  background: rgba(26, 122, 119, 0.04);
+  background: #059669;
 }
 
 .editor {

@@ -524,7 +524,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
           className={styles.addButton}
           onClick={() => setShowAdd(true)}
         >
-          + Add item
+          + Add items
         </button>
       )}
 
