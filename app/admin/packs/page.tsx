@@ -61,14 +61,14 @@ function formatShortDate(dateStr: string | null | undefined): string {
   }
 }
 
-function extractGradeLabel(title: string, slug?: string | null): string {
+function extractGradePackSublabel(title: string, slug?: string | null): string {
   const text = `${title} ${slug ?? ""}`;
   const match = text.match(/grade\s*([r\d]+)/i);
   if (match) {
     const val = match[1].toUpperCase();
-    return val === "R" ? "Grade R" : `Grade ${val}`;
+    return val === "R" ? "Grade R – Stationery Pack" : `Grade ${val} – Stationery Pack`;
   }
-  return "Grade Pack";
+  return title;
 }
 
 export default async function PacksPage({ searchParams }: PacksPageProps) {
@@ -294,18 +294,23 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                     const schoolName = rawSchoolName
                       .replace(/\s*grade\s*[r\d]+\s*pack/i, "")
                       .trim();
-                    const gradeLabel = extractGradeLabel(pack.title, pack.slug);
+                    const gradeSublabel = extractGradePackSublabel(pack.title, pack.slug);
 
                     return (
                       <tr key={pack.id}>
                         <td>
-                          <div className={`${styles.packCell} ${styles.packName}`}>
-                            <Link
-                              href={`/admin/packs/${pack.id}`}
-                              className={styles.schoolNameLink}
-                            >
-                              {schoolName}
-                            </Link>
+                          <div>
+                            <div>
+                              <Link
+                                href={`/admin/packs/${pack.id}`}
+                                className={styles.schoolNameLink}
+                              >
+                                {schoolName}
+                              </Link>
+                            </div>
+                            <div className={styles.gradeSublabel}>
+                              {gradeSublabel}
+                            </div>
                           </div>
                         </td>
                         <td className={styles.priceCell}>{money(pack.price)}</td>

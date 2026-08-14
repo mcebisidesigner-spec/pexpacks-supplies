@@ -142,6 +142,27 @@ export interface ItemListResult {
   pageCount: number;
 }
 
+export function extractSearchTokens(input: string): string[] {
+  const q = String(input).trim();
+  if (!q) return [];
+
+  const tokens = new Set<string>();
+
+  // 1. Title before parenthesis e.g. "Extra Thick Triangular Graphite Pencils (e.g., Faber-Castell / Steadtler)" -> "Extra Thick Triangular Graphite Pencils"
+  const beforeParen = q.split("(")[0].replace(/[%/,()\\.]/g, " ").replace(/\s+/g, " ").trim();
+  if (beforeParen.length >= 2) tokens.add(beforeParen);
+
+  // 2. Full sanitized string without PostgREST control characters
+  const fullClean = q.replace(/[%/,()\\.]/g, " ").replace(/\s+/g, " ").trim();
+  if (fullClean.length >= 2) tokens.add(fullClean);
+
+  // 3. String with PostgREST syntax delimiters stripped
+  const rawSafe = q.replace(/[%/,()]/g, "").trim();
+  if (rawSafe.length >= 2) tokens.add(rawSafe);
+
+  return Array.from(tokens);
+}
+
 export async function listItems(filters: ItemListFilters = {}): Promise<ItemListResult> {
   const admin = createSupabaseAdminClient();
   const page = Math.max(1, filters.page ?? 1);
@@ -160,8 +181,14 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
     const rawQ = Array.isArray(filters.q)
       ? ((filters.q as unknown as string[]).find((x) => x && String(x).trim()) || "")
       : String(filters.q);
-    const q = rawQ.replace(/%/g, "").trim();
-    if (q) query = query.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
+    const tokens = extractSearchTokens(rawQ);
+    if (tokens.length > 0) {
+      const clauses = tokens.flatMap((t) => [
+        `name.ilike.%${t}%`,
+        `description.ilike.%${t}%`,
+      ]);
+      query = query.or(clauses.join(","));
+    }
   }
   if (filters.pack_id) query = query.eq("pack_id", filters.pack_id);
 
@@ -775,7 +802,16 @@ export async function listStationeryInventory(query?: string): Promise<Stationer
       .order("name", { ascending: true })
       .order("created_at", { ascending: false });
 
-    if (q) dbQuery = dbQuery.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
+    if (query) {
+      const tokens = extractSearchTokens(query);
+      if (tokens.length > 0) {
+        const clauses = tokens.flatMap((t) => [
+          `name.ilike.%${t}%`,
+          `description.ilike.%${t}%`,
+        ]);
+        dbQuery = dbQuery.or(clauses.join(","));
+      }
+    }
 
     const { data } = await dbQuery.limit(500);
     if (!data) return [];

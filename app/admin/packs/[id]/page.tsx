@@ -21,14 +21,14 @@ function money(v: number): string {
   return `R ${v.toFixed(2)}`;
 }
 
-function extractGradeLabel(title: string, slug?: string | null): string {
+function extractGradePackSublabel(title: string, slug?: string | null): string {
   const text = `${title} ${slug ?? ""}`;
   const match = text.match(/grade\s*([r\d]+)/i);
   if (match) {
     const val = match[1].toUpperCase();
-    return val === "R" ? "Grade R" : `Grade ${val}`;
+    return val === "R" ? "Grade R – Stationery Pack" : `Grade ${val} – Stationery Pack`;
   }
-  return "Grade Pack";
+  return title;
 }
 
 export default async function PackOrSchoolPacksPage({ params }: EditPackPageProps) {
@@ -100,17 +100,23 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
                 <tbody>
                   {packResult.packs.map((pack) => {
                     const packHref = `/admin/packs/${school.slug || school.id}/${pack.slug || pack.id}`;
+                    const sublabel = extractGradePackSublabel(pack.title, pack.slug);
 
                     return (
                       <tr key={pack.id}>
                         <td>
-                          <div className={`${styles.packCell} ${styles.packName}`}>
-                            <Link
-                              href={packHref}
-                              className={styles.schoolNameLink}
-                            >
-                              {school.name}
-                            </Link>
+                          <div>
+                            <div>
+                              <Link
+                                href={packHref}
+                                className={styles.schoolNameLink}
+                              >
+                                {school.name}
+                              </Link>
+                            </div>
+                            <div className={styles.gradeSublabel}>
+                              {sublabel}
+                            </div>
                           </div>
                         </td>
                         <td className={styles.priceCell}>{money(pack.price)}</td>

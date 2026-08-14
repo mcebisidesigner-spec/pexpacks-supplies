@@ -1,44 +1,66 @@
 .formGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px 18px;
-  margin-top: 14px;
+  gap: 16px 20px;
+  margin-bottom: 16px;
 }
 
 @media (max-width: 640px) {
   .formGrid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
+}
+
+.checkboxCell {
+  display: flex;
+  align-items: center;
+  padding-top: 24px;
+}
+
+@media (max-width: 640px) {
+  .checkboxCell {
+    padding-top: 0;
+  }
+}
+
+.iconField {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .iconPicker {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 .iconOption {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border: 1px solid var(--pex-border, #dbe3ec);
-  border-radius: 8px;
-  background: var(--pex-bg);
-  color: #33475b;
+  border-radius: 10px;
+  background: var(--pex-bg, #ffffff);
+  color: var(--admin-heading, #1e293b);
   cursor: pointer;
   font-family: inherit;
+  transition: all 0.15s ease-in-out;
 }
 
 .iconOption:hover {
-  border-color: var(--pex-keppel, #1a7a77);
-  color: var(--pex-keppel, #1a7a77);
+  border-color: var(--pex-keppel, #10b981);
+  color: var(--pex-keppel, #10b981);
 }
 
 .iconOptionActive {
-  border-color: var(--pex-keppel, #1a7a77);
-  background: rgba(26, 122, 119, 0.08);
-  color: var(--pex-keppel, #1a7a77);
-  box-shadow: 0 0 0 2px rgba(26, 122, 119, 0.2);
+  border-color: var(--pex-keppel, #10b981);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--pex-keppel, #10b981);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
 }

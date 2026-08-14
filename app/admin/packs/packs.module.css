@@ -29,13 +29,13 @@
 }
 
 .schoolNameLink:hover {
-  color: var(--pex-teal, #23b4b0);
+  color: var(--pex-keppel, #10b981);
 }
 
 .gradeSublabel {
   font-size: 14px;
   font-weight: 700;
-  color: var(--pex-teal, #23b4b0);
+  color: var(--pex-keppel, #10b981);
   margin-top: 2px;
 }
 

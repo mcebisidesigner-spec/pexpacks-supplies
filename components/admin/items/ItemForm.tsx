@@ -66,22 +66,8 @@ export function ItemForm({ item, packs }: ItemFormProps) {
       <div className={formStyles.section}>
         <input type="hidden" name="pack_id" value={item?.pack_id ?? packs[0]?.id ?? ""} />
 
+        {/* Row 1: Item code & Item Description */}
         <div className={styles.formGrid}>
-          <div className={formStyles.field}>
-            <label className={formStyles.label} htmlFor="name">
-              Item Description *
-            </label>
-            <input
-              id="name"
-              name="name"
-              className={formStyles.input}
-              defaultValue={item?.name ?? ""}
-              placeholder="e.g. A4 Clear Plastic Folders with Button (Doc Wallet)"
-              required
-            />
-            {err("name")}
-          </div>
-
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="category">
               Item code
@@ -91,12 +77,28 @@ export function ItemForm({ item, packs }: ItemFormProps) {
               name="category"
               className={formStyles.input}
               defaultValue={item?.category ?? ""}
-              placeholder="e.g. ST-001, ITEM-102"
+              placeholder="e.g. Organisation"
             />
             {err("category")}
           </div>
+
+          <div className={formStyles.field}>
+            <label className={formStyles.label} htmlFor="name">
+              Item Description *
+            </label>
+            <input
+              id="name"
+              name="name"
+              className={formStyles.input}
+              defaultValue={item?.name ?? ""}
+              placeholder="e.g. A4 Clear Plastic Folders with Button"
+              required
+            />
+            {err("name")}
+          </div>
         </div>
 
+        {/* Row 2: Pack / Unit & Qty */}
         <div className={styles.formGrid}>
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="specification">
@@ -107,7 +109,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
               name="specification"
               className={formStyles.input}
               defaultValue={item?.specification ?? ""}
-              placeholder="e.g. Pack of 10 / Single"
+              placeholder="e.g. Pack"
             />
             {err("specification")}
           </div>
@@ -129,7 +131,10 @@ export function ItemForm({ item, packs }: ItemFormProps) {
             </span>
             {err("quantity")}
           </div>
+        </div>
 
+        {/* Row 3: Price & Visible on site */}
+        <div className={styles.formGrid}>
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="price">
               Price (R)
@@ -147,9 +152,21 @@ export function ItemForm({ item, packs }: ItemFormProps) {
             </span>
             {err("price")}
           </div>
+
+          <div className={styles.checkboxCell}>
+            <label className={formStyles.checkbox}>
+              <input
+                type="checkbox"
+                name="visible"
+                defaultChecked={item?.visible ?? true}
+              />
+              Visible on site
+            </label>
+          </div>
         </div>
 
-        <div className={formStyles.field}>
+        {/* Icon Picker Section */}
+        <div className={styles.iconField}>
           <label className={formStyles.label}>Icon</label>
           <div className={styles.iconPicker} role="group" aria-label="Pick an icon">
             {PACK_ITEM_ICONS.map((option) => (
@@ -171,19 +188,9 @@ export function ItemForm({ item, packs }: ItemFormProps) {
             Optional. Shown next to the item on the public pack list.
           </span>
         </div>
-
-        <div className={formStyles.checkboxes}>
-          <label className={formStyles.checkbox}>
-            <input
-              type="checkbox"
-              name="visible"
-              defaultChecked={item?.visible ?? true}
-            />
-            Visible on site
-          </label>
-        </div>
       </div>
 
+      {/* Action Buttons */}
       <div className={formStyles.actions}>
         <Link href="/admin/items" className={formStyles.cancelButton}>
           Cancel

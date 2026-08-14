@@ -5,6 +5,7 @@ import { listPacksForFilter } from "@/lib/admin/packs";
 import { deleteItemAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
+import { ItemFilterForm } from "@/components/admin/items/ItemFilterForm";
 import shared from "../schools/schools.module.css";
 import adminStyles from "../admin.module.css";
 import styles from "../packs/packs.module.css";
@@ -46,7 +47,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
   const session = await requireAdmin({ permission: "items.view" });
   const params = await searchParams;
 
-  const queryStr = parseParam(params.q) || parseParam(params.search);
+  const queryStr = parseParam(params.search) || parseParam(params.q);
   const page = Math.max(1, parseInt(parseParam(params.page) || "1", 10) || 1);
   const filters: ItemListFilters = {
     q: queryStr || undefined,
@@ -57,11 +58,11 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
 
   const { items, total, pageCount } = await listItems(filters);
   const inventoryItems = await listDistinctStationeryItems();
-  const baseParams = { q: filters.q, pack_id: filters.pack_id };
-  const hasFilters = Boolean(filters.q || filters.pack_id);
+  const baseParams = { search: queryStr || undefined, pack_id: filters.pack_id };
+  const hasFilters = Boolean(queryStr || filters.pack_id);
 
   return (
-    <div className={adminStyles.adminContainer}>
+    <div className={`${adminStyles.adminContainer} ${adminStyles.stack}`}>
       <div className={shared.toolbar}>
         <div className={shared.headerRow}>
           <h1 className={shared.pageTitle}>
@@ -75,146 +76,127 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
           </Link>
         </div>
 
-        <form method="get" action="/admin/items" className={shared.filterForm}>
-          <input
-            type="search"
-            name="search"
-            defaultValue={queryStr}
-            placeholder="Search item name or description…"
-            className={`${shared.filterInput} ${shared.searchInput}`}
-            aria-label="Search items"
-          />
-          <select name="q" defaultValue={queryStr} className={shared.filterInput}>
-            <option value="">All Stationery Items</option>
-            {inventoryItems.map((itemName) => (
-              <option key={itemName} value={itemName}>
-                {itemName}
-              </option>
-            ))}
-          </select>
-          <button type="submit" className={shared.applyButton}>
-            Apply
-          </button>
-          {hasFilters ? (
-            <Link href="/admin/items" className={shared.resetLink}>
-              Reset
-            </Link>
-          ) : null}
-        </form>
+        <ItemFilterForm
+          initialSearch={queryStr}
+          inventoryItems={inventoryItems}
+          hasFilters={hasFilters}
+        />
       </div>
 
-      {items.length === 0 ? (
-        <div className={adminStyles.tableCard}>
-          <div className={adminStyles.emptyStateContainer}>
-            <div className={adminStyles.emptyStateInner}>
-              <div className={adminStyles.emptyIconWrapper}>
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 3v10M8 8h8M4 21V9h16v12H4z" />
-                </svg>
+      <div>
+        {items.length === 0 ? (
+          <div className={adminStyles.tableCard}>
+            <div className={adminStyles.emptyStateContainer}>
+              <div className={adminStyles.emptyStateInner}>
+                <div className={adminStyles.emptyIconWrapper}>
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 3v10M8 8h8M4 21V9h16v12H4z" />
+                  </svg>
+                </div>
+                <h2 className={adminStyles.emptyStateTitle}>
+                  {hasFilters ? "No items match your filters" : "No items yet"}
+                </h2>
+                <p className={adminStyles.emptyStateText}>
+                  {hasFilters
+                    ? "Try clearing your filters."
+                    : "Add a new item, or add items from a pack's edit page."}
+                </p>
               </div>
-              <h2 className={adminStyles.emptyStateTitle}>
-                {hasFilters ? "No items match your filters" : "No items yet"}
-              </h2>
-              <p className={adminStyles.emptyStateText}>
-                {hasFilters
-                  ? "Try clearing your filters."
-                  : "Add a new item, or add items from a pack's edit page."}
-              </p>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className={adminStyles.tableCard}>
-          <div className={adminStyles.tableWrapper}>
-            <table className={adminStyles.table}>
-              <thead>
-                <tr>
-                  <th>Item code</th>
-                  <th>Item Description</th>
-                  <th>Pack / Unit</th>
-                  <th>Qty</th>
-                  <th>Price</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <span className={styles.mutedText}>
-                        {(item as { category?: string | null }).category || "—"}
-                      </span>
-                    </td>
-                    <td>
-                      <div className={styles.packCell}>
-                        <div>
-                          <div className={styles.packName}>{item.name}</div>
-                          {item.description ? (
-                            <div className={styles.mutedText}>{item.description}</div>
-                          ) : null}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      {item.specification || (item as { packaging?: string | null }).packaging || "—"}
-                    </td>
-                    <td>{item.quantity}</td>
-                    <td className={styles.priceCell}>{money(item.unit_price)}</td>
-                    <td>
-                      <div className={shared.actions}>
-                        <Link
-                          href={`/admin/items/${item.slug || item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || item.id}`}
-                          className={shared.actionLink}
-                        >
-                          Edit
-                        </Link>
-                        <form action={deleteItemAction.bind(null, item.id)}>
-                          <ConfirmButton
-                            label="Delete"
-                            title="Delete Permanently"
-                            confirmText={`Permanently delete "${item.name}"? This cannot be undone.`}
-                            busyLabel="Deleting…"
-                            className={`${shared.rowButton} ${shared.rowButtonDelete}`}
-                          />
-                        </form>
-                      </div>
-                    </td>
+        ) : (
+          <div className={adminStyles.tableCard}>
+            <div className={adminStyles.tableWrapper}>
+              <table className={adminStyles.table}>
+                <thead>
+                  <tr>
+                    <th>Item code</th>
+                    <th>Item Description</th>
+                    <th>Pack / Unit</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {items.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <span className={styles.mutedText}>
+                          {(item as { category?: string | null }).category || "—"}
+                        </span>
+                      </td>
+                      <td>
+                        <div className={styles.packCell}>
+                          <div>
+                            <div className={styles.packName}>{item.name}</div>
+                            {item.description ? (
+                              <div className={styles.mutedText}>{item.description}</div>
+                            ) : null}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        {item.specification || (item as { packaging?: string | null }).packaging || "—"}
+                      </td>
+                      <td>{item.quantity}</td>
+                      <td className={styles.priceCell}>{money(item.unit_price)}</td>
+                      <td>
+                        <div className={shared.actions}>
+                          <Link
+                            href={`/admin/items/${item.slug || item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || item.id}`}
+                            className={shared.actionLink}
+                          >
+                            Edit
+                          </Link>
+                          <form action={deleteItemAction.bind(null, item.id)}>
+                            <ConfirmButton
+                              label="Delete"
+                              title="Delete Permanently"
+                              confirmText="This cannot be undone."
+                              busyLabel="Deleting…"
+                              className={`${shared.rowButton} ${shared.rowButtonDelete}`}
+                            />
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {pageCount > 1 ? (
-        <div className={shared.pagination}>
-          <span className={shared.paginationInfo}>
-            Page {page} of {pageCount} · {total} items
-          </span>
-          <div className={shared.pageNav}>
-            <Link
-              href={buildHref(baseParams, { page: String(page - 1) })}
-              className={shared.pageButton}
-              aria-disabled={page <= 1}
-              aria-label="Previous page"
-            >
-              ← Prev
-            </Link>
-            <Link
-              href={buildHref(baseParams, { page: String(page + 1) })}
-              className={shared.pageButton}
-              aria-disabled={page >= pageCount}
-              aria-label="Next page"
-            >
-              Next →
-            </Link>
+        {pageCount > 1 ? (
+          <div className={shared.pagination}>
+            <span className={shared.paginationInfo}>
+              Page {page} of {pageCount} · {total} items
+            </span>
+            <div className={shared.pageNav}>
+              <Link
+                href={buildHref(baseParams, { page: String(page - 1) })}
+                className={shared.pageButton}
+                aria-disabled={page <= 1}
+                aria-label="Previous page"
+              >
+                ← Prev
+              </Link>
+              <Link
+                href={buildHref(baseParams, { page: String(page + 1) })}
+                className={shared.pageButton}
+                aria-disabled={page >= pageCount}
+                aria-label="Next page"
+              >
+                Next →
+              </Link>
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
 
       {hasPermission(session, "items.import") ? (
-        <section aria-label="Bulk CSV stationery import">
+        <section aria-label="Bulk CSV stationery import" style={{ marginTop: "12px" }}>
           <CSVStationeryImporter packs={await listPacksForFilter()} />
         </section>
       ) : null}
