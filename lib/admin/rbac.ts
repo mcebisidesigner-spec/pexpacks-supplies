@@ -34,6 +34,7 @@ export const PERMISSION_CATALOG = {
   "orders.edit": { name: "Edit Orders", group: "Orders" },
   "orders.export": { name: "Export Orders", group: "Orders" },
   "orders.refund": { name: "Refund Orders", group: "Orders" },
+  "orders.delete": { name: "Delete Orders", group: "Orders" },
   "payments.view": { name: "View Payments", group: "Payments" },
   "payments.refund": { name: "Process Refunds", group: "Payments" },
   "users.view": { name: "View Users", group: "Users" },

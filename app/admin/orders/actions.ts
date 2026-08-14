@@ -1,11 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
   parseOrderStatus,
   updateOrderStatus,
   refundOrder,
+  deleteOrder,
 } from "@/lib/admin/orders";
 
 export async function updateOrderStatusAction(
@@ -33,4 +35,13 @@ export async function refundOrderAction(
   revalidatePath(`/admin/orders/${id}`);
   revalidatePath("/admin/payments");
   revalidatePath("/admin");
+}
+
+export async function deleteOrderAction(id: string): Promise<void> {
+  await requireAdmin({ permission: "orders.edit" });
+  await deleteOrder(id, "orders.edit");
+  revalidatePath("/admin/orders");
+  revalidatePath("/admin/payments");
+  revalidatePath("/admin");
+  redirect("/admin/orders");
 }

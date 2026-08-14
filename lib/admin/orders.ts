@@ -236,6 +236,43 @@ export async function refundOrder(
   return { ok: true };
 }
 
+export async function deleteOrder(
+  id: string,
+  permission: PermissionKey = "orders.delete"
+): Promise<{ ok: boolean; message?: string }> {
+  const session = await assertCan(permission);
+  const admin = createSupabaseAdminClient();
+
+  const { data: existing } = await admin
+    .from("orders")
+    .select("id, order_reference, buyer_name")
+    .eq("id", id)
+    .maybeSingle();
+  if (!existing) return { ok: false, message: "Order not found." };
+
+  const { error } = await admin
+    .from("orders")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("[orders] delete failed:", error);
+    return { ok: false, message: error.message };
+  }
+
+  await writeAuditLog({
+    action: "orders.delete",
+    entityType: "order",
+    entityId: id,
+    summary: `Deleted order ${existing.order_reference} (${existing.buyer_name ?? "Unknown"})`,
+    details: { order_reference: existing.order_reference },
+    actorId: session.user.id,
+    actorName: session.user.email ?? null,
+  });
+
+  return { ok: true };
+}
+
 export async function exportOrders(
   filters: Omit<OrderListFilters, "page" | "pageSize"> = {}
 ): Promise<OrderRow[]> {

@@ -7,7 +7,7 @@ import { orderStatusLabel, PAYMENT_GATEWAY_LABELS } from "@/lib/admin/order-cons
 import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { OrderStatusForm } from "@/components/admin/orders/OrderStatusForm";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
-import { refundOrderAction } from "../actions";
+import { refundOrderAction, deleteOrderAction } from "../actions";
 import shared from "../../schools/schools.module.css";
 import adminStyles from "../../admin.module.css";
 import styles from "../orders.module.css";
@@ -58,78 +58,58 @@ interface ItemShape {
 }
 
 function ItemsList({ items }: { items: unknown }) {
-  if (!Array.isArray(items) || items.length === 0) {
-    return <p className={styles.mutedText}>No items recorded.</p>;
-  }
+  if (!Array.isArray(items) || items.length === 0) return null;
   return (
-    <div className={styles.itemList}>
-      {items.map((raw, i) => {
-        if (typeof raw === "string") {
-          return (
-            <div key={`${raw}-${i}`} className={styles.itemRow}>
-              <span className={styles.itemDot}>•</span>
-              <span className={styles.itemName}>{raw}</span>
-            </div>
-          );
-        }
-        const item = (raw ?? {}) as ItemShape;
-        const name = item.name || "—";
-        const qty = item.quantity;
-        const unit = item.unit_price ?? item.unitPrice ?? item.lineTotal;
+    <ul className={styles.itemList}>
+      {items.map((it: ItemShape, idx: number) => {
+        const title = it.name ?? "Item";
+        const qty = it.quantity ?? 1;
+        const price = it.unit_price ?? it.unitPrice ?? null;
         return (
-          <div key={`${name}-${i}`} className={styles.itemRow}>
-            <span className={styles.itemDot}>•</span>
-            <span className={styles.itemName}>{name}</span>
-            <span className={styles.itemQty}>
-              {qty ? `× ${qty}` : ""}
-              {unit ? ` · ${money(Number(unit))}` : ""}
+          <li key={idx} className={styles.itemRow}>
+            <span>
+              {qty}× {title}
             </span>
-          </div>
+            {price != null ? <span>{money(price * qty)}</span> : null}
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 }
 
 function PackContentsCard({ order }: { order: NonNullable<Awaited<ReturnType<typeof getOrder>>> }) {
-  const metadata = (order.metadata ?? {}) as Record<string, unknown>;
-  const packs = Array.isArray(metadata.packs) ? (metadata.packs as PackEntry[]) : [];
-  const notes = typeof metadata.notes === "string" ? metadata.notes : null;
-  const multi = order.pack_type === "multi-school" && packs.length > 0;
+  const items = Array.isArray(order.items) ? (order.items as PackEntry[]) : [];
+  if (items.length === 0) return null;
 
   return (
-    <div className={styles.detailCard}>
-      <h2 className={styles.cardTitle}>Pack contents</h2>
-      {multi ? (
-        packs.map((p, i) => (
-          <div key={`${p.pack_name}-${i}`} className={styles.packBlock}>
-            <h3 className={styles.packHeading}>
-              {[p.learner_name, p.school_name, p.grade ? `Grade ${p.grade}` : null]
-                .filter(Boolean)
-                .join(" · ")}
-            </h3>
-            <ItemsList items={p.items} />
-            <div className={styles.amountRow}>
-              <span className={styles.amountLabel}>
-                {p.pack_name ?? "Pack"}
-                {p.wants_pexcover ? " (+ Pexcover)" : ""}
-              </span>
-              <span className={styles.amountValue}>{money(p.total_price ?? null)}</span>
+    <div className={styles.detailCard} style={{ marginTop: 24 }}>
+      <h2 className={styles.cardTitle}>Pack contents ({items.length})</h2>
+      <div className={styles.packsGrid}>
+        {items.map((entry, idx) => (
+          <div key={idx} className={styles.packBox}>
+            <div className={styles.packHeader}>
+              <div>
+                <strong className={styles.packName}>
+                  {entry.pack_name ?? `Pack ${idx + 1}`}
+                </strong>
+                {entry.grade ? <span className={styles.packGrade}>{entry.grade}</span> : null}
+              </div>
+              {entry.total_price != null ? (
+                <span className={styles.packPrice}>{money(entry.total_price)}</span>
+              ) : null}
             </div>
+            {entry.learner_name ? (
+              <div className={styles.learnerLabel}>
+                Learner: <strong>{entry.learner_name}</strong>
+              </div>
+            ) : null}
+            {entry.wants_pexcover ? (
+              <div className={styles.pexcoverTag}>+ Pexcover protection requested</div>
+            ) : null}
+            <ItemsList items={entry.items} />
           </div>
-        ))
-      ) : (
-        <ItemsList items={order.items} />
-      )}
-      {notes ? (
-        <div className={styles.amountRow}>
-          <span className={styles.amountLabel}>Notes</span>
-        </div>
-      ) : null}
-      {notes ? <p className={styles.mutedText}>{notes}</p> : null}
-      <div className={styles.amountRow}>
-        <span className={styles.amountLabel}>Total</span>
-        <span className={styles.amountValue}>{money(order.estimated_total)}</span>
+        ))}
       </div>
     </div>
   );
@@ -137,14 +117,14 @@ function PackContentsCard({ order }: { order: NonNullable<Awaited<ReturnType<typ
 
 function KVRows({ rows }: { rows: { label: string; value: ReactNode }[] }) {
   return (
-    <div className={styles.kvList}>
-      {rows.map((row) => (
-        <div key={row.label} className={styles.kvRow}>
-          <span className={styles.kvLabel}>{row.label}</span>
-          <span className={styles.kvValue}>{row.value}</span>
+    <dl className={styles.kvList}>
+      {rows.map((r, i) => (
+        <div key={i} className={styles.kvRow}>
+          <dt className={styles.kvLabel}>{r.label}</dt>
+          <dd className={styles.kvValue}>{r.value ?? "—"}</dd>
         </div>
       ))}
-    </div>
+    </dl>
   );
 }
 
@@ -160,7 +140,8 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
     | null;
   const deliveryAddress = (order.delivery_address ?? null) as Record<string, string> | null;
   const canRefund = hasPermission(session, "orders.refund") && !["refunded", "cancelled"].includes(order.status);
-  const canEdit = hasPermission(session, "orders.edit");
+  const canEdit = hasPermission(session, "orders.edit") || session.isSuperAdmin;
+  const canDelete = hasPermission(session, "orders.delete") || hasPermission(session, "orders.edit") || session.isSuperAdmin;
 
   return (
     <div className={adminStyles.adminContainer}>
@@ -173,9 +154,21 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           <OrderStatusBadge status={order.status} />
           <span className={styles.created}>{formatDateTime(order.created_at)}</span>
         </div>
-        {canEdit ? (
-          <OrderStatusForm id={order.id} current={order.status} />
-        ) : null}
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12 }}>
+          {canEdit ? (
+            <OrderStatusForm id={order.id} current={order.status} />
+          ) : null}
+          {canDelete ? (
+            <form action={deleteOrderAction.bind(null, order.id)}>
+              <ConfirmButton
+                label="Delete Order"
+                confirmText={`Permanently delete order ${order.order_reference}? This action cannot be undone.`}
+                busyLabel="Deleting…"
+                className={`${shared.rowButton} ${shared.rowButtonDelete}`}
+              />
+            </form>
+          ) : null}
+        </div>
         {canRefund ? (
           <form action={refundOrderAction.bind(null, order.id)} className={styles.refundForm}>
             <textarea
