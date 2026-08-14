@@ -16,8 +16,10 @@ import type {
  */
 
 type IndexedSchool = SchoolSearchRecord & {
-  /** Pre-normalised name for substring matching */
-  normalisedName: string;
+  /** Full normalised school name (e.g. "actonville primary school") */
+  rawNormalisedName: string;
+  /** Cleaned normalised name with common stop words removed (e.g. "actonville") */
+  cleanNormalisedName: string;
   /** Pre-lowercased grades for fast grade filtering */
   lowerGrades: string[];
   /** Pre-normalised region/city/province for region filtering */
@@ -47,23 +49,29 @@ export class SchoolSearchIndex {
   constructor(records: SchoolSearchRecord[]) {
     // Pre-compute normalised data and sort by priority + name once
     this.schools = records
-      .map((school) => ({
-        ...school,
-        normalisedName: normaliseSchoolQuery(school.name)
+      .map((school) => {
+        const rawName = normaliseSchoolQuery(school.name);
+        const cleanName = rawName
           .replace(/\bprimary\b/g, "")
           .replace(/\bprivate\b/g, "")
           .replace(/\bhigh\b/g, "")
           .replace(/\bschool\b/g, "")
           .replace(/\s+/g, " ")
-          .trim(),
-        lowerGrades: school.grades.map((g) => g.toLowerCase()),
-        normalisedRegion: normaliseSchoolQuery(school.region),
-        normalisedCity: normaliseSchoolQuery(school.city),
-        normalisedProvince: normaliseSchoolQuery(school.province),
-        priority:
-          Number(Boolean(school.isFeatured)) * 2 +
-          Number(Boolean(school.isPartner)),
-      }))
+          .trim();
+
+        return {
+          ...school,
+          rawNormalisedName: rawName,
+          cleanNormalisedName: cleanName || rawName,
+          lowerGrades: school.grades.map((g) => g.toLowerCase()),
+          normalisedRegion: normaliseSchoolQuery(school.region),
+          normalisedCity: normaliseSchoolQuery(school.city),
+          normalisedProvince: normaliseSchoolQuery(school.province),
+          priority:
+            Number(Boolean(school.isFeatured)) * 2 +
+            Number(Boolean(school.isPartner)),
+        };
+      })
       .sort((a, b) => {
         if (a.priority !== b.priority) return b.priority - a.priority;
         return a.name.localeCompare(b.name);
@@ -111,7 +119,8 @@ export class SchoolSearchIndex {
     const cached = this.getFromCache(cacheKey);
     if (cached) return cached;
 
-    const query = normaliseSchoolQuery(filters.query);
+    const rawQuery = filters.query ?? "";
+    const queryNorm = normaliseSchoolQuery(rawQuery);
     const grade = normaliseFilterValue(filters.grade);
     const phase = filters.phase || "";
     const region = normaliseFilterValue(filters.region);
@@ -120,21 +129,46 @@ export class SchoolSearchIndex {
     // for a fast O(1) lookup instead of scanning all schools
     let candidates: IndexedSchool[];
 
-    if (grade && !phase && !query && !region) {
+    if (grade && !phase && !queryNorm && !region) {
       const indices = this.gradeIndex.get(grade.toLowerCase());
       candidates = indices
         ? Array.from(indices).map((i) => this.schools[i])
         : [];
-    } else if (phase && !grade && !query && !region) {
+    } else if (phase && !grade && !queryNorm && !region) {
       const indices = this.phaseIndex.get(phase);
       candidates = indices
         ? Array.from(indices).map((i) => this.schools[i])
         : [];
     } else {
-      // General path: scan with pre-normalised data (no per-request normalisation)
+      const queryClean = queryNorm
+        .replace(/\bprimary\b/g, "")
+        .replace(/\bprivate\b/g, "")
+        .replace(/\bhigh\b/g, "")
+        .replace(/\bschool\b/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      const tokens = queryNorm.split(/\s+/).filter(Boolean);
+
       candidates = this.schools.filter((school) => {
-        if (query) {
-          if (!school.normalisedName.includes(query)) return false;
+        if (queryNorm) {
+          const matchesRaw = school.rawNormalisedName.includes(queryNorm);
+          const matchesClean =
+            queryClean.length > 0 &&
+            (school.cleanNormalisedName.includes(queryClean) ||
+              school.rawNormalisedName.includes(queryClean));
+          const matchesTokens =
+            tokens.length > 0 &&
+            tokens.every(
+              (token) =>
+                school.rawNormalisedName.includes(token) ||
+                school.normalisedCity.includes(token) ||
+                school.normalisedProvince.includes(token)
+            );
+
+          if (!matchesRaw && !matchesClean && !matchesTokens) {
+            return false;
+          }
         }
         if (
           grade &&
@@ -201,7 +235,6 @@ export class SchoolSearchIndex {
   }
 
   private setCache(key: string, results: PaginatedSchoolResults) {
-    // Evict oldest entries if cache is full
     if (this.cache.size >= CACHE_MAX_SIZE) {
       const firstKey = this.cache.keys().next().value;
       if (firstKey !== undefined) this.cache.delete(firstKey);
