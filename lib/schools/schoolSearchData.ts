@@ -166,11 +166,6 @@ async function loadSearchableSchools(): Promise<SchoolSearchRecord[]> {
     `[performance] searchable schools loaded in ${Date.now() - started}ms`,
   );
   return records;
-  } catch {
-    // Ignore DB fetch failure, fallback to JSON index
-  }
-
-  return index;
 }
 
 async function refreshSearchIndex(): Promise<void> {
