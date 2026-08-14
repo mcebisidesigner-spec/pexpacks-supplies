@@ -163,7 +163,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                     <td>
                       <div className={shared.actions}>
                         <Link
-                          href={`/admin/items/${item.id}`}
+                          href={`${item.slug ? `/admin/items/${item.slug}` : `/admin/items/${item.id}`}`}
                           className={shared.actionLink}
                         >
                           Edit

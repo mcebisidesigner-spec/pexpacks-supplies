@@ -11,7 +11,10 @@ import {
 } from "@/lib/admin/rbac";
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 
-export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"];
+export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"] & {
+  category?: string | null;
+  slug?: string | null;
+};
 
 const optString = (max: number, label: string) =>
   z
@@ -25,6 +28,7 @@ const countField = z.coerce
   .max(1_000_000, "Value is too large");
 
 const iconField = optString(60, "icon");
+const slugField = optString(100, "slug");
 
 const priceField = z.preprocess(
   (v) => {
@@ -51,6 +55,7 @@ export const itemSchema = z.object({
   price: priceField,
   visible: z.boolean().default(false),
   sort_order: countField,
+  slug: slugField.nullable(),
 });
 
 export type ItemFormData = z.infer<typeof itemSchema>;
@@ -93,6 +98,7 @@ export function parseItemForm(formData: FormData): ParsedItemForm {
     price: raw(formData, "price"),
     visible: formData.has("visible"),
     sort_order: raw(formData, "sort_order") || "0",
+    slug: raw(formData, "slug"),
   });
 
   if (!parsed.success) {
@@ -144,7 +150,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
   let query = admin
     .from("stationery_items")
     .select(
-      "id,pack_id,name,description,specification,quantity,image,icon,unit_price,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
+      "*,stationery_packs(title)",
       { count: "exact" }
     );
 
@@ -166,7 +172,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
     return { items: [], total: 0, page, pageCount: 0 };
   }
 
-  const rows = (data ?? []) as (ItemRow & { stationery_packs?: { title: string | null } | null })[];
+  const rows = (data ?? []) as unknown as (ItemRow & { stationery_packs?: { title: string | null } | null })[];
 
   return {
     items: rows.map((row) => ({
@@ -181,12 +187,17 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
 
 export async function getItem(id: string): Promise<ItemRow | null> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("stationery_items").select("*").eq("id", id).maybeSingle();
+  const { data, error } = await admin
+    .from("stationery_items")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
   if (error) {
     console.error("[items] get failed:", error);
     return null;
   }
-  return data;
+  return data as unknown as ItemRow | null;
 }
 
 export async function createItem(formData: FormData): Promise<ItemFormResult> {
@@ -211,7 +222,7 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
 
     const { data: created, error } = await admin
       .from("stationery_items")
-      .insert({ ...restOf(data), unit_price: data.price, created_by: actor.user.id })
+      .insert({ ...restOf(data), unit_price: data.price, created_by: actor.user.id } as any)
       .select()
       .single();
 
@@ -249,7 +260,7 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
   try {
     const { data: updated, error } = await admin
       .from("stationery_items")
-      .update({ ...restOf(parsed.data), unit_price: parsed.data.price })
+      .update({ ...restOf(parsed.data), unit_price: parsed.data.price } as any)
       .eq("id", id)
       .select()
       .single();
@@ -514,14 +525,14 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
       if (existingId) {
         const { error } = await admin
           .from("stationery_items")
-          .update({ ...restOf(data), unit_price: data.price })
+          .update({ ...restOf(data), unit_price: data.price } as any)
           .eq("id", existingId);
         if (error) throw error;
         result.updated += 1;
       } else {
         const { error } = await admin
           .from("stationery_items")
-          .insert({ ...restOf(data), unit_price: data.price, created_by: actor.user.id });
+          .insert({ ...restOf(data), unit_price: data.price, created_by: actor.user.id } as any);
         if (error) throw error;
         byName.set(key, "new");
         result.created += 1;
@@ -646,7 +657,7 @@ export async function reconcilePackItems(
       if (nextDescription && nextDescription !== current.description) {
         patch.description = nextDescription;
       }
-      const { error } = await admin.from("stationery_items").update(patch).eq("id", current.id);
+      const { error } = await admin.from("stationery_items").update(patch as any).eq("id", current.id);
       if (error) {
         console.error("[items] reconcile update failed:", error);
       } else {
