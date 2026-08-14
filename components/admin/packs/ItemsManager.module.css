@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .header {
@@ -14,15 +14,15 @@
 
 .title {
   margin: 0;
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--admin-heading);
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--admin-text);
 }
 
 .count {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--pex-muted, #6b7a86);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--admin-text-3);
 }
 
 .empty {
@@ -38,29 +38,29 @@
   overflow: hidden;
   background: var(--admin-surface, #0f172a);
   border: 1px solid var(--admin-border, #1e293b);
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .table th {
   text-align: left;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #0f172a;
-  padding: 14px 16px;
+  color: #475569;
+  padding: 9px 14px;
   background: #ffffff;
   border-bottom: 1px solid #e2e8f0;
 }
 
 .table td {
-  padding: 16px;
+  padding: 14px;
   border-bottom: 1px solid var(--admin-border, #1e293b);
   vertical-align: middle;
   color: var(--admin-text, #ffffff);
@@ -80,8 +80,8 @@
 .reorderButton {
   border: none;
   background: none;
-  color: var(--pex-muted, #6b7a86);
-  font-size: 14px;
+  color: var(--admin-text-3);
+  font-size: 12px;
   line-height: 1;
   cursor: pointer;
   padding: 2px 4px;
@@ -99,8 +99,9 @@
 }
 
 .itemName {
-  font-weight: 700;
-  color: var(--admin-heading);
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--admin-text);
 }
 
 .itemCell {
@@ -170,15 +171,15 @@
 }
 
 .itemDesc {
-  font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
+  font-size: 10px;
+  color: var(--admin-text-3);
   margin-top: 2px;
   max-width: 320px;
 }
 
 .itemSpec {
-  font-size: 13px;
-  color: var(--admin-heading);
+  font-size: 11px;
+  color: var(--admin-text-2);
   max-width: 280px;
   display: inline-block;
 }
@@ -188,7 +189,7 @@
 }
 
 .badge {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 999px;
@@ -208,7 +209,7 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   white-space: nowrap;
 }
 
@@ -216,7 +217,7 @@
   background: none;
   border: none;
   padding: 0;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   color: #10b981;
   cursor: pointer;
@@ -231,7 +232,7 @@
   background: none;
   border: none;
   padding: 0;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   color: #ef4444;
   cursor: pointer;
@@ -244,37 +245,37 @@
 
 .addButton {
   align-self: flex-start;
-  background: #10b981;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 700;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--admin-accent-strong);
+  border: 1px solid rgba(52, 211, 153, 0.24);
+  border-radius: 7px;
+  padding: 8px 13px;
+  font-size: 12px;
+  font-weight: 900;
   cursor: pointer;
   font-family: inherit;
   transition: background 0.15s ease;
 }
 
 .addButton:hover {
-  background: #059669;
+  background: rgba(16, 185, 129, 0.18);
 }
 
 .editor {
-  border: 1px solid var(--pex-border, #e1e7ea);
+  border: 1px solid var(--admin-border, #1e293b);
   border-radius: 12px;
   padding: 16px;
-  background: var(--pex-bg);
+  background: var(--admin-surface, #0f172a);
 }
 
 .itemForm {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border: 1px solid var(--pex-border, #e1e7ea);
+  border: 1px solid var(--admin-border, #1e293b);
   border-radius: 12px;
   padding: 16px;
-  background: var(--pex-bg);
+  background: var(--admin-surface, #0f172a);
 }
 
 .formGrid {
@@ -360,35 +361,10 @@
   font-weight: 600;
 }
 
-.subtotalRow {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding: 10px 14px;
-  background: #f6faf9;
-  border: 1px solid #d9ebe8;
-  border-radius: 10px;
-}
-
-.subtotalLabel {
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--admin-heading);
-}
-
-.subtotalValue {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--pex-keppel, #1a7a77);
-}
-
 .label {
   font-size: 12px;
   font-weight: 700;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--admin-text-3);
 }
 
 .input,
@@ -398,8 +374,8 @@
   padding: 8px 12px;
   font-size: 14px;
   font-family: inherit;
-  color: var(--admin-heading);
-  background: var(--pex-bg);
+  color: var(--admin-text);
+  background: rgba(2, 6, 23, 0.34);
 }
 
 .input:focus,
@@ -433,7 +409,7 @@
   gap: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: #33475b;
+  color: var(--admin-text-2);
 }
 
 .formActions {
@@ -442,20 +418,20 @@
 }
 
 .cancelButton {
-  background: none;
-  border: 1px solid var(--pex-border, #dbe3ec);
+  background: transparent;
+  border: 1px solid var(--admin-border-strong);
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 14px;
   font-weight: 700;
-  color: #33475b;
+  color: var(--admin-text-2);
   cursor: pointer;
   font-family: inherit;
 }
 
 .saveButton {
-  background: var(--pex-keppel, #1a7a77);
-  color: #fff;
+  background: var(--admin-accent);
+  color: var(--admin-accent-text);
   border: none;
   border-radius: 8px;
   padding: 8px 16px;
@@ -471,15 +447,15 @@
 }
 
 .import {
-  border-top: 1px solid var(--pex-border, #e1e7ea);
-  padding-top: 14px;
+  border-top: 1px solid var(--admin-border, #1e293b);
+  padding-top: 16px;
 }
 
 .importTitle {
   margin: 0 0 8px;
   font-size: 13px;
-  font-weight: 800;
-  color: var(--admin-heading);
+  font-weight: 900;
+  color: var(--admin-text);
 }
 
 .importForm {
@@ -490,18 +466,19 @@
 }
 
 .fileInput {
-  font-size: 13px;
+  color: var(--admin-text-2);
+  font-size: 12px;
   font-family: inherit;
 }
 
 .importButton {
-  background: var(--pex-navy, #1a2a40);
-  color: #fff;
+  background: var(--admin-surface-2);
+  color: var(--admin-text);
   border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 700;
+  border-radius: 7px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 900;
   cursor: pointer;
   font-family: inherit;
 }
@@ -512,15 +489,15 @@
 }
 
 .importSuccess {
-  font-size: 13px;
-  font-weight: 700;
-  color: #1e6b45;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--admin-accent-strong);
 }
 
 .importHint {
   margin: 8px 0 0;
-  font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
+  font-size: 11px;
+  color: var(--admin-text-3);
 }
 
 @media (max-width: 720px) {

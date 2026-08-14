@@ -363,11 +363,6 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
     setEditingId(null);
   };
 
-  const subtotal = items.reduce(
-    (sum, it) => sum + (it.unit_price ?? 0) * it.quantity,
-    0
-  );
-
   async function move(index: number, direction: -1 | 1) {
     const next = [...items];
     const target = index + direction;
@@ -419,7 +414,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                           disabled={index === 0}
                           aria-label="Move up"
                         >
-                          ↑
+                          &uarr;
                         </button>
                         <button
                           type="button"
@@ -428,7 +423,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                           disabled={index === items.length - 1}
                           aria-label="Move down"
                         >
-                          ↓
+                          &darr;
                         </button>
                       </div>
                     </td>
@@ -442,7 +437,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                           className={styles.itemIconEmpty}
                           aria-hidden="true"
                         >
-                          —
+                          &mdash;
                         </span>
                       )}
                     </td>
@@ -458,13 +453,13 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                     </td>
                     <td>{item.quantity}</td>
                     <td className={styles.priceCell}>
-                      {item.unit_price != null ? formatCurrency(item.unit_price) : "—"}
+                      {item.unit_price != null ? formatCurrency(item.unit_price) : "-"}
                     </td>
                     <td>
                       {item.specification ? (
                         <span className={styles.itemSpec}>{item.specification}</span>
                       ) : (
-                        <span className={styles.itemSpecEmpty}>—</span>
+                        <span className={styles.itemSpecEmpty}>-</span>
                       )}
                     </td>
                     <td>
@@ -489,7 +484,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                           <ConfirmButton
                             label="Delete"
                             confirmText={`Delete "${item.name}"?`}
-                            busyLabel="Deleting…"
+                            busyLabel="Deleting..."
                             className={styles.deleteButton}
                           />
                         </form>
@@ -499,14 +494,6 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                 ))}
               </tbody>
             </table>
-          </div>
-          <div className={styles.subtotalRow}>
-            <span className={styles.subtotalLabel}>Items subtotal</span>
-            <span className={styles.subtotalValue}>{formatCurrency(subtotal)}</span>
-            <span className={styles.hint}>
-              Unit price × quantity for each item. Use this as a guide when
-              setting the pack total price above.
-            </span>
           </div>
         </>
       )}
@@ -524,7 +511,7 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
           className={styles.addButton}
           onClick={() => setShowAdd(true)}
         >
-          + Add items
+          + Add item
         </button>
       )}
 

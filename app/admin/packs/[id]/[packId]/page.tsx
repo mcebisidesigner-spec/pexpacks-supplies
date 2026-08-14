@@ -5,8 +5,7 @@ import { getPack } from "@/lib/admin/packs";
 import { getSchool } from "@/lib/admin/schools";
 import { PackPriceForm } from "@/components/admin/packs/PackPriceForm";
 import { PackItemsSection } from "@/components/admin/packs/PackItemsSection";
-import adminStyles from "../../../admin.module.css";
-import shared from "../../../schools/schools.module.css";
+import styles from "@/components/admin/packs/EditPack.module.css";
 
 interface NestedEditPackPageProps {
   params: Promise<{ id: string; packId: string }>;
@@ -31,13 +30,13 @@ export default async function NestedEditPackPage({ params }: NestedEditPackPageP
   const backHref = school ? `/admin/packs/${school.slug || school.id}` : "/admin/packs";
 
   return (
-    <div className={adminStyles.adminContainer}>
-      <p style={{ marginBottom: 16 }}>
-        <Link href={backHref} className={shared.resetLink}>
-          ← Back to school packs
+    <div className={styles.page}>
+      <p className={styles.backRow}>
+        <Link href={backHref} className={styles.backLink}>
+          &larr; Back to school packs
         </Link>
       </p>
-      <div className={adminStyles.stack}>
+      <div className={styles.stack}>
         <PackPriceForm
           packId={pack.id}
           price={pack.price}

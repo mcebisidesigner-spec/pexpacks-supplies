@@ -8,10 +8,10 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 14px;
   width: 100%;
-  max-width: 56rem;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   color: var(--admin-text-2);
   font-family: inherit;
 }
@@ -26,8 +26,8 @@
 
 .fieldLabel {
   display: block;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 800;
   color: var(--admin-text-2);
 }
 
@@ -52,18 +52,18 @@
 
 .searchInput {
   width: 100%;
-  min-height: 48px;
-  padding: 0 40px 0 44px;
-  border-radius: var(--admin-radius-sm);
-  border: 1px solid var(--admin-border-strong);
+  min-height: 42px;
+  padding: 0 38px 0 42px;
+  border-radius: 10px;
+  border: 1px solid var(--admin-border);
   background: var(--admin-surface);
   color: var(--admin-text);
-  font-size: 14px;
+  font-size: 13px;
   transition: border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
 .searchInput::placeholder {
-  color: var(--admin-muted);
+  color: rgba(148, 163, 184, 0.72);
 }
 
 .searchInput:focus {

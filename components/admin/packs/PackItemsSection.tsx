@@ -93,6 +93,8 @@ export function PackItemsSection({ packId, items }: PackItemsSectionProps) {
           busy={busy}
           showSave={false}
           hideList={true}
+          searchLabel="Add Stationery Items to this Pack"
+          searchPlaceholder="Search items by item code, description, type, SKU or name..."
           onSelectItem={handleSelectItem}
           onSave={handleSave}
         />

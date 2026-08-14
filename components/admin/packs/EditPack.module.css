@@ -1,0 +1,194 @@
+.page {
+  width: 100%;
+  max-width: 980px;
+  margin: 0;
+  color: var(--admin-text-2);
+}
+
+.backRow {
+  margin: 0 0 18px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--admin-text-3);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.backLink:hover {
+  color: var(--admin-accent-strong);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.priceForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heroRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.title {
+  margin: 0;
+  color: var(--admin-text);
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  color: var(--admin-text-3);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.saveButton {
+  flex: 0 0 auto;
+  min-height: 42px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--admin-accent);
+  color: var(--admin-accent-text);
+  padding: 0 18px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.18);
+}
+
+.saveButton:hover:not(:disabled) {
+  background: var(--admin-accent-strong);
+}
+
+.saveButton:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.card {
+  border: 1px solid var(--admin-border);
+  border-radius: 14px;
+  background: var(--admin-surface);
+  padding: 22px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
+}
+
+.cardTitle {
+  margin: 0 0 14px;
+  color: var(--admin-text-3);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.label {
+  color: var(--admin-text-3);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.input {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid rgba(51, 65, 85, 0.56);
+  border-radius: 8px;
+  background: rgba(2, 6, 23, 0.36);
+  color: var(--admin-text);
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
+}
+
+.hintRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.hint {
+  color: var(--admin-text-3);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.useTotalButton {
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  border-radius: 7px;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--admin-accent-strong);
+  padding: 5px 10px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.success {
+  margin: 0 0 12px;
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  border-radius: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--admin-accent-strong);
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.error {
+  margin: 0 0 12px;
+  color: var(--admin-red);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .page {
+    max-width: none;
+  }
+
+  .heroRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .saveButton {
+    width: fit-content;
+  }
+
+  .card {
+    padding: 18px;
+  }
+}

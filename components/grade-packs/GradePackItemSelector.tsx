@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import useSWR from "swr";
-import { Search, Trash2, Package, Check, AlertCircle } from "lucide-react";
+import { Search, Trash2, Check, AlertCircle } from "lucide-react";
 import styles from "./GradePackItemSelector.module.css";
 
 export interface StationeryItem {
@@ -36,6 +36,8 @@ export interface GradePackItemSelectorProps {
   busy?: boolean;
   showSave?: boolean;
   hideList?: boolean;
+  searchLabel?: string;
+  searchPlaceholder?: string;
   onItemsChange?: (lines: PackItem[]) => void;
   onSelectItem?: (item: StationeryItem) => void | Promise<void>;
   onSave?: (lines: PackItem[]) => void | Promise<void>;
@@ -50,6 +52,8 @@ export function GradePackItemSelector({
   busy = false,
   showSave = true,
   hideList = false,
+  searchLabel = "Add Stationery Item to Grade Pack",
+  searchPlaceholder = "Type item name or description (e.g., '2H Pencil', '70gsm A4 Box', 'Hardcover Notebook')...",
   onItemsChange,
   onSelectItem,
   onSave,
@@ -175,7 +179,7 @@ export function GradePackItemSelector({
       {/* 1. Item Search & Auto-Populate Bar */}
       <div className={styles.searchBlock} ref={dropdownRef}>
         <label className={styles.fieldLabel}>
-          Add Stationery Item to Grade Pack
+          {searchLabel}
         </label>
 
         <div className={styles.searchWrap}>
@@ -191,7 +195,7 @@ export function GradePackItemSelector({
               setIsDropdownOpen(true);
             }}
             onFocus={() => setIsDropdownOpen(true)}
-            placeholder="Type item name or description (e.g., '2H Pencil', '70gsm A4 Box', 'Hardcover Notebook')..."
+            placeholder={searchPlaceholder}
             className={styles.searchInput}
             aria-label="Search stationery items by name or description"
           />
