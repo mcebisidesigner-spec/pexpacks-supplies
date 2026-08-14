@@ -140,36 +140,10 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
             type="search"
             name="q"
             defaultValue={filters.q ?? ""}
-            placeholder="Search by School name"
+            placeholder="Search by School name…"
             className={`${shared.filterInput} ${shared.searchInput}`}
             aria-label="Search packs"
           />
-          <select name="school_id" defaultValue={filters.school_id ?? ""} className={shared.filterInput}>
-            <option value="">All schools</option>
-            {schools.map((school) => (
-              <option key={school.id} value={school.slug || school.id}>
-                {school.name}
-              </option>
-            ))}
-          </select>
-          <select name="delivery_type" defaultValue={filters.delivery_type ?? ""} className={shared.filterInput}>
-            <option value="">All delivery types</option>
-            {deliveryTypes.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
-          <select name="visible" defaultValue={filters.visible ?? ""} className={shared.filterInput}>
-            <option value="">All visibility</option>
-            <option value="true">Visible</option>
-            <option value="false">Hidden</option>
-          </select>
-          <select name="featured" defaultValue={filters.featured ?? ""} className={shared.filterInput}>
-            <option value="">All packs</option>
-            <option value="true">Featured only</option>
-            <option value="false">Not featured</option>
-          </select>
           <button type="submit" className={shared.applyButton}>
             Apply
           </button>
