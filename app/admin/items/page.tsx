@@ -131,7 +131,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                 <tr>
                   <th>Category</th>
                   <th>Item Description</th>
-                  <th>Packaging / Unit Specs</th>
+                  <th>Pack / Unit</th>
                   <th>Qty</th>
                   <th>Price</th>
                   <th>Actions</th>
