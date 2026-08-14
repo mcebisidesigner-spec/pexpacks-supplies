@@ -4,8 +4,9 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import GradePackItemSelector, {
   type PackLine,
+  type StationeryItem,
 } from "@/components/grade-packs/GradePackItemSelector";
-import { savePackItemsAction } from "@/app/admin/items/actions";
+import { savePackItemsAction, createItemAction } from "@/app/admin/items/actions";
 import { ItemsManager } from "./ItemsManager";
 import type { ItemRow } from "@/lib/admin/items";
 import styles from "./ItemsManager.module.css";
@@ -33,6 +34,37 @@ export function PackItemsSection({ packId, items }: PackItemsSectionProps) {
     quantity: item.quantity,
   }));
 
+  async function handleSelectItem(item: StationeryItem) {
+    setBusy(true);
+    setMessage(null);
+    try {
+      const priceVal = item.unit_price ?? item.price ?? 0;
+      const titleVal = item.title || item.name || "Stationery Item";
+
+      const formData = new FormData();
+      formData.set("pack_id", packId);
+      formData.set("name", titleVal);
+      if (item.description) formData.set("description", item.description);
+      if (item.category) formData.set("category", item.category);
+      formData.set("price", String(priceVal));
+      formData.set("quantity", "1");
+      formData.set("sort_order", String(items.length + 1));
+      formData.set("visible", "on");
+
+      const result = await createItemAction({ ok: false }, formData);
+      if (result.ok) {
+        setMessage(`Added "${titleVal}" to pack.`);
+        router.refresh();
+      } else {
+        setMessage(result.message ?? "Could not add item.");
+      }
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Could not add item.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function handleSave(lines: PackLine[]) {
     setBusy(true);
     setMessage(null);
@@ -59,10 +91,13 @@ export function PackItemsSection({ packId, items }: PackItemsSectionProps) {
           initialItems={initialItems}
           submitLabel="Save items"
           busy={busy}
+          showSave={false}
+          hideList={true}
+          onSelectItem={handleSelectItem}
           onSave={handleSave}
         />
         {message ? (
-          <p className={styles.importSuccess} role="status">
+          <p className={styles.importSuccess} role="status" style={{ marginTop: "8px" }}>
             {message}
           </p>
         ) : null}

@@ -35,7 +35,9 @@ export interface GradePackItemSelectorProps {
   submitLabel?: string;
   busy?: boolean;
   showSave?: boolean;
+  hideList?: boolean;
   onItemsChange?: (lines: PackItem[]) => void;
+  onSelectItem?: (item: StationeryItem) => void | Promise<void>;
   onSave?: (lines: PackItem[]) => void | Promise<void>;
   onSavePack?: (items: PackItem[], totalPrice: number) => void;
 }
@@ -47,7 +49,9 @@ export function GradePackItemSelector({
   submitLabel = "Save Grade Pack",
   busy = false,
   showSave = true,
+  hideList = false,
   onItemsChange,
+  onSelectItem,
   onSave,
   onSavePack,
 }: GradePackItemSelectorProps) {
@@ -92,7 +96,10 @@ export function GradePackItemSelector({
   };
 
   // Add item to current Grade Pack and auto-populate unit price
-  const handleSelectItem = (item: StationeryItem) => {
+  const handleSelectItem = async (item: StationeryItem) => {
+    if (onSelectItem) {
+      await onSelectItem(item);
+    }
     const priceVal = item.unit_price ?? item.price ?? 0;
     const titleVal = item.title || item.name || "Stationery Item";
 
@@ -241,7 +248,7 @@ export function GradePackItemSelector({
       </div>
 
       {/* 2. Assembled Grade Pack Inventory List */}
-      {selectedItems.length === 0 ? (
+      {hideList ? null : selectedItems.length === 0 ? (
         <div className={styles.emptyNote}>
           <p className={styles.emptyNoteMain}>No items added to this grade pack yet.</p>
           <p className={styles.emptyNoteSub}>
