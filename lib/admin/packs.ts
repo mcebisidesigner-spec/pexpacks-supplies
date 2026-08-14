@@ -141,8 +141,27 @@ export interface PackListResult {
   total: number;
   page: number;
   pageCount: number;
-  schools: { id: string; name: string }[];
+  schools: { id: string; name: string; slug?: string | null }[];
   deliveryTypes: string[];
+}
+
+export async function resolveSchoolId(
+  admin: ReturnType<typeof createSupabaseAdminClient>,
+  schoolIdOrSlug?: string
+): Promise<string | undefined> {
+  if (!schoolIdOrSlug) return undefined;
+  const decoded = decodeURIComponent(schoolIdOrSlug).trim();
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
+  if (isUuid) return decoded;
+
+  const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const { data } = await admin
+    .from("schools")
+    .select("id")
+    .or(`slug.ilike.${decoded},slug.ilike.${slugified},name.ilike.${decoded}`)
+    .maybeSingle();
+
+  return data?.id ?? decoded;
 }
 
 export async function listPacks(filters: PackListFilters = {}): Promise<PackListResult> {
@@ -179,7 +198,10 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
       }
     }
   }
-  if (filters.school_id) query = query.eq("school_id", filters.school_id);
+  if (filters.school_id) {
+    const realSchoolId = await resolveSchoolId(admin, filters.school_id);
+    if (realSchoolId) query = query.eq("school_id", realSchoolId);
+  }
   if (filters.delivery_type) query = query.eq("delivery_type", filters.delivery_type);
   if (filters.featured === "true") query = query.eq("featured", true);
   if (filters.featured === "false") query = query.eq("featured", false);
@@ -242,7 +264,7 @@ export interface SchoolGroupedResult {
   totalSchools: number;
   page: number;
   pageCount: number;
-  schools: { id: string; name: string }[];
+  schools: { id: string; name: string; slug?: string | null }[];
   deliveryTypes: string[];
 }
 
@@ -262,6 +284,12 @@ export async function listSchoolGroupedSummary(
 
   if (q) {
     schoolQuery = schoolQuery.or(`name.ilike.%${q}%,slug.ilike.%${q}%`);
+  }
+  if (filters.school_id) {
+    const realSchoolId = await resolveSchoolId(admin, filters.school_id);
+    if (realSchoolId) {
+      schoolQuery = schoolQuery.eq("id", realSchoolId);
+    }
   }
 
   const [{ data: dbSchools }, { data: dbPacks, count: totalGradePacks }] = await Promise.all([

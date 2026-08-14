@@ -140,7 +140,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
           <select name="school_id" defaultValue={filters.school_id ?? ""} className={shared.filterInput}>
             <option value="">All schools</option>
             {schools.map((school) => (
-              <option key={school.id} value={school.id}>
+              <option key={school.id} value={school.slug || school.id}>
                 {school.name}
               </option>
             ))}
@@ -219,7 +219,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                         <div className={styles.packCell}>
                           <div>
                             <Link
-                              href={`/admin/packs?school_id=${item.school_id}`}
+                              href={`/admin/packs?school_id=${item.school_slug || item.school_id}`}
                               className={styles.schoolNameLink}
                             >
                               {item.school_name}
@@ -241,7 +241,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                       <td>
                         <div className={shared.actions}>
                           <Link
-                            href={`/admin/packs?school_id=${item.school_id}`}
+                            href={`/admin/packs?school_id=${item.school_slug || item.school_id}`}
                             className={styles.schoolNameLink}
                             style={{ fontSize: "14px", textDecoration: "none" }}
                           >
