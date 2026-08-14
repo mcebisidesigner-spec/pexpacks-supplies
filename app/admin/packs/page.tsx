@@ -226,7 +226,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                             className={styles.schoolNameLink}
                             style={{ fontSize: "14px", textDecoration: "none" }}
                           >
-                            Grade packs
+                            School packs
                           </Link>
                           <SchoolVisibleToggle
                             schoolId={item.school_id}
