@@ -154,21 +154,25 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           <OrderStatusBadge status={order.status} />
           <span className={styles.created}>{formatDateTime(order.created_at)}</span>
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12 }}>
-          {canEdit ? (
-            <OrderStatusForm id={order.id} current={order.status} />
-          ) : null}
+
+        <div className={styles.actionRow}>
+          <div className={styles.statusGroup}>
+            {canEdit ? (
+              <OrderStatusForm id={order.id} current={order.status} />
+            ) : null}
+          </div>
           {canDelete ? (
             <form action={deleteOrderAction.bind(null, order.id)}>
               <ConfirmButton
-                label="Delete Order"
+                label="Delete order"
                 confirmText={`Permanently delete order ${order.order_reference}? This action cannot be undone.`}
                 busyLabel="Deleting…"
-                className={`${shared.rowButton} ${shared.rowButtonDelete}`}
+                className={styles.deleteBtn}
               />
             </form>
           ) : null}
         </div>
+
         {canRefund ? (
           <form action={refundOrderAction.bind(null, order.id)} className={styles.refundForm}>
             <textarea
