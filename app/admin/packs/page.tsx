@@ -110,6 +110,13 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
 
   return (
     <div className={adminStyles.adminContainer}>
+      {isSchoolFiltered ? (
+        <p style={{ marginBottom: 12 }}>
+          <Link href="/admin/packs" className={shared.resetLink}>
+            ← Back to grade packs
+          </Link>
+        </p>
+      ) : null}
       <div className={shared.toolbar}>
         <div className={shared.headerRow}>
           <h1 className={shared.pageTitle}>
