@@ -7,6 +7,7 @@ interface ConfirmButtonProps {
   confirmText: string;
   busyLabel?: string;
   className?: string;
+  title?: string;
 }
 
 export function ConfirmButton({
@@ -14,6 +15,7 @@ export function ConfirmButton({
   confirmText,
   busyLabel = "Saving…",
   className,
+  title,
 }: ConfirmButtonProps) {
   const { pending } = useFormStatus();
   return (
@@ -21,6 +23,7 @@ export function ConfirmButton({
       type="submit"
       className={className}
       disabled={pending}
+      title={title}
       onClick={(e) => {
         if (!window.confirm(confirmText)) e.preventDefault();
       }}

@@ -135,6 +135,7 @@
 }
 
 .deleteBtn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -153,6 +154,32 @@
 .deleteBtn:hover {
   background: rgba(248, 113, 113, 0.14);
   border-color: #f87171;
+}
+
+.deleteBtn::after {
+  content: "⚠️ Delete Permanently";
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  white-space: nowrap;
+  background: #7f1d1d;
+  color: #fef2f2;
+  border: 1px solid #f87171;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 30;
+}
+
+.deleteBtn:hover::after {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .refundForm {

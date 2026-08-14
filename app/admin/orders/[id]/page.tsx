@@ -165,6 +165,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
             <form action={deleteOrderAction.bind(null, order.id)}>
               <ConfirmButton
                 label="Delete order"
+                title="Delete Permanently"
                 confirmText={`Permanently delete order ${order.order_reference}? This action cannot be undone.`}
                 busyLabel="Deleting…"
                 className={styles.deleteBtn}
