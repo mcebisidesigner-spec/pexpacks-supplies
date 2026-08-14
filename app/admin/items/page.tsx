@@ -129,11 +129,11 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
             <table className={adminStyles.table}>
               <thead>
                 <tr>
-                  <th>Item Name</th>
-                  <th>Descr</th>
-                  <th>Pack-Qty</th>
+                  <th>Category</th>
+                  <th>Item Description</th>
+                  <th>Packaging / Unit Specs</th>
+                  <th>Qty</th>
                   <th>Price</th>
-                  <th>Visible</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -141,24 +141,25 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                 {items.map((item) => (
                   <tr key={item.id}>
                     <td>
+                      <span className={styles.mutedText}>
+                        {(item as { category?: string | null }).category || "Stationery"}
+                      </span>
+                    </td>
+                    <td>
                       <div className={styles.packCell}>
                         <div>
                           <div className={styles.packName}>{item.name}</div>
+                          {item.description ? (
+                            <div className={styles.mutedText}>{item.description}</div>
+                          ) : null}
                         </div>
                       </div>
                     </td>
-                    <td>{item.description || "—"}</td>
+                    <td>
+                      {item.specification || (item as { packaging?: string | null }).packaging || "—"}
+                    </td>
                     <td>{item.quantity}</td>
                     <td className={styles.priceCell}>{money(item.unit_price)}</td>
-                    <td>
-                      <span
-                        className={`${shared.flag} ${
-                          item.visible ? styles.badgeVisible : styles.badgeHidden
-                        }`}
-                      >
-                        {item.visible ? "Visible" : "Hidden"}
-                      </span>
-                    </td>
                     <td>
                       <div className={shared.actions}>
                         <Link
@@ -170,6 +171,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                         <form action={deleteItemAction.bind(null, item.id)}>
                           <ConfirmButton
                             label="Delete"
+                            title="Delete Permanently"
                             confirmText={`Permanently delete "${item.name}"? This cannot be undone.`}
                             busyLabel="Deleting…"
                             className={`${shared.rowButton} ${shared.rowButtonDelete}`}
