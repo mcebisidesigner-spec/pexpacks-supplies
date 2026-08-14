@@ -66,25 +66,55 @@ export function ItemForm({ item, packs }: ItemFormProps) {
       <div className={formStyles.section}>
         <input type="hidden" name="pack_id" value={item?.pack_id ?? packs[0]?.id ?? ""} />
 
-        <div className={formStyles.field}>
-          <label className={formStyles.label} htmlFor="name">
-            Item Name *
-          </label>
-          <input
-            id="name"
-            name="name"
-            className={formStyles.input}
-            defaultValue={item?.name ?? ""}
-            placeholder="e.g. A4 Exercise Book"
-            required
-          />
-          {err("name")}
+        <div className={styles.formGrid}>
+          <div className={formStyles.field}>
+            <label className={formStyles.label} htmlFor="name">
+              Item Description *
+            </label>
+            <input
+              id="name"
+              name="name"
+              className={formStyles.input}
+              defaultValue={item?.name ?? ""}
+              placeholder="e.g. A4 Clear Plastic Folders with Button (Doc Wallet)"
+              required
+            />
+            {err("name")}
+          </div>
+
+          <div className={formStyles.field}>
+            <label className={formStyles.label} htmlFor="category">
+              Category
+            </label>
+            <input
+              id="category"
+              name="category"
+              className={formStyles.input}
+              defaultValue={item?.category ?? ""}
+              placeholder="e.g. Organisation, Writing Tools, Colouring"
+            />
+            {err("category")}
+          </div>
         </div>
 
         <div className={styles.formGrid}>
           <div className={formStyles.field}>
+            <label className={formStyles.label} htmlFor="specification">
+              Pack / Unit
+            </label>
+            <input
+              id="specification"
+              name="specification"
+              className={formStyles.input}
+              defaultValue={item?.specification ?? ""}
+              placeholder="e.g. Pack of 10 / Single"
+            />
+            {err("specification")}
+          </div>
+
+          <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="quantity">
-              Pack-Qty
+              Qty
             </label>
             <input
               id="quantity"
@@ -95,7 +125,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
               placeholder="1"
             />
             <span className={formStyles.hint}>
-              How many of this item come in the pack.
+              Quantity of this item.
             </span>
             {err("quantity")}
           </div>
@@ -113,8 +143,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
               placeholder="0.00"
             />
             <span className={formStyles.hint}>
-              Price of the pack&apos;s allocation of this item. Leave blank for
-              no price.
+              Price of the item. Leave blank for no price.
             </span>
             {err("price")}
           </div>
