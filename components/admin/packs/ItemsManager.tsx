@@ -483,6 +483,8 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
                         <form action={deleteItemAction.bind(null, item.id)}>
                           <ConfirmButton
                             label="Delete"
+                            title="Delete Item"
+                            confirmLabel="Delete Item"
                             confirmText={`Delete "${item.name}"?`}
                             busyLabel="Deleting..."
                             className={styles.deleteButton}

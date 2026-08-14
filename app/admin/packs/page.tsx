@@ -197,15 +197,13 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                   {groupedResult.schoolsSummary.map((item) => (
                     <tr key={item.school_id}>
                       <td>
-                        <div className={styles.packCell}>
-                          <div>
-                            <Link
-                              href={`/admin/packs/${item.school_slug || item.school_id}`}
-                              className={styles.schoolNameLink}
-                            >
-                              {item.school_name}
-                            </Link>
-                          </div>
+                        <div className={`${styles.packCell} ${styles.packName}`}>
+                          <Link
+                            href={`/admin/packs/${item.school_slug || item.school_id}`}
+                            className={styles.schoolNameLink}
+                          >
+                            {item.school_name}
+                          </Link>
                         </div>
                       </td>
                       <td className={styles.sortCell}>{item.grade_packs_count}</td>
@@ -235,6 +233,8 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                           <form action={deleteSchoolPacksAction.bind(null, item.school_id)}>
                             <ConfirmButton
                               label="Delete"
+                              title="Delete School Packs Permanently"
+                              confirmLabel="Delete School Packs"
                               confirmText={`Permanently delete all grade packs for "${item.school_name}"? This cannot be undone.`}
                               busyLabel="Deleting…"
                               className={`${shared.rowButton} ${shared.rowButtonDelete}`}
@@ -299,16 +299,13 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                     return (
                       <tr key={pack.id}>
                         <td>
-                          <div className={styles.packCell}>
-                            <div>
-                              <Link
-                                href={`/admin/packs/${pack.id}`}
-                                className={styles.schoolNameLink}
-                              >
-                                {schoolName}
-                              </Link>
-                              <div className={styles.gradeSublabel}>{gradeLabel}</div>
-                            </div>
+                          <div className={`${styles.packCell} ${styles.packName}`}>
+                            <Link
+                              href={`/admin/packs/${pack.id}`}
+                              className={styles.schoolNameLink}
+                            >
+                              {schoolName}
+                            </Link>
                           </div>
                         </td>
                         <td className={styles.priceCell}>{money(pack.price)}</td>
@@ -347,7 +344,9 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                             <form action={deletePackAction.bind(null, pack.id)}>
                               <ConfirmButton
                                 label="Delete"
-                                confirmText={`Permanently delete "${pack.title}" and its items? This cannot be undone.`}
+                                title="Delete Pack Permanently"
+                                confirmLabel="Delete Pack"
+                                confirmText={`Permanently delete "${pack.title}"`}
                                 busyLabel="Deleting…"
                                 className={`${shared.rowButton} ${shared.rowButtonDelete}`}
                               />

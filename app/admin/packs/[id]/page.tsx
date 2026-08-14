@@ -99,22 +99,18 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
                 </thead>
                 <tbody>
                   {packResult.packs.map((pack) => {
-                    const gradeLabel = extractGradeLabel(pack.title, pack.slug);
                     const packHref = `/admin/packs/${school.slug || school.id}/${pack.slug || pack.id}`;
 
                     return (
                       <tr key={pack.id}>
                         <td>
-                          <div className={styles.packCell}>
-                            <div>
-                              <Link
-                                href={packHref}
-                                className={styles.schoolNameLink}
-                              >
-                                {school.name}
-                              </Link>
-                              <div className={styles.gradeSublabel}>{gradeLabel}</div>
-                            </div>
+                          <div className={`${styles.packCell} ${styles.packName}`}>
+                            <Link
+                              href={packHref}
+                              className={styles.schoolNameLink}
+                            >
+                              {school.name}
+                            </Link>
                           </div>
                         </td>
                         <td className={styles.priceCell}>{money(pack.price)}</td>
@@ -153,7 +149,9 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
                             <form action={deletePackAction.bind(null, pack.id)}>
                               <ConfirmButton
                                 label="Delete"
-                                confirmText={`Permanently delete "${pack.title}" and its items? This cannot be undone.`}
+                                title="Delete Pack Permanently"
+                                confirmLabel="Delete Pack"
+                                confirmText={`Permanently delete "${pack.title}"`}
                                 busyLabel="Deleting…"
                                 className={`${shared.rowButton} ${shared.rowButtonDelete}`}
                               />

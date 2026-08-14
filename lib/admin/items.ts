@@ -91,6 +91,7 @@ export function parseItemForm(formData: FormData): ParsedItemForm {
   const parsed = itemSchema.safeParse({
     pack_id: raw(formData, "pack_id"),
     name: raw(formData, "name"),
+    category: raw(formData, "category"),
     description: raw(formData, "description"),
     specification: raw(formData, "specification"),
     quantity: raw(formData, "quantity") || "1",
@@ -189,24 +190,38 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
 export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   const admin = createSupabaseAdminClient();
   const decoded = decodeURIComponent(idOrSlug).trim();
+  if (!decoded) return null;
+
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
 
-  let query = admin.from("stationery_items").select("*");
-
   if (isUuid) {
-    query = query.eq("id", decoded);
-  } else {
-    const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-    query = query.or(`slug.ilike.${decoded},slug.ilike.${slugified},name.ilike.${decoded}`);
+    const { data } = await admin.from("stationery_items").select("*").eq("id", decoded).maybeSingle();
+    if (data) return data as unknown as ItemRow;
   }
 
-  const { data, error } = await query.maybeSingle();
+  const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
-  if (error) {
-    console.error("[items] get failed:", error);
-    return null;
-  }
-  return data as unknown as ItemRow | null;
+  // 1. Direct query by exact slug or exact name
+  const { data: directMatch } = await admin
+    .from("stationery_items")
+    .select("*")
+    .or(`slug.ilike.${decoded},slug.ilike.${slugified},name.ilike.${decoded}`)
+    .limit(1)
+    .maybeSingle();
+
+  if (directMatch) return directMatch as unknown as ItemRow;
+
+  // 2. Fallback: match all items by slugified name or ID
+  const { data: allItems } = await admin.from("stationery_items").select("*");
+  if (!allItems) return null;
+
+  const matched = allItems.find((rawItem) => {
+    const item = rawItem as unknown as ItemRow;
+    const itemSlug = item.slug || item.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return itemSlug === slugified || item.id === decoded;
+  });
+
+  return (matched as unknown as ItemRow) ?? null;
 }
 
 export async function createItem(formData: FormData): Promise<ItemFormResult> {

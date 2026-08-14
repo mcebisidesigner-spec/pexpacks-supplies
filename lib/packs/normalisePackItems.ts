@@ -30,23 +30,43 @@ function inferCategory(name: string) {
 function inferIcon(name: string) {
   const value = name.toLowerCase();
 
-  if (/(book|scrapbook)/.test(value)) {
-    return "notebook";
+  if (/(folder|wallet|sleeve|envelope)/.test(value)) {
+    return "folder";
   }
 
-  if (/(pad|paper)/.test(value)) {
-    return "pad";
-  }
-
-  if (/(file|sleeve|folder)/.test(value)) {
+  if (/(file|document)/.test(value)) {
     return "file";
   }
 
-  if (/(pen|marker)/.test(value)) {
+  if (/(pad|examination|exam)/.test(value)) {
+    return "pad";
+  }
+
+  if (/(book|scrapbook|journal)/.test(value)) {
+    return "notebook";
+  }
+
+  if (/(marker|felt-tip|fibre)/.test(value)) {
+    return "marker";
+  }
+
+  if (/(crayon|monami|wax)/.test(value)) {
+    return "crayon";
+  }
+
+  if (/(paint|watercolour|water color|palette)/.test(value)) {
+    return "paint";
+  }
+
+  if (/(paintbrush|brush)/.test(value)) {
+    return "paintbrush";
+  }
+
+  if (/(pen|ballpoint|fineliner)/.test(value)) {
     return "pen";
   }
 
-  if (/(pencil|crayon|colour|color)/.test(value)) {
+  if (/(pencil|clutch|koki)/.test(value)) {
     return "pencil";
   }
 
@@ -54,19 +74,19 @@ function inferIcon(name: string) {
     return "glue";
   }
 
-  if (/scissor/.test(value)) {
+  if (/(scissor|cutting)/.test(value)) {
     return "scissors";
   }
 
-  if (/ruler/.test(value)) {
+  if (/(ruler|scale)/.test(value)) {
     return "ruler";
   }
 
-  if (/eraser/.test(value)) {
+  if (/(eraser|rubber)/.test(value)) {
     return "eraser";
   }
 
-  if (/sharpener/.test(value)) {
+  if (/(sharpener|geometry|math set)/.test(value)) {
     return "sharpener";
   }
 
@@ -76,6 +96,30 @@ function inferIcon(name: string) {
 
   if (/calculator/.test(value)) {
     return "calculator";
+  }
+
+  if (/(clip|paperclip)/.test(value)) {
+    return "paperclip";
+  }
+
+  if (/(pin|pushpin)/.test(value)) {
+    return "pin";
+  }
+
+  if (/(bag|case|pouch)/.test(value)) {
+    return "bag";
+  }
+
+  if (/(board|cardboard|construction paper|sheet)/.test(value)) {
+    return "layers";
+  }
+
+  if (/(tag|label)/.test(value)) {
+    return "tag";
+  }
+
+  if (/(globe|atlas|map)/.test(value)) {
+    return "globe";
   }
 
   return "notebook";

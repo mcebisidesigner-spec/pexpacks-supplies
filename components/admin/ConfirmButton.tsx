@@ -10,6 +10,7 @@ interface ConfirmButtonProps {
   busyLabel?: string;
   className?: string;
   title?: string;
+  confirmLabel?: string;
 }
 
 export function ConfirmButton({
@@ -18,6 +19,7 @@ export function ConfirmButton({
   busyLabel = "Saving…",
   className,
   title,
+  confirmLabel,
 }: ConfirmButtonProps) {
   const { pending } = useFormStatus();
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,6 +35,9 @@ export function ConfirmButton({
       formEl.requestSubmit();
     }
   };
+
+  const defaultTitle = isDeleteAction ? "Delete Permanently" : "Confirm Action";
+  const defaultConfirmLabel = isDeleteAction ? (label.toLowerCase() === "delete" ? "Delete" : label) : "Confirm";
 
   return (
     <>
@@ -53,9 +58,9 @@ export function ConfirmButton({
 
       <ConfirmModal
         isOpen={modalOpen}
-        title={title || (isDeleteAction ? "Delete Order Permanently" : "Confirm Action")}
+        title={title || defaultTitle}
         message={confirmText}
-        confirmLabel={isDeleteAction ? "Delete Order" : "Confirm"}
+        confirmLabel={confirmLabel || defaultConfirmLabel}
         cancelLabel="Cancel"
         variant={isDeleteAction ? "danger" : "primary"}
         onConfirm={handleConfirm}

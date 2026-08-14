@@ -84,14 +84,14 @@ export function ItemForm({ item, packs }: ItemFormProps) {
 
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="category">
-              Category
+              Item code
             </label>
             <input
               id="category"
               name="category"
               className={formStyles.input}
               defaultValue={item?.category ?? ""}
-              placeholder="e.g. Organisation, Writing Tools, Colouring"
+              placeholder="e.g. ST-001, ITEM-102"
             />
             {err("category")}
           </div>
@@ -170,20 +170,6 @@ export function ItemForm({ item, packs }: ItemFormProps) {
           <span className={formStyles.hint}>
             Optional. Shown next to the item on the public pack list.
           </span>
-        </div>
-
-        <div className={formStyles.field}>
-          <label className={formStyles.label} htmlFor="description">
-            Descr
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            className={formStyles.textarea}
-            rows={3}
-            defaultValue={item?.description ?? ""}
-          />
-          {err("description")}
         </div>
 
         <div className={formStyles.checkboxes}>

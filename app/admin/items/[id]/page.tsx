@@ -8,13 +8,16 @@ import adminStyles from "../../admin.module.css";
 import shared from "../../schools/schools.module.css";
 
 interface EditItemPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id?: string; slug?: string }>;
 }
 
 export default async function EditItemPage({ params }: EditItemPageProps) {
   await requireAdmin({ permission: "items.edit" });
-  const { id } = await params;
-  const [item, packs] = await Promise.all([getItem(id), listPacksForFilter()]);
+  const resolvedParams = await params;
+  const idOrSlug = resolvedParams.slug || resolvedParams.id;
+  if (!idOrSlug) notFound();
+
+  const [item, packs] = await Promise.all([getItem(idOrSlug), listPacksForFilter()]);
   if (!item) notFound();
 
   return (
