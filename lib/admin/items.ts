@@ -185,13 +185,21 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
   };
 }
 
-export async function getItem(id: string): Promise<ItemRow | null> {
+export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
-    .from("stationery_items")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
+  const decoded = decodeURIComponent(idOrSlug).trim();
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
+
+  let query = admin.from("stationery_items").select("*");
+
+  if (isUuid) {
+    query = query.eq("id", decoded);
+  } else {
+    const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    query = query.or(`slug.ilike.${decoded},slug.ilike.${slugified},name.ilike.${decoded}`);
+  }
+
+  const { data, error } = await query.maybeSingle();
 
   if (error) {
     console.error("[items] get failed:", error);
