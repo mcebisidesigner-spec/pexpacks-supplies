@@ -100,6 +100,7 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
                 <tbody>
                   {packResult.packs.map((pack) => {
                     const gradeLabel = extractGradeLabel(pack.title, pack.slug);
+                    const packHref = `/admin/packs/${school.slug || school.id}/${pack.slug || pack.id}`;
 
                     return (
                       <tr key={pack.id}>
@@ -107,7 +108,7 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
                           <div className={styles.packCell}>
                             <div>
                               <Link
-                                href={`/admin/packs/${pack.id}`}
+                                href={packHref}
                                 className={styles.schoolNameLink}
                               >
                                 {school.name}
@@ -142,7 +143,7 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
                         <td>
                           <div className={shared.actions}>
                             <Link
-                              href={`/admin/packs/${pack.id}`}
+                              href={packHref}
                               className={shared.actionLink}
                             >
                               Edit
@@ -182,9 +183,9 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
 
   return (
     <div className={adminStyles.adminContainer}>
-      <p>
+      <p style={{ marginBottom: 12 }}>
         <Link href="/admin/packs" className={shared.resetLink}>
-          ← Back to packs
+          ← Back to school packs
         </Link>
       </p>
       <div className={adminStyles.headerSection}>

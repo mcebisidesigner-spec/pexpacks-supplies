@@ -1,0 +1,50 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { requireAdmin } from "@/lib/admin/rbac";
+import { getPack } from "@/lib/admin/packs";
+import { getSchool } from "@/lib/admin/schools";
+import { PackPriceForm } from "@/components/admin/packs/PackPriceForm";
+import { PackItemsSection } from "@/components/admin/packs/PackItemsSection";
+import adminStyles from "../../../admin.module.css";
+import shared from "../../../schools/schools.module.css";
+
+interface NestedEditPackPageProps {
+  params: Promise<{ id: string; packId: string }>;
+}
+
+export default async function NestedEditPackPage({ params }: NestedEditPackPageProps) {
+  await requireAdmin({ permission: "packs.view" });
+  const { id, packId } = await params;
+
+  // 1. Fetch School metadata for back link
+  const school = await getSchool(id);
+
+  // 2. Fetch Pack details
+  const { pack, items } = await getPack(packId);
+  if (!pack) notFound();
+
+  const subtotal = items.reduce(
+    (sum, item) => sum + (item.unit_price ?? 0) * item.quantity,
+    0
+  );
+
+  const backHref = school ? `/admin/packs/${school.slug || school.id}` : "/admin/packs";
+
+  return (
+    <div className={adminStyles.adminContainer}>
+      <p style={{ marginBottom: 12 }}>
+        <Link href={backHref} className={shared.resetLink}>
+          ← Back to school packs
+        </Link>
+      </p>
+      <div className={adminStyles.headerSection}>
+        <h1 className={adminStyles.title}>Edit pack</h1>
+        <p className={adminStyles.subtitle}>{pack.title}</p>
+      </div>
+      <div className={adminStyles.stack}>
+        <PackPriceForm packId={pack.id} price={pack.price} subtotal={subtotal} />
+        <PackItemsSection packId={pack.id} items={items} />
+      </div>
+    </div>
+  );
+}

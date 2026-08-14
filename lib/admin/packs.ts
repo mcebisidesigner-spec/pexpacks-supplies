@@ -413,15 +413,26 @@ async function listDeliveryTypes(): Promise<string[]> {
   return values;
 }
 
-export async function getPack(id: string): Promise<{ pack: PackRow | null; items: ItemRow[] }> {
+export async function getPack(idOrSlug: string): Promise<{ pack: PackRow | null; items: ItemRow[] }> {
   const admin = createSupabaseAdminClient();
-  const { data: pack, error } = await admin.from("stationery_packs").select("*").eq("id", id).maybeSingle();
+  const decoded = decodeURIComponent(idOrSlug).trim();
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
+
+  let query = admin.from("stationery_packs").select("*");
+  if (isUuid) {
+    query = query.eq("id", decoded);
+  } else {
+    const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    query = query.or(`slug.ilike.${decoded},slug.ilike.${slugified},title.ilike.${decoded}`);
+  }
+
+  const { data: pack, error } = await query.maybeSingle();
   if (error || !pack) return { pack: null, items: [] };
 
   const { data: items, error: itemsError } = await admin
     .from("stationery_items")
     .select("*")
-    .eq("pack_id", id)
+    .eq("pack_id", pack.id)
     .order("sort_order", { ascending: true })
     .order("name", { ascending: true });
   if (itemsError) console.error("[packs] items load failed:", itemsError);
