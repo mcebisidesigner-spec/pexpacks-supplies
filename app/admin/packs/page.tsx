@@ -120,7 +120,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
       <div className={shared.toolbar}>
         <div className={shared.headerRow}>
           <h1 className={shared.pageTitle}>
-            Grade Packs
+            School Grade Packs
             <span className={shared.count}>
               {displayTotal} {displayTotal === 1 ? "Grade pack" : "Grade packs"}
             </span>
@@ -219,13 +219,6 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                       </td>
                       <td>
                         <div className={shared.actions}>
-                          <Link
-                            href={`/admin/packs/${item.school_slug || item.school_id}`}
-                            className={styles.schoolNameLink}
-                            style={{ fontSize: "14px", textDecoration: "none" }}
-                          >
-                            School packs
-                          </Link>
                           <SchoolVisibleToggle
                             schoolId={item.school_id}
                             visible={item.visible}

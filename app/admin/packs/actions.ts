@@ -117,10 +117,23 @@ export async function setPackVisibleAction(id: string, visible: boolean): Promis
 export async function setSchoolPacksVisibleAction(schoolId: string, visible: boolean): Promise<void> {
   await requireAdmin({ permission: "packs.edit" });
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
+  const { revalidateCatalog } = await import("@/lib/admin/catalog-revalidate");
   const admin = createSupabaseAdminClient();
+
   await admin.from("stationery_packs").update({ visible }).eq("school_id", schoolId);
+  const { data: school } = await admin
+    .from("schools")
+    .update({
+      status: visible ? "active" : "inactive",
+      published: visible,
+    })
+    .eq("id", schoolId)
+    .select("slug")
+    .maybeSingle();
+
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  revalidateCatalog({ schoolSlug: school?.slug });
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
