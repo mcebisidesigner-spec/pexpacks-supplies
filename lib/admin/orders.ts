@@ -242,6 +242,8 @@ export async function refundOrder(
   return { ok: true };
 }
 
+import { sendOrderDeletionArchiveEmail } from "@/lib/email/orderDeletionArchive";
+
 export async function deleteOrder(
   idOrRef: string,
   permission: PermissionKey = "orders.delete"
@@ -251,49 +253,74 @@ export async function deleteOrder(
 
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrRef);
 
-  let findQuery = admin.from("orders").select("id, order_reference, buyer_name");
+  let findQuery = admin.from("orders").select("*");
   if (isUuid) {
     findQuery = findQuery.eq("id", idOrRef);
   } else {
     findQuery = findQuery.ilike("order_reference", idOrRef);
   }
 
-  const { data: existing } = await findQuery.maybeSingle();
-  if (!existing) return { ok: false, message: "Order not found." };
+  const { data: fullOrder } = await findQuery.maybeSingle();
+  if (!fullOrder) return { ok: false, message: "Order not found." };
 
-  // 1. Purge associated payment records from payments table
-  if (existing.order_reference) {
+  const orderRef = String(fullOrder.order_reference || "");
+
+  // 1. Fetch matching payment / gateway records before purging
+  let matchingPayments: Record<string, unknown>[] = [];
+  if (orderRef) {
+    const { data: payRows } = await admin
+      .from("payments")
+      .select("*")
+      .ilike("order_reference", orderRef);
+    if (payRows && Array.isArray(payRows)) {
+      matchingPayments = payRows as Record<string, unknown>[];
+    }
+  }
+
+  // 2. Dispatch Order Deletion Archive Email to orders@pexpacks.co.za and mcebisi@pexpacks.co.za
+  try {
+    await sendOrderDeletionArchiveEmail({
+      order: fullOrder as Record<string, unknown>,
+      payments: matchingPayments,
+      deletedBy: session.user.email ?? "Administrator",
+    });
+  } catch (err) {
+    console.error("[orders] Archive email dispatch error:", err);
+  }
+
+  // 3. Purge associated payment records from payments table
+  if (orderRef) {
     await admin
       .from("payments")
       .delete()
-      .ilike("order_reference", existing.order_reference);
+      .ilike("order_reference", orderRef);
   }
 
-  // 2. Delete primary order record from orders table
+  // 4. Delete primary order record from orders table
   const { error } = await admin
     .from("orders")
     .delete()
-    .eq("id", existing.id);
+    .eq("id", fullOrder.id);
 
   if (error) {
     console.error("[orders] delete failed:", error);
     return { ok: false, message: error.message };
   }
 
-  // 3. Recalculate pre-aggregated dashboard summaries immediately
+  // 5. Recalculate pre-aggregated dashboard summaries immediately
   try {
     await admin.rpc("refresh_all_dashboard_summaries");
   } catch (err) {
     console.warn("[orders] refresh_all_dashboard_summaries warning:", err);
   }
 
-  // 4. Record audit log
+  // 6. Record audit log
   await writeAuditLog({
     action: "orders.delete",
     entityType: "order",
-    entityId: existing.id,
-    summary: `Permanently deleted order ${existing.order_reference} (${existing.buyer_name ?? "Unknown"}) across all system tables`,
-    details: { order_reference: existing.order_reference },
+    entityId: fullOrder.id,
+    summary: `Permanently deleted order ${orderRef} (${fullOrder.buyer_name ?? "Unknown"}) across all system tables and dispatched archive email`,
+    details: { order_reference: orderRef },
     actorId: session.user.id,
     actorName: session.user.email ?? null,
   });
