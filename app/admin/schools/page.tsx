@@ -195,7 +195,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                       <td>
                         <div className={styles.actions}>
                           <Link
-                            href={`/admin/schools/${school.id}`}
+                            href={`/admin/schools/${school.slug || school.id}`}
                             className={styles.actionLink}
                           >
                             Edit

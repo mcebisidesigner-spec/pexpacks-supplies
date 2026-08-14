@@ -248,9 +248,21 @@ async function listFilterColumn(column: "city" | "province"): Promise<string[]> 
   return [...new Set(rows.map((r) => r[column]).filter((v): v is string => Boolean(v)))].sort();
 }
 
-export async function getSchool(id: string): Promise<SchoolRow | null> {
+export async function getSchool(idOrSlug: string): Promise<SchoolRow | null> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("schools").select("*").eq("id", id).maybeSingle();
+  const decoded = decodeURIComponent(idOrSlug).trim();
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
+
+  let query = admin.from("schools").select("*");
+
+  if (isUuid) {
+    query = query.eq("id", decoded);
+  } else {
+    const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    query = query.or(`slug.ilike.${decoded},slug.ilike.${slugified},name.ilike.${decoded}`);
+  }
+
+  const { data, error } = await query.maybeSingle();
   if (error) {
     console.error("[schools] get failed:", error);
     return null;
