@@ -118,9 +118,14 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
               {displayTotal} {displayTotal === 1 ? "Grade pack" : "Grade packs"}
             </span>
           </h1>
-          <Link href="/admin/packs/new" className={shared.addButton}>
-            + Add pack
-          </Link>
+          {isSchoolFiltered ? (
+            <Link
+              href={`/admin/packs/new?school_id=${filters.school_id}`}
+              className={shared.addButton}
+            >
+              + Add pack
+            </Link>
+          ) : null}
         </div>
 
         <form method="get" action="/admin/packs" className={shared.filterForm}>
