@@ -241,104 +241,101 @@ export function GradePackItemSelector({
       </div>
 
       {/* 2. Assembled Grade Pack Inventory List */}
-      <div className={styles.packBlock}>
+      {selectedItems.length === 0 ? (
+        <div className={styles.emptyNote}>
+          <p className={styles.emptyNoteMain}>No items added to this grade pack yet.</p>
+          <p className={styles.emptyNoteSub}>
+            Use the search bar above to auto-populate prices and build your pack.
+          </p>
+        </div>
+      ) : (
+        <div className={styles.lineList}>
+          {selectedItems.map((item) => {
+            const displayTitle = item.title || item.name || "Stationery Item";
+            const unitPrice = item.unit_price ?? item.price ?? 0;
+            return (
+              <div
+                key={item.id}
+                className={styles.lineItem}
+              >
+                {/* Item Details */}
+                <div className={styles.lineInfo}>
+                  <h4 className={styles.lineName}>{displayTitle}</h4>
+                  {item.description && <p className={styles.lineDesc}>{item.description}</p>}
+                </div>
 
-        {selectedItems.length === 0 ? (
-          <div className={styles.emptyNote}>
-            <p className={styles.emptyNoteMain}>No items added to this grade pack yet.</p>
-            <p className={styles.emptyNoteSub}>
-              Use the search bar above to auto-populate prices and build your pack.
-            </p>
-          </div>
-        ) : (
-          <div className={styles.lineList}>
-            {selectedItems.map((item) => {
-              const displayTitle = item.title || item.name || "Stationery Item";
-              const unitPrice = item.unit_price ?? item.price ?? 0;
-              return (
-                <div
-                  key={item.id}
-                  className={styles.lineItem}
-                >
-                  {/* Item Details */}
-                  <div className={styles.lineInfo}>
-                    <h4 className={styles.lineName}>{displayTitle}</h4>
-                    {item.description && <p className={styles.lineDesc}>{item.description}</p>}
-                  </div>
-
-                  {/* Quantity Controls & Line Total */}
-                  <div className={styles.lineControls}>
-                    <div className={styles.qtyStepper}>
-                      <button
-                        type="button"
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className={styles.stepBtn}
-                        aria-label={`Decrease quantity of ${displayTitle}`}
-                      >
-                        -
-                      </button>
-                      <span className={styles.qtyValue}>
-                        {item.quantity}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className={styles.stepBtn}
-                        aria-label={`Increase quantity of ${displayTitle}`}
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    {/* Price Auto-Calculated */}
-                    <div className={styles.priceBlock}>
-                      <p className={styles.priceUnit}>
-                        R {unitPrice.toFixed(2)} ea
-                      </p>
-                      <p className={styles.priceTotal}>
-                        R {(unitPrice * item.quantity).toFixed(2)}
-                      </p>
-                    </div>
-
-                    {/* Remove CTA */}
+                {/* Quantity Controls & Line Total */}
+                <div className={styles.lineControls}>
+                  <div className={styles.qtyStepper}>
                     <button
                       type="button"
-                      onClick={() => removeItem(item.id)}
-                      className={styles.removeBtn}
-                      title="Remove Item"
-                      aria-label={`Remove ${displayTitle} from pack`}
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      className={styles.stepBtn}
+                      aria-label={`Decrease quantity of ${displayTitle}`}
                     >
-                      <Trash2 className={styles.removeIcon} />
+                      -
+                    </button>
+                    <span className={styles.qtyValue}>
+                      {item.quantity}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      className={styles.stepBtn}
+                      aria-label={`Increase quantity of ${displayTitle}`}
+                    >
+                      +
                     </button>
                   </div>
-                </div>
-              );
-            })}
 
-            {/* 3. Total Pack Summary Footer */}
-            {showSave && (
-              <div className={styles.totalRow}>
-                <div>
-                  <p className={styles.totalLabel}>Total Pack Cost</p>
-                  <p className={styles.totalValue}>
-                    R {totalPrice.toFixed(2)}
-                  </p>
-                </div>
+                  {/* Price Auto-Calculated */}
+                  <div className={styles.priceBlock}>
+                    <p className={styles.priceUnit}>
+                      R {unitPrice.toFixed(2)} ea
+                    </p>
+                    <p className={styles.priceTotal}>
+                      R {(unitPrice * item.quantity).toFixed(2)}
+                    </p>
+                  </div>
 
-                <button
-                  type="button"
-                  onClick={handleSave}
-                  disabled={busy}
-                  className={styles.saveBtn}
-                >
-                  <Check className={styles.saveBtnIcon} />
-                  {busy ? "Saving..." : saveSuccess ? "Pack Saved!" : submitLabel}
-                </button>
+                  {/* Remove CTA */}
+                  <button
+                    type="button"
+                    onClick={() => removeItem(item.id)}
+                    className={styles.removeBtn}
+                    title="Remove Item"
+                    aria-label={`Remove ${displayTitle} from pack`}
+                  >
+                    <Trash2 className={styles.removeIcon} />
+                  </button>
+                </div>
               </div>
-            )}
-          </div>
-        )}
-      </div>
+            );
+          })}
+
+          {/* 3. Total Pack Summary Footer */}
+          {showSave && (
+            <div className={styles.totalRow}>
+              <div>
+                <p className={styles.totalLabel}>Total Pack Cost</p>
+                <p className={styles.totalValue}>
+                  R {totalPrice.toFixed(2)}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={busy}
+                className={styles.saveBtn}
+              >
+                <Check className={styles.saveBtnIcon} />
+                {busy ? "Saving..." : saveSuccess ? "Pack Saved!" : submitLabel}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
