@@ -242,15 +242,6 @@ export function GradePackItemSelector({
 
       {/* 2. Assembled Grade Pack Inventory List */}
       <div className={styles.packBlock}>
-        <div className={styles.packHeader}>
-          <div className={styles.packHeading}>
-            <Package className={styles.packIcon} />
-            <h3 className={styles.packTitle}>Assembled Grade Pack Inventory</h3>
-          </div>
-          <span className={styles.packCount}>
-            {selectedItems.length} {selectedItems.length === 1 ? "item" : "items"} added
-          </span>
-        </div>
 
         {selectedItems.length === 0 ? (
           <div className={styles.emptyNote}>
