@@ -496,9 +496,19 @@ export async function getPack(idOrSlug: string): Promise<{ pack: PackRow | null;
     .eq("pack_id", pack.id)
     .order("sort_order", { ascending: true })
     .order("name", { ascending: true });
-  if (itemsError) console.error("[packs] items load failed:", itemsError);
+  const itemList = items ?? [];
+  const calculatedSum = itemList.reduce(
+    (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
+    0
+  );
+  const roundedSum = Math.round(calculatedSum * 100) / 100;
 
-  return { pack, items: items ?? [] };
+  if (pack.price !== roundedSum) {
+    await admin.from("stationery_packs").update({ price: roundedSum }).eq("id", pack.id);
+    pack.price = roundedSum;
+  }
+
+  return { pack, items: itemList };
 }
 
 async function ensureUniqueSlug(

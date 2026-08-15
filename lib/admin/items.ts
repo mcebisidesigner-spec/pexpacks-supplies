@@ -251,6 +251,29 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   return (matched as unknown as ItemRow) ?? null;
 }
 
+export async function syncPackTotalPrice(packId: string): Promise<number> {
+  if (!packId) return 0;
+  const admin = createSupabaseAdminClient();
+  const { data: items } = await admin
+    .from("stationery_items")
+    .select("unit_price, quantity")
+    .eq("pack_id", packId);
+
+  const totalPrice = (items ?? []).reduce(
+    (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
+    0
+  );
+
+  const rounded = Math.round(totalPrice * 100) / 100;
+  await admin
+    .from("stationery_packs")
+    .update({ price: rounded, updated_at: new Date().toISOString() })
+    .eq("id", packId);
+
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  return rounded;
+}
+
 export async function createItem(formData: FormData): Promise<ItemFormResult> {
   const actor = await assertCan("items.create");
   const parsed = parseItemForm(formData);
@@ -288,6 +311,9 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
       summary: `Created item "${created.name}"`,
     });
 
+    if (created.pack_id) {
+      await syncPackTotalPrice(created.pack_id);
+    }
     revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 
     return { ok: true, item: created };
@@ -327,6 +353,9 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
       summary: `Updated item "${updated.name}"`,
     });
 
+    if (updated.pack_id) {
+      await syncPackTotalPrice(updated.pack_id);
+    }
     revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 
     return { ok: true, item: updated };
@@ -358,6 +387,9 @@ export async function deleteItem(id: string): Promise<{ ok: boolean; message?: s
     summary: `Deleted item "${existing.name}"`,
   });
 
+  if (existing.pack_id) {
+    await syncPackTotalPrice(existing.pack_id);
+  }
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 
   return { ok: true, packId: existing.pack_id };
@@ -755,6 +787,7 @@ export async function reconcilePackItems(
     });
   }
 
+  await syncPackTotalPrice(packId);
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 
   return { ok: true, created, updated, deleted };
