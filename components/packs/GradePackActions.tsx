@@ -64,6 +64,7 @@ export function GradePackActions({
   const pdfItems = pack.items.map((item) => ({
     name: item.name,
     quantity: item.requiredQuantity,
+    description: item.description,
     specification: item.specification,
   }));
 

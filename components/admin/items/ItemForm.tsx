@@ -84,7 +84,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
 
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="name">
-              Item description *
+              Item name *
             </label>
             <input
               id="name"
@@ -96,6 +96,21 @@ export function ItemForm({ item, packs }: ItemFormProps) {
             />
             {err("name")}
           </div>
+        </div>
+
+        <div className={formStyles.field}>
+          <label className={formStyles.label} htmlFor="description">
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            className={formStyles.textarea}
+            rows={3}
+            defaultValue={item?.description ?? ""}
+            placeholder="e.g. Assorted colours or approved school brand details"
+          />
+          {err("description")}
         </div>
 
         {/* Row 2: Pack / Unit & Qty */}

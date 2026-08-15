@@ -111,8 +111,8 @@ export function PackItemsSection({
             onSave={handleSave}
           />
         </div>
-        <div className={styles.totalChip} aria-label="Items sum total">
-          {formatCurrency(subtotal)}
+        <div className={styles.totalChip} aria-label="Total price">
+          TOTAL PRICE: {formatCurrency(subtotal)}
         </div>
         {message ? (
           <p className={styles.importSuccess} role="status">

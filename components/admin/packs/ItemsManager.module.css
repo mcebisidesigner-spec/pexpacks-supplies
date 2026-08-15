@@ -15,14 +15,14 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  min-width: 142px;
   border-radius: 14px;
   background: var(--admin-surface);
   color: var(--admin-accent-strong);
   padding: 0 18px;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 900;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .wrapper {

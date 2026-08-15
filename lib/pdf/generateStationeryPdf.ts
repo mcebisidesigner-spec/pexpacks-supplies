@@ -35,6 +35,7 @@ const COL_SPEC = MARGIN_LEFT + 115;
 type StationeryListItem = {
   name: string;
   quantity: number | string;
+  description?: string;
   specification?: string;
 };
 
@@ -347,12 +348,13 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
     const itemName = doc.splitTextToSize(item.name, 78);
     doc.text(itemName[0], COL_ITEM, y);
 
-    // Specification (soft muted text)
-    if (item.specification) {
+    // Description (soft muted text)
+    const description = item.description || item.specification;
+    if (description) {
       doc.setFont("helvetica", "normal");
       doc.setFontSize(FONT_SMALL);
       doc.setTextColor(MUTED);
-      const specText = doc.splitTextToSize(item.specification, 55);
+      const specText = doc.splitTextToSize(description, 55);
       doc.text(specText[0], COL_SPEC, y);
       doc.setFontSize(FONT_BODY);
     }

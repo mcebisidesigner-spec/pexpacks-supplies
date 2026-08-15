@@ -57,7 +57,7 @@ export function ItemsManager({ items }: ItemsManagerProps) {
                     <td>
                       <span className={styles.itemName}>{item.name}</span>
                     </td>
-                    <td>{item.specification || item.description || "-"}</td>
+                    <td>{item.description || item.specification || "-"}</td>
                     <td>{item.quantity}</td>
                     <td className={styles.priceCell}>
                       {item.unit_price != null ? formatCurrency(item.unit_price) : "-"}

@@ -46,7 +46,7 @@ const priceField = z.preprocess(
 
 export const itemSchema = z.object({
   pack_id: z.string().uuid("Invalid pack id"),
-  name: z.string().trim().min(1, "Enter an item description").max(200, "Item description is too long"),
+  name: z.string().trim().min(1, "Enter an item name").max(200, "Item name is too long"),
   category: optString(200, "category"),
   description: optString(2000, "description"),
   specification: optString(2000, "specification"),
