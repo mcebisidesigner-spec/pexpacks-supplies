@@ -33,9 +33,6 @@ export function PackPreviewList({
               <ItemIcon name={item.icon} size={17} className={styles.icon} />
               <span className={styles.itemText}>
                 <span>{item.name}</span>
-                {item.description ? (
-                  <span className={styles.itemDescription}>{item.description}</span>
-                ) : null}
               </span>
             </li>
           ))}
