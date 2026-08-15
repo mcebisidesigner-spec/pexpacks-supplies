@@ -202,34 +202,6 @@ export function CSVStationeryImporter({ packs = [] }: CSVStationeryImporterProps
           </div>
         </div>
 
-        {/* Target Grade Pack Selector */}
-        {packs.length > 0 ? (
-          <div className={styles.packSelectRow}>
-            <label htmlFor="csv-target-pack" className={styles.packSelectLabel}>
-              Import into Grade Pack
-            </label>
-            <select
-              id="csv-target-pack"
-              value={targetPackId}
-              onChange={(e) => setTargetPackId(e.target.value)}
-              className={styles.packSelect}
-            >
-              {packs.map((pack) => (
-                <option key={pack.id} value={pack.id}>
-                  {pack.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        ) : (
-          <div className={styles.errorBanner}>
-            <div className={styles.errorBannerInner}>
-              <AlertTriangle className={styles.errorIcon} />
-              <span>No grade packs exist yet. Create a pack first.</span>
-            </div>
-          </div>
-        )}
-
         {/* Global Error Notice */}
         {globalError && (
           <div className={styles.errorBanner}>
@@ -281,7 +253,7 @@ export function CSVStationeryImporter({ packs = [] }: CSVStationeryImporterProps
             {/* Execute Import Action Button */}
             <button
               onClick={handleExecuteImport}
-              disabled={isUploading || validCount === 0 || !targetPackId}
+              disabled={isUploading || validCount === 0}
               type="button"
               className={styles.importBtn}
             >
