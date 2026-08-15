@@ -91,7 +91,6 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
                   <tr>
                     <th>SCHOOL NAME</th>
                     <th>PRICE</th>
-                    <th>STOCK</th>
                     <th>ITEMS</th>
                     <th>FLAGS</th>
                     <th>ACTIONS</th>
@@ -120,11 +119,6 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
                           </div>
                         </td>
                         <td className={styles.priceCell}>{money(pack.price)}</td>
-                        <td className={styles.stockCell}>
-                          <span className={pack.stock === 0 ? styles.stockLow : undefined}>
-                            {pack.stock}
-                          </span>
-                        </td>
                         <td className={styles.itemCount}>{pack.item_count}</td>
                         <td>
                           <div className={shared.flags}>
