@@ -66,7 +66,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
       <div className={formStyles.section}>
         <input type="hidden" name="pack_id" value={item?.pack_id ?? packs[0]?.id ?? ""} />
 
-        {/* Row 1: Item code & Item Description */}
+        {/* Row 1: Item code & ITEM NAME */}
         <div className={styles.formGrid}>
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="category">
@@ -84,7 +84,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
 
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="name">
-              Item Description *
+              ITEM NAME *
             </label>
             <input
               id="name"

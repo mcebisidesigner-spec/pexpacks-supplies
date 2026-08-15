@@ -53,7 +53,7 @@ export function GradePackItemSelector({
   showSave = true,
   hideList = false,
   searchLabel = "Add Stationery Item to Grade Pack",
-  searchPlaceholder = "Type item name or description (e.g., '2H Pencil', '70gsm A4 Box', 'Hardcover Notebook')...",
+  searchPlaceholder = "Search stationery items by name or description",
   onItemsChange,
   onSelectItem,
   onSave,
