@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { TestimonialForm } from "@/components/admin/content/TestimonialForm";
 import adminStyles from "../../../admin.module.css";
@@ -15,7 +16,7 @@ export default async function NewTestimonialPage() {
     <div className={adminStyles.adminContainer}>
       <p className={styles.backRow}>
         <Link href="/admin/content/testimonials" className={styles.backLink}>
-          ← Back to testimonials
+          <ArrowLeft aria-hidden="true" /> Back to testimonials
         </Link>
       </p>
       <div className={styles.headerRow}>

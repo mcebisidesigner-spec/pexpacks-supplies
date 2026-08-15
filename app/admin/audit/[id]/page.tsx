@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getAuditLog } from "@/lib/admin/audit";
@@ -36,7 +37,7 @@ export default async function AuditDetailPage({ params }: AuditDetailPageProps) 
     <div className={adminStyles.adminContainer}>
       <p>
         <Link href="/admin/audit" className={shared.resetLink}>
-          ← Back to audit logs
+          <ArrowLeft aria-hidden="true" /> Back to audit logs
         </Link>
       </p>
 

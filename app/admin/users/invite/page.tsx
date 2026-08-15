@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { listRoles } from "@/lib/admin/users";
 import { InviteUserForm } from "@/components/admin/users/InviteUserForm";
@@ -17,7 +18,7 @@ export default async function InviteUserPage() {
     <div className={adminStyles.adminContainer}>
       <p>
         <Link href="/admin/users" className={shared.resetLink}>
-          ← Back to users
+          <ArrowLeft aria-hidden="true" /> Back to users
         </Link>
       </p>
       <div className={adminStyles.headerSection}>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import {
   requireAdmin,
@@ -70,7 +71,7 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
     <div className={adminStyles.adminContainer}>
       <p>
         <Link href="/admin/users" className={shared.resetLink}>
-          ← Back to users
+          <ArrowLeft aria-hidden="true" /> Back to users
         </Link>
       </p>
 

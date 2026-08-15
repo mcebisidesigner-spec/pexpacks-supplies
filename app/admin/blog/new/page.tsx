@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { BlogForm } from "@/components/admin/blog/BlogForm";
 import adminStyles from "../../admin.module.css";
@@ -15,7 +16,7 @@ export default async function NewBlogPostPage() {
     <div className={adminStyles.adminContainer}>
       <p className={styles.backRow}>
         <Link href="/admin/blog" className={styles.backLink}>
-          ← Back to Blog
+          <ArrowLeft aria-hidden="true" /> Back to Blog
         </Link>
       </p>
       <div className={styles.headerRow}>

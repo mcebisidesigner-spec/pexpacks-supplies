@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getBlogPost } from "@/lib/admin/blog";
@@ -24,7 +25,7 @@ export default async function EditBlogPostPage({
     <div className={adminStyles.adminContainer}>
       <p className={styles.backRow}>
         <Link href="/admin/blog" className={styles.backLink}>
-          ← Back to Blog
+          <ArrowLeft aria-hidden="true" /> Back to Blog
         </Link>
       </p>
       <div className={styles.headerRow}>

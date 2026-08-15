@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin, displayName } from "@/lib/admin/rbac";
 import { getRole, permissionGroups } from "@/lib/admin/roles";
@@ -30,7 +31,7 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
     <div className={adminStyles.adminContainer}>
       <p>
         <Link href="/admin/roles" className={shared.resetLink}>
-          ← Back to roles
+          <ArrowLeft aria-hidden="true" /> Back to roles
         </Link>
       </p>
 

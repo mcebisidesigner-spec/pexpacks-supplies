@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getPack } from "@/lib/admin/packs";
@@ -33,7 +34,7 @@ export default async function NestedEditPackPage({ params }: NestedEditPackPageP
     <div className={styles.page}>
       <p className={styles.backRow}>
         <Link href={backHref} className={styles.backLink}>
-          &larr; Back to school packs
+          <ArrowLeft aria-hidden="true" /> Back to school packs
         </Link>
       </p>
       <div className={styles.stack}>

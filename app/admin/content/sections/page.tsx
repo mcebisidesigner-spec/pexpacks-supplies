@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { contentSections, getWebsiteContent } from "@/lib/admin/content";
 import { WebsiteContentForm } from "@/components/admin/content/WebsiteContentForm";
@@ -27,7 +28,7 @@ export default async function ContentSectionsPage() {
         </div>
       </div>
       <Link href="/admin/content" className={styles.backLink}>
-        ← Website content
+        <ArrowLeft aria-hidden="true" /> Website content
       </Link>
 
       <div className={styles.stack}>

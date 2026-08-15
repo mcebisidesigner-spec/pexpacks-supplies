@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
@@ -34,7 +35,7 @@ export default async function EditItemPage({ params, searchParams }: EditItemPag
     <div className={adminStyles.adminContainer}>
       <p>
         <Link href={returnTo} className={shared.resetLink}>
-          {returnTo === "/admin/items" ? "Back to items" : "Back to pack"}
+          <ArrowLeft aria-hidden="true" /> {returnTo === "/admin/items" ? "Back to items" : "Back to pack"}
         </Link>
       </p>
       <div className={adminStyles.headerSection}>

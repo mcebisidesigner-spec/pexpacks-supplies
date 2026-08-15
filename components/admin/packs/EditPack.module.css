@@ -23,6 +23,12 @@
   color: var(--admin-accent-strong);
 }
 
+.backLink svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 .stack {
   display: flex;
   flex-direction: column;

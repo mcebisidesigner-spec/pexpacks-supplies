@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
@@ -147,7 +148,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
     <div className={adminStyles.adminContainer}>
       <div className={styles.detailHeader}>
         <Link href="/admin/orders" className={shared.resetLink}>
-          ← Back to orders
+          <ArrowLeft aria-hidden="true" /> Back to orders
         </Link>
         <div className={styles.detailTitleRow}>
           <span className={styles.reference}>{order.order_reference}</span>

@@ -61,6 +61,12 @@
   text-decoration: underline;
 }
 
+.backLink svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 .backRow {
   margin: 0 0 14px;
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { permissionGroups } from "@/lib/admin/roles";
 import { RoleForm } from "@/components/admin/roles/RoleForm";
@@ -16,7 +17,7 @@ export default async function NewRolePage() {
     <div className={adminStyles.adminContainer}>
       <p>
         <Link href="/admin/roles" className={shared.resetLink}>
-          ← Back to roles
+          <ArrowLeft aria-hidden="true" /> Back to roles
         </Link>
       </p>
       <div className={adminStyles.headerSection}>

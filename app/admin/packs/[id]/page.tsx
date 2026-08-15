@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getPack, listPacks } from "@/lib/admin/packs";
@@ -45,7 +46,7 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
       <div className={adminStyles.adminContainer}>
         <p style={{ marginBottom: 12 }}>
           <Link href="/admin/packs" className={shared.resetLink}>
-            Back school Packs
+            <ArrowLeft aria-hidden="true" /> Back to school packs
           </Link>
         </p>
 
@@ -183,7 +184,7 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
     <div className={adminStyles.adminContainer}>
       <p style={{ marginBottom: 12 }}>
         <Link href="/admin/packs" className={shared.resetLink}>
-          ← Back to school packs
+          <ArrowLeft aria-hidden="true" /> Back to school packs
         </Link>
       </p>
       <div className={adminStyles.headerSection}>

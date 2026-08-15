@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listTestimonials } from "@/lib/admin/content";
 import { setTestimonialVisibleAction, deleteTestimonialAction } from "../actions";
@@ -37,7 +38,7 @@ export default async function TestimonialsPage() {
           ) : null}
         </div>
         <Link href="/admin/content" className={styles.backLink}>
-          ← Website content
+          <ArrowLeft aria-hidden="true" /> Website content
         </Link>
       </div>
 

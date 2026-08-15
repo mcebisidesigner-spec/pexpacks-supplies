@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listFaqs } from "@/lib/admin/content";
 import { setFaqVisibleAction, deleteFaqAction, reorderFaqAction } from "../actions";
@@ -43,7 +44,7 @@ export default async function FaqsPage() {
           ) : null}
         </div>
         <Link href="/admin/content" className={styles.backLink}>
-          ← Website content
+          <ArrowLeft aria-hidden="true" /> Website content
         </Link>
       </div>
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { FaqForm } from "@/components/admin/content/FaqForm";
 import adminStyles from "../../../admin.module.css";
@@ -15,7 +16,7 @@ export default async function NewFaqPage() {
     <div className={adminStyles.adminContainer}>
       <p className={styles.backRow}>
         <Link href="/admin/content/faqs" className={styles.backLink}>
-          ← Back to FAQs
+          <ArrowLeft aria-hidden="true" /> Back to FAQs
         </Link>
       </p>
       <div className={styles.headerRow}>

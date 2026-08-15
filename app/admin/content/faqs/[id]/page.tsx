@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getFaq } from "@/lib/admin/content";
@@ -24,7 +25,7 @@ export default async function EditFaqPage({
     <div className={adminStyles.adminContainer}>
       <p className={styles.backRow}>
         <Link href="/admin/content/faqs" className={styles.backLink}>
-          ← Back to FAQs
+          <ArrowLeft aria-hidden="true" /> Back to FAQs
         </Link>
       </p>
       <div className={styles.headerRow}>

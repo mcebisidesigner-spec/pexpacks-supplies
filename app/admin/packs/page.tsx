@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
   listPacks,
@@ -113,7 +114,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
       {isSchoolFiltered ? (
         <p style={{ marginBottom: 12 }}>
           <Link href="/admin/packs" className={shared.resetLink}>
-            ← Back to grade packs
+            <ArrowLeft aria-hidden="true" /> Back to grade packs
           </Link>
         </p>
       ) : null}

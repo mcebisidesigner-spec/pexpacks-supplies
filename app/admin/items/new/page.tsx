@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { listPacksForFilter } from "@/lib/admin/packs";
 import { ItemForm } from "@/components/admin/items/ItemForm";
@@ -17,7 +18,7 @@ export default async function NewItemPage() {
     <div className={adminStyles.adminContainer}>
       <p>
         <Link href="/admin/items" className={shared.resetLink}>
-          ← Back to items
+          <ArrowLeft aria-hidden="true" /> Back to items
         </Link>
       </p>
       <div className={adminStyles.headerSection}>
