@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getFullSchoolRecords } from "@/data/schools";
+import { getPublicSchoolRecords } from "@/lib/schools/publicSchoolData";
 import { siteUrl } from "@/lib/seo";
 
 export const runtime = "nodejs";
@@ -15,7 +15,7 @@ function escapeXml(unsafe: string): string {
 }
 
 export async function GET() {
-  const schools = await getFullSchoolRecords();
+  const schools = await getPublicSchoolRecords();
 
   const itemsXml = schools
     .flatMap((school) =>

@@ -4,7 +4,7 @@ import { PartnerForm } from '@/components/forms/PartnerForm'
 import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
 import { SectionHeader } from '@/components/marketing/SectionHeader'
-import { getSchoolIndex } from '@/data/schools'
+import { getPublicSchoolIndex } from '@/lib/schools/publicSchoolData'
 import { buildMetadata } from '@/lib/seo'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import cardStyles from '@/components/marketing/MarketingCards.module.css'
@@ -103,7 +103,7 @@ export const metadata: Metadata = buildMetadata(
 export const dynamic = 'force-static'
 
 export default async function PartnerWithSchoolsPage() {
-  const schoolIndex = await getSchoolIndex()
+  const schoolIndex = await getPublicSchoolIndex()
   const partnerCount = schoolIndex.filter((school) => school.isPartnerSchool)
     .length
 

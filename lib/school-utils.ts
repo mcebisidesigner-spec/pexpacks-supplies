@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSchoolBySlug as getSchoolRecordBySlug } from "@/data/schools";
 import { getGradeOrder } from "@/lib/grade-utils";
+import { isSchoolPublic } from "@/lib/schools/visibility";
 
 /**
  * Data-cache tag for public school/pack reads. Admin server actions call
@@ -39,13 +40,19 @@ function extractGradeSlug(grade: string, slug: string | null | undefined): strin
 export async function getSchoolBySlug(slug: string) {
   try {
     const supabase = createSupabaseAdminClient();
-    const { data: dbSchool } = await supabase
+    const { data: dbSchool, error: schoolError } = await supabase
       .from("schools")
-      .select("id, name, slug, city, district, province, logo, is_partner")
+      .select("id, name, slug, city, district, province, logo, is_partner, status, published")
       .eq("slug", slug)
-      .single();
+      .maybeSingle();
+
+    if (schoolError) throw schoolError;
 
     if (dbSchool) {
+      if (!isSchoolPublic(dbSchool.status, dbSchool.published)) {
+        return undefined;
+      }
+
       const staticRecord = await getSchoolRecordBySlug(slug);
 
       const { data: dbPacks } = await supabase
@@ -68,17 +75,18 @@ export async function getSchoolBySlug(slug: string) {
         const packIds = dbPacks.map((p) => p.id);
         const { data: dbItems } = await supabase
           .from("stationery_items")
-          .select("pack_id, name, quantity, icon, description, specification")
+          .select("pack_id, name, quantity, unit_price, icon, description, specification")
           .in("pack_id", packIds)
           .eq("visible", true)
           .order("sort_order", { ascending: true });
 
-        const itemsByPack = new Map<string, Array<{ name: string; quantity: number; icon?: string | null; description?: string | null; specification?: string | null }>>();
+        const itemsByPack = new Map<string, Array<{ name: string; quantity: number; unitPrice?: number | null; icon?: string | null; description?: string | null; specification?: string | null }>>();
         for (const item of dbItems ?? []) {
           const list = itemsByPack.get(item.pack_id) ?? [];
           list.push({
             name: item.name,
             quantity: item.quantity,
+            unitPrice: item.unit_price,
             icon: item.icon,
             description: item.description,
             specification: item.specification,
@@ -103,6 +111,7 @@ export async function getSchoolBySlug(slug: string) {
             packItems: packItems.map((i) => ({
               name: i.name,
               quantity: i.quantity,
+              unitPrice: i.unitPrice,
               icon: i.icon,
               description: i.description,
               specification: i.specification,
@@ -125,8 +134,9 @@ export async function getSchoolBySlug(slug: string) {
         grades,
       };
     }
-  } catch {
-    // Fallback to static JSON if DB query fails or school is not in DB
+  } catch (error) {
+    console.error("[school-utils] public school visibility lookup failed:", error);
+    return undefined;
   }
 
   return getSchoolRecordBySlug(slug);

@@ -19,12 +19,20 @@ function SubmitButton() {
 interface PackPriceFormProps {
   packId: string;
   price: number;
+  itemCount: number;
   subtotal?: number | null;
   schoolName?: string;
   packTitle?: string;
 }
 
-export function PackPriceForm({ packId, price, subtotal, schoolName, packTitle }: PackPriceFormProps) {
+export function PackPriceForm({
+  packId,
+  price,
+  itemCount,
+  subtotal,
+  schoolName,
+  packTitle,
+}: PackPriceFormProps) {
   const action = updatePackPriceAction.bind(null, packId);
   const [state, formAction] = useActionState<PackFormState, FormData>(action, {
     ok: false,
@@ -50,7 +58,12 @@ export function PackPriceForm({ packId, price, subtotal, schoolName, packTitle }
       <input type="hidden" name="price" value={value} readOnly />
       <div className={styles.heroRow}>
         <div>
-          <h1 className={styles.title}>Edit pack</h1>
+          <div className={styles.titleRow}>
+            <h1 className={styles.title}>Edit pack</h1>
+            <span className={styles.itemCount}>
+              {itemCount} {itemCount === 1 ? "item" : "items"}
+            </span>
+          </div>
           <p className={styles.subtitle}>{fullTitle}</p>
         </div>
         <SubmitButton />

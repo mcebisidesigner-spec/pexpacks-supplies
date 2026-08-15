@@ -1,5 +1,8 @@
-import { getSchoolIndex } from "@/data/schools";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import {
+  getPublicSchoolIndex,
+  getPublicSchoolSlugSet,
+} from "./publicSchoolData";
 import { SchoolSearchIndex } from "./SearchIndex";
 import { getFeaturedSchools } from "./getFeaturedSchools";
 import { getGrades } from "./getGrades";
@@ -88,7 +91,7 @@ export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
 
 async function loadSearchableSchools(): Promise<SchoolSearchRecord[]> {
   const started = Date.now();
-  const index = await getSchoolIndex();
+  const index = await getPublicSchoolIndex();
   let dbSchoolMap = new Map();
 
   try {
@@ -213,16 +216,26 @@ export async function getSearchIndex() {
 }
 
 export async function getSchoolSearchOptions() {
-  const schools = await getSearchableSchools();
+  const [schools, publicSlugs] = await Promise.all([
+    getSearchableSchools(),
+    getPublicSchoolSlugSet(),
+  ]);
+  const visibleSchools = schools.filter((school) => publicSlugs.has(school.slug));
   return {
-    grades: getGrades(schools),
-    regions: getRegions(schools),
+    grades: getGrades(visibleSchools),
+    regions: getRegions(visibleSchools),
   };
 }
 
 export async function getFeaturedSchoolRecords() {
-  const schools = await getSearchableSchools();
-  return getFeaturedSchools(schools, 4);
+  const [schools, publicSlugs] = await Promise.all([
+    getSearchableSchools(),
+    getPublicSchoolSlugSet(),
+  ]);
+  return getFeaturedSchools(
+    schools.filter((school) => publicSlugs.has(school.slug)),
+    4,
+  );
 }
 
 export async function searchSchoolRecords(
@@ -230,6 +243,18 @@ export async function searchSchoolRecords(
   limit = 12,
   offset = 0,
 ) {
-  const index = await getSearchIndex();
-  return index.search(filters, limit, offset);
+  const [index, publicSlugs] = await Promise.all([
+    getSearchIndex(),
+    getPublicSchoolSlugSet(),
+  ]);
+  const result = index.search(filters, limit, offset);
+  const results = result.results.filter((school) => publicSlugs.has(school.slug));
+  const removed = result.results.length - results.length;
+
+  return {
+    ...result,
+    results,
+    total: Math.max(0, result.total - removed),
+    hasMore: result.hasMore || removed > 0,
+  };
 }

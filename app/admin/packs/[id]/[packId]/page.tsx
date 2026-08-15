@@ -41,6 +41,7 @@ export default async function NestedEditPackPage({ params }: NestedEditPackPageP
         <PackPriceForm
           packId={pack.id}
           price={pack.price}
+          itemCount={items.length}
           subtotal={subtotal}
           schoolName={school?.name || ""}
           packTitle={pack.title}

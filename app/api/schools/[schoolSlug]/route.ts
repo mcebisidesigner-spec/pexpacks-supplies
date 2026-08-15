@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSchoolBySlug } from "@/data/schools";
+import { getSchoolBySlug } from "@/lib/school-utils";
 import { rateLimitRequest } from "@/lib/security/requestGuards";
 
 export const runtime = "nodejs";

@@ -12,6 +12,7 @@ export type GradePack = {
 export type SchoolPackItem = {
   name: string;
   quantity: number;
+  unitPrice?: number | null;
   icon?: string | null;
   description?: string | null;
   specification?: string | null;
@@ -29,7 +30,7 @@ export type School = {
   grades: GradePack[];
 };
 
-type SchoolIndexRecord = {
+export type SchoolIndexRecord = {
   id: string;
   name: string;
   slug: string;

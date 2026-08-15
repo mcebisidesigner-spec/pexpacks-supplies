@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/data/blog";
-import { getFullSchoolRecords } from "@/data/schools";
+import { getPublicSchoolRecords } from "@/lib/schools/publicSchoolData";
 import { siteUrl } from "@/lib/seo";
 
 const siteContentUpdatedAt = new Date();
@@ -32,7 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/campaign-terms",
   ];
 
-  const schools = await getFullSchoolRecords();
+  const schools = await getPublicSchoolRecords();
 
   const staticEntries = staticRoutes.map((route) => ({
     url: `${siteUrl}${route}`,

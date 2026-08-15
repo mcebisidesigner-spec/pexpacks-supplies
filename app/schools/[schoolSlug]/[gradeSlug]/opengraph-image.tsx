@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { notFound } from "next/navigation";
 import { getCachedSchoolBySlug } from "@/lib/school-utils";
 
 export const alt = "Pexpacks School Stationery Kit Preview";
@@ -19,9 +20,11 @@ export default async function Image({
   const school = await getCachedSchoolBySlug(schoolSlug);
   const grade = school?.grades.find((g) => g.gradeSlug === gradeSlug);
 
-  const schoolName = school?.name || schoolSlug.replace(/-/g, " ").toUpperCase();
-  const gradeText = grade?.grade || gradeSlug.replace(/-/g, " ").toUpperCase();
-  const priceText = grade?.price ? `R${grade.price}` : null;
+  if (!school || !grade) notFound();
+
+  const schoolName = school.name;
+  const gradeText = grade.grade;
+  const priceText = grade.price ? `R${grade.price}` : null;
 
   return new ImageResponse(
     (

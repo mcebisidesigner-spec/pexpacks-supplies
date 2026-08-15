@@ -49,6 +49,7 @@ type PackTrayActions = {
   updatePackDetails: (packId: string, learnerName: string, wantsPexcover: boolean) => void;
   removePack: (id: string) => void;
   clearPacks: () => void;
+  retainPublicSchoolPacks: (visibleSchoolSlugs: string[]) => void;
   openTray: () => void;
   closeTray: () => void;
   toggleTray: () => void;
@@ -103,6 +104,16 @@ export const usePackTrayStore = create<PackTrayState & PackTrayActions>()(
 
       clearPacks: () => {
         set({ packs: [] });
+      },
+
+      retainPublicSchoolPacks: (visibleSchoolSlugs) => {
+        const visible = new Set(visibleSchoolSlugs);
+        set((state) => {
+          const packs = state.packs.filter(
+            (pack) => !pack.schoolSlug || visible.has(pack.schoolSlug),
+          );
+          return packs.length === state.packs.length ? state : { packs };
+        });
       },
 
       openTray: () => {

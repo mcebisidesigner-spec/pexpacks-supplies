@@ -1,38 +1,13 @@
-import { getSchoolIndex } from "@/data/schools";
 import type { SchoolSearchRecord } from "./types";
-import { getSchoolPhasesFromGrades } from "./schoolPhase";
+import { getSearchableSchools } from "./schoolSearchData";
+import { getPublicSchoolSlugSet } from "./publicSchoolData";
 
-type SchoolIndexRecord = {
-  id: string;
-  name: string;
-  slug: string;
-  city: string;
-  metro: string;
-  province: string;
-  logo?: string | null;
-  isPartnerSchool: boolean;
-  isFeatured?: boolean;
-  lowestPrice?: number;
-  grades: { id: string; grade: string; gradeSlug: string }[];
-};
-
-function toSearchRecord(school: SchoolIndexRecord): SchoolSearchRecord {
-  const grades = school.grades.map((g) => g.grade);
-  return {
-    id: school.id,
-    name: school.name,
-    slug: school.slug,
-    region: school.city,
-    city: school.city,
-    metro: school.metro,
-    province: school.province,
-    grades,
-    phases: getSchoolPhasesFromGrades(grades, school.name),
-    isFeatured: Boolean(school.isFeatured),
-    isPartner: school.isPartnerSchool,
-    image: school.logo,
-    lowestPrice: school.lowestPrice,
-  };
+async function getVisibleSchools() {
+  const [schools, publicSlugs] = await Promise.all([
+    getSearchableSchools(),
+    getPublicSchoolSlugSet(),
+  ]);
+  return schools.filter((school) => publicSlugs.has(school.slug));
 }
 
 function gradeRank(grade: string) {
@@ -79,7 +54,7 @@ export async function getSchoolsByCity(
   targetCity: string,
   limit = 6
 ): Promise<{ schools: SchoolSearchRecord[]; matchedCity: string }> {
-  const index = await getSchoolIndex();
+  const index = await getVisibleSchools();
   const target = normalize(targetCity);
 
   if (!target) {
@@ -88,25 +63,24 @@ export async function getSchoolsByCity(
   }
 
   // 1. Exact city match
-  let matched = index.filter((s) => normalize(s.city) === target);
+  let matched = index.filter((s) => normalize(s.city ?? "") === target);
 
   // 2. Partial match
   if (matched.length === 0) {
     matched = index.filter(
       (s) =>
-        normalize(s.city).includes(target) ||
-        target.includes(normalize(s.city))
+        normalize(s.city ?? "").includes(target) ||
+        target.includes(normalize(s.city ?? ""))
     );
   }
 
   // 3. Metro match
   if (matched.length === 0) {
-    matched = index.filter((s) => normalize(s.metro) === target);
+    matched = index.filter((s) => normalize(s.metro ?? "") === target);
   }
 
   if (matched.length > 0) {
-    const records = matched.map(toSearchRecord);
-    const sorted = sortByGradeAndPartner(records);
+    const sorted = sortByGradeAndPartner(matched);
     const resolvedCity = sorted[0]?.city ?? targetCity;
     return {
       schools: uniqueBySlug(sorted).slice(0, limit),
@@ -126,10 +100,9 @@ export async function getSchoolsByCity(
 export async function getDefaultSchools(
   limit = 6
 ): Promise<SchoolSearchRecord[]> {
-  const index = await getSchoolIndex();
-  const partners = index.filter((s) => s.isPartnerSchool);
-  const records = partners.map(toSearchRecord);
-  const sorted = sortByGradeAndPartner(records);
+  const index = await getVisibleSchools();
+  const partners = index.filter((s) => s.isPartner);
+  const sorted = sortByGradeAndPartner(partners);
   return uniqueBySlug(sorted).slice(0, limit);
 }
 

@@ -48,6 +48,13 @@
   gap: 20px;
 }
 
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .title {
   margin: 0;
   color: var(--admin-text);
@@ -55,6 +62,14 @@
   font-weight: 900;
   line-height: 1;
   letter-spacing: 0;
+}
+
+.itemCount {
+  color: var(--admin-text-3);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .subtitle {

@@ -437,7 +437,10 @@ export async function setSchoolStatus(
     action: status === "archived" ? "schools.archive" : "schools.restore",
     entityType: "school",
     entityId: updated.id,
-    summary: `Set school "${updated.name}" status to ${updated.status}`,
+    summary:
+      status === "archived"
+        ? `Hid school "${updated.name}" from the public website`
+        : `Made school "${updated.name}" visible on the public website`,
   });
 
   revalidateCatalog({ schoolSlug: updated.slug });
@@ -456,7 +459,7 @@ export async function deleteSchool(id: string): Promise<{ ok: boolean; message?:
   if (error) {
     console.error("[schools] delete failed:", error);
     if (error.code === "23503") {
-      return { ok: false, message: "This school has related records and cannot be deleted. Archive it instead." };
+      return { ok: false, message: "This school has related records and cannot be deleted. Hide it instead." };
     }
     return { ok: false, message: "Failed to delete school." };
   }

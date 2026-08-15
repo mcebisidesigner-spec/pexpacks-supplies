@@ -1,4 +1,5 @@
 import type { TrayPackItem, TrayPackLineItem } from "@/store/usePackTrayStore";
+import { calculateItemLineTotal } from "@/lib/packs/calculatePackTotal";
 
 type CreateFullTrayPackInput = {
   packId: string;
@@ -25,7 +26,10 @@ export function createFullTrayPack(input: CreateFullTrayPackInput): TrayPackItem
     category: item.category,
     quantity: item.quantity,
     unitPrice: item.unitPrice,
-    lineTotal: item.unitPrice ? item.unitPrice * item.quantity : undefined,
+    lineTotal:
+      typeof item.unitPrice === "number"
+        ? calculateItemLineTotal(item.unitPrice, item.quantity)
+        : undefined,
   }));
 
   return {

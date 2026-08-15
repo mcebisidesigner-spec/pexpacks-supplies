@@ -15,6 +15,45 @@ export function GlobalPackTray() {
   const trayRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const schoolSlugsKey = [...new Set(
+    packs
+      .map((pack) => pack.schoolSlug)
+      .filter((slug): slug is string => Boolean(slug)),
+  )]
+    .sort()
+    .join("|");
+
+  useEffect(() => {
+    if (!schoolSlugsKey) return;
+
+    const controller = new AbortController();
+    const slugs = schoolSlugsKey.split("|");
+    void fetch("/api/schools/visibility", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slugs }),
+      cache: "no-store",
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) return null;
+        return response.json() as Promise<{
+          success?: boolean;
+          visibleSlugs?: string[];
+        }>;
+      })
+      .then((result) => {
+        if (!result?.success || !Array.isArray(result.visibleSlugs)) return;
+        usePackTrayStore
+          .getState()
+          .retainPublicSchoolPacks(result.visibleSlugs);
+      })
+      .catch(() => {
+        // Keep the local tray unchanged when visibility cannot be verified.
+      });
+
+    return () => controller.abort();
+  }, [schoolSlugsKey, isOpen]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {

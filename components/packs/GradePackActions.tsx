@@ -4,7 +4,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { calculatePackTotal } from "@/lib/packs/calculatePackTotal";
+import {
+  calculateItemLineTotal,
+  calculatePackTotal,
+} from "@/lib/packs/calculatePackTotal";
 import {
   createCustomPackSelection,
   createFullPackSelection,
@@ -28,6 +31,17 @@ type GradePackActionsProps = {
   downloadLabel?: string;
   autoCustomise?: boolean;
 };
+
+function formatItemCurrency(value: number) {
+  const rounded = Math.round((value + Number.EPSILON) * 100) / 100;
+  return new Intl.NumberFormat("en-ZA", {
+    style: "currency",
+    currency: "ZAR",
+    minimumFractionDigits: Number.isInteger(rounded) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(rounded);
+}
+
 export function GradePackActions({
   pack,
   showDownloadLink = true,
@@ -47,7 +61,10 @@ export function GradePackActions({
   // Stabilise the items reference to prevent infinite re-render loops.
   // Only recalculate when the serialised item list actually changes.
   const itemsKey = useMemo(
-    () => pack.items.map((i) => `${i.id}:${i.requiredQuantity}`).join(","),
+    () =>
+      pack.items
+        .map((i) => `${i.id}:${i.requiredQuantity}:${i.unitPrice ?? ""}`)
+        .join(","),
     [pack.items],
   );
 
@@ -59,7 +76,7 @@ export function GradePackActions({
     (item) => item.selected && item.selectedQuantity > 0,
   );
   const total = useMemo(() => calculatePackTotal(selection) ?? 0, [selection]);
-  const displayedTotal = total > 0 ? formatCurrency(total) : "R 0";
+  const displayedTotal = total > 0 ? formatItemCurrency(total) : "R 0";
   const selectedCount = selectedItems.length;
   const pdfItems = pack.items.map((item) => ({
     name: item.name,
@@ -110,7 +127,7 @@ export function GradePackActions({
 
     const modifications: Record<string, number> = {};
     const trayItems: Array<{ id: string; name: string; category?: string; quantity: number; unitPrice?: number }> = [];
-    let customTotal = 0;
+    const customTotal = calculatePackTotal(selection) ?? 0;
 
     selection.forEach((item) => {
       if (item.selected && item.selectedQuantity > 0) {
@@ -121,7 +138,6 @@ export function GradePackActions({
           quantity: item.selectedQuantity,
           unitPrice: item.unitPrice,
         });
-        customTotal += (item.unitPrice ?? 0) * item.selectedQuantity;
       }
       if (item.selectedQuantity !== item.requiredQuantity) {
         modifications[item.id] = item.selectedQuantity;
@@ -275,7 +291,10 @@ export function GradePackActions({
                 const itemTotal =
                   item.selectedQuantity > 0 &&
                   typeof item.unitPrice === "number"
-                    ? item.unitPrice * item.selectedQuantity
+                    ? calculateItemLineTotal(
+                        item.unitPrice,
+                        item.selectedQuantity,
+                      )
                     : undefined;
 
                 return (
@@ -303,12 +322,12 @@ export function GradePackActions({
                         <span className={styles.itemMeta}>
                           School requires: {item.requiredQuantity}
                           {typeof item.unitPrice === "number"
-                            ? ` - ${formatCurrency(item.unitPrice)} each`
+                            ? ` - ${formatItemCurrency(item.unitPrice)} each`
                             : ""}
                         </span>
                         {typeof itemTotal === "number" ? (
                           <span className={styles.lineTotal}>
-                            Line total: {formatCurrency(itemTotal)}
+                            Line total: {formatItemCurrency(itemTotal)}
                           </span>
                         ) : null}
                       </span>

@@ -78,14 +78,15 @@ export async function handleTrayCheckout(input: {
 
   let verifiedTotal = 0;
   for (const pack of input.packs) {
+    const serverPack = await getGradeBySlug(pack.schoolSlug, pack.gradeSlug);
+    if (!serverPack) {
+      throw new TrayCheckoutError(
+        `Pack not found: ${pack.schoolSlug}/${pack.gradeSlug}. Please re-select your school.`,
+        400,
+      );
+    }
+
     if (pack.packMode === "full") {
-      const serverPack = await getGradeBySlug(pack.schoolSlug, pack.gradeSlug);
-      if (!serverPack) {
-        throw new TrayCheckoutError(
-          `Pack not found: ${pack.schoolSlug}/${pack.gradeSlug}. Please re-select your school.`,
-          400
-        );
-      }
       verifiedTotal += serverPack.price + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
     } else {
       const hasUnitPrices = pack.items.some(

@@ -21,9 +21,8 @@ export async function createSchoolAction(
   if (result.ok) {
     invalidateSchoolSearchCache();
     revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-    revalidatePath("/admin/schools");
+    revalidatePublicSchoolSurfaces();
     revalidatePath("/admin");
-    revalidatePath("/schools");
     if (result.school.slug) {
       revalidatePath(`/schools/${result.school.slug}`);
     }
@@ -42,9 +41,8 @@ export async function updateSchoolAction(
   if (result.ok) {
     invalidateSchoolSearchCache();
     revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-    revalidatePath("/admin/schools");
+    revalidatePublicSchoolSurfaces();
     revalidatePath(`/admin/schools/${id}`);
-    revalidatePath("/schools");
     if (result.school.slug) {
       revalidatePath(`/schools/${result.school.slug}`);
     }
@@ -53,22 +51,28 @@ export async function updateSchoolAction(
   return { ok: false, errors: result.errors, message: result.message };
 }
 
-export async function archiveSchoolAction(id: string): Promise<void> {
+function revalidatePublicSchoolSurfaces() {
+  revalidatePath("/admin/schools");
+  revalidatePath("/schools");
+  revalidatePath("/partnership");
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/api/google-merchant-feed");
+}
+
+export async function hideSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.archive" });
   await setSchoolStatus(id, "archived");
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath("/admin/schools");
-  revalidatePath("/schools");
+  revalidatePublicSchoolSurfaces();
 }
 
-export async function restoreSchoolAction(id: string): Promise<void> {
+export async function showSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.restore" });
   await setSchoolStatus(id, "active");
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath("/admin/schools");
-  revalidatePath("/schools");
+  revalidatePublicSchoolSurfaces();
 }
 
 export async function deleteSchoolAction(id: string): Promise<void> {
@@ -76,6 +80,5 @@ export async function deleteSchoolAction(id: string): Promise<void> {
   await deleteSchool(id);
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath("/admin/schools");
-  revalidatePath("/schools");
+  revalidatePublicSchoolSurfaces();
 }

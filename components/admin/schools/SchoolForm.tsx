@@ -305,7 +305,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             >
               {SCHOOL_STATUSES.map((s) => (
                 <option key={s} value={s}>
-                  {s}
+                  {s === "archived" ? "hidden" : s}
                 </option>
               ))}
             </select>

@@ -160,6 +160,7 @@ export function createSchoolGradePack(
         category: inferCategory(item.name),
         icon: item.icon && isPackItemIconKey(item.icon) ? item.icon : inferIcon(item.name),
         requiredQuantity: item.quantity,
+        unitPrice: item.unitPrice ?? undefined,
         specification: item.specification ?? undefined,
         isRequired: true,
       }))
@@ -184,7 +185,7 @@ export function createSchoolGradePack(
       const description = descriptions?.[item.name]?.trim();
       return {
         ...item,
-        unitPrice: estimatedUnitPrice,
+        unitPrice: item.unitPrice ?? estimatedUnitPrice,
         description: description || undefined,
       };
     }),

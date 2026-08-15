@@ -192,7 +192,12 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
         <p className={adminStyles.subtitle}>{pack.title}</p>
       </div>
       <div className={adminStyles.stack}>
-        <PackPriceForm packId={pack.id} price={pack.price} subtotal={subtotal} />
+        <PackPriceForm
+          packId={pack.id}
+          price={pack.price}
+          itemCount={items.length}
+          subtotal={subtotal}
+        />
         <PackItemsSection
           packId={pack.id}
           packTitle={pack.title}

@@ -4,8 +4,8 @@ import { listSchools, type SchoolListFilters } from "@/lib/admin/schools";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import {
-  archiveSchoolAction,
-  restoreSchoolAction,
+  hideSchoolAction,
+  showSchoolAction,
   deleteSchoolAction,
 } from "./actions";
 import adminStyles from "../admin.module.css";
@@ -105,7 +105,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
             <option value="active">Active</option>
             <option value="pending">Pending</option>
             <option value="inactive">Inactive</option>
-            <option value="archived">Archived</option>
+            <option value="archived">Hidden</option>
           </select>
           <button type="submit" className={styles.applyButton}>
             Apply
@@ -161,7 +161,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                         ? styles.badgePending
                         : school.status === "inactive"
                           ? styles.badgeInactive
-                          : styles.badgeArchived;
+                          : styles.badgeHidden;
                   return (
                     <tr key={school.id}>
                       <td>
@@ -181,7 +181,12 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                             />
                           )}
                           <div>
-                            <div className={styles.schoolName}>{school.name}</div>
+                            <Link
+                              href={`/admin/schools/${school.slug || school.id}/profile`}
+                              className={styles.schoolName}
+                            >
+                              {school.name}
+                            </Link>
                           </div>
                         </div>
                       </td>
@@ -189,7 +194,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                       <td>{school.province ?? "—"}</td>
                       <td>
                         <span className={`${adminStyles.badge} ${statusClass}`}>
-                          {school.status}
+                          {school.status === "archived" ? "hidden" : school.status}
                         </span>
                       </td>
                       <td>
@@ -201,21 +206,21 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                             Edit
                           </Link>
                           {school.status === "archived" ? (
-                            <form action={restoreSchoolAction.bind(null, school.id)}>
+                            <form action={showSchoolAction.bind(null, school.id)}>
                               <ConfirmButton
-                                label="Restore"
-                                confirmText={`Restore ${school.name}?`}
-                                busyLabel="Restoring…"
-                                className={`${styles.rowButton} ${styles.rowButtonRestore}`}
+                                label="Show"
+                                confirmText={`Show ${school.name} and its visible grade packs on the public website?`}
+                                busyLabel="Showing…"
+                                className={`${styles.rowButton} ${styles.rowButtonShow}`}
                               />
                             </form>
                           ) : (
-                            <form action={archiveSchoolAction.bind(null, school.id)}>
+                            <form action={hideSchoolAction.bind(null, school.id)}>
                               <ConfirmButton
-                                label="Archive"
-                                confirmText={`Archive ${school.name}?`}
-                                busyLabel="Archiving…"
-                                className={`${styles.rowButton} ${styles.rowButtonArchive}`}
+                                label="Hide"
+                                confirmText={`Hide ${school.name} and all its grade packs from the public website?`}
+                                busyLabel="Hiding…"
+                                className={`${styles.rowButton} ${styles.rowButtonHide}`}
                               />
                             </form>
                           )}
