@@ -371,7 +371,11 @@ export async function listSchoolGroupedSummary(
 
   let groupedList: SchoolGroupedSummary[] = dbSchools
     .map((s) => {
-      const sPacks = dbPacks.filter((p) => p.school_id === s.id);
+      const sPacks = dbPacks.filter(
+        (p) =>
+          p.school_id === s.id ||
+          (s.slug && p.slug?.toLowerCase().startsWith(`${s.slug.toLowerCase()}-`))
+      );
       if (sPacks.length === 0) return null;
 
       const isVisible = sPacks.some((p) => p.visible);

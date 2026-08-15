@@ -188,7 +188,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                 <thead>
                   <tr>
                     <th>SCHOOL NAME</th>
-                    <th>GRADES PACKS</th>
+                    <th>GRADE PACKS</th>
                     <th>LAST EDITED</th>
                     <th>VISIBILITY</th>
                     <th>ACTIONS</th>
