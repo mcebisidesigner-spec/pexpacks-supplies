@@ -45,7 +45,7 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
       <div className={adminStyles.adminContainer}>
         <p style={{ marginBottom: 12 }}>
           <Link href="/admin/packs" className={shared.resetLink}>
-            ← Back to grade packs
+            Back school Packs
           </Link>
         </p>
 
