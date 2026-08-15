@@ -77,7 +77,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
               name="category"
               className={formStyles.input}
               defaultValue={item?.category ?? ""}
-              placeholder="e.g. Organisation"
+              placeholder="e.g. pex010sku"
             />
             {err("category")}
           </div>
