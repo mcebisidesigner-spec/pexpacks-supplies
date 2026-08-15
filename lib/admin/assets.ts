@@ -7,6 +7,7 @@ import {
   type PermissionKey,
   type AdminSession,
 } from "@/lib/admin/rbac";
+import { getAdminFilterOptions } from "@/lib/admin/filter-options";
 
 /**
  * Media library backed by the `school-assets` storage bucket and the `assets`
@@ -73,6 +74,9 @@ export async function listAssets(folder?: string): Promise<AssetRow[]> {
 }
 
 export async function listAssetFolders(): Promise<string[]> {
+  const cached = await getAdminFilterOptions();
+  if (cached.asset_folders?.length) return cached.asset_folders;
+
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin.from("assets").select("folder");
   if (error || !data) return ["uploads"];

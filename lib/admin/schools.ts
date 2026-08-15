@@ -10,6 +10,7 @@ import {
 } from "@/lib/admin/rbac";
 import { SCHOOL_STATUSES, type SchoolStatus } from "@/lib/admin/school-constants";
 import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
+import { getAdminFilterOptions } from "@/lib/admin/filter-options";
 
 export type SchoolRow = Database["public"]["Tables"]["schools"]["Row"];
 export type { SchoolStatus };
@@ -238,6 +239,10 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
 }
 
 async function listFilterColumn(column: "city" | "province"): Promise<string[]> {
+  const cached = await getAdminFilterOptions();
+  const key = column === "city" ? "school_cities" : "school_provinces";
+  if (cached[key]?.length) return cached[key];
+
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("schools")

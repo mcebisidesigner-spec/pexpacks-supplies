@@ -62,6 +62,9 @@ function endOfDay(date: string): string {
   return date;
 }
 
+const DEFAULT_EXPORT_LIMIT = 5000;
+const BROAD_EXPORT_LIMIT = 1000;
+
 async function assertCan(permission: PermissionKey): Promise<AdminSession> {
   const session = await getAdminUser();
   if (!session || !hasPermission(session, permission)) {
@@ -332,6 +335,10 @@ export async function exportOrders(
   filters: Omit<OrderListFilters, "page" | "pageSize"> = {}
 ): Promise<OrderRow[]> {
   const admin = createSupabaseAdminClient();
+  const hasNarrowFilter = Boolean(
+    filters.q || filters.status || filters.pack_type || filters.from || filters.to
+  );
+  const limit = hasNarrowFilter ? DEFAULT_EXPORT_LIMIT : BROAD_EXPORT_LIMIT;
   let query = admin.from("orders").select(ORDER_LIST_FIELDS);
 
   if (filters.q) {
@@ -347,7 +354,9 @@ export async function exportOrders(
   if (filters.from) query = query.gte("created_at", filters.from);
   if (filters.to) query = query.lte("created_at", endOfDay(filters.to));
 
-  const { data, error } = await query.order("created_at", { ascending: false });
+  const { data, error } = await query
+    .order("created_at", { ascending: false })
+    .limit(limit);
   if (error) {
     console.error("[orders] export failed:", error);
     return [];

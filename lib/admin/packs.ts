@@ -13,6 +13,7 @@ import { PACK_DELIVERY_TYPES } from "@/lib/admin/pack-constants";
 import { getGradeOrder } from "@/lib/grade-utils";
 import { createPackItems, packLineSchema, type PackLineInput } from "@/lib/admin/items";
 import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
+import { getAdminFilterOptions } from "@/lib/admin/filter-options";
 
 export type PackRow = Database["public"]["Tables"]["stationery_packs"]["Row"];
 export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"];
@@ -276,6 +277,62 @@ export async function listSchoolGroupedSummary(
   const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
   const q = (filters.q || "").replace(/%/g, "").trim();
 
+  const [allSchools, deliveryTypes] = await Promise.all([
+    listPackSchools(),
+    listDeliveryTypes(),
+  ]);
+
+  try {
+    const rpc = admin.rpc as unknown as (
+      fn: string,
+      args: Record<string, unknown>
+    ) => Promise<{
+      data:
+        | {
+            school_id: string;
+            school_name: string;
+            school_slug: string | null;
+            grade_packs_count: number;
+            last_edited: string | null;
+            visible: boolean;
+            total_schools: number;
+            total_grade_packs: number;
+          }[]
+        | null;
+      error: unknown;
+    }>;
+    const { data, error } = await rpc("get_admin_pack_school_groups", {
+      q: q || null,
+      visible_filter: filters.visible || null,
+      page_size: pageSize,
+      page_number: page,
+    });
+
+    if (!error && data) {
+      const first = data[0];
+      const totalSchools = Number(first?.total_schools ?? 0);
+      const totalGradePacks = Number(first?.total_grade_packs ?? 0);
+      return {
+        schoolsSummary: data.map((row) => ({
+          school_id: row.school_id,
+          school_name: row.school_name,
+          school_slug: row.school_slug ?? "",
+          grade_packs_count: Number(row.grade_packs_count ?? 0),
+          last_edited: row.last_edited ?? "",
+          visible: Boolean(row.visible),
+        })),
+        totalGradePacks,
+        totalSchools,
+        page,
+        pageCount: Math.max(1, Math.ceil(totalSchools / pageSize)),
+        schools: allSchools,
+        deliveryTypes,
+      };
+    }
+  } catch (err) {
+    console.warn("[packs] grouped summary RPC unavailable, using fallback:", err);
+  }
+
   let schoolQuery = admin
     .from("schools")
     .select("id, name, slug, updated_at")
@@ -298,11 +355,6 @@ export async function listSchoolGroupedSummary(
       .from("stationery_packs")
       .select("id, title, slug, school_id, visible, updated_at", { count: "exact" })
       .limit(50000),
-  ]);
-
-  const [allSchools, deliveryTypes] = await Promise.all([
-    listPackSchools(),
-    listDeliveryTypes(),
   ]);
 
   if (!dbSchools || !dbPacks) {
@@ -403,6 +455,15 @@ export async function nextSortOrder(
 }
 
 async function listDeliveryTypes(): Promise<string[]> {
+  const cached = await getAdminFilterOptions();
+  if (cached.pack_delivery_types?.length) {
+    const values = [...cached.pack_delivery_types];
+    for (const preset of PACK_DELIVERY_TYPES) {
+      if (!values.includes(preset)) values.push(preset);
+    }
+    return values;
+  }
+
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin.from("stationery_packs").select("delivery_type");
   if (error || !data) return [];

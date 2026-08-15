@@ -81,24 +81,44 @@ export async function listPayments(
     return { payments: [], total: 0, page, pageCount: 0, paidTotal: 0, paidCount: 0, statusOptions: [] };
   }
 
-  // Totals across the full filtered set (not just the page).
   let paidTotal = 0;
   let paidCount = 0;
   try {
-    const aggBase = admin
-      .from("orders")
-      .select("status, estimated_total")
-      .or(
-        `payment_gateway.not.is.null,paid_at.not.is.null,status.in.(${PAYMENT_STATUSES.join(",")})`
-      );
-    const { data: all } = await basePaymentFilter(aggBase, filters);
-    const paid = ((all ?? []) as { status: string | null; estimated_total: number | null }[]).filter(
-      (o) => o.status === "paid"
-    );
-    paidCount = paid.length;
-    paidTotal = paid.reduce((sum, o) => sum + (o.estimated_total ?? 0), 0);
+    const rpc = admin.rpc as unknown as (
+      fn: string,
+      args: Record<string, unknown>
+    ) => Promise<{
+      data: { paid_count: number; paid_total: number }[] | null;
+      error: unknown;
+    }>;
+    const { data, error } = await rpc("get_payment_totals", {
+      q: filters.q || null,
+      status_filter: filters.status || null,
+      from_ts: filters.from || null,
+      to_ts: filters.to ? endOfDay(filters.to) : null,
+    });
+    if (error) throw error;
+    const row = data?.[0];
+    paidCount = Number(row?.paid_count ?? 0);
+    paidTotal = Number(row?.paid_total ?? 0);
   } catch (err) {
-    console.error("[payments] totals failed:", err);
+    console.warn("[payments] totals RPC unavailable, using fallback:", err);
+    try {
+      const aggBase = admin
+        .from("orders")
+        .select("status, estimated_total")
+        .or(
+          `payment_gateway.not.is.null,paid_at.not.is.null,status.in.(${PAYMENT_STATUSES.join(",")})`
+        );
+      const { data: all } = await basePaymentFilter(aggBase, filters);
+      const paid = ((all ?? []) as { status: string | null; estimated_total: number | null }[]).filter(
+        (o) => o.status === "paid"
+      );
+      paidCount = paid.length;
+      paidTotal = paid.reduce((sum, o) => sum + (o.estimated_total ?? 0), 0);
+    } catch (fallbackErr) {
+      console.error("[payments] totals fallback failed:", fallbackErr);
+    }
   }
 
   return {

@@ -105,9 +105,28 @@ async function buildRoleMap(): Promise<Map<string, { roleIds: string[]; roleSlug
 
 export async function listUsers(filters: UserListFilters = {}): Promise<UserListResult> {
   const roleOptions = await listRoles();
+  const page = Math.max(1, filters.page ?? 1);
+  const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
+  const needsFullScan = Boolean(filters.q?.trim() || filters.role);
   let users: User[] = [];
+  let authTotal: number | null = null;
   try {
-    users = await fetchAllAuthUsers();
+    if (needsFullScan) {
+      users = await fetchAllAuthUsers();
+    } else {
+      const admin = createSupabaseAdminClient();
+      const res = (await admin.auth.admin.listUsers({
+        page,
+        perPage: pageSize,
+      })) as unknown as {
+        data?: { users?: User[] };
+        count?: number | null;
+        error?: unknown;
+      };
+      if (res.error) throw res.error;
+      users = res.data?.users ?? [];
+      authTotal = res.count ?? null;
+    }
   } catch (err) {
     console.error("[users] list failed:", err);
   }
@@ -130,13 +149,11 @@ export async function listUsers(filters: UserListFilters = {}): Promise<UserList
   if (q) filtered = filtered.filter((u) => u.__search.includes(q));
   if (filters.role) filtered = filtered.filter((u) => u.roleSlugs.includes(filters.role as string));
 
-  const page = Math.max(1, filters.page ?? 1);
-  const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
-  const total = filtered.length;
+  const total = needsFullScan ? filtered.length : authTotal ?? filtered.length;
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const from = (page - 1) * pageSize;
   const sorted = filtered.sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""));
-  const slice = sorted.slice(from, from + pageSize);
+  const slice = needsFullScan ? sorted.slice(from, from + pageSize) : sorted;
   for (const u of slice) delete (u as UserListItem & { __search?: string }).__search;
 
   return {

@@ -4956,7 +4956,7 @@
     "city": "Germiston",
     "metro": "Ekurhuleni",
     "province": "Gauteng",
-    "isPartnerSchool": false,
+    "isPartnerSchool": true,
     "grades": [
       {
         "id": "primrose-hill-primary-school-grade-r",
@@ -189814,7 +189814,7 @@
     "city": "Midrand",
     "metro": "Johannesburg",
     "province": "Gauteng",
-    "isPartnerSchool": false,
+    "isPartnerSchool": true,
     "grades": [
       {
         "id": "african-union-international-grade-r",

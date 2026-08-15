@@ -1,4 +1,5 @@
 import { redirect, notFound } from "next/navigation";
+import { cache } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { Json } from "@/lib/supabase/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -98,7 +99,7 @@ export function displayName(user: User): string {
  * Loads the signed-in user plus their effective roles and permissions.
  * Returns null when there is no session.
  */
-export async function getAdminUser(): Promise<AdminSession | null> {
+async function loadAdminUser(): Promise<AdminSession | null> {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -175,6 +176,8 @@ export async function getAdminUser(): Promise<AdminSession | null> {
     isSuperAdmin: false,
   };
 }
+
+export const getAdminUser = cache(loadAdminUser);
 
 /**
  * Gate for admin pages and server actions.
