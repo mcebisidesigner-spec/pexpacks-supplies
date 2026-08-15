@@ -20,17 +20,19 @@
 .modal {
   position: relative;
   width: 100%;
-  max-width: 540px;
+  max-width: 480px;
+  box-sizing: border-box;
   background: #090f1d; /* exact navy dark surface */
-  border: 1px solid rgba(255, 255, 255, 0.09); /* subtle border ring */
-  border-radius: 24px;
-  padding: 28px 30px 24px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12); /* subtle border ring */
+  border-radius: 20px;
+  padding: 24px;
   box-shadow:
     0 24px 64px rgba(0, 0, 0, 0.75),
     0 0 0 1px rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow: hidden;
   animation: scaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -39,11 +41,13 @@
   align-items: flex-start;
   gap: 16px;
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .iconWrapperDanger {
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 2px;
@@ -56,8 +60,8 @@
 }
 
 .iconWrapperInfo {
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 2px;
@@ -70,31 +74,37 @@
 }
 
 .titleBlock {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  overflow: hidden;
 }
 
 .title {
   margin: 0;
-  font-family: var(--font-pexpacks-sans-alt), var(--font-heading), system-ui, sans-serif;
-  font-size: 19px;
+  font-family: inherit;
+  font-size: 18px;
   font-weight: 800;
-  line-height: 1.25;
+  line-height: 1.3;
   color: #ffffff;
-  letter-spacing: -0.01em;
-  word-break: break-word;
+  letter-spacing: 0.01em;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .description {
   margin: 0;
   font-size: 13.5px;
-  line-height: 1.45;
-  color: #94a3b8;
-  word-break: break-word;
-  overflow-wrap: anywhere;
+  line-height: 1.5;
+  color: #cbd5e1;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .buttonRow {

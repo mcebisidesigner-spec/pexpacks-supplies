@@ -222,6 +222,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
                         <div className={shared.actions}>
                           <SchoolVisibleToggle
                             schoolId={item.school_id}
+                            schoolName={item.school_name}
                             visible={item.visible}
                           />
                           <form action={deleteSchoolPacksAction.bind(null, item.school_id)}>
