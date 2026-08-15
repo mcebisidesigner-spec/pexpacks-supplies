@@ -112,7 +112,7 @@ export function PackItemsSection({
           />
         </div>
         <div className={styles.totalChip} aria-label="Total price">
-          TOTAL PRICE: {formatCurrency(subtotal)}
+          {items.length === 0 ? "TOTAL PRICE" : formatCurrency(subtotal)}
         </div>
         {message ? (
           <p className={styles.importSuccess} role="status">

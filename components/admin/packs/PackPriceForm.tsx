@@ -34,9 +34,12 @@ export function PackPriceForm({ packId, price, subtotal, schoolName, packTitle }
   const targetPrice = suggested ?? price;
   const [value, setValue] = useState<string>(String(targetPrice));
 
-  const fullTitle = schoolName
-    ? `${schoolName} ${packTitle || ""}`
-    : packTitle || "";
+  const fullTitle =
+    schoolName && packTitle && packTitle.toLowerCase().includes(schoolName.toLowerCase())
+      ? packTitle
+      : schoolName
+      ? `${schoolName} ${packTitle || ""}`
+      : packTitle || "";
 
   useEffect(() => {
     setValue(String(targetPrice));
