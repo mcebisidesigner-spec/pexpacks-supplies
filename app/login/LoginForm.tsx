@@ -4,6 +4,7 @@ import { useState } from "react";
 import { login, requestPasswordReset } from "./actions";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { ADMIN_RUNTIME_SESSION_KEY } from "@/lib/admin/idle";
 import styles from "./login.module.css";
 
 type LoginFormProps = {
@@ -28,6 +29,14 @@ export function LoginForm({ error, message }: LoginFormProps) {
     setForgotError(null);
     setForgotSuccessMessage(null);
     setShowForgotModal(true);
+  };
+
+  const markDashboardSession = () => {
+    try {
+      window.sessionStorage.setItem(ADMIN_RUNTIME_SESSION_KEY, "active");
+    } catch {
+      // The idle guard still protects the session when storage is unavailable.
+    }
   };
 
   const handleForgotSubmit = async (e: React.FormEvent) => {
@@ -80,7 +89,7 @@ export function LoginForm({ error, message }: LoginFormProps) {
           </div>
         ) : null}
 
-        <form action={login} className={styles.form}>
+        <form action={login} className={styles.form} onSubmit={markDashboardSession}>
           <div className={styles.fieldGroup}>
             <Input
               id="email"

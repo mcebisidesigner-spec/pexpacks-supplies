@@ -15,6 +15,7 @@ import styles from "./ItemForm.module.css";
 interface ItemFormProps {
   item: ItemRow | null;
   packs: { id: string; title: string }[];
+  returnTo?: string;
 }
 
 function SubmitButton({ label }: { label: string }) {
@@ -26,7 +27,7 @@ function SubmitButton({ label }: { label: string }) {
   );
 }
 
-export function ItemForm({ item, packs }: ItemFormProps) {
+export function ItemForm({ item, packs, returnTo = "/admin/items" }: ItemFormProps) {
   const router = useRouter();
   const action =
     item == null ? createItemAction : updateItemAction.bind(null, item.id);
@@ -38,8 +39,8 @@ export function ItemForm({ item, packs }: ItemFormProps) {
   );
 
   useEffect(() => {
-    if (state?.ok) router.push("/admin/items");
-  }, [state, router]);
+    if (state?.ok) router.push(returnTo);
+  }, [state, router, returnTo]);
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
@@ -207,7 +208,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
 
       {/* Action Buttons */}
       <div className={formStyles.actions}>
-        <Link href="/admin/items" className={formStyles.cancelButton}>
+        <Link href={returnTo} className={formStyles.cancelButton}>
           Cancel
         </Link>
         <SubmitButton label={item ? "Save item" : "Add item"} />

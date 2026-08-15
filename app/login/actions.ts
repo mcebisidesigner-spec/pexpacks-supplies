@@ -65,7 +65,7 @@ export async function login(formData: FormData) {
   }
 }
 
-export async function logout() {
+export async function logout(reason?: "idle" | "restart") {
   const cookieStore = await cookies();
 
   const supabase = createServerClient(
@@ -101,7 +101,13 @@ export async function logout() {
   }
 
   await supabase.auth.signOut();
-  redirect("/login");
+  const message =
+    reason === "idle"
+      ? "Dashboard closed after 20 minutes of inactivity."
+      : reason === "restart"
+        ? "Dashboard session closed after the browser or device restarted."
+        : null;
+  redirect(message ? `/login?message=${encodeURIComponent(message)}` : "/login");
 }
 
 export async function requestPasswordReset(email: string) {
