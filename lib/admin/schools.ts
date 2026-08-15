@@ -81,6 +81,9 @@ export const schoolSchema = z.object({
   email: emailField,
   telephone: optString(40, "telephone"),
   principal: optString(120, "principal"),
+  parent_collection_accepted: z
+    .enum(["accepted", "non_accepted"])
+    .transform((value) => value === "accepted"),
   description: optString(5000, "description"),
   status: z.enum(SCHOOL_STATUSES).default("active"),
   published: z.boolean().default(true),
@@ -127,6 +130,8 @@ export function parseSchoolForm(formData: FormData): ParsedSchoolForm {
     email: raw(formData, "email"),
     telephone: raw(formData, "telephone"),
     principal: raw(formData, "principal"),
+    parent_collection_accepted:
+      raw(formData, "parent_collection_accepted") || "non_accepted",
     description: raw(formData, "description"),
     status: raw(formData, "status") || "active",
     published: formData.has("published"),
@@ -185,8 +190,12 @@ export interface SchoolListFilters {
   pageSize?: number;
 }
 
+export type SchoolListRow = SchoolRow & {
+  has_orderable_grade_packs: boolean;
+};
+
 export interface SchoolListResult {
-  schools: SchoolRow[];
+  schools: SchoolListRow[];
   total: number;
   page: number;
   pageCount: number;
@@ -201,7 +210,9 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  let query = admin.from("schools").select("*", { count: "exact" });
+  let query = admin
+    .from("schools")
+    .select("*, stationery_packs(visible, stationery_items(id))", { count: "exact" });
 
   if (filters.q) {
     const q = filters.q.replace(/%/g, "").trim();
@@ -228,8 +239,18 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
     listFilterColumn("province"),
   ]);
 
+  const schools = (data ?? []).map((row) => {
+    const { stationery_packs: packs, ...school } = row;
+    return {
+      ...school,
+      has_orderable_grade_packs: packs.some(
+        (pack) => pack.visible && pack.stationery_items.length > 0
+      ),
+    };
+  });
+
   return {
-    schools: data ?? [],
+    schools,
     total: count ?? 0,
     page,
     pageCount: Math.max(1, Math.ceil((count ?? 0) / pageSize)),

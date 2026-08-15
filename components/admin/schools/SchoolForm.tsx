@@ -186,6 +186,22 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             />
             {err("principal")}
           </div>
+
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="parent_collection_accepted">
+              Parent collection
+            </label>
+            <select
+              id="parent_collection_accepted"
+              name="parent_collection_accepted"
+              className={styles.input}
+              defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"}
+            >
+              <option value="accepted">Accepted</option>
+              <option value="non_accepted">Non-accepted</option>
+            </select>
+            {err("parent_collection_accepted")}
+          </div>
         </div>
       </div>
 

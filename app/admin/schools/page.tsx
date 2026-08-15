@@ -180,13 +180,24 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                               height={40}
                             />
                           )}
-                          <div>
+                          <div className={styles.schoolIdentity}>
                             <Link
                               href={`/admin/schools/${school.slug || school.id}/profile`}
                               className={styles.schoolName}
                             >
                               {school.name}
                             </Link>
+                            <span
+                              className={`${styles.partnershipStatus} ${
+                                school.is_partner
+                                  ? styles.partnershipOfficial
+                                  : school.has_orderable_grade_packs
+                                    ? styles.partnershipParticipating
+                                    : styles.partnershipDeclined
+                              }`}
+                            >
+                              {school.is_partner ? "Official Partner" : "Non-partner"}
+                            </span>
                           </div>
                         </div>
                       </td>

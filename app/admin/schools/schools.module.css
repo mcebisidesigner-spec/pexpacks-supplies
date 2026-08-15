@@ -112,6 +112,14 @@
   gap: 12px;
 }
 
+.schoolIdentity {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+
 .logoThumb {
   width: 40px;
   height: 40px;
@@ -135,6 +143,24 @@
 .schoolName:hover {
   color: var(--admin-accent-strong);
   text-decoration-color: currentColor;
+}
+
+.partnershipStatus {
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.partnershipOfficial {
+  color: var(--admin-accent-strong);
+}
+
+.partnershipParticipating {
+  color: var(--pex-coral, #ff8a76);
+}
+
+.partnershipDeclined {
+  color: var(--admin-red, #f87171);
 }
 
 .schoolSlug {

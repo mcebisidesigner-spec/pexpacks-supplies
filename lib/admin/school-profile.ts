@@ -24,7 +24,6 @@ export interface SchoolProfileData {
   acceptsDelivery: boolean;
   acceptsCollection: boolean;
   deliveryPackCount: number;
-  collectionPackCount: number;
 }
 
 const BOUGHT_STATUSES = new Set(["paid", "packing", "delivered"]);
@@ -109,10 +108,6 @@ export async function getSchoolProfile(idOrSlug: string): Promise<SchoolProfileD
     const mode = pack.delivery_type.toLowerCase();
     return mode.includes("courier") || mode.includes("delivery");
   });
-  const collectionPacks = visiblePacks.filter((pack) =>
-    pack.delivery_type.toLowerCase().includes("collection")
-  );
-
   return {
     school,
     totalPacks: packs.length,
@@ -121,8 +116,7 @@ export async function getSchoolProfile(idOrSlug: string): Promise<SchoolProfileD
     paidOrders: paidOrders.length,
     pendingOrders: orders.filter((order) => PENDING_STATUSES.has(order.status)).length,
     acceptsDelivery: deliveryPacks.length > 0,
-    acceptsCollection: collectionPacks.length > 0,
+    acceptsCollection: school.parent_collection_accepted,
     deliveryPackCount: deliveryPacks.length,
-    collectionPackCount: collectionPacks.length,
   };
 }

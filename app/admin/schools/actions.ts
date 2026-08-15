@@ -43,6 +43,7 @@ export async function updateSchoolAction(
     revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
     revalidatePublicSchoolSurfaces();
     revalidatePath(`/admin/schools/${id}`);
+    revalidatePath(`/admin/schools/${id}/profile`);
     if (result.school.slug) {
       revalidatePath(`/schools/${result.school.slug}`);
     }

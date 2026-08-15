@@ -315,6 +315,7 @@ export interface Database {
           email: string | null;
           telephone: string | null;
           principal: string | null;
+          parent_collection_accepted: boolean;
           description: string | null;
           status: string;
           partner_since: string | null;
@@ -342,6 +343,7 @@ export interface Database {
           email?: string | null;
           telephone?: string | null;
           principal?: string | null;
+          parent_collection_accepted?: boolean;
           description?: string | null;
           status?: string;
           partner_since?: string | null;
@@ -369,6 +371,7 @@ export interface Database {
           email?: string | null;
           telephone?: string | null;
           principal?: string | null;
+          parent_collection_accepted?: boolean;
           description?: string | null;
           status?: string;
           partner_since?: string | null;

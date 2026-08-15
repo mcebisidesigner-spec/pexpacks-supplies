@@ -162,7 +162,10 @@ export default async function SchoolProfilePage({ params }: SchoolProfilePagePro
         <ProfileCard
           label="School contacts"
           value={school.telephone || "Not recorded"}
-          detail={school.email || "No school email recorded"}
+          detail={
+            [school.email, school.address].filter(Boolean).join(" | ") ||
+            "No email or physical address recorded"
+          }
           icon={ContactRound}
           tone="amber"
           compact
@@ -209,8 +212,12 @@ export default async function SchoolProfilePage({ params }: SchoolProfilePagePro
         />
         <ProfileCard
           label="Parent collection"
-          value={profile.acceptsCollection ? "Accepted" : "Not available"}
-          detail={`${profile.collectionPackCount} of ${profile.visiblePacks} visible packs`}
+          value={profile.acceptsCollection ? "Accepted" : "Non-accepted"}
+          detail={
+            profile.acceptsCollection
+              ? "Parents may collect stationery for this school"
+              : "Parent collection is not accepted by this school"
+          }
           icon={UsersRound}
           tone={profile.acceptsCollection ? "green" : "amber"}
           valueTone={profile.acceptsCollection ? "green" : "amber"}

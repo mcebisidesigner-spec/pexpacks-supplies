@@ -33,6 +33,19 @@ type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
 };
 
+function formatSchoolLocation(city: string, district: string, province: string): string {
+  const districtLabel = district
+    ? /^city of\b/i.test(district)
+      ? district
+      : `City of ${district}`
+    : "";
+
+  return [city, districtLabel, province]
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .join(", ");
+}
+
 export async function generateStaticParams() {
   const schoolIndex = await getSchoolIndex();
   return schoolIndex
@@ -97,7 +110,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         />
       ))}
       <PageHero
-        eyebrow={`${school.city}, City of ${school.metro}`}
+        eyebrow={formatSchoolLocation(school.city, school.metro, school.province)}
         title={school.name}
         panelChildren={
           <div className={styles.schoolHeroPanel}>
