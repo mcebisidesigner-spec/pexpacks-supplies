@@ -178,7 +178,7 @@ function drawTableHeader(doc: jsPDF, y: number) {
   doc.text("Tick", COL_CHECK, y);
   doc.text("Qty", COL_QTY, y);
   doc.text("Item", COL_ITEM, y);
-  doc.text("Specification", COL_SPEC, y);
+  doc.text("Description", COL_SPEC, y);
 }
 
 // ═══════════════════════════════════════════════

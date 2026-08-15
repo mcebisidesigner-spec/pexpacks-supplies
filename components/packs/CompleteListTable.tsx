@@ -24,7 +24,7 @@ export function CompleteListTable({ items, label }: CompleteListTableProps) {
               Qty
             </th>
             <th scope="col">Item</th>
-            <th scope="col">Specification</th>
+            <th scope="col">Description</th>
           </tr>
         </thead>
         <tbody>
