@@ -84,7 +84,7 @@ export function ItemForm({ item, packs }: ItemFormProps) {
 
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="name">
-              ITEM NAME *
+              Item description *
             </label>
             <input
               id="name"

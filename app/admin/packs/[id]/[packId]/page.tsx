@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/admin/rbac";
+import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getPack } from "@/lib/admin/packs";
 import { getSchool } from "@/lib/admin/schools";
 import { PackPriceForm } from "@/components/admin/packs/PackPriceForm";
@@ -12,7 +12,7 @@ interface NestedEditPackPageProps {
 }
 
 export default async function NestedEditPackPage({ params }: NestedEditPackPageProps) {
-  await requireAdmin({ permission: "packs.view" });
+  const session = await requireAdmin({ permission: "packs.view" });
   const { id, packId } = await params;
 
   // 1. Fetch School metadata for back link
@@ -44,7 +44,13 @@ export default async function NestedEditPackPage({ params }: NestedEditPackPageP
           schoolName={school?.name || ""}
           packTitle={pack.title}
         />
-        <PackItemsSection packId={pack.id} items={items} />
+        <PackItemsSection
+          packId={pack.id}
+          packTitle={pack.title}
+          items={items}
+          subtotal={subtotal}
+          showImporter={hasPermission(session, "items.import")}
+        />
       </div>
     </div>
   );

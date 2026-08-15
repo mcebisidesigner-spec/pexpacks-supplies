@@ -178,9 +178,11 @@ export function GradePackItemSelector({
     <div className={styles.root}>
       {/* 1. Item Search & Auto-Populate Bar */}
       <div className={styles.searchBlock} ref={dropdownRef}>
-        <label className={styles.fieldLabel}>
-          {searchLabel}
-        </label>
+        {searchLabel ? (
+          <label className={styles.fieldLabel}>
+            {searchLabel}
+          </label>
+        ) : null}
 
         <div className={styles.searchWrap}>
           <div className={styles.searchIconWrap}>

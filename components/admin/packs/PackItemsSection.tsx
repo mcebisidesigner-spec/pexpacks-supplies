@@ -8,15 +8,26 @@ import GradePackItemSelector, {
 } from "@/components/grade-packs/GradePackItemSelector";
 import { savePackItemsAction, createItemAction } from "@/app/admin/items/actions";
 import { ItemsManager } from "./ItemsManager";
+import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
+import { formatCurrency } from "@/lib/formatCurrency";
 import type { ItemRow } from "@/lib/admin/items";
 import styles from "./ItemsManager.module.css";
 
 interface PackItemsSectionProps {
   packId: string;
+  packTitle: string;
   items: ItemRow[];
+  subtotal: number;
+  showImporter?: boolean;
 }
 
-export function PackItemsSection({ packId, items }: PackItemsSectionProps) {
+export function PackItemsSection({
+  packId,
+  packTitle,
+  items,
+  subtotal,
+  showImporter = false,
+}: PackItemsSectionProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -85,26 +96,39 @@ export function PackItemsSection({ packId, items }: PackItemsSectionProps) {
 
   return (
     <>
-      <section aria-label="Quick item editor">
-        <GradePackItemSelector
-          key={signature}
-          initialItems={initialItems}
-          submitLabel="Save items"
-          busy={busy}
-          showSave={false}
-          hideList={true}
-          searchLabel="Add Stationery Items to this Pack"
-          searchPlaceholder="Search stationery items by name or description"
-          onSelectItem={handleSelectItem}
-          onSave={handleSave}
-        />
+      <section className={styles.searchTotalRow} aria-label="Quick item editor">
+        <div className={styles.searchSlot}>
+          <GradePackItemSelector
+            key={signature}
+            initialItems={initialItems}
+            submitLabel="Save items"
+            busy={busy}
+            showSave={false}
+            hideList={true}
+            searchLabel=""
+            searchPlaceholder="Search items by item code, description, type, SKU or name..."
+            onSelectItem={handleSelectItem}
+            onSave={handleSave}
+          />
+        </div>
+        <div className={styles.totalChip} aria-label="Items sum total">
+          {formatCurrency(subtotal)}
+        </div>
         {message ? (
-          <p className={styles.importSuccess} role="status" style={{ marginTop: "8px" }}>
+          <p className={styles.importSuccess} role="status">
             {message}
           </p>
         ) : null}
       </section>
-      <ItemsManager packId={packId} items={items} />
+      <ItemsManager items={items} />
+      {showImporter ? (
+        <section className={styles.csvBanner} aria-label="Bulk CSV stationery import">
+          <CSVStationeryImporter
+            packs={[{ id: packId, title: packTitle }]}
+            onImported={() => router.refresh()}
+          />
+        </section>
+      ) : null}
     </>
   );
 }

@@ -1,485 +1,72 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
-import type { ItemRow, ItemFormState, StationeryInventoryItem } from "@/lib/admin/items";
-import {
-  createItemAction,
-  updateItemAction,
-  deleteItemAction,
-  reorderItemsAction,
-  importItemsAction,
-  searchStationeryInventoryAction,
-} from "@/app/admin/items/actions";
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import type { ItemRow } from "@/lib/admin/items";
+import { deleteItemAction } from "@/app/admin/items/actions";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
-import { ItemIcon } from "@/components/ui/ItemIcon";
-import { PACK_ITEM_ICONS, isPackItemIconKey } from "@/lib/packs/itemIcons";
 import styles from "./ItemsManager.module.css";
 
-function str(v: string | number | null | undefined): string {
-  return v == null ? "" : String(v);
-}
+const PAGE_SIZE = 4;
 
-interface ItemFormProps {
-  packId: string;
-  item: ItemRow | null;
-  onDone: () => void;
-  onSuccess: () => void;
-}
-
-function ItemForm({ packId, item, onDone, onSuccess }: ItemFormProps) {
-  const action =
-    item == null
-      ? createItemAction
-      : updateItemAction.bind(null, item.id);
-
-  const [state, formAction] = useActionState<ItemFormState, FormData>(action, {
-    ok: false,
-  });
-  const { pending } = useFormStatus();
-  const [icon, setIcon] = useState<string>(
-    item?.icon && isPackItemIconKey(item.icon) ? item.icon : ""
-  );
-  const [name, setName] = useState<string>(item?.name ?? "");
-  const [price, setPrice] = useState<string>(
-    item?.unit_price != null ? String(item.unit_price) : ""
-  );
-  const [suggestions, setSuggestions] = useState<StationeryInventoryItem[]>([]);
-  const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const debounceRef = useRef<number | null>(null);
-  const nameWrapRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (state?.ok) onSuccess();
-  }, [state, onSuccess]);
-
-  useEffect(() => {
-    if (!open) return;
-    function onClickOutside(e: MouseEvent) {
-      if (nameWrapRef.current && !nameWrapRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [open]);
-
-  useEffect(
-    () => () => {
-      if (debounceRef.current) window.clearTimeout(debounceRef.current);
-    },
-    []
-  );
-
-  function handleNameChange(value: string) {
-    setName(value);
-    setOpen(false);
-    if (debounceRef.current) window.clearTimeout(debounceRef.current);
-    const q = value.trim();
-    if (q.length < 3) {
-      setSuggestions([]);
-      return;
-    }
-    debounceRef.current = window.setTimeout(async () => {
-      setBusy(true);
-      try {
-        const found = await searchStationeryInventoryAction(q);
-        setSuggestions(found);
-        setOpen(found.length > 0);
-      } catch {
-        setSuggestions([]);
-        setOpen(false);
-      } finally {
-        setBusy(false);
-      }
-    }, 300);
-  }
-
-  function pickSuggestion(suggestion: StationeryInventoryItem) {
-    setName(suggestion.name);
-    setPrice(suggestion.unit_price != null ? String(suggestion.unit_price) : "");
-    setOpen(false);
-    setSuggestions([]);
-    if (debounceRef.current) window.clearTimeout(debounceRef.current);
-  }
-
-  const err = (field: string) =>
-    state?.errors?.[field] ? (
-      <span className={styles.error} role="alert">
-        {state.errors[field]}
-      </span>
-    ) : null;
-
-  return (
-    <form
-      action={async (formData) => {
-        formAction(formData);
-      }}
-      className={styles.itemForm}
-    >
-      <input type="hidden" name="pack_id" value={packId} />
-      <input type="hidden" name="sort_order" value={item?.sort_order ?? 0} />
-      <input type="hidden" name="icon" value={icon} />
-      {state?.message ? (
-        <p className={styles.error} role="alert">
-          {state.message}
-        </p>
-      ) : null}
-
-      <div className={styles.field}>
-        <label className={styles.label}>Icon</label>
-        <div className={styles.iconPicker} role="group" aria-label="Pick an icon">
-          {PACK_ITEM_ICONS.map((option) => (
-            <button
-              key={option.key}
-              type="button"
-              className={`${styles.iconOption} ${
-                icon === option.key ? styles.iconOptionActive : ""
-              }`}
-              onClick={() => setIcon(icon === option.key ? "" : option.key)}
-              title={option.label}
-              aria-pressed={icon === option.key}
-            >
-              <ItemIcon name={option.key} size={22} />
-            </button>
-          ))}
-        </div>
-        <span className={styles.hint}>
-          Optional. Shown next to the item on the public page. Picking again
-          clears the icon.
-        </span>
-      </div>
-
-      <div className={styles.formGrid}>
-        <div className={styles.field} ref={nameWrapRef}>
-          <label className={styles.label} htmlFor="name">
-            Name *
-          </label>
-          <div className={styles.autocomplete}>
-            <input
-              id="name"
-              name="name"
-              className={styles.input}
-              value={name}
-              onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="e.g. A4 Exercise Book"
-              required
-              autoComplete="off"
-            />
-            {busy ? (
-              <span className={styles.suggestBusy} aria-hidden="true">
-                …
-              </span>
-            ) : null}
-            {open && suggestions.length > 0 ? (
-              <ul className={styles.suggestList} role="listbox" aria-label="Matching inventory items">
-                {suggestions.map((s) => (
-                  <li key={s.name} role="option" aria-selected={false}>
-                    <button
-                      type="button"
-                      className={styles.suggestItem}
-                      onClick={() => pickSuggestion(s)}
-                    >
-                      <span className={styles.suggestName}>{s.name}</span>
-                      <span className={styles.suggestPrice}>
-                        {s.unit_price != null ? formatCurrency(s.unit_price) : ""}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-          <span className={styles.hint}>
-            Type at least 3 characters to pick from existing stationery items.
-          </span>
-          {err("name")}
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="quantity">
-            Qty
-          </label>
-          <input
-            id="quantity"
-            name="quantity"
-            className={styles.input}
-            inputMode="numeric"
-            defaultValue={item?.quantity ?? 1}
-          />
-          {err("quantity")}
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="price">
-            Price (R)
-          </label>
-          <input
-            id="price"
-            name="price"
-            className={styles.input}
-            inputMode="decimal"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="0.00"
-          />
-          {err("price")}
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="sort_order">
-            Sort order
-          </label>
-          <input
-            id="sort_order"
-            name="sort_order"
-            className={styles.input}
-            inputMode="numeric"
-            defaultValue={item?.sort_order ?? 0}
-          />
-          {err("sort_order")}
-        </div>
-      </div>
-
-      <input type="hidden" name="description" value={str(item?.description)} />
-
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="specification">
-          Specification
-        </label>
-        <textarea
-          id="specification"
-          name="specification"
-          className={styles.textarea}
-          rows={2}
-          defaultValue={str(item?.specification)}
-        />
-        <span className={styles.hint}>
-          Shown in the &quot;Specification&quot; column on the public
-          complete-list drawer and the downloadable PDF. Falls back to the
-          description when empty.
-        </span>
-        {err("specification")}
-      </div>
-
-      <div className={styles.formFooter}>
-        <label className={styles.checkbox}>
-          <input
-            type="checkbox"
-            name="visible"
-            defaultChecked={item?.visible ?? true}
-          />
-          Visible on site
-        </label>
-        <div className={styles.formActions}>
-          <button
-            type="button"
-            className={styles.cancelButton}
-            onClick={onDone}
-          >
-            Cancel
-          </button>
-          <button type="submit" className={styles.saveButton} disabled={pending}>
-            {pending ? "Saving…" : item ? "Save item" : "Add item"}
-          </button>
-        </div>
-      </div>
-    </form>
-  );
-}
-
-function ImportForm({ packId, onImported }: { packId: string; onImported: () => void }) {
-  const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const input = e.currentTarget.elements.namedItem("csv") as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) {
-      setError("Choose a CSV file first.");
-      return;
-    }
-    setBusy(true);
-    setError(null);
-    setMessage(null);
-    try {
-      const text = await file.text();
-      const result = await importItemsAction(packId, text);
-      if (result.errors && result.errors.length > 0) {
-        setError(result.errors.slice(0, 5).join(" · "));
-      }
-      if (result.created > 0 || result.updated > 0) {
-        setMessage(
-          `${result.created} created · ${result.updated} updated${
-            result.errors.length > 0 ? ` · ${result.errors.length} errors` : ""
-          }`
-        );
-        onImported();
-      }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Could not import the CSV file.";
-      setError(msg);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return (
-    <form className={styles.importForm} onSubmit={handleSubmit}>
-      <input type="file" name="csv" accept=".csv,text/csv" className={styles.fileInput} />
-      <button type="submit" className={styles.importButton} disabled={busy}>
-        {busy ? "Importing…" : "Import CSV"}
-      </button>
-      {message ? (
-        <span className={styles.importSuccess} role="status">
-          {message}
-        </span>
-      ) : null}
-      {error ? (
-        <span className={styles.error} role="alert">
-          {error}
-        </span>
-      ) : null}
-    </form>
-  );
+function itemHref(item: ItemRow): string {
+  const fallback =
+    item.name
+      ?.toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || item.id;
+  return `/admin/items/${item.slug || fallback}`;
 }
 
 interface ItemsManagerProps {
-  packId: string;
   items: ItemRow[];
 }
 
-export function ItemsManager({ packId, items }: ItemsManagerProps) {
-  const router = useRouter();
-  const [showAdd, setShowAdd] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-
-  const refresh = () => {
-    router.refresh();
-    setShowAdd(false);
-    setEditingId(null);
-  };
-
-  async function move(index: number, direction: -1 | 1) {
-    const next = [...items];
-    const target = index + direction;
-    if (target < 0 || target >= next.length) return;
-    [next[index], next[target]] = [next[target], next[index]];
-    await reorderItemsAction(
-      packId,
-      next.map((i) => i.id)
-    );
-    router.refresh();
-  }
+export function ItemsManager({ items }: ItemsManagerProps) {
+  const [page, setPage] = useState(1);
+  const pageCount = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const visibleItems = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return items.slice(start, start + PAGE_SIZE);
+  }, [currentPage, items]);
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.header}>
-        <h3 className={styles.title}>Items</h3>
-        <span className={styles.count}>
-          {items.length} {items.length === 1 ? "item" : "items"}
-        </span>
-      </div>
-
       {items.length === 0 ? (
-        <p className={styles.empty}>No items in this pack yet.</p>
+        <div className={styles.emptyBanner}>No items in this pack yet.</div>
       ) : (
         <>
           <div className={styles.tableWrap}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Icon</th>
-                  <th>Item</th>
-                  <th>Qty</th>
-                  <th>Price</th>
-                  <th>Specification</th>
-                  <th>Visible</th>
-                  <th>Actions</th>
+                  <th>ITEM CODE</th>
+                  <th>ITEM NAME</th>
+                  <th>DESCRIPTION</th>
+                  <th>QTY</th>
+                  <th>PRICE</th>
+                  <th>ACTIONS</th>
                 </tr>
               </thead>
               <tbody>
-                {items.map((item, index) => (
+                {visibleItems.map((item) => (
                   <tr key={item.id}>
+                    <td>{item.category || "-"}</td>
                     <td>
-                      <div className={styles.reorder}>
-                        <button
-                          type="button"
-                          className={styles.reorderButton}
-                          onClick={() => move(index, -1)}
-                          disabled={index === 0}
-                          aria-label="Move up"
-                        >
-                          &uarr;
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.reorderButton}
-                          onClick={() => move(index, 1)}
-                          disabled={index === items.length - 1}
-                          aria-label="Move down"
-                        >
-                          &darr;
-                        </button>
-                      </div>
+                      <span className={styles.itemName}>{item.name}</span>
                     </td>
-                    <td>
-                      {item.icon && isPackItemIconKey(item.icon) ? (
-                        <span className={styles.itemIcon}>
-                          <ItemIcon name={item.icon} size={20} />
-                        </span>
-                      ) : (
-                        <span
-                          className={styles.itemIconEmpty}
-                          aria-hidden="true"
-                        >
-                          &mdash;
-                        </span>
-                      )}
-                    </td>
-                    <td>
-                      <div className={styles.itemCell}>
-                        <div>
-                          <div className={styles.itemName}>{item.name}</div>
-                          {item.description ? (
-                            <div className={styles.itemDesc}>{item.description}</div>
-                          ) : null}
-                        </div>
-                      </div>
-                    </td>
+                    <td>{item.specification || item.description || "-"}</td>
                     <td>{item.quantity}</td>
                     <td className={styles.priceCell}>
                       {item.unit_price != null ? formatCurrency(item.unit_price) : "-"}
                     </td>
                     <td>
-                      {item.specification ? (
-                        <span className={styles.itemSpec}>{item.specification}</span>
-                      ) : (
-                        <span className={styles.itemSpecEmpty}>-</span>
-                      )}
-                    </td>
-                    <td>
-                      <span
-                        className={`${styles.badge} ${
-                          item.visible ? styles.badgeVisible : styles.badgeHidden
-                        }`}
-                      >
-                        {item.visible ? "Visible" : "Hidden"}
-                      </span>
-                    </td>
-                    <td>
                       <div className={styles.actions}>
-                        <button
-                          type="button"
-                          className={styles.actionLink}
-                          onClick={() => setEditingId(item.id)}
-                        >
+                        <Link href={itemHref(item)} className={styles.actionLink}>
                           Edit
-                        </button>
+                        </Link>
                         <form action={deleteItemAction.bind(null, item.id)}>
                           <ConfirmButton
                             label="Delete"
@@ -497,45 +84,33 @@ export function ItemsManager({ packId, items }: ItemsManagerProps) {
               </tbody>
             </table>
           </div>
+
+          <div className={styles.pager}>
+            <span>
+              Page {currentPage} of {pageCount} · {items.length}{" "}
+              {items.length === 1 ? "item" : "items"}
+            </span>
+            <div className={styles.pagerButtons}>
+              <button
+                type="button"
+                className={styles.pageButton}
+                onClick={() => setPage((value) => Math.max(1, value - 1))}
+                disabled={currentPage <= 1}
+              >
+                Prev
+              </button>
+              <button
+                type="button"
+                className={styles.pageButton}
+                onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
+                disabled={currentPage >= pageCount}
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </>
       )}
-
-      {showAdd ? (
-        <ItemForm
-          packId={packId}
-          item={null}
-          onDone={() => setShowAdd(false)}
-          onSuccess={refresh}
-        />
-      ) : (
-        <button
-          type="button"
-          className={styles.addButton}
-          onClick={() => setShowAdd(true)}
-        >
-          + Add item
-        </button>
-      )}
-
-      {editingId ? (
-        <div className={styles.editor}>
-          <ItemForm
-            packId={packId}
-            item={items.find((i) => i.id === editingId) ?? null}
-            onDone={() => setEditingId(null)}
-            onSuccess={refresh}
-          />
-        </div>
-      ) : null}
-
-      <div className={styles.import}>
-        <h4 className={styles.importTitle}>Bulk import (CSV)</h4>
-        <ImportForm packId={packId} onImported={refresh} />
-        <p className={styles.importHint}>
-          Columns: name, quantity, description, specification, visible,
-          sort_order, icon. Existing items are matched by name and updated.
-        </p>
-      </div>
     </div>
   );
 }

@@ -27,9 +27,10 @@ interface ParsedRecord {
 
 export interface CSVStationeryImporterProps {
   packs?: { id: string; title: string }[];
+  onImported?: () => void;
 }
 
-export function CSVStationeryImporter({ packs = [] }: CSVStationeryImporterProps) {
+export function CSVStationeryImporter({ packs = [], onImported }: CSVStationeryImporterProps) {
   const [file, setFile] = useState<File | null>(null);
   const [parsedRows, setParsedRows] = useState<ParsedRecord[]>([]);
   const [isParsing, setIsParsing] = useState(false);
@@ -133,6 +134,7 @@ export function CSVStationeryImporter({ packs = [] }: CSVStationeryImporterProps
         setUploadSuccess({ count: res.importedCount });
         setFile(null);
         setParsedRows([]);
+        onImported?.();
       }
     } catch (err) {
       setGlobalError(

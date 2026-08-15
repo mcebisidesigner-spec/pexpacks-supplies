@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/admin/rbac";
+import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getPack, listPacks } from "@/lib/admin/packs";
 import { deletePackAction } from "../actions";
 import { getSchool } from "@/lib/admin/schools";
@@ -32,7 +32,7 @@ function extractGradePackSublabel(title: string, slug?: string | null): string {
 }
 
 export default async function PackOrSchoolPacksPage({ params }: EditPackPageProps) {
-  await requireAdmin({ permission: "packs.view" });
+  const session = await requireAdmin({ permission: "packs.view" });
   const { id } = await params;
 
   // 1. Check if slug/ID matches a School (e.g. /admin/packs/actonville-primary-school)
@@ -198,7 +198,13 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
       </div>
       <div className={adminStyles.stack}>
         <PackPriceForm packId={pack.id} price={pack.price} subtotal={subtotal} />
-        <PackItemsSection packId={pack.id} items={items} />
+        <PackItemsSection
+          packId={pack.id}
+          packTitle={pack.title}
+          items={items}
+          subtotal={subtotal}
+          showImporter={hasPermission(session, "items.import")}
+        />
       </div>
     </div>
   );
