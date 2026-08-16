@@ -111,6 +111,9 @@ export function CapsuleBarChart({
           const isPeak = point.value > 0 && point.value === peakValue;
           return (
             <div className={styles.capsuleColumn} key={`${point.label}-${index}`}>
+              {isPeak ? (
+                <span className={styles.capsuleTooltip}>{valueFormatter(point.value)}</span>
+              ) : null}
               <span
                 className={`${styles.capsuleBar} ${
                   point.value === 0 ? styles.capsuleBarEmpty : ""

@@ -16,6 +16,13 @@ export default async function AdminLayout({
   const session = await requireAdmin();
   const groups = filterNav(session.permissions, session.isSuperAdmin);
   const name = displayName(session.user);
+  const metadata = session.user.user_metadata ?? {};
+  const avatarUrl =
+    typeof metadata["avatar_url"] === "string"
+      ? metadata["avatar_url"]
+      : typeof metadata["picture"] === "string"
+        ? metadata["picture"]
+        : null;
 
   return (
     <AdminShell
@@ -23,6 +30,7 @@ export default async function AdminLayout({
       userName={name}
       userEmail={session.user.email ?? ""}
       userRoles={session.roles}
+      avatarUrl={avatarUrl}
     >
       <IdleLogout />
       {children}

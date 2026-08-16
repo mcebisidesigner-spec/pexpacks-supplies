@@ -11,11 +11,6 @@ export default function AdminDashboardLoading() {
         <span className={styles.loadingLine} />
       </div>
 
-      <div className={styles.loadingTabs} aria-hidden="true">
-        <span />
-        <span />
-      </div>
-
       <div className={styles.primaryMetrics} aria-hidden="true">
         {METRIC_PLACEHOLDERS.map((label) => (
           <div className={styles.loadingMetric} key={label}>
@@ -24,6 +19,12 @@ export default function AdminDashboardLoading() {
             <span className={styles.loadingLine} />
           </div>
         ))}
+      </div>
+
+      <div className={styles.loadingPanels} aria-hidden="true">
+        <span />
+        <span />
+        <span />
       </div>
 
       <div className={styles.loadingPanels} aria-hidden="true">

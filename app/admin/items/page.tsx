@@ -196,7 +196,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
       </div>
 
       {hasPermission(session, "items.import") ? (
-        <section aria-label="Bulk CSV stationery import" style={{ marginTop: "12px" }}>
+        <section id="bulk-stationery-import" aria-label="Bulk CSV stationery import" style={{ marginTop: "12px" }}>
           <CSVStationeryImporter packs={await listPacksForFilter()} />
         </section>
       ) : null}
