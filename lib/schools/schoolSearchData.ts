@@ -1,241 +1,179 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import {
-  getPublicSchoolIndex,
-  getPublicSchoolSlugSet,
-} from "./publicSchoolData";
-import { SchoolSearchIndex } from "./SearchIndex";
-import { getFeaturedSchools } from "./getFeaturedSchools";
-import { getGrades } from "./getGrades";
-import { getRegions } from "./getRegions";
+import type { Json } from "@/lib/supabase/types";
 import { getSchoolPhasesFromGrades } from "./schoolPhase";
 import type { SchoolSearchFilters, SchoolSearchRecord } from "./types";
 
-function gradeRank(grade: string) {
-  if (/grade\s*r/i.test(grade)) {
-    return 0;
-  }
+type SearchSchoolRow = {
+  id: string;
+  name: string;
+  slug: string;
+  city: string | null;
+  district: string | null;
+  province: string | null;
+  logo: string | null;
+  is_partner: boolean | null;
+  is_featured: boolean | null;
+  lowest_price: number | null;
+  grades: Json | null;
+  custom_badge: string | null;
+  total_count?: number;
+};
 
+let publicSchoolReadRpcsAvailable: boolean | undefined;
+
+function isMissingRpc(error: { code?: string; message?: string } | null) {
+  return Boolean(
+    error &&
+      (error.code === "PGRST202" ||
+        error.message?.toLowerCase().includes("could not find the function")),
+  );
+}
+
+function gradeRank(grade: string) {
+  if (/grade\s*r/i.test(grade)) return 0;
   const number = Number(grade.match(/\d+/)?.[0]);
   return Number.isFinite(number) ? number : 99;
 }
 
-const SEARCH_DATA_TTL_MS = 5 * 60 * 1000; // 5 minutes
+function getGradeLabels(value: Json | null): string[] {
+  if (!Array.isArray(value)) return [];
 
-let searchableSchoolsCache: {
-  promise: Promise<SchoolSearchRecord[]>;
-  expiresAt: number;
-} | null = null;
-let searchableSchoolsRefresh: Promise<void> | null = null;
-
-let searchIndexCache: {
-  promise: Promise<SchoolSearchIndex>;
-  expiresAt: number;
-} | null = null;
-let searchIndexRefresh: Promise<void> | null = null;
-
-/**
- * Drops the in-memory search caches so the next call re-reads schools from the
- * database. Called by admin server actions after school/pack mutations.
- */
-export function invalidateSchoolSearchCache() {
-  searchableSchoolsCache = null;
-  searchIndexCache = null;
+  return value
+    .map((grade) => {
+      if (typeof grade === "string") return grade;
+      if (grade && typeof grade === "object" && !Array.isArray(grade)) {
+        const label = grade.grade;
+        return typeof label === "string" ? label : "";
+      }
+      return "";
+    })
+    .filter(Boolean)
+    .sort((a, b) => gradeRank(a) - gradeRank(b));
 }
 
-function isFresh(cache: { expiresAt: number } | null): boolean {
-  return cache !== null && cache.expiresAt > Date.now();
-}
+function toSearchRecord(row: SearchSchoolRow): SchoolSearchRecord {
+  const grades = getGradeLabels(row.grades);
+  const city = row.city ?? "";
 
-/**
- * Builds the searchable-schools list and swaps it into the cache. Runs in the
- * background when the cached value is merely stale, so callers never block on a
- * rebuild. On failure the previous cache is kept and the error is surfaced to
- * the awaited caller (cold path) or logged (background refresh).
- */
-async function refreshSearchableSchools(): Promise<void> {
-  if (searchableSchoolsRefresh) return searchableSchoolsRefresh;
-
-  searchableSchoolsRefresh = (async () => {
-    try {
-      const schools = await loadSearchableSchools();
-      searchableSchoolsCache = {
-        promise: Promise.resolve(schools),
-        expiresAt: Date.now() + SEARCH_DATA_TTL_MS,
-      };
-    } finally {
-      searchableSchoolsRefresh = null;
-    }
-  })();
-
-  return searchableSchoolsRefresh;
-}
-
-export async function getSearchableSchools(): Promise<SchoolSearchRecord[]> {
-  if (isFresh(searchableSchoolsCache)) return searchableSchoolsCache!.promise;
-
-  // Expired but present: serve the stale list immediately and refresh in the
-  // background so no request ever blocks on the ~2-3s DB read + build.
-  if (searchableSchoolsCache) {
-    refreshSearchableSchools().catch((error) => {
-      console.warn(
-        "[performance] background refresh of searchable schools failed; serving stale list:",
-        error,
-      );
-    });
-    return searchableSchoolsCache.promise;
-  }
-
-  await refreshSearchableSchools();
-  return searchableSchoolsCache!.promise;
-}
-
-async function loadSearchableSchools(): Promise<SchoolSearchRecord[]> {
-  const started = Date.now();
-  const index = await getPublicSchoolIndex();
-  let dbSchoolMap = new Map();
-
-  try {
-    const supabase = createSupabaseAdminClient();
-    let dbSchools: Array<{
-      id: string;
-      slug: string;
-      name: string;
-      city: string | null;
-      province: string | null;
-      district: string | null;
-      logo: string | null;
-      is_partner: boolean | null;
-      is_featured: boolean | null;
-      lowest_price: number | null;
-      custom_badge: string | null;
-    }> = [];
-    let from = 0;
-    const PAGE_SIZE = 1000;
-
-    while (true) {
-      const { data: page, error } = await supabase
-        .from("schools")
-        .select(
-          "id, slug, name, city, province, district, logo, is_partner, is_featured, lowest_price, custom_badge",
-        )
-        .range(from, from + PAGE_SIZE - 1);
-
-      if (error || !page || page.length === 0) break;
-      dbSchools = dbSchools.concat(page);
-      if (page.length < PAGE_SIZE) break;
-      from += PAGE_SIZE;
-    }
-
-    if (dbSchools.length > 0) {
-      dbSchoolMap = new Map(dbSchools.map((s) => [s.slug, s]));
-    }
-  } catch {
-    // Ignore DB fetch failure, fallback to JSON index
-  }
-
-  const records = index.map((school): SchoolSearchRecord => {
-    const dbSchool = dbSchoolMap.get(school.slug);
-    const schoolName = dbSchool?.name || school.name;
-    const logoUrl = dbSchool?.logo ?? school.logo ?? null;
-
-    return {
-      id: dbSchool?.id || school.id,
-      name: schoolName,
-      slug: dbSchool?.slug || school.slug,
-      region: dbSchool?.city || school.city,
-      city: dbSchool?.city || school.city,
-      metro: dbSchool?.district || school.metro,
-      province: dbSchool?.province || school.province,
-      grades: school.grades
-        .map((g) => g.grade)
-        .sort((a, b) => gradeRank(a) - gradeRank(b)),
-      phases: getSchoolPhasesFromGrades(
-        school.grades.map((g) => g.grade),
-        schoolName,
-      ),
-      isFeatured: dbSchool
-        ? Boolean(dbSchool.is_featured)
-        : Boolean("isFeatured" in school && school.isFeatured),
-      isPartner: dbSchool
-        ? Boolean(dbSchool.is_partner)
-        : school.isPartnerSchool,
-      image: logoUrl,
-      customBadge: dbSchool?.custom_badge || "2026 Packs",
-      lowestPrice: dbSchool?.lowest_price ?? school.lowestPrice,
-    };
-  });
-
-  console.info(
-    `[performance] searchable schools loaded in ${Date.now() - started}ms`,
-  );
-  return records;
-}
-
-async function refreshSearchIndex(): Promise<void> {
-  if (searchIndexRefresh) return searchIndexRefresh;
-
-  searchIndexRefresh = (async () => {
-    try {
-      const started = Date.now();
-      // Re-read schools from the DB before rebuilding the index so the fresh
-      // index is built from current data, never the stale list.
-      await refreshSearchableSchools();
-      const schools = await getSearchableSchools();
-      const index = new SchoolSearchIndex(schools);
-      searchIndexCache = {
-        promise: Promise.resolve(index),
-        expiresAt: Date.now() + SEARCH_DATA_TTL_MS,
-      };
-      console.info(
-        `[performance] search index ready in ${Date.now() - started}ms`,
-      );
-    } finally {
-      searchIndexRefresh = null;
-    }
-  })();
-
-  return searchIndexRefresh;
-}
-
-export async function getSearchIndex() {
-  if (isFresh(searchIndexCache)) return searchIndexCache!.promise;
-
-  // Stale index: serve it immediately and rebuild in the background.
-  if (searchIndexCache) {
-    refreshSearchIndex().catch((error) => {
-      console.warn(
-        "[performance] background refresh of search index failed; serving stale index:",
-        error,
-      );
-    });
-    return searchIndexCache.promise;
-  }
-
-  await refreshSearchIndex();
-  return searchIndexCache!.promise;
-}
-
-export async function getSchoolSearchOptions() {
-  const [schools, publicSlugs] = await Promise.all([
-    getSearchableSchools(),
-    getPublicSchoolSlugSet(),
-  ]);
-  const visibleSchools = schools.filter((school) => publicSlugs.has(school.slug));
   return {
-    grades: getGrades(visibleSchools),
-    regions: getRegions(visibleSchools),
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    region: city,
+    city,
+    metro: row.district ?? "",
+    province: row.province ?? "",
+    grades,
+    phases: getSchoolPhasesFromGrades(grades, row.name),
+    isFeatured: Boolean(row.is_featured),
+    isPartner: Boolean(row.is_partner),
+    image: row.logo,
+    customBadge: row.custom_badge || "2026 Packs",
+    lowestPrice: row.lowest_price ?? undefined,
   };
 }
 
-export async function getFeaturedSchoolRecords() {
-  const [schools, publicSlugs] = await Promise.all([
-    getSearchableSchools(),
-    getPublicSchoolSlugSet(),
-  ]);
-  return getFeaturedSchools(
-    schools.filter((school) => publicSlugs.has(school.slug)),
-    4,
-  );
+function safeFilterValue(value: string) {
+  return value.replace(/[(),]/g, " ").trim();
+}
+
+const PHASE_GRADE_FILTERS: Record<string, string[]> = {
+  "primary-schools": [
+    "Grade R",
+    "Grade 1",
+    "Grade 2",
+    "Grade 3",
+    "Grade 4",
+    "Grade 5",
+    "Grade 6",
+    "Grade 7",
+  ],
+  "high-schools": ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
+};
+
+async function searchPublicSchoolsFallback(
+  filters: SchoolSearchFilters,
+  limit: number,
+  offset: number,
+) {
+  const supabase = createSupabaseAdminClient();
+  let query = supabase
+    .from("schools")
+    .select(
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge",
+      { count: "exact" },
+    )
+    .eq("status", "active")
+    .eq("published", true);
+
+  const search = filters.query?.trim();
+  if (search) {
+    query = query.textSearch("search_vector", search, {
+      config: "english",
+      type: "websearch",
+    });
+  }
+
+  if (filters.grade?.trim()) {
+    query = query.contains("grades", [{ grade: filters.grade.trim() }]);
+  }
+
+  if (filters.region?.trim()) {
+    const region = safeFilterValue(filters.region);
+    query = query.or(
+      `city.ilike.${region},district.ilike.${region},province.ilike.${region}`,
+    );
+  }
+
+  const phaseGrades = filters.phase ? PHASE_GRADE_FILTERS[filters.phase] : undefined;
+  if (phaseGrades) {
+    query = query.or(
+      phaseGrades
+        .map((grade) => `grades.cs.[{"grade":"${grade}"}]`)
+        .join(","),
+    );
+  } else if (filters.phase === "pre-schools") {
+    query = query.or(
+      "name.ilike.%creche%,name.ilike.%pre-school%,name.ilike.%preschool%,name.ilike.%nursery%,name.ilike.%early childhood%,name.ilike.%kindergarten%",
+    );
+  }
+
+  const { data, error, count } = await query
+    .order("is_featured", { ascending: false })
+    .order("is_partner", { ascending: false })
+    .order("name", { ascending: true })
+    .range(offset, offset + limit - 1);
+
+  if (error) throw error;
+
+  return {
+    rows: (data ?? []) as SearchSchoolRow[],
+    total: count ?? 0,
+  };
+}
+
+/**
+ * Kept for admin action compatibility. Public reads are now bounded database
+ * queries, so there is no process-local school index to invalidate.
+ */
+export function invalidateSchoolSearchCache() {}
+
+export async function getFeaturedSchoolRecords(limit = 4) {
+  const supabase = createSupabaseAdminClient();
+  if (publicSchoolReadRpcsAvailable !== false) {
+    const { data, error } = await supabase.rpc("get_featured_public_schools", {
+      result_limit: limit,
+    });
+
+    if (!error && data) {
+      publicSchoolReadRpcsAvailable = true;
+      return data.map(toSearchRecord);
+    }
+    if (isMissingRpc(error)) publicSchoolReadRpcsAvailable = false;
+  }
+
+  const { rows } = await searchPublicSchoolsFallback({}, limit, 0);
+  return rows.map(toSearchRecord);
 }
 
 export async function searchSchoolRecords(
@@ -243,18 +181,42 @@ export async function searchSchoolRecords(
   limit = 12,
   offset = 0,
 ) {
-  const [index, publicSlugs] = await Promise.all([
-    getSearchIndex(),
-    getPublicSchoolSlugSet(),
-  ]);
-  const result = index.search(filters, limit, offset);
-  const results = result.results.filter((school) => publicSlugs.has(school.slug));
-  const removed = result.results.length - results.length;
+  const safeLimit = Math.min(Math.max(limit, 1), 24);
+  const safeOffset = Math.max(offset, 0);
+  const supabase = createSupabaseAdminClient();
+  let rows: SearchSchoolRow[];
+  let total: number;
+
+  if (publicSchoolReadRpcsAvailable !== false) {
+    const { data, error } = await supabase.rpc("search_public_schools", {
+      search_query: filters.query?.trim() ?? "",
+      grade_filter: filters.grade?.trim() ?? "",
+      phase_filter: filters.phase ?? "",
+      region_filter: filters.region?.trim() ?? "",
+      result_limit: safeLimit,
+      result_offset: safeOffset,
+    });
+
+    if (!error && data) {
+      publicSchoolReadRpcsAvailable = true;
+      rows = data;
+      total = data[0]?.total_count ?? 0;
+      return {
+        results: rows.map(toSearchRecord),
+        total,
+        hasMore: safeOffset + rows.length < total,
+      };
+    }
+    if (isMissingRpc(error)) publicSchoolReadRpcsAvailable = false;
+  }
+
+  const fallback = await searchPublicSchoolsFallback(filters, safeLimit, safeOffset);
+  rows = fallback.rows;
+  total = fallback.total;
 
   return {
-    ...result,
-    results,
-    total: Math.max(0, result.total - removed),
-    hasMore: result.hasMore || removed > 0,
+    results: rows.map(toSearchRecord),
+    total,
+    hasMore: safeOffset + rows.length < total,
   };
 }

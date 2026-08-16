@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { PartnerForm } from '@/components/forms/PartnerForm'
 import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
-import { SectionHeader } from '@/components/marketing/SectionHeader'
 import { getPublicSchoolIndex } from '@/lib/schools/publicSchoolData'
 import { buildMetadata } from '@/lib/seo'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
@@ -13,7 +12,7 @@ const benefits = [
   'Your own school website with your own domain',
   'Free hosting, SSL, and maintenance — forever',
   'A parent ordering portal built around your lists',
-  '2.5% of every pack sold back to your school',
+  '1.5% of every pack sold back to your school',
   'Zero setup or ongoing fees — ever',
 ]
 
@@ -24,34 +23,11 @@ const steps = [
   },
   {
     title: 'We build your portal',
-    text: 'Your school website and ordering system go live within days.',
+    text: 'Your school website and ordering system go live within 96 hours.',
   },
   {
     title: 'Share one link',
     text: 'Parents order through your school-branded link — we handle packing, payment, and delivery.',
-  },
-]
-
-// DRAFT — placeholder testimonials for review. Replace these with confirmed
-// quotes and permission before publishing.
-const successStories = [
-  {
-    quote:
-      'We stopped chasing stationery lists and started spending the saved time on learners. Our parents order online and the rebate lands in our development fund.',
-    name: 'School Principal',
-    school: 'Primary school, Gauteng',
-  },
-  {
-    quote:
-      'The free website alone was worth it. We finally have a proper online home, and parents can find their grade pack in seconds instead of phoning the office.',
-    name: 'School Administrator',
-    school: 'High school, Gauteng',
-  },
-  {
-    quote:
-      'Setup took days, not months. We shared one link with parents and Pexpacks handled the rest — packing, payments, and delivery all on time.',
-    name: 'Head of Department',
-    school: 'Primary school, Gauteng',
   },
 ]
 
@@ -61,8 +37,8 @@ const faqItems = [
     a: 'Yes. Zero setup costs, monthly fees, or hidden charges. Pexpacks covers all development and hosting costs out of our standard stationery margins.',
   },
   {
-    q: 'How does the 2.5% rebate work?',
-    a: "Every time a parent orders through your school portal, 2.5% of the pack cost goes to your school's development fund. We transfer it annually.",
+    q: 'How does the 1.5% rebate work?',
+    a: "Every time a parent orders through your school portal, 1.5% of the pack cost goes to your school's development fund. We transfer it annually.",
   },
   {
     q: 'Does this create admin work for my staff?',
@@ -70,7 +46,7 @@ const faqItems = [
   },
   {
     q: 'How long does it take to go live?',
-    a: 'Once we receive your grade lists, we typically launch your school portal within 48 hours.',
+    a: 'Once we receive your grade lists, we typically launch your school portal within 96 hours.',
   },
   {
     q: 'What happens after I apply?',
@@ -78,25 +54,25 @@ const faqItems = [
   },
 ]
 
-// Real partner schools, verified against the school index.
-const PARTNER_SCHOOL_NAMES = [
-  'St Francis College',
-  'Redhill School',
-  'Reddam House Waterfall Estate',
-  'The Ridge Preparatory School',
-  'Centennial Schools',
-  'Curro Hazeldean High School',
-  'Michael Mount Waldorf School',
-  'Spark Turffontein',
-  'Nova Pioneer Paulshof',
-  'Curro Savanna City',
-  'Grayston Preparatory School',
-  "The King's School Linbro",
+// Fictional examples only. Replace with approved partner names as the network grows.
+const EXAMPLE_SCHOOL_NAMES = [
+  'Willowcrest Learning Academy',
+  'Cedarbrook Preparatory',
+  'Northstar Heights School',
+  'Brightfield College',
+  'Meadowridge Learning School',
+  'Silveroak Academy',
+  'Riverstone Preparatory',
+  'Greenhaven College',
+  'Horizon Gate School',
+  'Maplewood Learning Academy',
+  'Sunrise Ridge Preparatory',
+  'Bluebell Heights School',
 ]
 
 export const metadata: Metadata = buildMetadata(
   'Partner With Pexpacks | Free School Website',
-  'Partner with Pexpacks and get a free school website, parent ordering portal, and 2.5% fundraising rebate on every pack sold.',
+  'Partner with Pexpacks and get a free school website, parent ordering portal, and 1.5% fundraising rebate on every pack sold.',
   '/partnership',
 )
 
@@ -109,8 +85,8 @@ export default async function PartnerWithSchoolsPage() {
 
   const stats = [
     { value: `${partnerCount}+`, label: 'schools already partnering' },
-    { value: '2.5%', label: 'rebate to your development fund' },
-    { value: '48h', label: 'from list to live portal' },
+    { value: '1.5%', label: 'rebate to your development fund' },
+    { value: '96h', label: 'from list to live portal' },
     { value: 'R0', label: 'setup or monthly fees' },
   ]
 
@@ -119,9 +95,9 @@ export default async function PartnerWithSchoolsPage() {
       <PageHero
         eyebrow="Partner with us"
         title="Free school website + stationery fundraising."
-        text="Become an official Pexpacks partner. We build and host your school's website and parent ordering portal for free — and your school earns 2.5% on every pack sold."
+        text="Become an official Pexpacks partner. We build and host your school's website and parent ordering portal for free — and your school earns 1.5% on every pack sold."
         panelTitle="What your school gets"
-        panelText="Free website, hosting, SSL, parent portal & 2.5% rebate"
+        panelText="Free website, hosting, SSL, parent portal & 1.5% rebate"
       >
         <div className={sectionStyles.buttonRow}>
           <Button href="#partner-form" variant="primary">
@@ -131,20 +107,6 @@ export default async function PartnerWithSchoolsPage() {
             How It Works
           </Button>
         </div>
-        <p
-          style={{
-            marginTop: 18,
-            fontSize: 14,
-            color: 'var(--pex-text-muted)',
-          }}
-        >
-          <Link
-            href="#success-stories"
-            style={{ color: 'var(--pex-keppel)', fontWeight: 800 }}
-          >
-            See success stories &rarr;
-          </Link>
-        </p>
       </PageHero>
 
       <section
@@ -202,7 +164,7 @@ export default async function PartnerWithSchoolsPage() {
             className={sectionStyles.sectionEyebrow}
             style={{ textAlign: 'center', margin: '36px 0 14px' }}
           >
-            Trusted by schools like
+            Example schools we are built to support
           </p>
           <ul
             style={{
@@ -215,7 +177,7 @@ export default async function PartnerWithSchoolsPage() {
               padding: 0,
             }}
           >
-            {PARTNER_SCHOOL_NAMES.map((name) => (
+            {EXAMPLE_SCHOOL_NAMES.map((name) => (
               <li
                 key={name}
                 style={{
@@ -265,98 +227,6 @@ export default async function PartnerWithSchoolsPage() {
                 <li key={benefit}>{benefit}</li>
               ))}
             </ul>
-          </div>
-        </div>
-      </section>
-
-      <section
-        className={sectionStyles.sectionAlt}
-        id="success-stories"
-        aria-labelledby="partnership-stories-heading"
-      >
-        <div className={sectionStyles.inner}>
-          <SectionHeader
-            eyebrow="Partner success stories"
-            title="Schools that already partner with us"
-            text="Real schools across Gauteng use Pexpacks to cut stationery admin and raise funds. Here is what they say."
-            headingId="partnership-stories-heading"
-          />
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns:
-                'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: 22,
-            }}
-          >
-            {successStories.map((story) => (
-              <article
-                key={story.name}
-                className={cardStyles.packCard}
-                style={{ padding: 28 }}
-              >
-                <div
-                  className={cardStyles.packCardHead}
-                  style={{ padding: 0 }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: 3,
-                      color: 'var(--pex-keppel)',
-                    }}
-                    aria-label="5 out of 5 stars"
-                  >
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <svg
-                        key={i}
-                        viewBox="0 0 20 20"
-                        style={{ width: 18, height: 18 }}
-                      >
-                        <path
-                          fill="currentColor"
-                          d="M10 1.5l2.5 5.1 5.6.8-4 3.9.9 5.6L10 14.1l-5 2.6.9-5.6-4-3.9 5.6-.8z"
-                        />
-                      </svg>
-                    ))}
-                  </div>
-                </div>
-                <div
-                  className={cardStyles.packCardBody}
-                  style={{ padding: 0 }}
-                >
-                  <p
-                    style={{
-                      margin: '14px 0 0',
-                      fontSize: 16,
-                      lineHeight: 1.55,
-                      color: 'var(--pex-text)',
-                    }}
-                  >
-                    &ldquo;{story.quote}&rdquo;
-                  </p>
-                  <p style={{ margin: '16px 0 0' }}>
-                    <strong
-                      style={{
-                        display: 'block',
-                        color: 'var(--pex-navy)',
-                        fontSize: 15,
-                      }}
-                    >
-                      {story.name}
-                    </strong>
-                    <span
-                      style={{
-                        color: 'var(--pex-text-muted)',
-                        fontSize: 14,
-                      }}
-                    >
-                      {story.school}
-                    </span>
-                  </p>
-                </div>
-              </article>
-            ))}
           </div>
         </div>
       </section>

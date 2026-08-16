@@ -12,13 +12,11 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { breadcrumbSchema, productSchema } from "@/lib/schema";
 import {
   getCachedSchoolBySlug,
-  getGradePackItemDescriptions,
 } from "@/lib/school-utils";
 import page from "@/styles/Page.module.css";
 
 type GradePageProps = {
   params: Promise<{ schoolSlug: string; gradeSlug: string }>;
-  searchParams?: Promise<{ customize?: string }>;
 };
 
 export const dynamicParams = true;
@@ -26,6 +24,7 @@ export const dynamicParams = true;
 export const revalidate = 3600; // Edge ISR cache for 1 hour, auto-revalidated on dashboard edit
 
 export async function generateStaticParams() {
+  if (process.env.NODE_ENV !== "production") return [];
   const schoolIndex = await getSchoolIndex();
   return schoolIndex
     .filter((school) => school.isFeatured || school.isPartnerSchool)
@@ -65,10 +64,8 @@ export async function generateMetadata({
   );
 }
 
-export default async function GradePackPage({ params, searchParams }: GradePageProps) {
+export default async function GradePackPage({ params }: GradePageProps) {
   const { schoolSlug, gradeSlug } = await params;
-  const search = await searchParams;
-  const autoCustomise = search?.customize === "1";
   const school = await getCachedSchoolBySlug(schoolSlug);
   const grade = school?.grades.find((g) => g.gradeSlug === gradeSlug);
 
@@ -76,7 +73,14 @@ export default async function GradePackPage({ params, searchParams }: GradePageP
     notFound();
   }
 
-  const descriptions = await getGradePackItemDescriptions(school.slug, grade.gradeSlug);
+  const descriptions = Object.fromEntries(
+    (grade.packItems ?? []).flatMap((item) => {
+      const description = item.description?.trim();
+      if (!description) return [];
+      const contentLabel = item.quantity > 1 ? `${item.quantity}x ${item.name}` : item.name;
+      return [[item.name, description], [contentLabel, description]];
+    }),
+  );
 
   return (
     <>
@@ -108,7 +112,7 @@ export default async function GradePackPage({ params, searchParams }: GradePageP
       />
       <section className={page.section}>
         <PackBuildingAnimation schoolName={school.name}>
-          <GradePackDetails school={school} grade={grade} descriptions={descriptions} autoCustomise={autoCustomise} />
+          <GradePackDetails school={school} grade={grade} descriptions={descriptions} readCustomiseFromUrl />
         </PackBuildingAnimation>
       </section>
     </>

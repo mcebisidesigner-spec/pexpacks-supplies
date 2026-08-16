@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { trackProceedToCheckout } from "@/lib/analytics";
+import {
+  trackAddLearnerStarted,
+  trackProceedToCheckout,
+} from "@/lib/analytics";
 import styles from "./GlobalPackTray.module.css";
 
 export function PackTrayFooter() {
@@ -25,8 +28,9 @@ export function PackTrayFooter() {
   }, [hasPacks, packs, total, closeTray, router]);
 
   const handleAddAnotherLearner = useCallback(() => {
+    trackAddLearnerStarted({ packCount: packs.length });
     setShowSchoolChoice(true);
-  }, []);
+  }, [packs.length]);
 
   const handleSameSchool = useCallback(() => {
     closeTray();

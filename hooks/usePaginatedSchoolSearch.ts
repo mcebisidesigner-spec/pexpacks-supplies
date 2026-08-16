@@ -5,6 +5,10 @@ import type {
   PaginatedSchoolResults,
   SchoolSearchRecord,
 } from "@/lib/schools/types";
+import {
+  trackSchoolSearchCompleted,
+  trackSchoolSearchFailed,
+} from "@/lib/analytics";
 
 type UsePaginatedSchoolSearchOptions = {
   initialQuery?: string;
@@ -15,6 +19,7 @@ type UsePaginatedSchoolSearchOptions = {
   resultLimit?: number;
   initialPanelOpen?: boolean;
   errorMessage: string;
+  searchSource: "home" | "schools" | "tray";
 };
 
 function shouldSearch(
@@ -38,6 +43,7 @@ export function usePaginatedSchoolSearch({
   resultLimit = 12,
   initialPanelOpen = false,
   errorMessage,
+  searchSource,
 }: UsePaginatedSchoolSearchOptions) {
   const [query, setQuery] = useState(initialQuery);
   const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
@@ -109,6 +115,12 @@ export function usePaginatedSchoolSearch({
         setTotal(data.total);
         setHasMore(data.hasMore);
         setHasSearched(true);
+        trackSchoolSearchCompleted({
+          source: searchSource,
+          queryLength: debouncedQuery.trim().length,
+          resultCount: data.total,
+          offset: nextOffset,
+        });
       } catch (fetchError) {
         if (
           fetchError instanceof DOMException &&
@@ -118,13 +130,17 @@ export function usePaginatedSchoolSearch({
         }
 
         setError(errorMessage);
+        trackSchoolSearchFailed({
+          source: searchSource,
+          queryLength: debouncedQuery.trim().length,
+        });
       } finally {
         if (activeRequest.current === controller) {
           setIsLoading(false);
         }
       }
     },
-    [debouncedQuery, errorMessage, grade, gradeAllValue, phase, phaseAllValue, resultLimit]
+    [debouncedQuery, errorMessage, grade, gradeAllValue, phase, phaseAllValue, resultLimit, searchSource]
   );
 
   useEffect(() => {

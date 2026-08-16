@@ -16,6 +16,12 @@ import { OrderSummaryCard } from "@/components/checkout/OrderSummaryCard";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import styles from "./Checkout.module.css";
 import clsx from "clsx";
+import {
+  trackCheckoutStepCompleted,
+  trackCheckoutValidationFailed,
+  trackPaymentFailed,
+  trackPaymentInitiated,
+} from "@/lib/analytics";
 
 type CheckoutFormProps = {
   schoolSlug: string;
@@ -265,6 +271,11 @@ export function CheckoutForm({
 
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
+      trackCheckoutValidationFailed({
+        checkoutMode: "single-pack",
+        step: STEPS[step]?.id || "unknown",
+        fields: Object.keys(nextErrors),
+      });
       focusFirstInvalid(nextErrors);
       return false;
     }
@@ -273,6 +284,10 @@ export function CheckoutForm({
 
   function handleNext() {
     if (validateStep(activeStep)) {
+      trackCheckoutStepCompleted({
+        checkoutMode: "single-pack",
+        step: currentStep.id,
+      });
       goToStep(activeStep + 1);
     }
   }
@@ -280,6 +295,11 @@ export function CheckoutForm({
   async function handlePay() {
     const detailsErrors = getStepErrors(1);
     if (Object.keys(detailsErrors).length > 0) {
+      trackCheckoutValidationFailed({
+        checkoutMode: "single-pack",
+        step: "details",
+        fields: Object.keys(detailsErrors),
+      });
       setErrors(detailsErrors);
       goToStep(1, { preserveErrors: true });
       focusFirstInvalid(detailsErrors);
@@ -288,6 +308,11 @@ export function CheckoutForm({
 
     const deliveryErrors = getStepErrors(2);
     if (Object.keys(deliveryErrors).length > 0) {
+      trackCheckoutValidationFailed({
+        checkoutMode: "single-pack",
+        step: "delivery",
+        fields: Object.keys(deliveryErrors),
+      });
       setErrors(deliveryErrors);
       goToStep(2, { preserveErrors: true });
       focusFirstInvalid(deliveryErrors);
@@ -355,6 +380,11 @@ export function CheckoutForm({
 
       if (!response.ok || !data.url) {
         console.error("Ozow Checkout Error Response:", response.status, data);
+        trackPaymentFailed({
+          checkoutMode: "single-pack",
+          failureType: response.ok ? "invalid_response" : "api",
+          statusCode: response.status,
+        });
         const errorMessage =
           data.error ||
           data.message ||
@@ -365,10 +395,18 @@ export function CheckoutForm({
         return;
       }
 
+      trackPaymentInitiated({
+        orderId: idempotencyKeyRef.current,
+        totalPrice: totalToPay,
+      });
       window.location.href = data.url;
       return;
     } catch (error) {
       console.error("Ozow Checkout Exception:", error);
+      trackPaymentFailed({
+        checkoutMode: "single-pack",
+        failureType: "network",
+      });
       setSubmitError(
         error instanceof Error
           ? error.message
@@ -492,7 +530,10 @@ export function CheckoutForm({
                 </div>
               </div>
               <p className={styles.paymentSubtext}>
-                We will send you payment details and delivery information after you confirm your order.
+                You will be redirected to Ozow to pay the pack total securely.
+                {fulfilmentOption === "Delivery"
+                  ? " The home-delivery fee is not included and will be confirmed with you separately before dispatch."
+                  : ""}
               </p>
             </section>
 
@@ -568,7 +609,9 @@ export function CheckoutForm({
             aria-expanded={summaryOpen}
             aria-controls="checkout-order-summary"
           >
-            <span className={styles.stickyCtaLabel}>Total to pay</span>
+            <span className={styles.stickyCtaLabel}>
+              {fulfilmentOption === "Delivery" ? "Pack total" : "Total to pay"}
+            </span>
             <span className={styles.stickyCtaPrice}>
               {formatCurrency(totalToPay)}
             </span>
@@ -637,7 +680,21 @@ export function CheckoutForm({
                     ? "Continue to details"
                     : "Continue to delivery"}
               </Button>
-            ) : null}
+            ) : (
+              <Button
+                type="button"
+                variant="primary"
+                onClick={handlePay}
+                disabled={submitting}
+                aria-busy={submitting}
+              >
+                {submitting
+                  ? "Preparing secure checkout..."
+                  : fulfilmentOption === "Delivery"
+                    ? `Pay Pack Total ${formatCurrency(totalToPay)}`
+                    : `Pay Securely ${formatCurrency(totalToPay)}`}
+              </Button>
+            )}
           </div>
 
           <OrderSummaryCard
@@ -650,6 +707,7 @@ export function CheckoutForm({
             hasPexcover={hasPexcover}
             summaryOpen={summaryOpen}
             whatsAppHref={whatsAppHref}
+            deliveryFeePending={fulfilmentOption === "Delivery"}
           />
         </div>
       </div>
@@ -678,7 +736,9 @@ export function CheckoutForm({
           >
             {submitting
               ? "Preparing secure checkout..."
-              : `Pay Securely ${formatCurrency(totalToPay)}`}
+              : fulfilmentOption === "Delivery"
+                ? `Pay Pack Total ${formatCurrency(totalToPay)}`
+                : `Pay Securely ${formatCurrency(totalToPay)}`}
           </Button>
         )}
       </div>

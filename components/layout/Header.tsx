@@ -90,7 +90,11 @@ export function Header() {
             adminUserLoading={adminUserLoading}
           />
           {!isAdmin && (
-            <Link className={styles.desktopOrder} href="/track-order">
+            <Link
+              className={styles.desktopOrder}
+              href="/track-order"
+              data-conversion-event="header_track_pack"
+            >
               <span>Track Your Pack</span>
               <span className={styles.orderIcon} aria-hidden="true">
                 <TrackPackIcon />

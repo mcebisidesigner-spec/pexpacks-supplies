@@ -12,7 +12,11 @@ import { Input } from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
 import { buildWhatsAppHref } from '@/data/contact'
 import clsx from 'clsx'
-import { trackPaymentInitiated } from '@/lib/analytics'
+import {
+  trackCheckoutValidationFailed,
+  trackPaymentFailed,
+  trackPaymentInitiated,
+} from '@/lib/analytics'
 import styles from '@/app/checkout/Checkout.module.css'
 
 type FulfilmentOption =
@@ -404,6 +408,11 @@ export function TrayCheckoutClient() {
 
     const firstError = Object.keys(nextErrors)[0]
     if (firstError) {
+      trackCheckoutValidationFailed({
+        checkoutMode: 'tray',
+        step: getSectionForError(firstError) || 'order',
+        fields: Object.keys(nextErrors),
+      })
       guideToIncompleteField(firstError)
     }
 
@@ -478,6 +487,11 @@ export function TrayCheckoutClient() {
 
       if (!response.ok || !data.url) {
         console.error("Ozow Checkout Error Response:", response.status, data)
+        trackPaymentFailed({
+          checkoutMode: 'tray',
+          failureType: response.ok ? 'invalid_response' : 'api',
+          statusCode: response.status,
+        })
         const errorMessage =
           data.error ||
           data.message ||
@@ -498,6 +512,10 @@ export function TrayCheckoutClient() {
       return
     } catch (error) {
       console.error("Ozow Checkout Exception:", error)
+      trackPaymentFailed({
+        checkoutMode: 'tray',
+        failureType: 'network',
+      })
       setSubmitError(
         error instanceof Error
           ? error.message
@@ -1119,10 +1137,21 @@ export function TrayCheckoutClient() {
                 </div>
               ) : null}
               <div className={styles.summaryGrandTotal}>
-                <span>Final amount</span>
+                <span>
+                  {fulfilmentOption === 'home_delivery'
+                    ? 'Pack total payable now'
+                    : 'Total payable now'}
+                </span>
                 <strong>{formatCurrency(total)}</strong>
               </div>
             </div>
+
+            {fulfilmentOption === 'home_delivery' ? (
+              <p className={styles.deliveryFeeNotice}>
+                The home-delivery fee is not included in this payment. We will
+                confirm the fee with you separately before dispatch.
+              </p>
+            ) : null}
 
             {errors.packs || errors.total ? (
               <p className={styles.formStatusError} role="alert">
@@ -1141,7 +1170,9 @@ export function TrayCheckoutClient() {
             >
               {submitting
                 ? 'Preparing your order...'
-                : `Pay Now ${formatCurrency(total)}`}
+                : fulfilmentOption === 'home_delivery'
+                  ? `Pay Pack Total ${formatCurrency(total)}`
+                  : `Pay Now ${formatCurrency(total)}`}
             </Button>
 
             <Button
@@ -1172,7 +1203,9 @@ export function TrayCheckoutClient() {
         >
           {submitting
             ? 'Preparing...'
-            : `Pay Now ${formatCurrency(total)}`}
+            : fulfilmentOption === 'home_delivery'
+              ? `Pay Pack Total ${formatCurrency(total)}`
+              : `Pay Now ${formatCurrency(total)}`}
         </Button>
       </div>
     </div>

@@ -52,9 +52,10 @@ let schoolIndexPromise: Promise<SchoolIndexRecord[]> | null = null;
 
 export const getSchoolIndex = async (): Promise<SchoolIndexRecord[]> => {
   if (!schoolIndexPromise) {
-    schoolIndexPromise = import("./school-index.json").then(
-      (data) => data.default as SchoolIndexRecord[]
-    );
+    schoolIndexPromise = readFile(
+      path.join(process.cwd(), "data", "school-index.json"),
+      "utf8",
+    ).then((contents) => JSON.parse(contents) as SchoolIndexRecord[]);
   }
   return schoolIndexPromise;
 };
@@ -66,9 +67,10 @@ let schoolRecordMapPromise: Promise<SchoolRecordMap> | null = null;
 
 export const getFullSchoolRecords = async (): Promise<School[]> => {
   if (!fullSchoolRecordsPromise) {
-    fullSchoolRecordsPromise = import("./school-records.json").then(
-      (records) => records.default as School[]
-    );
+    fullSchoolRecordsPromise = readFile(
+      path.join(process.cwd(), "data", "school-records.json"),
+      "utf8",
+    ).then((contents) => JSON.parse(contents) as School[]);
   }
 
   return fullSchoolRecordsPromise;
@@ -90,3 +92,6 @@ export const getSchoolBySlug = async (
   const records = await getSchoolRecordMap();
   return records.get(slug);
 };
+import "server-only";
+import { readFile } from "node:fs/promises";
+import path from "node:path";

@@ -70,7 +70,11 @@ export default async function BlogIndex() {
               <p className={styles.promoText}>
                 Add Pexcover to your stationery pack. Our team will cover all exercise books in durable protective film and print clean name tags for your child.
               </p>
-              <Link href="/blog/what-is-pexcover-book-covering" className={styles.promoLink}>
+              <Link
+                href="/blog/what-is-pexcover-book-covering"
+                className={styles.promoLink}
+                data-conversion-event="blog_pexcover_guide"
+              >
                 Learn how Pexcover works
               </Link>
             </div>

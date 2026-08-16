@@ -29,11 +29,21 @@ export function CTASection({
           <p>{text}</p>
         </div>
         <div className={styles.buttonRow}>
-          <Button href={primaryHref} variant="white" size="lg">
+          <Button
+            href={primaryHref}
+            variant="white"
+            size="lg"
+            data-conversion-event={`cta_${primaryLabel.toLowerCase().replaceAll(" ", "_")}`}
+          >
             {primaryLabel}
           </Button>
           {secondaryHref && secondaryLabel ? (
-            <Button href={secondaryHref} variant="primary" size="lg">
+            <Button
+              href={secondaryHref}
+              variant="primary"
+              size="lg"
+              data-conversion-event={`cta_${secondaryLabel.toLowerCase().replaceAll(" ", "_")}`}
+            >
               {secondaryLabel}
             </Button>
           ) : null}

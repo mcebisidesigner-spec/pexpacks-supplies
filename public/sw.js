@@ -1,13 +1,8 @@
-const APP_VERSION = "pexpacks-pwa-v1";
+const APP_VERSION = "pexpacks-pwa-v2";
 const STATIC_CACHE = `${APP_VERSION}-static`;
-const PAGE_CACHE = `${APP_VERSION}-pages`;
 const IMAGE_CACHE = `${APP_VERSION}-images`;
 
 const PRECACHE_URLS = [
-  "/",
-  "/schools",
-  "/office",
-  "/contact",
   "/offline",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
@@ -17,18 +12,30 @@ const PRECACHE_URLS = [
 ];
 
 const MAX_IMAGE_CACHE_ENTRIES = 60;
-const MAX_IMAGE_CACHE_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const MAX_IMAGE_CACHE_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 function isSameOrigin(url) {
   return url.origin === self.location.origin;
 }
 
-function isApiRequest(url) {
-  return url.pathname.startsWith("/api/");
+function isSensitivePath(url) {
+  return (
+    url.pathname.startsWith("/api/") ||
+    url.pathname.startsWith("/admin") ||
+    url.pathname.startsWith("/checkout")
+  );
+}
+
+function isNextFlightRequest(request, url) {
+  return (
+    request.headers.get("RSC") === "1" ||
+    request.headers.has("Next-Router-Prefetch") ||
+    url.searchParams.has("_rsc")
+  );
 }
 
 function isImageAsset(url) {
-  return /\.(?:avif|gif|jpg|jpeg|png|svg|webp)$/i.test(url.pathname) && !url.pathname.startsWith("/icons/");
+  return /\.(?:avif|gif|jpg|jpeg|png|svg|webp)$/i.test(url.pathname);
 }
 
 function isStaticAsset(url) {
@@ -44,68 +51,46 @@ function canCache(response) {
   return response && response.ok && response.type !== "opaque";
 }
 
-async function putCache(cacheName, request, response) {
-  if (!canCache(response)) {
-    return;
-  }
-
-  const cache = await caches.open(cacheName);
-  await cache.put(request, response.clone());
-}
-
 async function cacheFirst(request) {
   const cached = await caches.match(request);
-
-  if (cached) {
-    return cached;
-  }
+  if (cached) return cached;
 
   const response = await fetch(request);
-  await putCache(STATIC_CACHE, request, response);
+  if (canCache(response)) {
+    const cache = await caches.open(STATIC_CACHE);
+    await cache.put(request, response.clone());
+  }
   return response;
 }
 
-async function staleWhileRevalidateWithLimit(request, cacheName, maxEntries) {
-  const cached = await caches.match(request);
-
-  const networkResponse = fetch(request)
+async function staleWhileRevalidateImage(request) {
+  const cache = await caches.open(IMAGE_CACHE);
+  const cached = await cache.match(request);
+  const network = fetch(request)
     .then(async (response) => {
-      const cache = await caches.open(cacheName);
+      if (!canCache(response)) return response;
       const keys = await cache.keys();
-
-      if (keys.length >= maxEntries) {
-        const oldest = keys.slice(0, keys.length - maxEntries + 1);
-        await Promise.all(oldest.map((key) => cache.delete(key)));
+      if (keys.length >= MAX_IMAGE_CACHE_ENTRIES) {
+        await Promise.all(
+          keys.slice(0, keys.length - MAX_IMAGE_CACHE_ENTRIES + 1).map((key) =>
+            cache.delete(key),
+          ),
+        );
       }
-
       await cache.put(request, response.clone());
       return response;
     })
     .catch(() => undefined);
 
-  if (cached) {
-    return cached;
-  }
-
-  return (
-    (await networkResponse) ||
-    new Response("This resource is not available offline.", {
-      status: 503,
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
-    })
-  );
+  return cached || (await network) || new Response("Image unavailable", { status: 503 });
 }
 
-async function networkFirstNavigation(request) {
+async function networkNavigation(request) {
   try {
-    const response = await fetch(request);
-    await putCache(PAGE_CACHE, request, response);
-    return response;
+    return await fetch(request);
   } catch {
     return (
-      (await caches.match(request)) ||
       (await caches.match("/offline")) ||
-      (await caches.match("/")) ||
       new Response("Pexpacks is offline. Please reconnect and try again.", {
         status: 503,
         headers: { "Content-Type": "text/plain; charset=utf-8" },
@@ -114,59 +99,28 @@ async function networkFirstNavigation(request) {
   }
 }
 
-async function staleWhileRevalidate(request) {
-  const cached = await caches.match(request);
-  const networkResponse = fetch(request)
-    .then(async (response) => {
-      await putCache(PAGE_CACHE, request, response);
-      return response;
-    })
-    .catch(() => undefined);
-
-  if (cached) {
-    return cached;
-  }
-
-  return (
-    (await networkResponse) ||
-    new Response("This resource is not available offline.", {
-      status: 503,
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
-    })
-  );
-}
-
-async function deleteExpiredEntries(cacheName, maxAgeMs) {
-  const cache = await caches.open(cacheName);
-  const keys = await cache.keys();
+async function deleteExpiredImages() {
+  const cache = await caches.open(IMAGE_CACHE);
   const now = Date.now();
-
+  const keys = await cache.keys();
   await Promise.all(
     keys.map(async (request) => {
-      const cached = await cache.match(request);
-      if (cached) {
-        const dateHeader = cached.headers.get("date");
-        if (dateHeader) {
-          const cachedTime = new Date(dateHeader).getTime();
-          if (now - cachedTime > maxAgeMs) {
-            await cache.delete(request);
-          }
-        }
+      const response = await cache.match(request);
+      const cachedAt = response?.headers.get("date");
+      if (cachedAt && now - new Date(cachedAt).getTime() > MAX_IMAGE_CACHE_AGE_MS) {
+        await cache.delete(request);
       }
-    })
+    }),
   );
 }
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(STATIC_CACHE)
-      .then((cache) =>
-        Promise.all(
-          PRECACHE_URLS.map((url) => cache.add(url).catch(() => undefined)),
-        ),
-      ),
+    caches.open(STATIC_CACHE).then((cache) =>
+      Promise.all(PRECACHE_URLS.map((url) => cache.add(url).catch(() => undefined))),
+    ),
   );
+  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -177,7 +131,7 @@ self.addEventListener("activate", (event) => {
         Promise.all(
           keys
             .filter((key) => key.startsWith("pexpacks-pwa-"))
-            .filter((key) => key !== STATIC_CACHE && key !== PAGE_CACHE && key !== IMAGE_CACHE)
+            .filter((key) => key !== STATIC_CACHE && key !== IMAGE_CACHE)
             .map((key) => caches.delete(key)),
         ),
       )
@@ -189,31 +143,25 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  if (request.method !== "GET" || !isSameOrigin(url) || isApiRequest(url)) {
+  if (
+    request.method !== "GET" ||
+    !isSameOrigin(url) ||
+    isSensitivePath(url) ||
+    isNextFlightRequest(request, url)
+  ) {
     return;
   }
 
   if (request.mode === "navigate") {
-    event.respondWith(networkFirstNavigation(request));
-    return;
-  }
-
-  if (isImageAsset(url)) {
-    event.respondWith(staleWhileRevalidateWithLimit(request, IMAGE_CACHE, MAX_IMAGE_CACHE_ENTRIES));
-    return;
-  }
-
-  if (isStaticAsset(url)) {
+    event.respondWith(networkNavigation(request));
+  } else if (isStaticAsset(url)) {
     event.respondWith(cacheFirst(request));
-    return;
+  } else if (isImageAsset(url)) {
+    event.respondWith(staleWhileRevalidateImage(request));
   }
-
-  event.respondWith(staleWhileRevalidate(request));
 });
 
-// Periodic cache cleanup — runs when the SW wakes up
 self.addEventListener("message", (event) => {
-  if (event.data === "CLEAN_IMAGE_CACHE") {
-    deleteExpiredEntries(IMAGE_CACHE, MAX_IMAGE_CACHE_AGE_MS);
-  }
+  if (event.data === "SKIP_WAITING") self.skipWaiting();
+  if (event.data === "CLEAN_IMAGE_CACHE") event.waitUntil(deleteExpiredImages());
 });

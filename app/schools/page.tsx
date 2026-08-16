@@ -23,16 +23,7 @@ export const metadata: Metadata = buildMetadata(
   "/schools"
 );
 
-type SchoolsPageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-};
-
-function firstValue(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] : value;
-}
-
-export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
-  const params = searchParams ? await searchParams : {};
+export default async function SchoolsPage() {
   const featuredSchools = await getFeaturedSchoolRecords();
 
   return (
@@ -45,9 +36,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
           panelText="Each pack is packed according to your&nbsp; school&rsquo;s official stationery list."
           panelClassName={heroStyles.heroPanelSearchAligned}
         >
-          <SchoolSearchPanel
-            initialQuery={firstValue(params.q) ?? ""}
-          />
+          <SchoolSearchPanel readQueryFromUrl />
         </PageHero>
       </div>
 

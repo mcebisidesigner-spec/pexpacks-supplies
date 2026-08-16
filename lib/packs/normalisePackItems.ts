@@ -162,6 +162,7 @@ export function createSchoolGradePack(
         requiredQuantity: item.quantity,
         unitPrice: item.unitPrice ?? undefined,
         specification: item.specification ?? undefined,
+        description: item.description ?? undefined,
         isRequired: true,
       }))
     : normalisePackItems(grade.contents, grade.id);
@@ -182,7 +183,8 @@ export function createSchoolGradePack(
     packName: `${grade.grade} Stationery Pack`,
     slug: `${school.slug}/${grade.gradeSlug}`,
     items: items.map((item) => {
-      const description = descriptions?.[item.name]?.trim();
+      const description =
+        descriptions?.[item.name]?.trim() || item.description?.trim();
       return {
         ...item,
         unitPrice: item.unitPrice ?? estimatedUnitPrice,

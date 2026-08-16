@@ -10,24 +10,16 @@ import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
 import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
 import {
   getSchoolIndex,
-  getSchoolRecordMap,
 } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema, productSchema } from "@/lib/schema";
-import { getCachedSchoolBySlug, getSchoolGradeDescriptions } from "@/lib/school-utils";
+import { getCachedSchoolBySlug } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildWhatsAppHref } from "@/data/contact";
 import pageStyles from "@/styles/Page.module.css";
 import styles from "./SchoolDetailPage.module.css";
 
 export const revalidate = 3600; // Edge ISR cache for 1 hour, auto-revalidated on dashboard edit
-
-// Eagerly start loading the full school records at module evaluation time,
-// ahead of component rendering. This gives the 11MB dynamic import a head
-// start so it's more likely to resolve before the async component's first
-// `await`, avoiding a React Suspense interleave that can confuse Next.js's
-// internal performance.mark/measure bookkeeping in dev / Turbopack.
-getSchoolRecordMap();
 
 type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
@@ -47,6 +39,7 @@ function formatSchoolLocation(city: string, district: string, province: string):
 }
 
 export async function generateStaticParams() {
+  if (process.env.NODE_ENV !== "production") return [];
   const schoolIndex = await getSchoolIndex();
   return schoolIndex
     .filter((school) => school.isFeatured || school.isPartnerSchool)
@@ -89,11 +82,6 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   }
 
   const isPartner = school.isPartnerSchool;
-  const gradeDescriptions = await getSchoolGradeDescriptions(
-    school.slug,
-    school.grades.map((grade) => grade.gradeSlug)
-  );
-
   return (
     <>
       <JsonLd
@@ -174,7 +162,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
 
           <section className={pageStyles.section}>
             <div className={pageStyles.sectionInner}>
-              <GradeSelector school={school} gradeDescriptions={gradeDescriptions} />
+              <GradeSelector school={school} />
             </div>
           </section>
 

@@ -12,6 +12,11 @@ import {
   getSchoolPhaseLabel,
 } from "@/lib/schools/schoolPhase";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
+import { formatSchoolSearchLocation } from "@/lib/schools/searchPresentation";
+import {
+  trackSchoolNoResultsRecovery,
+  trackSchoolResultSelected,
+} from "@/lib/analytics";
 import { SchoolLogoPlaceholder } from "./SchoolLogoPlaceholder";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import { SchoolsHowItWorks } from "./SchoolsHowItWorks";
@@ -21,6 +26,7 @@ const resultLimit = 12;
 
 type SchoolSearchPanelProps = {
   initialQuery?: string;
+  readQueryFromUrl?: boolean;
 };
 
 function HighlightMatch({ text, query }: { text: string; query: string }) {
@@ -48,11 +54,13 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 
 export function SchoolSearchPanel({
   initialQuery = "",
+  readQueryFromUrl = false,
 }: SchoolSearchPanelProps) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const [trendingSchools, setTrendingSchools] = useState<{ name: string; slug: string; image?: string | null }[]>([]);
   const [trendingVisible, setTrendingVisible] = useState(false);
   const trendingFetched = useRef(false);
+  const urlQueryApplied = useRef(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const {
     query,
@@ -72,10 +80,18 @@ export function SchoolSearchPanel({
     initialPanelOpen: initialQuery.trim().length >= 3,
     phaseAllValue: "all",
     resultLimit,
+    searchSource: "schools",
     errorMessage:
       "We couldn't load the school list. Please refresh or contact Pexpacks.",
   });
   const searchActive = panelOpen;
+
+  useEffect(() => {
+    if (!readQueryFromUrl || urlQueryApplied.current) return;
+    urlQueryApplied.current = true;
+    const queryFromUrl = new URLSearchParams(window.location.search).get("q")?.trim();
+    if (queryFromUrl) updateQuery(queryFromUrl);
+  }, [readQueryFromUrl, updateQuery]);
 
   useEffect(() => {
     if (trendingFetched.current || query.length >= 3) return;
@@ -152,11 +168,19 @@ export function SchoolSearchPanel({
             <div className={heroStyles.trendingRow}>
               <span className={heroStyles.trendingLabel}>Trending Near You</span>
               <div className={heroStyles.trendingTrack}>
-                {trendingSchools.map((school) => (
+                {trendingSchools.map((school, index) => (
                   <Link
                     key={school.slug}
                     href={`/schools/${school.slug}`}
                     className={heroStyles.trendingCard}
+                    onClick={() =>
+                      trackSchoolResultSelected({
+                        source: "schools",
+                        schoolSlug: school.slug,
+                        position: index + 1,
+                        placement: "trending",
+                      })
+                    }
                   >
                     {school.image ? (
                       <Image
@@ -224,7 +248,7 @@ export function SchoolSearchPanel({
                   {results.length > 0 ? (
                     <>
                       <div className={heroStyles.heroResultsList}>
-                        {results.map((school) => (
+                        {results.map((school, index) => (
                           <article className={heroStyles.heroResultCard} key={school.id}>
                             <div className={heroStyles.heroResultContent}>
                               <div className={heroStyles.heroResultRow}>
@@ -248,14 +272,21 @@ export function SchoolSearchPanel({
                                 )}
                                 <div className={heroStyles.heroResultSummary}>
                                   <h3>
-                                    <Link href={`/schools/${school.slug}`}>
+                                    <Link
+                                      href={`/schools/${school.slug}`}
+                                      onClick={() =>
+                                        trackSchoolResultSelected({
+                                          source: "schools",
+                                          schoolSlug: school.slug,
+                                          position: index + 1,
+                                          placement: "result",
+                                        })
+                                      }
+                                    >
                                       <HighlightMatch text={school.name} query={query} />
                                     </Link>
                                   </h3>
-                                  <p>
-                                    {school.region}
-                                    {school.metro ? `, City of ${school.metro}` : school.province ? `, ${school.province}` : ""}
-                                  </p>
+                                  <p>{formatSchoolSearchLocation(school)}</p>
                                 </div>
                               </div>
                               <div className={heroStyles.heroResultMeta}>
@@ -265,6 +296,14 @@ export function SchoolSearchPanel({
                                       key={g}
                                       href={`/schools/${school.slug}`}
                                       className={heroStyles.gradePill}
+                                      onClick={() =>
+                                        trackSchoolResultSelected({
+                                          source: "schools",
+                                          schoolSlug: school.slug,
+                                          position: index + 1,
+                                          placement: "result",
+                                        })
+                                      }
                                     >
                                       {g}
                                     </Link>
@@ -295,6 +334,15 @@ export function SchoolSearchPanel({
                             <Link
                               href={`/schools/${school.slug}`}
                               className={heroStyles.heroResultLink}
+                              aria-label={`View ${school.name} packs in ${formatSchoolSearchLocation(school)}`}
+                              onClick={() =>
+                                trackSchoolResultSelected({
+                                  source: "schools",
+                                  schoolSlug: school.slug,
+                                  position: index + 1,
+                                  placement: "result",
+                                })
+                              }
                             >
                               View packs
                             </Link>
@@ -329,7 +377,13 @@ export function SchoolSearchPanel({
                         Don&rsquo;t see your school? Upload your stationery list or send it to us on WhatsApp and we&rsquo;ll pack every item exactly as specified.
                       </p>
                       <div className={heroStyles.searchCatchallActions}>
-                        <Link href="/order" className={heroStyles.searchCatchallUpload}>
+                        <Link
+                          href="/order"
+                          className={heroStyles.searchCatchallUpload}
+                          onClick={() =>
+                            trackSchoolNoResultsRecovery({ source: "schools" })
+                          }
+                        >
                           Upload Your School List
                         </Link>
                       </div>

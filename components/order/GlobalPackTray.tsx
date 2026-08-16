@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
+import { trackTrayOpened } from "@/lib/analytics";
 import { PackTrayItem } from "./PackTrayItem";
 import { PackTrayFooter } from "./PackTrayFooter";
 import styles from "./GlobalPackTray.module.css";
@@ -15,6 +16,7 @@ export function GlobalPackTray() {
   const trayRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const openTrackedRef = useRef(false);
   const schoolSlugsKey = [...new Set(
     packs
       .map((pack) => pack.schoolSlug)
@@ -86,6 +88,13 @@ export function GlobalPackTray() {
     },
     [closeTray]
   );
+
+  useEffect(() => {
+    if (isOpen && !openTrackedRef.current) {
+      trackTrayOpened({ packCount: packs.length });
+    }
+    openTrackedRef.current = isOpen;
+  }, [isOpen, packs.length]);
 
   useEffect(() => {
     if (isOpen) {
@@ -170,7 +179,7 @@ export function GlobalPackTray() {
           <div className={styles.searchSection}>
             <div className={styles.searchContainer}>
               <h3 className={styles.searchTitle}>Find Your School Pack</h3>
-              <HeroSearch onResultClick={closeTray} />
+              <HeroSearch onResultClick={closeTray} source="tray" />
             </div>
           </div>
         ) : null}

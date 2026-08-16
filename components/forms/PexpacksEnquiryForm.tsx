@@ -255,11 +255,11 @@ export function PexpacksEnquiryForm({
           ) : (
             <>
               <label className={formStyles.field} htmlFor="enqPartnerBusinessName">
-                <span>Organisation</span>
+                <span>School</span>
                 <input
                   id="enqPartnerBusinessName"
                   name="businessName"
-                  placeholder="School, business or supplier name"
+                  placeholder="School name"
                   autoComplete="organization"
                   defaultValue={initialBusinessName}
                   required

@@ -48,8 +48,8 @@ export default async function FAQPage() {
                 Search for your school or choose a standard grade pack. Your stationery is handled.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/schools" variant="primary">Find Your School Pack</Button>
-                <Button href="/partnership" variant="white">Partner With Us</Button>
+                <Button href="/schools" variant="primary" data-conversion-event="faq_find_school_pack">Find Your School Pack</Button>
+                <Button href="/partnership" variant="white" data-conversion-event="faq_partner">Partner With Us</Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>
@@ -62,7 +62,7 @@ export default async function FAQPage() {
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/contact" className={cardStyles.cardLink}>
+                <Link href="/contact" className={cardStyles.cardLink} data-conversion-event="faq_contact">
                   Contact Pexpacks &rarr;
                 </Link>
               </div>

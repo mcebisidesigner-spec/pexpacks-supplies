@@ -1033,6 +1033,52 @@ export interface Database {
         Args: Record<string, never>;
         Returns: { city: string | null; school_count: number }[];
       };
+      search_public_schools: {
+        Args: {
+          search_query?: string;
+          grade_filter?: string;
+          phase_filter?: string;
+          region_filter?: string;
+          result_limit?: number;
+          result_offset?: number;
+        };
+        Returns: {
+          id: string;
+          name: string;
+          slug: string;
+          city: string | null;
+          district: string | null;
+          province: string | null;
+          logo: string | null;
+          is_partner: boolean;
+          is_featured: boolean;
+          lowest_price: number | null;
+          grades: Json;
+          custom_badge: string | null;
+          total_count: number;
+        }[];
+      };
+      get_featured_public_schools: {
+        Args: { result_limit?: number };
+        Returns: {
+          id: string;
+          name: string;
+          slug: string;
+          city: string | null;
+          district: string | null;
+          province: string | null;
+          logo: string | null;
+          is_partner: boolean;
+          is_featured: boolean;
+          lowest_price: number | null;
+          grades: Json;
+          custom_badge: string | null;
+        }[];
+      };
+      get_public_school_pack: {
+        Args: { school_slug: string };
+        Returns: Json;
+      };
       get_orders_summary: {
         Args: { from_date: string; to_date: string };
         Returns: {

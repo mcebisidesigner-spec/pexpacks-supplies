@@ -15,7 +15,11 @@ import {
 import { useDialogFocusTrap } from "./useDialogFocusTrap";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { createFullTrayPack } from "@/lib/order/createTrayPack";
-import { trackInitiatePreOrder } from "@/lib/analytics";
+import {
+  trackCustomiserOpened,
+  trackCustomiserReset,
+  trackInitiatePreOrder,
+} from "@/lib/analytics";
 import type {
   GradePackForCustomisation,
   PackSelectionItem,
@@ -183,9 +187,10 @@ export function GradePackActions({
   // Auto-open drawer when customize=1 is in the URL
   useEffect(() => {
     if (autoCustomise && isMounted) {
+      trackCustomiserOpened({ school: pack.schoolName, grade: pack.grade });
       setIsOpen(true);
     }
-  }, [autoCustomise, isMounted]);
+  }, [autoCustomise, isMounted, pack.grade, pack.schoolName]);
 
   useDialogFocusTrap({
     isOpen,
@@ -232,6 +237,7 @@ export function GradePackActions({
 
   function resetToFullPack() {
     setSelection(createFullPackSelection(pack.items));
+    trackCustomiserReset({ school: pack.schoolName, grade: pack.grade });
   }
 
   const drawerContent = isOpen ? (
@@ -380,7 +386,7 @@ export function GradePackActions({
             onClick={handleSaveCustomPack}
             disabled={selectedCount === 0}
           >
-            Add to Order
+            Add Customised Pack
           </button>
           <button
             type="button"
@@ -410,7 +416,7 @@ export function GradePackActions({
             className={styles.detailButton}
             onClick={handleAddFullPack}
           >
-            Add to Order
+            Add Full Pack
           </Button>
           <Button
             id={`customise-${pack.id}`}
@@ -420,6 +426,10 @@ export function GradePackActions({
             className={styles.detailButton}
             onClick={(event) => {
               triggerButtonRef.current = event.currentTarget;
+              trackCustomiserOpened({
+                school: pack.schoolName,
+                grade: pack.grade,
+              });
               setIsOpen(true);
             }}
           >
@@ -467,7 +477,7 @@ export function GradePackActions({
       ) : null}
       <div className={styles.actionRow}>
         <Button type="button" size="sm" onClick={handleAddFullPack}>
-          Add to Order
+          Add Full Pack
         </Button>
         <Button
           id={`customise-${pack.id}`}
@@ -476,6 +486,10 @@ export function GradePackActions({
           size="sm"
           onClick={(event) => {
             triggerButtonRef.current = event.currentTarget;
+            trackCustomiserOpened({
+              school: pack.schoolName,
+              grade: pack.grade,
+            });
             setIsOpen(true);
           }}
         >

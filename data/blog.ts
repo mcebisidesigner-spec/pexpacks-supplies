@@ -32,7 +32,7 @@ export const blogPosts: BlogPost[] = [
     date: "2023-10-15",
     author: "Mcebisi Mhayise",
     category: "Parenting Tips",
-    image: "/images/pex-stationery-checklist-v2.webp",
+    image: "/images/pex-stationery-box-v2.webp",
   },
   {
     id: "2",
@@ -74,7 +74,7 @@ export const blogPosts: BlogPost[] = [
     date: "2023-11-20",
     author: "Riya Patel",
     category: "Education",
-    image: "/images/hero-school-delivery.webp",
+    image: "/images/hero-school-delivery-packs.webp",
   },
   {
     id: "4",

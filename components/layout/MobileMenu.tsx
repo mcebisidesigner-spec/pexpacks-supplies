@@ -112,6 +112,7 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
                   .filter(Boolean)
                   .join(" ")}
                 aria-current={active ? "page" : undefined}
+                data-conversion-event={`mobile_nav_${link.label.toLowerCase().replaceAll(" ", "_")}`}
               >
                 {link.label}
               </Link>
@@ -149,6 +150,7 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
             href="/track-order"
             className={styles.mobileMenuCta}
             onClick={onClose}
+            data-conversion-event="mobile_track_pack"
           >
             <span>Track Your Pack</span>
             <span className={styles.mobileMenuCtaIcon}>

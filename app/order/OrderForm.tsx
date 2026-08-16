@@ -5,6 +5,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
 import clsx from "clsx";
+import {
+  trackQuoteStepCompleted,
+  trackQuoteSubmitted,
+  trackQuoteSubmissionFailed,
+} from "@/lib/analytics";
 import styles from "./OrderPage.module.css";
 
 type OrderCategory = "Primary School Learner" | "High School Learner";
@@ -62,6 +67,10 @@ export function OrderForm() {
       }
     }
     setErrors({});
+    trackQuoteStepCompleted({
+      step,
+      inputMethod: step === 2 ? inputMethod : undefined,
+    });
     setStep((prev) => prev + 1);
   };
   
@@ -104,6 +113,7 @@ export function OrderForm() {
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
+      trackQuoteSubmissionFailed({ failureType: "validation" });
       return;
     }
 
@@ -136,11 +146,17 @@ export function OrderForm() {
       });
       const result = await res.json();
       if (!result.success) {
+        trackQuoteSubmissionFailed({ failureType: "api" });
         setErrors(result.errors ?? { submit: result.message || "Something went wrong." });
         return;
       }
+      trackQuoteSubmitted({
+        inputMethod,
+        learnerPhase: category || "not_selected",
+      });
       setIsSuccess(true);
     } catch {
+      trackQuoteSubmissionFailed({ failureType: "network" });
       setErrors({ submit: "We could not submit your request right now. Please try again or contact us directly." });
     } finally {
       setIsSubmitting(false);
@@ -183,7 +199,14 @@ export function OrderForm() {
   return (
     <div className={styles.formCard}>
       {/* Progress Indicator */}
-      <div className={styles.progressBar}>
+      <div
+        className={styles.progressBar}
+        role="progressbar"
+        aria-label="Quote request progress"
+        aria-valuemin={1}
+        aria-valuemax={3}
+        aria-valuenow={step}
+      >
         <div className={clsx(styles.progressStep, step >= 1 && styles.active)}></div>
         <div className={clsx(styles.progressStep, step >= 2 && styles.active)}></div>
         <div className={clsx(styles.progressStep, step >= 3 && styles.active)}></div>
@@ -197,11 +220,13 @@ export function OrderForm() {
             <div className={styles.verticalOptions}>
               {(["Primary School Learner", "High School Learner"] as OrderCategory[]).map((cat) => (
                 <button
+                  type="button"
                   key={cat}
                   className={clsx(styles.verticalOptionBtn, category === cat && styles.selected)}
                   onClick={() => {
                     setCategory(cat);
                     setErrors({});
+                    trackQuoteStepCompleted({ step: 1 });
                     setTimeout(() => {
                       setErrors({});
                       setStep(2);
@@ -328,7 +353,10 @@ export function OrderForm() {
             
             <form onSubmit={handleSubmit} className={styles.formGrid}>
               {errors.submit && (
-                <div style={{ gridColumn: "1 / -1", color: "var(--pex-error)", background: "var(--color-error-bg)", border: "1px solid var(--color-error-border)", padding: "14px 16px", borderRadius: "14px", fontSize: "14px", fontWeight: 500 }}>
+                <div
+                  role="alert"
+                  style={{ gridColumn: "1 / -1", color: "var(--pex-error)", background: "var(--color-error-bg)", border: "1px solid var(--color-error-border)", padding: "14px 16px", borderRadius: "14px", fontSize: "14px", fontWeight: 500 }}
+                >
                   {errors.submit}
                 </div>
               )}

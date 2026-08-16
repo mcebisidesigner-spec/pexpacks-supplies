@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { GradePack, School } from "@/data/schools";
 import { GradePackActions } from "@/components/packs/GradePackActions";
 import { ShareButtons } from "@/components/shared/ShareButtons";
@@ -16,6 +17,7 @@ type GradePackDetailsProps = {
   grade: GradePack;
   descriptions?: Record<string, string>;
   autoCustomise?: boolean;
+  readCustomiseFromUrl?: boolean;
 };
 
 function teacherPreferredBadge(item: string) {
@@ -34,8 +36,22 @@ function teacherPreferredBadge(item: string) {
   return "";
 }
 
-export function GradePackDetails({ school, grade, descriptions, autoCustomise }: GradePackDetailsProps) {
+export function GradePackDetails({
+  school,
+  grade,
+  descriptions,
+  autoCustomise = false,
+  readCustomiseFromUrl = false,
+}: GradePackDetailsProps) {
+  const [shouldAutoCustomise, setShouldAutoCustomise] = useState(autoCustomise);
   const pack = createSchoolGradePack(school, grade, descriptions);
+
+  useEffect(() => {
+    if (!readCustomiseFromUrl) return;
+    setShouldAutoCustomise(
+      new URLSearchParams(window.location.search).get("customize") === "1",
+    );
+  }, [readCustomiseFromUrl]);
 
   return (
     <article className={styles.gradeDetails}>
@@ -89,7 +105,7 @@ export function GradePackDetails({ school, grade, descriptions, autoCustomise }:
         </div>
 
         <div className={styles.gradeActionPanel} id="grade-actions">
-          <GradePackActions pack={pack} layout="detail" autoCustomise={autoCustomise} />
+          <GradePackActions pack={pack} layout="detail" autoCustomise={shouldAutoCustomise} />
           <HappyPayGradePackWidget pack={pack} amount={grade.price} />
         </div>
 

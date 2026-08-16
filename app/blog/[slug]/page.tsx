@@ -337,7 +337,7 @@ export default async function BlogPostPage({
                 </div>
               </div>
 
-              <Link href="/schools" className={styles.sidebarCta}>
+              <Link href="/schools" className={styles.sidebarCta} data-conversion-event="article_find_school_pack">
                 Find Your School Pack
               </Link>
             </nav>
@@ -379,13 +379,13 @@ export default async function BlogPostPage({
                 experience smoother.
               </p>
               <div className={styles.postKnowledgeGrid}>
-                <Link href="/schools" className={styles.postKnowledgePill}>
+                <Link href="/schools" className={styles.postKnowledgePill} data-conversion-event="article_browse_school_packs">
                   Browse school packs
                 </Link>
                 <Link href="/happy-pay" className={styles.postKnowledgePill}>
                   Split in 2 with Happy Pay
                 </Link>
-                <Link href="/add-your-school" className={styles.postKnowledgePill}>
+                <Link href="/add-your-school" className={styles.postKnowledgePill} data-conversion-event="article_request_school">
                   Request your school
                 </Link>
                 <Link href="/faq" className={styles.postKnowledgePill}>
@@ -457,7 +457,7 @@ export default async function BlogPostPage({
                 and order at your own pace so back-to-school is stress-free.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/schools" variant="primary">
+                <Button href="/schools" variant="primary" data-conversion-event="article_find_school_pack_bottom">
                   Find Your School Pack
                 </Button>
               </div>
@@ -473,7 +473,7 @@ export default async function BlogPostPage({
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/partnership" className={cardStyles.cardLink}>
+                <Link href="/partnership" className={cardStyles.cardLink} data-conversion-event="article_partnership">
                   Explore partnerships &rarr;
                 </Link>
               </div>

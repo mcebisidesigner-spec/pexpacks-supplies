@@ -7,7 +7,11 @@ export function FooterNav() {
     <nav className={styles.mainNav} aria-label="Footer navigation">
       {footerNavLinks.map((link, index) => (
         <span key={link.label} className={styles.navItem}>
-          <Link href={link.href} className={styles.navLink}>
+          <Link
+            href={link.href}
+            className={styles.navLink}
+            data-conversion-event={`footer_${link.label.toLowerCase().replaceAll(" ", "_")}`}
+          >
             {link.label}
           </Link>
             {index < footerNavLinks.length - 1 && (

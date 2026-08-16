@@ -15,6 +15,7 @@ type OrderSummaryCardProps = {
   hasPexcover: boolean;
   summaryOpen: boolean;
   whatsAppHref: string;
+  deliveryFeePending?: boolean;
 };
 
 export function OrderSummaryCard({
@@ -27,6 +28,7 @@ export function OrderSummaryCard({
   hasPexcover,
   summaryOpen,
   whatsAppHref,
+  deliveryFeePending = false,
 }: OrderSummaryCardProps) {
   return (
     <aside className={styles.summaryColumn} aria-label="Order summary">
@@ -60,10 +62,17 @@ export function OrderSummaryCard({
             <dd>{formatCurrency(packPrice)}</dd>
           </div>
           <div className={styles.summaryTotalRow}>
-            <dt>Total to pay</dt>
+            <dt>{deliveryFeePending ? "Pack total payable now" : "Total to pay"}</dt>
             <dd>{formatCurrency(totalToPay)}</dd>
           </div>
         </dl>
+
+        {deliveryFeePending ? (
+          <p className={styles.deliveryFeeNotice}>
+            Home delivery is charged separately. Pexpacks will confirm the fee
+            with you before dispatch.
+          </p>
+        ) : null}
 
         <TrustChecklist />
         <WhatsAppHelpBlock href={whatsAppHref} />

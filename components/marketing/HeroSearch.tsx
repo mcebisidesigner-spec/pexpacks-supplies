@@ -11,7 +11,12 @@ import {
   getSchoolPhaseLabel,
 } from "@/lib/schools/schoolPhase";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
+import { formatSchoolSearchLocation } from "@/lib/schools/searchPresentation";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
+import {
+  trackSchoolNoResultsRecovery,
+  trackSchoolResultSelected,
+} from "@/lib/analytics";
 import clsx from "clsx";
 import styles from "./HeroSearch.module.css";
 
@@ -41,7 +46,15 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
   );
 }
 
-export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {}) {
+type HeroSearchProps = {
+  onResultClick?: () => void;
+  source?: "home" | "tray";
+};
+
+export function HeroSearch({
+  onResultClick,
+  source = "home",
+}: HeroSearchProps = {}) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const [trendingSchools, setTrendingSchools] = useState<{ name: string; slug: string; image?: string | null }[]>([]);
@@ -63,10 +76,25 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
   } = usePaginatedSchoolSearch({
     phaseAllValue: "",
     resultLimit,
+    searchSource: source,
     errorMessage: "We couldn't search schools right now. Please try again.",
   });
 
   const searchActive = panelOpen;
+
+  function handleSchoolSelected(
+    schoolSlug: string,
+    position: number,
+    placement: "result" | "trending",
+  ) {
+    trackSchoolResultSelected({
+      source,
+      schoolSlug,
+      position,
+      placement,
+    });
+    onResultClick?.();
+  }
 
   useEffect(() => {
     if (!panelOpen) return;
@@ -140,12 +168,14 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
           <div className={styles.trendingRow}>
             <span className={styles.trendingLabel}>Trending Near You</span>
             <div className={styles.trendingTrack}>
-              {trendingSchools.map((school) => (
+              {trendingSchools.map((school, index) => (
                 <Link
                   key={school.slug}
                   href={`/schools/${school.slug}`}
                   className={styles.trendingCard}
-                  onClick={onResultClick}
+                  onClick={() =>
+                    handleSchoolSelected(school.slug, index + 1, "trending")
+                  }
                 >
                   {school.image ? (
                     <Image
@@ -214,7 +244,7 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                 {results.length > 0 ? (
                   <>
                     <div className={styles.heroResultsList}>
-                      {results.map((school) => (
+                      {results.map((school, index) => (
                         <article className={styles.heroResultCard} key={school.id}>
                           <div className={styles.heroResultContent}>
                             <div className={styles.heroResultRow}>
@@ -238,14 +268,20 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                               )}
                               <div className={styles.heroResultSummary}>
                                 <h3>
-                                  <Link href={`/schools/${school.slug}`} onClick={onResultClick}>
+                                  <Link
+                                    href={`/schools/${school.slug}`}
+                                    onClick={() =>
+                                      handleSchoolSelected(
+                                        school.slug,
+                                        index + 1,
+                                        "result",
+                                      )
+                                    }
+                                  >
                                     <HighlightMatch text={school.name} query={query} />
                                   </Link>
                                 </h3>
-                                <p>
-                                  {school.region}
-                                  {school.metro ? `, City of ${school.metro}` : school.province ? `, ${school.province}` : ""}
-                                </p>
+                                <p>{formatSchoolSearchLocation(school)}</p>
                               </div>
                             </div>
                             <div className={styles.heroResultMeta}>
@@ -255,7 +291,13 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                                     key={schoolGrade}
                                     href={`/schools/${school.slug}`}
                                     className={styles.gradePill}
-                                    onClick={onResultClick}
+                                    onClick={() =>
+                                      handleSchoolSelected(
+                                        school.slug,
+                                        index + 1,
+                                        "result",
+                                      )
+                                    }
                                   >
                                     {schoolGrade}
                                   </Link>
@@ -287,7 +329,14 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                           <Link
                             href={`/schools/${school.slug}`}
                             className={styles.heroResultLink}
-                            onClick={onResultClick}
+                            aria-label={`View ${school.name} packs in ${formatSchoolSearchLocation(school)}`}
+                            onClick={() =>
+                              handleSchoolSelected(
+                                school.slug,
+                                index + 1,
+                                "result",
+                              )
+                            }
                           >
                             View packs
                           </Link>
@@ -322,7 +371,14 @@ export function HeroSearch({ onResultClick }: { onResultClick?: () => void } = {
                       Don&rsquo;t see your school? Upload your stationery list or send it to us on WhatsApp and we&rsquo;ll pack every item exactly as specified.
                     </p>
                     <div className={styles.searchCatchallActions}>
-                      <Link href="/order" className={styles.searchCatchallUpload} onClick={onResultClick}>
+                      <Link
+                        href="/order"
+                        className={styles.searchCatchallUpload}
+                        onClick={() => {
+                          trackSchoolNoResultsRecovery({ source });
+                          onResultClick?.();
+                        }}
+                      >
                         Upload Your School List
                       </Link>
                     </div>

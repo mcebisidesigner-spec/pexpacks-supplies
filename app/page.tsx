@@ -10,6 +10,7 @@ import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
 import { getFaqs, getTestimonials, getWebsiteContent } from '@/lib/cms'
 import { HappyPayBanner } from '@/components/bnpl/HappyPayBanner'
 import { HappyPaySteps } from '@/components/bnpl/HappyPaySteps'
+import { testimonials as confirmedTestimonials } from '@/data/testimonials'
 
 import heroStyles from '@/components/marketing/HeroBase.module.css'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
@@ -34,6 +35,7 @@ export default async function HomePage() {
     typeof hero.lead === 'string' && hero.lead
       ? hero.lead
       : 'Your official school stationery list, perfectly packed and delivered.'
+  const featuredTestimonial = testimonials[0] ?? confirmedTestimonials[0]
   return (
     <>
       <section className={heroStyles.heroNavy}>
@@ -151,13 +153,14 @@ export default async function HomePage() {
               <h2 id="home-social-proof-heading">
                 Real packs. Real schools. Real peace of mind.
               </h2>
-              <blockquote>
-                &ldquo; Pexpacks delivered the exact pack our daughter needed.
-                List accurate and delivered timeously.&rdquo;
-              </blockquote>
-              <p className={sectionStyles.socialProofAuthor}>
-                Sarah, Grade 10 Parent
-              </p>
+              {featuredTestimonial ? (
+                <>
+                  <blockquote>&ldquo;{featuredTestimonial.quote}&rdquo;</blockquote>
+                  <p className={sectionStyles.socialProofAuthor}>
+                    {featuredTestimonial.name}, {featuredTestimonial.role}
+                  </p>
+                </>
+              ) : null}
               <div
                 className={sectionStyles.socialProofStats}
                 aria-label="Pexpacks trust highlights"
@@ -170,6 +173,7 @@ export default async function HomePage() {
                 href="/schools#schools-search"
                 variant="primary"
                 size="lg"
+                data-conversion-event="homepage_find_school_pack"
               >
                 Find my school pack
               </Button>

@@ -1,14 +1,5 @@
 import type { SchoolSearchRecord } from "./types";
-import { getSearchableSchools } from "./schoolSearchData";
-import { getPublicSchoolSlugSet } from "./publicSchoolData";
-
-async function getVisibleSchools() {
-  const [schools, publicSlugs] = await Promise.all([
-    getSearchableSchools(),
-    getPublicSchoolSlugSet(),
-  ]);
-  return schools.filter((school) => publicSlugs.has(school.slug));
-}
+import { getFeaturedSchoolRecords, searchSchoolRecords } from "./schoolSearchData";
 
 function gradeRank(grade: string) {
   if (/grade\s*r/i.test(grade)) return 0;
@@ -54,7 +45,6 @@ export async function getSchoolsByCity(
   targetCity: string,
   limit = 6
 ): Promise<{ schools: SchoolSearchRecord[]; matchedCity: string }> {
-  const index = await getVisibleSchools();
   const target = normalize(targetCity);
 
   if (!target) {
@@ -62,22 +52,10 @@ export async function getSchoolsByCity(
     return { schools: fallback, matchedCity: "" };
   }
 
-  // 1. Exact city match
-  let matched = index.filter((s) => normalize(s.city ?? "") === target);
-
-  // 2. Partial match
-  if (matched.length === 0) {
-    matched = index.filter(
-      (s) =>
-        normalize(s.city ?? "").includes(target) ||
-        target.includes(normalize(s.city ?? ""))
-    );
-  }
-
-  // 3. Metro match
-  if (matched.length === 0) {
-    matched = index.filter((s) => normalize(s.metro ?? "") === target);
-  }
+  const { results: matched } = await searchSchoolRecords(
+    { region: targetCity },
+    limit,
+  );
 
   if (matched.length > 0) {
     const sorted = sortByGradeAndPartner(matched);
@@ -100,9 +78,9 @@ export async function getSchoolsByCity(
 export async function getDefaultSchools(
   limit = 6
 ): Promise<SchoolSearchRecord[]> {
-  const index = await getVisibleSchools();
-  const partners = index.filter((s) => s.isPartner);
-  const sorted = sortByGradeAndPartner(partners);
+  const schools = await getFeaturedSchoolRecords(limit);
+  const partners = schools.filter((school) => school.isPartner);
+  const sorted = sortByGradeAndPartner(partners.length ? partners : schools);
   return uniqueBySlug(sorted).slice(0, limit);
 }
 
