@@ -356,14 +356,7 @@ export function AdminShell({
           ))}
         </nav>
 
-        {packsItem ? (
-          <div className={styles.sidebarWorkspace}>
-            <span className={styles.workspaceIcon}><Package aria-hidden="true" /></span>
-            <strong>School pack workspace</strong>
-            <p>Manage grade packs and stationery lists.</p>
-            <Link href={packsItem.href}>Open packs</Link>
-          </div>
-        ) : null}
+
       </aside>
 
       <div className={styles.main}>
