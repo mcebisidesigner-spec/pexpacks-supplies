@@ -103,7 +103,7 @@ const config: LegalDocumentConfig = {
             <li>Source high-quality stationery items matching approved school specifications;</li>
             <li>Package and label stationery packs according to learner grade and school distribution instructions;</li>
             <li>Deliver bulk orders to designated school collection points or coordinate doorstep delivery prior to term opening;</li>
-            <li>Provide transparent pricing, Lay-by options, and dedicated customer support to parents.</li>
+            <li>Provide transparent pricing, Happy Pay BNPL options, and dedicated customer support to parents.</li>
           </ul>
         </>
       ),

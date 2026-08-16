@@ -219,7 +219,7 @@ const config: LegalDocumentConfig = {
             <li>To execute Pexcover book-covering and custom protective book services</li>
             <li>To coordinate doorstep courier delivery or school-handover distribution</li>
             <li>To process online payment confirmations via authorized payment gateways</li>
-            <li>To communicate order status updates, delivery schedules, and Lay-by installment reminders</li>
+            <li>To communicate order status updates, delivery schedules, and Happy Pay BNPL instalment details</li>
             <li>To respond to customer enquiries, quotations, and support requests</li>
             <li>To comply with statutory accounting, tax (SARS), and regulatory record-keeping duties</li>
           </ul>

@@ -11,7 +11,7 @@ export const ORDER_STATUSES: OrderStatusDef[] = [
   { value: "pending", label: "New enquiry", tone: "info" },
   { value: "paid", label: "Paid", tone: "paid" },
   { value: "payment_failed", label: "Payment failed", tone: "danger" },
-  { value: "layby_active", label: "Layby active", tone: "info" },
+  { value: "layby_active", label: "Happy Pay active", tone: "info" },
   { value: "packing", label: "Packing", tone: "info" },
   { value: "delivered", label: "Delivered", tone: "paid" },
   { value: "cancelled", label: "Cancelled", tone: "muted" },

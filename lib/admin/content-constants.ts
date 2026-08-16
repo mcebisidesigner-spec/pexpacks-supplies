@@ -6,7 +6,7 @@ export const FAQ_CATEGORIES = [
   "Delivery",
   "Payment",
   "Schools",
-  "Savings Plan",
+  "Happy Pay (BNPL)",
 ] as const;
 
 export const TESTIMONIAL_RATINGS = [5, 4, 3, 2, 1] as const;

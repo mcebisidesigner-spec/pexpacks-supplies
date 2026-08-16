@@ -1,6 +1,6 @@
 export type FAQ = {
   id: string;
-  category: "School packs" | "Orders" | "Delivery" | "Payment" | "Schools" | "Savings Plan";
+  category: "School packs" | "Orders" | "Delivery" | "Payment" | "Schools" | "Happy Pay (BNPL)";
   question: string;
   answer: string;
   links?: {
@@ -214,58 +214,34 @@ export const faqs: FAQ[] = [
     ],
   },
   {
-    id: "savings-plan-basics",
-    category: "Savings Plan",
-    question: "What is the Pexpacks Savings Plan?",
+    id: "happypay-basics",
+    category: "Happy Pay (BNPL)",
+    question: "What is Happy Pay Buy Now, Pay Later (BNPL)?",
     answer:
-      "The Savings Plan is a non-interest-bearing programme that lets you contribute money toward a future stationery pack order over time. Once your saved amount matches the order value, Pexpacks will pack and dispatch the order. It gives you more flexibility than paying the full amount upfront.",
+      "Happy Pay allows you to split your school stationery pack purchase into equal, zero-interest instalments over time while your learner gets their stationery delivered upfront.",
     links: [
-      { label: "Contact us", href: "/contact?topic=savings-plan" },
+      { label: "Learn about Happy Pay", href: "/happy-pay" },
     ],
   },
   {
-    id: "savings-plan-vs-layby",
-    category: "Savings Plan",
-    question: "How is this different from lay-by?",
+    id: "happypay-interest",
+    category: "Happy Pay (BNPL)",
+    question: "Are there any interest or hidden fees?",
     answer:
-      "Unlike a traditional lay-by, goods in the Savings Plan are not reserved or packed until the balance is fully settled. This keeps things flexible: you can change your order, pause contributions, or request a full refund at any time before value match.",
-    links: [],
-  },
-  {
-    id: "savings-plan-start",
-    category: "Savings Plan",
-    question: "How do I start saving?",
-    answer:
-      "You can register interest during checkout or by contacting Pexpacks. Once enrolled, you will receive instructions on how to make deposits and track your savings balance.",
+      "No. Happy Pay is 100% interest-free with zero hidden fees when instalments are paid on schedule.",
     links: [
-      { label: "Contact us", href: "/contact?topic=savings-plan" },
+      { label: "Happy Pay terms", href: "/happy-pay-terms" },
     ],
   },
   {
-    id: "savings-plan-refund",
-    category: "Savings Plan",
-    question: "Can I get my money back?",
+    id: "happypay-eligibility",
+    category: "Happy Pay (BNPL)",
+    question: "Who is eligible to use Happy Pay?",
     answer:
-      "Yes. You can request a full refund of all deposits at any time before the order is value-matched or fulfilled. Refunds are processed within 14 business days to the original payment method where possible.",
-    links: [],
-  },
-  {
-    id: "savings-plan-value-match",
-    category: "Savings Plan",
-    question: "What happens when I reach the full order value?",
-    answer:
-      "Once your deposits match or exceed the order amount (value match), Pexpacks will contact you to confirm the order and begin packing and delivery. You can also choose to pay the outstanding balance early to speed things up.",
+      "Any South African resident over 18 with a valid ID, South African mobile number, and debit or credit card can select Happy Pay at checkout.",
     links: [
-      { label: "Delivery policy", href: "/delivery-policy" },
+      { label: "Find your school pack", href: "/schools" },
     ],
-  },
-  {
-    id: "savings-plan-price-change",
-    category: "Savings Plan",
-    question: "What if the price changes while I am saving?",
-    answer:
-      "Prices are not locked in while you save. If the price changes before your order is settled, Pexpacks will notify you. You can then choose to pay the difference or receive a full refund of your deposits.",
-    links: [],
   },
   {
     id: "school-rebate",

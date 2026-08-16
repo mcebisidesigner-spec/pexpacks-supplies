@@ -17,7 +17,7 @@ const categories = [
   "Delivery",
   "Payment",
   "Schools",
-  "Savings Plan",
+  "Happy Pay (BNPL)",
 ] as const;
 
 type Category = (typeof categories)[number];

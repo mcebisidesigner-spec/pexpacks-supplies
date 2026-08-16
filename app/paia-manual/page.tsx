@@ -106,7 +106,7 @@ const config: LegalDocumentConfig = {
           <h3>2. Financial &amp; Tax Records</h3>
           <p>Audited annual financial statements, tax assessment records, SARS filings, banking records, and supplier invoices.</p>
           <h3>3. Commercial &amp; Customer Records</h3>
-          <p>Stationery order records, Lay-by contracts, school partnership agreements, Pexcover™ service logs, and customer correspondence.</p>
+          <p>Stationery order records, Happy Pay BNPL order records, school partnership agreements, Pexcover™ service logs, and customer correspondence.</p>
           <h3>4. Personal Information &amp; POPIA Processing</h3>
           <p>Personal information processed regarding parents, legal guardians, learners, and suppliers as detailed in our <a href="/privacy-policy">Privacy Policy</a>.</p>
         </>
