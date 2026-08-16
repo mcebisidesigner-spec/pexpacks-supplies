@@ -128,7 +128,10 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
           </h1>
           {isSchoolFiltered ? (
             <Link
-              href={`/admin/packs/new?school_id=${filters.school_id}`}
+              href={`/admin/packs/${
+                schools.find((s) => s.id === filters.school_id || s.slug === filters.school_id)?.slug ||
+                filters.school_id
+              }/add-pack`}
               className={shared.addButton}
             >
               + Add pack

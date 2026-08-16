@@ -137,14 +137,15 @@ function SchoolPicker({ schools, value, onChange, error }: SchoolPickerProps) {
 
 interface PackFormProps {
   schools: PackSchool[];
+  defaultSchoolId?: string;
   action: (prev: PackFormState, formData: FormData) => Promise<PackFormState>;
 }
 
-export function PackForm({ schools, action }: PackFormProps) {
+export function PackForm({ schools, defaultSchoolId = "", action }: PackFormProps) {
   const [state, formAction] = useActionState<PackFormState, FormData>(action, {
     ok: false,
   });
-  const [schoolId, setSchoolId] = useState("");
+  const [schoolId, setSchoolId] = useState(defaultSchoolId);
   const [grade, setGrade] = useState("");
   const itemsRef = useRef<PackLine[]>([]);
   const itemsInputRef = useRef<HTMLInputElement>(null);

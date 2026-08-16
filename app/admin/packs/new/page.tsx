@@ -1,5 +1,7 @@
+import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { listPackSchools } from "@/lib/admin/packs";
+import { getSchool } from "@/lib/admin/schools";
 import { PackForm } from "@/components/admin/packs/PackForm";
 import { createPackAction } from "../actions";
 import adminStyles from "../../admin.module.css";
@@ -8,8 +10,21 @@ export const metadata = {
   title: "Add pack | Admin | Pexpacks",
 };
 
-export default async function NewPackPage() {
+interface NewPackPageProps {
+  searchParams?: Promise<{ school_id?: string }>;
+}
+
+export default async function NewPackPage({ searchParams }: NewPackPageProps) {
   await requireAdmin({ permission: "packs.create" });
+  const params = searchParams ? await searchParams : {};
+  const schoolId = params.school_id;
+
+  if (schoolId) {
+    const school = await getSchool(schoolId);
+    const targetSlug = school?.slug || schoolId;
+    redirect(`/admin/packs/${targetSlug}/add-pack`);
+  }
+
   const schools = await listPackSchools();
 
   return (

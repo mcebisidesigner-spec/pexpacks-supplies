@@ -59,7 +59,7 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
               </span>
             </h1>
             <Link
-              href={`/admin/packs/new?school_id=${school.id}`}
+              href={`/admin/packs/${school.slug || school.id}/add-pack`}
               className={shared.addButton}
             >
               + Add pack
