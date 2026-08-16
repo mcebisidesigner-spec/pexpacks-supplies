@@ -164,7 +164,7 @@ export function Footer({ company, footer }: FooterContent) {
 
               <details className={styles.policyDisclosure}>
               <summary className={styles.policySummary}>
-                <span>{siteName} policies, terms, and customer information:</span>
+                <span>{siteName} policies &amp; customer information:</span>
                 <span className={styles.policyChevron} aria-hidden="true" />
               </summary>
               <div className={styles.policyPanel}>
