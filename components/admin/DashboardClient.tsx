@@ -1,209 +1,122 @@
 "use client";
 
-import { useState, useEffect, type ReactNode } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
-  LayoutDashboard,
-  ShoppingBag,
-  School,
-  Package,
-  TrendingUp,
-  RefreshCw,
-  CheckCircle2,
-  ShieldCheck,
-  CalendarDays,
-  Clock,
-  PackageCheck,
   AlertTriangle,
-  Boxes,
   ArrowRight,
-  type LucideIcon,
+  BarChart3,
+  Boxes,
+  CalendarDays,
+  CheckCircle2,
+  Clock,
+  LayoutDashboard,
+  Package,
+  PackageCheck,
+  RefreshCw,
+  School,
+  ShoppingBag,
+  TrendingUp,
 } from "lucide-react";
-import useSWR from "swr";
 import { GradePackItemSelector } from "@/components/grade-packs/GradePackItemSelector";
-import type {
-  DashboardStats,
-  DailyPoint,
-  NameCount,
-} from "@/lib/admin/dashboard";
-import { orderStatusLabel, orderStatusTone } from "@/lib/admin/order-constants";
+import type { DashboardStats, DailyPoint } from "@/lib/admin/dashboard";
+import { orderStatusLabel } from "@/lib/admin/order-constants";
 import { useDashboardSummary } from "@/hooks/useDashboardSummary";
+import {
+  AttentionList,
+  CapsuleBarChart,
+  FulfilmentGauge,
+  HorizontalBars,
+  MetricCard,
+  StatusBadge,
+  formatDashboardCurrency,
+  type DashboardAttentionItem,
+  type DashboardMetric,
+} from "./dashboard/DashboardWidgets";
 import styles from "./DashboardClient.module.css";
 
 export interface DashboardClientProps {
   stats?: DashboardStats;
-  userName?: string;
-  userRole?: string;
 }
 
-type MetricTone = "emerald" | "amber" | "info" | "red" | "indigo" | "blue";
-
-interface MetricCard {
-  label: string;
-  value: number | string;
-  hint: string;
-  icon: LucideIcon;
-  tone: MetricTone;
-  currency?: boolean;
+function formatDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-ZA", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
 
-function formatCurrency(value: number): string {
-  return `R ${value.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+function toChartPoint(point: DailyPoint) {
+  const date = new Date(point.day);
+  return {
+    label: formatDate(point.day),
+    shortLabel: Number.isNaN(date.getTime())
+      ? point.day
+      : date.toLocaleDateString("en-ZA", { weekday: "narrow" }),
+    value: point.orders,
+  };
 }
 
-function formatDay(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
+function toRevenuePoint(point: DailyPoint) {
+  const date = new Date(point.day);
+  return {
+    label: formatDate(point.day),
+    shortLabel: Number.isNaN(date.getTime())
+      ? point.day
+      : date.toLocaleDateString("en-ZA", { day: "numeric" }),
+    value: point.revenue,
+  };
 }
 
-function metricToneClass(tone: MetricTone): string {
-  switch (tone) {
-    case "emerald":
-      return styles.iconEmerald;
-    case "amber":
-      return styles.iconAmber;
-    case "info":
-      return styles.iconInfo;
-    case "red":
-      return styles.iconRed;
-    default:
-      return styles.iconIndigo;
-  }
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const tone = orderStatusTone(status);
-  return (
-    <span className={`${styles.badge} ${tone === "paid" ? styles.badgePaid : tone === "danger" ? styles.badgeDanger : tone === "pending" ? styles.badgePending : tone === "info" ? styles.badgeInfo : styles.badgeMuted}`}>
-      <span aria-hidden="true" className={styles.badgeDot} />
-      {orderStatusLabel(status)}
-    </span>
-  );
-}
-
-function ChartCard({
-  title,
-  sub,
-  children,
-  ariaLabel,
-}: {
-  title: string;
-  sub?: string;
-  children: ReactNode;
-  ariaLabel: string;
-}) {
-  return (
-    <section className={styles.chartCard} aria-label={ariaLabel}>
-      <div className={styles.chartCardHeader}>
-        <h3 className={styles.chartCardTitle}>{title}</h3>
-        {sub ? <p className={styles.chartCardSub}>{sub}</p> : null}
-      </div>
-      {children}
-    </section>
-  );
-}
-
-function VerticalBars({
-  points,
-  valueFormatter,
-  color,
-  label,
-}: {
-  points: { label: string; value: number }[];
-  valueFormatter: (value: number) => string;
-  color: "accent" | "info";
-  label: string;
-}) {
-  if (points.length === 0) {
-    return <p className={styles.emptyText}>No data available yet.</p>;
-  }
-  const max = Math.max(1, ...points.map((p) => p.value));
-  const peak = points.reduce((a, b) => (b.value > a.value ? b : a), points[0]);
-  const barClass = color === "accent" ? styles.chartBar : styles.chartBarInfo;
-  return (
-    <div role="img" aria-label={`${label} Peak ${valueFormatter(peak.value)} on ${peak.label}.`}>
-      <div className={styles.chartBars}>
-        {points.map((p) => {
-          const height = Math.round((p.value / max) * 100);
-          return (
-            <div key={p.label} className={styles.chartBarCol}>
-              <div
-                className={barClass}
-                style={{ height: `${Math.max(height, p.value > 0 ? 4 : 2)}%` }}
-                title={`${p.label}: ${valueFormatter(p.value)}`}
-              />
-            </div>
-          );
-        })}
-      </div>
-      <span className={styles.srOnly}>{label}</span>
-    </div>
-  );
-}
-
-function HBars({ rows }: { rows: NameCount[] }) {
-  if (rows.length === 0) {
-    return <p className={styles.emptyText}>No data available yet.</p>;
-  }
-  const max = Math.max(1, ...rows.map((r) => r.count));
-  return (
-    <div className={styles.hBars}>
-      {rows.map((row) => (
-        <div key={row.label} className={styles.hBarRow}>
-          <span className={styles.hBarLabel} title={row.label}>{row.label}</span>
-          <span className={styles.hBarTrack}>
-            <span
-              className={styles.hBarFill}
-              style={{ width: `${Math.max(Math.round((row.count / max) * 100), 4)}%` }}
-            />
-          </span>
-          <span className={styles.hBarValue}>{row.count.toLocaleString()}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export function DashboardClient({
-  stats,
-  userName = "PexPacks Staff",
-  userRole = "Administrator",
-}: DashboardClientProps) {
-  const { summary, isLoading, isRefreshing, refresh } = useDashboardSummary();
+export function DashboardClient({ stats }: DashboardClientProps) {
+  const { summary, isLoading, isRefreshing, isError, refresh } = useDashboardSummary();
   const [activeTab, setActiveTab] = useState<"overview" | "pack-builder">("overview");
 
-  // Prefer live SWR summary; fall back to server-rendered stats (never fabricated).
-  const totalOrders = summary?.total_orders ?? stats?.orders?.total ?? 0;
-  const totalRevenue =
-      summary?.total_revenue ?? (stats?.orders?.revenue ?? 0);
-  const paidOrders = summary?.paid_orders ?? (totalRevenue > 0 ? 1 : 0);
+  const totalOrders = summary?.total_orders ?? stats?.orders.total ?? 0;
+  const totalRevenue = summary?.total_revenue ?? stats?.orders.revenue ?? 0;
+  const paidOrders = summary?.paid_orders ?? 0;
   const pendingPayments = summary?.pending_orders ?? 0;
-  const totalSchools = summary?.total_schools ?? stats?.schools?.total ?? 0;
+  const totalSchools = summary?.total_schools ?? stats?.schools.total ?? 0;
   const totalPacks = summary?.total_packs ?? stats?.packs ?? 0;
   const ordersToday = summary?.orders_today ?? 0;
   const ordersThisWeek = summary?.orders_this_week ?? 0;
   const readyToFulfil = summary?.awaiting_fulfilment ?? 0;
   const completedOrders = summary?.completed_orders ?? 0;
   const activePacks = summary?.active_packs ?? totalPacks;
+  const summaryAvailable = Boolean(summary);
 
-  const lastUpdated = summary?.last_updated_at ? new Date(summary.last_updated_at) : null;
-  const refreshedAt = lastUpdated
-    ? lastUpdated.toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit" })
+  const refreshedAt = summary?.last_updated_at
+    ? new Date(summary.last_updated_at).toLocaleTimeString("en-ZA", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
     : null;
   const freshness = isLoading
-    ? "Loading live metrics…"
+    ? "Loading live metrics..."
     : refreshedAt
-    ? `Data refreshed at ${refreshedAt}`
-    : "Live metrics";
+      ? `Data refreshed at ${refreshedAt}`
+      : "Using server metrics";
 
-  const metrics: MetricCard[] = [
+  const primaryMetrics: DashboardMetric[] = [
+    {
+      label: "Total Revenue",
+      value: totalRevenue,
+      hint: `${paidOrders.toLocaleString("en-ZA")} confirmed paid orders`,
+      icon: TrendingUp,
+      tone: "emerald",
+      currency: true,
+      href: "/admin/payments",
+    },
     {
       label: "Orders Today",
       value: ordersToday,
-      hint: `This week: ${ordersThisWeek.toLocaleString()}`,
+      hint: `${ordersThisWeek.toLocaleString("en-ZA")} received this week`,
       icon: CalendarDays,
-      tone: "amber",
+      tone: "info",
+      href: "/admin/orders",
     },
     {
       label: "Pending Payments",
@@ -211,311 +124,247 @@ export function DashboardClient({
       hint: "Awaiting payment confirmation",
       icon: Clock,
       tone: "amber",
+      href: "/admin/orders",
     },
     {
       label: "Ready to Fulfil",
       value: readyToFulfil,
-      hint: "Paid and in packing — dispatch these next",
+      hint: "Paid or currently being packed",
       icon: PackageCheck,
       tone: "info",
+      href: "/admin/orders",
     },
+  ];
+
+  const secondaryMetrics: DashboardMetric[] = [
     {
       label: "Completed",
       value: completedOrders,
       hint: "Delivered orders",
       icon: CheckCircle2,
       tone: "emerald",
+      href: "/admin/orders",
     },
     {
       label: "Total Orders",
       value: totalOrders,
-      hint: `${paidOrders.toLocaleString()} paid`,
+      hint: "All recorded orders",
       icon: ShoppingBag,
-      tone: "indigo",
+      tone: "neutral",
+      href: "/admin/orders",
     },
     {
-      label: "Total Revenue",
-      value: totalRevenue,
-      hint: "Confirmed payments",
-      icon: TrendingUp,
-      tone: "emerald",
-      currency: true,
-    },
-    {
-      label: "Active Schools",
+      label: "Schools",
       value: totalSchools,
-      hint: "Directory listed",
+      hint: "Directory listings",
       icon: School,
-      tone: "blue",
+      tone: "neutral",
+      href: "/admin/schools",
     },
     {
       label: "Active Packs",
       value: activePacks,
       hint: "Visible stationery packs",
       icon: Boxes,
-      tone: "info",
+      tone: "neutral",
+      href: "/admin/packs",
     },
   ];
 
-  const alerts: {
-    tone: MetricTone;
-    icon: LucideIcon;
-    title: string;
-    body: string;
-    href: string;
-    accessibilityLabel: string;
-  }[] = [];
-  const pendingSchools = stats?.schools?.pending ?? 0;
+  const attentionItems: DashboardAttentionItem[] = [];
   if (pendingPayments > 0) {
-    alerts.push({
+    attentionItems.push({
       tone: "amber",
       icon: Clock,
-      title: `${pendingPayments.toLocaleString()} orders waiting for payment`,
+      title: `${pendingPayments.toLocaleString("en-ZA")} awaiting payment`,
       body: "Confirm or follow up on pending orders.",
       href: "/admin/orders",
       accessibilityLabel: `${pendingPayments} orders require payment confirmation`,
     });
   }
   if (readyToFulfil > 0) {
-    alerts.push({
+    attentionItems.push({
       tone: "info",
       icon: PackageCheck,
-      title: `${readyToFulfil.toLocaleString()} orders ready to fulfil`,
-      body: "Paid and in packing — dispatch these next.",
+      title: `${readyToFulfil.toLocaleString("en-ZA")} ready to fulfil`,
+      body: "Paid and packing orders should be dispatched next.",
       href: "/admin/orders",
-      accessibilityLabel: `${readyToFulfil} orders ready for fulfilment`,
+      accessibilityLabel: `${readyToFulfil} orders are ready for fulfilment`,
     });
   }
-  if (pendingSchools > 0) {
-    alerts.push({
+  if ((stats?.schools.pending ?? 0) > 0) {
+    attentionItems.push({
       tone: "red",
       icon: AlertTriangle,
-      title: `${pendingSchools.toLocaleString()} schools pending approval`,
+      title: `${stats?.schools.pending.toLocaleString("en-ZA")} schools pending`,
       body: "Review and activate new school requests.",
       href: "/admin/schools",
-      accessibilityLabel: `${pendingSchools} schools require approval`,
+      accessibilityLabel: `${stats?.schools.pending} schools require approval`,
     });
   }
 
-  const ordersPoints = (stats?.ordersDaily ?? []).map((d: DailyPoint) => ({
-    label: formatDay(d.day),
-    value: d.orders,
-  }));
-  const revenuePoints = (stats?.ordersDaily ?? []).map((d: DailyPoint) => ({
-    label: formatDay(d.day),
-    value: d.revenue,
-  }));
-  const recent = stats?.recentOrders ?? [];
+  const orderPoints = (stats?.ordersDaily ?? []).slice(-7).map(toChartPoint);
+  const revenuePoints = (stats?.ordersDaily ?? []).slice(-14).map(toRevenuePoint);
+  const recentOrders = stats?.recentOrders ?? [];
 
   return (
-    <div className={styles.root} aria-label="PexPacks administration dashboard">
-      {/* 1. Header & Quick Switch Bar */}
-      <header className={styles.header} aria-label="Dashboard header">
+    <div className={styles.root} aria-label="Pexpacks administration dashboard">
+      <header className={styles.dashboardHeader}>
         <div>
-          <div className={styles.brandEyebrow}>
-            <ShieldCheck className={styles.brandEyebrowIcon} /> Operational Console
-          </div>
-          <h1 className={styles.brandTitle}>PexPacks Administration</h1>
-          <p className={styles.brandSub}>
-            Welcome back, <strong>{userName}</strong> ({userRole}). Live overview & management.
-          </p>
+          <span className={styles.dashboardEyebrow}>Operational overview</span>
+          <h1>Dashboard</h1>
+          <p>Live overview of Pexpacks orders, payments, fulfilment and catalogue activity.</p>
         </div>
-
         <div className={styles.headerActions}>
           <button
             type="button"
-            onClick={() => refresh()}
-            className={styles.syncBtn}
-            title="Refresh live metrics"
-            aria-label="Refresh live metrics"
+            className={styles.syncButton}
+            onClick={() => void refresh()}
+            disabled={isRefreshing}
           >
-            <RefreshCw className={`${styles.syncBtnIcon} ${isRefreshing ? styles.spin : ""}`} />
-            <span>{isRefreshing ? "Syncing…" : "Sync Metrics"}</span>
+            <RefreshCw className={isRefreshing ? styles.spin : ""} aria-hidden="true" />
+            {isRefreshing ? "Syncing..." : "Sync Metrics"}
           </button>
-
-          <div className={styles.syncHint} aria-live="polite">
-            {isRefreshing ? "Syncing in background…" : freshness}
-          </div>
+          <span className={styles.freshness} aria-live="polite">
+            <i aria-hidden="true" />
+            {freshness}
+          </span>
         </div>
       </header>
 
-      {/* 2. Navigation Tabs */}
-      <nav className={styles.tabs} aria-label="Dashboard navigation tabs">
+      <nav className={styles.tabs} aria-label="Dashboard views">
         <button
           type="button"
+          className={activeTab === "overview" ? styles.tabActive : styles.tab}
           onClick={() => setActiveTab("overview")}
-          className={`${styles.tab} ${activeTab === "overview" ? styles.tabActive : styles.tabIdle}`}
-          aria-current={activeTab === "overview" ? "page" : undefined}
+          aria-pressed={activeTab === "overview"}
         >
-          <LayoutDashboard className={styles.tabIcon} />
-          Overview
+          <LayoutDashboard aria-hidden="true" /> Overview
         </button>
-
         <button
           type="button"
+          className={activeTab === "pack-builder" ? styles.tabActive : styles.tab}
           onClick={() => setActiveTab("pack-builder")}
-          className={`${styles.tab} ${activeTab === "pack-builder" ? styles.tabActive : styles.tabIdle}`}
-          aria-current={activeTab === "pack-builder" ? "page" : undefined}
+          aria-pressed={activeTab === "pack-builder"}
         >
-          <Package className={styles.tabIcon} />
-          Stationery Pack Builder
+          <Package aria-hidden="true" /> Stationery Pack Builder
         </button>
       </nav>
 
-      {/* 3. Tab Content */}
-      {activeTab === "overview" && (
-        <div className={styles.tabContent}>
-          {/* Key Operational Metric Cards */}
-          <section className={styles.metricsGrid} aria-label="Key performance metrics">
-            {metrics.map((metric) => (
-              <div key={metric.label} className={styles.metricCard}>
-                <div className={styles.metricTop}>
-                  <span className={styles.metricLabel}>{metric.label}</span>
-                  <div className={`${styles.metricIcon} ${metricToneClass(metric.tone)}`}>
-                    <metric.icon className={styles.metricIconGlyph} />
-                  </div>
-                </div>
-                <div className={styles.metricValueBlock}>
-                  {isLoading ? (
-                    <div className={styles.skeleton} />
-                  ) : (
-                    <div
-                      className={
-                        metric.currency
-                          ? `${styles.metricValue} ${styles.metricValueAccent}`
-                          : styles.metricValue
-                      }
-                    >
-                      {metric.currency
-                        ? formatCurrency(
-                            typeof metric.value === "number" ? metric.value : 0
-                          )
-                        : typeof metric.value === "number"
-                        ? metric.value.toLocaleString()
-                        : metric.value}
-                    </div>
-                  )}
-                  <p className={styles.metricHint}>{metric.hint}</p>
-                </div>
-              </div>
+      {isError ? (
+        <div className={styles.dataNotice} role="status">
+          Live refresh is temporarily unavailable. Showing the latest server-loaded metrics.
+        </div>
+      ) : null}
+
+      {activeTab === "overview" ? (
+        <div className={styles.dashboardContent}>
+          <section className={styles.primaryMetrics} aria-label="Primary business metrics">
+            {primaryMetrics.map((metric, index) => (
+              <MetricCard key={metric.label} metric={metric} highlighted={index === 0} loading={isLoading} />
             ))}
           </section>
 
-          {/* Actionable Alerts */}
-          <section className={styles.section} aria-label="Actions needing attention">
-            <div className={styles.sectionHeading}>
-              <h2 className={styles.sectionTitle}>What needs attention</h2>
-              <p className={styles.sectionSub}>Actionable alerts across the business.</p>
-            </div>
+          <section className={styles.secondaryMetrics} aria-label="Supporting business metrics">
+            {secondaryMetrics.map((metric) => (
+              <MetricCard key={metric.label} metric={metric} loading={isLoading} />
+            ))}
+          </section>
 
-            {alerts.length > 0 ? (
-              <div className={styles.alertsGrid}>
-                {alerts.map((alert) => (
-                  <div
-                    key={alert.title}
-                    className={styles.alertCard}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => window.location.href = alert.href}
-                    aria-label={alert.accessibilityLabel}
-                  >
-                    <span className={`${styles.alertIcon} ${metricToneClass(alert.tone)}`}>
-                      <alert.icon className={styles.alertIconGlyph} />
-                    </span>
-                    <span className={styles.alertBody}>
-                      <span className={styles.alertTitle}>{alert.title}</span>
-                      <span className={styles.alertDesc}>{alert.body}</span>
-                    </span>
-                    <ArrowRight className={styles.alertArrow} aria-hidden="true" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className={styles.alertEmpty}>
-                <CheckCircle2 className={styles.alertEmptyIcon} aria-hidden="true" />
+          <section className={styles.operationsGrid} aria-label="Order activity and alerts">
+            <article className={`${styles.panel} ${styles.activityPanel}`}>
+              <div className={styles.panelHeader}>
                 <div>
-                  <p className={styles.alertEmptyTitle}>All clear</p>
-                  <p className={styles.alertEmptyDesc}>Nothing needs your attention right now.</p>
+                  <span className={styles.panelKicker}>Last 7 days</span>
+                  <h2>Order Activity</h2>
                 </div>
+                <BarChart3 aria-hidden="true" />
               </div>
-            )}
+              <CapsuleBarChart
+                points={orderPoints}
+                valueFormatter={(value) => `${value.toLocaleString("en-ZA")} orders`}
+                label="Order volume over the last seven days"
+              />
+            </article>
+
+            <article className={`${styles.panel} ${styles.attentionPanel}`}>
+              <div className={styles.panelHeader}>
+                <div>
+                  <span className={styles.panelKicker}>Operational queue</span>
+                  <h2>What needs attention</h2>
+                </div>
+                <AlertTriangle aria-hidden="true" />
+              </div>
+              <AttentionList items={attentionItems} />
+            </article>
           </section>
 
-          {/* Sales & catalogue charts */}
-          <section className={styles.section} aria-label="Sales and catalogue charts">
-            <div className={styles.sectionHeading}>
-              <h2 className={styles.sectionTitle}>Sales & catalogue</h2>
-              <p className={styles.sectionSub}>Orders and revenue over the last 30 days.</p>
-            </div>
+          <section className={styles.insightsGrid} aria-label="Business analytics">
+            <article className={`${styles.panel} ${styles.revenuePanel}`}>
+              <div className={styles.panelHeader}>
+                <div>
+                  <span className={styles.panelKicker}>Paid orders only</span>
+                  <h2>Revenue Activity</h2>
+                </div>
+                <TrendingUp aria-hidden="true" />
+              </div>
+              <CapsuleBarChart
+                points={revenuePoints}
+                valueFormatter={formatDashboardCurrency}
+                label="Confirmed revenue over the last fourteen days"
+              />
+            </article>
 
-            <div className={styles.chartsGrid}>
-              <ChartCard
-                title="Orders per day"
-                sub="Last 30 days"
-                ariaLabel="Orders per day chart for the last 30 days"
-              >
-                <VerticalBars
-                  points={ordersPoints}
-                  valueFormatter={(value) => value.toLocaleString()}
-                  color="accent"
-                  label="Orders per day for the last 30 days"
-                />
-              </ChartCard>
+            <article className={`${styles.panel} ${styles.fulfilmentPanel}`}>
+              <div className={styles.panelHeader}>
+                <div>
+                  <span className={styles.panelKicker}>Live pipeline</span>
+                  <h2>Packing &amp; Fulfilment</h2>
+                </div>
+                <PackageCheck aria-hidden="true" />
+              </div>
+              <FulfilmentGauge
+                completed={completedOrders}
+                awaiting={readyToFulfil}
+                available={summaryAvailable}
+              />
+            </article>
 
-              <ChartCard
-                title="Revenue per day"
-                sub="Paid orders only"
-                ariaLabel="Revenue per day chart for paid orders only"
-              >
-                <VerticalBars
-                  points={revenuePoints}
-                  valueFormatter={formatCurrency}
-                  color="info"
-                  label="Confirmed revenue per day for the last 30 days"
-                />
-              </ChartCard>
+            <article className={styles.panel}>
+              <div className={styles.panelHeader}>
+                <div>
+                  <span className={styles.panelKicker}>Order mix</span>
+                  <h2>Pack Types</h2>
+                </div>
+                <Boxes aria-hidden="true" />
+              </div>
+              <HorizontalBars rows={stats?.ordersByPackType ?? []} />
+            </article>
 
-              <ChartCard
-                title="Orders by pack type"
-                ariaLabel="Orders grouped by pack type"
-              >
-                <HBars rows={stats?.ordersByPackType ?? []} />
-              </ChartCard>
-
-              <ChartCard
-                title="Schools by city"
-                sub="Top 6 locations"
-                ariaLabel="Schools grouped by city, top 6 locations"
-              >
-                <HBars rows={stats?.schoolsByCity ?? []} />
-              </ChartCard>
-            </div>
+            <article className={styles.panel}>
+              <div className={styles.panelHeader}>
+                <div>
+                  <span className={styles.panelKicker}>Top locations</span>
+                  <h2>Schools by City</h2>
+                </div>
+                <School aria-hidden="true" />
+              </div>
+              <HorizontalBars rows={stats?.schoolsByCity ?? []} />
+            </article>
           </section>
 
-          {/* Recent orders */}
-          <section className={styles.section} aria-label="Recent orders">
-            <div className={styles.sectionHeading}>
+          <section className={`${styles.panel} ${styles.recentPanel}`} aria-labelledby="recent-orders-heading">
+            <div className={styles.panelHeader}>
               <div>
-                <h2 className={styles.sectionTitle}>Recent orders</h2>
-                <p className={styles.sectionSub}>
-                  Latest {recent.length > 0 ? recent.length : ""} orders across all schools.
-                </p>
+                <span className={styles.panelKicker}>Latest transactions</span>
+                <h2 id="recent-orders-heading">Recent Orders</h2>
               </div>
-              <Link href="/admin/orders" className={styles.seeAll}>
-                View all
-                <ArrowRight className={styles.seeAllIcon} aria-hidden="true" />
+              <Link href="/admin/orders" className={styles.viewAll}>
+                View all <ArrowRight aria-hidden="true" />
               </Link>
             </div>
 
-            {recent.length === 0 ? (
-              <div className={styles.emptyState}>
-                <ShoppingBag className={styles.emptyStateIcon} aria-hidden="true" />
-                <p className={styles.emptyStateTitle}>No orders yet</p>
-                <p className={styles.emptyStateDesc}>
-                  Orders will appear here as soon as customers place them.
-                </p>
-              </div>
-            ) : (
+            {recentOrders.length ? (
               <>
                 <div className={styles.tableWrap}>
                   <table className={styles.recentTable}>
@@ -531,87 +380,63 @@ export function DashboardClient({
                       </tr>
                     </thead>
                     <tbody>
-                      {recent.map((order) => (
+                      {recentOrders.map((order) => (
                         <tr key={order.id}>
                           <td>
-                            <Link className={styles.orderLink} href={`/admin/orders/${order.order_reference || order.id}`}>
+                            <Link href={`/admin/orders/${order.order_reference || order.id}`} className={styles.orderLink}>
                               {order.order_reference}
                             </Link>
                           </td>
                           <td>{order.buyer_name}</td>
                           <td>{order.school_name}</td>
-                          <td>
-                            {order.estimated_total != null
-                              ? formatCurrency(order.estimated_total)
-                              : "—"}
-                          </td>
-                          <td>
-                            <StatusBadge status={order.status} />
-                          </td>
-                          <td>{formatDay(order.created_at)}</td>
+                          <td>{order.estimated_total == null ? "-" : formatDashboardCurrency(order.estimated_total)}</td>
+                          <td><StatusBadge status={order.status} /></td>
+                          <td>{formatDate(order.created_at)}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-
-                <ul
-                  className={styles.recentCards}
-                  role="list"
-                  aria-label="Recent order cards"
-                >
-                  {recent.map((order) => (
-                    <li
-                      key={order.id}
-                      className={styles.recentCard}
-                      role="article"
-                      aria-label={`Order ${order.order_reference} for ${order.school_name}, ${orderStatusLabel(order.status)}, ${formatDay(order.created_at)}`}
-                    >
+                <ul className={styles.recentCards} aria-label="Recent order cards">
+                  {recentOrders.map((order) => (
+                    <li key={order.id}>
                       <Link
                         href={`/admin/orders/${order.order_reference || order.id}`}
                         className={styles.recentCard}
+                        aria-label={`Order ${order.order_reference}, ${orderStatusLabel(order.status)}`}
                       >
-                        <div className={styles.recentCardTop}>
-                          <span className={styles.orderLink}>{order.order_reference}</span>
+                        <span className={styles.recentCardTop}>
+                          <strong>{order.order_reference}</strong>
                           <StatusBadge status={order.status} />
-                        </div>
-                        <div className={styles.recentCardMeta}>
-                          {order.school_name}
-                          <span className={styles.recentCardDot}>·</span>
-                          {order.buyer_name}
-                        </div>
-                        <div className={styles.recentCardBottom}>
-                          <span className={styles.recentCardTotal}>
-                            {order.estimated_total != null
-                              ? formatCurrency(order.estimated_total)
-                              : "—"}
-                          </span>
-                          <span className={styles.recentCardDate}>
-                            {formatDay(order.created_at)}
-                          </span>
-                        </div>
+                        </span>
+                        <span>{order.school_name} / {order.buyer_name}</span>
+                        <span className={styles.recentCardBottom}>
+                          <strong>{order.estimated_total == null ? "-" : formatDashboardCurrency(order.estimated_total)}</strong>
+                          <small>{formatDate(order.created_at)}</small>
+                        </span>
                       </Link>
                     </li>
                   ))}
                 </ul>
               </>
+            ) : (
+              <div className={styles.emptyState}>
+                <ShoppingBag aria-hidden="true" />
+                <strong>No orders yet</strong>
+                <span>Orders will appear here as soon as customers place them.</span>
+              </div>
             )}
           </section>
         </div>
-      )}
-
-      {activeTab === "pack-builder" && (
+      ) : (
         <section className={styles.builder} aria-label="Stationery Pack Builder Workstation">
           <div className={styles.builderIntro}>
-            <h2 className={styles.builderTitle}>
-              <Package className={styles.builderTitleIcon} />
-              Grade Pack Builder Workstation
-            </h2>
-            <p className={styles.builderDesc}>
-              Type stationery item names or descriptions to auto-populate prices and assemble custom school grade packs.
-            </p>
+            <Package aria-hidden="true" />
+            <div>
+              <h2>Grade Pack Builder Workstation</h2>
+              <p>Search stationery items and assemble custom school grade packs.</p>
+            </div>
           </div>
-
           <GradePackItemSelector />
         </section>
       )}
