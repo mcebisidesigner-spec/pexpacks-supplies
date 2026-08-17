@@ -1,6 +1,9 @@
 import { ClipboardCheck } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listApprovals } from "@/lib/admin/operations";
+import { formatDateTime } from "@/lib/admin/ui-utils";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { EmptyState } from "@/components/admin/EmptyState";
 import { updateApprovalAction } from "../operations-actions";
 import admin from "../admin.module.css";
 import styles from "../operations.module.css";
@@ -20,14 +23,10 @@ export default async function ApprovalsPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1>Approvals</h1>
-          <p>
-            Review and decide on pending approval requests across the system.
-          </p>
-        </div>
-      </header>
+      <AdminPageHeader
+        title="Approvals"
+        subtitle="Review and decide on pending approval requests across the system."
+      />
 
       <div className={styles.kpis}>
         <div className={styles.kpi}>
@@ -79,7 +78,7 @@ export default async function ApprovalsPage() {
                         {approval.reason || "-"}
                       </td>
                       <td className={styles.muted}>
-                        {new Date(approval.created_at).toLocaleString("en-ZA")}
+                        {formatDateTime(approval.created_at)}
                       </td>
                       <td>
                         {hasPermission(session, "approvals.manage") ? (
@@ -117,8 +116,11 @@ export default async function ApprovalsPage() {
         </section>
       ) : (
         <section className={styles.formPanel}>
-          <ClipboardCheck aria-hidden="true" />
-          <p>No pending approvals.</p>
+          <EmptyState
+            icon={<ClipboardCheck aria-hidden="true" />}
+            title="No pending approvals"
+            text="All approval requests have been reviewed."
+          />
         </section>
       )}
 
@@ -175,9 +177,7 @@ export default async function ApprovalsPage() {
                         </td>
                         <td className={styles.muted}>
                           {approval.decided_at
-                            ? new Date(approval.decided_at).toLocaleString(
-                                "en-ZA",
-                              )
+                            ? formatDateTime(approval.decided_at)
                             : "-"}
                         </td>
                       </tr>

@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listOrders, type OrderListFilters } from "@/lib/admin/orders";
+import { PAGE_SIZE, buildHref, money, formatDate } from "@/lib/admin/ui-utils";
 import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { DateField } from "@/components/admin/DateField";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { Pagination } from "@/components/admin/Pagination";
 import shared from "../schools/schools.module.css";
 import adminStyles from "../admin.module.css";
 import styles from "./orders.module.css";
@@ -16,34 +19,6 @@ interface OrdersPageProps {
     to?: string;
     page?: string;
   }>;
-}
-
-const PAGE_SIZE = 20;
-
-function buildHref(
-  params: Record<string, string | undefined>,
-  overrides: Record<string, string | undefined>,
-): string {
-  const merged = { ...params, ...overrides };
-  const qs = new URLSearchParams();
-  for (const [key, value] of Object.entries(merged)) {
-    if (value) qs.set(key, value);
-  }
-  const s = qs.toString();
-  return s ? `/admin/orders?${s}` : "/admin/orders";
-}
-
-function money(v: number | null): string {
-  return v == null ? "—" : `R ${v.toFixed(2)}`;
-}
-
-function formatDate(iso: string | null): string {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("en-ZA", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 function packTypeLabel(packType: string | null): string {
@@ -85,29 +60,23 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
     filters.to,
   );
 
-  const exportQs = new URLSearchParams();
-  for (const [key, value] of Object.entries(baseParams)) {
-    if (value) exportQs.set(key, value);
-  }
-  const exportHref = `/admin/orders/export${exportQs.toString() ? `?${exportQs.toString()}` : ""}`;
+  const exportHref = buildHref("/admin/orders/export", baseParams);
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={shared.toolbar}>
-        <div className={shared.headerRow}>
-          <h1 className={shared.pageTitle}>
-            Orders
-            <span className={shared.count}>
-              {total} {total === 1 ? "order" : "orders"}
-            </span>
-          </h1>
-          {hasPermission(session, "orders.export") ? (
+      <AdminPageHeader
+        title="Orders"
+        count={total}
+        actions={
+          hasPermission(session, "orders.export") ? (
             <Link href={exportHref} className={shared.addButton}>
               Export CSV
             </Link>
-          ) : null}
-        </div>
+          ) : undefined
+        }
+      />
 
+      <div className={shared.toolbar}>
         <form method="get" action="/admin/orders" className={shared.filterForm}>
           <input
             type="search"
@@ -250,31 +219,12 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
         </div>
       )}
 
-      {pageCount > 1 ? (
-        <div className={shared.pagination}>
-          <span className={shared.paginationInfo}>
-            Page {page} of {pageCount} · {total} orders
-          </span>
-          <div className={shared.pageNav}>
-            <Link
-              href={buildHref(baseParams, { page: String(page - 1) })}
-              className={shared.pageButton}
-              aria-disabled={page <= 1}
-              aria-label="Previous page"
-            >
-              ← Prev
-            </Link>
-            <Link
-              href={buildHref(baseParams, { page: String(page + 1) })}
-              className={shared.pageButton}
-              aria-disabled={page >= pageCount}
-              aria-label="Next page"
-            >
-              Next →
-            </Link>
-          </div>
-        </div>
-      ) : null}
+      <Pagination
+        basePath="/admin/orders"
+        params={baseParams}
+        currentPage={page}
+        totalPages={pageCount}
+      />
     </div>
   );
 }

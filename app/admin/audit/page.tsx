@@ -2,6 +2,9 @@ import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listAuditLogs, type AuditFilters } from "@/lib/admin/audit";
 import { DateField } from "@/components/admin/DateField";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { Pagination } from "@/components/admin/Pagination";
+import { buildHref, formatDateTime, PAGE_SIZE } from "@/lib/admin/ui-utils";
 import adminStyles from "../admin.module.css";
 import styles from "./audit.module.css";
 
@@ -15,40 +18,6 @@ interface AuditPageProps {
     to?: string;
     page?: string;
   }>;
-}
-
-const PAGE_SIZE = 25;
-
-function buildHref(
-  params: Record<string, string | undefined>,
-  overrides: Record<string, string | undefined>,
-): string {
-  const merged = { ...params, ...overrides };
-  const qs = new URLSearchParams();
-  for (const [key, value] of Object.entries(merged)) {
-    if (value) qs.set(key, value);
-  }
-  const s = qs.toString();
-  return s ? `/admin/audit?${s}` : "/admin/audit";
-}
-
-function formatDateTime(value: string): string {
-  return new Date(value).toLocaleString("en-ZA", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-function buildExportHref(params: Record<string, string | undefined>): string {
-  const qs = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    if (value) qs.set(key, value);
-  }
-  const s = qs.toString();
-  return s ? `/admin/audit/export?${s}` : "/admin/audit/export";
 }
 
 export default async function AuditPage({ searchParams }: AuditPageProps) {
@@ -89,24 +58,22 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={styles.toolbar}>
-        <div className={styles.headerRow}>
-          <h1 className={styles.pageTitle}>
-            Audit Logs
-            <span className={styles.count}>
-              {total} {total === 1 ? "entry" : "entries"}
-            </span>
-          </h1>
-          {canExport ? (
+      <AdminPageHeader
+        title="Audit Logs"
+        count={total}
+        actions={
+          canExport ? (
             <Link
-              href={buildExportHref(baseParams)}
+              href={buildHref("/admin/audit/export", baseParams)}
               className={styles.exportLink}
             >
               Export CSV
             </Link>
-          ) : null}
-        </div>
+          ) : null
+        }
+      />
 
+      <div className={styles.toolbar}>
         <form method="get" action="/admin/audit" className={styles.filterForm}>
           <input
             type="search"
@@ -253,31 +220,12 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
         </div>
       )}
 
-      {pageCount > 1 ? (
-        <div className={styles.pagination}>
-          <span className={styles.paginationInfo}>
-            Page {page} of {pageCount} · {total} entries
-          </span>
-          <div className={styles.pageNav}>
-            <Link
-              href={buildHref(baseParams, { page: String(page - 1) })}
-              className={styles.pageButton}
-              aria-disabled={page <= 1}
-              aria-label="Previous page"
-            >
-              ← Prev
-            </Link>
-            <Link
-              href={buildHref(baseParams, { page: String(page + 1) })}
-              className={styles.pageButton}
-              aria-disabled={page >= pageCount}
-              aria-label="Next page"
-            >
-              Next →
-            </Link>
-          </div>
-        </div>
-      ) : null}
+      <Pagination
+        basePath="/admin/audit"
+        params={baseParams}
+        currentPage={page}
+        totalPages={pageCount}
+      />
     </div>
   );
 }

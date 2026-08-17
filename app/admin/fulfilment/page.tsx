@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Warehouse } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listFulfilmentRecords } from "@/lib/admin/operations";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { EmptyState } from "@/components/admin/EmptyState";
 import { updateFulfilmentAction } from "../operations-actions";
 import admin from "../admin.module.css";
 import styles from "../operations.module.css";
@@ -36,14 +38,10 @@ export default async function FulfilmentPage() {
   ).length;
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1>Fulfilment</h1>
-          <p>
-            Packing readiness, quality control, school collection and delivery.
-          </p>
-        </div>
-      </header>
+      <AdminPageHeader
+        title="Fulfilment"
+        subtitle="Packing readiness, quality control, school collection and delivery."
+      />
       <div className={styles.kpis}>
         <div className={styles.kpi}>
           <span>Orders in fulfilment</span>
@@ -189,10 +187,11 @@ export default async function FulfilmentPage() {
             </table>
           </div>
         ) : (
-          <div className={styles.empty}>
-            <Warehouse aria-hidden="true" />
-            <p>No paid orders are awaiting fulfilment.</p>
-          </div>
+          <EmptyState
+            icon={<Warehouse aria-hidden="true" />}
+            title="No fulfilment records"
+            text="No paid orders are awaiting fulfilment."
+          />
         )}
       </div>
     </div>

@@ -1,6 +1,9 @@
 import { Tags } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listPricingReview, listPricingRules, listPriceHistory } from "@/lib/admin/operations";
+import { money, formatDate } from "@/lib/admin/ui-utils";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { EmptyState } from "@/components/admin/EmptyState";
 import {
   approveProductPriceAction,
   createPricingRuleAction,
@@ -22,15 +25,10 @@ export default async function PricingPage() {
   ).length;
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1>Price Review</h1>
-          <p>
-            Approve selling prices from verified cost and preserve every
-            commercial change.
-          </p>
-        </div>
-      </header>
+      <AdminPageHeader
+        title="Price Review"
+        subtitle="Approve selling prices from verified cost and preserve every commercial change."
+      />
       <div className={styles.kpis}>
         <div className={styles.kpi}>
           <span>Products reviewed</span>
@@ -135,14 +133,14 @@ export default async function PricingPage() {
                       <div className={styles.money}>
                         {product.latest_verified_cost == null
                           ? "No verified cost"
-                          : `R ${Number(product.latest_verified_cost).toFixed(2)}`}
+                          : money(product.latest_verified_cost)}
                       </div>
                       <div className={styles.muted}>
                         {product.pricing_rule || "No matching pricing rule"}
                       </div>
                     </td>
                     <td className={styles.money}>
-                      R {Number(product.current_selling_price).toFixed(2)}
+                      {money(product.current_selling_price)}
                     </td>
                     <td>
                       {product.current_margin == null
@@ -150,7 +148,7 @@ export default async function PricingPage() {
                         : `${(product.current_margin * 100).toFixed(1)}%`}
                     </td>
                     <td className={styles.money}>
-                      R {product.suggested_price.toFixed(2)}
+                      {money(product.suggested_price)}
                     </td>
                     <td>
                       <span
@@ -191,10 +189,11 @@ export default async function PricingPage() {
             </table>
           </div>
         ) : (
-          <div className={styles.empty}>
-            <Tags aria-hidden="true" />
-            <p>No catalogue products are available for pricing.</p>
-          </div>
+          <EmptyState
+            icon={<Tags aria-hidden="true" />}
+            title="No products"
+            text="No catalogue products are available for pricing."
+          />
         )}
       </div>
 
@@ -218,28 +217,24 @@ export default async function PricingPage() {
                 {priceHistory.map((entry) => (
                   <tr key={entry.id}>
                     <td>
-                      {new Date(entry.created_at).toLocaleDateString("en-ZA", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
+                      {formatDate(entry.created_at)}
                     </td>
                     <td className={styles.mono}>
                       {entry.product_id.slice(0, 8)}…
                     </td>
                     <td>
                       {entry.new_cost != null
-                        ? `R ${Number(entry.new_cost).toFixed(2)}`
+                        ? money(entry.new_cost)
                         : "—"}
                     </td>
                     <td>
                       {entry.previous_selling_price != null
-                        ? `R ${Number(entry.previous_selling_price).toFixed(2)}`
+                        ? money(entry.previous_selling_price)
                         : "—"}
                     </td>
                     <td className={styles.money}>
                       {entry.new_selling_price != null
-                        ? `R ${Number(entry.new_selling_price).toFixed(2)}`
+                        ? money(entry.new_selling_price)
                         : "—"}
                     </td>
                     <td>

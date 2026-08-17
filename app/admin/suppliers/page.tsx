@@ -1,6 +1,8 @@
 import { Truck } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { DateField } from "@/components/admin/DateField";
+import { EmptyState } from "@/components/admin/EmptyState";
 import {
   isOperationsSchemaReady,
   listMasterProducts,
@@ -28,14 +30,11 @@ export default async function SuppliersPage() {
   ]);
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1>Suppliers</h1>
-          <p>
-            {suppliers.length} suppliers and their current commercial terms.
-          </p>
-        </div>
-      </header>
+      <AdminPageHeader
+        title="Suppliers"
+        count={suppliers.length}
+        subtitle="Suppliers and their current commercial terms."
+      />
       {!schemaReady ? (
         <section className={styles.notice} role="status">
           <strong>Operations database setup required</strong>
@@ -264,14 +263,15 @@ export default async function SuppliersPage() {
             </table>
           </div>
         ) : (
-          <div className={styles.empty}>
-            <Truck aria-hidden="true" />
-            <p>
-              {schemaReady
+          <EmptyState
+            icon={<Truck aria-hidden="true" />}
+            title="No suppliers"
+            text={
+              schemaReady
                 ? "No suppliers have been added."
-                : "Supplier data will appear after database setup."}
-            </p>
-          </div>
+                : "Supplier data will appear after database setup."
+            }
+          />
         )}
       </div>
       <div className={admin.tableCard}>

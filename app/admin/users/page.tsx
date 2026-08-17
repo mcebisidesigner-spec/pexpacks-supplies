@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { requireAdmin, hasPermission, displayName } from "@/lib/admin/rbac";
 import { listUsers, isBanned, type UserListFilters } from "@/lib/admin/users";
+import { PAGE_SIZE, formatDate } from "@/lib/admin/ui-utils";
 import { deactivateUserAction, reactivateUserAction, deleteUserAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { Pagination } from "@/components/admin/Pagination";
 import adminStyles from "../admin.module.css";
 import styles from "./users.module.css";
 
@@ -12,30 +15,6 @@ interface UsersPageProps {
     role?: string;
     page?: string;
   }>;
-}
-
-const PAGE_SIZE = 20;
-
-function buildHref(
-  params: Record<string, string | undefined>,
-  overrides: Record<string, string | undefined>
-): string {
-  const merged = { ...params, ...overrides };
-  const qs = new URLSearchParams();
-  for (const [key, value] of Object.entries(merged)) {
-    if (value) qs.set(key, value);
-  }
-  const s = qs.toString();
-  return s ? `/admin/users?${s}` : "/admin/users";
-}
-
-function formatDate(value: string | null | undefined): string {
-  if (!value) return "—";
-  return new Date(value).toLocaleDateString("en-ZA", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 export default async function UsersPage({ searchParams }: UsersPageProps) {
@@ -58,48 +37,44 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={styles.toolbar}>
-        <div className={styles.headerRow}>
-          <h1 className={styles.pageTitle}>
-            Users
-            <span className={styles.count}>
-              {total} {total === 1 ? "user" : "users"}
-            </span>
-          </h1>
-          {hasPermission(session, "users.create") ? (
+      <AdminPageHeader
+        title="Users"
+        count={total}
+        actions={
+          hasPermission(session, "users.create") ? (
             <Link href="/admin/users/invite" className={styles.addButton}>
               + Invite user
             </Link>
-          ) : null}
-        </div>
+          ) : undefined
+        }
+      />
 
-        <form method="get" action="/admin/users" className={styles.filterForm}>
-          <input
-            type="search"
-            name="q"
-            defaultValue={filters.q ?? ""}
-            placeholder="Search email, name or ID…"
-            className={`${styles.filterInput} ${styles.searchInput}`}
-            aria-label="Search users"
-          />
-          <select name="role" defaultValue={filters.role ?? ""} className={styles.filterInput}>
-            <option value="">All roles</option>
-            {roleOptions.map((r) => (
-              <option key={r.id} value={r.slug}>
-                {r.name}
-              </option>
-            ))}
-          </select>
-          <button type="submit" className={styles.applyButton}>
-            Apply
-          </button>
-          {hasFilters ? (
-            <Link href="/admin/users" className={styles.resetLink}>
-              Reset
-            </Link>
-          ) : null}
-        </form>
-      </div>
+      <form method="get" action="/admin/users" className={styles.filterForm}>
+        <input
+          type="search"
+          name="q"
+          defaultValue={filters.q ?? ""}
+          placeholder="Search email, name or ID…"
+          className={`${styles.filterInput} ${styles.searchInput}`}
+          aria-label="Search users"
+        />
+        <select name="role" defaultValue={filters.role ?? ""} className={styles.filterInput}>
+          <option value="">All roles</option>
+          {roleOptions.map((r) => (
+            <option key={r.id} value={r.slug}>
+              {r.name}
+            </option>
+          ))}
+        </select>
+        <button type="submit" className={styles.applyButton}>
+          Apply
+        </button>
+        {hasFilters ? (
+          <Link href="/admin/users" className={styles.resetLink}>
+            Reset
+          </Link>
+        ) : null}
+      </form>
 
       {users.length === 0 ? (
         <div className={adminStyles.tableCard}>
@@ -237,31 +212,12 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
         </div>
       )}
 
-      {pageCount > 1 ? (
-        <div className={styles.pagination}>
-          <span className={styles.paginationInfo}>
-            Page {page} of {pageCount} · {total} users
-          </span>
-          <div className={styles.pageNav}>
-            <Link
-              href={buildHref(baseParams, { page: String(page - 1) })}
-              className={styles.pageButton}
-              aria-disabled={page <= 1}
-              aria-label="Previous page"
-            >
-              ← Prev
-            </Link>
-            <Link
-              href={buildHref(baseParams, { page: String(page + 1) })}
-              className={styles.pageButton}
-              aria-disabled={page >= pageCount}
-              aria-label="Next page"
-            >
-              Next →
-            </Link>
-          </div>
-        </div>
-      ) : null}
+      <Pagination
+        basePath="/admin/users"
+        params={baseParams}
+        currentPage={page}
+        totalPages={pageCount}
+      />
     </div>
   );
 }

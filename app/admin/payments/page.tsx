@@ -2,9 +2,12 @@ import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listPayments, type PaymentFilters } from "@/lib/admin/payments";
 import { PAYMENT_GATEWAY_LABELS } from "@/lib/admin/order-constants";
+import { buildHref, money, formatDate, PAGE_SIZE } from "@/lib/admin/ui-utils";
 import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { RefundButton } from "@/components/admin/orders/RefundButton";
 import { DateField } from "@/components/admin/DateField";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { Pagination } from "@/components/admin/Pagination";
 import shared from "../schools/schools.module.css";
 import adminStyles from "../admin.module.css";
 import orderStyles from "../orders/orders.module.css";
@@ -17,34 +20,6 @@ interface PaymentsPageProps {
     to?: string;
     page?: string;
   }>;
-}
-
-const PAGE_SIZE = 20;
-
-function buildHref(
-  params: Record<string, string | undefined>,
-  overrides: Record<string, string | undefined>,
-): string {
-  const merged = { ...params, ...overrides };
-  const qs = new URLSearchParams();
-  for (const [key, value] of Object.entries(merged)) {
-    if (value) qs.set(key, value);
-  }
-  const s = qs.toString();
-  return s ? `/admin/payments?${s}` : "/admin/payments";
-}
-
-function money(v: number | null): string {
-  return v == null ? "—" : `R ${v.toFixed(2)}`;
-}
-
-function formatDate(iso: string | null): string {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("en-ZA", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 function paymentMethod(payment: {
@@ -109,17 +84,9 @@ export default async function PaymentsPage({
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={shared.toolbar}>
-        <div className={shared.headerRow}>
-          <h1 className={shared.pageTitle}>
-            Payments
-            <span className={shared.count}>
-              {total} {total === 1 ? "payment" : "payments"}
-            </span>
-          </h1>
-        </div>
+      <AdminPageHeader title="Payments" count={total} />
 
-        <div className={orderStyles.summaryStrip}>
+      <div className={orderStyles.summaryStrip}>
           <div className={orderStyles.summaryItem}>
             <span className={orderStyles.summaryLabel}>
               Captured revenue (paid)
@@ -184,7 +151,6 @@ export default async function PaymentsPage({
             </Link>
           ) : null}
         </form>
-      </div>
 
       {payments.length === 0 ? (
         <div className={adminStyles.tableCard}>
@@ -279,31 +245,12 @@ export default async function PaymentsPage({
         </div>
       )}
 
-      {pageCount > 1 ? (
-        <div className={shared.pagination}>
-          <span className={shared.paginationInfo}>
-            Page {page} of {pageCount} · {total} payments
-          </span>
-          <div className={shared.pageNav}>
-            <Link
-              href={buildHref(baseParams, { page: String(page - 1) })}
-              className={shared.pageButton}
-              aria-disabled={page <= 1}
-              aria-label="Previous page"
-            >
-              ← Prev
-            </Link>
-            <Link
-              href={buildHref(baseParams, { page: String(page + 1) })}
-              className={shared.pageButton}
-              aria-disabled={page >= pageCount}
-              aria-label="Next page"
-            >
-              Next →
-            </Link>
-          </div>
-        </div>
-      ) : null}
+      <Pagination
+        basePath="/admin/payments"
+        params={baseParams}
+        currentPage={page}
+        totalPages={pageCount}
+      />
     </div>
   );
 }

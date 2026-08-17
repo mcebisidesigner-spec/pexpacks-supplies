@@ -14,6 +14,9 @@ import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { DuplicateButton } from "@/components/admin/packs/DuplicateButton";
 import { VisibleToggle } from "@/components/admin/packs/VisibleToggle";
 import { SchoolVisibleToggle } from "@/components/admin/packs/SchoolVisibleToggle";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { Pagination } from "@/components/admin/Pagination";
+import { PAGE_SIZE, money } from "@/lib/admin/ui-utils";
 import shared from "../schools/schools.module.css";
 import adminStyles from "../admin.module.css";
 import styles from "./packs.module.css";
@@ -30,25 +33,6 @@ interface PacksPageProps {
     visible?: string;
     page?: string;
   }>;
-}
-
-const PAGE_SIZE = 20;
-
-function buildHref(
-  params: Record<string, string | undefined>,
-  overrides: Record<string, string | undefined>
-): string {
-  const merged = { ...params, ...overrides };
-  const qs = new URLSearchParams();
-  for (const [key, value] of Object.entries(merged)) {
-    if (value) qs.set(key, value);
-  }
-  const s = qs.toString();
-  return s ? `/admin/packs?${s}` : "/admin/packs";
-}
-
-function money(v: number): string {
-  return `R ${v.toFixed(2)}`;
 }
 
 function formatShortDate(dateStr: string | null | undefined): string {
@@ -121,15 +105,11 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
           </Link>
         </p>
       ) : null}
-      <div className={shared.toolbar}>
-        <div className={shared.headerRow}>
-          <h1 className={shared.pageTitle}>
-            School Packs
-            <span className={shared.count}>
-              {displayTotal} {displayTotal === 1 ? "Grade pack" : "Grade packs"}
-            </span>
-          </h1>
-          {isSchoolFiltered ? (
+      <AdminPageHeader
+        title="School Packs"
+        count={displayTotal}
+        actions={
+          isSchoolFiltered ? (
             <Link
               href={`/admin/packs/${
                 schools.find((s) => s.id === filters.school_id || s.slug === filters.school_id)?.slug ||
@@ -139,28 +119,28 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
             >
               + Add pack
             </Link>
-          ) : null}
-        </div>
+          ) : undefined
+        }
+      />
 
-        <form method="get" action="/admin/packs" className={shared.filterForm}>
-          <input
-            type="search"
-            name="q"
-            defaultValue={filters.q ?? ""}
-            placeholder="Search by School name…"
-            className={`${shared.filterInput} ${shared.searchInput}`}
-            aria-label="Search packs"
-          />
-          <button type="submit" className={shared.applyButton}>
-            Apply
-          </button>
-          {hasFilters ? (
-            <Link href="/admin/packs" className={shared.resetLink}>
-              Reset
-            </Link>
-          ) : null}
-        </form>
-      </div>
+      <form method="get" action="/admin/packs" className={shared.filterForm}>
+        <input
+          type="search"
+          name="q"
+          defaultValue={filters.q ?? ""}
+          placeholder="Search by School name…"
+          className={`${shared.filterInput} ${shared.searchInput}`}
+          aria-label="Search packs"
+        />
+        <button type="submit" className={shared.applyButton}>
+          Apply
+        </button>
+        {hasFilters ? (
+          <Link href="/admin/packs" className={shared.resetLink}>
+            Reset
+          </Link>
+        ) : null}
+      </form>
 
       {!isSchoolFiltered && groupedResult ? (
         // ═══════════════════════════════════════════════
@@ -363,31 +343,12 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
         )
       ) : null}
 
-      {pageCount > 1 ? (
-        <div className={shared.pagination}>
-          <span className={shared.paginationInfo}>
-            Page {page} of {pageCount} · {displayTotal} Grade packs
-          </span>
-          <div className={shared.pageNav}>
-            <Link
-              href={buildHref(baseParams, { page: String(page - 1) })}
-              className={shared.pageButton}
-              aria-disabled={page <= 1}
-              aria-label="Previous page"
-            >
-              ← Prev
-            </Link>
-            <Link
-              href={buildHref(baseParams, { page: String(page + 1) })}
-              className={shared.pageButton}
-              aria-disabled={page >= pageCount}
-              aria-label="Next page"
-            >
-              Next →
-            </Link>
-          </div>
-        </div>
-      ) : null}
+      <Pagination
+        basePath="/admin/packs"
+        params={baseParams}
+        currentPage={page}
+        totalPages={pageCount}
+      />
     </div>
   );
 }

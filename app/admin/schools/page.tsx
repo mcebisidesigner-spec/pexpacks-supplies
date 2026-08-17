@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { listSchools, type SchoolListFilters } from "@/lib/admin/schools";
+import { buildHref, PAGE_SIZE } from "@/lib/admin/ui-utils";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { EmptyState } from "@/components/admin/EmptyState";
+import { Pagination } from "@/components/admin/Pagination";
+import { StatusBadge } from "@/components/admin/StatusBadge";
 import {
   hideSchoolAction,
   showSchoolAction,
@@ -19,21 +24,6 @@ interface SchoolsPageProps {
     status?: string;
     page?: string;
   }>;
-}
-
-const PAGE_SIZE = 20;
-
-function buildHref(
-  params: Record<string, string | undefined>,
-  overrides: Record<string, string | undefined>
-): string {
-  const merged = { ...params, ...overrides };
-  const qs = new URLSearchParams();
-  for (const [key, value] of Object.entries(merged)) {
-    if (value) qs.set(key, value);
-  }
-  const s = qs.toString();
-  return s ? `/admin/schools?${s}` : "/admin/schools";
 }
 
 export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
@@ -62,20 +52,17 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={styles.toolbar}>
-        <div className={styles.headerRow}>
-          <h1 className={styles.pageTitle}>
-            Schools
-            <span className={styles.count}>
-              {total} {total === 1 ? "school" : "schools"}
-            </span>
-          </h1>
-          <Link href="/admin/schools/new" className={styles.addButton}>
+      <AdminPageHeader
+        title="Schools"
+        count={total}
+        actions={
+          <Link href="/admin/schools/new" className={adminStyles.addButton}>
             + Add school
           </Link>
-        </div>
+        }
+      />
 
-        <form method="get" action="/admin/schools" className={styles.filterForm}>
+      <form method="get" action="/admin/schools" className={adminStyles.filterForm}>
           <input
             type="search"
             name="q"
@@ -116,28 +103,23 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
             </Link>
           ) : null}
         </form>
-      </div>
 
       {schools.length === 0 ? (
         <div className={adminStyles.tableCard}>
-          <div className={adminStyles.emptyStateContainer}>
-            <div className={adminStyles.emptyStateInner}>
-              <div className={adminStyles.emptyIconWrapper}>
-                <svg viewBox="0 0 24 24">
-                  <path d="M3 9l9-6 9 6-9 6-9-6z" />
-                  <path d="M9 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5" />
-                </svg>
-              </div>
-              <h2 className={adminStyles.emptyStateTitle}>
-                {hasFilters ? "No schools match your filters" : "No schools yet"}
-              </h2>
-              <p className={adminStyles.emptyStateText}>
-                {hasFilters
-                  ? "Try clearing your filters, or add a new school."
-                  : "Add your first school to start building the catalogue."}
-              </p>
-            </div>
-          </div>
+          <EmptyState
+            icon={
+              <svg viewBox="0 0 24 24">
+                <path d="M3 9l9-6 9 6-9 6-9-6z" />
+                <path d="M9 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5" />
+              </svg>
+            }
+            title={hasFilters ? "No schools match your filters" : "No schools yet"}
+            text={
+              hasFilters
+                ? "Try clearing your filters, or add a new school."
+                : "Add your first school to start building the catalogue."
+            }
+          />
         </div>
       ) : (
         <div className={adminStyles.tableCard}>
@@ -153,16 +135,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                 </tr>
               </thead>
               <tbody>
-                {schools.map((school) => {
-                  const statusClass =
-                    school.status === "active"
-                      ? styles.badgeActive
-                      : school.status === "pending"
-                        ? styles.badgePending
-                        : school.status === "inactive"
-                          ? styles.badgeInactive
-                          : styles.badgeHidden;
-                  return (
+                {schools.map((school) => (
                     <tr key={school.id}>
                       <td>
                         <div className={styles.schoolCell}>
@@ -204,9 +177,7 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                       <td>{school.city ?? "—"}</td>
                       <td>{school.province ?? "—"}</td>
                       <td>
-                        <span className={`${adminStyles.badge} ${statusClass}`}>
-                          {school.status === "archived" ? "hidden" : school.status}
-                        </span>
+                        <StatusBadge status={school.status === "archived" ? "hidden" : school.status} />
                       </td>
                       <td>
                         <div className={styles.actions}>
@@ -246,39 +217,19 @@ export default async function SchoolsPage({ searchParams }: SchoolsPageProps) {
                         </div>
                       </td>
                     </tr>
-                  );
-                })}
+                ))}
               </tbody>
             </table>
           </div>
         </div>
       )}
 
-      {pageCount > 1 ? (
-        <div className={styles.pagination}>
-          <span className={styles.paginationInfo}>
-            Page {page} of {pageCount} · {total} schools
-          </span>
-          <div className={styles.pageNav}>
-            <Link
-              href={buildHref(baseParams, { page: String(page - 1) })}
-              className={styles.pageButton}
-              aria-disabled={page <= 1}
-              aria-label="Previous page"
-            >
-              ← Prev
-            </Link>
-            <Link
-              href={buildHref(baseParams, { page: String(page + 1) })}
-              className={styles.pageButton}
-              aria-disabled={page >= pageCount}
-              aria-label="Next page"
-            >
-              Next →
-            </Link>
-          </div>
-        </div>
-      ) : null}
+      <Pagination
+        basePath="/admin/schools"
+        params={baseParams}
+        currentPage={page}
+        totalPages={pageCount}
+      />
     </div>
   );
 }

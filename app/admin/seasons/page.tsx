@@ -1,6 +1,9 @@
 import { Calendar } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listSeasons, isOperationsSchemaReady } from "@/lib/admin/operations";
+import { formatDate } from "@/lib/admin/ui-utils";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { EmptyState } from "@/components/admin/EmptyState";
 import {
   createSeasonAction,
   updateSeasonAction,
@@ -10,15 +13,6 @@ import admin from "../admin.module.css";
 import styles from "../operations.module.css";
 
 export const dynamic = "force-dynamic";
-
-function formatDate(iso: string | null): string {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("en-ZA", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 const STATUS_OPTIONS = ["planning", "active", "closed", "archived"];
 
@@ -32,17 +26,12 @@ export default async function SeasonsPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1>
-            <Calendar size={22} /> Seasons
-          </h1>
-          <p>
-            {seasons.length} seasons. The default season determines the
-            operational period for new orders and procurement.
-          </p>
-        </div>
-      </header>
+      <AdminPageHeader
+        title="Seasons"
+        count={seasons.length}
+        subtitle="The default season determines the operational period for new orders and procurement."
+        actions={<Calendar size={22} />}
+      />
 
       {!schemaReady ? (
         <section className={styles.notice} role="status">
@@ -168,7 +157,7 @@ export default async function SeasonsPage() {
             </table>
           </div>
         ) : (
-          <p className={styles.empty}>No seasons created yet.</p>
+          <EmptyState title="No seasons" text="No seasons created yet." />
         )}
       </div>
     </div>

@@ -2,7 +2,10 @@ import Link from "next/link";
 import { ClipboardCheck } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { DateField } from "@/components/admin/DateField";
+import { formatDateTime } from "@/lib/admin/ui-utils";
 import { listOperationalTasks } from "@/lib/admin/operations";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { EmptyState } from "@/components/admin/EmptyState";
 import {
   createOperationalTaskAction,
   updateOperationalTaskStatusAction,
@@ -28,15 +31,10 @@ export default async function TasksPage() {
   ).length;
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1>Operational Tasks</h1>
-          <p>
-            Assign and track work connected to orders, products, suppliers and
-            fulfilment exceptions.
-          </p>
-        </div>
-      </header>
+      <AdminPageHeader
+        title="Operational Tasks"
+        subtitle="Assign and track work connected to orders, products, suppliers and fulfilment exceptions."
+      />
       <div className={styles.kpis}>
         <div className={styles.kpi}>
           <span>Open</span>
@@ -143,9 +141,7 @@ export default async function TasksPage() {
                       <div className={styles.mono}>{task.entity_id || ""}</div>
                     </td>
                     <td>
-                      {task.due_at
-                        ? new Date(task.due_at).toLocaleString("en-ZA")
-                        : "-"}
+                      {formatDateTime(task.due_at)}
                     </td>
                     <td>
                       <span
@@ -186,10 +182,11 @@ export default async function TasksPage() {
             </table>
           </div>
         ) : (
-          <div className={styles.empty}>
-            <ClipboardCheck aria-hidden="true" />
-            <p>No operational tasks have been created.</p>
-          </div>
+          <EmptyState
+            icon={<ClipboardCheck aria-hidden="true" />}
+            title="No tasks"
+            text="No operational tasks have been created."
+          />
         )}
       </div>
     </div>

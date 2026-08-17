@@ -10,6 +10,8 @@ import {
   createSupplierPurchaseOrderAction,
   updateProcurementRequirementAction,
 } from "../operations-actions";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { EmptyState } from "@/components/admin/EmptyState";
 import admin from "../admin.module.css";
 import styles from "../operations.module.css";
 
@@ -36,15 +38,10 @@ export default async function ProcurementPage() {
   );
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1>Procurement</h1>
-          <p>
-            Committed demand from fully paid orders. Supplier availability is
-            not Pexpacks stock.
-          </p>
-        </div>
-      </header>
+      <AdminPageHeader
+        title="Procurement"
+        subtitle="Committed demand from fully paid orders. Supplier availability is not Pexpacks stock."
+      />
       <div className={styles.kpis}>
         <div className={styles.kpi}>
           <span>Required units</span>
@@ -241,13 +238,11 @@ export default async function ProcurementPage() {
             </table>
           </div>
         ) : (
-          <div className={styles.empty}>
-            <ShoppingCart aria-hidden="true" />
-            <p>
-              No committed procurement demand. Requirements appear after
-              verified full payment.
-            </p>
-          </div>
+          <EmptyState
+            icon={<ShoppingCart aria-hidden="true" />}
+            title="No procurement demand"
+            text="No committed procurement demand. Requirements appear after verified full payment."
+          />
         )}
       </div>
       <div className={admin.tableCard}>
