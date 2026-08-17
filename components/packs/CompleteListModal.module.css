@@ -64,61 +64,12 @@
   color: var(--pex-keppel);
   transform: var(--button-hover-transform);
 }
-  transition: var(--button-transition);
-}
-
-.addToOrderButton:hover {
-  filter: brightness(110%);
-  transform: var(--button-hover-transform);
-  box-shadow: var(--button-hover-shadow);
-}
-
-.addToOrderButton:active {
-  filter: brightness(100%);
-  transform: var(--button-active-transform);
-}
-
-.addToOrderButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  filter: none;
-  box-shadow: none;
-}
-
-.addToOrderButton:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: 3px;
-}
-
-.customiseButton {
-  width: 100%;
-  min-height: 48px;
-  border: 1px solid var(--pex-border);
-  border-radius: var(--radius-pill);
-  background: var(--pex-bg);
-  color: var(--pex-primary);
-  font: inherit;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-   gap: var(--space-2);
-  transition: var(--button-transition);
-}
-
-.customiseButton:hover {
-  border-color: var(--pex-keppel);
-  color: var(--pex-keppel);
-  transform: var(--button-hover-transform);
-}
 
 .customiseButton:focus-visible {
   outline: var(--focus-ring);
   outline-offset: 3px;
 }
+
 
 .price {
   margin: 0;
