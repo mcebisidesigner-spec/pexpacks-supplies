@@ -1,0 +1,274 @@
+import { Truck } from "lucide-react";
+import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
+import {
+  isOperationsSchemaReady,
+  listMasterProducts,
+  listSupplierOffers,
+  listSuppliers,
+} from "@/lib/admin/operations";
+import {
+  createSupplierAction,
+  createSupplierOfferAction,
+} from "../operations-actions";
+import admin from "../admin.module.css";
+import styles from "../operations.module.css";
+
+export const dynamic = "force-dynamic";
+
+export default async function SuppliersPage() {
+  const session = await requireAdmin({ permission: "suppliers.view" });
+  const [schemaReady, suppliers, offers, catalogue] = await Promise.all([
+    isOperationsSchemaReady(),
+    listSuppliers(),
+    listSupplierOffers(),
+    listMasterProducts("", 500),
+  ]);
+  return (
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <div>
+          <h1>Suppliers</h1>
+          <p>
+            {suppliers.length} suppliers and their current commercial terms.
+          </p>
+        </div>
+      </header>
+      {!schemaReady ? (
+        <section className={styles.notice} role="status">
+          <strong>Operations database setup required</strong>
+          <p>
+            Apply Supabase migrations 00029 and 00030 to activate Makro, BSC
+            Supplies, supplier offers and procurement records.
+          </p>
+        </section>
+      ) : null}
+      {schemaReady && hasPermission(session, "suppliers.manage") ? (
+        <section className={styles.formPanel}>
+          <h2>Add supplier</h2>
+          <form action={createSupplierAction} className={styles.formGrid}>
+            <input
+              className={styles.field}
+              name="code"
+              placeholder="Supplier code"
+              required
+            />
+            <input
+              className={`${styles.field} ${styles.wide}`}
+              name="name"
+              placeholder="Supplier name"
+              required
+            />
+            <input
+              className={styles.field}
+              name="contactName"
+              placeholder="Contact name"
+            />
+            <input
+              className={styles.field}
+              name="email"
+              type="email"
+              placeholder="Email"
+            />
+            <input
+              className={styles.field}
+              name="telephone"
+              placeholder="Telephone"
+            />
+            <input
+              className={styles.field}
+              name="leadTimeDays"
+              type="number"
+              min="0"
+              placeholder="Lead time days"
+            />
+            <input
+              className={styles.field}
+              name="paymentTerms"
+              placeholder="Payment terms"
+            />
+            <button className={styles.button} type="submit">
+              Add supplier
+            </button>
+          </form>
+        </section>
+      ) : null}
+      {schemaReady && hasPermission(session, "suppliers.manage") ? (
+        <section className={styles.formPanel}>
+          <h2>Record supplier offer</h2>
+          <form action={createSupplierOfferAction} className={styles.formGrid}>
+            <select className={styles.field} name="supplierId" required>
+              <option value="">Supplier</option>
+              {suppliers.map((supplier) => (
+                <option key={supplier.id} value={supplier.id}>
+                  {supplier.code} · {supplier.name}
+                </option>
+              ))}
+            </select>
+            <select
+              className={`${styles.field} ${styles.wide}`}
+              name="productId"
+              required
+            >
+              <option value="">Catalogue product</option>
+              {catalogue.products.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.sku} · {product.name}
+                </option>
+              ))}
+            </select>
+            <input
+              className={styles.field}
+              name="unitCost"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="Unit cost"
+              required
+            />
+            <input
+              className={styles.field}
+              name="minimumOrderQuantity"
+              type="number"
+              min="1"
+              defaultValue="1"
+              aria-label="Minimum order quantity"
+            />
+            <input
+              className={styles.field}
+              name="availableQuantity"
+              type="number"
+              min="0"
+              placeholder="Supplier availability"
+            />
+            <input
+              className={styles.field}
+              name="offerLeadTimeDays"
+              type="number"
+              min="0"
+              placeholder="Lead time days"
+            />
+            <input
+              className={styles.field}
+              name="validUntil"
+              type="date"
+              aria-label="Valid until"
+            />
+            <label className={styles.inlineForm}>
+              <input name="isPreferred" type="checkbox" /> Preferred offer
+            </label>
+            <button className={styles.button}>Record offer</button>
+          </form>
+        </section>
+      ) : null}
+      <div className={admin.tableCard}>
+        {suppliers.length ? (
+          <div className={admin.tableWrapper}>
+            <table className={admin.table}>
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Supplier</th>
+                  <th>Contact</th>
+                  <th>Lead time</th>
+                  <th>Payment terms</th>
+                  <th>Offers</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {suppliers.map((supplier) => (
+                  <tr key={supplier.id}>
+                    <td className={styles.mono}>{supplier.code}</td>
+                    <td className={styles.name}>{supplier.name}</td>
+                    <td>
+                      {supplier.contact_name || "-"}
+                      <div className={styles.muted}>
+                        {supplier.email ||
+                          supplier.telephone ||
+                          "No contact details"}
+                      </div>
+                    </td>
+                    <td>
+                      {supplier.lead_time_days == null
+                        ? "-"
+                        : `${supplier.lead_time_days} days`}
+                    </td>
+                    <td>{supplier.payment_terms || "-"}</td>
+                    <td>{supplier.offer_count ?? 0}</td>
+                    <td>
+                      <span
+                        className={`${styles.badge} ${supplier.active ? styles.good : styles.danger}`}
+                      >
+                        {supplier.active ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className={styles.empty}>
+            <Truck aria-hidden="true" />
+            <p>
+              {schemaReady
+                ? "No suppliers have been added."
+                : "Supplier data will appear after database setup."}
+            </p>
+          </div>
+        )}
+      </div>
+      <div className={admin.tableCard}>
+        {offers.length ? (
+          <div className={admin.tableWrapper}>
+            <table className={admin.table}>
+              <thead>
+                <tr>
+                  <th>Supplier</th>
+                  <th>Product</th>
+                  <th>Unit cost</th>
+                  <th>MOQ</th>
+                  <th>Supplier availability</th>
+                  <th>Lead time</th>
+                  <th>Valid until</th>
+                  <th>Preference</th>
+                </tr>
+              </thead>
+              <tbody>
+                {offers.map((offer) => (
+                  <tr key={offer.id}>
+                    <td className={styles.name}>{offer.suppliers.name}</td>
+                    <td>
+                      {offer.master_products.name}
+                      <div className={styles.mono}>
+                        {offer.master_products.sku}
+                      </div>
+                    </td>
+                    <td className={styles.money}>
+                      R {Number(offer.unit_cost).toFixed(2)}
+                    </td>
+                    <td>{offer.minimum_order_quantity}</td>
+                    <td>{offer.available_quantity ?? "Not reported"}</td>
+                    <td>
+                      {offer.lead_time_days == null
+                        ? "-"
+                        : `${offer.lead_time_days} days`}
+                    </td>
+                    <td>{offer.valid_until || "Open"}</td>
+                    <td>
+                      <span
+                        className={`${styles.badge} ${offer.is_preferred ? styles.good : ""}`}
+                      >
+                        {offer.is_preferred ? "Preferred" : "Alternative"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}

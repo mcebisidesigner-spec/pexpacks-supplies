@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateCheckoutPayload } from "@/lib/validation/checkout";
-import { createPendingOrder, generateOrderReference, getOrderByIdempotencyKey } from "@/lib/orders";
+import {
+  createPendingOrder,
+  generateOrderReference,
+  getOrderByIdempotencyKey,
+} from "@/lib/orders";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { getGradeBySlug } from "@/lib/school-utils";
 import {
@@ -8,7 +12,11 @@ import {
   rateLimitRequest,
 } from "@/lib/security/requestGuards";
 import { initiateOzowPayment, OzowCheckoutError } from "@/lib/ozow/checkout";
-import { handleTrayCheckout, TrayCheckoutError, trayErrorResponse } from "@/lib/checkout/trayCheckout";
+import {
+  handleTrayCheckout,
+  TrayCheckoutError,
+  trayErrorResponse,
+} from "@/lib/checkout/trayCheckout";
 
 export const runtime = "nodejs";
 
@@ -24,8 +32,14 @@ async function resolveTrustedPack(input: {
   const schoolGrade = await getGradeBySlug(input.schoolSlug, input.gradeSlug);
   if (schoolGrade) {
     return {
+      id: schoolGrade.id,
       price: schoolGrade.price,
       items: schoolGrade.contents,
+      snapshotItems: (schoolGrade.packItems ?? []).map((item) => ({
+        name: item.name,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice ?? undefined,
+      })),
     };
   }
 
@@ -36,7 +50,7 @@ export async function POST(request: NextRequest) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json(
       { success: false, error: "Invalid request origin." },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -48,8 +62,12 @@ export async function POST(request: NextRequest) {
 
   if (!limit.allowed) {
     return NextResponse.json(
-      { success: false, error: "Too many checkout attempts. Please wait a few minutes and try again." },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+      {
+        success: false,
+        error:
+          "Too many checkout attempts. Please wait a few minutes and try again.",
+      },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }
 
@@ -61,22 +79,33 @@ export async function POST(request: NextRequest) {
     } catch {
       return NextResponse.json(
         { success: false, error: "Invalid JSON body." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const isTrayOrder = body.isTrayOrder === true;
 
     if (isTrayOrder) {
-      const buyerName = typeof body.buyerName === "string" ? body.buyerName : "";
-      const buyerEmail = typeof body.buyerEmail === "string" ? body.buyerEmail : "";
-      const buyerPhone = typeof body.buyerPhone === "string" ? body.buyerPhone : "";
-      const estimatedTotal = typeof body.estimatedTotal === "number" ? body.estimatedTotal : 0;
-      const deliveryMethod = typeof body.deliveryMethod === "string" ? body.deliveryMethod : "school_collection";
-      const primarySchoolSlug = typeof body.primarySchoolSlug === "string" ? body.primarySchoolSlug : undefined;
+      const buyerName =
+        typeof body.buyerName === "string" ? body.buyerName : "";
+      const buyerEmail =
+        typeof body.buyerEmail === "string" ? body.buyerEmail : "";
+      const buyerPhone =
+        typeof body.buyerPhone === "string" ? body.buyerPhone : "";
+      const estimatedTotal =
+        typeof body.estimatedTotal === "number" ? body.estimatedTotal : 0;
+      const deliveryMethod =
+        typeof body.deliveryMethod === "string"
+          ? body.deliveryMethod
+          : "school_collection";
+      const primarySchoolSlug =
+        typeof body.primarySchoolSlug === "string"
+          ? body.primarySchoolSlug
+          : undefined;
       const notes = typeof body.notes === "string" ? body.notes : undefined;
       const idempotencyKey =
-        typeof body.idempotencyKey === "string" && body.idempotencyKey.length > 0
+        typeof body.idempotencyKey === "string" &&
+        body.idempotencyKey.length > 0
           ? body.idempotencyKey
           : undefined;
 
@@ -90,15 +119,20 @@ export async function POST(request: NextRequest) {
         gradeSlug: typeof p.gradeSlug === "string" ? p.gradeSlug : "",
         packName: typeof p.packName === "string" ? p.packName : "",
         packMode: typeof p.packMode === "string" ? p.packMode : "full",
-        items: Array.isArray(p.items) ? p.items.map((i: Record<string, unknown>) => ({
-          name: typeof i.name === "string" ? i.name : "",
-          quantity: typeof i.quantity === "number" ? i.quantity : 0,
-          unitPrice: typeof i.unitPrice === "number" ? i.unitPrice : undefined,
-        })) : [],
+        items: Array.isArray(p.items)
+          ? p.items.map((i: Record<string, unknown>) => ({
+              name: typeof i.name === "string" ? i.name : "",
+              quantity: typeof i.quantity === "number" ? i.quantity : 0,
+              unitPrice:
+                typeof i.unitPrice === "number" ? i.unitPrice : undefined,
+            }))
+          : [],
         totalPrice: typeof p.totalPrice === "number" ? p.totalPrice : 0,
         wantsPexcover: p.wantsPexcover === true,
-        pexcoverPrice: typeof p.pexcoverPrice === "number" ? p.pexcoverPrice : 0,
-        basePackPrice: typeof p.basePackPrice === "number" ? p.basePackPrice : 0,
+        pexcoverPrice:
+          typeof p.pexcoverPrice === "number" ? p.pexcoverPrice : 0,
+        basePackPrice:
+          typeof p.basePackPrice === "number" ? p.basePackPrice : 0,
       }));
 
       const order = await handleTrayCheckout({
@@ -138,8 +172,12 @@ export async function POST(request: NextRequest) {
 
     if (validated.errors) {
       return NextResponse.json(
-        { success: false, error: "Validation failed.", errors: validated.errors },
-        { status: 400 }
+        {
+          success: false,
+          error: "Validation failed.",
+          errors: validated.errors,
+        },
+        { status: 400 },
       );
     }
 
@@ -154,9 +192,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "We could not find this pack. Please choose your school pack again.",
+          error:
+            "We could not find this pack. Please choose your school pack again.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -211,6 +250,8 @@ export async function POST(request: NextRequest) {
         amount: trustedTotal,
       },
       idempotencyKey,
+      packId: trustedPack.id,
+      snapshotItems: trustedPack.snapshotItems,
     });
 
     const { url } = await initiateOzowPayment({
@@ -234,20 +275,23 @@ export async function POST(request: NextRequest) {
     if (error instanceof OzowCheckoutError) {
       return NextResponse.json(
         { success: false, error: error.message },
-        { status: 502 }
+        { status: 502 },
       );
     }
 
     console.error(
       "[checkout] Unexpected error:",
-      error instanceof Error ? (error.stack || error.message) : error
+      error instanceof Error ? error.stack || error.message : error,
     );
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "An error occurred during checkout.",
+        error:
+          error instanceof Error
+            ? error.message
+            : "An error occurred during checkout.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

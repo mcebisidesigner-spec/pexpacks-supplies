@@ -31,6 +31,19 @@ export const PERMISSION_CATALOG = {
   "items.delete": { name: "Delete Items", group: "Items" },
   "items.reorder": { name: "Reorder Items", group: "Items" },
   "items.import": { name: "Import Items", group: "Items" },
+  "catalogue.view": { name: "View Master Catalogue", group: "Catalogue" },
+  "catalogue.manage": { name: "Manage Master Catalogue", group: "Catalogue" },
+  "suppliers.view": { name: "View Suppliers", group: "Suppliers" },
+  "suppliers.manage": { name: "Manage Suppliers", group: "Suppliers" },
+  "pricing.view": { name: "View Pricing", group: "Pricing" },
+  "pricing.manage": { name: "Manage Pricing", group: "Pricing" },
+  "procurement.view": { name: "View Procurement", group: "Procurement" },
+  "procurement.manage": { name: "Manage Procurement", group: "Procurement" },
+  "fulfilment.view": { name: "View Fulfilment", group: "Fulfilment" },
+  "fulfilment.manage": { name: "Manage Fulfilment", group: "Fulfilment" },
+  "tasks.view": { name: "View Tasks", group: "Collaboration" },
+  "tasks.manage": { name: "Manage Tasks", group: "Collaboration" },
+  "approvals.manage": { name: "Manage Approvals", group: "Approvals" },
   "orders.view": { name: "View Orders", group: "Orders" },
   "orders.edit": { name: "Edit Orders", group: "Orders" },
   "orders.export": { name: "Export Orders", group: "Orders" },
@@ -75,10 +88,18 @@ const STAFF_ROLE_SLUGS = new Set([
   "school_manager",
   "office_manager",
   "order_manager",
+  "operations_manager",
+  "catalogue_pricing",
+  "procurement",
+  "fulfilment",
+  "finance",
+  "management_viewer",
   "viewer",
 ]);
 
-export function isStaffClaim(appMetadata: Record<string, unknown> | undefined): boolean {
+export function isStaffClaim(
+  appMetadata: Record<string, unknown> | undefined,
+): boolean {
   if (!appMetadata) return false;
   const legacy = appMetadata["role"];
   if (legacy === "admin") return true;
@@ -107,7 +128,9 @@ async function loadAdminUser(): Promise<AdminSession | null> {
   if (!user) return null;
 
   const admin = createSupabaseAdminClient();
-  const legacyAdmin = (user.app_metadata as Record<string, unknown> | undefined)?.role === "admin";
+  const legacyAdmin =
+    (user.app_metadata as Record<string, unknown> | undefined)?.role ===
+    "admin";
 
   // 1. Roles
   const { data: userRoles } = await admin
@@ -118,7 +141,10 @@ async function loadAdminUser(): Promise<AdminSession | null> {
 
   let roleSlugs: string[] = [];
   if (roleIds.length > 0) {
-    const { data: roles } = await admin.from("roles").select("slug").in("id", roleIds);
+    const { data: roles } = await admin
+      .from("roles")
+      .select("slug")
+      .in("id", roleIds);
     roleSlugs = (roles ?? []).map((r) => r.slug);
   }
 
@@ -185,7 +211,9 @@ export const getAdminUser = cache(loadAdminUser);
  * - authenticated but not staff → masked 404
  * - lacks an optional required permission → masked 404
  */
-export async function requireAdmin(options?: { permission?: PermissionKey }): Promise<AdminSession> {
+export async function requireAdmin(options?: {
+  permission?: PermissionKey;
+}): Promise<AdminSession> {
   const session = await getAdminUser();
   if (!session) {
     redirect("/login");
@@ -201,7 +229,10 @@ export async function requireAdmin(options?: { permission?: PermissionKey }): Pr
 }
 
 /** True when the session has a permission (super admins always pass). */
-export function hasPermission(session: AdminSession, key: PermissionKey): boolean {
+export function hasPermission(
+  session: AdminSession,
+  key: PermissionKey,
+): boolean {
   return session.isSuperAdmin || session.permissions.has(key);
 }
 

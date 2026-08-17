@@ -5,14 +5,13 @@ import { ORDER_STATUSES } from "@/lib/admin/order-constants";
 export type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
 
 const PAYMENT_FIELDS =
-  "id,order_reference,buyer_name,buyer_email,school_name,pack_type,estimated_total,status,payment_gateway,gateway_reference,payment_reference,paid_at,created_at";
+  "id,order_reference,buyer_name,buyer_email,school_name,pack_type,estimated_total,status,payment_gateway,gateway_reference,payment_reference,paid_at,metadata,created_at";
 
 const PAYMENT_STATUSES = [
   "paid",
   "pending_payment",
   "payment_failed",
   "refunded",
-  "layby_active",
 ];
 
 export interface PaymentFilters {
@@ -39,13 +38,18 @@ function endOfDay(date: string): string {
   return date;
 }
 
-type OrdersQuery = ReturnType<ReturnType<typeof createSupabaseAdminClient>["from"]>;
+type OrdersQuery = ReturnType<
+  ReturnType<typeof createSupabaseAdminClient>["from"]
+>;
 
-function basePaymentFilter(query: OrdersQuery, filters: PaymentFilters): OrdersQuery {
+function basePaymentFilter(
+  query: OrdersQuery,
+  filters: PaymentFilters,
+): OrdersQuery {
   const q = filters.q?.replace(/%/g, "").trim();
   if (q) {
     query = query.or(
-      `order_reference.ilike.%${q}%,buyer_name.ilike.%${q}%,buyer_email.ilike.%${q}%`
+      `order_reference.ilike.%${q}%,buyer_name.ilike.%${q}%,buyer_email.ilike.%${q}%`,
     );
   }
   if (filters.status) query = query.eq("status", filters.status);
@@ -55,7 +59,7 @@ function basePaymentFilter(query: OrdersQuery, filters: PaymentFilters): OrdersQ
 }
 
 export async function listPayments(
-  filters: PaymentFilters = {}
+  filters: PaymentFilters = {},
 ): Promise<PaymentListResult> {
   const admin = createSupabaseAdminClient();
   const page = Math.max(1, filters.page ?? 1);
@@ -68,7 +72,7 @@ export async function listPayments(
     .from("orders")
     .select(PAYMENT_FIELDS, { count: "exact" })
     .or(
-      `payment_gateway.not.is.null,paid_at.not.is.null,status.in.(${PAYMENT_STATUSES.join(",")})`
+      `payment_gateway.not.is.null,paid_at.not.is.null,status.in.(${PAYMENT_STATUSES.join(",")})`,
     );
 
   const query = basePaymentFilter(base, filters);
@@ -78,15 +82,23 @@ export async function listPayments(
 
   if (error) {
     console.error("[payments] list failed:", error);
-    return { payments: [], total: 0, page, pageCount: 0, paidTotal: 0, paidCount: 0, statusOptions: [] };
+    return {
+      payments: [],
+      total: 0,
+      page,
+      pageCount: 0,
+      paidTotal: 0,
+      paidCount: 0,
+      statusOptions: [],
+    };
   }
 
   let paidTotal = 0;
   let paidCount = 0;
   try {
-    const rpc = admin.rpc as unknown as (
+    const rpc = admin.rpc.bind(admin) as unknown as (
       fn: string,
-      args: Record<string, unknown>
+      args: Record<string, unknown>,
     ) => Promise<{
       data: { paid_count: number; paid_total: number }[] | null;
       error: unknown;
@@ -108,12 +120,15 @@ export async function listPayments(
         .from("orders")
         .select("status, estimated_total")
         .or(
-          `payment_gateway.not.is.null,paid_at.not.is.null,status.in.(${PAYMENT_STATUSES.join(",")})`
+          `payment_gateway.not.is.null,paid_at.not.is.null,status.in.(${PAYMENT_STATUSES.join(",")})`,
         );
       const { data: all } = await basePaymentFilter(aggBase, filters);
-      const paid = ((all ?? []) as { status: string | null; estimated_total: number | null }[]).filter(
-        (o) => o.status === "paid"
-      );
+      const paid = (
+        (all ?? []) as {
+          status: string | null;
+          estimated_total: number | null;
+        }[]
+      ).filter((o) => o.status === "paid");
       paidCount = paid.length;
       paidTotal = paid.reduce((sum, o) => sum + (o.estimated_total ?? 0), 0);
     } catch (fallbackErr) {
@@ -128,6 +143,9 @@ export async function listPayments(
     pageCount: Math.max(1, Math.ceil((count ?? 0) / pageSize)),
     paidTotal,
     paidCount,
-    statusOptions: ORDER_STATUSES.map((s) => ({ value: s.value, label: s.label })),
+    statusOptions: ORDER_STATUSES.map((s) => ({
+      value: s.value,
+      label: s.label,
+    })),
   };
 }

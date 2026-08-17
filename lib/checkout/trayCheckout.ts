@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { createMultiPackOrder, generateOrderReference, getOrderByIdempotencyKey } from "@/lib/orders";
+import {
+  createMultiPackOrder,
+  generateOrderReference,
+  getOrderByIdempotencyKey,
+} from "@/lib/orders";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { getGradeBySlug } from "@/lib/school-utils";
 
@@ -26,6 +30,7 @@ type TrayPack = {
   wantsPexcover: boolean;
   pexcoverPrice: number;
   basePackPrice: number;
+  packId?: string;
 };
 
 export async function handleTrayCheckout(input: {
@@ -77,6 +82,7 @@ export async function handleTrayCheckout(input: {
   }
 
   let verifiedTotal = 0;
+  const verifiedPacks: TrayPack[] = [];
   for (const pack of input.packs) {
     const serverPack = await getGradeBySlug(pack.schoolSlug, pack.gradeSlug);
     if (!serverPack) {
@@ -87,20 +93,59 @@ export async function handleTrayCheckout(input: {
     }
 
     if (pack.packMode === "full") {
-      verifiedTotal += serverPack.price + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+      verifiedTotal +=
+        serverPack.price + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+      verifiedPacks.push({
+        ...pack,
+        packId: serverPack.id,
+        items: (serverPack.packItems ?? []).map((item) => ({
+          name: item.name,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice ?? undefined,
+        })),
+        totalPrice: serverPack.price,
+        basePackPrice: serverPack.price,
+        pexcoverPrice: pack.wantsPexcover ? PEXCOVER_PRICE : 0,
+      });
     } else {
-      const hasUnitPrices = pack.items.some(
-        (i) => i.unitPrice !== undefined && i.unitPrice !== null
+      const authoritativeItems = new Map(
+        (serverPack.packItems ?? []).map((item) => [
+          item.name.trim().toLowerCase(),
+          item,
+        ]),
       );
-      if (hasUnitPrices) {
-        const itemsTotal = pack.items.reduce(
-          (sum, i) => sum + (i.unitPrice ?? 0) * i.quantity,
-          0
-        );
-        verifiedTotal += itemsTotal + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
-      } else {
-        verifiedTotal += pack.totalPrice + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
-      }
+      const selectedItems = pack.items
+        .map((item) => {
+          const authoritative = authoritativeItems.get(
+            item.name.trim().toLowerCase(),
+          );
+          if (!authoritative) {
+            throw new TrayCheckoutError(
+              `Item is no longer available in ${serverPack.grade}: ${item.name}`,
+              400,
+            );
+          }
+          const quantity = Math.max(0, Math.min(99, Math.trunc(item.quantity)));
+          return {
+            name: authoritative.name,
+            quantity,
+            unitPrice: authoritative.unitPrice ?? 0,
+          };
+        })
+        .filter((item) => item.quantity > 0);
+      const itemsTotal = selectedItems.reduce(
+        (sum, item) => sum + (item.unitPrice ?? 0) * item.quantity,
+        0,
+      );
+      verifiedTotal += itemsTotal + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+      verifiedPacks.push({
+        ...pack,
+        packId: serverPack.id,
+        items: selectedItems,
+        totalPrice: itemsTotal,
+        basePackPrice: itemsTotal,
+        pexcoverPrice: pack.wantsPexcover ? PEXCOVER_PRICE : 0,
+      });
     }
   }
 
@@ -111,7 +156,7 @@ export async function handleTrayCheckout(input: {
     });
     throw new TrayCheckoutError(
       "Prices have changed since you added items. Please refresh your pack tray.",
-      400
+      400,
     );
   }
 
@@ -126,12 +171,14 @@ export async function handleTrayCheckout(input: {
       : "Payment method: Ozow (Pay Now)",
     `Total: R${amount}`,
     "---",
-    ...input.packs.flatMap((pack) => [
+    ...verifiedPacks.flatMap((pack) => [
       `Learner: ${pack.learnerName || "Unnamed"}`,
       `School: ${pack.schoolName || "N/A"} - ${pack.grade || "N/A"}`,
       `Pack: ${pack.packName} (${pack.packMode})`,
       ...pack.items.map((i) => `${i.quantity} x ${i.name}`),
-      pack.wantsPexcover ? `Pexcover book covering - R ${pack.pexcoverPrice}` : "",
+      pack.wantsPexcover
+        ? `Pexcover book covering - R ${pack.pexcoverPrice}`
+        : "",
       `---`,
     ]),
   ].filter(Boolean);
@@ -141,7 +188,7 @@ export async function handleTrayCheckout(input: {
     buyerName,
     buyerEmail,
     buyerPhone,
-    packs: input.packs,
+    packs: verifiedPacks,
     estimatedTotal: verifiedTotal,
     deliveryMethod: input.deliveryMethod,
     primarySchoolSlug: input.primarySchoolSlug,
@@ -166,15 +213,15 @@ export function trayErrorResponse(err: unknown) {
   if (err instanceof TrayCheckoutError) {
     return NextResponse.json(
       { success: false, error: err.message },
-      { status: err.status }
+      { status: err.status },
     );
   }
   console.error(
     "[trayCheckout] Unexpected error:",
-    err instanceof Error ? (err.stack || err.message) : err
+    err instanceof Error ? err.stack || err.message : err,
   );
   return NextResponse.json(
     { success: false, error: "An unexpected error occurred." },
-    { status: 500 }
+    { status: 500 },
   );
 }

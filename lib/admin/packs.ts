@@ -283,7 +283,7 @@ export async function listSchoolGroupedSummary(
   ]);
 
   try {
-    const rpc = admin.rpc as unknown as (
+    const rpc = admin.rpc.bind(admin) as unknown as (
       fn: string,
       args: Record<string, unknown>
     ) => Promise<{

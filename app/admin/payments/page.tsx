@@ -22,7 +22,7 @@ const PAGE_SIZE = 20;
 
 function buildHref(
   params: Record<string, string | undefined>,
-  overrides: Record<string, string | undefined>
+  overrides: Record<string, string | undefined>,
 ): string {
   const merged = { ...params, ...overrides };
   const qs = new URLSearchParams();
@@ -46,7 +46,39 @@ function formatDate(iso: string | null): string {
   });
 }
 
-export default async function PaymentsPage({ searchParams }: PaymentsPageProps) {
+function paymentMethod(payment: {
+  payment_gateway: string | null;
+  metadata: unknown;
+}): string {
+  const metadata =
+    payment.metadata &&
+    typeof payment.metadata === "object" &&
+    !Array.isArray(payment.metadata)
+      ? (payment.metadata as Record<string, unknown>)
+      : null;
+  const gateway =
+    metadata?.gateway &&
+    typeof metadata.gateway === "object" &&
+    !Array.isArray(metadata.gateway)
+      ? (metadata.gateway as Record<string, unknown>)
+      : null;
+  const method =
+    typeof metadata?.method === "string"
+      ? metadata.method
+      : typeof gateway?.method === "string"
+        ? gateway.method
+        : "";
+  if (method.toLowerCase() === "happypay") return "Ozow · Happy Pay";
+  return (
+    PAYMENT_GATEWAY_LABELS[payment.payment_gateway ?? ""] ??
+    payment.payment_gateway ??
+    "—"
+  );
+}
+
+export default async function PaymentsPage({
+  searchParams,
+}: PaymentsPageProps) {
   const session = await requireAdmin({ permission: "payments.view" });
   const params = await searchParams;
 
@@ -69,7 +101,9 @@ export default async function PaymentsPage({ searchParams }: PaymentsPageProps) 
     to: filters.to,
   };
 
-  const hasFilters = Boolean(filters.q || filters.status || filters.from || filters.to);
+  const hasFilters = Boolean(
+    filters.q || filters.status || filters.from || filters.to,
+  );
   const canRefund = hasPermission(session, "payments.refund");
 
   return (
@@ -86,7 +120,9 @@ export default async function PaymentsPage({ searchParams }: PaymentsPageProps) 
 
         <div className={orderStyles.summaryStrip}>
           <div className={orderStyles.summaryItem}>
-            <span className={orderStyles.summaryLabel}>Captured revenue (paid)</span>
+            <span className={orderStyles.summaryLabel}>
+              Captured revenue (paid)
+            </span>
             <span className={orderStyles.summaryValue}>{money(paidTotal)}</span>
           </div>
           <div className={orderStyles.summaryItem}>
@@ -99,7 +135,11 @@ export default async function PaymentsPage({ searchParams }: PaymentsPageProps) 
           </div>
         </div>
 
-        <form method="get" action="/admin/payments" className={shared.filterForm}>
+        <form
+          method="get"
+          action="/admin/payments"
+          className={shared.filterForm}
+        >
           <input
             type="search"
             name="q"
@@ -108,7 +148,11 @@ export default async function PaymentsPage({ searchParams }: PaymentsPageProps) 
             className={`${shared.filterInput} ${shared.searchInput}`}
             aria-label="Search payments"
           />
-          <select name="status" defaultValue={filters.status ?? ""} className={shared.filterInput}>
+          <select
+            name="status"
+            defaultValue={filters.status ?? ""}
+            className={shared.filterInput}
+          >
             <option value="">All payment statuses</option>
             {statusOptions.map((s) => (
               <option key={s.value} value={s.value}>
@@ -153,7 +197,9 @@ export default async function PaymentsPage({ searchParams }: PaymentsPageProps) 
                 </svg>
               </div>
               <h2 className={adminStyles.emptyStateTitle}>
-                {hasFilters ? "No payments match your filters" : "No payments yet"}
+                {hasFilters
+                  ? "No payments match your filters"
+                  : "No payments yet"}
               </h2>
               <p className={adminStyles.emptyStateText}>
                 Payment attempts recorded against orders will appear here.
@@ -181,22 +227,26 @@ export default async function PaymentsPage({ searchParams }: PaymentsPageProps) 
                 {payments.map((p) => (
                   <tr key={p.id}>
                     <td>
-                      <div className={orderStyles.mono}>{p.order_reference}</div>
-                      <div className={orderStyles.mutedText}>{formatDate(p.created_at)}</div>
+                      <div className={orderStyles.mono}>
+                        {p.order_reference}
+                      </div>
+                      <div className={orderStyles.mutedText}>
+                        {formatDate(p.created_at)}
+                      </div>
                     </td>
                     <td>
                       <div>{p.buyer_name}</div>
-                      <div className={orderStyles.mutedText}>{p.buyer_email ?? "—"}</div>
+                      <div className={orderStyles.mutedText}>
+                        {p.buyer_email ?? "—"}
+                      </div>
                     </td>
-                    <td className={orderStyles.amountValue}>{money(p.estimated_total)}</td>
+                    <td className={orderStyles.amountValue}>
+                      {money(p.estimated_total)}
+                    </td>
                     <td>
                       <OrderStatusBadge status={p.status} />
                     </td>
-                    <td>
-                      {PAYMENT_GATEWAY_LABELS[p.payment_gateway ?? ""] ??
-                        p.payment_gateway ??
-                        "—"}
-                    </td>
+                    <td>{paymentMethod(p)}</td>
                     <td>
                       <span className={orderStyles.mono}>
                         {p.gateway_reference ?? p.payment_reference ?? "—"}
@@ -211,8 +261,12 @@ export default async function PaymentsPage({ searchParams }: PaymentsPageProps) 
                         >
                           View
                         </Link>
-                        {canRefund && !["refunded", "cancelled"].includes(p.status) ? (
-                          <RefundButton id={p.id} amount={money(p.estimated_total)} />
+                        {canRefund &&
+                        !["refunded", "cancelled"].includes(p.status) ? (
+                          <RefundButton
+                            id={p.id}
+                            amount={money(p.estimated_total)}
+                          />
                         ) : null}
                       </div>
                     </td>

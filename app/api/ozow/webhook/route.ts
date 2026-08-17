@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse, after } from "next/server";
 import { track } from "@vercel/analytics/server";
-import { markOrderPaid, getOrderForReceipt } from "@/lib/orders";
+import {
+  markOrderPaid,
+  getOrderForReceipt,
+  recordOrderPaymentStatus,
+} from "@/lib/orders";
 import { getOzowConfig, ozowWebhookHash } from "@/lib/ozow/signature";
 import { sendPurchaseReceipt } from "@/lib/email/receipt";
 
@@ -14,7 +18,7 @@ function parseBody(raw: string): Record<string, string> {
     const json = JSON.parse(raw);
     if (json && typeof json === "object") {
       return Object.fromEntries(
-        Object.entries(json).map(([key, value]) => [key, String(value ?? "")])
+        Object.entries(json).map(([key, value]) => [key, String(value ?? "")]),
       );
     }
   } catch {
@@ -36,7 +40,7 @@ export async function POST(request: NextRequest) {
     console.error("[ozow/webhook] Missing Ozow configuration.");
     return NextResponse.json(
       { success: false, error: "Payment configuration is not available." },
-      { status: 503 }
+      { status: 503 },
     );
   }
 
@@ -48,7 +52,7 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { success: false, error: "Invalid body." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -72,7 +76,7 @@ export async function POST(request: NextRequest) {
   if (!SiteCode || !TransactionReference || !HashCheck) {
     return NextResponse.json(
       { success: false, error: "Missing required webhook fields." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -99,23 +103,31 @@ export async function POST(request: NextRequest) {
     expectedHash === providedHash;
 
   if (!hashValid) {
-    console.error("[ozow/webhook] Hash check failed for:", TransactionReference);
+    console.error(
+      "[ozow/webhook] Hash check failed for:",
+      TransactionReference,
+    );
     return NextResponse.json(
       { success: false, error: "Invalid signature." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (SiteCode !== config.siteCode) {
-    console.error("[ozow/webhook] SiteCode mismatch for:", TransactionReference);
+    console.error(
+      "[ozow/webhook] SiteCode mismatch for:",
+      TransactionReference,
+    );
     return NextResponse.json(
       { success: false, error: "Invalid site code." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (Status === "Complete") {
-    const isHappyPay = (Optional1 || "").includes("HappyPay") || (Optional2 || "").includes("HappyPay");
+    const isHappyPay =
+      (Optional1 || "").includes("HappyPay") ||
+      (Optional2 || "").includes("HappyPay");
     const numAmount = Amount ? parseFloat(Amount) : null;
 
     const result = await markOrderPaid({
@@ -123,6 +135,8 @@ export async function POST(request: NextRequest) {
       paymentGateway: "ozow",
       gatewayReference: TransactionId ?? null,
       amount: numAmount,
+      currency: CurrencyCode || "ZAR",
+      paymentMethod: isHappyPay ? "HappyPay" : "Ozow",
       metadata: {
         ozowStatusMessage: StatusMessage || "Complete",
         isTest: IsTest === "true",
@@ -134,11 +148,11 @@ export async function POST(request: NextRequest) {
     if (!result.success) {
       console.error(
         "[ozow/webhook] Failed to mark order paid for:",
-        TransactionReference
+        TransactionReference,
       );
       return NextResponse.json(
         { success: false, error: "Could not update the order." },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -148,7 +162,7 @@ export async function POST(request: NextRequest) {
       "amount",
       Amount,
       "statusMessage",
-      StatusMessage
+      StatusMessage,
     );
 
     track("Pre-Order Completed", {
@@ -169,31 +183,42 @@ export async function POST(request: NextRequest) {
             console.warn(
               "[ozow/webhook] Receipt email not sent for",
               TransactionReference,
-              receiptResult.error
+              receiptResult.error,
             );
           }
         } catch (err) {
           console.error(
             "[ozow/webhook] Receipt email exception for",
             TransactionReference,
-            err
+            err,
           );
         }
       });
     } else {
       console.warn(
         "[ozow/webhook] Order not found for receipt:",
-        TransactionReference
+        TransactionReference,
       );
     }
   } else {
+    await recordOrderPaymentStatus({
+      orderReference: TransactionReference,
+      gatewayReference: TransactionId ?? null,
+      status: Status || "Error",
+      amount: Amount ? parseFloat(Amount) : null,
+      currency: CurrencyCode || "ZAR",
+      metadata: {
+        ozowStatusMessage: StatusMessage || Status || "Not complete",
+        isTest: IsTest === "true",
+      },
+    });
     console.log(
       "[ozow/webhook] Payment not complete:",
       TransactionReference,
       "status",
       Status,
       "message",
-      StatusMessage
+      StatusMessage,
     );
   }
 
