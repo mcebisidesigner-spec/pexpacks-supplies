@@ -15,6 +15,22 @@ function canUseServiceWorker() {
 export function PwaLifecycle() {
   useEffect(() => {
     if (!canUseServiceWorker()) {
+      if (process.env.NODE_ENV !== "production" && "serviceWorker" in navigator) {
+        void Promise.all([
+          navigator.serviceWorker.getRegistrations().then((registrations) =>
+            Promise.all(registrations.map((registration) => registration.unregister())),
+          ),
+          "caches" in window
+            ? caches.keys().then((keys) =>
+                Promise.all(
+                  keys
+                    .filter((key) => key.startsWith("pexpacks-pwa-"))
+                    .map((key) => caches.delete(key)),
+                ),
+              )
+            : Promise.resolve([]),
+        ]);
+      }
       return;
     }
 

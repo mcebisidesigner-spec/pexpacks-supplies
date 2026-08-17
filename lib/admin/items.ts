@@ -10,6 +10,10 @@ import {
   type AdminSession,
 } from "@/lib/admin/rbac";
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+import {
+  INVENTORY_ITEM_FILTER,
+  PACK_LINE_INVENTORY_MARKER,
+} from "@/lib/admin/item-constants";
 
 export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"] & {
   category?: string | null;
@@ -78,6 +82,10 @@ export type ItemFormState = {
 function raw(formData: FormData, key: string): string {
   const v = formData.get(key);
   return typeof v === "string" ? v : "";
+}
+
+function escapeIlikeLiteral(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/%/g, "\\%").replace(/_/g, "\\_");
 }
 
 /** ItemFormData minus the `price` key, which maps to the `unit_price` column. */
@@ -175,7 +183,8 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
     .select(
       "*,stationery_packs(title)",
       { count: "exact" }
-    );
+    )
+    .or(INVENTORY_ITEM_FILTER);
 
   if (filters.q) {
     const rawQ = Array.isArray(filters.q)
@@ -223,7 +232,12 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
 
   if (isUuid) {
-    const { data } = await admin.from("stationery_items").select("*").eq("id", decoded).maybeSingle();
+    const { data } = await admin
+      .from("stationery_items")
+      .select("*")
+      .eq("id", decoded)
+      .or(INVENTORY_ITEM_FILTER)
+      .maybeSingle();
     if (data) return data as unknown as ItemRow;
   }
 
@@ -234,13 +248,17 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
     .from("stationery_items")
     .select("*")
     .or(`slug.ilike.${decoded},slug.ilike.${slugified},name.ilike.${decoded}`)
+    .or(INVENTORY_ITEM_FILTER)
     .limit(1)
     .maybeSingle();
 
   if (directMatch) return directMatch as unknown as ItemRow;
 
   // 2. Fallback: match all items by slugified name or ID
-  const { data: allItems } = await admin.from("stationery_items").select("*");
+  const { data: allItems } = await admin
+    .from("stationery_items")
+    .select("*")
+    .or(INVENTORY_ITEM_FILTER);
   if (!allItems) return null;
 
   const matched = allItems.find((rawItem) => {
@@ -330,7 +348,11 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
   if (!parsed.ok) return { ok: false, errors: parsed.errors };
 
   const admin = createSupabaseAdminClient();
-  const existing = await admin.from("stationery_items").select("id").eq("id", id).maybeSingle();
+  const existing = await admin
+    .from("stationery_items")
+    .select("id, name")
+    .eq("id", id)
+    .maybeSingle();
   if (existing.error || !existing.data) {
     return { ok: false, errors: {}, message: "Item not found." };
   }
@@ -344,6 +366,14 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
       .single();
 
     if (error) throw error;
+
+    const { error: descriptionSyncError } = await admin
+      .from("stationery_items")
+      .update({ description: parsed.data.description })
+      .ilike("name", escapeIlikeLiteral(existing.data.name))
+      .neq("id", id);
+
+    if (descriptionSyncError) throw descriptionSyncError;
 
     void writeAuditLog({
       actorId: actor.user.id,
@@ -678,6 +708,7 @@ export async function createPackItems(
     unit_price: line.unit_price ?? null,
     quantity: line.quantity,
     icon: null,
+    image: PACK_LINE_INVENTORY_MARKER,
     visible: true,
     sort_order: index + 1,
     created_by: createdBy,
@@ -800,6 +831,7 @@ export async function listDistinctStationeryItems(): Promise<string[]> {
     const { data } = await admin
       .from("stationery_items")
       .select("name")
+      .or(INVENTORY_ITEM_FILTER)
       .order("name", { ascending: true });
 
     if (!data) return [];
@@ -833,6 +865,7 @@ export async function listStationeryInventory(query?: string): Promise<Stationer
     let dbQuery = admin
       .from("stationery_items")
       .select("id, name, description, unit_price")
+      .or(INVENTORY_ITEM_FILTER)
       .order("name", { ascending: true })
       .order("created_at", { ascending: false });
 

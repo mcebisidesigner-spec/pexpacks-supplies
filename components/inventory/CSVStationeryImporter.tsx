@@ -28,14 +28,15 @@ interface ParsedRecord {
 export interface CSVStationeryImporterProps {
   packs?: { id: string; title: string }[];
   onImported?: () => void;
+  onStageItems?: (items: CSVStationeryRow[]) => void;
 }
 
-export function CSVStationeryImporter({ packs = [], onImported }: CSVStationeryImporterProps) {
+export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: CSVStationeryImporterProps) {
   const [file, setFile] = useState<File | null>(null);
   const [parsedRows, setParsedRows] = useState<ParsedRecord[]>([]);
   const [isParsing, setIsParsing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [targetPackId, setTargetPackId] = useState<string>(packs[0]?.id ?? "");
+  const targetPackId = packs[0]?.id ?? "";
   const [uploadSuccess, setUploadSuccess] = useState<{ count: number } | null>(
     null
   );
@@ -129,6 +130,13 @@ export function CSVStationeryImporter({ packs = [], onImported }: CSVStationeryI
     setGlobalError(null);
 
     try {
+      if (onStageItems) {
+        onStageItems(validItems);
+        setUploadSuccess({ count: validItems.length });
+        setFile(null);
+        setParsedRows([]);
+        return;
+      }
       const res = await bulkImportStationeryAction(validItems, targetPackId);
       if (res.success) {
         setUploadSuccess({ count: res.importedCount });
@@ -159,7 +167,9 @@ export function CSVStationeryImporter({ packs = [], onImported }: CSVStationeryI
               Bulk CSV Stationery Importer
             </h2>
             <p className={styles.cardSub}>
-              Upload or update master stationery items in bulk using a CSV file.
+              {onStageItems
+                ? "Add stationery items to this new pack in bulk using a CSV file."
+                : "Upload or update master stationery items in bulk using a CSV file."}
             </p>
           </div>
 
@@ -226,10 +236,11 @@ export function CSVStationeryImporter({ packs = [], onImported }: CSVStationeryI
           <div className={styles.successBanner}>
             <CheckCircle2 className={styles.successIcon} />
             <div>
-              <p className={styles.successTitle}>Import Successful!</p>
+              <p className={styles.successTitle}>{onStageItems ? "Items added to pack" : "Import Successful!"}</p>
               <p className={styles.successText}>
-                Successfully processed and upserted {uploadSuccess.count}{" "}
-                stationery items into Supabase.
+                {onStageItems
+                  ? `${uploadSuccess.count} stationery items are ready to be created with this pack.`
+                  : `Successfully processed and upserted ${uploadSuccess.count} stationery items into Supabase.`}
               </p>
             </div>
           </div>
@@ -262,12 +273,12 @@ export function CSVStationeryImporter({ packs = [], onImported }: CSVStationeryI
               {isUploading ? (
                 <>
                   <RefreshCw className={`${styles.importBtnIcon} ${styles.spin}`} />
-                  Upserting to Supabase...
+                  {onStageItems ? "Adding to pack..." : "Upserting to Supabase..."}
                 </>
               ) : (
                 <>
                   <CheckCircle2 className={styles.importBtnIcon} />
-                  Import {validCount} Items Now
+                  {onStageItems ? `Add ${validCount} Items to Pack` : `Import ${validCount} Items Now`}
                 </>
               )}
             </button>

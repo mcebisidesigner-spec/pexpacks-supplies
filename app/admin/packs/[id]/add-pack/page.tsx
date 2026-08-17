@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { requireAdmin } from "@/lib/admin/rbac";
-import { listPackSchools } from "@/lib/admin/packs";
+import { notFound } from "next/navigation";
+import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";
-import { PackForm } from "@/components/admin/packs/PackForm";
-import { createPackAction } from "../../actions";
-import adminStyles from "../../../admin.module.css";
-import shared from "../../../schools/schools.module.css";
+import { SchoolPackCreateForm } from "@/components/admin/packs/SchoolPackCreateForm";
+import { createSchoolPackAction } from "../../actions";
+import styles from "@/components/admin/packs/EditPack.module.css";
 
 export const metadata = {
   title: "Add Pack | Admin | Pexpacks",
@@ -17,37 +16,26 @@ interface AddPackPageProps {
 }
 
 export default async function AddPackPage({ params }: AddPackPageProps) {
-  await requireAdmin({ permission: "packs.create" });
+  const session = await requireAdmin({ permission: "packs.create" });
   const { id } = await params;
-  const schools = await listPackSchools();
   const school = await getSchool(id);
+  if (!school) notFound();
 
-  const schoolId = school?.id ?? (schools.find((s) => s.slug === id || s.id === id)?.id || "");
-  const schoolSlug = school?.slug || id;
-  const schoolName = school?.name;
+  const schoolRoute = school.slug || school.id;
+  const createAction = createSchoolPackAction.bind(null, school.id, schoolRoute);
 
   return (
-    <div className={adminStyles.adminContainer}>
-      <p style={{ marginBottom: 12 }}>
-        <Link href={`/admin/packs/${schoolSlug}`} className={shared.resetLink}>
-          <ArrowLeft aria-hidden="true" /> Back to {schoolName ?? "school packs"}
+    <div className={styles.page}>
+      <p className={styles.backRow}>
+        <Link href={`/admin/packs/${schoolRoute}`} className={styles.backLink}>
+          <ArrowLeft aria-hidden="true" /> Back to {school.name}
         </Link>
       </p>
-
-      <div className={adminStyles.headerSection}>
-        <h1 className={adminStyles.title}>
-          Add a pack {schoolName ? `for ${schoolName}` : ""}
-        </h1>
-        <p className={adminStyles.subtitle}>
-          Add a grade to create its stationery pack. The public pack card is built
-          automatically from live site data.
-        </p>
-      </div>
-
-      <PackForm
-        schools={schools}
-        defaultSchoolId={schoolId}
-        action={createPackAction}
+      <SchoolPackCreateForm
+        schoolId={school.id}
+        schoolName={school.name}
+        showImporter={hasPermission(session, "items.import")}
+        action={createAction}
       />
     </div>
   );

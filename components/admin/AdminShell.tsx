@@ -129,7 +129,6 @@ export function AdminShell({
   const ordersItem = readyItems.find((item) => item.href === "/admin/orders");
   const paymentsItem = readyItems.find((item) => item.href === "/admin/payments");
   const schoolsItem = readyItems.find((item) => item.href === "/admin/schools");
-  const packsItem = readyItems.find((item) => item.href === "/admin/packs");
   const roleLabels = userRoles.length ? userRoles.join(", ") : "Staff";
   const userInitials = initials(userName);
   const {

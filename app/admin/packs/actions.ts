@@ -33,6 +33,28 @@ export async function createPackAction(
   redirect(`/admin/packs/${result.pack.id}`);
 }
 
+export async function createSchoolPackAction(
+  schoolId: string,
+  schoolRoute: string,
+  _prev: PackFormState,
+  formData: FormData,
+): Promise<PackFormState> {
+  await requireAdmin({ permission: "packs.create" });
+  formData.set("school_id", schoolId);
+  const result = await createPack(formData);
+  if (!result.ok) {
+    return { ok: false, errors: result.errors, message: result.message };
+  }
+
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  revalidatePath("/admin/packs");
+  revalidatePath(`/admin/packs/${schoolRoute}`);
+  revalidatePath("/schools");
+  revalidatePath("/", "layout");
+  redirect(`/admin/packs/${encodeURIComponent(schoolRoute)}`);
+}
+
 export async function updatePackAction(
   id: string,
   _prev: PackFormState,
@@ -88,7 +110,6 @@ export async function deletePackAction(id: string): Promise<void> {
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
-  redirect("/admin/packs");
 }
 
 export async function duplicatePackAction(id: string): Promise<{ ok: boolean; packId?: string }> {

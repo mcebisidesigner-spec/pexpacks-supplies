@@ -1,4 +1,4 @@
-const APP_VERSION = "pexpacks-pwa-v2";
+const APP_VERSION = "pexpacks-pwa-v3";
 const STATIC_CACHE = `${APP_VERSION}-static`;
 const IMAGE_CACHE = `${APP_VERSION}-images`;
 
@@ -40,10 +40,9 @@ function isImageAsset(url) {
 
 function isStaticAsset(url) {
   return (
-    url.pathname.startsWith("/_next/static/") ||
     url.pathname.startsWith("/fonts/") ||
     url.pathname.startsWith("/icons/") ||
-    /\.(?:css|js|woff2?)$/i.test(url.pathname)
+    /\.(?:woff2?)$/i.test(url.pathname)
   );
 }
 
@@ -147,6 +146,7 @@ self.addEventListener("fetch", (event) => {
     request.method !== "GET" ||
     !isSameOrigin(url) ||
     isSensitivePath(url) ||
+    url.pathname.startsWith("/_next/") ||
     isNextFlightRequest(request, url)
   ) {
     return;

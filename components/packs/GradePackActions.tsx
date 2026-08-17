@@ -67,7 +67,10 @@ export function GradePackActions({
   const itemsKey = useMemo(
     () =>
       pack.items
-        .map((i) => `${i.id}:${i.requiredQuantity}:${i.unitPrice ?? ""}`)
+        .map(
+          (i) =>
+            `${i.id}:${i.requiredQuantity}:${i.unitPrice ?? ""}:${i.description ?? ""}`,
+        )
         .join(","),
     [pack.items],
   );

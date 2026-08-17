@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
+import { INVENTORY_ITEM_FILTER } from "@/lib/admin/item-constants";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -26,7 +27,8 @@ export async function GET(request: Request) {
     // Fast ILIKE typeahead search across name and description
     const { data, error } = await admin
       .from("stationery_items")
-      .select("id, name, description, unit_price, quantity")
+      .select("id, name, description, specification, unit_price, quantity")
+      .or(INVENTORY_ITEM_FILTER)
       .or(`name.ilike.%${cleanQuery}%,description.ilike.%${cleanQuery}%`)
       .limit(8);
 
@@ -39,6 +41,7 @@ export async function GET(request: Request) {
       id: item.id,
       title: item.name || "Stationery Item",
       description: item.description || "",
+      category: item.specification || undefined,
       unit_price: Number(item.unit_price ?? 0),
     }));
 

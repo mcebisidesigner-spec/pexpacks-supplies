@@ -349,7 +349,7 @@ export async function generateStationeryPdf(options: StationeryPdfOptions) {
     doc.text(itemName[0], COL_ITEM, y);
 
     // Description (soft muted text)
-    const description = item.description || item.specification;
+    const description = item.description?.trim();
     if (description) {
       doc.setFont("helvetica", "normal");
       doc.setFontSize(FONT_SMALL);

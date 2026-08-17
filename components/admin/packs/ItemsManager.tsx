@@ -1,8 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import type { ItemRow } from "@/lib/admin/items";
 import { deleteItemAction } from "@/app/admin/items/actions";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -11,22 +9,11 @@ import styles from "./ItemsManager.module.css";
 
 const PAGE_SIZE = 4;
 
-function itemHref(item: ItemRow, returnTo: string): string {
-  const fallback =
-    item.name
-      ?.toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || item.id;
-  const path = `/admin/items/${item.slug || fallback}`;
-  return `${path}?returnTo=${encodeURIComponent(returnTo)}`;
-}
-
 interface ItemsManagerProps {
   items: ItemRow[];
 }
 
 export function ItemsManager({ items }: ItemsManagerProps) {
-  const pathname = usePathname();
   const [page, setPage] = useState(1);
   const pageCount = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
@@ -60,16 +47,13 @@ export function ItemsManager({ items }: ItemsManagerProps) {
                     <td>
                       <span className={styles.itemName}>{item.name}</span>
                     </td>
-                    <td>{item.description || item.specification || "-"}</td>
+                    <td>{item.description?.trim() || "-"}</td>
                     <td>{item.quantity}</td>
                     <td className={styles.priceCell}>
                       {item.unit_price != null ? formatCurrency(item.unit_price) : "-"}
                     </td>
                     <td>
                       <div className={styles.actions}>
-                        <Link href={itemHref(item, pathname)} className={styles.actionLink}>
-                          Edit
-                        </Link>
                         <form action={deleteItemAction.bind(null, item.id)}>
                           <ConfirmButton
                             label="Delete"

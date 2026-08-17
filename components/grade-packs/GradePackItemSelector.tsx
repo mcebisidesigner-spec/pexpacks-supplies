@@ -114,22 +114,17 @@ export function GradePackItemSelector({
       description: item.description,
       unit_price: priceVal,
       price: priceVal,
+      sku: item.sku,
+      category: item.category,
       quantity: 1,
     };
 
-    setSelectedItems((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
-      let updated: PackItem[];
-      if (existing) {
-        updated = prev.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      } else {
-        updated = [...prev, newItem];
-      }
-      notifyChange(updated);
-      return updated;
-    });
+    const existing = selectedItems.find((i) => i.id === item.id);
+    const updated = existing
+      ? selectedItems.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i))
+      : [...selectedItems, newItem];
+    setSelectedItems(updated);
+    notifyChange(updated);
 
     setSearchTerm("");
     setIsDropdownOpen(false);
@@ -141,20 +136,16 @@ export function GradePackItemSelector({
       removeItem(id);
       return;
     }
-    setSelectedItems((prev) => {
-      const updated = prev.map((item) => (item.id === id ? { ...item, quantity: qty } : item));
-      notifyChange(updated);
-      return updated;
-    });
+    const updated = selectedItems.map((item) => (item.id === id ? { ...item, quantity: qty } : item));
+    setSelectedItems(updated);
+    notifyChange(updated);
   };
 
   // Remove item from pack
   const removeItem = (id: string) => {
-    setSelectedItems((prev) => {
-      const updated = prev.filter((item) => item.id !== id);
-      notifyChange(updated);
-      return updated;
-    });
+    const updated = selectedItems.filter((item) => item.id !== id);
+    setSelectedItems(updated);
+    notifyChange(updated);
   };
 
   // Calculate total price of the grade pack
