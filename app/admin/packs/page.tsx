@@ -121,7 +121,7 @@ export default async function PacksPage({ searchParams }: PacksPageProps) {
       <div className={shared.toolbar}>
         <div className={shared.headerRow}>
           <h1 className={shared.pageTitle}>
-            School Grade Packs
+            School Packs
             <span className={shared.count}>
               {displayTotal} {displayTotal === 1 ? "Grade pack" : "Grade packs"}
             </span>
