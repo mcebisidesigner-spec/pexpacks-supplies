@@ -34,7 +34,7 @@ export default async function NestedEditPackPage({ params }: NestedEditPackPageP
     <div className={styles.page}>
       <p className={styles.backRow}>
         <Link href={backHref} className={styles.backLink}>
-          <ArrowLeft aria-hidden="true" /> Back to school packs
+          <ArrowLeft aria-hidden="true" /> Back to {school ? `${school.name} packs` : "school packs"}
         </Link>
       </p>
       <div className={styles.stack}>
