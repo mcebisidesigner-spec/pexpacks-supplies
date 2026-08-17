@@ -36,7 +36,6 @@
   gap: 9px;
 }
 
-.primaryAction,
 .secondaryAction {
   display: inline-flex;
   min-height: 42px;
@@ -51,16 +50,9 @@
   text-decoration: none;
 }
 
-.primaryAction {
-  border-color: var(--admin-accent);
-  background: var(--admin-accent);
-  color: var(--admin-accent-text);
-}
-
-.primaryAction:hover { border-color: var(--admin-accent-strong); background: var(--admin-accent-strong); }
 .secondaryAction { background: var(--admin-surface); color: var(--admin-text-2); }
 .secondaryAction:hover { background: var(--admin-surface-2); color: var(--admin-text); }
-.primaryAction svg, .secondaryAction svg { width: 15px; height: 15px; }
+.secondaryAction svg { width: 15px; height: 15px; }
 
 .dataNotice {
   padding: 10px 13px;
@@ -568,7 +560,6 @@
   border: 0;
 }
 
-.primaryAction:focus-visible,
 .secondaryAction:focus-visible,
 .metricCard:focus-visible,
 .attentionItem:focus-visible,
@@ -637,7 +628,7 @@
   .dashboardHeader { align-items: flex-start; flex-direction: column; }
   .dashboardHeader h1 { font-size: 30px; }
   .headerActions { width: 100%; }
-  .primaryAction, .secondaryAction { min-width: 0; flex: 1; padding-inline: 11px; }
+  .secondaryAction { min-width: 0; flex: 1; padding-inline: 11px; }
   .primaryMetrics { grid-template-columns: 1fr; }
   .metricCard { min-height: 136px; }
   .analyticsPanel, .reminderPanel, .queuePanel, .activityPanel, .progressPanel, .livePanel { grid-column: 1 / -1; }

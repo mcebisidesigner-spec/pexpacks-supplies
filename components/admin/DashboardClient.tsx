@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Clock,
   PackageCheck,
-  Plus,
   RefreshCw,
   ShoppingBag,
   TrendingUp,
@@ -165,9 +164,6 @@ export function DashboardClient({ stats }: DashboardClientProps) {
           <p>Plan, prioritise, and fulfil school stationery orders with ease.</p>
         </div>
         <div className={styles.headerActions}>
-          <Link href="/admin/packs/new" className={styles.primaryAction}>
-            <Plus aria-hidden="true" /> Add pack
-          </Link>
           <Link href="/admin/items#bulk-stationery-import" className={styles.secondaryAction}>
             <ArrowDownToLine aria-hidden="true" /> Import data
           </Link>

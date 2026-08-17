@@ -8,14 +8,17 @@ import {
   createMasterProduct,
   createOperationalTask,
   createPricingRule,
+  createSeason,
   createSupplier,
   createSupplierOffer,
   createSupplierPurchaseOrder,
   importMasterProducts,
+  setDefaultSeason,
   updateFulfilmentRecord,
   updateOperationalTaskStatus,
   updatePackingRecord,
   updateProcurementRequirement,
+  updateSeason,
 } from "@/lib/admin/operations";
 
 function text(formData: FormData, key: string) {
@@ -327,4 +330,64 @@ export async function updateOperationalTaskStatusAction(
   });
   revalidatePath("/admin/tasks");
   revalidatePath("/admin");
+}
+
+export async function createSeasonAction(formData: FormData) {
+  const session = await requireAdmin({ permission: "settings.manage" });
+  const name = text(formData, "name");
+  const academicYear = number(formData, "academicYear");
+  if (!name || !academicYear) throw new Error("Season name and academic year are required.");
+  const season = await createSeason({
+    name,
+    academicYear,
+    startsOn: text(formData, "startsOn"),
+    orderingClosesOn: text(formData, "orderingClosesOn"),
+    fulfilmentStartsOn: text(formData, "fulfilmentStartsOn"),
+    fulfilmentEndsOn: text(formData, "fulfilmentEndsOn"),
+    status: text(formData, "status") || "planning",
+    isDefault: formData.get("isDefault") === "on",
+  });
+  await writeAuditLog({
+    action: "season.created",
+    entityType: "season",
+    entityId: season.id,
+    summary: `Created season ${name} (${academicYear})`,
+    actorId: session.user.id,
+  });
+  revalidatePath("/admin/seasons");
+}
+
+export async function updateSeasonAction(id: string, formData: FormData) {
+  const session = await requireAdmin({ permission: "settings.manage" });
+  await updateSeason(id, {
+    name: text(formData, "name"),
+    academicYear: number(formData, "academicYear"),
+    startsOn: text(formData, "startsOn"),
+    orderingClosesOn: text(formData, "orderingClosesOn"),
+    fulfilmentStartsOn: text(formData, "fulfilmentStartsOn"),
+    fulfilmentEndsOn: text(formData, "fulfilmentEndsOn"),
+    status: text(formData, "status"),
+    isDefault: formData.get("isDefault") === "on",
+  });
+  await writeAuditLog({
+    action: "season.updated",
+    entityType: "season",
+    entityId: id,
+    summary: "Updated season",
+    actorId: session.user.id,
+  });
+  revalidatePath("/admin/seasons");
+}
+
+export async function setDefaultSeasonAction(id: string) {
+  const session = await requireAdmin({ permission: "settings.manage" });
+  await setDefaultSeason(id);
+  await writeAuditLog({
+    action: "season.setDefault",
+    entityType: "season",
+    entityId: id,
+    summary: "Set as default operational season",
+    actorId: session.user.id,
+  });
+  revalidatePath("/admin/seasons");
 }

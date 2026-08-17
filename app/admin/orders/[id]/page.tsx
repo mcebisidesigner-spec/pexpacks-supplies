@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { getOrder } from "@/lib/admin/orders";
+import { listOrderItems } from "@/lib/admin/operations";
 import { orderStatusLabel, PAYMENT_GATEWAY_LABELS } from "@/lib/admin/order-constants";
 import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { OrderStatusForm } from "@/components/admin/orders/OrderStatusForm";
@@ -134,6 +135,8 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
   const { id } = await params;
   const order = await getOrder(id);
   if (!order) notFound();
+
+  const orderItems = await listOrderItems(order.id);
 
   const metadata = (order.metadata ?? {}) as Record<string, unknown>;
   const refund = (metadata.refund ?? null) as
@@ -287,6 +290,57 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
       </div>
 
       <PackContentsCard order={order} />
+
+      {orderItems.length > 0 ? (
+        <div className={styles.detailCard} style={{ marginTop: 20 }}>
+          <h2 className={styles.cardTitle}>
+            Order line items ({orderItems.length})
+          </h2>
+          <div className={adminStyles.tableWrapper}>
+            <table className={adminStyles.table}>
+              <thead>
+                <tr>
+                  <th>SKU</th>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Unit price</th>
+                  <th>Line total</th>
+                  <th>Est. cost</th>
+                  <th>Margin</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orderItems.map((item) => (
+                  <tr key={item.id}>
+                    <td className={styles.mono}>{item.sku_snapshot}</td>
+                    <td>
+                      {item.product_name_snapshot}
+                      {item.description_snapshot ? (
+                        <div className={styles.muted}>
+                          {item.description_snapshot}
+                        </div>
+                      ) : null}
+                    </td>
+                    <td>{item.quantity}</td>
+                    <td>{money(item.unit_selling_price)}</td>
+                    <td>{money(item.line_total)}</td>
+                    <td>
+                      {item.estimated_unit_cost != null
+                        ? money(item.estimated_unit_cost)
+                        : "—"}
+                    </td>
+                    <td>
+                      {item.expected_margin != null
+                        ? `${(item.expected_margin * 100).toFixed(1)}%`
+                        : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : null}
 
       {metadata ? (
         <div className={styles.detailCard} style={{ marginTop: 20 }}>

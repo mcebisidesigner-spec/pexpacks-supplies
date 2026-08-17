@@ -95,6 +95,13 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     title: "Operations",
     items: [
       {
+        label: "Seasons",
+        href: "/admin/seasons",
+        icon: "seasons",
+        permission: "settings.manage",
+        ready: true,
+      },
+      {
         label: "Procurement",
         href: "/admin/procurement",
         icon: "procurement",

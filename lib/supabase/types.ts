@@ -45,6 +45,42 @@ export interface Database {
         };
         Relationships: [];
       };
+      payments: {
+        Row: {
+          id: string;
+          order_reference: string | null;
+          gateway_reference: string | null;
+          amount: number | null;
+          currency: string;
+          payment_gateway: string;
+          status: string;
+          metadata: Json | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_reference?: string | null;
+          gateway_reference?: string | null;
+          amount?: number | null;
+          currency?: string;
+          payment_gateway?: string;
+          status?: string;
+          metadata?: Json | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_reference?: string | null;
+          gateway_reference?: string | null;
+          amount?: number | null;
+          currency?: string;
+          payment_gateway?: string;
+          status?: string;
+          metadata?: Json | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       orders: {
         Row: {
           id: string;
@@ -1005,8 +1041,1465 @@ export interface Database {
         };
         Relationships: [];
       };
+      seasons: {
+        Row: {
+          id: string;
+          name: string;
+          academic_year: number;
+          starts_on: string | null;
+          ordering_closes_on: string | null;
+          fulfilment_starts_on: string | null;
+          fulfilment_ends_on: string | null;
+          status: string;
+          is_default: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          academic_year: number;
+          starts_on?: string | null;
+          ordering_closes_on?: string | null;
+          fulfilment_starts_on?: string | null;
+          fulfilment_ends_on?: string | null;
+          status?: string;
+          is_default?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          academic_year?: number;
+          starts_on?: string | null;
+          ordering_closes_on?: string | null;
+          fulfilment_starts_on?: string | null;
+          fulfilment_ends_on?: string | null;
+          status?: string;
+          is_default?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      user_profiles: {
+        Row: {
+          user_id: string;
+          display_name: string | null;
+          avatar_url: string | null;
+          telephone: string | null;
+          job_title: string | null;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          telephone?: string | null;
+          job_title?: string | null;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          telephone?: string | null;
+          job_title?: string | null;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      customers: {
+        Row: {
+          id: string;
+          email: string | null;
+          phone: string | null;
+          full_name: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          email?: string | null;
+          phone?: string | null;
+          full_name: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string | null;
+          phone?: string | null;
+          full_name?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      learners: {
+        Row: {
+          id: string;
+          customer_id: string;
+          school_id: string | null;
+          full_name: string;
+          grade: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          customer_id: string;
+          school_id?: string | null;
+          full_name: string;
+          grade?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          customer_id?: string;
+          school_id?: string | null;
+          full_name?: string;
+          grade?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "learners_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "learners_school_id_fkey";
+            columns: ["school_id"];
+            isOneToOne: false;
+            referencedRelation: "schools";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      master_products: {
+        Row: {
+          id: string;
+          sku: string;
+          name: string;
+          description: string | null;
+          category: string | null;
+          brand: string | null;
+          unit: string | null;
+          packaging: string | null;
+          specification: string | null;
+          visibility: string;
+          availability: string;
+          calculated_selling_price: number | null;
+          selling_price_override: number | null;
+          current_selling_price: number;
+          latest_verified_cost: number | null;
+          target_markup: number | null;
+          target_margin: number | null;
+          pricing_status: string;
+          preferred_supplier_id: string | null;
+          last_verified_at: string | null;
+          active: boolean;
+          search_vector: string | null;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          sku: string;
+          name: string;
+          description?: string | null;
+          category?: string | null;
+          brand?: string | null;
+          unit?: string | null;
+          packaging?: string | null;
+          specification?: string | null;
+          visibility?: string;
+          availability?: string;
+          calculated_selling_price?: number | null;
+          selling_price_override?: number | null;
+          current_selling_price?: number;
+          latest_verified_cost?: number | null;
+          target_markup?: number | null;
+          target_margin?: number | null;
+          pricing_status?: string;
+          preferred_supplier_id?: string | null;
+          last_verified_at?: string | null;
+          active?: boolean;
+          search_vector?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          sku?: string;
+          name?: string;
+          description?: string | null;
+          category?: string | null;
+          brand?: string | null;
+          unit?: string | null;
+          packaging?: string | null;
+          specification?: string | null;
+          visibility?: string;
+          availability?: string;
+          calculated_selling_price?: number | null;
+          selling_price_override?: number | null;
+          current_selling_price?: number;
+          latest_verified_cost?: number | null;
+          target_markup?: number | null;
+          target_margin?: number | null;
+          pricing_status?: string;
+          preferred_supplier_id?: string | null;
+          last_verified_at?: string | null;
+          active?: boolean;
+          search_vector?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "master_products_preferred_supplier_id_fkey";
+            columns: ["preferred_supplier_id"];
+            isOneToOne: false;
+            referencedRelation: "suppliers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      school_pack_items: {
+        Row: {
+          id: string;
+          pack_id: string;
+          product_id: string;
+          legacy_item_id: string | null;
+          pack_quantity: number;
+          school_wording: string | null;
+          prescribed_brand: string | null;
+          substitution_policy: string;
+          school_notes: string | null;
+          selling_price_override: number | null;
+          sort_order: number;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          pack_id: string;
+          product_id: string;
+          legacy_item_id?: string | null;
+          pack_quantity?: number;
+          school_wording?: string | null;
+          prescribed_brand?: string | null;
+          substitution_policy?: string;
+          school_notes?: string | null;
+          selling_price_override?: number | null;
+          sort_order?: number;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          pack_id?: string;
+          product_id?: string;
+          legacy_item_id?: string | null;
+          pack_quantity?: number;
+          school_wording?: string | null;
+          prescribed_brand?: string | null;
+          substitution_policy?: string;
+          school_notes?: string | null;
+          selling_price_override?: number | null;
+          sort_order?: number;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "school_pack_items_pack_id_fkey";
+            columns: ["pack_id"];
+            isOneToOne: false;
+            referencedRelation: "stationery_packs";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "school_pack_items_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "master_products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "school_pack_items_legacy_item_id_fkey";
+            columns: ["legacy_item_id"];
+            isOneToOne: false;
+            referencedRelation: "stationery_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      suppliers: {
+        Row: {
+          id: string;
+          code: string;
+          name: string;
+          contact_name: string | null;
+          email: string | null;
+          telephone: string | null;
+          address: string | null;
+          payment_terms: string | null;
+          lead_time_days: number | null;
+          active: boolean;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          name: string;
+          contact_name?: string | null;
+          email?: string | null;
+          telephone?: string | null;
+          address?: string | null;
+          payment_terms?: string | null;
+          lead_time_days?: number | null;
+          active?: boolean;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          name?: string;
+          contact_name?: string | null;
+          email?: string | null;
+          telephone?: string | null;
+          address?: string | null;
+          payment_terms?: string | null;
+          lead_time_days?: number | null;
+          active?: boolean;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      supplier_quote_imports: {
+        Row: {
+          id: string;
+          supplier_id: string;
+          source_file_name: string | null;
+          storage_path: string | null;
+          status: string;
+          imported_rows: number;
+          rejected_rows: number;
+          errors: Json;
+          imported_by: string | null;
+          created_at: string;
+          completed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          supplier_id: string;
+          source_file_name?: string | null;
+          storage_path?: string | null;
+          status?: string;
+          imported_rows?: number;
+          rejected_rows?: number;
+          errors?: Json;
+          imported_by?: string | null;
+          created_at?: string;
+          completed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          supplier_id?: string;
+          source_file_name?: string | null;
+          storage_path?: string | null;
+          status?: string;
+          imported_rows?: number;
+          rejected_rows?: number;
+          errors?: Json;
+          imported_by?: string | null;
+          created_at?: string;
+          completed_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "supplier_quote_imports_supplier_id_fkey";
+            columns: ["supplier_id"];
+            isOneToOne: false;
+            referencedRelation: "suppliers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      supplier_offers: {
+        Row: {
+          id: string;
+          supplier_id: string;
+          product_id: string;
+          quote_import_id: string | null;
+          supplier_sku: string | null;
+          unit_cost: number;
+          currency: string;
+          minimum_order_quantity: number;
+          available_quantity: number | null;
+          lead_time_days: number | null;
+          valid_from: string;
+          valid_until: string | null;
+          verified_at: string | null;
+          is_preferred: boolean;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          supplier_id: string;
+          product_id: string;
+          quote_import_id?: string | null;
+          supplier_sku?: string | null;
+          unit_cost: number;
+          currency?: string;
+          minimum_order_quantity?: number;
+          available_quantity?: number | null;
+          lead_time_days?: number | null;
+          valid_from?: string;
+          valid_until?: string | null;
+          verified_at?: string | null;
+          is_preferred?: boolean;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          supplier_id?: string;
+          product_id?: string;
+          quote_import_id?: string | null;
+          supplier_sku?: string | null;
+          unit_cost?: number;
+          currency?: string;
+          minimum_order_quantity?: number;
+          available_quantity?: number | null;
+          lead_time_days?: number | null;
+          valid_from?: string;
+          valid_until?: string | null;
+          verified_at?: string | null;
+          is_preferred?: boolean;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "supplier_offers_supplier_id_fkey";
+            columns: ["supplier_id"];
+            isOneToOne: false;
+            referencedRelation: "suppliers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_offers_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "master_products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_offers_quote_import_id_fkey";
+            columns: ["quote_import_id"];
+            isOneToOne: false;
+            referencedRelation: "supplier_quote_imports";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      pricing_rules: {
+        Row: {
+          id: string;
+          name: string;
+          scope: string;
+          scope_value: string | null;
+          method: string;
+          rate: number;
+          rounding_increment: number;
+          priority: number;
+          active: boolean;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          scope: string;
+          scope_value?: string | null;
+          method: string;
+          rate: number;
+          rounding_increment?: number;
+          priority?: number;
+          active?: boolean;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          scope?: string;
+          scope_value?: string | null;
+          method?: string;
+          rate?: number;
+          rounding_increment?: number;
+          priority?: number;
+          active?: boolean;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      price_history: {
+        Row: {
+          id: string;
+          product_id: string;
+          supplier_id: string | null;
+          previous_cost: number | null;
+          new_cost: number | null;
+          previous_selling_price: number | null;
+          new_selling_price: number | null;
+          previous_margin: number | null;
+          new_margin: number | null;
+          reason: string | null;
+          source: string | null;
+          changed_by: string | null;
+          approved_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          product_id: string;
+          supplier_id?: string | null;
+          previous_cost?: number | null;
+          new_cost?: number | null;
+          previous_selling_price?: number | null;
+          new_selling_price?: number | null;
+          previous_margin?: number | null;
+          new_margin?: number | null;
+          reason?: string | null;
+          source?: string | null;
+          changed_by?: string | null;
+          approved_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          product_id?: string;
+          supplier_id?: string | null;
+          previous_cost?: number | null;
+          new_cost?: number | null;
+          previous_selling_price?: number | null;
+          new_selling_price?: number | null;
+          previous_margin?: number | null;
+          new_margin?: number | null;
+          reason?: string | null;
+          source?: string | null;
+          changed_by?: string | null;
+          approved_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "price_history_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "master_products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "price_history_supplier_id_fkey";
+            columns: ["supplier_id"];
+            isOneToOne: false;
+            referencedRelation: "suppliers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      order_items: {
+        Row: {
+          id: string;
+          order_id: string;
+          product_id: string | null;
+          pack_id: string | null;
+          sku_snapshot: string;
+          product_name_snapshot: string;
+          description_snapshot: string | null;
+          quantity: number;
+          unit_selling_price: number;
+          line_total: number;
+          estimated_unit_cost: number | null;
+          expected_margin: number | null;
+          pricing_version: string | null;
+          school_name_snapshot: string | null;
+          grade_snapshot: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_id: string;
+          product_id?: string | null;
+          pack_id?: string | null;
+          sku_snapshot: string;
+          product_name_snapshot: string;
+          description_snapshot?: string | null;
+          quantity: number;
+          unit_selling_price: number;
+          line_total?: number;
+          estimated_unit_cost?: number | null;
+          expected_margin?: number | null;
+          pricing_version?: string | null;
+          school_name_snapshot?: string | null;
+          grade_snapshot?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_id?: string;
+          product_id?: string | null;
+          pack_id?: string | null;
+          sku_snapshot?: string;
+          product_name_snapshot?: string;
+          description_snapshot?: string | null;
+          quantity?: number;
+          unit_selling_price?: number;
+          line_total?: number;
+          estimated_unit_cost?: number | null;
+          expected_margin?: number | null;
+          pricing_version?: string | null;
+          school_name_snapshot?: string | null;
+          grade_snapshot?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "master_products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_pack_id_fkey";
+            columns: ["pack_id"];
+            isOneToOne: false;
+            referencedRelation: "stationery_packs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      payment_events: {
+        Row: {
+          id: string;
+          order_id: string;
+          provider: string;
+          payment_method: string;
+          gateway_reference: string | null;
+          event_key: string;
+          status: string;
+          amount: number | null;
+          currency: string;
+          payload: Json;
+          processed_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_id: string;
+          provider?: string;
+          payment_method?: string;
+          gateway_reference?: string | null;
+          event_key: string;
+          status: string;
+          amount?: number | null;
+          currency?: string;
+          payload?: Json;
+          processed_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_id?: string;
+          provider?: string;
+          payment_method?: string;
+          gateway_reference?: string | null;
+          event_key?: string;
+          status?: string;
+          amount?: number | null;
+          currency?: string;
+          payload?: Json;
+          processed_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payment_events_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      procurement_requirements: {
+        Row: {
+          id: string;
+          season_id: string;
+          product_id: string;
+          required_quantity: number;
+          requested_quantity: number;
+          supplier_confirmed_quantity: number;
+          secured_quantity: number;
+          received_quantity: number;
+          allocated_quantity: number;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          season_id: string;
+          product_id: string;
+          required_quantity?: number;
+          requested_quantity?: number;
+          supplier_confirmed_quantity?: number;
+          secured_quantity?: number;
+          received_quantity?: number;
+          allocated_quantity?: number;
+          status?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          season_id?: string;
+          product_id?: string;
+          required_quantity?: number;
+          requested_quantity?: number;
+          supplier_confirmed_quantity?: number;
+          secured_quantity?: number;
+          received_quantity?: number;
+          allocated_quantity?: number;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "procurement_requirements_season_id_fkey";
+            columns: ["season_id"];
+            isOneToOne: false;
+            referencedRelation: "seasons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "procurement_requirements_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "master_products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      procurement_requirement_orders: {
+        Row: {
+          id: string;
+          requirement_id: string;
+          order_id: string;
+          order_item_id: string;
+          required_quantity: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          requirement_id: string;
+          order_id: string;
+          order_item_id: string;
+          required_quantity: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          requirement_id?: string;
+          order_id?: string;
+          order_item_id?: string;
+          required_quantity?: number;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "procurement_requirement_orders_requirement_id_fkey";
+            columns: ["requirement_id"];
+            isOneToOne: false;
+            referencedRelation: "procurement_requirements";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "procurement_requirement_orders_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "procurement_requirement_orders_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      supplier_purchase_orders: {
+        Row: {
+          id: string;
+          purchase_order_number: string;
+          supplier_id: string;
+          season_id: string | null;
+          status: string;
+          currency: string;
+          expected_on: string | null;
+          notes: string | null;
+          created_by: string | null;
+          approved_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          purchase_order_number: string;
+          supplier_id: string;
+          season_id?: string | null;
+          status?: string;
+          currency?: string;
+          expected_on?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          approved_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          purchase_order_number?: string;
+          supplier_id?: string;
+          season_id?: string | null;
+          status?: string;
+          currency?: string;
+          expected_on?: string | null;
+          notes?: string | null;
+          created_by?: string | null;
+          approved_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "supplier_purchase_orders_supplier_id_fkey";
+            columns: ["supplier_id"];
+            isOneToOne: false;
+            referencedRelation: "suppliers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_purchase_orders_season_id_fkey";
+            columns: ["season_id"];
+            isOneToOne: false;
+            referencedRelation: "seasons";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      supplier_purchase_items: {
+        Row: {
+          id: string;
+          purchase_order_id: string;
+          requirement_id: string | null;
+          product_id: string;
+          ordered_quantity: number;
+          confirmed_quantity: number;
+          received_quantity: number;
+          unit_cost: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          purchase_order_id: string;
+          requirement_id?: string | null;
+          product_id: string;
+          ordered_quantity: number;
+          confirmed_quantity?: number;
+          received_quantity?: number;
+          unit_cost: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          purchase_order_id?: string;
+          requirement_id?: string | null;
+          product_id?: string;
+          ordered_quantity?: number;
+          confirmed_quantity?: number;
+          received_quantity?: number;
+          unit_cost?: number;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "supplier_purchase_items_purchase_order_id_fkey";
+            columns: ["purchase_order_id"];
+            isOneToOne: false;
+            referencedRelation: "supplier_purchase_orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_purchase_items_requirement_id_fkey";
+            columns: ["requirement_id"];
+            isOneToOne: false;
+            referencedRelation: "procurement_requirements";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supplier_purchase_items_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "master_products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      supplier_receipts: {
+        Row: {
+          id: string;
+          purchase_order_id: string;
+          reference: string | null;
+          received_by: string | null;
+          received_at: string;
+          notes: string | null;
+        };
+        Insert: {
+          id?: string;
+          purchase_order_id: string;
+          reference?: string | null;
+          received_by?: string | null;
+          received_at?: string;
+          notes?: string | null;
+        };
+        Update: {
+          id?: string;
+          purchase_order_id?: string;
+          reference?: string | null;
+          received_by?: string | null;
+          received_at?: string;
+          notes?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "supplier_receipts_purchase_order_id_fkey";
+            columns: ["purchase_order_id"];
+            isOneToOne: false;
+            referencedRelation: "supplier_purchase_orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      order_product_allocations: {
+        Row: {
+          id: string;
+          order_item_id: string;
+          purchase_item_id: string | null;
+          quantity: number;
+          allocated_by: string | null;
+          allocated_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_item_id: string;
+          purchase_item_id?: string | null;
+          quantity: number;
+          allocated_by?: string | null;
+          allocated_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_item_id?: string;
+          purchase_item_id?: string | null;
+          quantity?: number;
+          allocated_by?: string | null;
+          allocated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "order_product_allocations_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_product_allocations_purchase_item_id_fkey";
+            columns: ["purchase_item_id"];
+            isOneToOne: false;
+            referencedRelation: "supplier_purchase_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      substitutions: {
+        Row: {
+          id: string;
+          order_item_id: string;
+          original_product_id: string | null;
+          replacement_product_id: string;
+          quantity: number;
+          reason: string;
+          status: string;
+          requested_by: string | null;
+          approved_by: string | null;
+          created_at: string;
+          resolved_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          order_item_id: string;
+          original_product_id?: string | null;
+          replacement_product_id: string;
+          quantity: number;
+          reason: string;
+          status?: string;
+          requested_by?: string | null;
+          approved_by?: string | null;
+          created_at?: string;
+          resolved_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          order_item_id?: string;
+          original_product_id?: string | null;
+          replacement_product_id?: string;
+          quantity?: number;
+          reason?: string;
+          status?: string;
+          requested_by?: string | null;
+          approved_by?: string | null;
+          created_at?: string;
+          resolved_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "substitutions_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "substitutions_original_product_id_fkey";
+            columns: ["original_product_id"];
+            isOneToOne: false;
+            referencedRelation: "master_products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "substitutions_replacement_product_id_fkey";
+            columns: ["replacement_product_id"];
+            isOneToOne: false;
+            referencedRelation: "master_products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      packing_records: {
+        Row: {
+          id: string;
+          order_id: string;
+          status: string;
+          started_by: string | null;
+          checked_by: string | null;
+          started_at: string | null;
+          checked_at: string | null;
+          packed_at: string | null;
+          notes: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_id: string;
+          status?: string;
+          started_by?: string | null;
+          checked_by?: string | null;
+          started_at?: string | null;
+          checked_at?: string | null;
+          packed_at?: string | null;
+          notes?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_id?: string;
+          status?: string;
+          started_by?: string | null;
+          checked_by?: string | null;
+          started_at?: string | null;
+          checked_at?: string | null;
+          packed_at?: string | null;
+          notes?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "packing_records_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: true;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      fulfilment_records: {
+        Row: {
+          id: string;
+          order_id: string;
+          method: string;
+          status: string;
+          target_date: string | null;
+          school_open_day: string | null;
+          courier_name: string | null;
+          waybill_number: string | null;
+          completed_at: string | null;
+          notes: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_id: string;
+          method: string;
+          status?: string;
+          target_date?: string | null;
+          school_open_day?: string | null;
+          courier_name?: string | null;
+          waybill_number?: string | null;
+          completed_at?: string | null;
+          notes?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_id?: string;
+          method?: string;
+          status?: string;
+          target_date?: string | null;
+          school_open_day?: string | null;
+          courier_name?: string | null;
+          waybill_number?: string | null;
+          completed_at?: string | null;
+          notes?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "fulfilment_records_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: true;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      operational_tasks: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          entity_type: string | null;
+          entity_id: string | null;
+          status: string;
+          priority: string;
+          assigned_to: string | null;
+          due_at: string | null;
+          created_by: string | null;
+          completed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          status?: string;
+          priority?: string;
+          assigned_to?: string | null;
+          due_at?: string | null;
+          created_by?: string | null;
+          completed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string | null;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          status?: string;
+          priority?: string;
+          assigned_to?: string | null;
+          due_at?: string | null;
+          created_by?: string | null;
+          completed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      task_comments: {
+        Row: {
+          id: string;
+          task_id: string;
+          author_id: string | null;
+          body: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          task_id: string;
+          author_id?: string | null;
+          body: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          task_id?: string;
+          author_id?: string | null;
+          body?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "task_comments_task_id_fkey";
+            columns: ["task_id"];
+            isOneToOne: false;
+            referencedRelation: "operational_tasks";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      task_mentions: {
+        Row: {
+          comment_id: string;
+          user_id: string;
+          created_at: string;
+        };
+        Insert: {
+          comment_id: string;
+          user_id: string;
+          created_at?: string;
+        };
+        Update: {
+          comment_id?: string;
+          user_id?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "task_mentions_comment_id_fkey";
+            columns: ["comment_id"];
+            isOneToOne: false;
+            referencedRelation: "task_comments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          permission_key: string | null;
+          type: string;
+          title: string;
+          body: string | null;
+          entity_type: string | null;
+          entity_id: string | null;
+          read_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          permission_key?: string | null;
+          type: string;
+          title: string;
+          body?: string | null;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          read_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          permission_key?: string | null;
+          type?: string;
+          title?: string;
+          body?: string | null;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          read_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      approvals: {
+        Row: {
+          id: string;
+          entity_type: string;
+          entity_id: string;
+          approval_type: string;
+          status: string;
+          requested_by: string | null;
+          decided_by: string | null;
+          reason: string | null;
+          decision_notes: string | null;
+          created_at: string;
+          decided_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          entity_type: string;
+          entity_id: string;
+          approval_type: string;
+          status?: string;
+          requested_by?: string | null;
+          decided_by?: string | null;
+          reason?: string | null;
+          decision_notes?: string | null;
+          created_at?: string;
+          decided_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          entity_type?: string;
+          entity_id?: string;
+          approval_type?: string;
+          status?: string;
+          requested_by?: string | null;
+          decided_by?: string | null;
+          reason?: string | null;
+          decision_notes?: string | null;
+          created_at?: string;
+          decided_at?: string | null;
+        };
+        Relationships: [];
+      };
+      operational_events: {
+        Row: {
+          id: string;
+          event_key: string | null;
+          event_type: string;
+          entity_type: string;
+          entity_id: string;
+          actor_id: string | null;
+          data: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          event_key?: string | null;
+          event_type: string;
+          entity_type: string;
+          entity_id: string;
+          actor_id?: string | null;
+          data?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          event_key?: string | null;
+          event_type?: string;
+          entity_type?: string;
+          entity_id?: string;
+          actor_id?: string | null;
+          data?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
-    Views: Record<string, never>;
+    Views: {
+      procurement_command_view: {
+        Row: {
+          id: string;
+          season_id: string;
+          product_id: string;
+          sku: string;
+          product_name: string;
+          category: string | null;
+          required_quantity: number;
+          requested_quantity: number;
+          supplier_confirmed_quantity: number;
+          secured_quantity: number;
+          received_quantity: number;
+          allocated_quantity: number;
+          outstanding_quantity: number;
+          procurement_coverage_percent: number;
+          status: string;
+          updated_at: string;
+        };
+        Relationships: [];
+      };
+      order_readiness_view: {
+        Row: {
+          order_id: string;
+          order_reference: string;
+          order_status: string;
+          line_count: number;
+          required_units: number;
+          allocated_units: number;
+          readiness_percent: number;
+        };
+        Relationships: [];
+      };
+    };
     Functions: {
       is_admin: { Args: Record<string, never>; Returns: boolean };
       is_staff: { Args: Record<string, never>; Returns: boolean };
@@ -1117,6 +2610,37 @@ export interface Database {
       refresh_all_dashboard_summaries: {
         Args: Record<string, never>;
         Returns: undefined;
+      };
+      current_operational_season_id: {
+        Args: Record<string, never>;
+        Returns: string;
+      };
+      complete_order_payment: {
+        Args: {
+          p_order_reference: string;
+          p_gateway_reference: string;
+          p_amount: number;
+          p_currency?: string;
+          p_provider?: string;
+          p_payment_method?: string;
+          p_payload?: Json;
+        };
+        Returns: Json;
+      };
+      record_order_payment_status: {
+        Args: {
+          p_order_reference: string;
+          p_gateway_reference: string;
+          p_status: string;
+          p_amount: number;
+          p_currency?: string;
+          p_payload?: Json;
+        };
+        Returns: Json;
+      };
+      allocate_secured_demand: {
+        Args: { p_requirement_id: string };
+        Returns: number;
       };
     };
     Enums: Record<string, never>;

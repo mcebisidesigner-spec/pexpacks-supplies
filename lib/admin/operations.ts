@@ -826,3 +826,158 @@ export async function getOperationsSummary() {
     openTasks: tasks.count ?? 0,
   };
 }
+
+/* ---------------------------------------------------
+   Seasons
+   --------------------------------------------------- */
+
+export async function listSeasons() {
+  const { data, error } = await db()
+    .from("seasons")
+    .select("id,name,academic_year,starts_on,ordering_closes_on,fulfilment_starts_on,fulfilment_ends_on,status,is_default,created_at,updated_at")
+    .order("academic_year", { ascending: false });
+  assertNoError(error, "Unable to load seasons");
+  return (data ?? []) as {
+    id: string;
+    name: string;
+    academic_year: number;
+    starts_on: string | null;
+    ordering_closes_on: string | null;
+    fulfilment_starts_on: string | null;
+    fulfilment_ends_on: string | null;
+    status: string;
+    is_default: boolean;
+    created_at: string;
+    updated_at: string;
+  }[];
+}
+
+export async function createSeason(input: {
+  name: string;
+  academicYear: number;
+  startsOn?: string;
+  orderingClosesOn?: string;
+  fulfilmentStartsOn?: string;
+  fulfilmentEndsOn?: string;
+  status?: string;
+  isDefault?: boolean;
+}) {
+  const { data, error } = await db()
+    .from("seasons")
+    .insert({
+      name: input.name,
+      academic_year: input.academicYear,
+      starts_on: input.startsOn || null,
+      ordering_closes_on: input.orderingClosesOn || null,
+      fulfilment_starts_on: input.fulfilmentStartsOn || null,
+      fulfilment_ends_on: input.fulfilmentEndsOn || null,
+      status: input.status || "planning",
+      is_default: input.isDefault ?? false,
+    })
+    .select("id")
+    .single();
+  assertNoError(error, "Unable to create season");
+  return data as { id: string };
+}
+
+export async function updateSeason(
+  id: string,
+  input: {
+    name?: string;
+    academicYear?: number;
+    startsOn?: string;
+    orderingClosesOn?: string;
+    fulfilmentStartsOn?: string;
+    fulfilmentEndsOn?: string;
+    status?: string;
+    isDefault?: boolean;
+  },
+) {
+  const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
+  if (input.name !== undefined) patch.name = input.name;
+  if (input.academicYear !== undefined) patch.academic_year = input.academicYear;
+  if (input.startsOn !== undefined) patch.starts_on = input.startsOn || null;
+  if (input.orderingClosesOn !== undefined) patch.ordering_closes_on = input.orderingClosesOn || null;
+  if (input.fulfilmentStartsOn !== undefined) patch.fulfilment_starts_on = input.fulfilmentStartsOn || null;
+  if (input.fulfilmentEndsOn !== undefined) patch.fulfilment_ends_on = input.fulfilmentEndsOn || null;
+  if (input.status !== undefined) patch.status = input.status;
+  if (input.isDefault !== undefined) patch.is_default = input.isDefault;
+
+  if (input.isDefault) {
+    await db().from("seasons").update({ is_default: false }).neq("id", id);
+  }
+
+  const { error } = await db().from("seasons").update(patch).eq("id", id);
+  assertNoError(error, "Unable to update season");
+}
+
+export async function setDefaultSeason(id: string) {
+  await db().from("seasons").update({ is_default: false }).neq("id", id);
+  const { error } = await db()
+    .from("seasons")
+    .update({ is_default: true, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  assertNoError(error, "Unable to set default season");
+}
+
+/* ---------------------------------------------------
+   Order items
+   --------------------------------------------------- */
+
+export async function listOrderItems(orderId: string) {
+  const { data, error } = await db()
+    .from("order_items")
+    .select("id,order_id,product_id,pack_id,sku_snapshot,product_name_snapshot,description_snapshot,quantity,unit_selling_price,line_total,estimated_unit_cost,expected_margin,pricing_version,school_name_snapshot,grade_snapshot,created_at")
+    .eq("order_id", orderId)
+    .order("created_at");
+  if (isOperationsSchemaUnavailable(error)) return [];
+  assertNoError(error, "Unable to load order items");
+  return (data ?? []) as {
+    id: string;
+    order_id: string;
+    product_id: string | null;
+    pack_id: string | null;
+    sku_snapshot: string;
+    product_name_snapshot: string;
+    description_snapshot: string | null;
+    quantity: number;
+    unit_selling_price: number;
+    line_total: number;
+    estimated_unit_cost: number | null;
+    expected_margin: number | null;
+    pricing_version: string | null;
+    school_name_snapshot: string | null;
+    grade_snapshot: string | null;
+    created_at: string;
+  }[];
+}
+
+/* ---------------------------------------------------
+   Price history
+   --------------------------------------------------- */
+
+export async function listPriceHistory(limit = 100) {
+  const { data, error } = await db()
+    .from("price_history")
+    .select("id,product_id,supplier_id,previous_cost,new_cost,previous_selling_price,new_selling_price,previous_margin,new_margin,reason,source,changed_by,approved_by,created_at")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (isOperationsSchemaUnavailable(error)) return [];
+  assertNoError(error, "Unable to load price history");
+  return (data ?? []) as {
+    id: string;
+    product_id: string;
+    supplier_id: string | null;
+    previous_cost: number | null;
+    new_cost: number | null;
+    previous_selling_price: number | null;
+    new_selling_price: number | null;
+    previous_margin: number | null;
+    new_margin: number | null;
+    reason: string | null;
+    source: string | null;
+    changed_by: string | null;
+    approved_by: string | null;
+    created_at: string;
+  }[];
+}

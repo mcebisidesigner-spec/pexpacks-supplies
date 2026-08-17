@@ -1,6 +1,6 @@
 import { Tags } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
-import { listPricingReview, listPricingRules } from "@/lib/admin/operations";
+import { listPricingReview, listPricingRules, listPriceHistory } from "@/lib/admin/operations";
 import {
   approveProductPriceAction,
   createPricingRuleAction,
@@ -12,9 +12,10 @@ export const dynamic = "force-dynamic";
 
 export default async function PricingPage() {
   const session = await requireAdmin({ permission: "pricing.view" });
-  const [products, rules] = await Promise.all([
+  const [products, rules, priceHistory] = await Promise.all([
     listPricingReview(),
     listPricingRules(),
+    listPriceHistory(50),
   ]);
   const exceptions = products.filter(
     (p) => p.pricing_status !== "approved",
@@ -196,6 +197,64 @@ export default async function PricingPage() {
           </div>
         )}
       </div>
+
+      {priceHistory.length > 0 ? (
+        <div className={styles.historyCard}>
+          <h2>Recent price changes ({priceHistory.length})</h2>
+          <div className={admin.tableWrapper}>
+            <table className={admin.table}>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Product ID</th>
+                  <th>Cost</th>
+                  <th>Previous price</th>
+                  <th>New price</th>
+                  <th>Margin</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                {priceHistory.map((entry) => (
+                  <tr key={entry.id}>
+                    <td>
+                      {new Date(entry.created_at).toLocaleDateString("en-ZA", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className={styles.mono}>
+                      {entry.product_id.slice(0, 8)}…
+                    </td>
+                    <td>
+                      {entry.new_cost != null
+                        ? `R ${Number(entry.new_cost).toFixed(2)}`
+                        : "—"}
+                    </td>
+                    <td>
+                      {entry.previous_selling_price != null
+                        ? `R ${Number(entry.previous_selling_price).toFixed(2)}`
+                        : "—"}
+                    </td>
+                    <td className={styles.money}>
+                      {entry.new_selling_price != null
+                        ? `R ${Number(entry.new_selling_price).toFixed(2)}`
+                        : "—"}
+                    </td>
+                    <td>
+                      {entry.new_margin != null
+                        ? `${(entry.new_margin * 100).toFixed(1)}%`
+                        : "—"}
+                    </td>
+                    <td>{entry.source || entry.reason || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

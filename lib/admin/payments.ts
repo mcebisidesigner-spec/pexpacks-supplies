@@ -38,14 +38,13 @@ function endOfDay(date: string): string {
   return date;
 }
 
-type OrdersQuery = ReturnType<
-  ReturnType<typeof createSupabaseAdminClient>["from"]
->;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FilterableQuery = any;
 
 function basePaymentFilter(
-  query: OrdersQuery,
+  query: FilterableQuery,
   filters: PaymentFilters,
-): OrdersQuery {
+): FilterableQuery {
   const q = filters.q?.replace(/%/g, "").trim();
   if (q) {
     query = query.or(

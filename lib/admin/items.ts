@@ -136,6 +136,7 @@ async function assertCan(permission: PermissionKey): Promise<AdminSession> {
 export interface ItemListFilters {
   q?: string;
   pack_id?: string;
+  category?: string;
   page?: number;
   pageSize?: number;
 }
@@ -202,6 +203,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
     }
   }
   if (filters.pack_id) query = query.eq("pack_id", filters.pack_id);
+  if (filters.category) query = query.filter("category", "eq", filters.category);
 
   const { data, count, error } = await query
     .order("name", { ascending: true })
@@ -234,6 +236,44 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
     page,
     pageCount: Math.max(1, Math.ceil(total / pageSize)),
   };
+}
+
+export type StationeryCatalogueSection = {
+  name: string;
+  count: number;
+};
+
+export async function listStationeryCatalogueSections(): Promise<StationeryCatalogueSection[]> {
+  try {
+    const admin = createSupabaseAdminClient();
+    const { data, error } = await admin
+      .from("stationery_items")
+      .select("category,name")
+      .or(INVENTORY_ITEM_FILTER)
+      .order("category", { ascending: true })
+      .limit(5000);
+
+    if (error || !data) {
+      if (error) console.error("[items] section list failed:", error);
+      return [];
+    }
+
+    const sections = new Map<string, Set<string>>();
+    for (const row of data as Array<{ category?: string | null; name?: string | null }>) {
+      const section = row.category?.trim();
+      const name = row.name?.trim();
+      if (!section || !name) continue;
+      if (!sections.has(section)) sections.set(section, new Set<string>());
+      sections.get(section)?.add(inventoryItemNameKey(name));
+    }
+
+    return Array.from(sections.entries())
+      .map(([name, items]) => ({ name, count: items.size }))
+      .sort((a, b) => a.name.localeCompare(b.name, "en-ZA"));
+  } catch (err) {
+    console.error("[items] listStationeryCatalogueSections failed:", err);
+    return [];
+  }
 }
 
 export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
