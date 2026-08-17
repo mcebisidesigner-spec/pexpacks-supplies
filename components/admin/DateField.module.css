@@ -36,13 +36,21 @@
   top: calc(100% + 8px);
   left: 0;
   z-index: 140;
-  width: min(330px, calc(100vw - 40px));
+  width: min(330px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
   padding: 14px;
   border: 1px solid var(--admin-border-strong);
   border-radius: 8px;
   background: var(--admin-surface);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.58);
+  box-sizing: border-box;
 }
+
+.popover.alignRight {
+  left: auto;
+  right: 0;
+}
+
 
 .brandRow,
 .monthRow,

@@ -11,11 +11,13 @@ CREATE INDEX IF NOT EXISTS idx_stationery_packs_school_id ON public.stationery_p
 CREATE INDEX IF NOT EXISTS idx_stationery_packs_slug ON public.stationery_packs (slug);
 CREATE INDEX IF NOT EXISTS idx_stationery_packs_school_visible ON public.stationery_packs (school_id, visible);
 
--- 3. Schools indexes (slug lookup, status)
+-- 3. Schools indexes (slug lookup, published)
 CREATE INDEX IF NOT EXISTS idx_schools_slug ON public.schools (slug);
-CREATE INDEX IF NOT EXISTS idx_schools_visible ON public.schools (visible);
+CREATE INDEX IF NOT EXISTS idx_schools_published ON public.schools (published);
 
--- 4. Orders & order items indexes (dashboard metrics, status filtering)
+-- 4. Orders indexes (dashboard metrics, status filtering)
 CREATE INDEX IF NOT EXISTS idx_orders_status_created_at ON public.orders (status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_orders_created_at ON public.orders (created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON public.order_items (order_id);
+
+-- Note: order_items index (idx_order_items_order_id) is created in migration 00030
+-- after the order_items table is defined.

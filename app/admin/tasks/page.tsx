@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ClipboardCheck } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { DateField } from "@/components/admin/DateField";
@@ -123,7 +124,9 @@ export default async function TasksPage() {
                 {tasks.map((task) => (
                   <tr key={task.id}>
                     <td>
-                      <div className={styles.name}>{task.title}</div>
+                      <Link href={`/admin/tasks/${task.id}`} className={styles.name}>
+                        {task.title}
+                      </Link>
                       {task.description ? (
                         <div className={styles.muted}>{task.description}</div>
                       ) : null}

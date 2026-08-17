@@ -12,13 +12,19 @@ import {
   createSupplier,
   createSupplierOffer,
   createSupplierPurchaseOrder,
+  createSupplierReceipt,
+  createTaskComment,
+  deleteTaskComment,
   importMasterProducts,
   setDefaultSeason,
+  updateApproval,
   updateFulfilmentRecord,
   updateOperationalTaskStatus,
   updatePackingRecord,
   updateProcurementRequirement,
   updateSeason,
+  updateSupplier,
+  updateSupplierOffer,
 } from "@/lib/admin/operations";
 
 function text(formData: FormData, key: string) {
@@ -390,4 +396,161 @@ export async function setDefaultSeasonAction(id: string) {
     actorId: session.user.id,
   });
   revalidatePath("/admin/seasons");
+}
+
+export async function createTaskCommentAction(
+  taskId: string,
+  formData: FormData,
+) {
+  const session = await requireAdmin({ permission: "tasks.manage" });
+  const body = text(formData, "body");
+  if (!body) throw new Error("Comment body is required.");
+  const comment = await createTaskComment({
+    taskId,
+    authorId: session.user.id,
+    body,
+  });
+  await writeAuditLog({
+    action: "task.comment.created",
+    entityType: "task_comment",
+    entityId: comment.id,
+    summary: `Added comment to task ${taskId}`,
+    actorId: session.user.id,
+  });
+  revalidatePath("/admin/tasks");
+  revalidatePath(`/admin/tasks/${taskId}`);
+}
+
+export async function deleteTaskCommentAction(
+  taskId: string,
+  commentId: string,
+) {
+  const session = await requireAdmin({ permission: "tasks.manage" });
+  await deleteTaskComment(commentId);
+  await writeAuditLog({
+    action: "task.comment.deleted",
+    entityType: "task_comment",
+    entityId: commentId,
+    summary: `Deleted comment from task ${taskId}`,
+    actorId: session.user.id,
+  });
+  revalidatePath("/admin/tasks");
+  revalidatePath(`/admin/tasks/${taskId}`);
+}
+
+export async function createSupplierReceiptAction(formData: FormData) {
+  const session = await requireAdmin({ permission: "procurement.manage" });
+  const purchaseOrderId = text(formData, "purchaseOrderId");
+  if (!purchaseOrderId) throw new Error("Purchase order ID is required.");
+  
+  const items: Array<{ purchaseItemId: string; receivedQuantity: number }> = [];
+  for (const [key, value] of formData.entries()) {
+    if (key.startsWith("received_")) {
+      const purchaseItemId = key.replace("received_", "");
+      const qty = parseInt(String(value), 10);
+      if (!isNaN(qty) && qty >= 0) {
+        items.push({ purchaseItemId, receivedQuantity: qty });
+      }
+    }
+  }
+  
+  if (items.length === 0) throw new Error("No receipt quantities provided.");
+  
+  const receipt = await createSupplierReceipt({
+    purchaseOrderId,
+    receivedBy: session.user.id,
+    reference: text(formData, "reference"),
+    notes: text(formData, "notes"),
+    items,
+  });
+  
+  await writeAuditLog({
+    action: "supplier.receipt.created",
+    entityType: "supplier_receipt",
+    entityId: receipt.id,
+    summary: `Received goods for purchase order`,
+    actorId: session.user.id,
+  });
+  
+  revalidatePath("/admin/procurement");
+  revalidatePath("/admin/procurement/receiving");
+}
+
+export async function updateApprovalAction(
+  id: string,
+  formData: FormData,
+) {
+  const session = await requireAdmin({ permission: "settings.manage" });
+  const status = text(formData, "status") as "approved" | "rejected" | "cancelled";
+  if (!["approved", "rejected", "cancelled"].includes(status)) {
+    throw new Error("Invalid approval status.");
+  }
+  await updateApproval(id, {
+    status,
+    decidedBy: session.user.id,
+    decisionNotes: text(formData, "decisionNotes"),
+  });
+  await writeAuditLog({
+    action: "approval.updated",
+    entityType: "approval",
+    entityId: id,
+    summary: `Approval ${status}`,
+    actorId: session.user.id,
+  });
+  revalidatePath("/admin/approvals");
+}
+
+export async function updateSupplierAction(id: string, formData: FormData) {
+  const session = await requireAdmin({ permission: "suppliers.manage" });
+  await updateSupplier(id, {
+    name: text(formData, "name"),
+    contactName: text(formData, "contactName"),
+    email: text(formData, "email"),
+    telephone: text(formData, "telephone"),
+    leadTimeDays: formData.get("leadTimeDays")
+      ? parseInt(String(formData.get("leadTimeDays")), 10)
+      : undefined,
+    paymentTerms: text(formData, "paymentTerms"),
+    active: formData.get("active") !== "off",
+  });
+  await writeAuditLog({
+    action: "supplier.updated",
+    entityType: "supplier",
+    entityId: id,
+    summary: "Updated supplier",
+    actorId: session.user.id,
+  });
+  revalidatePath("/admin/suppliers");
+}
+
+export async function updateSupplierOfferAction(
+  id: string,
+  formData: FormData,
+) {
+  const session = await requireAdmin({ permission: "suppliers.manage" });
+  await updateSupplierOffer(id, {
+    unitCost: formData.get("unitCost")
+      ? parseFloat(String(formData.get("unitCost")))
+      : undefined,
+    minimumOrderQuantity: formData.get("minimumOrderQuantity")
+      ? parseInt(String(formData.get("minimumOrderQuantity")), 10)
+      : undefined,
+    availableQuantity: formData.get("availableQuantity")
+      ? parseInt(String(formData.get("availableQuantity")), 10)
+      : undefined,
+    leadTimeDays: formData.get("leadTimeDays")
+      ? parseInt(String(formData.get("leadTimeDays")), 10)
+      : undefined,
+    validUntil: text(formData, "validUntil"),
+    isPreferred: formData.get("isPreferred") === "on",
+    active: formData.get("active") !== "off",
+  });
+  await writeAuditLog({
+    action: "supplier.offer.updated",
+    entityType: "supplier_offer",
+    entityId: id,
+    summary: "Updated supplier offer",
+    actorId: session.user.id,
+  });
+  revalidatePath("/admin/suppliers");
 }

@@ -202,11 +202,13 @@ insert into public.school_pack_items (
   pack_id, product_id, legacy_item_id, pack_quantity, school_wording,
   school_notes, selling_price_override, sort_order, active
 )
-select
-  i.pack_id, i.master_product_id, i.id, greatest(i.quantity, 1), i.name,
+select distinct on (i.pack_id, i.master_product_id, trim(i.name))
+  i.pack_id, i.master_product_id, i.id, greatest(i.quantity, 1), trim(i.name),
   i.description, i.unit_price, i.sort_order, i.visible
 from public.stationery_items i
 where i.master_product_id is not null
+  and nullif(trim(i.name), '') is not null
+order by i.pack_id, i.master_product_id, trim(i.name), i.sort_order
 on conflict (legacy_item_id) do nothing;
 
 -- ---------------------------------------------------

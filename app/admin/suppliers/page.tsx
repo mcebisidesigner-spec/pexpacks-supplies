@@ -10,6 +10,8 @@ import {
 import {
   createSupplierAction,
   createSupplierOfferAction,
+  updateSupplierAction,
+  updateSupplierOfferAction,
 } from "../operations-actions";
 import admin from "../admin.module.css";
 import styles from "../operations.module.css";
@@ -174,6 +176,9 @@ export default async function SuppliersPage() {
                   <th>Payment terms</th>
                   <th>Offers</th>
                   <th>Status</th>
+                  {hasPermission(session, "suppliers.manage") ? (
+                    <th>Actions</th>
+                  ) : null}
                 </tr>
               </thead>
               <tbody>
@@ -203,6 +208,56 @@ export default async function SuppliersPage() {
                         {supplier.active ? "Active" : "Inactive"}
                       </span>
                     </td>
+                    {hasPermission(session, "suppliers.manage") ? (
+                      <td>
+                        <form
+                          action={updateSupplierAction.bind(null, supplier.id)}
+                          className={styles.inlineForm}
+                        >
+                          <input
+                            className={styles.field}
+                            name="name"
+                            defaultValue={supplier.name}
+                            placeholder="Name"
+                          />
+                          <input
+                            className={styles.field}
+                            name="contactName"
+                            defaultValue={supplier.contact_name || ""}
+                            placeholder="Contact"
+                          />
+                          <input
+                            className={styles.field}
+                            name="email"
+                            defaultValue={supplier.email || ""}
+                            placeholder="Email"
+                          />
+                          <input
+                            className={styles.field}
+                            name="telephone"
+                            defaultValue={supplier.telephone || ""}
+                            placeholder="Phone"
+                          />
+                          <input
+                            className={styles.field}
+                            name="leadTimeDays"
+                            type="number"
+                            min="0"
+                            defaultValue={supplier.lead_time_days ?? ""}
+                            placeholder="Lead days"
+                          />
+                          <input
+                            className={styles.field}
+                            name="paymentTerms"
+                            defaultValue={supplier.payment_terms || ""}
+                            placeholder="Payment terms"
+                          />
+                          <button className={styles.buttonSecondary}>
+                            Save
+                          </button>
+                        </form>
+                      </td>
+                    ) : null}
                   </tr>
                 ))}
               </tbody>
@@ -233,6 +288,9 @@ export default async function SuppliersPage() {
                   <th>Lead time</th>
                   <th>Valid until</th>
                   <th>Preference</th>
+                  {hasPermission(session, "suppliers.manage") ? (
+                    <th>Actions</th>
+                  ) : null}
                 </tr>
               </thead>
               <tbody>
@@ -263,6 +321,64 @@ export default async function SuppliersPage() {
                         {offer.is_preferred ? "Preferred" : "Alternative"}
                       </span>
                     </td>
+                    {hasPermission(session, "suppliers.manage") ? (
+                      <td>
+                        <form
+                          action={updateSupplierOfferAction.bind(
+                            null,
+                            offer.id,
+                          )}
+                          className={styles.inlineForm}
+                        >
+                          <input
+                            className={styles.field}
+                            name="unitCost"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            defaultValue={offer.unit_cost}
+                          />
+                          <input
+                            className={styles.field}
+                            name="minimumOrderQuantity"
+                            type="number"
+                            min="1"
+                            defaultValue={offer.minimum_order_quantity}
+                          />
+                          <input
+                            className={styles.field}
+                            name="availableQuantity"
+                            type="number"
+                            min="0"
+                            defaultValue={offer.available_quantity ?? ""}
+                          />
+                          <input
+                            className={styles.field}
+                            name="leadTimeDays"
+                            type="number"
+                            min="0"
+                            defaultValue={offer.lead_time_days ?? ""}
+                          />
+                          <DateField
+                            className={styles.field}
+                            name="validUntil"
+                            defaultValue={offer.valid_until || ""}
+                            ariaLabel="Valid until"
+                          />
+                          <label className={styles.inlineForm}>
+                            <input
+                              name="isPreferred"
+                              type="checkbox"
+                              defaultChecked={offer.is_preferred}
+                            />{" "}
+                            Preferred
+                          </label>
+                          <button className={styles.buttonSecondary}>
+                            Save
+                          </button>
+                        </form>
+                      </td>
+                    ) : null}
                   </tr>
                 ))}
               </tbody>

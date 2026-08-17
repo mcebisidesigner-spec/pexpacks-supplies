@@ -56,7 +56,10 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
     link.setAttribute("download", "pexpacks_stationery_template.csv");
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    if (link.parentNode) {
+      link.parentNode.removeChild(link);
+    }
+
   };
 
   // Process CSV File with Papaparse

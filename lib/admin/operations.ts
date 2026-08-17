@@ -677,11 +677,22 @@ export async function updatePackingRecord(
   if (status === "quality_check")
     Object.assign(values, { checked_by: actorId, checked_at: now });
   if (status === "packed") Object.assign(values, { packed_at: now });
+  
+  const { data: record } = await db()
+    .from("packing_records")
+    .select("order_id")
+    .eq("id", id)
+    .single();
+  
   const { error } = await db()
     .from("packing_records")
     .update(values)
     .eq("id", id);
   assertNoError(error, "Unable to update packing");
+  
+  if (record?.order_id) {
+    await advanceOrderStatus(record.order_id);
+  }
 }
 
 export async function updateFulfilmentRecord(
@@ -691,6 +702,13 @@ export async function updateFulfilmentRecord(
   waybillNumber?: string,
 ) {
   const completed = ["collected", "delivered"].includes(status);
+  
+  const { data: record } = await db()
+    .from("fulfilment_records")
+    .select("order_id")
+    .eq("id", id)
+    .single();
+  
   const { error } = await db()
     .from("fulfilment_records")
     .update({
@@ -702,6 +720,10 @@ export async function updateFulfilmentRecord(
     })
     .eq("id", id);
   assertNoError(error, "Unable to update fulfilment");
+  
+  if (record?.order_id) {
+    await advanceOrderStatus(record.order_id);
+  }
 }
 
 export type TaskRow = {
@@ -765,6 +787,389 @@ export async function updateOperationalTaskStatus(id: string, status: string) {
     })
     .eq("id", id);
   assertNoError(error, "Unable to update the task");
+}
+
+export async function getTask(id: string) {
+  const { data, error } = await db()
+    .from("operational_tasks")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (isOperationsSchemaUnavailable(error)) return null;
+  assertNoError(error, "Unable to load the task");
+  return data as TaskRow | null;
+}
+
+export type SupplierReceiptRow = {
+  id: string;
+  purchase_order_id: string;
+  reference: string | null;
+  received_by: string | null;
+  received_at: string;
+  notes: string | null;
+};
+
+export type PurchaseOrderWithItems = {
+  id: string;
+  purchase_order_number: string;
+  supplier_id: string;
+  status: string;
+  expected_on: string | null;
+  notes: string | null;
+  created_at: string;
+  suppliers: { name: string; code: string } | null;
+  supplier_purchase_items: Array<{
+    id: string;
+    product_id: string;
+    ordered_quantity: number;
+    confirmed_quantity: number;
+    received_quantity: number;
+    unit_cost: number;
+    master_products: { name: string; sku: string } | null;
+  }>;
+};
+
+export async function listPurchaseOrdersForReceiving() {
+  const { data, error } = await db()
+    .from("supplier_purchase_orders")
+    .select(`
+      *,
+      suppliers(name, code),
+      supplier_purchase_items(
+        id,
+        product_id,
+        ordered_quantity,
+        confirmed_quantity,
+        received_quantity,
+        unit_cost,
+        master_products(name, sku)
+      )
+    `)
+    .in("status", ["sent", "confirmed", "partially_received"])
+    .order("created_at", { ascending: false });
+  if (isOperationsSchemaUnavailable(error))
+    return [] as PurchaseOrderWithItems[];
+  assertNoError(error, "Unable to load purchase orders");
+  return (data ?? []) as PurchaseOrderWithItems[];
+}
+
+export async function listSupplierReceipts(purchaseOrderId: string) {
+  const { data, error } = await db()
+    .from("supplier_receipts")
+    .select("*")
+    .eq("purchase_order_id", purchaseOrderId)
+    .order("received_at", { ascending: false });
+  if (isOperationsSchemaUnavailable(error))
+    return [] as SupplierReceiptRow[];
+  assertNoError(error, "Unable to load supplier receipts");
+  return (data ?? []) as SupplierReceiptRow[];
+}
+
+export async function createSupplierReceipt(input: {
+  purchaseOrderId: string;
+  receivedBy: string;
+  reference?: string;
+  notes?: string;
+  items: Array<{
+    purchaseItemId: string;
+    receivedQuantity: number;
+  }>;
+}) {
+  const client = db();
+  
+  const { data: receipt, error: receiptError } = await client
+    .from("supplier_receipts")
+    .insert({
+      purchase_order_id: input.purchaseOrderId,
+      received_by: input.receivedBy,
+      reference: input.reference?.trim() || null,
+      notes: input.notes?.trim() || null,
+    })
+    .select("id")
+    .single();
+  assertNoError(receiptError, "Unable to create supplier receipt");
+  
+  for (const item of input.items) {
+    if (item.receivedQuantity <= 0) continue;
+    
+    const { error: itemError } = await client
+      .from("supplier_purchase_items")
+      .update({
+        received_quantity: item.receivedQuantity,
+      })
+      .eq("id", item.purchaseItemId);
+    assertNoError(itemError, "Unable to update purchase item received quantity");
+  }
+  
+  const { data: po } = await client
+    .from("supplier_purchase_orders")
+    .select(`
+      id,
+      supplier_purchase_items(ordered_quantity, received_quantity)
+    `)
+    .eq("id", input.purchaseOrderId)
+    .single();
+  
+  if (po) {
+    const items = po.supplier_purchase_items || [];
+    const allFullyReceived = items.every(
+      (i: any) => i.received_quantity >= i.ordered_quantity,
+    );
+    const anyReceived = items.some(
+      (i: any) => i.received_quantity > 0,
+    );
+    
+    let newStatus = "confirmed";
+    if (allFullyReceived) newStatus = "received";
+    else if (anyReceived) newStatus = "partially_received";
+    
+    const { error: statusError } = await client
+      .from("supplier_purchase_orders")
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq("id", input.purchaseOrderId);
+    assertNoError(statusError, "Unable to update purchase order status");
+  }
+  
+  return receipt as { id: string };
+}
+
+export type ApprovalRow = {
+  id: string;
+  entity_type: string;
+  entity_id: string;
+  approval_type: string;
+  status: string;
+  requested_by: string | null;
+  decided_by: string | null;
+  reason: string | null;
+  decision_notes: string | null;
+  created_at: string;
+  decided_at: string | null;
+};
+
+export async function listApprovals(status?: string) {
+  let query = db()
+    .from("approvals")
+    .select("*")
+    .order("created_at", { ascending: false });
+  
+  if (status) {
+    query = query.eq("status", status);
+  }
+  
+  const { data, error } = await query.limit(250);
+  if (isOperationsSchemaUnavailable(error)) return [] as ApprovalRow[];
+  assertNoError(error, "Unable to load approvals");
+  return (data ?? []) as ApprovalRow[];
+}
+
+export async function updateApproval(
+  id: string,
+  input: {
+    status: "approved" | "rejected" | "cancelled";
+    decidedBy: string;
+    decisionNotes?: string;
+  },
+) {
+  const { error } = await db()
+    .from("approvals")
+    .update({
+      status: input.status,
+      decided_by: input.decidedBy,
+      decision_notes: input.decisionNotes?.trim() || null,
+      decided_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+  assertNoError(error, "Unable to update approval");
+}
+
+export async function updateSupplier(
+  id: string,
+  input: {
+    name?: string;
+    contactName?: string;
+    email?: string;
+    telephone?: string;
+    leadTimeDays?: number;
+    paymentTerms?: string;
+    active?: boolean;
+  },
+) {
+  const { error } = await db()
+    .from("suppliers")
+    .update({
+      ...(input.name !== undefined && { name: input.name.trim() }),
+      ...(input.contactName !== undefined && {
+        contact_name: input.contactName.trim() || null,
+      }),
+      ...(input.email !== undefined && { email: input.email.trim() || null }),
+      ...(input.telephone !== undefined && {
+        telephone: input.telephone.trim() || null,
+      }),
+      ...(input.leadTimeDays !== undefined && {
+        lead_time_days: input.leadTimeDays,
+      }),
+      ...(input.paymentTerms !== undefined && {
+        payment_terms: input.paymentTerms.trim() || null,
+      }),
+      ...(input.active !== undefined && { active: input.active }),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+  assertNoError(error, "Unable to update supplier");
+}
+
+export async function updateSupplierOffer(
+  id: string,
+  input: {
+    unitCost?: number;
+    minimumOrderQuantity?: number;
+    availableQuantity?: number;
+    leadTimeDays?: number;
+    validUntil?: string;
+    isPreferred?: boolean;
+    active?: boolean;
+  },
+) {
+  const client = db();
+  
+  if (input.isPreferred) {
+    const { data: offer } = await client
+      .from("supplier_offers")
+      .select("supplier_id, product_id")
+      .eq("id", id)
+      .single();
+    
+    if (offer) {
+      await client
+        .from("supplier_offers")
+        .update({ is_preferred: false })
+        .eq("supplier_id", offer.supplier_id)
+        .eq("product_id", offer.product_id)
+        .neq("id", id);
+    }
+  }
+  
+  const { error } = await client
+    .from("supplier_offers")
+    .update({
+      ...(input.unitCost !== undefined && { unit_cost: input.unitCost }),
+      ...(input.minimumOrderQuantity !== undefined && {
+        minimum_order_quantity: input.minimumOrderQuantity,
+      }),
+      ...(input.availableQuantity !== undefined && {
+        available_quantity: input.availableQuantity,
+      }),
+      ...(input.leadTimeDays !== undefined && {
+        lead_time_days: input.leadTimeDays,
+      }),
+      ...(input.validUntil !== undefined && {
+        valid_until: input.validUntil || null,
+      }),
+      ...(input.isPreferred !== undefined && {
+        is_preferred: input.isPreferred,
+      }),
+      ...(input.active !== undefined && { active: input.active }),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+  assertNoError(error, "Unable to update supplier offer");
+}
+
+export async function advanceOrderStatus(orderId: string) {
+  const client = db();
+  
+  const { data: order } = await client
+    .from("orders")
+    .select("id, status")
+    .eq("id", orderId)
+    .single();
+  
+  if (!order || order.status === "cancelled" || order.status === "refunded" || order.status === "delivered") {
+    return;
+  }
+  
+  const { data: packingRecords } = await client
+    .from("packing_records")
+    .select("status")
+    .eq("order_id", orderId);
+  
+  const { data: fulfilmentRecords } = await client
+    .from("fulfilment_records")
+    .select("status")
+    .eq("order_id", orderId);
+  
+  const packingStatuses = (packingRecords || []).map((r: any) => r.status);
+  const fulfilmentStatuses = (fulfilmentRecords || []).map((r: any) => r.status);
+  
+  let newStatus: string | null = null;
+  
+  if (fulfilmentStatuses.includes("delivered")) {
+    newStatus = "delivered";
+  } else if (packingStatuses.includes("packed")) {
+    newStatus = "packing";
+  } else if (packingStatuses.includes("quality_check") || packingStatuses.includes("packing")) {
+    newStatus = "packing";
+  } else if (packingStatuses.includes("ready")) {
+    newStatus = "packing";
+  }
+  
+  if (newStatus && newStatus !== order.status) {
+    const { error } = await client
+      .from("orders")
+      .update({
+        status: newStatus,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", orderId);
+    assertNoError(error, "Unable to advance order status");
+  }
+}
+
+export type TaskCommentRow = {
+  id: string;
+  task_id: string;
+  author_id: string | null;
+  body: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function listTaskComments(taskId: string) {
+  const { data, error } = await db()
+    .from("task_comments")
+    .select("*")
+    .eq("task_id", taskId)
+    .order("created_at", { ascending: true });
+  if (isOperationsSchemaUnavailable(error)) return [] as TaskCommentRow[];
+  assertNoError(error, "Unable to load task comments");
+  return (data ?? []) as TaskCommentRow[];
+}
+
+export async function createTaskComment(input: {
+  taskId: string;
+  authorId: string;
+  body: string;
+}) {
+  const { data, error } = await db()
+    .from("task_comments")
+    .insert({
+      task_id: input.taskId,
+      author_id: input.authorId,
+      body: input.body.trim(),
+    })
+    .select("id")
+    .single();
+  assertNoError(error, "Unable to create the comment");
+  return data as { id: string };
+}
+
+export async function deleteTaskComment(commentId: string) {
+  const { error } = await db()
+    .from("task_comments")
+    .delete()
+    .eq("id", commentId);
+  assertNoError(error, "Unable to delete the comment");
 }
 
 export async function getOperationsSummary() {
@@ -862,6 +1267,10 @@ export async function createSeason(input: {
   status?: string;
   isDefault?: boolean;
 }) {
+  if (input.isDefault) {
+    await db().from("seasons").update({ is_default: false }).eq("is_default", true);
+  }
+  
   const { data, error } = await db()
     .from("seasons")
     .insert({
@@ -893,6 +1302,10 @@ export async function updateSeason(
     isDefault?: boolean;
   },
 ) {
+  if (input.isDefault) {
+    await db().from("seasons").update({ is_default: false }).eq("is_default", true).neq("id", id);
+  }
+  
   const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
   if (input.name !== undefined) patch.name = input.name;
   if (input.academicYear !== undefined) patch.academic_year = input.academicYear;

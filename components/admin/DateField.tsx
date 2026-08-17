@@ -92,8 +92,18 @@ export function DateField({
   const [hour, setHour] = useState(initialTime.hour);
   const [minute, setMinute] = useState(initialTime.minute);
 
+  const [alignRight, setAlignRight] = useState(false);
+
   useEffect(() => {
     if (!open) return;
+    const updatePosition = () => {
+      if (rootRef.current) {
+        const rect = rootRef.current.getBoundingClientRect();
+        setAlignRight(rect.left + 340 > window.innerWidth);
+      }
+    };
+    updatePosition();
+
     const close = (event: PointerEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
     };
@@ -102,9 +112,11 @@ export function DateField({
     };
     document.addEventListener("pointerdown", close);
     window.addEventListener("keydown", escape);
+    window.addEventListener("resize", updatePosition);
     return () => {
       document.removeEventListener("pointerdown", close);
       window.removeEventListener("keydown", escape);
+      window.removeEventListener("resize", updatePosition);
     };
   }, [open]);
 
@@ -179,7 +191,7 @@ export function DateField({
       {open ? (
         <div
           id={dialogId}
-          className={styles.popover}
+          className={`${styles.popover} ${alignRight ? styles.alignRight : ""}`}
           role="dialog"
           aria-modal="false"
           aria-label={ariaLabel ?? "Choose date"}
