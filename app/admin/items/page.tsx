@@ -110,7 +110,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
               <table className={adminStyles.table}>
                 <thead>
                   <tr>
-                    <th>Item code</th>
+                    <th>ITEM CODE</th>
                     <th>ITEM NAME</th>
                     <th>Pack / Unit</th>
                     <th>Qty</th>
@@ -123,7 +123,7 @@ export default async function ItemsPage({ searchParams }: ItemsPageProps) {
                     <tr key={item.id}>
                       <td>
                         <span className={styles.mutedText}>
-                          {(item as { category?: string | null }).category || "—"}
+                          {(item as { category?: string | null; sku?: string | null }).category || (item as { sku?: string | null }).sku || "—"}
                         </span>
                       </td>
                       <td>

@@ -56,7 +56,7 @@ export function ItemsManager({ items }: ItemsManagerProps) {
               <tbody>
                 {visibleItems.map((item) => (
                   <tr key={item.id}>
-                    <td>{item.category || "-"}</td>
+                    <td>{item.category || (item as { sku?: string | null }).sku || "-"}</td>
                     <td>
                       <span className={styles.itemName}>{item.name}</span>
                     </td>

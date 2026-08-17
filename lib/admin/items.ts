@@ -186,6 +186,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
       const clauses = tokens.flatMap((t) => [
         `name.ilike.%${t}%`,
         `description.ilike.%${t}%`,
+        `category.ilike.%${t}%`,
       ]);
       query = query.or(clauses.join(","));
     }
