@@ -1,32 +1,13 @@
 import { requireAdmin } from "@/lib/admin/rbac";
-import {
-  getSystemSettings,
-  getIntegrationHealth,
-  getPerformanceMetrics,
-  getSystemSettingsAuditLogs,
-} from "@/lib/admin/system-settings";
-import { SettingsControlCentre } from "@/components/admin/settings/SettingsControlCentre";
+import { SettingsPageView } from "@/components/admin/views/SettingsPageView";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "System Control Centre | Admin | Pexpacks",
+  title: "Settings | Admin | Pexpacks",
 };
 
-export default async function SettingsPage() {
-  const session = await requireAdmin({ permission: "settings.manage" });
-  const [settings, integrations, performance, auditLogs] = await Promise.all([
-    getSystemSettings(),
-    getIntegrationHealth(),
-    getPerformanceMetrics(),
-    getSystemSettingsAuditLogs(50),
-  ]);
-
-  return (
-    <SettingsControlCentre
-      initialSettings={settings}
-      integrations={integrations}
-      performance={performance}
-      auditLogs={auditLogs}
-      userEmail={session.user.email ?? "admin@pexpacks.co.za"}
-    />
-  );
+export default async function AdminSettingsPage() {
+  await requireAdmin({ permission: "settings.manage" });
+  return <SettingsPageView />;
 }
