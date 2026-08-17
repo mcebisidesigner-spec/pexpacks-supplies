@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
-import { INVENTORY_ITEM_FILTER } from "@/lib/admin/item-constants";
+import {
+  INVENTORY_ITEM_FILTER,
+  inventoryItemNameKey,
+} from "@/lib/admin/item-constants";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -30,20 +33,28 @@ export async function GET(request: Request) {
       .select("id, name, description, specification, unit_price, quantity")
       .or(INVENTORY_ITEM_FILTER)
       .or(`name.ilike.%${cleanQuery}%,description.ilike.%${cleanQuery}%`)
-      .limit(8);
+      .limit(40);
 
     if (error) {
       console.error("[api/stationery/search] Query failed:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const items = (data || []).map((item) => ({
-      id: item.id,
-      title: item.name || "Stationery Item",
-      description: item.description || "",
-      category: item.specification || undefined,
-      unit_price: Number(item.unit_price ?? 0),
-    }));
+    const seen = new Set<string>();
+    const items = [];
+    for (const item of data || []) {
+      const key = inventoryItemNameKey(item.name || "Stationery Item");
+      if (seen.has(key)) continue;
+      seen.add(key);
+      items.push({
+        id: item.id,
+        title: item.name || "Stationery Item",
+        description: item.description || "",
+        category: item.specification || undefined,
+        unit_price: Number(item.unit_price ?? 0),
+      });
+      if (items.length >= 8) break;
+    }
 
     return NextResponse.json(items);
   } catch (err) {

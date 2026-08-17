@@ -28,6 +28,7 @@ export async function createPackAction(
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
+  revalidatePath("/admin/packs", "layout");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
   redirect(`/admin/packs/${result.pack.id}`);
@@ -49,6 +50,7 @@ export async function createSchoolPackAction(
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
+  revalidatePath("/admin/packs", "layout");
   revalidatePath(`/admin/packs/${schoolRoute}`);
   revalidatePath("/schools");
   revalidatePath("/", "layout");
@@ -108,6 +110,7 @@ export async function deletePackAction(id: string): Promise<void> {
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
+  revalidatePath("/admin/packs", "layout");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
 }
@@ -119,6 +122,7 @@ export async function duplicatePackAction(id: string): Promise<{ ok: boolean; pa
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
+  revalidatePath("/admin/packs", "layout");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
   return { ok: true, packId: result.packId };
@@ -168,6 +172,7 @@ export async function deleteSchoolPacksAction(schoolId: string): Promise<void> {
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");
+  revalidatePath("/admin/packs", "layout");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
 }

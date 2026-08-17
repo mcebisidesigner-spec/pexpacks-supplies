@@ -3,3 +3,7 @@
 export const PACK_LINE_INVENTORY_MARKER = "__pexpacks_pack_line__";
 export const INVENTORY_ITEM_FILTER =
   `image.is.null,image.neq.${PACK_LINE_INVENTORY_MARKER}`;
+
+export function inventoryItemNameKey(name: string): string {
+  return name.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-ZA");
+}

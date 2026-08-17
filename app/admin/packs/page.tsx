@@ -18,6 +18,9 @@ import shared from "../schools/schools.module.css";
 import adminStyles from "../admin.module.css";
 import styles from "./packs.module.css";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface PacksPageProps {
   searchParams: Promise<{
     q?: string;

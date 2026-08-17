@@ -11,6 +11,7 @@ import { ItemsManager } from "./ItemsManager";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import { formatCurrency } from "@/lib/formatCurrency";
 import type { ItemRow } from "@/lib/admin/items";
+import { PACK_LINE_INVENTORY_MARKER } from "@/lib/admin/item-constants";
 import styles from "./ItemsManager.module.css";
 
 interface PackItemsSectionProps {
@@ -59,6 +60,7 @@ export function PackItemsSection({
       if (item.category) formData.set("category", item.category);
       formData.set("price", String(priceVal));
       formData.set("quantity", "1");
+      formData.set("image", PACK_LINE_INVENTORY_MARKER);
       formData.set("sort_order", String(items.length + 1));
       formData.set("visible", "on");
 

@@ -13,6 +13,7 @@ import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import {
   INVENTORY_ITEM_FILTER,
   PACK_LINE_INVENTORY_MARKER,
+  inventoryItemNameKey,
 } from "@/lib/admin/item-constants";
 
 export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"] & {
@@ -213,14 +214,25 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
 
   const rows = (data ?? []) as unknown as (ItemRow & { stationery_packs?: { title: string | null } | null })[];
 
+  const uniqueRows = Array.from(
+    rows.reduce((itemsByName, row) => {
+      const key = inventoryItemNameKey(row.name);
+      if (!itemsByName.has(key)) itemsByName.set(key, row);
+      return itemsByName;
+    }, new Map<string, (typeof rows)[number]>()).values()
+  );
+  const rawTotal = count ?? 0;
+  const coversAllResults = from === 0 && rows.length === rawTotal;
+  const total = coversAllResults ? uniqueRows.length : rawTotal;
+
   return {
-    items: rows.map((row) => ({
+    items: uniqueRows.map((row) => ({
       ...row,
       pack_title: row.stationery_packs?.title ?? null,
     })),
-    total: count ?? 0,
+    total,
     page,
-    pageCount: Math.max(1, Math.ceil((count ?? 0) / pageSize)),
+    pageCount: Math.max(1, Math.ceil(total / pageSize)),
   };
 }
 
