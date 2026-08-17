@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listOrders, type OrderListFilters } from "@/lib/admin/orders";
 import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
+import { DateField } from "@/components/admin/DateField";
 import shared from "../schools/schools.module.css";
 import adminStyles from "../admin.module.css";
 import styles from "./orders.module.css";
@@ -21,7 +22,7 @@ const PAGE_SIZE = 20;
 
 function buildHref(
   params: Record<string, string | undefined>,
-  overrides: Record<string, string | undefined>
+  overrides: Record<string, string | undefined>,
 ): string {
   const merged = { ...params, ...overrides };
   const qs = new URLSearchParams();
@@ -66,7 +67,8 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
     pageSize: PAGE_SIZE,
   };
 
-  const { orders, total, pageCount, statusOptions, packTypes } = await listOrders(filters);
+  const { orders, total, pageCount, statusOptions, packTypes } =
+    await listOrders(filters);
   const baseParams = {
     q: filters.q,
     status: filters.status,
@@ -76,7 +78,11 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
   };
 
   const hasFilters = Boolean(
-    filters.q || filters.status || filters.pack_type || filters.from || filters.to
+    filters.q ||
+    filters.status ||
+    filters.pack_type ||
+    filters.from ||
+    filters.to,
   );
 
   const exportQs = new URLSearchParams();
@@ -111,7 +117,11 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
             className={`${shared.filterInput} ${shared.searchInput}`}
             aria-label="Search orders"
           />
-          <select name="status" defaultValue={filters.status ?? ""} className={shared.filterInput}>
+          <select
+            name="status"
+            defaultValue={filters.status ?? ""}
+            className={shared.filterInput}
+          >
             <option value="">All statuses</option>
             {statusOptions.map((s) => (
               <option key={s.value} value={s.value}>
@@ -119,7 +129,11 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
               </option>
             ))}
           </select>
-          <select name="pack_type" defaultValue={filters.pack_type ?? ""} className={shared.filterInput}>
+          <select
+            name="pack_type"
+            defaultValue={filters.pack_type ?? ""}
+            className={shared.filterInput}
+          >
             <option value="">All pack types</option>
             {packTypes.map((t) => (
               <option key={t} value={t}>
@@ -127,19 +141,19 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
               </option>
             ))}
           </select>
-          <input
-            type="date"
+          <DateField
             name="from"
             defaultValue={filters.from ?? ""}
             className={shared.filterInput}
-            aria-label="From date"
+            ariaLabel="From date"
+            placeholder="From date"
           />
-          <input
-            type="date"
+          <DateField
             name="to"
             defaultValue={filters.to ?? ""}
             className={shared.filterInput}
-            aria-label="To date"
+            ariaLabel="To date"
+            placeholder="To date"
           />
           <button type="submit" className={shared.applyButton}>
             Apply
@@ -193,8 +207,12 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                 {orders.map((order) => (
                   <tr key={order.id}>
                     <td>
-                      <div className={styles.reference}>{order.order_reference}</div>
-                      <div className={styles.mutedText}>{formatDate(order.created_at)}</div>
+                      <div className={styles.reference}>
+                        {order.order_reference}
+                      </div>
+                      <div className={styles.mutedText}>
+                        {formatDate(order.created_at)}
+                      </div>
                     </td>
                     <td>
                       <div>{order.buyer_name}</div>
@@ -207,7 +225,9 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
                       <div className={styles.mutedText}>{order.grade}</div>
                     </td>
                     <td>{packTypeLabel(order.pack_type)}</td>
-                    <td className={styles.amountValue}>{money(order.estimated_total)}</td>
+                    <td className={styles.amountValue}>
+                      {money(order.estimated_total)}
+                    </td>
                     <td>
                       <OrderStatusBadge status={order.status} />
                     </td>

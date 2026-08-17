@@ -6,11 +6,15 @@ import { useFormStatus } from "react-dom";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
 import { SCHOOL_STATUSES } from "@/lib/admin/school-constants";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
+import { DateField } from "@/components/admin/DateField";
 import styles from "./SchoolForm.module.css";
 
 interface SchoolFormProps {
   school: SchoolRow | null;
-  action: (prev: SchoolFormState, formData: FormData) => Promise<SchoolFormState>;
+  action: (
+    prev: SchoolFormState,
+    formData: FormData,
+  ) => Promise<SchoolFormState>;
 }
 
 function SubmitButton({ label }: { label: string }) {
@@ -27,11 +31,14 @@ function str(v: string | number | null | undefined): string {
 }
 
 export function SchoolForm({ school, action }: SchoolFormProps) {
-  const [state, formAction] = useActionState<SchoolFormState, FormData>(action, {
-    ok: false,
-  });
+  const [state, formAction] = useActionState<SchoolFormState, FormData>(
+    action,
+    {
+      ok: false,
+    },
+  );
   const [logoPreview, setLogoPreview] = useState<string | null>(
-    school?.logo ?? null
+    school?.logo ?? null,
   );
   const [logoValue, setLogoValue] = useState<string>(school?.logo ?? "");
 
@@ -188,14 +195,19 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="parent_collection_accepted">
+            <label
+              className={styles.label}
+              htmlFor="parent_collection_accepted"
+            >
               Parent collection
             </label>
             <select
               id="parent_collection_accepted"
               name="parent_collection_accepted"
               className={styles.input}
-              defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"}
+              defaultValue={
+                school?.parent_collection_accepted ? "accepted" : "non_accepted"
+              }
             >
               <option value="accepted">Accepted</option>
               <option value="non_accepted">Non-accepted</option>
@@ -248,7 +260,9 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               defaultValue={str(school?.custom_badge) || "2026 Packs"}
               placeholder="e.g. 2026 Packs"
             />
-            <span className={styles.hint}>Custom badge pill shown on search card (e.g. 2026 Packs).</span>
+            <span className={styles.hint}>
+              Custom badge pill shown on search card (e.g. 2026 Packs).
+            </span>
             {err("custom_badge")}
           </div>
 
@@ -271,12 +285,13 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             <label className={styles.label} htmlFor="partner_since">
               Partner since
             </label>
-            <input
+            <DateField
               id="partner_since"
               name="partner_since"
-              type="date"
               className={styles.input}
               defaultValue={str(school?.partner_since)}
+              ariaLabel="Partner since"
+              placeholder="Select partnership date"
             />
             {err("partner_since")}
           </div>

@@ -4,6 +4,7 @@ import { listPayments, type PaymentFilters } from "@/lib/admin/payments";
 import { PAYMENT_GATEWAY_LABELS } from "@/lib/admin/order-constants";
 import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { RefundButton } from "@/components/admin/orders/RefundButton";
+import { DateField } from "@/components/admin/DateField";
 import shared from "../schools/schools.module.css";
 import adminStyles from "../admin.module.css";
 import orderStyles from "../orders/orders.module.css";
@@ -160,19 +161,19 @@ export default async function PaymentsPage({
               </option>
             ))}
           </select>
-          <input
-            type="date"
+          <DateField
             name="from"
             defaultValue={filters.from ?? ""}
             className={shared.filterInput}
-            aria-label="From date"
+            ariaLabel="From date"
+            placeholder="From date"
           />
-          <input
-            type="date"
+          <DateField
             name="to"
             defaultValue={filters.to ?? ""}
             className={shared.filterInput}
-            aria-label="To date"
+            ariaLabel="To date"
+            placeholder="To date"
           />
           <button type="submit" className={shared.applyButton}>
             Apply

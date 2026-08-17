@@ -1,0 +1,233 @@
+.root {
+  position: relative;
+  min-width: 154px;
+}
+
+.trigger {
+  display: flex;
+  width: 100%;
+  min-height: 42px;
+  align-items: center;
+  gap: 9px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trigger svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  color: var(--admin-accent-strong);
+}
+
+.trigger span {
+  overflow: hidden;
+  color: var(--admin-text-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trigger.hasValue span {
+  color: var(--admin-text);
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 140;
+  width: min(330px, calc(100vw - 40px));
+  padding: 14px;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: 8px;
+  background: var(--admin-surface);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.58);
+}
+
+.brandRow,
+.monthRow,
+.actions,
+.timeRow {
+  display: flex;
+  align-items: center;
+}
+
+.brandRow {
+  justify-content: space-between;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--admin-border);
+  color: var(--admin-text-3);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.brandRow strong {
+  color: var(--admin-accent-strong);
+}
+
+.brandRow button,
+.monthRow button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid var(--admin-border);
+  border-radius: 7px;
+  background: var(--admin-surface-2);
+  color: var(--admin-text-2);
+  cursor: pointer;
+}
+
+.brandRow svg,
+.monthRow svg {
+  width: 15px;
+  height: 15px;
+}
+
+.monthRow {
+  justify-content: space-between;
+  margin: 11px 0 9px;
+}
+
+.monthRow strong {
+  color: var(--admin-heading);
+  font-size: 14px;
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.weekdays span {
+  padding: 7px 0;
+  color: var(--admin-text-3);
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.grid button {
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--admin-text-2);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.grid button:hover:not(:disabled) {
+  border-color: var(--admin-border-strong);
+  background: var(--admin-surface-2);
+  color: var(--admin-heading);
+}
+
+.grid .outside {
+  color: var(--admin-muted);
+  opacity: 0.62;
+}
+
+.grid .today {
+  border-color: var(--admin-accent);
+  color: var(--admin-accent-strong);
+}
+
+.grid .selected,
+.grid .selected:hover:not(:disabled) {
+  border-color: var(--admin-accent);
+  background: var(--admin-accent);
+  color: var(--admin-accent-text);
+}
+
+.grid button:disabled {
+  cursor: not-allowed;
+  opacity: 0.22;
+}
+
+.timeRow {
+  justify-content: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid var(--admin-border);
+  border-radius: 7px;
+  background: var(--admin-bg);
+  color: var(--admin-text-3);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.timeRow input {
+  width: 52px;
+  height: 34px;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: 7px;
+  background: var(--admin-surface-2);
+  color: var(--admin-heading);
+  font: inherit;
+  text-align: center;
+}
+
+.actions {
+  justify-content: flex-end;
+  gap: 7px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--admin-border);
+}
+
+.actions button {
+  min-height: 34px;
+  padding: 0 11px;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.textButton {
+  border: 1px solid var(--admin-border);
+  background: var(--admin-surface-2);
+  color: var(--admin-text-2);
+}
+
+.applyButton {
+  border: 1px solid var(--admin-accent);
+  background: var(--admin-accent);
+  color: var(--admin-accent-text);
+}
+
+.applyButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.trigger:focus-visible,
+.popover button:focus-visible,
+.popover input:focus-visible {
+  outline: 3px solid var(--admin-focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 620px) {
+  .root {
+    width: 100%;
+  }
+
+  .popover {
+    position: fixed;
+    top: 50%;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    transform: translateY(-50%);
+  }
+}

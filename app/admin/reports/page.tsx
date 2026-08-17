@@ -8,6 +8,7 @@ import {
   getTopSchools,
 } from "@/lib/admin/reports";
 import { orderStatusLabel } from "@/lib/admin/order-constants";
+import { DateField } from "@/components/admin/DateField";
 import adminStyles from "../admin.module.css";
 import styles from "./reports.module.css";
 
@@ -43,12 +44,36 @@ export default async function ReportsPage({
   ]);
 
   const stats = [
-    { label: "Total orders", value: String(summary.totalOrders), help: "All statuses" },
-    { label: "Paid", value: String(summary.paidOrders), help: "Completed orders" },
-    { label: "Refunded", value: String(summary.refundedOrders), help: "Refunded orders" },
-    { label: "Cancelled", value: String(summary.cancelledOrders), help: "Cancelled orders" },
-    { label: "Revenue", value: currency.format(summary.revenue), help: "Paid orders only" },
-    { label: "Avg order value", value: currency.format(summary.avgOrderValue), help: "Paid orders only" },
+    {
+      label: "Total orders",
+      value: String(summary.totalOrders),
+      help: "All statuses",
+    },
+    {
+      label: "Paid",
+      value: String(summary.paidOrders),
+      help: "Completed orders",
+    },
+    {
+      label: "Refunded",
+      value: String(summary.refundedOrders),
+      help: "Refunded orders",
+    },
+    {
+      label: "Cancelled",
+      value: String(summary.cancelledOrders),
+      help: "Cancelled orders",
+    },
+    {
+      label: "Revenue",
+      value: currency.format(summary.revenue),
+      help: "Paid orders only",
+    },
+    {
+      label: "Avg order value",
+      value: currency.format(summary.avgOrderValue),
+      help: "Paid orders only",
+    },
   ];
 
   return (
@@ -58,34 +83,41 @@ export default async function ReportsPage({
           <div>
             <h1 className={styles.pageTitle}>Reports</h1>
             <p className={styles.subtitle}>
-              Order performance for the selected date range. Defaults to the last 30 days.
+              Order performance for the selected date range. Defaults to the
+              last 30 days.
             </p>
           </div>
         </div>
 
-        <form method="get" action="/admin/reports" className={styles.filterForm}>
+        <form
+          method="get"
+          action="/admin/reports"
+          className={styles.filterForm}
+        >
           <div className={styles.filterField}>
             <label className={styles.filterLabel} htmlFor="from">
               From
             </label>
-            <input
+            <DateField
               id="from"
               name="from"
-              type="date"
               className={styles.filterInput}
               defaultValue={range.from}
+              ariaLabel="Report start date"
+              placeholder="Start date"
             />
           </div>
           <div className={styles.filterField}>
             <label className={styles.filterLabel} htmlFor="to">
               To
             </label>
-            <input
+            <DateField
               id="to"
               name="to"
-              type="date"
               className={styles.filterInput}
               defaultValue={range.to}
+              ariaLabel="Report end date"
+              placeholder="End date"
             />
           </div>
           <button type="submit" className={styles.applyButton}>

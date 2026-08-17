@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
-import { AlertTriangle, Trash2, ShieldAlert } from "lucide-react";
+import { useEffect } from "react";
+import { AlertTriangle, Trash2, X } from "lucide-react";
 import styles from "./ConfirmModal.module.css";
 
 export interface ConfirmModalProps {
@@ -42,18 +42,43 @@ export function ConfirmModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-modal-title"
+      aria-describedby="confirm-modal-description"
       onClick={onCancel}
     >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.brandRow}>
+          <span>
+            <strong>Pexpacks</strong> Confirmation
+          </span>
+          <button
+            type="button"
+            onClick={onCancel}
+            aria-label="Close confirmation"
+          >
+            <X aria-hidden="true" />
+          </button>
+        </div>
         <div className={styles.headerRow}>
-          <div className={variant === "danger" ? styles.iconWrapperDanger : styles.iconWrapperInfo}>
-            {variant === "danger" ? <Trash2 size={24} /> : <AlertTriangle size={24} />}
+          <div
+            className={
+              variant === "danger"
+                ? styles.iconWrapperDanger
+                : styles.iconWrapperInfo
+            }
+          >
+            {variant === "danger" ? (
+              <Trash2 size={24} />
+            ) : (
+              <AlertTriangle size={24} />
+            )}
           </div>
           <div className={styles.titleBlock}>
             <h2 id="confirm-modal-title" className={styles.title}>
               {title}
             </h2>
-            <p className={styles.description}>{message}</p>
+            <p id="confirm-modal-description" className={styles.description}>
+              {message}
+            </p>
           </div>
         </div>
 
@@ -63,7 +88,11 @@ export function ConfirmModal({
           </button>
           <button
             type="button"
-            className={variant === "danger" ? styles.confirmBtnDanger : styles.confirmBtnPrimary}
+            className={
+              variant === "danger"
+                ? styles.confirmBtnDanger
+                : styles.confirmBtnPrimary
+            }
             onClick={onConfirm}
             autoFocus
           >

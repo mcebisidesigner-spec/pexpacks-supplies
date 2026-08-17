@@ -4,20 +4,27 @@ import { Laptop, X } from "lucide-react";
 import styles from "./DeviceActivityPrompt.module.css";
 
 interface DeviceActivityPromptProps {
-  onAllow: () => void;
-  onBlock: () => void;
+  onContinue: () => void;
+  onDismiss: () => void;
 }
 
-export function DeviceActivityPrompt({ onAllow, onBlock }: DeviceActivityPromptProps) {
+export function DeviceActivityPrompt({
+  onContinue,
+  onDismiss,
+}: DeviceActivityPromptProps) {
   return (
-    <div className={styles.popupWrap} role="dialog" aria-labelledby="device-prompt-title">
+    <div
+      className={styles.popupWrap}
+      role="dialog"
+      aria-labelledby="device-prompt-title"
+    >
       <div className={styles.header}>
         <span id="device-prompt-title" className={styles.domainLabel}>
           <span className={styles.domainTag}>Pexpacks</span> Security
         </span>
         <button
           type="button"
-          onClick={onBlock}
+          onClick={onDismiss}
           className={styles.closeBtn}
           aria-label="Close prompt"
         >
@@ -30,16 +37,18 @@ export function DeviceActivityPrompt({ onAllow, onBlock }: DeviceActivityPromptP
           <Laptop size={20} />
         </div>
         <p className={styles.messageText}>
-          Pexpacks Supplies wants to know when you are actively using this device to protect dashboard database security.
+          Pexpacks protects this dashboard by closing the session after 20
+          minutes without activity. The timer pauses while you work in another
+          application.
         </p>
       </div>
 
       <div className={styles.actions}>
-        <button type="button" onClick={onAllow} className={styles.allowBtn}>
-          Allow
+        <button type="button" onClick={onContinue} className={styles.allowBtn}>
+          Continue
         </button>
-        <button type="button" onClick={onBlock} className={styles.blockBtn}>
-          Block
+        <button type="button" onClick={onDismiss} className={styles.blockBtn}>
+          Dismiss
         </button>
       </div>
     </div>

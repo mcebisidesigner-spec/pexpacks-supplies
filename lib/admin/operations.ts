@@ -32,7 +32,7 @@ function assertNoError(error: DatabaseError, context: string) {
   if (!error) return;
   if (isOperationsSchemaUnavailable(error)) {
     throw new Error(
-      `${context}: operations database setup is pending. Apply Supabase migration 00029_operations_foundation.sql.`,
+      `${context}: operations database setup is pending. Apply Supabase migration 00030_operations_foundation.sql.`,
     );
   }
   throw new Error(`${context}: ${error.message || "Unknown database error"}`);

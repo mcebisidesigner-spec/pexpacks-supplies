@@ -1,5 +1,6 @@
 import { ShoppingCart } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
+import { DateField } from "@/components/admin/DateField";
 import {
   listProcurementRequirements,
   listSupplierPurchaseOrders,
@@ -113,11 +114,11 @@ export default async function ProcurementPage() {
               placeholder="Unit cost"
               required
             />
-            <input
+            <DateField
               className={styles.field}
               name="expectedOn"
-              type="date"
-              aria-label="Expected date"
+              ariaLabel="Expected date"
+              placeholder="Expected date"
             />
             <input
               className={`${styles.field} ${styles.wide}`}

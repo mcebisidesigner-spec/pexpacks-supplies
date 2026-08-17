@@ -1,186 +1,194 @@
-/* ===================================================
-   PexPacks Supplies — Custom Confirmation Modal System
-   Pexpacks Dark Brand Aesthetic & Design Language
-   =================================================== */
-
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
   padding: 20px;
+  place-items: center;
   background: rgba(2, 6, 23, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 160ms ease-out;
 }
 
 .modal {
-  position: relative;
-  width: 100%;
-  max-width: 480px;
-  box-sizing: border-box;
-  background: #090f1d; /* exact navy dark surface */
-  border: 1px solid rgba(255, 255, 255, 0.12); /* subtle border ring */
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow:
-    0 24px 64px rgba(0, 0, 0, 0.75),
-    0 0 0 1px rgba(255, 255, 255, 0.06);
   display: flex;
+  width: min(440px, 100%);
   flex-direction: column;
   gap: 16px;
-  overflow: hidden;
-  animation: scaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 20px;
+  border: 1px solid var(--admin-border-strong, #334155);
+  border-radius: 8px;
+  background: var(--admin-surface, #0f172a);
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.68);
+  animation: enter 180ms ease-out;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--admin-border, #1e293b);
+  color: var(--admin-text-3, #94a3b8);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.brandRow strong {
+  color: var(--admin-accent-strong, #34d399);
+}
+
+.brandRow button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid var(--admin-border, #1e293b);
+  border-radius: 7px;
+  background: var(--admin-surface-2, #1e293b);
+  color: var(--admin-text-3, #94a3b8);
+  cursor: pointer;
+}
+
+.brandRow svg {
+  width: 15px;
+  height: 15px;
 }
 
 .headerRow {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  width: 100%;
   min-width: 0;
-  box-sizing: border-box;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.iconWrapperDanger,
+.iconWrapperInfo {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border-radius: 8px;
 }
 
 .iconWrapperDanger {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.28);
+  border: 1px solid var(--admin-red, #f87171);
+  background: var(--admin-red-subtle, rgba(248, 113, 113, 0.14));
+  color: var(--admin-red, #f87171);
 }
 
 .iconWrapperInfo {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(16, 185, 129, 0.12);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.28);
+  border: 1px solid var(--admin-accent, #10b981);
+  background: var(--admin-accent-subtle, rgba(16, 185, 129, 0.14));
+  color: var(--admin-accent-strong, #34d399);
 }
 
 .titleBlock {
-  flex: 1 1 auto;
   min-width: 0;
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
 }
 
 .title {
   margin: 0;
-  font-family: inherit;
+  color: var(--admin-heading, #fff);
   font-size: 18px;
   font-weight: 800;
   line-height: 1.3;
-  color: #ffffff;
-  letter-spacing: 0.01em;
-  white-space: normal;
-  word-break: normal;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .description {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: #cbd5e1;
-  white-space: normal;
-  word-break: normal;
-  overflow-wrap: break-word;
-  max-width: 100%;
+  margin: 6px 0 0;
+  color: var(--admin-text-2, #cbd5e1);
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .buttonRow {
   display: flex;
-  align-items: center;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 12px;
-  width: 100%;
+  gap: 9px;
+  padding-top: 4px;
+}
+
+.cancelBtn,
+.confirmBtnDanger,
+.confirmBtnPrimary {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .cancelBtn {
-  min-height: 42px;
-  padding: 0 22px;
-  border-radius: 999px;
-  border: 1px solid #283650;
-  background: #172033;
-  color: #cbd5e1;
-  font-size: 13.5px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.cancelBtn:hover {
-  background: #232e48;
-  color: #ffffff;
-  border-color: #3b4c6e;
+  border: 1px solid var(--admin-border-strong, #334155);
+  background: var(--admin-surface-2, #1e293b);
+  color: var(--admin-text-2, #cbd5e1);
 }
 
 .confirmBtnDanger {
-  min-height: 42px;
-  padding: 0 24px;
-  border-radius: 999px;
-  border: none;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: #ffffff;
-  font-size: 13.5px;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.55), 0 2px 8px rgba(220, 38, 38, 0.35);
-  transition: all 0.15s ease;
-}
-
-.confirmBtnDanger:hover {
-  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-  box-shadow: 0 6px 24px rgba(239, 68, 68, 0.7), 0 4px 12px rgba(220, 38, 38, 0.45);
-  transform: translateY(-1px);
+  border: 1px solid var(--admin-red, #f87171);
+  background: var(--admin-red, #f87171);
+  color: #300505;
 }
 
 .confirmBtnPrimary {
-  min-height: 44px;
-  padding: 0 22px;
-  border-radius: 999px;
-  border: 1px solid #10b981;
-  background: #10b981;
-  color: #020617;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
-  transition: all 0.15s ease;
+  border: 1px solid var(--admin-accent, #10b981);
+  background: var(--admin-accent, #10b981);
+  color: var(--admin-accent-text, #022c22);
 }
 
+.cancelBtn:hover,
+.brandRow button:hover {
+  color: var(--admin-heading, #fff);
+}
+
+.confirmBtnDanger:hover,
 .confirmBtnPrimary:hover {
-  background: #34d399;
-  box-shadow: 0 6px 20px rgba(52, 211, 153, 0.5);
-  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.modal button:focus-visible {
+  outline: 3px solid var(--admin-focus, #34d399);
+  outline-offset: 2px;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-@keyframes scaleUp {
-  from { opacity: 0; transform: scale(0.94); }
-  to { opacity: 1; transform: scale(1); }
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 520px) {
+  .overlay {
+    padding: 12px;
+  }
+  .modal {
+    padding: 16px;
+  }
+  .buttonRow {
+    flex-direction: column-reverse;
+  }
+  .buttonRow button {
+    width: 100%;
+  }
 }

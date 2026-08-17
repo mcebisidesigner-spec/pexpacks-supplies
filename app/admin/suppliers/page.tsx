@@ -1,5 +1,6 @@
 import { Truck } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
+import { DateField } from "@/components/admin/DateField";
 import {
   isOperationsSchemaReady,
   listMasterProducts,
@@ -37,7 +38,7 @@ export default async function SuppliersPage() {
         <section className={styles.notice} role="status">
           <strong>Operations database setup required</strong>
           <p>
-            Apply Supabase migrations 00029 and 00030 to activate Makro, BSC
+            Apply Supabase migrations 00030 and 00031 to activate Makro, BSC
             Supplies, supplier offers and procurement records.
           </p>
         </section>
@@ -147,11 +148,11 @@ export default async function SuppliersPage() {
               min="0"
               placeholder="Lead time days"
             />
-            <input
+            <DateField
               className={styles.field}
               name="validUntil"
-              type="date"
-              aria-label="Valid until"
+              ariaLabel="Valid until"
+              placeholder="Valid until"
             />
             <label className={styles.inlineForm}>
               <input name="isPreferred" type="checkbox" /> Preferred offer

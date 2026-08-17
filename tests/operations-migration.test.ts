@@ -3,14 +3,14 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  resolve(process.cwd(), "supabase/migrations/00029_operations_foundation.sql"),
+  resolve(process.cwd(), "supabase/migrations/00030_operations_foundation.sql"),
   "utf8",
 ).toLowerCase();
 
 const supplierSeed = readFileSync(
   resolve(
     process.cwd(),
-    "supabase/migrations/00030_seed_current_suppliers.sql",
+    "supabase/migrations/00031_seed_current_suppliers.sql",
   ),
   "utf8",
 ).toLowerCase();

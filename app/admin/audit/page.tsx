@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listAuditLogs, type AuditFilters } from "@/lib/admin/audit";
+import { DateField } from "@/components/admin/DateField";
 import adminStyles from "../admin.module.css";
 import styles from "./audit.module.css";
 
@@ -20,7 +21,7 @@ const PAGE_SIZE = 25;
 
 function buildHref(
   params: Record<string, string | undefined>,
-  overrides: Record<string, string | undefined>
+  overrides: Record<string, string | undefined>,
 ): string {
   const merged = { ...params, ...overrides };
   const qs = new URLSearchParams();
@@ -66,7 +67,8 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
     pageSize: PAGE_SIZE,
   };
 
-  const { logs, total, pageCount, entityTypes, actions, actors } = await listAuditLogs(filters);
+  const { logs, total, pageCount, entityTypes, actions, actors } =
+    await listAuditLogs(filters);
   const baseParams = {
     q: filters.q,
     entity_type: filters.entity_type,
@@ -76,7 +78,12 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
     to: filters.to,
   };
   const hasFilters = Boolean(
-    filters.q || filters.entity_type || filters.action || filters.actor || filters.from || filters.to
+    filters.q ||
+    filters.entity_type ||
+    filters.action ||
+    filters.actor ||
+    filters.from ||
+    filters.to,
   );
   const canExport = hasPermission(session, "audit.export");
 
@@ -91,7 +98,10 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
             </span>
           </h1>
           {canExport ? (
-            <Link href={buildExportHref(baseParams)} className={styles.exportLink}>
+            <Link
+              href={buildExportHref(baseParams)}
+              className={styles.exportLink}
+            >
               Export CSV
             </Link>
           ) : null}
@@ -118,7 +128,11 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
               </option>
             ))}
           </select>
-          <select name="action" defaultValue={filters.action ?? ""} className={styles.filterInput}>
+          <select
+            name="action"
+            defaultValue={filters.action ?? ""}
+            className={styles.filterInput}
+          >
             <option value="">All actions</option>
             {actions.map((a) => (
               <option key={a} value={a}>
@@ -126,7 +140,11 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
               </option>
             ))}
           </select>
-          <select name="actor" defaultValue={filters.actor ?? ""} className={styles.filterInput}>
+          <select
+            name="actor"
+            defaultValue={filters.actor ?? ""}
+            className={styles.filterInput}
+          >
             <option value="">All actors</option>
             {actors.map((a) => (
               <option key={a} value={a}>
@@ -134,19 +152,19 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
               </option>
             ))}
           </select>
-          <input
-            type="date"
+          <DateField
             name="from"
             defaultValue={filters.from ?? ""}
             className={styles.filterInput}
-            aria-label="From date"
+            ariaLabel="From date"
+            placeholder="From date"
           />
-          <input
-            type="date"
+          <DateField
             name="to"
             defaultValue={filters.to ?? ""}
             className={styles.filterInput}
-            aria-label="To date"
+            ariaLabel="To date"
+            placeholder="To date"
           />
           <button type="submit" className={styles.applyButton}>
             Apply
@@ -171,7 +189,9 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
                 </svg>
               </div>
               <h2 className={adminStyles.emptyStateTitle}>
-                {hasFilters ? "No logs match your filters" : "No audit activity yet"}
+                {hasFilters
+                  ? "No logs match your filters"
+                  : "No audit activity yet"}
               </h2>
               <p className={adminStyles.emptyStateText}>
                 {hasFilters
@@ -198,21 +218,30 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
                 {logs.map((log) => (
                   <tr key={log.id}>
                     <td>{formatDateTime(log.created_at)}</td>
-                    <td className={styles.actorCell}>{log.actor_name ?? "—"}</td>
+                    <td className={styles.actorCell}>
+                      {log.actor_name ?? "—"}
+                    </td>
                     <td className={styles.actionCell}>{log.action}</td>
                     <td>
                       <div className={styles.entityCell}>
                         {log.entity_type}
-                        {log.entity_id ? ` · ${log.entity_id.slice(0, 12)}` : ""}
+                        {log.entity_id
+                          ? ` · ${log.entity_id.slice(0, 12)}`
+                          : ""}
                       </div>
                     </td>
                     <td>
                       <div className={styles.summaryCell}>
-                        <span className={styles.summaryText}>{log.summary}</span>
+                        <span className={styles.summaryText}>
+                          {log.summary}
+                        </span>
                       </div>
                     </td>
                     <td>
-                      <Link href={`/admin/audit/${log.id}`} className={styles.actionLink}>
+                      <Link
+                        href={`/admin/audit/${log.id}`}
+                        className={styles.actionLink}
+                      >
                         Details
                       </Link>
                     </td>

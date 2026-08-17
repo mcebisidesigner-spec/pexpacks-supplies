@@ -3,135 +3,121 @@
   top: 16px;
   left: 16px;
   z-index: 99999;
-  width: 380px;
-  max-width: calc(100vw - 32px);
-  background: #111a2e;
-  border: 1px solid rgba(51, 65, 85, 0.7);
-  border-radius: 18px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(16, 185, 129, 0.2);
-  padding: 18px 20px;
-  color: #f8fafc;
-  font-family: inherit;
-  animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  width: min(380px, calc(100vw - 32px));
+  padding: 18px;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: 8px;
+  background: var(--admin-surface);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.58);
+  color: var(--admin-text);
+  animation: enter 180ms ease-out;
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-12px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.domainLabel {
-  font-size: 14px;
-  font-weight: 800;
-  color: #f8fafc;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  letter-spacing: -0.01em;
-}
-
-.domainTag {
-  color: #10b981;
-  font-weight: 900;
-}
-
-.closeBtn {
-  background: transparent;
-  border: none;
-  color: #64748b;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.15s ease, background 0.15s ease;
-}
-
-.closeBtn:hover {
-  color: #f8fafc;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.body {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 18px;
-}
-
-.iconWrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: rgba(16, 185, 129, 0.14);
-  color: #10b981;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.messageText {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #cbd5e1;
-  margin: 0;
-  font-weight: 500;
-}
-
+.header,
+.body,
 .actions {
   display: flex;
   align-items: center;
+}
+
+.header {
+  justify-content: space-between;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.domainLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--admin-text-3);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.domainTag {
+  color: var(--admin-accent-strong);
+}
+
+.closeBtn {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid var(--admin-border);
+  border-radius: 7px;
+  background: var(--admin-surface-2);
+  color: var(--admin-text-3);
+  cursor: pointer;
+}
+
+.body {
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.iconWrap {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border: 1px solid var(--admin-accent);
+  border-radius: 8px;
+  background: var(--admin-accent-subtle);
+  color: var(--admin-accent-strong);
+}
+
+.messageText {
+  margin: 0;
+  color: var(--admin-text-2);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.actions {
   justify-content: flex-end;
-  gap: 10px;
+  gap: 9px;
+}
+
+.allowBtn,
+.blockBtn {
+  min-height: 38px;
+  padding: 0 15px;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .allowBtn {
-  background: #10b981;
-  color: #ffffff;
-  border: none;
-  border-radius: 9999px;
-  padding: 8px 24px;
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-}
-
-.allowBtn:hover {
-  background: #059669;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  border: 1px solid var(--admin-accent);
+  background: var(--admin-accent);
+  color: var(--admin-accent-text);
 }
 
 .blockBtn {
-  background: #1e293b;
-  color: #94a3b8;
-  border: 1px solid rgba(51, 65, 85, 0.6);
-  border-radius: 9999px;
-  padding: 8px 20px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  border: 1px solid var(--admin-border-strong);
+  background: var(--admin-surface-2);
+  color: var(--admin-text-2);
 }
 
-.blockBtn:hover {
-  background: #334155;
-  color: #f8fafc;
+.popupWrap button:focus-visible {
+  outline: 3px solid var(--admin-focus);
+  outline-offset: 2px;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -1,5 +1,6 @@
 import { ClipboardCheck } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
+import { DateField } from "@/components/admin/DateField";
 import { listOperationalTasks } from "@/lib/admin/operations";
 import {
   createOperationalTaskAction,
@@ -78,10 +79,12 @@ export default async function TasksPage() {
               <option>high</option>
               <option>urgent</option>
             </select>
-            <input
+            <DateField
               className={styles.field}
               name="dueAt"
-              type="datetime-local"
+              mode="datetime-local"
+              ariaLabel="Task due date and time"
+              placeholder="Due date and time"
             />
             <input
               className={`${styles.field} ${styles.wide}`}
