@@ -225,9 +225,17 @@ export function IdleLogout() {
       systemDetectionStarting = true;
 
       try {
-        const permission = requestPermission
-          ? await IdleDetector.requestPermission()
-          : await navigator.permissions.query({ name: "idle-detection" as PermissionName }).then((result) => result.state);
+        let permission = "denied";
+        if (requestPermission) {
+          permission = await IdleDetector.requestPermission();
+        } else if ("permissions" in navigator && navigator.permissions?.query) {
+          try {
+            const status = await navigator.permissions.query({ name: "idle-detection" as PermissionName });
+            permission = status.state;
+          } catch {
+            permission = "prompt";
+          }
+        }
         if (permission !== "granted") return;
 
         const detector = new IdleDetector();
