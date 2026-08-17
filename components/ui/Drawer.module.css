@@ -56,9 +56,9 @@
 .headerSubtitle {
   display: block;
   margin-top: 6px;
-  color: var(--pex-text-muted);
+  color: var(--pex-keppel, #10b981);
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .headerRight {

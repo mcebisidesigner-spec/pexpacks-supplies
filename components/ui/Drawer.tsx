@@ -11,7 +11,7 @@ type DrawerProps = {
   onClose: () => void;
   title: string;
   titleId: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   headerRight?: ReactNode;
   children: ReactNode;
   footer?: ReactNode;

@@ -32,6 +32,9 @@ export function CompleteListModal({ pack, onClose, onAddToOrder }: CompleteListM
 
   const idBase = safeId(pack.id);
   const titleId = `${idBase}-complete-list-title`;
+  const countFormatted = String(pack.items.length).padStart(2, "0");
+  const itemWord = pack.items.length === 1 ? "Stationery item" : "Stationery items";
+  const subtitleText = `${countFormatted} ${itemWord}`;
 
   return (
     <Drawer
@@ -39,7 +42,7 @@ export function CompleteListModal({ pack, onClose, onAddToOrder }: CompleteListM
       onClose={onClose}
       title={pack.modalTitle}
       titleId={titleId}
-      subtitle={`${pack.gradeLabel} stationery list`}
+      subtitle={<span className={styles.itemCountSubtitle}>{subtitleText}</span>}
       footer={
         <>
           <p className={styles.price}>{pack.priceLabel}</p>

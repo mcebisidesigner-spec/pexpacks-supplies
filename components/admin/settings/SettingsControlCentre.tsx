@@ -33,8 +33,8 @@ import type {
   SystemSettingCategory,
   SystemSettingRecord,
   SystemSettingsAuditRecord,
-} from "@/lib/admin/system-settings";
-import { SYSTEM_SETTING_CATEGORIES, SYSTEM_SETTING_DEFINITIONS } from "@/lib/admin/system-settings";
+} from "@/lib/admin/system-settings-shared";
+import { SYSTEM_SETTING_CATEGORIES, SYSTEM_SETTING_DEFINITIONS } from "@/lib/admin/system-settings-shared";
 import {
   exportSettingsAction,
   restoreSettingsAction,
