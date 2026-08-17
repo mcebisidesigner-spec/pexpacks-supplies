@@ -307,45 +307,89 @@
 .topbarActions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   margin-left: auto;
 }
 
 .profile { position: relative; }
 .notification { position: relative; }
 
+.utilityButton {
+  position: relative;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  background: #1c2638;
+  color: #94a3b8;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.utilityButton:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #ffffff;
+  background: #243147;
+}
+
+.utilityButtonActive {
+  border-color: #10b981;
+  background: #102e25;
+  color: #10b981;
+}
+
+.utilityBadge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  display: grid;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  place-items: center;
+  border: 2px solid #0b132b;
+  border-radius: 999px;
+  background: #ff5c5c;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .profileTrigger {
   display: flex;
-  min-width: 226px;
-  height: 52px;
   align-items: center;
-  gap: 10px;
-  padding: 5px 9px 5px 6px;
+  gap: 12px;
+  padding: 4px 12px 4px 4px;
   border: 1px solid transparent;
-  border-radius: 15px;
+  border-radius: 999px;
   background: transparent;
-  color: var(--admin-text);
+  color: #ffffff;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .profileTrigger:hover,
 .profileTriggerActive {
-  border-color: var(--admin-border);
-  background: var(--admin-surface-2);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .profileAvatar {
   display: grid;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
   place-items: center;
-  border: 2px solid rgba(52, 211, 153, 0.38);
+  border: 2px solid #10b981;
   border-radius: 50%;
-  background: #16382d;
-  color: var(--admin-accent-strong);
-  font-size: 10px;
-  font-weight: 900;
+  background: #0d2e25;
+  color: #10b981;
+  font-size: 13px;
+  font-weight: 800;
   overflow: hidden;
 }
 
@@ -353,23 +397,16 @@
 
 .profileCopy {
   display: flex;
-  min-width: 0;
-  flex: 1;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
+  align-items: center;
 }
 
-.profileCopy strong,
-.profileCopy small {
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.profileCopy strong {
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-.profileCopy strong { font-size: 11px; }
-.profileCopy small { color: var(--admin-text-3); font-size: 8px; }
 .profileTrigger > svg { width: 14px; height: 14px; color: var(--admin-text-3); }
 
 .profileDropdown {

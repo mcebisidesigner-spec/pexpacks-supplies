@@ -23,6 +23,10 @@ import {
   Package,
   PackageCheck,
   PackageSearch,
+  ShoppingCart,
+  Tags,
+  Truck,
+  Warehouse,
   RefreshCw,
   School,
   Search,
@@ -43,6 +47,11 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   school: School,
   pack: Package,
   items: PackageSearch,
+  pricing: Tags,
+  suppliers: Truck,
+  procurement: ShoppingCart,
+  fulfilment: Warehouse,
+  tasks: PackageCheck,
   orders: ClipboardList,
   payments: CreditCard,
   users: Users,
@@ -129,6 +138,8 @@ export function AdminShell({
   const ordersItem = readyItems.find((item) => item.href === "/admin/orders");
   const paymentsItem = readyItems.find((item) => item.href === "/admin/payments");
   const schoolsItem = readyItems.find((item) => item.href === "/admin/schools");
+  const procurementItem = readyItems.find((item) => item.href === "/admin/procurement");
+  const tasksItem = readyItems.find((item) => item.href === "/admin/tasks");
   const roleLabels = userRoles.length ? userRoles.join(", ") : "Staff";
   const userInitials = initials(userName);
   const {
@@ -137,7 +148,7 @@ export function AdminShell({
     isRefreshing: notificationsRefreshing,
     isError: notificationsError,
     refresh: refreshNotifications,
-  } = useAdminNotifications(Boolean(ordersItem || paymentsItem || schoolsItem));
+  } = useAdminNotifications(Boolean(ordersItem || paymentsItem || schoolsItem || procurementItem || tasksItem));
 
   const notificationItems = [
     notifications?.failed_payments
@@ -180,11 +191,19 @@ export function AdminShell({
           tone: "info",
         }
       : null,
+    notifications?.procurement_outstanding
+      ? { key: "procurement", title: `${notifications.procurement_outstanding} units outstanding`, detail: "Committed paid-order demand is not yet secured.", href: procurementItem?.href ?? "/admin", icon: ShoppingCart, tone: "warning" }
+      : null,
+    notifications?.open_tasks
+      ? { key: "tasks", title: `${notifications.open_tasks} open operational task${notifications.open_tasks === 1 ? "" : "s"}`, detail: "Assigned work requires attention.", href: tasksItem?.href ?? "/admin", icon: PackageCheck, tone: "info" }
+      : null,
   ].filter((item): item is NonNullable<typeof item> => Boolean(item));
   const notificationCount = notificationItems.reduce((total, item) => {
     if (item.key === "failed-payments") return total + (notifications?.failed_payments ?? 0);
     if (item.key === "pending-payments") return total + (notifications?.pending_payments ?? 0);
     if (item.key === "awaiting-fulfilment") return total + (notifications?.awaiting_fulfilment ?? 0);
+    if (item.key === "procurement") return total + (notifications?.procurement_outstanding ?? 0);
+    if (item.key === "tasks") return total + (notifications?.open_tasks ?? 0);
     return total + (notifications?.pending_schools ?? 0);
   }, 0);
 
@@ -468,7 +487,7 @@ export function AdminShell({
                       <p className={styles.notificationEmpty}>All clear. There is no activity requiring attention.</p>
                     )}
                     <div className={styles.notificationFooter}>
-                      Updates every 15 seconds
+                      Live updates with 60-second fallback
                       {notifications?.generated_at ? ` · ${new Date(notifications.generated_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : ""}
                     </div>
                   </div>
@@ -488,13 +507,11 @@ export function AdminShell({
                 aria-expanded={profileOpen}
               >
                 <span className={styles.profileAvatar}>
-                  {currentAvatarUrl ? <Image src={currentAvatarUrl} alt="" width={40} height={40} /> : userInitials}
+                  {currentAvatarUrl ? <Image src={currentAvatarUrl} alt="" width={44} height={44} /> : userInitials}
                 </span>
                 <span className={styles.profileCopy}>
-                  <strong>{userName}</strong>
-                  <small>{userEmail}</small>
+                  <strong>{userName.split(" ")[0].replace(/@.*/, "").charAt(0).toUpperCase() + userName.split(" ")[0].replace(/@.*/, "").slice(1)}</strong>
                 </span>
-                <ChevronDown aria-hidden="true" />
               </button>
 
               {profileOpen ? (
