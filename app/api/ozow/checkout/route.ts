@@ -5,6 +5,7 @@ import {
   rateLimitRequest,
 } from "@/lib/security/requestGuards";
 import { handleTrayCheckout, TrayCheckoutError, trayErrorResponse } from "@/lib/checkout/trayCheckout";
+import { upsertCustomerAndLearner, linkOrderToCustomerAndLearner } from "@/lib/admin/operations";
 
 export const runtime = "nodejs";
 
@@ -66,9 +67,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const isBnpl = body.isBnpl === true;
-    const isTrayOrder = body.isTrayOrder === true;
-
     let transactionReference =
       (typeof body.orderId === "string" && body.orderId) ||
       (typeof body.orderReference === "string" && body.orderReference) ||
@@ -86,12 +84,79 @@ export async function POST(request: NextRequest) {
       (typeof body.buyerEmail === "string" && body.buyerEmail) ||
       "";
 
+    const isBnpl = body.isBnpl === true;
+    const isTrayOrder = body.isTrayOrder === true;
     const packsRaw = Array.isArray(body.packs) ? body.packs : [];
 
-    // If order has packs, save/retrieve order in DB
+    let createdOrderId: string | null = null;
+    let buyerName = typeof body.buyerName === "string" ? body.buyerName : "";
+    let buyerPhone = typeof body.buyerPhone === "string" ? body.buyerPhone : "";
+
+    // Convert single-pack checkout to tray format so orders are always created in DB
+    if (packsRaw.length === 0 && !isTrayOrder) {
+      const schoolSlug = typeof body.schoolSlug === "string" ? body.schoolSlug : "";
+      const schoolName = typeof body.schoolName === "string" ? body.schoolName : "";
+      const grade = typeof body.grade === "string" ? body.grade : "";
+      const gradeSlug = typeof body.gradeSlug === "string" ? body.gradeSlug : "";
+      const packType = typeof body.packType === "string" ? body.packType : "full";
+      const learnerName = typeof body.learnerName === "string" ? body.learnerName : "";
+      const deliveryMethod = typeof body.deliveryMethod === "string" ? body.deliveryMethod : "school_collection";
+      const notes = typeof body.notes === "string" ? body.notes : undefined;
+      const items = Array.isArray(body.items) ? body.items : [];
+
+      const trayPack = {
+        learnerName,
+        schoolSlug,
+        schoolName,
+        grade,
+        gradeSlug,
+        packName: `${grade} Pack`,
+        packMode: packType === "customised" ? "customised" : "full",
+        items: items.map((name: string) => ({
+          name: typeof name === "string" ? name : "",
+          quantity: 1,
+          unitPrice: undefined,
+        })),
+        totalPrice: rawAmount,
+        wantsPexcover: body.pexcoverSelected === true,
+        pexcoverPrice: typeof body.pexcoverAmount === "number" ? body.pexcoverAmount : 0,
+        basePackPrice: rawAmount,
+      };
+
+      const idempotencyKey =
+        typeof body.idempotencyKey === "string" && body.idempotencyKey.length > 0
+          ? body.idempotencyKey
+          : typeof body.orderId === "string"
+            ? body.orderId
+            : undefined;
+
+      const order = await handleTrayCheckout({
+        buyerName,
+        buyerEmail: customerEmail,
+        buyerPhone,
+        estimatedTotal: rawAmount,
+        deliveryMethod,
+        primarySchoolSlug: schoolSlug,
+        notes,
+        packs: [trayPack],
+        paymentGateway: "ozow",
+        gatewayMetadata: {
+          method: isBnpl ? "HappyPay" : "Ozow",
+          is_bnpl: isBnpl,
+          ...(isBnpl ? { split_instalments: 2 } : {}),
+          amount: rawAmount,
+        },
+        isBnpl,
+        idempotencyKey,
+      });
+
+      transactionReference = order.orderReference;
+      rawAmount = order.estimatedTotal;
+      createdOrderId = order.id;
+    }
+
+    // Tray/Multi-pack path
     if (packsRaw.length > 0 || isTrayOrder) {
-      const buyerName = typeof body.buyerName === "string" ? body.buyerName : "";
-      const buyerPhone = typeof body.buyerPhone === "string" ? body.buyerPhone : "";
       const deliveryMethod = typeof body.deliveryMethod === "string" ? body.deliveryMethod : "school_collection";
       const primarySchoolSlug = typeof body.primarySchoolSlug === "string" ? body.primarySchoolSlug : undefined;
       const notes = typeof body.notes === "string" ? body.notes : undefined;
@@ -143,6 +208,37 @@ export async function POST(request: NextRequest) {
 
       transactionReference = order.orderReference;
       rawAmount = order.estimatedTotal;
+      createdOrderId = order.id;
+    }
+
+    // Link order to customer and learner records (best-effort)
+    if (createdOrderId && buyerName && customerEmail) {
+      try {
+        const firstPack = packsRaw[0] || {};
+        const learnerName = typeof firstPack.learnerName === "string" ? firstPack.learnerName : buyerName;
+        const schoolSlug = typeof body.schoolSlug === "string"
+          ? body.schoolSlug
+          : typeof firstPack.schoolSlug === "string"
+            ? firstPack.schoolSlug
+            : "";
+        const grade = typeof body.grade === "string"
+          ? body.grade
+          : typeof firstPack.grade === "string"
+            ? firstPack.grade
+            : "";
+
+        const { customerId, learnerId } = await upsertCustomerAndLearner({
+          buyerName,
+          buyerEmail: customerEmail,
+          buyerPhone,
+          learnerName,
+          schoolSlug,
+          grade,
+        });
+        await linkOrderToCustomerAndLearner(createdOrderId, customerId, learnerId);
+      } catch (linkErr) {
+        console.warn("[ozow/checkout] customer/learner link warning:", linkErr);
+      }
     }
 
     if (!transactionReference) {

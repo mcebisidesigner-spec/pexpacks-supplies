@@ -16,6 +16,7 @@ import {
   createTaskComment,
   deleteTaskComment,
   importMasterProducts,
+  linkOrderToCustomerAndLearner,
   setDefaultSeason,
   updateApproval,
   updateFulfilmentRecord,
@@ -25,6 +26,7 @@ import {
   updateSeason,
   updateSupplier,
   updateSupplierOffer,
+  upsertCustomerAndLearner,
 } from "@/lib/admin/operations";
 
 function text(formData: FormData, key: string) {
@@ -553,4 +555,23 @@ export async function updateSupplierOfferAction(
     actorId: session.user.id,
   });
   revalidatePath("/admin/suppliers");
+}
+
+export async function upsertCustomerAndLearnerAction(input: {
+  buyerName: string;
+  buyerEmail: string;
+  buyerPhone: string;
+  learnerName: string;
+  schoolSlug: string;
+  grade: string;
+}) {
+  return upsertCustomerAndLearner(input);
+}
+
+export async function linkOrderToCustomerAndLearnerAction(
+  orderId: string,
+  customerId: string,
+  learnerId: string,
+) {
+  await linkOrderToCustomerAndLearner(orderId, customerId, learnerId);
 }

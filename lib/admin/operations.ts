@@ -1091,27 +1091,37 @@ export async function advanceOrderStatus(orderId: string) {
   
   const { data: packingRecords } = await client
     .from("packing_records")
-    .select("status")
+    .select("status, updated_at")
     .eq("order_id", orderId);
   
   const { data: fulfilmentRecords } = await client
     .from("fulfilment_records")
-    .select("status")
+    .select("status, target_date, updated_at")
     .eq("order_id", orderId);
   
   const packingStatuses = (packingRecords || []).map((r: any) => r.status);
   const fulfilmentStatuses = (fulfilmentRecords || []).map((r: any) => r.status);
+  const fulfilment = (fulfilmentRecords || [])[0] as any;
   
   let newStatus: string | null = null;
   
+  // Status advancement: paid → scheduled → not_ready → packing → dispatched → delivered
   if (fulfilmentStatuses.includes("delivered")) {
     newStatus = "delivered";
+  } else if (fulfilmentStatuses.includes("dispatched")) {
+    newStatus = "dispatched";
+  } else if (fulfilmentStatuses.includes("in_transit")) {
+    newStatus = "dispatched";
   } else if (packingStatuses.includes("packed")) {
     newStatus = "packing";
+  } else if (fulfilment?.target_date && order.status === "paid") {
+    newStatus = "scheduled";
   } else if (packingStatuses.includes("quality_check") || packingStatuses.includes("packing")) {
     newStatus = "packing";
-  } else if (packingStatuses.includes("ready")) {
+  } else if (packingStatuses.includes("ready") && order.status === "not_ready") {
     newStatus = "packing";
+  } else if (packingStatuses.includes("ready") && order.status === "paid") {
+    newStatus = "not_ready";
   }
   
   if (newStatus && newStatus !== order.status) {
@@ -1124,6 +1134,103 @@ export async function advanceOrderStatus(orderId: string) {
       .eq("id", orderId);
     assertNoError(error, "Unable to advance order status");
   }
+}
+
+export async function upsertCustomerAndLearner(input: {
+  buyerName: string;
+  buyerEmail: string;
+  buyerPhone: string;
+  learnerName: string;
+  schoolSlug: string;
+  grade: string;
+}): Promise<{ customerId: string; learnerId: string }> {
+  const client = db();
+
+  // Upsert customer by email
+  let customerId: string | null = null;
+  if (input.buyerEmail) {
+    const { data: existing } = await client
+      .from("customers")
+      .select("id")
+      .eq("email", input.buyerEmail)
+      .maybeSingle();
+    
+    if (existing) {
+      customerId = existing.id;
+    } else {
+      const { data: created, error: customerError } = await client
+        .from("customers")
+        .insert({
+          email: input.buyerEmail,
+          phone: input.buyerPhone,
+          full_name: input.buyerName,
+        })
+        .select("id")
+        .single();
+      assertNoError(customerError, "Failed to create customer");
+      customerId = created.id;
+    }
+  }
+
+  if (!customerId) {
+    throw new Error("Cannot create learner without a customer ID");
+  }
+
+  // Look up school_id from slug
+  let schoolId: string | null = null;
+  if (input.schoolSlug) {
+    const { data: school } = await client
+      .from("schools")
+      .select("id")
+      .eq("slug", input.schoolSlug)
+      .maybeSingle();
+    schoolId = school?.id ?? null;
+  }
+
+  // Upsert learner by customer_id + full_name
+  const { data: existingLearner } = await client
+    .from("learners")
+    .select("id")
+    .eq("customer_id", customerId)
+    .eq("full_name", input.learnerName)
+    .maybeSingle();
+
+  let learnerId: string;
+  if (existingLearner) {
+    learnerId = existingLearner.id;
+  } else {
+    const { data: created, error: learnerError } = await client
+      .from("learners")
+      .insert({
+        customer_id: customerId,
+        school_id: schoolId,
+        full_name: input.learnerName,
+        grade: input.grade,
+      })
+      .select("id")
+      .single();
+    assertNoError(learnerError, "Failed to create learner");
+    learnerId = created.id;
+  }
+
+  return { customerId, learnerId };
+}
+
+export async function linkOrderToCustomerAndLearner(
+  orderId: string,
+  customerId: string,
+  learnerId: string,
+) {
+  const client = db();
+  const { error } = await client
+    .from("orders")
+    .update({
+      customer_id: customerId,
+      learner_id: learnerId,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", orderId);
+  assertNoError(error, "Failed to link order to customer/learner");
 }
 
 export type TaskCommentRow = {
