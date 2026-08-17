@@ -226,51 +226,6 @@ function ExistingItemsTable({
   );
 }
 
-function CatalogueSectionButtons({
-  sections,
-  selectedSection,
-  total,
-}: {
-  sections: StationeryCatalogueSection[];
-  selectedSection: string;
-  total: number;
-}) {
-  return (
-    <section className={styles.formPanel}>
-      <div className={styles.panelHeader}>
-        <div>
-          <h2>Catalogue sections</h2>
-          <p className={styles.muted}>
-            Open the full catalogue or filter existing products by section.
-          </p>
-        </div>
-        <Link href={catalogueHref()} className={shared.addButton}>
-          View catalogue
-        </Link>
-      </div>
-      <div className={styles.sectionButtons}>
-        <Link
-          href={catalogueHref()}
-          className={`${styles.sectionButton} ${!selectedSection ? styles.sectionButtonActive : ""}`}
-        >
-          <span>All products</span>
-          <strong>{total}</strong>
-        </Link>
-        {sections.map((section) => (
-          <Link
-            key={section.name}
-            href={catalogueHref({ section: section.name })}
-            className={`${styles.sectionButton} ${selectedSection === section.name ? styles.sectionButtonActive : ""}`}
-          >
-            <span>{section.name}</span>
-            <strong>{section.count}</strong>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 export default async function MasterCataloguePage({
   searchParams,
 }: {
@@ -295,13 +250,12 @@ export default async function MasterCataloguePage({
     page,
     pageSize: PAGE_SIZE,
   };
-  const [existingCatalogue, sections] = await Promise.all([
+
+  const [existingCatalogue] = await Promise.all([
     showCatalogue
       ? listItems(legacyFilters)
       : Promise.resolve({ items: [] as ItemListItem[], total: 0, page, pageCount: 0 }),
-    listStationeryCatalogueSections(),
   ]);
-  const sectionTotal = sections.reduce((sum, section) => sum + section.count, 0);
 
   const canManage = hasPermission(session, "catalogue.manage");
   const canEditExisting = hasPermission(session, "items.edit");
@@ -328,12 +282,6 @@ export default async function MasterCataloguePage({
           ) : null}
         </div>
       </header>
-
-      <CatalogueSectionButtons
-        sections={sections}
-        selectedSection={selectedSection}
-        total={sectionTotal}
-      />
 
       {showCatalogue ? (
         <form method="get" className={shared.filterForm}>
