@@ -5,6 +5,7 @@ import { invalidateSchoolSearchCache } from "@/lib/schools/schoolSearchData";
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
+  getSchool,
   createSchool,
   updateSchool,
   setSchoolStatus,
@@ -83,3 +84,19 @@ export async function deleteSchoolAction(id: string): Promise<void> {
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePublicSchoolSurfaces();
 }
+
+export async function toggleSchoolVisibilityAction(schoolId: string): Promise<{ ok: boolean; newStatus?: string; message?: string }> {
+  await requireAdmin({ permission: "schools.edit" });
+  const school = await getSchool(schoolId);
+  if (!school) return { ok: false, message: "School not found" };
+
+  const nextStatus = school.status === "active" ? "inactive" : "active";
+  const res = await setSchoolStatus(school.id, nextStatus);
+  if (res.ok) {
+    invalidateSchoolSearchCache();
+    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+    revalidatePublicSchoolSurfaces();
+  }
+  return { ...res, newStatus: nextStatus };
+}
+

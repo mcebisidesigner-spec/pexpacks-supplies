@@ -13,7 +13,7 @@ import {
   Search,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
-import { toggleSchoolVisibility } from "@/lib/admin/schools";
+import { toggleSchoolVisibilityAction } from "@/app/admin/schools/actions";
 
 interface SchoolRow {
   id: string;
@@ -55,7 +55,7 @@ export function SchoolsPageView() {
   const handleToggleHide = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      await toggleSchoolVisibility(id);
+      await toggleSchoolVisibilityAction(id);
       setSchools((prev) =>
         prev.map((s) =>
           s.id === id ? { ...s, status: s.status === "Active" ? "Inactive" : "Active" } : s

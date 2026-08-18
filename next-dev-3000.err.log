@@ -132,3 +132,2005 @@ Import trace for requested module:
 ./lib/admin/rbac.ts
 ./lib/admin/schools.ts
 ./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+⨯ ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+⨯ ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next\dev\cache\webpack\client-development-fallback\0.pack.gz_' -> 'E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next\dev\cache\webpack\client-development-fallback\0.pack.gz'
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next\dev\cache\webpack\client-development-fallback\0.pack.gz_' -> 'E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\.next\dev\cache\webpack\client-development-fallback\0.pack.gz'
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+⨯ ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+⨯ ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+⨯ ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+⨯ ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+⨯ ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+⨯ ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+⨯ ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+Import trace for requested module:
+./lib/admin/catalog-revalidate.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `----
+
+Import trace for requested module:
+./lib/supabase/server.ts
+./lib/admin/rbac.ts
+./lib/admin/schools.ts
+./components/admin/views/SchoolsPageView.tsx 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
+[browser] Uncaught ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+
+[browser] ./lib/admin/catalog-revalidate.ts
+Error:   x You're importing a module that depends on "revalidatePath". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :          ^^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `----
+  x You're importing a module that depends on "revalidateTag". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\admin\catalog-revalidate.ts:1:1]
+ 1 | import { revalidatePath, revalidateTag } from "next/cache";
+   :                          ^^^^^^^^^^^^^
+ 2 | import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+ 3 | 
+ 4 | /**
+   `---- 
+[browser] ./lib/supabase/server.ts
+Error:   x You're importing a module that depends on "next/headers". This API is only available in Server Components in the App Router, but you are using it in the Pages Router.
+  | Learn more: https://nextjs.org/docs/app/building-your-application/rendering/server-components
+  |
+
+   ,-[E:\WORK-FOLDER\WEB-DESIGN-PROJECTS\pexpacks-supplies\lib\supabase\server.ts:2:1]
+ 1 | import { createServerClient } from "@supabase/ssr";
+ 2 | import { cookies } from "next/headers";
+   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 3 | import type { Database } from "./types";
+ 4 | 
+ 5 | /**
+   `---- 
