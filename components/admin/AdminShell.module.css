@@ -450,27 +450,6 @@
   border: 2px solid #070d18;
 }
 
-.globalActionBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: #0d9488;
-  border: none;
-  border-radius: 8px;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 140ms ease;
-}
-
-.globalActionBtn:hover {
-  background: #0f766e;
-  box-shadow: 0 0 16px rgba(13, 148, 136, 0.4);
-}
-
 .content {
   padding: 24px;
   flex: 1;

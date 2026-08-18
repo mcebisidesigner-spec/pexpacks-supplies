@@ -548,3 +548,13 @@ export async function uploadSchoolLogo(file: File): Promise<{ publicUrl: string;
 
   return { publicUrl: urlData.publicUrl, path: data.path };
 }
+
+export async function toggleSchoolVisibility(schoolId: string): Promise<{ ok: boolean; newStatus?: string; message?: string }> {
+  const existing = await getSchool(schoolId);
+  if (!existing) return { ok: false, message: "School not found" };
+
+  const nextStatus: SchoolStatus = existing.status === "active" ? "inactive" : "active";
+  const res = await setSchoolStatus(existing.id, nextStatus);
+  return { ...res, newStatus: nextStatus };
+}
+

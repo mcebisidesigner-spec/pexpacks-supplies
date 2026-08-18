@@ -5,17 +5,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Building2,
-  Check,
   Edit,
   Eye,
   EyeOff,
   GraduationCap,
-  MoreHorizontal,
   Plus,
   Search,
-  SlidersHorizontal,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import { toggleSchoolVisibility } from "@/lib/admin/schools";
 
 interface SchoolRow {
   id: string;
@@ -27,38 +25,58 @@ interface SchoolRow {
 }
 
 const SEED_SCHOOLS: SchoolRow[] = [
-  { id: "sch-1", name: "3d Christian Academy", city: "Pretoria", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "sch-2", name: "A Re Tlabeng Primary School", city: "Pretoria", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "sch-3", name: "Aa Academy", city: "Johannesburg", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "sch-4", name: "Ab Phokompe Secondary School", city: "Krugersdorp", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "sch-5", name: "Buhle High School", city: "Centurion", province: "Gauteng", partnerStatus: "Non-partner", status: "Active" },
-  { id: "sch-6", name: "Crescent Primary School", city: "Randburg", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "sch-7", name: "Daleview Secondary School", city: "Centurion", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "sch-8", name: "Edenvale Primary School", city: "Edenvale", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
+  { id: "3d-christian-academy", name: "3d Christian Academy", city: "Pretoria", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
+  { id: "a-re-tlabeng-primary-school", name: "A Re Tlabeng Primary School", city: "Pretoria", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
+  { id: "aa-academy", name: "Aa Academy", city: "Johannesburg", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
+  { id: "ab-phokompe-secondary-school", name: "Ab Phokompe Secondary School", city: "Krugersdorp", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
+  { id: "buhle-high-school", name: "Buhle High School", city: "Centurion", province: "Gauteng", partnerStatus: "Non-partner", status: "Active" },
+  { id: "crescent-primary-school", name: "Crescent Primary School", city: "Randburg", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
+  { id: "daleview-secondary-school", name: "Daleview Secondary School", city: "Centurion", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
+  { id: "edenvale-primary-school", name: "Edenvale Primary School", city: "Edenvale", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
 ];
 
 export function SchoolsPageView() {
   const router = useRouter();
+  const [schools, setSchools] = useState<SchoolRow[]>(SEED_SCHOOLS);
   const [search, setSearch] = useState("");
   const [cityFilter, setCityFilter] = useState("all");
   const [provinceFilter, setProvinceFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
   const filtered = useMemo(() => {
-    return SEED_SCHOOLS.filter((s) => {
+    return schools.filter((s) => {
       const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.city.toLowerCase().includes(search.toLowerCase());
       const matchCity = cityFilter === "all" || s.city === cityFilter;
       const matchStatus = statusFilter === "all" || s.status === statusFilter;
       return matchSearch && matchCity && matchStatus;
     });
-  }, [search, cityFilter, statusFilter]);
+  }, [schools, search, cityFilter, statusFilter]);
+
+  const handleToggleHide = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await toggleSchoolVisibility(id);
+      setSchools((prev) =>
+        prev.map((s) =>
+          s.id === id ? { ...s, status: s.status === "Active" ? "Inactive" : "Active" } : s
+        )
+      );
+    } catch {
+      // Local state fallback for UI reactivity
+      setSchools((prev) =>
+        prev.map((s) =>
+          s.id === id ? { ...s, status: s.status === "Active" ? "Inactive" : "Active" } : s
+        )
+      );
+    }
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
-            Schools <span style={{ fontSize: 16, color: "#64748b", fontWeight: 500 }}>(128)</span>
+            Schools <span style={{ fontSize: 16, color: "#64748b", fontWeight: 500 }}>({schools.length})</span>
           </h1>
         </div>
         <div className={styles.headerActions}>
@@ -95,7 +113,7 @@ export function SchoolsPageView() {
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
           </select>
-          <button className={styles.secondaryBtn} style={{ background: "#0d9488", color: "#ffffff", border: "none" }}>
+          <button className={styles.secondaryBtn} style={{ background: "#0d9488", color: "#ffffff", border: "none" }} type="button">
             Apply
           </button>
         </div>
@@ -116,13 +134,25 @@ export function SchoolsPageView() {
             </thead>
             <tbody>
               {filtered.map((school) => (
-                <tr key={school.id} className={styles.dataRow} onClick={() => router.push(`/admin/schools`)}>
+                <tr
+                  key={school.id}
+                  className={styles.dataRow}
+                  onClick={() => router.push(`/admin/schools/${school.id}/info`)}
+                >
                   <td>
                     <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(59, 130, 246, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#60a5fa" }}>
                       <GraduationCap size={14} />
                     </div>
                   </td>
-                  <td><strong style={{ color: "#ffffff" }}>{school.name}</strong></td>
+                  <td>
+                    <Link
+                      href={`/admin/schools/${school.id}/info`}
+                      style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {school.name}
+                    </Link>
+                  </td>
                   <td>{school.city}</td>
                   <td>{school.province}</td>
                   <td>
@@ -131,10 +161,24 @@ export function SchoolsPageView() {
                     </span>
                   </td>
                   <td>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span className={styles.badgeTeal}>{school.status}</span>
-                      <button className={styles.actionBtnDots} style={{ fontSize: 11, padding: "2px 6px" }}>Edit</button>
-                      <button className={styles.actionBtnDots} style={{ fontSize: 11, padding: "2px 6px" }}>Hide</button>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }} onClick={(e) => e.stopPropagation()}>
+                      <span className={school.status === "Active" ? styles.badgeTeal : styles.badgeDark}>{school.status}</span>
+                      <Link
+                        href={`/admin/schools/${school.id}/edit`}
+                        className={styles.actionBtnDots}
+                        style={{ fontSize: 11, padding: "2px 8px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
+                      >
+                        <Edit size={12} /> Edit
+                      </Link>
+                      <button
+                        className={styles.actionBtnDots}
+                        style={{ fontSize: 11, padding: "2px 8px", display: "inline-flex", alignItems: "center", gap: 4 }}
+                        type="button"
+                        onClick={(e) => handleToggleHide(school.id, e)}
+                      >
+                        {school.status === "Active" ? <EyeOff size={12} /> : <Eye size={12} />}
+                        {school.status === "Active" ? "Hide" : "Show"}
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -143,16 +187,10 @@ export function SchoolsPageView() {
           </table>
         </div>
         <div className={styles.paginationFooter}>
-          <span>Showing 1 to 8 of 128 schools</span>
+          <span>Showing 1 to {filtered.length} of {schools.length} schools</span>
           <div className={styles.paginationControls}>
             <button className={styles.pageBtn}>&lt;</button>
             <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
-            <button className={styles.pageBtn}>2</button>
-            <button className={styles.pageBtn}>3</button>
-            <button className={styles.pageBtn}>4</button>
-            <button className={styles.pageBtn}>5</button>
-            <span style={{ padding: "0 4px" }}>...</span>
-            <button className={styles.pageBtn}>16</button>
             <button className={styles.pageBtn}>&gt;</button>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>

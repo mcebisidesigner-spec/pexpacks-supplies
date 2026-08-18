@@ -360,11 +360,6 @@ export function AdminShell({
             >
               <MessageSquare size={16} />
             </Link>
-
-            <Link href="/admin/orders" className={styles.globalActionBtn}>
-              <Plus size={14} />
-              <span>+ New Order</span>
-            </Link>
           </div>
         </header>
 

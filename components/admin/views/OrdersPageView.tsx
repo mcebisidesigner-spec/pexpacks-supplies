@@ -2,18 +2,8 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import {
-  Calendar,
-  CheckCircle2,
-  Clock,
-  FileText,
-  Filter,
-  LayoutGrid,
-  List,
-  MoreHorizontal,
-  Plus,
-  Search,
-} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Eye, Plus, Search } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 
 interface OrderRow {
@@ -23,42 +13,62 @@ interface OrderRow {
   orderDate: string;
   total: number;
   paymentStatus: "Paid" | "Part-Paid" | "Unpaid";
-  fulfilmentStatus: "Ready to Pack" | "In Packing" | "Picking" | "Dispatched" | "Payment Pending" | "Delivered" | "Cancelled";
+  fulfilmentStatus: "Paid" | "Procurement" | "Ready to Pack" | "At Risk" | "Completed";
 }
 
 const SEED_ORDERS: OrderRow[] = [
-  { id: "o-1", orderNumber: "ORD-10528", school: "3d Christian Academy", orderDate: "May 27, 2024", total: 28430.00, paymentStatus: "Paid", fulfilmentStatus: "Ready to Pack" },
-  { id: "o-2", orderNumber: "ORD-10527", school: "A Re Tlabeng Primary", orderDate: "May 26, 2024", total: 16230.00, paymentStatus: "Paid", fulfilmentStatus: "In Packing" },
-  { id: "o-3", orderNumber: "ORD-10526", school: "Aa Academy", orderDate: "May 26, 2024", total: 52851.00, paymentStatus: "Part-Paid", fulfilmentStatus: "Picking" },
-  { id: "o-4", orderNumber: "ORD-10525", school: "Ab Phokompe Secondary", orderDate: "May 25, 2024", total: 34131.00, paymentStatus: "Paid", fulfilmentStatus: "Dispatched" },
-  { id: "o-5", orderNumber: "ORD-10524", school: "Blue Hills School", orderDate: "May 25, 2024", total: 26362.00, paymentStatus: "Unpaid", fulfilmentStatus: "Payment Pending" },
-  { id: "o-6", orderNumber: "ORD-10523", school: "Crescent Primary", orderDate: "May 24, 2024", total: 12450.00, paymentStatus: "Paid", fulfilmentStatus: "Delivered" },
-  { id: "o-7", orderNumber: "ORD-10522", school: "Daleview Secondary", orderDate: "May 24, 2024", total: 28361.00, paymentStatus: "Paid", fulfilmentStatus: "Delivered" },
-  { id: "o-8", orderNumber: "ORD-10521", school: "Edenvale Primary", orderDate: "May 23, 2024", total: 15671.00, paymentStatus: "Unpaid", fulfilmentStatus: "Cancelled" },
+  { id: "ord-10528", orderNumber: "ORD-10528", school: "3d Christian Academy", orderDate: "May 27, 2024", total: 28430.00, paymentStatus: "Paid", fulfilmentStatus: "Ready to Pack" },
+  { id: "ord-10527", orderNumber: "ORD-10527", school: "A Re Tlabeng Primary", orderDate: "May 26, 2024", total: 16230.00, paymentStatus: "Paid", fulfilmentStatus: "Procurement" },
+  { id: "ord-10526", orderNumber: "ORD-10526", school: "Aa Academy", orderDate: "May 26, 2024", total: 52851.00, paymentStatus: "Part-Paid", fulfilmentStatus: "At Risk" },
+  { id: "ord-10525", orderNumber: "ORD-10525", school: "Ab Phokompe Secondary", orderDate: "May 25, 2024", total: 34131.00, paymentStatus: "Paid", fulfilmentStatus: "Completed" },
+  { id: "ord-10524", orderNumber: "ORD-10524", school: "Blue Hills School", orderDate: "May 25, 2024", total: 26362.00, paymentStatus: "Paid", fulfilmentStatus: "Paid" },
 ];
 
 export function OrdersPageView() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [activeTab, setActiveTab] = useState("all");
 
   const filtered = useMemo(() => {
     return SEED_ORDERS.filter((o) => {
-      const matchSearch = o.orderNumber.toLowerCase().includes(search.toLowerCase()) || o.school.toLowerCase().includes(search.toLowerCase());
-      const matchStatus = statusFilter === "all" || o.paymentStatus === statusFilter || o.fulfilmentStatus === statusFilter;
-      return matchSearch && matchStatus;
+      const matchSearch =
+        o.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
+        o.school.toLowerCase().includes(search.toLowerCase());
+      const matchTab =
+        activeTab === "all" ||
+        (activeTab === "Paid" && (o.paymentStatus === "Paid" || o.fulfilmentStatus === "Paid")) ||
+        o.fulfilmentStatus === activeTab;
+      return matchSearch && matchTab;
     });
-  }, [search, statusFilter]);
+  }, [search, activeTab]);
 
   return (
     <div className={styles.container}>
       <div className={styles.headerRow}>
         <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>Orders</h1>
-          <p className={styles.headerSubtitle}>Track and manage customer orders.</p>
+          <h1 className={styles.headerTitle}>Orders & Commerce</h1>
+          <p className={styles.headerSubtitle}>Order status lifecycle & fulfillment tracking</p>
         </div>
         <div className={styles.headerActions}>
-          <button className={styles.primaryBtn}><Plus size={14} /> + New Order</button>
+          <Link href="/admin/orders/new" className={styles.primaryBtn}>
+            <Plus size={14} /> + New Order
+          </Link>
         </div>
+      </div>
+
+      {/* Tabs Row */}
+      <div style={{ display: "flex", gap: 8, borderBottom: "1px solid #1e293b", paddingBottom: 8 }}>
+        {["all", "Paid", "Procurement", "Ready to Pack", "At Risk", "Completed"].map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            className={activeTab === tab ? styles.primaryBtn : styles.secondaryBtn}
+            onClick={() => setActiveTab(tab)}
+            style={{ height: 30, fontSize: 11, padding: "0 12px" }}
+          >
+            {tab === "all" ? "All Orders" : tab}
+          </button>
+        ))}
       </div>
 
       <div className={styles.toolbar}>
@@ -72,15 +82,6 @@ export function OrdersPageView() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <select className={styles.selectInput} value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="all">Status: All</option>
-            <option value="Paid">Paid</option>
-            <option value="Part-Paid">Part-Paid</option>
-            <option value="Unpaid">Unpaid</option>
-          </select>
-          <select className={styles.selectInput}>
-            <option>Date: This Month</option>
-          </select>
         </div>
       </div>
 
@@ -89,10 +90,10 @@ export function OrdersPageView() {
           <table className={styles.dataTable}>
             <thead>
               <tr>
-                <th>Order #</th>
+                <th>Order Reference</th>
                 <th>School</th>
                 <th>Order Date</th>
-                <th>Total</th>
+                <th>Total Amount</th>
                 <th>Payment Status</th>
                 <th>Fulfilment Status</th>
                 <th>Actions</th>
@@ -100,53 +101,60 @@ export function OrdersPageView() {
             </thead>
             <tbody>
               {filtered.map((ord) => (
-                <tr key={ord.id} className={styles.dataRow}>
-                  <td><span className={styles.badgeTeal}>{ord.orderNumber}</span></td>
+                <tr
+                  key={ord.id}
+                  className={styles.dataRow}
+                  onClick={() => router.push(`/admin/orders/${ord.id}`)}
+                >
+                  <td>
+                    <Link
+                      href={`/admin/orders/${ord.id}`}
+                      style={{ color: "#2dd4bf", fontWeight: 700, textDecoration: "none" }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {ord.orderNumber}
+                    </Link>
+                  </td>
                   <td><strong style={{ color: "#ffffff" }}>{ord.school}</strong></td>
                   <td>{ord.orderDate}</td>
                   <td><strong>R {ord.total.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</strong></td>
                   <td>
-                    <span className={ord.paymentStatus === "Paid" ? styles.badgeGreen : ord.paymentStatus === "Part-Paid" ? styles.badgeAmber : styles.badgeRed}>
+                    <span className={ord.paymentStatus === "Paid" ? styles.badgeGreen : styles.badgeAmber}>
                       {ord.paymentStatus}
                     </span>
                   </td>
                   <td>
                     <span className={
                       ord.fulfilmentStatus === "Ready to Pack" ? styles.badgeTeal :
-                      ord.fulfilmentStatus === "In Packing" ? styles.badgeBlue :
-                      ord.fulfilmentStatus === "Dispatched" ? styles.badgePurple :
-                      ord.fulfilmentStatus === "Delivered" ? styles.badgeGreen :
+                      ord.fulfilmentStatus === "Procurement" ? styles.badgeBlue :
+                      ord.fulfilmentStatus === "At Risk" ? styles.badgeRed :
+                      ord.fulfilmentStatus === "Completed" ? styles.badgeGreen :
                       styles.badgeAmber
                     }>
                       {ord.fulfilmentStatus}
                     </span>
                   </td>
-                  <td><button className={styles.actionBtnDots}><MoreHorizontal size={14} /></button></td>
+                  <td>
+                    <Link
+                      href={`/admin/orders/${ord.id}`}
+                      className={styles.actionBtnDots}
+                      style={{ fontSize: 11, padding: "2px 8px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Eye size={12} /> View Detail
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <div className={styles.paginationFooter}>
-          <span>Showing 1 to 8 of 356 orders</span>
+          <span>Showing 1 to {filtered.length} of {SEED_ORDERS.length} orders</span>
           <div className={styles.paginationControls}>
             <button className={styles.pageBtn}>&lt;</button>
             <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
-            <button className={styles.pageBtn}>2</button>
-            <button className={styles.pageBtn}>3</button>
-            <button className={styles.pageBtn}>4</button>
-            <button className={styles.pageBtn}>5</button>
-            <span style={{ padding: "0 4px" }}>...</span>
-            <button className={styles.pageBtn}>45</button>
             <button className={styles.pageBtn}>&gt;</button>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span>Show</span>
-            <select className={styles.selectInput} style={{ height: 26, padding: "0 4px", fontSize: 11 }}>
-              <option>10</option>
-              <option>20</option>
-            </select>
-            <span>per page</span>
           </div>
         </div>
       </div>
