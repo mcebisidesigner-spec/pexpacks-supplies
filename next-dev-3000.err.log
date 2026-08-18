@@ -1,0 +1,8 @@
+⨯ upstream image response failed for https://rjuvicgqwryztwytnauo.supabase.co/storage/v1/object/public/school-assets/logos/e8218283-cbc7-446e-82c6-78ebd8ca2fac.png 400
+[browser] Image with src "http://localhost:3000/images/logo.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[TypeError: fetch failed] {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted address: rjuvicgqwryztwytnauo.supabase.co:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}

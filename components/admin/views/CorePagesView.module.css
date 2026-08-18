@@ -488,3 +488,222 @@
   background: #1e293b;
   color: #ffffff;
 }
+
+/* ===================================================
+   SCHOOL PACKS DETAIL PAGE EXTENSIONS
+   =================================================== */
+
+.metricsGrid5 {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 1200px) {
+  .metricsGrid5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .metricsGrid5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .metricsGrid5 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detailLayout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .detailLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sidebarColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebarCard {
+  background: #0c1322;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebarCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.sidebarHeaderTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebarStatRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+}
+
+.sidebarStatRow:last-child {
+  border-bottom: none;
+}
+
+.sidebarStatLabel {
+  color: #94a3b8;
+}
+
+.sidebarStatVal {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.quickActionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.quickActionItem:hover {
+  background: #1e293b;
+  border-color: #2dd4bf;
+  color: #ffffff;
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activityItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 16px;
+  position: relative;
+}
+
+.activityItem::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2dd4bf;
+}
+
+.activityTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.activityMeta {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.actionIconBtnGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionIconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid #1e293b;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 140ms ease;
+  padding: 0;
+  text-decoration: none;
+}
+
+.actionIconBtnTeal {
+  color: #2dd4bf;
+  border-color: rgba(45, 212, 191, 0.3);
+}
+
+.actionIconBtnTeal:hover {
+  background: rgba(45, 212, 191, 0.2);
+  color: #ffffff;
+}
+
+.actionIconBtnBlue {
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.actionIconBtnBlue:hover {
+  background: rgba(59, 130, 246, 0.2);
+  color: #ffffff;
+}
+
+.actionIconBtnRed {
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.actionIconBtnRed:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ffffff;
+}
+
+.gradePackLink {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 13px;
+  transition: color 140ms ease;
+}
+
+.gradePackLink:hover {
+  color: #2dd4bf;
+}
+

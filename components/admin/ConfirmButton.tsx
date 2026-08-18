@@ -6,6 +6,7 @@ import { ConfirmModal } from "@/components/ui/ConfirmModal";
 
 interface ConfirmButtonProps {
   label: string;
+  icon?: React.ReactNode;
   confirmText: string;
   busyLabel?: string;
   className?: string;
@@ -15,6 +16,7 @@ interface ConfirmButtonProps {
 
 export function ConfirmButton({
   label,
+  icon,
   confirmText,
   busyLabel = "Saving…",
   className,
@@ -53,7 +55,7 @@ export function ConfirmButton({
           setModalOpen(true);
         }}
       >
-        {pending ? busyLabel : label}
+        {pending ? busyLabel : icon ? <>{icon} {label}</> : label}
       </button>
 
       <ConfirmModal

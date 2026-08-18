@@ -6,5 +6,13 @@
 - Local:         http://localhost:3000
 - Network:       http://192.168.1.26:3000
 - Environments: .env.local
-✓ Ready in 53s
-✓ Running next.config.ts took 15.9s
+✓ Ready in 933ms
+✓ Running next.config.ts took 60ms
+- Experiments (use with caution):
+  · optimizePackageImports
+  · serverActions
+
+○ Compiling / ...
+ GET / 200 in 17.4s (next.js: 17.1s, application-code: 269ms)
+ GET / 200 in 149ms (next.js: 6ms, application-code: 142ms)
+ GET / 200 in 164ms (next.js: 5ms, application-code: 159ms)
