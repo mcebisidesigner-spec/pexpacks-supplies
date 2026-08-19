@@ -4,6 +4,7 @@ import { SectionHeader } from '@/components/marketing/SectionHeader'
 import { HeroSearch } from '@/components/marketing/HeroSearch'
 import { ConciergeSection } from '@/components/marketing/ConciergeSection'
 import { SuperpowerSection } from '@/components/marketing/SuperpowerSection'
+import { RetailVsPexpacksSlider } from '@/components/marketing/RetailVsPexpacksSlider'
 import { FaqMarquee } from '@/components/shared/FaqMarquee'
 import { TestimonialMarquee } from '@/components/shared/TestimonialMarquee'
 import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
@@ -182,10 +183,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <RetailVsPexpacksSlider />
+
       <SuperpowerSection />
 
       <ConciergeSection />
-
 
       {testimonials.length > 0 ? (
         <section
