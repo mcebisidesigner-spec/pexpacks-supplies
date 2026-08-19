@@ -180,3 +180,4 @@
  GET /admin/schools/29a6b115-0658-49ea-9438-f5dcdf976462/info 200 in 1755ms (next.js: 11ms, application-code: 1744ms)
  GET /api/admin/notifications 200 in 1528ms (next.js: 5ms, application-code: 1523ms)
  GET /api/admin/notifications 200 in 960ms (next.js: 7ms, application-code: 953ms)
+ GET /api/admin/notifications 200 in 1302ms (next.js: 3ms, application-code: 1299ms)
