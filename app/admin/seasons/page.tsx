@@ -17,8 +17,8 @@ export const dynamic = "force-dynamic";
 const STATUS_OPTIONS = ["planning", "active", "closed", "archived"];
 
 export default async function SeasonsPage() {
-  const session = await requireAdmin({ permission: "settings.manage" });
-  const [schemaReady, seasons] = await Promise.all([
+  const [session, schemaReady, seasons] = await Promise.all([
+    requireAdmin({ permission: "settings.manage" }),
     isOperationsSchemaReady(),
     listSeasons(),
   ]);

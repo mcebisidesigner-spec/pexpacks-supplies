@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "../supabase/admin";
 import type { Json } from "../supabase/types";
 import {
@@ -29,7 +29,7 @@ export {
 
 export const SYSTEM_SETTINGS_CACHE_TAG = "system_settings";
 
-export async function getSystemSettings(): Promise<Record<string, SystemSettingRecord>> {
+const _getSystemSettingsRaw = async (): Promise<Record<string, SystemSettingRecord>> => {
   const admin = createSupabaseAdminClient();
   const map: Record<string, SystemSettingRecord> = {};
 
@@ -50,7 +50,7 @@ export async function getSystemSettings(): Promise<Record<string, SystemSettingR
 
   try {
     const { data, error } = await (admin.from as unknown as (table: string) => any)("system_settings")
-      .select("*");
+      .select("key,category,value,value_type,scope,description,is_sensitive,is_public,requires_approval,version,updated_by,updated_at");
 
     if (!error && data) {
       for (const row of data) {
@@ -69,7 +69,13 @@ export async function getSystemSettings(): Promise<Record<string, SystemSettingR
   }
 
   return map;
-}
+};
+
+export const getSystemSettings = unstable_cache(
+  _getSystemSettingsRaw,
+  ["system-settings"],
+  { revalidate: 300, tags: [SYSTEM_SETTINGS_CACHE_TAG] }
+);
 
 export async function getPublicSystemSettings(): Promise<Record<string, unknown>> {
   const settings = await getSystemSettings();
@@ -165,7 +171,7 @@ export async function getSystemSettingsAuditLogs(limit = 50): Promise<SystemSett
   const admin = createSupabaseAdminClient();
   try {
     const { data, error } = await (admin.from as unknown as (table: string) => any)("system_settings_audit")
-      .select("*")
+      .select("id,setting_key,old_value,new_value,change_reason,actor_id,actor_email,created_at")
       .order("created_at", { ascending: false })
       .limit(limit);
 

@@ -11,8 +11,8 @@ import styles from "../operations.module.css";
 export const dynamic = "force-dynamic";
 
 export default async function ApprovalsPage() {
-  const session = await requireAdmin({ permission: "approvals.manage" });
-  const [allApprovals, pendingApprovals] = await Promise.all([
+  const [session, allApprovals, pendingApprovals] = await Promise.all([
+    requireAdmin({ permission: "approvals.manage" }),
     listApprovals(),
     listApprovals("pending"),
   ]);

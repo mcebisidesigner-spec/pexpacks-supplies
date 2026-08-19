@@ -34,7 +34,7 @@ function buildQuery(
   admin: ReturnType<typeof createSupabaseAdminClient>,
   filters: AuditFilters
 ) {
-  let query = admin.from("audit_logs").select("*", { count: "exact" });
+  let query = admin.from("audit_logs").select("id,created_at,actor_id,actor_name,action,entity_type,entity_id,summary,details,ip,user_agent", { count: "exact" });
 
   if (filters.q) {
     const q = filters.q.replace(/%/g, "").trim();
@@ -103,7 +103,7 @@ export async function listAuditLogs(filters: AuditFilters = {}): Promise<AuditLi
 
 export async function getAuditLog(id: number): Promise<AuditLogRow | null> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("audit_logs").select("*").eq("id", id).maybeSingle();
+  const { data, error } = await admin.from("audit_logs").select("id,created_at,actor_id,actor_name,action,entity_type,entity_id,summary,details,ip,user_agent").eq("id", id).maybeSingle();
   if (error) {
     console.error("[audit] get failed:", error);
     return null;

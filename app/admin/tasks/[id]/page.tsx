@@ -19,13 +19,16 @@ export default async function TaskDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  const session = await requireAdmin({ permission: "tasks.view" });
+  const [{ id }, session] = await Promise.all([
+    params,
+    requireAdmin({ permission: "tasks.view" }),
+  ]);
   
-  const task = await getTask(id);
+  const [task, comments] = await Promise.all([
+    getTask(id),
+    listTaskComments(id),
+  ]);
   if (!task) notFound();
-  
-  const comments = await listTaskComments(id);
 
   return (
     <div className={styles.page}>

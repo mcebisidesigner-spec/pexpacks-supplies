@@ -14,8 +14,8 @@ import styles from "../operations.module.css";
 export const dynamic = "force-dynamic";
 
 export default async function PricingPage() {
-  const session = await requireAdmin({ permission: "pricing.view" });
-  const [products, rules, priceHistory] = await Promise.all([
+  const [session, products, rules, priceHistory] = await Promise.all([
+    requireAdmin({ permission: "pricing.view" }),
     listPricingReview(),
     listPricingRules(),
     listPriceHistory(50),

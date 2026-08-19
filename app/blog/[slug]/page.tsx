@@ -163,6 +163,7 @@ function renderContent(content: string[]): ReactNode[] {
             alt={img.alt}
             width={800}
             height={450}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 800px, 800px"
             className={styles.postImage}
             placeholder="blur"
             blurDataURL={IMAGE_BLUR_DATA_URL}
@@ -352,6 +353,7 @@ export default async function BlogPostPage({
                   alt={post.title}
                   width={800}
                   height={450}
+                  sizes="(max-width: 768px) 100vw, 800px"
                   className={styles.postImage}
                   placeholder="blur"
                   blurDataURL={IMAGE_BLUR_DATA_URL}

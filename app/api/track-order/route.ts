@@ -106,7 +106,10 @@ export async function GET(request: NextRequest) {
       updatedAt: order.updated_at || order.created_at || new Date().toISOString(),
     };
 
-    return NextResponse.json(sanitizedPayload, { status: 200 });
+    return NextResponse.json(sanitizedPayload, {
+      status: 200,
+      headers: { "Cache-Control": "private, no-store" },
+    });
   } catch (err) {
     console.error("[track-order] Unexpected lookup error:", err);
     return NextResponse.json(

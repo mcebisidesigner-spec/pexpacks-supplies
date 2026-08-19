@@ -62,7 +62,7 @@ function extFor(mime: string): string {
 
 export async function listAssets(folder?: string): Promise<AssetRow[]> {
   const admin = createSupabaseAdminClient();
-  let query = admin.from("assets").select("*");
+  let query = admin.from("assets").select("id,name,bucket,folder,path,public_url,mime_type,size_bytes,width,height,alt_text,uploaded_by,created_at");
   if (folder) query = query.eq("folder", folder);
   query = query.order("created_at", { ascending: false });
   const { data, error } = await query;

@@ -813,6 +813,43 @@ function SparklineWave({ color, direction = "up" }: { color: string; direction?:
 }
 
 // ==========================================
+// STATIC CONSTANTS (module scope)
+// ==========================================
+
+// Bar chart daily points for May 20-27
+const CHART_DAYS = [
+  { day: "May 20", label: "20", val: 210000, height: "65%" },
+  { day: "May 21", label: "21", val: 245000, height: "76%" },
+  { day: "May 22", label: "22", val: 230000, height: "71%" },
+  { day: "May 23", label: "23", val: 270000, height: "84%" },
+  { day: "May 24", label: "24", val: 285340, height: "95%", isPeak: true },
+  { day: "May 25", label: "25", val: 190000, height: "58%" },
+  { day: "May 26", label: "26", val: 225000, height: "70%" },
+  { day: "May 27", label: "27", val: 250000, height: "78%" },
+] as const;
+
+const EXCEPTION_ICON_MAP: Record<SeverityLevel, React.ReactNode> = {
+  high: <AlertTriangle size={16} />,
+  medium: <Clock size={16} />,
+  info: <Info size={16} />,
+  low: <CheckCircle2 size={16} />,
+};
+
+const EXCEPTION_ICON_CLASS_MAP: Record<SeverityLevel, string> = {
+  high: styles.exceptionIconHigh,
+  medium: styles.exceptionIconMedium,
+  info: styles.exceptionIconInfo,
+  low: styles.exceptionIconLow,
+};
+
+const EXCEPTION_BADGE_CLASS_MAP: Record<SeverityLevel, string> = {
+  high: styles.severityHigh,
+  medium: styles.severityMedium,
+  info: styles.severityInfo,
+  low: styles.severityLow,
+};
+
+// ==========================================
 // MAIN COMPONENT
 // ==========================================
 
@@ -908,6 +945,21 @@ export function OperationsCommandCenter() {
     };
   }, [packs]);
 
+  // Kanban column partitions
+  const kanbanItemColumns = useMemo(() => ({
+    needs_procurement: filteredItems.filter((i) => i.stage === "needs_procurement"),
+    partially_secured: filteredItems.filter((i) => i.stage === "partially_secured"),
+    fully_secured: filteredItems.filter((i) => i.stage === "fully_secured"),
+    completed: filteredItems.filter((i) => i.stage === "completed"),
+  }), [filteredItems]);
+
+  const kanbanPackColumns = useMemo(() => ({
+    draft: filteredPacks.filter((p) => p.stage === "draft"),
+    awaiting_approval: filteredPacks.filter((p) => p.stage === "awaiting_approval"),
+    published: filteredPacks.filter((p) => p.stage === "published"),
+    needs_update: filteredPacks.filter((p) => p.stage === "needs_update"),
+  }), [filteredPacks]);
+
   // Inline status changer
   const handleMoveStage = (itemId: string, newStage: ItemStage) => {
     setItems((prev) =>
@@ -940,18 +992,6 @@ export function OperationsCommandCenter() {
     setComments((prev) => [newComment, ...prev]);
     setNewCommentText("");
   };
-
-  // Bar chart daily points for May 20-27
-  const chartDays = [
-    { day: "May 20", label: "20", val: 210000, height: "65%" },
-    { day: "May 21", label: "21", val: 245000, height: "76%" },
-    { day: "May 22", label: "22", val: 230000, height: "71%" },
-    { day: "May 23", label: "23", val: 270000, height: "84%" },
-    { day: "May 24", label: "24", val: 285340, height: "95%", isPeak: true },
-    { day: "May 25", label: "25", val: 190000, height: "58%" },
-    { day: "May 26", label: "26", val: 225000, height: "70%" },
-    { day: "May 27", label: "27", val: 250000, height: "78%" },
-  ];
 
   return (
     <div className={styles.commandCenter}>
@@ -1300,7 +1340,7 @@ export function OperationsCommandCenter() {
 
           {/* Interactive Bar Chart */}
           <div className={styles.chartContainer}>
-            {chartDays.map((item, idx) => (
+            {CHART_DAYS.map((item, idx) => (
               <div
                 key={item.day}
                 className={styles.chartColumn}
@@ -1335,7 +1375,7 @@ export function OperationsCommandCenter() {
           </div>
 
           <div className={styles.chartXAxis}>
-            {chartDays.map((item) => (
+            {CHART_DAYS.map((item) => (
               <span key={item.day}>{item.day}</span>
             ))}
           </div>
@@ -1355,25 +1395,6 @@ export function OperationsCommandCenter() {
 
           <div className={styles.exceptionList}>
             {INITIAL_EXCEPTIONS.map((exc) => {
-              const iconMap = {
-                high: <AlertTriangle size={16} />,
-                medium: <Clock size={16} />,
-                info: <Info size={16} />,
-                low: <CheckCircle2 size={16} />,
-              };
-              const iconClassMap = {
-                high: styles.exceptionIconHigh,
-                medium: styles.exceptionIconMedium,
-                info: styles.exceptionIconInfo,
-                low: styles.exceptionIconLow,
-              };
-              const badgeClassMap = {
-                high: styles.severityHigh,
-                medium: styles.severityMedium,
-                info: styles.severityInfo,
-                low: styles.severityLow,
-              };
-
               return (
                 <div
                   key={exc.id}
@@ -1389,8 +1410,8 @@ export function OperationsCommandCenter() {
                   }}
                 >
                   <div className={styles.exceptionLeft}>
-                    <div className={`${styles.exceptionIcon} ${iconClassMap[exc.severity]}`}>
-                      {iconMap[exc.severity]}
+                    <div className={`${styles.exceptionIcon} ${EXCEPTION_ICON_CLASS_MAP[exc.severity]}`}>
+                      {EXCEPTION_ICON_MAP[exc.severity]}
                     </div>
                     <div className={styles.exceptionDetails}>
                       <span className={styles.exceptionHeadline}>{exc.title}</span>
@@ -1400,7 +1421,7 @@ export function OperationsCommandCenter() {
 
                   <div className={styles.exceptionRight}>
                     <span className={styles.exceptionTarget}>{exc.targetCount}</span>
-                    <span className={`${styles.severityBadge} ${badgeClassMap[exc.severity]}`}>
+                    <span className={`${styles.severityBadge} ${EXCEPTION_BADGE_CLASS_MAP[exc.severity]}`}>
                       {exc.severity}
                     </span>
                     <span className={styles.exceptionTime}>{exc.timeAgo}</span>
@@ -1563,9 +1584,7 @@ export function OperationsCommandCenter() {
                   <span>Due Date</span>
                 </div>
                 <div className={styles.colCardsList}>
-                  {filteredItems
-                    .filter((i) => i.stage === "needs_procurement")
-                    .map((item) => (
+                  {kanbanItemColumns.needs_procurement.map((item) => (
                       <div
                         key={item.id}
                         className={styles.kanbanCard}
@@ -1637,9 +1656,7 @@ export function OperationsCommandCenter() {
                   <span>Due Date</span>
                 </div>
                 <div className={styles.colCardsList}>
-                  {filteredItems
-                    .filter((i) => i.stage === "partially_secured")
-                    .map((item) => (
+                  {kanbanItemColumns.partially_secured.map((item) => (
                       <div
                         key={item.id}
                         className={styles.kanbanCard}
@@ -1680,9 +1697,7 @@ export function OperationsCommandCenter() {
                   <span>Due Date</span>
                 </div>
                 <div className={styles.colCardsList}>
-                  {filteredItems
-                    .filter((i) => i.stage === "fully_secured")
-                    .map((item) => (
+                  {kanbanItemColumns.fully_secured.map((item) => (
                       <div
                         key={item.id}
                         className={styles.kanbanCard}
@@ -1723,9 +1738,7 @@ export function OperationsCommandCenter() {
                   <span>Due Date</span>
                 </div>
                 <div className={styles.colCardsList}>
-                  {filteredItems
-                    .filter((i) => i.stage === "completed")
-                    .map((item) => (
+                  {kanbanItemColumns.completed.map((item) => (
                       <div
                         key={item.id}
                         className={styles.kanbanCard}
@@ -1771,9 +1784,7 @@ export function OperationsCommandCenter() {
                   <span>Due Date</span>
                 </div>
                 <div className={styles.colCardsList}>
-                  {filteredPacks
-                    .filter((p) => p.stage === "draft")
-                    .map((pack) => (
+                  {kanbanPackColumns.draft.map((pack) => (
                       <div
                         key={pack.id}
                         className={styles.kanbanCard}
@@ -1810,9 +1821,7 @@ export function OperationsCommandCenter() {
                   <span>Due Date</span>
                 </div>
                 <div className={styles.colCardsList}>
-                  {filteredPacks
-                    .filter((p) => p.stage === "awaiting_approval")
-                    .map((pack) => (
+                  {kanbanPackColumns.awaiting_approval.map((pack) => (
                       <div
                         key={pack.id}
                         className={styles.kanbanCard}
@@ -1849,9 +1858,7 @@ export function OperationsCommandCenter() {
                   <span>Due Date</span>
                 </div>
                 <div className={styles.colCardsList}>
-                  {filteredPacks
-                    .filter((p) => p.stage === "published")
-                    .map((pack) => (
+                  {kanbanPackColumns.published.map((pack) => (
                       <div
                         key={pack.id}
                         className={styles.kanbanCard}
@@ -1888,9 +1895,7 @@ export function OperationsCommandCenter() {
                   <span>Due Date</span>
                 </div>
                 <div className={styles.colCardsList}>
-                  {filteredPacks
-                    .filter((p) => p.stage === "needs_update")
-                    .map((pack) => (
+                  {kanbanPackColumns.needs_update.map((pack) => (
                       <div
                         key={pack.id}
                         className={styles.kanbanCard}

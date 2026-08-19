@@ -1,0 +1,40 @@
+# Documentation & design files
+docs/
+*.md
+!README.md
+
+# Test infrastructure
+tests/
+coverage/
+playwright-report/
+
+# Development tools
+.agents/
+.github/
+.vscode/
+*.log
+.tmp/
+
+# Design assets (not needed in production)
+*.psd
+*.ai
+*.sketch
+*.fig
+
+# Build artifacts that Vercel regenerates
+.next/
+node_modules/
+
+# Database migrations source (Supabase manages these)
+supabase/migrations/
+
+# Scripts (not needed at runtime)
+scripts/
+
+# Type info
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Environment files (Vercel injects these)
+.env*
+!.env.example

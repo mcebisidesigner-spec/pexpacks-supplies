@@ -12,8 +12,10 @@ import styles from "../../operations.module.css";
 export const dynamic = "force-dynamic";
 
 export default async function ReceivingPage() {
-  const session = await requireAdmin({ permission: "procurement.view" });
-  const purchaseOrders = await listPurchaseOrdersForReceiving();
+  const [session, purchaseOrders] = await Promise.all([
+    requireAdmin({ permission: "procurement.view" }),
+    listPurchaseOrdersForReceiving(),
+  ]);
 
   return (
     <div className={styles.page}>

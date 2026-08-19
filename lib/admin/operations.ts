@@ -354,7 +354,7 @@ export async function listPricingReview() {
 export async function listPricingRules() {
   const { data, error } = await db()
     .from("pricing_rules")
-    .select("*")
+    .select("id,name,scope,scope_value,method,rate,rounding_increment,priority,active")
     .order("priority");
   if (isOperationsSchemaUnavailable(error)) return [] as PricingRule[];
   assertNoError(error, "Unable to load pricing rules");
@@ -459,7 +459,7 @@ export type ProcurementRow = {
 export async function listProcurementRequirements() {
   const { data, error } = await db()
     .from("procurement_command_view")
-    .select("*")
+    .select("id,season_id,product_id,sku,product_name,category,required_quantity,requested_quantity,supplier_confirmed_quantity,secured_quantity,received_quantity,allocated_quantity,outstanding_quantity,procurement_coverage_percent,status,updated_at")
     .order("outstanding_quantity", { ascending: false })
     .order("product_name");
   if (isOperationsSchemaUnavailable(error)) return [] as ProcurementRow[];
@@ -742,7 +742,7 @@ export type TaskRow = {
 export async function listOperationalTasks() {
   const { data, error } = await db()
     .from("operational_tasks")
-    .select("*")
+    .select("id,title,description,entity_type,entity_id,status,priority,assigned_to,due_at,created_at")
     .order("status")
     .order("due_at", { ascending: true, nullsFirst: false })
     .limit(250);
@@ -792,7 +792,7 @@ export async function updateOperationalTaskStatus(id: string, status: string) {
 export async function getTask(id: string) {
   const { data, error } = await db()
     .from("operational_tasks")
-    .select("*")
+    .select("id,title,description,entity_type,entity_id,status,priority,assigned_to,due_at,created_at")
     .eq("id", id)
     .single();
   if (isOperationsSchemaUnavailable(error)) return null;
@@ -833,7 +833,7 @@ export async function listPurchaseOrdersForReceiving() {
   const { data, error } = await db()
     .from("supplier_purchase_orders")
     .select(`
-      *,
+      id,purchase_order_number,supplier_id,status,expected_on,notes,created_at,
       suppliers(name, code),
       supplier_purchase_items(
         id,
@@ -856,7 +856,7 @@ export async function listPurchaseOrdersForReceiving() {
 export async function listSupplierReceipts(purchaseOrderId: string) {
   const { data, error } = await db()
     .from("supplier_receipts")
-    .select("*")
+    .select("id,purchase_order_id,reference,received_by,received_at,notes")
     .eq("purchase_order_id", purchaseOrderId)
     .order("received_at", { ascending: false });
   if (isOperationsSchemaUnavailable(error))
@@ -950,7 +950,7 @@ export type ApprovalRow = {
 export async function listApprovals(status?: string) {
   let query = db()
     .from("approvals")
-    .select("*")
+    .select("id,entity_type,entity_id,approval_type,status,requested_by,decided_by,reason,decision_notes,created_at,decided_at")
     .order("created_at", { ascending: false });
   
   if (status) {
@@ -1245,7 +1245,7 @@ export type TaskCommentRow = {
 export async function listTaskComments(taskId: string) {
   const { data, error } = await db()
     .from("task_comments")
-    .select("*")
+    .select("id,task_id,author_id,body,created_at,updated_at")
     .eq("task_id", taskId)
     .order("created_at", { ascending: true });
   if (isOperationsSchemaUnavailable(error)) return [] as TaskCommentRow[];

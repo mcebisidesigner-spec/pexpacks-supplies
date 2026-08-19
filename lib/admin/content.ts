@@ -62,7 +62,7 @@ export async function listTestimonials(): Promise<TestimonialRow[]> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("testimonials")
-    .select("*")
+    .select("id,name,role,context,quote,avatar,rating,visible,sort_order,updated_by,updated_at,created_at")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
   if (error) {
@@ -76,7 +76,7 @@ export async function getTestimonial(id: string): Promise<TestimonialRow | null>
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("testimonials")
-    .select("*")
+    .select("id,name,role,context,quote,avatar,rating,visible,sort_order,updated_by,updated_at,created_at")
     .eq("id", id)
     .maybeSingle();
   if (error) {
@@ -256,7 +256,7 @@ export async function listFaqs(): Promise<FaqRow[]> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("faqs")
-    .select("*")
+    .select("id,slug,question,answer,category,links,visible,sort_order,updated_by,updated_at,created_at")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
   if (error) {
@@ -268,7 +268,7 @@ export async function listFaqs(): Promise<FaqRow[]> {
 
 export async function getFaq(id: string): Promise<FaqRow | null> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("faqs").select("*").eq("id", id).maybeSingle();
+  const { data, error } = await admin.from("faqs").select("id,slug,question,answer,category,links,visible,sort_order,updated_by,updated_at,created_at").eq("id", id).maybeSingle();
   if (error) {
     console.error("[content] get faq failed:", error);
     return null;

@@ -76,9 +76,17 @@ export function SchoolPacksDetailView({
   const [sortBy, setSortBy] = useState("last-edited");
 
   const totalPacks = initialPacks.length;
-  const publishedPacks = initialPacks.filter((p) => p.visible).length;
-  const totalItemsCount = initialPacks.reduce((sum, p) => sum + (p.item_count || 0), 0);
-  const totalRevenue = initialPacks.reduce((sum, p) => sum + (p.price || 0), 0);
+  const { publishedPacks, totalItemsCount, totalRevenue } = useMemo(() => {
+    let publishedPacks = 0;
+    let totalItemsCount = 0;
+    let totalRevenue = 0;
+    for (const p of initialPacks) {
+      if (p.visible) publishedPacks++;
+      totalItemsCount += p.item_count || 0;
+      totalRevenue += p.price || 0;
+    }
+    return { publishedPacks, totalItemsCount, totalRevenue };
+  }, [initialPacks]);
 
   const filteredPacks = useMemo(() => {
     return initialPacks.filter((p) => {

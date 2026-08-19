@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -38,11 +38,17 @@ export function ProcurementPageView() {
   const [cards, setCards] = useState<KanbanCard[]>(SEED_KANBAN);
   const [generatedMessage, setGeneratedMessage] = useState<string | null>(null);
 
-  const committedSpend = cards.reduce((sum, c) => sum + c.value, 0);
-  const outstandingPOValue = cards.filter((c) => c.stage !== "Completed").reduce((sum, c) => sum + c.value, 0);
-  const revenueAtRisk = cards.filter((c) => c.stage === "Needs Procurement").reduce((sum, c) => sum + c.value, 0);
+  const { committedSpend, outstandingPOValue, revenueAtRisk } = useMemo(() => {
+    let committed = 0, outstanding = 0, atRisk = 0;
+    for (const c of cards) {
+      committed += c.value;
+      if (c.stage !== "Completed") outstanding += c.value;
+      if (c.stage === "Needs Procurement") atRisk += c.value;
+    }
+    return { committedSpend: committed, outstandingPOValue: outstanding, revenueAtRisk: atRisk };
+  }, [cards]);
 
-  const moveStage = (id: string) => {
+  const moveStage = useCallback((id: string) => {
     const stages: KanbanCard["stage"][] = ["Needs Procurement", "Partially Secured", "Fully Secured", "Completed"];
     setCards((prev) =>
       prev.map((c) => {
@@ -54,9 +60,9 @@ export function ProcurementPageView() {
         return c;
       })
     );
-  };
+  }, []);
 
-  const handleGeneratePO = (supplier: string) => {
+  const handleGeneratePO = useCallback((supplier: string) => {
     const poNum = `PO-${Math.floor(10000 + Math.random() * 90000)}`;
     const newCard: KanbanCard = {
       id: `po-${Date.now()}`,
@@ -69,7 +75,15 @@ export function ProcurementPageView() {
     setCards((prev) => [newCard, ...prev]);
     setGeneratedMessage(`Generated 1-Click Purchase Order ${poNum} for ${supplier}!`);
     setTimeout(() => setGeneratedMessage(null), 4000);
-  };
+  }, []);
+
+  const kanbanColumns = useMemo(() => {
+    const stages = ["Needs Procurement", "Partially Secured", "Fully Secured", "Completed"] as const;
+    return stages.map((stage) => ({
+      stage,
+      cards: cards.filter((c) => c.stage === stage),
+    }));
+  }, [cards]);
 
   return (
     <div className={styles.container}>
@@ -153,8 +167,7 @@ export function ProcurementPageView() {
 
       {/* 4-Stage Kanban Board */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginTop: 12 }}>
-        {(["Needs Procurement", "Partially Secured", "Fully Secured", "Completed"] as const).map((stage) => {
-          const stageCards = cards.filter((c) => c.stage === stage);
+        {kanbanColumns.map(({ stage, cards: stageCards }) => {
           return (
             <div
               key={stage}

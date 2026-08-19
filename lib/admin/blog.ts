@@ -60,7 +60,7 @@ export async function listBlogPosts(): Promise<BlogPostRow[]> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("blog_posts")
-    .select("*")
+    .select("id,slug,title,excerpt,content,author,category,image,published,created_at,updated_at")
     .order("created_at", { ascending: false });
   if (error) {
     console.error("[blog] list posts failed:", error);
@@ -73,7 +73,7 @@ export async function getBlogPost(id: string): Promise<BlogPostRow | null> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("blog_posts")
-    .select("*")
+    .select("id,slug,title,excerpt,content,author,category,image,published,created_at,updated_at")
     .eq("id", id)
     .maybeSingle();
   if (error) {

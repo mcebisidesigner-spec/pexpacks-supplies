@@ -45,7 +45,7 @@ export function permissionGroups(): { group: string; items: { key: string; name:
 export async function listRoles(): Promise<RoleListItem[]> {
   const admin = createSupabaseAdminClient();
   const [roles, userRoles, rolePermissions] = await Promise.all([
-    admin.from("roles").select("*").order("name", { ascending: true }),
+    admin.from("roles").select("id,name,slug,description,created_at").order("name", { ascending: true }),
     admin.from("user_roles").select("role_id"),
     admin.from("role_permissions").select("role_id, permission_id"),
   ]);
@@ -68,7 +68,7 @@ export async function listRoles(): Promise<RoleListItem[]> {
 
 export async function getRole(id: string): Promise<RoleDetail | null> {
   const admin = createSupabaseAdminClient();
-  const { data: role, error } = await admin.from("roles").select("*").eq("id", id).maybeSingle();
+  const { data: role, error } = await admin.from("roles").select("id,name,slug,description,created_at").eq("id", id).maybeSingle();
   if (error || !role) {
     console.error("[roles] get failed:", error);
     return null;
@@ -91,7 +91,7 @@ export async function getRole(id: string): Promise<RoleDetail | null> {
 
 export async function listPermissions(): Promise<PermissionRow[]> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("permissions").select("*").order("name", { ascending: true });
+  const { data, error } = await admin.from("permissions").select("id,key,name,description,created_at").order("name", { ascending: true });
   if (error) return [];
   return data ?? [];
 }

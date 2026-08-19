@@ -2,7 +2,6 @@ import { requireAdmin } from "@/lib/admin/rbac";
 import { SchoolPacksView } from "@/components/admin/packs/SchoolPacksView";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 export const metadata = {
   title: "School Packs | Admin | Pexpacks",

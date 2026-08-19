@@ -19,8 +19,10 @@ export const metadata = {
 };
 
 export default async function AddItemPage() {
-  const session = await requireAdmin({ permission: "catalogue.view" });
-  const schemaReady = await isOperationsSchemaReady();
+  const [session, schemaReady] = await Promise.all([
+    requireAdmin({ permission: "catalogue.view" }),
+    isOperationsSchemaReady(),
+  ]);
   const canManage = hasPermission(session, "catalogue.manage");
   const canImportExisting = hasPermission(session, "items.import");
 

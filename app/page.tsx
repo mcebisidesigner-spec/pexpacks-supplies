@@ -4,18 +4,22 @@ import { SectionHeader } from '@/components/marketing/SectionHeader'
 import { HeroSearch } from '@/components/marketing/HeroSearch'
 import { ConciergeSection } from '@/components/marketing/ConciergeSection'
 import { SuperpowerSection } from '@/components/marketing/SuperpowerSection'
-import { RetailVsPexpacksSlider } from '@/components/marketing/RetailVsPexpacksSlider'
-import { FaqMarquee } from '@/components/shared/FaqMarquee'
-import { TestimonialMarquee } from '@/components/shared/TestimonialMarquee'
+import {
+  RetailVsPexpacksSlider,
+  FaqMarquee,
+  TestimonialMarquee,
+  HappyPayBanner,
+  HappyPaySteps,
+} from '@/components/marketing/HomeBelowFold'
 import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
 import { getFaqs, getTestimonials, getWebsiteContent } from '@/lib/cms'
-import { HappyPayBanner } from '@/components/bnpl/HappyPayBanner'
-import { HappyPaySteps } from '@/components/bnpl/HappyPaySteps'
 import { testimonials as confirmedTestimonials } from '@/data/testimonials'
 
 import heroStyles from '@/components/marketing/HeroBase.module.css'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import homeStyles from '@/components/marketing/MarketingHome.module.css'
+
+export const revalidate = 300
 
 export default async function HomePage() {
   const [testimonials, allFaqs, content] = await Promise.all([

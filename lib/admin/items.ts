@@ -183,7 +183,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
   let query = admin
     .from("stationery_items")
     .select(
-      "*,stationery_packs(title)",
+      "id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
       { count: "exact" }
     )
     .or(INVENTORY_ITEM_FILTER);
@@ -286,7 +286,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   if (isUuid) {
     const { data } = await admin
       .from("stationery_items")
-      .select("*")
+      .select("id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at")
       .eq("id", decoded)
       .or(INVENTORY_ITEM_FILTER)
       .maybeSingle();
@@ -298,7 +298,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   // 1. Direct query by exact slug or exact name
   const { data: directMatch } = await admin
     .from("stationery_items")
-    .select("*")
+    .select("id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at")
     .or(`slug.ilike.${decoded},slug.ilike.${slugified},name.ilike.${decoded}`)
     .or(INVENTORY_ITEM_FILTER)
     .limit(1)
@@ -309,7 +309,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   // 2. Fallback: match all items by slugified name or ID
   const { data: allItems } = await admin
     .from("stationery_items")
-    .select("*")
+    .select("id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at")
     .or(INVENTORY_ITEM_FILTER);
   if (!allItems) return null;
 

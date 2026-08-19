@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Papa from "papaparse";
 import {
   Upload,
   FileSpreadsheet,
@@ -63,7 +62,7 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
   };
 
   // Process CSV File with Papaparse
-  const handleFileChange = (selectedFile: File | null) => {
+  const handleFileChange = async (selectedFile: File | null) => {
     if (!selectedFile) return;
 
     setFile(selectedFile);
@@ -71,6 +70,7 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
     setGlobalError(null);
     setIsParsing(true);
 
+    const Papa = (await import("papaparse")).default;
     Papa.parse<CsvRow>(selectedFile, {
       header: true,
       skipEmptyLines: true,

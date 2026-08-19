@@ -177,7 +177,7 @@
 }
 
 .link:hover {
-  color: var(--pex-primary-dark, #0369a1);
+  color: var(--pex-keppel, #0369a1);
 }
 
 .forgotBtn {
@@ -193,7 +193,7 @@
 }
 
 .forgotBtn:hover {
-  color: var(--pex-primary-dark, #0369a1);
+  color: var(--pex-keppel, #0369a1);
 }
 
 /* Modal Popup Styles */

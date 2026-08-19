@@ -479,7 +479,11 @@ export async function getPack(idOrSlug: string): Promise<{ pack: PackRow | null;
   const decoded = decodeURIComponent(idOrSlug).trim();
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
 
-  let query = admin.from("stationery_packs").select("*");
+  let query = admin
+    .from("stationery_packs")
+    .select(
+      "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector"
+    );
   if (isUuid) {
     query = query.eq("id", decoded);
   } else {
@@ -492,7 +496,9 @@ export async function getPack(idOrSlug: string): Promise<{ pack: PackRow | null;
 
   const { data: items, error: itemsError } = await admin
     .from("stationery_items")
-    .select("*")
+    .select(
+      "id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at,search_vector"
+    )
     .eq("pack_id", pack.id)
     .order("sort_order", { ascending: true })
     .order("name", { ascending: true });
@@ -818,10 +824,21 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
   const actor = await assertCan("packs.duplicate");
   const admin = createSupabaseAdminClient();
 
-  const { data: source, error } = await admin.from("stationery_packs").select("*").eq("id", id).maybeSingle();
+  const { data: source, error } = await admin
+    .from("stationery_packs")
+    .select(
+      "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector"
+    )
+    .eq("id", id)
+    .maybeSingle();
   if (error || !source) return { ok: false, message: "Pack not found." };
 
-  const { data: sourceItems } = await admin.from("stationery_items").select("*").eq("pack_id", id);
+  const { data: sourceItems } = await admin
+    .from("stationery_items")
+    .select(
+      "id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at,search_vector"
+    )
+    .eq("pack_id", id);
 
   try {
     const baseSlug = slugify(source.title) || "pack";

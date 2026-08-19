@@ -39,7 +39,6 @@
   /* Pexcover sub-palette */
   --pexcover-lavender: #b19cd9;
   --pexcover-pink: #ffd1dc;
-  --pex-packaging-mocha: #a38b7d;
 
   /* SME Professional sub-palette */
   --pex-sme-navy: #152238;
@@ -71,13 +70,9 @@
 
   /* Legacy aliases */
   --pex-primary: var(--pex-navy);
-  --pex-primary-dark: var(--pex-sme-navy);
   --pex-accent: var(--pex-coral);
-  --pex-accent-hover: var(--pex-coral-hover);
   --pex-illustration-soft: var(--pex-border);
   --pex-premium: var(--pex-sme-amber);
-  --pex-soft-gold: var(--pex-bg-soft);
-  --pex-bg-warm: var(--pex-bg-soft);
   --pex-text-muted: var(--pex-muted);
 
   /* Shadows */
@@ -156,8 +151,6 @@
   --space-9: 96px;
   --gap-card: var(--card-gap);
   --gap-card-mobile: var(--card-gap-mobile);
-  --gap-field: 12px;
-  --gap-action: 12px;
 
   /* Elevation */
   --shadow-soft: 0 14px 32px rgba(26, 42, 64, 0.14);
@@ -167,9 +160,9 @@
   /* Typography */
   --font-heading: var(--font-pexpacks-sans-alt), Arial, sans-serif;
   --font-body: var(--font-pexpacks-sans), Arial, sans-serif;
+  --font-sans: var(--font-body);
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --font-weight-heading: 800;
-  --font-weight-body: 400;
-  --font-weight-medium: 500;
   --section-eyebrow-color: var(--pex-keppel);
   --section-eyebrow-font-size: 14px;
   --section-eyebrow-font-weight: 800;
@@ -185,7 +178,6 @@
   --text-2xl: clamp(1.5rem, 3vw, 2rem);
   --text-3xl: clamp(2rem, 5vw, 3.25rem);
   --text-hero: clamp(2.4rem, 8vw, 5.5rem);
-  --line-tight: 1.05;
   --line-heading: 1.12;
   --line-body: 1.6;
 
@@ -199,7 +191,6 @@
   --button-disabled-opacity: 0.62;
   --button-focus-ring: var(--focus-ring);
   --button-focus-ring-offset: 3px;
-  --transition-fast: 150ms ease-in-out;
   --motion-duration-fast: 160ms;
   --motion-duration: 220ms;
   --motion-duration-slow: 320ms;
@@ -225,8 +216,6 @@
   /* Layout */
   --layout-max-width: 1280px;
   --container-max: var(--layout-max-width);
-  --container-padding-mobile: 20px;
-  --container-padding-desktop: 40px;
 
   --gutter-mobile: clamp(16px, 4vw, 24px);
   --gutter-tablet: clamp(24px, 5vw, 40px);
@@ -243,15 +232,9 @@
   --button-height-desktop: 52px;
   --cta-padding-x: 24px;
 
-  --section-padding-mobile: 64px;
   --section-padding-y-mobile: 56px;
   --section-padding-y-tablet: 72px;
   --section-padding-y-desktop: 96px;
-  --section-padding-desktop: 112px;
-  --section-spacing: var(--section-padding-y-desktop);
-
-  --hero-copy-max-width: 760px;
-  --hero-copy-max-width-mobile: 100%;
 
   /* Standardised breakpoints (min-width values) */
   --bp-sm: 600px;

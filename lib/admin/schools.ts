@@ -212,7 +212,7 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
 
   let query = admin
     .from("schools")
-    .select("*, stationery_packs(visible, stationery_items(id))", { count: "exact" });
+    .select("id,name,slug,city,province,logo,is_partner,is_featured,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at, stationery_packs(visible, stationery_items(id))", { count: "exact" });
 
   if (filters.q) {
     const q = filters.q.replace(/%/g, "").trim();
@@ -279,7 +279,7 @@ export async function getSchool(idOrSlug: string): Promise<SchoolRow | null> {
   const decoded = decodeURIComponent(idOrSlug).trim();
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
 
-  let query = admin.from("schools").select("*");
+  let query = admin.from("schools").select("id,name,slug,city,province,logo,is_partner,is_featured,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at");
 
   if (isUuid) {
     query = query.eq("id", decoded);
