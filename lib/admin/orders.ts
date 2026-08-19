@@ -156,10 +156,11 @@ export async function getOrder(idOrRef: string): Promise<OrderRow | null> {
   }
 
   const { data, error } = await query.maybeSingle();
-  if (error || !data) {
+  if (error) {
     console.error("[orders] get failed:", error);
     return null;
   }
+  if (!data) return null;
   return data as unknown as OrderRow;
 }
 
