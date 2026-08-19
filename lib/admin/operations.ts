@@ -1444,11 +1444,27 @@ export async function setDefaultSeason(id: string) {
    Order items
    --------------------------------------------------- */
 
-export async function listOrderItems(orderId: string) {
+export async function listOrderItems(orderIdOrRef: string) {
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderIdOrRef);
+  let targetOrderId = orderIdOrRef;
+
+  if (!isUuid) {
+    const { data: orderRow, error: orderError } = await db()
+      .from("orders")
+      .select("id")
+      .ilike("order_reference", orderIdOrRef)
+      .maybeSingle();
+
+    if (orderError || !orderRow?.id) {
+      return [];
+    }
+    targetOrderId = orderRow.id;
+  }
+
   const { data, error } = await db()
     .from("order_items")
     .select("id,order_id,product_id,pack_id,sku_snapshot,product_name_snapshot,description_snapshot,quantity,unit_selling_price,line_total,estimated_unit_cost,expected_margin,pricing_version,school_name_snapshot,grade_snapshot,created_at")
-    .eq("order_id", orderId)
+    .eq("order_id", targetOrderId)
     .order("created_at");
   if (isOperationsSchemaUnavailable(error)) return [];
   assertNoError(error, "Unable to load order items");
