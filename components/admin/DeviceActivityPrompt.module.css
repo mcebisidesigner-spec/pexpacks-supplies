@@ -1,16 +1,20 @@
 .popupWrap {
   position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 99999;
-  width: min(380px, calc(100vw - 32px));
-  padding: 18px;
-  border: 1px solid var(--admin-border-strong);
-  border-radius: 8px;
-  background: var(--admin-surface);
-  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.58);
-  color: var(--admin-text);
-  animation: enter 180ms ease-out;
+  top: 24px;
+  left: 24px;
+  z-index: 999999;
+  width: min(400px, calc(100vw - 32px));
+  padding: 20px;
+  border: 1px solid #1e293b;
+  border-left: 4px solid #10b981;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #0d1627 0%, #080d17 100%);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.85),
+    0 0 25px rgba(16, 185, 129, 0.2);
+  backdrop-filter: blur(16px);
+  color: #f8fafc;
+  animation: enter 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .header,
@@ -22,102 +26,128 @@
 
 .header {
   justify-content: space-between;
-  padding-bottom: 11px;
-  border-bottom: 1px solid var(--admin-border);
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1e293b;
 }
 
 .domainLabel {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--admin-text-3);
+  color: #94a3b8;
   font-size: 11px;
   font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .domainTag {
-  color: var(--admin-accent-strong);
+  color: #34d399;
+  font-weight: 900;
 }
 
 .closeBtn {
   display: grid;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   place-items: center;
-  border: 1px solid var(--admin-border);
-  border-radius: 7px;
-  background: var(--admin-surface-2);
-  color: var(--admin-text-3);
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #1e293b;
+  color: #cbd5e1;
   cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.closeBtn:hover {
+  background: #334155;
+  color: #ffffff;
+  border-color: #475569;
 }
 
 .body {
   align-items: flex-start;
-  gap: 12px;
-  padding: 16px 0;
+  gap: 14px;
+  padding: 18px 0;
 }
 
 .iconWrap {
   display: grid;
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
   place-items: center;
-  border: 1px solid var(--admin-accent);
-  border-radius: 8px;
-  background: var(--admin-accent-subtle);
-  color: var(--admin-accent-strong);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.18);
 }
 
 .messageText {
   margin: 0;
-  color: var(--admin-text-2);
-  font-size: 13px;
-  font-weight: 500;
+  color: #f8fafc;
+  font-size: 13.5px;
+  font-weight: 600;
   line-height: 1.55;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .actions {
   justify-content: flex-end;
-  gap: 9px;
+  gap: 10px;
+  padding-top: 4px;
 }
 
 .allowBtn,
 .blockBtn {
   min-height: 38px;
-  padding: 0 15px;
-  border-radius: 7px;
+  padding: 0 18px;
+  border-radius: 8px;
   font: inherit;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 800;
   cursor: pointer;
+  transition: all 150ms ease;
 }
 
 .allowBtn {
-  border: 1px solid var(--admin-accent);
-  background: var(--admin-accent);
-  color: var(--admin-accent-text);
+  border: 1px solid #34d399;
+  background: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.allowBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
 }
 
 .blockBtn {
-  border: 1px solid var(--admin-border-strong);
-  background: var(--admin-surface-2);
-  color: var(--admin-text-2);
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+.blockBtn:hover {
+  background: #334155;
+  color: #ffffff;
+  border-color: #475569;
 }
 
 .popupWrap button:focus-visible {
-  outline: 3px solid var(--admin-focus);
+  outline: 3px solid #34d399;
   outline-offset: 2px;
 }
 
 @keyframes enter {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-10px) scale(0.97);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
