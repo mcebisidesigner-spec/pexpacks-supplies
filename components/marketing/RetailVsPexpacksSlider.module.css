@@ -316,7 +316,15 @@
     width: 42px;
     height: 42px;
   }
+  .trackArea {
+    margin-top: 54px;
+    padding-top: 42px;
+  }
   .truckWrapper {
-    top: -46px;
+    top: -40px;
+  }
+  .truckContainer svg {
+    width: 122px;
+    height: 68px;
   }
 }

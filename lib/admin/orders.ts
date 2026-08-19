@@ -256,24 +256,25 @@ export async function deleteOrder(
 
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrRef);
 
-  let findQuery = admin.from("orders").select("*");
+  let findQuery = admin.from("orders").select(ORDER_DETAIL_FIELDS);
   if (isUuid) {
     findQuery = findQuery.eq("id", idOrRef);
   } else {
     findQuery = findQuery.ilike("order_reference", idOrRef);
   }
 
-  const { data: fullOrder } = await findQuery.maybeSingle();
+  const { data: rawOrder } = await findQuery.maybeSingle();
+  const fullOrder = rawOrder as Record<string, unknown> | null;
   if (!fullOrder) return { ok: false, message: "Order not found." };
 
-  const orderRef = String(fullOrder.order_reference || "");
+  const orderRef = String((fullOrder.order_reference as string) || "");
 
   // 1. Fetch matching payment / gateway records before purging
   let matchingPayments: Record<string, unknown>[] = [];
   if (orderRef) {
     const { data: payRows } = await admin
       .from("payments")
-      .select("*")
+      .select("id,order_reference,gateway_reference,amount,currency,payment_gateway,status,metadata,created_at")
       .ilike("order_reference", orderRef);
     if (payRows && Array.isArray(payRows)) {
       matchingPayments = payRows as Record<string, unknown>[];
@@ -303,7 +304,7 @@ export async function deleteOrder(
   const { error } = await admin
     .from("orders")
     .delete()
-    .eq("id", fullOrder.id);
+    .eq("id", String(fullOrder.id));
 
   if (error) {
     console.error("[orders] delete failed:", error);
@@ -321,8 +322,8 @@ export async function deleteOrder(
   await writeAuditLog({
     action: "orders.delete",
     entityType: "order",
-    entityId: fullOrder.id,
-    summary: `Permanently deleted order ${orderRef} (${fullOrder.buyer_name ?? "Unknown"}) across all system tables and dispatched archive email`,
+    entityId: String(fullOrder.id),
+    summary: `Permanently deleted order ${orderRef} (${String(fullOrder.buyer_name || "Unknown")}) across all system tables and dispatched archive email`,
     details: { order_reference: orderRef },
     actorId: session.user.id,
     actorName: session.user.email ?? null,

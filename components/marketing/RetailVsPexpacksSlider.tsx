@@ -239,8 +239,8 @@ export function RetailVsPexpacksSlider() {
           {/* Bottom Track with Synced Delivery Van */}
           <div className={styles.trackArea}>
             <div className={styles.trackLabels}>
-              <span className={styles.labelStress}>Hands-on stress (Empty truck)</span>
-              <span className={styles.labelReady}>Pexpacks ready (Fully loaded)</span>
+              <span className={styles.labelStress}>Hands-on stress</span>
+              <span className={styles.labelReady}>Pexpacks ready</span>
             </div>
 
             {/* Delivery Van SVG tied to sliderPos */}

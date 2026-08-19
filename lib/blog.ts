@@ -20,13 +20,13 @@ function toContent(value: Json | null): string[] {
   return Array.isArray(value) ? value.map((line) => String(line)) : [];
 }
 
-function toPost(row: BlogRow): BlogPost {
+function toPost(row: { id: string; slug: string; title: string; excerpt?: string | null; content?: Json; author?: string | null; category?: string | null; image?: string | null; created_at?: string | null }): BlogPost {
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
     excerpt: row.excerpt ?? "",
-    content: toContent(row.content),
+    content: toContent(row.content ?? null),
     date: row.created_at ? row.created_at.slice(0, 10) : "",
     author: row.author ?? "",
     category: row.category ?? "",
@@ -45,7 +45,7 @@ async function fetchPublishedPosts(): Promise<BlogPost[]> {
     const admin = createSupabaseAdminClient();
     const { data, error } = await admin
       .from("blog_posts")
-      .select("*")
+      .select("id,slug,title,excerpt,content,author,category,image,published,created_at,updated_at")
       .eq("published", true)
       .order("created_at", { ascending: false });
 
@@ -66,7 +66,7 @@ async function fetchPostBySlug(slug: string): Promise<BlogPost | null> {
     const admin = createSupabaseAdminClient();
     const { data, error } = await admin
       .from("blog_posts")
-      .select("*")
+      .select("id,slug,title,excerpt,content,author,category,image,published,created_at,updated_at")
       .eq("slug", slug)
       .eq("published", true)
       .maybeSingle();
