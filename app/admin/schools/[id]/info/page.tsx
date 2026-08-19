@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, Building2, DollarSign, Edit, GraduationCap, ShieldCheck, User } from "lucide-react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";
 import { listPacks } from "@/lib/admin/packs";
@@ -20,6 +20,11 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
   const { id } = await params;
   const school = await getSchool(id);
   if (!school) notFound();
+
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  if (isUuid && school.slug) {
+    redirect(`/admin/schools/${school.slug}/info`);
+  }
 
   const [packData, orderData] = await Promise.all([
     listPacks({ school_id: school.id, pageSize: 100 }),

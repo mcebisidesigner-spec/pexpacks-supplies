@@ -186,11 +186,19 @@ function SparklineWave({ color, direction = "up" }: { color: string; direction?:
 export function SchoolPacksView() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSeason, setSelectedSeason] = useState("2024");
+  const [selectedSeason, setSelectedSeason] = useState("2027");
   const [selectedVisibility, setSelectedVisibility] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const currentDateStr = useMemo(() => {
+    return new Date().toLocaleDateString("en-ZA", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  }, []);
 
   // Filtered rows
   const filteredSchools = useMemo(() => {
@@ -226,7 +234,7 @@ export function SchoolPacksView() {
 
         <button className={styles.datePickerBtn}>
           <Calendar size={14} />
-          <span>May 27 – Jun 2, 2024</span>
+          <span>{currentDateStr}</span>
         </button>
       </div>
 
@@ -420,11 +428,6 @@ export function SchoolPacksView() {
               <LayoutGrid size={14} />
             </button>
           </div>
-
-          <Link href="/admin/packs/new" className={styles.newPackBtn}>
-            <Plus size={14} />
-            <span>+ New Pack</span>
-          </Link>
         </div>
       </div>
 
@@ -454,7 +457,14 @@ export function SchoolPacksView() {
                   <tr
                     key={school.id}
                     className={styles.dataRow}
-                    onClick={() => router.push(`/admin/packs`)}
+                    onClick={() =>
+                      router.push(
+                        `/admin/packs/${school.name
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, "-")
+                          .replace(/^-+|-+$/g, "")}`
+                      )
+                    }
                   >
                     <td>
                       <div className={styles.schoolCell}>

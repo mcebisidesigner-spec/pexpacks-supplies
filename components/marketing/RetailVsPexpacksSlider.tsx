@@ -129,7 +129,7 @@ export function RetailVsPexpacksSlider() {
               <span className={styles.eyebrowDot} aria-hidden="true" />
               DRAG THE LINE
             </p>
-            <h2 className={styles.title}>Hands-on vs. Pexpacks ready</h2>
+            <h2 className={styles.title}>DIY vs. Pexpacks ready</h2>
           </div>
 
           {/* Interactive Split Frame */}
@@ -141,7 +141,7 @@ export function RetailVsPexpacksSlider() {
               if (e.touches[0]) handleStart(e.touches[0].clientX)
             }}
             role="slider"
-            aria-label="Drag comparison slider between hands-on shopping and Pexpacks ready"
+            aria-label="Drag comparison slider between DIY shopping and Pexpacks ready"
             aria-valuenow={Math.round(sliderPos)}
             aria-valuemin={0}
             aria-valuemax={100}
@@ -171,7 +171,7 @@ export function RetailVsPexpacksSlider() {
               className={styles.leftLayer}
               style={{ clipPath: `inset(0 calc(100% - ${sliderPos}%) 0 0)` }}
             >
-              <span className={styles.badgeRetail}>Hands-on shopping</span>
+              <span className={styles.badgeRetail}>DIY shopping</span>
               <h3 className={styles.headlineRetail}>
                 More trips. More gaps. More last–minute stress.
               </h3>
@@ -239,7 +239,7 @@ export function RetailVsPexpacksSlider() {
           {/* Bottom Track with Synced Delivery Van */}
           <div className={styles.trackArea}>
             <div className={styles.trackLabels}>
-              <span className={styles.labelStress}>Hands-on stress</span>
+              <span className={styles.labelStress}>DIY stress</span>
               <span className={styles.labelReady}>Pexpacks ready</span>
             </div>
 

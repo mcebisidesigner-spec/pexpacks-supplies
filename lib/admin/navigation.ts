@@ -50,8 +50,8 @@ export const ADMIN_NAV: AdminNavGroup[] = [
         ready: true,
       },
       {
-        label: "Stationery Items",
-        href: "/admin/items",
+        label: "Master Products",
+        href: "/admin/products",
         icon: "items",
         permission: "catalogue.view",
         ready: true,

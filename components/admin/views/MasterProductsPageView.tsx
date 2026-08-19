@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Boxes,
   Check,
@@ -39,6 +40,7 @@ const SEED_PRODUCTS: ProductRow[] = [
 ];
 
 export function MasterProductsPageView() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -61,8 +63,8 @@ export function MasterProductsPageView() {
           <p className={styles.headerSubtitle}>Manage the master catalogue used across all school packs.</p>
         </div>
         <div className={styles.headerActions}>
-          <Link href="/admin/items/add-item" className={styles.primaryBtn}>
-            <Plus size={14} /> + New Product
+          <Link href="/admin/products/add-item" className={styles.primaryBtn}>
+            <Plus size={14} /> + New Item
           </Link>
         </div>
       </div>
@@ -117,19 +119,34 @@ export function MasterProductsPageView() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((prod) => (
-                <tr key={prod.sku} className={styles.dataRow}>
-                  <td><span className={styles.badgeTeal}>{prod.sku}</span></td>
-                  <td><strong style={{ color: "#ffffff" }}>{prod.name}</strong></td>
-                  <td>{prod.category}</td>
-                  <td>{prod.unit}</td>
-                  <td><strong>R {prod.sellPrice.toFixed(2)}</strong></td>
-                  <td style={{ color: "#94a3b8" }}>R {prod.costPrice.toFixed(2)}</td>
-                  <td><span style={{ color: "#34d399", fontWeight: 700 }}>{prod.margin}%</span></td>
-                  <td>{prod.supplier}</td>
-                  <td><span className={styles.badgeGreen}>{prod.status}</span></td>
-                </tr>
-              ))}
+              {filtered.map((prod) => {
+                const prodSlug = prod.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+                return (
+                  <tr
+                    key={prod.sku}
+                    className={styles.dataRow}
+                    onClick={() => router.push(`/admin/products/${prodSlug}`)}
+                  >
+                    <td><span className={styles.badgeTeal}>{prod.sku}</span></td>
+                    <td>
+                      <Link
+                        href={`/admin/products/${prodSlug}`}
+                        style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {prod.name}
+                      </Link>
+                    </td>
+                    <td>{prod.category}</td>
+                    <td>{prod.unit}</td>
+                    <td><strong>R {prod.sellPrice.toFixed(2)}</strong></td>
+                    <td style={{ color: "#94a3b8" }}>R {prod.costPrice.toFixed(2)}</td>
+                    <td><span style={{ color: "#34d399", fontWeight: 700 }}>{prod.margin}%</span></td>
+                    <td>{prod.supplier}</td>
+                    <td><span className={styles.badgeGreen}>{prod.status}</span></td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

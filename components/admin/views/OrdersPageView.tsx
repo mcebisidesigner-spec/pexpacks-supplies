@@ -49,11 +49,6 @@ export function OrdersPageView() {
           <h1 className={styles.headerTitle}>Orders & Commerce</h1>
           <p className={styles.headerSubtitle}>Order status lifecycle & fulfillment tracking</p>
         </div>
-        <div className={styles.headerActions}>
-          <Link href="/admin/orders/new" className={styles.primaryBtn}>
-            <Plus size={14} /> + New Order
-          </Link>
-        </div>
       </div>
 
       {/* Tabs Row */}
@@ -100,52 +95,55 @@ export function OrdersPageView() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((ord) => (
-                <tr
-                  key={ord.id}
-                  className={styles.dataRow}
-                  onClick={() => router.push(`/admin/orders/${ord.id}`)}
-                >
-                  <td>
-                    <Link
-                      href={`/admin/orders/${ord.id}`}
-                      style={{ color: "#2dd4bf", fontWeight: 700, textDecoration: "none" }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {ord.orderNumber}
-                    </Link>
-                  </td>
-                  <td><strong style={{ color: "#ffffff" }}>{ord.school}</strong></td>
-                  <td>{ord.orderDate}</td>
-                  <td><strong>R {ord.total.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</strong></td>
-                  <td>
-                    <span className={ord.paymentStatus === "Paid" ? styles.badgeGreen : styles.badgeAmber}>
-                      {ord.paymentStatus}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={
-                      ord.fulfilmentStatus === "Ready to Pack" ? styles.badgeTeal :
-                      ord.fulfilmentStatus === "Procurement" ? styles.badgeBlue :
-                      ord.fulfilmentStatus === "At Risk" ? styles.badgeRed :
-                      ord.fulfilmentStatus === "Completed" ? styles.badgeGreen :
-                      styles.badgeAmber
-                    }>
-                      {ord.fulfilmentStatus}
-                    </span>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/admin/orders/${ord.id}`}
-                      className={styles.actionBtnDots}
-                      style={{ fontSize: 11, padding: "2px 8px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Eye size={12} /> View Detail
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map((ord) => {
+                const refNo = ord.orderNumber;
+                return (
+                  <tr
+                    key={ord.id}
+                    className={styles.dataRow}
+                    onClick={() => router.push(`/admin/orders/${refNo}`)}
+                  >
+                    <td>
+                      <Link
+                        href={`/admin/orders/${refNo}`}
+                        style={{ color: "#2dd4bf", fontWeight: 700, textDecoration: "none" }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {refNo}
+                      </Link>
+                    </td>
+                    <td><strong style={{ color: "#ffffff" }}>{ord.school}</strong></td>
+                    <td>{ord.orderDate}</td>
+                    <td><strong>R {ord.total.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</strong></td>
+                    <td>
+                      <span className={ord.paymentStatus === "Paid" ? styles.badgeGreen : styles.badgeAmber}>
+                        {ord.paymentStatus}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={
+                        ord.fulfilmentStatus === "Ready to Pack" ? styles.badgeTeal :
+                        ord.fulfilmentStatus === "Procurement" ? styles.badgeBlue :
+                        ord.fulfilmentStatus === "At Risk" ? styles.badgeRed :
+                        ord.fulfilmentStatus === "Completed" ? styles.badgeGreen :
+                        styles.badgeAmber
+                      }>
+                        {ord.fulfilmentStatus}
+                      </span>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/admin/orders/${refNo}`}
+                        className={styles.actionBtnDots}
+                        style={{ fontSize: 11, padding: "2px 8px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Eye size={12} /> View Detail
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

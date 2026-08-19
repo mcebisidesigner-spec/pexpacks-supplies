@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Filter,
   LayoutGrid,
@@ -36,6 +37,7 @@ const SEED_SUPPLIERS: SupplierRow[] = [
 ];
 
 export function SuppliersPageView() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -55,7 +57,9 @@ export function SuppliersPageView() {
           <p className={styles.headerSubtitle}>Manage your supplier network and performance.</p>
         </div>
         <div className={styles.headerActions}>
-          <button className={styles.primaryBtn}><Plus size={14} /> + New Supplier</button>
+          <Link href="/admin/suppliers/new-supplier" className={styles.primaryBtn}>
+            <Plus size={14} /> + New Supplier
+          </Link>
         </div>
       </div>
 
@@ -97,28 +101,41 @@ export function SuppliersPageView() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((sup) => (
-                <tr key={sup.id} className={styles.dataRow}>
-                  <td>
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(45, 212, 191, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2dd4bf" }}>
-                        <Truck size={14} />
+              {filtered.map((sup) => {
+                const supSlug = sup.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+                return (
+                  <tr
+                    key={sup.id}
+                    className={styles.dataRow}
+                    onClick={() => router.push(`/admin/suppliers/${supSlug}`)}
+                  >
+                    <td>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(45, 212, 191, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2dd4bf" }}>
+                          <Truck size={14} />
+                        </div>
+                        <Link
+                          href={`/admin/suppliers/${supSlug}`}
+                          style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {sup.name}
+                        </Link>
                       </div>
-                      <strong style={{ color: "#ffffff" }}>{sup.name}</strong>
-                    </div>
-                  </td>
-                  <td>{sup.category}</td>
-                  <td>{sup.leadTime}</td>
-                  <td><span style={{ color: sup.onTimeRate >= 95 ? "#34d399" : "#fbbf24", fontWeight: 700 }}>{sup.onTimeRate}%</span></td>
-                  <td>{sup.quoteResponse}</td>
-                  <td>
-                    <span className={sup.status === "Preferred" ? styles.badgeTeal : sup.status === "Approved" ? styles.badgeGreen : styles.badgeAmber}>
-                      {sup.status}
-                    </span>
-                  </td>
-                  <td><button className={styles.actionBtnDots}><MoreHorizontal size={14} /></button></td>
-                </tr>
-              ))}
+                    </td>
+                    <td>{sup.category}</td>
+                    <td>{sup.leadTime}</td>
+                    <td><span style={{ color: sup.onTimeRate >= 95 ? "#34d399" : "#fbbf24", fontWeight: 700 }}>{sup.onTimeRate}%</span></td>
+                    <td>{sup.quoteResponse}</td>
+                    <td>
+                      <span className={sup.status === "Preferred" ? styles.badgeTeal : sup.status === "Approved" ? styles.badgeGreen : styles.badgeAmber}>
+                        {sup.status}
+                      </span>
+                    </td>
+                    <td><button className={styles.actionBtnDots}><MoreHorizontal size={14} /></button></td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

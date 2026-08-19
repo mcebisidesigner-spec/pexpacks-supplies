@@ -58,7 +58,7 @@ const ORDERED_NAV_ITEMS: Array<{
   { label: "Dashboard", href: "/admin", icon: Package, exact: true },
   { label: "Schools", href: "/admin/schools", icon: School },
   { label: "School Packs", href: "/admin/packs", icon: Briefcase },
-  { label: "Master Products", href: "/admin/items", icon: Boxes },
+  { label: "Master Products", href: "/admin/products", icon: Boxes },
   { label: "Suppliers", href: "/admin/suppliers", icon: Users },
   { label: "Orders", href: "/admin/orders", icon: FileText },
   { label: "Payments", href: "/admin/payments", icon: CreditCard },
@@ -257,19 +257,15 @@ export function AdminShell({
               </button>
             </div>
             <div className={styles.quickCreateList}>
-              <Link href="/admin/orders" className={styles.quickCreateItem}>
-                <ClipboardList size={14} />
-                <span>New Order</span>
-              </Link>
               <Link href="/admin/schools/new" className={styles.quickCreateItem}>
                 <School size={14} />
                 <span>New School</span>
               </Link>
-              <Link href="/admin/items/add-item" className={styles.quickCreateItem}>
+              <Link href="/admin/products/add-item" className={styles.quickCreateItem}>
                 <Package size={14} />
-                <span>New Product</span>
+                <span>New Item</span>
               </Link>
-              <Link href="/admin/suppliers" className={styles.quickCreateItem}>
+              <Link href="/admin/suppliers/new-supplier" className={styles.quickCreateItem}>
                 <Truck size={14} />
                 <span>New Supplier</span>
               </Link>
