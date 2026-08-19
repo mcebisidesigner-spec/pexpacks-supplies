@@ -249,8 +249,8 @@
 /* Track Section below comparison frame */
 .trackArea {
   position: relative;
-  margin-top: clamp(24px, 3vw, 36px);
-  padding-top: 18px;
+  margin-top: clamp(46px, 5vw, 64px);
+  padding-top: 24px;
   border-top: 1px dashed #cbd5e1;
 }
 
@@ -272,7 +272,7 @@
 
 .truckWrapper {
   position: absolute;
-  top: -24px;
+  top: -56px;
   transform: translateX(-50%);
   transition: left 60ms linear;
   pointer-events: none;
@@ -282,7 +282,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  filter: drop-shadow(0 6px 12px rgba(15, 23, 42, 0.15));
+  filter: drop-shadow(0 8px 18px rgba(15, 23, 42, 0.18));
 }
 
 @media (max-width: 640px) {
@@ -315,5 +315,8 @@
   .handleButton {
     width: 42px;
     height: 42px;
+  }
+  .truckWrapper {
+    top: -46px;
   }
 }

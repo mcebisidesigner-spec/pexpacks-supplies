@@ -114,6 +114,11 @@ export function RetailVsPexpacksSlider() {
     return () => observer.disconnect()
   }, [isInteracting])
 
+  // Dynamic box loading opacity & scaling based on slider position (0% retail = empty, 100% Pexpacks = fully loaded)
+  const box1Opacity = Math.min(1, Math.max(0, (sliderPos - 10) / 25))
+  const box2Opacity = Math.min(1, Math.max(0, (sliderPos - 40) / 25))
+  const box3Opacity = Math.min(1, Math.max(0, (sliderPos - 70) / 20))
+
   return (
     <section className={styles.section} aria-label="Retail run versus Pexpacks comparison">
       <div className={styles.inner}>
@@ -200,7 +205,6 @@ export function RetailVsPexpacksSlider() {
                   strokeLinejoin="round"
                 >
                   <polyline points="15 18 9 12 15 6" />
-                  <polyline points="9 18 15 12 9 6" style={{ display: 'none' }} />
                 </svg>
                 <svg
                   width="20"
@@ -232,58 +236,132 @@ export function RetailVsPexpacksSlider() {
             </div>
           </div>
 
-          {/* Bottom Track with Synced Delivery Truck Graphic */}
+          {/* Bottom Track with Synced Delivery Van */}
           <div className={styles.trackArea}>
             <div className={styles.trackLabels}>
-              <span className={styles.labelStress}>Retail stress</span>
-              <span className={styles.labelReady}>Pexpacks ready</span>
+              <span className={styles.labelStress}>Retail stress (Empty truck)</span>
+              <span className={styles.labelReady}>Pexpacks ready (Fully loaded)</span>
             </div>
 
-            {/* Delivery Truck SVG tied to sliderPos */}
+            {/* Delivery Van SVG tied to sliderPos */}
             <div className={styles.truckWrapper} style={{ left: `${sliderPos}%` }}>
               <div className={styles.truckContainer}>
-                {/* SVG Delivery Truck with Stacked Stationery Boxes */}
                 <svg
-                  width="68"
-                  height="42"
-                  viewBox="0 0 80 50"
+                  width="140"
+                  height="78"
+                  viewBox="0 0 180 100"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
                 >
-                  {/* Stacked Boxes on Truck Bed */}
-                  <rect x="18" y="16" width="14" height="12" rx="2" fill="#F59E0B" />
-                  <rect x="20" y="7" width="12" height="10" rx="2" fill="#FF6F59" />
-                  <rect x="31" y="12" width="13" height="16" rx="2" fill="#10B981" />
-                  {/* Box ribbons / straps */}
-                  <line x1="25" y1="16" x2="25" y2="28" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" />
-                  <line x1="26" y1="7" x2="26" y2="17" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" />
-                  <line x1="37" y1="12" x2="37" y2="28" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" />
+                  {/* CARGO BOXES (DYNAMICALLY LOADED AS TRUCK MOVES TO PEXPACKS READY) */}
+                  {/* Box 1 (Left Cargo Box) */}
+                  <g
+                    style={{
+                      opacity: box1Opacity,
+                      transform: `scale(${0.75 + box1Opacity * 0.25})`,
+                      transformOrigin: '97px 42px',
+                      transition: 'opacity 120ms ease-out, transform 120ms ease-out',
+                    }}
+                  >
+                    <rect x="74" y="24" width="46" height="36" rx="3" fill="#E59866" stroke="#B45309" strokeWidth="1.5" />
+                    <line x1="97" y1="24" x2="97" y2="60" stroke="#1E293B" strokeWidth="2" />
+                    <rect x="80" y="34" width="34" height="16" rx="2" fill="#FFFFFF" />
+                    <circle cx="85" cy="42" r="3" fill="#219E9A" />
+                    <text x="99" y="44.5" fill="#1A2A40" fontSize="6" fontWeight="900" fontFamily="sans-serif" textAnchor="middle">
+                      PEXPACKS
+                    </text>
+                  </g>
 
-                  {/* Truck Body Base */}
-                  <rect x="12" y="27" width="34" height="12" rx="2" fill="#133E42" />
+                  {/* Box 2 (Right Cargo Box) */}
+                  <g
+                    style={{
+                      opacity: box2Opacity,
+                      transform: `scale(${0.75 + box2Opacity * 0.25})`,
+                      transformOrigin: '147px 42px',
+                      transition: 'opacity 120ms ease-out, transform 120ms ease-out',
+                    }}
+                  >
+                    <rect x="124" y="24" width="46" height="36" rx="3" fill="#D97706" stroke="#92400E" strokeWidth="1.5" />
+                    <line x1="147" y1="24" x2="147" y2="60" stroke="#1E293B" strokeWidth="2" />
+                    <rect x="130" y="34" width="34" height="16" rx="2" fill="#FFFFFF" />
+                    <circle cx="135" cy="42" r="3" fill="#FF6F59" />
+                    <text x="149" y="44.5" fill="#1A2A40" fontSize="6" fontWeight="900" fontFamily="sans-serif" textAnchor="middle">
+                      PEXPACKS
+                    </text>
+                  </g>
 
-                  {/* Truck Cabin */}
+                  {/* Box 3 (Top Stacked Box) */}
+                  <g
+                    style={{
+                      opacity: box3Opacity,
+                      transform: `scale(${0.75 + box3Opacity * 0.25})`,
+                      transformOrigin: '122px 13px',
+                      transition: 'opacity 120ms ease-out, transform 120ms ease-out',
+                    }}
+                  >
+                    <rect x="98" y="4" width="48" height="20" rx="3" fill="#F59E0B" stroke="#B45309" strokeWidth="1.5" />
+                    <rect x="106" y="8" width="32" height="12" rx="2" fill="#FFFFFF" />
+                    <circle cx="110" cy="14" r="2.5" fill="#219E9A" />
+                    <text x="124" y="16.5" fill="#1A2A40" fontSize="5" fontWeight="900" fontFamily="sans-serif" textAnchor="middle">
+                      PEXPACKS
+                    </text>
+                  </g>
+
+                  {/* TRUCK CABIN & FLATBED BODY (MATCHING ATTACHED REFERENCE IMAGE STYLE IN PEXPACKS COLOURS) */}
+                  {/* Flatbed Cargo Rail & Side Wall */}
+                  <rect x="70" y="60" width="104" height="16" fill="#FF6F59" stroke="#E11D48" strokeWidth="1.5" />
+                  <rect x="70" y="56" width="104" height="5" fill="#E11D48" />
+
+                  {/* Cabin Body Front (Sloping hood, curved roof) */}
                   <path
-                    d="M45 22C45 20.8954 45.8954 20 47 20H60C62.2091 20 64 21.7909 64 24V39H45V22Z"
-                    fill="#0D9488"
+                    d="M6 82 L16 52 C20 44 26 30 38 28 H66 V82 H6 Z"
+                    fill="#FF6F59"
+                    stroke="#E11D48"
+                    strokeWidth="1.5"
                   />
-                  {/* Cabin Window */}
+
+                  {/* Windshield & Side Window (Dark Tint with Sheen) */}
                   <path
-                    d="M50 23H58C59.1046 23 60 23.8954 60 25V30H50V23Z"
-                    fill="#E0F2FE"
+                    d="M26 40 C30 34 34 32 40 32 H62 V58 H22 Z"
+                    fill="#1E293B"
+                  />
+                  <path
+                    d="M30 38 C33 35 36 34 40 34 H58 V46 H26 Z"
+                    fill="rgba(255,255,255,0.22)"
                   />
 
-                  {/* Bumper & Grill */}
-                  <rect x="63" y="32" width="4" height="6" rx="1" fill="#64748B" />
+                  {/* Side Door Outline & Handle */}
+                  <path d="M22 58 H64 V78 H22 Z" fill="none" stroke="#E11D48" strokeWidth="1.5" />
+                  <rect x="52" y="62" width="8" height="3" rx="1.5" fill="#1E293B" />
 
-                  {/* Front Wheels */}
-                  <circle cx="24" cy="39" r="6" fill="#1E293B" />
-                  <circle cx="24" cy="39" r="2.5" fill="#E2E8F0" />
+                  {/* Side Mirror */}
+                  <rect x="16" y="44" width="8" height="16" rx="4" fill="#1E293B" />
+                  <rect x="18" y="46" width="4" height="12" rx="2" fill="#219E9A" />
 
-                  {/* Rear Wheels */}
-                  <circle cx="54" cy="39" r="6" fill="#1E293B" />
-                  <circle cx="54" cy="39" r="2.5" fill="#E2E8F0" />
+                  {/* Headlight & Indicator */}
+                  <path d="M6 62 C6 58 10 58 10 62 V72 H6 Z" fill="#FBBF24" />
+                  <rect x="8" y="73" width="3" height="4" rx="1" fill="#F97316" />
+
+                  {/* Front Bumper (Metallic Grey) */}
+                  <rect x="0" y="74" width="14" height="14" rx="3" fill="#94A3B8" stroke="#64748B" strokeWidth="1" />
+
+                  {/* Rear Tail Light & Bumper */}
+                  <rect x="172" y="64" width="4" height="10" rx="1" fill="#E11D48" />
+                  <rect x="172" y="76" width="6" height="10" rx="2" fill="#475569" />
+
+                  {/* WHEELS & RIMS (MATCHING REFERENCE IMAGE DETAILED RIMS) */}
+                  {/* Front Wheel */}
+                  <circle cx="34" cy="82" r="16" fill="#1E293B" />
+                  <circle cx="34" cy="82" r="10" fill="#475569" />
+                  <circle cx="34" cy="82" r="6" fill="#CBD5E1" />
+                  <circle cx="34" cy="82" r="2.5" fill="#1E293B" />
+
+                  {/* Rear Wheel */}
+                  <circle cx="142" cy="82" r="16" fill="#1E293B" />
+                  <circle cx="142" cy="82" r="10" fill="#475569" />
+                  <circle cx="142" cy="82" r="6" fill="#CBD5E1" />
+                  <circle cx="142" cy="82" r="2.5" fill="#1E293B" />
                 </svg>
               </div>
             </div>
