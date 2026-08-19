@@ -244,7 +244,13 @@ export function RetailVsPexpacksSlider() {
             </div>
 
             {/* Delivery Van SVG tied to sliderPos */}
-            <div className={styles.truckWrapper} style={{ left: `${sliderPos}%` }}>
+            <div
+              className={styles.truckWrapper}
+              style={{
+                left: `${sliderPos}%`,
+                transform: `translateX(-50%) scaleX(${sliderPos < 50 ? -1 : 1})`,
+              }}
+            >
               <div className={styles.truckContainer}>
                 <svg
                   width="140"

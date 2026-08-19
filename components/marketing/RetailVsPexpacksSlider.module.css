@@ -274,7 +274,7 @@
   position: absolute;
   top: -56px;
   transform: translateX(-50%);
-  transition: left 60ms linear;
+  transition: left 60ms linear, transform 200ms ease-out;
   pointer-events: none;
 }
 
