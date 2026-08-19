@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { GradePackForCustomisation } from "@/lib/packs/types";
 import { formatInstalment, happyPayInstalment } from "@/lib/order/happyPay";
@@ -34,7 +34,7 @@ export function HappyPayGradePackWidget({
   const [isOpen, setIsOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
-  const instalment = happyPayInstalment(amount);
+  const instalment = useMemo(() => happyPayInstalment(amount), [amount]);
 
   useEffect(() => {
     setIsMounted(true);

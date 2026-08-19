@@ -79,18 +79,23 @@ export function GradePackActions({
     createCustomPackSelection(pack.items),
   );
 
-  const selectedItems = selection.filter(
-    (item) => item.selected && item.selectedQuantity > 0,
+  const selectedItems = useMemo(
+    () => selection.filter((item) => item.selected && item.selectedQuantity > 0),
+    [selection],
   );
   const total = useMemo(() => calculatePackTotal(selection) ?? 0, [selection]);
   const displayedTotal = total > 0 ? formatItemCurrency(total) : "R 0";
   const selectedCount = selectedItems.length;
-  const pdfItems = pack.items.map((item) => ({
-    name: item.name,
-    quantity: item.requiredQuantity,
-    description: item.description,
-    specification: item.specification,
-  }));
+  const pdfItems = useMemo(
+    () =>
+      pack.items.map((item) => ({
+        name: item.name,
+        quantity: item.requiredQuantity,
+        description: item.description,
+        specification: item.specification,
+      })),
+    [pack.items],
+  );
 
   const closeCustomiser = useCallback(() => {
     setIsOpen(false);

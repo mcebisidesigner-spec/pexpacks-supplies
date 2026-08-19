@@ -45,8 +45,9 @@ export function MasterProductsPageView() {
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
   const filtered = useMemo(() => {
+    const q = search.toLowerCase();
     return SEED_PRODUCTS.filter((p) => {
-      const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.sku.toLowerCase().includes(search.toLowerCase());
+      const matchSearch = p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q);
       const matchCat = categoryFilter === "all" || p.category === categoryFilter;
       return matchSearch && matchCat;
     });
