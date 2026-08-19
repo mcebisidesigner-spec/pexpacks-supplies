@@ -132,22 +132,31 @@ async function loadAdminUser(): Promise<AdminSession | null> {
     (user.app_metadata as Record<string, unknown> | undefined)?.role ===
     "admin";
 
-  // 1. Roles
-  const { data: userRoles } = await admin
-    .from("user_roles")
-    .select("role_id")
-    .eq("user_id", user.id);
-  const roleIds = (userRoles ?? []).map((r) => r.role_id);
+  // 1. Fetch user_roles and user_permissions in parallel (both depend only on user.id)
+  const [userRolesResult, overridesResult] = await Promise.all([
+    admin.from("user_roles").select("role_id").eq("user_id", user.id),
+    admin
+      .from("user_permissions")
+      .select("permission_id, granted")
+      .eq("user_id", user.id),
+  ]);
 
-  let roleSlugs: string[] = [];
-  if (roleIds.length > 0) {
-    const { data: roles } = await admin
-      .from("roles")
-      .select("slug")
-      .in("id", roleIds);
-    roleSlugs = (roles ?? []).map((r) => r.slug);
-  }
+  const roleIds = (userRolesResult.data ?? []).map((r) => r.role_id);
 
+  // 2. Fetch roles, role_permissions in parallel (both depend only on roleIds)
+  const [rolesResult, rpResult] = await Promise.all([
+    roleIds.length > 0
+      ? admin.from("roles").select("slug").in("id", roleIds)
+      : Promise.resolve({ data: [] }),
+    roleIds.length > 0
+      ? admin
+          .from("role_permissions")
+          .select("permission_id")
+          .in("role_id", roleIds)
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const roleSlugs = (rolesResult.data ?? []).map((r) => r.slug);
   const isSuperAdmin = legacyAdmin || roleSlugs.includes("super_admin");
   if (isSuperAdmin) {
     return {
@@ -158,28 +167,19 @@ async function loadAdminUser(): Promise<AdminSession | null> {
     };
   }
 
-  // 2. Role-derived permissions
+  // 3. Resolve role-derived permissions
   const permissionSet = new Set<string>();
-  if (roleIds.length > 0) {
-    const { data: rp } = await admin
-      .from("role_permissions")
-      .select("permission_id")
-      .in("role_id", roleIds);
-    const permissionIds = (rp ?? []).map((r) => r.permission_id);
-    if (permissionIds.length > 0) {
-      const { data: permissions } = await admin
-        .from("permissions")
-        .select("key")
-        .in("id", permissionIds);
-      (permissions ?? []).forEach((p) => permissionSet.add(p.key));
-    }
+  const rpIds = (rpResult.data ?? []).map((r) => r.permission_id);
+  if (rpIds.length > 0) {
+    const { data: permissions } = await admin
+      .from("permissions")
+      .select("key")
+      .in("id", rpIds);
+    (permissions ?? []).forEach((p) => permissionSet.add(p.key));
   }
 
-  // 3. Per-user overrides (granted = true adds, false removes)
-  const { data: overrides } = await admin
-    .from("user_permissions")
-    .select("permission_id, granted")
-    .eq("user_id", user.id);
+  // 4. Resolve per-user overrides
+  const overrides = overridesResult.data;
   if (overrides && overrides.length > 0) {
     const ids = [...new Set(overrides.map((o) => o.permission_id))];
     const { data: permissionKeys } = await admin

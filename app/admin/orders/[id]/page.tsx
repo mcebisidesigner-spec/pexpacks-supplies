@@ -131,12 +131,17 @@ function KVRows({ rows }: { rows: { label: string; value: ReactNode }[] }) {
 }
 
 export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
-  const session = await requireAdmin({ permission: "orders.view" });
-  const { id } = await params;
-  const order = await getOrder(id);
-  if (!order) notFound();
+  const [session, { id }] = await Promise.all([
+    requireAdmin({ permission: "orders.view" }),
+    params,
+  ]);
 
-  const orderItems = await listOrderItems(order.id);
+  const [order, orderItems] = await Promise.all([
+    getOrder(id),
+    listOrderItems(id),
+  ]);
+
+  if (!order) notFound();
 
   const metadata = (order.metadata ?? {}) as Record<string, unknown>;
   const refund = (metadata.refund ?? null) as
