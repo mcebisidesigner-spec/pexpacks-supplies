@@ -1,26 +1,27 @@
 .page {
   width: 100%;
-  max-width: 980px;
+  max-width: 100%;
   margin: 0;
-  color: var(--admin-text-2);
+  color: #cbd5e1;
 }
 
 .backRow {
-  margin: 0 0 18px;
+  margin: 0 0 16px;
 }
 
 .backLink {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--admin-text-3);
-  font-size: 13px;
-  font-weight: 700;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
   text-decoration: none;
+  transition: color 140ms ease;
 }
 
 .backLink:hover {
-  color: var(--admin-accent-strong);
+  color: #2dd4bf;
 }
 
 .backLink svg {
@@ -32,7 +33,7 @@
 .stack {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 
 .priceForm {
@@ -57,45 +58,46 @@
 
 .title {
   margin: 0;
-  color: var(--admin-text);
-  font-size: clamp(30px, 4vw, 42px);
-  font-weight: 900;
+  color: #ffffff;
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 800;
   line-height: 1;
-  letter-spacing: 0;
+  letter-spacing: -0.02em;
 }
 
 .itemCount {
-  color: var(--admin-text-3);
+  color: #94a3b8;
   font-size: 14px;
-  font-weight: 700;
-  line-height: 1;
+  font-weight: 600;
   white-space: nowrap;
 }
 
 .subtitle {
   margin: 8px 0 0;
-  color: var(--admin-text-3);
+  color: #94a3b8;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .saveButton {
   flex: 0 0 auto;
-  min-height: 42px;
+  min-height: 40px;
   border: 0;
-  border-radius: 7px;
-  background: var(--admin-accent);
-  color: var(--admin-accent-text);
-  padding: 0 18px;
+  border-radius: 8px;
+  background: #0d9488;
+  color: #ffffff;
+  padding: 0 20px;
   font-family: inherit;
   font-size: 13px;
-  font-weight: 900;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.18);
+  box-shadow: 0 0 16px rgba(13, 148, 136, 0.4);
+  transition: all 140ms ease;
 }
 
 .saveButton:hover:not(:disabled) {
-  background: var(--admin-accent-strong);
+  background: #0f766e;
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.6);
 }
 
 .saveButton:disabled {
