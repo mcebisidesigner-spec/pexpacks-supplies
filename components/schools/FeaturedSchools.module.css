@@ -138,9 +138,9 @@
 }
 
 .yearPillBadge {
-  background: rgba(13, 148, 136, 0.12);
+  background: rgba(190, 147, 64, 0.2);
   color: #0d9488;
-  border: 1px solid rgba(13, 148, 136, 0.3);
+  border: 1px solid rgba(190, 147, 64, 0.4);
   padding: 4px 12px;
   border-radius: var(--radius-pill);
   font-size: 12px;
