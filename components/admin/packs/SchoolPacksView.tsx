@@ -183,7 +183,9 @@ function SparklineWave({ color, direction = "up" }: { color: string; direction?:
   );
 }
 
-export function SchoolPacksView() {
+import type { SchoolGroupedResult } from "@/lib/admin/packs";
+
+export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedResult }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("2027");
@@ -200,9 +202,30 @@ export function SchoolPacksView() {
     });
   }, []);
 
+  const schoolRows = useMemo(() => {
+    if (initialData?.schoolsSummary && initialData.schoolsSummary.length > 0) {
+      return initialData.schoolsSummary.map((s, idx) => ({
+        id: s.school_id,
+        code: `SCH-${1001 + idx}`,
+        name: s.school_name,
+        gradePacksCount: s.grade_packs_count,
+        season: "2027",
+        lastEdited: s.last_edited ? new Date(s.last_edited).toLocaleDateString("en-GB") : "17/08/26",
+        lastEditedBy: "Mcebisi M.",
+        visibility: (s.visible ? "visible" : "hidden") as "visible" | "hidden",
+        status: (s.visible ? "published" : "draft") as "published" | "draft" | "review",
+        health: "good" as "good" | "needs_work",
+        owner: "MC" as "MC" | "KG" | "LM" | "SB",
+        ownerName: "Mcebisi M.",
+        avatarColor: "rgba(45, 212, 191, 0.18)",
+      }));
+    }
+    return SEED_SCHOOL_ROWS;
+  }, [initialData]);
+
   // Filtered rows
   const filteredSchools = useMemo(() => {
-    return SEED_SCHOOL_ROWS.filter((school) => {
+    return schoolRows.filter((school) => {
       const matchQuery =
         school.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         school.code.toLowerCase().includes(searchQuery.toLowerCase());
@@ -212,7 +235,7 @@ export function SchoolPacksView() {
         selectedStatus === "all" || school.status === selectedStatus;
       return matchQuery && matchVisibility && matchStatus;
     });
-  }, [searchQuery, selectedVisibility, selectedStatus]);
+  }, [schoolRows, searchQuery, selectedVisibility, selectedStatus]);
 
   return (
     <div className={styles.container}>

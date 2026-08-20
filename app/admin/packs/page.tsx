@@ -1,4 +1,5 @@
 import { requireAdmin } from "@/lib/admin/rbac";
+import { listSchoolGroupedSummary } from "@/lib/admin/packs";
 import { SchoolPacksView } from "@/components/admin/packs/SchoolPacksView";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,6 @@ export const metadata = {
 
 export default async function AdminSchoolPacksPage() {
   await requireAdmin({ permission: "packs.view" });
-
-  return <SchoolPacksView />;
+  const initialData = await listSchoolGroupedSummary({ page: 1, pageSize: 20 });
+  return <SchoolPacksView initialData={initialData} />;
 }
