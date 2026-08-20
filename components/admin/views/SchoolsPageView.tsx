@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Building2,
-  Edit,
   Eye,
   EyeOff,
   GraduationCap,
@@ -163,13 +162,6 @@ export function SchoolsPageView() {
                   <td>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }} onClick={(e) => e.stopPropagation()}>
                       <span className={school.status === "Active" ? styles.badgeTeal : styles.badgeDark}>{school.status}</span>
-                      <Link
-                        href={`/admin/schools/${school.id}/edit`}
-                        className={styles.actionBtnDots}
-                        style={{ fontSize: 11, padding: "2px 8px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
-                      >
-                        <Edit size={12} /> Edit
-                      </Link>
                       <button
                         className={styles.actionBtnDots}
                         style={{ fontSize: 11, padding: "2px 8px", display: "inline-flex", alignItems: "center", gap: 4 }}
