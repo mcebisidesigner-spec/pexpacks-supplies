@@ -42,7 +42,7 @@ function buildCompleteListPack(
     modalTitle: `${grade.grade} Stationery List`,
     contentHeading: "Official school stationery list",
     description: `Prepared according to the official school list for ${grade.grade}.`,
-    priceLabel: `From ${formatCurrency(grade.price)}`,
+    priceLabel: pack.items.length > 0 && grade.price > 0 ? `From ${formatCurrency(grade.price)}` : "From Quote",
     items: toSchoolListItems(pack),
     customiseTargetId: `customise-${pack.id}`,
     footerActions: (
@@ -140,6 +140,10 @@ export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: Grad
             gradeDescriptions?.[grade.gradeSlug]
           );
 
+          const listItems = toSchoolListItems(pack);
+          const hasItems = listItems.length > 0;
+          const priceLabel = hasItems && grade.price > 0 ? `From ${formatCurrency(grade.price)}` : "From Quote";
+
           return (
             <ArticlePackCard
               key={grade.id}
@@ -147,8 +151,8 @@ export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: Grad
               bestFor={`Best for ${grade.grade} learners`}
               title={`${grade.grade} Stationery Pack`}
               description="Prepared according to the official school list."
-              priceLabel={`From ${formatCurrency(grade.price)}`}
-              items={toSchoolListItems(pack)}
+              priceLabel={priceLabel}
+              items={listItems}
               viewCompleteAriaLabel={`View complete ${grade.grade} stationery list`}
               onViewCompleteList={(event) => {
                 viewListTriggerRef.current = event.currentTarget;

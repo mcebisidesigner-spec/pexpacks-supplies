@@ -8,9 +8,8 @@ import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholde
 import { Button } from "@/components/ui/Button";
 import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
 import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
-import {
-  getSchoolIndex,
-} from "@/data/schools";
+import type { GradePack, School } from "@/data/schools";
+import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { breadcrumbSchema, productSchema } from "@/lib/schema";
 import { getCachedSchoolBySlug } from "@/lib/school-utils";
@@ -36,6 +35,55 @@ function formatSchoolLocation(city: string, district: string, province: string):
     .map((value) => value.trim())
     .filter(Boolean)
     .join(", ");
+}
+
+function isHighSchoolName(name: string): boolean {
+  return /high|hoërskool|secondary|college|academy/i.test(name) && !/primary/i.test(name);
+}
+
+function isPrimarySchoolName(name: string): boolean {
+  return /primary|laerskool|preparatory|pre-primary/i.test(name) && !/high|hoërskool/i.test(name);
+}
+
+function getStandardGradeList(schoolName: string): string[] {
+  if (isHighSchoolName(schoolName)) {
+    return ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
+  }
+  if (isPrimarySchoolName(schoolName)) {
+    return ["Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7"];
+  }
+  return [
+    "Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7",
+    "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"
+  ];
+}
+
+function getNormalizedSchoolGrades(school: School): GradePack[] {
+  const standardGrades = getStandardGradeList(school.name);
+  const existingByLabel = new Map<string, GradePack>();
+
+  for (const grade of school.grades || []) {
+    const key = grade.grade.trim().toLowerCase();
+    existingByLabel.set(key, grade);
+  }
+
+  return standardGrades.map((gradeLabel, idx) => {
+    const key = gradeLabel.trim().toLowerCase();
+    const existing = existingByLabel.get(key);
+    if (existing) return existing;
+
+    const slug = gradeLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    return {
+      id: `std-${school.id}-${slug}-${idx}`,
+      grade: gradeLabel,
+      gradeSlug: slug,
+      price: 0,
+      contents: [],
+      packItems: [],
+      deliveryNote: "Prepared according to official school list.",
+      availability: "in-stock" as const,
+    };
+  });
 }
 
 export async function generateStaticParams() {
@@ -81,7 +129,16 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
     notFound();
   }
 
-  const isPartner = school.isPartnerSchool;
+  const isRefused = Boolean(school.refusedPartnership);
+  const gradesToRender = getNormalizedSchoolGrades(school);
+  const schoolWithGrades = { ...school, grades: gradesToRender };
+
+  const heroLabel = isHighSchoolName(school.name)
+    ? "High School Grade Packs"
+    : isPrimarySchoolName(school.name)
+    ? "Primary School Grade Packs"
+    : "Grade-Specific Packs";
+
   return (
     <>
       <JsonLd
@@ -91,10 +148,10 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           { name: school.name, path: `/schools/${school.slug}` },
         ])}
       />
-      {school.grades.map((grade) => (
+      {schoolWithGrades.grades.map((grade) => (
         <JsonLd
           key={grade.id}
-          data={productSchema(school, grade)}
+          data={productSchema(schoolWithGrades, grade)}
         />
       ))}
       <PageHero
@@ -104,10 +161,10 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <div className={styles.schoolHeroPanel}>
             <div className={styles.schoolHeroCopy}>
               <span className={styles.schoolHeroLabel}>
-                {isPartner ? "Prepared with care" : "Awaiting the school list"}
+                {isRefused ? "Awaiting the school list" : heroLabel}
               </span>
               <span className={styles.schoolHeroTitle}>
-                {isPartner ? "Ready packed" : "or you could send your list"}
+                {isRefused ? "or you could send your list" : "Prepared with care"}
               </span>
             </div>
             <div className={styles.schoolHeroLogoWrap}>
@@ -131,51 +188,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
         }
       />
 
-      {isPartner ? (
-        <>
-          <div className={styles.searchMicroCopy}>
-            <p>
-              Every pack is an exact 100% match to {school.name}&apos;s official requirements. Simply select your grade, and you can easily add or minus quantities of the required items before checkout.
-            </p>
-          </div>
-
-          {/* Subtle Pexcover Advertisement Banner */}
-          <div className={styles.pexcoverBannerOuter}>
-            <div className={styles.pexcoverBanner}>
-              <div className={styles.pexcoverBannerIcon}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              <div className={styles.pexcoverBannerContent}>
-                <h4 className={styles.pexcoverBannerTitle}>Simplify prep with Pexcover book covering</h4>
-                <p className={styles.pexcoverBannerText}>
-                  Add covered books and custom-printed name labels for just <strong>R 350</strong> per pack. 
-                  We cover the books and print matching labels so your child is first-day ready.
-                </p>
-                <Link href="/blog/what-is-pexcover-book-covering" className={styles.pexcoverBannerLink}>
-                  Learn how Pexcover works &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <section className={pageStyles.section}>
-            <div className={pageStyles.sectionInner}>
-              <GradeSelector school={school} />
-            </div>
-          </section>
-
-          <section className={pageStyles.section}>
-            <div className={pageStyles.sectionInner}>
-              <HappyPayBanner variant="schoolPage" />
-              <div style={{ marginTop: 20 }}>
-                <HappyPaySteps />
-              </div>
-            </div>
-          </section>
-        </>
-      ) : (
+      {isRefused ? (
         <div className={styles.unpartneredCard}>
           <div className={styles.unpartneredCardBody}>
             <span className={styles.unpartneredBadge}>Not yet an official partner</span>
@@ -212,6 +225,50 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
             </div>
           </div>
         </div>
+      ) : (
+        <>
+          <div className={styles.searchMicroCopy}>
+            <p>
+              Every pack is an exact 100% match to {school.name}&apos;s official requirements. Simply select your grade, and you can easily add or minus quantities of the required items before checkout.
+            </p>
+          </div>
+
+          {/* Subtle Pexcover Advertisement Banner */}
+          <div className={styles.pexcoverBannerOuter}>
+            <div className={styles.pexcoverBanner}>
+              <div className={styles.pexcoverBannerIcon}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <div className={styles.pexcoverBannerContent}>
+                <h4 className={styles.pexcoverBannerTitle}>Simplify prep with Pexcover book covering</h4>
+                <p className={styles.pexcoverBannerText}>
+                  Add covered books and custom-printed name labels for just <strong>R 350</strong> per pack. 
+                  We cover the books and print matching labels so your child is first-day ready.
+                </p>
+                <Link href="/blog/what-is-pexcover-book-covering" className={styles.pexcoverBannerLink}>
+                  Learn how Pexcover works &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <section className={pageStyles.section}>
+            <div className={pageStyles.sectionInner}>
+              <GradeSelector school={schoolWithGrades} />
+            </div>
+          </section>
+
+          <section className={pageStyles.section}>
+            <div className={pageStyles.sectionInner}>
+              <HappyPayBanner variant="schoolPage" />
+              <div style={{ marginTop: 20 }}>
+                <HappyPaySteps />
+              </div>
+            </div>
+          </section>
+        </>
       )}
     </>
   );

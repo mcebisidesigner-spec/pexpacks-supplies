@@ -17,6 +17,7 @@ type DbSchool = {
   province: string | null;
   logo: string | null;
   is_partner: boolean | null;
+  refused_partnership: boolean | null;
 };
 
 type DbPackItem = {
@@ -107,6 +108,7 @@ function toSchool(school: DbSchool, packs: DbPack[]): School {
     province: school.province ?? "",
     logo: school.logo,
     isPartnerSchool: Boolean(school.is_partner),
+    refusedPartnership: Boolean(school.refused_partnership),
     grades: toGradePacks(packs),
   };
 }
@@ -122,7 +124,7 @@ async function getSchoolWithBoundedQueries(slug: string): Promise<School | undef
   const supabase = createSupabaseAdminClient();
   const { data: dbSchool, error: schoolError } = await supabase
     .from("schools")
-    .select("id, name, slug, city, district, province, logo, is_partner, status, published")
+    .select("id, name, slug, city, district, province, logo, is_partner, refused_partnership, status, published")
     .eq("slug", slug)
     .maybeSingle();
 

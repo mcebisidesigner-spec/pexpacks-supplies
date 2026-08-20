@@ -344,6 +344,7 @@ export interface Database {
           logo: string | null;
           is_partner: boolean;
           is_featured: boolean;
+          refused_partnership: boolean;
           lowest_price: number | null;
           grades: Json | null;
           district: string | null;
@@ -372,6 +373,7 @@ export interface Database {
           logo?: string | null;
           is_partner?: boolean;
           is_featured?: boolean;
+          refused_partnership?: boolean;
           lowest_price?: number | null;
           grades?: Json | null;
           district?: string | null;
@@ -400,6 +402,7 @@ export interface Database {
           logo?: string | null;
           is_partner?: boolean;
           is_featured?: boolean;
+          refused_partnership?: boolean;
           lowest_price?: number | null;
           grades?: Json | null;
           district?: string | null;

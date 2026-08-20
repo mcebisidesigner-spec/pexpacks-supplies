@@ -27,6 +27,7 @@ export type School = {
   province: string;
   logo?: string | null;
   isPartnerSchool: boolean;
+  refusedPartnership?: boolean;
   grades: GradePack[];
 };
 

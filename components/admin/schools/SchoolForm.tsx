@@ -647,6 +647,15 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 />
                 Featured School
               </label>
+              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#f87171", cursor: "pointer", fontWeight: 600 }}>
+                <input
+                  type="checkbox"
+                  name="refused_partnership"
+                  defaultChecked={(school as any)?.refused_partnership ?? false}
+                  style={{ accentColor: "#ef4444", width: 16, height: 16 }}
+                />
+                Refused Partnership
+              </label>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 10, borderTop: "1px solid #1e293b" }}>

@@ -89,6 +89,7 @@ export const schoolSchema = z.object({
   published: z.boolean().default(true),
   is_partner: z.boolean().default(false),
   is_featured: z.boolean().default(false),
+  refused_partnership: z.boolean().default(false),
   lowest_price: priceField,
   partner_since: dateField,
   latitude: numberField("latitude"),
@@ -137,6 +138,7 @@ export function parseSchoolForm(formData: FormData): ParsedSchoolForm {
     published: formData.has("published"),
     is_partner: formData.has("is_partner"),
     is_featured: formData.has("is_featured"),
+    refused_partnership: formData.has("refused_partnership"),
     lowest_price: raw(formData, "lowest_price"),
     partner_since: raw(formData, "partner_since"),
     latitude: raw(formData, "latitude"),
@@ -212,7 +214,7 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
 
   let query = admin
     .from("schools")
-    .select("id,name,slug,city,province,logo,is_partner,is_featured,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at, stationery_packs(visible, stationery_items(id))", { count: "exact" });
+    .select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at, stationery_packs(visible, stationery_items(id))", { count: "exact" });
 
   if (filters.q) {
     const q = filters.q.replace(/%/g, "").trim();
@@ -279,7 +281,7 @@ export async function getSchool(idOrSlug: string): Promise<SchoolRow | null> {
   const decoded = decodeURIComponent(idOrSlug).trim();
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
 
-  let query = admin.from("schools").select("id,name,slug,city,province,logo,is_partner,is_featured,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at");
+  let query = admin.from("schools").select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at");
 
   if (isUuid) {
     query = query.eq("id", decoded);
