@@ -55,10 +55,6 @@
   font-weight: 800;
 }
 
-.featuredCard strong {
-  color: var(--pex-text);
-}
-
 .featuredCard:hover .featuredCta {
   background: var(--pex-coral-hover);
   color: var(--pex-bg);
@@ -139,6 +135,30 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+.yearPillBadge {
+  background: rgba(13, 148, 136, 0.12);
+  color: #0d9488;
+  border: 1px solid rgba(13, 148, 136, 0.3);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+}
+
+.awaitingBadge {
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
 }
 
 @media (max-width: 1024px) {

@@ -61,7 +61,11 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
             <span className={styles.featuredMeta}>{school.region}</span>
             <h3>{school.name}</h3>
             <p>{gradeRangeLabel(school.grades)}</p>
-            <strong>Stationery packs available</strong>
+            {school.hasOrderablePacks ? (
+              <span className={styles.yearPillBadge}>2027 Packs</span>
+            ) : (
+              <span className={styles.awaitingBadge}>Awaiting Lists</span>
+            )}
             <span className={styles.featuredCta}>View packs</span>
           </Link>
         ))}
