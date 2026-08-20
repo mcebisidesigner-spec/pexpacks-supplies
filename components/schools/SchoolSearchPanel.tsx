@@ -315,11 +315,6 @@ export function SchoolSearchPanel({
                                   ) : null}
                                 </div>
                                 <div className={heroStyles.heroResultBadges}>
-                                  {school.phases.slice(0, 1).map((schoolPhase) => (
-                                    <span key={schoolPhase}>
-                                      {getSchoolPhaseLabel(schoolPhase)}
-                                    </span>
-                                  ))}
                                   {school.hasOrderablePacks ? (
                                     <span className={heroStyles.yearPillBadge}>2027 Packs</span>
                                   ) : (

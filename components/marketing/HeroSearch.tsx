@@ -309,11 +309,6 @@ export function HeroSearch({
                                 ) : null}
                               </div>
                               <div className={styles.heroResultBadges}>
-                                {school.phases.slice(0, 1).map((schoolPhase) => (
-                                  <span key={schoolPhase}>
-                                    {getSchoolPhaseLabel(schoolPhase)}
-                                  </span>
-                                ))}
                                 {school.hasOrderablePacks ? (
                                   <span className={styles.yearPillBadge}>2027 Packs</span>
                                 ) : (
