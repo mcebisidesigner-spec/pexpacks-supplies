@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useTransition, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Building2,
   Eye,
   EyeOff,
   GraduationCap,
@@ -12,71 +11,153 @@ import {
   Search,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
-import { toggleSchoolVisibilityAction } from "@/app/admin/schools/actions";
+import {
+  listSchoolsAction,
+  toggleSchoolVisibilityAction,
+} from "@/app/admin/schools/actions";
+import type { SchoolListResult, SchoolListRow } from "@/lib/admin/schools";
 
-interface SchoolRow {
-  id: string;
-  name: string;
-  city: string;
-  province: string;
-  partnerStatus: "Partner" | "Non-partner";
-  status: "Active" | "Inactive";
+interface SchoolsPageViewProps {
+  initialData?: SchoolListResult;
 }
 
-const SEED_SCHOOLS: SchoolRow[] = [
-  { id: "3d-christian-academy", name: "3d Christian Academy", city: "Pretoria", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "a-re-tlabeng-primary-school", name: "A Re Tlabeng Primary School", city: "Pretoria", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "aa-academy", name: "Aa Academy", city: "Johannesburg", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "ab-phokompe-secondary-school", name: "Ab Phokompe Secondary School", city: "Krugersdorp", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "buhle-high-school", name: "Buhle High School", city: "Centurion", province: "Gauteng", partnerStatus: "Non-partner", status: "Active" },
-  { id: "crescent-primary-school", name: "Crescent Primary School", city: "Randburg", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "daleview-secondary-school", name: "Daleview Secondary School", city: "Centurion", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-  { id: "edenvale-primary-school", name: "Edenvale Primary School", city: "Edenvale", province: "Gauteng", partnerStatus: "Partner", status: "Active" },
-];
-
-export function SchoolsPageView() {
+export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
   const router = useRouter();
-  const [schools, setSchools] = useState<SchoolRow[]>(SEED_SCHOOLS);
+  const [isPending, startTransition] = useTransition();
+
+  const [schoolsResult, setSchoolsResult] = useState<SchoolListResult>(
+    initialData ?? {
+      schools: [],
+      total: 0,
+      page: 1,
+      pageCount: 1,
+      cities: [],
+      provinces: [],
+    }
+  );
+
   const [search, setSearch] = useState("");
   const [cityFilter, setCityFilter] = useState("all");
   const [provinceFilter, setProvinceFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [pageSize, setPageSize] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const filtered = useMemo(() => {
-    return schools.filter((s) => {
-      const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.city.toLowerCase().includes(search.toLowerCase());
-      const matchCity = cityFilter === "all" || s.city === cityFilter;
-      const matchStatus = statusFilter === "all" || s.status === statusFilter;
-      return matchSearch && matchCity && matchStatus;
+  // Fetch updated data from Supabase when page, pageSize, or filters change
+  const loadSchools = (
+    page: number,
+    size: number,
+    qStr: string,
+    city: string,
+    province: string,
+    status: string
+  ) => {
+    startTransition(async () => {
+      const res = await listSchoolsAction({
+        page,
+        pageSize: size,
+        q: qStr || undefined,
+        city: city === "all" ? undefined : city,
+        province: province === "all" ? undefined : province,
+        status: status === "all" ? undefined : status,
+      });
+      setSchoolsResult(res);
     });
-  }, [schools, search, cityFilter, statusFilter]);
+  };
 
-  const handleToggleHide = async (id: string, e: React.MouseEvent) => {
+  const handleSearchChange = (val: string) => {
+    setSearch(val);
+    setCurrentPage(1);
+    loadSchools(1, pageSize, val, cityFilter, provinceFilter, statusFilter);
+  };
+
+  const handleCityChange = (val: string) => {
+    setCityFilter(val);
+    setCurrentPage(1);
+    loadSchools(1, pageSize, search, val, provinceFilter, statusFilter);
+  };
+
+  const handleProvinceChange = (val: string) => {
+    setProvinceFilter(val);
+    setCurrentPage(1);
+    loadSchools(1, pageSize, search, cityFilter, val, statusFilter);
+  };
+
+  const handleStatusChange = (val: string) => {
+    setStatusFilter(val);
+    setCurrentPage(1);
+    loadSchools(1, pageSize, search, cityFilter, provinceFilter, val);
+  };
+
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+    setCurrentPage(1);
+    loadSchools(1, size, search, cityFilter, provinceFilter, statusFilter);
+  };
+
+  const handlePageChange = (p: number) => {
+    const targetPage = Math.max(1, Math.min(p, schoolsResult.pageCount || 1));
+    setCurrentPage(targetPage);
+    loadSchools(targetPage, pageSize, search, cityFilter, provinceFilter, statusFilter);
+  };
+
+  const handleApplyClick = () => {
+    setCurrentPage(1);
+    loadSchools(1, pageSize, search, cityFilter, provinceFilter, statusFilter);
+  };
+
+  const handleToggleHide = async (id: string, currentStatus: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      await toggleSchoolVisibilityAction(id);
-      setSchools((prev) =>
-        prev.map((s) =>
-          s.id === id ? { ...s, status: s.status === "Active" ? "Inactive" : "Active" } : s
-        )
-      );
-    } catch {
-      // Local state fallback for UI reactivity
-      setSchools((prev) =>
-        prev.map((s) =>
-          s.id === id ? { ...s, status: s.status === "Active" ? "Inactive" : "Active" } : s
-        )
-      );
+      const res = await toggleSchoolVisibilityAction(id);
+      if (res.ok) {
+        setSchoolsResult((prev) => ({
+          ...prev,
+          schools: prev.schools.map((s) =>
+            s.id === id
+              ? { ...s, status: s.status === "active" ? "inactive" : "active" }
+              : s
+          ),
+        }));
+      }
+    } catch (err) {
+      console.error("Toggle school status failed:", err);
     }
   };
 
+  const { schools, total, pageCount } = schoolsResult;
+  const fromRecord = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const toRecord = Math.min(total, currentPage * pageSize);
+
+  // Pagination number buttons logic
+  const pageNumbers = useMemo(() => {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(pageCount, start + maxVisible - 1);
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }, [currentPage, pageCount]);
+
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
-            Schools <span style={{ fontSize: 16, color: "#64748b", fontWeight: 500 }}>({schools.length})</span>
+            Schools{" "}
+            <span style={{ fontSize: 16, color: "#64748b", fontWeight: 500 }}>
+              ({total.toLocaleString()})
+            </span>
           </h1>
+          <p className={styles.headerSubtitle}>
+            Central directory of all registered partner and non-partner schools in South Africa.
+          </p>
         </div>
         <div className={styles.headerActions}>
           <Link href="/admin/schools/new" className={styles.primaryBtn}>
@@ -85,40 +166,72 @@ export function SchoolsPageView() {
         </div>
       </div>
 
+      {/* Toolbar Filters */}
       <div className={styles.toolbar}>
         <div className={styles.toolbarLeft}>
           <div className={styles.searchBox}>
             <Search />
             <input
               className={styles.searchInput}
-              placeholder="Search by name..."
+              placeholder="Search by school name, city or province..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <select className={styles.selectInput} value={cityFilter} onChange={(e) => setCityFilter(e.target.value)}>
-            <option value="all">All cities</option>
-            <option value="Pretoria">Pretoria</option>
-            <option value="Johannesburg">Johannesburg</option>
-            <option value="Centurion">Centurion</option>
-            <option value="Randburg">Randburg</option>
+
+          {/* Cities Dropdown (Populated from DB) */}
+          <select
+            className={styles.selectInput}
+            value={cityFilter}
+            onChange={(e) => handleCityChange(e.target.value)}
+          >
+            <option value="all">All cities ({schoolsResult.cities?.length ?? 0})</option>
+            {(schoolsResult.cities ?? []).map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
           </select>
-          <select className={styles.selectInput} value={provinceFilter} onChange={(e) => setProvinceFilter(e.target.value)}>
-            <option value="all">All provinces</option>
-            <option value="Gauteng">Gauteng</option>
+
+          {/* Provinces Dropdown (Populated from DB) */}
+          <select
+            className={styles.selectInput}
+            value={provinceFilter}
+            onChange={(e) => handleProvinceChange(e.target.value)}
+          >
+            <option value="all">All provinces ({schoolsResult.provinces?.length ?? 0})</option>
+            {(schoolsResult.provinces ?? []).map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
           </select>
-          <select className={styles.selectInput} value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+
+          {/* Status Dropdown */}
+          <select
+            className={styles.selectInput}
+            value={statusFilter}
+            onChange={(e) => handleStatusChange(e.target.value)}
+          >
             <option value="all">All statuses</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="archived">Hidden</option>
           </select>
-          <button className={styles.secondaryBtn} style={{ background: "#0d9488", color: "#ffffff", border: "none" }} type="button">
+
+          <button
+            className={styles.secondaryBtn}
+            style={{ background: "#0d9488", color: "#ffffff", border: "none" }}
+            type="button"
+            onClick={handleApplyClick}
+          >
             Apply
           </button>
         </div>
       </div>
 
-      <div className={styles.tableCard}>
+      {/* Data Table Card */}
+      <div className={styles.tableCard} style={{ opacity: isPending ? 0.7 : 1 }}>
         <div className={styles.tableWrapper}>
           <table className={styles.dataTable}>
             <thead>
@@ -132,64 +245,141 @@ export function SchoolsPageView() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((school) => (
-                <tr
-                  key={school.id}
-                  className={styles.dataRow}
-                  onClick={() => router.push(`/admin/schools/${school.id}/info`)}
-                >
-                  <td>
-                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(59, 130, 246, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#60a5fa" }}>
-                      <GraduationCap size={14} />
-                    </div>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/admin/schools/${school.id}/info`}
-                      style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {school.name}
-                    </Link>
-                  </td>
-                  <td>{school.city}</td>
-                  <td>{school.province}</td>
-                  <td>
-                    <span className={school.partnerStatus === "Partner" ? styles.badgeGreen : styles.badgeDark}>
-                      ● {school.partnerStatus}
-                    </span>
-                  </td>
-                  <td>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }} onClick={(e) => e.stopPropagation()}>
-                      <span className={school.status === "Active" ? styles.badgeTeal : styles.badgeDark}>{school.status}</span>
-                      <button
-                        className={styles.actionBtnDots}
-                        style={{ fontSize: 11, padding: "2px 8px", display: "inline-flex", alignItems: "center", gap: 4 }}
-                        type="button"
-                        onClick={(e) => handleToggleHide(school.id, e)}
-                      >
-                        {school.status === "Active" ? <EyeOff size={12} /> : <Eye size={12} />}
-                        {school.status === "Active" ? "Hide" : "Show"}
-                      </button>
-                    </div>
+              {schools.length === 0 ? (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: "center", padding: "32px", color: "#94a3b8" }}>
+                    No matching schools found in the database.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                schools.map((school) => {
+                  const isPartner = school.is_partner;
+                  const isActive = school.status === "active";
+                  const targetSlugOrId = school.slug || school.id;
+                  return (
+                    <tr
+                      key={school.id}
+                      className={styles.dataRow}
+                      onClick={() => router.push(`/admin/schools/${targetSlugOrId}/info`)}
+                    >
+                      <td>
+                        <div
+                          style={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: "50%",
+                            background: "rgba(59, 130, 246, 0.15)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            color: "#60a5fa",
+                          }}
+                        >
+                          <GraduationCap size={14} />
+                        </div>
+                      </td>
+                      <td>
+                        <Link
+                          href={`/admin/schools/${targetSlugOrId}/info`}
+                          style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {school.name}
+                        </Link>
+                      </td>
+                      <td>{school.city || "—"}</td>
+                      <td>{school.province || "—"}</td>
+                      <td>
+                        <span className={isPartner ? styles.badgeGreen : styles.badgeDark}>
+                          ● {isPartner ? "Partner" : "Non-partner"}
+                        </span>
+                      </td>
+                      <td>
+                        <div
+                          style={{ display: "flex", alignItems: "center", gap: 8 }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <span className={isActive ? styles.badgeTeal : styles.badgeDark}>
+                            {isActive ? "Active" : "Inactive"}
+                          </span>
+                          <button
+                            className={styles.actionBtnDots}
+                            style={{
+                              fontSize: 11,
+                              padding: "2px 8px",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 4,
+                            }}
+                            type="button"
+                            onClick={(e) => handleToggleHide(school.id, school.status, e)}
+                          >
+                            {isActive ? <EyeOff size={12} /> : <Eye size={12} />}
+                            {isActive ? "Hide" : "Show"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
+
+        {/* Dynamic Pagination & Working "Show Per Page" Selector */}
         <div className={styles.paginationFooter}>
-          <span>Showing 1 to {filtered.length} of {schools.length} schools</span>
+          <span>
+            Showing {fromRecord.toLocaleString()} to {toRecord.toLocaleString()} of{" "}
+            {total.toLocaleString()} schools
+          </span>
+
+          {/* Page Controls */}
           <div className={styles.paginationControls}>
-            <button className={styles.pageBtn}>&lt;</button>
-            <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
-            <button className={styles.pageBtn}>&gt;</button>
+            <button
+              className={styles.pageBtn}
+              disabled={currentPage <= 1 || isPending}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              &lt;
+            </button>
+
+            {pageNumbers.map((p) => (
+              <button
+                key={p}
+                className={`${styles.pageBtn} ${
+                  p === currentPage ? styles.pageBtnActive : ""
+                }`}
+                disabled={isPending}
+                onClick={() => handlePageChange(p)}
+              >
+                {p}
+              </button>
+            ))}
+
+            <button
+              className={styles.pageBtn}
+              disabled={currentPage >= pageCount || isPending}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              &gt;
+            </button>
           </div>
+
+          {/* Working Show per page selector */}
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span>Show</span>
-            <select className={styles.selectInput} style={{ height: 26, padding: "0 4px", fontSize: 11 }}>
-              <option>10</option>
-              <option>20</option>
+            <select
+              className={styles.selectInput}
+              style={{ height: 28, padding: "0 6px", fontSize: 11, background: "#020617" }}
+              value={pageSize}
+              onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+              <option value={250}>250</option>
             </select>
             <span>per page</span>
           </div>

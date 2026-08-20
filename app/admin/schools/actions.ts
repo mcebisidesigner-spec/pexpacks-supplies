@@ -6,11 +6,14 @@ import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
   getSchool,
+  listSchools,
   createSchool,
   updateSchool,
   setSchoolStatus,
   deleteSchool,
   type SchoolFormState,
+  type SchoolListFilters,
+  type SchoolListResult,
 } from "@/lib/admin/schools";
 
 export async function createSchoolAction(
@@ -83,6 +86,11 @@ export async function deleteSchoolAction(id: string): Promise<void> {
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePublicSchoolSurfaces();
+}
+
+export async function listSchoolsAction(filters: SchoolListFilters = {}): Promise<SchoolListResult> {
+  await requireAdmin({ permission: "schools.view" });
+  return listSchools(filters);
 }
 
 export async function toggleSchoolVisibilityAction(schoolId: string): Promise<{ ok: boolean; newStatus?: string; message?: string }> {
