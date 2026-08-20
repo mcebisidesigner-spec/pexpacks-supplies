@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchSchoolRecords } from "@/lib/schools/schoolSearchData";
+import { searchSchoolRecords, getFeaturedSchoolRecords } from "@/lib/schools/schoolSearchData";
 import { isSchoolPhase } from "@/lib/schools/schoolPhase";
 import { rateLimitRequest } from "@/lib/security/requestGuards";
 
@@ -34,9 +34,29 @@ export async function GET(request: NextRequest) {
   const limit = Math.min(Math.max(numberParam(params.get("limit"), 12), 1), 24);
   const offset = Math.max(numberParam(params.get("offset"), 0), 0);
   const phaseParam = params.get("phase") ?? "";
+  const query = params.get("q")?.trim() ?? "";
+  const featuredOnly = params.get("featured") === "true";
+
+  if (featuredOnly || (!query && params.has("limit"))) {
+    const featured = await getFeaturedSchoolRecords(4);
+    return NextResponse.json(
+      {
+        success: true,
+        results: featured,
+        total: featured.length,
+        hasMore: false,
+        limit: 4,
+        offset: 0,
+      },
+      {
+        headers: { "Cache-Control": "private, no-store" },
+      }
+    );
+  }
+
   const results = await searchSchoolRecords(
     {
-      query: params.get("q") ?? "",
+      query,
       grade: params.get("grade") ?? "",
       phase: isSchoolPhase(phaseParam) ? phaseParam : "",
       region: params.get("region") ?? "",

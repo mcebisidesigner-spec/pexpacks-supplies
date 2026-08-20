@@ -169,20 +169,53 @@ export function invalidateSchoolSearchCache() {}
 
 export async function getFeaturedSchoolRecords(limit = 4) {
   const supabase = createSupabaseAdminClient();
-  if (publicSchoolReadRpcsAvailable !== false) {
-    const { data, error } = await supabase.rpc("get_featured_public_schools", {
-      result_limit: limit,
-    });
 
-    if (!error && data) {
-      publicSchoolReadRpcsAvailable = true;
-      return data.map(toSearchRecord);
+  const { data: partnerFeatured } = await supabase
+    .from("schools")
+    .select(
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, stationery_packs(visible, stationery_items(id))"
+    )
+    .eq("status", "active")
+    .eq("published", true)
+    .eq("is_partner", true)
+    .eq("is_featured", true)
+    .order("name", { ascending: true });
+
+  let schools = (partnerFeatured ?? []) as SearchSchoolRow[];
+
+  if (schools.length < limit) {
+    const { data: fallbackData } = await supabase
+      .from("schools")
+      .select(
+        "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, stationery_packs(visible, stationery_items(id))"
+      )
+      .eq("status", "active")
+      .eq("published", true)
+      .or("is_partner.eq.true,is_featured.eq.true")
+      .order("is_partner", { ascending: false })
+      .order("is_featured", { ascending: false })
+      .order("name", { ascending: true })
+      .limit(limit * 2);
+
+    const existingIds = new Set(schools.map((s) => s.id));
+    for (const f of (fallbackData ?? []) as SearchSchoolRow[]) {
+      if (!existingIds.has(f.id)) {
+        schools.push(f);
+        existingIds.add(f.id);
+      }
     }
-    if (isMissingRpc(error)) publicSchoolReadRpcsAvailable = false;
   }
 
-  const { rows } = await searchPublicSchoolsFallback({}, limit, 0);
-  return rows.map(toSearchRecord);
+  // 24-hour daily rotation if more than 4 matching schools exist
+  if (schools.length > limit) {
+    const daySeed = Math.floor(Date.now() / (24 * 60 * 60 * 1000));
+    const offset = (daySeed * limit) % schools.length;
+    schools = [...schools.slice(offset), ...schools.slice(0, offset)].slice(0, limit);
+  } else {
+    schools = schools.slice(0, limit);
+  }
+
+  return schools.map(toSearchRecord);
 }
 
 export async function searchSchoolRecords(
