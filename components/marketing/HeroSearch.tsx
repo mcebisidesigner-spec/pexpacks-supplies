@@ -308,21 +308,20 @@ export function HeroSearch({
                                   </span>
                                 ) : null}
                               </div>
-                              {school.phases.length > 0 ? (
-                                <div className={styles.heroResultBadges}>
-                                  {school.phases.slice(0, 2).map((schoolPhase) => (
-                                    <span key={schoolPhase}>
-                                      {getSchoolPhaseLabel(schoolPhase)}
-                                    </span>
-                                  ))}
-                                </div>
-                              ) : null}
                               <div className={styles.heroResultBadges}>
-                                {school.isPartner ? (
-                                  <span className={styles.partnerBadge}>Official Partner</span>
+                                {school.phases.slice(0, 1).map((schoolPhase) => (
+                                  <span key={schoolPhase}>
+                                    {getSchoolPhaseLabel(schoolPhase)}
+                                  </span>
+                                ))}
+                                {school.hasOrderablePacks ? (
+                                  <span className={styles.yearPillBadge}>2027 Packs</span>
                                 ) : (
                                   <span className={styles.awaitingBadge}>Awaiting Lists</span>
                                 )}
+                                {school.isPartner ? (
+                                  <span className={styles.partnerBadge}>Official Partner</span>
+                                ) : null}
                               </div>
                             </div>
                           </div>

@@ -16,6 +16,7 @@ type SearchSchoolRow = {
   lowest_price: number | null;
   grades: Json | null;
   custom_badge: string | null;
+  stationery_packs?: { visible?: boolean; stationery_items?: { id: string }[] }[] | null;
   total_count?: number;
 };
 
@@ -55,6 +56,13 @@ function toSearchRecord(row: SearchSchoolRow): SchoolSearchRecord {
   const grades = getGradeLabels(row.grades);
   const city = row.city ?? "";
 
+  const hasPacks =
+    (Array.isArray(row.stationery_packs) &&
+      row.stationery_packs.some(
+        (p) => p.visible && Array.isArray(p.stationery_items) && p.stationery_items.length > 0
+      )) ||
+    (row.lowest_price != null && row.lowest_price > 0);
+
   return {
     id: row.id,
     name: row.name,
@@ -67,8 +75,9 @@ function toSearchRecord(row: SearchSchoolRow): SchoolSearchRecord {
     phases: getSchoolPhasesFromGrades(grades, row.name),
     isFeatured: Boolean(row.is_featured),
     isPartner: Boolean(row.is_partner),
+    hasOrderablePacks: Boolean(hasPacks),
     image: row.logo,
-    customBadge: row.custom_badge || "2026 Packs",
+    customBadge: row.custom_badge || null,
     lowestPrice: row.lowest_price ?? undefined,
   };
 }
@@ -100,7 +109,7 @@ async function searchPublicSchoolsFallback(
   let query = supabase
     .from("schools")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge",
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, stationery_packs(visible, stationery_items(id))",
       { count: "exact" },
     )
     .eq("status", "active")

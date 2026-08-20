@@ -315,19 +315,19 @@ export function SchoolSearchPanel({
                                   ) : null}
                                 </div>
                                 <div className={heroStyles.heroResultBadges}>
-                                  {school.phases.slice(0, 2).map((schoolPhase) => (
+                                  {school.phases.slice(0, 1).map((schoolPhase) => (
                                     <span key={schoolPhase}>
                                       {getSchoolPhaseLabel(schoolPhase)}
                                     </span>
                                   ))}
-                                  {school.isPartner ? (
-                                    <span className={heroStyles.partnerBadge}>Official Partner</span>
+                                  {school.hasOrderablePacks ? (
+                                    <span className={heroStyles.yearPillBadge}>2027 Packs</span>
                                   ) : (
                                     <span className={heroStyles.awaitingBadge}>Awaiting Lists</span>
                                   )}
-                                  <span className={heroStyles.customPillBadge}>
-                                    {school.customBadge || "2026 Packs"}
-                                  </span>
+                                  {school.isPartner ? (
+                                    <span className={heroStyles.partnerBadge}>Official Partner</span>
+                                  ) : null}
                                 </div>
                               </div>
                             </div>

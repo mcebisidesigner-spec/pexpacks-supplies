@@ -11,6 +11,7 @@ export type SchoolSearchRecord = {
   grades: string[];
   isFeatured?: boolean;
   isPartner?: boolean;
+  hasOrderablePacks?: boolean;
   image?: string | null;
   customBadge?: string | null;
   phases: SchoolPhase[];
