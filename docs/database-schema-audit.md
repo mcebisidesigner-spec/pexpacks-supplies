@@ -1,7 +1,7 @@
 # Pexpacks Database Schema Audit
 
 Date: 2026-08-20
-Implementation status: incremental unification implemented in migrations `00036` and `00037`.
+Implementation status: incremental unification implemented in migrations `00036`, `00037`, and `00038`.
 
 ## Verdict
 
@@ -81,6 +81,8 @@ Risk: older public/admin tables may be more permissive than newer operations tab
 
 Target direction: keep service-role operations server-side, but standardize RLS policy intent by table category: public read, staff read, permission-managed writes, service-role-only workflows.
 
+Implemented: `00038_admin_data_quality_and_security_hardening.sql` narrows public school/pack/item reads to active, published, and visible records; makes legacy `app_settings` service-role writable only; and requires `settings.manage` for `system_settings` and `system_settings_audit` writes.
+
 ### 6. Business Logic Lives in Large SQL Functions
 
 Important business events are inside SQL functions, especially payment completion:
@@ -101,7 +103,7 @@ Target direction: keep atomic DB functions, but split internal responsibilities 
 
 1. Resolve the duplicate `00035` situation without deleting history. Done for the untracked refused-partnership migration.
 2. Adopt a strict migration naming rule: one unique increasing version per file. Documented in `supabase/migrations/README.md`.
-3. Add a simple CI/local check that fails on duplicate migration prefixes. Still recommended.
+3. Add a simple CI/local check that fails on duplicate migration prefixes. Still recommended; local check currently passes.
 4. Add a short `supabase/migrations/README.md` explaining that old migrations are append-only. Done.
 
 ### Phase 2: Pick Canonical Tables
@@ -156,12 +158,20 @@ Do not drop old tables immediately. First:
 4. Remove app reads after all screens are migrated.
 5. Only then consider a future archival/drop migration.
 
+### Phase 7: Monitor Data Quality and Security
+
+1. Query `admin_data_quality_issues_view` after imports and before releases.
+2. Keep public policies constrained to published/visible records.
+3. Keep settings changes behind `settings.manage`.
+4. Run `supabase db lint --local --schema public --level warning --fail-on error` in local/CI checks.
+
 ## Suggested Next Migrations
 
 Do not edit old applied migrations. Add new ones like:
 
 - `00037_canonical_schema_unification_views.sql` was added and combines canonical pack item, order line, settings, subtotal, and public pack RPC cleanup.
-- `00038_legacy_write_audit.sql` is still recommended if you want to log remaining direct writes into compatibility tables.
+- `00038_admin_data_quality_and_security_hardening.sql` was added and hardens public/settings RLS while adding `admin_data_quality_issues_view`.
+- A future `00039_legacy_write_audit.sql` is still recommended if you want to log remaining direct writes into compatibility tables.
 
 The refused-partnership migration is now `00036_add_refused_partnership.sql`.
 
