@@ -16,7 +16,7 @@ type SearchSchoolRow = {
   lowest_price: number | null;
   grades: Json | null;
   custom_badge: string | null;
-  stationery_packs?: { visible?: boolean; stationery_items?: { id: string }[] }[] | null;
+  canonical_pack_item_count?: number;
   total_count?: number;
 };
 
@@ -36,31 +36,48 @@ function gradeRank(grade: string) {
   return Number.isFinite(number) ? number : 99;
 }
 
-function getGradeLabels(value: Json | null): string[] {
-  if (!Array.isArray(value)) return [];
+function getGradeLabels(value: Json | null, schoolName?: string): string[] {
+  let labels: string[] = [];
+  if (Array.isArray(value)) {
+    labels = value
+      .map((grade) => {
+        if (typeof grade === "string") return grade;
+        if (grade && typeof grade === "object" && !Array.isArray(grade)) {
+          const label = grade.grade;
+          return typeof label === "string" ? label : "";
+        }
+        return "";
+      })
+      .filter(Boolean)
+      .sort((a, b) => gradeRank(a) - gradeRank(b));
+  }
 
-  return value
-    .map((grade) => {
-      if (typeof grade === "string") return grade;
-      if (grade && typeof grade === "object" && !Array.isArray(grade)) {
-        const label = grade.grade;
-        return typeof label === "string" ? label : "";
-      }
-      return "";
-    })
-    .filter(Boolean)
-    .sort((a, b) => gradeRank(a) - gradeRank(b));
+  if (labels.length > 0) return labels;
+
+  if (schoolName) {
+    const isHigh = /high|hoërskool|secondary|college|academy/i.test(schoolName) && !/primary/i.test(schoolName);
+    const isPrimary = /primary|laerskool|preparatory|pre-primary/i.test(schoolName) && !/high|hoërskool/i.test(schoolName);
+
+    if (isHigh) {
+      return ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
+    }
+    if (isPrimary) {
+      return ["Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7"];
+    }
+  }
+
+  return [
+    "Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7",
+    "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"
+  ];
 }
 
 function toSearchRecord(row: SearchSchoolRow): SchoolSearchRecord {
-  const grades = getGradeLabels(row.grades);
+  const grades = getGradeLabels(row.grades, row.name);
   const city = row.city ?? "";
 
   const hasPacks =
-    (Array.isArray(row.stationery_packs) &&
-      row.stationery_packs.some(
-        (p) => p.visible && Array.isArray(p.stationery_items) && p.stationery_items.length > 0
-      )) ||
+    Number(row.canonical_pack_item_count ?? 0) > 0 ||
     (row.lowest_price != null && row.lowest_price > 0);
 
   return {
@@ -100,6 +117,25 @@ const PHASE_GRADE_FILTERS: Record<string, string[]> = {
   "high-schools": ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
 };
 
+async function withCanonicalPackCounts(rows: SearchSchoolRow[]): Promise<SearchSchoolRow[]> {
+  if (rows.length === 0) return rows;
+  const schoolIds = rows.map((row) => row.id);
+  const supabase = createSupabaseAdminClient();
+  const { data } = await supabase
+    .from("pack_subtotals" as never)
+    .select("school_id,item_count")
+    .in("school_id" as never, schoolIds as never);
+
+  const counts = new Map<string, number>();
+  for (const row of (data ?? []) as unknown as { school_id: string; item_count: number | null }[]) {
+    counts.set(row.school_id, (counts.get(row.school_id) ?? 0) + Number(row.item_count ?? 0));
+  }
+  return rows.map((row) => ({
+    ...row,
+    canonical_pack_item_count: counts.get(row.id) ?? 0,
+  }));
+}
+
 async function searchPublicSchoolsFallback(
   filters: SchoolSearchFilters,
   limit: number,
@@ -109,7 +145,7 @@ async function searchPublicSchoolsFallback(
   let query = supabase
     .from("schools")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, stationery_packs(visible, stationery_items(id))",
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge",
       { count: "exact" },
     )
     .eq("status", "active")
@@ -156,7 +192,7 @@ async function searchPublicSchoolsFallback(
   if (error) throw error;
 
   return {
-    rows: (data ?? []) as SearchSchoolRow[],
+    rows: await withCanonicalPackCounts((data ?? []) as SearchSchoolRow[]),
     total: count ?? 0,
   };
 }
@@ -168,7 +204,7 @@ export async function getNearbySchoolRecords(userLat: number, userLng: number, l
   const { data: schools } = await supabase
     .from("schools")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, latitude, longitude, stationery_packs(visible, stationery_items(id))"
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, latitude, longitude"
     )
     .eq("status", "active")
     .eq("published", true)
@@ -209,7 +245,8 @@ export async function getNearbySchoolRecords(userLat: number, userLng: number, l
     return getFeaturedSchoolRecords(limit);
   }
 
-  return scored.map((item) => toSearchRecord(item.school as SearchSchoolRow));
+  const counted = await withCanonicalPackCounts(scored.map((item) => item.school as unknown as SearchSchoolRow));
+  return counted.map(toSearchRecord);
 }
 
 export async function getFeaturedSchoolRecords(limit = 4) {
@@ -218,7 +255,7 @@ export async function getFeaturedSchoolRecords(limit = 4) {
   const { data: partnerFeatured } = await supabase
     .from("schools")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, stationery_packs(visible, stationery_items(id))"
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge"
     )
     .eq("status", "active")
     .eq("published", true)
@@ -232,7 +269,7 @@ export async function getFeaturedSchoolRecords(limit = 4) {
     const { data: fallbackData } = await supabase
       .from("schools")
       .select(
-        "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, stationery_packs(visible, stationery_items(id))"
+        "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge"
       )
       .eq("status", "active")
       .eq("published", true)
@@ -260,7 +297,7 @@ export async function getFeaturedSchoolRecords(limit = 4) {
     schools = schools.slice(0, limit);
   }
 
-  return schools.map(toSearchRecord);
+  return (await withCanonicalPackCounts(schools)).map(toSearchRecord);
 }
 
 export async function searchSchoolRecords(
