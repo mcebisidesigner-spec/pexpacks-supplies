@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Boxes,
   CheckCircle2,
@@ -36,6 +37,8 @@ const SEED_FULFILMENT: FulfilmentRow[] = [
 ];
 
 export function FulfilmentPageView() {
+  const router = useRouter();
+
   return (
     <div className={styles.container}>
       <div className={styles.headerRow}>
@@ -103,14 +106,34 @@ export function FulfilmentPageView() {
                 <th>Batch / Wave</th>
                 <th>Items</th>
                 <th>Est. Dispatch</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {SEED_FULFILMENT.map((row) => (
-                <tr key={row.id} className={styles.dataRow}>
-                  <td><span className={styles.badgeTeal}>{row.orderNumber}</span></td>
-                  <td><strong style={{ color: "#ffffff" }}>{row.school}</strong></td>
+                <tr
+                  key={row.id}
+                  className={styles.dataRow}
+                  onClick={() => router.push(`/admin/fulfilment/${row.orderNumber}`)}
+                >
+                  <td>
+                    <Link
+                      href={`/admin/fulfilment/${row.orderNumber}`}
+                      className={styles.badgeTeal}
+                      style={{ textDecoration: "none" }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {row.orderNumber}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/admin/fulfilment/${row.orderNumber}`}
+                      style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {row.school}
+                    </Link>
+                  </td>
                   <td>
                     <span className={
                       row.status === "Ready to Pack" ? styles.badgeTeal :
@@ -126,7 +149,6 @@ export function FulfilmentPageView() {
                   <td><span className={styles.badgeDark}>{row.batchWave}</span></td>
                   <td>{row.itemsCount}</td>
                   <td>{row.estDispatch}</td>
-                  <td><button className={styles.actionBtnDots}><MoreHorizontal size={14} /></button></td>
                 </tr>
               ))}
             </tbody>

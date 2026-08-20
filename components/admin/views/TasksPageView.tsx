@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   CheckSquare,
   Clock,
@@ -34,6 +35,8 @@ const SEED_TASKS: TaskRow[] = [
 ];
 
 export function TasksPageView() {
+  const router = useRouter();
+
   return (
     <div className={styles.container}>
       <div className={styles.headerRow}>
@@ -42,7 +45,9 @@ export function TasksPageView() {
           <p className={styles.headerSubtitle}>Track tasks and get things done.</p>
         </div>
         <div className={styles.headerActions}>
-          <button className={styles.primaryBtn}><Plus size={14} /> + New Task</button>
+          <Link href="/admin/tasks/new" className={styles.primaryBtn}>
+            <Plus size={14} /> + New Task
+          </Link>
         </div>
       </div>
 
@@ -68,30 +73,45 @@ export function TasksPageView() {
               </tr>
             </thead>
             <tbody>
-              {SEED_TASKS.map((t) => (
-                <tr key={t.id} className={styles.dataRow}>
-                  <td><strong style={{ color: "#ffffff" }}>{t.task}</strong></td>
-                  <td>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span className={styles.avatarBadge} style={{ background: t.assigneeAvatar === "MC" ? "#0d9488" : t.assigneeAvatar === "KG" ? "#d97706" : "#2563eb" }}>
-                        {t.assigneeAvatar}
+              {SEED_TASKS.map((t) => {
+                const taskSlug = t.task.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+                return (
+                  <tr
+                    key={t.id}
+                    className={styles.dataRow}
+                    onClick={() => router.push(`/admin/tasks/${taskSlug}`)}
+                  >
+                    <td>
+                      <Link
+                        href={`/admin/tasks/${taskSlug}`}
+                        style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {t.task}
+                      </Link>
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span className={styles.avatarBadge} style={{ background: t.assigneeAvatar === "MC" ? "#0d9488" : t.assigneeAvatar === "KG" ? "#d97706" : "#2563eb" }}>
+                          {t.assigneeAvatar}
+                        </span>
+                        <span>{t.assignee}</span>
+                      </div>
+                    </td>
+                    <td>{t.dueDate}</td>
+                    <td>
+                      <span style={{ color: t.priority === "High" ? "#f87171" : t.priority === "Medium" ? "#fbbf24" : "#34d399", fontWeight: 600 }}>
+                        ● {t.priority}
                       </span>
-                      <span>{t.assignee}</span>
-                    </div>
-                  </td>
-                  <td>{t.dueDate}</td>
-                  <td>
-                    <span style={{ color: t.priority === "High" ? "#f87171" : t.priority === "Medium" ? "#fbbf24" : "#34d399", fontWeight: 600 }}>
-                      ● {t.priority}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={t.status === "Completed" ? styles.badgeGreen : t.status === "In Progress" ? styles.badgeBlue : styles.badgeAmber}>
-                      {t.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>
+                      <span className={t.status === "Completed" ? styles.badgeGreen : t.status === "In Progress" ? styles.badgeBlue : styles.badgeAmber}>
+                        {t.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

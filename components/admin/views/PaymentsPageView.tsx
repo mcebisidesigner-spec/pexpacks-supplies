@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Check,
   CheckCircle2,
@@ -36,6 +37,7 @@ const SEED_PAYMENTS: PaymentRow[] = [
 ];
 
 export function PaymentsPageView() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [providerFilter, setProviderFilter] = useState("all");
 
@@ -101,9 +103,30 @@ export function PaymentsPageView() {
             </thead>
             <tbody>
               {filtered.map((pay) => (
-                <tr key={pay.id} className={styles.dataRow}>
-                  <td><span className={styles.badgeTeal}>{pay.paymentId}</span></td>
-                  <td><strong style={{ color: "#ffffff" }}>{pay.orderNumber}</strong></td>
+                <tr
+                  key={pay.id}
+                  className={styles.dataRow}
+                  onClick={() => router.push(`/admin/payments/${pay.orderNumber}`)}
+                >
+                  <td>
+                    <Link
+                      href={`/admin/payments/${pay.orderNumber}`}
+                      className={styles.badgeTeal}
+                      style={{ textDecoration: "none" }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {pay.paymentId}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/admin/payments/${pay.orderNumber}`}
+                      style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {pay.orderNumber}
+                    </Link>
+                  </td>
                   <td>{pay.date}</td>
                   <td>{pay.provider}</td>
                   <td><strong>R {pay.amount.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</strong></td>
