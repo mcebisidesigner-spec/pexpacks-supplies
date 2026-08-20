@@ -21,6 +21,7 @@ type DbSchool = {
 };
 
 type DbPackItem = {
+  pack_id: string;
   name: string;
   quantity: number;
   unit_price: number | null;
@@ -150,15 +151,14 @@ async function getSchoolWithBoundedQueries(slug: string): Promise<School | undef
 
   const packIds = dbPacks.map((pack) => pack.id);
   const { data: dbItems, error: itemsError } = await supabase
-    .from("stationery_items")
+    .from("public_pack_items_view" as never)
     .select("pack_id, name, quantity, unit_price, icon, description, specification")
     .in("pack_id", packIds)
-    .eq("visible", true)
     .order("sort_order", { ascending: true });
 
   if (itemsError) throw itemsError;
   const itemsByPack = new Map<string, DbPackItem[]>();
-  for (const item of dbItems ?? []) {
+  for (const item of (dbItems ?? []) as unknown as DbPackItem[]) {
     const items = itemsByPack.get(item.pack_id) ?? [];
     items.push(item);
     itemsByPack.set(item.pack_id, items);

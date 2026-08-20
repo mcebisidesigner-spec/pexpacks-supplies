@@ -4,8 +4,8 @@ import type { Json } from "@/lib/supabase/types";
 import { getAdminUser, hasPermission, writeAuditLog, type PermissionKey, type AdminSession } from "@/lib/admin/rbac";
 
 /**
- * System-wide configuration stored in `app_settings` (key → jsonb value).
- * Each section has a zod schema; the UI renders one form per section.
+ * System-wide configuration stored in `system_settings`.
+ * `app_settings` remains a read-only compatibility fallback for older data.
  */
 
 export type SettingField = {
@@ -90,6 +90,108 @@ const DEFAULTS: AppSettings = {
   },
 };
 
+type SystemSettingPointer = {
+  key: string;
+  category: string;
+  valueType: "string" | "boolean" | "email";
+  description: string;
+  isPublic?: boolean;
+};
+
+type SystemSettingRow = {
+  key: string;
+  value: unknown;
+};
+
+type SystemSettingUpsertRow = {
+  key: string;
+  category: string;
+  value: Json;
+  value_type: SystemSettingPointer["valueType"];
+  scope: "global";
+  description: string;
+  is_sensitive: boolean;
+  is_public: boolean;
+  requires_approval: boolean;
+  updated_by: string;
+  updated_at: string;
+};
+
+type SystemSettingsTable = {
+  select(columns: string): {
+    in(
+      column: string,
+      values: string[],
+    ): Promise<{ data: SystemSettingRow[] | null; error: { message?: string } | null }>;
+  };
+  upsert(
+    rows: SystemSettingUpsertRow[],
+    options: { onConflict: string },
+  ): Promise<{ error: { message?: string } | null }>;
+};
+
+function systemSettingsTable(admin: ReturnType<typeof createSupabaseAdminClient>) {
+  return (admin.from as unknown as (table: string) => SystemSettingsTable)(
+    "system_settings",
+  );
+}
+
+const SYSTEM_SETTING_MAP: {
+  [K in SettingKey]: Record<keyof AppSettings[K] & string, SystemSettingPointer>;
+} = {
+  general: {
+    site_name: {
+      key: "general.site_name",
+      category: "general",
+      valueType: "string",
+      description: "Primary customer-facing brand name",
+      isPublic: true,
+    },
+    support_email: {
+      key: "business.support_email",
+      category: "business",
+      valueType: "email",
+      description: "Primary customer support contact email",
+      isPublic: true,
+    },
+    support_phone: {
+      key: "business.support_phone",
+      category: "business",
+      valueType: "string",
+      description: "Customer support helpline telephone number",
+      isPublic: true,
+    },
+    site_url: {
+      key: "general.site_url",
+      category: "general",
+      valueType: "string",
+      description: "Official web application canonical URL",
+      isPublic: true,
+    },
+  },
+  ordering: {
+    default_fulfilment_option: {
+      key: "orders.default_fulfilment",
+      category: "orders",
+      valueType: "string",
+      description: "Default selected fulfilment method at checkout",
+      isPublic: true,
+    },
+    pexcover_enabled: {
+      key: "orders.pexcover_enabled",
+      category: "orders",
+      valueType: "boolean",
+      description: "Offer PexCover protection at checkout",
+    },
+    currency: {
+      key: "orders.currency",
+      category: "orders",
+      valueType: "string",
+      description: "Default checkout and reporting currency",
+    },
+  },
+};
+
 async function assertCan(permission: PermissionKey): Promise<AdminSession> {
   const session = await getAdminUser();
   if (!session || !hasPermission(session, permission)) {
@@ -122,10 +224,41 @@ export function settingFields(section: SettingKey): SettingField[] {
 
 export async function getSettings(): Promise<AppSettings> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("app_settings").select("key, value");
-  if (error) return DEFAULTS;
-
   const result = structuredClone(DEFAULTS);
+
+  const systemKeys = Object.values(SYSTEM_SETTING_MAP).flatMap((section) =>
+    Object.values(section).map((setting) => setting.key),
+  );
+
+  try {
+    const { data, error } = await systemSettingsTable(admin)
+      .select("key,value")
+      .in("key", systemKeys);
+
+    if (!error) {
+      const values = new Map(
+        (data ?? []).map((row) => [
+          row.key,
+          row.value,
+        ]),
+      );
+
+      for (const sectionKey of Object.keys(SYSTEM_SETTING_MAP) as SettingKey[]) {
+        const current = result[sectionKey] as Record<string, unknown>;
+        for (const [fieldKey, pointer] of Object.entries(SYSTEM_SETTING_MAP[sectionKey])) {
+          if (values.has(pointer.key)) current[fieldKey] = values.get(pointer.key);
+        }
+      }
+
+      return result;
+    }
+  } catch {
+    // Fall through to legacy app_settings compatibility.
+  }
+
+  const { data, error } = await admin.from("app_settings").select("key, value");
+  if (error) return result;
+
   for (const row of data ?? []) {
     const key = row.key as SettingKey;
     if (!(key in settingDefs)) continue;
@@ -180,13 +313,32 @@ export async function updateSetting(
 
   try {
     const admin = createSupabaseAdminClient();
-    const { error } = await admin.from("app_settings").upsert(
-      {
-        key: section,
-        value: parsed.data as unknown as Json,
-        updated_by: actor.user.id,
+    const sectionMap = SYSTEM_SETTING_MAP[section as SettingKey] as Record<
+      string,
+      SystemSettingPointer
+    >;
+    const systemRows: SystemSettingUpsertRow[] = Object.entries(parsed.data as Record<string, unknown>).map(
+      ([fieldKey, value]) => {
+        const pointer = sectionMap[fieldKey];
+        return {
+          key: pointer.key,
+          category: pointer.category,
+          value: value as Json,
+          value_type: pointer.valueType,
+          scope: "global",
+          description: pointer.description,
+          is_sensitive: false,
+          is_public: pointer.isPublic ?? false,
+          requires_approval: false,
+          updated_by: actor.user.id,
+          updated_at: new Date().toISOString(),
+        };
       },
-      { onConflict: "key" }
+    );
+
+    const { error } = await systemSettingsTable(admin).upsert(
+      systemRows,
+      { onConflict: "key" },
     );
     if (error) throw error;
 

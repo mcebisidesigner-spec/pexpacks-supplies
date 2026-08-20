@@ -2,6 +2,9 @@
 -- Optimizes query performance for 10+ concurrent dashboard users, order checkout, & school catalog loading
 
 -- 1. Stationery items indexes (pack lookup, item code search, name sorting)
+ALTER TABLE public.stationery_items ADD COLUMN IF NOT EXISTS category text;
+ALTER TABLE public.stationery_items ADD COLUMN IF NOT EXISTS slug text;
+
 CREATE INDEX IF NOT EXISTS idx_stationery_items_pack_id ON public.stationery_items (pack_id);
 CREATE INDEX IF NOT EXISTS idx_stationery_items_category ON public.stationery_items (category);
 CREATE INDEX IF NOT EXISTS idx_stationery_items_pack_price ON public.stationery_items (pack_id, unit_price, quantity);
