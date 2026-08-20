@@ -5,7 +5,7 @@ import { getAdminUser, hasPermission, writeAuditLog, type PermissionKey, type Ad
 
 /**
  * System-wide configuration stored in `system_settings`.
- * `app_settings` remains a read-only compatibility fallback for older data.
+ * `settings_effective_view` remains a read-only compatibility fallback for older data.
  */
 
 export type SettingField = {
@@ -136,6 +136,21 @@ function systemSettingsTable(admin: ReturnType<typeof createSupabaseAdminClient>
   );
 }
 
+type EffectiveSettingsTable = {
+  select(columns: string): {
+    like(
+      column: string,
+      pattern: string,
+    ): Promise<{ data: SystemSettingRow[] | null; error: { message?: string } | null }>;
+  };
+};
+
+function effectiveSettingsTable(admin: ReturnType<typeof createSupabaseAdminClient>) {
+  return (admin.from as unknown as (table: string) => EffectiveSettingsTable)(
+    "settings_effective_view",
+  );
+}
+
 const SYSTEM_SETTING_MAP: {
   [K in SettingKey]: Record<keyof AppSettings[K] & string, SystemSettingPointer>;
 } = {
@@ -253,14 +268,16 @@ export async function getSettings(): Promise<AppSettings> {
       return result;
     }
   } catch {
-    // Fall through to legacy app_settings compatibility.
+    // Table query failed — return defaults.
   }
 
-  const { data, error } = await admin.from("app_settings").select("key, value");
+  const { data, error } = await effectiveSettingsTable(admin)
+    .select("key, value")
+    .like("key", "legacy.%");
   if (error) return result;
 
   for (const row of data ?? []) {
-    const key = row.key as SettingKey;
+    const key = String(row.key).replace(/^legacy\./, "") as SettingKey;
     if (!(key in settingDefs)) continue;
     const value = row.value as Record<string, unknown>;
     const current = result[key] as Record<string, unknown>;

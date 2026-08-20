@@ -208,7 +208,7 @@ export async function approveProductPriceAction(
   const sellingPrice = number(formData, "sellingPrice");
   if (sellingPrice <= 0)
     throw new Error("The approved selling price must be greater than zero.");
-  await approveProductPrice(productId, sellingPrice, session.user.id);
+  await approveProductPrice(productId, sellingPrice, session.user.id, session.isSuperAdmin);
   await writeAuditLog({
     action: "pricing.approved",
     entityType: "master_product",

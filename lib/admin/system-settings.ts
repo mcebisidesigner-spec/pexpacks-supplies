@@ -240,7 +240,7 @@ export async function getPerformanceMetrics(): Promise<SystemPerformanceMetrics>
     const [s, p, i, o, a] = await Promise.all([
       admin.from("schools").select("id", { count: "exact", head: true }),
       admin.from("stationery_packs").select("id", { count: "exact", head: true }),
-      admin.from("stationery_items").select("id", { count: "exact", head: true }),
+      (admin.from as unknown as (table: string) => any)("school_pack_items").select("id", { count: "exact", head: true }),
       admin.from("orders").select("id", { count: "exact", head: true }),
       admin.from("audit_logs").select("id", { count: "exact", head: true }),
     ]);
@@ -263,12 +263,12 @@ export async function getPerformanceMetrics(): Promise<SystemPerformanceMetrics>
     databaseRowsCount: { schools, packs, items, orders, auditLogs },
     recommendations: [
       {
-        issue: "Stationery items search query filtering by category",
-        suggestion: "Ensure index idx_stationery_items_category remains active.",
+        issue: "Canonical product search and pack composition",
+        suggestion: "Keep master_products search indexes and school_pack_items pack indexes active.",
       },
       {
         issue: "School grade pack subtotal aggregation",
-        suggestion: "Index idx_stationery_items_pack_price accelerates total sum calculations.",
+        suggestion: "Use canonical_pack_items_view and school_pack_items pack indexes for totals.",
       },
     ],
   };

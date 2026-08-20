@@ -10,15 +10,35 @@ import {
   type AdminSession,
 } from "@/lib/admin/rbac";
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
-import {
-  INVENTORY_ITEM_FILTER,
-  PACK_LINE_INVENTORY_MARKER,
-  inventoryItemNameKey,
-} from "@/lib/admin/item-constants";
+import { inventoryItemNameKey } from "@/lib/admin/item-constants";
 
-export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"] & {
+type SupabaseAdminClient = ReturnType<typeof createSupabaseAdminClient>;
+type MasterProductRow = Database["public"]["Tables"]["master_products"]["Row"];
+type SchoolPackItemInsert = Database["public"]["Tables"]["school_pack_items"]["Insert"];
+
+export type ItemRow = {
+  id: string;
+  pack_id: string;
+  product_id?: string | null;
+  legacy_item_id?: string | null;
+  name: string;
+  description: string | null;
+  specification: string | null;
+  quantity: number;
+  unit_price: number | null;
+  image?: string | null;
+  icon: string | null;
+  visible: boolean;
+  sort_order: number;
+  created_by?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  search_vector?: string | null;
   category?: string | null;
   slug?: string | null;
+  sku?: string | null;
+  brand?: string | null;
+  source?: string | null;
 };
 
 const optString = (max: number, label: string) =>
@@ -89,11 +109,101 @@ function escapeIlikeLiteral(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/%/g, "\\%").replace(/_/g, "\\_");
 }
 
-/** ItemFormData minus the `price` key, which maps to the `unit_price` column. */
-function restOf(data: ItemFormData): Omit<ItemFormData, "price"> {
-  const { price, ...rest } = data;
-  void price;
-  return rest;
+function adminPackItemsTable(admin: SupabaseAdminClient) {
+  return admin.from("admin_pack_items_view" as never);
+}
+
+function masterProductsTable(admin: SupabaseAdminClient) {
+  return admin.from("master_products");
+}
+
+function schoolPackItemsTable(admin: SupabaseAdminClient) {
+  return admin.from("school_pack_items");
+}
+
+function productSku(data: Pick<ItemFormData, "category" | "name">): string {
+  const entered = data.category?.trim();
+  if (entered) return entered.toUpperCase();
+  return `PEX-${inventoryItemNameKey(data.name).toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80)}`;
+}
+
+async function ensureMasterProduct(
+  admin: SupabaseAdminClient,
+  data: Pick<ItemFormData, "name" | "category" | "description" | "specification" | "visible" | "price">,
+  actorId: string
+): Promise<MasterProductRow> {
+  const sku = productSku(data);
+  const productPatch = {
+    sku,
+    name: data.name.trim(),
+    description: data.description,
+    category: data.category,
+    specification: data.specification,
+    visibility: data.visible ? "public" : "internal",
+    availability: "available",
+    current_selling_price: data.price ?? 0,
+    calculated_selling_price: data.price ?? 0,
+    pricing_status: data.price != null ? "review" : "unpriced",
+    active: true,
+    updated_by: actorId,
+  };
+
+  const { data: existingBySku } = await masterProductsTable(admin)
+    .select("*")
+    .eq("sku", sku)
+    .maybeSingle();
+
+  if (existingBySku) {
+    const { data: updated, error } = await masterProductsTable(admin)
+      .update(productPatch)
+      .eq("id", existingBySku.id)
+      .select("*")
+      .single();
+    if (error) throw error;
+    return updated as MasterProductRow;
+  }
+
+  const { data: existingByName } = await masterProductsTable(admin)
+    .select("*")
+    .ilike("name", escapeIlikeLiteral(data.name.trim()))
+    .maybeSingle();
+
+  if (existingByName) {
+    const { data: updated, error } = await masterProductsTable(admin)
+      .update(productPatch)
+      .eq("id", existingByName.id)
+      .select("*")
+      .single();
+    if (error) throw error;
+    return updated as MasterProductRow;
+  }
+
+  const { data: created, error } = await masterProductsTable(admin)
+    .insert({ ...productPatch, created_by: actorId })
+    .select("*")
+    .single();
+  if (error) throw error;
+  return created as MasterProductRow;
+}
+
+async function readCanonicalItem(admin: SupabaseAdminClient, id: string): Promise<ItemRow | null> {
+  const { data, error } = await adminPackItemsTable(admin)
+    .select(
+      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source"
+    )
+    .eq("id", id as never)
+    .maybeSingle();
+  if (error || !data) return null;
+  return data as unknown as ItemRow;
+}
+
+async function nextPackItemSortOrder(admin: SupabaseAdminClient, packId: string): Promise<number> {
+  const { data } = await schoolPackItemsTable(admin)
+    .select("sort_order")
+    .eq("pack_id", packId)
+    .order("sort_order", { ascending: false })
+    .limit(1);
+  return (data?.[0]?.sort_order ?? 0) + 1;
 }
 
 export function parseItemForm(formData: FormData): ParsedItemForm {
@@ -181,12 +291,11 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
   const to = from + pageSize - 1;
 
   let query = admin
-    .from("stationery_items")
+    .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at,stationery_packs(title)",
+      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source,pack_title",
       { count: "exact" }
-    )
-    .or(INVENTORY_ITEM_FILTER);
+    );
 
   if (filters.q) {
     const rawQ = Array.isArray(filters.q)
@@ -202,8 +311,8 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
       query = query.or(clauses.join(","));
     }
   }
-  if (filters.pack_id) query = query.eq("pack_id", filters.pack_id);
-  if (filters.category) query = query.filter("category", "eq", filters.category);
+  if (filters.pack_id) query = query.eq("pack_id" as never, filters.pack_id as never);
+  if (filters.category) query = query.filter("category" as never, "eq", filters.category as never);
 
   const { data, count, error } = await query
     .order("name", { ascending: true })
@@ -214,7 +323,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
     return { items: [], total: 0, page, pageCount: 0 };
   }
 
-  const rows = (data ?? []) as unknown as (ItemRow & { stationery_packs?: { title: string | null } | null })[];
+  const rows = (data ?? []) as unknown as (ItemRow & { pack_title?: string | null })[];
 
   const uniqueRows = Array.from(
     rows.reduce((itemsByName, row) => {
@@ -230,7 +339,7 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
   return {
     items: uniqueRows.map((row) => ({
       ...row,
-      pack_title: row.stationery_packs?.title ?? null,
+      pack_title: row.pack_title ?? null,
     })),
     total,
     page,
@@ -247,10 +356,9 @@ export async function listStationeryCatalogueSections(): Promise<StationeryCatal
   try {
     const admin = createSupabaseAdminClient();
     const { data, error } = await admin
-      .from("stationery_items")
+      .from("admin_pack_items_view" as never)
       .select("category,name")
-      .or(INVENTORY_ITEM_FILTER)
-      .order("category", { ascending: true })
+      .order("category" as never, { ascending: true })
       .limit(5000);
 
     if (error || !data) {
@@ -284,23 +392,17 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
 
   if (isUuid) {
-    const { data } = await admin
-      .from("stationery_items")
-      .select("id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at")
-      .eq("id", decoded)
-      .or(INVENTORY_ITEM_FILTER)
-      .maybeSingle();
-    if (data) return data as unknown as ItemRow;
+    const data = await readCanonicalItem(admin, decoded);
+    if (data) return data;
   }
 
   const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
   // 1. Direct query by exact slug or exact name
   const { data: directMatch } = await admin
-    .from("stationery_items")
-    .select("id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at")
-    .or(`slug.ilike.${decoded},slug.ilike.${slugified},name.ilike.${decoded}`)
-    .or(INVENTORY_ITEM_FILTER)
+    .from("admin_pack_items_view" as never)
+    .select("id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source")
+    .or(`sku.ilike.${decoded},sku.ilike.${slugified},name.ilike.${decoded}` as never)
     .limit(1)
     .maybeSingle();
 
@@ -308,14 +410,13 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
 
   // 2. Fallback: match all items by slugified name or ID
   const { data: allItems } = await admin
-    .from("stationery_items")
-    .select("id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at")
-    .or(INVENTORY_ITEM_FILTER);
+    .from("admin_pack_items_view" as never)
+    .select("id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source");
   if (!allItems) return null;
 
   const matched = allItems.find((rawItem) => {
     const item = rawItem as unknown as ItemRow;
-    const itemSlug = item.slug || item.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    const itemSlug = item.slug || item.sku?.toLowerCase() || item.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     return itemSlug === slugified || item.id === decoded;
   });
 
@@ -326,11 +427,11 @@ export async function syncPackTotalPrice(packId: string): Promise<number> {
   if (!packId) return 0;
   const admin = createSupabaseAdminClient();
   const { data: items } = await admin
-    .from("stationery_items")
+    .from("admin_pack_items_view" as never)
     .select("unit_price, quantity")
-    .eq("pack_id", packId);
+    .eq("pack_id" as never, packId as never);
 
-  const totalPrice = (items ?? []).reduce(
+  const totalPrice = ((items ?? []) as unknown as Pick<ItemRow, "unit_price" | "quantity">[]).reduce(
     (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
     0
   );
@@ -355,23 +456,27 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
   try {
     let data = parsed.data;
     if (!data.sort_order || data.sort_order <= 0) {
-      const { data: rows } = await admin
-        .from("stationery_items")
-        .select("sort_order")
-        .eq("pack_id", data.pack_id)
-        .order("sort_order", { ascending: false })
-        .limit(1);
-      const max = rows?.[0]?.sort_order ?? 0;
-      data = { ...data, sort_order: max + 1 };
+      data = { ...data, sort_order: await nextPackItemSortOrder(admin, data.pack_id) };
     }
 
-    const { data: created, error } = await admin
-      .from("stationery_items")
-      .insert({ ...restOf(data), unit_price: data.price, created_by: actor.user.id } as any)
-      .select()
+    const product = await ensureMasterProduct(admin, data, actor.user.id);
+    const { data: createdLink, error } = await schoolPackItemsTable(admin)
+      .insert({
+        pack_id: data.pack_id,
+        product_id: product.id,
+        pack_quantity: data.quantity,
+        school_wording: data.name.trim() === product.name ? null : data.name.trim(),
+        school_notes: data.description,
+        selling_price_override: data.price,
+        sort_order: data.sort_order,
+        active: data.visible,
+      })
+      .select("id")
       .single();
 
     if (error) throw error;
+    const created = await readCanonicalItem(admin, createdLink.id);
+    if (!created) throw new Error("Created item could not be loaded.");
 
     void writeAuditLog({
       actorId: actor.user.id,
@@ -400,32 +505,31 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
   if (!parsed.ok) return { ok: false, errors: parsed.errors };
 
   const admin = createSupabaseAdminClient();
-  const existing = await admin
-    .from("stationery_items")
-    .select("id, name")
-    .eq("id", id)
-    .maybeSingle();
-  if (existing.error || !existing.data) {
+  const existing = await readCanonicalItem(admin, id);
+  if (!existing) {
     return { ok: false, errors: {}, message: "Item not found." };
   }
 
   try {
-    const { data: updated, error } = await admin
-      .from("stationery_items")
-      .update({ ...restOf(parsed.data), unit_price: parsed.data.price } as any)
+    const product = await ensureMasterProduct(admin, parsed.data, actor.user.id);
+    const { data: updatedLink, error } = await schoolPackItemsTable(admin)
+      .update({
+        pack_id: parsed.data.pack_id,
+        product_id: product.id,
+        pack_quantity: parsed.data.quantity,
+        school_wording: parsed.data.name.trim() === product.name ? null : parsed.data.name.trim(),
+        school_notes: parsed.data.description,
+        selling_price_override: parsed.data.price,
+        sort_order: parsed.data.sort_order,
+        active: parsed.data.visible,
+      })
       .eq("id", id)
-      .select()
+      .select("id")
       .single();
 
     if (error) throw error;
-
-    const { error: descriptionSyncError } = await admin
-      .from("stationery_items")
-      .update({ description: parsed.data.description })
-      .ilike("name", escapeIlikeLiteral(existing.data.name))
-      .neq("id", id);
-
-    if (descriptionSyncError) throw descriptionSyncError;
+    const updated = await readCanonicalItem(admin, updatedLink.id);
+    if (!updated) throw new Error("Updated item could not be loaded.");
 
     void writeAuditLog({
       actorId: actor.user.id,
@@ -452,10 +556,10 @@ export async function deleteItem(id: string): Promise<{ ok: boolean; message?: s
   const actor = await assertCan("items.delete");
   const admin = createSupabaseAdminClient();
 
-  const { data: existing } = await admin.from("stationery_items").select("id, name, pack_id").eq("id", id).single();
+  const existing = await readCanonicalItem(admin, id);
   if (!existing) return { ok: false, message: "Item not found." };
 
-  const { error } = await admin.from("stationery_items").delete().eq("id", id);
+  const { error } = await schoolPackItemsTable(admin).delete().eq("id", id);
   if (error) {
     console.error("[items] delete failed:", error);
     return { ok: false, message: "Failed to delete item." };
@@ -485,7 +589,7 @@ export async function reorderItems(
   const actor = await assertCan("items.reorder");
   const admin = createSupabaseAdminClient();
 
-  const { data: existing } = await admin.from("stationery_items").select("id").eq("pack_id", packId);
+  const { data: existing } = await schoolPackItemsTable(admin).select("id").eq("pack_id", packId);
   if (!existing) return { ok: false, message: "No items found in this pack." };
 
   const idSet = new Set(orderedIds);
@@ -496,7 +600,7 @@ export async function reorderItems(
 
   try {
     const updates = orderedIds.map((id, index) =>
-      admin.from("stationery_items").update({ sort_order: index + 1 }).eq("id", id)
+      schoolPackItemsTable(admin).update({ sort_order: index + 1 }).eq("id", id)
     );
     await Promise.all(updates);
 
@@ -637,8 +741,11 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
     return result;
   }
 
-  const { data: existing } = await admin.from("stationery_items").select("id, name").eq("pack_id", packId);
-  const byName = new Map((existing ?? []).map((item) => [item.name.toLowerCase(), item.id]));
+  const { data: existing } = await adminPackItemsTable(admin)
+    .select("id, name")
+    .eq("pack_id" as never, packId as never);
+  const existingItems = (existing ?? []) as unknown as Pick<ItemRow, "id" | "name">[];
+  const byName = new Map(existingItems.map((item) => [item.name.toLowerCase(), item.id]));
 
   const parseRow = (row: string[], lineNumber: number): ItemFormData | null => {
     const field = (key: string): string => {
@@ -689,16 +796,32 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
 
     try {
       if (existingId) {
-        const { error } = await admin
-          .from("stationery_items")
-          .update({ ...restOf(data), unit_price: data.price } as any)
+        const product = await ensureMasterProduct(admin, data, actor.user.id);
+        const { error } = await schoolPackItemsTable(admin)
+          .update({
+            product_id: product.id,
+            pack_quantity: data.quantity,
+            school_wording: data.name.trim() === product.name ? null : data.name.trim(),
+            school_notes: data.description,
+            selling_price_override: data.price,
+            sort_order: data.sort_order || undefined,
+            active: data.visible,
+          })
           .eq("id", existingId);
         if (error) throw error;
         result.updated += 1;
       } else {
-        const { error } = await admin
-          .from("stationery_items")
-          .insert({ ...restOf(data), unit_price: data.price, created_by: actor.user.id } as any);
+        const product = await ensureMasterProduct(admin, data, actor.user.id);
+        const { error } = await schoolPackItemsTable(admin).insert({
+          pack_id: data.pack_id,
+          product_id: product.id,
+          pack_quantity: data.quantity,
+          school_wording: data.name.trim() === product.name ? null : data.name.trim(),
+          school_notes: data.description,
+          selling_price_override: data.price,
+          sort_order: data.sort_order || (await nextPackItemSortOrder(admin, data.pack_id)),
+          active: data.visible,
+        });
         if (error) throw error;
         byName.set(key, "new");
         result.created += 1;
@@ -753,22 +876,35 @@ export async function createPackItems(
   if (!parsed.success) return { ok: false, created: 0 };
 
   const admin = createSupabaseAdminClient();
-  const rows = parsed.data.map((line, index) => ({
-    pack_id: packId,
-    name: line.name.trim(),
-    description: line.description || null,
-    unit_price: line.unit_price ?? null,
-    quantity: line.quantity,
-    icon: null,
-    image: PACK_LINE_INVENTORY_MARKER,
-    visible: true,
-    sort_order: index + 1,
-    created_by: createdBy,
-  }));
-
-  const { error } = await admin.from("stationery_items").insert(rows);
+  const rows: SchoolPackItemInsert[] = [];
+  for (let index = 0; index < parsed.data.length; index++) {
+    const line = parsed.data[index];
+    const product = await ensureMasterProduct(
+      admin,
+      {
+        name: line.name,
+        category: null,
+        description: line.description || null,
+        specification: null,
+        visible: true,
+        price: line.unit_price ?? null,
+      },
+      createdBy
+    );
+    rows.push({
+      pack_id: packId,
+      product_id: product.id,
+      pack_quantity: line.quantity,
+      school_wording: line.name.trim() === product.name ? null : line.name.trim(),
+      school_notes: line.description || null,
+      selling_price_override: line.unit_price ?? null,
+      sort_order: index + 1,
+      active: true,
+    });
+  }
+  const { error } = await schoolPackItemsTable(admin).insert(rows);
   if (error) {
-    console.error("[items] bulk create failed:", error);
+    console.error("[items] bulk canonical create failed:", error);
     return { ok: false, created: 0 };
   }
   return { ok: true, created: rows.length };
@@ -792,17 +928,19 @@ export async function reconcilePackItems(
 
   const admin = createSupabaseAdminClient();
   const { data: existingRows, error: loadError } = await admin
-    .from("stationery_items")
+    .from("admin_pack_items_view" as never)
     .select("id, name, description, quantity, unit_price, sort_order")
-    .eq("pack_id", packId);
+    .eq("pack_id" as never, packId as never);
   if (loadError) {
     console.error("[items] reconcile load failed:", loadError);
     return { ok: false, created: 0, updated: 0, deleted: 0, message: "Failed to load items." };
   }
 
-  const remaining = new Map(
-    (existingRows ?? []).map((row) => [row.name.trim().toLowerCase(), row])
-  );
+  const existingItems = (existingRows ?? []) as unknown as Pick<
+    ItemRow,
+    "id" | "name" | "description" | "quantity" | "unit_price" | "sort_order"
+  >[];
+  const remaining = new Map(existingItems.map((row) => [row.name.trim().toLowerCase(), row]));
 
   let created = 0;
   let updated = 0;
@@ -824,7 +962,28 @@ export async function reconcilePackItems(
       if (nextDescription && nextDescription !== current.description) {
         patch.description = nextDescription;
       }
-      const { error } = await admin.from("stationery_items").update(patch as any).eq("id", current.id);
+      const product = await ensureMasterProduct(
+        admin,
+        {
+          name: line.name,
+          category: null,
+          description: nextDescription || current.description,
+          specification: null,
+          visible: true,
+          price: line.unit_price ?? null,
+        },
+        actor.user.id
+      );
+      const { error } = await schoolPackItemsTable(admin)
+        .update({
+          product_id: product.id,
+          pack_quantity: patch.quantity ?? 1,
+          school_notes: patch.description ?? null,
+          selling_price_override: patch.unit_price ?? null,
+          sort_order: patch.sort_order ?? sortOrder,
+          active: true,
+        })
+        .eq("id", current.id);
       if (error) {
         console.error("[items] reconcile update failed:", error);
       } else {
@@ -832,16 +991,27 @@ export async function reconcilePackItems(
       }
       remaining.delete(key);
     } else {
-      const { error } = await admin.from("stationery_items").insert({
+      const product = await ensureMasterProduct(
+        admin,
+        {
+          name: line.name,
+          category: null,
+          description: line.description || null,
+          specification: null,
+          visible: true,
+          price: line.unit_price ?? null,
+        },
+        actor.user.id
+      );
+      const { error } = await schoolPackItemsTable(admin).insert({
         pack_id: packId,
-        name: line.name.trim(),
-        description: line.description || null,
-        unit_price: line.unit_price ?? null,
-        quantity: line.quantity,
-        icon: null,
-        visible: true,
+        product_id: product.id,
+        pack_quantity: line.quantity,
+        school_wording: line.name.trim() === product.name ? null : line.name.trim(),
+        school_notes: line.description || null,
+        selling_price_override: line.unit_price ?? null,
         sort_order: sortOrder,
-        created_by: actor.user.id,
+        active: true,
       });
       if (error) {
         console.error("[items] reconcile insert failed:", error);
@@ -852,7 +1022,7 @@ export async function reconcilePackItems(
   }
 
   for (const row of remaining.values()) {
-    const { error } = await admin.from("stationery_items").delete().eq("id", row.id);
+    const { error } = await schoolPackItemsTable(admin).delete().eq("id", row.id);
     if (error) {
       console.error("[items] reconcile delete failed:", error);
     } else {
@@ -881,9 +1051,9 @@ export async function listDistinctStationeryItems(): Promise<string[]> {
   try {
     const admin = createSupabaseAdminClient();
     const { data } = await admin
-      .from("stationery_items")
+      .from("master_products")
       .select("name")
-      .or(INVENTORY_ITEM_FILTER)
+      .eq("active", true)
       .order("name", { ascending: true });
 
     if (!data) return [];
@@ -912,12 +1082,11 @@ export interface StationeryInventoryItem {
 export async function listStationeryInventory(query?: string): Promise<StationeryInventoryItem[]> {
   try {
     const admin = createSupabaseAdminClient();
-    const q = (query ?? "").replace(/[%_]/g, "").trim();
 
     let dbQuery = admin
-      .from("stationery_items")
-      .select("id, name, description, unit_price")
-      .or(INVENTORY_ITEM_FILTER)
+      .from("master_products")
+      .select("id, name, description, current_selling_price")
+      .eq("active", true)
       .order("name", { ascending: true })
       .order("created_at", { ascending: false });
 
@@ -941,7 +1110,7 @@ export async function listStationeryInventory(query?: string): Promise<Stationer
       const name = row.name.trim();
       if (!name || seen.has(name.toLowerCase())) continue;
       seen.add(name.toLowerCase());
-      out.push({ id: row.id, name, description: row.description, unit_price: row.unit_price });
+      out.push({ id: row.id, name, description: row.description, unit_price: row.current_selling_price });
       if (out.length >= 50) break;
     }
     return out;

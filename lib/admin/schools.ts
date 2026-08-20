@@ -214,7 +214,7 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
 
   let query = admin
     .from("schools")
-    .select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at, stationery_packs(visible, stationery_items(id))", { count: "exact" });
+    .select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at", { count: "exact" });
 
   if (filters.q) {
     const q = filters.q.replace(/%/g, "").trim();
@@ -232,7 +232,13 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
     .range(from, to);
 
   if (error) {
-    console.error("[schools] list failed:", error);
+    console.error("[schools] list failed:", {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+      status: (error as { status?: number }).status,
+    });
     return { schools: [], total: 0, page, pageCount: 0, cities: [], provinces: [] };
   }
 
@@ -241,13 +247,29 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
     listFilterColumn("province"),
   ]);
 
+  const schoolIds = (data ?? []).map((row) => row.id);
+  const packItemCounts = new Map<string, number>();
+  if (schoolIds.length > 0) {
+    const { data: subtotalRows, error: subtotalError } = await admin
+      .from("pack_subtotals" as never)
+      .select("school_id,item_count")
+      .in("school_id" as never, schoolIds as never);
+    if (subtotalError) {
+      console.error("[schools] pack_subtotals query failed:", {
+        message: subtotalError.message,
+        code: subtotalError.code,
+      });
+    } else {
+      for (const row of (subtotalRows ?? []) as unknown as { school_id: string; item_count: number | null }[]) {
+        packItemCounts.set(row.school_id, (packItemCounts.get(row.school_id) ?? 0) + Number(row.item_count ?? 0));
+      }
+    }
+  }
+
   const schools = (data ?? []).map((row) => {
-    const { stationery_packs: packs, ...school } = row;
     return {
-      ...school,
-      has_orderable_grade_packs: packs.some(
-        (pack) => pack.visible && pack.stationery_items.length > 0
-      ),
+      ...row,
+      has_orderable_grade_packs: (packItemCounts.get(row.id) ?? 0) > 0,
     };
   });
 
@@ -550,4 +572,3 @@ export async function uploadSchoolLogo(file: File): Promise<{ publicUrl: string;
 
   return { publicUrl: urlData.publicUrl, path: data.path };
 }
-

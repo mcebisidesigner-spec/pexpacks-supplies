@@ -9,22 +9,42 @@
 -- 1. EXTENSIONS
 CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA extensions;
 
--- 2. ADD SPATIAL COLUMNS TO SCHOOLS TABLE
+-- 2. BASE SCHOOLS TABLE
+-- Fresh local resets apply this migration before the CMS migration that
+-- enriches schools. Keep the base shape here so spatial RPCs can be installed
+-- from a clean database without depending on later migrations.
+CREATE TABLE IF NOT EXISTS public.schools (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  name text NOT NULL,
+  slug text UNIQUE NOT NULL,
+  city text,
+  district text,
+  province text,
+  logo text,
+  is_partner boolean NOT NULL DEFAULT false,
+  is_featured boolean NOT NULL DEFAULT false,
+  lowest_price numeric,
+  status text DEFAULT 'active'::text NOT NULL
+);
+
+-- 3. ADD SPATIAL COLUMNS TO SCHOOLS TABLE
 ALTER TABLE public.schools
   ADD COLUMN IF NOT EXISTS lat double precision,
   ADD COLUMN IF NOT EXISTS lng double precision,
   ADD COLUMN IF NOT EXISTS location geometry(Point, 4326);
 
--- 3. POPULATE GEOMETRY FROM LAT/LNG (run after data migration)
+-- 4. POPULATE GEOMETRY FROM LAT/LNG (run after data migration)
 UPDATE public.schools
 SET location = ST_SetSRID(ST_MakePoint(lng, lat), 4326)
 WHERE lat IS NOT NULL AND lng IS NOT NULL AND location IS NULL;
 
--- 4. SPATIAL INDEX
+-- 5. SPATIAL INDEX
 CREATE INDEX IF NOT EXISTS idx_schools_location
   ON public.schools USING GIST (location);
 
--- 5. RPC: GET SCHOOLS NEAR USER (PostGIS distance query)
+-- 6. RPC: GET SCHOOLS NEAR USER (PostGIS distance query)
 CREATE OR REPLACE FUNCTION public.get_schools_near_user(
   user_lat double precision,
   user_lng double precision,
@@ -73,7 +93,7 @@ AS $$
   LIMIT limit_count;
 $$;
 
--- 6. RPC: GET SCHOOLS BY DISTRICT/CITY (IP-based fallback)
+-- 7. RPC: GET SCHOOLS BY DISTRICT/CITY (IP-based fallback)
 CREATE OR REPLACE FUNCTION public.get_schools_by_district(
   target_district text,
   limit_count integer DEFAULT 6

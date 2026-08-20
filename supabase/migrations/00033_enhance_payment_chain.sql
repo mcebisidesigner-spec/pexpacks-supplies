@@ -25,7 +25,6 @@ declare
   v_requirement_id uuid;
   v_link_id uuid;
   v_item record;
-  v_allocated integer;
 begin
   select * into v_order
   from public.orders
@@ -96,7 +95,7 @@ begin
       where id = v_requirement_id;
 
       -- Auto-allocate already-secured stock to this requirement
-      v_allocated := public.allocate_secured_demand(v_requirement_id);
+      perform public.allocate_secured_demand(v_requirement_id);
     end if;
     v_link_id := null;
   end loop;

@@ -188,6 +188,111 @@ comment on view public.order_line_summary_view is
 comment on column public.orders.items is
   'Legacy order item summary. Business logic should use order_items/order_line_summary_view.';
 
+create or replace function public.get_orders_summary(from_date date, to_date date)
+returns table (
+  total_orders bigint,
+  paid_orders bigint,
+  refunded_orders bigint,
+  cancelled_orders bigint,
+  revenue numeric,
+  avg_order_value numeric
+)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  with filtered_orders as (
+    select o.id, o.status
+    from public.orders o
+    where o.created_at::date between from_date and to_date
+  ),
+  order_totals as (
+    select ol.order_id, coalesce(sum(ol.line_total), 0)::numeric(12,2) as order_total
+    from public.order_line_summary_view ol
+    join filtered_orders fo on fo.id = ol.order_id
+    group by ol.order_id
+  )
+  select
+    count(*)::bigint as total_orders,
+    count(*) filter (where fo.status in ('paid', 'processing', 'fulfilled'))::bigint as paid_orders,
+    count(*) filter (where fo.status = 'refunded')::bigint as refunded_orders,
+    count(*) filter (where fo.status = 'cancelled')::bigint as cancelled_orders,
+    coalesce(sum(ot.order_total) filter (where fo.status in ('paid', 'processing', 'fulfilled')), 0)::numeric(12,2) as revenue,
+    coalesce(avg(ot.order_total) filter (where fo.status in ('paid', 'processing', 'fulfilled')), 0)::numeric(12,2) as avg_order_value
+  from filtered_orders fo
+  left join order_totals ot on ot.order_id = fo.id;
+$$;
+
+create or replace function public.get_orders_by_status_range(from_date date, to_date date)
+returns table (status text, order_count bigint, revenue numeric)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  with filtered_orders as (
+    select o.id, o.status
+    from public.orders o
+    where o.created_at::date between from_date and to_date
+  ),
+  order_totals as (
+    select ol.order_id, coalesce(sum(ol.line_total), 0)::numeric(12,2) as order_total
+    from public.order_line_summary_view ol
+    join filtered_orders fo on fo.id = ol.order_id
+    group by ol.order_id
+  )
+  select
+    coalesce(fo.status, 'unknown')::text as status,
+    count(*)::bigint as order_count,
+    coalesce(sum(ot.order_total), 0)::numeric(12,2) as revenue
+  from filtered_orders fo
+  left join order_totals ot on ot.order_id = fo.id
+  group by coalesce(fo.status, 'unknown')
+  order by order_count desc;
+$$;
+
+create or replace function public.get_orders_by_pack_type_range(from_date date, to_date date)
+returns table (pack_type text, order_count bigint)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    coalesce(p.title, o.pack_type, 'Unknown')::text as pack_type,
+    count(distinct o.id)::bigint as order_count
+  from public.orders o
+  left join public.order_items oi on oi.order_id = o.id
+  left join public.stationery_packs p on p.id = oi.pack_id
+  where o.created_at::date between from_date and to_date
+  group by coalesce(p.title, o.pack_type, 'Unknown')
+  order by order_count desc;
+$$;
+
+create or replace function public.get_top_schools(from_date date, to_date date, result_limit integer default 10)
+returns table (school_name text, order_count bigint, revenue numeric)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    coalesce(ol.school_name_snapshot, 'Unknown')::text as school_name,
+    count(distinct ol.order_id)::bigint as order_count,
+    coalesce(sum(ol.line_total), 0)::numeric(12,2) as revenue
+  from public.order_line_summary_view ol
+  where ol.order_created_at::date between from_date and to_date
+  group by coalesce(ol.school_name_snapshot, 'Unknown')
+  order by revenue desc, order_count desc
+  limit greatest(result_limit, 1);
+$$;
+
+grant execute on function public.get_orders_summary(date, date) to authenticated, service_role;
+grant execute on function public.get_orders_by_status_range(date, date) to authenticated, service_role;
+grant execute on function public.get_orders_by_pack_type_range(date, date) to authenticated, service_role;
+grant execute on function public.get_top_schools(date, date, integer) to authenticated, service_role;
+
 -- 4. Effective settings view --------------------------------------------------
 
 insert into public.system_settings (

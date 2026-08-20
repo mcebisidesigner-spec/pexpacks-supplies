@@ -16,7 +16,7 @@ import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 import { getAdminFilterOptions } from "@/lib/admin/filter-options";
 
 export type PackRow = Database["public"]["Tables"]["stationery_packs"]["Row"];
-export type ItemRow = Database["public"]["Tables"]["stationery_items"]["Row"];
+export type ItemRow = import("@/lib/admin/items").ItemRow;
 
 export { PACK_DELIVERY_TYPES };
 
@@ -175,7 +175,7 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
   let query = admin
     .from("stationery_packs")
     .select(
-      "id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,school_id,created_by,updated_by,created_at,updated_at,schools(name),stationery_items(count)",
+      "id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,school_id,created_by,updated_by,created_at,updated_at,schools(name)",
       { count: "exact" }
     );
 
@@ -221,8 +221,18 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
 
   const rows = (data ?? []) as (PackRow & {
     schools?: { name: string | null } | null;
-    stationery_items?: { count: number }[] | null;
   })[];
+  const packIds = rows.map((row) => row.id);
+  const itemCounts = new Map<string, number>();
+  if (packIds.length > 0) {
+    const { data: countRows } = await admin
+      .from("pack_subtotals" as never)
+      .select("pack_id,item_count")
+      .in("pack_id" as never, packIds as never);
+    for (const row of (countRows ?? []) as unknown as { pack_id: string; item_count: number }[]) {
+      itemCounts.set(row.pack_id, Number(row.item_count ?? 0));
+    }
+  }
 
   rows.sort((a, b) => {
     const orderA = getGradeOrder(`${a.title} ${a.slug ?? ""}`);
@@ -240,7 +250,7 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
     packs: rows.map((row) => ({
       ...row,
       school_name: row.schools?.name ?? null,
-      item_count: row.stationery_items?.[0]?.count ?? 0,
+      item_count: itemCounts.get(row.id) ?? 0,
     })),
     total: count ?? 0,
     page,
@@ -495,14 +505,15 @@ export async function getPack(idOrSlug: string): Promise<{ pack: PackRow | null;
   if (error || !pack) return { pack: null, items: [] };
 
   const { data: items, error: itemsError } = await admin
-    .from("stationery_items")
+    .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at,search_vector"
+      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source"
     )
-    .eq("pack_id", pack.id)
-    .order("sort_order", { ascending: true })
-    .order("name", { ascending: true });
-  const itemList = items ?? [];
+    .eq("pack_id" as never, pack.id as never)
+    .order("sort_order" as never, { ascending: true })
+    .order("name" as never, { ascending: true });
+  if (itemsError) console.error("[packs] pack item load failed:", itemsError);
+  const itemList = (items ?? []) as unknown as ItemRow[];
   const calculatedSum = itemList.reduce(
     (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
     0
@@ -834,11 +845,11 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
   if (error || !source) return { ok: false, message: "Pack not found." };
 
   const { data: sourceItems } = await admin
-    .from("stationery_items")
+    .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,name,description,specification,quantity,unit_price,image,icon,visible,sort_order,created_by,created_at,updated_at,search_vector"
+      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source"
     )
-    .eq("pack_id", id);
+    .eq("pack_id" as never, id as never);
 
   try {
     const baseSlug = slugify(source.title) || "pack";
@@ -866,20 +877,20 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
     if (copyError) throw copyError;
 
     if (sourceItems && sourceItems.length > 0) {
-      const { error: itemsError } = await admin.from("stationery_items").insert(
-        sourceItems.map((item) => ({
+      const copiedItems = (sourceItems as unknown as ItemRow[]).filter((item) => item.product_id).map((item) => ({
           pack_id: copy.id,
-          name: item.name,
-          description: item.description,
-          quantity: item.quantity,
-          image: item.image,
-          icon: item.icon,
-          visible: item.visible,
+          product_id: item.product_id as string,
+          pack_quantity: item.quantity,
+          school_wording: item.name,
+          school_notes: item.description,
+          selling_price_override: item.unit_price,
           sort_order: item.sort_order,
-          created_by: actor.user.id,
-        }))
-      );
-      if (itemsError) throw itemsError;
+          active: item.visible,
+        }));
+      if (copiedItems.length > 0) {
+        const { error: itemsError } = await admin.from("school_pack_items").insert(copiedItems);
+        if (itemsError) throw itemsError;
+      }
     }
 
     void writeAuditLog({

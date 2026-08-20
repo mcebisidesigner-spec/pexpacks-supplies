@@ -54,7 +54,7 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
               )}
               {school.isPartner && (
                 <span className={styles.partnerBadge}>
-                  ★ Official Partner
+                  ★ Official Partner ★
                 </span>
               )}
             </div>

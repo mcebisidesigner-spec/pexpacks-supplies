@@ -14,6 +14,11 @@ alter table public.orders
   add column if not exists submission_id uuid,
   add column if not exists removed_items jsonb,
   add column if not exists gateway_reference text,
+  add column if not exists paid_at timestamptz,
+  add column if not exists payment_gateway text,
+  add column if not exists payment_reference text,
+  add column if not exists delivery_address jsonb,
+  add column if not exists pack_type text,
   add column if not exists pexcover_data jsonb,
   add column if not exists sibling_group_id text;
 
@@ -24,7 +29,12 @@ alter table public.orders alter column items drop not null;
 -- 3. delivery_address is written as a JSON object by saveOrderRecord; live
 -- column is text. Convert (orders table is empty in production).
 alter table public.orders
-  alter column delivery_address type jsonb using delivery_address::jsonb;
+  alter column delivery_address type jsonb using
+    case
+      when delivery_address is null then null
+      when pg_typeof(delivery_address)::text = 'jsonb' then delivery_address::jsonb
+      else to_jsonb(delivery_address)
+    end;
 
 -- 4. Admin-friendly indexes.
 create index if not exists idx_orders_status on public.orders(status);

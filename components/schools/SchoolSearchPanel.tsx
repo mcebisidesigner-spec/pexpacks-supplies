@@ -347,7 +347,7 @@ export function SchoolSearchPanel({
                                     <span className={heroStyles.awaitingBadge}>Awaiting Lists</span>
                                   )}
                                   {school.isPartner ? (
-                                    <span className={heroStyles.partnerBadge}>Official Partner</span>
+                                    <span className={heroStyles.partnerBadge}>★ Official Partner ★</span>
                                   ) : null}
                                 </div>
                               </div>

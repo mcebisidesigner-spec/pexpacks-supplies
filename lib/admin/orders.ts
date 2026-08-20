@@ -170,7 +170,7 @@ export async function updateOrderStatus(id: string, status: string): Promise<{ o
 
   const { data: existing } = await admin
     .from("orders")
-    .select("id, order_reference, status")
+    .select("id, order_reference, status, buyer_email, buyer_name, tracking_token, courier_name, waybill_number, estimated_delivery")
     .eq("id", id)
     .maybeSingle();
   if (!existing) return { ok: false, message: "Order not found." };
@@ -195,7 +195,33 @@ export async function updateOrderStatus(id: string, status: string): Promise<{ o
     actorName: session.user.email ?? null,
   });
 
+  // Fire-and-forget status update notification
+  if (existing.buyer_email) {
+    sendOrderUpdateNotificationFromOrders(existing, status).catch(() => {});
+  }
+
   return { ok: true };
+}
+
+async function sendOrderUpdateNotificationFromOrders(
+  order: { order_reference: string; buyer_email: string | null; buyer_name: string | null; tracking_token: string | null; status: string; courier_name: string | null; waybill_number: string | null; estimated_delivery: string | null },
+  newStatus: string,
+) {
+  try {
+    const { sendOrderStatusUpdate } = await import("@/lib/email/orderStatusUpdate");
+    await sendOrderStatusUpdate({
+      order_reference: order.order_reference,
+      buyer_email: order.buyer_email,
+      buyer_name: order.buyer_name || "there",
+      tracking_token: order.tracking_token,
+      status: newStatus,
+      courier_name: order.courier_name,
+      waybill_number: order.waybill_number,
+      estimated_delivery: order.estimated_delivery,
+    });
+  } catch (err) {
+    console.error("[email] status update notification failed:", err);
+  }
 }
 
 export async function refundOrder(

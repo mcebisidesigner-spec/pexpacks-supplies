@@ -413,6 +413,8 @@ create index if not exists idx_schools_status on public.schools (status);
 -- 8. AGGREGATE RPCs (server-side, avoid shipping whole tables)
 -- ===================================================
 
+alter table public.orders add column if not exists pack_type text;
+
 create or replace function public.get_orders_daily(from_date date, to_date date)
 returns table (day date, order_count bigint, revenue numeric)
 language sql stable security definer

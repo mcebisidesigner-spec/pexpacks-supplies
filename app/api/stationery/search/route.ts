@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
-import {
-  INVENTORY_ITEM_FILTER,
-  inventoryItemNameKey,
-} from "@/lib/admin/item-constants";
+import { inventoryItemNameKey } from "@/lib/admin/item-constants";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -29,10 +26,10 @@ export async function GET(request: Request) {
 
     // Fast ILIKE typeahead search across name and description
     const { data, error } = await admin
-      .from("stationery_items")
-      .select("id, name, description, specification, unit_price, quantity")
-      .or(INVENTORY_ITEM_FILTER)
-      .or(`name.ilike.%${cleanQuery}%,description.ilike.%${cleanQuery}%`)
+      .from("master_products")
+      .select("id, name, description, specification, current_selling_price")
+      .eq("active", true)
+      .or(`sku.ilike.%${cleanQuery}%,name.ilike.%${cleanQuery}%,description.ilike.%${cleanQuery}%`)
       .limit(40);
 
     if (error) {
@@ -51,7 +48,7 @@ export async function GET(request: Request) {
         title: item.name || "Stationery Item",
         description: item.description || "",
         category: item.specification || undefined,
-        unit_price: Number(item.unit_price ?? 0),
+        unit_price: Number(item.current_selling_price ?? 0),
       });
       if (items.length >= 8) break;
     }

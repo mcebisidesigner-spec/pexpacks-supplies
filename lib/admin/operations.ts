@@ -393,6 +393,7 @@ export async function approveProductPrice(
   productId: string,
   sellingPrice: number,
   actorId: string,
+  isSuperAdmin = false,
 ) {
   const client = db();
   const { data: current, error: currentError } = await client
@@ -406,6 +407,30 @@ export async function approveProductPrice(
     current.latest_verified_cost == null
       ? null
       : asNumber(current.latest_verified_cost);
+
+  // Margin validation against system_settings thresholds
+  if (cost != null && sellingPrice > 0) {
+    const margin = (sellingPrice - cost) / sellingPrice;
+    const { data: settings } = await (client.from as (t: string) => any)("system_settings")
+      .select("key,value")
+      .in("key", ["pricing.low_margin_warning_pct", "pricing.critical_margin_pct"]);
+    const settingsMap = new Map<string, number>((settings ?? []).map((s: any) => [s.key, Number(s.value)]));
+    const criticalPct: number = settingsMap.get("pricing.critical_margin_pct") ?? 10;
+    const warningPct: number = settingsMap.get("pricing.low_margin_warning_pct") ?? 20;
+    const marginPct = margin * 100;
+
+    if (marginPct < criticalPct && !isSuperAdmin) {
+      throw new Error(
+        `Margin ${marginPct.toFixed(1)}% is below the critical floor (${criticalPct}%). Only a super admin can approve this price.`
+      );
+    }
+    if (marginPct < warningPct) {
+      console.warn(
+        `[pricing] Low margin warning: ${marginPct.toFixed(1)}% < ${warningPct}% for product ${productId}`
+      );
+    }
+  }
+
   const { error } = await client
     .from("master_products")
     .update({
@@ -1133,6 +1158,37 @@ export async function advanceOrderStatus(orderId: string) {
       })
       .eq("id", orderId);
     assertNoError(error, "Unable to advance order status");
+
+    // Fire-and-forget status update notification
+    sendOrderUpdateNotification(client, orderId, newStatus).catch(() => {});
+  }
+}
+
+async function sendOrderUpdateNotification(
+  client: ReturnType<typeof db>,
+  orderId: string,
+  newStatus: string,
+) {
+  try {
+    const { sendOrderStatusUpdate } = await import("@/lib/email/orderStatusUpdate");
+    const { data: order } = await client
+      .from("orders")
+      .select("order_reference,buyer_email,buyer_name,tracking_token,courier_name,waybill_number,estimated_delivery")
+      .eq("id", orderId)
+      .single();
+    if (!order?.buyer_email) return;
+    await sendOrderStatusUpdate({
+      order_reference: order.order_reference,
+      buyer_email: order.buyer_email,
+      buyer_name: order.buyer_name || "there",
+      tracking_token: order.tracking_token,
+      status: newStatus,
+      courier_name: order.courier_name,
+      waybill_number: order.waybill_number,
+      estimated_delivery: order.estimated_delivery,
+    });
+  } catch (err) {
+    console.error("[email] status update notification failed:", err);
   }
 }
 

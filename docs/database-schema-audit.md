@@ -1,7 +1,7 @@
 # Pexpacks Database Schema Audit
 
 Date: 2026-08-20
-Implementation status: initial cleanup implemented in migrations `00036` and `00037`.
+Implementation status: incremental unification implemented in migrations `00036` and `00037`.
 
 ## Verdict
 
@@ -9,7 +9,7 @@ The database is useful and recoverable, but it is messy. The mess is mostly from
 
 Because this project is still being built from scratch, unifying the schema is highly practical. The clean target is not to physically remove every legacy table immediately, but to make the normalized operations model the only business source of truth and keep legacy tables as compatibility surfaces until the app no longer imports them.
 
-Practical feasibility: high. The largest remaining effort is updating admin pack/item screens that still write `stationery_items`; the database now has canonical views and sync bridges to support that migration in smaller steps.
+Practical feasibility: high. Admin pack/item screens now use canonical product and pack-composition tables through compatibility read views. Legacy tables remain in the migration history and database only as compatibility/archive candidates.
 
 ## Current Shape
 
@@ -48,7 +48,7 @@ Risk: product price, quantity, wording, visibility, and pack contents can drift 
 
 Target direction: `master_products` should be the canonical product catalogue; `school_pack_items` should be the canonical pack composition table. `stationery_items` should become a compatibility table or view until all app code is migrated.
 
-Implemented: `00037_canonical_schema_unification_views.sql` adds `canonical_pack_items_view`, `public_pack_items_view`, and `admin_pack_items_view`. These views prefer `school_pack_items + master_products` and include legacy `stationery_items` only when a row has not been bridged.
+Implemented: `00037_canonical_schema_unification_views.sql` adds `canonical_pack_items_view`, `public_pack_items_view`, and `admin_pack_items_view`. App reads use those views, while admin writes now create/update `master_products` and `school_pack_items` instead of writing `stationery_items`.
 
 ### 3. Orders Have Both JSON Summary and Normalized Line Items
 
@@ -58,7 +58,7 @@ Risk: reports, receipts, procurement, and fulfilment can disagree if they read f
 
 Target direction: `orders` stores header/customer/payment summary; `order_items` stores purchased line truth.
 
-Implemented: `00037_canonical_schema_unification_views.sql` adds `order_line_summary_view` and comments `orders.items` as a legacy display/cache summary.
+Implemented: `00037_canonical_schema_unification_views.sql` adds `order_line_summary_view`, replaces reporting RPC revenue calculations with order-line-backed queries, and comments `orders.items` as a legacy display/cache summary.
 
 ### 4. Settings Are Split
 
@@ -71,7 +71,7 @@ Risk: admins may update one settings area while runtime code reads another. This
 
 Target direction: migrate all active keys into `system_settings`, then make `app_settings` read-only compatibility or remove app reads from it.
 
-Implemented: `00037_canonical_schema_unification_views.sql` adds `settings_effective_view` and seeds missing canonical settings for checkout currency and PexCover. `lib/admin/settings.ts` now reads and writes `system_settings`, falling back to `app_settings` only for older deployments.
+Implemented: `00037_canonical_schema_unification_views.sql` adds `settings_effective_view` and seeds missing canonical settings for checkout currency and PexCover. `lib/admin/settings.ts` now reads/writes `system_settings` and uses `settings_effective_view` only as a read-only compatibility fallback.
 
 ### 5. RLS Policy Maturity Is Uneven
 
@@ -123,16 +123,16 @@ Compatibility only:
 
 ### Phase 3: Move Reads First
 
-1. Public school pack pages should read from `school_pack_items + master_products`, with fallback to `stationery_items`. Started via `public_pack_items_view` and the updated public school pack RPC/fallback.
-2. Admin items should manage `master_products`.
-3. Admin pack composition should manage `school_pack_items`.
-4. Reports and procurement should read only `order_items`, not `orders.items`.
+1. Public school pack pages read from `school_pack_items + master_products` via `public_pack_items_view` and the public pack RPC/fallback.
+2. Admin items manage `master_products`.
+3. Admin pack composition manages `school_pack_items`.
+4. Reports and procurement read from `order_items`/`order_line_summary_view`, not `orders.items`.
 
 ### Phase 4: Then Move Writes
 
-1. New item creation writes to `master_products`.
+1. New item creation writes to `master_products` and links pack membership through `school_pack_items`.
 2. Pack editing writes to `school_pack_items`.
-3. Checkout writes `orders` and `order_items`; `orders.items` becomes summary/cache only.
+3. Checkout writes `orders` and `order_items`; `orders.items` is summary/cache only.
 4. Settings forms write to `system_settings`.
 
 ### Phase 5: Add Safety Views
@@ -169,11 +169,11 @@ The refused-partnership migration is now `00036_add_refused_partnership.sql`.
 
 Highest priority:
 
-1. Fix duplicate migration numbering before next DB push.
-2. Decide that `master_products + school_pack_items` is the canonical item model.
-3. Move public pack reads to a compatibility view backed by canonical tables.
-4. Migrate `app_settings` reads/writes into `system_settings`.
-5. Add smoke tests for payment completion creating payment event, procurement demand, packing record, and fulfilment record.
+1. Run Supabase against a local database and validate the full migration chain.
+2. Add a duplicate migration prefix check to CI/local scripts.
+3. Regenerate Supabase types after applying `00037`.
+4. Add smoke tests for payment completion creating payment event, procurement demand, packing record, and fulfilment record.
+5. After app usage proves stable, decide whether compatibility tables should be archived or dropped in a future migration.
 
 ## What Not To Do
 

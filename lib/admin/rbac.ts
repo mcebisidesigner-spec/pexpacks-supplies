@@ -122,9 +122,14 @@ export function displayName(user: User): string {
  */
 async function loadAdminUser(): Promise<AdminSession | null> {
   const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: User | null;
+  try {
+    const result = await supabase.auth.getUser();
+    user = result.data.user;
+  } catch (err) {
+    console.error("[rbac] getUser failed (network/auth error):", (err as Error).message);
+    return null;
+  }
   if (!user) return null;
 
   const admin = createSupabaseAdminClient();

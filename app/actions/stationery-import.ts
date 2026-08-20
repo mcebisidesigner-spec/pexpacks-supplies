@@ -28,28 +28,57 @@ export async function bulkImportStationeryAction(items: CSVStationeryRow[], pack
     targetPackId = firstPack?.id ?? "00000000-0000-0000-0000-000000000000";
   }
 
-  // 2. Format & sanitize payload
-  const formattedItems = items.map((item) => ({
-    pack_id: targetPackId,
-    name: item.title.trim(),
-    description: item.description?.trim() || null,
-    unit_price: Math.max(0, Number(item.unit_price) || 0),
-    specification: item.category?.trim() || "General",
-    visible: true,
-    updated_at: new Date().toISOString(),
-  }));
+  const formattedProducts = items.map((item) => {
+    const title = item.title.trim();
+    const sku =
+      item.sku?.trim().toUpperCase() ||
+      `PEX-${title.toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80)}`;
+    const unitPrice = Math.max(0, Number(item.unit_price) || 0);
+    return {
+      sku,
+      name: title,
+      description: item.description?.trim() || null,
+      category: item.category?.trim() || "General",
+      specification: item.category?.trim() || "General",
+      visibility: "public",
+      availability: "available",
+      current_selling_price: unitPrice,
+      calculated_selling_price: unitPrice,
+      pricing_status: unitPrice > 0 ? "review" : "unpriced",
+      active: true,
+      created_by: actor.user.id,
+      updated_by: actor.user.id,
+      updated_at: new Date().toISOString(),
+    };
+  });
 
-  // 3. Batch Upsert to Supabase (service role bypasses RLS; the RBAC gate above
-  // is the security boundary)
   const { data, error } = await admin
-    .from("stationery_items")
-    .upsert(formattedItems, {
+    .from("master_products")
+    .upsert(formattedProducts, {
+      onConflict: "sku",
       ignoreDuplicates: false,
     })
-    .select("id");
+    .select("id, sku, name, current_selling_price");
 
   if (error) {
     throw new Error(`Database import failed: ${error.message}`);
+  }
+
+  if (packId && data && data.length > 0) {
+    const rows = data.map((product, index) => ({
+      pack_id: targetPackId,
+      product_id: product.id,
+      pack_quantity: 1,
+      selling_price_override: product.current_selling_price,
+      sort_order: index + 1,
+      active: true,
+    }));
+    const { error: linkError } = await admin
+      .from("school_pack_items")
+      .upsert(rows, { onConflict: "pack_id,product_id", ignoreDuplicates: false });
+    if (linkError) {
+      throw new Error(`Pack composition import failed: ${linkError.message}`);
+    }
   }
 
   void writeAuditLog({
@@ -58,9 +87,9 @@ export async function bulkImportStationeryAction(items: CSVStationeryRow[], pack
     action: "items.import",
     entityType: "pack",
     entityId: packId,
-    summary: `Bulk-imported stationery: ${data?.length ?? formattedItems.length} items`,
+    summary: `Bulk-imported stationery: ${data?.length ?? formattedProducts.length} products`,
   });
   revalidatePath("/admin/items");
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  return { success: true, importedCount: data?.length ?? formattedItems.length };
+  return { success: true, importedCount: data?.length ?? formattedProducts.length };
 }

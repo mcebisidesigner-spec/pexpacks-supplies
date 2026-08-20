@@ -341,7 +341,7 @@ export function HeroSearch({
                                   <span className={styles.awaitingBadge}>Awaiting Lists</span>
                                 )}
                                 {school.isPartner ? (
-                                  <span className={styles.partnerBadge}>Official Partner</span>
+                                  <span className={styles.partnerBadge}>★ Official Partner ★</span>
                                 ) : null}
                               </div>
                             </div>
