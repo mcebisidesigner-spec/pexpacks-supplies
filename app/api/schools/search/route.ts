@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchSchoolRecords, getFeaturedSchoolRecords } from "@/lib/schools/schoolSearchData";
+import { searchSchoolRecords, getFeaturedSchoolRecords, getNearbySchoolRecords } from "@/lib/schools/schoolSearchData";
 import { isSchoolPhase } from "@/lib/schools/schoolPhase";
 import { rateLimitRequest } from "@/lib/security/requestGuards";
 
@@ -36,6 +36,27 @@ export async function GET(request: NextRequest) {
   const phaseParam = params.get("phase") ?? "";
   const query = params.get("q")?.trim() ?? "";
   const featuredOnly = params.get("featured") === "true";
+
+  const latStr = params.get("lat");
+  const lngStr = params.get("lng");
+  if (latStr && lngStr && !query) {
+    const userLat = Number(latStr);
+    const userLng = Number(lngStr);
+    if (!isNaN(userLat) && !isNaN(userLng)) {
+      const nearby = await getNearbySchoolRecords(userLat, userLng, limit);
+      return NextResponse.json(
+        {
+          success: true,
+          results: nearby,
+          total: nearby.length,
+          hasMore: false,
+          limit,
+          offset: 0,
+        },
+        { headers: { "Cache-Control": "private, no-store" } }
+      );
+    }
+  }
 
   if (featuredOnly || (!query && params.has("limit"))) {
     const featured = await getFeaturedSchoolRecords(4);

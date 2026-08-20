@@ -113,15 +113,41 @@ export function HeroSearch({
   useEffect(() => {
     if (trendingFetched.current || query.length >= 3) return;
     trendingFetched.current = true;
-    fetch("/api/schools/search?limit=8")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.results) {
-          setTrendingSchools(data.results);
-          setTrendingVisible(true);
-        }
-      })
-      .catch(() => {});
+
+    const fetchDefault = () => {
+      fetch("/api/schools/search?limit=8")
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.results) {
+            setTrendingSchools(data.results);
+            setTrendingVisible(true);
+          }
+        })
+        .catch(() => {});
+    };
+
+    if (typeof window !== "undefined" && "geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          fetch(`/api/schools/search?limit=8&lat=${latitude}&lng=${longitude}`)
+            .then((r) => r.json())
+            .then((data) => {
+              if (data.results && data.results.length > 0) {
+                setTrendingSchools(data.results);
+                setTrendingVisible(true);
+              } else {
+                fetchDefault();
+              }
+            })
+            .catch(fetchDefault);
+        },
+        fetchDefault,
+        { timeout: 4000, maximumAge: 120000 }
+      );
+    } else {
+      fetchDefault();
+    }
   }, [query]);
 
 

@@ -161,11 +161,56 @@ async function searchPublicSchoolsFallback(
   };
 }
 
-/**
- * Kept for admin action compatibility. Public reads are now bounded database
- * queries, so there is no process-local school index to invalidate.
- */
 export function invalidateSchoolSearchCache() {}
+
+export async function getNearbySchoolRecords(userLat: number, userLng: number, limit = 8) {
+  const supabase = createSupabaseAdminClient();
+  const { data: schools } = await supabase
+    .from("schools")
+    .select(
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, latitude, longitude, stationery_packs(visible, stationery_items(id))"
+    )
+    .eq("status", "active")
+    .eq("published", true)
+    .not("latitude", "is", null)
+    .not("longitude", "is", null);
+
+  if (!schools || schools.length === 0) {
+    return getFeaturedSchoolRecords(limit);
+  }
+
+  const calculateDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  const scored = schools
+    .map((school) => {
+      const lat = Number(school.latitude);
+      const lng = Number(school.longitude);
+      if (isNaN(lat) || isNaN(lng)) return null;
+      const distance = calculateDistanceKm(userLat, userLng, lat, lng);
+      return { school, distance };
+    })
+    .filter((item): item is { school: typeof schools[0]; distance: number } => item !== null)
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, limit);
+
+  if (scored.length === 0) {
+    return getFeaturedSchoolRecords(limit);
+  }
+
+  return scored.map((item) => toSearchRecord(item.school as SearchSchoolRow));
+}
 
 export async function getFeaturedSchoolRecords(limit = 4) {
   const supabase = createSupabaseAdminClient();
