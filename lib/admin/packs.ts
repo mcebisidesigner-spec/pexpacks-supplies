@@ -293,81 +293,80 @@ export async function listSchoolGroupedSummary(
   ]);
 
   try {
-    const rpc = admin.rpc.bind(admin) as unknown as (
-      fn: string,
-      args: Record<string, unknown>
-    ) => Promise<{
-      data:
-        | {
-            school_id: string;
-            school_name: string;
-            school_slug: string | null;
-            grade_packs_count: number;
-            last_edited: string | null;
-            visible: boolean;
-            total_schools: number;
-            total_grade_packs: number;
-          }[]
-        | null;
-      error: unknown;
-    }>;
-    const { data, error } = await rpc("get_admin_pack_school_groups", {
+    const { data, error } = await (admin.rpc as any)("get_all_pack_school_groups_json", {
       q: q || null,
       visible_filter: filters.visible || null,
-      page_size: pageSize,
-      page_number: page,
     });
 
     if (!error && data) {
-      const first = data[0];
-      const totalSchools = Number(first?.total_schools ?? 0);
-      const totalGradePacks = Number(first?.total_grade_packs ?? 0);
+      const rawSchools = Array.isArray(data.schools) ? data.schools : [];
+      const totalSchools = Number(data.total_schools ?? rawSchools.length);
+      const totalGradePacks = Number(data.total_grade_packs ?? 0);
+
+      const schoolsSummary: SchoolGroupedSummary[] = rawSchools.map((row: any) => ({
+        school_id: row.school_id,
+        school_name: row.school_name,
+        school_slug: row.school_slug ?? "",
+        grade_packs_count: Number(row.grade_packs_count ?? 0),
+        last_edited: row.last_edited ?? "",
+        visible: Boolean(row.visible),
+      }));
+
       return {
-        schoolsSummary: data.map((row) => ({
-          school_id: row.school_id,
-          school_name: row.school_name,
-          school_slug: row.school_slug ?? "",
-          grade_packs_count: Number(row.grade_packs_count ?? 0),
-          last_edited: row.last_edited ?? "",
-          visible: Boolean(row.visible),
-        })),
+        schoolsSummary,
         totalGradePacks,
         totalSchools,
-        page,
+        page: 1,
         pageCount: Math.max(1, Math.ceil(totalSchools / pageSize)),
         schools: allSchools,
         deliveryTypes,
       };
     }
   } catch (err) {
-    console.warn("[packs] grouped summary RPC unavailable, using fallback:", err);
+    console.warn("[packs] grouped summary JSON RPC unavailable, using fallback:", err);
   }
 
-  let schoolQuery = admin
-    .from("schools")
-    .select("id, name, slug, updated_at")
-    .order("name", { ascending: true })
-    .limit(10000);
+  let dbSchools: { id: string; name: string; slug: string | null; updated_at?: string | null }[] = [];
+  const chunk = 1000;
+  let chunkPage = 0;
+  let hasMore = true;
 
-  if (q) {
-    schoolQuery = schoolQuery.or(`name.ilike.%${q}%,slug.ilike.%${q}%`);
-  }
-  if (filters.school_id) {
-    const realSchoolId = await resolveSchoolId(admin, filters.school_id);
-    if (realSchoolId) {
-      schoolQuery = schoolQuery.eq("id", realSchoolId);
+  while (hasMore) {
+    let qBuilder = admin
+      .from("schools")
+      .select("id, name, slug, updated_at")
+      .order("name", { ascending: true })
+      .range(chunkPage * chunk, (chunkPage + 1) * chunk - 1);
+
+    if (q) {
+      qBuilder = qBuilder.or(`name.ilike.%${q}%,slug.ilike.%${q}%`);
+    }
+    if (filters.school_id) {
+      const realSchoolId = await resolveSchoolId(admin, filters.school_id);
+      if (realSchoolId) {
+        qBuilder = qBuilder.eq("id", realSchoolId);
+      }
+    }
+
+    const { data: chunkData } = await qBuilder;
+    if (!chunkData || chunkData.length === 0) {
+      hasMore = false;
+    } else {
+      dbSchools = dbSchools.concat(chunkData);
+      if (chunkData.length < chunk || filters.school_id) {
+        hasMore = false;
+      } else {
+        chunkPage++;
+      }
     }
   }
 
-  const [{ data: dbSchools }, { data: dbPacks, count: totalGradePacks }] = await Promise.all([
-    schoolQuery,
-    admin
-      .from("stationery_packs")
-      .select("id, title, slug, school_id, visible, updated_at", { count: "exact" })
-      .limit(50000),
-  ]);
+  const { data: dbPacks, count: totalGradePacks } = await admin
+    .from("stationery_packs")
+    .select("id, title, slug, school_id, visible, updated_at", { count: "exact" })
+    .limit(50000);
 
-  if (!dbSchools) {
+  if (dbSchools.length === 0) {
     return {
       schoolsSummary: [],
       totalGradePacks: 0,
