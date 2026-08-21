@@ -50,6 +50,17 @@ export default function PexConsoleGateway() {
     }
   }, [step]);
 
+  // Pre-fill OTP code if passed via URL search parameters (from Copy AUTH No. button)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const urlOtp = params.get("otp");
+      if (urlOtp && urlOtp.length === 6 && /^\d+$/.test(urlOtp)) {
+        setOtpValues(urlOtp.split(""));
+      }
+    }
+  }, []);
+
   function handleCredentialsSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMessage(null);

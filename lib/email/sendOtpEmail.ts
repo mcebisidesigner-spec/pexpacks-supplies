@@ -45,54 +45,76 @@ export async function generateAndSendOtpEmail(
     }
 
     const resend = new Resend(apiKey);
-    const from = process.env.RESEND_FROM_EMAIL || "Pexpacks Security <orders@pexpacks.co.za>";
-    const formattedDigits = otpCode.split("").join(" &nbsp; ");
+    const from = process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
+    
+    // Join digits with non-breaking spaces so email clients never wrap digits onto multiple lines
+    const formattedDigits = otpCode.split("").join("&nbsp;&nbsp;");
+    const consoleUrl = `https://pexpacks.co.za/pex-console?otp=${otpCode}`;
 
     const htmlBody = `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pexpacks Security Token</title>
+  <title>Your Pexpacks Security Token</title>
 </head>
 <body style="margin:0;padding:0;background:#070b12;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#e2e8f0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#070b12;padding:40px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:440px;background:#0c1322;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.5);">
-          <!-- Header -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:420px;background:#0c1322;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.5);">
+          <!-- Header Card Content -->
           <tr>
-            <td style="padding:32px 24px 20px;text-align:center;background:#0c1322;">
-              <div style="display:inline-block;padding:4px 12px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:999px;color:#2dd4bf;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:12px;">
+            <td style="padding:32px 24px 16px;text-align:center;background:#0c1322;">
+              <div style="display:inline-block;padding:5px 14px;background:rgba(16,185,129,0.12);border:1px solid #10b981;border-radius:999px;color:#2dd4bf;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:16px;">
                 TWO-FACTOR AUTHENTICATION
               </div>
-              <h1 style="margin:0 0 8px;font-size:22px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;">
+              <h1 style="margin:0 0 10px;font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;font-family:Arial,Helvetica,sans-serif;">
                 Your Security Token
               </h1>
-              <p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.5;">
-                Enter this 6-digit code on the <strong>/pex-console</strong> login gateway:
+              <p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.5;font-family:Arial,Helvetica,sans-serif;">
+                Enter this 6-digit code on the <strong style="color:#ffffff;">/pex-console</strong> login gateway:
               </p>
             </td>
           </tr>
 
-          <!-- OTP Code Box -->
+          <!-- Inner Code Box -->
           <tr>
-            <td style="padding:10px 24px 24px;text-align:center;">
-              <div style="background:#070b12;border:1.5px solid #1e293b;border-radius:12px;padding:20px 12px;margin:8px 0;font-size:32px;font-weight:800;color:#10b981;letter-spacing:8px;font-family:'Courier New',Courier,monospace;">
-                [ &nbsp;${formattedDigits}&nbsp; ]
+            <td style="padding:0 24px 20px;">
+              <div style="background:#060911;border:1px solid #1e293b;border-radius:12px;padding:24px 16px;text-align:center;">
+                <!-- Digits Single Line Container -->
+                <div style="font-size:28px;font-weight:800;color:#10b981;letter-spacing:6px;font-family:'Courier New',Courier,monospace,sans-serif;white-space:nowrap !important;margin-bottom:20px;display:inline-block;width:100%;">
+                  [&nbsp; ${formattedDigits} &nbsp;]
+                </div>
+                
+                <!-- Copy AUTH No. Button -->
+                <div style="text-align:center;">
+                  <a href="${consoleUrl}" target="_blank" style="display:inline-block;padding:10px 24px;background:#10b981;color:#070b12;font-size:13px;font-weight:800;font-family:Arial,Helvetica,sans-serif;text-decoration:none;border-radius:999px;box-shadow:0 4px 14px rgba(16,185,129,0.35);">
+                    Copy AUTH No.
+                  </a>
+                </div>
               </div>
-              <p style="margin:14px 0 0;font-size:12px;color:#64748b;">
-                This code expires in <strong style="color:#cbd5e1;">5 minutes</strong> and can only be used once.
+            </td>
+          </tr>
+
+          <!-- Expiration Notice -->
+          <tr>
+            <td style="padding:0 24px 24px;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#64748b;font-family:Arial,Helvetica,sans-serif;">
+                This code expires in <strong style="color:#ffffff;">5 minutes</strong> and can only be used once.
               </p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="padding:16px 24px;background:rgba(15,23,42,0.6);border-top:1px solid rgba(255,255,255,0.05);text-align:center;font-size:11px;color:#64748b;line-height:1.4;">
-              If you did not request this administrative login token, please ignore this email or contact system security immediately.
-              <br /><br />
-              &copy; Pexpacks Supplies &bull; Back-Office Security
+            <td style="padding:20px 24px;background:rgba(15,23,42,0.6);border-top:1px solid rgba(255,255,255,0.06);text-align:center;font-size:11px;color:#64748b;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">
+              <p style="margin:0 0 8px;">
+                If you did not request this administrative login token, please ignore this email or contact system security immediately.
+              </p>
+              <p style="margin:0;">
+                &copy; Pexpacks Supplies &bull; Back-Office Security
+              </p>
             </td>
           </tr>
         </table>
