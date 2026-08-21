@@ -221,7 +221,7 @@ export async function requireAdmin(options?: {
 }): Promise<AdminSession> {
   const session = await getAdminUser();
   if (!session) {
-    redirect("/login");
+    notFound();
     throw new Error("Unauthenticated");
   }
   if (!session.isSuperAdmin && session.roles.length === 0) {

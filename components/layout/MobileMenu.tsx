@@ -124,29 +124,6 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
 
         <div className={styles.mobileMenuSecondary}>
           <Link
-            href="/login"
-            onClick={onClose}
-            className={[
-              styles.mobileMenuLink,
-              styles.mobileMenuLogin,
-              isActivePath("/login", pathname) ? styles.mobileMenuLinkActive : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            aria-current={isActivePath("/login", pathname) ? "page" : undefined}
-          >
-            <svg
-              className={styles.mobileMenuLoginIcon}
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="8" r="3.5" />
-              <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
-            </svg>
-            Login
-          </Link>
-
-          <Link
             href="/track-order"
             className={styles.mobileMenuCta}
             onClick={onClose}

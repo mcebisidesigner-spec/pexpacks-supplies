@@ -9,6 +9,39 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      security_audit_logs: {
+        Row: {
+          id: string;
+          ip_address: string;
+          user_agent: string | null;
+          event_type: string;
+          email_masked: string | null;
+          user_id: string | null;
+          metadata: Json | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          ip_address: string;
+          user_agent?: string | null;
+          event_type: string;
+          email_masked?: string | null;
+          user_id?: string | null;
+          metadata?: Json | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          ip_address?: string;
+          user_agent?: string | null;
+          event_type?: string;
+          email_masked?: string | null;
+          user_id?: string | null;
+          metadata?: Json | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       form_submissions: {
         Row: {
           id: string;
