@@ -11,6 +11,7 @@ import {
 } from "@/lib/security/rate-limit";
 import { logSecurityEvent } from "@/lib/security/audit";
 import { isStaffClaim } from "@/lib/admin/rbac";
+import { generateAndSendOtpEmail } from "@/lib/email/sendOtpEmail";
 
 export type AuthResponse = {
   ok: boolean;
@@ -32,7 +33,7 @@ async function getClientContext() {
 }
 
 /**
- * Step 1: Validate Email & Password, verify Admin Role, and trigger Email OTP Challenge
+ * Step 1: Validate Email & Password, verify Admin Role, and send 6-digit Email OTP Token
  */
 export async function authenticatePasswordAction(
   prevState: AuthResponse,
@@ -93,7 +94,6 @@ export async function authenticatePasswordAction(
     );
 
     if (!isStaff) {
-      // Check database user_roles table if metadata not set
       const { data: rolesData } = await adminClient
         .from("user_roles")
         .select("role_id")
@@ -112,17 +112,11 @@ export async function authenticatePasswordAction(
       }
     }
 
-    // 4. Trigger Email OTP Challenge for 2FA Step 2
-    const { error: otpSendError } = await supabaseServer.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: false,
-      },
-    });
+    // 4. Generate & Send 6-Digit Physical Security Token Email (Resend)
+    const otpResult = await generateAndSendOtpEmail(email);
 
-    if (otpSendError) {
-      console.error("[2fa-otp] Failed to send OTP code:", otpSendError.message);
-      // Fallback: If signInWithOtp error occurs due to local dev config, log and allow retry
+    if (!otpResult.success) {
+      console.warn("[2fa-otp] Warning sending OTP email:", otpResult.error);
     }
 
     await logSecurityEvent({
@@ -171,16 +165,60 @@ export async function verifyOtpAction(
 
   try {
     const supabaseServer = await createSupabaseServerClient();
+    const adminClient = createSupabaseAdminClient();
+    let verifiedSession = false;
+    let verifiedUserId: string | undefined;
 
-    // 2. Verify OTP token with Supabase Auth
+    // A. Verify with Supabase Auth (type: email)
     const { data: verifyData, error: verifyError } =
       await supabaseServer.auth.verifyOtp({
-        email,
+        email: email.trim(),
         token: token.trim(),
         type: "email",
       });
 
-    if (verifyError || !verifyData.session) {
+    if (!verifyError && verifyData?.session) {
+      verifiedSession = true;
+      verifiedUserId = verifyData.user?.id;
+    } else {
+      // Try type: magiclink
+      const { data: magicData, error: magicError } =
+        await supabaseServer.auth.verifyOtp({
+          email: email.trim(),
+          token: token.trim(),
+          type: "magiclink",
+        });
+
+      if (!magicError && magicData?.session) {
+        verifiedSession = true;
+        verifiedUserId = magicData.user?.id;
+      }
+    }
+
+    // B. Fallback Check: Verify against auth_otp_tokens table
+    if (!verifiedSession) {
+      const nowIso = new Date().toISOString();
+      const { data: matchedTokens } = await adminClient
+        .from("auth_otp_tokens")
+        .select("id")
+        .eq("email", email.trim().toLowerCase())
+        .eq("otp_code", token.trim())
+        .eq("used", false)
+        .gte("expires_at", nowIso)
+        .limit(1);
+
+      if (matchedTokens && matchedTokens.length > 0) {
+        // Mark token as used
+        await adminClient
+          .from("auth_otp_tokens")
+          .update({ used: true })
+          .eq("id", matchedTokens[0].id);
+
+        verifiedSession = true;
+      }
+    }
+
+    if (!verifiedSession) {
       await recordFailedAttempt(ip, userAgent, maskEmail(email));
       await logSecurityEvent({
         ipAddress: ip,
@@ -191,14 +229,14 @@ export async function verifyOtpAction(
       return { ok: false, message: GENERIC_ERROR_MSG };
     }
 
-    // 3. Reset rate limit & Log Success
+    // Reset rate limit & Log Success
     resetRateLimit(ip);
     await logSecurityEvent({
       ipAddress: ip,
       userAgent,
       eventType: "LOGIN_SUCCESS",
       email,
-      userId: verifyData.user?.id,
+      userId: verifiedUserId,
     });
 
     return {
@@ -226,13 +264,9 @@ export async function resendOtpAction(email: string): Promise<AuthResponse> {
   }
 
   try {
-    const supabaseServer = await createSupabaseServerClient();
-    const { error } = await supabaseServer.auth.signInWithOtp({
-      email,
-      options: { shouldCreateUser: false },
-    });
+    const otpResult = await generateAndSendOtpEmail(email);
 
-    if (error) {
+    if (!otpResult.success) {
       return { ok: false, message: "Could not resend verification code." };
     }
 
@@ -243,7 +277,7 @@ export async function resendOtpAction(email: string): Promise<AuthResponse> {
       email,
     });
 
-    return { ok: true, message: "Verification code sent to your email." };
+    return { ok: true, message: "6-digit verification code sent to your email." };
   } catch (err) {
     console.error("[auth-action] resendOtpAction exception:", err);
     return { ok: false, message: "Could not resend verification code." };
