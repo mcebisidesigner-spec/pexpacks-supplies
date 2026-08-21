@@ -21,7 +21,7 @@ export function ClientRuntimeWidgets() {
   const hideWhatsApp =
     pathname?.startsWith("/checkout") ||
     pathname?.startsWith("/admin") ||
-    pathname === "/pex-console" ||
+    pathname === "/pex-console-secure" ||
     pathname === "/login";
 
   useEffect(() => {

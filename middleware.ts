@@ -63,8 +63,8 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // 3. Handle Hidden Gateway Route (/pex-console)
-  if (pathname === "/pex-console") {
+  // 3. Handle Hidden Gateway Route (/pex-console-secure)
+  if (pathname === "/pex-console-secure") {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -96,6 +96,6 @@ export const config = {
     "/admin/:path*",
     "/admin",
     "/login",
-    "/pex-console",
+    "/pex-console-secure",
   ],
 };

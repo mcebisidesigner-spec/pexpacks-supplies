@@ -37,7 +37,7 @@ export function SiteChrome({
   const pathname = usePathname();
   const isAuthOrAdmin =
     pathname.startsWith("/admin") ||
-    pathname === "/pex-console" ||
+    pathname === "/pex-console-secure" ||
     pathname === "/login";
 
   if (isAuthOrAdmin) {

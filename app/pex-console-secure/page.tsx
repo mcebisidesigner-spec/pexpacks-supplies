@@ -94,7 +94,7 @@ export default function PexConsoleGateway() {
           type: "info",
         });
 
-        // Immediately clean address bar to keep URL 100% clean (/pex-console)
+        // Immediately clean address bar to keep URL 100% clean (/pex-console-secure)
         window.history.replaceState({}, document.title, window.location.pathname);
       }
     }

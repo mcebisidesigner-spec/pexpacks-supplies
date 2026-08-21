@@ -72,7 +72,7 @@ export async function generateAndSendOtpEmail(
                 Your Security Token
               </h1>
               <p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.5;font-family:Arial,Helvetica,sans-serif;">
-                Enter this 6-digit code on the <strong style="color:#ffffff;">/pex-console</strong> login gateway:
+                Enter this 6-digit code on the <strong style="color:#ffffff;">/pex-console-secure</strong> login gateway:
               </p>
             </td>
           </tr>
