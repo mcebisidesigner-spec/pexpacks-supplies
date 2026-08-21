@@ -30,21 +30,56 @@ export default async function EditSchoolPage({ params }: EditSchoolPageProps) {
       <div>
         <Link
           href={`/admin/schools/${schoolSlugOrId}/info`}
-          className={styles.secondaryBtn}
-          style={{ height: 32, fontSize: 11, background: "transparent", border: "none", color: "#94a3b8", paddingLeft: 0 }}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: 12,
+            fontWeight: 500,
+            color: "#94a3b8",
+            textDecoration: "none",
+            transition: "color 140ms ease",
+          }}
         >
           <ArrowLeft size={14} /> Back to {school.name}
         </Link>
       </div>
 
       {/* Header */}
-      <div className={styles.headerRow}>
+      <div className={styles.headerRow} style={{ marginTop: 8, marginBottom: 12 }}>
         <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: 26,
+              fontWeight: 700,
+              color: "#ffffff",
+              letterSpacing: "-0.02em",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
             Edit School: {school.name}
-            <span className={styles.badgeTeal}>● {school.status}</span>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "3px 10px",
+                borderRadius: 12,
+                background: "rgba(16, 185, 129, 0.15)",
+                border: "1px solid rgba(16, 185, 129, 0.3)",
+                color: "#10b981",
+                fontSize: 11,
+                fontWeight: 600,
+                lineHeight: 1,
+              }}
+            >
+              <span style={{ fontSize: 8 }}>●</span> {school.status ? school.status.toLowerCase() : "active"}
+            </span>
           </h1>
-          <p className={styles.headerSubtitle}>
+          <p style={{ margin: "4px 0 0", fontSize: 13, color: "#94a3b8" }}>
             Update school profile, primary contacts, address, grades, search badge, logo, and partnership status.
           </p>
         </div>

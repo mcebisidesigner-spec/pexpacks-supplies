@@ -83,8 +83,25 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
         <div className={styles.sidebarCard}>
           <div className={styles.sidebarCardHeader}>
             <div className={styles.sidebarHeaderTitle}>
-              <Building2 size={16} style={{ color: "#2dd4bf" }} />
-              <span>School Identity & Primary Details</span>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 8,
+                  background: "rgba(45, 212, 191, 0.12)",
+                  border: "1px solid rgba(45, 212, 191, 0.25)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#2dd4bf",
+                  flexShrink: 0,
+                }}
+              >
+                <Building2 size={16} />
+              </div>
+              <span style={{ fontSize: 15, fontWeight: 700, color: "#ffffff" }}>
+                School Identity & Primary Details
+              </span>
             </div>
           </div>
 
@@ -298,8 +315,25 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
         <div className={styles.sidebarCard}>
           <div className={styles.sidebarCardHeader}>
             <div className={styles.sidebarHeaderTitle}>
-              <GraduationCap size={16} style={{ color: "#60a5fa" }} />
-              <span>School Profile & Search Pill Configuration</span>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 8,
+                  background: "rgba(96, 165, 250, 0.12)",
+                  border: "1px solid rgba(96, 165, 250, 0.25)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#60a5fa",
+                  flexShrink: 0,
+                }}
+              >
+                <GraduationCap size={16} />
+              </div>
+              <span style={{ fontSize: 15, fontWeight: 700, color: "#ffffff" }}>
+                School Profile & Search Pill Configuration
+              </span>
             </div>
           </div>
 
@@ -562,8 +596,25 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
         <div className={styles.sidebarCard}>
           <div className={styles.sidebarCardHeader}>
             <div className={styles.sidebarHeaderTitle}>
-              <ShieldCheck size={16} style={{ color: "#2dd4bf" }} />
-              <span>Status & Partnership Flags</span>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 8,
+                  background: "rgba(45, 212, 191, 0.12)",
+                  border: "1px solid rgba(45, 212, 191, 0.25)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#2dd4bf",
+                  flexShrink: 0,
+                }}
+              >
+                <ShieldCheck size={16} />
+              </div>
+              <span style={{ fontSize: 15, fontWeight: 700, color: "#ffffff" }}>
+                Status & Partnership Flags
+              </span>
             </div>
           </div>
 
