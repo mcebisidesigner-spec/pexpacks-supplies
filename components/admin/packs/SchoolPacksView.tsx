@@ -185,6 +185,10 @@ function SparklineWave({ color, direction = "up" }: { color: string; direction?:
 
 import type { SchoolGroupedResult } from "@/lib/admin/packs";
 
+function formatNumber(num: number): string {
+  return new Intl.NumberFormat("en-US").format(num);
+}
+
 export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedResult }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -263,8 +267,8 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           <div className={styles.headerTexts}>
             <h1 className={styles.headerTitle}>
               School Packs{" "}
-              <span className={styles.headerCount}>
-                ({totalCount.toLocaleString()})
+              <span className={styles.headerCount} suppressHydrationWarning>
+                ({formatNumber(totalCount)})
               </span>
             </h1>
             <p className={styles.headerSubtitle}>
@@ -291,7 +295,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             </div>
             <div className={styles.kpiHeaderInfo}>
               <span className={styles.kpiLabel}>Total Schools</span>
-              <span className={styles.kpiValue}>{totalCount.toLocaleString()}</span>
+              <span className={styles.kpiValue} suppressHydrationWarning>{formatNumber(totalCount)}</span>
             </div>
           </div>
           <div className={styles.kpiFooter}>
@@ -598,9 +602,9 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
           {/* Table Pagination Footer */}
           <div className={styles.paginationFooter}>
-            <span>
+            <span suppressHydrationWarning>
               Showing {totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1} to{" "}
-              {Math.min(currentPage * pageSize, totalCount)} of {totalCount.toLocaleString()} schools
+              {Math.min(currentPage * pageSize, totalCount)} of {formatNumber(totalCount)} schools
             </span>
             <div className={styles.paginationControls}>
               <button
@@ -834,7 +838,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 </svg>
 
                 <div className={styles.donutCenterText}>
-                  <span className={styles.donutCenterNumber}>128</span>
+                  <span className={styles.donutCenterNumber} suppressHydrationWarning>{formatNumber(totalCount)}</span>
                   <span className={styles.donutCenterLabel}>Total Schools</span>
                 </div>
               </div>
