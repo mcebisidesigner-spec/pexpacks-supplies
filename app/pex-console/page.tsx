@@ -176,7 +176,7 @@ export default function PexConsoleGateway() {
         } catch {
           // ignore
         }
-        window.location.href = res.redirectUrl;
+        window.location.replace(res.redirectUrl);
       } else {
         setErrorMessage(res.message || "Invalid login credentials or verification code.");
       }
