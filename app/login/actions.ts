@@ -107,7 +107,7 @@ export async function logout(reason?: "idle" | "restart") {
       : reason === "restart"
         ? "Dashboard session closed after the browser or device restarted."
         : null;
-  redirect(message ? `/login?message=${encodeURIComponent(message)}` : "/login");
+  redirect(message ? `/pex-console?message=${encodeURIComponent(message)}` : "/pex-console");
 }
 
 export async function requestPasswordReset(email: string) {

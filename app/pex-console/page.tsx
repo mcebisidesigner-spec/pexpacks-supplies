@@ -50,13 +50,26 @@ export default function PexConsoleGateway() {
     }
   }, [step]);
 
-  // Pre-fill OTP code if passed via URL search parameters (from Copy AUTH No. button)
+  // Pre-fill & copy OTP code if passed via URL search parameters (from Copy AUTH No. button), and display URL messages
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
+      const urlMsg = params.get("message") || params.get("error");
+      if (urlMsg) {
+        setErrorMessage(urlMsg);
+      }
+
       const urlOtp = params.get("otp");
       if (urlOtp && urlOtp.length === 6 && /^\d+$/.test(urlOtp)) {
         setOtpValues(urlOtp.split(""));
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            void navigator.clipboard.writeText(urlOtp);
+            setResendMessage(`Security token ${urlOtp} copied to clipboard!`);
+          }
+        } catch {
+          // Ignore clipboard permission errors
+        }
       }
     }
   }, []);
@@ -104,7 +117,8 @@ export default function PexConsoleGateway() {
       otpRefs.current[index + 1]?.focus();
     }
 
-    if (next.every((v) => v.length === 1)) {
+    // Auto submit if all 6 digits are entered
+    if (next.every((d) => d !== "")) {
       submitOtpToken(next.join(""));
     }
   }
@@ -131,6 +145,11 @@ export default function PexConsoleGateway() {
     startTransition(async () => {
       const res = await verifyOtpAction(email, token);
       if (res.ok && res.redirectUrl) {
+        try {
+          window.sessionStorage.setItem("pex_admin_runtime_session", "active");
+        } catch {
+          // ignore
+        }
         window.location.href = res.redirectUrl;
       } else {
         setErrorMessage(res.message || "Invalid login credentials or verification code.");

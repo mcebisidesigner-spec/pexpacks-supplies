@@ -78,7 +78,10 @@ export function IdleLogout() {
     let lastActivitySync = 0;
     let signingOut = false;
     let fallbackPaused = document.visibilityState === "hidden";
-    let runtimeAuthorized = hasRuntimeSession();
+    // Since IdleLogout only renders inside AdminLayout after requireAdmin() server verification,
+    // authorize the runtime session immediately for this tab.
+    authorizeRuntimeSession();
+    let runtimeAuthorized = true;
 
     const channel =
       typeof BroadcastChannel === "undefined"
@@ -90,7 +93,7 @@ export function IdleLogout() {
         reason === "idle"
           ? "Dashboard closed after 20 minutes of inactivity."
           : "Dashboard session closed after the browser or device restarted.";
-      return `/login?message=${encodeURIComponent(message)}`;
+      return `/pex-console?message=${encodeURIComponent(message)}`;
     };
 
     const signOutForSecurity = async (reason: "idle" | "restart") => {
