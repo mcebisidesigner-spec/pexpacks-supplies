@@ -76,6 +76,15 @@ export async function middleware(request: NextRequest) {
       });
     }
 
+    response.headers.set(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+    );
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+    response.headers.set("Surrogate-Control", "no-store");
+    response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive, nosnippet, nocache");
+
     return response;
   }
 

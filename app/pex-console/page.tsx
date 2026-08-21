@@ -166,6 +166,13 @@ export default function PexConsoleGateway() {
     }
   }
 
+  // Set stealth document title
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.title = "404 Not Found";
+    }
+  }, []);
+
   function submitOtpToken(token: string) {
     setErrorMessage(null);
     startTransition(async () => {
@@ -173,6 +180,8 @@ export default function PexConsoleGateway() {
       if (res.ok && res.redirectUrl) {
         try {
           window.sessionStorage.setItem("pex_admin_runtime_session", "active");
+          // Replace history state to erase /pex-console from current browser history stack
+          window.history.replaceState(null, "", "/");
         } catch {
           // ignore
         }
