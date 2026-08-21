@@ -167,7 +167,7 @@
 .submitBtn {
   height: 44px;
   width: 100%;
-  background: #10b981;
+  background: var(--pex-coral, #ff6f59);
   border: none;
   border-radius: 10px;
   color: #ffffff;
@@ -179,12 +179,12 @@
   justify-content: center;
   gap: 8px;
   transition: all 140ms ease;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 16px rgba(255, 111, 89, 0.3);
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: #059669;
-  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.45);
+  background: var(--pex-coral-hover, #e85e4b);
+  box-shadow: 0 4px 20px rgba(255, 111, 89, 0.45);
 }
 
 .submitBtn:disabled {
