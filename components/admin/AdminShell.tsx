@@ -210,8 +210,8 @@ export function AdminShell({
                     userInitials
                   )}
                 </div>
-                <div>
-                  <strong className={styles.profileDropdownName}>{userEmail}</strong>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <strong className={styles.profileDropdownName}>{displayName}</strong>
                   <div className={styles.profileDropdownEmail}>{userEmail}</div>
                 </div>
               </div>
@@ -221,7 +221,7 @@ export function AdminShell({
                 onClick={handleSignOut}
                 disabled={signingOut}
               >
-                <LogOut size={14} />
+                <LogOut size={15} />
                 {signingOut ? "Signing out..." : "Sign out"}
               </button>
             </div>
