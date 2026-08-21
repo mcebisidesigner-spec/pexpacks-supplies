@@ -261,7 +261,12 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             <Package size={22} />
           </div>
           <div className={styles.headerTexts}>
-            <h1 className={styles.headerTitle}>School Packs</h1>
+            <h1 className={styles.headerTitle}>
+              School Packs{" "}
+              <span className={styles.headerCount}>
+                ({totalCount.toLocaleString()})
+              </span>
+            </h1>
             <p className={styles.headerSubtitle}>
               Manage and publish school packs for each school and grade.
             </p>
