@@ -284,7 +284,7 @@ export async function listSchoolGroupedSummary(
 ): Promise<SchoolGroupedResult> {
   const admin = createSupabaseAdminClient();
   const page = Math.max(1, filters.page ?? 1);
-  const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
+  const pageSize = Math.min(10000, Math.max(1, filters.pageSize ?? 5000));
   const q = (filters.q || "").replace(/%/g, "").trim();
 
   const [allSchools, deliveryTypes] = await Promise.all([
@@ -430,12 +430,32 @@ export interface PackSchool {
 
 export async function listPackSchools(): Promise<PackSchool[]> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
-    .from("schools")
-    .select("id, name, slug")
-    .order("name", { ascending: true });
-  if (error || !data) return [];
-  return data;
+  const chunk = 1000;
+  let all: PackSchool[] = [];
+  let page = 0;
+  let hasMore = true;
+
+  while (hasMore) {
+    const from = page * chunk;
+    const to = from + chunk - 1;
+    const { data, error } = await admin
+      .from("schools")
+      .select("id, name, slug")
+      .order("name", { ascending: true })
+      .range(from, to);
+
+    if (error || !data || data.length === 0) {
+      hasMore = false;
+    } else {
+      all = all.concat(data);
+      if (data.length < chunk) {
+        hasMore = false;
+      } else {
+        page++;
+      }
+    }
+  }
+  return all;
 }
 
 export async function listPacksForFilter(): Promise<{ id: string; title: string }[]> {
