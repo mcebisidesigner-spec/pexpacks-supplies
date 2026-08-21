@@ -21,6 +21,13 @@ export default function PexConsoleGateway() {
   const [resendMessage, setResendMessage] = useState<string | null>(null);
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  // Pop-up Modal State (No query params in browser URL bar)
+  const [modalNotice, setModalNotice] = useState<{
+    title: string;
+    message: string;
+    type?: "info" | "warn";
+  } | null>(null);
+
   // Timer countdown for Step 2
   useEffect(() => {
     if (step !== "otp_challenge" || timerSeconds <= 0) {
@@ -50,26 +57,45 @@ export default function PexConsoleGateway() {
     }
   }, [step]);
 
-  // Pre-fill & copy OTP code if passed via URL search parameters (from Copy AUTH No. button), and display URL messages
+  // Handle Pop-up Notice from sessionStorage & URL parameters (clean address bar)
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const urlMsg = params.get("message") || params.get("error");
-      if (urlMsg) {
-        setErrorMessage(urlMsg);
+      // 1. Check for popup notice stored in sessionStorage (e.g. idle logout or restart)
+      try {
+        const storedNotice = window.sessionStorage.getItem("pex_console_popup_notice");
+        if (storedNotice) {
+          window.sessionStorage.removeItem("pex_console_popup_notice");
+          setModalNotice({
+            title: "Security Notice",
+            message: storedNotice,
+            type: "warn",
+          });
+        }
+      } catch {
+        // ignore
       }
 
+      // 2. Check for URL search parameters (Copy AUTH No button)
+      const params = new URLSearchParams(window.location.search);
       const urlOtp = params.get("otp");
+
       if (urlOtp && urlOtp.length === 6 && /^\d+$/.test(urlOtp)) {
         setOtpValues(urlOtp.split(""));
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             void navigator.clipboard.writeText(urlOtp);
-            setResendMessage(`Security token ${urlOtp} copied to clipboard!`);
           }
         } catch {
-          // Ignore clipboard permission errors
+          // ignore
         }
+        setModalNotice({
+          title: "Security Token Copied",
+          message: `6-Digit Security Token ${urlOtp} has been copied to your local clipboard and pre-filled below.`,
+          type: "info",
+        });
+
+        // Immediately clean address bar to keep URL 100% clean (/pex-console)
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
     }
   }, []);
@@ -188,30 +214,32 @@ export default function PexConsoleGateway() {
           <div className={styles.logoWrapper}>
             <Logo variant="white" />
           </div>
-          <span className={styles.badge}>
-            <ShieldCheck size={13} />
-            {step === "credentials" ? "Console Gateway" : "Two-Factor Verification"}
-          </span>
+
+          <div className={styles.badge}>
+            <ShieldCheck size={14} /> Console Gateway
+          </div>
+
           <h1 className={styles.title}>
             {step === "credentials" ? "System Access" : "Security Challenge"}
           </h1>
+
           <p className={styles.subtitle}>
             {step === "credentials"
               ? "Enter administrative credentials to proceed."
-              : `Enter the 6-digit verification code sent to ${email}.`}
+              : `Enter the 6-digit security token sent to ${email || "your registered email"}`}
           </p>
         </div>
 
-        {/* Global Error Banner */}
-        {errorMessage ? (
-          <div className={styles.errorMessage} role="alert">
-            <AlertTriangle size={15} style={{ flexShrink: 0 }} />
+        {/* Inline Error Message */}
+        {errorMessage && (
+          <div className={styles.errorMessage}>
+            <AlertTriangle size={16} />
             <span>{errorMessage}</span>
           </div>
-        ) : null}
+        )}
 
         {/* Step 1: Credentials Form */}
-        {step === "credentials" ? (
+        {step === "credentials" && (
           <form onSubmit={handleCredentialsSubmit} className={styles.form}>
             <div className={styles.field}>
               <label htmlFor="email" className={styles.label}>
@@ -222,11 +250,12 @@ export default function PexConsoleGateway() {
                   id="email"
                   type="email"
                   required
-                  autoComplete="email"
-                  placeholder="admin@pexpacks.co.za"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@pexpacks.co.za"
                   className={styles.input}
+                  autoComplete="email"
+                  disabled={isPending}
                 />
               </div>
             </div>
@@ -240,16 +269,17 @@ export default function PexConsoleGateway() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   required
-                  autoComplete="current-password"
-                  placeholder="••••••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
                   className={styles.input}
+                  autoComplete="current-password"
+                  disabled={isPending}
                 />
                 <button
                   type="button"
-                  className={styles.passwordToggle}
                   onClick={() => setShowPassword(!showPassword)}
+                  className={styles.passwordToggle}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -257,10 +287,14 @@ export default function PexConsoleGateway() {
               </div>
             </div>
 
-            <button type="submit" disabled={isPending} className={styles.submitBtn}>
+            <button
+              type="submit"
+              disabled={isPending || !email || !password}
+              className={styles.submitBtn}
+            >
               {isPending ? (
                 <>
-                  <RefreshCw size={16} className="animate-spin" /> Verifying...
+                  <RefreshCw size={16} className="animate-spin" /> Authenticating...
                 </>
               ) : (
                 <>
@@ -269,54 +303,54 @@ export default function PexConsoleGateway() {
               )}
             </button>
           </form>
-        ) : (
-          /* Step 2: 2FA / OTP Form */
-          <div className={styles.form}>
-            {resendMessage ? (
-              <div
-                style={{
-                  background: "rgba(16, 185, 129, 0.12)",
-                  border: "1px solid rgba(16, 185, 129, 0.3)",
-                  borderRadius: 10,
-                  padding: "8px 12px",
-                  color: "#34d399",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  textAlign: "center",
-                }}
-              >
-                {resendMessage}
-              </div>
-            ) : null}
+        )}
 
+        {/* Step 2: 2FA OTP Form */}
+        {step === "otp_challenge" && (
+          <div className={styles.form}>
             <div className={styles.field}>
-              <span className={styles.label} style={{ textAlign: "center", display: "block" }}>
-                6-Digit Security Token
-              </span>
+              <label className={styles.label}>6-Digit Security Token</label>
               <div className={styles.otpContainer}>
-                {otpValues.map((val, index) => (
+                {otpValues.map((digit, idx) => (
                   <input
-                    key={index}
+                    key={idx}
                     ref={(el) => {
-                      otpRefs.current[index] = el;
+                      otpRefs.current[idx] = el;
                     }}
                     type="text"
                     inputMode="numeric"
                     maxLength={1}
-                    value={val}
-                    onChange={(e) => handleOtpChange(index, e.target.value)}
-                    onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(idx, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(idx, e)}
                     onPaste={handleOtpPaste}
                     className={styles.otpBox}
-                    aria-label={`Digit ${index + 1}`}
+                    disabled={isPending}
+                    autoComplete="one-time-code"
                   />
                 ))}
               </div>
             </div>
 
+            {resendMessage && (
+              <div
+                style={{
+                  fontSize: 12,
+                  color: "#2dd4bf",
+                  textAlign: "center",
+                  fontWeight: 600,
+                }}
+              >
+                {resendMessage}
+              </div>
+            )}
+
             <div className={styles.timerRow}>
               <span>
-                Code expires in: <strong style={{ color: "#ffffff" }}>{formatTimer(timerSeconds)}</strong>
+                Code expires in:{" "}
+                <strong style={{ color: timerSeconds < 60 ? "#ef4444" : "#ffffff" }}>
+                  {formatTimer(timerSeconds)}
+                </strong>
               </span>
               <button
                 type="button"
@@ -340,7 +374,7 @@ export default function PexConsoleGateway() {
                 </>
               ) : (
                 <>
-                  Verify Code & Access Back-Office <Lock size={16} />
+                  Verify Code &amp; Access Back-Office <Lock size={16} />
                 </>
               )}
             </button>
@@ -370,6 +404,42 @@ export default function PexConsoleGateway() {
           Pexpacks Back-Office System &bull; Unauthorized access prohibited
         </p>
       </main>
+
+      {/* Pop-up Security Modal */}
+      {modalNotice && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setModalNotice(null)}
+        >
+          <div
+            className={styles.modalCard}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className={
+                modalNotice.type === "warn"
+                  ? `${styles.modalIcon} ${styles.modalIconWarn}`
+                  : styles.modalIcon
+              }
+            >
+              {modalNotice.type === "warn" ? (
+                <AlertTriangle size={26} />
+              ) : (
+                <ShieldCheck size={26} />
+              )}
+            </div>
+            <h3 className={styles.modalTitle}>{modalNotice.title}</h3>
+            <p className={styles.modalMessage}>{modalNotice.message}</p>
+            <button
+              type="button"
+              className={styles.modalActionBtn}
+              onClick={() => setModalNotice(null)}
+            >
+              Acknowledge &amp; Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

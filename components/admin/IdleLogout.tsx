@@ -88,14 +88,6 @@ export function IdleLogout() {
         ? null
         : new BroadcastChannel(ADMIN_ACTIVITY_CHANNEL);
 
-    const loginUrl = (reason: "idle" | "restart") => {
-      const message =
-        reason === "idle"
-          ? "Dashboard closed after 20 minutes of inactivity."
-          : "Dashboard session closed after the browser or device restarted.";
-      return `/pex-console?message=${encodeURIComponent(message)}`;
-    };
-
     const signOutForSecurity = async (reason: "idle" | "restart") => {
       if (signingOut) return;
       signingOut = true;
@@ -103,16 +95,23 @@ export function IdleLogout() {
         type: "signed-out",
         reason,
       } satisfies ActivityMessage);
+
+      const message =
+        reason === "idle"
+          ? "Dashboard closed after 20 minutes of inactivity."
+          : "Dashboard session closed after the browser or device restarted.";
+
       try {
         window.sessionStorage.removeItem(ADMIN_RUNTIME_SESSION_KEY);
+        window.sessionStorage.setItem("pex_console_popup_notice", message);
       } catch {
-        // Continue with the server-side sign-out.
+        // Continue with sign-out
       }
 
       try {
         await logout(reason);
       } catch {
-        window.location.replace(loginUrl(reason));
+        window.location.replace("/pex-console");
       }
     };
 
@@ -154,7 +153,14 @@ export function IdleLogout() {
       }
       if (message.type === "signed-out") {
         signingOut = true;
-        window.location.replace(loginUrl(message.reason));
+        const msg =
+          message.reason === "idle"
+            ? "Dashboard closed after 20 minutes of inactivity."
+            : "Dashboard session closed after the browser or device restarted.";
+        try {
+          window.sessionStorage.setItem("pex_console_popup_notice", msg);
+        } catch {}
+        window.location.replace("/pex-console");
       }
     };
 
