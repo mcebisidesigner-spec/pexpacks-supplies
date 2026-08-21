@@ -180,8 +180,6 @@ export default function PexConsoleGateway() {
       if (res.ok && res.redirectUrl) {
         try {
           window.sessionStorage.setItem("pex_admin_runtime_session", "active");
-          // Replace history state to erase /pex-console from current browser history stack
-          window.history.replaceState(null, "", "/");
         } catch {
           // ignore
         }
