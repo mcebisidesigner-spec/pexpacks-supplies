@@ -1,28 +1,27 @@
 .searchTotalRow {
-  display: grid;
-  grid-template-columns: minmax(280px, 460px) auto;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  width: 100%;
 }
 
 .searchSlot {
+  flex: 1;
   min-width: 0;
 }
 
 .totalChip {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   min-height: 44px;
-  border-radius: 14px;
-  background: var(--admin-surface);
-  color: var(--admin-accent-strong);
-  padding: 0 18px;
-  font-size: 16px;
-  font-weight: 900;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 800;
   line-height: 1;
   white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
 .wrapper {

@@ -108,7 +108,7 @@ export function PackItemsSection({
             showSave={false}
             hideList={true}
             searchLabel=""
-            searchPlaceholder="Search items by item code, description, type, SKU or name..."
+            searchPlaceholder="Search items by item name"
             onSelectItem={handleSelectItem}
             onSave={handleSave}
           />
