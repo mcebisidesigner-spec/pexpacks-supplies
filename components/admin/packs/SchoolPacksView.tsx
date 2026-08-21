@@ -193,6 +193,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
 
   const currentDateStr = useMemo(() => {
     return new Date().toLocaleDateString("en-ZA", {
@@ -204,21 +205,25 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
   const schoolRows = useMemo(() => {
     if (initialData?.schoolsSummary && initialData.schoolsSummary.length > 0) {
-      return initialData.schoolsSummary.map((s, idx) => ({
-        id: s.school_id,
-        code: `SCH-${1001 + idx}`,
-        name: s.school_name,
-        gradePacksCount: s.grade_packs_count,
-        season: "2027",
-        lastEdited: s.last_edited ? new Date(s.last_edited).toLocaleDateString("en-GB") : "17/08/26",
-        lastEditedBy: "Mcebisi M.",
-        visibility: (s.visible ? "visible" : "hidden") as "visible" | "hidden",
-        status: (s.visible ? "published" : "draft") as "published" | "draft" | "review",
-        health: "good" as "good" | "needs_work",
-        owner: "MC" as "MC" | "KG" | "LM" | "SB",
-        ownerName: "Mcebisi M.",
-        avatarColor: "rgba(45, 212, 191, 0.18)",
-      }));
+      return initialData.schoolsSummary
+        .map((s, idx) => ({
+          id: s.school_id,
+          code: `SCH-${1001 + idx}`,
+          name: s.school_name,
+          gradePacksCount: s.grade_packs_count,
+          season: "2027",
+          lastEdited: s.last_edited ? new Date(s.last_edited).toLocaleDateString("en-GB") : "17/08/26",
+          lastEditedBy: "Mcebisi M.",
+          visibility: (s.visible ? "visible" : "hidden") as "visible" | "hidden",
+          status: (s.visible ? "published" : "draft") as "published" | "draft" | "review",
+          health: "good" as "good" | "needs_work",
+          owner: "MC" as "MC" | "KG" | "LM" | "SB",
+          ownerName: "Mcebisi M.",
+          avatarColor: "rgba(45, 212, 191, 0.18)",
+        }))
+        .sort((a, b) =>
+          a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" })
+        );
     }
     return SEED_SCHOOL_ROWS;
   }, [initialData]);
@@ -236,6 +241,14 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
       return matchQuery && matchVisibility && matchStatus;
     });
   }, [schoolRows, searchQuery, selectedVisibility, selectedStatus]);
+
+  const totalCount = filteredSchools.length;
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+
+  const paginatedSchools = useMemo(() => {
+    const from = (currentPage - 1) * pageSize;
+    return filteredSchools.slice(from, from + pageSize);
+  }, [filteredSchools, currentPage, pageSize]);
 
   return (
     <div className={styles.container}>
@@ -273,7 +286,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             </div>
             <div className={styles.kpiHeaderInfo}>
               <span className={styles.kpiLabel}>Total Schools</span>
-              <span className={styles.kpiValue}>128</span>
+              <span className={styles.kpiValue}>{totalCount.toLocaleString()}</span>
             </div>
           </div>
           <div className={styles.kpiFooter}>
@@ -476,7 +489,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 </tr>
               </thead>
               <tbody>
-                {filteredSchools.map((school) => (
+                {paginatedSchools.map((school) => (
                   <tr
                     key={school.id}
                     className={styles.dataRow}
@@ -580,21 +593,54 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
           {/* Table Pagination Footer */}
           <div className={styles.paginationFooter}>
-            <span>Showing 1 to 8 of 128 schools</span>
+            <span>
+              Showing {totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1} to{" "}
+              {Math.min(currentPage * pageSize, totalCount)} of {totalCount.toLocaleString()} schools
+            </span>
             <div className={styles.paginationControls}>
-              <button className={styles.pageBtn}>&lt;</button>
-              <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
-              <button className={styles.pageBtn}>2</button>
-              <button className={styles.pageBtn}>3</button>
-              <button className={styles.pageBtn}>4</button>
-              <button className={styles.pageBtn}>5</button>
-              <span style={{ padding: "0 4px" }}>...</span>
-              <button className={styles.pageBtn}>16</button>
-              <button className={styles.pageBtn}>&gt;</button>
+              <button
+                className={styles.pageBtn}
+                disabled={currentPage <= 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              >
+                &lt;
+              </button>
+
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum = i + 1;
+                if (totalPages > 5 && currentPage > 3) {
+                  pageNum = currentPage - 2 + i;
+                  if (pageNum > totalPages) pageNum = totalPages - (4 - i);
+                }
+                return (
+                  <button
+                    key={pageNum}
+                    className={`${styles.pageBtn} ${
+                      currentPage === pageNum ? styles.pageBtnActive : ""
+                    }`}
+                    onClick={() => setCurrentPage(pageNum)}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              <button
+                className={styles.pageBtn}
+                disabled={currentPage >= totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              >
+                &gt;
+              </button>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <span>Show</span>
               <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
                 style={{
                   background: "#0c1322",
                   border: "1px solid #1e293b",
@@ -602,11 +648,16 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                   color: "#cbd5e1",
                   fontSize: 11,
                   padding: "3px 6px",
+                  cursor: "pointer",
                 }}
               >
-                <option>10</option>
-                <option>20</option>
-                <option>50</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+                <option value={250}>250</option>
+                <option value={500}>500</option>
+                <option value={1000}>1000</option>
+                <option value={totalCount || 3342}>3342 (All)</option>
               </select>
               <span>per page</span>
             </div>

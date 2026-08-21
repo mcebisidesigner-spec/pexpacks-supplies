@@ -367,7 +367,7 @@ export async function listSchoolGroupedSummary(
       .limit(50000),
   ]);
 
-  if (!dbSchools || !dbPacks) {
+  if (!dbSchools) {
     return {
       schoolsSummary: [],
       totalGradePacks: 0,
@@ -379,27 +379,26 @@ export async function listSchoolGroupedSummary(
     };
   }
 
-  let groupedList: SchoolGroupedSummary[] = dbSchools
-    .map((s) => {
-      const sPacks = dbPacks.filter((p) => p.school_id === s.id);
-      if (sPacks.length === 0) return null;
+  const packList = dbPacks || [];
 
-      const isVisible = sPacks.some((p) => p.visible);
-      const latestUpdate = sPacks.reduce(
-        (max, p) => (p.updated_at && p.updated_at > max ? p.updated_at : max),
-        s.updated_at || ""
-      );
+  let groupedList: SchoolGroupedSummary[] = dbSchools.map((s) => {
+    const sPacks = packList.filter((p) => p.school_id === s.id);
 
-      return {
-        school_id: s.id,
-        school_name: s.name,
-        school_slug: s.slug ?? "",
-        grade_packs_count: sPacks.length,
-        last_edited: latestUpdate,
-        visible: isVisible,
-      };
-    })
-    .filter(Boolean) as SchoolGroupedSummary[];
+    const isVisible = sPacks.length > 0 ? sPacks.some((p) => p.visible) : true;
+    const latestUpdate = sPacks.reduce(
+      (max, p) => (p.updated_at && p.updated_at > max ? p.updated_at : max),
+      s.updated_at || ""
+    );
+
+    return {
+      school_id: s.id,
+      school_name: s.name,
+      school_slug: s.slug ?? "",
+      grade_packs_count: sPacks.length,
+      last_edited: latestUpdate,
+      visible: isVisible,
+    };
+  });
 
   if (filters.visible === "true") {
     groupedList = groupedList.filter((s) => s.visible);
@@ -414,7 +413,7 @@ export async function listSchoolGroupedSummary(
 
   return {
     schoolsSummary: paginatedList,
-    totalGradePacks: totalGradePacks ?? dbPacks.length,
+    totalGradePacks: totalGradePacks ?? packList.length,
     totalSchools,
     page,
     pageCount,

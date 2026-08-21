@@ -10,6 +10,6 @@ export const metadata = {
 
 export default async function AdminSchoolPacksPage() {
   await requireAdmin({ permission: "packs.view" });
-  const initialData = await listSchoolGroupedSummary({ page: 1, pageSize: 20 });
+  const initialData = await listSchoolGroupedSummary({ page: 1, pageSize: 5000 });
   return <SchoolPacksView initialData={initialData} />;
 }
