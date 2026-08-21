@@ -59,7 +59,9 @@
   background: var(--admin-surface);
   color: var(--admin-text);
   font-size: 13px;
-  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
 }
 
 .searchInput::placeholder {
@@ -70,6 +72,48 @@
   outline: none;
   border-color: var(--admin-accent);
   box-shadow: 0 0 0 3px var(--admin-accent-subtle);
+}
+
+.packEditor {
+  gap: 0;
+}
+
+.packEditor .searchBlock {
+  gap: 0;
+}
+
+.packEditor .searchWrap {
+  min-height: 56px;
+  background: #07111f;
+}
+
+.packEditor .searchIconWrap {
+  padding-left: 16px;
+}
+
+.packEditor .searchIconGlyph {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+}
+
+.packEditor .searchInput {
+  min-height: 56px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #ffffff;
+  padding-left: 62px;
+  font-size: 14px;
+}
+
+.packEditor .searchInput::placeholder {
+  color: #f8fafc;
+  opacity: 0.94;
+}
+
+.packEditor .searchInput:focus {
+  box-shadow: inset 0 0 0 2px rgba(34, 211, 238, 0.4);
 }
 
 .spinnerWrap {
@@ -331,7 +375,9 @@
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.14s ease, color 0.14s ease;
+  transition:
+    background 0.14s ease,
+    color 0.14s ease;
 }
 
 .stepBtn:hover {
@@ -382,7 +428,9 @@
   background: transparent;
   color: var(--admin-text-3);
   cursor: pointer;
-  transition: color 0.14s ease, background 0.14s ease;
+  transition:
+    color 0.14s ease,
+    background 0.14s ease;
 }
 
 .removeBtn:hover {

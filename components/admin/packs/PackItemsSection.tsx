@@ -6,7 +6,10 @@ import GradePackItemSelector, {
   type PackLine,
   type StationeryItem,
 } from "@/components/grade-packs/GradePackItemSelector";
-import { savePackItemsAction, createItemAction } from "@/app/admin/items/actions";
+import {
+  savePackItemsAction,
+  createItemAction,
+} from "@/app/admin/items/actions";
 import { ItemsManager } from "./ItemsManager";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -34,8 +37,11 @@ export function PackItemsSection({
   const [message, setMessage] = useState<string | null>(null);
 
   const signature = useMemo(
-    () => items.map((item) => `${item.id}:${item.quantity}:${item.unit_price}`).join("|"),
-    [items]
+    () =>
+      items
+        .map((item) => `${item.id}:${item.quantity}:${item.unit_price}`)
+        .join("|"),
+    [items],
   );
 
   const initialItems: PackLine[] = items.map((item) => ({
@@ -109,6 +115,7 @@ export function PackItemsSection({
             hideList={true}
             searchLabel=""
             searchPlaceholder="Search items by item name"
+            variant="packEditor"
             onSelectItem={handleSelectItem}
             onSave={handleSave}
           />
@@ -124,7 +131,10 @@ export function PackItemsSection({
       </section>
       <ItemsManager items={items} />
       {showImporter ? (
-        <section className={styles.csvBanner} aria-label="Bulk CSV stationery import">
+        <section
+          className={styles.csvBanner}
+          aria-label="Bulk CSV stationery import"
+        >
           <CSVStationeryImporter
             packs={[{ id: packId, title: packTitle }]}
             onImported={() => router.refresh()}

@@ -1,13 +1,16 @@
 .searchTotalRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 18px;
+  gap: 0;
   width: 100%;
+  min-height: 56px;
+  border-top: 1px solid rgba(34, 211, 238, 0.48);
+  border-bottom: 1px solid rgba(34, 211, 238, 0.48);
+  background: #07111f;
 }
 
 .searchSlot {
-  flex: 1;
   min-width: 0;
 }
 
@@ -15,26 +18,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
-  min-height: 44px;
+  min-width: 190px;
+  min-height: 56px;
   color: #ffffff;
+  padding: 0 26px;
+  background: #0b1b2b;
   font-size: 26px;
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1;
   white-space: nowrap;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0;
+  padding: 26px 20px 14px;
 }
 
 .emptyBanner {
-  border: 1px solid var(--admin-border);
-  border-radius: 16px;
-  background: var(--admin-surface);
-  color: var(--admin-text-3);
+  border: 1px solid rgba(30, 41, 59, 0.95);
+  border-radius: 18px;
+  background: #101928;
+  color: #9fb0c4;
   padding: 28px;
   font-size: 14px;
   font-weight: 700;
@@ -42,9 +49,9 @@
 
 .tableWrap {
   overflow: hidden;
-  background: var(--admin-surface);
-  border: 1px solid var(--admin-border);
-  border-radius: 18px;
+  background: #101928;
+  border: 1px solid rgba(2, 6, 23, 0.98);
+  border-radius: 20px;
 }
 
 .table {
@@ -56,22 +63,24 @@
 
 .table th {
   text-align: left;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 900;
-  color: var(--admin-text-3);
-  padding: 15px 24px;
-  background: var(--admin-surface-2);
+  color: #f8fafc;
+  padding: 13px 16px;
+  background: #111a29;
   text-transform: uppercase;
 }
 
 .table td {
-  height: 72px;
-  padding: 17px 24px;
-  border-bottom: 1px solid rgba(51, 65, 85, 0.52);
+  height: 86px;
+  padding: 20px 16px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.55);
   vertical-align: middle;
-  color: var(--admin-text-2);
-  background: var(--admin-surface);
+  color: #f8fafc;
+  background: #101928;
   overflow-wrap: anywhere;
+  font-size: 16px;
+  line-height: 1.35;
 }
 
 .table tr:last-child td {
@@ -85,7 +94,7 @@
 
 .table th:nth-child(2),
 .table td:nth-child(2) {
-  width: 41%;
+  width: 39%;
 }
 
 .table th:nth-child(3),
@@ -106,18 +115,18 @@
 
 .table th:nth-child(6),
 .table td:nth-child(6) {
-  width: 13%;
+  width: 12%;
 }
 
 .itemName {
-  color: var(--admin-text);
+  color: #ffffff;
   font-weight: 900;
 }
 
 .priceCell {
   white-space: nowrap;
   font-weight: 900;
-  color: var(--admin-text);
+  color: #ffffff;
 }
 
 .actions {
@@ -144,7 +153,7 @@
 }
 
 .deleteButton {
-  color: var(--admin-red);
+  color: #ffffff;
 }
 
 .actionLink:hover,
@@ -157,8 +166,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px 10px 10px;
-  color: var(--admin-text-3);
+  padding: 14px 10px 0;
+  color: #8aa0b6;
   font-size: 12px;
   font-weight: 700;
 }
@@ -171,10 +180,10 @@
 
 .pageButton {
   min-height: 38px;
-  border: 1px solid var(--admin-border);
+  border: 1px solid rgba(51, 65, 85, 0.78);
   border-radius: 9px;
-  background: var(--admin-surface);
-  color: var(--admin-text-2);
+  background: #101928;
+  color: #cbd5e1;
   padding: 0 16px;
   font-family: inherit;
   font-size: 12px;
@@ -183,8 +192,8 @@
 }
 
 .pageButton:hover:not(:disabled) {
-  border-color: var(--admin-accent);
-  color: var(--admin-text);
+  border-color: #14b8a6;
+  color: #ffffff;
 }
 
 .pageButton:disabled {
@@ -195,7 +204,8 @@
 .importSuccess {
   grid-column: 1 / -1;
   margin: 0;
-  color: var(--admin-accent-strong);
+  padding: 8px 28px 12px;
+  color: #34d399;
   font-size: 12px;
   font-weight: 900;
 }
@@ -216,15 +226,23 @@
 
   .totalChip {
     justify-content: flex-start;
-    width: fit-content;
+    width: 100%;
+    min-width: 0;
+    padding: 0 18px 16px;
+    background: #07111f;
   }
 
   .tableWrap {
     overflow-x: auto;
+    border-radius: 16px;
   }
 
   .table {
-    min-width: 760px;
+    min-width: 720px;
+  }
+
+  .wrapper {
+    padding: 18px 10px 12px;
   }
 
   .pager {

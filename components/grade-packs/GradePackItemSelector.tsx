@@ -38,6 +38,7 @@ export interface GradePackItemSelectorProps {
   hideList?: boolean;
   searchLabel?: string;
   searchPlaceholder?: string;
+  variant?: "default" | "packEditor";
   onItemsChange?: (lines: PackItem[]) => void;
   onSelectItem?: (item: StationeryItem) => void | Promise<void>;
   onSave?: (lines: PackItem[]) => void | Promise<void>;
@@ -54,6 +55,7 @@ export function GradePackItemSelector({
   hideList = false,
   searchLabel = "Add Stationery Item to Grade Pack",
   searchPlaceholder = "Search stationery items by name or description",
+  variant = "default",
   onItemsChange,
   onSelectItem,
   onSave,
@@ -79,13 +81,16 @@ export function GradePackItemSelector({
     debouncedQuery.length >= 2
       ? `/api/stationery/search?q=${encodeURIComponent(debouncedQuery)}`
       : null,
-    fetcher
+    fetcher,
   );
 
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     }
@@ -121,7 +126,9 @@ export function GradePackItemSelector({
 
     const existing = selectedItems.find((i) => i.id === item.id);
     const updated = existing
-      ? selectedItems.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i))
+      ? selectedItems.map((i) =>
+          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i,
+        )
       : [...selectedItems, newItem];
     setSelectedItems(updated);
     notifyChange(updated);
@@ -136,7 +143,9 @@ export function GradePackItemSelector({
       removeItem(id);
       return;
     }
-    const updated = selectedItems.map((item) => (item.id === id ? { ...item, quantity: qty } : item));
+    const updated = selectedItems.map((item) =>
+      item.id === id ? { ...item, quantity: qty } : item,
+    );
     setSelectedItems(updated);
     notifyChange(updated);
   };
@@ -151,7 +160,7 @@ export function GradePackItemSelector({
   // Calculate total price of the grade pack
   const totalPrice = selectedItems.reduce(
     (sum, item) => sum + (item.unit_price ?? item.price ?? 0) * item.quantity,
-    0
+    0,
   );
 
   const handleSave = async () => {
@@ -166,13 +175,15 @@ export function GradePackItemSelector({
   };
 
   return (
-    <div className={styles.root}>
+    <div
+      className={`${styles.root} ${
+        variant === "packEditor" ? styles.packEditor : ""
+      }`}
+    >
       {/* 1. Item Search & Auto-Populate Bar */}
       <div className={styles.searchBlock} ref={dropdownRef}>
         {searchLabel ? (
-          <label className={styles.fieldLabel}>
-            {searchLabel}
-          </label>
+          <label className={styles.fieldLabel}>{searchLabel}</label>
         ) : null}
 
         <div className={styles.searchWrap}>
@@ -214,13 +225,9 @@ export function GradePackItemSelector({
                   className={styles.resultButton}
                 >
                   <div className={styles.resultInfo}>
-                    <p className={styles.resultTitle}>
-                      {itemTitle}
-                    </p>
+                    <p className={styles.resultTitle}>{itemTitle}</p>
                     {item.description && (
-                      <p className={styles.resultDesc}>
-                        {item.description}
-                      </p>
+                      <p className={styles.resultDesc}>{item.description}</p>
                     )}
                   </div>
 
@@ -236,20 +243,26 @@ export function GradePackItemSelector({
           </div>
         )}
 
-        {isDropdownOpen && debouncedQuery.length >= 2 && searchResults?.length === 0 && !isLoading && (
-          <div className={styles.resultEmpty}>
-            <AlertCircle className={styles.emptyIcon} />
-            No matching stationery items found for &quot;{debouncedQuery}&quot;.
-          </div>
-        )}
+        {isDropdownOpen &&
+          debouncedQuery.length >= 2 &&
+          searchResults?.length === 0 &&
+          !isLoading && (
+            <div className={styles.resultEmpty}>
+              <AlertCircle className={styles.emptyIcon} />
+              {`No matching stationery items found for "${debouncedQuery}".`}
+            </div>
+          )}
       </div>
 
       {/* 2. Assembled Grade Pack Inventory List */}
       {hideList ? null : selectedItems.length === 0 ? (
         <div className={styles.emptyNote}>
-          <p className={styles.emptyNoteMain}>No items added to this grade pack yet.</p>
+          <p className={styles.emptyNoteMain}>
+            No items added to this grade pack yet.
+          </p>
           <p className={styles.emptyNoteSub}>
-            Use the search bar above to auto-populate prices and build your pack.
+            Use the search bar above to auto-populate prices and build your
+            pack.
           </p>
         </div>
       ) : (
@@ -258,14 +271,13 @@ export function GradePackItemSelector({
             const displayTitle = item.title || item.name || "Stationery Item";
             const unitPrice = item.unit_price ?? item.price ?? 0;
             return (
-              <div
-                key={item.id}
-                className={styles.lineItem}
-              >
+              <div key={item.id} className={styles.lineItem}>
                 {/* Item Details */}
                 <div className={styles.lineInfo}>
                   <h4 className={styles.lineName}>{displayTitle}</h4>
-                  {item.description && <p className={styles.lineDesc}>{item.description}</p>}
+                  {item.description && (
+                    <p className={styles.lineDesc}>{item.description}</p>
+                  )}
                 </div>
 
                 {/* Quantity Controls & Line Total */}
@@ -279,9 +291,7 @@ export function GradePackItemSelector({
                     >
                       -
                     </button>
-                    <span className={styles.qtyValue}>
-                      {item.quantity}
-                    </span>
+                    <span className={styles.qtyValue}>{item.quantity}</span>
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
@@ -322,9 +332,7 @@ export function GradePackItemSelector({
             <div className={styles.totalRow}>
               <div>
                 <p className={styles.totalLabel}>Total Pack Cost</p>
-                <p className={styles.totalValue}>
-                  R {totalPrice.toFixed(2)}
-                </p>
+                <p className={styles.totalValue}>R {totalPrice.toFixed(2)}</p>
               </div>
 
               <button
