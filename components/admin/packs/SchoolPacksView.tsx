@@ -519,9 +519,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                   <th>Season</th>
                   <th>Last Edited</th>
                   <th>Visibility</th>
-                  <th>Status</th>
-                  <th>Health</th>
-                  <th>Owner</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -575,42 +572,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       >
                         {school.visibility === "visible" ? "Visible" : "Hidden"}
                       </span>
-                    </td>
-                    <td>
-                      <span
-                        className={
-                          school.status === "published"
-                            ? styles.statusBadgePublished
-                            : school.status === "draft"
-                            ? styles.statusBadgeDraft
-                            : styles.statusBadgeReview
-                        }
-                      >
-                        {school.status.charAt(0).toUpperCase() + school.status.slice(1)}
-                      </span>
-                    </td>
-                    <td>
-                      <span
-                        className={
-                          school.health === "good"
-                            ? styles.healthDotGood
-                            : styles.healthDotNeedsWork
-                        }
-                      >
-                        {school.health === "good" ? "Good" : "Needs work"}
-                      </span>
-                    </td>
-                    <td>
-                      <div className={styles.ownerBadge}>
-                        <span
-                          className={`${styles.ownerAvatar} ${
-                            school.owner === "MC" ? styles.ownerAvatarMC : styles.ownerAvatarKG
-                          }`}
-                        >
-                          {school.owner}
-                        </span>
-                        <span>{school.ownerName}</span>
-                      </div>
                     </td>
                     <td>
                       <button
