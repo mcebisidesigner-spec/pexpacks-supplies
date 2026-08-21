@@ -49,7 +49,6 @@ export async function generateAndSendOtpEmail(
     
     // Join digits with non-breaking spaces so email clients never wrap digits onto multiple lines
     const formattedDigits = otpCode.split("").join("&nbsp;&nbsp;");
-    const consoleUrl = `https://pexpacks.co.za/pex-console?otp=${otpCode}`;
 
     const htmlBody = `<!doctype html>
 <html lang="en">
@@ -82,16 +81,16 @@ export async function generateAndSendOtpEmail(
           <tr>
             <td style="padding:0 24px 20px;">
               <div style="background:#060911;border:1px solid #1e293b;border-radius:12px;padding:24px 16px;text-align:center;">
-                <!-- Digits Single Line Container -->
-                <div style="font-size:28px;font-weight:800;color:#10b981;letter-spacing:6px;font-family:'Courier New',Courier,monospace,sans-serif;white-space:nowrap !important;margin-bottom:20px;display:inline-block;width:100%;">
+                <!-- Digits Single Line Container (Selectable / Copyable - No Link Navigation) -->
+                <div style="font-size:28px;font-weight:800;color:#10b981;letter-spacing:6px;font-family:'Courier New',Courier,monospace,sans-serif;white-space:nowrap !important;margin-bottom:20px;display:inline-block;width:100%;user-select:all !important;-webkit-user-select:all !important;cursor:pointer;">
                   [&nbsp; ${formattedDigits} &nbsp;]
                 </div>
                 
-                <!-- Copy AUTH No. Button -->
+                <!-- Copy AUTH No. Element (No URL Redirection) -->
                 <div style="text-align:center;">
-                  <a href="${consoleUrl}" target="_blank" style="display:inline-block;padding:10px 24px;background:#10b981;color:#070b12;font-size:13px;font-weight:800;font-family:Arial,Helvetica,sans-serif;text-decoration:none;border-radius:999px;box-shadow:0 4px 14px rgba(16,185,129,0.35);">
-                    Copy AUTH No.
-                  </a>
+                  <div style="display:inline-block;padding:10px 24px;background:#10b981;color:#070b12;font-size:13px;font-weight:800;font-family:Arial,Helvetica,sans-serif;border-radius:999px;box-shadow:0 4px 14px rgba(16,185,129,0.35);user-select:all !important;-webkit-user-select:all !important;cursor:pointer;">
+                    Copy AUTH No. &nbsp;[ ${otpCode} ]
+                  </div>
                 </div>
               </div>
             </td>

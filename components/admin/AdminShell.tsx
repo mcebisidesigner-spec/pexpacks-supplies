@@ -163,7 +163,7 @@ export function AdminShell({
       setSigningOut(true);
       const supabase = createClient();
       await supabase.auth.signOut();
-      router.push("/login");
+      window.location.href = "/";
     } catch {
       setSigningOut(false);
     }

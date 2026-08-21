@@ -1,6 +1,7 @@
 "use server";
 
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
@@ -172,49 +173,31 @@ export async function verifyOtpAction(
     let verifiedSession = false;
     let verifiedUserId: string | undefined;
 
-    // A. Verify with Supabase Auth (type: email or magiclink)
-    let { data: verifyData, error: verifyError } =
-      await supabaseServer.auth.verifyOtp({
-        email: email.trim().toLowerCase(),
-        token: token.trim(),
-        type: "email",
-      });
+    // 2. Check DB auth_otp_tokens table first with adminClient
+    const nowIso = new Date().toISOString();
+    const { data: matchedTokens } = await adminClient
+      .from("auth_otp_tokens")
+      .select("id")
+      .eq("email", email.trim().toLowerCase())
+      .eq("otp_code", token.trim())
+      .eq("used", false)
+      .gte("expires_at", nowIso)
+      .limit(1);
 
-    if (verifyError || !verifyData?.session) {
-      const res2 = await supabaseServer.auth.verifyOtp({
-        email: email.trim().toLowerCase(),
-        token: token.trim(),
-        type: "magiclink",
-      });
-      if (!res2.error && res2.data?.session) {
-        verifyData = res2.data;
-        verifyError = null;
-      }
-    }
-
-    if (!verifyError && verifyData?.session) {
-      verifiedSession = true;
-      verifiedUserId = verifyData.user?.id;
-    } else {
-      // B. Fallback Check: Verify against auth_otp_tokens table
-      const nowIso = new Date().toISOString();
-      const { data: matchedTokens } = await adminClient
+    if (matchedTokens && matchedTokens.length > 0) {
+      // Mark token as used
+      await adminClient
         .from("auth_otp_tokens")
-        .select("id")
-        .eq("email", email.trim().toLowerCase())
-        .eq("otp_code", token.trim())
-        .eq("used", false)
-        .gte("expires_at", nowIso)
-        .limit(1);
+        .update({ used: true })
+        .eq("id", matchedTokens[0].id);
 
-      if (matchedTokens && matchedTokens.length > 0) {
-        // Mark token as used
-        await adminClient
-          .from("auth_otp_tokens")
-          .update({ used: true })
-          .eq("id", matchedTokens[0].id);
-
-        // Force session creation & cookie issuance via Supabase Server Client
+      // Check if current server client has an active session from Step 1
+      const { data: userData } = await supabaseServer.auth.getUser();
+      if (userData?.user) {
+        verifiedSession = true;
+        verifiedUserId = userData.user.id;
+      } else {
+        // Issue fresh session cookies via token_hash if session was missing
         try {
           const { data: freshLink } = await adminClient.auth.admin.generateLink({
             type: "magiclink",
@@ -232,22 +215,23 @@ export async function verifyOtpAction(
               verifiedSession = true;
               verifiedUserId = freshSession.user?.id;
             }
-          } else if (freshLink?.properties?.email_otp) {
-            const { data: freshSession, error: sessionErr } =
-              await supabaseServer.auth.verifyOtp({
-                email: email.trim().toLowerCase(),
-                token: freshLink.properties.email_otp,
-                type: "email",
-              });
-
-            if (!sessionErr && freshSession?.session) {
-              verifiedSession = true;
-              verifiedUserId = freshSession.user?.id;
-            }
           }
         } catch (err) {
           console.error("[auth-action] Session cookie generation error:", err);
         }
+      }
+    } else {
+      // Native Supabase OTP check fallback
+      const { data: verifyData, error: verifyError } =
+        await supabaseServer.auth.verifyOtp({
+          email: email.trim().toLowerCase(),
+          token: token.trim(),
+          type: "email",
+        });
+
+      if (!verifyError && verifyData?.session) {
+        verifiedSession = true;
+        verifiedUserId = verifyData.user?.id;
       }
     }
 
@@ -314,4 +298,26 @@ export async function resendOtpAction(email: string): Promise<AuthResponse> {
     console.error("[auth-action] resendOtpAction exception:", err);
     return { ok: false, message: "Could not resend verification code." };
   }
+}
+
+/**
+ * Sign Out Action: Sign out user and redirect directly to Web App Homepage (/)
+ */
+export async function logoutAction(): Promise<never> {
+  const cookieStore = await cookies();
+  const supabase = await createSupabaseServerClient();
+
+  try {
+    cookieStore.set({
+      name: "pex_admin_last_activity",
+      value: "",
+      path: "/",
+      expires: new Date(0),
+    });
+  } catch {
+    // ignore
+  }
+
+  await supabase.auth.signOut();
+  redirect("/");
 }

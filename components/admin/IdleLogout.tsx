@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { logout } from "@/app/login/actions";
+import { logoutAction } from "@/app/actions/auth";
 import { DeviceActivityPrompt } from "./DeviceActivityPrompt";
 import {
   ADMIN_ACTIVITY_CHANNEL,
@@ -109,9 +109,9 @@ export function IdleLogout() {
       }
 
       try {
-        await logout(reason);
+        await logoutAction();
       } catch {
-        window.location.replace("/pex-console");
+        window.location.replace("/");
       }
     };
 

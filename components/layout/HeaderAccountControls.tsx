@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { logout } from "@/app/login/actions";
+import { logoutAction } from "@/app/actions/auth";
 import { HeaderOrderIcon } from "@/components/order/HeaderOrderIcon";
 import { TrackPackIcon } from "@/components/ui/icons";
 import headerStyles from "./Header.module.css";
@@ -103,7 +103,7 @@ export function HeaderAccountControls({
               type="button"
               className={styles.logoutButton}
               role="menuitem"
-              onClick={() => startLogoutTransition(() => logout())}
+              onClick={() => startLogoutTransition(() => logoutAction())}
               disabled={isLoggingOut}
             >
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
