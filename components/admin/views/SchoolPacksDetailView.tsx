@@ -274,9 +274,9 @@ export function SchoolPacksDetailView({
                           <td>
                             <div>
                               <div>
-                                <span className={styles.gradePackLink} style={{ cursor: "default", color: "#ffffff" }}>
+                                <Link href={`/admin/packs/${pack.slug || pack.id}`} className={styles.gradePackLink}>
                                   {formattedGrade}
-                                </span>
+                                </Link>
                               </div>
                               <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
                                 {school.name}
