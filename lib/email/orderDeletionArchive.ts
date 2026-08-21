@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { emailLegalNoticeHtml } from "@/lib/email/legalNotice";
 
 export interface OrderDeletionArchiveParams {
   order: Record<string, unknown>;
@@ -149,6 +150,11 @@ export async function sendOrderDeletionArchiveEmail({
           </tr>
 
           <!-- Footer -->
+          <tr>
+            <td style="background-color:#020617; padding: 16px 28px 0; text-align:left;">
+              ${emailLegalNoticeHtml}
+            </td>
+          </tr>
           <tr>
             <td style="background-color:#020617; padding: 16px 28px; border-top:1px solid #1e293b; text-align:center; font-size:11px; color:#64748b;">
               Pexpacks Admin Security System · Automated Archive Dispatch · orders@pexpacks.co.za &amp; mcebisi@pexpacks.co.za

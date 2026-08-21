@@ -58,6 +58,7 @@ const policyGroups = [
     links: [
       { label: "Terms of Use", href: "/terms" },
       { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Email Disclaimer", href: "/email-disclaimer" },
       { label: "Cookie Policy", href: "/cookie-notice" },
       { label: "PAIA Manual", href: "/paia-manual" },
     ],
@@ -119,17 +120,13 @@ function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
   );
 }
 
-export function Footer({ company, footer }: FooterContent) {
+export function Footer({ company }: FooterContent) {
   const currentYear = new Date().getFullYear();
   const siteName = company?.site_name || "Pexpacks";
   const email = company?.support_email || generalEmail;
   const emailHref = `mailto:${email}`;
   const phone = company?.support_phone || phoneNumber;
   const phoneHrefLocal = phone ? telHref(phone) : "#";
-  const aboutText =
-    footer?.about_text || "School stationery, packed and delivered.";
-  const copyrightText =
-    footer?.copyright_text || "Pexpacks Supplies. All rights reserved.";
 
   return (
     <footer className={styles.footer} id="site-footer">

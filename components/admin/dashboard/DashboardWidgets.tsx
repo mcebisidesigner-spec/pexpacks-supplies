@@ -36,6 +36,10 @@ export function formatDashboardCurrency(value: number): string {
   })}`;
 }
 
+function formatDashboardCount(value: number): string {
+  return Math.trunc(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function toneClass(tone: DashboardTone) {
   return styles[`tone${tone[0].toUpperCase()}${tone.slice(1)}`];
 }
@@ -170,8 +174,8 @@ export function FulfilmentGauge({
         <span>{available ? "Delivered" : "Unavailable"}</span>
       </div>
       <div className={styles.gaugeLegend}>
-        <span><i className={styles.legendDelivered} />{completed.toLocaleString()} completed</span>
-        <span><i className={styles.legendAwaiting} />{awaiting.toLocaleString()} awaiting</span>
+        <span><i className={styles.legendDelivered} />{formatDashboardCount(completed)} completed</span>
+        <span><i className={styles.legendAwaiting} />{formatDashboardCount(awaiting)} awaiting</span>
       </div>
     </div>
   );

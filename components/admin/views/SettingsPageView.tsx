@@ -169,7 +169,7 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
                   <input
                     type="email"
                     name="support_email"
-                    defaultValue="support@pexpacks.co.za"
+                    defaultValue="care@pexpacks.co.za"
                     style={{
                       width: "100%",
                       background: "#020617",

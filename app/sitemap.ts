@@ -21,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/twitter-image.jpg",
     "/privacy-policy",
     "/terms",
+    "/email-disclaimer",
     "/happy-pay-terms",
     "/cookie-notice",
     "/delivery-policy",

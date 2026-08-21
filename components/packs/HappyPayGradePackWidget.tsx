@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import type { GradePackForCustomisation } from "@/lib/packs/types";
 import { formatInstalment, happyPayInstalment } from "@/lib/order/happyPay";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
+import { usePortalContainer } from "@/hooks/usePortalContainer";
 import styles from "./HappyPayGradePackWidget.module.css";
 
 type HappyPayGradePackWidgetProps = {
@@ -33,6 +34,7 @@ export function HappyPayGradePackWidget({
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const portalContainer = usePortalContainer();
 
   const instalment = useMemo(() => happyPayInstalment(amount), [amount]);
 
@@ -55,7 +57,7 @@ export function HappyPayGradePackWidget({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isOpen]);
 
-  const modal = isMounted && isOpen ? (
+  const modal = isMounted && isOpen && portalContainer.current ? (
     createPortal(
       <div
         className={styles.overlay}
@@ -108,7 +110,7 @@ export function HappyPayGradePackWidget({
           </button>
         </section>
       </div>,
-      document.body
+      portalContainer.current
     )
   ) : null;
 

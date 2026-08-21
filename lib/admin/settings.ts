@@ -79,7 +79,7 @@ export type AppSettings = {
 const DEFAULTS: AppSettings = {
   general: {
     site_name: "Pexpacks",
-    support_email: "helpme@pexpacks.co.za",
+    support_email: "care@pexpacks.co.za",
     support_phone: "",
     site_url: "https://pexpacks.co.za",
   },

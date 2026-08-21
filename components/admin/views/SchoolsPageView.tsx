@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition, useMemo } from "react";
+import { useState, useTransition, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -15,10 +15,14 @@ import {
   listSchoolsAction,
   toggleSchoolVisibilityAction,
 } from "@/app/admin/schools/actions";
-import type { SchoolListResult, SchoolListRow } from "@/lib/admin/schools";
+import type { SchoolListResult } from "@/lib/admin/schools";
 
 interface SchoolsPageViewProps {
   initialData?: SchoolListResult;
+}
+
+function formatCount(value: number): string {
+  return Math.trunc(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
@@ -134,7 +138,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
     const pages: number[] = [];
     const maxVisible = 5;
     let start = Math.max(1, currentPage - 2);
-    let end = Math.min(pageCount, start + maxVisible - 1);
+    const end = Math.min(pageCount, start + maxVisible - 1);
     if (end - start + 1 < maxVisible) {
       start = Math.max(1, end - maxVisible + 1);
     }
@@ -152,7 +156,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
           <h1 className={styles.headerTitle}>
             Schools{" "}
             <span style={{ fontSize: 16, color: "#64748b", fontWeight: 500 }}>
-              ({total.toLocaleString()})
+              ({formatCount(total)})
             </span>
           </h1>
           <p className={styles.headerSubtitle}>
@@ -330,8 +334,8 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         {/* Dynamic Pagination & Working "Show Per Page" Selector */}
         <div className={styles.paginationFooter}>
           <span>
-            Showing {fromRecord.toLocaleString()} to {toRecord.toLocaleString()} of{" "}
-            {total.toLocaleString()} schools
+            Showing {formatCount(fromRecord)} to {formatCount(toRecord)} of{" "}
+            {formatCount(total)} schools
           </span>
 
           {/* Page Controls */}

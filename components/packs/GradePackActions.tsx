@@ -13,6 +13,7 @@ import {
   createFullPackSelection,
 } from "@/lib/packs/createPackSelection";
 import { useDialogFocusTrap } from "./useDialogFocusTrap";
+import { usePortalContainer } from "@/hooks/usePortalContainer";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { createFullTrayPack } from "@/lib/order/createTrayPack";
 import {
@@ -57,6 +58,7 @@ export function GradePackActions({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
   const triggerButtonRef = useRef<HTMLButtonElement | null>(null);
+  const portalContainer = usePortalContainer();
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const addPack = usePackTrayStore((s) => s.addPack);
@@ -468,8 +470,8 @@ export function GradePackActions({
           </div>
         ) : null}
 
-        {isMounted && drawerContent
-          ? createPortal(drawerContent, document.body)
+        {isMounted && drawerContent && portalContainer.current
+          ? createPortal(drawerContent, portalContainer.current)
           : null}
       </div>
     );
@@ -524,8 +526,8 @@ export function GradePackActions({
         </DownloadListLink>
       ) : null}
 
-      {isMounted && drawerContent
-        ? createPortal(drawerContent, document.body)
+      {isMounted && drawerContent && portalContainer.current
+        ? createPortal(drawerContent, portalContainer.current)
         : null}
     </div>
   );
