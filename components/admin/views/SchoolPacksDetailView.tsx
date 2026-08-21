@@ -267,7 +267,7 @@ export function SchoolPacksDetailView({
                     </tr>
                   ) : (
                     filteredPacks.map((pack) => {
-                      const packHref = `/admin/packs/${schoolIdentifier}/${pack.slug || pack.id}`;
+                      const packHref = `/admin/packs/${pack.slug || pack.id}`;
                       const formattedGrade = extractGradeLabel(pack.title, pack.slug);
 
                       return (
@@ -275,9 +275,9 @@ export function SchoolPacksDetailView({
                           <td>
                             <div>
                               <div>
-                                <Link href={packHref} className={styles.gradePackLink}>
+                                <span className={styles.gradePackLink} style={{ cursor: "default", color: "#ffffff" }}>
                                   {formattedGrade}
-                                </Link>
+                                </span>
                               </div>
                               <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
                                 {school.name}
@@ -308,7 +308,7 @@ export function SchoolPacksDetailView({
                           <td>
                             <div className={styles.actionIconBtnGroup}>
                               <Link
-                                href={packHref}
+                                href={`/admin/packs/${pack.slug || pack.id}`}
                                 className={`${styles.actionIconBtn} ${styles.actionIconBtnTeal}`}
                                 title="Edit Pack"
                               >
