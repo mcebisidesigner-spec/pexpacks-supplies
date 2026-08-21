@@ -189,6 +189,17 @@ function formatNumber(num: number): string {
   return new Intl.NumberFormat("en-US").format(num);
 }
 
+function formatDateString(isoOrDateStr?: string | null): string {
+  if (!isoOrDateStr) return "17/08/26";
+  try {
+    const d = new Date(isoOrDateStr);
+    if (isNaN(d.getTime())) return "17/08/26";
+    return d.toLocaleDateString("en-GB");
+  } catch {
+    return "17/08/26";
+  }
+}
+
 export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedResult }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -216,7 +227,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           name: s.school_name,
           gradePacksCount: s.grade_packs_count,
           season: "2027",
-          lastEdited: s.last_edited ? new Date(s.last_edited).toLocaleDateString("en-GB") : "17/08/26",
+          lastEdited: formatDateString(s.last_edited),
           lastEditedBy: "Mcebisi M.",
           visibility: (s.visible ? "visible" : "hidden") as "visible" | "hidden",
           status: (s.visible ? "published" : "draft") as "published" | "draft" | "review",
