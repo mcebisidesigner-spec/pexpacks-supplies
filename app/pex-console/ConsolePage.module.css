@@ -38,7 +38,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.logoWrapper img {
+  width: auto;
+  max-width: 135px;
+  height: 46px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+  transition: all 200ms ease;
+}
+
+@media (max-width: 480px) {
+  .logoWrapper img {
+    max-width: 115px;
+    height: 38px;
+  }
 }
 
 .badge {
