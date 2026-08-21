@@ -8,6 +8,7 @@ import { getSchool } from "@/lib/admin/schools";
 import { PackPriceForm } from "@/components/admin/packs/PackPriceForm";
 import { PackItemsSection } from "@/components/admin/packs/PackItemsSection";
 import { SchoolPacksDetailView } from "@/components/admin/views/SchoolPacksDetailView";
+import styles from "@/components/admin/packs/EditPack.module.css";
 import adminStyles from "../../admin.module.css";
 import shared from "../../schools/schools.module.css";
 
@@ -43,24 +44,45 @@ export default async function PackOrSchoolPacksPage({ params }: EditPackPageProp
     0
   );
 
+  const schoolData = pack.school_id ? await getSchool(pack.school_id) : null;
+  const schoolName = schoolData?.name || "3d Christian Academy";
+  const backHref = schoolData ? `/admin/packs/${schoolData.slug || schoolData.id}` : "/admin/packs";
+
   return (
-    <div className={adminStyles.adminContainer}>
-      <p style={{ marginBottom: 12 }}>
-        <Link href="/admin/packs" prefetch={false} className={shared.resetLink}>
-          <ArrowLeft aria-hidden="true" /> Back to school packs
+    <div className={styles.page} style={{ maxWidth: 1200, margin: "0 auto", padding: "8px 0" }}>
+      {/* Top Back Link matching reference attachment */}
+      <div style={{ marginBottom: 16 }}>
+        <Link
+          href={backHref}
+          className={styles.backLink}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: 13,
+            fontWeight: 500,
+            color: "#94a3b8",
+            textDecoration: "none",
+            transition: "color 140ms ease",
+          }}
+        >
+          <ArrowLeft size={15} /> Back to [{schoolName}]
         </Link>
-      </p>
-      <div className={adminStyles.headerSection}>
-        <h1 className={adminStyles.title}>Edit pack</h1>
-        <p className={adminStyles.subtitle}>{pack.title}</p>
       </div>
-      <div className={adminStyles.stack}>
+
+      {/* Main Stack Container */}
+      <div className={styles.stack} style={{ gap: 20 }}>
+        {/* Header Title, Items Count Badge, Subtitle & Save Pack Button */}
         <PackPriceForm
           packId={pack.id}
           price={pack.price}
           itemCount={items.length}
           subtotal={subtotal}
+          schoolName={schoolName}
+          packTitle={pack.title}
         />
+
+        {/* Search Bar, Big Total Price & Items Table */}
         <PackItemsSection
           packId={pack.id}
           packTitle={pack.title}
