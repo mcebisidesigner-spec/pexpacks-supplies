@@ -24,12 +24,16 @@ export type AuthResponse = {
 const GENERIC_ERROR_MSG = "Invalid login credentials or verification code.";
 
 async function getClientContext() {
-  const headerList = await headers();
-  const forwardedFor = headerList.get("x-forwarded-for");
-  const realIp = headerList.get("x-real-ip");
-  const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : realIp || "127.0.0.1";
-  const userAgent = headerList.get("user-agent") || "Unknown";
-  return { ip, userAgent };
+  try {
+    const headerList = await headers();
+    const forwardedFor = headerList?.get("x-forwarded-for");
+    const realIp = headerList?.get("x-real-ip");
+    const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : realIp || "127.0.0.1";
+    const userAgent = headerList?.get("user-agent") || "Unknown";
+    return { ip, userAgent };
+  } catch {
+    return { ip: "127.0.0.1", userAgent: "Unknown" };
+  }
 }
 
 /**
@@ -39,33 +43,33 @@ export async function authenticatePasswordAction(
   prevState: AuthResponse,
   formData: FormData
 ): Promise<AuthResponse> {
-  const { ip, userAgent } = await getClientContext();
-  const email = (formData.get("email") as string)?.trim().toLowerCase();
-  const password = formData.get("password") as string;
-
-  if (!email || !password) {
-    return { ok: false, message: GENERIC_ERROR_MSG };
-  }
-
-  // 1. Check Rate Limiter
-  const rateLimit = checkRateLimit(ip);
-  if (!rateLimit.allowed) {
-    await logSecurityEvent({
-      ipAddress: ip,
-      userAgent,
-      eventType: "RATE_LIMITED",
-      email,
-      metadata: { reset_seconds: rateLimit.resetSeconds },
-    });
-    return {
-      ok: false,
-      message: `Too many failed attempts. Please try again in ${Math.ceil(
-        rateLimit.resetSeconds / 60
-      )} minutes.`,
-    };
-  }
-
   try {
+    const { ip, userAgent } = await getClientContext();
+    const email = (formData.get("email") as string)?.trim().toLowerCase();
+    const password = formData.get("password") as string;
+
+    if (!email || !password) {
+      return { ok: false, message: GENERIC_ERROR_MSG };
+    }
+
+    // 1. Check Rate Limiter
+    const rateLimit = checkRateLimit(ip);
+    if (!rateLimit.allowed) {
+      await logSecurityEvent({
+        ipAddress: ip,
+        userAgent,
+        eventType: "RATE_LIMITED",
+        email,
+        metadata: { reset_seconds: rateLimit.resetSeconds },
+      });
+      return {
+        ok: false,
+        message: `Too many failed attempts. Please try again in ${Math.ceil(
+          rateLimit.resetSeconds / 60
+        )} minutes.`,
+      };
+    }
+
     const adminClient = createSupabaseAdminClient();
     const supabaseServer = await createSupabaseServerClient();
 
@@ -134,7 +138,6 @@ export async function authenticatePasswordAction(
     };
   } catch (err) {
     console.error("[auth-action] authenticatePasswordAction exception:", err);
-    await recordFailedAttempt(ip, userAgent, maskEmail(email));
     return { ok: false, message: GENERIC_ERROR_MSG };
   }
 }
@@ -146,24 +149,24 @@ export async function verifyOtpAction(
   email: string,
   token: string
 ): Promise<AuthResponse> {
-  const { ip, userAgent } = await getClientContext();
-
-  if (!email || !token || token.length < 6) {
-    return { ok: false, message: GENERIC_ERROR_MSG };
-  }
-
-  // 1. Rate Limiting Check
-  const rateLimit = checkRateLimit(ip);
-  if (!rateLimit.allowed) {
-    return {
-      ok: false,
-      message: `Too many attempts. Please try again in ${Math.ceil(
-        rateLimit.resetSeconds / 60
-      )} minutes.`,
-    };
-  }
-
   try {
+    const { ip, userAgent } = await getClientContext();
+
+    if (!email || !token || token.length < 6) {
+      return { ok: false, message: GENERIC_ERROR_MSG };
+    }
+
+    // 1. Rate Limiting Check
+    const rateLimit = checkRateLimit(ip);
+    if (!rateLimit.allowed) {
+      return {
+        ok: false,
+        message: `Too many attempts. Please try again in ${Math.ceil(
+          rateLimit.resetSeconds / 60
+        )} minutes.`,
+      };
+    }
+
     const supabaseServer = await createSupabaseServerClient();
     const adminClient = createSupabaseAdminClient();
     let verifiedSession = false;
@@ -218,7 +221,18 @@ export async function verifyOtpAction(
             email: email.trim().toLowerCase(),
           });
 
-          if (freshLink?.properties?.email_otp) {
+          if (freshLink?.properties?.hashed_token) {
+            const { data: freshSession, error: sessionErr } =
+              await supabaseServer.auth.verifyOtp({
+                token_hash: freshLink.properties.hashed_token,
+                type: "magiclink",
+              });
+
+            if (!sessionErr && freshSession?.session) {
+              verifiedSession = true;
+              verifiedUserId = freshSession.user?.id;
+            }
+          } else if (freshLink?.properties?.email_otp) {
             const { data: freshSession, error: sessionErr } =
               await supabaseServer.auth.verifyOtp({
                 email: email.trim().toLowerCase(),
@@ -264,7 +278,6 @@ export async function verifyOtpAction(
     };
   } catch (err) {
     console.error("[auth-action] verifyOtpAction exception:", err);
-    await recordFailedAttempt(ip, userAgent, maskEmail(email));
     return { ok: false, message: GENERIC_ERROR_MSG };
   }
 }
@@ -273,16 +286,16 @@ export async function verifyOtpAction(
  * Resend OTP Code for Step 2
  */
 export async function resendOtpAction(email: string): Promise<AuthResponse> {
-  const { ip, userAgent } = await getClientContext();
-
-  if (!email) return { ok: false, message: "Email is required." };
-
-  const rateLimit = checkRateLimit(ip);
-  if (!rateLimit.allowed) {
-    return { ok: false, message: "Rate limit exceeded. Please wait a moment." };
-  }
-
   try {
+    const { ip, userAgent } = await getClientContext();
+
+    if (!email) return { ok: false, message: "Email is required." };
+
+    const rateLimit = checkRateLimit(ip);
+    if (!rateLimit.allowed) {
+      return { ok: false, message: "Rate limit exceeded. Please wait a moment." };
+    }
+
     const otpResult = await generateAndSendOtpEmail(email);
 
     if (!otpResult.success) {
