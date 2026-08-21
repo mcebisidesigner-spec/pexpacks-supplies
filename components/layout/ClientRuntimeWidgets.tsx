@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { trackCtaClicked } from "@/lib/analytics";
+import { initDomRemovalGuard } from "@/lib/dom-guard";
 
 const DynamicWhatsAppWidget = dynamic(
   () => import("@/components/shared/WhatsAppWidget").then((m) => m.WhatsAppWidget),
@@ -17,7 +18,15 @@ const DynamicPwaLifecycle = dynamic(
 export function ClientRuntimeWidgets() {
   const pathname = usePathname();
   const [idleReady, setIdleReady] = useState(false);
-  const hideWhatsApp = pathname?.startsWith("/checkout") || pathname?.startsWith("/admin");
+  const hideWhatsApp =
+    pathname?.startsWith("/checkout") ||
+    pathname?.startsWith("/admin") ||
+    pathname === "/pex-console" ||
+    pathname === "/login";
+
+  useEffect(() => {
+    initDomRemovalGuard();
+  }, []);
 
   useEffect(() => {
     if ("requestIdleCallback" in window) {
