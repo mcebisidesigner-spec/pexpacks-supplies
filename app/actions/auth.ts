@@ -169,34 +169,31 @@ export async function verifyOtpAction(
     let verifiedSession = false;
     let verifiedUserId: string | undefined;
 
-    // A. Verify with Supabase Auth (type: email)
-    const { data: verifyData, error: verifyError } =
+    // A. Verify with Supabase Auth (type: email or magiclink)
+    let { data: verifyData, error: verifyError } =
       await supabaseServer.auth.verifyOtp({
-        email: email.trim(),
+        email: email.trim().toLowerCase(),
         token: token.trim(),
         type: "email",
       });
+
+    if (verifyError || !verifyData?.session) {
+      const res2 = await supabaseServer.auth.verifyOtp({
+        email: email.trim().toLowerCase(),
+        token: token.trim(),
+        type: "magiclink",
+      });
+      if (!res2.error && res2.data?.session) {
+        verifyData = res2.data;
+        verifyError = null;
+      }
+    }
 
     if (!verifyError && verifyData?.session) {
       verifiedSession = true;
       verifiedUserId = verifyData.user?.id;
     } else {
-      // Try type: magiclink
-      const { data: magicData, error: magicError } =
-        await supabaseServer.auth.verifyOtp({
-          email: email.trim(),
-          token: token.trim(),
-          type: "magiclink",
-        });
-
-      if (!magicError && magicData?.session) {
-        verifiedSession = true;
-        verifiedUserId = magicData.user?.id;
-      }
-    }
-
-    // B. Fallback Check: Verify against auth_otp_tokens table
-    if (!verifiedSession) {
+      // B. Fallback Check: Verify against auth_otp_tokens table
       const nowIso = new Date().toISOString();
       const { data: matchedTokens } = await adminClient
         .from("auth_otp_tokens")
@@ -214,7 +211,29 @@ export async function verifyOtpAction(
           .update({ used: true })
           .eq("id", matchedTokens[0].id);
 
-        verifiedSession = true;
+        // Force session creation & cookie issuance via Supabase Server Client
+        try {
+          const { data: freshLink } = await adminClient.auth.admin.generateLink({
+            type: "magiclink",
+            email: email.trim().toLowerCase(),
+          });
+
+          if (freshLink?.properties?.email_otp) {
+            const { data: freshSession, error: sessionErr } =
+              await supabaseServer.auth.verifyOtp({
+                email: email.trim().toLowerCase(),
+                token: freshLink.properties.email_otp,
+                type: "email",
+              });
+
+            if (!sessionErr && freshSession?.session) {
+              verifiedSession = true;
+              verifiedUserId = freshSession.user?.id;
+            }
+          }
+        } catch (err) {
+          console.error("[auth-action] Session cookie generation error:", err);
+        }
       }
     }
 

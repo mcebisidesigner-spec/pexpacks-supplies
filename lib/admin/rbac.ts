@@ -222,7 +222,6 @@ export async function requireAdmin(options?: {
   const session = await getAdminUser();
   if (!session) {
     notFound();
-    throw new Error("Unauthenticated");
   }
   if (!session.isSuperAdmin && session.roles.length === 0) {
     notFound();

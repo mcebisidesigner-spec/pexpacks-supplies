@@ -52,15 +52,8 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const isStaff =
-      user &&
-      ((user.app_metadata as Record<string, unknown> | undefined)?.role === "admin" ||
-        Array.isArray(
-          (user.app_metadata as Record<string, unknown> | undefined)?.roles
-        ));
-
-    // Stealth Edge Masking: Return 404 rewrite if unauthenticated or not staff
-    if (!user || !isStaff) {
+    // Stealth Edge Masking: Return 404 rewrite if unauthenticated
+    if (!user) {
       return NextResponse.rewrite(new URL("/not-found", request.url), {
         status: 404,
         headers: response.headers,
@@ -76,15 +69,8 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const isStaff =
-      user &&
-      ((user.app_metadata as Record<string, unknown> | undefined)?.role === "admin" ||
-        Array.isArray(
-          (user.app_metadata as Record<string, unknown> | undefined)?.roles
-        ));
-
-    // If already authenticated as staff, redirect directly to /admin
-    if (user && isStaff) {
+    // If already authenticated, redirect directly to /admin
+    if (user) {
       return NextResponse.redirect(new URL("/admin", request.url), {
         headers: response.headers,
       });
