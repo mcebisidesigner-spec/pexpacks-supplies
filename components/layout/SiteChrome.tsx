@@ -35,9 +35,12 @@ export function SiteChrome({
   children: ReactNode;
 } & SiteContentProps) {
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
+  const isAuthOrAdmin =
+    pathname.startsWith("/admin") ||
+    pathname === "/pex-console" ||
+    pathname === "/login";
 
-  if (isAdmin) {
+  if (isAuthOrAdmin) {
     return <main id="site-main" className="site-main site-main-admin">{children}</main>;
   }
 
