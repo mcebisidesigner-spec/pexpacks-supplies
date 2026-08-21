@@ -249,6 +249,23 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
   const totalCount = filteredSchools.length;
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
+  const visiblePageNumbers = useMemo(() => {
+    const maxButtons = 5;
+    let start = Math.max(1, currentPage - 2);
+    let end = start + maxButtons - 1;
+
+    if (end > totalPages) {
+      end = totalPages;
+      start = Math.max(1, end - maxButtons + 1);
+    }
+
+    const pages: number[] = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }, [currentPage, totalPages]);
+
   const paginatedSchools = useMemo(() => {
     const from = (currentPage - 1) * pageSize;
     return filteredSchools.slice(from, from + pageSize);
@@ -615,24 +632,17 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 &lt;
               </button>
 
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                let pageNum = i + 1;
-                if (totalPages > 5 && currentPage > 3) {
-                  pageNum = currentPage - 2 + i;
-                  if (pageNum > totalPages) pageNum = totalPages - (4 - i);
-                }
-                return (
-                  <button
-                    key={pageNum}
-                    className={`${styles.pageBtn} ${
-                      currentPage === pageNum ? styles.pageBtnActive : ""
-                    }`}
-                    onClick={() => setCurrentPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
+              {visiblePageNumbers.map((pageNum) => (
+                <button
+                  key={pageNum}
+                  className={`${styles.pageBtn} ${
+                    currentPage === pageNum ? styles.pageBtnActive : ""
+                  }`}
+                  onClick={() => setCurrentPage(pageNum)}
+                >
+                  {pageNum}
+                </button>
+              ))}
 
               <button
                 className={styles.pageBtn}
