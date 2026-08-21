@@ -47,8 +47,8 @@ export async function generateAndSendOtpEmail(
     const resend = new Resend(apiKey);
     const from = process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
     
-    // Join digits with non-breaking spaces so email clients never wrap digits onto multiple lines
-    const formattedDigits = otpCode.split("").join("&nbsp;&nbsp;");
+    // Digits array for 3x2 grid matching exact sample spec
+    const digits = otpCode.split("");
 
     const htmlBody = `<!doctype html>
 <html lang="en">
@@ -57,48 +57,54 @@ export async function generateAndSendOtpEmail(
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Your Pexpacks Security Token</title>
 </head>
-<body style="margin:0;padding:0;background:#070b12;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#e2e8f0;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#070b12;padding:40px 16px;">
+<body style="margin:0;padding:0;background:#05080f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#e2e8f0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#05080f;padding:48px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:420px;background:#0c1322;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.5);">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:440px;background:#0b111e;border:1px solid #162032;border-radius:20px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,0.6);">
           <!-- Header Card Content -->
           <tr>
-            <td style="padding:32px 24px 16px;text-align:center;background:#0c1322;">
-              <div style="display:inline-block;padding:5px 14px;background:rgba(16,185,129,0.12);border:1px solid #10b981;border-radius:999px;color:#2dd4bf;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:16px;">
+            <td style="padding:40px 32px 20px;text-align:center;background:#0b111e;">
+              <!-- Capsule Top Badge -->
+              <div style="display:inline-block;padding:6px 18px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.4);border-radius:999px;color:#2dd4bf;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:20px;">
                 TWO-FACTOR AUTHENTICATION
               </div>
-              <h1 style="margin:0 0 10px;font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;font-family:Arial,Helvetica,sans-serif;">
+
+              <!-- Main Title -->
+              <h1 style="margin:0 0 12px;font-size:26px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;font-family:Arial,Helvetica,sans-serif;">
                 Your Security Token
               </h1>
+
+              <!-- Subtitle -->
               <p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.5;font-family:Arial,Helvetica,sans-serif;">
                 Enter this 6-digit code on the <strong style="color:#ffffff;">/pex-console-secure</strong> login gateway:
               </p>
             </td>
           </tr>
 
-          <!-- Inner Code Box -->
+          <!-- Inner Code Box (Exact 3x2 Grid Matching Sample Image) -->
           <tr>
-            <td style="padding:0 24px 20px;">
-              <div style="background:#060911;border:1px solid #1e293b;border-radius:12px;padding:24px 16px;text-align:center;">
-                <!-- Digits Single Line Container (Selectable / Copyable - No Link Navigation) -->
-                <div style="font-size:28px;font-weight:800;color:#10b981;letter-spacing:6px;font-family:'Courier New',Courier,monospace,sans-serif;white-space:nowrap !important;margin-bottom:20px;display:inline-block;width:100%;user-select:all !important;-webkit-user-select:all !important;cursor:pointer;">
-                  [&nbsp; ${formattedDigits} &nbsp;]
-                </div>
-                
-                <!-- Copy AUTH No. Element (No URL Redirection) -->
-                <div style="text-align:center;">
-                  <div style="display:inline-block;padding:10px 24px;background:#10b981;color:#070b12;font-size:13px;font-weight:800;font-family:Arial,Helvetica,sans-serif;border-radius:999px;box-shadow:0 4px 14px rgba(16,185,129,0.35);user-select:all !important;-webkit-user-select:all !important;cursor:pointer;">
-                    Copy AUTH No. &nbsp;[ ${otpCode} ]
-                  </div>
-                </div>
+            <td style="padding:0 32px 24px;">
+              <div style="background:#060a14;border:1px solid #182438;border-radius:16px;padding:32px 24px;text-align:center;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 auto;max-width:260px;">
+                  <tr>
+                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[0]}</td>
+                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[1]}</td>
+                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[2]}</td>
+                  </tr>
+                  <tr>
+                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[3]}</td>
+                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[4]}</td>
+                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[5]}</td>
+                  </tr>
+                </table>
               </div>
             </td>
           </tr>
 
           <!-- Expiration Notice -->
           <tr>
-            <td style="padding:0 24px 24px;text-align:center;">
+            <td style="padding:0 32px 28px;text-align:center;">
               <p style="margin:0;font-size:12px;color:#64748b;font-family:Arial,Helvetica,sans-serif;">
                 This code expires in <strong style="color:#ffffff;">5 minutes</strong> and can only be used once.
               </p>
@@ -107,7 +113,7 @@ export async function generateAndSendOtpEmail(
 
           <!-- Footer -->
           <tr>
-            <td style="padding:20px 24px;background:rgba(15,23,42,0.6);border-top:1px solid rgba(255,255,255,0.06);text-align:center;font-size:11px;color:#64748b;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">
+            <td style="padding:24px 32px;background:rgba(10,16,28,0.8);border-top:1px solid rgba(255,255,255,0.06);text-align:center;font-size:11px;color:#64748b;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">
               <p style="margin:0 0 8px;">
                 If you did not request this administrative login token, please ignore this email or contact system security immediately.
               </p>
