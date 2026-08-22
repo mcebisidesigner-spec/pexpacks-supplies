@@ -104,6 +104,29 @@
   box-shadow: none;
 }
 
+.marginRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.marginLabel {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.marginPositive {
+  color: #34d399;
+  font-weight: 700;
+}
+
+.marginDanger {
+  color: #f87171;
+  font-weight: 700;
+}
+
 @media (max-width: 640px) {
   .priceHeader {
     padding: 18px 18px 0;
