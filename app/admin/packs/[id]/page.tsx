@@ -18,6 +18,7 @@ import { getSchool } from "@/lib/admin/schools";
 import { PackPriceForm } from "@/components/admin/packs/PackPriceForm";
 import { PackItemsSection } from "@/components/admin/packs/PackItemsSection";
 import { SchoolPacksDetailView } from "@/components/admin/views/SchoolPacksDetailView";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface EditPackPageProps {
@@ -68,7 +69,7 @@ export default async function PackOrSchoolPacksPage({
         <ArrowLeft size={14} /> Back to {schoolName}
       </Link>
 
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {schoolName}{" "}

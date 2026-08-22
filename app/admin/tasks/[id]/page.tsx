@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, CheckSquare, Clock, MessageSquare, Paperclip, Save, Tag, Send } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface TaskDetailPageProps {
@@ -24,7 +25,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
         </Link>
       </div>
 
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {formattedTitle}

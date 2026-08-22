@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Calendar, CheckSquare, Clock, Flag, Save, UserCheck, Tag } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 export const metadata = {
@@ -23,7 +24,7 @@ export default async function NewTaskPage() {
       </div>
 
       {/* Header */}
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>Create New Task</h1>
           <p className={styles.headerSubtitle}>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Barcode, DollarSign, Edit, Layers, Tag, TrendingUp } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface ProductDetailPageProps {
@@ -41,7 +42,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         </Link>
       </div>
 
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {name}

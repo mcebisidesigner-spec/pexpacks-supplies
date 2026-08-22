@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowLeft, Calculator, Save, Search, Trash2 } from "lucide-react";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface SelectedItem {
@@ -89,7 +90,7 @@ export default function PackBuilderPage() {
         </Link>
       </div>
 
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>Interactive Pack Builder</h1>
           <p className={styles.headerSubtitle}>Assembly &amp; Live Bill of Materials (BOM) Calculation</p>
@@ -113,7 +114,7 @@ export default function PackBuilderPage() {
               <div>
                 <label className={`${styles.text11} ${styles.cMuted} ${styles.mb4}`}>Pack Title</label>
                 <input
-                  className={`${styles.searchInput} ${styles.wFull} ${styles.pl12}`}
+                  className={`${adminStyles.searchInput} ${styles.wFull} ${styles.pl12}`}
                   value={packTitle}
                   onChange={(e) => setPackTitle(e.target.value)}
                 />
@@ -121,7 +122,7 @@ export default function PackBuilderPage() {
               <div>
                 <label className={`${styles.text11} ${styles.cMuted} ${styles.mb4}`}>Assigned School</label>
                 <input
-                  className={`${styles.searchInput} ${styles.wFull} ${styles.pl12}`}
+                  className={`${adminStyles.searchInput} ${styles.wFull} ${styles.pl12}`}
                   value={schoolName}
                   onChange={(e) => setSchoolName(e.target.value)}
                 />
@@ -137,7 +138,7 @@ export default function PackBuilderPage() {
             <div className={`${styles.searchBox} ${styles.wFull}`}>
               <Search />
               <input
-                className={styles.searchInput}
+                className={adminStyles.searchInput}
                 placeholder="Search master items by SKU or title..."
                 value={itemQuery}
                 onChange={(e) => setItemQuery(e.target.value)}
@@ -228,7 +229,7 @@ export default function PackBuilderPage() {
             <div className={styles.sidebarStatRow}>
               <span className={styles.sidebarStatLabel}>Selling Price (R):</span>
               <input
-                className={`${styles.searchInput} ${styles.h28} ${styles.textRight} ${styles.w100px}`}
+                className={`${adminStyles.searchInput} ${styles.h28} ${styles.textRight} ${styles.w100px}`}
                 type="number"
                 value={sellingPrice}
                 onChange={(e) => setSellingPrice(Number(e.target.value))}

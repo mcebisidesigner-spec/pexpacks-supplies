@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowLeft, CheckCircle2, CreditCard, DollarSign, RefreshCw, ShieldCheck, User } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface PaymentDetailPageProps {
@@ -21,7 +22,7 @@ export default async function PaymentDetailPage({ params }: PaymentDetailPagePro
       </div>
 
       {/* Header */}
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Payment {orderNumber}

@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { SchoolForm } from "@/components/admin/schools/SchoolForm";
 import { createSchoolAction } from "../actions";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 export const metadata = {
@@ -25,7 +26,7 @@ export default async function NewSchoolPage() {
       </div>
 
       {/* Header with crisp white title */}
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={`${styles.headerTitle} ${styles["c-white"]}`}>
             Add a School

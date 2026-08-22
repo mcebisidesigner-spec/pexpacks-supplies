@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Save, ShoppingCart, Tag, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 export const metadata = {
@@ -18,7 +19,7 @@ export default async function AddMasterItemPage() {
         </Link>
       </div>
 
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>Add New Master Item</h1>
           <p className={styles.headerSubtitle}>
