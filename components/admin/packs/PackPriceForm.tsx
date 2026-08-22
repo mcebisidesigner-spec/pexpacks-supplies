@@ -110,15 +110,6 @@ export function PackPriceForm({
           <div className={editStyles.inlineItemsSlot}>{children}</div>
         ) : null}
 
-        {margin != null && (
-          <div className={editStyles.marginRow}>
-            <span className={editStyles.marginLabel}>Margin:</span>
-            <span className={`${editStyles.marginValue} ${marginTone}`}>
-              {margin}%
-            </span>
-          </div>
-        )}
-
         {state?.ok ? (
           <div className={coreStyles.success} role="status">
             {state.message}

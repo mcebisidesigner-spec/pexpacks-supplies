@@ -70,7 +70,14 @@ export default async function PackOrSchoolPacksPage({
 
       <div className={styles.headerRow}>
         <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>{pack.title}</h1>
+          <h1 className={styles.headerTitle}>
+            {schoolName}{" "}
+            <span className={styles.titleAccent}>
+              {pack.title.toLowerCase().startsWith(schoolName.toLowerCase())
+                ? pack.title.slice(schoolName.length).trim() || "Pack"
+                : pack.title}
+            </span>
+          </h1>
           <p className={styles.headerMeta}>
             {schoolName} / {itemCount} {itemCount === 1 ? "item" : "items"}
           </p>
