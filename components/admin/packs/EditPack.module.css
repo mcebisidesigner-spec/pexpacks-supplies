@@ -85,6 +85,18 @@
   font-weight: 800;
 }
 
+.marginDanger {
+  color: #f87171;
+}
+
+.marginWarning {
+  color: #facc15;
+}
+
+.marginPositive {
+  color: #34d399;
+}
+
 @media (max-width: 640px) {
   .priceHeader {
     flex-direction: column;

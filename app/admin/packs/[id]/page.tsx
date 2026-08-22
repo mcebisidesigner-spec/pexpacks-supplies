@@ -7,6 +7,7 @@ import {
   EyeOff,
   FileText,
   Layers,
+  Save,
   School,
 } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -59,108 +60,114 @@ export default async function PackOrSchoolPacksPage({
   const itemCount = items.length;
   const formattedSubtotal = `R ${subtotal.toFixed(2)}`;
   const formattedPrice = `R ${(pack.price ?? 0).toFixed(2)}`;
+  const priceFormId = `pack-price-form-${pack.id}`;
 
   return (
-    <div className={styles.container}>
-      <Link
-        href={backHref}
-        className={styles.secondaryBtn}
-        style={{ height: 32, fontSize: 11, background: "transparent", border: "none", color: "#94a3b8", paddingLeft: 0 }}
-      >
+    <div className={`${styles.container} ${styles.packEditorContainer}`}>
+      <Link href={backHref} className={styles.backLink}>
         <ArrowLeft size={14} /> Back to {schoolName}
       </Link>
 
       <div className={styles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>{pack.title}</h1>
-          <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>
-            {schoolName} &middot; {itemCount} items
-          </div>
+          <p className={styles.headerMeta}>
+            {schoolName} / {itemCount} {itemCount === 1 ? "item" : "items"}
+          </p>
         </div>
+        <button
+          type="submit"
+          form={priceFormId}
+          className={`${styles.primaryBtn} ${styles.headerSaveBtn}`}
+        >
+          <Save size={14} /> Save pack
+        </button>
       </div>
 
-      <div className={styles.metricsGrid5}>
+      <div className={`${styles.metricsGrid5} ${styles.packMetricsGrid}`}>
         <div className={styles.metricCard}>
           <div className={styles.metricTop}>
             <span className={styles.metricLabel}>Pack Price</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+            <div
+              className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}
+            >
               <DollarSign size={16} />
             </div>
           </div>
           <div className={styles.metricValue}>{formattedPrice}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Retail selling price</div>
+          <div className={styles.metricSub}>Retail selling price</div>
         </div>
 
         <div className={styles.metricCard}>
           <div className={styles.metricTop}>
             <span className={styles.metricLabel}>Item Subtotal</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+            <div
+              className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}
+            >
               <Layers size={16} />
             </div>
           </div>
           <div className={styles.metricValue}>{formattedSubtotal}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Sum of line items</div>
+          <div className={styles.metricSub}>Sum of line items</div>
         </div>
 
         <div className={styles.metricCard}>
           <div className={styles.metricTop}>
             <span className={styles.metricLabel}>Items</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}>
+            <div
+              className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}
+            >
               <FileText size={16} />
             </div>
           </div>
           <div className={styles.metricValue}>{itemCount}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Line items in pack</div>
+          <div className={styles.metricSub}>Line items in pack</div>
         </div>
 
         <div className={styles.metricCard}>
           <div className={styles.metricTop}>
             <span className={styles.metricLabel}>School</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+            <div
+              className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}
+            >
               <School size={16} />
             </div>
           </div>
-          <div className={styles.metricValue} style={{ fontSize: 16 }}>
+          <div className={`${styles.metricValue} ${styles.metricValueSmall}`}>
             {schoolData ? schoolName : "Unassigned"}
           </div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>
-            {schoolData?.province || ""}
-          </div>
+          <div className={styles.metricSub}>{schoolData?.province || ""}</div>
         </div>
 
         <div className={styles.metricCard}>
           <div className={styles.metricTop}>
             <span className={styles.metricLabel}>Visibility</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+            <div
+              className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}
+            >
               {pack.visible ? <Eye size={16} /> : <EyeOff size={16} />}
             </div>
           </div>
-          <div className={styles.metricValue} style={{ fontSize: 16 }}>
+          <div className={`${styles.metricValue} ${styles.metricValueSmall}`}>
             {pack.visible ? "Visible" : "Hidden"}
           </div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>
+          <div className={styles.metricSub}>
             {pack.visible ? "Public listing" : "Draft / hidden"}
           </div>
         </div>
       </div>
 
       <div className={styles.detailLayout}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className={styles.formStack}>
           <PackPriceForm
+            formId={priceFormId}
             packId={pack.id}
             price={pack.price}
             itemCount={itemCount}
             subtotal={subtotal}
             schoolName={schoolName}
             packTitle={pack.title}
-          />
-
-          <PackItemsSection
-            packId={pack.id}
-            packTitle={pack.title}
-            items={items}
-            subtotal={subtotal}
-            showImporter={hasPermission(session, "items.import")}
+            showSubmit={false}
           />
         </div>
 
@@ -168,15 +175,15 @@ export default async function PackOrSchoolPacksPage({
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Box size={16} style={{ color: "#2dd4bf" }} />
+                <Box size={16} className={styles.iconTeal} />
                 <span>Pack Summary</span>
               </div>
-              <span className={styles.badgeGreen} style={{ fontSize: 10 }}>
+              <span className={`${styles.badgeGreen} ${styles.badgeTiny}`}>
                 {pack.visible ? "Live" : "Draft"}
               </span>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div className={styles.summaryStack}>
               <div className={styles.sidebarStatRow}>
                 <span className={styles.sidebarStatLabel}>Title</span>
                 <span className={styles.sidebarStatVal}>{pack.title}</span>
@@ -187,7 +194,9 @@ export default async function PackOrSchoolPacksPage({
               </div>
               <div className={styles.sidebarStatRow}>
                 <span className={styles.sidebarStatLabel}>Subtotal</span>
-                <span className={styles.sidebarStatVal}>{formattedSubtotal}</span>
+                <span className={styles.sidebarStatVal}>
+                  {formattedSubtotal}
+                </span>
               </div>
               <div className={styles.sidebarStatRow}>
                 <span className={styles.sidebarStatLabel}>Items</span>
@@ -201,6 +210,14 @@ export default async function PackOrSchoolPacksPage({
           </div>
         </div>
       </div>
+
+      <PackItemsSection
+        packId={pack.id}
+        packTitle={pack.title}
+        items={items}
+        subtotal={subtotal}
+        showImporter={hasPermission(session, "items.import")}
+      />
     </div>
   );
 }

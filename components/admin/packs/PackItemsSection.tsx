@@ -121,7 +121,8 @@ export function PackItemsSection({
           />
         </div>
         <div className={styles.totalChip} aria-label="Total price">
-          {items.length === 0 ? "TOTAL PRICE" : formatCurrency(subtotal)}
+          <span>Total</span>
+          {formatCurrency(subtotal)}
         </div>
         {message ? (
           <p className={styles.importSuccess} role="status">
@@ -137,6 +138,7 @@ export function PackItemsSection({
         >
           <CSVStationeryImporter
             packs={[{ id: packId, title: packTitle }]}
+            variant="compact"
             onImported={() => router.refresh()}
           />
         </section>

@@ -16,6 +16,11 @@
   font-family: inherit;
 }
 
+.rootCompact {
+  max-width: none;
+  margin: 0;
+}
+
 /* 1. Header card ------------------------------------------------------- */
 .card {
   display: flex;
@@ -27,6 +32,14 @@
   background: var(--admin-surface);
 }
 
+.cardCompact {
+  min-height: 104px;
+  padding: 18px 28px;
+  border-color: #2dd4bf;
+  border-radius: 8px;
+  background: #060b14;
+}
+
 .cardHeader {
   display: flex;
   flex-direction: column;
@@ -34,6 +47,18 @@
   justify-content: space-between;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--admin-border);
+}
+
+.cardHeaderCompact {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(240px, 1fr) minmax(
+      220px,
+      1fr
+    );
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 .cardTitleBlock {
@@ -60,6 +85,41 @@
   color: var(--admin-text-3);
 }
 
+.compactDropzone {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--admin-text, #ffffff);
+  text-align: center;
+  cursor: pointer;
+}
+
+.compactDropzone span {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--admin-text, #ffffff);
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.compactDropzone small {
+  color: var(--admin-text-3, #94a3b8);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.compactUploadIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--admin-text-3, #94a3b8);
+}
+
 .templateBtn {
   display: inline-flex;
   align-items: center;
@@ -74,7 +134,25 @@
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.16s ease, border-color 0.16s ease;
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.templateBtnCompact {
+  justify-self: end;
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--admin-text, #ffffff);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.templateBtnCompact:hover {
+  background: transparent;
+  color: var(--admin-accent-strong, #2dd4bf);
 }
 
 .templateBtn:hover {
@@ -100,6 +178,10 @@
   border: 2px dashed var(--admin-border-strong);
   background: var(--admin-bg);
   transition: border-color 0.16s ease;
+}
+
+.hidden {
+  display: none;
 }
 
 .dropzone:hover {
@@ -494,5 +576,22 @@
 
   .importBtn {
     align-self: auto;
+  }
+}
+
+@media (max-width: 820px) {
+  .cardHeaderCompact {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 18px;
+  }
+
+  .compactDropzone {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .templateBtnCompact {
+    justify-self: start;
   }
 }

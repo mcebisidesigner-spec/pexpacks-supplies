@@ -28,16 +28,22 @@ export interface CSVStationeryImporterProps {
   packs?: { id: string; title: string }[];
   onImported?: () => void;
   onStageItems?: (items: CSVStationeryRow[]) => void;
+  variant?: "default" | "compact";
 }
 
-export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: CSVStationeryImporterProps) {
+export function CSVStationeryImporter({
+  packs = [],
+  onImported,
+  onStageItems,
+  variant = "default",
+}: CSVStationeryImporterProps) {
   const [file, setFile] = useState<File | null>(null);
   const [parsedRows, setParsedRows] = useState<ParsedRecord[]>([]);
   const [isParsing, setIsParsing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const targetPackId = packs[0]?.id ?? "";
   const [uploadSuccess, setUploadSuccess] = useState<{ count: number } | null>(
-    null
+    null,
   );
   const [globalError, setGlobalError] = useState<string | null>(null);
 
@@ -58,7 +64,6 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
     if (link.parentNode) {
       link.parentNode.removeChild(link);
     }
-
   };
 
   // Process CSV File with Papaparse
@@ -84,7 +89,8 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
           // Validation checks
           const title =
             row.title || row.Title || row.ITEM_NAME || row.name || "";
-          const rawPrice = row.unit_price ?? row.price ?? row.Price ?? row.UNIT_PRICE;
+          const rawPrice =
+            row.unit_price ?? row.price ?? row.Price ?? row.UNIT_PRICE;
           const price = parseFloat(String(rawPrice ?? ""));
 
           let errorMsg: string | undefined;
@@ -149,7 +155,9 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
       }
     } catch (err) {
       setGlobalError(
-        err instanceof Error ? err.message : "An unexpected import error occurred."
+        err instanceof Error
+          ? err.message
+          : "An unexpected import error occurred.",
       );
     } finally {
       setIsUploading(false);
@@ -158,12 +166,17 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
 
   const validCount = parsedRows.filter((r) => !r.error).length;
   const invalidCount = parsedRows.filter((r) => r.error).length;
+  const isCompact = variant === "compact";
 
   return (
-    <div className={styles.root}>
+    <div className={`${styles.root} ${isCompact ? styles.rootCompact : ""}`}>
       {/* Top Header Card */}
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
+      <div className={`${styles.card} ${isCompact ? styles.cardCompact : ""}`}>
+        <div
+          className={`${styles.cardHeader} ${
+            isCompact ? styles.cardHeaderCompact : ""
+          }`}
+        >
           <div className={styles.cardTitleBlock}>
             <h2 className={styles.cardTitle}>
               <FileSpreadsheet className={styles.titleIcon} />
@@ -176,10 +189,35 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
             </p>
           </div>
 
+          {isCompact ? (
+            <label className={styles.compactDropzone}>
+              <input
+                type="file"
+                accept=".csv"
+                onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+                className={styles.dropzoneInput}
+                aria-label="Upload CSV file"
+              />
+              <Upload className={styles.compactUploadIcon} />
+              <span>
+                {isParsing
+                  ? "Parsing CSV..."
+                  : file
+                    ? file.name
+                    : "Click to upload or drag & drop CSV file"}
+              </span>
+              <small>
+                Supports columns: sku, title, description, unit_price, category
+              </small>
+            </label>
+          ) : null}
+
           <button
             onClick={downloadTemplate}
             type="button"
-            className={styles.templateBtn}
+            className={`${styles.templateBtn} ${
+              isCompact ? styles.templateBtnCompact : ""
+            }`}
           >
             <Download className={styles.templateIcon} />
             Download Sample CSV Template
@@ -187,7 +225,7 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
         </div>
 
         {/* File Dropzone area */}
-        <div className={styles.dropzone}>
+        <div className={`${styles.dropzone} ${isCompact ? styles.hidden : ""}`}>
           <input
             type="file"
             accept=".csv"
@@ -202,7 +240,7 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
             <div>
               <p className={styles.dropzoneTitle}>
                 {isParsing
-                  ? "Parsing CSV…"
+                  ? "Parsing CSV..."
                   : file
                     ? file.name
                     : "Click to upload or drag & drop CSV file"}
@@ -239,7 +277,9 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
           <div className={styles.successBanner}>
             <CheckCircle2 className={styles.successIcon} />
             <div>
-              <p className={styles.successTitle}>{onStageItems ? "Items added to pack" : "Import Successful!"}</p>
+              <p className={styles.successTitle}>
+                {onStageItems ? "Items added to pack" : "Import Successful!"}
+              </p>
               <p className={styles.successText}>
                 {onStageItems
                   ? `${uploadSuccess.count} stationery items are ready to be created with this pack.`
@@ -275,13 +315,19 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
             >
               {isUploading ? (
                 <>
-                  <RefreshCw className={`${styles.importBtnIcon} ${styles.spin}`} />
-                  {onStageItems ? "Adding to pack..." : "Upserting to Supabase..."}
+                  <RefreshCw
+                    className={`${styles.importBtnIcon} ${styles.spin}`}
+                  />
+                  {onStageItems
+                    ? "Adding to pack..."
+                    : "Upserting to Supabase..."}
                 </>
               ) : (
                 <>
                   <CheckCircle2 className={styles.importBtnIcon} />
-                  {onStageItems ? `Add ${validCount} Items to Pack` : `Import ${validCount} Items Now`}
+                  {onStageItems
+                    ? `Add ${validCount} Items to Pack`
+                    : `Import ${validCount} Items Now`}
                 </>
               )}
             </button>
@@ -312,10 +358,10 @@ export function CSVStationeryImporter({ packs = [], onImported, onStageItems }: 
                       #{row.rowNumber}
                     </td>
                     <td className={`${styles.td} ${styles.tdMono}`}>
-                      {row.data.sku || "—"}
+                      {row.data.sku || "-"}
                     </td>
                     <td className={`${styles.td} ${styles.tdTitle}`}>
-                      {row.data.title || "—"}
+                      {row.data.title || "-"}
                     </td>
                     <td className={`${styles.td} ${styles.tdCategory}`}>
                       {row.data.category}

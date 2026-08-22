@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { ItemRow } from "@/lib/admin/items";
 import { deleteItemAction } from "@/app/admin/items/actions";
-import { formatCurrency } from "@/lib/formatCurrency";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { formatCurrency } from "@/lib/formatCurrency";
+import type { ItemRow } from "@/lib/admin/items";
 import styles from "./ItemsManager.module.css";
 
 const PAGE_SIZE = 4;
@@ -43,14 +43,20 @@ export function ItemsManager({ items }: ItemsManagerProps) {
               <tbody>
                 {visibleItems.map((item) => (
                   <tr key={item.id}>
-                    <td>{item.category || (item as { sku?: string | null }).sku || "-"}</td>
+                    <td>
+                      {item.category ||
+                        (item as { sku?: string | null }).sku ||
+                        "-"}
+                    </td>
                     <td>
                       <span className={styles.itemName}>{item.name}</span>
                     </td>
                     <td>{item.description?.trim() || "-"}</td>
                     <td>{item.quantity}</td>
                     <td className={styles.priceCell}>
-                      {item.unit_price != null ? formatCurrency(item.unit_price) : "-"}
+                      {item.unit_price != null
+                        ? formatCurrency(item.unit_price)
+                        : "-"}
                     </td>
                     <td>
                       <div className={styles.actions}>
@@ -74,7 +80,7 @@ export function ItemsManager({ items }: ItemsManagerProps) {
 
           <div className={styles.pager}>
             <span>
-              Page {currentPage} of {pageCount} · {items.length}{" "}
+              Page {currentPage} of {pageCount} - {items.length}{" "}
               {items.length === 1 ? "item" : "items"}
             </span>
             <div className={styles.pagerButtons}>
@@ -89,7 +95,9 @@ export function ItemsManager({ items }: ItemsManagerProps) {
               <button
                 type="button"
                 className={styles.pageButton}
-                onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
+                onClick={() =>
+                  setPage((value) => Math.min(pageCount, value + 1))
+                }
                 disabled={currentPage >= pageCount}
               >
                 Next
