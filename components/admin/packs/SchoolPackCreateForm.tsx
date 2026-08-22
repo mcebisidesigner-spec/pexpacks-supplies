@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import {
+  ArrowLeft,
   Box,
   Building2,
   DollarSign,
@@ -156,6 +158,17 @@ export function SchoolPackCreateForm({
       <input type="hidden" name="visible" value="on" />
       <input ref={itemsInputRef} type="hidden" name="items" defaultValue="[]" />
 
+      {/* Top Breadcrumb */}
+      <div>
+        <Link
+          href={`/admin/packs/${schoolId}`}
+          className={`${coreStyles.secondaryBtn} ${coreStyles.backBtn}`}
+        >
+          <ArrowLeft size={14} /> Back to {schoolName}
+        </Link>
+      </div>
+
+      {/* Header Title Row matching reference image */}
       <div className={coreStyles.headerRow}>
         <div className={coreStyles.headerTitleGroup}>
           <h1 className={coreStyles.headerTitle}>
@@ -180,6 +193,7 @@ export function SchoolPackCreateForm({
         </p>
       ) : null}
 
+      {/* 5 Summary Metric Stat Cards matching reference image */}
       <div
         className={`${coreStyles.metricsGrid5} ${coreStyles.packMetricsGrid}`}
       >
@@ -193,7 +207,7 @@ export function SchoolPackCreateForm({
             </div>
           </div>
           <div className={coreStyles.metricValue}>{formattedPrice}</div>
-          <div className={coreStyles.metricSub}>Retail selling price</div>
+          <div className={coreStyles.metricSubtext}>Retail selling price</div>
         </div>
 
         <div className={coreStyles.metricCard}>
@@ -206,7 +220,7 @@ export function SchoolPackCreateForm({
             </div>
           </div>
           <div className={coreStyles.metricValue}>{formattedSubtotal}</div>
-          <div className={coreStyles.metricSub}>Sum of line items</div>
+          <div className={coreStyles.metricSubtext}>Sum of line items</div>
         </div>
 
         <div className={coreStyles.metricCard}>
@@ -219,7 +233,7 @@ export function SchoolPackCreateForm({
             </div>
           </div>
           <div className={coreStyles.metricValue}>{lines.length}</div>
-          <div className={coreStyles.metricSub}>Line items in pack</div>
+          <div className={coreStyles.metricSubtext}>Line items in pack</div>
         </div>
 
         <div className={coreStyles.metricCard}>
@@ -236,7 +250,7 @@ export function SchoolPackCreateForm({
           >
             {schoolName}
           </div>
-          <div className={coreStyles.metricSub}>Gauteng</div>
+          <div className={coreStyles.metricSubtext}>Gauteng</div>
         </div>
 
         <div className={coreStyles.metricCard}>
@@ -253,19 +267,17 @@ export function SchoolPackCreateForm({
           >
             Visible
           </div>
-          <div className={coreStyles.metricSub}>Public listing</div>
+          <div className={coreStyles.metricSubtext}>Public listing</div>
         </div>
       </div>
 
+      {/* Middle Section (2-Column Grid: Set Pack Grade & Items + Pack Summary) */}
       <div className={coreStyles.detailLayout}>
         <div className={styles.leftStack}>
           <section className={`${coreStyles.tableCard} ${styles.priceCard}`}>
             <div className={styles.priceHeader}>
               <div>
-                <h2 className={styles.cardTitle}>Set Pack Price & Grade</h2>
-                <p className={styles.cardSub}>
-                  Select the pack grade and price.
-                </p>
+                <h2 className={styles.cardTitle}>Set Pack Grade & Items</h2>
               </div>
             </div>
 
@@ -286,48 +298,18 @@ export function SchoolPackCreateForm({
                 </select>
               </label>
 
-              <div className={styles.fieldGroup}>
-                <span className={styles.priceSub}>
-                  {lines.length} {lines.length === 1 ? "item" : "items"} -
-                  subtotal {formattedSubtotal}
-                </span>
-                <div className={styles.priceInputRow}>
-                  <span className={styles.currencyPrefix}>R</span>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    name="price"
-                    placeholder={subtotal > 0 ? String(subtotal) : "0"}
-                    value={customPrice}
-                    onChange={(event) => setCustomPrice(event.target.value)}
-                    className={styles.priceInput}
-                  />
-                </div>
+              <div className={styles.fieldGroup} style={{ marginTop: 6 }}>
+                <span className={styles.fieldLabel}>Add Stationery Items</span>
+                <GradePackItemSelector
+                  key={selectorKey}
+                  initialItems={lines}
+                  showSave={false}
+                  hideList
+                  searchLabel=""
+                  searchPlaceholder="Search items by item name/SKU"
+                  onItemsChange={updateLines}
+                />
               </div>
-            </div>
-          </section>
-
-          <section
-            className={itemStyles.searchTotalRow}
-            aria-label="Pack details and item search"
-          >
-            <div className={itemStyles.searchSlot}>
-              <GradePackItemSelector
-                key={selectorKey}
-                initialItems={lines}
-                showSave={false}
-                hideList
-                searchLabel=""
-                searchPlaceholder="Search items by item name"
-                onItemsChange={updateLines}
-              />
-            </div>
-            <div
-              className={itemStyles.totalChip}
-              aria-label={`Pack total ${formattedSubtotal}`}
-            >
-              <span>Total</span>R{subtotal.toFixed(0)}
             </div>
           </section>
         </div>
@@ -342,7 +324,7 @@ export function SchoolPackCreateForm({
               <span
                 className={`${coreStyles.badgeGreen} ${coreStyles.badgeTiny}`}
               >
-                Live
+                Draft
               </span>
             </div>
 
@@ -355,12 +337,6 @@ export function SchoolPackCreateForm({
                 <span className={coreStyles.sidebarStatLabel}>Price</span>
                 <span className={coreStyles.sidebarStatVal}>
                   {formattedPrice}
-                </span>
-              </div>
-              <div className={coreStyles.sidebarStatRow}>
-                <span className={coreStyles.sidebarStatLabel}>Subtotal</span>
-                <span className={coreStyles.sidebarStatVal}>
-                  {formattedSubtotal}
                 </span>
               </div>
               <div className={coreStyles.sidebarStatRow}>
