@@ -30,7 +30,7 @@ export default async function InviteUserPage() {
       </div>
       <div className={adminStyles.tableCard}>
         <div className={adminStyles.tableWrapper}>
-          <div style={{ padding: "clamp(20px, 3vw, 32px)" }}>
+          <div className={adminStyles.pForm}>
             <InviteUserForm roles={roles} />
           </div>
         </div>

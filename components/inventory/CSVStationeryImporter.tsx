@@ -28,7 +28,7 @@ export interface CSVStationeryImporterProps {
   packs?: { id: string; title: string }[];
   onImported?: () => void;
   onStageItems?: (items: CSVStationeryRow[]) => void;
-  variant?: "default" | "compact";
+  variant?: "default" | "compact" | "tiles";
 }
 
 export function CSVStationeryImporter({
@@ -167,15 +167,25 @@ export function CSVStationeryImporter({
   const validCount = parsedRows.filter((r) => !r.error).length;
   const invalidCount = parsedRows.filter((r) => r.error).length;
   const isCompact = variant === "compact";
+  const isTiles = variant === "tiles";
+  const isCondensed = isCompact || isTiles;
 
   return (
-    <div className={`${styles.root} ${isCompact ? styles.rootCompact : ""}`}>
+    <div
+      className={`${styles.root} ${isCondensed ? styles.rootCompact : ""} ${
+        isTiles ? styles.rootTiles : ""
+      }`}
+    >
       {/* Top Header Card */}
-      <div className={`${styles.card} ${isCompact ? styles.cardCompact : ""}`}>
+      <div
+        className={`${styles.card} ${isCondensed ? styles.cardCompact : ""} ${
+          isTiles ? styles.cardTiles : ""
+        }`}
+      >
         <div
           className={`${styles.cardHeader} ${
-            isCompact ? styles.cardHeaderCompact : ""
-          }`}
+            isCondensed ? styles.cardHeaderCompact : ""
+          } ${isTiles ? styles.cardHeaderTiles : ""}`}
         >
           <div className={styles.cardTitleBlock}>
             <h2 className={styles.cardTitle}>
@@ -189,8 +199,12 @@ export function CSVStationeryImporter({
             </p>
           </div>
 
-          {isCompact ? (
-            <label className={styles.compactDropzone}>
+          {isCondensed ? (
+            <label
+              className={`${styles.compactDropzone} ${
+                isTiles ? styles.tileDropzone : ""
+              }`}
+            >
               <input
                 type="file"
                 accept=".csv"
@@ -216,8 +230,8 @@ export function CSVStationeryImporter({
             onClick={downloadTemplate}
             type="button"
             className={`${styles.templateBtn} ${
-              isCompact ? styles.templateBtnCompact : ""
-            }`}
+              isCondensed ? styles.templateBtnCompact : ""
+            } ${isTiles ? styles.templateBtnTile : ""}`}
           >
             <Download className={styles.templateIcon} />
             Download Sample CSV Template
@@ -225,7 +239,9 @@ export function CSVStationeryImporter({
         </div>
 
         {/* File Dropzone area */}
-        <div className={`${styles.dropzone} ${isCompact ? styles.hidden : ""}`}>
+        <div
+          className={`${styles.dropzone} ${isCondensed ? styles.hidden : ""}`}
+        >
           <input
             type="file"
             accept=".csv"

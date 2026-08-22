@@ -567,3 +567,13 @@
   opacity: 1;
   pointer-events: auto;
 }
+
+/* ---- Inline-style replacement utilities ---- */
+.m-0 { margin: 0; }
+.p-8 { padding: 8px; }
+.flex-1 { flex: 1; }
+.min-w-0 { min-width: 0; }
+.minW0 { min-width: 0; }
+.flex1 { flex: 1; }
+.no-results-text { margin: 0; padding: 8px; font-size: 11px; color: #64748b; }
+.noResultsText { margin: 0; padding: 8px; font-size: 11px; color: #64748b; }

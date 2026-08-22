@@ -35,8 +35,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
       <div>
         <Link
           href="/admin/products"
-          className={styles.secondaryBtn}
-          style={{ height: 32, fontSize: 11, background: "transparent", border: "none", color: "#94a3b8", paddingLeft: 0 }}
+          className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}
         >
           <ArrowLeft size={14} /> Back to Master Products
         </Link>
@@ -66,7 +65,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             </div>
           </div>
           <div className={styles.metricValue}>{money(cost)}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Allocated wholesale cost</div>
+          <div className={styles.metricSub}>Allocated wholesale cost</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -77,7 +76,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             </div>
           </div>
           <div className={styles.metricValue}>{money(price)}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Catalog selling price</div>
+          <div className={styles.metricSub}>Catalog selling price</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -87,8 +86,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               <TrendingUp size={16} />
             </div>
           </div>
-          <div className={styles.metricValue} style={{ color: "#34d399" }}>{margin.toFixed(1)}%</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Unit profit margin</div>
+          <div className={`${styles.metricValue} ${styles["c-green"]}`}>{margin.toFixed(1)}%</div>
+          <div className={styles.metricSub}>Unit profit margin</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -99,16 +98,16 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             </div>
           </div>
           <div className={styles.metricValue}>{packInclusionsCount}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Assigned school packs</div>
+          <div className={styles.metricSub}>Assigned school packs</div>
         </div>
       </div>
 
       <div className={styles.detailLayout}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Barcode size={16} style={{ color: "#2dd4bf" }} />
+                <Barcode size={16} className={styles["c-teal"]} />
                 <span>Barcode & SKU Mappings</span>
               </div>
             </div>
@@ -122,7 +121,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             </div>
             <div className={styles.sidebarStatRow}>
               <span className={styles.sidebarStatLabel}>Primary Supplier:</span>
-              <span className={styles.sidebarStatVal} style={{ color: "#60a5fa" }}>{supplierName}</span>
+              <span className={`${styles.sidebarStatVal} ${styles["c-blue"]}`}>{supplierName}</span>
             </div>
           </div>
         </div>

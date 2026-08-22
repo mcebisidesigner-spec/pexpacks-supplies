@@ -210,7 +210,7 @@ export function AdminShell({
                     userInitials
                   )}
                 </div>
-                <div style={{ minWidth: 0, flex: 1 }}>
+                <div className={`${styles.minW0} ${styles.flex1}`}>
                   <strong className={styles.profileDropdownName}>{displayName}</strong>
                   <div className={styles.profileDropdownEmail}>{userEmail}</div>
                 </div>
@@ -327,7 +327,7 @@ export function AdminShell({
                     );
                   })
                 ) : (
-                  <p style={{ margin: 0, padding: 8, fontSize: 11, color: "#64748b" }}>
+                  <p className={styles.noResultsText}>
                     No matching pages
                   </p>
                 )}

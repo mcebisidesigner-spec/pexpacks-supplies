@@ -76,7 +76,7 @@ export default async function AuditDetailPage({ params }: AuditDetailPageProps) 
           <h2 className={styles.detailCardTitle}>Summary</h2>
         </div>
         <div className={styles.detailCardBody}>
-          <p style={{ margin: 0 }}>{log.summary}</p>
+          <p className={adminStyles.m0}>{log.summary}</p>
         </div>
       </div>
 
@@ -88,7 +88,7 @@ export default async function AuditDetailPage({ params }: AuditDetailPageProps) 
           {detailsJson ? (
             <pre className={styles.preBlock}>{detailsJson}</pre>
           ) : (
-            <p className={styles.mutedText} style={{ margin: 0 }}>
+            <p className={`${styles.mutedText} ${adminStyles.m0}`}>
               No additional details recorded for this entry.
             </p>
           )}

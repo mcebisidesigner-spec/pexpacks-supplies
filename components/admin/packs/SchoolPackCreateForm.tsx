@@ -1,11 +1,9 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import {
-  ArrowLeft,
   Box,
   Building2,
   DollarSign,
@@ -288,7 +286,7 @@ export function SchoolPackCreateForm({
                 </select>
               </label>
 
-              <div className={styles.fieldGroup} style={{ marginTop: 6 }}>
+              <div className={`${styles.fieldGroup} ${styles.itemSearchGroup}`}>
                 <span className={styles.fieldLabel}>Add Stationery Items</span>
                 <GradePackItemSelector
                   key={selectorKey}
@@ -424,13 +422,10 @@ export function SchoolPackCreateForm({
 
       {showImporter ? (
         <section
-          className={itemStyles.csvBanner}
+          className={`${itemStyles.csvBanner} ${styles.csvTiles}`}
           aria-label="Bulk CSV stationery import"
         >
-          <CSVStationeryImporter
-            onStageItems={stageCsvItems}
-            variant="compact"
-          />
+          <CSVStationeryImporter onStageItems={stageCsvItems} variant="tiles" />
         </section>
       ) : null}
     </form>

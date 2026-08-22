@@ -273,6 +273,12 @@
   }
 }
 
+/* ---- Inline-style replacement utilities (light theme) ---- */
+.m-0 { margin: 0; }
+.mt-20 { margin-top: 20px; }
+.mt-24 { margin-top: 24px; }
+.p-form { padding: clamp(20px, 3vw, 32px); }
+
 /* ---- Toolbar / Header (consolidated from schools.module.css) ---- */
 
 .toolbar {

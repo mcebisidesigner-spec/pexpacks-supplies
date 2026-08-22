@@ -33,7 +33,7 @@
 }
 
 .priceCard {
-  min-height: 174px;
+  min-height: 150px;
 }
 
 .priceHeader {
@@ -47,17 +47,14 @@
   font-weight: 800;
 }
 
-.cardSub {
-  margin: 6px 0 0;
-  color: var(--db-text-muted, #94a3b8);
-  font-size: 12px;
-  font-weight: 600;
-}
-
 .priceControls {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   padding: 14px 22px 20px;
+}
+
+.itemSearchGroup {
+  margin-top: 2px;
 }
 
 .fieldGroup {
@@ -92,47 +89,19 @@
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.14);
 }
 
-.priceSub {
-  color: var(--db-text-muted, #94a3b8);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.priceInputRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.currencyPrefix {
-  color: var(--db-text-muted, #94a3b8);
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.priceInput {
-  width: min(100%, 190px);
-  height: 40px;
-  border: 1px solid rgba(51, 65, 85, 0.72);
-  border-radius: 999px;
-  background: #020617;
-  color: var(--db-text, #ffffff);
-  padding: 0 18px;
-  font: inherit;
-  font-size: 16px;
-  font-weight: 800;
-  outline: none;
-}
-
-.priceInput:focus {
-  border-color: var(--db-accent, #2dd4bf);
-  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.14);
-}
-
 .emptyRow {
   height: 90px;
   color: var(--db-text-muted, #94a3b8);
   text-align: center;
+}
+
+.csvTiles {
+  margin-top: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 @media (max-width: 640px) {
@@ -142,9 +111,5 @@
 
   .priceControls {
     padding: 14px 18px 18px;
-  }
-
-  .priceInput {
-    width: 100%;
   }
 }

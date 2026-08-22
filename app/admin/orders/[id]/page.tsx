@@ -85,7 +85,7 @@ function PackContentsCard({ order }: { order: NonNullable<Awaited<ReturnType<typ
   if (items.length === 0) return null;
 
   return (
-    <div className={styles.detailCard} style={{ marginTop: 24 }}>
+    <div className={`${styles.detailCard} ${adminStyles.mt24}`}>
       <h2 className={styles.cardTitle}>Pack contents ({items.length})</h2>
       <div className={styles.packsGrid}>
         {items.map((entry, idx) => (
@@ -358,7 +358,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
       <PackContentsCard order={order} />
 
       {orderItems.length > 0 ? (
-        <div className={styles.detailCard} style={{ marginTop: 20 }}>
+        <div className={`${styles.detailCard} ${adminStyles.mt20}`}>
           <h2 className={styles.cardTitle}>
             Order line items ({orderItems.length})
           </h2>
@@ -409,7 +409,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
       ) : null}
 
       {metadata ? (
-        <div className={styles.detailCard} style={{ marginTop: 20 }}>
+        <div className={`${styles.detailCard} ${adminStyles.mt20}`}>
           <h2 className={styles.cardTitle}>Full metadata</h2>
           <pre className={styles.metaBlock}>{JSON.stringify(metadata, null, 2)}</pre>
         </div>
