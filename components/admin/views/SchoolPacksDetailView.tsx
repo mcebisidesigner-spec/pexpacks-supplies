@@ -201,7 +201,7 @@ export function SchoolPacksDetailView({
       {/* Main 2-Column Layout */}
       <div className={styles.detailLayout}>
         {/* Left Column: Table and Toolbar */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={{ minWidth: 0, width: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
           {/* Controls Bar */}
           <div className={styles.toolbar}>
             <div className={styles.toolbarLeft}>

@@ -387,14 +387,16 @@
 
 .mainGrid {
   display: grid;
-  grid-template-columns: 1.85fr 1fr;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 280px);
+  gap: 14px;
   align-items: start;
+  width: 100%;
+  max-width: 100%;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1180px) {
   .mainGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
