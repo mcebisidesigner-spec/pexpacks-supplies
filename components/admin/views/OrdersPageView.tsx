@@ -49,19 +49,19 @@ export function OrdersPageView() {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Orders &amp; Commerce{" "}
-            <span className={styles.headerCount}>({filtered.length})</span>
+            <span className={adminStyles.headerCount}>({filtered.length})</span>
           </h1>
           <p className={styles.headerSubtitle}>Order status lifecycle &amp; fulfillment tracking</p>
         </div>
       </div>
 
       {/* Tabs Row */}
-      <div className={`${adminStyles.flex} ${styles["gap-8"]} ${styles["border-b"]} ${styles["pb-8"]}`}>
+      <div className={`${adminStyles.flex} ${adminStyles["gap-8"]} ${adminStyles["border-b"]} ${adminStyles["pb-8"]}`}>
         {["all", "Paid", "Procurement", "Ready to Pack", "At Risk", "Completed"].map((tab) => (
           <button
             key={tab}
             type="button"
-            className={`${activeTab === tab ? styles.primaryBtn : styles.secondaryBtn} ${styles["h-30"]} ${styles["text-11"]}`}
+            className={`${activeTab === tab ? styles.primaryBtn : styles.secondaryBtn} ${adminStyles["h-30"]} ${adminStyles["text-11"]}`}
             onClick={() => setActiveTab(tab)}
           >
             {tab === "all" ? "All Orders" : tab}
@@ -137,7 +137,7 @@ export function OrdersPageView() {
                     <td>
                       <Link
                         href={`/admin/orders/${refNo}`}
-                        className={`${adminStyles.actionBtnDots} ${styles["text-11"]} ${styles["px-8"]}`}
+                        className={`${adminStyles.actionBtnDots} ${adminStyles["text-11"]} ${adminStyles["px-8"]}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Eye size={12} /> View Detail

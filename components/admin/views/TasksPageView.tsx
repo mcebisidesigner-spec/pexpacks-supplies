@@ -85,14 +85,14 @@ export function TasksPageView() {
                     <td>
                       <Link
                         href={`/admin/tasks/${taskSlug}`}
-                        className={`${styles["c-white"]} ${styles["fw-700"]}`}
+                        className={`${adminStyles["c-white"]} ${adminStyles["fw-700"]}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         {t.task}
                       </Link>
                     </td>
                     <td>
-                      <div className={`${adminStyles.flex} ${styles["items-center"]} ${styles["gap-6"]}`}>
+                      <div className={`${adminStyles.flex} ${adminStyles["items-center"]} ${adminStyles["gap-6"]}`}>
                         <span className={adminStyles.avatarBadge} style={{ background: t.assigneeAvatar === "MC" ? "#0d9488" : t.assigneeAvatar === "KG" ? "#d97706" : "#2563eb" }}>
                           {t.assigneeAvatar}
                         </span>
@@ -101,7 +101,7 @@ export function TasksPageView() {
                     </td>
                     <td>{t.dueDate}</td>
                     <td>
-                      <span className={`${t.priority === "High" ? styles["c-red"] : t.priority === "Medium" ? styles["c-amber"] : styles["c-green"]} ${styles["fw-600"]}`}>
+                      <span className={`${t.priority === "High" ? adminStyles["c-red"] : t.priority === "Medium" ? adminStyles["c-amber"] : adminStyles["c-green"]} ${adminStyles["fw-600"]}`}>
                         ● {t.priority}
                       </span>
                     </td>

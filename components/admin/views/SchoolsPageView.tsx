@@ -156,7 +156,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Schools{" "}
-            <span className={styles.headerCount}>
+            <span className={adminStyles.headerCount}>
               ({formatCount(total)})
             </span>
           </h1>
@@ -291,14 +291,14 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
                       </td>
                       <td>
                         <div
-                          className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${styles["gap-8"]}`}
+                          className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles["gap-8"]}`}
                           onClick={(e) => e.stopPropagation()}
                         >
                           <span className={isActive ? adminStyles.badgeTeal : adminStyles.badgeDark}>
                             {isActive ? "Active" : "Inactive"}
                           </span>
                           <button
-                            className={`${adminStyles.actionBtnDots} ${styles["text-11"]} ${styles["px-8"]}`}
+                            className={`${adminStyles.actionBtnDots} ${adminStyles["text-11"]} ${adminStyles["px-8"]}`}
                             type="button"
                             onClick={(e) => handleToggleHide(school.id, school.status, e)}
                           >
@@ -355,10 +355,10 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
           </div>
 
           {/* Working Show per page selector */}
-          <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${styles["gap-6"]}`}>
+          <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles["gap-6"]}`}>
             <span>Show</span>
             <select
-              className={`${styles.selectInput} ${styles["h-28"]} ${styles["text-11"]} ${styles["bg-surface-strong"]}`}
+              className={`${styles.selectInput} ${adminStyles["h-28"]} ${adminStyles["text-11"]} ${adminStyles["bg-surface-strong"]}`}
               value={pageSize}
               onChange={(e) => handlePageSizeChange(Number(e.target.value))}
             >

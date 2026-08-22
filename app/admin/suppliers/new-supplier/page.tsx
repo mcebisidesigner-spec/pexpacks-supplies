@@ -29,7 +29,7 @@ export default async function NewSupplierPage() {
       </div>
 
       <form action="/admin/suppliers" method="GET" className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap18}`}>
+        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
           {/* Supplier Identity */}
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>

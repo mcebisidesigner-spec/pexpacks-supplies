@@ -31,7 +31,7 @@ export default async function AddItemPage() {
     <div className={adminStyles.page}>
       <div className={adminStyles.headerSection}>
         <p>
-          <Link href="/admin/items" className={shared.resetLink}>
+          <Link href="/admin/items" className={adminStyles.resetLink}>
             <ArrowLeft aria-hidden="true" /> Back to items
           </Link>
         </p>

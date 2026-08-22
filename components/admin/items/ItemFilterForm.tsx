@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import shared from "@/app/admin/schools/schools.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface ItemFilterFormProps {
   initialSearch: string;
@@ -40,20 +41,20 @@ export function ItemFilterForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={shared.filterForm}>
+    <form onSubmit={handleSubmit} className={adminStyles.filterForm}>
       <input
         type="search"
         name="search"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         placeholder="Search item name or description…"
-        className={`${shared.filterInput} ${shared.searchInput}`}
+        className={`${adminStyles.filterInput} ${adminStyles.searchInput}`}
         aria-label="Search items"
       />
       <select
         value={searchValue}
         onChange={handleSelectChange}
-        className={shared.filterInput}
+        className={adminStyles.filterInput}
         aria-label="Filter stationery items"
       >
         <option value="">All Stationery Items</option>
@@ -63,11 +64,11 @@ export function ItemFilterForm({
           </option>
         ))}
       </select>
-      <button type="submit" className={shared.applyButton}>
+      <button type="submit" className={adminStyles.applyButton}>
         Apply
       </button>
       {hasFilters ? (
-        <Link href="/admin/items" className={shared.resetLink}>
+        <Link href="/admin/items" className={adminStyles.resetLink}>
           Reset
         </Link>
       ) : null}

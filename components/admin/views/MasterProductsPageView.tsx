@@ -62,7 +62,7 @@ export function MasterProductsPageView() {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Master Products{" "}
-            <span className={styles.headerCount}>({filtered.length})</span>
+            <span className={adminStyles.headerCount}>({filtered.length})</span>
           </h1>
           <p className={styles.headerSubtitle}>Manage the master catalogue used across all school packs.</p>
         </div>
@@ -167,9 +167,9 @@ export function MasterProductsPageView() {
             <button className={styles.pageBtn}>156</button>
             <button className={styles.pageBtn}>&gt;</button>
           </div>
-          <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${styles["gap-6"]}`}>
+          <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles["gap-6"]}`}>
             <span>Show</span>
-            <select className={`${styles.selectInput} ${styles["h-26"]} ${styles["text-11"]}`}>
+            <select className={`${styles.selectInput} ${adminStyles["h-26"]} ${adminStyles["text-11"]}`}>
               <option>10</option>
               <option>20</option>
             </select>

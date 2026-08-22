@@ -104,7 +104,7 @@ export default function PackBuilderPage() {
 
       <div className={adminStyles.detailLayout}>
         {/* Left Column: Form & Assembly */}
-        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap18}`}>
+        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
           {/* Metadata Card */}
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>

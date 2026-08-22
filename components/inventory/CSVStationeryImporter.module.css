@@ -19,10 +19,16 @@
 .rootCompact {
   max-width: none;
   margin: 0;
+  gap: 12px;
+  padding: 8px 14px;
+  border: 2px solid var(--a-accent, #00a99d);
+  border-radius: 8px;
+  background: var(--a-bg, #050910);
+  box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.12);
 }
 
 .rootTiles {
-  gap: 14px;
+  gap: 12px;
 }
 
 /* 1. Header card ------------------------------------------------------- */
@@ -38,7 +44,7 @@
 
 .cardCompact {
   min-height: 66px;
-  padding: 14px 10px;
+  padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -46,7 +52,6 @@
 
 .cardTiles {
   min-height: 76px;
-  padding: 0;
 }
 
 .cardHeader {
@@ -86,9 +91,9 @@
   flex-direction: column;
   justify-content: center;
   padding: 12px 14px;
-  border: 1px solid #14b8a6;
+  border: 1px solid var(--a-accent, #14b8a6);
   border-radius: 6px;
-  background: #12a89d;
+  background: var(--a-accent, #12a89d);
 }
 
 .cardTitle {
@@ -143,9 +148,9 @@
 .tileDropzone {
   min-height: 76px;
   padding: 12px 16px;
-  border: 1px dashed #00a99d;
+  border: 1px dashed var(--a-accent, #00a99d);
   border-radius: 6px;
-  background: #050910;
+  background: var(--a-bg, #050910);
 }
 
 .compactDropzone span {
@@ -205,9 +210,9 @@
   justify-self: stretch;
   justify-content: center;
   padding: 12px 16px;
-  border: 1px dashed #00a99d;
+  border: 1px dashed var(--a-accent, #00a99d);
   border-radius: 6px;
-  background: #050910;
+  background: var(--a-bg, #050910);
   text-align: center;
 }
 

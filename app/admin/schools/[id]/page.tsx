@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
@@ -21,7 +21,7 @@ export default async function EditSchoolPage({ params }: EditSchoolPageProps) {
   return (
     <div className={adminStyles.adminContainer}>
       <p>
-        <Link href="/admin/schools" className={shared.resetLink}>
+        <Link href="/admin/schools" className={adminStyles.resetLink}>
           <ArrowLeft aria-hidden="true" /> Back to schools
         </Link>
       </p>

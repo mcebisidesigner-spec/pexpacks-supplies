@@ -278,21 +278,6 @@
 .csvBanner {
   margin-top: 18px;
   width: 100%;
-  padding: 8px 14px;
-  border: 2px solid #00a99d;
-  border-radius: 7px;
-  background: #050910;
-  box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.12);
-}
-
-.csvBanner > div {
-  max-width: none;
-  margin: 0;
-}
-
-.csvBanner > div > div:first-child {
-  border: 0;
-  border-radius: 0;
 }
 
 @media (max-width: 820px) {

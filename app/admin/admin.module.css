@@ -1712,6 +1712,34 @@
 
 /* --- Button size modifiers --- */
 .btnSm { padding: 0 10px; }
+
+/* --- Additional hyphenated utility aliases --- */
+.mt-6 { margin-top: 6px; }
+.pt-8 { padding-top: 8px; }
+.pt-10 { padding-top: 10px; }
+.pb-8 { padding-bottom: 8px; }
+.px-8 { padding-left: 8px; padding-right: 8px; }
+.p-12 { padding: 12px; }
+.border-b { border-bottom: 1px solid var(--a-border); }
+.h-26 { height: 26px; }
+.h-28 { height: 28px; }
+.h-30 { height: 30px; }
+.h-34 { height: 34px; }
+.h-full-btn { height: 100%; }
+.w-full { width: 100%; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.bg-surface-strong { background: var(--a-surface); }
+.gap-14 { gap: 14px; }
+.gap-16 { gap: 16px; }
+.gap-18 { gap: 18px; }
+.headerCount { font-size: 12px; font-weight: 600; color: var(--a-text-4); }
+.iconBtnRed { color: var(--a-red); }
+.titleAccent { font-size: 22px; font-weight: 700; color: var(--a-text); letter-spacing: -0.02em; }
+.emptyStateIconWrapper { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 12px; background: var(--a-accent-subtle); color: var(--a-accent); }
 .btnMd { padding: 0 12px; }
 .wFullBtn { width: 100%; justify-content: center; }
 
@@ -2145,7 +2173,6 @@
 .mono { font-family: monospace; }
 .warn { color: var(--a-amber); }
 .good { color: var(--a-green); }
-.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
 .header { font-size: 13px; font-weight: 700; color: var(--a-text); }
 .actions { display: flex; align-items: center; gap: 8px; }
 .pageNav { display: flex; align-items: center; gap: 6px; }

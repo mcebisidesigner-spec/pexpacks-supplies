@@ -128,7 +128,7 @@ export function FulfilmentPageView() {
                   <td>
                     <Link
                       href={`/admin/fulfilment/${row.orderNumber}`}
-                      className={`${styles["c-white"]} ${styles["fw-700"]}`}
+                      className={`${adminStyles["c-white"]} ${adminStyles["fw-700"]}`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {row.school}

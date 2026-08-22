@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
@@ -18,7 +18,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
   return (
     <div className={adminStyles.adminContainer}>
       <p>
-        <Link href={`/admin/products/${productId}`} className={shared.resetLink}>
+        <Link href={`/admin/products/${productId}`} className={adminStyles.resetLink}>
           <ArrowLeft aria-hidden="true" /> Back to product detail
         </Link>
       </p>

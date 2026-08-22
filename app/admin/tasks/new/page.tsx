@@ -34,7 +34,7 @@ export default async function NewTaskPage() {
       </div>
 
       <form action="/admin/tasks" method="GET" className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
+        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-18"]}`}>
           {/* Task Details */}
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
@@ -144,10 +144,10 @@ export default async function NewTaskPage() {
                 />
               </div>
 
-              <div className={styles["pt-8"]}>
+              <div className={adminStyles["pt-8"]}>
                 <button
                   type="submit"
-                  className={`${styles.primaryBtn} ${styles["h-full-btn"]}`}
+                  className={`${styles.primaryBtn} ${adminStyles["h-full-btn"]}`}
                 >
                   <Save size={14} /> Create Task
                 </button>

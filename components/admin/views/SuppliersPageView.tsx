@@ -66,7 +66,7 @@ export function SuppliersPageView() {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Suppliers{" "}
-            <span className={styles.headerCount}>({suppliers.length})</span>
+            <span className={adminStyles.headerCount}>({suppliers.length})</span>
           </h1>
           <p className={styles.headerSubtitle}>
             Manage your supplier network and performance.
@@ -137,14 +137,14 @@ export function SuppliersPageView() {
                     >
                       <td>
                         <div
-                          className={`${adminStyles.flex} ${styles["items-center"]} ${styles["gap-10"]}`}
+                          className={`${adminStyles.flex} ${adminStyles["items-center"]} ${adminStyles["gap-10"]}`}
                         >
                           <div className={adminStyles.supplierAvatar}>
                             <Truck size={14} />
                           </div>
                           <Link
                             href={`/admin/suppliers/${supSlug}`}
-                            className={`${styles["c-white"]} ${styles["fw-700"]}`}
+                            className={`${adminStyles["c-white"]} ${adminStyles["fw-700"]}`}
                             onClick={(e) => e.stopPropagation()}
                           >
                             {sup.name}
@@ -157,9 +157,9 @@ export function SuppliersPageView() {
                         <span
                           className={`${
                             sup.onTimeRate >= 95
-                              ? styles["c-green"]
-                              : styles["c-amber"]
-                          } ${styles["fw-700"]}`}
+                              ? adminStyles["c-green"]
+                              : adminStyles["c-amber"]
+                          } ${adminStyles["fw-700"]}`}
                         >
                           {sup.onTimeRate}%
                         </span>
@@ -180,7 +180,7 @@ export function SuppliersPageView() {
                       <td>
                         <button
                           type="button"
-                          className={styles.iconBtnRed}
+                          className={adminStyles.iconBtnRed}
                           title="Delete Supplier"
                           onClick={(e) => {
                             e.stopPropagation();

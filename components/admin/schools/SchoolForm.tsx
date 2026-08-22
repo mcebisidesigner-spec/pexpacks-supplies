@@ -67,7 +67,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
     <form action={formAction} className={adminStyles.detailLayout}>
       <input type="hidden" name="logo" value={logoValue} />
 
-      <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${styles["gap-18"]}`}>
+      <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-18"]}`}>
         {/* Banner Alert Messages */}
         {state?.ok ? (
           <div className={`${adminStyles.badgeGreen} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block}`} role="status">
@@ -163,7 +163,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             </div>
           </div>
 
-          <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${styles["gap-14"]}`}>
+          <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-14"]}`}>
             <div>
               <label className={adminStyles.formLabel} htmlFor="description">Description &amp; Overview</label>
               <textarea id="description" name="description" rows={3} defaultValue={str(school?.description)} placeholder="Brief introduction for parents searching school stationery packs..." className={`${adminStyles.textareaField} ${adminStyles.textareaFieldMd}`} />
@@ -221,7 +221,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             </div>
           </div>
 
-          <div className={`${adminStyles.flex} ${styles["gap-16"]} ${adminStyles.itemsCenter}`}>
+          <div className={`${adminStyles.flex} ${adminStyles["gap-16"]} ${adminStyles.itemsCenter}`}>
             <div className={adminStyles.logoUploadBox}>
               {logoPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -277,7 +277,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             </div>
           </div>
 
-          <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${styles["gap-14"]}`}>
+          <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-14"]}`}>
             <div>
               <label className={adminStyles.formLabel} htmlFor="status">Publication Status</label>
               <select id="status" name="status" defaultValue={school?.status ?? "active"} className={adminStyles.inputField}>

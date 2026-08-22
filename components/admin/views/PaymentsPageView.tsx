@@ -56,7 +56,7 @@ export function PaymentsPageView() {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Payments{" "}
-            <span className={styles.headerCount}>({filtered.length})</span>
+            <span className={adminStyles.headerCount}>({filtered.length})</span>
           </h1>
           <p className={styles.headerSubtitle}>Monitor and reconcile all incoming payments.</p>
         </div>
@@ -142,7 +142,7 @@ export function PaymentsPageView() {
                     {pay.reconciled ? (
                       <CheckCircle2 size={16} color="#10b981" />
                     ) : (
-                      <span className={styles["c-subtle"]}>—</span>
+                      <span className={adminStyles["c-subtle"]}>—</span>
                     )}
                   </td>
                 </tr>

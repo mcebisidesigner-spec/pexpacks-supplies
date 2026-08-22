@@ -28,7 +28,7 @@ export default async function NewSchoolPage() {
       {/* Header with crisp white title */}
       <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
-          <h1 className={`${styles.headerTitle} ${styles["c-white"]}`}>
+          <h1 className={`${styles.headerTitle} ${adminStyles["c-white"]}`}>
             Add a School
           </h1>
           <p className={styles.headerSubtitle}>

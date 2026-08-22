@@ -17,7 +17,7 @@ export default async function NewRolePage() {
   return (
     <div className={adminStyles.adminContainer}>
       <p>
-        <Link href="/admin/roles" className={shared.resetLink}>
+        <Link href="/admin/roles" className={adminStyles.resetLink}>
           <ArrowLeft aria-hidden="true" /> Back to roles
         </Link>
       </p>
