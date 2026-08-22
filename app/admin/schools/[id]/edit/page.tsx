@@ -5,6 +5,7 @@ import { requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";
 import { SchoolForm } from "@/components/admin/schools/SchoolForm";
 import { updateSchoolAction } from "../../actions";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface EditSchoolPageProps {
@@ -37,7 +38,7 @@ export default async function EditSchoolPage({ params }: EditSchoolPageProps) {
       </div>
 
       {/* Header */}
-      <div className={`${styles.headerRow} ${styles.mt8} ${styles.mb12}`}>
+      <div className={`${adminStyles.headerRow} ${styles.mt8} ${styles.mb12}`}>
         <div className={styles.headerTitleGroup}>
           <h1 className={`${styles.headerTitle} ${styles.itemsCenter} ${styles.gap10}`}>
             Edit School: {school.name}

@@ -5,6 +5,7 @@ import { requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";
 import { listPacks } from "@/lib/admin/packs";
 import { listOrders } from "@/lib/admin/orders";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface SchoolInfoPageProps {
@@ -45,7 +46,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
       </div>
 
       {/* Header */}
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {school.name}

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Building2, Clock, CreditCard, Edit2, Mail, Phone, Save, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
-import adminStyles from "../admin.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface SupplierDetailPageProps {
