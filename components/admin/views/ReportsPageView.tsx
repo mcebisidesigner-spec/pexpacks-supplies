@@ -34,13 +34,13 @@ export function ReportsPageView() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: 16, alignItems: "start" }}>
+      <div className={styles.reportsLayout}>
         {/* Left Sidebar Menu */}
-        <div className={styles.tableCard} style={{ padding: 12 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "#64748b", textTransform: "uppercase", marginBottom: 8, padding: "0 8px" }}>
+        <div className={`${styles.tableCard} ${styles.tableCardPadded12}`}>
+          <div className={styles.reportsCatLabel}>
             Report Categories
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <div className={styles.reportsCatMenu}>
             {[
               { id: "overview", label: "Overview", icon: BarChart3 },
               { id: "sales", label: "Sales & Revenue", icon: TrendingUp },
@@ -56,20 +56,7 @@ export function ReportsPageView() {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "8px 12px",
-                    borderRadius: 8,
-                    background: active ? "rgba(13, 148, 136, 0.22)" : "transparent",
-                    color: active ? "#2dd4bf" : "#94a3b8",
-                    border: active ? "1px solid rgba(45, 212, 191, 0.4)" : "1px solid transparent",
-                    fontSize: 12,
-                    fontWeight: active ? 600 : 500,
-                    cursor: "pointer",
-                    textAlign: "left",
-                  }}
+                  className={`${styles.reportsCatBtn} ${active ? styles.reportsCatBtnActive : ""}`}
                 >
                   <Icon size={14} />
                   <span>{cat.label}</span>
@@ -80,7 +67,7 @@ export function ReportsPageView() {
         </div>
 
         {/* Right Analytics Grid */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className={styles.reportsContent}>
           {/* Top 4 KPI Cards */}
           <div className={styles.metricsGrid4}>
             <div className={styles.metricCard}>
@@ -106,30 +93,30 @@ export function ReportsPageView() {
           </div>
 
           {/* Revenue Over Time & Top Schools by Revenue */}
-          <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>
-            <div className={styles.tableCard} style={{ padding: 18 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                <strong style={{ color: "#ffffff", fontSize: 14 }}>Revenue Over Time</strong>
-                <select className={styles.selectInput} style={{ height: 28, fontSize: 11 }}><option>This Month</option></select>
+          <div className={styles.reportsGrid}>
+            <div className={`${styles.tableCard} ${styles.tableCardPadded18}`}>
+              <div className={styles.reportsChartHeader}>
+                <strong className={styles.reportsChartTitle}>Revenue Over Time</strong>
+                <select className={`${styles.selectInput} ${styles.reportsChartSelect}`}><option>This Month</option></select>
               </div>
-              <div style={{ position: "relative", height: 160, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div className={styles.reportsChartArea}>
                 <svg width="100%" height="100%" viewBox="0 0 400 140" fill="none">
                   <path d="M 0 100 Q 50 110 100 80 T 200 60 T 300 20 T 400 60" stroke="#2dd4bf" strokeWidth="2.5" />
                   <circle cx="300" cy="20" r="5" fill="#2dd4bf" />
                 </svg>
-                <div style={{ position: "absolute", top: 0, right: 80, background: "#090d16", border: "1px solid #2dd4bf", borderRadius: 6, padding: "4px 8px", fontSize: 10 }}>
-                  <div style={{ color: "#94a3b8" }}>May 24, 2024</div>
-                  <strong style={{ color: "#ffffff" }}>R 285,340</strong>
+                <div className={styles.reportsChartTooltip}>
+                  <div className={styles.reportsChartTooltipLabel}>May 24, 2024</div>
+                  <strong className={styles.reportsChartTooltipValue}>R 285,340</strong>
                 </div>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, color: "#64748b", marginTop: 8 }}>
+              <div className={styles.reportsChartFooter}>
                 <span>May 20</span><span>May 21</span><span>May 22</span><span>May 23</span><span>May 24</span><span>May 25</span><span>May 26</span><span>May 27</span>
               </div>
             </div>
 
-            <div className={styles.tableCard} style={{ padding: 18 }}>
-              <strong style={{ color: "#ffffff", fontSize: 14, marginBottom: 14 }}>Top Schools by Revenue</strong>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 10 }}>
+            <div className={`${styles.tableCard} ${styles.tableCardPadded18}`}>
+              <strong className={styles.reportsListTitle}>Top Schools by Revenue</strong>
+              <div className={styles.reportsList}>
                 {[
                   { rank: 1, name: "3d Christian Academy", val: "R 285,340" },
                   { rank: 2, name: "Aa Academy", val: "R 214,520" },
@@ -137,12 +124,12 @@ export function ReportsPageView() {
                   { rank: 4, name: "A Re Tlabeng Primary", val: "R 142,760" },
                   { rank: 5, name: "Daleview Secondary", val: "R 121,700" },
                 ].map((s) => (
-                  <div key={s.rank} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12, borderBottom: "1px solid #1e293b", paddingBottom: 6 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ color: "#2dd4bf", fontWeight: 700 }}>{s.rank}.</span>
-                      <span style={{ color: "#ffffff" }}>{s.name}</span>
+                  <div key={s.rank} className={styles.reportsListItem}>
+                    <div className={`${styles.flex} ${styles.itemsCenter} ${styles.gap8}`}>
+                      <span className={styles.reportsRank}>{s.rank}.</span>
+                      <span className={styles.reportsSchoolName}>{s.name}</span>
                     </div>
-                    <strong style={{ color: "#34d399" }}>{s.val}</strong>
+                    <strong className={styles.reportsSchoolValue}>{s.val}</strong>
                   </div>
                 ))}
               </div>

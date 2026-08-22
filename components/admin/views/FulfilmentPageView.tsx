@@ -119,7 +119,6 @@ export function FulfilmentPageView() {
                     <Link
                       href={`/admin/fulfilment/${row.orderNumber}`}
                       className={styles.badgeTeal}
-                      style={{ textDecoration: "none" }}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {row.orderNumber}
@@ -128,7 +127,7 @@ export function FulfilmentPageView() {
                   <td>
                     <Link
                       href={`/admin/fulfilment/${row.orderNumber}`}
-                      style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                      className={`${styles["c-white"]} ${styles["fw-700"]}`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {row.school}

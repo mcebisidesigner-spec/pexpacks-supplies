@@ -52,14 +52,13 @@ export function OrdersPageView() {
       </div>
 
       {/* Tabs Row */}
-      <div style={{ display: "flex", gap: 8, borderBottom: "1px solid #1e293b", paddingBottom: 8 }}>
+      <div className={`${styles.flex} ${styles["gap-8"]} ${styles["border-b"]} ${styles["pb-8"]}`}>
         {["all", "Paid", "Procurement", "Ready to Pack", "At Risk", "Completed"].map((tab) => (
           <button
             key={tab}
             type="button"
-            className={activeTab === tab ? styles.primaryBtn : styles.secondaryBtn}
+            className={`${activeTab === tab ? styles.primaryBtn : styles.secondaryBtn} ${styles["h-30"]} ${styles["text-11"]}`}
             onClick={() => setActiveTab(tab)}
-            style={{ height: 30, fontSize: 11, padding: "0 12px" }}
           >
             {tab === "all" ? "All Orders" : tab}
           </button>
@@ -106,13 +105,13 @@ export function OrdersPageView() {
                     <td>
                       <Link
                         href={`/admin/orders/${refNo}`}
-                        style={{ color: "#2dd4bf", fontWeight: 700, textDecoration: "none" }}
+                        className={`${styles.cTeal} ${styles.fw700}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         {refNo}
                       </Link>
                     </td>
-                    <td><strong style={{ color: "#ffffff" }}>{ord.school}</strong></td>
+                    <td><strong className={styles.cWhite}>{ord.school}</strong></td>
                     <td>{ord.orderDate}</td>
                     <td><strong>R {ord.total.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</strong></td>
                     <td>
@@ -134,8 +133,7 @@ export function OrdersPageView() {
                     <td>
                       <Link
                         href={`/admin/orders/${refNo}`}
-                        className={styles.actionBtnDots}
-                        style={{ fontSize: 11, padding: "2px 8px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}
+                        className={`${styles.actionBtnDots} ${styles["text-11"]} ${styles["px-8"]}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Eye size={12} /> View Detail

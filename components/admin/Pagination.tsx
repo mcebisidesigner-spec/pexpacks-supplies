@@ -30,7 +30,6 @@ export function Pagination({
           className={styles.pageButton}
           aria-disabled={prevDisabled}
           href={prevDisabled ? "#" : buildHref(basePath, params, { page: currentPage - 1 })}
-          style={prevDisabled ? { pointerEvents: "none", opacity: 0.4 } : undefined}
         >
           ← Prev
         </Link>
@@ -38,7 +37,6 @@ export function Pagination({
           className={styles.pageButton}
           aria-disabled={nextDisabled}
           href={nextDisabled ? "#" : buildHref(basePath, params, { page: currentPage + 1 })}
-          style={nextDisabled ? { pointerEvents: "none", opacity: 0.4 } : undefined}
         >
           Next →
         </Link>

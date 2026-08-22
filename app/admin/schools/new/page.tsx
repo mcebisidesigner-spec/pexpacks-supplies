@@ -18,15 +18,7 @@ export default async function NewSchoolPage() {
       <div>
         <Link
           href="/admin/schools"
-          className={styles.secondaryBtn}
-          style={{
-            height: 32,
-            fontSize: 11,
-            background: "transparent",
-            border: "none",
-            color: "#94a3b8",
-            paddingLeft: 0,
-          }}
+          className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}
         >
           <ArrowLeft size={14} /> Back to Schools
         </Link>
@@ -35,7 +27,7 @@ export default async function NewSchoolPage() {
       {/* Header with crisp white title */}
       <div className={styles.headerRow}>
         <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle} style={{ color: "#ffffff" }}>
+          <h1 className={`${styles.headerTitle} ${styles["c-white"]}`}>
             Add a School
           </h1>
           <p className={styles.headerSubtitle}>

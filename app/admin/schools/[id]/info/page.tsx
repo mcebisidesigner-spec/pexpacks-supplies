@@ -39,11 +39,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
     <div className={styles.container}>
       {/* Breadcrumb */}
       <div>
-        <Link
-          href="/admin/schools"
-          className={styles.secondaryBtn}
-          style={{ height: 32, fontSize: 11, background: "transparent", border: "none", color: "#94a3b8", paddingLeft: 0 }}
-        >
+        <Link href="/admin/schools" className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}>
           <ArrowLeft size={14} /> Back to schools
         </Link>
       </div>
@@ -81,7 +77,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
             </div>
           </div>
           <div className={styles.metricValue}>{packData.total}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Grade R through 12</div>
+          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Grade R through 12</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -92,7 +88,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
             </div>
           </div>
           <div className={styles.metricValue}>{totalOrders}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Lifetime learner orders</div>
+          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Lifetime learner orders</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -103,7 +99,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
             </div>
           </div>
           <div className={styles.metricValue}>{money(totalRevenue)}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Generated sales</div>
+          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Generated sales</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -113,25 +109,25 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
               <ShieldCheck size={16} />
             </div>
           </div>
-          <div className={styles.metricValue} style={{ color: "#fbbf24" }}>{money(rebateAmount)}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Agreed payout ledger</div>
+          <div className={`${styles.metricValue} ${styles["c-amber"]}`}>{money(rebateAmount)}</div>
+          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Agreed payout ledger</div>
         </div>
       </div>
 
       {/* Main Details & Contact Section */}
       <div className={styles.detailLayout}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
           {/* Metadata Card */}
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Building2 size={16} style={{ color: "#2dd4bf" }} />
+                <Building2 size={16} className={styles.iconTeal} />
                 <span>School Metadata & Overview</span>
               </div>
               <span className={styles.badgeTeal}>{school.status}</span>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+            <div className={styles["grid-2equal"]}>
               <div className={styles.sidebarStatRow}>
                 <span className={styles.sidebarStatLabel}>EMIS Number:</span>
                 <span className={styles.sidebarStatVal}>EMIS-{school.id.slice(0, 8).toUpperCase()}</span>
@@ -153,9 +149,9 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
 
           {/* Assigned Grade Packs */}
           <div className={styles.tableCard}>
-            <div style={{ padding: "14px 16px", fontWeight: 700, borderBottom: "1px solid #1e293b", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div className={`${styles["p-12"]} ${styles["fw-700"]} ${styles["border-b"]} ${styles["c-white"]} ${styles.flex} ${styles["items-center"]} ${styles["justify-between"]}`}>
               <span>Assigned Grade Packs</span>
-              <Link href={`/admin/packs/${school.slug || school.id}`} style={{ fontSize: 11, color: "#2dd4bf", textDecoration: "none" }}>
+              <Link href={`/admin/packs/${school.slug || school.id}`} className={`${styles["text-11"]} ${styles["c-teal"]}`}>
                 Manage Packs →
               </Link>
             </div>
@@ -172,15 +168,15 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
                 <tbody>
                   {packData.packs.length === 0 ? (
                     <tr>
-                      <td colSpan={4} style={{ textAlign: "center", padding: 24, color: "#64748b" }}>
+                      <td colSpan={4} className={`${styles["text-center"]} ${styles["c-subtle"]}`} style={{ padding: 24 }}>
                         No grade packs assigned yet.
                       </td>
                     </tr>
                   ) : (
                     packData.packs.map((p) => (
                       <tr key={p.id} className={styles.dataRow}>
-                        <td><strong style={{ color: "#ffffff" }}>{p.title}</strong></td>
-                        <td style={{ color: "#ffffff", fontWeight: 600 }}>{money(p.price)}</td>
+                        <td><strong className={styles["c-white"]}>{p.title}</strong></td>
+                        <td className={`${styles["c-white"]} ${styles["fw-600"]}`}>{money(p.price)}</td>
                         <td>{p.item_count} items</td>
                         <td>
                           <span className={p.visible ? styles.badgeTeal : styles.badgeDark}>
@@ -201,7 +197,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <User size={16} style={{ color: "#2dd4bf" }} />
+                <User size={16} className={styles.iconTeal} />
                 <span>Primary Contacts</span>
               </div>
             </div>
@@ -211,7 +207,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
             </div>
             <div className={styles.sidebarStatRow}>
               <span className={styles.sidebarStatLabel}>Email:</span>
-              <span className={styles.sidebarStatVal} style={{ fontSize: 11, color: "#60a5fa" }}>{school.email || "info@pexpacks.co.za"}</span>
+              <span className={`${styles.sidebarStatVal} ${styles["text-11"]} ${styles["c-blue"]}`}>{school.email || "info@pexpacks.co.za"}</span>
             </div>
             <div className={styles.sidebarStatRow}>
               <span className={styles.sidebarStatLabel}>Telephone:</span>
@@ -222,7 +218,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <ShieldCheck size={16} style={{ color: "#fbbf24" }} />
+                <ShieldCheck size={16} className={styles.iconAmber} />
                 <span>Rebate Payout Ledger</span>
               </div>
             </div>
@@ -232,7 +228,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
             </div>
             <div className={styles.sidebarStatRow}>
               <span className={styles.sidebarStatLabel}>Accrued Rebate:</span>
-              <span className={styles.sidebarStatVal} style={{ color: "#34d399", fontWeight: 700 }}>{money(rebateAmount)}</span>
+              <span className={`${styles.sidebarStatVal} ${styles["c-green"]} ${styles["fw-700"]}`}>{money(rebateAmount)}</span>
             </div>
             <div className={styles.sidebarStatRow}>
               <span className={styles.sidebarStatLabel}>Payout Status:</span>

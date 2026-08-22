@@ -59,12 +59,11 @@
   border: 1px solid #1e293b;
   border-radius: 8px;
   background: #020617;
-  color: #ffffff;
+  color: var(--db-text, #ffffff);
   font: inherit;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   outline: none;
-  box-sizing: border-box;
   transition: all 140ms ease;
 }
 
@@ -74,8 +73,7 @@
 }
 
 .searchInput:focus {
-  outline: none;
-  border-color: #2dd4bf;
+  border-color: var(--db-accent, #2dd4bf);
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.14);
 }
 
@@ -108,10 +106,10 @@
   border-radius: 8px;
   border: 1px solid #1e293b;
   background: #020617;
-  color: #ffffff;
+  color: var(--db-text, #ffffff);
   padding-left: 48px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .packEditor .searchInput::placeholder {
@@ -120,7 +118,7 @@
 }
 
 .packEditor .searchInput:focus {
-  border-color: #2dd4bf;
+  border-color: var(--db-accent, #2dd4bf);
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.14);
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Save } from "lucide-react";
@@ -28,6 +29,8 @@ interface PackPriceFormProps {
   schoolName?: string;
   packTitle?: string;
   showSubmit?: boolean;
+  title?: string;
+  children?: ReactNode;
 }
 
 export function PackPriceForm({
@@ -37,6 +40,8 @@ export function PackPriceForm({
   itemCount,
   subtotal,
   showSubmit = true,
+  title = "Set Pack Price",
+  children,
 }: PackPriceFormProps) {
   const action = updatePackPriceAction.bind(null, packId);
   const [state, formAction] = useActionState<PackFormState, FormData>(action, {
@@ -71,7 +76,7 @@ export function PackPriceForm({
         <input type="hidden" name="price" value={value} readOnly />
         <div className={editStyles.priceHeader}>
           <div>
-            <div className={editStyles.priceLabel}>Set Pack Price</div>
+            <div className={editStyles.priceLabel}>{title}</div>
             <div className={editStyles.priceSub}>
               {itemCount} {itemCount === 1 ? "item" : "items"} - subtotal{" "}
               {subtotal != null ? `R ${subtotal.toFixed(2)}` : "-"}
@@ -100,6 +105,10 @@ export function PackPriceForm({
             </button>
           )}
         </div>
+
+        {children ? (
+          <div className={editStyles.inlineItemsSlot}>{children}</div>
+        ) : null}
 
         {margin != null && (
           <div className={editStyles.marginRow}>

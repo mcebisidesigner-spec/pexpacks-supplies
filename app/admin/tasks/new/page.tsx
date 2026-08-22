@@ -16,15 +16,7 @@ export default async function NewTaskPage() {
       <div>
         <Link
           href="/admin/tasks"
-          className={styles.secondaryBtn}
-          style={{
-            height: 32,
-            fontSize: 11,
-            background: "transparent",
-            border: "none",
-            color: "#94a3b8",
-            paddingLeft: 0,
-          }}
+          className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}
         >
           <ArrowLeft size={14} /> Back to Tasks
         </Link>
@@ -41,55 +33,38 @@ export default async function NewTaskPage() {
       </div>
 
       <form action="/admin/tasks" method="GET" className={styles.detailLayout}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
           {/* Task Details */}
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <CheckSquare size={16} style={{ color: "#2dd4bf" }} />
+                <CheckSquare size={16} className={styles.iconTeal} />
                 <span>Task Overview & Description</span>
               </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div className={styles.formField}>
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                <label className={styles.formLabel}>
                   Task Title *
                 </label>
                 <input
                   name="title"
                   required
                   placeholder="e.g. Confirm PO-11256 supplier delivery dates"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "10px 14px",
-                    color: "#ffffff",
-                    fontSize: 14,
-                  }}
+                  className={`${styles.inputField} ${styles.inputFieldLg}`}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                <label className={styles.formLabel}>
                   Detailed Description
                 </label>
                 <textarea
                   name="description"
                   rows={5}
                   placeholder="Outline requirements, affected school codes, and expected deliverables..."
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "10px 14px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                    resize: "vertical",
-                  }}
+                  className={`${styles.textareaField} ${styles.textareaFieldMd}`}
                 />
               </div>
             </div>
@@ -101,28 +76,20 @@ export default async function NewTaskPage() {
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Tag size={16} style={{ color: "#60a5fa" }} />
+                <Tag size={16} className={styles.iconBlue} />
                 <span>Assignment & Priority</span>
               </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div className={styles.formField}>
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                <label className={styles.formLabel}>
                   Category
                 </label>
                 <select
                   name="category"
                   defaultValue="Procurement"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.selectField}
                 >
                   <option value="Procurement">Procurement</option>
                   <option value="Pricing">Pricing</option>
@@ -133,21 +100,13 @@ export default async function NewTaskPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                <label className={styles.formLabel}>
                   Priority Level
                 </label>
                 <select
                   name="priority"
                   defaultValue="High"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.selectField}
                 >
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
@@ -157,21 +116,13 @@ export default async function NewTaskPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                <label className={styles.formLabel}>
                   Assignee
                 </label>
                 <select
                   name="assignee"
                   defaultValue="Kwanele G."
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.selectField}
                 >
                   <option value="Mcebisi M.">Mcebisi M. (Operations Manager)</option>
                   <option value="Kwanele G.">Kwanele G. (Procurement Lead)</option>
@@ -181,30 +132,21 @@ export default async function NewTaskPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                <label className={styles.formLabel}>
                   Due Date
                 </label>
                 <input
                   type="date"
                   name="due_date"
                   defaultValue="2026-08-30"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.inputField}
                 />
               </div>
 
-              <div style={{ paddingTop: 8 }}>
+              <div className={styles["pt-8"]}>
                 <button
                   type="submit"
-                  className={styles.primaryBtn}
-                  style={{ width: "100%", justifyContent: "center" }}
+                  className={`${styles.primaryBtn} ${styles["h-full-btn"]}`}
                 >
                   <Save size={14} /> Create Task
                 </button>

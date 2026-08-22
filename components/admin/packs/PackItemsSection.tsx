@@ -23,7 +23,7 @@ interface PackItemsSectionProps {
   items: ItemRow[];
   subtotal: number;
   showImporter?: boolean;
-  mode?: "all" | "search" | "list";
+  mode?: "all" | "search" | "inlineSearch" | "list";
 }
 
 export function PackItemsSection({
@@ -106,7 +106,32 @@ export function PackItemsSection({
 
   return (
     <>
-      {mode !== "list" ? (
+      {mode === "inlineSearch" ? (
+        <section
+          className={styles.inlineSearchBox}
+          aria-label="Quick item editor"
+        >
+          <span className={styles.inlineSearchLabel}>Add Stationery Items</span>
+          <GradePackItemSelector
+            key={signature}
+            initialItems={initialItems}
+            submitLabel="Save items"
+            busy={busy}
+            showSave={false}
+            hideList={true}
+            searchLabel=""
+            searchPlaceholder="Search items by item name/SKU"
+            variant="packEditor"
+            onSelectItem={handleSelectItem}
+            onSave={handleSave}
+          />
+          {message ? (
+            <p className={styles.inlineSuccess} role="status">
+              {message}
+            </p>
+          ) : null}
+        </section>
+      ) : mode !== "list" ? (
         <section
           className={styles.searchTotalRow}
           aria-label="Quick item editor"
@@ -137,7 +162,7 @@ export function PackItemsSection({
           ) : null}
         </section>
       ) : null}
-      {mode !== "search" ? (
+      {mode !== "search" && mode !== "inlineSearch" ? (
         <>
           <ItemsManager items={items} />
           {showImporter ? (

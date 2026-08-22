@@ -155,7 +155,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Schools{" "}
-            <span style={{ fontSize: 16, color: "#64748b", fontWeight: 500 }}>
+            <span className={`${styles["text-16"]} ${styles.cSubtle} ${styles["fw-500"]}`}>
               ({formatCount(total)})
             </span>
           </h1>
@@ -224,8 +224,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
           </select>
 
           <button
-            className={styles.secondaryBtn}
-            style={{ background: "#0d9488", color: "#ffffff", border: "none" }}
+            className={styles.primaryBtn}
             type="button"
             onClick={handleApplyClick}
           >
@@ -240,7 +239,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
           <table className={styles.dataTable}>
             <thead>
               <tr>
-                <th style={{ width: 36 }}></th>
+                <th className={styles.textCenter} style={{ width: 36 }}></th>
                 <th>School Name</th>
                 <th>City</th>
                 <th>Province</th>
@@ -251,7 +250,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
             <tbody>
               {schools.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: "center", padding: "32px", color: "#94a3b8" }}>
+                  <td colSpan={6} className={`${styles.textCenter} ${styles.cMuted}`} style={{ padding: "32px" }}>
                     No matching schools found in the database.
                   </td>
                 </tr>
@@ -268,16 +267,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
                     >
                       <td>
                         <div
-                          style={{
-                            width: 28,
-                            height: 28,
-                            borderRadius: "50%",
-                            background: "rgba(59, 130, 246, 0.15)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: "#60a5fa",
-                          }}
+                          className={`${styles.avatarBadge} ${styles.iconBlue}`}
                         >
                           <GraduationCap size={14} />
                         </div>
@@ -285,7 +275,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
                       <td>
                         <Link
                           href={`/admin/schools/${targetSlugOrId}/info`}
-                          style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                          className={`${styles.cWhite} ${styles.fw700}`}
                           onClick={(e) => e.stopPropagation()}
                         >
                           {school.name}
@@ -300,21 +290,14 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
                       </td>
                       <td>
                         <div
-                          style={{ display: "flex", alignItems: "center", gap: 8 }}
+                          className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-8"]}`}
                           onClick={(e) => e.stopPropagation()}
                         >
                           <span className={isActive ? styles.badgeTeal : styles.badgeDark}>
                             {isActive ? "Active" : "Inactive"}
                           </span>
                           <button
-                            className={styles.actionBtnDots}
-                            style={{
-                              fontSize: 11,
-                              padding: "2px 8px",
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 4,
-                            }}
+                            className={`${styles.actionBtnDots} ${styles["text-11"]} ${styles["px-8"]}`}
                             type="button"
                             onClick={(e) => handleToggleHide(school.id, school.status, e)}
                           >
@@ -371,11 +354,10 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
           </div>
 
           {/* Working Show per page selector */}
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-6"]}`}>
             <span>Show</span>
             <select
-              className={styles.selectInput}
-              style={{ height: 28, padding: "0 6px", fontSize: 11, background: "#020617" }}
+              className={`${styles.selectInput} ${styles["h-28"]} ${styles["text-11"]} ${styles["bg-surface-strong"]}`}
               value={pageSize}
               onChange={(e) => handlePageSizeChange(Number(e.target.value))}
             >

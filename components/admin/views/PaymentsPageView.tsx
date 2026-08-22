@@ -112,7 +112,6 @@ export function PaymentsPageView() {
                     <Link
                       href={`/admin/payments/${pay.orderNumber}`}
                       className={styles.badgeTeal}
-                      style={{ textDecoration: "none" }}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {pay.paymentId}
@@ -121,7 +120,7 @@ export function PaymentsPageView() {
                   <td>
                     <Link
                       href={`/admin/payments/${pay.orderNumber}`}
-                      style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                      className={`${styles.cWhite} ${styles.fw700}`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {pay.orderNumber}
@@ -139,7 +138,7 @@ export function PaymentsPageView() {
                     {pay.reconciled ? (
                       <CheckCircle2 size={16} color="#10b981" />
                     ) : (
-                      <span style={{ color: "#64748b" }}>—</span>
+                      <span className={styles["c-subtle"]}>—</span>
                     )}
                   </td>
                 </tr>

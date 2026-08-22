@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
@@ -29,9 +29,8 @@ function SubmitButton({ label }: { label: string }) {
   return (
     <button
       type="submit"
-      className={styles.primaryBtn}
+      className={`${styles.primaryBtn} ${styles.hFullBtn}`}
       disabled={pending}
-      style={{ width: "100%", justifyContent: "center", height: 38, fontSize: 13 }}
     >
       <Save size={14} /> {pending ? "Saving..." : label}
     </button>
@@ -56,7 +55,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
-      <span style={{ fontSize: 11, color: "#f87171", marginTop: 4, display: "block" }} role="alert">
+      <span className={`${styles.text11} ${styles.cRed} ${styles.mt4} ${styles.block}`} role="alert">
         {state.errors[field]}
       </span>
     ) : null;
@@ -67,15 +66,15 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
     <form action={formAction} className={styles.detailLayout}>
       <input type="hidden" name="logo" value={logoValue} />
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
         {/* Banner Alert Messages */}
         {state?.ok ? (
-          <div className={styles.badgeGreen} style={{ padding: "10px 14px", fontSize: 13, display: "block" }} role="status">
-            ✓ {state.message || "School updated successfully."}
+          <div className={`${styles.badgeGreen} ${styles.p12} ${styles.text13} ${styles.block}`} role="status">
+            &#x2713; {state.message || "School updated successfully."}
           </div>
         ) : state?.message ? (
-          <div className={styles.badgeRed} style={{ padding: "10px 14px", fontSize: 13, display: "block", color: "#f87171", background: "rgba(239, 68, 68, 0.15)" }} role="alert">
-            ⚠ {state.message}
+          <div className={`${styles.badgeRed} ${styles.p12} ${styles.text13} ${styles.block} ${styles.cRed}`} style={{ background: "rgba(239, 68, 68, 0.15)" }} role="alert">
+            &#x26A0; {state.message}
           </div>
         ) : null}
 
@@ -83,229 +82,68 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
         <div className={styles.sidebarCard}>
           <div className={styles.sidebarCardHeader}>
             <div className={styles.sidebarHeaderTitle}>
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 8,
-                  background: "rgba(45, 212, 191, 0.12)",
-                  border: "1px solid rgba(45, 212, 191, 0.25)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#2dd4bf",
-                  flexShrink: 0,
-                }}
-              >
+              <div className={styles.sectionIconTeal}>
                 <Building2 size={16} />
               </div>
-              <span style={{ fontSize: 15, fontWeight: 700, color: "#ffffff" }}>
-                School Identity & Primary Details
+              <span className={`${styles.text15} ${styles.fw700} ${styles.cWhite}`}>
+                School Identity &amp; Primary Details
               </span>
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+          <div className={styles.grid2equal}>
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="name">
-                School Name *
-              </label>
-              <input
-                id="name"
-                name="name"
-                defaultValue={school?.name ?? ""}
-                placeholder="e.g. Sunnyvale Primary School"
-                required
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              />
+              <label className={styles.formLabel} htmlFor="name">School Name *</label>
+              <input id="name" name="name" defaultValue={school?.name ?? ""} placeholder="e.g. Sunnyvale Primary School" required className={styles.inputField} />
               {err("name")}
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="slug">
-                URL Slug / Identifier
-              </label>
-              <input
-                id="slug"
-                name="slug"
-                defaultValue={str(school?.slug)}
-                placeholder="auto-generated from name"
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              />
-              <span style={{ fontSize: 11, color: "#64748b", marginTop: 4, display: "block" }}>
-                Used in public URLs. Leave blank to auto-generate.
-              </span>
+              <label className={styles.formLabel} htmlFor="slug">URL Slug / Identifier</label>
+              <input id="slug" name="slug" defaultValue={str(school?.slug)} placeholder="auto-generated from name" className={styles.inputField} />
+              <span className={`${styles.text11} ${styles.cSubtle} ${styles.mt4} ${styles.block}`}>Used in public URLs. Leave blank to auto-generate.</span>
               {err("slug")}
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="city">
-                City / Town
-              </label>
-              <input
-                id="city"
-                name="city"
-                defaultValue={str(school?.city)}
-                placeholder="e.g. Pretoria"
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              />
+              <label className={styles.formLabel} htmlFor="city">City / Town</label>
+              <input id="city" name="city" defaultValue={str(school?.city)} placeholder="e.g. Pretoria" className={styles.inputField} />
               {err("city")}
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="province">
-                Province
-              </label>
-              <input
-                id="province"
-                name="province"
-                defaultValue={str(school?.province)}
-                placeholder="e.g. Gauteng"
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              />
+              <label className={styles.formLabel} htmlFor="province">Province</label>
+              <input id="province" name="province" defaultValue={str(school?.province)} placeholder="e.g. Gauteng" className={styles.inputField} />
               {err("province")}
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="district">
-                District
-              </label>
-              <input
-                id="district"
-                name="district"
-                defaultValue={str(school?.district)}
-                placeholder="e.g. Tshwane South"
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              />
+              <label className={styles.formLabel} htmlFor="district">District</label>
+              <input id="district" name="district" defaultValue={str(school?.district)} placeholder="e.g. Tshwane South" className={styles.inputField} />
               {err("district")}
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="email">
-                Contact Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                defaultValue={str(school?.email)}
-                placeholder="admin@school.co.za"
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              />
+              <label className={styles.formLabel} htmlFor="email">Contact Email</label>
+              <input id="email" name="email" type="email" defaultValue={str(school?.email)} placeholder="admin@school.co.za" className={styles.inputField} />
               {err("email")}
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="telephone">
-                Telephone
-              </label>
-              <input
-                id="telephone"
-                name="telephone"
-                defaultValue={str(school?.telephone)}
-                placeholder="+27 12 000 0000"
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              />
+              <label className={styles.formLabel} htmlFor="telephone">Telephone</label>
+              <input id="telephone" name="telephone" defaultValue={str(school?.telephone)} placeholder="+27 12 000 0000" className={styles.inputField} />
               {err("telephone")}
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="principal">
-                Principal / Headmaster
-              </label>
-              <input
-                id="principal"
-                name="principal"
-                defaultValue={str(school?.principal)}
-                placeholder="e.g. Dr. A. Smith"
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              />
+              <label className={styles.formLabel} htmlFor="principal">Principal / Headmaster</label>
+              <input id="principal" name="principal" defaultValue={str(school?.principal)} placeholder="e.g. Dr. A. Smith" className={styles.inputField} />
               {err("principal")}
             </div>
 
             <div style={{ gridColumn: "span 2" }}>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="address">
-                Physical Address
-              </label>
-              <input
-                id="address"
-                name="address"
-                defaultValue={str(school?.address)}
-                placeholder="e.g. 45 School Road, Centurion"
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              />
+              <label className={styles.formLabel} htmlFor="address">Physical Address</label>
+              <input id="address" name="address" defaultValue={str(school?.address)} placeholder="e.g. 45 School Road, Centurion" className={styles.inputField} />
               {err("address")}
             </div>
           </div>
@@ -315,185 +153,58 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
         <div className={styles.sidebarCard}>
           <div className={styles.sidebarCardHeader}>
             <div className={styles.sidebarHeaderTitle}>
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 8,
-                  background: "rgba(96, 165, 250, 0.12)",
-                  border: "1px solid rgba(96, 165, 250, 0.25)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#60a5fa",
-                  flexShrink: 0,
-                }}
-              >
+              <div className={styles.sectionIconBlue}>
                 <GraduationCap size={16} />
               </div>
-              <span style={{ fontSize: 15, fontWeight: 700, color: "#ffffff" }}>
-                School Profile & Search Pill Configuration
+              <span className={`${styles.text15} ${styles.fw700} ${styles.cWhite}`}>
+                School Profile &amp; Search Pill Configuration
               </span>
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-14"]}`}>
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="description">
-                Description & Overview
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                rows={3}
-                defaultValue={str(school?.description)}
-                placeholder="Brief introduction for parents searching school stationery packs..."
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 12,
-                  resize: "vertical",
-                }}
-              />
+              <label className={styles.formLabel} htmlFor="description">Description &amp; Overview</label>
+              <textarea id="description" name="description" rows={3} defaultValue={str(school?.description)} placeholder="Brief introduction for parents searching school stationery packs..." className={`${styles.textareaField} ${styles.textareaFieldMd}`} />
               {err("description")}
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+            <div className={styles.grid2equal}>
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="grades">
-                  Offered Grades
-                </label>
-                <input
-                  id="grades"
-                  name="grades"
-                  defaultValue={grades}
-                  placeholder="Grade R, Grade 1, Grade 2"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
-                />
-                <span style={{ fontSize: 11, color: "#64748b", marginTop: 4, display: "block" }}>
-                  Comma-separated grade names.
-                </span>
+                <label className={styles.formLabel} htmlFor="grades">Offered Grades</label>
+                <input id="grades" name="grades" defaultValue={grades} placeholder="Grade R, Grade 1, Grade 2" className={styles.inputField} />
+                <span className={`${styles.text11} ${styles.cSubtle} ${styles.mt4} ${styles.block}`}>Comma-separated grade names.</span>
                 {err("grades")}
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="custom_badge">
-                  Search Pill Badge
-                </label>
-                <input
-                  id="custom_badge"
-                  name="custom_badge"
-                  defaultValue={str(school?.custom_badge) || "2026 Packs"}
-                  placeholder="e.g. 2026 Packs"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
-                />
-                <span style={{ fontSize: 11, color: "#64748b", marginTop: 4, display: "block" }}>
-                  Badge shown on search cards (e.g. 2026 Packs).
-                </span>
+                <label className={styles.formLabel} htmlFor="custom_badge">Search Pill Badge</label>
+                <input id="custom_badge" name="custom_badge" defaultValue={str(school?.custom_badge) || "2026 Packs"} placeholder="e.g. 2026 Packs" className={styles.inputField} />
+                <span className={`${styles.text11} ${styles.cSubtle} ${styles.mt4} ${styles.block}`}>Badge shown on search cards (e.g. 2026 Packs).</span>
                 {err("custom_badge")}
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="lowest_price">
-                  Lowest Pack Price (R)
-                </label>
-                <input
-                  id="lowest_price"
-                  name="lowest_price"
-                  inputMode="decimal"
-                  defaultValue={str(school?.lowest_price)}
-                  placeholder="e.g. 245.00"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
-                />
+                <label className={styles.formLabel} htmlFor="lowest_price">Lowest Pack Price (R)</label>
+                <input id="lowest_price" name="lowest_price" inputMode="decimal" defaultValue={str(school?.lowest_price)} placeholder="e.g. 245.00" className={styles.inputField} />
                 {err("lowest_price")}
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="partner_since">
-                  Partner Since Date
-                </label>
-                <DateField
-                  id="partner_since"
-                  name="partner_since"
-                  className={styles.searchInput}
-                  defaultValue={str(school?.partner_since)}
-                  ariaLabel="Partner since"
-                  placeholder="Select partnership date"
-                />
+                <label className={styles.formLabel} htmlFor="partner_since">Partner Since Date</label>
+                <DateField id="partner_since" name="partner_since" className={styles.searchInput} defaultValue={str(school?.partner_since)} ariaLabel="Partner since" placeholder="Select partnership date" />
                 {err("partner_since")}
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="latitude">
-                  Latitude
-                </label>
-                <input
-                  id="latitude"
-                  name="latitude"
-                  inputMode="decimal"
-                  defaultValue={str(school?.latitude)}
-                  placeholder="e.g. -25.7479"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
-                />
+                <label className={styles.formLabel} htmlFor="latitude">Latitude</label>
+                <input id="latitude" name="latitude" inputMode="decimal" defaultValue={str(school?.latitude)} placeholder="e.g. -25.7479" className={styles.inputField} />
                 {err("latitude")}
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="longitude">
-                  Longitude
-                </label>
-                <input
-                  id="longitude"
-                  name="longitude"
-                  inputMode="decimal"
-                  defaultValue={str(school?.longitude)}
-                  placeholder="e.g. 28.2293"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
-                />
+                <label className={styles.formLabel} htmlFor="longitude">Longitude</label>
+                <input id="longitude" name="longitude" inputMode="decimal" defaultValue={str(school?.longitude)} placeholder="e.g. 28.2293" className={styles.inputField} />
                 {err("longitude")}
               </div>
             </div>
@@ -504,34 +215,16 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
         <div className={styles.sidebarCard}>
           <div className={styles.sidebarCardHeader}>
             <div className={styles.sidebarHeaderTitle}>
-              <ImageIcon size={16} style={{ color: "#fbbf24" }} />
+              <ImageIcon size={16} className={styles.iconAmber} />
               <span>School Logo Branding</span>
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-            <div
-              style={{
-                position: "relative",
-                width: 110,
-                height: 110,
-                borderRadius: 12,
-                border: "1px dashed #334155",
-                background: "#020617",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden",
-                flexShrink: 0,
-              }}
-            >
+          <div className={`${styles.flex} ${styles["gap-16"]} ${styles.itemsCenter}`}>
+            <div className={styles.logoUploadBox}>
               {logoPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={logoPreview}
-                  alt="School logo preview"
-                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
-                />
+                <img src={logoPreview} alt="School logo preview" className={styles.logoPreviewImg} />
               ) : (
                 <SchoolLogoPlaceholder width={110} height={110} />
               )}
@@ -539,12 +232,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 type="file"
                 name="logo_file"
                 accept="image/png,image/webp,image/svg+xml,image/jpeg"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  opacity: 0,
-                  cursor: "pointer",
-                }}
+                className={styles.logoFileInput}
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
@@ -556,32 +244,15 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               />
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 6, fontSize: 12 }}>
-              <p style={{ margin: 0, color: "#cbd5e1", fontWeight: 600 }}>
-                Upload School Emblem / Logo
-              </p>
-              <p style={{ margin: 0, color: "#64748b", fontSize: 11 }}>
-                PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder used if empty.
-              </p>
+            <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-6"]} ${styles.text12}`}>
+              <p className={`${styles.cWhite} ${styles.fw600}`}>Upload School Emblem / Logo</p>
+              <p className={`${styles.cSubtle} ${styles.text11}`}>PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder used if empty.</p>
               {logoPreview ? (
                 <button
                   type="button"
-                  style={{
-                    alignSelf: "flex-start",
-                    background: "none",
-                    border: "none",
-                    padding: 0,
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: "#f87171",
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                    marginTop: 6,
-                  }}
-                  onClick={() => {
-                    setLogoPreview(null);
-                    setLogoValue("");
-                  }}
+                  className={`${styles.text11} ${styles.fw700} ${styles.cRed} ${styles.underline} ${styles.mt6}`}
+                  style={{ alignSelf: "flex-start", background: "none", border: "none", padding: 0, cursor: "pointer" }}
+                  onClick={() => { setLogoPreview(null); setLogoValue(""); }}
                 >
                   Remove logo
                 </button>
@@ -596,126 +267,57 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
         <div className={styles.sidebarCard}>
           <div className={styles.sidebarCardHeader}>
             <div className={styles.sidebarHeaderTitle}>
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 8,
-                  background: "rgba(45, 212, 191, 0.12)",
-                  border: "1px solid rgba(45, 212, 191, 0.25)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#2dd4bf",
-                  flexShrink: 0,
-                }}
-              >
+              <div className={styles.sectionIconTeal}>
                 <ShieldCheck size={16} />
               </div>
-              <span style={{ fontSize: 15, fontWeight: 700, color: "#ffffff" }}>
-                Status & Partnership Flags
+              <span className={`${styles.text15} ${styles.fw700} ${styles.cWhite}`}>
+                Status &amp; Partnership Flags
               </span>
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-14"]}`}>
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="status">
-                Publication Status
-              </label>
-              <select
-                id="status"
-                name="status"
-                defaultValue={school?.status ?? "active"}
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              >
+              <label className={styles.formLabel} htmlFor="status">Publication Status</label>
+              <select id="status" name="status" defaultValue={school?.status ?? "active"} className={styles.inputField}>
                 {SCHOOL_STATUSES.map((s) => (
-                  <option key={s} value={s}>
-                    {s === "archived" ? "Hidden" : s.charAt(0).toUpperCase() + s.slice(1)}
-                  </option>
+                  <option key={s} value={s}>{s === "archived" ? "Hidden" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
                 ))}
               </select>
               {err("status")}
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }} htmlFor="parent_collection_accepted">
-                Parent Collection Option
-              </label>
-              <select
-                id="parent_collection_accepted"
-                name="parent_collection_accepted"
-                defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"}
-                style={{
-                  width: "100%",
-                  background: "#020617",
-                  border: "1px solid #334155",
-                  borderRadius: 8,
-                  padding: "8px 12px",
-                  color: "#ffffff",
-                  fontSize: 13,
-                }}
-              >
+              <label className={styles.formLabel} htmlFor="parent_collection_accepted">Parent Collection Option</label>
+              <select id="parent_collection_accepted" name="parent_collection_accepted" defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"} className={styles.inputField}>
                 <option value="accepted">Accepted (Bulk Pickup)</option>
                 <option value="non_accepted">Non-accepted</option>
               </select>
               {err("parent_collection_accepted")}
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4 }}>
-              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#cbd5e1", cursor: "pointer" }}>
-                <input
-                  type="checkbox"
-                  name="published"
-                  defaultChecked={school?.published ?? true}
-                  style={{ accentColor: "#0d9488", width: 16, height: 16 }}
-                />
+            <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-8"]} ${styles.mt4}`}>
+              <label className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-8"]} ${styles.text12} ${styles.cWhite} ${styles.cursorPointer}`}>
+                <input type="checkbox" name="published" defaultChecked={school?.published ?? true} className={styles.checkbox} />
                 Published on Site
               </label>
-              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#cbd5e1", cursor: "pointer" }}>
-                <input
-                  type="checkbox"
-                  name="is_partner"
-                  defaultChecked={school?.is_partner ?? false}
-                  style={{ accentColor: "#0d9488", width: 16, height: 16 }}
-                />
+              <label className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-8"]} ${styles.text12} ${styles.cWhite} ${styles.cursorPointer}`}>
+                <input type="checkbox" name="is_partner" defaultChecked={school?.is_partner ?? false} className={styles.checkbox} />
                 Partner School
               </label>
-              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#cbd5e1", cursor: "pointer" }}>
-                <input
-                  type="checkbox"
-                  name="is_featured"
-                  defaultChecked={school?.is_featured ?? false}
-                  style={{ accentColor: "#0d9488", width: 16, height: 16 }}
-                />
+              <label className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-8"]} ${styles.text12} ${styles.cWhite} ${styles.cursorPointer}`}>
+                <input type="checkbox" name="is_featured" defaultChecked={school?.is_featured ?? false} className={styles.checkbox} />
                 Featured School
               </label>
-              <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#f87171", cursor: "pointer", fontWeight: 600 }}>
-                <input
-                  type="checkbox"
-                  name="refused_partnership"
-                  defaultChecked={(school as any)?.refused_partnership ?? false}
-                  style={{ accentColor: "#ef4444", width: 16, height: 16 }}
-                />
+              <label className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-8"]} ${styles.text12} ${styles.cRed} ${styles.cursorPointer} ${styles.fw600}`}>
+                <input type="checkbox" name="refused_partnership" defaultChecked={(school as any)?.refused_partnership ?? false} className={styles.checkboxRed} />
                 Refused Partnership
               </label>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingTop: 10, borderTop: "1px solid #1e293b" }}>
+            <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-10"]} ${styles.pt10}`} style={{ borderTop: "1px solid #1e293b" }}>
               <SubmitButton label={school ? "Save School Details" : "Create School"} />
-              <Link
-                href={schoolSlugOrId ? `/admin/schools/${schoolSlugOrId}/info` : "/admin/schools"}
-                className={styles.secondaryBtn}
-                style={{ width: "100%", justifyContent: "center", height: 38, fontSize: 12 }}
-              >
+              <Link href={schoolSlugOrId ? `/admin/schools/${schoolSlugOrId}/info` : "/admin/schools"} className={`${styles.secondaryBtn} ${styles.hFullBtn} ${styles.text12}`}>
                 Cancel
               </Link>
             </div>

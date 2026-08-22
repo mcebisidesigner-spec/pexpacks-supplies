@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -23,7 +23,7 @@ const SAMPLE_MASTER_ITEMS = [
 ];
 
 export default function PackBuilderPage() {
-  const [packTitle, setPackTitle] = useState("Grade 1 – 2027 Stationery Pack");
+  const [packTitle, setPackTitle] = useState("Grade 1 \u2013 2027 Stationery Pack");
   const [schoolName, setSchoolName] = useState("3d Christian Academy");
   const [sellingPrice, setSellingPrice] = useState<number>(370.00);
   const [itemQuery, setItemQuery] = useState("");
@@ -84,11 +84,7 @@ export default function PackBuilderPage() {
   return (
     <div className={styles.container}>
       <div>
-        <Link
-          href="/admin/packs"
-          className={styles.secondaryBtn}
-          style={{ height: 32, fontSize: 11, background: "transparent", border: "none", color: "#94a3b8", paddingLeft: 0 }}
-        >
+        <Link href="/admin/packs" className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}>
           <ArrowLeft size={14} /> Back to packs
         </Link>
       </div>
@@ -96,7 +92,7 @@ export default function PackBuilderPage() {
       <div className={styles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>Interactive Pack Builder</h1>
-          <p className={styles.headerSubtitle}>Assembly & Live Bill of Materials (BOM) Calculation</p>
+          <p className={styles.headerSubtitle}>Assembly &amp; Live Bill of Materials (BOM) Calculation</p>
         </div>
         <div className={styles.headerActions}>
           <button className={styles.primaryBtn} type="button">
@@ -107,33 +103,27 @@ export default function PackBuilderPage() {
 
       <div className={styles.detailLayout}>
         {/* Left Column: Form & Assembly */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div className={`${styles.flex} ${styles["flex-col"]} ${styles.gap18}`}>
           {/* Metadata Card */}
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <span>Pack Configurations</span>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+            <div className={styles.grid2}>
               <div>
-                <label style={{ fontSize: 11, color: "#94a3b8", display: "block", marginBottom: 4 }}>
-                  Pack Title
-                </label>
+                <label className={`${styles.text11} ${styles.cMuted} ${styles.mb4}`}>Pack Title</label>
                 <input
-                  className={styles.searchInput}
+                  className={`${styles.searchInput} ${styles.wFull} ${styles.pl12}`}
                   value={packTitle}
                   onChange={(e) => setPackTitle(e.target.value)}
-                  style={{ width: "100%", paddingLeft: 12 }}
                 />
               </div>
               <div>
-                <label style={{ fontSize: 11, color: "#94a3b8", display: "block", marginBottom: 4 }}>
-                  Assigned School
-                </label>
+                <label className={`${styles.text11} ${styles.cMuted} ${styles.mb4}`}>Assigned School</label>
                 <input
-                  className={styles.searchInput}
+                  className={`${styles.searchInput} ${styles.wFull} ${styles.pl12}`}
                   value={schoolName}
                   onChange={(e) => setSchoolName(e.target.value)}
-                  style={{ width: "100%", paddingLeft: 12 }}
                 />
               </div>
             </div>
@@ -144,7 +134,7 @@ export default function PackBuilderPage() {
             <div className={styles.sidebarCardHeader}>
               <span>Typeahead Master Product Search</span>
             </div>
-            <div className={styles.searchBox} style={{ width: "100%" }}>
+            <div className={`${styles.searchBox} ${styles.wFull}`}>
               <Search />
               <input
                 className={styles.searchInput}
@@ -154,25 +144,14 @@ export default function PackBuilderPage() {
               />
             </div>
             {searchResults.length > 0 && (
-              <div style={{ background: "#0f182b", border: "1px solid #1e293b", borderRadius: 8, overflow: "hidden" }}>
+              <div className={styles.searchDropdown}>
                 {searchResults.map((itm) => (
-                  <div
-                    key={itm.id}
-                    onClick={() => addItem(itm)}
-                    style={{
-                      padding: "10px 14px",
-                      borderBottom: "1px solid #1e293b",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      cursor: "pointer",
-                    }}
-                  >
+                  <div key={itm.id} onClick={() => addItem(itm)} className={styles.searchDropdownItem}>
                     <div>
-                      <strong style={{ color: "#ffffff", fontSize: 13 }}>{itm.name}</strong>
-                      <span style={{ fontSize: 11, color: "#64748b", marginLeft: 8 }}>({itm.sku})</span>
+                      <strong className={`${styles.cWhite} ${styles.text13}`}>{itm.name}</strong>
+                      <span className={`${styles.text11} ${styles.cSubtle} ${styles.ml8}`}>({itm.sku})</span>
                     </div>
-                    <span style={{ color: "#2dd4bf", fontSize: 12, fontWeight: 700 }}>
+                    <span className={`${styles.cTeal} ${styles.text12} ${styles.fw700}`}>
                       + Add Item (Cost R {itm.supplierCost})
                     </span>
                   </div>
@@ -183,7 +162,7 @@ export default function PackBuilderPage() {
 
           {/* BOM Table */}
           <div className={styles.tableCard}>
-            <div style={{ padding: "12px 16px", borderBottom: "1px solid #1e293b", fontWeight: 700, color: "#ffffff" }}>
+            <div className={`${styles.pCard} ${styles.borderB} ${styles.fw700} ${styles.cWhite}`}>
               Bill of Materials ({selectedItems.length} Allocated Items)
             </div>
             <div className={styles.tableWrapper}>
@@ -201,31 +180,17 @@ export default function PackBuilderPage() {
                 <tbody>
                   {selectedItems.map((itm) => (
                     <tr key={itm.id}>
-                      <td><strong style={{ color: "#ffffff" }}>{itm.name}</strong></td>
+                      <td><strong className={styles.cWhite}>{itm.name}</strong></td>
                       <td>{itm.sku}</td>
                       <td>R {itm.supplierCost.toFixed(2)}</td>
                       <td>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                          <button
-                            className={styles.actionBtnDots}
-                            onClick={() => updateQty(itm.id, -1)}
-                            type="button"
-                          >
-                            -
-                          </button>
-                          <span style={{ color: "#ffffff", fontWeight: 700, minWidth: 20, textAlign: "center" }}>
-                            {itm.qty}
-                          </span>
-                          <button
-                            className={styles.actionBtnDots}
-                            onClick={() => updateQty(itm.id, 1)}
-                            type="button"
-                          >
-                            +
-                          </button>
+                        <div className={`${styles.flex} ${styles.itemsCenter} ${styles.gap6}`}>
+                          <button className={styles.actionBtnDots} onClick={() => updateQty(itm.id, -1)} type="button">-</button>
+                          <span className={`${styles.cWhite} ${styles.fw700} ${styles.minW20} ${styles.textCenter}`}>{itm.qty}</span>
+                          <button className={styles.actionBtnDots} onClick={() => updateQty(itm.id, 1)} type="button">+</button>
                         </div>
                       </td>
-                      <td style={{ color: "#ffffff", fontWeight: 700 }}>
+                      <td className={`${styles.cWhite} ${styles.fw700}`}>
                         R {(itm.supplierCost * itm.qty).toFixed(2)}
                       </td>
                       <td>
@@ -250,8 +215,8 @@ export default function PackBuilderPage() {
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Calculator size={16} style={{ color: "#2dd4bf" }} />
-                <span>Financial & Health Breakdown</span>
+                <Calculator size={16} className={styles.iconTeal} />
+                <span>Financial &amp; Health Breakdown</span>
               </div>
             </div>
 
@@ -263,24 +228,23 @@ export default function PackBuilderPage() {
             <div className={styles.sidebarStatRow}>
               <span className={styles.sidebarStatLabel}>Selling Price (R):</span>
               <input
-                className={styles.searchInput}
+                className={`${styles.searchInput} ${styles.h28} ${styles.textRight} ${styles.w100px}`}
                 type="number"
                 value={sellingPrice}
                 onChange={(e) => setSellingPrice(Number(e.target.value))}
-                style={{ width: 100, height: 28, textAlign: "right" }}
               />
             </div>
 
             <div className={styles.sidebarStatRow}>
               <span className={styles.sidebarStatLabel}>Gross Margin (R):</span>
-              <span className={styles.sidebarStatVal} style={{ color: grossProfit >= 0 ? "#34d399" : "#f87171" }}>
+              <span className={`${styles.sidebarStatVal} ${grossProfit >= 0 ? styles.cGreen : styles.cRed}`}>
                 R {grossProfit.toFixed(2)}
               </span>
             </div>
 
             <div className={styles.sidebarStatRow}>
               <span className={styles.sidebarStatLabel}>Margin Percentage:</span>
-              <span className={styles.sidebarStatVal} style={{ color: marginPct >= 30 ? "#34d399" : "#fbbf24" }}>
+              <span className={`${styles.sidebarStatVal} ${marginPct >= 30 ? styles.cGreen : styles.cAmber}`}>
                 {marginPct.toFixed(1)}%
               </span>
             </div>

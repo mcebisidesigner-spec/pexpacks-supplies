@@ -11,6 +11,7 @@ import {
 import admin from "../../admin.module.css";
 import shared from "../../schools/schools.module.css";
 import styles from "../../operations.module.css";
+import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -34,10 +35,10 @@ export default async function AddItemPage() {
             <ArrowLeft aria-hidden="true" /> Back to items
           </Link>
         </p>
-        <h1 className={styles.headerTitle} style={{ fontSize: "28px", margin: "8px 0 4px" }}>
+        <h1 className={`${styles.headerTitle} ${viewStyles.text28} ${viewStyles.mt8} ${viewStyles.mb4}`}>
           Stationery Items
         </h1>
-        <p className={styles.muted} style={{ fontSize: "14px", margin: 0 }}>
+        <p className={`${styles.muted} ${viewStyles.text14} ${viewStyles.m0}`}>
           Digital stationery products that can be reused across school packs.
         </p>
       </div>
@@ -118,7 +119,7 @@ export default async function AddItemPage() {
         <section
           id="bulk-stationery-import"
           aria-label="Bulk CSV stationery import"
-          style={{ marginTop: "12px" }}
+          className={viewStyles.mt12}
         >
           <CSVStationeryImporter packs={await listPacksForFilter()} />
         </section>

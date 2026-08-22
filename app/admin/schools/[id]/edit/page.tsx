@@ -30,56 +30,22 @@ export default async function EditSchoolPage({ params }: EditSchoolPageProps) {
       <div>
         <Link
           href={`/admin/schools/${schoolSlugOrId}/info`}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            fontSize: 12,
-            fontWeight: 500,
-            color: "#94a3b8",
-            textDecoration: "none",
-            transition: "color 140ms ease",
-          }}
+          className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}
         >
           <ArrowLeft size={14} /> Back to {school.name}
         </Link>
       </div>
 
       {/* Header */}
-      <div className={styles.headerRow} style={{ marginTop: 8, marginBottom: 12 }}>
+      <div className={`${styles.headerRow} ${styles.mt8} ${styles.mb12}`}>
         <div className={styles.headerTitleGroup}>
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 26,
-              fontWeight: 700,
-              color: "#ffffff",
-              letterSpacing: "-0.02em",
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-            }}
-          >
+          <h1 className={`${styles.headerTitle} ${styles.itemsCenter} ${styles.gap10}`}>
             Edit School: {school.name}
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                padding: "3px 10px",
-                borderRadius: 12,
-                background: "rgba(16, 185, 129, 0.15)",
-                border: "1px solid rgba(16, 185, 129, 0.3)",
-                color: "#10b981",
-                fontSize: 11,
-                fontWeight: 600,
-                lineHeight: 1,
-              }}
-            >
-              <span style={{ fontSize: 8 }}>●</span> {school.status ? school.status.toLowerCase() : "active"}
+            <span className={`${styles.badgeGreen} ${styles.text11} ${styles.fw600}`}>
+              <span className={styles.text8}>●</span> {school.status ? school.status.toLowerCase() : "active"}
             </span>
           </h1>
-          <p style={{ margin: "4px 0 0", fontSize: 13, color: "#94a3b8" }}>
+          <p className={`${styles.text13} ${styles.cMuted} ${styles.mt4}`}>
             Update school profile, primary contacts, address, grades, search badge, logo, and partnership status.
           </p>
         </div>

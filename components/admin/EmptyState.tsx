@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import styles from "../../app/admin/admin.module.css";
+import viewStyles from "./views/CorePagesView.module.css";
 
 type EmptyStateProps = {
   icon?: ReactNode;
@@ -15,7 +16,7 @@ export function EmptyState({ icon, title, text, action }: EmptyStateProps) {
         {icon && <div className={styles.emptyIconWrapper}>{icon}</div>}
         <h3 className={styles.emptyStateTitle}>{title}</h3>
         <p className={styles.emptyStateText}>{text}</p>
-        {action && <div style={{ marginTop: 16 }}>{action}</div>}
+        {action && <div className={viewStyles.mt16}>{action}</div>}
       </div>
     </div>
   );

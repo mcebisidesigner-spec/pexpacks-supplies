@@ -5,6 +5,7 @@ import { permissionGroups } from "@/lib/admin/roles";
 import { RoleForm } from "@/components/admin/roles/RoleForm";
 import adminStyles from "../../admin.module.css";
 import shared from "../../schools/schools.module.css";
+import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 
 export const metadata = {
   title: "New role | Admin | Pexpacks",
@@ -28,7 +29,7 @@ export default async function NewRolePage() {
       </div>
       <div className={adminStyles.tableCard}>
         <div className={adminStyles.tableWrapper}>
-          <div style={{ padding: "clamp(20px, 3vw, 32px)" }}>
+          <div className={viewStyles.formCardInner}>
             <RoleForm
               initial={{ name: "", slug: "", description: null, permissionKeys: [] }}
               groups={permissionGroups()}

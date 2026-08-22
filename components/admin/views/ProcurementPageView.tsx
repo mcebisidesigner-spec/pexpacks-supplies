@@ -17,6 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 
 interface KanbanCard {
   id: string;
@@ -100,7 +101,7 @@ export function ProcurementPageView() {
       </div>
 
       {generatedMessage && (
-        <div className={styles.badgeGreen} style={{ padding: "10px 14px", fontSize: 13 }}>
+        <div className={`${styles.badgeGreen} ${viewStyles.badgeGreenPadded}`}>
           <CheckCircle2 size={16} /> {generatedMessage}
         </div>
       )}
@@ -115,7 +116,7 @@ export function ProcurementPageView() {
             </div>
           </div>
           <div className={styles.metricValue}>R {committedSpend.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Total supplier commitment</div>
+          <div className={viewStyles.kanbanMetricCaption}>Total supplier commitment</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -125,10 +126,10 @@ export function ProcurementPageView() {
               <ShoppingCart size={16} />
             </div>
           </div>
-          <div className={styles.metricValue} style={{ color: "#fbbf24" }}>
+          <div className={`${styles.metricValue} ${viewStyles.kanbanMetricValueAmber}`}>
             R {outstandingPOValue.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
           </div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>In-flight open POs</div>
+          <div className={viewStyles.kanbanMetricCaption}>In-flight open POs</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -138,10 +139,10 @@ export function ProcurementPageView() {
               <AlertTriangle size={16} />
             </div>
           </div>
-          <div className={styles.metricValue} style={{ color: "#f87171" }}>
+          <div className={`${styles.metricValue} ${viewStyles.kanbanMetricValueRed}`}>
             R {revenueAtRisk.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
           </div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Unsecured procurement items</div>
+          <div className={viewStyles.kanbanMetricCaption}>Unsecured procurement items</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -151,14 +152,14 @@ export function ProcurementPageView() {
               <FileSpreadsheet size={16} />
             </div>
           </div>
-          <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
-            <button className={styles.secondaryBtn} style={{ height: 26, fontSize: 10 }} onClick={() => handleGeneratePO("Waltons")} type="button">
+          <div className={`${viewStyles.flex} ${viewStyles.gap6} ${viewStyles.mt8}`}>
+            <button className={`${styles.secondaryBtn} ${viewStyles.poBtnSmall}`} onClick={() => handleGeneratePO("Waltons")} type="button">
               + Waltons
             </button>
-            <button className={styles.secondaryBtn} style={{ height: 26, fontSize: 10 }} onClick={() => handleGeneratePO("Croxley")} type="button">
+            <button className={`${styles.secondaryBtn} ${viewStyles.poBtnSmall}`} onClick={() => handleGeneratePO("Croxley")} type="button">
               + Croxley
             </button>
-            <button className={styles.secondaryBtn} style={{ height: 26, fontSize: 10 }} onClick={() => handleGeneratePO("Bidvest")} type="button">
+            <button className={`${styles.secondaryBtn} ${viewStyles.poBtnSmall}`} onClick={() => handleGeneratePO("Bidvest")} type="button">
               + Bidvest
             </button>
           </div>
@@ -166,36 +167,33 @@ export function ProcurementPageView() {
       </div>
 
       {/* 4-Stage Kanban Board */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginTop: 12 }}>
+      <div className={viewStyles.kanbanGrid}>
         {kanbanColumns.map(({ stage, cards: stageCards }) => {
           return (
             <div
               key={stage}
-              className={styles.sidebarCard}
-              style={{ minHeight: 380, background: "#0c1322", border: "1px solid #1e293b" }}
+              className={`${styles.sidebarCard} ${viewStyles.kanbanCol}`}
             >
               <div className={styles.sidebarCardHeader}>
                 <span>{stage}</span>
                 <span className={styles.badgeTeal}>{stageCards.length}</span>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div className={viewStyles.kanbanItems}>
                 {stageCards.map((c) => (
                   <div
                     key={c.id}
-                    className={styles.quickActionItem}
-                    style={{ flexDirection: "column", alignItems: "flex-start", gap: 6 }}
+                    className={`${styles.quickActionItem} ${viewStyles.kanbanCard}`}
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                      <strong style={{ color: "#ffffff", fontSize: 13 }}>{c.poNumber}</strong>
-                      <span style={{ color: "#2dd4bf", fontWeight: 700 }}>
+                    <div className={viewStyles.kanbanCardTop}>
+                      <strong className={viewStyles.kanbanPoNumber}>{c.poNumber}</strong>
+                      <span className={viewStyles.kanbanValue}>
                         R {c.value.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
                       </span>
                     </div>
-                    <div style={{ fontSize: 11, color: "#94a3b8" }}>{c.supplier} • {c.itemsCount} items</div>
+                    <div className={viewStyles.kanbanMeta}>{c.supplier} • {c.itemsCount} items</div>
                     <button
-                      className={styles.secondaryBtn}
-                      style={{ height: 24, fontSize: 10, alignSelf: "flex-end", marginTop: 4 }}
+                      className={`${styles.secondaryBtn} ${viewStyles.kanbanAdvance}`}
                       onClick={() => moveStage(c.id)}
                       type="button"
                     >

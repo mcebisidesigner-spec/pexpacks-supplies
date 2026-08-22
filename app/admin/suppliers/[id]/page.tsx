@@ -20,18 +20,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
     <div className={styles.container}>
       {/* Breadcrumb */}
       <div>
-        <Link
-          href="/admin/suppliers"
-          className={styles.secondaryBtn}
-          style={{
-            height: 32,
-            fontSize: 11,
-            background: "transparent",
-            border: "none",
-            color: "#94a3b8",
-            paddingLeft: 0,
-          }}
-        >
+        <Link href="/admin/suppliers" className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}>
           <ArrowLeft size={14} /> Back to Suppliers
         </Link>
       </div>
@@ -56,8 +45,8 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
               <Truck size={16} />
             </div>
           </div>
-          <div className={styles.metricValue} style={{ color: "#34d399" }}>98.4%</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Past 90 days performance</div>
+          <div className={`${styles.metricValue} ${styles["c-green"]}`}>98.4%</div>
+          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Past 90 days performance</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -68,7 +57,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
             </div>
           </div>
           <div className={styles.metricValue}>2.1 hrs</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Turnaround speed</div>
+          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Turnaround speed</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -79,7 +68,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
             </div>
           </div>
           <div className={styles.metricValue}>412</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Catalogue items supplied</div>
+          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Catalogue items supplied</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -89,25 +78,27 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
               <CreditCard size={16} />
             </div>
           </div>
-          <div className={styles.metricValue} style={{ fontSize: 18, marginTop: 6, color: "#fbbf24" }}>
+          <div
+            className={`${styles.metricValue} ${styles["text-18"]} ${styles["mt-6"]} ${styles["c-amber"]}`}
+          >
             30 Days Net
           </div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Agreed commercial term</div>
+          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Agreed commercial term</div>
         </div>
       </div>
 
       {/* Detail Layout */}
       <div className={styles.detailLayout}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Building2 size={16} style={{ color: "#2dd4bf" }} />
+                <Building2 size={16} className={styles.iconTeal} />
                 <span>Supplier Master Details</span>
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+            <div className={styles["grid-2equal"]}>
               <div className={styles.sidebarStatRow}>
                 <span className={styles.sidebarStatLabel}>Supplier Name:</span>
                 <span className={styles.sidebarStatVal}>{title}</span>
@@ -118,7 +109,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
               </div>
               <div className={styles.sidebarStatRow}>
                 <span className={styles.sidebarStatLabel}>Procurement Email:</span>
-                <span className={styles.sidebarStatVal} style={{ color: "#60a5fa" }}>orders@{id}.co.za</span>
+                <span className={`${styles.sidebarStatVal} ${styles["c-blue"]}`}>orders@{id}.co.za</span>
               </div>
               <div className={styles.sidebarStatRow}>
                 <span className={styles.sidebarStatLabel}>Standard Lead Time:</span>
@@ -132,7 +123,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Phone size={16} style={{ color: "#2dd4bf" }} />
+                <Phone size={16} className={styles.iconTeal} />
                 <span>Primary Contacts</span>
               </div>
             </div>

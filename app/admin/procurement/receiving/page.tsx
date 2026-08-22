@@ -8,6 +8,7 @@ import {
 import { createSupplierReceiptAction } from "../../operations-actions";
 import admin from "../../admin.module.css";
 import styles from "../../operations.module.css";
+import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -56,8 +57,7 @@ export default async function ReceivingPage() {
               <h2>
                 {po.purchase_order_number}
                 <span
-                  className={`${styles.badge} ${po.status === "received" ? styles.good : po.status === "partially_received" ? styles.warn : ""}`}
-                  style={{ marginLeft: "0.5rem" }}
+                  className={`${styles.badge} ${po.status === "received" ? styles.good : po.status === "partially_received" ? styles.warn : ""} ${viewStyles.ml8}`}
                 >
                   {po.status.replace(/_/g, " ")}
                 </span>
@@ -94,15 +94,12 @@ export default async function ReceivingPage() {
                           <td>
                             {hasPermission(session, "procurement.manage") ? (
                               <input
-                                className={styles.field}
+                                className={`${styles.field} ${viewStyles.w80}`}
                                 type="number"
                                 min="0"
-                                max={
-                                  item.ordered_quantity - item.received_quantity
-                                }
+                                max={item.ordered_quantity - item.received_quantity}
                                 defaultValue="0"
                                 name={`received_${item.id}`}
-                                style={{ width: "80px" }}
                               />
                             ) : (
                               item.received_quantity
@@ -118,8 +115,7 @@ export default async function ReceivingPage() {
               {hasPermission(session, "procurement.manage") ? (
                 <form
                   action={createSupplierReceiptAction}
-                  className={styles.formGrid}
-                  style={{ marginTop: "1rem" }}
+                  className={`${styles.formGrid} ${viewStyles.mt16}`}
                 >
                   <input type="hidden" name="purchaseOrderId" value={po.id} />
                   <input

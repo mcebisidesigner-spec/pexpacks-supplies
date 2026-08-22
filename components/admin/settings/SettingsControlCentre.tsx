@@ -41,6 +41,7 @@ import {
   updateSystemSettingAction,
 } from "@/app/admin/settings/actions";
 import styles from "./SettingsControlCentre.module.css";
+import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 
 interface SettingsControlCentreProps {
   initialSettings: Record<string, SystemSettingRecord>;
@@ -199,7 +200,7 @@ export function SettingsControlCentre({
                   </button>
                 ))
               ) : (
-                <p style={{ margin: 0, padding: 12, color: "var(--admin-text-3)", fontSize: 12, textAlign: "center" }}>
+                <p className={viewStyles.settingsCentered}>
                   No matching settings found for &ldquo;{searchQuery}&rdquo;.
                 </p>
               )}
@@ -254,20 +255,20 @@ export function SettingsControlCentre({
                 <p>High-level system status and recent operational settings activity</p>
               </div>
               <div className={styles.formGrid}>
-                <div style={{ padding: 16, border: "1px solid var(--admin-border)", borderRadius: 14, background: "var(--admin-bg)" }}>
+                <div className={viewStyles.cardBorder}>
                   <span className={styles.badgeSuccess}>Connected</span>
-                  <h3 style={{ margin: "8px 0 4px", color: "#ffffff", fontSize: 16 }}>Supabase & RLS</h3>
-                  <p style={{ margin: 0, color: "var(--admin-text-3)", fontSize: 12 }}>Service Role & Auth RLS Active</p>
+                  <h3 className={viewStyles.settingsStatusCardTitle}>Supabase & RLS</h3>
+                  <p className={viewStyles.settingsStatusCardCaption}>Service Role & Auth RLS Active</p>
                 </div>
-                <div style={{ padding: 16, border: "1px solid var(--admin-border)", borderRadius: 14, background: "var(--admin-bg)" }}>
+                <div className={viewStyles.cardBorder}>
                   <span className={styles.badgeSuccess}>Healthy</span>
-                  <h3 style={{ margin: "8px 0 4px", color: "#ffffff", fontSize: 16 }}>Vercel Edge</h3>
-                  <p style={{ margin: 0, color: "var(--admin-text-3)", fontSize: 12 }}>Caching & Static Routes Live</p>
+                  <h3 className={viewStyles.settingsStatusCardTitle}>Vercel Edge</h3>
+                  <p className={viewStyles.settingsStatusCardCaption}>Caching & Static Routes Live</p>
                 </div>
-                <div style={{ padding: 16, border: "1px solid var(--admin-border)", borderRadius: 14, background: "var(--admin-bg)" }}>
+                <div className={viewStyles.cardBorder}>
                   <span className={styles.badgeSuccess}>Active</span>
-                  <h3 style={{ margin: "8px 0 4px", color: "#ffffff", fontSize: 16 }}>Active Season</h3>
-                  <p style={{ margin: 0, color: "var(--admin-text-3)", fontSize: 12 }}>{String(settingsState["seasons.active_season"]?.value ?? "2027 BTS")}</p>
+                  <h3 className={viewStyles.settingsStatusCardTitle}>Active Season</h3>
+                  <p className={viewStyles.settingsStatusCardCaption}>{String(settingsState["seasons.active_season"]?.value ?? "2027 BTS")}</p>
                 </div>
               </div>
             </div>
@@ -409,16 +410,16 @@ export function SettingsControlCentre({
                 <h2>Integration Status & Health</h2>
                 <p>Live operational status of external infrastructure & payment gateways (Secrets are 100% masked)</p>
               </div>
-              <div style={{ display: "grid", gap: 14 }}>
+              <div className={viewStyles.settingsStatusGrid}>
                 {integrations.map((item) => (
-                  <div key={item.name} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: 16, border: "1px solid var(--admin-border)", borderRadius: 12, background: "var(--admin-bg)" }}>
+                  <div key={item.name} className={viewStyles.settingsStatusCard}>
                     <div>
-                      <strong style={{ color: "#ffffff", fontSize: 14 }}>{item.name}</strong>
-                      <p style={{ margin: "2px 0 0", color: "var(--admin-text-3)", fontSize: 12 }}>{item.purpose}</p>
-                      <small style={{ color: "var(--admin-text-3)", fontSize: 10 }}>{item.details}</small>
+                      <strong className={viewStyles.cWhite}>{item.name}</strong>
+                      <p className={viewStyles.settingsStatusCardPurpose}>{item.purpose}</p>
+                      <small className={viewStyles.text11}>{item.details}</small>
                     </div>
                     <span className={item.status === "connected" ? styles.badgeSuccess : styles.badgeWarning}>
-                      <CheckCircle2 style={{ width: 14, height: 14 }} /> {item.status === "connected" ? "Connected" : "Action Required"}
+                      <CheckCircle2 className={viewStyles.settingsIconCheck} /> {item.status === "connected" ? "Connected" : "Action Required"}
                     </span>
                   </div>
                 ))}
@@ -433,19 +434,19 @@ export function SettingsControlCentre({
                 <h2>Data Management & Snapshot Centre</h2>
                 <p>Export system data snapshots, run dry-run imports, & trigger application data restores</p>
               </div>
-              <div style={{ display: "flex", gap: 14 }}>
+              <div className={`${viewStyles.flex} ${viewStyles.gap14}`}>
                 <button type="button" className={styles.saveButton} onClick={handleExport}>
-                  <Download style={{ width: 16, height: 16, display: "inline-block", marginRight: 6 }} /> Export Settings Data Snapshot
+                  <Download className={viewStyles.settingsExportIcon} /> Export Settings Data Snapshot
                 </button>
                 <button type="button" className={styles.discardButton} onClick={() => setShowRestoreModal(true)}>
-                  <Upload style={{ width: 16, height: 16, display: "inline-block", marginRight: 6 }} /> Restore Data Snapshot
+                  <Upload className={viewStyles.settingsExportIcon} /> Restore Data Snapshot
                 </button>
               </div>
 
               {showRestoreModal && (
-                <div style={{ marginTop: 20, padding: 20, border: "1px solid var(--admin-border-strong)", borderRadius: 14, background: "#111a2e" }}>
-                  <h3 style={{ margin: "0 0 8px", color: "#ffffff" }}>Restore System Settings Snapshot</h3>
-                  <p style={{ margin: "0 0 12px", color: "var(--admin-text-3)", fontSize: 12 }}>Paste the JSON exported snapshot payload to restore configuration parameters.</p>
+                <div className={viewStyles.settingsRestoreSection}>
+                  <h3 className={viewStyles.settingsRestoreTitle}>Restore System Settings Snapshot</h3>
+                  <p className={viewStyles.settingsRestoreDesc}>Paste the JSON exported snapshot payload to restore configuration parameters.</p>
                   <textarea
                     rows={6}
                     className={styles.textarea}
@@ -453,7 +454,7 @@ export function SettingsControlCentre({
                     value={restoreJson}
                     onChange={(e) => setRestoreJson(e.target.value)}
                   />
-                  <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+                  <div className={viewStyles.settingsRestoreActions}>
                     <button type="button" className={styles.saveButton} onClick={handleRestoreSubmit} disabled={!restoreJson.trim() || busyKey === "restore"}>
                       Confirm Restore
                     </button>
@@ -490,7 +491,7 @@ export function SettingsControlCentre({
                       <tr key={log.id}>
                         <td>{new Date(log.created_at).toLocaleString("en-ZA")}</td>
                         <td>{log.actor_email || "System"}</td>
-                        <td><strong style={{ color: "#10b981" }}>{log.setting_key}</strong></td>
+                        <td><strong className={viewStyles.settingsLogKey}>{log.setting_key}</strong></td>
                         <td><code>{JSON.stringify(log.old_value)}</code></td>
                         <td><code>{JSON.stringify(log.new_value)}</code></td>
                         <td>{log.change_reason || "—"}</td>
@@ -498,7 +499,7 @@ export function SettingsControlCentre({
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={6} style={{ textAlign: "center", color: "var(--admin-text-3)", padding: 20 }}>
+                      <td colSpan={6} className={viewStyles.settingsLogEmpty}>
                         No settings change audit records logged yet.
                       </td>
                     </tr>

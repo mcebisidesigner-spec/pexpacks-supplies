@@ -131,7 +131,7 @@ export function MasterProductsPageView() {
                     <td>
                       <Link
                         href={`/admin/products/${prodSlug}`}
-                        style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                        className={`${styles.cWhite} ${styles.fw700}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         {prod.name}
@@ -140,8 +140,8 @@ export function MasterProductsPageView() {
                     <td>{prod.category}</td>
                     <td>{prod.unit}</td>
                     <td><strong>R {prod.sellPrice.toFixed(2)}</strong></td>
-                    <td style={{ color: "#94a3b8" }}>R {prod.costPrice.toFixed(2)}</td>
-                    <td><span style={{ color: "#34d399", fontWeight: 700 }}>{prod.margin}%</span></td>
+                    <td className={styles.cSubtle}>R {prod.costPrice.toFixed(2)}</td>
+                    <td><span className={`${styles.cGreen} ${styles.fw700}`}>{prod.margin}%</span></td>
                     <td>{prod.supplier}</td>
                     <td><span className={styles.badgeGreen}>{prod.status}</span></td>
                   </tr>
@@ -163,9 +163,9 @@ export function MasterProductsPageView() {
             <button className={styles.pageBtn}>156</button>
             <button className={styles.pageBtn}>&gt;</button>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-6"]}`}>
             <span>Show</span>
-            <select className={styles.selectInput} style={{ height: 26, padding: "0 4px", fontSize: 11 }}>
+            <select className={`${styles.selectInput} ${styles["h-26"]} ${styles["text-11"]}`}>
               <option>10</option>
               <option>20</option>
             </select>

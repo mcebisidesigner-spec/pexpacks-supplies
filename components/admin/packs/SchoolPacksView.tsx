@@ -31,6 +31,7 @@ import {
   Users,
 } from "lucide-react";
 import styles from "./SchoolPacksView.module.css";
+import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 
 export interface SchoolPackRowData {
   id: string;
@@ -604,7 +605,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 &gt;
               </button>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div className={`${viewStyles.flex} ${viewStyles.itemsCenter} ${viewStyles.gap6}`}>
               <span>Show</span>
               <select
                 value={pageSize}
@@ -612,15 +613,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                style={{
-                  background: "#0c1322",
-                  border: "1px solid #1e293b",
-                  borderRadius: 6,
-                  color: "#cbd5e1",
-                  fontSize: 11,
-                  padding: "3px 6px",
-                  cursor: "pointer",
-                }}
+                className={viewStyles.pageShowSelect}
               >
                 <option value={20}>20</option>
                 <option value={50}>50</option>
@@ -651,8 +644,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
               <div className={styles.exceptionItem}>
                 <div className={styles.exceptionLeft}>
                   <div
-                    className={styles.exceptionIcon}
-                    style={{ background: "rgba(239, 68, 68, 0.18)", color: "#ef4444" }}
+                    className={`${styles.exceptionIcon} ${viewStyles.iconRed}`}
                   >
                     <AlertTriangle size={15} />
                   </div>
@@ -674,8 +666,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
               <div className={styles.exceptionItem}>
                 <div className={styles.exceptionLeft}>
                   <div
-                    className={styles.exceptionIcon}
-                    style={{ background: "rgba(245, 158, 11, 0.18)", color: "#f59e0b" }}
+                    className={`${styles.exceptionIcon} ${viewStyles.iconAmber}`}
                   >
                     <Clock size={15} />
                   </div>
@@ -695,8 +686,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
               <div className={styles.exceptionItem}>
                 <div className={styles.exceptionLeft}>
                   <div
-                    className={styles.exceptionIcon}
-                    style={{ background: "rgba(245, 158, 11, 0.18)", color: "#f59e0b" }}
+                    className={`${styles.exceptionIcon} ${viewStyles.iconAmber}`}
                   >
                     <AlertTriangle size={15} />
                   </div>
@@ -716,8 +706,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
               <div className={styles.exceptionItem}>
                 <div className={styles.exceptionLeft}>
                   <div
-                    className={styles.exceptionIcon}
-                    style={{ background: "rgba(59, 130, 246, 0.18)", color: "#3b82f6" }}
+                    className={`${styles.exceptionIcon} ${viewStyles.iconBlue}`}
                   >
                     <FileText size={15} />
                   </div>
@@ -737,8 +726,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
               <div className={styles.exceptionItem}>
                 <div className={styles.exceptionLeft}>
                   <div
-                    className={styles.exceptionIcon}
-                    style={{ background: "rgba(100, 116, 139, 0.18)", color: "#94a3b8" }}
+                    className={`${styles.exceptionIcon} ${viewStyles.iconSlate}`}
                   >
                     <EyeOff size={15} />
                   </div>
@@ -808,7 +796,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
               <div className={styles.donutLegend}>
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={styles.legendColorDot} style={{ background: "#10b981" }} />
+                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#10b981" }} />
                     <span>Visible</span>
                   </div>
                   <div>
@@ -819,7 +807,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={styles.legendColorDot} style={{ background: "#64748b" }} />
+                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#64748b" }} />
                     <span>Hidden</span>
                   </div>
                   <div>
@@ -830,7 +818,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={styles.legendColorDot} style={{ background: "#3b82f6" }} />
+                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#3b82f6" }} />
                     <span>Draft</span>
                   </div>
                   <div>
@@ -841,7 +829,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={styles.legendColorDot} style={{ background: "#f59e0b" }} />
+                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#f59e0b" }} />
                     <span>Review</span>
                   </div>
                   <div>
@@ -852,7 +840,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={styles.legendColorDot} style={{ background: "#0d9488" }} />
+                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#0d9488" }} />
                     <span>Other</span>
                   </div>
                   <div>

@@ -38,6 +38,7 @@ import {
   X,
 } from "lucide-react";
 import styles from "./OperationsCommandCenter.module.css";
+import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 
 // ==========================================
 // TYPES & DATA STRUCTURES
@@ -1387,7 +1388,7 @@ export function OperationsCommandCenter() {
             <h2 className={styles.panelTitle}>What needs attention</h2>
             <Link
               href="/admin/tasks"
-              style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, color: "#2dd4bf", textDecoration: "none", fontWeight: 600 }}
+              className={viewStyles.occLegendLink}
             >
               View all alerts <ArrowRight size={13} />
             </Link>
@@ -1754,7 +1755,7 @@ export function OperationsCommandCenter() {
                         <span className={`${styles.avatarBadge} ${styles[`avatar${item.owner}`]}`}>
                           {item.owner}
                         </span>
-                        <span className={styles.cardDueDate} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span className={`${styles.cardDueDate} ${viewStyles.occStatusRow}`}>
                           {item.dueDate} <Check className={styles.cardCheckmark} />
                         </span>
                       </div>
@@ -1794,7 +1795,7 @@ export function OperationsCommandCenter() {
                           <div className={styles.cardTitle}>{pack.schoolName} – {pack.grade}</div>
                           <div className={styles.cardSubmeta}>Health: {pack.healthScore}% · {pack.totalItems} items</div>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div className={viewStyles.occStatusRow}>
                           <span className={`${styles.avatarBadge} ${styles[`avatar${pack.owner}`]}`}>{pack.owner}</span>
                           <span className={styles.cardSubmeta}>R{pack.price}</span>
                         </div>
@@ -1831,7 +1832,7 @@ export function OperationsCommandCenter() {
                           <div className={styles.cardTitle}>{pack.schoolName} – {pack.grade}</div>
                           <div className={styles.cardSubmeta}>Health: {pack.healthScore}% · {pack.totalItems} items</div>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div className={viewStyles.occStatusRow}>
                           <span className={`${styles.avatarBadge} ${styles[`avatar${pack.owner}`]}`}>{pack.owner}</span>
                           <span className={styles.cardSubmeta}>R{pack.price}</span>
                         </div>
@@ -1868,7 +1869,7 @@ export function OperationsCommandCenter() {
                           <div className={styles.cardTitle}>{pack.schoolName} – {pack.grade}</div>
                           <div className={styles.cardSubmeta}>Health: {pack.healthScore}% · {pack.totalItems} items</div>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div className={viewStyles.occStatusRow}>
                           <span className={`${styles.avatarBadge} ${styles[`avatar${pack.owner}`]}`}>{pack.owner}</span>
                           <span className={styles.cardSubmeta}>R{pack.price}</span>
                         </div>
@@ -1905,7 +1906,7 @@ export function OperationsCommandCenter() {
                           <div className={styles.cardTitle}>{pack.schoolName} – {pack.grade}</div>
                           <div className={styles.cardSubmeta}>Health: {pack.healthScore}% · Stale price</div>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div className={viewStyles.occStatusRow}>
                           <span className={`${styles.avatarBadge} ${styles[`avatar${pack.owner}`]}`}>{pack.owner}</span>
                           <span className={styles.cardSubmeta}>R{pack.price}</span>
                         </div>
@@ -1944,7 +1945,7 @@ export function OperationsCommandCenter() {
                     onClick={() => setSelectedItem(item)}
                   >
                     <td>
-                      <strong style={{ color: "#ffffff" }}>{item.name}</strong>
+                      <strong className={viewStyles.occCardTitle}>{item.name}</strong>
                     </td>
                     <td>{item.schoolOrCategory}</td>
                     <td>
@@ -1984,8 +1985,7 @@ export function OperationsCommandCenter() {
                     <td>{item.dueDate}</td>
                     <td>
                       <button
-                        className={styles.controlBtn}
-                        style={{ padding: "4px 8px", fontSize: 11 }}
+                        className={`${styles.controlBtn} ${viewStyles.occBadgePadded}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedItem(item);
@@ -2009,7 +2009,7 @@ export function OperationsCommandCenter() {
         <div className={styles.drawerOverlay} onClick={() => { setSelectedItem(null); setSelectedPack(null); }}>
           <div className={styles.drawerPanel} onClick={(e) => e.stopPropagation()}>
             <div className={styles.drawerHeader}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div className={viewStyles.occMetaRow}>
                 <span
                   className={`${styles.avatarBadge} ${
                     styles[`avatar${selectedItem?.owner || selectedPack?.owner || "LM"}`]
@@ -2101,7 +2101,7 @@ export function OperationsCommandCenter() {
                       </div>
                       <div className={styles.healthScoreTotal}>
                         <span>Total Deterministic Health</span>
-                        <span style={{ color: "#2dd4bf", fontSize: 16 }}>
+                        <span className={viewStyles.occScoreBig}>
                           {selectedItem?.healthScore || selectedPack?.healthScore || 75}%
                         </span>
                       </div>
@@ -2111,16 +2111,16 @@ export function OperationsCommandCenter() {
                   {/* Financial Exposure */}
                   <div className={styles.drawerSection}>
                     <h4 className={styles.drawerSectionTitle}>Financial Exposure & Margin Risk</h4>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 4 }}>
-                      <div style={{ background: "#111a2e", padding: "8px 10px", borderRadius: 6 }}>
-                        <div style={{ fontSize: 10, color: "#94a3b8" }}>Committed Spend</div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: "#ffffff" }}>
+                    <div className={viewStyles.occDetailGrid}>
+                      <div className={viewStyles.occDetailCell}>
+                        <div className={viewStyles.occDetailLabel}>Committed Spend</div>
+                        <div className={viewStyles.occDetailValue}>
                           R {(selectedItem?.committedSpend || 42000).toLocaleString("en-ZA")}
                         </div>
                       </div>
-                      <div style={{ background: "#111a2e", padding: "8px 10px", borderRadius: 6 }}>
-                        <div style={{ fontSize: 10, color: "#94a3b8" }}>Revenue Tied</div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: "#f87171" }}>
+                      <div className={viewStyles.occDetailCell}>
+                        <div className={viewStyles.occDetailLabel}>Revenue Tied</div>
+                        <div className={viewStyles.occDetailValueRed}>
                           R {(selectedItem?.revenueAtRisk || 86400).toLocaleString("en-ZA")}
                         </div>
                       </div>
@@ -2180,8 +2180,7 @@ export function OperationsCommandCenter() {
                       onChange={(e) => setNewCommentText(e.target.value)}
                     />
                     <button
-                      className={`${styles.actionBtn} ${styles.actionBtnPrimary}`}
-                      style={{ alignSelf: "flex-end" }}
+                      className={`${styles.actionBtn} ${styles.actionBtnPrimary} ${viewStyles.occAlignEnd}`}
                       onClick={handleAddComment}
                     >
                       <Send size={12} /> Post Comment
@@ -2193,22 +2192,22 @@ export function OperationsCommandCenter() {
               {activeDrawerTab === "supplier" && (
                 <div className={styles.drawerSection}>
                   <h4 className={styles.drawerSectionTitle}>Supplier Logistics Profile</h4>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 6, fontSize: 12 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ color: "#94a3b8" }}>Primary Supplier:</span>
-                      <strong style={{ color: "#ffffff" }}>{selectedItem?.supplier || "Bantex SA"}</strong>
+                  <div className={viewStyles.occSupplierInfo}>
+                    <div className={viewStyles.occSupplierRow}>
+                      <span className={viewStyles.occSupplierLabel}>Primary Supplier:</span>
+                      <strong className={viewStyles.occSupplierVal}>{selectedItem?.supplier || "Bantex SA"}</strong>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ color: "#94a3b8" }}>Average Lead Time:</span>
-                      <strong style={{ color: "#ffffff" }}>{selectedItem?.supplierLeadDays || 14} business days</strong>
+                    <div className={viewStyles.occSupplierRow}>
+                      <span className={viewStyles.occSupplierLabel}>Average Lead Time:</span>
+                      <strong className={viewStyles.occSupplierVal}>{selectedItem?.supplierLeadDays || 14} business days</strong>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ color: "#94a3b8" }}>Fulfillment Accuracy:</span>
-                      <strong style={{ color: "#34d399" }}>98.4% On-time</strong>
+                    <div className={viewStyles.occSupplierRow}>
+                      <span className={viewStyles.occSupplierLabel}>Fulfillment Accuracy:</span>
+                      <strong className={viewStyles.occSupplierValGreen}>98.4% On-time</strong>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                      <span style={{ color: "#94a3b8" }}>Internal Note:</span>
-                      <span style={{ color: "#cbd5e1" }}>{selectedItem?.notes || "No pending blockers."}</span>
+                    <div className={viewStyles.occSupplierRow}>
+                      <span className={viewStyles.occSupplierLabel}>Internal Note:</span>
+                      <span className={viewStyles.occSupplierValLight}>{selectedItem?.notes || "No pending blockers."}</span>
                     </div>
                   </div>
                 </div>

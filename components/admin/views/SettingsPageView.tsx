@@ -47,16 +47,7 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
       </div>
 
       {/* Responsive 4-Tab Navigation Bar */}
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 8,
-          borderBottom: "1px solid #1e293b",
-          paddingBottom: 12,
-          marginBottom: 20,
-        }}
-      >
+      <div className={styles.settingsTabBar}>
         {[
           { id: "general", label: "1. General Settings", icon: Building2 },
           { id: "user-roles", label: "2. Users & Roles", icon: Users },
@@ -70,19 +61,11 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
               key={tab.id}
               type="button"
               onClick={() => handleTabChange(tab.id as any)}
-              className={isActive ? styles.primaryBtn : styles.secondaryBtn}
-              style={{
-                height: 44, // 44px+ mobile touch target requirement
-                minHeight: 44,
-                padding: "0 18px",
-                fontSize: 13,
-                fontWeight: 700,
-                flex: "1 1 auto",
-                justifyContent: "center",
-                background: isActive ? "#0d9488" : "#0f172a",
-                borderColor: isActive ? "#2dd4bf" : "#1e293b",
-                color: isActive ? "#ffffff" : "#94a3b8",
-              }}
+              className={[
+                isActive ? styles.primaryBtn : styles.secondaryBtn,
+                isActive ? styles.settingsTabBtnActive : styles.settingsTabBtnInactive,
+                styles.settingsTabBtn,
+              ].join(" ")}
             >
               <Icon size={16} />
               {tab.label}
@@ -94,91 +77,59 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
       {/* TAB 1: GENERAL SETTINGS */}
       {currentTab === "general" && (
         <form action="/admin/settings/general" method="GET" className={styles.detailLayout}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <div className={styles.formStack}>
             {/* Company Information */}
             <div className={styles.sidebarCard}>
               <div className={styles.sidebarCardHeader}>
                 <div className={styles.sidebarHeaderTitle}>
-                  <Building2 size={16} style={{ color: "#2dd4bf" }} />
+                  <Building2 size={16} className={styles.setIconTeal} />
                   <span>Company Identity & Legal Registration</span>
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+              <div className={styles.settingsGrid2}>
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Legal Entity Name
                   </label>
                   <input
                     name="company_name"
                     defaultValue="Pexpacks Supplies (Pty) Ltd"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     CIPC Registration Number
                   </label>
                   <input
                     name="reg_number"
                     defaultValue="2024/182736/07"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     SARS VAT Registration Number
                   </label>
                   <input
                     name="vat_number"
                     defaultValue="4920192837"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Support Email Address
                   </label>
                   <input
                     type="email"
                     name="support_email"
                     defaultValue="care@pexpacks.co.za"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
               </div>
@@ -188,69 +139,45 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
             <div className={styles.sidebarCard}>
               <div className={styles.sidebarCardHeader}>
                 <div className={styles.sidebarHeaderTitle}>
-                  <Globe size={16} style={{ color: "#60a5fa" }} />
+                  <Globe size={16} className={styles.setIconBlue} />
                   <span>Physical Address & Time Zone</span>
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+              <div className={styles.settingsGrid2}>
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Physical Warehouse Address
                   </label>
                   <textarea
                     name="address"
                     rows={3}
                     defaultValue="128 Logistics Hub, Midrand Industrial Park, Midrand, Gauteng, 1685"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 12,
-                    }}
+                    className={styles.textareaField}
                   />
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <div className={styles.sidebarItemStack}>
                   <div>
-                    <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                    <label className={styles.formLabel}>
                       System Time Zone
                     </label>
                     <input
                       name="timezone"
                       defaultValue="Africa/Johannesburg (SAST UTC+2)"
                       disabled
-                      style={{
-                        width: "100%",
-                        background: "#020617",
-                        border: "1px solid #334155",
-                        borderRadius: 8,
-                        padding: "8px 12px",
-                        color: "#94a3b8",
-                        fontSize: 13,
-                      }}
+                      className={`${styles.inputField} ${styles.inputFieldMuted}`}
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                    <label className={styles.formLabel}>
                       Operating Hours
                     </label>
                     <input
                       name="operating_hours"
                       defaultValue="Mon - Fri: 07:30 - 17:00 SAST"
-                      style={{
-                        width: "100%",
-                        background: "#020617",
-                        border: "1px solid #334155",
-                        borderRadius: 8,
-                        padding: "8px 12px",
-                        color: "#ffffff",
-                        fontSize: 13,
-                      }}
+                      className={styles.inputField}
                     />
                   </div>
                 </div>
@@ -262,26 +189,26 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
             <div className={styles.sidebarCard}>
               <div className={styles.sidebarCardHeader}>
                 <div className={styles.sidebarHeaderTitle}>
-                  <Mail size={16} style={{ color: "#fbbf24" }} />
+                  <Mail size={16} className={styles.setIconAmber} />
                   <span>Communication Defaults</span>
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div className={styles.formStackCompact}>
                 {[
                   { label: "Send Automated Order Confirmation Emails", active: true },
                   { label: "Send Dispatch SMS Notifications to Parents", active: true },
                   { label: "Send Payment Reminder Notifications", active: true },
                   { label: "Weekly School Procurement Digest", active: false },
                 ].map((pref) => (
-                  <div key={pref.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12 }}>
-                    <span style={{ color: "#cbd5e1" }}>{pref.label}</span>
-                    <input type="checkbox" defaultChecked={pref.active} style={{ accentColor: "#0d9488", width: 16, height: 16 }} />
+                  <div key={pref.label} className={styles.prefRow}>
+                    <span className={styles.prefLabel}>{pref.label}</span>
+                    <input type="checkbox" defaultChecked={pref.active} className={styles.settingsCheckbox} />
                   </div>
                 ))}
 
-                <div style={{ paddingTop: 12 }}>
-                  <button type="submit" className={styles.primaryBtn} style={{ width: "100%", justifyContent: "center" }}>
+                <div className={styles.pt12}>
+                  <button type="submit" className={`${styles.primaryBtn} ${styles.wFullBtn}`}>
                     <Save size={14} /> Save General Settings
                   </button>
                 </div>
@@ -293,10 +220,10 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
 
       {/* TAB 2: USERS & ROLES */}
       {currentTab === "user-roles" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <div className={styles.headerRow} style={{ marginTop: 0 }}>
+        <div className={styles.formStack}>
+          <div className={styles.headerRow}>
             <div className={styles.headerTitleGroup}>
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: "#ffffff", margin: 0 }}>Administrative Users & Access Matrix</h2>
+              <h2 className={styles.userSectionTitle}>Administrative Users & Access Matrix</h2>
             </div>
             <div className={styles.headerActions}>
               <button
@@ -330,10 +257,10 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
                     { name: "Warehouse Packing Staff", email: "warehouse@pexpacks.co.za", role: "Packing Staff", perms: "Fulfilment & Packing Only", status: "Active" },
                   ].map((user, idx) => (
                     <tr key={idx} className={styles.dataRow}>
-                      <td><strong style={{ color: "#ffffff" }}>{user.name}</strong></td>
+                      <td><strong className={styles.tableUserName}>{user.name}</strong></td>
                       <td>{user.email}</td>
                       <td><span className={styles.badgeTeal}>{user.role}</span></td>
-                      <td><span style={{ fontSize: 11, color: "#cbd5e1" }}>{user.perms}</span></td>
+                      <td><span className={styles.tablePerms}>{user.perms}</span></td>
                       <td><span className={styles.badgeGreen}>{user.status}</span></td>
                     </tr>
                   ))}
@@ -346,15 +273,15 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Shield size={16} style={{ color: "#34d399" }} />
+                <Shield size={16} className={styles.setIconGreen} />
                 <span>Role Permission Matrix Configuration</span>
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, fontSize: 12 }}>
+            <div className={styles.permGrid3}>
               <div>
-                <strong style={{ color: "#ffffff", display: "block", marginBottom: 8 }}>Catalogue & Master Products</strong>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <strong className={styles.permGroupTitle}>Catalogue & Master Products</strong>
+                <div className={styles.checkboxStack}>
                   <label><input type="checkbox" defaultChecked /> Create / Edit Master Items</label>
                   <label><input type="checkbox" defaultChecked /> Delete Catalogue Items</label>
                   <label><input type="checkbox" defaultChecked /> Modify Margin Rules</label>
@@ -362,8 +289,8 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
               </div>
 
               <div>
-                <strong style={{ color: "#ffffff", display: "block", marginBottom: 8 }}>Orders & Commerce</strong>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <strong className={styles.permGroupTitle}>Orders & Commerce</strong>
+                <div className={styles.checkboxStack}>
                   <label><input type="checkbox" defaultChecked /> View Orders</label>
                   <label><input type="checkbox" defaultChecked /> Issue Order Refunds</label>
                   <label><input type="checkbox" defaultChecked /> Delete Orders (Super Admin Only)</label>
@@ -371,8 +298,8 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
               </div>
 
               <div>
-                <strong style={{ color: "#ffffff", display: "block", marginBottom: 8 }}>Financial & Settlements</strong>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <strong className={styles.permGroupTitle}>Financial & Settlements</strong>
+                <div className={styles.checkboxStack}>
                   <label><input type="checkbox" defaultChecked /> Perform Bank Reconciliation</label>
                   <label><input type="checkbox" defaultChecked /> Override Credit Terms</label>
                   <label><input type="checkbox" defaultChecked /> Export Financial Summaries</label>
@@ -386,19 +313,19 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
       {/* TAB 3: FINANCIAL SETTINGS */}
       {currentTab === "financial" && (
         <form action="/admin/settings/financial" method="GET" className={styles.detailLayout}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <div className={styles.formStack}>
             {/* Tax & Invoicing */}
             <div className={styles.sidebarCard}>
               <div className={styles.sidebarCardHeader}>
                 <div className={styles.sidebarHeaderTitle}>
-                  <Receipt size={16} style={{ color: "#2dd4bf" }} />
+                  <Receipt size={16} className={styles.setIconTeal} />
                   <span>Tax & Invoice Configuration</span>
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+              <div className={styles.settingsGrid2}>
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Standard South African VAT Rate (%)
                   </label>
                   <input
@@ -406,34 +333,18 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
                     step="0.1"
                     name="vat_rate"
                     defaultValue="15.0"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Invoice Reference Prefix
                   </label>
                   <input
                     name="invoice_prefix"
                     defaultValue="PX-INV-"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
               </div>
@@ -443,66 +354,42 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
             <div className={styles.sidebarCard}>
               <div className={styles.sidebarCardHeader}>
                 <div className={styles.sidebarHeaderTitle}>
-                  <CreditCard size={16} style={{ color: "#34d399" }} />
+                  <CreditCard size={16} className={styles.setIconGreen} />
                   <span>Settlement Bank Account Details (EFT)</span>
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+              <div className={styles.settingsGrid3}>
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Bank Name
                   </label>
                   <input
                     name="bank_name"
                     defaultValue="Nedbank South Africa"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Account Number
                   </label>
                   <input
                     name="account_number"
                     defaultValue="1029384756"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Branch Code
                   </label>
                   <input
                     name="branch_code"
                     defaultValue="198765"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
               </div>
@@ -513,28 +400,20 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
             <div className={styles.sidebarCard}>
               <div className={styles.sidebarCardHeader}>
                 <div className={styles.sidebarHeaderTitle}>
-                  <Receipt size={16} style={{ color: "#fbbf24" }} />
+                  <Receipt size={16} className={styles.setIconAmber} />
                   <span>Supplier Credit Terms</span>
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div className={styles.formStackCompact}>
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Default Credit Terms
                   </label>
                   <select
                     name="default_credit_terms"
                     defaultValue="30 Days Net"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.selectField}
                   >
                     <option value="30 Days Net">30 Days Net</option>
                     <option value="60 Days Net">60 Days Net</option>
@@ -543,26 +422,18 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+                  <label className={styles.formLabel}>
                     Early Settlement Discount (%)
                   </label>
                   <input
                     name="settlement_discount"
                     defaultValue="2.5% within 7 Days"
-                    style={{
-                      width: "100%",
-                      background: "#020617",
-                      border: "1px solid #334155",
-                      borderRadius: 8,
-                      padding: "8px 12px",
-                      color: "#ffffff",
-                      fontSize: 13,
-                    }}
+                    className={styles.inputField}
                   />
                 </div>
 
-                <div style={{ paddingTop: 12 }}>
-                  <button type="submit" className={styles.primaryBtn} style={{ width: "100%", justifyContent: "center" }}>
+                <div className={styles.pt12}>
+                  <button type="submit" className={`${styles.primaryBtn} ${styles.wFullBtn}`}>
                     <Save size={14} /> Save Financial Settings
                   </button>
                 </div>
@@ -574,30 +445,30 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
 
       {/* TAB 4: TEMPLATES & MEDIA */}
       {currentTab === "templates" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div className={styles.formStack}>
           {/* Document & Email Templates */}
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <FileText size={16} style={{ color: "#2dd4bf" }} />
+                <FileText size={16} className={styles.setIconTeal} />
                 <span>Document & Transactional Email Templates</span>
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+            <div className={styles.settingsGrid2}>
               {[
                 { title: "Packing Slip Template", desc: "Warehouse pick & pack sheet printed per order.", badge: "PDF / Print" },
                 { title: "School RFQ Quote Template", desc: "Bulk school pricing quotation template.", badge: "PDF" },
                 { title: "Order Confirmation Email", desc: "Sent to parents immediately upon successful Ozow payment.", badge: "HTML Email" },
                 { title: "Packing Complete & Collection Ready", desc: "Automated SMS/Email notification when bag is ready.", badge: "Email + SMS" },
               ].map((tmpl, idx) => (
-                <div key={idx} style={{ background: "#020617", border: "1px solid #334155", borderRadius: 8, padding: 14 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                    <strong style={{ color: "#ffffff", fontSize: 13 }}>{tmpl.title}</strong>
+                <div key={idx} className={styles.templateCard}>
+                  <div className={styles.templateCardHead}>
+                    <strong className={styles.templateCardTitle}>{tmpl.title}</strong>
                     <span className={styles.badgeTeal}>{tmpl.badge}</span>
                   </div>
-                  <p style={{ margin: "0 0 10px", fontSize: 11, color: "#94a3b8" }}>{tmpl.desc}</p>
-                  <button className={styles.secondaryBtn} style={{ height: 28, fontSize: 11 }}>
+                  <p className={styles.templateCardDesc}>{tmpl.desc}</p>
+                  <button className={`${styles.secondaryBtn} ${styles.templateEditBtn}`}>
                     Edit Template
                   </button>
                 </div>
@@ -609,23 +480,23 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <ImageIcon size={16} style={{ color: "#60a5fa" }} />
+                <ImageIcon size={16} className={styles.setIconBlue} />
                 <span>Brand Assets & Marketing Collateral</span>
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
-              <div style={{ background: "#020617", border: "1px dashed #334155", borderRadius: 8, padding: 14, textAlign: "center" }}>
-                <strong style={{ color: "#ffffff", fontSize: 12, display: "block", marginBottom: 4 }}>Primary Pexpacks Logo</strong>
-                <span style={{ fontSize: 11, color: "#64748b" }}>SVG / PNG Vector</span>
+            <div className={styles.settingsGrid3}>
+              <div className={styles.brandAssetBox}>
+                <strong className={styles.brandAssetTitle}>Primary Pexpacks Logo</strong>
+                <span className={styles.brandAssetSub}>SVG / PNG Vector</span>
               </div>
-              <div style={{ background: "#020617", border: "1px dashed #334155", borderRadius: 8, padding: 14, textAlign: "center" }}>
-                <strong style={{ color: "#ffffff", fontSize: 12, display: "block", marginBottom: 4 }}>Dark Mode Dashboard Logo</strong>
-                <span style={{ fontSize: 11, color: "#64748b" }}>White / Mint Variant</span>
+              <div className={styles.brandAssetBox}>
+                <strong className={styles.brandAssetTitle}>Dark Mode Dashboard Logo</strong>
+                <span className={styles.brandAssetSub}>White / Mint Variant</span>
               </div>
-              <div style={{ background: "#020617", border: "1px dashed #334155", borderRadius: 8, padding: 14, textAlign: "center" }}>
-                <strong style={{ color: "#ffffff", fontSize: 12, display: "block", marginBottom: 4 }}>School Pack Catalog Banners</strong>
-                <span style={{ fontSize: 11, color: "#64748b" }}>High-Res WebP</span>
+              <div className={styles.brandAssetBox}>
+                <strong className={styles.brandAssetTitle}>School Pack Catalog Banners</strong>
+                <span className={styles.brandAssetSub}>High-Res WebP</span>
               </div>
             </div>
           </div>

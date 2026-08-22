@@ -44,8 +44,8 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
 
       <div className={adminStyles.stack}>
         <div className={adminStyles.tableCard}>
-          <div className={adminStyles.tableWrapper}>
-            <div style={{ padding: "clamp(20px, 3vw, 32px)" }}>
+            <div className={adminStyles.tableWrapper}>
+            <div className={adminStyles.pForm}>
               <RoleForm
                 initial={{
                   id: role.id,

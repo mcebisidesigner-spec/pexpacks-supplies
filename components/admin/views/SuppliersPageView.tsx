@@ -110,13 +110,13 @@ export function SuppliersPageView() {
                     onClick={() => router.push(`/admin/suppliers/${supSlug}`)}
                   >
                     <td>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(45, 212, 191, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2dd4bf" }}>
+                      <div className={`${styles.flex} ${styles["items-center"]} ${styles["gap-10"]}`}>
+                        <div className={styles.supplierAvatar}>
                           <Truck size={14} />
                         </div>
                         <Link
                           href={`/admin/suppliers/${supSlug}`}
-                          style={{ color: "#ffffff", fontWeight: 700, textDecoration: "none" }}
+                          className={`${styles["c-white"]} ${styles["fw-700"]}`}
                           onClick={(e) => e.stopPropagation()}
                         >
                           {sup.name}
@@ -125,7 +125,7 @@ export function SuppliersPageView() {
                     </td>
                     <td>{sup.category}</td>
                     <td>{sup.leadTime}</td>
-                    <td><span style={{ color: sup.onTimeRate >= 95 ? "#34d399" : "#fbbf24", fontWeight: 700 }}>{sup.onTimeRate}%</span></td>
+                    <td><span className={`${sup.onTimeRate >= 95 ? styles["c-green"] : styles["c-amber"]} ${styles["fw-700"]}`}>{sup.onTimeRate}%</span></td>
                     <td>{sup.quoteResponse}</td>
                     <td>
                       <span className={sup.status === "Preferred" ? styles.badgeTeal : sup.status === "Approved" ? styles.badgeGreen : styles.badgeAmber}>
@@ -148,13 +148,13 @@ export function SuppliersPageView() {
             <button className={styles.pageBtn}>3</button>
             <button className={styles.pageBtn}>4</button>
             <button className={styles.pageBtn}>5</button>
-            <span style={{ padding: "0 4px" }}>...</span>
+            <span className={styles["px-4"]}>...</span>
             <button className={styles.pageBtn}>8</button>
             <button className={styles.pageBtn}>&gt;</button>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div className={`${styles.flex} ${styles["items-center"]} ${styles["gap-6"]}`}>
             <span>Show</span>
-            <select className={styles.selectInput} style={{ height: 26, padding: "0 4px", fontSize: 11 }}>
+            <select className={`${styles.selectInput} ${styles["h-26"]} ${styles["text-11"]} ${styles["px-4"]}`}>
               <option>10</option>
               <option>20</option>
             </select>
