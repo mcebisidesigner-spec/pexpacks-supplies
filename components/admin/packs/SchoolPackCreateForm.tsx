@@ -297,23 +297,6 @@ export function SchoolPackCreateForm({
                   searchPlaceholder="Search items by item name/SKU"
                   onItemsChange={updateLines}
                 />
-                <div className={styles.marginRow}>
-                  <span className={styles.marginLabel}>Margin:</span>{" "}
-                  <span
-                    className={
-                      subtotal > 0 && displayPrice > 0
-                        ? displayPrice >= subtotal
-                          ? styles.marginPositive
-                          : styles.marginDanger
-                        : styles.marginDanger
-                    }
-                  >
-                    {subtotal > 0
-                      ? (((displayPrice - subtotal) / subtotal) * 100).toFixed(1)
-                      : "0.0"}
-                    %
-                  </span>
-                </div>
               </div>
             </div>
           </section>
