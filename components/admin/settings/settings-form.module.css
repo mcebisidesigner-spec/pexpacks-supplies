@@ -1,4 +1,4 @@
-.form {
+﻿.form {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -13,7 +13,7 @@
 .label {
   font-size: 13px;
   font-weight: 800;
-  color: var(--admin-heading);
+  color: var(--a-text);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -25,7 +25,7 @@
   padding: 10px 14px;
   font-size: 14px;
   font-family: inherit;
-  color: var(--admin-heading);
+  color: var(--a-text);
   background: var(--pex-bg);
   width: 100%;
   max-width: 480px;
@@ -61,7 +61,7 @@
   display: block;
   font-size: 14px;
   font-weight: 700;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .checkHelp {
@@ -102,7 +102,7 @@
 
 .saveButton {
   background: var(--pex-keppel, #1a7a77);
-  color: #fff;
+  color: var(--a-text);
   border: none;
   border-radius: 8px;
   padding: 10px 20px;

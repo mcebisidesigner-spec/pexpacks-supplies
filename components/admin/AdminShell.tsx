@@ -170,7 +170,7 @@ export function AdminShell({
   };
 
   return (
-    <div className={styles.shell}>
+    <div className={`admin-dark ${styles.shell}`}>
       {/* Mobile overlay */}
       <div
         className={clsx(styles.overlay, open && styles.overlayVisible)}

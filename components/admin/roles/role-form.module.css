@@ -1,4 +1,4 @@
-.form {
+﻿.form {
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -25,7 +25,7 @@
 .label {
   font-size: 13px;
   font-weight: 800;
-  color: var(--admin-heading);
+  color: var(--a-text);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -38,7 +38,7 @@
   padding: 10px 14px;
   font-size: 14px;
   font-family: inherit;
-  color: var(--admin-heading);
+  color: var(--a-text);
   background: var(--pex-bg);
   width: 100%;
 }
@@ -111,7 +111,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--admin-heading);
+  color: var(--a-text);
   background: var(--pex-bg-soft, #f4f5f7);
   padding: 8px 14px;
   border-bottom: 1px solid var(--pex-border, #e1e7ea);
@@ -149,7 +149,7 @@
   display: block;
   font-size: 13px;
   font-weight: 700;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .checkMono {
@@ -188,7 +188,7 @@
   display: inline-flex;
   align-items: center;
   background: var(--pex-bg);
-  color: var(--admin-heading);
+  color: var(--a-text);
   border: 1px solid var(--pex-border, #dbe3ec);
   border-radius: 8px;
   padding: 10px 20px;

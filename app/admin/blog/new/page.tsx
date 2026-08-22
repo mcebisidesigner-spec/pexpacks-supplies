@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { BlogForm } from "@/components/admin/blog/BlogForm";
@@ -19,9 +19,9 @@ export default async function NewBlogPostPage() {
           <ArrowLeft aria-hidden="true" /> Back to Blog
         </Link>
       </p>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div>
-          <h1 className={styles.pageTitle}>New post</h1>
+          <h1 className={adminStyles.pageTitle}>New post</h1>
           <p className={styles.subtitle}>
             Write an article for the public Resource Hub at /blog.
           </p>

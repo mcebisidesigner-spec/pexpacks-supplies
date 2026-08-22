@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listTestimonials } from "@/lib/admin/content";
@@ -18,12 +18,12 @@ export default async function TestimonialsPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={styles.toolbar}>
-        <div className={styles.headerRow}>
+      <div className={adminStyles.toolbar}>
+        <div className={adminStyles.headerRow}>
           <div>
-            <h1 className={styles.pageTitle}>
+            <h1 className={adminStyles.pageTitle}>
               Testimonials
-              <span className={styles.count}>
+              <span className={adminStyles.count}>
                 {testimonials.length} {testimonials.length === 1 ? "item" : "items"}
               </span>
             </h1>
@@ -32,7 +32,7 @@ export default async function TestimonialsPage() {
             </p>
           </div>
           {canManage ? (
-            <Link href="/admin/content/testimonials/new" className={styles.addButton}>
+            <Link href="/admin/content/testimonials/new" className={adminStyles.addButton}>
               + New testimonial
             </Link>
           ) : null}
@@ -103,14 +103,14 @@ export default async function TestimonialsPage() {
                         <div className={styles.actions}>
                           <Link
                             href={`/admin/content/testimonials/${t.id}`}
-                            className={styles.actionLink}
+                            className={adminStyles.actionLink}
                           >
                             Edit
                           </Link>
                           <form action={setTestimonialVisibleAction.bind(null, t.id, !t.visible)}>
                             <button
                               type="submit"
-                              className={`${styles.rowButton} ${
+                              className={`${adminStyles.rowButton} ${
                                 t.visible ? styles.rowButtonHide : styles.rowButtonShow
                               }`}
                             >
@@ -122,7 +122,7 @@ export default async function TestimonialsPage() {
                               label="Delete"
                               confirmText={`Delete the testimonial from ${t.name}? This cannot be undone.`}
                               busyLabel="Deleting…"
-                              className={`${styles.rowButton} ${styles.rowButtonDelete}`}
+                              className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
                             />
                           </form>
                         </div>

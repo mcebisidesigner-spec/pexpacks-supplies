@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -85,7 +85,7 @@ export default function PackBuilderPage() {
   return (
     <div className={styles.container}>
       <div>
-        <Link href="/admin/packs" className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}>
+        <Link href="/admin/packs" className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}>
           <ArrowLeft size={14} /> Back to packs
         </Link>
       </div>
@@ -102,27 +102,27 @@ export default function PackBuilderPage() {
         </div>
       </div>
 
-      <div className={styles.detailLayout}>
+      <div className={adminStyles.detailLayout}>
         {/* Left Column: Form & Assembly */}
-        <div className={`${styles.flex} ${styles["flex-col"]} ${styles.gap18}`}>
+        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap18}`}>
           {/* Metadata Card */}
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
               <span>Pack Configurations</span>
             </div>
-            <div className={styles.grid2}>
+            <div className={adminStyles.grid2}>
               <div>
-                <label className={`${styles.text11} ${styles.cMuted} ${styles.mb4}`}>Pack Title</label>
+                <label className={`${styles.text11} ${adminStyles.cMuted} ${adminStyles.mb4}`}>Pack Title</label>
                 <input
-                  className={`${adminStyles.searchInput} ${styles.wFull} ${styles.pl12}`}
+                  className={`${adminStyles.searchInput} ${adminStyles.wFull} ${styles.pl12}`}
                   value={packTitle}
                   onChange={(e) => setPackTitle(e.target.value)}
                 />
               </div>
               <div>
-                <label className={`${styles.text11} ${styles.cMuted} ${styles.mb4}`}>Assigned School</label>
+                <label className={`${styles.text11} ${adminStyles.cMuted} ${adminStyles.mb4}`}>Assigned School</label>
                 <input
-                  className={`${adminStyles.searchInput} ${styles.wFull} ${styles.pl12}`}
+                  className={`${adminStyles.searchInput} ${adminStyles.wFull} ${styles.pl12}`}
                   value={schoolName}
                   onChange={(e) => setSchoolName(e.target.value)}
                 />
@@ -131,11 +131,11 @@ export default function PackBuilderPage() {
           </div>
 
           {/* Typeahead Search */}
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
               <span>Typeahead Master Product Search</span>
             </div>
-            <div className={`${styles.searchBox} ${styles.wFull}`}>
+            <div className={`${styles.searchBox} ${adminStyles.wFull}`}>
               <Search />
               <input
                 className={adminStyles.searchInput}
@@ -145,14 +145,14 @@ export default function PackBuilderPage() {
               />
             </div>
             {searchResults.length > 0 && (
-              <div className={styles.searchDropdown}>
+              <div className={adminStyles.searchDropdown}>
                 {searchResults.map((itm) => (
-                  <div key={itm.id} onClick={() => addItem(itm)} className={styles.searchDropdownItem}>
+                  <div key={itm.id} onClick={() => addItem(itm)} className={adminStyles.searchDropdownItem}>
                     <div>
-                      <strong className={`${styles.cWhite} ${styles.text13}`}>{itm.name}</strong>
-                      <span className={`${styles.text11} ${styles.cSubtle} ${styles.ml8}`}>({itm.sku})</span>
+                      <strong className={`${adminStyles.cWhite} ${adminStyles.text13}`}>{itm.name}</strong>
+                      <span className={`${styles.text11} ${adminStyles.cSubtle} ${adminStyles.ml8}`}>({itm.sku})</span>
                     </div>
-                    <span className={`${styles.cTeal} ${styles.text12} ${styles.fw700}`}>
+                    <span className={`${adminStyles.cTeal} ${adminStyles.text12} ${adminStyles.fw700}`}>
                       + Add Item (Cost R {itm.supplierCost})
                     </span>
                   </div>
@@ -162,11 +162,11 @@ export default function PackBuilderPage() {
           </div>
 
           {/* BOM Table */}
-          <div className={styles.tableCard}>
-            <div className={`${styles.pCard} ${styles.borderB} ${styles.fw700} ${styles.cWhite}`}>
+          <div className={adminStyles.tableCard}>
+            <div className={`${adminStyles.pCard} ${adminStyles.borderB} ${adminStyles.fw700} ${adminStyles.cWhite}`}>
               Bill of Materials ({selectedItems.length} Allocated Items)
             </div>
-            <div className={styles.tableWrapper}>
+            <div className={adminStyles.tableWrapper}>
               <table className={styles.dataTable}>
                 <thead>
                   <tr>
@@ -181,22 +181,22 @@ export default function PackBuilderPage() {
                 <tbody>
                   {selectedItems.map((itm) => (
                     <tr key={itm.id}>
-                      <td><strong className={styles.cWhite}>{itm.name}</strong></td>
+                      <td><strong className={adminStyles.cWhite}>{itm.name}</strong></td>
                       <td>{itm.sku}</td>
                       <td>R {itm.supplierCost.toFixed(2)}</td>
                       <td>
-                        <div className={`${styles.flex} ${styles.itemsCenter} ${styles.gap6}`}>
-                          <button className={styles.actionBtnDots} onClick={() => updateQty(itm.id, -1)} type="button">-</button>
-                          <span className={`${styles.cWhite} ${styles.fw700} ${styles.minW20} ${styles.textCenter}`}>{itm.qty}</span>
-                          <button className={styles.actionBtnDots} onClick={() => updateQty(itm.id, 1)} type="button">+</button>
+                        <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles.gap6}`}>
+                          <button className={adminStyles.actionBtnDots} onClick={() => updateQty(itm.id, -1)} type="button">-</button>
+                          <span className={`${adminStyles.cWhite} ${adminStyles.fw700} ${styles.minW20} ${adminStyles.textCenter}`}>{itm.qty}</span>
+                          <button className={adminStyles.actionBtnDots} onClick={() => updateQty(itm.id, 1)} type="button">+</button>
                         </div>
                       </td>
-                      <td className={`${styles.cWhite} ${styles.fw700}`}>
+                      <td className={`${adminStyles.cWhite} ${adminStyles.fw700}`}>
                         R {(itm.supplierCost * itm.qty).toFixed(2)}
                       </td>
                       <td>
                         <button
-                          className={`${styles.actionIconBtn} ${styles.actionIconBtnRed}`}
+                          className={`${adminStyles.actionIconBtn} ${adminStyles.actionIconBtnRed}`}
                           onClick={() => removeItem(itm.id)}
                           type="button"
                         >
@@ -212,47 +212,47 @@ export default function PackBuilderPage() {
         </div>
 
         {/* Right Sidebar: Profit & Pack Health Calculator */}
-        <div className={styles.sidebarColumn}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Calculator size={16} className={styles.iconTeal} />
+        <div className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Calculator size={16} className={adminStyles.iconTeal} />
                 <span>Financial &amp; Health Breakdown</span>
               </div>
             </div>
 
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Total Supplier Cost:</span>
-              <span className={styles.sidebarStatVal}>R {totalCost.toFixed(2)}</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Total Supplier Cost:</span>
+              <span className={adminStyles.sidebarStatVal}>R {totalCost.toFixed(2)}</span>
             </div>
 
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Selling Price (R):</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Selling Price (R):</span>
               <input
-                className={`${adminStyles.searchInput} ${styles.h28} ${styles.textRight} ${styles.w100px}`}
+                className={`${adminStyles.searchInput} ${adminStyles.h28} ${adminStyles.textRight} ${adminStyles.w100px}`}
                 type="number"
                 value={sellingPrice}
                 onChange={(e) => setSellingPrice(Number(e.target.value))}
               />
             </div>
 
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Gross Margin (R):</span>
-              <span className={`${styles.sidebarStatVal} ${grossProfit >= 0 ? styles.cGreen : styles.cRed}`}>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Gross Margin (R):</span>
+              <span className={`${adminStyles.sidebarStatVal} ${grossProfit >= 0 ? adminStyles.cGreen : adminStyles.cRed}`}>
                 R {grossProfit.toFixed(2)}
               </span>
             </div>
 
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Margin Percentage:</span>
-              <span className={`${styles.sidebarStatVal} ${marginPct >= 30 ? styles.cGreen : styles.cAmber}`}>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Margin Percentage:</span>
+              <span className={`${adminStyles.sidebarStatVal} ${marginPct >= 30 ? adminStyles.cGreen : adminStyles.cAmber}`}>
                 {marginPct.toFixed(1)}%
               </span>
             </div>
 
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Pack Health Score:</span>
-              <span className={healthScore >= 75 ? styles.badgeGreen : styles.badgeAmber}>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Pack Health Score:</span>
+              <span className={healthScore >= 75 ? adminStyles.badgeGreen : adminStyles.badgeAmber}>
                 {healthScore}% Healthy
               </span>
             </div>

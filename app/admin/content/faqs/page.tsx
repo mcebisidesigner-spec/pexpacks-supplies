@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listFaqs } from "@/lib/admin/content";
@@ -24,12 +24,12 @@ export default async function FaqsPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={styles.toolbar}>
-        <div className={styles.headerRow}>
+      <div className={adminStyles.toolbar}>
+        <div className={adminStyles.headerRow}>
           <div>
-            <h1 className={styles.pageTitle}>
+            <h1 className={adminStyles.pageTitle}>
               FAQs
-              <span className={styles.count}>
+              <span className={adminStyles.count}>
                 {faqs.length} {faqs.length === 1 ? "item" : "items"}
               </span>
             </h1>
@@ -38,7 +38,7 @@ export default async function FaqsPage() {
             </p>
           </div>
           {canManage ? (
-            <Link href="/admin/content/faqs/new" className={styles.addButton}>
+            <Link href="/admin/content/faqs/new" className={adminStyles.addButton}>
               + New FAQ
             </Link>
           ) : null}
@@ -116,14 +116,14 @@ export default async function FaqsPage() {
                           <div className={styles.actions}>
                             <Link
                               href={`/admin/content/faqs/${f.id}`}
-                              className={styles.actionLink}
+                              className={adminStyles.actionLink}
                             >
                               Edit
                             </Link>
                             <form action={setFaqVisibleAction.bind(null, f.id, !f.visible)}>
                               <button
                                 type="submit"
-                                className={`${styles.rowButton} ${
+                                className={`${adminStyles.rowButton} ${
                                   f.visible ? styles.rowButtonHide : styles.rowButtonShow
                                 }`}
                               >
@@ -135,7 +135,7 @@ export default async function FaqsPage() {
                                 label="Delete"
                                 confirmText={`Delete the FAQ "${f.question}"? This cannot be undone.`}
                                 busyLabel="Deleting…"
-                                className={`${styles.rowButton} ${styles.rowButtonDelete}`}
+                                className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
                               />
                             </form>
                           </div>

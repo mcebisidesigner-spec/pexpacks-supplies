@@ -18,7 +18,6 @@
   --color-brand-orange: var(--pex-coral);
   --color-brand-orange-hover: var(--pex-coral-hover);
   --color-brand-teal: var(--pex-keppel);
-  --color-background: var(--pex-bg);
   --color-background-soft: var(--pex-bg-soft);
   --color-page-background: var(--pex-body-bg);
   --color-surface: var(--pex-bg);
@@ -35,10 +34,6 @@
   --color-teal-subtle: rgba(33, 158, 154, 0.08);
   --color-teal-border: rgba(33, 158, 154, 0.2);
   --color-surface-glass: rgba(255, 255, 255, 0.92);
-
-  /* Pexcover sub-palette */
-  --pexcover-lavender: #b19cd9;
-  --pexcover-pink: #ffd1dc;
 
   /* SME Professional sub-palette */
   --pex-sme-navy: #152238;
@@ -146,14 +141,11 @@
   --space-4: 16px;
   --space-5: 24px;
   --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
-  --space-9: 96px;
+
   --gap-card: var(--card-gap);
   --gap-card-mobile: var(--card-gap-mobile);
 
   /* Elevation */
-  --shadow-soft: 0 14px 32px rgba(26, 42, 64, 0.14);
   --shadow-pill: 0 9px 18px rgba(26, 42, 64, 0.22);
   --shadow-card: var(--card-shadow);
 
@@ -176,8 +168,7 @@
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;
   --text-2xl: clamp(1.5rem, 3vw, 2rem);
-  --text-3xl: clamp(2rem, 5vw, 3.25rem);
-  --text-hero: clamp(2.4rem, 8vw, 5.5rem);
+
   --line-heading: 1.12;
   --line-body: 1.6;
 
@@ -228,17 +219,10 @@
   --logo-width-desktop: 103px;
 
   --touch-target-min: 48px;
-  --button-height-mobile: 48px;
-  --button-height-desktop: 52px;
   --cta-padding-x: 24px;
 
   --section-padding-y-mobile: 56px;
   --section-padding-y-tablet: 72px;
   --section-padding-y-desktop: 96px;
 
-  /* Standardised breakpoints (min-width values) */
-  --bp-sm: 600px;
-  --bp-md: 900px;
-  --bp-lg: 1024px;
-  --bp-xl: 1280px;
 }

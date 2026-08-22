@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import { isOperationsSchemaReady } from "@/lib/admin/operations";
@@ -8,10 +8,10 @@ import {
   createMasterProductAction,
   importMasterProductsAction,
 } from "../../operations-actions";
-import admin from "../../admin.module.css";
 import shared from "../../schools/schools.module.css";
 import styles from "../../operations.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -28,51 +28,51 @@ export default async function AddItemPage() {
   const canImportExisting = hasPermission(session, "items.import");
 
   return (
-    <div className={styles.page}>
-      <div className={admin.headerSection}>
+    <div className={adminStyles.page}>
+      <div className={adminStyles.headerSection}>
         <p>
           <Link href="/admin/items" className={shared.resetLink}>
             <ArrowLeft aria-hidden="true" /> Back to items
           </Link>
         </p>
-        <h1 className={`${styles.headerTitle} ${viewStyles.text28} ${viewStyles.mt8} ${viewStyles.mb4}`}>
+        <h1 className={`${styles.headerTitle} ${viewStyles.text28} ${adminStyles.mt8} ${adminStyles.mb4}`}>
           Stationery Items
         </h1>
-        <p className={`${styles.muted} ${viewStyles.text14} ${viewStyles.m0}`}>
+        <p className={`${adminStyles.muted} ${adminStyles.text14} ${adminStyles.m0}`}>
           Digital stationery products that can be reused across school packs.
         </p>
       </div>
 
       {schemaReady && canManage ? (
-        <section className={styles.formPanel}>
+        <section className={adminStyles.formPanel}>
           <h2>Add catalogue product</h2>
-          <form action={createMasterProductAction} className={styles.formGrid}>
+          <form action={createMasterProductAction} className={adminStyles.formGrid}>
             <input
-              className={styles.field}
+              className={adminStyles.field}
               name="sku"
               placeholder="Unique SKU"
               required
             />
             <input
-              className={`${styles.field} ${styles.wide}`}
+              className={`${adminStyles.field} ${adminStyles.wide}`}
               name="name"
               placeholder="Item name"
               required
             />
             <input
-              className={styles.field}
+              className={adminStyles.field}
               name="category"
               placeholder="Category"
             />
-            <input className={styles.field} name="brand" placeholder="Brand" />
-            <input className={styles.field} name="unit" placeholder="Unit" />
+            <input className={adminStyles.field} name="brand" placeholder="Brand" />
+            <input className={adminStyles.field} name="unit" placeholder="Unit" />
             <input
-              className={styles.field}
+              className={adminStyles.field}
               name="packaging"
               placeholder="Packaging"
             />
             <input
-              className={styles.field}
+              className={adminStyles.field}
               name="sellingPrice"
               type="number"
               min="0"
@@ -80,11 +80,11 @@ export default async function AddItemPage() {
               placeholder="Selling price"
             />
             <input
-              className={`${styles.field} ${styles.wide}`}
+              className={`${adminStyles.field} ${adminStyles.wide}`}
               name="description"
               placeholder="Description"
             />
-            <button className={styles.button} type="submit">
+            <button className={adminStyles.button} type="submit">
               Add product
             </button>
           </form>
@@ -92,24 +92,24 @@ export default async function AddItemPage() {
       ) : null}
 
       {schemaReady && canManage ? (
-        <section className={styles.formPanel}>
+        <section className={adminStyles.formPanel}>
           <h2>Bulk CSV catalogue importer</h2>
           <form
             action={importMasterProductsAction}
-            className={styles.inlineForm}
+            className={adminStyles.inlineForm}
           >
             <input
-              className={styles.field}
+              className={adminStyles.field}
               type="file"
               name="file"
               accept=".csv,text/csv"
               required
             />
-            <button className={styles.button} type="submit">
+            <button className={adminStyles.button} type="submit">
               Import catalogue
             </button>
           </form>
-          <p className={styles.muted}>
+          <p className={adminStyles.muted}>
             Required columns: SKU and item name. Optional: description, category, brand, unit, packaging and selling price.
           </p>
         </section>
@@ -119,7 +119,7 @@ export default async function AddItemPage() {
         <section
           id="bulk-stationery-import"
           aria-label="Bulk CSV stationery import"
-          className={viewStyles.mt12}
+          className={adminStyles.mt12}
         >
           <CSVStationeryImporter packs={await listPacksForFilter()} />
         </section>

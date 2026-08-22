@@ -12,15 +12,15 @@ export default async function RolesPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={styles.toolbar}>
-        <div className={styles.headerRow}>
-          <h1 className={styles.pageTitle}>
+      <div className={adminStyles.toolbar}>
+        <div className={adminStyles.headerRow}>
+          <h1 className={adminStyles.pageTitle}>
             Roles
-            <span className={styles.count}>
+            <span className={adminStyles.count}>
               {roles.length} {roles.length === 1 ? "role" : "roles"}
             </span>
           </h1>
-          <Link href="/admin/roles/new" className={styles.addButton}>
+          <Link href="/admin/roles/new" className={adminStyles.addButton}>
             + New role
           </Link>
         </div>
@@ -79,7 +79,7 @@ export default async function RolesPage() {
                     <td>{role.permissionCount}</td>
                     <td>
                       <div className={styles.actions}>
-                        <Link href={`/admin/roles/${role.id}`} className={styles.actionLink}>
+                        <Link href={`/admin/roles/${role.id}`} className={adminStyles.actionLink}>
                           Edit
                         </Link>
                         {role.slug !== "super_admin" && role.memberCount === 0 ? (
@@ -88,7 +88,7 @@ export default async function RolesPage() {
                               label="Delete"
                               confirmText={`Permanently delete the "${role.name}" role? This cannot be undone.`}
                               busyLabel="Deleting…"
-                              className={`${styles.rowButton} ${styles.rowButtonDelete}`}
+                              className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
                             />
                           </form>
                         ) : null}

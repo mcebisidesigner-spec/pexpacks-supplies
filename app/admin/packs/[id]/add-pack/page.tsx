@@ -1,11 +1,12 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";
 import { SchoolPackCreateForm } from "@/components/admin/packs/SchoolPackCreateForm";
 import { createSchoolPackAction } from "../../actions";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import styles from "@/components/admin/views/CorePagesView.module.css"
+import adminStyles from "@/app/admin/admin.module.css";
 
 export const metadata = {
   title: "Add Pack | Admin | Pexpacks",
@@ -30,7 +31,7 @@ export default async function AddPackPage({ params }: AddPackPageProps) {
 
   return (
     <div className={`${styles.container} ${styles.packEditorContainer}`}>
-      <Link href={`/admin/packs/${schoolRoute}`} className={styles.backLink}>
+      <Link href={`/admin/packs/${schoolRoute}`} className={adminStyles.backLink}>
         <ArrowLeft size={14} /> Back to {school.name}
       </Link>
       <SchoolPackCreateForm

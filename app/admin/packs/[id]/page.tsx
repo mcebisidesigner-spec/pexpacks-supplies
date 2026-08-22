@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import {
   ArrowLeft,
   Box,
@@ -65,7 +65,7 @@ export default async function PackOrSchoolPacksPage({
 
   return (
     <div className={`${styles.container} ${styles.packEditorContainer}`}>
-      <Link href={backHref} className={styles.backLink}>
+      <Link href={backHref} className={adminStyles.backLink}>
         <ArrowLeft size={14} /> Back to {schoolName}
       </Link>
 
@@ -73,7 +73,7 @@ export default async function PackOrSchoolPacksPage({
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {schoolName}{" "}
-            <span className={styles.titleAccent}>
+            <span className={adminStyles.titleAccent}>
               {pack.title.toLowerCase().startsWith(schoolName.toLowerCase())
                 ? pack.title.slice(schoolName.length).trim() || "Pack"
                 : pack.title}
@@ -92,81 +92,81 @@ export default async function PackOrSchoolPacksPage({
         </button>
       </div>
 
-      <div className={`${styles.metricsGrid5} ${styles.packMetricsGrid}`}>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Pack Price</span>
+      <div className={`${adminStyles.metricsGrid5} ${styles.packMetricsGrid}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Pack Price</span>
             <div
-              className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
             >
-              <span className={styles.currencyText}>R</span>
+              <span className={adminStyles.currencyText}>R</span>
             </div>
           </div>
-          <div className={styles.metricValue}>{formattedPrice}</div>
-          <div className={styles.metricSub}>Retail selling price</div>
+          <div className={adminStyles.metricValue}>{formattedPrice}</div>
+          <div className={adminStyles.metricSub}>Retail selling price</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Item Subtotal</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Item Subtotal</span>
             <div
-              className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
             >
               <Layers size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{formattedSubtotal}</div>
-          <div className={styles.metricSub}>Sum of line items</div>
+          <div className={adminStyles.metricValue}>{formattedSubtotal}</div>
+          <div className={adminStyles.metricSub}>Sum of line items</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Items</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Items</span>
             <div
-              className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}
             >
               <FileText size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{itemCount}</div>
-          <div className={styles.metricSub}>Line items in pack</div>
+          <div className={adminStyles.metricValue}>{itemCount}</div>
+          <div className={adminStyles.metricSub}>Line items in pack</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>School</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>School</span>
             <div
-              className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
             >
               <School size={16} />
             </div>
           </div>
-          <div className={`${styles.metricValue} ${styles.metricValueSmall}`}>
+          <div className={`${adminStyles.metricValue} ${adminStyles.metricValueSmall}`}>
             {schoolData ? schoolName : "Unassigned"}
           </div>
-          <div className={styles.metricSub}>{schoolData?.province || ""}</div>
+          <div className={adminStyles.metricSub}>{schoolData?.province || ""}</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Visibility</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Visibility</span>
             <div
-              className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
             >
               {pack.visible ? <Eye size={16} /> : <EyeOff size={16} />}
             </div>
           </div>
-          <div className={`${styles.metricValue} ${styles.metricValueSmall}`}>
+          <div className={`${adminStyles.metricValue} ${adminStyles.metricValueSmall}`}>
             {pack.visible ? "Visible" : "Hidden"}
           </div>
-          <div className={styles.metricSub}>
+          <div className={adminStyles.metricSub}>
             {pack.visible ? "Public listing" : "Draft / hidden"}
           </div>
         </div>
       </div>
 
-      <div className={styles.detailLayout}>
-        <div className={styles.formStack}>
+      <div className={adminStyles.detailLayout}>
+        <div className={adminStyles.formStack}>
           <PackPriceForm
             formId={priceFormId}
             packId={pack.id}
@@ -188,40 +188,40 @@ export default async function PackOrSchoolPacksPage({
           </PackPriceForm>
         </div>
 
-        <div className={styles.sidebarColumn}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Box size={16} className={styles.iconTeal} />
+        <div className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Box size={16} className={adminStyles.iconTeal} />
                 <span>Pack Summary</span>
               </div>
-              <span className={`${styles.badgeGreen} ${styles.badgeTiny}`}>
+              <span className={`${adminStyles.badgeGreen} ${adminStyles.badgeTiny}`}>
                 {pack.visible ? "Live" : "Draft"}
               </span>
             </div>
 
-            <div className={styles.summaryStack}>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Title</span>
-                <span className={styles.sidebarStatVal}>{pack.title}</span>
+            <div className={adminStyles.summaryStack}>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Title</span>
+                <span className={adminStyles.sidebarStatVal}>{pack.title}</span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Price</span>
-                <span className={styles.sidebarStatVal}>{formattedPrice}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Price</span>
+                <span className={adminStyles.sidebarStatVal}>{formattedPrice}</span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Subtotal</span>
-                <span className={styles.sidebarStatVal}>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Subtotal</span>
+                <span className={adminStyles.sidebarStatVal}>
                   {formattedSubtotal}
                 </span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Items</span>
-                <span className={styles.sidebarStatVal}>{itemCount}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Items</span>
+                <span className={adminStyles.sidebarStatVal}>{itemCount}</span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>School</span>
-                <span className={styles.sidebarStatVal}>{schoolName}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>School</span>
+                <span className={adminStyles.sidebarStatVal}>{schoolName}</span>
               </div>
             </div>
           </div>

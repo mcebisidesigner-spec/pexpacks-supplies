@@ -10,7 +10,6 @@ import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { OrderStatusForm } from "@/components/admin/orders/OrderStatusForm";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { refundOrderAction, deleteOrderAction } from "../actions";
-import shared from "../../schools/schools.module.css";
 import adminStyles from "../../admin.module.css";
 import styles from "../orders.module.css";
 
@@ -216,7 +215,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
   return (
     <div className={adminStyles.adminContainer}>
       <div className={styles.detailHeader}>
-        <Link href="/admin/orders" className={shared.resetLink}>
+        <Link href="/admin/orders" className={adminStyles.resetLink}>
           <ArrowLeft aria-hidden="true" /> Back to orders
         </Link>
         <div className={styles.detailTitleRow}>
@@ -256,7 +255,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
               label="Refund order"
               confirmText={`Refund ${order.order_reference} for ${money(order.estimated_total)}?`}
               busyLabel="Refunding…"
-              className={`${shared.rowButton} ${shared.rowButtonDelete}`}
+              className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
             />
           </form>
         ) : null}

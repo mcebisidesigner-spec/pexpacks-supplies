@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft, Building2, DollarSign, Edit, GraduationCap, ShieldCheck, User } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
@@ -40,7 +40,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
     <div className={styles.container}>
       {/* Breadcrumb */}
       <div>
-        <Link href="/admin/schools" className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}>
+        <Link href="/admin/schools" className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}>
           <ArrowLeft size={14} /> Back to schools
         </Link>
       </div>
@@ -50,7 +50,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {school.name}
-            <span className={school.is_partner ? styles.badgeGreen : styles.badgeDark}>
+            <span className={school.is_partner ? adminStyles.badgeGreen : adminStyles.badgeDark}>
               ● {school.is_partner ? "Partner School" : "Non-partner"}
             </span>
           </h1>
@@ -69,94 +69,94 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
       </div>
 
       {/* 4 Metric Cards */}
-      <div className={styles.metricsGrid4}>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Grade Packs</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+      <div className={adminStyles.metricsGrid4}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Grade Packs</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
               <GraduationCap size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{packData.total}</div>
+          <div className={adminStyles.metricValue}>{packData.total}</div>
           <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Grade R through 12</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Total Orders</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Total Orders</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}>
               <Building2 size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{totalOrders}</div>
+          <div className={adminStyles.metricValue}>{totalOrders}</div>
           <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Lifetime learner orders</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Total Gross Revenue</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconGreen}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Total Gross Revenue</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconGreen}`}>
               <DollarSign size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{money(totalRevenue)}</div>
+          <div className={adminStyles.metricValue}>{money(totalRevenue)}</div>
           <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Generated sales</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>School Rebate (1.5%)</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconAmber}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>School Rebate (1.5%)</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconAmber}`}>
               <ShieldCheck size={16} />
             </div>
           </div>
-          <div className={`${styles.metricValue} ${styles["c-amber"]}`}>{money(rebateAmount)}</div>
+          <div className={`${adminStyles.metricValue} ${styles["c-amber"]}`}>{money(rebateAmount)}</div>
           <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Agreed payout ledger</div>
         </div>
       </div>
 
       {/* Main Details & Contact Section */}
-      <div className={styles.detailLayout}>
-        <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
+      <div className={adminStyles.detailLayout}>
+        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
           {/* Metadata Card */}
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Building2 size={16} className={styles.iconTeal} />
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Building2 size={16} className={adminStyles.iconTeal} />
                 <span>School Metadata & Overview</span>
               </div>
-              <span className={styles.badgeTeal}>{school.status}</span>
+              <span className={adminStyles.badgeTeal}>{school.status}</span>
             </div>
 
             <div className={styles["grid-2equal"]}>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>EMIS Number:</span>
-                <span className={styles.sidebarStatVal}>EMIS-{school.id.slice(0, 8).toUpperCase()}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>EMIS Number:</span>
+                <span className={adminStyles.sidebarStatVal}>EMIS-{school.id.slice(0, 8).toUpperCase()}</span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>District:</span>
-                <span className={styles.sidebarStatVal}>{school.district || "Tshwane"}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>District:</span>
+                <span className={adminStyles.sidebarStatVal}>{school.district || "Tshwane"}</span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Physical Address:</span>
-                <span className={styles.sidebarStatVal}>{school.address || "Not specified"}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Physical Address:</span>
+                <span className={adminStyles.sidebarStatVal}>{school.address || "Not specified"}</span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Parent Collection:</span>
-                <span className={styles.sidebarStatVal}>{school.parent_collection_accepted ? "Accepted" : "School delivery only"}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Parent Collection:</span>
+                <span className={adminStyles.sidebarStatVal}>{school.parent_collection_accepted ? "Accepted" : "School delivery only"}</span>
               </div>
             </div>
           </div>
 
           {/* Assigned Grade Packs */}
-          <div className={styles.tableCard}>
-            <div className={`${styles["p-12"]} ${styles["fw-700"]} ${styles["border-b"]} ${styles["c-white"]} ${styles.flex} ${styles["items-center"]} ${styles["justify-between"]}`}>
+          <div className={adminStyles.tableCard}>
+            <div className={`${styles["p-12"]} ${styles["fw-700"]} ${styles["border-b"]} ${styles["c-white"]} ${adminStyles.flex} ${styles["items-center"]} ${styles["justify-between"]}`}>
               <span>Assigned Grade Packs</span>
               <Link href={`/admin/packs/${school.slug || school.id}`} className={`${styles["text-11"]} ${styles["c-teal"]}`}>
                 Manage Packs →
               </Link>
             </div>
-            <div className={styles.tableWrapper}>
+            <div className={adminStyles.tableWrapper}>
               <table className={styles.dataTable}>
                 <thead>
                   <tr>
@@ -180,7 +180,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
                         <td className={`${styles["c-white"]} ${styles["fw-600"]}`}>{money(p.price)}</td>
                         <td>{p.item_count} items</td>
                         <td>
-                          <span className={p.visible ? styles.badgeTeal : styles.badgeDark}>
+                          <span className={p.visible ? adminStyles.badgeTeal : adminStyles.badgeDark}>
                             {p.visible ? "Visible" : "Hidden"}
                           </span>
                         </td>
@@ -194,46 +194,46 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
         </div>
 
         {/* Sidebar: Contacts & Financial Payout Ledger */}
-        <div className={styles.sidebarColumn}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <User size={16} className={styles.iconTeal} />
+        <div className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <User size={16} className={adminStyles.iconTeal} />
                 <span>Primary Contacts</span>
               </div>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Principal / Admin:</span>
-              <span className={styles.sidebarStatVal}>{school.principal || "Principal Office"}</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Principal / Admin:</span>
+              <span className={adminStyles.sidebarStatVal}>{school.principal || "Principal Office"}</span>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Email:</span>
-              <span className={`${styles.sidebarStatVal} ${styles["text-11"]} ${styles["c-blue"]}`}>{school.email || "info@pexpacks.co.za"}</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Email:</span>
+              <span className={`${adminStyles.sidebarStatVal} ${styles["text-11"]} ${styles["c-blue"]}`}>{school.email || "info@pexpacks.co.za"}</span>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Telephone:</span>
-              <span className={styles.sidebarStatVal}>{school.telephone || "N/A"}</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Telephone:</span>
+              <span className={adminStyles.sidebarStatVal}>{school.telephone || "N/A"}</span>
             </div>
           </div>
 
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <ShieldCheck size={16} className={styles.iconAmber} />
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <ShieldCheck size={16} className={adminStyles.iconAmber} />
                 <span>Rebate Payout Ledger</span>
               </div>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Rebate Rate:</span>
-              <span className={styles.sidebarStatVal}>1.5% fixed</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Rebate Rate:</span>
+              <span className={adminStyles.sidebarStatVal}>1.5% fixed</span>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Accrued Rebate:</span>
-              <span className={`${styles.sidebarStatVal} ${styles["c-green"]} ${styles["fw-700"]}`}>{money(rebateAmount)}</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Accrued Rebate:</span>
+              <span className={`${adminStyles.sidebarStatVal} ${styles["c-green"]} ${styles["fw-700"]}`}>{money(rebateAmount)}</span>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Payout Status:</span>
-              <span className={styles.badgeGreen}>Up to Date</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Payout Status:</span>
+              <span className={adminStyles.badgeGreen}>Up to Date</span>
             </div>
           </div>
         </div>

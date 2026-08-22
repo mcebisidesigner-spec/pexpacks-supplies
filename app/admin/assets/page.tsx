@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listAssets, listAssetFolders } from "@/lib/admin/assets";
 import { AssetUploadForm } from "@/components/admin/assets/AssetUploadForm";
@@ -48,12 +48,12 @@ export default async function AssetsPage({
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={styles.toolbar}>
-        <div className={styles.headerRow}>
+      <div className={adminStyles.toolbar}>
+        <div className={adminStyles.headerRow}>
           <div>
-            <h1 className={styles.pageTitle}>
+            <h1 className={adminStyles.pageTitle}>
               Assets
-              <span className={styles.count}>
+              <span className={adminStyles.count}>
                 {assets.length} {assets.length === 1 ? "file" : "files"}
               </span>
             </h1>
@@ -63,8 +63,8 @@ export default async function AssetsPage({
           </div>
         </div>
 
-        <form method="get" action="/admin/assets" className={styles.filterForm}>
-          <select name="folder" defaultValue={folder ?? ""} className={styles.filterInput}>
+        <form method="get" action="/admin/assets" className={adminStyles.filterForm}>
+          <select name="folder" defaultValue={folder ?? ""} className={adminStyles.filterInput}>
             <option value="">All folders</option>
             {folders.map((f) => (
               <option key={f} value={f}>
@@ -72,11 +72,11 @@ export default async function AssetsPage({
               </option>
             ))}
           </select>
-          <button type="submit" className={styles.applyButton}>
+          <button type="submit" className={adminStyles.applyButton}>
             Filter
           </button>
           {folder ? (
-            <Link href="/admin/assets" className={styles.resetLink}>
+            <Link href="/admin/assets" className={adminStyles.resetLink}>
               Reset
             </Link>
           ) : null}
@@ -190,7 +190,7 @@ export default async function AssetsPage({
                                 label="Delete"
                                 confirmText={`Delete "${asset.name}"? The file is removed from storage and the library.`}
                                 busyLabel="Deleting…"
-                                className={`${styles.rowButton} ${styles.rowButtonDelete}`}
+                                className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
                               />
                             </form>
                           </>

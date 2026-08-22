@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
@@ -8,6 +8,7 @@ import { Save } from "lucide-react";
 import { updatePackPriceAction } from "@/app/admin/packs/actions";
 import type { PackFormState } from "@/lib/admin/packs";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 import editStyles from "./EditPack.module.css";
 
 function SubmitButton() {
@@ -71,7 +72,7 @@ export function PackPriceForm({
   }, [targetPrice]);
 
   return (
-    <div className={coreStyles.tableCard}>
+    <div className={adminStyles.tableCard}>
       <form id={formId} action={formAction}>
         <input type="hidden" name="price" value={value} readOnly />
         <div className={editStyles.priceHeader}>
@@ -111,11 +112,11 @@ export function PackPriceForm({
         ) : null}
 
         {state?.ok ? (
-          <div className={coreStyles.success} role="status">
+          <div className={adminStyles.success} role="status">
             {state.message}
           </div>
         ) : state?.errors?.price ? (
-          <div className={coreStyles.error} role="alert">
+          <div className={adminStyles.error} role="alert">
             {state.errors.price}
           </div>
         ) : null}

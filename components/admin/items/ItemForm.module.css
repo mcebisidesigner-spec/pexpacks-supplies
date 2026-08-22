@@ -1,4 +1,4 @@
-.formGrid {
+﻿.formGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px 20px;
@@ -47,7 +47,7 @@
   border: 1px solid var(--pex-border, #dbe3ec);
   border-radius: 10px;
   background: var(--pex-bg, #ffffff);
-  color: var(--admin-heading, #1e293b);
+  color: var(--a-text);
   cursor: pointer;
   font-family: inherit;
   transition: all 0.15s ease-in-out;

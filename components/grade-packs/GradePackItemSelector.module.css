@@ -1,4 +1,4 @@
-/* ===================================================
+﻿/* ===================================================
    PexPacks Supplies — Grade Pack Item Selector
    Token-based styles scoped to this component.
    Assumes rendering inside the .admin-dark theme scope
@@ -12,7 +12,7 @@
   width: 100%;
   max-width: none;
   margin: 0;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
   font-family: inherit;
 }
 
@@ -28,7 +28,7 @@
   display: block;
   font-size: 13px;
   font-weight: 800;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
 }
 
 .searchWrap {
@@ -59,7 +59,7 @@
   border: 1px solid #1e293b;
   border-radius: 8px;
   background: #020617;
-  color: var(--db-text, #ffffff);
+  color: var(--a-text);
   font: inherit;
   font-size: 14px;
   font-weight: 700;
@@ -73,7 +73,7 @@
 }
 
 .searchInput:focus {
-  border-color: var(--db-accent, #2dd4bf);
+  border-color: var(--a-accent);
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.14);
 }
 
@@ -106,7 +106,7 @@
   border-radius: 8px;
   border: 1px solid #1e293b;
   background: #020617;
-  color: var(--db-text, #ffffff);
+  color: var(--a-text);
   padding-left: 48px;
   font-size: 14px;
   font-weight: 700;
@@ -118,7 +118,7 @@
 }
 
 .packEditor .searchInput:focus {
-  border-color: var(--db-accent, #2dd4bf);
+  border-color: var(--a-accent);
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.14);
 }
 
@@ -134,7 +134,7 @@
 .spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid var(--admin-accent);
+  border: 2px solid var(--a-accent);
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -149,10 +149,10 @@
   right: 0;
   max-height: 320px;
   overflow-y: auto;
-  border-radius: var(--db-radius, var(--admin-radius-sm));
-  border: 1px solid var(--db-border-strong, var(--admin-border-strong));
-  background: var(--db-surface, var(--admin-surface));
-  box-shadow: var(--db-shadow-card, 0 18px 42px rgba(0, 0, 0, 0.56));
+  border-radius: var(--a-radius);
+  border: 1px solid var(--a-border-strong);
+  background: var(--a-surface);
+  box-shadow: var(--a-shadow-card);
 }
 
 .resultButton {
@@ -165,23 +165,23 @@
   padding: 14px;
   text-align: left;
   border: 0;
-  background: var(--db-surface, var(--admin-surface));
+  background: var(--a-surface);
   color: inherit;
   cursor: pointer;
   transition: background 0.14s ease;
 }
 
 .resultButton:hover {
-  background: var(--db-surface-hover, var(--admin-surface-2));
+  background: var(--a-surface-2);
 }
 
 .resultButton + .resultButton {
-  border-top: 1px solid var(--db-border, var(--admin-border));
+  border-top: 1px solid var(--a-border);
 }
 
 .resultButton:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 3px var(--admin-focus);
+  box-shadow: inset 0 0 0 3px var(--a-accent);
 }
 
 .resultInfo {
@@ -195,18 +195,18 @@
 .resultTitle {
   font-size: 14px;
   font-weight: 800;
-  color: var(--db-text, var(--admin-text));
+  color: var(--a-text);
   transition: color 0.14s ease;
 }
 
 .resultButton:hover .resultTitle {
-  color: var(--db-accent, var(--admin-accent-strong));
+  color: var(--a-accent);
 }
 
 .resultMeta {
   margin: 0;
   overflow: hidden;
-  color: var(--db-accent, var(--admin-accent-strong));
+  color: var(--a-accent);
   font-size: 11px;
   font-weight: 700;
   text-overflow: ellipsis;
@@ -218,7 +218,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
-  color: var(--db-text-muted, var(--admin-text-3));
+  color: var(--a-text-3);
 }
 
 .resultPriceBlock {
@@ -229,12 +229,12 @@
 .resultPrice {
   font-size: 14px;
   font-weight: 700;
-  color: var(--db-green, var(--admin-accent-strong));
+  color: var(--a-green);
 }
 
 .resultPriceTag {
   font-size: 10px;
-  color: var(--db-text-muted, var(--admin-muted));
+  color: var(--a-text-4);
 }
 
 .resultEmpty {
@@ -246,10 +246,10 @@
   padding: 16px;
   text-align: center;
   font-size: 14px;
-  color: var(--admin-text-3);
-  border-radius: var(--admin-radius-sm);
-  border: 1px solid var(--admin-border-strong);
-  background: var(--db-surface, var(--admin-surface));
+  color: var(--a-text-3);
+  border-radius: var(--a-radius-sm);
+  border: 1px solid var(--a-border-strong);
+  background: var(--a-surface);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
@@ -259,7 +259,7 @@
   margin-right: 8px;
   width: 20px;
   height: 20px;
-  color: var(--admin-amber);
+  color: var(--a-amber);
 }
 
 /* 2. Assembled grade pack inventory ----------------------------------- */
@@ -268,9 +268,9 @@
   flex-direction: column;
   gap: 16px;
   padding: 20px;
-  border-radius: var(--admin-radius);
-  border: 1px solid var(--admin-border);
-  background: var(--admin-surface);
+  border-radius: var(--a-radius);
+  border: 1px solid var(--a-border);
+  background: var(--a-surface);
 }
 
 .packHeader {
@@ -279,7 +279,7 @@
   justify-content: space-between;
   gap: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--admin-border);
+  border-bottom: 1px solid var(--a-border);
 }
 
 .packHeading {
@@ -291,20 +291,20 @@
 .packIcon {
   width: 20px;
   height: 20px;
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .packTitle {
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: var(--admin-text);
+  color: var(--a-text);
 }
 
 .packCount {
   font-size: 12px;
   font-weight: 500;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .emptyNote {
@@ -312,7 +312,7 @@
   padding: 32px 0;
   text-align: center;
   font-size: 14px;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .emptyNoteMain {
@@ -322,7 +322,7 @@
 .emptyNoteSub {
   margin: 4px 0 0;
   font-size: 12px;
-  color: var(--admin-muted);
+  color: var(--a-text-4);
 }
 
 .lineList {
@@ -336,9 +336,9 @@
   flex-direction: column;
   gap: 12px;
   padding: 14px;
-  border-radius: var(--admin-radius-sm);
-  border: 1px solid var(--admin-border);
-  background: var(--admin-bg);
+  border-radius: var(--a-radius-sm);
+  border: 1px solid var(--a-border);
+  background: var(--a-bg);
 }
 
 .lineInfo {
@@ -351,13 +351,13 @@
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: var(--admin-text);
+  color: var(--a-text);
 }
 
 .lineDesc {
   margin: 0;
   font-size: 12px;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .lineControls {
@@ -374,8 +374,8 @@
   gap: 6px;
   padding: 4px;
   border-radius: 10px;
-  border: 1px solid var(--admin-border);
-  background: var(--admin-surface);
+  border: 1px solid var(--a-border);
+  background: var(--a-surface);
 }
 
 .stepBtn {
@@ -387,7 +387,7 @@
   border-radius: 8px;
   border: none;
   background: transparent;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -397,13 +397,13 @@
 }
 
 .stepBtn:hover {
-  background: var(--admin-surface-2);
-  color: var(--admin-text);
+  background: var(--a-surface-2);
+  color: var(--a-text);
 }
 
 .stepBtn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--admin-focus);
+  box-shadow: 0 0 0 3px var(--a-accent);
 }
 
 .qtyValue {
@@ -411,7 +411,7 @@
   text-align: center;
   font-size: 14px;
   font-weight: 600;
-  color: var(--admin-text);
+  color: var(--a-text);
 }
 
 .priceBlock {
@@ -423,14 +423,14 @@
 .priceUnit {
   margin: 0;
   font-size: 12px;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .priceTotal {
   margin: 0;
   font-size: 14px;
   font-weight: 700;
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .removeBtn {
@@ -442,7 +442,7 @@
   border-radius: 10px;
   border: none;
   background: transparent;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
   cursor: pointer;
   transition:
     color 0.14s ease,
@@ -450,13 +450,13 @@
 }
 
 .removeBtn:hover {
-  color: var(--admin-red);
-  background: var(--admin-red-subtle);
+  color: var(--a-red);
+  background: var(--a-red-subtle);
 }
 
 .removeBtn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--admin-focus);
+  box-shadow: 0 0 0 3px var(--a-accent);
 }
 
 .removeIcon {
@@ -471,20 +471,20 @@
   justify-content: space-between;
   gap: 12px;
   padding-top: 16px;
-  border-top: 1px solid var(--admin-border);
+  border-top: 1px solid var(--a-border);
 }
 
 .totalLabel {
   margin: 0;
   font-size: 12px;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .totalValue {
   margin: 0;
   font-size: 24px;
   font-weight: 800;
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .saveBtn {
@@ -493,19 +493,19 @@
   gap: 8px;
   min-height: 44px;
   padding: 0 24px;
-  border-radius: var(--admin-radius-sm);
+  border-radius: var(--a-radius-sm);
   border: none;
-  background: var(--admin-accent);
-  color: var(--admin-accent-text);
+  background: var(--a-accent);
+  color: var(--a-text);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 20px var(--admin-accent-subtle);
+  box-shadow: 0 8px 20px var(--a-accent-subtle);
   transition: background 0.16s ease;
 }
 
 .saveBtn:hover:not(:disabled) {
-  background: var(--admin-accent-strong);
+  background: var(--a-accent-strong);
 }
 
 .saveBtn:disabled {
@@ -515,7 +515,7 @@
 
 .saveBtn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--admin-focus);
+  box-shadow: 0 0 0 3px var(--a-accent);
 }
 
 .saveBtnIcon {

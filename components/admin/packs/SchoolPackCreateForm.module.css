@@ -1,9 +1,9 @@
-.form {
+﻿.form {
   gap: 14px;
 }
 
 .titleAccent {
-  color: var(--db-accent, #2dd4bf);
+  color: var(--a-accent);
 }
 
 .statusMessage {
@@ -42,7 +42,7 @@
 
 .cardTitle {
   margin: 0;
-  color: var(--db-text, #ffffff);
+  color: var(--a-text);
   font-size: 16px;
   font-weight: 800;
 }
@@ -66,7 +66,7 @@
 }
 
 .fieldLabel {
-  color: var(--db-text-soft, #cbd5e1);
+  color: var(--a-text-2);
   font-size: 12px;
   font-weight: 700;
 }
@@ -78,7 +78,7 @@
   border: 1px solid #1e293b;
   border-radius: 8px;
   background: #020617;
-  color: var(--db-text, #ffffff);
+  color: var(--a-text);
   padding: 0 16px;
   font: inherit;
   font-size: 14px;
@@ -88,13 +88,13 @@
 }
 
 .fieldSelect:focus {
-  border-color: var(--db-accent, #2dd4bf);
+  border-color: var(--a-accent);
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.14);
 }
 
 .emptyRow {
   height: 90px;
-  color: var(--db-text-muted, #94a3b8);
+  color: var(--a-text-3);
   text-align: center;
 }
 

@@ -1,11 +1,7 @@
 import { revalidateTag, unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "../supabase/admin";
 import type { Json } from "../supabase/types";
-import {
-  getAdminUser,
-  hasPermission,
-  writeAuditLog,
-} from "./rbac";
+import { getAdminUser, hasPermission, writeAuditLog } from "./rbac";
 import {
   SYSTEM_SETTING_DEFINITIONS,
   type SystemSettingRecord,
@@ -29,7 +25,9 @@ export {
 
 export const SYSTEM_SETTINGS_CACHE_TAG = "system_settings";
 
-const _getSystemSettingsRaw = async (): Promise<Record<string, SystemSettingRecord>> => {
+const _getSystemSettingsRaw = async (): Promise<
+  Record<string, SystemSettingRecord>
+> => {
   const admin = createSupabaseAdminClient();
   const map: Record<string, SystemSettingRecord> = {};
 
@@ -49,8 +47,11 @@ const _getSystemSettingsRaw = async (): Promise<Record<string, SystemSettingReco
   }
 
   try {
-    const { data, error } = await (admin.from as unknown as (table: string) => any)("system_settings")
-      .select("key,category,value,value_type,scope,description,is_sensitive,is_public,requires_approval,version,updated_by,updated_at");
+    const { data, error } = await (
+      admin.from as unknown as (table: string) => any
+    )("system_settings").select(
+      "key,category,value,value_type,scope,description,is_sensitive,is_public,requires_approval,version,updated_by,updated_at",
+    );
 
     if (!error && data) {
       for (const row of data) {
@@ -59,7 +60,11 @@ const _getSystemSettingsRaw = async (): Promise<Record<string, SystemSettingReco
           map[item.key] = {
             ...map[item.key],
             ...item,
-            value: item.value ?? (SYSTEM_SETTING_DEFINITIONS.find((d) => d.key === item.key)?.defaultValue ?? null),
+            value:
+              item.value ??
+              SYSTEM_SETTING_DEFINITIONS.find((d) => d.key === item.key)
+                ?.defaultValue ??
+              null,
           };
         }
       }
@@ -74,10 +79,12 @@ const _getSystemSettingsRaw = async (): Promise<Record<string, SystemSettingReco
 export const getSystemSettings = unstable_cache(
   _getSystemSettingsRaw,
   ["system-settings"],
-  { revalidate: 300, tags: [SYSTEM_SETTINGS_CACHE_TAG] }
+  { revalidate: 300, tags: [SYSTEM_SETTINGS_CACHE_TAG] },
 );
 
-export async function getPublicSystemSettings(): Promise<Record<string, unknown>> {
+export async function getPublicSystemSettings(): Promise<
+  Record<string, unknown>
+> {
   const settings = await getSystemSettings();
   const publicValues: Record<string, unknown> = {};
 
@@ -93,7 +100,7 @@ export async function getPublicSystemSettings(): Promise<Record<string, unknown>
 export async function updateSystemSetting(
   key: string,
   newValue: unknown,
-  changeReason?: string
+  changeReason?: string,
 ): Promise<{ ok: boolean; message?: string; errors?: Record<string, string> }> {
   const session = await getAdminUser();
   if (!session || !hasPermission(session, "settings.manage")) {
@@ -108,10 +115,18 @@ export async function updateSystemSetting(
   if (def.valueType === "boolean" && typeof newValue !== "boolean") {
     return { ok: false, message: "Value must be a boolean." };
   }
-  if ((def.valueType === "number" || def.valueType === "currency" || def.valueType === "percentage") && (typeof newValue !== "number" || !Number.isFinite(newValue))) {
+  if (
+    (def.valueType === "number" ||
+      def.valueType === "currency" ||
+      def.valueType === "percentage") &&
+    (typeof newValue !== "number" || !Number.isFinite(newValue))
+  ) {
     return { ok: false, message: "Value must be a valid number." };
   }
-  if (def.valueType === "email" && (typeof newValue !== "string" || !newValue.includes("@"))) {
+  if (
+    def.valueType === "email" &&
+    (typeof newValue !== "string" || !newValue.includes("@"))
+  ) {
     return { ok: false, message: "Value must be a valid email address." };
   }
 
@@ -120,7 +135,9 @@ export async function updateSystemSetting(
   const oldValue = currentMap[key]?.value ?? null;
 
   try {
-    const { error: upsertErr } = await (admin.from as unknown as (table: string) => any)("system_settings").upsert(
+    const { error: upsertErr } = await (
+      admin.from as unknown as (table: string) => any
+    )("system_settings").upsert(
       {
         key,
         category: def.category,
@@ -135,12 +152,14 @@ export async function updateSystemSetting(
         updated_at: new Date().toISOString(),
         version: (currentMap[key]?.version ?? 1) + 1,
       },
-      { onConflict: "key" }
+      { onConflict: "key" },
     );
 
     if (upsertErr) throw upsertErr;
 
-    await (admin.from as unknown as (table: string) => any)("system_settings_audit").insert({
+    await (admin.from as unknown as (table: string) => any)(
+      "system_settings_audit",
+    ).insert({
       setting_key: key,
       old_value: oldValue as Json,
       new_value: newValue as Json,
@@ -159,19 +178,30 @@ export async function updateSystemSetting(
       details: { key, oldValue, newValue, reason: changeReason },
     });
 
-    (revalidateTag as unknown as (tag: string) => void)(SYSTEM_SETTINGS_CACHE_TAG);
+    (revalidateTag as unknown as (tag: string) => void)(
+      SYSTEM_SETTINGS_CACHE_TAG,
+    );
     return { ok: true, message: `${def.label} updated successfully.` };
   } catch (err) {
     console.error("[system-settings] update failed:", err);
-    return { ok: false, message: err instanceof Error ? err.message : "Failed to update setting." };
+    return {
+      ok: false,
+      message: err instanceof Error ? err.message : "Failed to update setting.",
+    };
   }
 }
 
-export async function getSystemSettingsAuditLogs(limit = 50): Promise<SystemSettingsAuditRecord[]> {
+export async function getSystemSettingsAuditLogs(
+  limit = 50,
+): Promise<SystemSettingsAuditRecord[]> {
   const admin = createSupabaseAdminClient();
   try {
-    const { data, error } = await (admin.from as unknown as (table: string) => any)("system_settings_audit")
-      .select("id,setting_key,old_value,new_value,change_reason,actor_id,actor_email,created_at")
+    const { data, error } = await (
+      admin.from as unknown as (table: string) => any
+    )("system_settings_audit")
+      .select(
+        "id,setting_key,old_value,new_value,change_reason,actor_id,actor_email,created_at",
+      )
       .order("created_at", { ascending: false })
       .limit(limit);
 
@@ -206,7 +236,9 @@ export async function getIntegrationHealth(): Promise<IntegrationStatus[]> {
       purpose: "Transactional email notifications & receipt dispatch",
       status: process.env.RESEND_API_KEY ? "connected" : "action_required",
       environment: "Production",
-      details: process.env.RESEND_API_KEY ? "API key active. Transactional emails enabled." : "RESEND_API_KEY not configured in environment.",
+      details: process.env.RESEND_API_KEY
+        ? "API key active. Transactional emails enabled."
+        : "RESEND_API_KEY not configured in environment.",
       lastCheckedAt: now,
     },
     {
@@ -214,7 +246,9 @@ export async function getIntegrationHealth(): Promise<IntegrationStatus[]> {
       purpose: "Secure instant EFT payment processing",
       status: process.env.OZOW_SITE_CODE ? "connected" : "action_required",
       environment: "Production",
-      details: process.env.OZOW_SITE_CODE ? `Site Code ${process.env.OZOW_SITE_CODE} active.` : "OZOW_SITE_CODE environment variable required.",
+      details: process.env.OZOW_SITE_CODE
+        ? `Site Code ${process.env.OZOW_SITE_CODE} active.`
+        : "OZOW_SITE_CODE environment variable required.",
       lastCheckedAt: now,
     },
     {
@@ -239,8 +273,10 @@ export async function getPerformanceMetrics(): Promise<SystemPerformanceMetrics>
   try {
     const [s, p, i, o, a] = await Promise.all([
       admin.from("schools").select("id", { count: "exact", head: true }),
-      admin.from("stationery_packs").select("id", { count: "exact", head: true }),
-      (admin.from as unknown as (table: string) => any)("school_pack_items").select("id", { count: "exact", head: true }),
+      admin.from("school_packs").select("id", { count: "exact", head: true }),
+      (admin.from as unknown as (table: string) => any)(
+        "school_pack_items",
+      ).select("id", { count: "exact", head: true }),
       admin.from("orders").select("id", { count: "exact", head: true }),
       admin.from("audit_logs").select("id", { count: "exact", head: true }),
     ]);
@@ -264,11 +300,13 @@ export async function getPerformanceMetrics(): Promise<SystemPerformanceMetrics>
     recommendations: [
       {
         issue: "Canonical product search and pack composition",
-        suggestion: "Keep master_products search indexes and school_pack_items pack indexes active.",
+        suggestion:
+          "Keep master_products search indexes and school_pack_items pack indexes active.",
       },
       {
         issue: "School grade pack subtotal aggregation",
-        suggestion: "Use canonical_pack_items_view and school_pack_items pack indexes for totals.",
+        suggestion:
+          "Use canonical_pack_items_view and school_pack_items pack indexes for totals.",
       },
     ],
   };

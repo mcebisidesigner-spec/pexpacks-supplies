@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -16,6 +16,7 @@ import {
   Warehouse,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface FulfilmentRow {
   id: string;
@@ -41,7 +42,7 @@ export function FulfilmentPageView() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>Packing & Fulfilment</h1>
           <p className={styles.headerSubtitle}>Oversees packing, batching and dispatch.</p>
@@ -49,54 +50,54 @@ export function FulfilmentPageView() {
       </div>
 
       {/* 4 Metric Cards */}
-      <div className={styles.metricsGrid4}>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Ready to Pack</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}><PackageCheck size={16} /></div>
+      <div className={adminStyles.metricsGrid4}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Ready to Pack</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}><PackageCheck size={16} /></div>
           </div>
-          <div className={styles.metricValue}>356</div>
-          <span className={`${styles.metricTrend} ${styles.metricTrendUp}`}><TrendingUp size={12} /> 15% vs last 7 days</span>
+          <div className={adminStyles.metricValue}>356</div>
+          <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 15% vs last 7 days</span>
         </div>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>In Packing</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}><Boxes size={16} /></div>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>In Packing</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}><Boxes size={16} /></div>
           </div>
-          <div className={styles.metricValue}>124</div>
-          <span className={`${styles.metricTrend} ${styles.metricTrendDown}`}><TrendingDown size={12} /> 5% vs last 7 days</span>
+          <div className={adminStyles.metricValue}>124</div>
+          <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendDown}`}><TrendingDown size={12} /> 5% vs last 7 days</span>
         </div>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Ready for Dispatch</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconGreen}`}><Truck size={16} /></div>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Ready for Dispatch</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconGreen}`}><Truck size={16} /></div>
           </div>
-          <div className={styles.metricValue}>78</div>
-          <span className={`${styles.metricTrend} ${styles.metricTrendUp}`}><TrendingUp size={12} /> 8% vs last 7 days</span>
+          <div className={adminStyles.metricValue}>78</div>
+          <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 8% vs last 7 days</span>
         </div>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Dispatched Today</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconPurple}`}><Warehouse size={16} /></div>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Dispatched Today</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconPurple}`}><Warehouse size={16} /></div>
           </div>
-          <div className={styles.metricValue}>42</div>
-          <span className={`${styles.metricTrend} ${styles.metricTrendUp}`}><TrendingUp size={12} /> 18% vs last 7 days</span>
+          <div className={adminStyles.metricValue}>42</div>
+          <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 18% vs last 7 days</span>
         </div>
       </div>
 
-      <div className={styles.toolbar}>
+      <div className={adminStyles.toolbar}>
         <div className={styles.toolbarLeft}>
           <div className={styles.searchBox}>
             <Search />
-            <input className={styles.searchInput} placeholder="Search orders or schools..." />
+            <input className={adminStyles.searchInput} placeholder="Search orders or schools..." />
           </div>
           <select className={styles.selectInput}><option>Status: All</option></select>
           <select className={styles.selectInput}><option>Batch: All</option></select>
         </div>
       </div>
 
-      <div className={styles.tableCard}>
-        <div className={styles.tableWrapper}>
+      <div className={adminStyles.tableCard}>
+        <div className={adminStyles.tableWrapper}>
           <table className={styles.dataTable}>
             <thead>
               <tr>
@@ -118,7 +119,7 @@ export function FulfilmentPageView() {
                   <td>
                     <Link
                       href={`/admin/fulfilment/${row.orderNumber}`}
-                      className={styles.badgeTeal}
+                      className={adminStyles.badgeTeal}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {row.orderNumber}
@@ -135,17 +136,17 @@ export function FulfilmentPageView() {
                   </td>
                   <td>
                     <span className={
-                      row.status === "Ready to Pack" ? styles.badgeTeal :
-                      row.status === "In Packing" ? styles.badgeBlue :
-                      row.status === "Ready for Dispatch" ? styles.badgeGreen :
-                      row.status === "Dispatched" ? styles.badgePurple :
-                      row.status === "Delivered" ? styles.badgeGreen :
-                      styles.badgeAmber
+                      row.status === "Ready to Pack" ? adminStyles.badgeTeal :
+                      row.status === "In Packing" ? adminStyles.badgeBlue :
+                      row.status === "Ready for Dispatch" ? adminStyles.badgeGreen :
+                      row.status === "Dispatched" ? adminStyles.badgePurple :
+                      row.status === "Delivered" ? adminStyles.badgeGreen :
+                      adminStyles.badgeAmber
                     }>
                       {row.status}
                     </span>
                   </td>
-                  <td><span className={styles.badgeDark}>{row.batchWave}</span></td>
+                  <td><span className={adminStyles.badgeDark}>{row.batchWave}</span></td>
                   <td>{row.itemsCount}</td>
                   <td>{row.estDispatch}</td>
                 </tr>
@@ -155,7 +156,7 @@ export function FulfilmentPageView() {
         </div>
         <div className={styles.paginationFooter}>
           <span>Showing 1 to 6 of 124 orders</span>
-          <div className={styles.paginationControls}>
+          <div className={adminStyles.paginationControls}>
             <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
             <button className={styles.pageBtn}>2</button>
             <button className={styles.pageBtn}>3</button>

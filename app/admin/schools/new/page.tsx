@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { SchoolForm } from "@/components/admin/schools/SchoolForm";
@@ -19,7 +19,7 @@ export default async function NewSchoolPage() {
       <div>
         <Link
           href="/admin/schools"
-          className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}
+          className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}
         >
           <ArrowLeft size={14} /> Back to Schools
         </Link>

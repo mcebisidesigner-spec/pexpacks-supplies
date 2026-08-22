@@ -1,9 +1,9 @@
-.root {
+﻿.root {
   display: flex;
   min-width: 0;
   flex-direction: column;
   gap: 16px;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
 }
 
 .dashboardHeader {
@@ -16,7 +16,7 @@
 
 .dashboardHeader h1 {
   margin: 0;
-  color: var(--admin-text);
+  color: var(--a-text);
   font-family: var(--font-heading);
   font-size: 34px;
   line-height: 1;
@@ -25,7 +25,7 @@
 
 .dashboardHeader p {
   margin: 8px 0 0;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
   font-size: 12px;
   line-height: 1.45;
 }
@@ -43,23 +43,23 @@
   justify-content: center;
   gap: 8px;
   padding: 0 17px;
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--a-border-strong);
   border-radius: 999px;
   font-size: 11px;
   font-weight: 800;
   text-decoration: none;
 }
 
-.secondaryAction { background: var(--admin-surface); color: var(--admin-text-2); }
-.secondaryAction:hover { background: var(--admin-surface-2); color: var(--admin-text); }
+.secondaryAction { background: var(--a-surface); color: var(--a-text-2); }
+.secondaryAction:hover { background: var(--a-surface-2); color: var(--a-text); }
 .secondaryAction svg { width: 15px; height: 15px; }
 
 .dataNotice {
   padding: 10px 13px;
   border: 1px solid rgba(251, 191, 36, 0.35);
   border-radius: 11px;
-  background: var(--admin-amber-subtle);
-  color: var(--admin-amber);
+  background: var(--a-amber-subtle);
+  color: var(--a-amber);
   font-size: 10px;
 }
 
@@ -78,10 +78,10 @@
   justify-content: space-between;
   padding: 18px;
   overflow: hidden;
-  border: 1px solid var(--admin-border);
+  border: 1px solid var(--a-border);
   border-radius: 18px;
-  background: var(--admin-surface);
-  color: var(--admin-text-2);
+  background: var(--a-surface);
+  color: var(--a-text-2);
   text-decoration: none;
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
   transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
@@ -89,7 +89,7 @@
 
 .metricCard:hover {
   transform: translateY(-2px);
-  border-color: var(--admin-border-strong);
+  border-color: var(--a-border-strong);
   background: #121d32;
 }
 
@@ -108,7 +108,7 @@
 }
 
 .metricLabel {
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
   font-size: 11px;
   font-weight: 800;
 }
@@ -122,7 +122,7 @@
   height: 30px;
   flex: 0 0 30px;
   place-items: center;
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--a-border-strong);
   border-radius: 50%;
   color: currentColor;
 }
@@ -145,7 +145,7 @@
 
 .metricValue {
   overflow-wrap: anywhere;
-  color: var(--admin-text);
+  color: var(--a-text);
   font-size: 32px;
   line-height: 1;
   letter-spacing: 0;
@@ -154,7 +154,7 @@
 .metricCardHighlighted .metricValue { color: #fff; }
 
 .metricHint {
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
   font-size: 9px;
   line-height: 1.35;
 }
@@ -164,16 +164,16 @@
   width: 104px;
   height: 31px;
   border-radius: 7px;
-  background: var(--admin-surface-2);
+  background: var(--a-surface-2);
   animation: pulse 1.2s ease-in-out infinite alternate;
 }
 
 .toneEmerald .metricAction,
-.toneEmerald:not(.metricCardHighlighted) .metricValue { color: var(--admin-accent-strong); }
-.toneAmber .metricAction, .toneAmber .metricValue { color: var(--admin-amber); }
-.toneInfo .metricAction { color: var(--admin-info); }
-.toneRed .metricAction { color: var(--admin-red); }
-.toneNeutral .metricAction { color: var(--admin-text-3); }
+.toneEmerald:not(.metricCardHighlighted) .metricValue { color: var(--a-accent-strong); }
+.toneAmber .metricAction, .toneAmber .metricValue { color: var(--a-amber); }
+.toneInfo .metricAction { color: var(--a-blue); }
+.toneRed .metricAction { color: var(--a-red); }
+.toneNeutral .metricAction { color: var(--a-text-3); }
 
 .middleGrid,
 .bottomGrid {
@@ -185,9 +185,9 @@
 .panel {
   min-width: 0;
   padding: 17px;
-  border: 1px solid var(--admin-border);
+  border: 1px solid var(--a-border);
   border-radius: 18px;
-  background: var(--admin-surface);
+  background: var(--a-surface);
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
 }
 
@@ -208,7 +208,7 @@
 
 .panelHeader h2 {
   margin: 0;
-  color: var(--admin-text);
+  color: var(--a-text);
   font-size: 13px;
   line-height: 1.25;
 }
@@ -216,14 +216,14 @@
 .panelHeader span {
   display: block;
   margin-top: 4px;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
   font-size: 8px;
 }
 
 .panelHeader > svg {
   width: 17px;
   height: 17px;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .capsuleChart { min-width: 0; }
@@ -251,10 +251,10 @@
   max-width: 62px;
   overflow: hidden;
   padding: 3px 6px;
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--a-border-strong);
   border-radius: 7px;
-  background: var(--admin-surface-2);
-  color: var(--admin-accent-strong);
+  background: var(--a-surface-2);
+  color: var(--a-accent-strong);
   font-size: 8px;
   font-weight: 900;
   text-overflow: ellipsis;
@@ -270,20 +270,20 @@
   transition: height 220ms ease, background-color 160ms ease;
 }
 
-.capsuleBarPeak { background: var(--admin-accent-strong); }
+.capsuleBarPeak { background: var(--a-accent-strong); }
 
 .capsuleBarEmpty {
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--a-border-strong);
   background: repeating-linear-gradient(
     135deg,
-    var(--admin-surface-2) 0,
-    var(--admin-surface-2) 4px,
-    var(--admin-border-strong) 4px,
-    var(--admin-border-strong) 7px
+    var(--a-surface-2) 0,
+    var(--a-surface-2) 4px,
+    var(--a-border-strong) 4px,
+    var(--a-border-strong) 7px
   );
 }
 
-.capsuleLabel { color: var(--admin-text-3); font-size: 9px; font-weight: 700; }
+.capsuleLabel { color: var(--a-text-3); font-size: 9px; font-weight: 700; }
 
 .attentionList {
   display: flex;
@@ -300,11 +300,11 @@
   padding: 8px;
   border: 1px solid transparent;
   border-radius: 10px;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
   text-decoration: none;
 }
 
-.attentionItem:hover { border-color: var(--admin-border); background: var(--admin-surface-2); }
+.attentionItem:hover { border-color: var(--a-border); background: var(--a-surface-2); }
 
 .attentionIcon {
   display: grid;
@@ -312,19 +312,19 @@
   height: 30px;
   place-items: center;
   border-radius: 9px;
-  background: var(--admin-muted-subtle);
+  background: var(--a-surface-2);
 }
 
 .attentionIcon svg { width: 14px; height: 14px; }
-.attentionIcon.toneAmber { color: var(--admin-amber); background: var(--admin-amber-subtle); }
-.attentionIcon.toneInfo { color: var(--admin-info); background: var(--admin-info-subtle); }
-.attentionIcon.toneRed { color: var(--admin-red); background: var(--admin-red-subtle); }
-.attentionIcon.toneEmerald { color: var(--admin-accent-strong); background: var(--admin-accent-subtle); }
+.attentionIcon.toneAmber { color: var(--a-amber); background: var(--a-amber-subtle); }
+.attentionIcon.toneInfo { color: var(--a-blue); background: var(--a-blue-subtle); }
+.attentionIcon.toneRed { color: var(--a-red); background: var(--a-red-subtle); }
+.attentionIcon.toneEmerald { color: var(--a-accent-strong); background: var(--a-accent-subtle); }
 
 .attentionCopy { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
-.attentionCopy strong { overflow: hidden; color: var(--admin-text); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-.attentionCopy span { overflow: hidden; color: var(--admin-text-3); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
-.attentionArrow { width: 13px; color: var(--admin-text-3); }
+.attentionCopy strong { overflow: hidden; color: var(--a-text); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.attentionCopy span { overflow: hidden; color: var(--a-text-3); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.attentionArrow { width: 13px; color: var(--a-text-3); }
 
 .attentionEmpty {
   display: flex;
@@ -333,13 +333,13 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .attentionEmpty > svg { width: 24px; height: 24px; }
 .attentionEmpty div { display: flex; flex-direction: column; gap: 2px; }
-.attentionEmpty strong { color: var(--admin-text); font-size: 11px; }
-.attentionEmpty span { color: var(--admin-text-3); font-size: 8px; }
+.attentionEmpty strong { color: var(--a-text); font-size: 11px; }
+.attentionEmpty span { color: var(--a-text-3); font-size: 8px; }
 
 .panelAction {
   display: flex;
@@ -364,15 +364,15 @@
   min-height: 28px;
   align-items: center;
   padding: 0 9px;
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--a-border-strong);
   border-radius: 999px;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
   font-size: 8px;
   font-weight: 800;
   text-decoration: none;
 }
 
-.miniAction:hover { border-color: rgba(52, 211, 153, 0.4); color: var(--admin-accent-strong); }
+.miniAction:hover { border-color: rgba(52, 211, 153, 0.4); color: var(--a-accent-strong); }
 
 .queueList,
 .activityList { display: flex; flex-direction: column; gap: 5px; }
@@ -387,14 +387,14 @@
 }
 
 .queueItem i { width: 8px; height: 8px; border-radius: 50%; }
-.queueMarker1 { background: var(--admin-info); }
-.queueMarker2 { background: var(--admin-accent-strong); }
-.queueMarker3 { background: var(--admin-amber); }
-.queueMarker4 { background: #a78bfa; }
+.queueMarker1 { background: var(--a-blue); }
+.queueMarker2 { background: var(--a-accent-strong); }
+.queueMarker3 { background: var(--a-amber); }
+.queueMarker4 { background: var(--a-purple); }
 .queueItem > span { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
-.queueItem strong { overflow: hidden; color: var(--admin-text); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-.queueItem small { color: var(--admin-text-3); font-size: 7px; }
-.queueItem b { color: var(--admin-text-2); font-size: 10px; }
+.queueItem strong { overflow: hidden; color: var(--a-text); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.queueItem small { color: var(--a-text-3); font-size: 7px; }
+.queueItem b { color: var(--a-text-2); font-size: 10px; }
 
 .activityItem {
   display: grid;
@@ -404,29 +404,29 @@
   gap: 9px;
   padding: 4px;
   border-radius: 10px;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
   text-decoration: none;
 }
 
-.activityItem:hover { background: var(--admin-surface-2); }
+.activityItem:hover { background: var(--a-surface-2); }
 
 .activityAvatar {
   display: grid;
   width: 34px;
   height: 34px;
   place-items: center;
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--a-border-strong);
   border-radius: 50%;
-  background: var(--admin-surface-2);
-  color: var(--admin-accent-strong);
+  background: var(--a-surface-2);
+  color: var(--a-accent-strong);
   font-size: 8px;
   font-weight: 900;
 }
 
 .activityCopy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
 .activityCopy strong, .activityCopy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.activityCopy strong { color: var(--admin-text); font-size: 9px; }
-.activityCopy small { color: var(--admin-text-3); font-size: 7px; }
+.activityCopy strong { color: var(--a-text); font-size: 9px; }
+.activityCopy small { color: var(--a-text-3); font-size: 7px; }
 
 .statusBadge {
   display: inline-flex;
@@ -440,11 +440,11 @@
 }
 
 .statusBadge i { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
-.statusPaid { color: var(--admin-accent-strong); background: var(--admin-accent-subtle); }
-.statusPending { color: var(--admin-amber); background: var(--admin-amber-subtle); }
-.statusInfo { color: var(--admin-info); background: var(--admin-info-subtle); }
-.statusDanger { color: var(--admin-red); background: var(--admin-red-subtle); }
-.statusMuted { color: var(--admin-text-3); background: var(--admin-muted-subtle); }
+.statusPaid { color: var(--a-accent-strong); background: var(--a-accent-subtle); }
+.statusPending { color: var(--a-amber); background: var(--a-amber-subtle); }
+.statusInfo { color: var(--a-blue); background: var(--a-blue-subtle); }
+.statusDanger { color: var(--a-red); background: var(--a-red-subtle); }
+.statusMuted { color: var(--a-text-3); background: var(--a-surface-2); }
 
 .gaugeWrap {
   position: relative;
@@ -457,7 +457,7 @@
 
 .gauge { width: min(238px, 100%); height: auto; overflow: visible; }
 .gaugeTrack, .gaugeValue { fill: none; stroke-width: 24; stroke-linecap: round; }
-.gaugeTrack { stroke: var(--admin-surface-2); }
+.gaugeTrack { stroke: var(--a-surface-2); }
 .gaugeValue { stroke: #15946a; transition: stroke-dasharray 320ms ease; }
 
 .gaugeNumber {
@@ -468,13 +468,13 @@
   align-items: center;
 }
 
-.gaugeNumber strong { color: var(--admin-text); font-size: 32px; line-height: 1; }
-.gaugeNumber span { margin-top: 4px; color: var(--admin-text-3); font-size: 8px; }
-.gaugeLegend { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; color: var(--admin-text-3); font-size: 8px; }
+.gaugeNumber strong { color: var(--a-text); font-size: 32px; line-height: 1; }
+.gaugeNumber span { margin-top: 4px; color: var(--a-text-3); font-size: 8px; }
+.gaugeLegend { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; color: var(--a-text-3); font-size: 8px; }
 .gaugeLegend span { display: inline-flex; align-items: center; gap: 5px; }
 .gaugeLegend i { width: 7px; height: 7px; border-radius: 50%; }
-.legendDelivered { background: var(--admin-accent-strong); }
-.legendAwaiting { background: var(--admin-info); }
+.legendDelivered { background: var(--a-accent-strong); }
+.legendAwaiting { background: var(--a-blue); }
 
 .livePanel {
   grid-column: span 3;
@@ -528,7 +528,7 @@
   color: #063625;
   cursor: pointer;
 }
-.liveControls a { background: var(--admin-red); color: #fff; text-decoration: none; }
+.liveControls a { background: var(--a-red); color: #fff; text-decoration: none; }
 .liveControls button:disabled { cursor: wait; opacity: 0.7; }
 .liveControls svg { width: 15px; height: 15px; }
 
@@ -539,13 +539,13 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
   text-align: center;
 }
 
 .emptyState svg { width: 24px; height: 24px; }
-.emptyState strong { color: var(--admin-text); font-size: 11px; }
-.emptyState span, .emptyText { color: var(--admin-text-3); font-size: 9px; }
+.emptyState strong { color: var(--a-text); font-size: 11px; }
+.emptyState span, .emptyText { color: var(--a-text-3); font-size: 9px; }
 .emptyText { margin: 0; padding: 28px 6px; text-align: center; }
 
 .srOnly {
@@ -568,7 +568,7 @@
 .activityItem:focus-visible,
 .liveControls button:focus-visible,
 .liveControls a:focus-visible {
-  outline: 3px solid var(--admin-focus);
+  outline: 3px solid var(--a-accent);
   outline-offset: 2px;
 }
 
@@ -587,7 +587,7 @@
 .loadingPanels span {
   display: block;
   border-radius: 6px;
-  background: linear-gradient(90deg, var(--admin-surface-2) 20%, var(--admin-border-strong) 50%, var(--admin-surface-2) 80%);
+  background: linear-gradient(90deg, var(--a-surface-2) 20%, var(--a-border-strong) 50%, var(--a-surface-2) 80%);
   background-size: 220% 100%;
   animation: dashboardLoading 1.4s ease-in-out infinite;
 }
@@ -605,13 +605,13 @@
   align-content: space-between;
   gap: 14px;
   padding: 18px;
-  border: 1px solid var(--admin-border);
+  border: 1px solid var(--a-border);
   border-radius: 18px;
-  background: var(--admin-surface);
+  background: var(--a-surface);
 }
 
 .loadingPanels { display: grid; grid-template-columns: 5fr 3fr 4fr; gap: 12px; }
-.loadingPanels span { min-height: 282px; border: 1px solid var(--admin-border); border-radius: 18px; }
+.loadingPanels span { min-height: 282px; border: 1px solid var(--a-border); border-radius: 18px; }
 @keyframes dashboardLoading { to { background-position: -220% 0; } }
 
 @media (max-width: 1250px) {
@@ -652,3 +652,10 @@
   .loadingTabs span,
   .loadingPanels span { animation: none; }
 }
+
+/* Horizontal Bars */
+.horizontalBars { display: flex; flex-direction: column; gap: 8px; }
+.horizontalBarRow { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.horizontalBarLabel { width: 120px; color: var(--a-text-2); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.horizontalBarTrack { flex: 1; height: 8px; background: var(--a-surface-deep); border-radius: 4px; overflow: hidden; }
+.horizontalBarFill { display: block; height: 100%; background: var(--a-accent); border-radius: 4px; transition: width 0.3s ease; }

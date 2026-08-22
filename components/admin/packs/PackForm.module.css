@@ -1,4 +1,4 @@
-.picker {
+﻿.picker {
   position: relative;
 }
 
@@ -26,7 +26,7 @@
   background: transparent;
   padding: 10px 12px;
   font-size: 14px;
-  color: var(--admin-heading);
+  color: var(--a-text);
   font-family: inherit;
   cursor: pointer;
 }
@@ -52,7 +52,7 @@
   margin: 16px 0 10px;
   font-size: 14px;
   font-weight: 800;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .previewCard {

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import styles from "./SchoolPacksView.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 export interface SchoolPackRowData {
   id: string;
@@ -178,7 +179,7 @@ function SparklineWave({ color, direction = "up" }: { color: string; direction?:
       ? "M 0 18 Q 15 22 30 14 T 50 8 T 72 2"
       : "M 0 4 Q 15 2 30 10 T 50 16 T 72 22";
   return (
-    <svg className={styles.kpiSparkline} viewBox="0 0 72 24" fill="none">
+    <svg className={adminStyles.kpiSparkline} viewBox="0 0 72 24" fill="none">
       <path d={path} stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -303,7 +304,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           </div>
         </div>
 
-        <button className={styles.datePickerBtn}>
+        <button className={adminStyles.datePickerBtn}>
           <Calendar size={14} />
           <span>{currentDateStr}</span>
         </button>
@@ -312,20 +313,20 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
       {/* ===================================================
           2. 6 KPI SPARKLINE CARDS
           =================================================== */}
-      <div className={styles.kpiGrid}>
+      <div className={adminStyles.kpiGrid}>
         {/* Card 1: Total Schools */}
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIconWrapper} ${styles.kpiIconTeal}`}>
+        <div className={adminStyles.kpiCard}>
+          <div className={adminStyles.kpiTop}>
+            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconTeal}`}>
               <GraduationCap size={18} />
             </div>
-            <div className={styles.kpiHeaderInfo}>
-              <span className={styles.kpiLabel}>Total Schools</span>
-              <span className={styles.kpiValue} suppressHydrationWarning>{formatNumber(totalCount)}</span>
+            <div className={adminStyles.kpiHeaderInfo}>
+              <span className={adminStyles.kpiLabel}>Total Schools</span>
+              <span className={adminStyles.kpiValue} suppressHydrationWarning>{formatNumber(totalCount)}</span>
             </div>
           </div>
-          <div className={styles.kpiFooter}>
-            <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+          <div className={adminStyles.kpiFooter}>
+            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
               <TrendingUp size={12} /> 6 vs last 7 days
             </span>
             <SparklineWave color="#2dd4bf" direction="up" />
@@ -333,18 +334,18 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 2: Active Packs */}
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIconWrapper} ${styles.kpiIconCyan}`}>
+        <div className={adminStyles.kpiCard}>
+          <div className={adminStyles.kpiTop}>
+            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconCyan}`}>
               <Package size={18} />
             </div>
-            <div className={styles.kpiHeaderInfo}>
-              <span className={styles.kpiLabel}>Active Packs</span>
-              <span className={styles.kpiValue}>96</span>
+            <div className={adminStyles.kpiHeaderInfo}>
+              <span className={adminStyles.kpiLabel}>Active Packs</span>
+              <span className={adminStyles.kpiValue}>96</span>
             </div>
           </div>
-          <div className={styles.kpiFooter}>
-            <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+          <div className={adminStyles.kpiFooter}>
+            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
               <TrendingUp size={12} /> 12 vs last 7 days
             </span>
             <SparklineWave color="#06b6d4" direction="up" />
@@ -352,18 +353,18 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 3: Draft Packs */}
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIconWrapper} ${styles.kpiIconBlue}`}>
+        <div className={adminStyles.kpiCard}>
+          <div className={adminStyles.kpiTop}>
+            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconBlue}`}>
               <FileText size={18} />
             </div>
-            <div className={styles.kpiHeaderInfo}>
-              <span className={styles.kpiLabel}>Draft Packs</span>
-              <span className={styles.kpiValue}>14</span>
+            <div className={adminStyles.kpiHeaderInfo}>
+              <span className={adminStyles.kpiLabel}>Draft Packs</span>
+              <span className={adminStyles.kpiValue}>14</span>
             </div>
           </div>
-          <div className={styles.kpiFooter}>
-            <span className={`${styles.kpiTrend} ${styles.kpiTrendDown}`}>
+          <div className={adminStyles.kpiFooter}>
+            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
               <TrendingDown size={12} /> 2 vs last 7 days
             </span>
             <SparklineWave color="#3b82f6" direction="down" />
@@ -371,18 +372,18 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 4: Ready for Review */}
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIconWrapper} ${styles.kpiIconAmber}`}>
+        <div className={adminStyles.kpiCard}>
+          <div className={adminStyles.kpiTop}>
+            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconAmber}`}>
               <Clock size={18} />
             </div>
-            <div className={styles.kpiHeaderInfo}>
-              <span className={styles.kpiLabel}>Ready for Review</span>
-              <span className={styles.kpiValue}>9</span>
+            <div className={adminStyles.kpiHeaderInfo}>
+              <span className={adminStyles.kpiLabel}>Ready for Review</span>
+              <span className={adminStyles.kpiValue}>9</span>
             </div>
           </div>
-          <div className={styles.kpiFooter}>
-            <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+          <div className={adminStyles.kpiFooter}>
+            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
               <TrendingUp size={12} /> 3 vs last 7 days
             </span>
             <SparklineWave color="#f59e0b" direction="up" />
@@ -390,18 +391,18 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 5: Visible Packs */}
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIconWrapper} ${styles.kpiIconEmerald}`}>
+        <div className={adminStyles.kpiCard}>
+          <div className={adminStyles.kpiTop}>
+            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconEmerald}`}>
               <Eye size={18} />
             </div>
-            <div className={styles.kpiHeaderInfo}>
-              <span className={styles.kpiLabel}>Visible Packs</span>
-              <span className={styles.kpiValue}>82</span>
+            <div className={adminStyles.kpiHeaderInfo}>
+              <span className={adminStyles.kpiLabel}>Visible Packs</span>
+              <span className={adminStyles.kpiValue}>82</span>
             </div>
           </div>
-          <div className={styles.kpiFooter}>
-            <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+          <div className={adminStyles.kpiFooter}>
+            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
               <TrendingUp size={12} /> 10 vs last 7 days
             </span>
             <SparklineWave color="#10b981" direction="up" />
@@ -409,18 +410,18 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 6: Hidden Packs */}
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIconWrapper} ${styles.kpiIconSlate}`}>
+        <div className={adminStyles.kpiCard}>
+          <div className={adminStyles.kpiTop}>
+            <div className={`${adminStyles.kpiIconWrapper} ${styles.kpiIconSlate}`}>
               <EyeOff size={18} />
             </div>
-            <div className={styles.kpiHeaderInfo}>
-              <span className={styles.kpiLabel}>Hidden Packs</span>
-              <span className={styles.kpiValue}>10</span>
+            <div className={adminStyles.kpiHeaderInfo}>
+              <span className={adminStyles.kpiLabel}>Hidden Packs</span>
+              <span className={adminStyles.kpiValue}>10</span>
             </div>
           </div>
-          <div className={styles.kpiFooter}>
-            <span className={`${styles.kpiTrend} ${styles.kpiTrendDown}`}>
+          <div className={adminStyles.kpiFooter}>
+            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
               <TrendingDown size={12} /> 1 vs last 7 days
             </span>
             <SparklineWave color="#ef4444" direction="down" />
@@ -445,7 +446,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           </div>
 
           <select
-            className={styles.filterSelect}
+            className={adminStyles.filterSelect}
             value={selectedSeason}
             onChange={(e) => setSelectedSeason(e.target.value)}
           >
@@ -455,7 +456,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           </select>
 
           <select
-            className={styles.filterSelect}
+            className={adminStyles.filterSelect}
             value={selectedVisibility}
             onChange={(e) => setSelectedVisibility(e.target.value)}
           >
@@ -465,7 +466,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           </select>
 
           <select
-            className={styles.filterSelect}
+            className={adminStyles.filterSelect}
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
           >
@@ -509,7 +510,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         {/* Left Column: Primary Data Table */}
         <div className={styles.tableCard}>
           <div className={styles.tableWrapper}>
-            <table className={styles.dataTable}>
+            <table className={adminStyles.dataTable}>
               <thead>
                 <tr>
                   <th>School Name</th>
@@ -602,7 +603,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 &gt;
               </button>
             </div>
-            <div className={`${viewStyles.flex} ${viewStyles.itemsCenter} ${viewStyles.gap6}`}>
+            <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles.gap6}`}>
               <span>Show</span>
               <select
                 value={pageSize}
@@ -610,7 +611,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className={viewStyles.pageShowSelect}
+                className={adminStyles.pageShowSelect}
               >
                 <option value={20}>20</option>
                 <option value={50}>50</option>
@@ -628,121 +629,121 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         {/* Right Column: Stacked Panels */}
         <div className={styles.rightPanels}>
           {/* Panel 1: What needs attention */}
-          <div className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <h2 className={styles.panelTitle}>What needs attention</h2>
+          <div className={adminStyles.panel}>
+            <div className={adminStyles.panelHeader}>
+              <h2 className={adminStyles.panelTitle}>What needs attention</h2>
               <Link href="/admin/tasks" className={styles.panelLink}>
                 View all <ArrowRight size={12} />
               </Link>
             </div>
 
-            <div className={styles.exceptionList}>
+            <div className={adminStyles.exceptionList}>
               {/* 1. 9 packs awaiting approval */}
-              <div className={styles.exceptionItem}>
-                <div className={styles.exceptionLeft}>
+              <div className={adminStyles.exceptionItem}>
+                <div className={adminStyles.exceptionLeft}>
                   <div
-                    className={`${styles.exceptionIcon} ${viewStyles.iconRed}`}
+                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconRed}`}
                   >
                     <AlertTriangle size={15} />
                   </div>
-                  <div className={styles.exceptionDetails}>
-                    <span className={styles.exceptionHeadline}>9 packs awaiting approval</span>
-                    <span className={styles.exceptionSubtext}>
+                  <div className={adminStyles.exceptionDetails}>
+                    <span className={adminStyles.exceptionHeadline}>9 packs awaiting approval</span>
+                    <span className={adminStyles.exceptionSubtext}>
                       Require final review before publishing
                     </span>
                   </div>
                 </div>
-                <div className={styles.exceptionRight}>
+                <div className={adminStyles.exceptionRight}>
                   <span className={styles.exceptionCount}>9</span>
-                  <span className={`${styles.severityBadge} ${styles.severityHigh}`}>High</span>
-                  <span className={styles.exceptionTime}>32m ago</span>
+                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityHigh}`}>High</span>
+                  <span className={adminStyles.exceptionTime}>32m ago</span>
                 </div>
               </div>
 
               {/* 2. 14 packs are drafts */}
-              <div className={styles.exceptionItem}>
-                <div className={styles.exceptionLeft}>
+              <div className={adminStyles.exceptionItem}>
+                <div className={adminStyles.exceptionLeft}>
                   <div
-                    className={`${styles.exceptionIcon} ${viewStyles.iconAmber}`}
+                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconAmber}`}
                   >
                     <Clock size={15} />
                   </div>
-                  <div className={styles.exceptionDetails}>
-                    <span className={styles.exceptionHeadline}>14 packs are drafts</span>
-                    <span className={styles.exceptionSubtext}>Not yet published</span>
+                  <div className={adminStyles.exceptionDetails}>
+                    <span className={adminStyles.exceptionHeadline}>14 packs are drafts</span>
+                    <span className={adminStyles.exceptionSubtext}>Not yet published</span>
                   </div>
                 </div>
-                <div className={styles.exceptionRight}>
+                <div className={adminStyles.exceptionRight}>
                   <span className={styles.exceptionCount}>14</span>
-                  <span className={`${styles.severityBadge} ${styles.severityMedium}`}>Medium</span>
-                  <span className={styles.exceptionTime}>1h ago</span>
+                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityMedium}`}>Medium</span>
+                  <span className={adminStyles.exceptionTime}>1h ago</span>
                 </div>
               </div>
 
               {/* 3. 6 packs missing prices */}
-              <div className={styles.exceptionItem}>
-                <div className={styles.exceptionLeft}>
+              <div className={adminStyles.exceptionItem}>
+                <div className={adminStyles.exceptionLeft}>
                   <div
-                    className={`${styles.exceptionIcon} ${viewStyles.iconAmber}`}
+                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconAmber}`}
                   >
                     <AlertTriangle size={15} />
                   </div>
-                  <div className={styles.exceptionDetails}>
-                    <span className={styles.exceptionHeadline}>6 packs missing prices</span>
-                    <span className={styles.exceptionSubtext}>Items without pricing</span>
+                  <div className={adminStyles.exceptionDetails}>
+                    <span className={adminStyles.exceptionHeadline}>6 packs missing prices</span>
+                    <span className={adminStyles.exceptionSubtext}>Items without pricing</span>
                   </div>
                 </div>
-                <div className={styles.exceptionRight}>
+                <div className={adminStyles.exceptionRight}>
                   <span className={styles.exceptionCount}>6</span>
-                  <span className={`${styles.severityBadge} ${styles.severityMedium}`}>Medium</span>
-                  <span className={styles.exceptionTime}>1h ago</span>
+                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityMedium}`}>Medium</span>
+                  <span className={adminStyles.exceptionTime}>1h ago</span>
                 </div>
               </div>
 
               {/* 4. 3 schools updated */}
-              <div className={styles.exceptionItem}>
-                <div className={styles.exceptionLeft}>
+              <div className={adminStyles.exceptionItem}>
+                <div className={adminStyles.exceptionLeft}>
                   <div
-                    className={`${styles.exceptionIcon} ${viewStyles.iconBlue}`}
+                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconBlue}`}
                   >
                     <FileText size={15} />
                   </div>
-                  <div className={styles.exceptionDetails}>
-                    <span className={styles.exceptionHeadline}>3 schools updated</span>
-                    <span className={styles.exceptionSubtext}>School lists changed</span>
+                  <div className={adminStyles.exceptionDetails}>
+                    <span className={adminStyles.exceptionHeadline}>3 schools updated</span>
+                    <span className={adminStyles.exceptionSubtext}>School lists changed</span>
                   </div>
                 </div>
-                <div className={styles.exceptionRight}>
+                <div className={adminStyles.exceptionRight}>
                   <span className={styles.exceptionCount}>3</span>
-                  <span className={`${styles.severityBadge} ${styles.severityInfo}`}>Info</span>
-                  <span className={styles.exceptionTime}>2h ago</span>
+                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityInfo}`}>Info</span>
+                  <span className={adminStyles.exceptionTime}>2h ago</span>
                 </div>
               </div>
 
               {/* 5. 10 packs are hidden */}
-              <div className={styles.exceptionItem}>
-                <div className={styles.exceptionLeft}>
+              <div className={adminStyles.exceptionItem}>
+                <div className={adminStyles.exceptionLeft}>
                   <div
-                    className={`${styles.exceptionIcon} ${viewStyles.iconSlate}`}
+                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconSlate}`}
                   >
                     <EyeOff size={15} />
                   </div>
-                  <div className={styles.exceptionDetails}>
-                    <span className={styles.exceptionHeadline}>10 packs are hidden</span>
-                    <span className={styles.exceptionSubtext}>Currently not visible to users</span>
+                  <div className={adminStyles.exceptionDetails}>
+                    <span className={adminStyles.exceptionHeadline}>10 packs are hidden</span>
+                    <span className={adminStyles.exceptionSubtext}>Currently not visible to users</span>
                   </div>
                 </div>
-                <div className={styles.exceptionRight}>
+                <div className={adminStyles.exceptionRight}>
                   <span className={styles.exceptionCount}>10</span>
-                  <span className={`${styles.severityBadge} ${styles.severityLow}`}>Low</span>
-                  <span className={styles.exceptionTime}>2h ago</span>
+                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityLow}`}>Low</span>
+                  <span className={adminStyles.exceptionTime}>2h ago</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Panel 2: Donut Distribution Chart */}
-          <div className={styles.panel}>
+          <div className={adminStyles.panel}>
             <div className={styles.donutContainer}>
               <div className={styles.donutSvgWrapper}>
                 <svg width="130" height="130" viewBox="0 0 130 130">
@@ -793,7 +794,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
               <div className={styles.donutLegend}>
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#10b981" }} />
+                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#10b981" }} />
                     <span>Visible</span>
                   </div>
                   <div>
@@ -804,7 +805,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#64748b" }} />
+                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#64748b" }} />
                     <span>Hidden</span>
                   </div>
                   <div>
@@ -815,7 +816,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#3b82f6" }} />
+                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#3b82f6" }} />
                     <span>Draft</span>
                   </div>
                   <div>
@@ -826,7 +827,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#f59e0b" }} />
+                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#f59e0b" }} />
                     <span>Review</span>
                   </div>
                   <div>
@@ -837,7 +838,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
                 <div className={styles.legendRow}>
                   <div className={styles.legendLabelGroup}>
-                    <span className={`${viewStyles.legendDotInline}`} style={{ background: "#0d9488" }} />
+                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#0d9488" }} />
                     <span>Other</span>
                   </div>
                   <div>

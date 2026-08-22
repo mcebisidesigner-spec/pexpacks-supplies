@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -17,13 +17,14 @@ import {
   Users,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 export function ReportsPageView() {
   const [activeCategory, setActiveCategory] = useState("overview");
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>Reports</h1>
           <p className={styles.headerSubtitle}>Explore performance and operational insights.</p>
@@ -34,13 +35,13 @@ export function ReportsPageView() {
         </div>
       </div>
 
-      <div className={styles.reportsLayout}>
+      <div className={adminStyles.reportsLayout}>
         {/* Left Sidebar Menu */}
-        <div className={`${styles.tableCard} ${styles.tableCardPadded12}`}>
-          <div className={styles.reportsCatLabel}>
+        <div className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded12}`}>
+          <div className={adminStyles.reportsCatLabel}>
             Report Categories
           </div>
-          <div className={styles.reportsCatMenu}>
+          <div className={adminStyles.reportsCatMenu}>
             {[
               { id: "overview", label: "Overview", icon: BarChart3 },
               { id: "sales", label: "Sales & Revenue", icon: TrendingUp },
@@ -56,7 +57,7 @@ export function ReportsPageView() {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`${styles.reportsCatBtn} ${active ? styles.reportsCatBtnActive : ""}`}
+                  className={`${adminStyles.reportsCatBtn} ${active ? adminStyles.reportsCatBtnActive : ""}`}
                 >
                   <Icon size={14} />
                   <span>{cat.label}</span>
@@ -67,56 +68,56 @@ export function ReportsPageView() {
         </div>
 
         {/* Right Analytics Grid */}
-        <div className={styles.reportsContent}>
+        <div className={adminStyles.reportsContent}>
           {/* Top 4 KPI Cards */}
-          <div className={styles.metricsGrid4}>
-            <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>Total Revenue</span>
-              <div className={styles.metricValue}>R1,248,950</div>
-              <span className={`${styles.metricTrend} ${styles.metricTrendUp}`}><TrendingUp size={12} /> 22% vs last month</span>
+          <div className={adminStyles.metricsGrid4}>
+            <div className={adminStyles.metricCard}>
+              <span className={adminStyles.metricLabel}>Total Revenue</span>
+              <div className={adminStyles.metricValue}>R1,248,950</div>
+              <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 22% vs last month</span>
             </div>
-            <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>Total Orders</span>
-              <div className={styles.metricValue}>356</div>
-              <span className={`${styles.metricTrend} ${styles.metricTrendUp}`}><TrendingUp size={12} /> 14% vs last month</span>
+            <div className={adminStyles.metricCard}>
+              <span className={adminStyles.metricLabel}>Total Orders</span>
+              <div className={adminStyles.metricValue}>356</div>
+              <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 14% vs last month</span>
             </div>
-            <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>Average Order Value</span>
-              <div className={styles.metricValue}>R23,540</div>
-              <span className={`${styles.metricTrend} ${styles.metricTrendUp}`}><TrendingUp size={12} /> 6% vs last month</span>
+            <div className={adminStyles.metricCard}>
+              <span className={adminStyles.metricLabel}>Average Order Value</span>
+              <div className={adminStyles.metricValue}>R23,540</div>
+              <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 6% vs last month</span>
             </div>
-            <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>On-Time Deliveries</span>
-              <div className={styles.metricValue}>96.4%</div>
-              <span className={`${styles.metricTrend} ${styles.metricTrendUp}`}><TrendingUp size={12} /> 1.2% vs last month</span>
+            <div className={adminStyles.metricCard}>
+              <span className={adminStyles.metricLabel}>On-Time Deliveries</span>
+              <div className={adminStyles.metricValue}>96.4%</div>
+              <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 1.2% vs last month</span>
             </div>
           </div>
 
           {/* Revenue Over Time & Top Schools by Revenue */}
-          <div className={styles.reportsGrid}>
-            <div className={`${styles.tableCard} ${styles.tableCardPadded18}`}>
-              <div className={styles.reportsChartHeader}>
-                <strong className={styles.reportsChartTitle}>Revenue Over Time</strong>
-                <select className={`${styles.selectInput} ${styles.reportsChartSelect}`}><option>This Month</option></select>
+          <div className={adminStyles.reportsGrid}>
+            <div className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded18}`}>
+              <div className={adminStyles.reportsChartHeader}>
+                <strong className={adminStyles.reportsChartTitle}>Revenue Over Time</strong>
+                <select className={`${styles.selectInput} ${adminStyles.reportsChartSelect}`}><option>This Month</option></select>
               </div>
-              <div className={styles.reportsChartArea}>
+              <div className={adminStyles.reportsChartArea}>
                 <svg width="100%" height="100%" viewBox="0 0 400 140" fill="none">
                   <path d="M 0 100 Q 50 110 100 80 T 200 60 T 300 20 T 400 60" stroke="#2dd4bf" strokeWidth="2.5" />
                   <circle cx="300" cy="20" r="5" fill="#2dd4bf" />
                 </svg>
-                <div className={styles.reportsChartTooltip}>
-                  <div className={styles.reportsChartTooltipLabel}>May 24, 2024</div>
-                  <strong className={styles.reportsChartTooltipValue}>R 285,340</strong>
+                <div className={adminStyles.reportsChartTooltip}>
+                  <div className={adminStyles.reportsChartTooltipLabel}>May 24, 2024</div>
+                  <strong className={adminStyles.reportsChartTooltipValue}>R 285,340</strong>
                 </div>
               </div>
-              <div className={styles.reportsChartFooter}>
+              <div className={adminStyles.reportsChartFooter}>
                 <span>May 20</span><span>May 21</span><span>May 22</span><span>May 23</span><span>May 24</span><span>May 25</span><span>May 26</span><span>May 27</span>
               </div>
             </div>
 
-            <div className={`${styles.tableCard} ${styles.tableCardPadded18}`}>
-              <strong className={styles.reportsListTitle}>Top Schools by Revenue</strong>
-              <div className={styles.reportsList}>
+            <div className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded18}`}>
+              <strong className={adminStyles.reportsListTitle}>Top Schools by Revenue</strong>
+              <div className={adminStyles.reportsList}>
                 {[
                   { rank: 1, name: "3d Christian Academy", val: "R 285,340" },
                   { rank: 2, name: "Aa Academy", val: "R 214,520" },
@@ -124,12 +125,12 @@ export function ReportsPageView() {
                   { rank: 4, name: "A Re Tlabeng Primary", val: "R 142,760" },
                   { rank: 5, name: "Daleview Secondary", val: "R 121,700" },
                 ].map((s) => (
-                  <div key={s.rank} className={styles.reportsListItem}>
-                    <div className={`${styles.flex} ${styles.itemsCenter} ${styles.gap8}`}>
-                      <span className={styles.reportsRank}>{s.rank}.</span>
-                      <span className={styles.reportsSchoolName}>{s.name}</span>
+                  <div key={s.rank} className={adminStyles.reportsListItem}>
+                    <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles.gap8}`}>
+                      <span className={adminStyles.reportsRank}>{s.rank}.</span>
+                      <span className={adminStyles.reportsSchoolName}>{s.name}</span>
                     </div>
-                    <strong className={styles.reportsSchoolValue}>{s.val}</strong>
+                    <strong className={adminStyles.reportsSchoolValue}>{s.val}</strong>
                   </div>
                 ))}
               </div>

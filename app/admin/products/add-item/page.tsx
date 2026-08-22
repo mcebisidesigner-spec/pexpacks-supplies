@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft, Save, ShoppingCart, Tag, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -14,7 +14,7 @@ export default async function AddMasterItemPage() {
   return (
     <div className={styles.container}>
       <div>
-        <Link href="/admin/products" className={styles.backLink}>
+        <Link href="/admin/products" className={adminStyles.backLink}>
           <ArrowLeft size={14} /> Back to Master Products
         </Link>
       </div>
@@ -32,41 +32,41 @@ export default async function AddMasterItemPage() {
       <form
         action="/admin/products"
         method="GET"
-        className={styles.detailLayout}
+        className={adminStyles.detailLayout}
       >
-        <div className={styles.formStack}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Tag size={16} className={styles.iconTeal} />
+        <div className={adminStyles.formStack}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Tag size={16} className={adminStyles.iconTeal} />
                 <span>Item Identity & Categorisation</span>
               </div>
             </div>
 
-            <div className={styles.formGrid2}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>SKU / Item Code *</label>
+            <div className={adminStyles.formGrid2}>
+              <div className={adminStyles.fieldGroup}>
+                <label className={adminStyles.fieldLabel}>SKU / Item Code *</label>
                 <input
                   name="sku"
                   required
                   placeholder="e.g. PRO-1029"
-                  className={styles.fieldControl}
+                  className={adminStyles.fieldControl}
                 />
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Item Name *</label>
+              <div className={adminStyles.fieldGroup}>
+                <label className={adminStyles.fieldLabel}>Item Name *</label>
                 <input
                   name="name"
                   required
                   placeholder="e.g. Staedtler HB Pencils 12 Pack"
-                  className={styles.fieldControl}
+                  className={adminStyles.fieldControl}
                 />
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Category</label>
-                <select name="category" className={styles.fieldControl}>
+              <div className={adminStyles.fieldGroup}>
+                <label className={adminStyles.fieldLabel}>Category</label>
+                <select name="category" className={adminStyles.fieldControl}>
                   <option value="Stationery">Stationery</option>
                   <option value="Paper & Books">Paper & Books</option>
                   <option value="Writing Instruments">
@@ -76,28 +76,28 @@ export default async function AddMasterItemPage() {
                 </select>
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Brand</label>
+              <div className={adminStyles.fieldGroup}>
+                <label className={adminStyles.fieldLabel}>Brand</label>
                 <input
                   name="brand"
                   placeholder="e.g. Pritt / Staedtler / Croxley"
-                  className={styles.fieldControl}
+                  className={adminStyles.fieldControl}
                 />
               </div>
             </div>
           </div>
 
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <ShoppingCart size={16} className={styles.iconGreen} />
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <ShoppingCart size={16} className={adminStyles.iconGreen} />
                 <span>Pricing & Commercials</span>
               </div>
             </div>
 
-            <div className={styles.formGrid3}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>
+            <div className={adminStyles.formGrid3}>
+              <div className={adminStyles.fieldGroup}>
+                <label className={adminStyles.fieldLabel}>
                   Latest Purchase Cost (R) *
                 </label>
                 <input
@@ -106,61 +106,61 @@ export default async function AddMasterItemPage() {
                   name="cost_price"
                   required
                   placeholder="0.00"
-                  className={styles.fieldControl}
+                  className={adminStyles.fieldControl}
                 />
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Selling Price (R) *</label>
+              <div className={adminStyles.fieldGroup}>
+                <label className={adminStyles.fieldLabel}>Selling Price (R) *</label>
                 <input
                   type="number"
                   step="0.01"
                   name="sell_price"
                   required
                   placeholder="0.00"
-                  className={styles.fieldControl}
+                  className={adminStyles.fieldControl}
                 />
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Unit / Pack Format</label>
+              <div className={adminStyles.fieldGroup}>
+                <label className={adminStyles.fieldLabel}>Unit / Pack Format</label>
                 <input
                   name="unit"
                   placeholder="Each / Box / Pack"
                   defaultValue="Each"
-                  className={styles.fieldControl}
+                  className={adminStyles.fieldControl}
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className={styles.sidebarColumn}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Truck size={16} className={styles.iconBlue} />
+        <div className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Truck size={16} className={adminStyles.iconBlue} />
                 <span>Supplier & Availability</span>
               </div>
             </div>
 
-            <div className={styles.formStackCompact}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Preferred Supplier</label>
-                <select name="supplier" className={styles.fieldControl}>
+            <div className={adminStyles.formStackCompact}>
+              <div className={adminStyles.fieldGroup}>
+                <label className={adminStyles.fieldLabel}>Preferred Supplier</label>
+                <select name="supplier" className={adminStyles.fieldControl}>
                   <option value="Waltons">Waltons</option>
                   <option value="Bidvest">Bidvest Paperplus</option>
                   <option value="Croxley">Croxley South Africa</option>
                 </select>
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Lead Time (Days)</label>
+              <div className={adminStyles.fieldGroup}>
+                <label className={adminStyles.fieldLabel}>Lead Time (Days)</label>
                 <input
                   type="number"
                   name="lead_time"
                   defaultValue="3"
-                  className={styles.fieldControl}
+                  className={adminStyles.fieldControl}
                 />
               </div>
 

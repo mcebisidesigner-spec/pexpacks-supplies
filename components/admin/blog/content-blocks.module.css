@@ -1,4 +1,4 @@
-.composer {
+﻿.composer {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -53,7 +53,7 @@
   border: 1px solid #dbe3ec;
   border-radius: 6px;
   background: var(--pex-bg);
-  color: var(--admin-heading);
+  color: var(--a-text);
   font-size: 12px;
   font-weight: 700;
   padding: 3px 8px;
@@ -94,8 +94,8 @@
 }
 
 .blockButtonDelete:hover:not(:disabled) {
-  border-color: #dc2626;
-  color: #dc2626;
+  border-color: var(--a-red);
+  color: var(--a-red);
 }
 
 .blockBody {
@@ -111,7 +111,7 @@
   padding: 10px 12px;
   font-size: 14px;
   font-family: inherit;
-  color: var(--admin-heading);
+  color: var(--a-text);
   background: var(--pex-bg);
   width: 100%;
   resize: vertical;
@@ -165,7 +165,7 @@
   padding: 8px 10px;
   font-size: 13px;
   font-family: inherit;
-  color: var(--admin-heading);
+  color: var(--a-text);
   background: var(--pex-bg);
   width: 100%;
 }

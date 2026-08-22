@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft, Package } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import {
@@ -6,9 +6,9 @@ import {
   listSupplierReceipts,
 } from "@/lib/admin/operations";
 import { createSupplierReceiptAction } from "../../operations-actions";
-import admin from "../../admin.module.css";
 import styles from "../../operations.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -19,10 +19,10 @@ export default async function ReceivingPage() {
   ]);
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
+    <div className={adminStyles.page}>
+      <header className={adminStyles.header}>
         <div>
-          <Link href="/admin/procurement" className={admin.backLink}>
+          <Link href="/admin/procurement" className={adminStyles.backLink}>
             <ArrowLeft aria-hidden="true" />
             <span>Back to procurement</span>
           </Link>
@@ -34,7 +34,7 @@ export default async function ReceivingPage() {
       </header>
 
       {purchaseOrders.length === 0 ? (
-        <div className={styles.formPanel}>
+        <div className={adminStyles.formPanel}>
           <Package aria-hidden="true" />
           <p>No purchase orders are awaiting receipt.</p>
         </div>
@@ -53,16 +53,16 @@ export default async function ReceivingPage() {
             : 0;
 
           return (
-            <section key={po.id} className={styles.formPanel}>
+            <section key={po.id} className={adminStyles.formPanel}>
               <h2>
                 {po.purchase_order_number}
                 <span
-                  className={`${styles.badge} ${po.status === "received" ? styles.good : po.status === "partially_received" ? styles.warn : ""} ${viewStyles.ml8}`}
+                  className={`${adminStyles.badge} ${po.status === "received" ? adminStyles.good : po.status === "partially_received" ? adminStyles.warn : ""} ${adminStyles.ml8}`}
                 >
                   {po.status.replace(/_/g, " ")}
                 </span>
               </h2>
-              <p className={styles.muted}>
+              <p className={adminStyles.muted}>
                 {po.suppliers?.name || "Unknown supplier"} ·{" "}
                 {po.expected_on
                   ? `Expected ${new Date(po.expected_on).toLocaleDateString("en-ZA")}`
@@ -70,9 +70,9 @@ export default async function ReceivingPage() {
                 · {percentReceived}% received
               </p>
 
-              <div className={admin.tableCard}>
-                <div className={admin.tableWrapper}>
-                  <table className={admin.table}>
+              <div className={adminStyles.tableCard}>
+                <div className={adminStyles.tableWrapper}>
+                  <table className={adminStyles.table}>
                     <thead>
                       <tr>
                         <th>SKU</th>
@@ -85,7 +85,7 @@ export default async function ReceivingPage() {
                     <tbody>
                       {po.supplier_purchase_items.map((item) => (
                         <tr key={item.id}>
-                          <td className={styles.mono}>
+                          <td className={adminStyles.mono}>
                             {item.master_products?.sku || "-"}
                           </td>
                           <td>{item.master_products?.name || "Unknown"}</td>
@@ -94,7 +94,7 @@ export default async function ReceivingPage() {
                           <td>
                             {hasPermission(session, "procurement.manage") ? (
                               <input
-                                className={`${styles.field} ${viewStyles.w80}`}
+                                className={`${adminStyles.field} ${adminStyles.w80}`}
                                 type="number"
                                 min="0"
                                 max={item.ordered_quantity - item.received_quantity}
@@ -115,20 +115,20 @@ export default async function ReceivingPage() {
               {hasPermission(session, "procurement.manage") ? (
                 <form
                   action={createSupplierReceiptAction}
-                  className={`${styles.formGrid} ${viewStyles.mt16}`}
+                  className={`${adminStyles.formGrid} ${adminStyles.mt16}`}
                 >
                   <input type="hidden" name="purchaseOrderId" value={po.id} />
                   <input
-                    className={styles.field}
+                    className={adminStyles.field}
                     name="reference"
                     placeholder="Delivery note / invoice ref"
                   />
                   <input
-                    className={`${styles.field} ${styles.wide}`}
+                    className={`${adminStyles.field} ${adminStyles.wide}`}
                     name="notes"
                     placeholder="Notes (condition, discrepancies, etc.)"
                   />
-                  <button className={styles.button}>Record receipt</button>
+                  <button className={adminStyles.button}>Record receipt</button>
                 </form>
               ) : null}
             </section>

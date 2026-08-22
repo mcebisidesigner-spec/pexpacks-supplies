@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { permissionGroups } from "@/lib/admin/roles";
@@ -29,7 +29,7 @@ export default async function NewRolePage() {
       </div>
       <div className={adminStyles.tableCard}>
         <div className={adminStyles.tableWrapper}>
-          <div className={viewStyles.formCardInner}>
+          <div className={adminStyles.formCardInner}>
             <RoleForm
               initial={{ name: "", slug: "", description: null, permissionKeys: [] }}
               groups={permissionGroups()}

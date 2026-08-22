@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useRef, useState } from "react";
 import { useActionState } from "react";
@@ -20,6 +20,7 @@ import type { CSVStationeryRow } from "@/app/actions/stationery-import";
 import type { PackFormState } from "@/lib/admin/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 import itemStyles from "./ItemsManager.module.css";
 import styles from "./SchoolPackCreateForm.module.css";
 
@@ -157,7 +158,7 @@ export function SchoolPackCreateForm({
       <input ref={itemsInputRef} type="hidden" name="items" defaultValue="[]" />
 
       {/* Header Title Row matching reference image */}
-      <div className={coreStyles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={coreStyles.headerTitleGroup}>
           <h1 className={coreStyles.headerTitle}>
             {schoolName} <span className={styles.titleAccent}>New Pack</span>
@@ -183,75 +184,75 @@ export function SchoolPackCreateForm({
 
       {/* 5 Summary Metric Stat Cards matching reference image */}
       <div
-        className={`${coreStyles.metricsGrid5} ${coreStyles.packMetricsGrid}`}
+        className={`${adminStyles.metricsGrid5} ${coreStyles.packMetricsGrid}`}
       >
-        <div className={coreStyles.metricCard}>
-          <div className={coreStyles.metricTop}>
-            <span className={coreStyles.metricLabel}>Pack Price</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Pack Price</span>
             <div
-              className={`${coreStyles.metricIconWrapper} ${coreStyles.metricIconTeal}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
             >
-              <span className={coreStyles.currencyText}>R</span>
+              <span className={adminStyles.currencyText}>R</span>
             </div>
           </div>
-          <div className={coreStyles.metricValue}>{formattedPrice}</div>
+          <div className={adminStyles.metricValue}>{formattedPrice}</div>
           <div className={coreStyles.metricSubtext}>Retail selling price</div>
         </div>
 
-        <div className={coreStyles.metricCard}>
-          <div className={coreStyles.metricTop}>
-            <span className={coreStyles.metricLabel}>Item Subtotal</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Item Subtotal</span>
             <div
-              className={`${coreStyles.metricIconWrapper} ${coreStyles.metricIconTeal}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
             >
               <Layers size={16} />
             </div>
           </div>
-          <div className={coreStyles.metricValue}>{formattedSubtotal}</div>
+          <div className={adminStyles.metricValue}>{formattedSubtotal}</div>
           <div className={coreStyles.metricSubtext}>Sum of line items</div>
         </div>
 
-        <div className={coreStyles.metricCard}>
-          <div className={coreStyles.metricTop}>
-            <span className={coreStyles.metricLabel}>Items</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Items</span>
             <div
-              className={`${coreStyles.metricIconWrapper} ${coreStyles.metricIconBlue}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}
             >
               <FileText size={16} />
             </div>
           </div>
-          <div className={coreStyles.metricValue}>{lines.length}</div>
+          <div className={adminStyles.metricValue}>{lines.length}</div>
           <div className={coreStyles.metricSubtext}>Line items in pack</div>
         </div>
 
-        <div className={coreStyles.metricCard}>
-          <div className={coreStyles.metricTop}>
-            <span className={coreStyles.metricLabel}>School</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>School</span>
             <div
-              className={`${coreStyles.metricIconWrapper} ${coreStyles.metricIconTeal}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
             >
               <Building2 size={16} />
             </div>
           </div>
           <div
-            className={`${coreStyles.metricValue} ${coreStyles.metricValueSmall}`}
+            className={`${adminStyles.metricValue} ${adminStyles.metricValueSmall}`}
           >
             {schoolName}
           </div>
           <div className={coreStyles.metricSubtext}>Gauteng</div>
         </div>
 
-        <div className={coreStyles.metricCard}>
-          <div className={coreStyles.metricTop}>
-            <span className={coreStyles.metricLabel}>Visibility</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Visibility</span>
             <div
-              className={`${coreStyles.metricIconWrapper} ${coreStyles.metricIconTeal}`}
+              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
             >
               <Eye size={16} />
             </div>
           </div>
           <div
-            className={`${coreStyles.metricValue} ${coreStyles.metricValueSmall}`}
+            className={`${adminStyles.metricValue} ${adminStyles.metricValueSmall}`}
           >
             Visible
           </div>
@@ -260,9 +261,9 @@ export function SchoolPackCreateForm({
       </div>
 
       {/* Middle Section (2-Column Grid: Set Pack Grade & Items + Pack Summary) */}
-      <div className={coreStyles.detailLayout}>
+      <div className={adminStyles.detailLayout}>
         <div className={styles.leftStack}>
-          <section className={`${coreStyles.tableCard} ${styles.priceCard}`}>
+          <section className={`${adminStyles.tableCard} ${styles.priceCard}`}>
             <div className={styles.priceHeader}>
               <div>
                 <h2 className={styles.cardTitle}>Set Pack Grade & Items</h2>
@@ -302,40 +303,40 @@ export function SchoolPackCreateForm({
           </section>
         </div>
 
-        <aside className={coreStyles.sidebarColumn}>
-          <section className={coreStyles.sidebarCard}>
-            <div className={coreStyles.sidebarCardHeader}>
-              <div className={coreStyles.sidebarHeaderTitle}>
-                <Box size={16} className={coreStyles.iconTeal} />
+        <aside className={adminStyles.sidebarColumn}>
+          <section className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Box size={16} className={adminStyles.iconTeal} />
                 <span>Pack Summary</span>
               </div>
               <span
-                className={`${coreStyles.badgeGreen} ${coreStyles.badgeTiny}`}
+                className={`${adminStyles.badgeGreen} ${adminStyles.badgeTiny}`}
               >
                 Draft
               </span>
             </div>
 
-            <div className={coreStyles.summaryStack}>
-              <div className={coreStyles.sidebarStatRow}>
-                <span className={coreStyles.sidebarStatLabel}>Title</span>
-                <span className={coreStyles.sidebarStatVal}>{packTitle}</span>
+            <div className={adminStyles.summaryStack}>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Title</span>
+                <span className={adminStyles.sidebarStatVal}>{packTitle}</span>
               </div>
-              <div className={coreStyles.sidebarStatRow}>
-                <span className={coreStyles.sidebarStatLabel}>Price</span>
-                <span className={coreStyles.sidebarStatVal}>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Price</span>
+                <span className={adminStyles.sidebarStatVal}>
                   {formattedPrice}
                 </span>
               </div>
-              <div className={coreStyles.sidebarStatRow}>
-                <span className={coreStyles.sidebarStatLabel}>Items</span>
-                <span className={coreStyles.sidebarStatVal}>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Items</span>
+                <span className={adminStyles.sidebarStatVal}>
                   {lines.length}
                 </span>
               </div>
-              <div className={coreStyles.sidebarStatRow}>
-                <span className={coreStyles.sidebarStatLabel}>School</span>
-                <span className={coreStyles.sidebarStatVal}>{schoolName}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>School</span>
+                <span className={adminStyles.sidebarStatVal}>{schoolName}</span>
               </div>
             </div>
           </section>

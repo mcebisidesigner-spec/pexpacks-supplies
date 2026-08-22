@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -42,6 +42,7 @@ import {
 } from "@/app/admin/settings/actions";
 import styles from "./SettingsControlCentre.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface SettingsControlCentreProps {
   initialSettings: Record<string, SystemSettingRecord>;
@@ -200,7 +201,7 @@ export function SettingsControlCentre({
                   </button>
                 ))
               ) : (
-                <p className={viewStyles.settingsCentered}>
+                <p className={adminStyles.settingsCentered}>
                   No matching settings found for &ldquo;{searchQuery}&rdquo;.
                 </p>
               )}
@@ -255,20 +256,20 @@ export function SettingsControlCentre({
                 <p>High-level system status and recent operational settings activity</p>
               </div>
               <div className={styles.formGrid}>
-                <div className={viewStyles.cardBorder}>
+                <div className={adminStyles.cardBorder}>
                   <span className={styles.badgeSuccess}>Connected</span>
-                  <h3 className={viewStyles.settingsStatusCardTitle}>Supabase & RLS</h3>
-                  <p className={viewStyles.settingsStatusCardCaption}>Service Role & Auth RLS Active</p>
+                  <h3 className={adminStyles.settingsStatusCardTitle}>Supabase & RLS</h3>
+                  <p className={adminStyles.settingsStatusCardCaption}>Service Role & Auth RLS Active</p>
                 </div>
-                <div className={viewStyles.cardBorder}>
+                <div className={adminStyles.cardBorder}>
                   <span className={styles.badgeSuccess}>Healthy</span>
-                  <h3 className={viewStyles.settingsStatusCardTitle}>Vercel Edge</h3>
-                  <p className={viewStyles.settingsStatusCardCaption}>Caching & Static Routes Live</p>
+                  <h3 className={adminStyles.settingsStatusCardTitle}>Vercel Edge</h3>
+                  <p className={adminStyles.settingsStatusCardCaption}>Caching & Static Routes Live</p>
                 </div>
-                <div className={viewStyles.cardBorder}>
+                <div className={adminStyles.cardBorder}>
                   <span className={styles.badgeSuccess}>Active</span>
-                  <h3 className={viewStyles.settingsStatusCardTitle}>Active Season</h3>
-                  <p className={viewStyles.settingsStatusCardCaption}>{String(settingsState["seasons.active_season"]?.value ?? "2027 BTS")}</p>
+                  <h3 className={adminStyles.settingsStatusCardTitle}>Active Season</h3>
+                  <p className={adminStyles.settingsStatusCardCaption}>{String(settingsState["seasons.active_season"]?.value ?? "2027 BTS")}</p>
                 </div>
               </div>
             </div>
@@ -410,16 +411,16 @@ export function SettingsControlCentre({
                 <h2>Integration Status & Health</h2>
                 <p>Live operational status of external infrastructure & payment gateways (Secrets are 100% masked)</p>
               </div>
-              <div className={viewStyles.settingsStatusGrid}>
+              <div className={adminStyles.settingsStatusGrid}>
                 {integrations.map((item) => (
-                  <div key={item.name} className={viewStyles.settingsStatusCard}>
+                  <div key={item.name} className={adminStyles.settingsStatusCard}>
                     <div>
-                      <strong className={viewStyles.cWhite}>{item.name}</strong>
-                      <p className={viewStyles.settingsStatusCardPurpose}>{item.purpose}</p>
+                      <strong className={adminStyles.cWhite}>{item.name}</strong>
+                      <p className={adminStyles.settingsStatusCardPurpose}>{item.purpose}</p>
                       <small className={viewStyles.text11}>{item.details}</small>
                     </div>
                     <span className={item.status === "connected" ? styles.badgeSuccess : styles.badgeWarning}>
-                      <CheckCircle2 className={viewStyles.settingsIconCheck} /> {item.status === "connected" ? "Connected" : "Action Required"}
+                      <CheckCircle2 className={adminStyles.settingsIconCheck} /> {item.status === "connected" ? "Connected" : "Action Required"}
                     </span>
                   </div>
                 ))}
@@ -434,19 +435,19 @@ export function SettingsControlCentre({
                 <h2>Data Management & Snapshot Centre</h2>
                 <p>Export system data snapshots, run dry-run imports, & trigger application data restores</p>
               </div>
-              <div className={`${viewStyles.flex} ${viewStyles.gap14}`}>
+              <div className={`${adminStyles.flex} ${adminStyles.gap14}`}>
                 <button type="button" className={styles.saveButton} onClick={handleExport}>
-                  <Download className={viewStyles.settingsExportIcon} /> Export Settings Data Snapshot
+                  <Download className={adminStyles.settingsExportIcon} /> Export Settings Data Snapshot
                 </button>
                 <button type="button" className={styles.discardButton} onClick={() => setShowRestoreModal(true)}>
-                  <Upload className={viewStyles.settingsExportIcon} /> Restore Data Snapshot
+                  <Upload className={adminStyles.settingsExportIcon} /> Restore Data Snapshot
                 </button>
               </div>
 
               {showRestoreModal && (
-                <div className={viewStyles.settingsRestoreSection}>
-                  <h3 className={viewStyles.settingsRestoreTitle}>Restore System Settings Snapshot</h3>
-                  <p className={viewStyles.settingsRestoreDesc}>Paste the JSON exported snapshot payload to restore configuration parameters.</p>
+                <div className={adminStyles.settingsRestoreSection}>
+                  <h3 className={adminStyles.settingsRestoreTitle}>Restore System Settings Snapshot</h3>
+                  <p className={adminStyles.settingsRestoreDesc}>Paste the JSON exported snapshot payload to restore configuration parameters.</p>
                   <textarea
                     rows={6}
                     className={styles.textarea}
@@ -454,7 +455,7 @@ export function SettingsControlCentre({
                     value={restoreJson}
                     onChange={(e) => setRestoreJson(e.target.value)}
                   />
-                  <div className={viewStyles.settingsRestoreActions}>
+                  <div className={adminStyles.settingsRestoreActions}>
                     <button type="button" className={styles.saveButton} onClick={handleRestoreSubmit} disabled={!restoreJson.trim() || busyKey === "restore"}>
                       Confirm Restore
                     </button>
@@ -491,7 +492,7 @@ export function SettingsControlCentre({
                       <tr key={log.id}>
                         <td>{new Date(log.created_at).toLocaleString("en-ZA")}</td>
                         <td>{log.actor_email || "System"}</td>
-                        <td><strong className={viewStyles.settingsLogKey}>{log.setting_key}</strong></td>
+                        <td><strong className={adminStyles.settingsLogKey}>{log.setting_key}</strong></td>
                         <td><code>{JSON.stringify(log.old_value)}</code></td>
                         <td><code>{JSON.stringify(log.new_value)}</code></td>
                         <td>{log.change_reason || "—"}</td>
@@ -499,7 +500,7 @@ export function SettingsControlCentre({
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={6} className={viewStyles.settingsLogEmpty}>
+                      <td colSpan={6} className={adminStyles.settingsLogEmpty}>
                         No settings change audit records logged yet.
                       </td>
                     </tr>

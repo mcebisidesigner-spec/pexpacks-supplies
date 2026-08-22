@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -15,6 +15,7 @@ import {
   Search,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface ProductRow {
   sku: string;
@@ -57,7 +58,7 @@ export function MasterProductsPageView() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Master Products{" "}
@@ -72,12 +73,12 @@ export function MasterProductsPageView() {
         </div>
       </div>
 
-      <div className={styles.toolbar}>
+      <div className={adminStyles.toolbar}>
         <div className={styles.toolbarLeft}>
           <div className={styles.searchBox}>
             <Search />
             <input
-              className={styles.searchInput}
+              className={adminStyles.searchInput}
               placeholder="Search products by name or SKU..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -94,19 +95,19 @@ export function MasterProductsPageView() {
         </div>
 
         <div className={styles.toolbarRight}>
-          <div className={styles.viewToggleGroup}>
-            <button className={`${styles.viewBtn} ${viewMode === "list" ? styles.viewBtnActive : ""}`} onClick={() => setViewMode("list")}>
+          <div className={adminStyles.viewToggleGroup}>
+            <button className={`${adminStyles.viewBtn} ${viewMode === "list" ? adminStyles.viewBtnActive : ""}`} onClick={() => setViewMode("list")}>
               <List size={14} />
             </button>
-            <button className={`${styles.viewBtn} ${viewMode === "grid" ? styles.viewBtnActive : ""}`} onClick={() => setViewMode("grid")}>
+            <button className={`${adminStyles.viewBtn} ${viewMode === "grid" ? adminStyles.viewBtnActive : ""}`} onClick={() => setViewMode("grid")}>
               <LayoutGrid size={14} />
             </button>
           </div>
         </div>
       </div>
 
-      <div className={styles.tableCard}>
-        <div className={styles.tableWrapper}>
+      <div className={adminStyles.tableCard}>
+        <div className={adminStyles.tableWrapper}>
           <table className={styles.dataTable}>
             <thead>
               <tr>
@@ -130,11 +131,11 @@ export function MasterProductsPageView() {
                     className={styles.dataRow}
                     onClick={() => router.push(`/admin/products/${prodSlug}`)}
                   >
-                    <td><span className={styles.badgeTeal}>{prod.sku}</span></td>
+                    <td><span className={adminStyles.badgeTeal}>{prod.sku}</span></td>
                     <td>
                       <Link
                         href={`/admin/products/${prodSlug}`}
-                        className={`${styles.cWhite} ${styles.fw700}`}
+                        className={`${adminStyles.cWhite} ${adminStyles.fw700}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         {prod.name}
@@ -143,10 +144,10 @@ export function MasterProductsPageView() {
                     <td>{prod.category}</td>
                     <td>{prod.unit}</td>
                     <td><strong>R {prod.sellPrice.toFixed(2)}</strong></td>
-                    <td className={styles.cSubtle}>R {prod.costPrice.toFixed(2)}</td>
-                    <td><span className={`${styles.cGreen} ${styles.fw700}`}>{prod.margin}%</span></td>
+                    <td className={adminStyles.cSubtle}>R {prod.costPrice.toFixed(2)}</td>
+                    <td><span className={`${adminStyles.cGreen} ${adminStyles.fw700}`}>{prod.margin}%</span></td>
                     <td>{prod.supplier}</td>
-                    <td><span className={styles.badgeGreen}>{prod.status}</span></td>
+                    <td><span className={adminStyles.badgeGreen}>{prod.status}</span></td>
                   </tr>
                 );
               })}
@@ -155,7 +156,7 @@ export function MasterProductsPageView() {
         </div>
         <div className={styles.paginationFooter}>
           <span>Showing 1 to 8 of 1,248 products</span>
-          <div className={styles.paginationControls}>
+          <div className={adminStyles.paginationControls}>
             <button className={styles.pageBtn}>&lt;</button>
             <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
             <button className={styles.pageBtn}>2</button>
@@ -166,7 +167,7 @@ export function MasterProductsPageView() {
             <button className={styles.pageBtn}>156</button>
             <button className={styles.pageBtn}>&gt;</button>
           </div>
-          <div className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-6"]}`}>
+          <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${styles["gap-6"]}`}>
             <span>Show</span>
             <select className={`${styles.selectInput} ${styles["h-26"]} ${styles["text-11"]}`}>
               <option>10</option>

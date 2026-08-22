@@ -1,110 +1,4 @@
-.toolbar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.headerRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.pageTitle {
-  margin: 0;
-  font-size: clamp(22px, 3vw, 28px);
-  font-weight: 800;
-  color: var(--admin-heading);
-}
-
-.count {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--pex-muted, #6b7a86);
-  margin-left: 8px;
-}
-
-.addButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--pex-keppel, #1a7a77);
-  color: #fff;
-  text-decoration: none;
-  border-radius: 8px;
-  padding: 10px 18px;
-  font-size: 14px;
-  font-weight: 700;
-  font-family: inherit;
-}
-
-.filterForm {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  background: var(--pex-bg);
-  border: 1px solid var(--pex-border, #e1e7ea);
-  border-radius: 12px;
-  padding: 12px;
-}
-
-.filterInput {
-  border: 1px solid var(--pex-border, #dbe3ec);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
-  font-family: inherit;
-  color: var(--admin-heading);
-  background: var(--pex-bg);
-}
-
-.filterInput:focus {
-  outline: none;
-  border-color: var(--pex-keppel, #1a7a77);
-  box-shadow: 0 0 0 3px rgba(26, 122, 119, 0.15);
-}
-
-.searchInput {
-  min-width: 240px;
-}
-
-.applyButton {
-  background: var(--pex-navy, #1a2a40);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.resetLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--pex-muted, #6b7a86);
-  text-decoration: none;
-}
-
-.resetLink:hover {
-  text-decoration: underline;
-}
-
-.resetLink svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-/* ---- Table ---- */
+﻿/* ---- Table ---- */
 
 .schoolCell {
   display: flex;
@@ -133,15 +27,15 @@
 .schoolName {
   display: inline;
   font-weight: 700;
-  color: var(--admin-heading);
+  color: var(--a-text);
   text-decoration: underline;
-  text-decoration-color: var(--admin-text-3);
+  text-decoration-color: var(--a-text-3);
   text-decoration-thickness: 1px;
   text-underline-offset: 5px;
 }
 
 .schoolName:hover {
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
   text-decoration-color: currentColor;
 }
 
@@ -152,7 +46,7 @@
 }
 
 .partnershipOfficial {
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .partnershipParticipating {
@@ -160,7 +54,7 @@
 }
 
 .partnershipDeclined {
-  color: var(--admin-red, #f87171);
+  color: var(--a-red);
 }
 
 .schoolSlug {
@@ -221,35 +115,6 @@
   align-items: center;
   gap: 10px;
   white-space: nowrap;
-}
-
-.actionLink {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--pex-keppel, #1a7a77);
-  text-decoration: none;
-}
-
-.actionLink:hover {
-  text-decoration: underline;
-}
-
-.rowButton {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.rowButton:hover {
-  text-decoration: underline;
-}
-
-.rowButtonDelete {
-  color: #a93226;
 }
 
 .rowButtonHide {

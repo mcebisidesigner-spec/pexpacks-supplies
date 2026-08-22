@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listBlogPosts } from "@/lib/admin/blog";
 import { setBlogPostPublishedAction, deleteBlogPostAction } from "./actions";
@@ -24,12 +24,12 @@ export default async function BlogPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={contentStyles.toolbar}>
-        <div className={contentStyles.headerRow}>
+      <div className={adminStyles.toolbar}>
+        <div className={adminStyles.headerRow}>
           <div>
-            <h1 className={contentStyles.pageTitle}>
+            <h1 className={adminStyles.pageTitle}>
               Blog
-              <span className={contentStyles.count}>
+              <span className={adminStyles.count}>
                 {posts.length} {posts.length === 1 ? "post" : "posts"}
               </span>
             </h1>
@@ -38,7 +38,7 @@ export default async function BlogPage() {
             </p>
           </div>
           {canManage ? (
-            <Link href="/admin/blog/new" className={contentStyles.addButton}>
+            <Link href="/admin/blog/new" className={adminStyles.addButton}>
               + New post
             </Link>
           ) : null}
@@ -120,14 +120,14 @@ export default async function BlogPage() {
                         <div className={contentStyles.actions}>
                           <Link
                             href={`/admin/blog/${post.id}`}
-                            className={contentStyles.actionLink}
+                            className={adminStyles.actionLink}
                           >
                             Edit
                           </Link>
                           <form action={setBlogPostPublishedAction.bind(null, post.id, !post.published)}>
                             <button
                               type="submit"
-                              className={`${contentStyles.rowButton} ${
+                              className={`${adminStyles.rowButton} ${
                                 post.published
                                   ? contentStyles.rowButtonHide
                                   : contentStyles.rowButtonShow
@@ -141,7 +141,7 @@ export default async function BlogPage() {
                               label="Delete"
                               confirmText={`Delete the post "${post.title}"? This cannot be undone.`}
                               busyLabel="Deleting…"
-                              className={`${contentStyles.rowButton} ${contentStyles.rowButtonDelete}`}
+                              className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
                             />
                           </form>
                         </div>

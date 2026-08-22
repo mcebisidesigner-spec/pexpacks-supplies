@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { FaqForm } from "@/components/admin/content/FaqForm";
@@ -19,9 +19,9 @@ export default async function NewFaqPage() {
           <ArrowLeft aria-hidden="true" /> Back to FAQs
         </Link>
       </p>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div>
-          <h1 className={styles.pageTitle}>New FAQ</h1>
+          <h1 className={adminStyles.pageTitle}>New FAQ</h1>
           <p className={styles.subtitle}>Add a question and answer to the FAQ content.</p>
         </div>
       </div>

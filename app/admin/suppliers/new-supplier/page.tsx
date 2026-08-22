@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft, Building2, CreditCard, Mail, Phone, Save, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -14,7 +14,7 @@ export default async function NewSupplierPage() {
   return (
     <div className={styles.container}>
       <div>
-        <Link href="/admin/suppliers" className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}>
+        <Link href="/admin/suppliers" className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}>
           <ArrowLeft size={14} /> Back to Suppliers
         </Link>
       </div>
@@ -28,49 +28,49 @@ export default async function NewSupplierPage() {
         </div>
       </div>
 
-      <form action="/admin/suppliers" method="GET" className={styles.detailLayout}>
-        <div className={`${styles.flex} ${styles["flex-col"]} ${styles.gap18}`}>
+      <form action="/admin/suppliers" method="GET" className={adminStyles.detailLayout}>
+        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap18}`}>
           {/* Supplier Identity */}
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Building2 size={16} className={styles.iconTeal} />
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Building2 size={16} className={adminStyles.iconTeal} />
                 <span>Supplier Identity &amp; Information</span>
               </div>
             </div>
 
-            <div className={styles.grid2equal}>
+            <div className={adminStyles.grid2equal}>
               <div>
-                <label className={styles.formLabel}>Supplier Name *</label>
+                <label className={adminStyles.formLabel}>Supplier Name *</label>
                 <input
                   name="name"
                   required
                   placeholder="e.g. Waltons Stationery Supplies"
-                  className={styles.inputField}
+                  className={adminStyles.inputField}
                 />
               </div>
 
               <div>
-                <label className={styles.formLabel}>Supplier Code / Ref</label>
+                <label className={adminStyles.formLabel}>Supplier Code / Ref</label>
                 <input
                   name="code"
                   placeholder="e.g. SUP-WALTONS-01"
-                  className={styles.inputField}
+                  className={adminStyles.inputField}
                 />
               </div>
 
               <div>
-                <label className={styles.formLabel}>Primary Contact Person</label>
+                <label className={adminStyles.formLabel}>Primary Contact Person</label>
                 <input
                   name="contact_person"
                   placeholder="e.g. Sarah Jenkins"
-                  className={styles.inputField}
+                  className={adminStyles.inputField}
                 />
               </div>
 
               <div>
-                <label className={styles.formLabel}>Status</label>
-                <select name="status" className={styles.inputField}>
+                <label className={adminStyles.formLabel}>Status</label>
+                <select name="status" className={adminStyles.inputField}>
                   <option value="Preferred">Preferred Partner</option>
                   <option value="Approved">Approved Supplier</option>
                   <option value="Prospect">Prospect</option>
@@ -80,32 +80,32 @@ export default async function NewSupplierPage() {
           </div>
 
           {/* Contact Details */}
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Mail size={16} className={styles.iconBlue} />
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Mail size={16} className={adminStyles.iconBlue} />
                 <span>Contact Details &amp; Orders</span>
               </div>
             </div>
 
-            <div className={styles.grid2equal}>
+            <div className={adminStyles.grid2equal}>
               <div>
-                <label className={styles.formLabel}>Procurement Email *</label>
+                <label className={adminStyles.formLabel}>Procurement Email *</label>
                 <input
                   type="email"
                   name="email"
                   required
                   placeholder="orders@supplier.co.za"
-                  className={styles.inputField}
+                  className={adminStyles.inputField}
                 />
               </div>
 
               <div>
-                <label className={styles.formLabel}>Telephone</label>
+                <label className={adminStyles.formLabel}>Telephone</label>
                 <input
                   name="phone"
                   placeholder="+27 11 000 0000"
-                  className={styles.inputField}
+                  className={adminStyles.inputField}
                 />
               </div>
             </div>
@@ -113,37 +113,37 @@ export default async function NewSupplierPage() {
         </div>
 
         {/* Commercial Terms Sidebar */}
-        <div className={styles.sidebarColumn}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <CreditCard size={16} className={styles.iconAmber} />
+        <div className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <CreditCard size={16} className={adminStyles.iconAmber} />
                 <span>Commercial Terms</span>
               </div>
             </div>
 
-            <div className={styles.formField}>
+            <div className={adminStyles.formField}>
               <div>
-                <label className={styles.formLabel}>Payment Terms</label>
+                <label className={adminStyles.formLabel}>Payment Terms</label>
                 <input
                   name="payment_terms"
                   defaultValue="30 Days Net"
-                  className={styles.inputField}
+                  className={adminStyles.inputField}
                 />
               </div>
 
               <div>
-                <label className={styles.formLabel}>Standard Lead Time (Days)</label>
+                <label className={adminStyles.formLabel}>Standard Lead Time (Days)</label>
                 <input
                   type="number"
                   name="lead_time"
                   defaultValue="3"
-                  className={styles.inputField}
+                  className={adminStyles.inputField}
                 />
               </div>
 
-              <div className={styles.pt12}>
-                <button type="submit" className={`${styles.primaryBtn} ${styles.hFullBtn}`}>
+              <div className={adminStyles.pt12}>
+                <button type="submit" className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}>
                   <Save size={14} /> Onboard Supplier
                 </button>
               </div>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { contentSections, getWebsiteContent } from "@/lib/admin/content";
@@ -18,9 +18,9 @@ export default async function ContentSectionsPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div>
-          <h1 className={styles.pageTitle}>Content sections</h1>
+          <h1 className={adminStyles.pageTitle}>Content sections</h1>
           <p className={styles.subtitle}>
             Site-wide copy for the homepage, announcement bar, footer and SEO defaults.
             Changes publish to the live site immediately.

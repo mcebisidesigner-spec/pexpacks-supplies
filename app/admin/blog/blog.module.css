@@ -1,11 +1,11 @@
-.titleCell {
+﻿.titleCell {
   min-width: 240px;
 }
 
 .titleLink {
   font-weight: 700;
   font-size: 14px;
-  color: var(--admin-heading);
+  color: var(--a-text);
   text-decoration: none;
 }
 

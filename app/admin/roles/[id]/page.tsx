@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin, displayName } from "@/lib/admin/rbac";
@@ -8,7 +8,6 @@ import { RoleForm } from "@/components/admin/roles/RoleForm";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { deleteRoleAction } from "../actions";
 import adminStyles from "../../admin.module.css";
-import shared from "../../schools/schools.module.css";
 import styles from "../roles.module.css";
 
 interface RoleDetailPageProps {
@@ -30,13 +29,13 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
   return (
     <div className={adminStyles.adminContainer}>
       <p>
-        <Link href="/admin/roles" className={shared.resetLink}>
+        <Link href="/admin/roles" className={adminStyles.resetLink}>
           <ArrowLeft aria-hidden="true" /> Back to roles
         </Link>
       </p>
 
-      <div className={styles.headerRow}>
-        <h1 className={styles.pageTitle}>
+      <div className={adminStyles.headerRow}>
+        <h1 className={adminStyles.pageTitle}>
           {role.name}
           {role.slug === "super_admin" ? <span className={styles.seedTag}> seed</span> : null}
         </h1>
@@ -69,7 +68,7 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
                 Manage assignments from each user’s profile.
               </p>
             </div>
-            <Link href={`/admin/users?role=${role.slug}`} className={styles.actionLink}>
+            <Link href={`/admin/users?role=${role.slug}`} className={adminStyles.actionLink}>
               View in users
             </Link>
           </div>

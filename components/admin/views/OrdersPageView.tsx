@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, Plus, Search } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface OrderRow {
   id: string;
@@ -44,7 +45,7 @@ export function OrdersPageView() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Orders &amp; Commerce{" "}
@@ -55,7 +56,7 @@ export function OrdersPageView() {
       </div>
 
       {/* Tabs Row */}
-      <div className={`${styles.flex} ${styles["gap-8"]} ${styles["border-b"]} ${styles["pb-8"]}`}>
+      <div className={`${adminStyles.flex} ${styles["gap-8"]} ${styles["border-b"]} ${styles["pb-8"]}`}>
         {["all", "Paid", "Procurement", "Ready to Pack", "At Risk", "Completed"].map((tab) => (
           <button
             key={tab}
@@ -68,12 +69,12 @@ export function OrdersPageView() {
         ))}
       </div>
 
-      <div className={styles.toolbar}>
+      <div className={adminStyles.toolbar}>
         <div className={styles.toolbarLeft}>
           <div className={styles.searchBox}>
             <Search />
             <input
-              className={styles.searchInput}
+              className={adminStyles.searchInput}
               placeholder="Search orders by number or school..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -82,8 +83,8 @@ export function OrdersPageView() {
         </div>
       </div>
 
-      <div className={styles.tableCard}>
-        <div className={styles.tableWrapper}>
+      <div className={adminStyles.tableCard}>
+        <div className={adminStyles.tableWrapper}>
           <table className={styles.dataTable}>
             <thead>
               <tr>
@@ -108,27 +109,27 @@ export function OrdersPageView() {
                     <td>
                       <Link
                         href={`/admin/orders/${refNo}`}
-                        className={`${styles.cTeal} ${styles.fw700}`}
+                        className={`${adminStyles.cTeal} ${adminStyles.fw700}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         {refNo}
                       </Link>
                     </td>
-                    <td><strong className={styles.cWhite}>{ord.school}</strong></td>
+                    <td><strong className={adminStyles.cWhite}>{ord.school}</strong></td>
                     <td>{ord.orderDate}</td>
                     <td><strong>R {ord.total.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</strong></td>
                     <td>
-                      <span className={ord.paymentStatus === "Paid" ? styles.badgeGreen : styles.badgeAmber}>
+                      <span className={ord.paymentStatus === "Paid" ? adminStyles.badgeGreen : adminStyles.badgeAmber}>
                         {ord.paymentStatus}
                       </span>
                     </td>
                     <td>
                       <span className={
-                        ord.fulfilmentStatus === "Ready to Pack" ? styles.badgeTeal :
-                        ord.fulfilmentStatus === "Procurement" ? styles.badgeBlue :
-                        ord.fulfilmentStatus === "At Risk" ? styles.badgeRed :
-                        ord.fulfilmentStatus === "Completed" ? styles.badgeGreen :
-                        styles.badgeAmber
+                        ord.fulfilmentStatus === "Ready to Pack" ? adminStyles.badgeTeal :
+                        ord.fulfilmentStatus === "Procurement" ? adminStyles.badgeBlue :
+                        ord.fulfilmentStatus === "At Risk" ? adminStyles.badgeRed :
+                        ord.fulfilmentStatus === "Completed" ? adminStyles.badgeGreen :
+                        adminStyles.badgeAmber
                       }>
                         {ord.fulfilmentStatus}
                       </span>
@@ -136,7 +137,7 @@ export function OrdersPageView() {
                     <td>
                       <Link
                         href={`/admin/orders/${refNo}`}
-                        className={`${styles.actionBtnDots} ${styles["text-11"]} ${styles["px-8"]}`}
+                        className={`${adminStyles.actionBtnDots} ${styles["text-11"]} ${styles["px-8"]}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Eye size={12} /> View Detail
@@ -150,7 +151,7 @@ export function OrdersPageView() {
         </div>
         <div className={styles.paginationFooter}>
           <span>Showing 1 to {filtered.length} of {SEED_ORDERS.length} orders</span>
-          <div className={styles.paginationControls}>
+          <div className={adminStyles.paginationControls}>
             <button className={styles.pageBtn}>&lt;</button>
             <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
             <button className={styles.pageBtn}>&gt;</button>

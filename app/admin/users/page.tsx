@@ -42,23 +42,23 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
         count={total}
         actions={
           hasPermission(session, "users.create") ? (
-            <Link href="/admin/users/invite" className={styles.addButton}>
+            <Link href="/admin/users/invite" className={adminStyles.addButton}>
               + Invite user
             </Link>
           ) : undefined
         }
       />
 
-      <form method="get" action="/admin/users" className={styles.filterForm}>
+      <form method="get" action="/admin/users" className={adminStyles.filterForm}>
         <input
           type="search"
           name="q"
           defaultValue={filters.q ?? ""}
           placeholder="Search email, name or ID…"
-          className={`${styles.filterInput} ${styles.searchInput}`}
+          className={`${adminStyles.filterInput} ${adminStyles.searchInput}`}
           aria-label="Search users"
         />
-        <select name="role" defaultValue={filters.role ?? ""} className={styles.filterInput}>
+        <select name="role" defaultValue={filters.role ?? ""} className={adminStyles.filterInput}>
           <option value="">All roles</option>
           {roleOptions.map((r) => (
             <option key={r.id} value={r.slug}>
@@ -66,11 +66,11 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
             </option>
           ))}
         </select>
-        <button type="submit" className={styles.applyButton}>
+        <button type="submit" className={adminStyles.applyButton}>
           Apply
         </button>
         {hasFilters ? (
-          <Link href="/admin/users" className={styles.resetLink}>
+          <Link href="/admin/users" className={adminStyles.resetLink}>
             Reset
           </Link>
         ) : null}
@@ -167,7 +167,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                       <td>{formatDate(user.created_at)}</td>
                       <td>
                         <div className={styles.actions}>
-                          <Link href={`/admin/users/${user.id}`} className={styles.actionLink}>
+                          <Link href={`/admin/users/${user.id}`} className={adminStyles.actionLink}>
                             View
                           </Link>
                           {canDeactivate && user.id !== session.user.id ? (
@@ -177,7 +177,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                                   label="Reactivate"
                                   confirmText={`Reactivate ${displayName(user)}?`}
                                   busyLabel="Reactivating…"
-                                  className={`${styles.rowButton} ${styles.rowButtonRestore}`}
+                                  className={`${adminStyles.rowButton} ${styles.rowButtonRestore}`}
                                 />
                               </form>
                             ) : (
@@ -186,7 +186,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                                   label="Deactivate"
                                   confirmText={`Deactivate ${displayName(user)}? They will be signed out and blocked.`}
                                   busyLabel="Deactivating…"
-                                  className={`${styles.rowButton} ${styles.rowButtonDeactivate}`}
+                                  className={`${adminStyles.rowButton} ${styles.rowButtonDeactivate}`}
                                 />
                               </form>
                             )
@@ -197,7 +197,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                                 label="Delete"
                                 confirmText={`Permanently delete ${displayName(user)} (${user.email})? This cannot be undone.`}
                                 busyLabel="Deleting…"
-                                className={`${styles.rowButton} ${styles.rowButtonDelete}`}
+                                className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
                               />
                             </form>
                           ) : null}

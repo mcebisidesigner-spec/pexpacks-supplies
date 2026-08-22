@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useTransition, useMemo } from "react";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import {
   Search,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 import {
   listSchoolsAction,
   toggleSchoolVisibilityAction,
@@ -151,7 +152,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
   return (
     <div className={styles.container}>
       {/* Header */}
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Schools{" "}
@@ -171,12 +172,12 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       </div>
 
       {/* Toolbar Filters */}
-      <div className={styles.toolbar}>
+      <div className={adminStyles.toolbar}>
         <div className={styles.toolbarLeft}>
           <div className={styles.searchBox}>
             <Search />
             <input
-              className={styles.searchInput}
+              className={adminStyles.searchInput}
               placeholder="Search by school name, city or province..."
               value={search}
               onChange={(e) => handleSearchChange(e.target.value)}
@@ -234,12 +235,12 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       </div>
 
       {/* Data Table Card */}
-      <div className={styles.tableCard} style={{ opacity: isPending ? 0.7 : 1 }}>
-        <div className={styles.tableWrapper}>
+      <div className={adminStyles.tableCard} style={{ opacity: isPending ? 0.7 : 1 }}>
+        <div className={adminStyles.tableWrapper}>
           <table className={styles.dataTable}>
             <thead>
               <tr>
-                <th className={styles.textCenter} style={{ width: 36 }}></th>
+                <th className={adminStyles.textCenter} style={{ width: 36 }}></th>
                 <th>School Name</th>
                 <th>City</th>
                 <th>Province</th>
@@ -250,7 +251,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
             <tbody>
               {schools.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className={`${styles.textCenter} ${styles.cMuted}`} style={{ padding: "32px" }}>
+                  <td colSpan={6} className={`${adminStyles.textCenter} ${adminStyles.cMuted}`} style={{ padding: "32px" }}>
                     No matching schools found in the database.
                   </td>
                 </tr>
@@ -267,7 +268,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
                     >
                       <td>
                         <div
-                          className={`${styles.avatarBadge} ${styles.iconBlue}`}
+                          className={`${adminStyles.avatarBadge} ${adminStyles.iconBlue}`}
                         >
                           <GraduationCap size={14} />
                         </div>
@@ -275,7 +276,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
                       <td>
                         <Link
                           href={`/admin/schools/${targetSlugOrId}/info`}
-                          className={`${styles.cWhite} ${styles.fw700}`}
+                          className={`${adminStyles.cWhite} ${adminStyles.fw700}`}
                           onClick={(e) => e.stopPropagation()}
                         >
                           {school.name}
@@ -284,20 +285,20 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
                       <td>{school.city || "—"}</td>
                       <td>{school.province || "—"}</td>
                       <td>
-                        <span className={isPartner ? styles.badgeGreen : styles.badgeDark}>
+                        <span className={isPartner ? adminStyles.badgeGreen : adminStyles.badgeDark}>
                           ● {isPartner ? "Partner" : "Non-partner"}
                         </span>
                       </td>
                       <td>
                         <div
-                          className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-8"]}`}
+                          className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${styles["gap-8"]}`}
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <span className={isActive ? styles.badgeTeal : styles.badgeDark}>
+                          <span className={isActive ? adminStyles.badgeTeal : adminStyles.badgeDark}>
                             {isActive ? "Active" : "Inactive"}
                           </span>
                           <button
-                            className={`${styles.actionBtnDots} ${styles["text-11"]} ${styles["px-8"]}`}
+                            className={`${adminStyles.actionBtnDots} ${styles["text-11"]} ${styles["px-8"]}`}
                             type="button"
                             onClick={(e) => handleToggleHide(school.id, school.status, e)}
                           >
@@ -322,7 +323,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
           </span>
 
           {/* Page Controls */}
-          <div className={styles.paginationControls}>
+          <div className={adminStyles.paginationControls}>
             <button
               className={styles.pageBtn}
               disabled={currentPage <= 1 || isPending}
@@ -354,7 +355,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
           </div>
 
           {/* Working Show per page selector */}
-          <div className={`${styles.flex} ${styles.itemsCenter} ${styles["gap-6"]}`}>
+          <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${styles["gap-6"]}`}>
             <span>Show</span>
             <select
               className={`${styles.selectInput} ${styles["h-28"]} ${styles["text-11"]} ${styles["bg-surface-strong"]}`}

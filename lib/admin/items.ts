@@ -14,7 +14,8 @@ import { inventoryItemNameKey } from "@/lib/admin/item-constants";
 
 type SupabaseAdminClient = ReturnType<typeof createSupabaseAdminClient>;
 type MasterProductRow = Database["public"]["Tables"]["master_products"]["Row"];
-type SchoolPackItemInsert = Database["public"]["Tables"]["school_pack_items"]["Insert"];
+type SchoolPackItemInsert =
+  Database["public"]["Tables"]["school_pack_items"]["Insert"];
 
 export type ItemRow = {
   id: string;
@@ -66,12 +67,16 @@ const priceField = z.preprocess(
     .number({ message: "Enter a valid price" })
     .min(0, "Cannot be negative")
     .max(99_999_999, "Value is too large")
-    .nullable()
+    .nullable(),
 );
 
 export const itemSchema = z.object({
   pack_id: z.string().uuid("Invalid pack id"),
-  name: z.string().trim().min(1, "Enter an item name").max(200, "Item name is too long"),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Enter an item name")
+    .max(200, "Item name is too long"),
   category: optString(200, "category"),
   description: optString(2000, "description"),
   specification: optString(2000, "specification"),
@@ -124,13 +129,20 @@ function schoolPackItemsTable(admin: SupabaseAdminClient) {
 function productSku(data: Pick<ItemFormData, "category" | "name">): string {
   const entered = data.category?.trim();
   if (entered) return entered.toUpperCase();
-  return `PEX-${inventoryItemNameKey(data.name).toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80)}`;
+  return `PEX-${inventoryItemNameKey(data.name)
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80)}`;
 }
 
 async function ensureMasterProduct(
   admin: SupabaseAdminClient,
-  data: Pick<ItemFormData, "name" | "category" | "description" | "specification" | "visible" | "price">,
-  actorId: string
+  data: Pick<
+    ItemFormData,
+    "name" | "category" | "description" | "specification" | "visible" | "price"
+  >,
+  actorId: string,
 ): Promise<MasterProductRow> {
   const sku = productSku(data);
   const productPatch = {
@@ -186,10 +198,13 @@ async function ensureMasterProduct(
   return created as MasterProductRow;
 }
 
-async function readCanonicalItem(admin: SupabaseAdminClient, id: string): Promise<ItemRow | null> {
+async function readCanonicalItem(
+  admin: SupabaseAdminClient,
+  id: string,
+): Promise<ItemRow | null> {
   const { data, error } = await adminPackItemsTable(admin)
     .select(
-      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source"
+      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
     )
     .eq("id", id as never)
     .maybeSingle();
@@ -197,7 +212,10 @@ async function readCanonicalItem(admin: SupabaseAdminClient, id: string): Promis
   return data as unknown as ItemRow;
 }
 
-async function nextPackItemSortOrder(admin: SupabaseAdminClient, packId: string): Promise<number> {
+async function nextPackItemSortOrder(
+  admin: SupabaseAdminClient,
+  packId: string,
+): Promise<number> {
   const { data } = await schoolPackItemsTable(admin)
     .select("sort_order")
     .eq("pack_id", packId)
@@ -269,11 +287,18 @@ export function extractSearchTokens(input: string): string[] {
   const tokens = new Set<string>();
 
   // 1. Title before parenthesis e.g. "Extra Thick Triangular Graphite Pencils (e.g., Faber-Castell / Steadtler)" -> "Extra Thick Triangular Graphite Pencils"
-  const beforeParen = q.split("(")[0].replace(/[%/,()\\.]/g, " ").replace(/\s+/g, " ").trim();
+  const beforeParen = q
+    .split("(")[0]
+    .replace(/[%/,()\\.]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   if (beforeParen.length >= 2) tokens.add(beforeParen);
 
   // 2. Full sanitized string without PostgREST control characters
-  const fullClean = q.replace(/[%/,()\\.]/g, " ").replace(/\s+/g, " ").trim();
+  const fullClean = q
+    .replace(/[%/,()\\.]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   if (fullClean.length >= 2) tokens.add(fullClean);
 
   // 3. String with PostgREST syntax delimiters stripped
@@ -283,7 +308,9 @@ export function extractSearchTokens(input: string): string[] {
   return Array.from(tokens);
 }
 
-export async function listItems(filters: ItemListFilters = {}): Promise<ItemListResult> {
+export async function listItems(
+  filters: ItemListFilters = {},
+): Promise<ItemListResult> {
   const admin = createSupabaseAdminClient();
   const page = Math.max(1, filters.page ?? 1);
   const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
@@ -294,12 +321,13 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
     .from("admin_pack_items_view" as never)
     .select(
       "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source,pack_title",
-      { count: "exact" }
+      { count: "exact" },
     );
 
   if (filters.q) {
     const rawQ = Array.isArray(filters.q)
-      ? ((filters.q as unknown as string[]).find((x) => x && String(x).trim()) || "")
+      ? (filters.q as unknown as string[]).find((x) => x && String(x).trim()) ||
+        ""
       : String(filters.q);
     const tokens = extractSearchTokens(rawQ);
     if (tokens.length > 0) {
@@ -311,8 +339,10 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
       query = query.or(clauses.join(","));
     }
   }
-  if (filters.pack_id) query = query.eq("pack_id" as never, filters.pack_id as never);
-  if (filters.category) query = query.filter("category" as never, "eq", filters.category as never);
+  if (filters.pack_id)
+    query = query.eq("pack_id" as never, filters.pack_id as never);
+  if (filters.category)
+    query = query.filter("category" as never, "eq", filters.category as never);
 
   const { data, count, error } = await query
     .order("name", { ascending: true })
@@ -323,14 +353,18 @@ export async function listItems(filters: ItemListFilters = {}): Promise<ItemList
     return { items: [], total: 0, page, pageCount: 0 };
   }
 
-  const rows = (data ?? []) as unknown as (ItemRow & { pack_title?: string | null })[];
+  const rows = (data ?? []) as unknown as (ItemRow & {
+    pack_title?: string | null;
+  })[];
 
   const uniqueRows = Array.from(
-    rows.reduce((itemsByName, row) => {
-      const key = inventoryItemNameKey(row.name);
-      if (!itemsByName.has(key)) itemsByName.set(key, row);
-      return itemsByName;
-    }, new Map<string, (typeof rows)[number]>()).values()
+    rows
+      .reduce((itemsByName, row) => {
+        const key = inventoryItemNameKey(row.name);
+        if (!itemsByName.has(key)) itemsByName.set(key, row);
+        return itemsByName;
+      }, new Map<string, (typeof rows)[number]>())
+      .values(),
   );
   const rawTotal = count ?? 0;
   const coversAllResults = from === 0 && rows.length === rawTotal;
@@ -352,7 +386,9 @@ export type StationeryCatalogueSection = {
   count: number;
 };
 
-export async function listStationeryCatalogueSections(): Promise<StationeryCatalogueSection[]> {
+export async function listStationeryCatalogueSections(): Promise<
+  StationeryCatalogueSection[]
+> {
   try {
     const admin = createSupabaseAdminClient();
     const { data, error } = await admin
@@ -367,7 +403,10 @@ export async function listStationeryCatalogueSections(): Promise<StationeryCatal
     }
 
     const sections = new Map<string, Set<string>>();
-    for (const row of data as Array<{ category?: string | null; name?: string | null }>) {
+    for (const row of data as Array<{
+      category?: string | null;
+      name?: string | null;
+    }>) {
       const section = row.category?.trim();
       const name = row.name?.trim();
       if (!section || !name) continue;
@@ -389,20 +428,30 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   const decoded = decodeURIComponent(idOrSlug).trim();
   if (!decoded) return null;
 
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      decoded,
+    );
 
   if (isUuid) {
     const data = await readCanonicalItem(admin, decoded);
     if (data) return data;
   }
 
-  const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const slugified = decoded
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
   // 1. Direct query by exact slug or exact name
   const { data: directMatch } = await admin
     .from("admin_pack_items_view" as never)
-    .select("id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source")
-    .or(`sku.ilike.${decoded},sku.ilike.${slugified},name.ilike.${decoded}` as never)
+    .select(
+      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
+    )
+    .or(
+      `sku.ilike.${decoded},sku.ilike.${slugified},name.ilike.${decoded}` as never,
+    )
     .limit(1)
     .maybeSingle();
 
@@ -411,12 +460,20 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   // 2. Fallback: match all items by slugified name or ID
   const { data: allItems } = await admin
     .from("admin_pack_items_view" as never)
-    .select("id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source");
+    .select(
+      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
+    );
   if (!allItems) return null;
 
   const matched = allItems.find((rawItem) => {
     const item = rawItem as unknown as ItemRow;
-    const itemSlug = item.slug || item.sku?.toLowerCase() || item.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    const itemSlug =
+      item.slug ||
+      item.sku?.toLowerCase() ||
+      item.name
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
     return itemSlug === slugified || item.id === decoded;
   });
 
@@ -431,14 +488,16 @@ export async function syncPackTotalPrice(packId: string): Promise<number> {
     .select("unit_price, quantity")
     .eq("pack_id" as never, packId as never);
 
-  const totalPrice = ((items ?? []) as unknown as Pick<ItemRow, "unit_price" | "quantity">[]).reduce(
+  const totalPrice = (
+    (items ?? []) as unknown as Pick<ItemRow, "unit_price" | "quantity">[]
+  ).reduce(
     (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
-    0
+    0,
   );
 
   const rounded = Math.round(totalPrice * 100) / 100;
   await admin
-    .from("stationery_packs")
+    .from("school_packs")
     .update({ price: rounded, updated_at: new Date().toISOString() })
     .eq("id", packId);
 
@@ -456,7 +515,10 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
   try {
     let data = parsed.data;
     if (!data.sort_order || data.sort_order <= 0) {
-      data = { ...data, sort_order: await nextPackItemSortOrder(admin, data.pack_id) };
+      data = {
+        ...data,
+        sort_order: await nextPackItemSortOrder(admin, data.pack_id),
+      };
     }
 
     const product = await ensureMasterProduct(admin, data, actor.user.id);
@@ -465,7 +527,8 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
         pack_id: data.pack_id,
         product_id: product.id,
         pack_quantity: data.quantity,
-        school_wording: data.name.trim() === product.name ? null : data.name.trim(),
+        school_wording:
+          data.name.trim() === product.name ? null : data.name.trim(),
         school_notes: data.description,
         selling_price_override: data.price,
         sort_order: data.sort_order,
@@ -495,11 +558,18 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
     return { ok: true, item: created };
   } catch (err) {
     console.error("[items] create failed:", err);
-    return { ok: false, errors: {}, message: "Failed to create item. Please try again." };
+    return {
+      ok: false,
+      errors: {},
+      message: "Failed to create item. Please try again.",
+    };
   }
 }
 
-export async function updateItem(id: string, formData: FormData): Promise<ItemFormResult> {
+export async function updateItem(
+  id: string,
+  formData: FormData,
+): Promise<ItemFormResult> {
   const actor = await assertCan("items.edit");
   const parsed = parseItemForm(formData);
   if (!parsed.ok) return { ok: false, errors: parsed.errors };
@@ -511,13 +581,20 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
   }
 
   try {
-    const product = await ensureMasterProduct(admin, parsed.data, actor.user.id);
+    const product = await ensureMasterProduct(
+      admin,
+      parsed.data,
+      actor.user.id,
+    );
     const { data: updatedLink, error } = await schoolPackItemsTable(admin)
       .update({
         pack_id: parsed.data.pack_id,
         product_id: product.id,
         pack_quantity: parsed.data.quantity,
-        school_wording: parsed.data.name.trim() === product.name ? null : parsed.data.name.trim(),
+        school_wording:
+          parsed.data.name.trim() === product.name
+            ? null
+            : parsed.data.name.trim(),
         school_notes: parsed.data.description,
         selling_price_override: parsed.data.price,
         sort_order: parsed.data.sort_order,
@@ -548,11 +625,17 @@ export async function updateItem(id: string, formData: FormData): Promise<ItemFo
     return { ok: true, item: updated };
   } catch (err) {
     console.error("[items] update failed:", err);
-    return { ok: false, errors: {}, message: "Failed to update item. Please try again." };
+    return {
+      ok: false,
+      errors: {},
+      message: "Failed to update item. Please try again.",
+    };
   }
 }
 
-export async function deleteItem(id: string): Promise<{ ok: boolean; message?: string; packId?: string }> {
+export async function deleteItem(
+  id: string,
+): Promise<{ ok: boolean; message?: string; packId?: string }> {
   const actor = await assertCan("items.delete");
   const admin = createSupabaseAdminClient();
 
@@ -584,23 +667,30 @@ export async function deleteItem(id: string): Promise<{ ok: boolean; message?: s
 
 export async function reorderItems(
   packId: string,
-  orderedIds: string[]
+  orderedIds: string[],
 ): Promise<{ ok: boolean; message?: string }> {
   const actor = await assertCan("items.reorder");
   const admin = createSupabaseAdminClient();
 
-  const { data: existing } = await schoolPackItemsTable(admin).select("id").eq("pack_id", packId);
+  const { data: existing } = await schoolPackItemsTable(admin)
+    .select("id")
+    .eq("pack_id", packId);
   if (!existing) return { ok: false, message: "No items found in this pack." };
 
   const idSet = new Set(orderedIds);
   const valid = existing.filter((item) => idSet.has(item.id));
   if (valid.length !== existing.length) {
-    return { ok: false, message: "The item list changed. Refresh and try again." };
+    return {
+      ok: false,
+      message: "The item list changed. Refresh and try again.",
+    };
   }
 
   try {
     const updates = orderedIds.map((id, index) =>
-      schoolPackItemsTable(admin).update({ sort_order: index + 1 }).eq("id", id)
+      schoolPackItemsTable(admin)
+        .update({ sort_order: index + 1 })
+        .eq("id", id),
     );
     await Promise.all(updates);
 
@@ -634,7 +724,10 @@ export function parseCsv(text: string): string[][] {
   let row: string[] = [];
   let field = "";
   let inQuotes = false;
-  const src = text.replace(/^\ufeff/, "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const src = text
+    .replace(/^\ufeff/, "")
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n");
 
   const firstLine = src.split("\n")[0] || "";
   let delimiter = ",";
@@ -705,14 +798,25 @@ const CSV_ALIASES: Record<string, string> = {
 };
 
 function cleanHeader(value: string): string {
-  return value.replace(/^\ufeff/, "").replace(/[^a-z0-9]/gi, "").toLowerCase();
+  return value
+    .replace(/^\ufeff/, "")
+    .replace(/[^a-z0-9]/gi, "")
+    .toLowerCase();
 }
 
-export async function importItemsCsv(packId: string, csvText: string): Promise<ImportItemsResult> {
+export async function importItemsCsv(
+  packId: string,
+  csvText: string,
+): Promise<ImportItemsResult> {
   const actor = await assertCan("items.import");
   const admin = createSupabaseAdminClient();
 
-  const result: ImportItemsResult = { ok: true, created: 0, updated: 0, errors: [] };
+  const result: ImportItemsResult = {
+    ok: true,
+    created: 0,
+    updated: 0,
+    errors: [],
+  };
   const rows = parseCsv(csvText);
   if (rows.length === 0) {
     result.ok = false;
@@ -744,8 +848,13 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
   const { data: existing } = await adminPackItemsTable(admin)
     .select("id, name")
     .eq("pack_id" as never, packId as never);
-  const existingItems = (existing ?? []) as unknown as Pick<ItemRow, "id" | "name">[];
-  const byName = new Map(existingItems.map((item) => [item.name.toLowerCase(), item.id]));
+  const existingItems = (existing ?? []) as unknown as Pick<
+    ItemRow,
+    "id" | "name"
+  >[];
+  const byName = new Map(
+    existingItems.map((item) => [item.name.toLowerCase(), item.id]),
+  );
 
   const parseRow = (row: string[], lineNumber: number): ItemFormData | null => {
     const field = (key: string): string => {
@@ -760,10 +869,13 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
     const parsedQty = qtyMatch ? qtyMatch[0] : "1";
 
     const rawPrice = field("price");
-    const cleanedPrice = rawPrice ? rawPrice.replace(/[^\d.,]/g, "").replace(",", ".") : "";
+    const cleanedPrice = rawPrice
+      ? rawPrice.replace(/[^\d.,]/g, "").replace(",", ".")
+      : "";
 
     const rawVis = field("visible").toLowerCase();
-    const isVisible = rawVis === "" ? true : ["true", "1", "yes", "y"].includes(rawVis);
+    const isVisible =
+      rawVis === "" ? true : ["true", "1", "yes", "y"].includes(rawVis);
 
     const candidate: Record<string, unknown> = {
       pack_id: packId,
@@ -779,7 +891,9 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
     };
     const parsed = itemSchema.safeParse(candidate);
     if (!parsed.success) {
-      const message = parsed.error.issues.map((issue) => `${String(issue.path[0])}: ${issue.message}`).join("; ");
+      const message = parsed.error.issues
+        .map((issue) => `${String(issue.path[0])}: ${issue.message}`)
+        .join("; ");
       result.errors.push(`Row ${lineNumber}: ${message}`);
       return null;
     }
@@ -801,7 +915,8 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
           .update({
             product_id: product.id,
             pack_quantity: data.quantity,
-            school_wording: data.name.trim() === product.name ? null : data.name.trim(),
+            school_wording:
+              data.name.trim() === product.name ? null : data.name.trim(),
             school_notes: data.description,
             selling_price_override: data.price,
             sort_order: data.sort_order || undefined,
@@ -816,10 +931,13 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
           pack_id: data.pack_id,
           product_id: product.id,
           pack_quantity: data.quantity,
-          school_wording: data.name.trim() === product.name ? null : data.name.trim(),
+          school_wording:
+            data.name.trim() === product.name ? null : data.name.trim(),
           school_notes: data.description,
           selling_price_override: data.price,
-          sort_order: data.sort_order || (await nextPackItemSortOrder(admin, data.pack_id)),
+          sort_order:
+            data.sort_order ||
+            (await nextPackItemSortOrder(admin, data.pack_id)),
           active: data.visible,
         });
         if (error) throw error;
@@ -828,7 +946,9 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
       }
     } catch (err) {
       console.error("[items] csv row failed:", err);
-      result.errors.push(`Row ${lineNumber}: failed to save item "${data.name}".`);
+      result.errors.push(
+        `Row ${lineNumber}: failed to save item "${data.name}".`,
+      );
     }
   }
 
@@ -847,9 +967,17 @@ export async function importItemsCsv(packId: string, csvText: string): Promise<I
 }
 
 export const packLineSchema = z.object({
-  name: z.string().trim().min(1, "Item name is required").max(200, "Item name is too long"),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Item name is required")
+    .max(200, "Item name is too long"),
   description: z
-    .union([z.string().trim().max(2000, "Description is too long"), z.null(), z.literal("")])
+    .union([
+      z.string().trim().max(2000, "Description is too long"),
+      z.null(),
+      z.literal(""),
+    ])
     .optional(),
   unit_price: z.union([z.number().min(0).max(99_999_999), z.null()]).optional(),
   quantity: z
@@ -868,7 +996,7 @@ export type PackLineInput = z.infer<typeof packLineSchema>;
 export async function createPackItems(
   packId: string,
   lines: PackLineInput[],
-  createdBy: string
+  createdBy: string,
 ): Promise<{ ok: boolean; created: number }> {
   if (lines.length === 0) return { ok: true, created: 0 };
 
@@ -889,13 +1017,14 @@ export async function createPackItems(
         visible: true,
         price: line.unit_price ?? null,
       },
-      createdBy
+      createdBy,
     );
     rows.push({
       pack_id: packId,
       product_id: product.id,
       pack_quantity: line.quantity,
-      school_wording: line.name.trim() === product.name ? null : line.name.trim(),
+      school_wording:
+        line.name.trim() === product.name ? null : line.name.trim(),
       school_notes: line.description || null,
       selling_price_override: line.unit_price ?? null,
       sort_order: index + 1,
@@ -918,12 +1047,24 @@ export async function createPackItems(
  */
 export async function reconcilePackItems(
   packId: string,
-  lines: PackLineInput[]
-): Promise<{ ok: boolean; created: number; updated: number; deleted: number; message?: string }> {
+  lines: PackLineInput[],
+): Promise<{
+  ok: boolean;
+  created: number;
+  updated: number;
+  deleted: number;
+  message?: string;
+}> {
   const actor = await assertCan("items.edit");
   const parsed = z.array(packLineSchema).safeParse(lines);
   if (!parsed.success) {
-    return { ok: false, created: 0, updated: 0, deleted: 0, message: "One of the items is not valid." };
+    return {
+      ok: false,
+      created: 0,
+      updated: 0,
+      deleted: 0,
+      message: "One of the items is not valid.",
+    };
   }
 
   const admin = createSupabaseAdminClient();
@@ -933,14 +1074,22 @@ export async function reconcilePackItems(
     .eq("pack_id" as never, packId as never);
   if (loadError) {
     console.error("[items] reconcile load failed:", loadError);
-    return { ok: false, created: 0, updated: 0, deleted: 0, message: "Failed to load items." };
+    return {
+      ok: false,
+      created: 0,
+      updated: 0,
+      deleted: 0,
+      message: "Failed to load items.",
+    };
   }
 
   const existingItems = (existingRows ?? []) as unknown as Pick<
     ItemRow,
     "id" | "name" | "description" | "quantity" | "unit_price" | "sort_order"
   >[];
-  const remaining = new Map(existingItems.map((row) => [row.name.trim().toLowerCase(), row]));
+  const remaining = new Map(
+    existingItems.map((row) => [row.name.trim().toLowerCase(), row]),
+  );
 
   let created = 0;
   let updated = 0;
@@ -972,7 +1121,7 @@ export async function reconcilePackItems(
           visible: true,
           price: line.unit_price ?? null,
         },
-        actor.user.id
+        actor.user.id,
       );
       const { error } = await schoolPackItemsTable(admin)
         .update({
@@ -1001,13 +1150,14 @@ export async function reconcilePackItems(
           visible: true,
           price: line.unit_price ?? null,
         },
-        actor.user.id
+        actor.user.id,
       );
       const { error } = await schoolPackItemsTable(admin).insert({
         pack_id: packId,
         product_id: product.id,
         pack_quantity: line.quantity,
-        school_wording: line.name.trim() === product.name ? null : line.name.trim(),
+        school_wording:
+          line.name.trim() === product.name ? null : line.name.trim(),
         school_notes: line.description || null,
         selling_price_override: line.unit_price ?? null,
         sort_order: sortOrder,
@@ -1022,7 +1172,9 @@ export async function reconcilePackItems(
   }
 
   for (const row of remaining.values()) {
-    const { error } = await schoolPackItemsTable(admin).delete().eq("id", row.id);
+    const { error } = await schoolPackItemsTable(admin)
+      .delete()
+      .eq("id", row.id);
     if (error) {
       console.error("[items] reconcile delete failed:", error);
     } else {
@@ -1057,7 +1209,9 @@ export async function listDistinctStationeryItems(): Promise<string[]> {
       .order("name", { ascending: true });
 
     if (!data) return [];
-    return Array.from(new Set(data.map((item) => item.name.trim()).filter(Boolean))).sort();
+    return Array.from(
+      new Set(data.map((item) => item.name.trim()).filter(Boolean)),
+    ).sort();
   } catch (err) {
     console.error("[items] listDistinctStationeryItems failed:", err);
     return [];
@@ -1079,7 +1233,9 @@ export interface StationeryInventoryItem {
  * returned, so typing any part of an item name — not just its start — matches.
  * Backed by the pg_trgm GIN index from migration 00021.
  */
-export async function listStationeryInventory(query?: string): Promise<StationeryInventoryItem[]> {
+export async function listStationeryInventory(
+  query?: string,
+): Promise<StationeryInventoryItem[]> {
   try {
     const admin = createSupabaseAdminClient();
 
@@ -1110,7 +1266,12 @@ export async function listStationeryInventory(query?: string): Promise<Stationer
       const name = row.name.trim();
       if (!name || seen.has(name.toLowerCase())) continue;
       seen.add(name.toLowerCase());
-      out.push({ id: row.id, name, description: row.description, unit_price: row.current_selling_price });
+      out.push({
+        id: row.id,
+        name,
+        description: row.description,
+        unit_price: row.current_selling_price,
+      });
       if (out.length >= 50) break;
     }
     return out;

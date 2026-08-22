@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
@@ -28,9 +28,9 @@ export default async function EditFaqPage({
           <ArrowLeft aria-hidden="true" /> Back to FAQs
         </Link>
       </p>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div>
-          <h1 className={styles.pageTitle}>Edit FAQ</h1>
+          <h1 className={adminStyles.pageTitle}>Edit FAQ</h1>
           <p className={styles.subtitle}>{row.question}</p>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft, Building2, Clock, CreditCard, Edit2, Mail, Phone, Save, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -21,7 +21,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
     <div className={styles.container}>
       {/* Breadcrumb */}
       <div>
-        <Link href="/admin/suppliers" className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}>
+        <Link href="/admin/suppliers" className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}>
           <ArrowLeft size={14} /> Back to Suppliers
         </Link>
       </div>
@@ -31,7 +31,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {title}
-            <span className={styles.badgeTeal}>Preferred Partner</span>
+            <span className={adminStyles.badgeTeal}>Preferred Partner</span>
           </h1>
           <p className={styles.headerSubtitle}>Supplier Code: SUP-{id.toUpperCase().slice(0, 8)}</p>
         </div>
@@ -43,49 +43,49 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
       </div>
 
       {/* Metrics Grid */}
-      <div className={styles.metricsGrid4}>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>On-Time Delivery %</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconGreen}`}>
+      <div className={adminStyles.metricsGrid4}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>On-Time Delivery %</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconGreen}`}>
               <Truck size={16} />
             </div>
           </div>
-          <div className={`${styles.metricValue} ${styles["c-green"]}`}>98.4%</div>
+          <div className={`${adminStyles.metricValue} ${styles["c-green"]}`}>98.4%</div>
           <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Past 90 days performance</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Avg. Quote Response</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Avg. Quote Response</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}>
               <Clock size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>2.1 hrs</div>
+          <div className={adminStyles.metricValue}>2.1 hrs</div>
           <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Turnaround speed</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Quoted Master Items</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Quoted Master Items</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
               <Building2 size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>412</div>
+          <div className={adminStyles.metricValue}>412</div>
           <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Catalogue items supplied</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Payment Terms</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconAmber}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Payment Terms</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconAmber}`}>
               <CreditCard size={16} />
             </div>
           </div>
           <div
-            className={`${styles.metricValue} ${styles["text-18"]} ${styles["mt-6"]} ${styles["c-amber"]}`}
+            className={`${adminStyles.metricValue} ${styles["text-18"]} ${styles["mt-6"]} ${styles["c-amber"]}`}
           >
             30 Days Net
           </div>
@@ -94,52 +94,52 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
       </div>
 
       {/* Detail Layout */}
-      <div className={styles.detailLayout}>
-        <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Building2 size={16} className={styles.iconTeal} />
+      <div className={adminStyles.detailLayout}>
+        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Building2 size={16} className={adminStyles.iconTeal} />
                 <span>Supplier Master Details</span>
               </div>
             </div>
 
             <div className={styles["grid-2equal"]}>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Supplier Name:</span>
-                <span className={styles.sidebarStatVal}>{title}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Supplier Name:</span>
+                <span className={adminStyles.sidebarStatVal}>{title}</span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Category:</span>
-                <span className={styles.sidebarStatVal}>Stationery & Paper</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Category:</span>
+                <span className={adminStyles.sidebarStatVal}>Stationery & Paper</span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Procurement Email:</span>
-                <span className={`${styles.sidebarStatVal} ${styles["c-blue"]}`}>orders@{id}.co.za</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Procurement Email:</span>
+                <span className={`${adminStyles.sidebarStatVal} ${styles["c-blue"]}`}>orders@{id}.co.za</span>
               </div>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Standard Lead Time:</span>
-                <span className={styles.sidebarStatVal}>2 - 3 business days</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Standard Lead Time:</span>
+                <span className={adminStyles.sidebarStatVal}>2 - 3 business days</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className={styles.sidebarColumn}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Phone size={16} className={styles.iconTeal} />
+        <div className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Phone size={16} className={adminStyles.iconTeal} />
                 <span>Primary Contacts</span>
               </div>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Account Manager:</span>
-              <span className={styles.sidebarStatVal}>Sarah Jenkins</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Account Manager:</span>
+              <span className={adminStyles.sidebarStatVal}>Sarah Jenkins</span>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Phone:</span>
-              <span className={styles.sidebarStatVal}>+27 11 987 6543</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Phone:</span>
+              <span className={adminStyles.sidebarStatVal}>+27 11 987 6543</span>
             </div>
           </div>
         </div>

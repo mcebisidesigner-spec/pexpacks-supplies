@@ -26,7 +26,6 @@ import {
   deleteUserAction,
 } from "../actions";
 import adminStyles from "../../admin.module.css";
-import shared from "../../schools/schools.module.css";
 import styles from "../users.module.css";
 
 interface UserDetailPageProps {
@@ -70,13 +69,13 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
   return (
     <div className={adminStyles.adminContainer}>
       <p>
-        <Link href="/admin/users" className={shared.resetLink}>
+        <Link href="/admin/users" className={adminStyles.resetLink}>
           <ArrowLeft aria-hidden="true" /> Back to users
         </Link>
       </p>
 
-      <div className={styles.headerRow}>
-        <h1 className={styles.pageTitle}>{displayName(user)}</h1>
+      <div className={adminStyles.headerRow}>
+        <h1 className={adminStyles.pageTitle}>{displayName(user)}</h1>
       </div>
 
       <div className={styles.detailMeta}>

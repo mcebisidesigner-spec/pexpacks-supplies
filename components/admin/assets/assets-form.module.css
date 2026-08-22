@@ -1,4 +1,4 @@
-.form {
+﻿.form {
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -13,7 +13,7 @@
 .label {
   font-size: 13px;
   font-weight: 800;
-  color: var(--admin-heading);
+  color: var(--a-text);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -24,7 +24,7 @@
   padding: 10px 14px;
   font-size: 14px;
   font-family: inherit;
-  color: var(--admin-heading);
+  color: var(--a-text);
   background: var(--pex-bg);
   width: 100%;
   max-width: 480px;
@@ -39,7 +39,7 @@
 .fileInput {
   font-family: inherit;
   font-size: 14px;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .success {

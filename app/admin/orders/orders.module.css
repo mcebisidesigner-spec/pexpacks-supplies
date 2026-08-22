@@ -1,4 +1,4 @@
-.detailHeader {
+﻿.detailHeader {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -16,7 +16,7 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 20px;
   font-weight: 700;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .created {
@@ -32,7 +32,7 @@
 }
 
 .detailCard {
-  background: var(--card-bg, #ffffff);
+  background: var(--card-bg, var(--a-text));
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 16px;
   padding: 20px;
@@ -69,7 +69,7 @@
   text-align: right;
   font-weight: 500;
   word-break: break-word;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .itemList {
@@ -86,7 +86,7 @@
 }
 
 .itemDot {
-  color: #94a3b8;
+  color: var(--a-text-3);
 }
 
 .itemName {
@@ -110,13 +110,13 @@
 
 .amountLabel {
   font-weight: 600;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .amountValue {
   font-weight: 700;
   font-size: 18px;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .actionRow {
@@ -144,7 +144,7 @@
   border: 1px solid rgba(248, 113, 113, 0.4);
   border-radius: 12px;
   background: rgba(15, 23, 42, 0.6);
-  color: #f87171;
+  color: var(--a-red);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -153,7 +153,7 @@
 
 .deleteBtn:hover {
   background: rgba(248, 113, 113, 0.14);
-  border-color: #f87171;
+  border-color: var(--a-red);
 }
 
 .deleteBtn::after {
@@ -164,7 +164,7 @@
   white-space: nowrap;
   background: #7f1d1d;
   color: #fef2f2;
-  border: 1px solid #f87171;
+  border: 1px solid var(--a-red);
   font-size: 11px;
   font-weight: 800;
   padding: 5px 10px;
@@ -193,13 +193,13 @@
 .refundReason {
   width: 100%;
   padding: 14px 18px;
-  border: 1px solid var(--admin-border-strong, #334155);
+  border: 1px solid var(--a-border-strong);
   border-radius: 12px;
   font-size: 14px;
   resize: vertical;
   min-height: 60px;
-  color: #ffffff;
-  background: #ffffff;
+  color: var(--a-text);
+  background: var(--a-text);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -225,6 +225,73 @@
   color: var(--pex-muted, #6b7a86);
 }
 
+.muted {
+  color: var(--pex-muted, #6b7a86);
+  font-size: 12px;
+}
+
+.packsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.packBox {
+  border: 1px solid var(--a-border);
+  border-radius: 12px;
+  background: var(--a-surface);
+  padding: 16px;
+}
+
+.packHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.packName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--a-text);
+}
+
+.packGrade {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--a-surface-2);
+  color: var(--a-text-3);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.packPrice {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--a-text);
+  white-space: nowrap;
+}
+
+.learnerLabel {
+  font-size: 13px;
+  color: var(--a-text-3);
+  margin-bottom: 6px;
+}
+
+.pexcoverTag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--a-blue-subtle);
+  color: var(--a-blue);
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
 .positive {
   color: #1e6b45;
 }
@@ -238,7 +305,7 @@
   flex-wrap: wrap;
   gap: 24px;
   padding: 16px 20px;
-  background: var(--card-bg, #ffffff);
+  background: var(--card-bg, var(--a-text));
   border: 1px solid var(--pex-border, #e1e7ea);
   border-radius: 16px;
   margin-bottom: 20px;
@@ -258,7 +325,7 @@
 .summaryValue {
   font-size: 18px;
   font-weight: 700;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .packBlock {
@@ -276,7 +343,7 @@
 .packHeading {
   font-weight: 700;
   font-size: 14px;
-  color: var(--admin-heading);
+  color: var(--a-text);
   margin: 0 0 8px;
 }
 

@@ -1,4 +1,4 @@
-/* ===================================================
+﻿/* ===================================================
    PexPacks Supplies — Bulk CSV Stationery Importer
    Token-based styles scoped to this component.
    Assumes rendering inside the .admin-dark theme scope
@@ -12,7 +12,7 @@
   width: 100%;
   max-width: 56rem;
   margin: 0 auto;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
   font-family: inherit;
 }
 
@@ -31,9 +31,9 @@
   flex-direction: column;
   gap: 16px;
   padding: 24px;
-  border-radius: var(--admin-radius);
-  border: 1px solid var(--admin-border);
-  background: var(--admin-surface);
+  border-radius: var(--a-radius);
+  border: 1px solid var(--a-border);
+  background: var(--a-surface);
 }
 
 .cardCompact {
@@ -55,7 +55,7 @@
   gap: 16px;
   justify-content: space-between;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--admin-border);
+  border-bottom: 1px solid var(--a-border);
 }
 
 .cardHeaderCompact {
@@ -98,7 +98,7 @@
   margin: 0;
   font-size: 20px;
   font-weight: 700;
-  color: var(--admin-text);
+  color: var(--a-text);
 }
 
 .cardHeaderTiles .cardTitle {
@@ -108,7 +108,7 @@
 }
 
 .titleIcon {
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .cardHeaderTiles .titleIcon {
@@ -118,7 +118,7 @@
 .cardSub {
   margin: 4px 0 0;
   font-size: 12px;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .cardHeaderTiles .cardSub {
@@ -135,7 +135,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  color: var(--admin-text, #ffffff);
+  color: var(--a-text);
   text-align: center;
   cursor: pointer;
 }
@@ -151,7 +151,7 @@
 .compactDropzone span {
   max-width: 100%;
   overflow: hidden;
-  color: var(--admin-text, #ffffff);
+  color: var(--a-text);
   font-size: 12px;
   font-weight: 700;
   text-overflow: ellipsis;
@@ -159,7 +159,7 @@
 }
 
 .compactDropzone small {
-  color: var(--admin-text-3, #94a3b8);
+  color: var(--a-text-3);
   font-size: 10px;
   font-weight: 600;
 }
@@ -167,7 +167,7 @@
 .compactUploadIcon {
   width: 18px;
   height: 18px;
-  color: var(--admin-text-3, #94a3b8);
+  color: var(--a-text-3);
 }
 
 .templateBtn {
@@ -177,10 +177,10 @@
   align-self: flex-start;
   min-height: 44px;
   padding: 0 16px;
-  border-radius: var(--admin-radius-sm);
-  border: 1px solid var(--admin-border-strong);
-  background: var(--admin-surface-2);
-  color: var(--admin-text-2);
+  border-radius: var(--a-radius-sm);
+  border: 1px solid var(--a-border-strong);
+  background: var(--a-surface-2);
+  color: var(--a-text-2);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -195,7 +195,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--admin-text, #ffffff);
+  color: var(--a-text);
   font-size: 11px;
   font-weight: 700;
 }
@@ -218,21 +218,21 @@
 
 .templateBtnCompact:hover {
   background: transparent;
-  color: var(--admin-accent-strong, #2dd4bf);
+  color: var(--a-accent-strong);
 }
 
 .templateBtn:hover {
-  background: var(--admin-surface);
-  border-color: var(--admin-border-strong);
+  background: var(--a-surface);
+  border-color: var(--a-border-strong);
 }
 
 .templateBtn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--admin-focus);
+  box-shadow: 0 0 0 3px var(--a-accent);
 }
 
 .templateIcon {
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 /* File dropzone -------------------------------------------------------- */
@@ -240,9 +240,9 @@
   position: relative;
   padding: 32px;
   text-align: center;
-  border-radius: var(--admin-radius-sm);
-  border: 2px dashed var(--admin-border-strong);
-  background: var(--admin-bg);
+  border-radius: var(--a-radius-sm);
+  border: 2px dashed var(--a-border-strong);
+  background: var(--a-bg);
   transition: border-color 0.16s ease;
 }
 
@@ -251,7 +251,7 @@
 }
 
 .dropzone:hover {
-  border-color: var(--admin-accent);
+  border-color: var(--a-accent);
 }
 
 .dropzoneInput {
@@ -278,37 +278,37 @@
   width: 48px;
   height: 48px;
   margin: 0 auto;
-  border-radius: var(--admin-radius);
-  border: 1px solid var(--admin-border-strong);
-  background: var(--admin-surface);
+  border-radius: var(--a-radius);
+  border: 1px solid var(--a-border-strong);
+  background: var(--a-surface);
   transition: border-color 0.16s ease;
 }
 
 .dropzone:hover .dropzoneIconWrap {
-  border-color: var(--admin-accent);
+  border-color: var(--a-accent);
 }
 
 .dropzoneIcon {
   width: 24px;
   height: 24px;
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .dropzoneTitle {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: var(--admin-text);
+  color: var(--a-text);
 }
 
 .dropzoneHint {
   margin: 2px 0 0;
   font-size: 12px;
-  color: var(--admin-muted);
+  color: var(--a-text-4);
 }
 
 .dropzoneHintStrong {
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 /* Target pack selector ------------------------------------------------- */
@@ -321,24 +321,24 @@
 .packSelectLabel {
   font-size: 12px;
   font-weight: 600;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .packSelect {
   min-height: 44px;
   padding: 0 12px;
-  border-radius: var(--admin-radius-sm);
-  border: 1px solid var(--admin-border-strong);
-  background: var(--admin-surface);
-  color: var(--admin-text);
+  border-radius: var(--a-radius-sm);
+  border: 1px solid var(--a-border-strong);
+  background: var(--a-surface);
+  color: var(--a-text);
   font-size: 14px;
   cursor: pointer;
 }
 
 .packSelect:focus {
   outline: none;
-  border-color: var(--admin-accent);
-  box-shadow: 0 0 0 3px var(--admin-accent-subtle);
+  border-color: var(--a-accent);
+  box-shadow: 0 0 0 3px var(--a-accent-subtle);
 }
 
 /* Banners -------------------------------------------------------------- */
@@ -348,10 +348,10 @@
   justify-content: space-between;
   gap: 12px;
   padding: 16px;
-  border-radius: var(--admin-radius-sm);
-  border: 1px solid var(--admin-red);
-  background: var(--admin-red-subtle);
-  color: var(--admin-red);
+  border-radius: var(--a-radius-sm);
+  border: 1px solid var(--a-red);
+  background: var(--a-red-subtle);
+  color: var(--a-red);
   font-size: 12px;
 }
 
@@ -388,7 +388,7 @@
 
 .dismissBtn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--admin-focus);
+  box-shadow: 0 0 0 3px var(--a-accent);
 }
 
 .dismissIcon {
@@ -401,10 +401,10 @@
   align-items: center;
   gap: 8px;
   padding: 16px;
-  border-radius: var(--admin-radius-sm);
-  border: 1px solid var(--admin-accent);
-  background: var(--admin-accent-subtle);
-  color: var(--admin-accent-strong);
+  border-radius: var(--a-radius-sm);
+  border: 1px solid var(--a-accent);
+  background: var(--a-accent-subtle);
+  color: var(--a-accent-strong);
   font-size: 12px;
 }
 
@@ -429,9 +429,9 @@
   flex-direction: column;
   gap: 16px;
   padding: 24px;
-  border-radius: var(--admin-radius);
-  border: 1px solid var(--admin-border);
-  background: var(--admin-surface);
+  border-radius: var(--a-radius);
+  border: 1px solid var(--a-border);
+  background: var(--a-surface);
 }
 
 .previewHeader {
@@ -440,7 +440,7 @@
   gap: 12px;
   justify-content: space-between;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--admin-border);
+  border-bottom: 1px solid var(--a-border);
 }
 
 .previewHeaderLeft {
@@ -453,7 +453,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: var(--admin-text);
+  color: var(--a-text);
 }
 
 .pill {
@@ -466,15 +466,15 @@
 }
 
 .pillValid {
-  background: var(--admin-accent-subtle);
-  color: var(--admin-accent-strong);
-  border: 1px solid var(--admin-accent);
+  background: var(--a-accent-subtle);
+  color: var(--a-accent-strong);
+  border: 1px solid var(--a-accent);
 }
 
 .pillInvalid {
-  background: var(--admin-red-subtle);
-  color: var(--admin-red);
-  border: 1px solid var(--admin-red);
+  background: var(--a-red-subtle);
+  color: var(--a-red);
+  border: 1px solid var(--a-red);
 }
 
 .importBtn {
@@ -485,19 +485,19 @@
   align-self: flex-start;
   min-height: 44px;
   padding: 0 24px;
-  border-radius: var(--admin-radius-sm);
+  border-radius: var(--a-radius-sm);
   border: none;
-  background: var(--admin-accent);
-  color: var(--admin-accent-text);
+  background: var(--a-accent);
+  color: var(--a-text);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 20px var(--admin-accent-subtle);
+  box-shadow: 0 8px 20px var(--a-accent-subtle);
   transition: background 0.16s ease;
 }
 
 .importBtn:hover:not(:disabled) {
-  background: var(--admin-accent-strong);
+  background: var(--a-accent-strong);
 }
 
 .importBtn:disabled {
@@ -507,7 +507,7 @@
 
 .importBtn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px var(--admin-focus);
+  box-shadow: 0 0 0 3px var(--a-accent);
 }
 
 .importBtnIcon {
@@ -523,8 +523,8 @@
   overflow-x: auto;
   max-height: 320px;
   overflow-y: auto;
-  border-radius: var(--admin-radius-sm);
-  border: 1px solid var(--admin-border);
+  border-radius: var(--a-radius-sm);
+  border: 1px solid var(--a-border);
 }
 
 .table {
@@ -532,20 +532,20 @@
   border-collapse: collapse;
   text-align: left;
   font-size: 12px;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
 }
 
 .tableHead {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--admin-bg);
-  color: var(--admin-text-3);
+  background: var(--a-bg);
+  color: var(--a-text-3);
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  border-bottom: 1px solid var(--admin-border);
+  border-bottom: 1px solid var(--a-border);
 }
 
 .th {
@@ -553,11 +553,11 @@
 }
 
 .tableBody {
-  background: var(--admin-bg);
+  background: var(--a-bg);
 }
 
 .tableRow {
-  border-bottom: 1px solid var(--admin-border);
+  border-bottom: 1px solid var(--a-border);
   transition: background 0.14s ease;
 }
 
@@ -566,11 +566,11 @@
 }
 
 .tableRowError {
-  background: var(--admin-red-subtle);
+  background: var(--a-red-subtle);
 }
 
 .tableRowHover:hover {
-  background: var(--admin-surface-2);
+  background: var(--a-surface-2);
 }
 
 .td {
@@ -579,21 +579,21 @@
 
 .tdMono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .tdTitle {
   font-weight: 600;
-  color: var(--admin-text);
+  color: var(--a-text);
 }
 
 .tdCategory {
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
 }
 
 .tdPrice {
   font-weight: 700;
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .statusReady {
@@ -601,7 +601,7 @@
   align-items: center;
   gap: 4px;
   font-weight: 500;
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .statusError {
@@ -609,7 +609,7 @@
   align-items: center;
   gap: 4px;
   font-weight: 500;
-  color: var(--admin-red);
+  color: var(--a-red);
 }
 
 .statusIcon {

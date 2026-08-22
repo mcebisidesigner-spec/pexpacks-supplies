@@ -1,4 +1,4 @@
-.packCell {
+﻿.packCell {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -16,13 +16,13 @@
 
 .packName {
   font-weight: 700;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .schoolNameLink {
   font-weight: 700;
   font-size: 15px;
-  color: var(--admin-heading);
+  color: var(--a-text);
   text-decoration: underline;
   text-underline-offset: 3px;
   transition: color 0.15s ease;
@@ -53,7 +53,7 @@
 
 .priceCell {
   font-weight: 700;
-  color: var(--admin-heading);
+  color: var(--a-text);
   white-space: nowrap;
 }
 

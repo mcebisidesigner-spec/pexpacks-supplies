@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -13,6 +13,7 @@ import {
   Search,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface PaymentRow {
   id: string;
@@ -51,7 +52,7 @@ export function PaymentsPageView() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Payments{" "}
@@ -64,12 +65,12 @@ export function PaymentsPageView() {
         </div>
       </div>
 
-      <div className={styles.toolbar}>
+      <div className={adminStyles.toolbar}>
         <div className={styles.toolbarLeft}>
           <div className={styles.searchBox}>
             <Search />
             <input
-              className={styles.searchInput}
+              className={adminStyles.searchInput}
               placeholder="Search transactions..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -90,8 +91,8 @@ export function PaymentsPageView() {
         </div>
       </div>
 
-      <div className={styles.tableCard}>
-        <div className={styles.tableWrapper}>
+      <div className={adminStyles.tableCard}>
+        <div className={adminStyles.tableWrapper}>
           <table className={styles.dataTable}>
             <thead>
               <tr>
@@ -114,7 +115,7 @@ export function PaymentsPageView() {
                   <td>
                     <Link
                       href={`/admin/payments/${pay.orderNumber}`}
-                      className={styles.badgeTeal}
+                      className={adminStyles.badgeTeal}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {pay.paymentId}
@@ -123,7 +124,7 @@ export function PaymentsPageView() {
                   <td>
                     <Link
                       href={`/admin/payments/${pay.orderNumber}`}
-                      className={`${styles.cWhite} ${styles.fw700}`}
+                      className={`${adminStyles.cWhite} ${adminStyles.fw700}`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {pay.orderNumber}
@@ -133,7 +134,7 @@ export function PaymentsPageView() {
                   <td>{pay.provider}</td>
                   <td><strong>R {pay.amount.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</strong></td>
                   <td>
-                    <span className={pay.status === "Received" ? styles.badgeGreen : pay.status === "Partially Reconciled" ? styles.badgeAmber : pay.status === "Pending" ? styles.badgeBlue : styles.badgeRed}>
+                    <span className={pay.status === "Received" ? adminStyles.badgeGreen : pay.status === "Partially Reconciled" ? adminStyles.badgeAmber : pay.status === "Pending" ? adminStyles.badgeBlue : adminStyles.badgeRed}>
                       {pay.status}
                     </span>
                   </td>
@@ -151,7 +152,7 @@ export function PaymentsPageView() {
         </div>
         <div className={styles.paginationFooter}>
           <span>Showing 1 to 8 of 248 payments</span>
-          <div className={styles.paginationControls}>
+          <div className={adminStyles.paginationControls}>
             <button className={styles.pageBtn}>&lt;</button>
             <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
             <button className={styles.pageBtn}>2</button>

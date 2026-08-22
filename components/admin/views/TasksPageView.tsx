@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import {
   Search,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface TaskRow {
   id: string;
@@ -39,7 +40,7 @@ export function TasksPageView() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>Tasks</h1>
           <p className={styles.headerSubtitle}>Track tasks and get things done.</p>
@@ -51,7 +52,7 @@ export function TasksPageView() {
         </div>
       </div>
 
-      <div className={styles.toolbar}>
+      <div className={adminStyles.toolbar}>
         <div className={styles.toolbarLeft}>
           <select className={styles.selectInput}><option>All Tasks</option></select>
           <select className={styles.selectInput}><option>Status: All</option></select>
@@ -60,8 +61,8 @@ export function TasksPageView() {
         </div>
       </div>
 
-      <div className={styles.tableCard}>
-        <div className={styles.tableWrapper}>
+      <div className={adminStyles.tableCard}>
+        <div className={adminStyles.tableWrapper}>
           <table className={styles.dataTable}>
             <thead>
               <tr>
@@ -91,8 +92,8 @@ export function TasksPageView() {
                       </Link>
                     </td>
                     <td>
-                      <div className={`${styles.flex} ${styles["items-center"]} ${styles["gap-6"]}`}>
-                        <span className={styles.avatarBadge} style={{ background: t.assigneeAvatar === "MC" ? "#0d9488" : t.assigneeAvatar === "KG" ? "#d97706" : "#2563eb" }}>
+                      <div className={`${adminStyles.flex} ${styles["items-center"]} ${styles["gap-6"]}`}>
+                        <span className={adminStyles.avatarBadge} style={{ background: t.assigneeAvatar === "MC" ? "#0d9488" : t.assigneeAvatar === "KG" ? "#d97706" : "#2563eb" }}>
                           {t.assigneeAvatar}
                         </span>
                         <span>{t.assignee}</span>
@@ -105,7 +106,7 @@ export function TasksPageView() {
                       </span>
                     </td>
                     <td>
-                      <span className={t.status === "Completed" ? styles.badgeGreen : t.status === "In Progress" ? styles.badgeBlue : styles.badgeAmber}>
+                      <span className={t.status === "Completed" ? adminStyles.badgeGreen : t.status === "In Progress" ? adminStyles.badgeBlue : adminStyles.badgeAmber}>
                         {t.status}
                       </span>
                     </td>
@@ -117,7 +118,7 @@ export function TasksPageView() {
         </div>
         <div className={styles.paginationFooter}>
           <span>Showing 1 to 8 of 32 tasks</span>
-          <div className={styles.paginationControls}>
+          <div className={adminStyles.paginationControls}>
             <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
             <button className={styles.pageBtn}>2</button>
             <button className={styles.pageBtn}>3</button>

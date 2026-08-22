@@ -18,7 +18,7 @@ import {
 
 export async function createPackAction(
   _prev: PackFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<PackFormState> {
   await requireAdmin({ permission: "packs.create" });
   const result = await createPack(formData);
@@ -55,13 +55,15 @@ export async function createSchoolPackAction(
   revalidatePath(`/admin/packs/${result.pack.slug || result.pack.id}`);
   revalidatePath("/schools");
   revalidatePath("/", "layout");
-  redirect(`/admin/packs/${encodeURIComponent(result.pack.slug || result.pack.id)}`);
+  redirect(
+    `/admin/packs/${encodeURIComponent(result.pack.slug || result.pack.id)}`,
+  );
 }
 
 export async function updatePackAction(
   id: string,
   _prev: PackFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<PackFormState> {
   await requireAdmin({ permission: "packs.edit" });
   const result = await updatePack(id, formData);
@@ -80,7 +82,7 @@ export async function updatePackAction(
 export async function updatePackPriceAction(
   id: string,
   _prev: PackFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<PackFormState> {
   await requireAdmin({ permission: "packs.edit" });
   const rawPrice = formData.get("price");
@@ -91,7 +93,10 @@ export async function updatePackPriceAction(
 
   const result = await updatePackPrice(id, price);
   if (!result.ok) {
-    return { ok: false, errors: { price: result.message ?? "Failed to update price." } };
+    return {
+      ok: false,
+      errors: { price: result.message ?? "Failed to update price." },
+    };
   }
 
   invalidateSchoolSearchCache();
@@ -116,7 +121,9 @@ export async function deletePackAction(id: string): Promise<void> {
   revalidatePath("/", "layout");
 }
 
-export async function duplicatePackAction(id: string): Promise<{ ok: boolean; packId?: string }> {
+export async function duplicatePackAction(
+  id: string,
+): Promise<{ ok: boolean; packId?: string }> {
   await requireAdmin({ permission: "packs.duplicate" });
   const result = await duplicatePack(id);
   if (!result.ok) return { ok: false };
@@ -129,7 +136,10 @@ export async function duplicatePackAction(id: string): Promise<{ ok: boolean; pa
   return { ok: true, packId: result.packId };
 }
 
-export async function setPackVisibleAction(id: string, visible: boolean): Promise<void> {
+export async function setPackVisibleAction(
+  id: string,
+  visible: boolean,
+): Promise<void> {
   await requireAdmin({ permission: "packs.edit" });
   await setPackVisible(id, visible);
   invalidateSchoolSearchCache();
@@ -140,13 +150,19 @@ export async function setPackVisibleAction(id: string, visible: boolean): Promis
   revalidatePath("/", "layout");
 }
 
-export async function setSchoolPacksVisibleAction(schoolId: string, visible: boolean): Promise<void> {
+export async function setSchoolPacksVisibleAction(
+  schoolId: string,
+  visible: boolean,
+): Promise<void> {
   await requireAdmin({ permission: "packs.edit" });
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const { revalidateCatalog } = await import("@/lib/admin/catalog-revalidate");
   const admin = createSupabaseAdminClient();
 
-  await admin.from("stationery_packs").update({ visible }).eq("school_id", schoolId);
+  await admin
+    .from("school_packs")
+    .update({ visible })
+    .eq("school_id", schoolId);
   const { data: school } = await admin
     .from("schools")
     .update({
@@ -169,7 +185,7 @@ export async function deleteSchoolPacksAction(schoolId: string): Promise<void> {
   await requireAdmin({ permission: "packs.delete" });
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const admin = createSupabaseAdminClient();
-  await admin.from("stationery_packs").delete().eq("school_id", schoolId);
+  await admin.from("school_packs").delete().eq("school_id", schoolId);
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePath("/admin/packs");

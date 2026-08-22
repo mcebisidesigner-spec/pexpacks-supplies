@@ -281,7 +281,7 @@ export interface Database {
             isOneToOne: false;
             referencedRelation: "form_submissions";
             referencedColumns: ["id"];
-          }
+          },
         ];
       };
       lay_by_applications: {
@@ -367,7 +367,7 @@ export interface Database {
             isOneToOne: false;
             referencedRelation: "form_submissions";
             referencedColumns: ["id"];
-          }
+          },
         ];
       };
       waitlist_entries: {
@@ -559,7 +559,7 @@ export interface Database {
             isOneToOne: false;
             referencedRelation: "permissions";
             referencedColumns: ["id"];
-          }
+          },
         ];
       };
       user_roles: {
@@ -588,7 +588,7 @@ export interface Database {
             isOneToOne: false;
             referencedRelation: "roles";
             referencedColumns: ["id"];
-          }
+          },
         ];
       };
       user_permissions: {
@@ -620,7 +620,7 @@ export interface Database {
             isOneToOne: false;
             referencedRelation: "permissions";
             referencedColumns: ["id"];
-          }
+          },
         ];
       };
       assigned_forms: {
@@ -857,7 +857,7 @@ export interface Database {
         };
         Relationships: [];
       };
-      stationery_packs: {
+      school_packs: {
         Row: {
           id: string;
           school_id: string | null;
@@ -877,6 +877,10 @@ export interface Database {
           created_at: string;
           updated_at: string;
           search_vector: string | null;
+          season_id: string | null;
+          list_version: number;
+          pricing_status: string;
+          fulfilment_deadline: string | null;
         };
         Insert: {
           id?: string;
@@ -897,6 +901,10 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
           search_vector?: string | null;
+          season_id?: string | null;
+          list_version?: number;
+          pricing_status?: string;
+          fulfilment_deadline?: string | null;
         };
         Update: {
           id?: string;
@@ -917,6 +925,93 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
           search_vector?: string | null;
+          season_id?: string | null;
+          list_version?: number;
+          pricing_status?: string;
+          fulfilment_deadline?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "school_packs_school_id_fkey";
+            columns: ["school_id"];
+            isOneToOne: false;
+            referencedRelation: "schools";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      stationery_packs: {
+        Row: {
+          id: string;
+          school_id: string | null;
+          title: string;
+          slug: string | null;
+          description: string | null;
+          price: number;
+          stock: number;
+          featured: boolean;
+          visible: boolean;
+          academic_year: string | null;
+          delivery_type: string;
+          pack_image: string | null;
+          sort_order: number;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+          search_vector: string | null;
+          season_id: string | null;
+          list_version: number;
+          pricing_status: string;
+          fulfilment_deadline: string | null;
+        };
+        Insert: {
+          id?: string;
+          school_id?: string | null;
+          title: string;
+          slug?: string | null;
+          description?: string | null;
+          price?: number;
+          stock?: number;
+          featured?: boolean;
+          visible?: boolean;
+          academic_year?: string | null;
+          delivery_type?: string;
+          pack_image?: string | null;
+          sort_order?: number;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          search_vector?: string | null;
+          season_id?: string | null;
+          list_version?: number;
+          pricing_status?: string;
+          fulfilment_deadline?: string | null;
+        };
+        Update: {
+          id?: string;
+          school_id?: string | null;
+          title?: string;
+          slug?: string | null;
+          description?: string | null;
+          price?: number;
+          stock?: number;
+          featured?: boolean;
+          visible?: boolean;
+          academic_year?: string | null;
+          delivery_type?: string;
+          pack_image?: string | null;
+          sort_order?: number;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          search_vector?: string | null;
+          season_id?: string | null;
+          list_version?: number;
+          pricing_status?: string;
+          fulfilment_deadline?: string | null;
         };
         Relationships: [
           {
@@ -925,7 +1020,7 @@ export interface Database {
             isOneToOne: false;
             referencedRelation: "schools";
             referencedColumns: ["id"];
-          }
+          },
         ];
       };
       stationery_items: {
@@ -987,7 +1082,7 @@ export interface Database {
             isOneToOne: false;
             referencedRelation: "stationery_packs";
             referencedColumns: ["id"];
-          }
+          },
         ];
       };
       blog_posts: {
@@ -1400,7 +1495,7 @@ export interface Database {
             foreignKeyName: "school_pack_items_pack_id_fkey";
             columns: ["pack_id"];
             isOneToOne: false;
-            referencedRelation: "stationery_packs";
+            referencedRelation: "school_packs";
             referencedColumns: ["id"];
           },
           {
@@ -1784,7 +1879,7 @@ export interface Database {
             foreignKeyName: "order_items_pack_id_fkey";
             columns: ["pack_id"];
             isOneToOne: false;
-            referencedRelation: "stationery_packs";
+            referencedRelation: "school_packs";
             referencedColumns: ["id"];
           },
         ];
@@ -2567,14 +2662,29 @@ export interface Database {
       is_admin: { Args: Record<string, never>; Returns: boolean };
       is_staff: { Args: Record<string, never>; Returns: boolean };
       has_permission: { Args: { p_key: string }; Returns: boolean };
-      set_user_as_admin: { Args: { target_user_id: string }; Returns: undefined };
-      grant_role: {
-        Args: { target_user_id: string; role_slug: string; granted_by?: string | null };
+      set_user_as_admin: {
+        Args: { target_user_id: string };
         Returns: undefined;
       };
-      revoke_role: { Args: { target_user_id: string; role_slug: string }; Returns: undefined };
+      grant_role: {
+        Args: {
+          target_user_id: string;
+          role_slug: string;
+          granted_by?: string | null;
+        };
+        Returns: undefined;
+      };
+      revoke_role: {
+        Args: { target_user_id: string; role_slug: string };
+        Returns: undefined;
+      };
       set_user_permission: {
-        Args: { target_user_id: string; permission_key: string; granted: boolean; granted_by?: string | null };
+        Args: {
+          target_user_id: string;
+          permission_key: string;
+          granted: boolean;
+          granted_by?: string | null;
+        };
         Returns: undefined;
       };
       get_orders_daily: {
@@ -2656,7 +2766,11 @@ export interface Database {
       };
       get_top_schools: {
         Args: { from_date: string; to_date: string; result_limit?: number };
-        Returns: { school_name: string | null; order_count: number; revenue: number }[];
+        Returns: {
+          school_name: string | null;
+          order_count: number;
+          revenue: number;
+        }[];
       };
       get_revenue_total: {
         Args: Record<string, never>;

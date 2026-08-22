@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
@@ -28,9 +28,9 @@ export default async function EditTestimonialPage({
           <ArrowLeft aria-hidden="true" /> Back to testimonials
         </Link>
       </p>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div>
-          <h1 className={styles.pageTitle}>Edit testimonial</h1>
+          <h1 className={adminStyles.pageTitle}>Edit testimonial</h1>
           <p className={styles.subtitle}>{row.name}</p>
         </div>
       </div>

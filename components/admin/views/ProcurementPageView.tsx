@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
@@ -17,6 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 
 interface KanbanCard {
@@ -88,7 +89,7 @@ export function ProcurementPageView() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>Procurement Pipeline & PO Workspace</h1>
           <p className={styles.headerSubtitle}>Financial exposure & 4-stage procurement workflow</p>
@@ -101,65 +102,65 @@ export function ProcurementPageView() {
       </div>
 
       {generatedMessage && (
-        <div className={`${styles.badgeGreen} ${viewStyles.badgeGreenPadded}`}>
+        <div className={`${adminStyles.badgeGreen} ${adminStyles.badgeGreenPadded}`}>
           <CheckCircle2 size={16} /> {generatedMessage}
         </div>
       )}
 
       {/* Financial Exposure Cards */}
-      <div className={styles.metricsGrid4}>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Committed Spend</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+      <div className={adminStyles.metricsGrid4}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Committed Spend</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
               <DollarSign size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>R {committedSpend.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</div>
-          <div className={viewStyles.kanbanMetricCaption}>Total supplier commitment</div>
+          <div className={adminStyles.metricValue}>R {committedSpend.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</div>
+          <div className={adminStyles.kanbanMetricCaption}>Total supplier commitment</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Outstanding PO Value</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconAmber}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Outstanding PO Value</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconAmber}`}>
               <ShoppingCart size={16} />
             </div>
           </div>
-          <div className={`${styles.metricValue} ${viewStyles.kanbanMetricValueAmber}`}>
+          <div className={`${adminStyles.metricValue} ${adminStyles.kanbanMetricValueAmber}`}>
             R {outstandingPOValue.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
           </div>
-          <div className={viewStyles.kanbanMetricCaption}>In-flight open POs</div>
+          <div className={adminStyles.kanbanMetricCaption}>In-flight open POs</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Revenue at Risk</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconRed}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Revenue at Risk</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconRed}`}>
               <AlertTriangle size={16} />
             </div>
           </div>
-          <div className={`${styles.metricValue} ${viewStyles.kanbanMetricValueRed}`}>
+          <div className={`${adminStyles.metricValue} ${adminStyles.kanbanMetricValueRed}`}>
             R {revenueAtRisk.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
           </div>
-          <div className={viewStyles.kanbanMetricCaption}>Unsecured procurement items</div>
+          <div className={adminStyles.kanbanMetricCaption}>Unsecured procurement items</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Quick Bulk PO Generators</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Quick Bulk PO Generators</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}>
               <FileSpreadsheet size={16} />
             </div>
           </div>
-          <div className={`${viewStyles.flex} ${viewStyles.gap6} ${viewStyles.mt8}`}>
-            <button className={`${styles.secondaryBtn} ${viewStyles.poBtnSmall}`} onClick={() => handleGeneratePO("Waltons")} type="button">
+          <div className={`${adminStyles.flex} ${adminStyles.gap6} ${adminStyles.mt8}`}>
+            <button className={`${styles.secondaryBtn} ${adminStyles.poBtnSmall}`} onClick={() => handleGeneratePO("Waltons")} type="button">
               + Waltons
             </button>
-            <button className={`${styles.secondaryBtn} ${viewStyles.poBtnSmall}`} onClick={() => handleGeneratePO("Croxley")} type="button">
+            <button className={`${styles.secondaryBtn} ${adminStyles.poBtnSmall}`} onClick={() => handleGeneratePO("Croxley")} type="button">
               + Croxley
             </button>
-            <button className={`${styles.secondaryBtn} ${viewStyles.poBtnSmall}`} onClick={() => handleGeneratePO("Bidvest")} type="button">
+            <button className={`${styles.secondaryBtn} ${adminStyles.poBtnSmall}`} onClick={() => handleGeneratePO("Bidvest")} type="button">
               + Bidvest
             </button>
           </div>
@@ -167,33 +168,33 @@ export function ProcurementPageView() {
       </div>
 
       {/* 4-Stage Kanban Board */}
-      <div className={viewStyles.kanbanGrid}>
+      <div className={adminStyles.kanbanGrid}>
         {kanbanColumns.map(({ stage, cards: stageCards }) => {
           return (
             <div
               key={stage}
-              className={`${styles.sidebarCard} ${viewStyles.kanbanCol}`}
+              className={`${adminStyles.sidebarCard} ${adminStyles.kanbanCol}`}
             >
-              <div className={styles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarCardHeader}>
                 <span>{stage}</span>
-                <span className={styles.badgeTeal}>{stageCards.length}</span>
+                <span className={adminStyles.badgeTeal}>{stageCards.length}</span>
               </div>
 
-              <div className={viewStyles.kanbanItems}>
+              <div className={adminStyles.kanbanItems}>
                 {stageCards.map((c) => (
                   <div
                     key={c.id}
-                    className={`${styles.quickActionItem} ${viewStyles.kanbanCard}`}
+                    className={`${adminStyles.quickActionItem} ${adminStyles.kanbanCard}`}
                   >
-                    <div className={viewStyles.kanbanCardTop}>
-                      <strong className={viewStyles.kanbanPoNumber}>{c.poNumber}</strong>
-                      <span className={viewStyles.kanbanValue}>
+                    <div className={adminStyles.kanbanCardTop}>
+                      <strong className={adminStyles.kanbanPoNumber}>{c.poNumber}</strong>
+                      <span className={adminStyles.kanbanValue}>
                         R {c.value.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
                       </span>
                     </div>
-                    <div className={viewStyles.kanbanMeta}>{c.supplier} • {c.itemsCount} items</div>
+                    <div className={adminStyles.kanbanMeta}>{c.supplier} • {c.itemsCount} items</div>
                     <button
-                      className={`${styles.secondaryBtn} ${viewStyles.kanbanAdvance}`}
+                      className={`${styles.secondaryBtn} ${adminStyles.kanbanAdvance}`}
                       onClick={() => moveStage(c.id)}
                       type="button"
                     >

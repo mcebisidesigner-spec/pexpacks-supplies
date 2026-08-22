@@ -1,36 +1,7 @@
-.toolbar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.headerRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.pageTitle {
-  margin: 0;
-  font-size: clamp(22px, 3vw, 28px);
-  font-weight: 800;
-  color: var(--admin-heading);
-}
-
-.subtitle {
+﻿.subtitle {
   margin: 4px 0 0;
   font-size: 14px;
   color: var(--pex-muted, #6b7a86);
-}
-
-.count {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--pex-muted, #6b7a86);
-  margin-left: 8px;
 }
 
 .uploadCard {
@@ -45,63 +16,13 @@
   margin: 0 0 4px;
   font-size: 18px;
   font-weight: 800;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .uploadSubtitle {
   margin: 0 0 16px;
   font-size: 13px;
   color: var(--pex-muted, #6b7a86);
-}
-
-.filterForm {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  background: var(--pex-bg);
-  border: 1px solid var(--pex-border, #e1e7ea);
-  border-radius: 12px;
-  padding: 12px;
-}
-
-.filterInput {
-  border: 1px solid var(--pex-border, #dbe3ec);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
-  font-family: inherit;
-  color: var(--admin-heading);
-  background: var(--pex-bg);
-}
-
-.filterInput:focus {
-  outline: none;
-  border-color: var(--pex-keppel, #1a7a77);
-  box-shadow: 0 0 0 3px rgba(26, 122, 119, 0.15);
-}
-
-.applyButton {
-  background: var(--pex-navy, #1a2a40);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.resetLink {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--pex-muted, #6b7a86);
-  text-decoration: none;
-}
-
-.resetLink:hover {
-  text-decoration: underline;
 }
 
 .thumb {
@@ -139,7 +60,7 @@
 
 .assetName {
   font-weight: 700;
-  color: var(--admin-heading);
+  color: var(--a-text);
   word-break: break-all;
 }
 
@@ -182,24 +103,6 @@
   align-items: center;
   gap: 12px;
   white-space: nowrap;
-}
-
-.rowButton {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.rowButton:hover {
-  text-decoration: underline;
-}
-
-.rowButtonDelete {
-  color: #a93226;
 }
 
 .openLink {

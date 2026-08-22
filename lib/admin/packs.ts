@@ -11,11 +11,15 @@ import {
 import { slugify } from "@/lib/slugify";
 import { PACK_DELIVERY_TYPES } from "@/lib/admin/pack-constants";
 import { getGradeOrder } from "@/lib/grade-utils";
-import { createPackItems, packLineSchema, type PackLineInput } from "@/lib/admin/items";
+import {
+  createPackItems,
+  packLineSchema,
+  type PackLineInput,
+} from "@/lib/admin/items";
 import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 import { getAdminFilterOptions } from "@/lib/admin/filter-options";
 
-export type PackRow = Database["public"]["Tables"]["stationery_packs"]["Row"];
+export type PackRow = Database["public"]["Tables"]["school_packs"]["Row"];
 export type ItemRow = import("@/lib/admin/items").ItemRow;
 
 export { PACK_DELIVERY_TYPES };
@@ -51,7 +55,11 @@ const slugField = z
 
 export const packSchema = z.object({
   school_id: optString(64, "school"),
-  title: z.string().trim().min(1, "Enter a pack title").max(200, "Title is too long"),
+  title: z
+    .string()
+    .trim()
+    .min(1, "Enter a pack title")
+    .max(200, "Title is too long"),
   slug: slugField,
   description: optString(4000, "description"),
   price: moneyField,
@@ -148,14 +156,20 @@ export interface PackListResult {
 
 export async function resolveSchoolId(
   admin: ReturnType<typeof createSupabaseAdminClient>,
-  schoolIdOrSlug?: string
+  schoolIdOrSlug?: string,
 ): Promise<string | undefined> {
   if (!schoolIdOrSlug) return undefined;
   const decoded = decodeURIComponent(schoolIdOrSlug).trim();
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      decoded,
+    );
   if (isUuid) return decoded;
 
-  const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const slugified = decoded
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
   const { data } = await admin
     .from("schools")
     .select("id")
@@ -165,7 +179,9 @@ export async function resolveSchoolId(
   return data?.id ?? decoded;
 }
 
-export async function listPacks(filters: PackListFilters = {}): Promise<PackListResult> {
+export async function listPacks(
+  filters: PackListFilters = {},
+): Promise<PackListResult> {
   const admin = createSupabaseAdminClient();
   const page = Math.max(1, filters.page ?? 1);
   const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? 20));
@@ -173,10 +189,10 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
   const to = from + pageSize - 1;
 
   let query = admin
-    .from("stationery_packs")
+    .from("school_packs")
     .select(
       "id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,school_id,created_by,updated_by,created_at,updated_at,schools(name)",
-      { count: "exact" }
+      { count: "exact" },
     );
 
   if (filters.q) {
@@ -190,11 +206,11 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
       const schoolIds = (matchedSchools ?? []).map((s) => s.id);
       if (schoolIds.length > 0) {
         query = query.or(
-          `school_id.in.(${schoolIds.join(",")}),title.ilike.%${q}%,slug.ilike.%${q}%,description.ilike.%${q}%,academic_year.ilike.%${q}%`
+          `school_id.in.(${schoolIds.join(",")}),title.ilike.%${q}%,slug.ilike.%${q}%,description.ilike.%${q}%,academic_year.ilike.%${q}%`,
         );
       } else {
         query = query.or(
-          `title.ilike.%${q}%,slug.ilike.%${q}%,description.ilike.%${q}%,academic_year.ilike.%${q}%`
+          `title.ilike.%${q}%,slug.ilike.%${q}%,description.ilike.%${q}%,academic_year.ilike.%${q}%`,
         );
       }
     }
@@ -203,7 +219,8 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
     const realSchoolId = await resolveSchoolId(admin, filters.school_id);
     if (realSchoolId) query = query.eq("school_id", realSchoolId);
   }
-  if (filters.delivery_type) query = query.eq("delivery_type", filters.delivery_type);
+  if (filters.delivery_type)
+    query = query.eq("delivery_type", filters.delivery_type);
   if (filters.featured === "true") query = query.eq("featured", true);
   if (filters.featured === "false") query = query.eq("featured", false);
   if (filters.visible === "true") query = query.eq("visible", true);
@@ -216,7 +233,14 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
 
   if (error) {
     console.error("[packs] list failed:", error);
-    return { packs: [], total: 0, page, pageCount: 0, schools: [], deliveryTypes: [] };
+    return {
+      packs: [],
+      total: 0,
+      page,
+      pageCount: 0,
+      schools: [],
+      deliveryTypes: [],
+    };
   }
 
   const rows = (data ?? []) as (PackRow & {
@@ -229,7 +253,10 @@ export async function listPacks(filters: PackListFilters = {}): Promise<PackList
       .from("pack_subtotals" as never)
       .select("pack_id,item_count")
       .in("pack_id" as never, packIds as never);
-    for (const row of (countRows ?? []) as unknown as { pack_id: string; item_count: number }[]) {
+    for (const row of (countRows ?? []) as unknown as {
+      pack_id: string;
+      item_count: number;
+    }[]) {
       itemCounts.set(row.pack_id, Number(row.item_count ?? 0));
     }
   }
@@ -280,7 +307,7 @@ export interface SchoolGroupedResult {
 }
 
 export async function listSchoolGroupedSummary(
-  filters: PackListFilters = {}
+  filters: PackListFilters = {},
 ): Promise<SchoolGroupedResult> {
   const admin = createSupabaseAdminClient();
   const page = Math.max(1, filters.page ?? 1);
@@ -293,24 +320,29 @@ export async function listSchoolGroupedSummary(
   ]);
 
   try {
-    const { data, error } = await (admin.rpc as any)("get_all_pack_school_groups_json", {
-      q: q || null,
-      visible_filter: filters.visible || null,
-    });
+    const { data, error } = await (admin.rpc as any)(
+      "get_all_pack_school_groups_json",
+      {
+        q: q || null,
+        visible_filter: filters.visible || null,
+      },
+    );
 
     if (!error && data) {
       const rawSchools = Array.isArray(data.schools) ? data.schools : [];
       const totalSchools = Number(data.total_schools ?? rawSchools.length);
       const totalGradePacks = Number(data.total_grade_packs ?? 0);
 
-      const schoolsSummary: SchoolGroupedSummary[] = rawSchools.map((row: any) => ({
-        school_id: row.school_id,
-        school_name: row.school_name,
-        school_slug: row.school_slug ?? "",
-        grade_packs_count: Number(row.grade_packs_count ?? 0),
-        last_edited: row.last_edited ?? "",
-        visible: Boolean(row.visible),
-      }));
+      const schoolsSummary: SchoolGroupedSummary[] = rawSchools.map(
+        (row: any) => ({
+          school_id: row.school_id,
+          school_name: row.school_name,
+          school_slug: row.school_slug ?? "",
+          grade_packs_count: Number(row.grade_packs_count ?? 0),
+          last_edited: row.last_edited ?? "",
+          visible: Boolean(row.visible),
+        }),
+      );
 
       return {
         schoolsSummary,
@@ -323,10 +355,18 @@ export async function listSchoolGroupedSummary(
       };
     }
   } catch (err) {
-    console.warn("[packs] grouped summary JSON RPC unavailable, using fallback:", err);
+    console.warn(
+      "[packs] grouped summary JSON RPC unavailable, using fallback:",
+      err,
+    );
   }
 
-  let dbSchools: { id: string; name: string; slug: string | null; updated_at?: string | null }[] = [];
+  let dbSchools: {
+    id: string;
+    name: string;
+    slug: string | null;
+    updated_at?: string | null;
+  }[] = [];
   const chunk = 1000;
   let chunkPage = 0;
   let hasMore = true;
@@ -362,8 +402,10 @@ export async function listSchoolGroupedSummary(
   }
 
   const { data: dbPacks, count: totalGradePacks } = await admin
-    .from("stationery_packs")
-    .select("id, title, slug, school_id, visible, updated_at", { count: "exact" })
+    .from("school_packs")
+    .select("id, title, slug, school_id, visible, updated_at", {
+      count: "exact",
+    })
     .limit(50000);
 
   if (dbSchools.length === 0) {
@@ -386,7 +428,7 @@ export async function listSchoolGroupedSummary(
     const isVisible = sPacks.length > 0 ? sPacks.some((p) => p.visible) : true;
     const latestUpdate = sPacks.reduce(
       (max, p) => (p.updated_at && p.updated_at > max ? p.updated_at : max),
-      s.updated_at || ""
+      s.updated_at || "",
     );
 
     return {
@@ -457,10 +499,12 @@ export async function listPackSchools(): Promise<PackSchool[]> {
   return all;
 }
 
-export async function listPacksForFilter(): Promise<{ id: string; title: string }[]> {
+export async function listPacksForFilter(): Promise<
+  { id: string; title: string }[]
+> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
-    .from("stationery_packs")
+    .from("school_packs")
     .select("id, title")
     .order("title", { ascending: true });
   if (error || !data) return [];
@@ -469,11 +513,11 @@ export async function listPacksForFilter(): Promise<{ id: string; title: string 
 
 export async function nextSortOrder(
   admin: ReturnType<typeof createSupabaseAdminClient>,
-  schoolId: string | null
+  schoolId: string | null,
 ): Promise<number> {
   if (!schoolId) return 0;
   const { data } = await admin
-    .from("stationery_packs")
+    .from("school_packs")
     .select("sort_order")
     .eq("school_id", schoolId)
     .order("sort_order", { ascending: false })
@@ -493,30 +537,44 @@ async function listDeliveryTypes(): Promise<string[]> {
   }
 
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("stationery_packs").select("delivery_type");
+  const { data, error } = await admin
+    .from("school_packs")
+    .select("delivery_type");
   if (error || !data) return [];
-  const values = [...new Set(data.map((r) => r.delivery_type).filter(Boolean))].sort();
+  const values = [
+    ...new Set(data.map((r) => r.delivery_type).filter(Boolean)),
+  ].sort();
   for (const preset of PACK_DELIVERY_TYPES) {
     if (!values.includes(preset)) values.push(preset);
   }
   return values;
 }
 
-export async function getPack(idOrSlug: string): Promise<{ pack: PackRow | null; items: ItemRow[] }> {
+export async function getPack(
+  idOrSlug: string,
+): Promise<{ pack: PackRow | null; items: ItemRow[] }> {
   const admin = createSupabaseAdminClient();
   const decoded = decodeURIComponent(idOrSlug).trim();
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      decoded,
+    );
 
   let query = admin
-    .from("stationery_packs")
+    .from("school_packs")
     .select(
-      "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector"
+      "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector,season_id,list_version,pricing_status,fulfilment_deadline",
     );
   if (isUuid) {
     query = query.eq("id", decoded);
   } else {
-    const slugified = decoded.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-    query = query.or(`slug.ilike.${decoded},slug.ilike.${slugified},title.ilike.${decoded}`);
+    const slugified = decoded
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    query = query.or(
+      `slug.ilike.${decoded},slug.ilike.${slugified},title.ilike.${decoded}`,
+    );
   }
 
   const { data: pack, error } = await query.maybeSingle();
@@ -525,7 +583,7 @@ export async function getPack(idOrSlug: string): Promise<{ pack: PackRow | null;
   const { data: items, error: itemsError } = await admin
     .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source"
+      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
     )
     .eq("pack_id" as never, pack.id as never)
     .order("sort_order" as never, { ascending: true })
@@ -534,12 +592,15 @@ export async function getPack(idOrSlug: string): Promise<{ pack: PackRow | null;
   const itemList = (items ?? []) as unknown as ItemRow[];
   const calculatedSum = itemList.reduce(
     (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
-    0
+    0,
   );
   const roundedSum = Math.round(calculatedSum * 100) / 100;
 
   if (pack.price !== roundedSum) {
-    await admin.from("stationery_packs").update({ price: roundedSum }).eq("id", pack.id);
+    await admin
+      .from("school_packs")
+      .update({ price: roundedSum })
+      .eq("id", pack.id);
     pack.price = roundedSum;
   }
 
@@ -549,13 +610,13 @@ export async function getPack(idOrSlug: string): Promise<{ pack: PackRow | null;
 async function ensureUniqueSlug(
   admin: ReturnType<typeof createSupabaseAdminClient>,
   slug: string,
-  excludeId?: string
+  excludeId?: string,
 ): Promise<string> {
   let candidate = slug;
   let n = 1;
   while (true) {
     const { data } = await admin
-      .from("stationery_packs")
+      .from("school_packs")
       .select("id")
       .eq("slug", candidate)
       .maybeSingle();
@@ -582,7 +643,10 @@ type CreatePackFormData = z.infer<typeof createPackSchema>;
  * Parses the serialized `items` hidden field produced by the GradePackItemSelector
  * in the pack creation form. Returns an empty line list when no items were chosen.
  */
-function parsePackItems(formData: FormData): { lines: PackLineInput[]; error?: string } {
+function parsePackItems(formData: FormData): {
+  lines: PackLineInput[];
+  error?: string;
+} {
   const rawItems = raw(formData, "items");
   if (!rawItems.trim()) return { lines: [] };
 
@@ -590,14 +654,18 @@ function parsePackItems(formData: FormData): { lines: PackLineInput[]; error?: s
   try {
     value = JSON.parse(rawItems);
   } catch {
-    return { lines: [], error: "The items list is not valid. Refresh and try again." };
+    return {
+      lines: [],
+      error: "The items list is not valid. Refresh and try again.",
+    };
   }
 
   const parsed = z.array(packLineSchema).safeParse(value);
   if (!parsed.success) {
     return {
       lines: [],
-      error: "One of the items is not valid. Check names, quantities and prices.",
+      error:
+        "One of the items is not valid. Check names, quantities and prices.",
     };
   }
   return { lines: parsed.data };
@@ -651,7 +719,7 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
 
   const itemsTotal = packItems.lines.reduce(
     (sum, line) => sum + (line.unit_price ?? 0) * line.quantity,
-    0
+    0,
   );
   const defaultPrice = Math.round(itemsTotal * 100) / 100;
 
@@ -659,11 +727,14 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
     const data: CreatePackFormData = parsed.data;
     const grade = data.grade.trim();
     const title = `${school.name} ${grade} Pack`;
-    const slug = await ensureUniqueSlug(admin, `${school.slug}-${gradeToSlug(grade)}`);
+    const slug = await ensureUniqueSlug(
+      admin,
+      `${school.slug}-${gradeToSlug(grade)}`,
+    );
     const sort_order = await nextSortOrder(admin, school.id);
 
     const { data: created, error } = await admin
-      .from("stationery_packs")
+      .from("school_packs")
       .insert({
         school_id: school.id,
         title,
@@ -687,16 +758,25 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
       if (error.code === "23505") {
         return {
           ok: false,
-          errors: { school_id: "A pack for this school and grade already exists." },
+          errors: {
+            school_id: "A pack for this school and grade already exists.",
+          },
         };
       }
       throw error;
     }
 
     if (packItems.lines.length > 0) {
-      const itemResult = await createPackItems(created.id, packItems.lines, actor.user.id);
+      const itemResult = await createPackItems(
+        created.id,
+        packItems.lines,
+        actor.user.id,
+      );
       if (!itemResult.ok) {
-        console.error("[packs] failed to create items for new pack", created.id);
+        console.error(
+          "[packs] failed to create items for new pack",
+          created.id,
+        );
       }
     }
 
@@ -714,17 +794,28 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
     return { ok: true, pack: created };
   } catch (err) {
     console.error("[packs] create failed:", err);
-    return { ok: false, errors: {}, message: "Failed to create pack. Please try again." };
+    return {
+      ok: false,
+      errors: {},
+      message: "Failed to create pack. Please try again.",
+    };
   }
 }
 
-export async function updatePack(id: string, formData: FormData): Promise<PackFormResult> {
+export async function updatePack(
+  id: string,
+  formData: FormData,
+): Promise<PackFormResult> {
   const actor = await assertCan("packs.edit");
   const parsed = parsePackForm(formData);
   if (!parsed.ok) return { ok: false, errors: parsed.errors };
 
   const admin = createSupabaseAdminClient();
-  const existing = await admin.from("stationery_packs").select("id, slug").eq("id", id).maybeSingle();
+  const existing = await admin
+    .from("school_packs")
+    .select("id, slug")
+    .eq("id", id)
+    .maybeSingle();
   if (existing.error || !existing.data) {
     return { ok: false, errors: {}, message: "Pack not found." };
   }
@@ -743,7 +834,7 @@ export async function updatePack(id: string, formData: FormData): Promise<PackFo
     slug = await ensureUniqueSlug(admin, slug, id);
 
     const { data: updated, error } = await admin
-      .from("stationery_packs")
+      .from("school_packs")
       .update({ ...data, slug, updated_by: actor.user.id })
       .eq("id", id)
       .select()
@@ -751,7 +842,10 @@ export async function updatePack(id: string, formData: FormData): Promise<PackFo
 
     if (error) {
       if (error.code === "23505") {
-        return { ok: false, errors: { slug: "A pack with this slug already exists." } };
+        return {
+          ok: false,
+          errors: { slug: "A pack with this slug already exists." },
+        };
       }
       throw error;
     }
@@ -770,13 +864,17 @@ export async function updatePack(id: string, formData: FormData): Promise<PackFo
     return { ok: true, pack: updated };
   } catch (err) {
     console.error("[packs] update failed:", err);
-    return { ok: false, errors: {}, message: "Failed to update pack. Please try again." };
+    return {
+      ok: false,
+      errors: {},
+      message: "Failed to update pack. Please try again.",
+    };
   }
 }
 
 export async function updatePackPrice(
   id: string,
-  price: number
+  price: number,
 ): Promise<{ ok: boolean; message?: string }> {
   const actor = await assertCan("packs.edit");
   const admin = createSupabaseAdminClient();
@@ -787,14 +885,14 @@ export async function updatePackPrice(
   }
 
   const { data: existing } = await admin
-    .from("stationery_packs")
+    .from("school_packs")
     .select("id, title")
     .eq("id", id)
     .maybeSingle();
   if (!existing) return { ok: false, message: "Pack not found." };
 
   const { error } = await admin
-    .from("stationery_packs")
+    .from("school_packs")
     .update({ price: parsed.data, updated_by: actor.user.id })
     .eq("id", id);
   if (error) {
@@ -818,13 +916,13 @@ export async function updatePackPrice(
 
 export async function setPackVisible(
   id: string,
-  visible: boolean
+  visible: boolean,
 ): Promise<{ ok: boolean; message?: string }> {
   const actor = await assertCan("packs.edit");
   const admin = createSupabaseAdminClient();
 
   const { data: updated, error } = await admin
-    .from("stationery_packs")
+    .from("school_packs")
     .update({ visible, updated_by: actor.user.id })
     .eq("id", id)
     .select("id, title, visible")
@@ -849,14 +947,16 @@ export async function setPackVisible(
   return { ok: true };
 }
 
-export async function duplicatePack(id: string): Promise<{ ok: boolean; message?: string; packId?: string }> {
+export async function duplicatePack(
+  id: string,
+): Promise<{ ok: boolean; message?: string; packId?: string }> {
   const actor = await assertCan("packs.duplicate");
   const admin = createSupabaseAdminClient();
 
   const { data: source, error } = await admin
-    .from("stationery_packs")
+    .from("school_packs")
     .select(
-      "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector"
+      "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector",
     )
     .eq("id", id)
     .maybeSingle();
@@ -865,7 +965,7 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
   const { data: sourceItems } = await admin
     .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source"
+      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
     )
     .eq("pack_id" as never, id as never);
 
@@ -873,7 +973,7 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
     const baseSlug = slugify(source.title) || "pack";
     const slug = await ensureUniqueSlug(admin, baseSlug);
     const { data: copy, error: copyError } = await admin
-      .from("stationery_packs")
+      .from("school_packs")
       .insert({
         school_id: source.school_id,
         title: `${source.title} (Copy)`,
@@ -895,7 +995,9 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
     if (copyError) throw copyError;
 
     if (sourceItems && sourceItems.length > 0) {
-      const copiedItems = (sourceItems as unknown as ItemRow[]).filter((item) => item.product_id).map((item) => ({
+      const copiedItems = (sourceItems as unknown as ItemRow[])
+        .filter((item) => item.product_id)
+        .map((item) => ({
           pack_id: copy.id,
           product_id: item.product_id as string,
           pack_quantity: item.quantity,
@@ -906,7 +1008,9 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
           active: item.visible,
         }));
       if (copiedItems.length > 0) {
-        const { error: itemsError } = await admin.from("school_pack_items").insert(copiedItems);
+        const { error: itemsError } = await admin
+          .from("school_pack_items")
+          .insert(copiedItems);
         if (itemsError) throw itemsError;
       }
     }
@@ -929,18 +1033,27 @@ export async function duplicatePack(id: string): Promise<{ ok: boolean; message?
   }
 }
 
-export async function deletePack(id: string): Promise<{ ok: boolean; message?: string }> {
+export async function deletePack(
+  id: string,
+): Promise<{ ok: boolean; message?: string }> {
   const actor = await assertCan("packs.delete");
   const admin = createSupabaseAdminClient();
 
-  const { data: existing } = await admin.from("stationery_packs").select("id, title").eq("id", id).single();
+  const { data: existing } = await admin
+    .from("school_packs")
+    .select("id, title")
+    .eq("id", id)
+    .single();
   if (!existing) return { ok: false, message: "Pack not found." };
 
-  const { error } = await admin.from("stationery_packs").delete().eq("id", id);
+  const { error } = await admin.from("school_packs").delete().eq("id", id);
   if (error) {
     console.error("[packs] delete failed:", error);
     if (error.code === "23503") {
-      return { ok: false, message: "This pack has related records and cannot be deleted." };
+      return {
+        ok: false,
+        message: "This pack has related records and cannot be deleted.",
+      };
     }
     return { ok: false, message: "Failed to delete pack." };
   }
@@ -965,11 +1078,13 @@ export async function deletePack(id: string): Promise<{ ok: boolean; message?: s
  * when the pack or its school can't be resolved, or the slug doesn't follow the
  * convention (e.g. a duplicated/custom pack).
  */
-export async function getPublicGradePackPath(packId: string): Promise<string | null> {
+export async function getPublicGradePackPath(
+  packId: string,
+): Promise<string | null> {
   try {
     const admin = createSupabaseAdminClient();
     const { data: pack } = await admin
-      .from("stationery_packs")
+      .from("school_packs")
       .select("slug, school_id")
       .eq("id", packId)
       .maybeSingle();
@@ -993,10 +1108,17 @@ export async function getPublicGradePackPath(packId: string): Promise<string | n
   }
 }
 
-const IMAGE_MIME_TYPES = new Set(["image/png", "image/webp", "image/svg+xml", "image/jpeg"]);
+const IMAGE_MIME_TYPES = new Set([
+  "image/png",
+  "image/webp",
+  "image/svg+xml",
+  "image/jpeg",
+]);
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
-export async function uploadPackImage(file: File): Promise<{ publicUrl: string; path: string }> {
+export async function uploadPackImage(
+  file: File,
+): Promise<{ publicUrl: string; path: string }> {
   if (!IMAGE_MIME_TYPES.has(file.type)) {
     throw new Error("Image must be a PNG, WebP, SVG or JPG image.");
   }
@@ -1005,21 +1127,31 @@ export async function uploadPackImage(file: File): Promise<{ publicUrl: string; 
   }
 
   const ext =
-    file.type === "image/svg+xml" ? "svg" : file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+    file.type === "image/svg+xml"
+      ? "svg"
+      : file.type === "image/png"
+        ? "png"
+        : file.type === "image/webp"
+          ? "webp"
+          : "jpg";
   const path = `packs/${crypto.randomUUID()}.${ext}`;
 
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.storage.from("school-assets").upload(path, file, {
-    contentType: file.type,
-    upsert: false,
-  });
+  const { data, error } = await admin.storage
+    .from("school-assets")
+    .upload(path, file, {
+      contentType: file.type,
+      upsert: false,
+    });
 
   if (error) {
     console.error("[packs] image upload failed:", error);
     throw new Error("Failed to upload image.");
   }
 
-  const { data: urlData } = admin.storage.from("school-assets").getPublicUrl(data.path);
+  const { data: urlData } = admin.storage
+    .from("school-assets")
+    .getPublicUrl(data.path);
 
   await admin.from("assets").upsert(
     {
@@ -1032,7 +1164,7 @@ export async function uploadPackImage(file: File): Promise<{ publicUrl: string; 
       size_bytes: file.size,
       uploaded_by: (await getAdminUser())?.user.id ?? null,
     },
-    { onConflict: "path" }
+    { onConflict: "path" },
   );
 
   return { publicUrl: urlData.publicUrl, path: data.path };

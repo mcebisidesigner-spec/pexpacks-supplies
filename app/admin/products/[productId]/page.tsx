@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft, Barcode, DollarSign, Edit, Layers, Tag, TrendingUp } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
@@ -36,7 +36,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
       <div>
         <Link
           href="/admin/products"
-          className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}
+          className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}
         >
           <ArrowLeft size={14} /> Back to Master Products
         </Link>
@@ -46,7 +46,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {name}
-            <span className={styles.badgeTeal}>{category}</span>
+            <span className={adminStyles.badgeTeal}>{category}</span>
           </h1>
           <p className={styles.headerSubtitle}>SKU: {sku}</p>
         </div>
@@ -57,84 +57,84 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         </div>
       </div>
 
-      <div className={styles.metricsGrid4}>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Supplier Cost</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+      <div className={adminStyles.metricsGrid4}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Supplier Cost</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
               <DollarSign size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{money(cost)}</div>
-          <div className={styles.metricSub}>Allocated wholesale cost</div>
+          <div className={adminStyles.metricValue}>{money(cost)}</div>
+          <div className={adminStyles.metricSub}>Allocated wholesale cost</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Selling Price</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Selling Price</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}>
               <Tag size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{money(price)}</div>
-          <div className={styles.metricSub}>Catalog selling price</div>
+          <div className={adminStyles.metricValue}>{money(price)}</div>
+          <div className={adminStyles.metricSub}>Catalog selling price</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Gross Margin %</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconGreen}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Gross Margin %</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconGreen}`}>
               <TrendingUp size={16} />
             </div>
           </div>
-          <div className={`${styles.metricValue} ${styles["c-green"]}`}>{margin.toFixed(1)}%</div>
-          <div className={styles.metricSub}>Unit profit margin</div>
+          <div className={`${adminStyles.metricValue} ${styles["c-green"]}`}>{margin.toFixed(1)}%</div>
+          <div className={adminStyles.metricSub}>Unit profit margin</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Active Pack Inclusions</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconPurple}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Active Pack Inclusions</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconPurple}`}>
               <Layers size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{packInclusionsCount}</div>
-          <div className={styles.metricSub}>Assigned school packs</div>
+          <div className={adminStyles.metricValue}>{packInclusionsCount}</div>
+          <div className={adminStyles.metricSub}>Assigned school packs</div>
         </div>
       </div>
 
-      <div className={styles.detailLayout}>
-        <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
+      <div className={adminStyles.detailLayout}>
+        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
                 <Barcode size={16} className={styles["c-teal"]} />
                 <span>Barcode & SKU Mappings</span>
               </div>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>EAN / Barcode:</span>
-              <span className={styles.sidebarStatVal}>{barcode}</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>EAN / Barcode:</span>
+              <span className={adminStyles.sidebarStatVal}>{barcode}</span>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Internal SKU:</span>
-              <span className={styles.sidebarStatVal}>{sku}</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Internal SKU:</span>
+              <span className={adminStyles.sidebarStatVal}>{sku}</span>
             </div>
-            <div className={styles.sidebarStatRow}>
-              <span className={styles.sidebarStatLabel}>Primary Supplier:</span>
-              <span className={`${styles.sidebarStatVal} ${styles["c-blue"]}`}>{supplierName}</span>
+            <div className={adminStyles.sidebarStatRow}>
+              <span className={adminStyles.sidebarStatLabel}>Primary Supplier:</span>
+              <span className={`${adminStyles.sidebarStatVal} ${styles["c-blue"]}`}>{supplierName}</span>
             </div>
           </div>
         </div>
 
-        <div className={styles.sidebarColumn}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
+        <div className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
               <span>Cost History</span>
             </div>
-            <div className={styles.activityItem}>
-              <div className={styles.activityTitle}>Supplier Cost Updated (R {cost.toFixed(2)})</div>
-              <div className={styles.activityMeta}>17 Aug 2026 • By Admin</div>
+            <div className={adminStyles.activityItem}>
+              <div className={adminStyles.activityTitle}>Supplier Cost Updated (R {cost.toFixed(2)})</div>
+              <div className={adminStyles.activityMeta}>17 Aug 2026 • By Admin</div>
             </div>
           </div>
         </div>

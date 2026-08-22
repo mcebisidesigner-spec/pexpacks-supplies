@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { TestimonialForm } from "@/components/admin/content/TestimonialForm";
@@ -19,9 +19,9 @@ export default async function NewTestimonialPage() {
           <ArrowLeft aria-hidden="true" /> Back to testimonials
         </Link>
       </p>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div>
-          <h1 className={styles.pageTitle}>New testimonial</h1>
+          <h1 className={adminStyles.pageTitle}>New testimonial</h1>
           <p className={styles.subtitle}>Add a customer quote to the homepage marquee.</p>
         </div>
       </div>

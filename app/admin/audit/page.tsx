@@ -73,20 +73,20 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
         }
       />
 
-      <div className={styles.toolbar}>
-        <form method="get" action="/admin/audit" className={styles.filterForm}>
+      <div className={adminStyles.toolbar}>
+        <form method="get" action="/admin/audit" className={adminStyles.filterForm}>
           <input
             type="search"
             name="q"
             defaultValue={filters.q ?? ""}
             placeholder="Search summary, actor or ID…"
-            className={`${styles.filterInput} ${styles.searchInput}`}
+            className={`${adminStyles.filterInput} ${adminStyles.searchInput}`}
             aria-label="Search audit logs"
           />
           <select
             name="entity_type"
             defaultValue={filters.entity_type ?? ""}
-            className={styles.filterInput}
+            className={adminStyles.filterInput}
           >
             <option value="">All entities</option>
             {entityTypes.map((e) => (
@@ -98,7 +98,7 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
           <select
             name="action"
             defaultValue={filters.action ?? ""}
-            className={styles.filterInput}
+            className={adminStyles.filterInput}
           >
             <option value="">All actions</option>
             {actions.map((a) => (
@@ -110,7 +110,7 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
           <select
             name="actor"
             defaultValue={filters.actor ?? ""}
-            className={styles.filterInput}
+            className={adminStyles.filterInput}
           >
             <option value="">All actors</option>
             {actors.map((a) => (
@@ -122,22 +122,22 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
           <DateField
             name="from"
             defaultValue={filters.from ?? ""}
-            className={styles.filterInput}
+            className={adminStyles.filterInput}
             ariaLabel="From date"
             placeholder="From date"
           />
           <DateField
             name="to"
             defaultValue={filters.to ?? ""}
-            className={styles.filterInput}
+            className={adminStyles.filterInput}
             ariaLabel="To date"
             placeholder="To date"
           />
-          <button type="submit" className={styles.applyButton}>
+          <button type="submit" className={adminStyles.applyButton}>
             Apply
           </button>
           {hasFilters ? (
-            <Link href="/admin/audit" className={styles.resetLink}>
+            <Link href="/admin/audit" className={adminStyles.resetLink}>
               Reset
             </Link>
           ) : null}
@@ -207,7 +207,7 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
                     <td>
                       <Link
                         href={`/admin/audit/${log.id}`}
-                        className={styles.actionLink}
+                        className={adminStyles.actionLink}
                       >
                         Details
                       </Link>

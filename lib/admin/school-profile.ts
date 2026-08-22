@@ -79,7 +79,7 @@ export async function getSchoolProfile(
     multiPackOrdersResult,
   ] = await Promise.all([
     admin
-      .from("stationery_packs")
+      .from("school_packs")
       .select("id,visible,delivery_type")
       .eq("school_id", school.id),
     admin.from("orders").select(orderFields).eq("school_slug", school.slug),

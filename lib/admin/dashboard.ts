@@ -20,7 +20,12 @@ export interface NameCount {
 }
 
 export interface DashboardStats {
-  schools: { total: number; featured: number; partner: number; pending: number };
+  schools: {
+    total: number;
+    featured: number;
+    partner: number;
+    pending: number;
+  };
   packs: number;
   orders: { total: number; thisMonth: number; revenue: number };
   users: number;
@@ -39,7 +44,9 @@ export interface DashboardStats {
   }[];
 }
 
-async function count(table: "schools" | "stationery_packs" | "orders" | "assets"): Promise<number> {
+async function count(
+  table: "schools" | "school_packs" | "orders" | "assets",
+): Promise<number> {
   try {
     const admin = createSupabaseAdminClient();
     const { count: result } = await admin
@@ -69,13 +76,13 @@ type DashboardSummaryRow = Pick<
 >;
 
 async function readDashboardSummary(
-  admin: SupabaseClient<Database>
+  admin: SupabaseClient<Database>,
 ): Promise<DashboardSummaryRow | null> {
   try {
     const { data } = await admin
       .from("dashboard_summaries")
       .select(
-        "total_orders, paid_orders, pending_orders, total_revenue, total_schools, total_packs, orders_today, orders_this_week, awaiting_fulfilment, completed_orders, active_packs, last_updated_at"
+        "total_orders, paid_orders, pending_orders, total_revenue, total_schools, total_packs, orders_today, orders_this_week, awaiting_fulfilment, completed_orders, active_packs, last_updated_at",
       )
       .eq("id", "global")
       .maybeSingle();
@@ -151,7 +158,7 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
   } else {
     const [s, p, o, a] = await Promise.all([
       count("schools"),
-      count("stationery_packs"),
+      count("school_packs"),
       count("orders"),
       count("assets"),
     ]);
@@ -252,7 +259,7 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
     const { data } = await admin
       .from("orders")
       .select(
-        "id, order_reference, buyer_name, school_name, estimated_total, status, created_at"
+        "id, order_reference, buyer_name, school_name, estimated_total, status, created_at",
       )
       .order("created_at", { ascending: false })
       .limit(8);
@@ -288,5 +295,5 @@ export const getDashboardStats = unstable_cache(
   {
     revalidate: 60,
     tags: [DASHBOARD_STATS_TAG],
-  }
+  },
 );

@@ -1,4 +1,4 @@
-.stack {
+﻿.stack {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -19,7 +19,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 800;
-  color: var(--admin-heading);
+  color: var(--a-text);
 }
 
 .cardSubtitle {

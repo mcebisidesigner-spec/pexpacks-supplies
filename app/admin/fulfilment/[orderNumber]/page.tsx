@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft, Barcode, CheckSquare, Save } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -32,7 +32,7 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
   return (
     <div className={styles.container}>
       <div>
-        <Link href="/admin/fulfilment" className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}>
+        <Link href="/admin/fulfilment" className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}>
           <ArrowLeft size={14} /> Back to Packing &amp; Fulfilment
         </Link>
       </div>
@@ -41,7 +41,7 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Fulfilment Workbench: {orderNumber}
-            <span className={styles.badgeTeal}>● In Packing</span>
+            <span className={adminStyles.badgeTeal}>● In Packing</span>
           </h1>
           <p className={styles.headerSubtitle}>
             School: 3d Christian Academy • Grade 4 Pack • Learner: Ethan Morgan • Opening: 15 Jan 2027
@@ -50,17 +50,17 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
       </div>
 
       {/* 6-Stage Stepper Bar */}
-      <div className={`${styles.tableCard} ${styles.pCard}`}>
-        <div className={`${styles.text11} ${styles.fw700} ${styles.uppercase} ${styles.lsWide} ${styles.cSubtle} ${styles.mb12}`}>
+      <div className={`${adminStyles.tableCard} ${adminStyles.pCard}`}>
+        <div className={`${styles.text11} ${adminStyles.fw700} ${adminStyles.uppercase} ${adminStyles.lsWide} ${adminStyles.cSubtle} ${adminStyles.mb12}`}>
           Packing Lifecycle Stepper
         </div>
-        <div className={styles.grid6}>
+        <div className={adminStyles.grid6}>
           {steps.map((item, idx) => {
             const btnCls = item.active
-              ? `${styles.primaryBtn} ${styles.text11} ${styles.justifyCenter} ${styles.stepBtnActive}`
+              ? `${styles.primaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.stepBtnActive}`
               : item.done
-                ? `${styles.secondaryBtn} ${styles.text11} ${styles.justifyCenter} ${styles.stepBtnDone}`
-                : `${styles.secondaryBtn} ${styles.text11} ${styles.justifyCenter} ${styles.stepBtnInactive}`;
+                ? `${styles.secondaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.stepBtnDone}`
+                : `${styles.secondaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.stepBtnInactive}`;
             return (
               <button key={idx} type="button" className={btnCls}>
                 {item.done ? "\u2713 " : ""}{item.stage}
@@ -71,23 +71,23 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
       </div>
 
       {/* Packing Workbench Layout */}
-      <div className={`${styles.detailLayout} ${styles.mt18}`}>
-        <div className={`${styles.flex} ${styles["flex-col"]} ${styles.gap18}`}>
+      <div className={`${adminStyles.detailLayout} ${adminStyles.mt18}`}>
+        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap18}`}>
           {/* Interactive Packing Checklist */}
-          <div className={styles.tableCard}>
-            <div className={styles.sectionHeaderBetween}>
-              <div className={`${styles.flex} ${styles.itemsCenter} ${styles.gap8}`}>
-                <CheckSquare size={16} className={styles.iconTeal} />
+          <div className={adminStyles.tableCard}>
+            <div className={adminStyles.sectionHeaderBetween}>
+              <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles.gap8}`}>
+                <CheckSquare size={16} className={adminStyles.iconTeal} />
                 <span>Reusable Bag Items Checklist (4 of 5 Checked)</span>
               </div>
-              <span className={styles.badgeGreen}>80% Complete</span>
+              <span className={adminStyles.badgeGreen}>80% Complete</span>
             </div>
 
-            <div className={styles.tableWrapper}>
+            <div className={adminStyles.tableWrapper}>
               <table className={styles.dataTable}>
                 <thead>
                   <tr>
-                    <th className={styles.w40}>CHECK</th>
+                    <th className={adminStyles.w40}>CHECK</th>
                     <th>ITEM DESCRIPTION</th>
                     <th>QTY</th>
                     <th>UNIT FORMAT</th>
@@ -96,15 +96,15 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
                 </thead>
                 <tbody>
                   {items.map((itm, idx) => (
-                    <tr key={idx} className={`${styles.dataRow} ${itm.substitute ? styles.rowHighlight : ""}`}>
-                      <td><input type="checkbox" defaultChecked={itm.checked} className={styles.checkbox} /></td>
-                      <td className={itm.substitute ? `${styles.cAmber} ${styles.fw700}` : `${styles.fw700}`}>{itm.name}</td>
+                    <tr key={idx} className={`${styles.dataRow} ${itm.substitute ? adminStyles.rowHighlight : ""}`}>
+                      <td><input type="checkbox" defaultChecked={itm.checked} className={adminStyles.checkbox} /></td>
+                      <td className={itm.substitute ? `${adminStyles.cAmber} ${adminStyles.fw700}` : `${adminStyles.fw700}`}>{itm.name}</td>
                       <td>{itm.qty}</td>
                       <td>{itm.unit}</td>
                       <td>
                         {itm.packed
-                          ? <span className={styles.badgeGreen}>Packed</span>
-                          : <span className={styles.badgeAmber}>Pending Verification</span>}
+                          ? <span className={adminStyles.badgeGreen}>Packed</span>
+                          : <span className={adminStyles.badgeAmber}>Pending Verification</span>}
                       </td>
                     </tr>
                   ))}
@@ -115,39 +115,39 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
         </div>
 
         {/* Packing Notes & Barcode Panel */}
-        <div className={styles.sidebarColumn}>
-          <form action="/admin/fulfilment" method="GET" className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Barcode size={16} className={styles.iconTeal} />
+        <div className={adminStyles.sidebarColumn}>
+          <form action="/admin/fulfilment" method="GET" className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Barcode size={16} className={adminStyles.iconTeal} />
                 <span>Bag Tracking &amp; Staff Log</span>
               </div>
             </div>
 
-            <div className={styles.formField}>
+            <div className={adminStyles.formField}>
               <div>
-                <label className={styles.formLabel}>Fabric Bag Barcode / Serial</label>
-                <input name="bag_serial" defaultValue="BAG-3DCA-8492" className={`${styles.inputField} ${styles.inputFieldMono}`} />
+                <label className={adminStyles.formLabel}>Fabric Bag Barcode / Serial</label>
+                <input name="bag_serial" defaultValue="BAG-3DCA-8492" className={`${adminStyles.inputField} ${adminStyles.inputFieldMono}`} />
               </div>
               <div>
-                <label className={styles.formLabel}>Assigned Packer</label>
-                <select name="packer" defaultValue="Kwanele G." className={styles.selectField}>
+                <label className={adminStyles.formLabel}>Assigned Packer</label>
+                <select name="packer" defaultValue="Kwanele G." className={adminStyles.selectField}>
                   <option value="Kwanele G.">Kwanele G. (Lead Packer)</option>
                   <option value="Mcebisi M.">Mcebisi M.</option>
                   <option value="Liam M.">Liam M.</option>
                 </select>
               </div>
               <div>
-                <label className={styles.formLabel}>Packing Notes / Substitution Exceptions</label>
+                <label className={adminStyles.formLabel}>Packing Notes / Substitution Exceptions</label>
                 <textarea
                   name="notes"
                   rows={3}
                   defaultValue="Substituted blue shatterproof ruler with clear 30cm ruler due to supplier stock buffer."
-                  className={styles.textareaField}
+                  className={adminStyles.textareaField}
                 />
               </div>
-              <div className={styles.pt8}>
-                <button type="submit" className={`${styles.primaryBtn} ${styles.hFullBtn}`}>
+              <div className={adminStyles.pt8}>
+                <button type="submit" className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}>
                   <Save size={14} /> Save Packing Log
                 </button>
               </div>

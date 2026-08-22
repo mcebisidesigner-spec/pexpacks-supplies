@@ -1,4 +1,4 @@
-.searchTotalRow {
+﻿.searchTotalRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -22,7 +22,7 @@
   justify-content: flex-end;
   min-width: 300px;
   min-height: 56px;
-  color: #ffffff;
+  color: var(--a-text);
   padding: 0 18px 0 26px;
   background: #0b1b2b;
   font-size: 26px;
@@ -42,7 +42,7 @@
 .emptyBanner {
   border: 1px solid rgba(30, 41, 59, 0.95);
   border-radius: 18px;
-  background: #101928;
+  background: var(--a-surface);
   color: #9fb0c4;
   padding: 28px;
   font-size: 14px;
@@ -51,7 +51,7 @@
 
 .tableWrap {
   overflow: hidden;
-  background: #101928;
+  background: var(--a-surface);
   border: 1px solid rgba(2, 6, 23, 0.98);
   border-radius: 18px;
 }
@@ -67,7 +67,7 @@
   text-align: left;
   font-size: 11px;
   font-weight: 900;
-  color: #f8fafc;
+  color: var(--a-text);
   padding: 16px 16px;
   background: #111a29;
   text-transform: uppercase;
@@ -78,8 +78,8 @@
   padding: 20px 16px;
   border-bottom: 1px solid rgba(51, 65, 85, 0.55);
   vertical-align: middle;
-  color: #f8fafc;
-  background: #101928;
+  color: var(--a-text);
+  background: var(--a-surface);
   overflow-wrap: anywhere;
   font-size: 16px;
   line-height: 1.35;
@@ -121,14 +121,14 @@
 }
 
 .itemName {
-  color: #ffffff;
+  color: var(--a-text);
   font-weight: 900;
 }
 
 .priceCell {
   white-space: nowrap;
   font-weight: 900;
-  color: #ffffff;
+  color: var(--a-text);
 }
 
 .actions {
@@ -151,11 +151,11 @@
 }
 
 .actionLink {
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .deleteButton {
-  color: #f87171;
+  color: var(--a-red);
   font-size: 13px;
   font-weight: 600;
 }
@@ -169,7 +169,7 @@
   border-radius: 8px;
   background: rgba(239, 68, 68, 0.08);
   border: 1px solid rgba(239, 68, 68, 0.4);
-  color: #f87171;
+  color: var(--a-red);
   cursor: pointer;
   transition: all 140ms ease;
 }
@@ -177,7 +177,7 @@
 .iconBtnRed:hover {
   background: rgba(239, 68, 68, 0.2);
   border-color: rgba(239, 68, 68, 0.6);
-  color: #ffffff;
+  color: var(--a-text);
 }
 
 .iconBtnTeal {
@@ -189,7 +189,7 @@
   border-radius: 8px;
   background: rgba(45, 212, 191, 0.08);
   border: 1px solid rgba(45, 212, 191, 0.4);
-  color: #2dd4bf;
+  color: var(--a-accent);
   cursor: pointer;
   transition: all 140ms ease;
   text-decoration: none;
@@ -198,7 +198,7 @@
 .iconBtnTeal:hover {
   background: rgba(45, 212, 191, 0.2);
   border-color: rgba(45, 212, 191, 0.6);
-  color: #ffffff;
+  color: var(--a-text);
 }
 
 .actionLink:hover,
@@ -227,8 +227,8 @@
   min-height: 38px;
   border: 1px solid rgba(51, 65, 85, 0.78);
   border-radius: 9px;
-  background: #101928;
-  color: #cbd5e1;
+  background: var(--a-surface);
+  color: var(--a-text-2);
   padding: 0 16px;
   font-family: inherit;
   font-size: 12px;
@@ -237,8 +237,8 @@
 }
 
 .pageButton:hover:not(:disabled) {
-  border-color: #14b8a6;
-  color: #ffffff;
+  border-color: var(--a-accent);
+  color: var(--a-text);
 }
 
 .pageButton:disabled {
@@ -250,7 +250,7 @@
   grid-column: 1 / -1;
   margin: 0;
   padding: 8px 28px 12px;
-  color: #34d399;
+  color: var(--a-green);
   font-size: 12px;
   font-weight: 900;
 }
@@ -263,14 +263,14 @@
 }
 
 .inlineSearchLabel {
-  color: var(--db-text-soft, #cbd5e1);
+  color: var(--a-text-2);
   font-size: 12px;
   font-weight: 800;
 }
 
 .inlineSuccess {
   margin: 0;
-  color: #34d399;
+  color: var(--a-green);
   font-size: 12px;
   font-weight: 800;
 }

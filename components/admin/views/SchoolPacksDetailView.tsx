@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -23,6 +23,7 @@ import {
   Zap,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 import { VisibleToggle } from "@/components/admin/packs/VisibleToggle";
 import { DuplicateButton } from "@/components/admin/packs/DuplicateButton";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
@@ -116,7 +117,7 @@ export function SchoolPacksDetailView({
       </div>
 
       {/* Header Row */}
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {school.name}{" "}
@@ -136,61 +137,61 @@ export function SchoolPacksDetailView({
       </div>
 
       {/* Metric Summary Row (5 cards) */}
-      <div className={styles.metricsGrid5}>
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Grade Packs</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+      <div className={adminStyles.metricsGrid5}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Grade Packs</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
               <Box size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{totalPacks}</div>
+          <div className={adminStyles.metricValue}>{totalPacks}</div>
           <div className={styles.metricSubtext}>Total packs</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Published</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Published</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}>
               <BookOpen size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{publishedPacks}</div>
+          <div className={adminStyles.metricValue}>{publishedPacks}</div>
           <div className={styles.metricSubtext}>
             {totalPacks > 0 ? Math.round((publishedPacks / totalPacks) * 100) : 0}% published
           </div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Total Items</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Total Items</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
               <Layers size={16} />
             </div>
           </div>
-          <div className={styles.metricValue}>{totalItemsCount}</div>
+          <div className={adminStyles.metricValue}>{totalItemsCount}</div>
           <div className={styles.metricSubtext}>Across all packs</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Revenue to Date</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
-              <span className={styles.currencyText}>R</span>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Revenue to Date</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
+              <span className={adminStyles.currencyText}>R</span>
             </div>
           </div>
-          <div className={styles.metricValue}>{money(totalRevenue)}</div>
+          <div className={adminStyles.metricValue}>{money(totalRevenue)}</div>
           <div className={styles.metricSubtext}>From grade packs</div>
         </div>
 
-        <div className={styles.metricCard}>
-          <div className={styles.metricTop}>
-            <span className={styles.metricLabel}>Last Updated</span>
-            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+        <div className={adminStyles.metricCard}>
+          <div className={adminStyles.metricTop}>
+            <span className={adminStyles.metricLabel}>Last Updated</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
               <Calendar size={16} />
             </div>
           </div>
-          <div className={`${styles.metricValue} ${styles.metricValueDate}`}>
+          <div className={`${adminStyles.metricValue} ${styles.metricValueDate}`}>
             May 21, 2024
           </div>
           <div className={styles.metricSubtext}>By Liam Morgan</div>
@@ -198,16 +199,16 @@ export function SchoolPacksDetailView({
       </div>
 
       {/* Main 2-Column Layout */}
-      <div className={styles.detailLayout}>
+      <div className={adminStyles.detailLayout}>
         {/* Left Column: Table and Toolbar */}
-        <div className={styles.leftColumn}>
+        <div className={adminStyles.leftColumn}>
           {/* Controls Bar */}
-          <div className={styles.toolbar}>
+          <div className={adminStyles.toolbar}>
             <div className={styles.toolbarLeft}>
               <div className={styles.searchBox}>
                 <Search />
                 <input
-                  className={styles.searchInput}
+                  className={adminStyles.searchInput}
                   placeholder="Search grade packs..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -243,8 +244,8 @@ export function SchoolPacksDetailView({
           </div>
 
           {/* Data Table */}
-          <div className={styles.tableCard}>
-            <div className={styles.tableWrapper}>
+          <div className={adminStyles.tableCard}>
+            <div className={adminStyles.tableWrapper}>
               <table className={styles.dataTable}>
                 <thead>
                   <tr>
@@ -259,7 +260,7 @@ export function SchoolPacksDetailView({
                 <tbody>
                   {filteredPacks.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className={styles.emptyCell}>
+                      <td colSpan={6} className={adminStyles.emptyCell}>
                         No grade packs found matching criteria.
                       </td>
                     </tr>
@@ -272,38 +273,38 @@ export function SchoolPacksDetailView({
                           <td>
                             <div>
                               <div>
-                                <Link href={`/admin/packs/${pack.slug || pack.id}`} className={styles.gradePackLink}>
+                                <Link href={`/admin/packs/${pack.slug || pack.id}`} className={adminStyles.gradePackLink}>
                                   {formattedGrade}
                                 </Link>
                               </div>
-                              <div className={styles.schoolNameSub}>
+                              <div className={adminStyles.schoolNameSub}>
                                 {school.name}
                               </div>
                             </div>
                           </td>
-                          <td className={styles.textWhiteBold}>
+                          <td className={adminStyles.textWhiteBold}>
                             {money(pack.price)}
                           </td>
                           <td>
-                            <span className={styles.itemCountSpan}>
+                            <span className={adminStyles.itemCountSpan}>
                               {pack.item_count}
                             </span>{" "}
-                            <span className={styles.itemCountLabel}>items</span>
+                            <span className={adminStyles.itemCountLabel}>items</span>
                           </td>
                           <td>
-                            <span className={`${styles.badgeTeal} ${styles.badgeIconWrap}`}>
+                            <span className={`${adminStyles.badgeTeal} ${styles.badgeIconWrap}`}>
                               <Eye size={12} /> {pack.visible ? "Visible" : "Hidden"}
                             </span>
                           </td>
                           <td>
-                            <div className={styles.textWhiteMedium}>May 21, 2024</div>
-                            <div className={styles.itemCountLabel}>Liam Morgan</div>
+                            <div className={adminStyles.textWhiteMedium}>May 21, 2024</div>
+                            <div className={adminStyles.itemCountLabel}>Liam Morgan</div>
                           </td>
                           <td>
-                            <div className={styles.actionIconBtnGroup}>
+                            <div className={adminStyles.actionIconBtnGroup}>
                               <Link
                                 href={`/admin/packs/${pack.slug || pack.id}`}
-                                className={`${styles.actionIconBtn} ${styles.actionIconBtnTeal}`}
+                                className={`${adminStyles.actionIconBtn} ${adminStyles.actionIconBtnTeal}`}
                                 title="Edit Pack"
                               >
                                 <Edit2 size={13} />
@@ -318,7 +319,7 @@ export function SchoolPacksDetailView({
                                     confirmLabel="Delete Pack"
                                     confirmText={`Permanently delete "${pack.title}"`}
                                     busyLabel=""
-                                    className={`${styles.actionIconBtn} ${styles.actionIconBtnRed}`}
+                                    className={`${adminStyles.actionIconBtn} ${adminStyles.actionIconBtnRed}`}
                                   />
                                 </form>
                               )}
@@ -337,13 +338,13 @@ export function SchoolPacksDetailView({
               <span>
                 Showing 1 to {filteredPacks.length} of {filteredPacks.length} grade packs
               </span>
-              <div className={styles.paginationControls}>
+              <div className={adminStyles.paginationControls}>
                 <button className={styles.pageBtn}>&lt;</button>
                 <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
                 <button className={styles.pageBtn}>&gt;</button>
               </div>
-              <div className={styles.paginationSelectWrap}>
-                <select className={`${styles.selectInput} ${styles.paginationSelect}`}>
+              <div className={adminStyles.paginationSelectWrap}>
+                <select className={`${styles.selectInput} ${adminStyles.paginationSelect}`}>
                   <option>10 per page</option>
                   <option>20 per page</option>
                 </select>
@@ -353,114 +354,114 @@ export function SchoolPacksDetailView({
         </div>
 
         {/* Right Sidebar Column */}
-        <div className={styles.sidebarColumn}>
+        <div className={adminStyles.sidebarColumn}>
           {/* School Health Card */}
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <HeartPulse size={16} className={styles.iconTeal} />
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <HeartPulse size={16} className={adminStyles.iconTeal} />
                 <span>School Health</span>
               </div>
-              <span className={`${styles.badgeGreen} ${styles.badgeTiny}`}>Healthy</span>
+              <span className={`${adminStyles.badgeGreen} ${adminStyles.badgeTiny}`}>Healthy</span>
             </div>
 
-            <div className={styles.sidebarStack}>
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Grade Packs</span>
-                <div className={styles.sidebarStatGroup}>
-                  <span className={styles.sidebarStatVal}>{totalPacks} / {totalPacks}</span>
-                  <span className={styles.sidebarStatPercent}>100%</span>
+            <div className={adminStyles.sidebarStack}>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Grade Packs</span>
+                <div className={adminStyles.sidebarStatGroup}>
+                  <span className={adminStyles.sidebarStatVal}>{totalPacks} / {totalPacks}</span>
+                  <span className={adminStyles.sidebarStatPercent}>100%</span>
                 </div>
               </div>
 
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Published Packs</span>
-                <div className={styles.sidebarStatGroup}>
-                  <span className={styles.sidebarStatVal}>{publishedPacks}</span>
-                  <span className={styles.sidebarStatPercent}>100%</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Published Packs</span>
+                <div className={adminStyles.sidebarStatGroup}>
+                  <span className={adminStyles.sidebarStatVal}>{publishedPacks}</span>
+                  <span className={adminStyles.sidebarStatPercent}>100%</span>
                 </div>
               </div>
 
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Total Items</span>
-                <span className={styles.sidebarStatVal}>{totalItemsCount}</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Total Items</span>
+                <span className={adminStyles.sidebarStatVal}>{totalItemsCount}</span>
               </div>
 
-              <div className={styles.sidebarStatRow}>
-                <span className={styles.sidebarStatLabel}>Last Activity</span>
-                <span className={styles.sidebarStatVal}>May 21, 2024</span>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Last Activity</span>
+                <span className={adminStyles.sidebarStatVal}>May 21, 2024</span>
               </div>
             </div>
           </div>
 
           {/* Quick Actions Card */}
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Zap size={16} className={styles.iconTeal} />
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Zap size={16} className={adminStyles.iconTeal} />
                 <span>Quick Actions</span>
               </div>
             </div>
 
-            <div className={`${styles.sidebarStack} ${styles.gap8}`}>
+            <div className={`${adminStyles.sidebarStack} ${adminStyles.gap8}`}>
               <Link
                 href={`/admin/packs/${schoolIdentifier}/add-pack`}
-                className={styles.quickActionItem}
+                className={adminStyles.quickActionItem}
               >
-                <div className={styles.sidebarStatGroup}>
-                  <Plus size={14} className={styles.iconTeal} />
+                <div className={adminStyles.sidebarStatGroup}>
+                  <Plus size={14} className={adminStyles.iconTeal} />
                   <span>Add new pack</span>
                 </div>
-                <ChevronRight size={14} className={styles.iconMuted} />
+                <ChevronRight size={14} className={adminStyles.iconMuted} />
               </Link>
 
-              <button className={styles.quickActionItem} type="button">
-                <div className={styles.sidebarStatGroup}>
-                  <Copy size={14} className={styles.iconTeal} />
+              <button className={adminStyles.quickActionItem} type="button">
+                <div className={adminStyles.sidebarStatGroup}>
+                  <Copy size={14} className={adminStyles.iconTeal} />
                   <span>Duplicate existing pack</span>
                 </div>
-                <ChevronRight size={14} className={styles.iconMuted} />
+                <ChevronRight size={14} className={adminStyles.iconMuted} />
               </button>
 
-              <button className={styles.quickActionItem} type="button">
-                <div className={styles.sidebarStatGroup}>
-                  <Download size={14} className={styles.iconTeal} />
+              <button className={adminStyles.quickActionItem} type="button">
+                <div className={adminStyles.sidebarStatGroup}>
+                  <Download size={14} className={adminStyles.iconTeal} />
                   <span>Import packs from template</span>
                 </div>
-                <ChevronRight size={14} className={styles.iconMuted} />
+                <ChevronRight size={14} className={adminStyles.iconMuted} />
               </button>
 
-              <button className={styles.quickActionItem} type="button">
-                <div className={styles.sidebarStatGroup}>
-                  <Upload size={14} className={styles.iconTeal} />
+              <button className={adminStyles.quickActionItem} type="button">
+                <div className={adminStyles.sidebarStatGroup}>
+                  <Upload size={14} className={adminStyles.iconTeal} />
                   <span>Export school packs</span>
                 </div>
-                <ChevronRight size={14} className={styles.iconMuted} />
+                <ChevronRight size={14} className={adminStyles.iconMuted} />
               </button>
             </div>
           </div>
 
           {/* Recent Activity Card */}
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Clock size={16} className={styles.iconTeal} />
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Clock size={16} className={adminStyles.iconTeal} />
                 <span>Recent Activity</span>
               </div>
-              <Link href="#" className={styles.sidebarHeaderLink}>
+              <Link href="#" className={adminStyles.sidebarHeaderLink}>
                 View all
               </Link>
             </div>
 
-            <div className={styles.activityList}>
-              <div className={styles.activityItem}>
-                <div className={styles.activityTitle}>Grade R – Stationery Pack updated</div>
-                <div className={styles.activityMeta}>May 21, 2024 • 10:24 AM • Liam Morgan</div>
+            <div className={adminStyles.activityList}>
+              <div className={adminStyles.activityItem}>
+                <div className={adminStyles.activityTitle}>Grade R – Stationery Pack updated</div>
+                <div className={adminStyles.activityMeta}>May 21, 2024 • 10:24 AM • Liam Morgan</div>
               </div>
 
-              <div className={styles.activityItem}>
-                <div className={styles.activityTitle}>Grade R – Stationery Pack created</div>
-                <div className={styles.activityMeta}>May 21, 2024 • 10:15 AM • Liam Morgan</div>
+              <div className={adminStyles.activityItem}>
+                <div className={adminStyles.activityTitle}>Grade R – Stationery Pack created</div>
+                <div className={adminStyles.activityMeta}>May 21, 2024 • 10:15 AM • Liam Morgan</div>
               </div>
             </div>
           </div>

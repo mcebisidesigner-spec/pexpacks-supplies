@@ -1,4 +1,4 @@
-.root {
+﻿.root {
   position: relative;
   min-width: 154px;
 }
@@ -17,18 +17,18 @@
   width: 16px;
   height: 16px;
   flex: 0 0 16px;
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .trigger span {
   overflow: hidden;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .trigger.hasValue span {
-  color: var(--admin-text);
+  color: var(--a-text);
 }
 
 .popover {
@@ -39,9 +39,9 @@
   width: min(330px, calc(100vw - 24px));
   max-width: calc(100vw - 24px);
   padding: 14px;
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--a-border-strong);
   border-radius: 8px;
-  background: var(--admin-surface);
+  background: var(--a-surface);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.58);
   box-sizing: border-box;
 }
@@ -63,15 +63,15 @@
 .brandRow {
   justify-content: space-between;
   padding-bottom: 11px;
-  border-bottom: 1px solid var(--admin-border);
-  color: var(--admin-text-3);
+  border-bottom: 1px solid var(--a-border);
+  color: var(--a-text-3);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
 }
 
 .brandRow strong {
-  color: var(--admin-accent-strong);
+  color: var(--a-accent-strong);
 }
 
 .brandRow button,
@@ -80,10 +80,10 @@
   width: 32px;
   height: 32px;
   place-items: center;
-  border: 1px solid var(--admin-border);
+  border: 1px solid var(--a-border);
   border-radius: 7px;
-  background: var(--admin-surface-2);
-  color: var(--admin-text-2);
+  background: var(--a-surface-2);
+  color: var(--a-text-2);
   cursor: pointer;
 }
 
@@ -99,7 +99,7 @@
 }
 
 .monthRow strong {
-  color: var(--admin-heading);
+  color: var(--a-text);
   font-size: 14px;
 }
 
@@ -111,7 +111,7 @@
 
 .weekdays span {
   padding: 7px 0;
-  color: var(--admin-text-3);
+  color: var(--a-text-3);
   font-size: 9px;
   font-weight: 800;
   text-align: center;
@@ -123,7 +123,7 @@
   border: 1px solid transparent;
   border-radius: 7px;
   background: transparent;
-  color: var(--admin-text-2);
+  color: var(--a-text-2);
   font: inherit;
   font-size: 12px;
   font-weight: 700;
@@ -131,26 +131,26 @@
 }
 
 .grid button:hover:not(:disabled) {
-  border-color: var(--admin-border-strong);
-  background: var(--admin-surface-2);
-  color: var(--admin-heading);
+  border-color: var(--a-border-strong);
+  background: var(--a-surface-2);
+  color: var(--a-text);
 }
 
 .grid .outside {
-  color: var(--admin-muted);
+  color: var(--a-text-4);
   opacity: 0.62;
 }
 
 .grid .today {
-  border-color: var(--admin-accent);
-  color: var(--admin-accent-strong);
+  border-color: var(--a-accent);
+  color: var(--a-accent-strong);
 }
 
 .grid .selected,
 .grid .selected:hover:not(:disabled) {
-  border-color: var(--admin-accent);
-  background: var(--admin-accent);
-  color: var(--admin-accent-text);
+  border-color: var(--a-accent);
+  background: var(--a-accent);
+  color: var(--a-text);
 }
 
 .grid button:disabled {
@@ -163,10 +163,10 @@
   gap: 7px;
   margin-top: 10px;
   padding: 10px;
-  border: 1px solid var(--admin-border);
+  border: 1px solid var(--a-border);
   border-radius: 7px;
-  background: var(--admin-bg);
-  color: var(--admin-text-3);
+  background: var(--a-bg);
+  color: var(--a-text-3);
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
@@ -175,10 +175,10 @@
 .timeRow input {
   width: 52px;
   height: 34px;
-  border: 1px solid var(--admin-border-strong);
+  border: 1px solid var(--a-border-strong);
   border-radius: 7px;
-  background: var(--admin-surface-2);
-  color: var(--admin-heading);
+  background: var(--a-surface-2);
+  color: var(--a-text);
   font: inherit;
   text-align: center;
 }
@@ -188,7 +188,7 @@
   gap: 7px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid var(--admin-border);
+  border-top: 1px solid var(--a-border);
 }
 
 .actions button {
@@ -202,15 +202,15 @@
 }
 
 .textButton {
-  border: 1px solid var(--admin-border);
-  background: var(--admin-surface-2);
-  color: var(--admin-text-2);
+  border: 1px solid var(--a-border);
+  background: var(--a-surface-2);
+  color: var(--a-text-2);
 }
 
 .applyButton {
-  border: 1px solid var(--admin-accent);
-  background: var(--admin-accent);
-  color: var(--admin-accent-text);
+  border: 1px solid var(--a-accent);
+  background: var(--a-accent);
+  color: var(--a-text);
 }
 
 .applyButton:disabled {
@@ -221,7 +221,7 @@
 .trigger:focus-visible,
 .popover button:focus-visible,
 .popover input:focus-visible {
-  outline: 3px solid var(--admin-focus);
+  outline: 3px solid var(--a-accent);
   outline-offset: 2px;
 }
 

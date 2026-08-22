@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
@@ -31,22 +31,22 @@ export default async function EditSchoolPage({ params }: EditSchoolPageProps) {
       <div>
         <Link
           href={`/admin/schools/${schoolSlugOrId}/info`}
-          className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}
+          className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}
         >
           <ArrowLeft size={14} /> Back to {school.name}
         </Link>
       </div>
 
       {/* Header */}
-      <div className={`${adminStyles.headerRow} ${styles.mt8} ${styles.mb12}`}>
+      <div className={`${adminStyles.headerRow} ${adminStyles.mt8} ${adminStyles.mb12}`}>
         <div className={styles.headerTitleGroup}>
-          <h1 className={`${styles.headerTitle} ${styles.itemsCenter} ${styles.gap10}`}>
+          <h1 className={`${styles.headerTitle} ${adminStyles.itemsCenter} ${adminStyles.gap10}`}>
             Edit School: {school.name}
-            <span className={`${styles.badgeGreen} ${styles.text11} ${styles.fw600}`}>
-              <span className={styles.text8}>●</span> {school.status ? school.status.toLowerCase() : "active"}
+            <span className={`${adminStyles.badgeGreen} ${styles.text11} ${adminStyles.fw600}`}>
+              <span className={adminStyles.text8}>●</span> {school.status ? school.status.toLowerCase() : "active"}
             </span>
           </h1>
-          <p className={`${styles.text13} ${styles.cMuted} ${styles.mt4}`}>
+          <p className={`${adminStyles.text13} ${adminStyles.cMuted} ${adminStyles.mt4}`}>
             Update school profile, primary contacts, address, grades, search badge, logo, and partnership status.
           </p>
         </div>

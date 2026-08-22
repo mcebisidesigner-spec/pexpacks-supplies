@@ -46,13 +46,14 @@ let aggregateRpcAvailable: boolean | undefined;
 function isMissingRpc(error: { code?: string; message?: string } | null) {
   return Boolean(
     error &&
-      (error.code === "PGRST202" ||
-        error.message?.toLowerCase().includes("could not find the function")),
+    (error.code === "PGRST202" ||
+      error.message?.toLowerCase().includes("could not find the function")),
   );
 }
 
 function extractGradeName(title: string | null, slug: string | null): string {
-  const match = (title ?? "").match(/Grade\s+([R\d]+)/i) ||
+  const match =
+    (title ?? "").match(/Grade\s+([R\d]+)/i) ||
     (slug ?? "").match(/grade-([r\d]+)/i);
   if (match) return `Grade ${match[1].toUpperCase()}`;
 
@@ -63,13 +64,17 @@ function extractGradeName(title: string | null, slug: string | null): string {
 function extractGradeSlug(grade: string, slug: string | null): string {
   const slugMatch = (slug ?? "").match(/grade-[r\d]+/i);
   if (slugMatch) return slugMatch[0].toLowerCase();
-  return grade.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return grade
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function toGradePacks(packs: DbPack[]): GradePack[] {
   return [...packs]
     .sort((a, b) => {
-      const gradeOrder = getGradeOrder(`${a.title} ${a.slug ?? ""}`) -
+      const gradeOrder =
+        getGradeOrder(`${a.title} ${a.slug ?? ""}`) -
         getGradeOrder(`${b.title} ${b.slug ?? ""}`);
       return gradeOrder || (a.sort_order ?? 0) - (b.sort_order ?? 0);
     })
@@ -93,7 +98,8 @@ function toGradePacks(packs: DbPack[]): GradePack[] {
           item.quantity > 1 ? `${item.quantity}x ${item.name}` : item.name,
         ),
         packItems,
-        deliveryNote: pack.description || "Prepared for delivery before school starts.",
+        deliveryNote:
+          pack.description || "Prepared for delivery before school starts.",
         availability: (pack.stock ?? 1) > 0 ? "in-stock" : "pre-order",
       };
     });
@@ -121,11 +127,15 @@ function parseAggregatePayload(value: unknown): School | null {
   return toSchool(payload.school, payload.packs);
 }
 
-async function getSchoolWithBoundedQueries(slug: string): Promise<School | undefined> {
+async function getSchoolWithBoundedQueries(
+  slug: string,
+): Promise<School | undefined> {
   const supabase = createSupabaseAdminClient();
   const { data: dbSchool, error: schoolError } = await supabase
     .from("schools")
-    .select("id, name, slug, city, district, province, logo, is_partner, refused_partnership, status, published")
+    .select(
+      "id, name, slug, city, district, province, logo, is_partner, refused_partnership, status, published",
+    )
     .eq("slug", slug)
     .maybeSingle();
 
@@ -134,7 +144,7 @@ async function getSchoolWithBoundedQueries(slug: string): Promise<School | undef
   if (!isSchoolPublic(dbSchool.status, dbSchool.published)) return undefined;
 
   const { data: dbPacks, error: packsError } = await supabase
-    .from("stationery_packs")
+    .from("school_packs")
     .select("id, title, slug, price, description, stock, sort_order")
     .or(`school_id.eq.${dbSchool.id},slug.ilike.${dbSchool.slug}-%`)
     .eq("visible", true)
@@ -145,14 +155,20 @@ async function getSchoolWithBoundedQueries(slug: string): Promise<School | undef
   if (!dbPacks?.length) {
     const staticSchool = await getStaticSchoolBySlug(slug);
     return staticSchool
-      ? { ...staticSchool, ...toSchool(dbSchool, []), grades: staticSchool.grades }
+      ? {
+          ...staticSchool,
+          ...toSchool(dbSchool, []),
+          grades: staticSchool.grades,
+        }
       : toSchool(dbSchool, []);
   }
 
   const packIds = dbPacks.map((pack) => pack.id);
   const { data: dbItems, error: itemsError } = await supabase
     .from("public_pack_items_view" as never)
-    .select("pack_id, name, quantity, unit_price, icon, description, specification")
+    .select(
+      "pack_id, name, quantity, unit_price, icon, description, specification",
+    )
     .in("pack_id", packIds)
     .order("sort_order", { ascending: true });
 
@@ -170,7 +186,9 @@ async function getSchoolWithBoundedQueries(slug: string): Promise<School | undef
   );
 }
 
-export async function getSchoolBySlug(slug: string): Promise<School | undefined> {
+export async function getSchoolBySlug(
+  slug: string,
+): Promise<School | undefined> {
   try {
     const supabase = createSupabaseAdminClient();
     if (aggregateRpcAvailable !== false) {

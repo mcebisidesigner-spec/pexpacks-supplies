@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowLeft, Calendar, CheckSquare, Clock, Flag, Save, UserCheck, Tag } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -17,7 +17,7 @@ export default async function NewTaskPage() {
       <div>
         <Link
           href="/admin/tasks"
-          className={`${styles.secondaryBtn} ${styles.backLinkOverride}`}
+          className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}
         >
           <ArrowLeft size={14} /> Back to Tasks
         </Link>
@@ -33,39 +33,39 @@ export default async function NewTaskPage() {
         </div>
       </div>
 
-      <form action="/admin/tasks" method="GET" className={styles.detailLayout}>
-        <div className={`${styles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
+      <form action="/admin/tasks" method="GET" className={adminStyles.detailLayout}>
+        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
           {/* Task Details */}
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <CheckSquare size={16} className={styles.iconTeal} />
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <CheckSquare size={16} className={adminStyles.iconTeal} />
                 <span>Task Overview & Description</span>
               </div>
             </div>
 
-            <div className={styles.formField}>
+            <div className={adminStyles.formField}>
               <div>
-                <label className={styles.formLabel}>
+                <label className={adminStyles.formLabel}>
                   Task Title *
                 </label>
                 <input
                   name="title"
                   required
                   placeholder="e.g. Confirm PO-11256 supplier delivery dates"
-                  className={`${styles.inputField} ${styles.inputFieldLg}`}
+                  className={`${adminStyles.inputField} ${adminStyles.inputFieldLg}`}
                 />
               </div>
 
               <div>
-                <label className={styles.formLabel}>
+                <label className={adminStyles.formLabel}>
                   Detailed Description
                 </label>
                 <textarea
                   name="description"
                   rows={5}
                   placeholder="Outline requirements, affected school codes, and expected deliverables..."
-                  className={`${styles.textareaField} ${styles.textareaFieldMd}`}
+                  className={`${adminStyles.textareaField} ${adminStyles.textareaFieldMd}`}
                 />
               </div>
             </div>
@@ -73,24 +73,24 @@ export default async function NewTaskPage() {
         </div>
 
         {/* Sidebar Controls */}
-        <div className={styles.sidebarColumn}>
-          <div className={styles.sidebarCard}>
-            <div className={styles.sidebarCardHeader}>
-              <div className={styles.sidebarHeaderTitle}>
-                <Tag size={16} className={styles.iconBlue} />
+        <div className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Tag size={16} className={adminStyles.iconBlue} />
                 <span>Assignment & Priority</span>
               </div>
             </div>
 
-            <div className={styles.formField}>
+            <div className={adminStyles.formField}>
               <div>
-                <label className={styles.formLabel}>
+                <label className={adminStyles.formLabel}>
                   Category
                 </label>
                 <select
                   name="category"
                   defaultValue="Procurement"
-                  className={styles.selectField}
+                  className={adminStyles.selectField}
                 >
                   <option value="Procurement">Procurement</option>
                   <option value="Pricing">Pricing</option>
@@ -101,13 +101,13 @@ export default async function NewTaskPage() {
               </div>
 
               <div>
-                <label className={styles.formLabel}>
+                <label className={adminStyles.formLabel}>
                   Priority Level
                 </label>
                 <select
                   name="priority"
                   defaultValue="High"
-                  className={styles.selectField}
+                  className={adminStyles.selectField}
                 >
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
@@ -117,13 +117,13 @@ export default async function NewTaskPage() {
               </div>
 
               <div>
-                <label className={styles.formLabel}>
+                <label className={adminStyles.formLabel}>
                   Assignee
                 </label>
                 <select
                   name="assignee"
                   defaultValue="Kwanele G."
-                  className={styles.selectField}
+                  className={adminStyles.selectField}
                 >
                   <option value="Mcebisi M.">Mcebisi M. (Operations Manager)</option>
                   <option value="Kwanele G.">Kwanele G. (Procurement Lead)</option>
@@ -133,14 +133,14 @@ export default async function NewTaskPage() {
               </div>
 
               <div>
-                <label className={styles.formLabel}>
+                <label className={adminStyles.formLabel}>
                   Due Date
                 </label>
                 <input
                   type="date"
                   name="due_date"
                   defaultValue="2026-08-30"
-                  className={styles.inputField}
+                  className={adminStyles.inputField}
                 />
               </div>
 

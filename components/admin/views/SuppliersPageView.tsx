@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import {
   Truck,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface SupplierRow {
   id: string;
@@ -61,7 +62,7 @@ export function SuppliersPageView() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Suppliers{" "}
@@ -78,12 +79,12 @@ export function SuppliersPageView() {
         </div>
       </div>
 
-      <div className={styles.toolbar}>
+      <div className={adminStyles.toolbar}>
         <div className={styles.toolbarLeft}>
           <div className={styles.searchBox}>
             <Search />
             <input
-              className={styles.searchInput}
+              className={adminStyles.searchInput}
               placeholder="Search by supplier name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -102,8 +103,8 @@ export function SuppliersPageView() {
         </div>
       </div>
 
-      <div className={styles.tableCard}>
-        <div className={styles.tableWrapper}>
+      <div className={adminStyles.tableCard}>
+        <div className={adminStyles.tableWrapper}>
           <table className={styles.dataTable}>
             <thead>
               <tr>
@@ -118,7 +119,7 @@ export function SuppliersPageView() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className={styles.emptyCell}>
+                  <td colSpan={6} className={adminStyles.emptyCell}>
                     No suppliers found matching criteria.
                   </td>
                 </tr>
@@ -136,9 +137,9 @@ export function SuppliersPageView() {
                     >
                       <td>
                         <div
-                          className={`${styles.flex} ${styles["items-center"]} ${styles["gap-10"]}`}
+                          className={`${adminStyles.flex} ${styles["items-center"]} ${styles["gap-10"]}`}
                         >
-                          <div className={styles.supplierAvatar}>
+                          <div className={adminStyles.supplierAvatar}>
                             <Truck size={14} />
                           </div>
                           <Link
@@ -167,10 +168,10 @@ export function SuppliersPageView() {
                         <span
                           className={
                             sup.status === "Preferred"
-                              ? styles.badgeTeal
+                              ? adminStyles.badgeTeal
                               : sup.status === "Approved"
-                              ? styles.badgeGreen
-                              : styles.badgeAmber
+                              ? adminStyles.badgeGreen
+                              : adminStyles.badgeAmber
                           }
                         >
                           {sup.status}

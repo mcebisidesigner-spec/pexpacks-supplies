@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import styles from "./OperationsCommandCenter.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 // ==========================================
 // TYPES & DATA STRUCTURES
@@ -801,7 +802,7 @@ function SparklineWave({ color, direction = "up" }: { color: string; direction?:
       ? "M 0 18 Q 15 22 30 14 T 50 8 T 72 2"
       : "M 0 4 Q 15 2 30 10 T 50 16 T 72 22";
   return (
-    <svg className={styles.kpiSparkline} viewBox="0 0 72 24" fill="none">
+    <svg className={adminStyles.kpiSparkline} viewBox="0 0 72 24" fill="none">
       <path
         d={path}
         stroke={color}
@@ -844,10 +845,10 @@ const EXCEPTION_ICON_CLASS_MAP: Record<SeverityLevel, string> = {
 };
 
 const EXCEPTION_BADGE_CLASS_MAP: Record<SeverityLevel, string> = {
-  high: styles.severityHigh,
-  medium: styles.severityMedium,
-  info: styles.severityInfo,
-  low: styles.severityLow,
+  high: adminStyles.severityHigh,
+  medium: adminStyles.severityMedium,
+  info: adminStyles.severityInfo,
+  low: adminStyles.severityLow,
 };
 
 // ==========================================
@@ -1039,7 +1040,7 @@ export function OperationsCommandCenter() {
             </button>
           </div>
 
-          <button className={styles.datePickerBtn}>
+          <button className={adminStyles.datePickerBtn}>
             <Calendar size={14} />
             <span>{mode === "procurement" ? "May 27 – Jun 2, 2024" : "2027 Back-to-School"}</span>
           </button>
@@ -1050,23 +1051,23 @@ export function OperationsCommandCenter() {
           2. CONTROL TOWER ("SEE"): 6 KPI CARDS
           =================================================== */}
       {mode === "procurement" ? (
-        <div className={styles.kpiGrid}>
+        <div className={adminStyles.kpiGrid}>
           {/* 1. Paid Orders */}
           <div
-            className={`${styles.kpiCard} ${activeStageFilter === "completed" ? styles.kpiCardActive : ""}`}
+            className={`${adminStyles.kpiCard} ${activeStageFilter === "completed" ? adminStyles.kpiCardActive : ""}`}
             onClick={() => setActiveStageFilter(activeStageFilter === "completed" ? null : "completed")}
           >
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconTeal}`}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconTeal}`}>
                 <ShoppingCart size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Paid Orders</span>
-                <span className={styles.kpiValue}>128</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Paid Orders</span>
+                <span className={adminStyles.kpiValue}>128</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
                 <TrendingUp size={12} /> 18% vs last 7 days
               </span>
               <SparklineWave color="#2dd4bf" direction="up" />
@@ -1074,18 +1075,18 @@ export function OperationsCommandCenter() {
           </div>
 
           {/* 2. Revenue Received */}
-          <div className={styles.kpiCard}>
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconEmerald}`}>
+          <div className={adminStyles.kpiCard}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconEmerald}`}>
                 <TrendingUp size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Revenue Received</span>
-                <span className={styles.kpiValue}>R1,248,950</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Revenue Received</span>
+                <span className={adminStyles.kpiValue}>R1,248,950</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
                 <TrendingUp size={12} /> 22% vs last 7 days
               </span>
               <SparklineWave color="#10b981" direction="up" />
@@ -1094,20 +1095,20 @@ export function OperationsCommandCenter() {
 
           {/* 3. Procurement Outstanding */}
           <div
-            className={`${styles.kpiCard} ${activeStageFilter === "needs_procurement" ? styles.kpiCardActive : ""}`}
+            className={`${adminStyles.kpiCard} ${activeStageFilter === "needs_procurement" ? adminStyles.kpiCardActive : ""}`}
             onClick={() => setActiveStageFilter(activeStageFilter === "needs_procurement" ? null : "needs_procurement")}
           >
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconAmber}`}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconAmber}`}>
                 <Truck size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Procurement Outstanding</span>
-                <span className={styles.kpiValue}>R305,620</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Procurement Outstanding</span>
+                <span className={adminStyles.kpiValue}>R305,620</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendDown}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
                 <TrendingDown size={12} /> 8% vs last 7 days
               </span>
               <SparklineWave color="#f59e0b" direction="down" />
@@ -1116,20 +1117,20 @@ export function OperationsCommandCenter() {
 
           {/* 4. Ready to Pack */}
           <div
-            className={`${styles.kpiCard} ${activeStageFilter === "fully_secured" ? styles.kpiCardActive : ""}`}
+            className={`${adminStyles.kpiCard} ${activeStageFilter === "fully_secured" ? adminStyles.kpiCardActive : ""}`}
             onClick={() => setActiveStageFilter(activeStageFilter === "fully_secured" ? null : "fully_secured")}
           >
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconCyan}`}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconCyan}`}>
                 <PackageCheck size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Ready to Pack</span>
-                <span className={styles.kpiValue}>356</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Ready to Pack</span>
+                <span className={adminStyles.kpiValue}>356</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
                 <TrendingUp size={12} /> 15% vs last 7 days
               </span>
               <SparklineWave color="#06b6d4" direction="up" />
@@ -1138,20 +1139,20 @@ export function OperationsCommandCenter() {
 
           {/* 5. Orders At Risk */}
           <div
-            className={`${styles.kpiCard} ${activeStageFilter === "needs_procurement" ? styles.kpiCardActive : ""}`}
+            className={`${adminStyles.kpiCard} ${activeStageFilter === "needs_procurement" ? adminStyles.kpiCardActive : ""}`}
             onClick={() => setActiveStageFilter(activeStageFilter === "needs_procurement" ? null : "needs_procurement")}
           >
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconRed}`}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${styles.kpiIconRed}`}>
                 <AlertTriangle size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Orders At Risk</span>
-                <span className={styles.kpiValue}>14</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Orders At Risk</span>
+                <span className={adminStyles.kpiValue}>14</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendDown}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
                 <TrendingDown size={12} /> 27% vs last 7 days
               </span>
               <SparklineWave color="#ef4444" direction="down" />
@@ -1159,21 +1160,21 @@ export function OperationsCommandCenter() {
           </div>
 
           {/* 6. Procurement Coverage */}
-          <div className={styles.kpiCard}>
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconTeal}`}>
+          <div className={adminStyles.kpiCard}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconTeal}`}>
                 <ShieldCheck size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Procurement Coverage</span>
-                <span className={styles.kpiValue}>72%</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Procurement Coverage</span>
+                <span className={adminStyles.kpiValue}>72%</span>
               </div>
             </div>
             <div className={styles.kpiProgressBar}>
               <div className={styles.kpiProgressFill} style={{ width: "72%" }} />
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
                 <TrendingUp size={12} /> 6pp vs last 7 days
               </span>
             </div>
@@ -1181,19 +1182,19 @@ export function OperationsCommandCenter() {
         </div>
       ) : (
         /* School Packs Mode KPI Grid */
-        <div className={styles.kpiGrid}>
-          <div className={styles.kpiCard}>
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconTeal}`}>
+        <div className={adminStyles.kpiGrid}>
+          <div className={adminStyles.kpiCard}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconTeal}`}>
                 <Package size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Total Packs</span>
-                <span className={styles.kpiValue}>1,248</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Total Packs</span>
+                <span className={adminStyles.kpiValue}>1,248</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
                 <TrendingUp size={12} /> 14% vs last 30 days
               </span>
               <SparklineWave color="#2dd4bf" direction="up" />
@@ -1201,20 +1202,20 @@ export function OperationsCommandCenter() {
           </div>
 
           <div
-            className={`${styles.kpiCard} ${activeStageFilter === "awaiting_approval" ? styles.kpiCardActive : ""}`}
+            className={`${adminStyles.kpiCard} ${activeStageFilter === "awaiting_approval" ? adminStyles.kpiCardActive : ""}`}
             onClick={() => setActiveStageFilter(activeStageFilter === "awaiting_approval" ? null : "awaiting_approval")}
           >
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconAmber}`}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconAmber}`}>
                 <Clock size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Awaiting Approval</span>
-                <span className={styles.kpiValue}>36</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Awaiting Approval</span>
+                <span className={adminStyles.kpiValue}>36</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendDown}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
                 <TrendingDown size={12} /> 12% vs last 30 days
               </span>
               <SparklineWave color="#f59e0b" direction="down" />
@@ -1222,38 +1223,38 @@ export function OperationsCommandCenter() {
           </div>
 
           <div
-            className={`${styles.kpiCard} ${activeStageFilter === "published" ? styles.kpiCardActive : ""}`}
+            className={`${adminStyles.kpiCard} ${activeStageFilter === "published" ? adminStyles.kpiCardActive : ""}`}
             onClick={() => setActiveStageFilter(activeStageFilter === "published" ? null : "published")}
           >
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconEmerald}`}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconEmerald}`}>
                 <CheckCircle2 size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Published Packs</span>
-                <span className={styles.kpiValue}>982</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Published Packs</span>
+                <span className={adminStyles.kpiValue}>982</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
                 <TrendingUp size={12} /> 18% vs last 30 days
               </span>
               <SparklineWave color="#10b981" direction="up" />
             </div>
           </div>
 
-          <div className={styles.kpiCard}>
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconBlue}`}>
+          <div className={adminStyles.kpiCard}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconBlue}`}>
                 <Users size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Schools Covered</span>
-                <span className={styles.kpiValue}>164</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Schools Covered</span>
+                <span className={adminStyles.kpiValue}>164</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
                 <TrendingUp size={12} /> 9% vs last 30 days
               </span>
               <SparklineWave color="#3b82f6" direction="up" />
@@ -1261,38 +1262,38 @@ export function OperationsCommandCenter() {
           </div>
 
           <div
-            className={`${styles.kpiCard} ${activeStageFilter === "needs_update" ? styles.kpiCardActive : ""}`}
+            className={`${adminStyles.kpiCard} ${activeStageFilter === "needs_update" ? adminStyles.kpiCardActive : ""}`}
             onClick={() => setActiveStageFilter(activeStageFilter === "needs_update" ? null : "needs_update")}
           >
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconRed}`}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${styles.kpiIconRed}`}>
                 <RefreshCw size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Packs Needing Updates</span>
-                <span className={styles.kpiValue}>22</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Packs Needing Updates</span>
+                <span className={adminStyles.kpiValue}>22</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendDown}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
                 <TrendingDown size={12} /> 8% vs last 30 days
               </span>
               <SparklineWave color="#ef4444" direction="down" />
             </div>
           </div>
 
-          <div className={styles.kpiCard}>
-            <div className={styles.kpiTop}>
-              <div className={`${styles.kpiIconWrapper} ${styles.kpiIconTeal}`}>
+          <div className={adminStyles.kpiCard}>
+            <div className={adminStyles.kpiTop}>
+              <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconTeal}`}>
                 <ShoppingCart size={18} />
               </div>
-              <div className={styles.kpiHeaderInfo}>
-                <span className={styles.kpiLabel}>Average Pack Value</span>
-                <span className={styles.kpiValue}>R1,067</span>
+              <div className={adminStyles.kpiHeaderInfo}>
+                <span className={adminStyles.kpiLabel}>Average Pack Value</span>
+                <span className={adminStyles.kpiValue}>R1,067</span>
               </div>
             </div>
-            <div className={styles.kpiFooter}>
-              <span className={`${styles.kpiTrend} ${styles.kpiTrendUp}`}>
+            <div className={adminStyles.kpiFooter}>
+              <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
                 <TrendingUp size={12} /> 6% vs last 30 days
               </span>
               <SparklineWave color="#2dd4bf" direction="up" />
@@ -1306,10 +1307,10 @@ export function OperationsCommandCenter() {
           =================================================== */}
       <div className={styles.dynamicsGrid}>
         {/* Left Panel: Revenue Received / Pack Status Overview Chart */}
-        <div className={styles.panel}>
-          <div className={styles.panelHeader}>
+        <div className={adminStyles.panel}>
+          <div className={adminStyles.panelHeader}>
             <div className={styles.panelTitleGroup}>
-              <h2 className={styles.panelTitle}>
+              <h2 className={adminStyles.panelTitle}>
                 {mode === "procurement" ? "Revenue Received (R)" : "Pack Status Overview"}
               </h2>
               <Info className={styles.panelInfoIcon} />
@@ -1383,23 +1384,23 @@ export function OperationsCommandCenter() {
         </div>
 
         {/* Right Panel: What Needs Attention (Exception Center) */}
-        <div className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <h2 className={styles.panelTitle}>What needs attention</h2>
+        <div className={adminStyles.panel}>
+          <div className={adminStyles.panelHeader}>
+            <h2 className={adminStyles.panelTitle}>What needs attention</h2>
             <Link
               href="/admin/tasks"
-              className={viewStyles.occLegendLink}
+              className={adminStyles.occLegendLink}
             >
               View all alerts <ArrowRight size={13} />
             </Link>
           </div>
 
-          <div className={styles.exceptionList}>
+          <div className={adminStyles.exceptionList}>
             {INITIAL_EXCEPTIONS.map((exc) => {
               return (
                 <div
                   key={exc.id}
-                  className={styles.exceptionItem}
+                  className={adminStyles.exceptionItem}
                   onClick={() => {
                     if (exc.stageFilter) {
                       setActiveStageFilter(exc.stageFilter);
@@ -1410,22 +1411,22 @@ export function OperationsCommandCenter() {
                     }
                   }}
                 >
-                  <div className={styles.exceptionLeft}>
-                    <div className={`${styles.exceptionIcon} ${EXCEPTION_ICON_CLASS_MAP[exc.severity]}`}>
+                  <div className={adminStyles.exceptionLeft}>
+                    <div className={`${adminStyles.exceptionIcon} ${EXCEPTION_ICON_CLASS_MAP[exc.severity]}`}>
                       {EXCEPTION_ICON_MAP[exc.severity]}
                     </div>
-                    <div className={styles.exceptionDetails}>
-                      <span className={styles.exceptionHeadline}>{exc.title}</span>
-                      <span className={styles.exceptionSubtext}>{exc.description}</span>
+                    <div className={adminStyles.exceptionDetails}>
+                      <span className={adminStyles.exceptionHeadline}>{exc.title}</span>
+                      <span className={adminStyles.exceptionSubtext}>{exc.description}</span>
                     </div>
                   </div>
 
-                  <div className={styles.exceptionRight}>
+                  <div className={adminStyles.exceptionRight}>
                     <span className={styles.exceptionTarget}>{exc.targetCount}</span>
-                    <span className={`${styles.severityBadge} ${EXCEPTION_BADGE_CLASS_MAP[exc.severity]}`}>
+                    <span className={`${adminStyles.severityBadge} ${EXCEPTION_BADGE_CLASS_MAP[exc.severity]}`}>
                       {exc.severity}
                     </span>
-                    <span className={styles.exceptionTime}>{exc.timeAgo}</span>
+                    <span className={adminStyles.exceptionTime}>{exc.timeAgo}</span>
                   </div>
                 </div>
               );
@@ -1465,7 +1466,7 @@ export function OperationsCommandCenter() {
 
             {/* Group By Filter */}
             <select
-              className={styles.filterSelect}
+              className={adminStyles.filterSelect}
               value={activeStageFilter ?? ""}
               onChange={(e) => setActiveStageFilter(e.target.value ? e.target.value : null)}
             >
@@ -1755,7 +1756,7 @@ export function OperationsCommandCenter() {
                         <span className={`${styles.avatarBadge} ${styles[`avatar${item.owner}`]}`}>
                           {item.owner}
                         </span>
-                        <span className={`${styles.cardDueDate} ${viewStyles.occStatusRow}`}>
+                        <span className={`${styles.cardDueDate} ${adminStyles.occStatusRow}`}>
                           {item.dueDate} <Check className={styles.cardCheckmark} />
                         </span>
                       </div>
@@ -1795,7 +1796,7 @@ export function OperationsCommandCenter() {
                           <div className={styles.cardTitle}>{pack.schoolName} – {pack.grade}</div>
                           <div className={styles.cardSubmeta}>Health: {pack.healthScore}% · {pack.totalItems} items</div>
                         </div>
-                        <div className={viewStyles.occStatusRow}>
+                        <div className={adminStyles.occStatusRow}>
                           <span className={`${styles.avatarBadge} ${styles[`avatar${pack.owner}`]}`}>{pack.owner}</span>
                           <span className={styles.cardSubmeta}>R{pack.price}</span>
                         </div>
@@ -1832,7 +1833,7 @@ export function OperationsCommandCenter() {
                           <div className={styles.cardTitle}>{pack.schoolName} – {pack.grade}</div>
                           <div className={styles.cardSubmeta}>Health: {pack.healthScore}% · {pack.totalItems} items</div>
                         </div>
-                        <div className={viewStyles.occStatusRow}>
+                        <div className={adminStyles.occStatusRow}>
                           <span className={`${styles.avatarBadge} ${styles[`avatar${pack.owner}`]}`}>{pack.owner}</span>
                           <span className={styles.cardSubmeta}>R{pack.price}</span>
                         </div>
@@ -1869,7 +1870,7 @@ export function OperationsCommandCenter() {
                           <div className={styles.cardTitle}>{pack.schoolName} – {pack.grade}</div>
                           <div className={styles.cardSubmeta}>Health: {pack.healthScore}% · {pack.totalItems} items</div>
                         </div>
-                        <div className={viewStyles.occStatusRow}>
+                        <div className={adminStyles.occStatusRow}>
                           <span className={`${styles.avatarBadge} ${styles[`avatar${pack.owner}`]}`}>{pack.owner}</span>
                           <span className={styles.cardSubmeta}>R{pack.price}</span>
                         </div>
@@ -1906,7 +1907,7 @@ export function OperationsCommandCenter() {
                           <div className={styles.cardTitle}>{pack.schoolName} – {pack.grade}</div>
                           <div className={styles.cardSubmeta}>Health: {pack.healthScore}% · Stale price</div>
                         </div>
-                        <div className={viewStyles.occStatusRow}>
+                        <div className={adminStyles.occStatusRow}>
                           <span className={`${styles.avatarBadge} ${styles[`avatar${pack.owner}`]}`}>{pack.owner}</span>
                           <span className={styles.cardSubmeta}>R{pack.price}</span>
                         </div>
@@ -1925,7 +1926,7 @@ export function OperationsCommandCenter() {
               WORKSPACE: DATA TABLE VIEW ALTERNATIVE
               =================================================== */
           <div className={styles.tableView}>
-            <table className={styles.dataTable}>
+            <table className={adminStyles.dataTable}>
               <thead>
                 <tr>
                   <th>Item / Pack Name</th>
@@ -1945,7 +1946,7 @@ export function OperationsCommandCenter() {
                     onClick={() => setSelectedItem(item)}
                   >
                     <td>
-                      <strong className={viewStyles.occCardTitle}>{item.name}</strong>
+                      <strong className={adminStyles.occCardTitle}>{item.name}</strong>
                     </td>
                     <td>{item.schoolOrCategory}</td>
                     <td>
@@ -1955,14 +1956,14 @@ export function OperationsCommandCenter() {
                     </td>
                     <td>
                       <span
-                        className={`${styles.severityBadge} ${
+                        className={`${adminStyles.severityBadge} ${
                           item.stage === "completed"
-                            ? styles.severityLow
+                            ? adminStyles.severityLow
                             : item.stage === "fully_secured"
-                            ? styles.severityInfo
+                            ? adminStyles.severityInfo
                             : item.stage === "partially_secured"
-                            ? styles.severityMedium
-                            : styles.severityHigh
+                            ? adminStyles.severityMedium
+                            : adminStyles.severityHigh
                         }`}
                       >
                         {item.stage.replace("_", " ")}
@@ -1985,7 +1986,7 @@ export function OperationsCommandCenter() {
                     <td>{item.dueDate}</td>
                     <td>
                       <button
-                        className={`${styles.controlBtn} ${viewStyles.occBadgePadded}`}
+                        className={`${styles.controlBtn} ${adminStyles.occBadgePadded}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedItem(item);
@@ -2009,7 +2010,7 @@ export function OperationsCommandCenter() {
         <div className={styles.drawerOverlay} onClick={() => { setSelectedItem(null); setSelectedPack(null); }}>
           <div className={styles.drawerPanel} onClick={(e) => e.stopPropagation()}>
             <div className={styles.drawerHeader}>
-              <div className={viewStyles.occMetaRow}>
+              <div className={adminStyles.occMetaRow}>
                 <span
                   className={`${styles.avatarBadge} ${
                     styles[`avatar${selectedItem?.owner || selectedPack?.owner || "LM"}`]
@@ -2101,7 +2102,7 @@ export function OperationsCommandCenter() {
                       </div>
                       <div className={styles.healthScoreTotal}>
                         <span>Total Deterministic Health</span>
-                        <span className={viewStyles.occScoreBig}>
+                        <span className={adminStyles.occScoreBig}>
                           {selectedItem?.healthScore || selectedPack?.healthScore || 75}%
                         </span>
                       </div>
@@ -2111,16 +2112,16 @@ export function OperationsCommandCenter() {
                   {/* Financial Exposure */}
                   <div className={styles.drawerSection}>
                     <h4 className={styles.drawerSectionTitle}>Financial Exposure & Margin Risk</h4>
-                    <div className={viewStyles.occDetailGrid}>
-                      <div className={viewStyles.occDetailCell}>
-                        <div className={viewStyles.occDetailLabel}>Committed Spend</div>
-                        <div className={viewStyles.occDetailValue}>
+                    <div className={adminStyles.occDetailGrid}>
+                      <div className={adminStyles.occDetailCell}>
+                        <div className={adminStyles.occDetailLabel}>Committed Spend</div>
+                        <div className={adminStyles.occDetailValue}>
                           R {(selectedItem?.committedSpend || 42000).toLocaleString("en-ZA")}
                         </div>
                       </div>
-                      <div className={viewStyles.occDetailCell}>
-                        <div className={viewStyles.occDetailLabel}>Revenue Tied</div>
-                        <div className={viewStyles.occDetailValueRed}>
+                      <div className={adminStyles.occDetailCell}>
+                        <div className={adminStyles.occDetailLabel}>Revenue Tied</div>
+                        <div className={adminStyles.occDetailValueRed}>
                           R {(selectedItem?.revenueAtRisk || 86400).toLocaleString("en-ZA")}
                         </div>
                       </div>
@@ -2180,7 +2181,7 @@ export function OperationsCommandCenter() {
                       onChange={(e) => setNewCommentText(e.target.value)}
                     />
                     <button
-                      className={`${styles.actionBtn} ${styles.actionBtnPrimary} ${viewStyles.occAlignEnd}`}
+                      className={`${styles.actionBtn} ${styles.actionBtnPrimary} ${adminStyles.occAlignEnd}`}
                       onClick={handleAddComment}
                     >
                       <Send size={12} /> Post Comment
@@ -2192,22 +2193,22 @@ export function OperationsCommandCenter() {
               {activeDrawerTab === "supplier" && (
                 <div className={styles.drawerSection}>
                   <h4 className={styles.drawerSectionTitle}>Supplier Logistics Profile</h4>
-                  <div className={viewStyles.occSupplierInfo}>
-                    <div className={viewStyles.occSupplierRow}>
-                      <span className={viewStyles.occSupplierLabel}>Primary Supplier:</span>
-                      <strong className={viewStyles.occSupplierVal}>{selectedItem?.supplier || "Bantex SA"}</strong>
+                  <div className={adminStyles.occSupplierInfo}>
+                    <div className={adminStyles.occSupplierRow}>
+                      <span className={adminStyles.occSupplierLabel}>Primary Supplier:</span>
+                      <strong className={adminStyles.occSupplierVal}>{selectedItem?.supplier || "Bantex SA"}</strong>
                     </div>
-                    <div className={viewStyles.occSupplierRow}>
-                      <span className={viewStyles.occSupplierLabel}>Average Lead Time:</span>
-                      <strong className={viewStyles.occSupplierVal}>{selectedItem?.supplierLeadDays || 14} business days</strong>
+                    <div className={adminStyles.occSupplierRow}>
+                      <span className={adminStyles.occSupplierLabel}>Average Lead Time:</span>
+                      <strong className={adminStyles.occSupplierVal}>{selectedItem?.supplierLeadDays || 14} business days</strong>
                     </div>
-                    <div className={viewStyles.occSupplierRow}>
-                      <span className={viewStyles.occSupplierLabel}>Fulfillment Accuracy:</span>
-                      <strong className={viewStyles.occSupplierValGreen}>98.4% On-time</strong>
+                    <div className={adminStyles.occSupplierRow}>
+                      <span className={adminStyles.occSupplierLabel}>Fulfillment Accuracy:</span>
+                      <strong className={adminStyles.occSupplierValGreen}>98.4% On-time</strong>
                     </div>
-                    <div className={viewStyles.occSupplierRow}>
-                      <span className={viewStyles.occSupplierLabel}>Internal Note:</span>
-                      <span className={viewStyles.occSupplierValLight}>{selectedItem?.notes || "No pending blockers."}</span>
+                    <div className={adminStyles.occSupplierRow}>
+                      <span className={adminStyles.occSupplierLabel}>Internal Note:</span>
+                      <span className={adminStyles.occSupplierValLight}>{selectedItem?.notes || "No pending blockers."}</span>
                     </div>
                   </div>
                 </div>

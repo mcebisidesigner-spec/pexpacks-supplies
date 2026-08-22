@@ -13,7 +13,10 @@ export interface CSVStationeryRow {
   category?: string;
 }
 
-export async function bulkImportStationeryAction(items: CSVStationeryRow[], packId?: string) {
+export async function bulkImportStationeryAction(
+  items: CSVStationeryRow[],
+  packId?: string,
+) {
   // Only authenticated staff with the items.import permission may bulk-import.
   const actor = await requireAdmin({ permission: "items.import" });
 
@@ -24,7 +27,11 @@ export async function bulkImportStationeryAction(items: CSVStationeryRow[], pack
   const admin = createSupabaseAdminClient();
   let targetPackId = packId;
   if (!targetPackId) {
-    const { data: firstPack } = await admin.from("stationery_packs").select("id").limit(1).maybeSingle();
+    const { data: firstPack } = await admin
+      .from("school_packs")
+      .select("id")
+      .limit(1)
+      .maybeSingle();
     targetPackId = firstPack?.id ?? "00000000-0000-0000-0000-000000000000";
   }
 
@@ -32,7 +39,11 @@ export async function bulkImportStationeryAction(items: CSVStationeryRow[], pack
     const title = item.title.trim();
     const sku =
       item.sku?.trim().toUpperCase() ||
-      `PEX-${title.toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80)}`;
+      `PEX-${title
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 80)}`;
     const unitPrice = Math.max(0, Number(item.unit_price) || 0);
     return {
       sku,
@@ -75,7 +86,10 @@ export async function bulkImportStationeryAction(items: CSVStationeryRow[], pack
     }));
     const { error: linkError } = await admin
       .from("school_pack_items")
-      .upsert(rows, { onConflict: "pack_id,product_id", ignoreDuplicates: false });
+      .upsert(rows, {
+        onConflict: "pack_id,product_id",
+        ignoreDuplicates: false,
+      });
     if (linkError) {
       throw new Error(`Pack composition import failed: ${linkError.message}`);
     }
@@ -91,5 +105,8 @@ export async function bulkImportStationeryAction(items: CSVStationeryRow[], pack
   });
   revalidatePath("/admin/items");
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  return { success: true, importedCount: data?.length ?? formattedProducts.length };
+  return {
+    success: true,
+    importedCount: data?.length ?? formattedProducts.length,
+  };
 }
