@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowLeft, Building2, Clock, CreditCard, Mail, Phone, Save, Truck } from "lucide-react";
+import { ArrowLeft, Building2, Clock, CreditCard, Edit2, Mail, Phone, Save, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import adminStyles from "../admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface SupplierDetailPageProps {
@@ -26,13 +27,18 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
       </div>
 
       {/* Header */}
-      <div className={styles.headerRow}>
+      <div className={adminStyles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {title}
             <span className={styles.badgeTeal}>Preferred Partner</span>
           </h1>
           <p className={styles.headerSubtitle}>Supplier Code: SUP-{id.toUpperCase().slice(0, 8)}</p>
+        </div>
+        <div className={styles.headerActions}>
+          <Link href={`/admin/suppliers/${id}/edit`} className={styles.primaryBtn}>
+            <Edit2 size={14} /> Edit Supplier
+          </Link>
         </div>
       </div>
 

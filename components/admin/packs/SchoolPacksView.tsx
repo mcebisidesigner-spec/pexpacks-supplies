@@ -290,9 +290,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           =================================================== */}
       <div className={styles.pageHeader}>
         <div className={styles.headerTitleGroup}>
-          <div className={styles.headerIconBadge}>
-            <Package size={22} />
-          </div>
           <div className={styles.headerTexts}>
             <h1 className={styles.headerTitle}>
               School Packs{" "}

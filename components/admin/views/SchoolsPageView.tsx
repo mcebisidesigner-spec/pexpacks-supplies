@@ -165,7 +165,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         </div>
         <div className={styles.headerActions}>
           <Link href="/admin/schools/new" className={styles.primaryBtn}>
-            <Plus size={14} /> + Add School
+            <Plus size={14} /> Add School
           </Link>
         </div>
       </div>
