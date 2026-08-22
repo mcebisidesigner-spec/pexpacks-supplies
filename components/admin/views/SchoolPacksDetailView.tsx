@@ -109,8 +109,7 @@ export function SchoolPacksDetailView({
       <div>
         <Link
           href="/admin/packs"
-          className={styles.secondaryBtn}
-          style={{ height: 32, fontSize: 11, background: "transparent", border: "none", color: "#94a3b8", paddingLeft: 0 }}
+          className={`${styles.secondaryBtn} ${styles.backBtn}`}
         >
           <ArrowLeft size={14} /> Back to school packs
         </Link>
@@ -121,7 +120,7 @@ export function SchoolPacksDetailView({
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             {school.name}{" "}
-            <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500 }}>
+            <span className={styles.headerSubtitleBadge}>
               {totalPacks} {totalPacks === 1 ? "Grade pack" : "Grade packs"}
             </span>
           </h1>
@@ -136,7 +135,7 @@ export function SchoolPacksDetailView({
         </div>
       </div>
 
-      {/* Metric Summary Row (5 cards matching screenshot) */}
+      {/* Metric Summary Row (5 cards) */}
       <div className={styles.metricsGrid5}>
         <div className={styles.metricCard}>
           <div className={styles.metricTop}>
@@ -146,7 +145,7 @@ export function SchoolPacksDetailView({
             </div>
           </div>
           <div className={styles.metricValue}>{totalPacks}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Total packs</div>
+          <div className={styles.metricSubtext}>Total packs</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -157,7 +156,7 @@ export function SchoolPacksDetailView({
             </div>
           </div>
           <div className={styles.metricValue}>{publishedPacks}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>
+          <div className={styles.metricSubtext}>
             {totalPacks > 0 ? Math.round((publishedPacks / totalPacks) * 100) : 0}% published
           </div>
         </div>
@@ -170,18 +169,18 @@ export function SchoolPacksDetailView({
             </div>
           </div>
           <div className={styles.metricValue}>{totalItemsCount}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>Across all packs</div>
+          <div className={styles.metricSubtext}>Across all packs</div>
         </div>
 
         <div className={styles.metricCard}>
           <div className={styles.metricTop}>
             <span className={styles.metricLabel}>Revenue to Date</span>
             <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
-              <span style={{ fontWeight: 700, fontSize: 13 }}>R</span>
+              <span className={styles.currencyText}>R</span>
             </div>
           </div>
           <div className={styles.metricValue}>{money(totalRevenue)}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>From grade packs</div>
+          <div className={styles.metricSubtext}>From grade packs</div>
         </div>
 
         <div className={styles.metricCard}>
@@ -191,17 +190,17 @@ export function SchoolPacksDetailView({
               <Calendar size={16} />
             </div>
           </div>
-          <div className={styles.metricValue} style={{ fontSize: 16, marginTop: 8 }}>
+          <div className={`${styles.metricValue} ${styles.metricValueDate}`}>
             May 21, 2024
           </div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>By Liam Morgan</div>
+          <div className={styles.metricSubtext}>By Liam Morgan</div>
         </div>
       </div>
 
       {/* Main 2-Column Layout */}
       <div className={styles.detailLayout}>
         {/* Left Column: Table and Toolbar */}
-        <div style={{ minWidth: 0, width: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className={styles.leftColumn}>
           {/* Controls Bar */}
           <div className={styles.toolbar}>
             <div className={styles.toolbarLeft}>
@@ -261,7 +260,7 @@ export function SchoolPacksDetailView({
                 <tbody>
                   {filteredPacks.length === 0 ? (
                     <tr>
-                      <td colSpan={7} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>
+                      <td colSpan={7} className={styles.emptyCell}>
                         No grade packs found matching criteria.
                       </td>
                     </tr>
@@ -278,22 +277,22 @@ export function SchoolPacksDetailView({
                                   {formattedGrade}
                                 </Link>
                               </div>
-                              <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+                              <div className={styles.schoolNameSub}>
                                 {school.name}
                               </div>
                             </div>
                           </td>
-                          <td style={{ fontWeight: 700, color: "#ffffff" }}>
+                          <td className={styles.textWhiteBold}>
                             {money(pack.price)}
                           </td>
                           <td>
-                            <span style={{ color: "#ffffff", fontWeight: 600 }}>
+                            <span className={styles.itemCountSpan}>
                               {pack.item_count}
                             </span>{" "}
-                            <span style={{ color: "#64748b", fontSize: 11 }}>items</span>
+                            <span className={styles.itemCountLabel}>items</span>
                           </td>
                           <td>
-                            <span className={styles.badgeTeal} style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                            <span className={`${styles.badgeTeal} ${styles.badgeIconWrap}`}>
                               <Eye size={12} /> {pack.visible ? "Visible" : "Hidden"}
                             </span>
                           </td>
@@ -301,8 +300,8 @@ export function SchoolPacksDetailView({
                             <span className={styles.badgeGreen}>Published</span>
                           </td>
                           <td>
-                            <div style={{ color: "#ffffff", fontWeight: 500 }}>May 21, 2024</div>
-                            <div style={{ color: "#64748b", fontSize: 11 }}>Liam Morgan</div>
+                            <div className={styles.textWhiteMedium}>May 21, 2024</div>
+                            <div className={styles.itemCountLabel}>Liam Morgan</div>
                           </td>
                           <td>
                             <div className={styles.actionIconBtnGroup}>
@@ -348,8 +347,8 @@ export function SchoolPacksDetailView({
                 <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
                 <button className={styles.pageBtn}>&gt;</button>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <select className={styles.selectInput} style={{ height: 26, padding: "0 4px", fontSize: 11 }}>
+              <div className={styles.paginationSelectWrap}>
+                <select className={`${styles.selectInput} ${styles.paginationSelect}`}>
                   <option>10 per page</option>
                   <option>20 per page</option>
                 </select>
@@ -364,26 +363,26 @@ export function SchoolPacksDetailView({
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <HeartPulse size={16} style={{ color: "#2dd4bf" }} />
+                <HeartPulse size={16} className={styles.iconTeal} />
                 <span>School Health</span>
               </div>
-              <span className={styles.badgeGreen} style={{ fontSize: 10 }}>Healthy</span>
+              <span className={`${styles.badgeGreen} ${styles.badgeTiny}`}>Healthy</span>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div className={styles.sidebarStack}>
               <div className={styles.sidebarStatRow}>
                 <span className={styles.sidebarStatLabel}>Grade Packs</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div className={styles.sidebarStatGroup}>
                   <span className={styles.sidebarStatVal}>{totalPacks} / {totalPacks}</span>
-                  <span style={{ color: "#34d399", fontWeight: 700, fontSize: 11 }}>100%</span>
+                  <span className={styles.sidebarStatPercent}>100%</span>
                 </div>
               </div>
 
               <div className={styles.sidebarStatRow}>
                 <span className={styles.sidebarStatLabel}>Published Packs</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div className={styles.sidebarStatGroup}>
                   <span className={styles.sidebarStatVal}>{publishedPacks}</span>
-                  <span style={{ color: "#34d399", fontWeight: 700, fontSize: 11 }}>100%</span>
+                  <span className={styles.sidebarStatPercent}>100%</span>
                 </div>
               </div>
 
@@ -403,45 +402,45 @@ export function SchoolPacksDetailView({
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Zap size={16} style={{ color: "#2dd4bf" }} />
+                <Zap size={16} className={styles.iconTeal} />
                 <span>Quick Actions</span>
               </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div className={styles.sidebarStack} style={{ gap: 8 }}>
               <Link
                 href={`/admin/packs/${schoolIdentifier}/add-pack`}
                 className={styles.quickActionItem}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Plus size={14} style={{ color: "#2dd4bf" }} />
+                <div className={styles.sidebarStatGroup}>
+                  <Plus size={14} className={styles.iconTeal} />
                   <span>Add new pack</span>
                 </div>
-                <ChevronRight size={14} style={{ color: "#64748b" }} />
+                <ChevronRight size={14} className={styles.iconMuted} />
               </Link>
 
               <button className={styles.quickActionItem} type="button">
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Copy size={14} style={{ color: "#2dd4bf" }} />
+                <div className={styles.sidebarStatGroup}>
+                  <Copy size={14} className={styles.iconTeal} />
                   <span>Duplicate existing pack</span>
                 </div>
-                <ChevronRight size={14} style={{ color: "#64748b" }} />
+                <ChevronRight size={14} className={styles.iconMuted} />
               </button>
 
               <button className={styles.quickActionItem} type="button">
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Download size={14} style={{ color: "#2dd4bf" }} />
+                <div className={styles.sidebarStatGroup}>
+                  <Download size={14} className={styles.iconTeal} />
                   <span>Import packs from template</span>
                 </div>
-                <ChevronRight size={14} style={{ color: "#64748b" }} />
+                <ChevronRight size={14} className={styles.iconMuted} />
               </button>
 
               <button className={styles.quickActionItem} type="button">
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Upload size={14} style={{ color: "#2dd4bf" }} />
+                <div className={styles.sidebarStatGroup}>
+                  <Upload size={14} className={styles.iconTeal} />
                   <span>Export school packs</span>
                 </div>
-                <ChevronRight size={14} style={{ color: "#64748b" }} />
+                <ChevronRight size={14} className={styles.iconMuted} />
               </button>
             </div>
           </div>
@@ -450,10 +449,10 @@ export function SchoolPacksDetailView({
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Clock size={16} style={{ color: "#2dd4bf" }} />
+                <Clock size={16} className={styles.iconTeal} />
                 <span>Recent Activity</span>
               </div>
-              <Link href="#" style={{ fontSize: 11, color: "#2dd4bf", textDecoration: "none" }}>
+              <Link href="#" className={styles.sidebarHeaderLink}>
                 View all
               </Link>
             </div>
