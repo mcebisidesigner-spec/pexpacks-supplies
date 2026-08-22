@@ -252,7 +252,6 @@ export function SchoolPacksDetailView({
                     <th>PRICE</th>
                     <th>ITEMS</th>
                     <th>VISIBILITY</th>
-                    <th>STATUS</th>
                     <th>LAST EDITED</th>
                     <th>ACTIONS</th>
                   </tr>
@@ -260,7 +259,7 @@ export function SchoolPacksDetailView({
                 <tbody>
                   {filteredPacks.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className={styles.emptyCell}>
+                      <td colSpan={6} className={styles.emptyCell}>
                         No grade packs found matching criteria.
                       </td>
                     </tr>
@@ -297,9 +296,6 @@ export function SchoolPacksDetailView({
                             </span>
                           </td>
                           <td>
-                            <span className={styles.badgeGreen}>Published</span>
-                          </td>
-                          <td>
                             <div className={styles.textWhiteMedium}>May 21, 2024</div>
                             <div className={styles.itemCountLabel}>Liam Morgan</div>
                           </td>
@@ -313,7 +309,6 @@ export function SchoolPacksDetailView({
                                 <Edit2 size={13} />
                               </Link>
                               <VisibleToggle id={pack.id} visible={pack.visible} />
-                              <DuplicateButton id={pack.id} title={pack.title} />
                               {deletePackAction && (
                                 <form action={deletePackAction.bind(null, pack.id)}>
                                   <ConfirmButton
@@ -407,7 +402,7 @@ export function SchoolPacksDetailView({
               </div>
             </div>
 
-            <div className={styles.sidebarStack} style={{ gap: 8 }}>
+            <div className={`${styles.sidebarStack} ${styles.gap8}`}>
               <Link
                 href={`/admin/packs/${schoolIdentifier}/add-pack`}
                 className={styles.quickActionItem}

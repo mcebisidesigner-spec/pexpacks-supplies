@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Trash2 } from "lucide-react";
 import { deleteItemAction } from "@/app/admin/items/actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -67,19 +68,10 @@ export function ItemsManager({ items }: ItemsManagerProps) {
                         >
                           <button
                             type="submit"
-                            className={styles.deleteButton}
-                            style={{
-                              background: "none",
-                              border: "none",
-                              color: "#f87171",
-                              cursor: "pointer",
-                              fontWeight: 600,
-                              fontSize: 13,
-                              padding: 0,
-                              fontFamily: "inherit",
-                            }}
+                            className={styles.iconBtnRed}
+                            title="Delete Item"
                           >
-                            Delete
+                            <Trash2 size={14} />
                           </button>
                         </form>
                       </div>

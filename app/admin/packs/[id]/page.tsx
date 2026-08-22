@@ -91,7 +91,7 @@ export default async function PackOrSchoolPacksPage({
             <div
               className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}
             >
-              <DollarSign size={16} />
+              <span className={styles.currencyText}>R</span>
             </div>
           </div>
           <div className={styles.metricValue}>{formattedPrice}</div>
@@ -168,14 +168,16 @@ export default async function PackOrSchoolPacksPage({
             schoolName={schoolName}
             packTitle={pack.title}
             showSubmit={false}
-          />
-          <PackItemsSection
-            packId={pack.id}
-            packTitle={pack.title}
-            items={items}
-            subtotal={subtotal}
-            mode="search"
-          />
+            title="Set Pack Grade & Items"
+          >
+            <PackItemsSection
+              packId={pack.id}
+              packTitle={pack.title}
+              items={items}
+              subtotal={subtotal}
+              mode="inlineSearch"
+            />
+          </PackPriceForm>
         </div>
 
         <div className={styles.sidebarColumn}>

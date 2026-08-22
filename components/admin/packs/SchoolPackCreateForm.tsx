@@ -6,11 +6,11 @@ import { useFormStatus } from "react-dom";
 import {
   Box,
   Building2,
-  DollarSign,
   Eye,
   FileText,
   Layers,
   Save,
+  Trash2,
 } from "lucide-react";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import GradePackItemSelector, {
@@ -191,7 +191,7 @@ export function SchoolPackCreateForm({
             <div
               className={`${coreStyles.metricIconWrapper} ${coreStyles.metricIconTeal}`}
             >
-              <DollarSign size={16} />
+              <span className={coreStyles.currencyText}>R</span>
             </div>
           </div>
           <div className={coreStyles.metricValue}>{formattedPrice}</div>
@@ -374,10 +374,11 @@ export function SchoolPackCreateForm({
                       <div className={itemStyles.actions}>
                         <button
                           type="button"
-                          className={itemStyles.deleteButton}
+                          className={itemStyles.iconBtnRed}
                           onClick={() => removeLine(line.id)}
+                          title="Delete Item"
                         >
-                          Delete
+                          <Trash2 size={14} />
                         </button>
                       </div>
                     </td>

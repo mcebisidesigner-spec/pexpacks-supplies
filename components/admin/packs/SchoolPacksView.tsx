@@ -517,9 +517,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                   <th>School Name</th>
                   <th>Grade Packs</th>
                   <th>Season</th>
-                  <th>Last Edited</th>
                   <th>Visibility</th>
-                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -555,14 +553,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       <span className={styles.seasonBadge}>{school.season}</span>
                     </td>
                     <td>
-                      <div>
-                        <div>{school.lastEdited}</div>
-                        <div style={{ fontSize: 10, color: "#64748b" }}>
-                          by {school.lastEditedBy}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
                       <span
                         className={
                           school.visibility === "visible"
@@ -572,16 +562,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       >
                         {school.visibility === "visible" ? "Visible" : "Hidden"}
                       </span>
-                    </td>
-                    <td>
-                      <button
-                        className={styles.actionBtnDots}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        <MoreHorizontal size={14} />
-                      </button>
                     </td>
                   </tr>
                 ))}
