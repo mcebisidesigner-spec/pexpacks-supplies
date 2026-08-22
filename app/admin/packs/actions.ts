@@ -52,9 +52,10 @@ export async function createSchoolPackAction(
   revalidatePath("/admin/packs");
   revalidatePath("/admin/packs", "layout");
   revalidatePath(`/admin/packs/${schoolRoute}`);
+  revalidatePath(`/admin/packs/${result.pack.slug || result.pack.id}`);
   revalidatePath("/schools");
   revalidatePath("/", "layout");
-  redirect(`/admin/packs/${encodeURIComponent(schoolRoute)}`);
+  redirect(`/admin/packs/${encodeURIComponent(result.pack.slug || result.pack.id)}`);
 }
 
 export async function updatePackAction(

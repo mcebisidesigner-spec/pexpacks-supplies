@@ -83,6 +83,7 @@ export function GradePackItemSelector({
       : null,
     fetcher,
   );
+  const matchingItems = Array.isArray(searchResults) ? searchResults : [];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -212,9 +213,9 @@ export function GradePackItemSelector({
         </div>
 
         {/* Search Results Dropdown Overlay */}
-        {isDropdownOpen && searchResults && searchResults.length > 0 && (
+        {isDropdownOpen && matchingItems.length > 0 && (
           <div className={styles.results}>
-            {searchResults.map((item) => {
+            {matchingItems.map((item) => {
               const itemTitle = item.title || item.name || "Stationery Item";
               const itemPrice = item.unit_price ?? item.price ?? 0;
               return (
@@ -226,6 +227,11 @@ export function GradePackItemSelector({
                 >
                   <div className={styles.resultInfo}>
                     <p className={styles.resultTitle}>{itemTitle}</p>
+                    {item.sku || item.category ? (
+                      <p className={styles.resultMeta}>
+                        {[item.sku, item.category].filter(Boolean).join(" / ")}
+                      </p>
+                    ) : null}
                     {item.description && (
                       <p className={styles.resultDesc}>{item.description}</p>
                     )}
@@ -245,7 +251,7 @@ export function GradePackItemSelector({
 
         {isDropdownOpen &&
           debouncedQuery.length >= 2 &&
-          searchResults?.length === 0 &&
+          matchingItems.length === 0 &&
           !isLoading && (
             <div className={styles.resultEmpty}>
               <AlertCircle className={styles.emptyIcon} />

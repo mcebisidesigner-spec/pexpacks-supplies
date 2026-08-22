@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
-import { inventoryItemNameKey } from "@/lib/admin/item-constants";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -24,12 +23,17 @@ export async function GET(request: Request) {
     const admin = createSupabaseAdminClient();
     const cleanQuery = query.trim();
 
-    // Fast ILIKE typeahead search across name and description
+    // Fast ILIKE typeahead search across the canonical master product fields.
     const { data, error } = await admin
       .from("master_products")
-      .select("id, name, description, specification, current_selling_price")
+      .select(
+        "id, sku, name, description, category, specification, current_selling_price",
+      )
       .eq("active", true)
-      .or(`sku.ilike.%${cleanQuery}%,name.ilike.%${cleanQuery}%,description.ilike.%${cleanQuery}%`)
+      .or(
+        `sku.ilike.%${cleanQuery}%,name.ilike.%${cleanQuery}%,description.ilike.%${cleanQuery}%`,
+      )
+      .order("name", { ascending: true })
       .limit(40);
 
     if (error) {
@@ -37,25 +41,21 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const seen = new Set<string>();
-    const items = [];
-    for (const item of data || []) {
-      const key = inventoryItemNameKey(item.name || "Stationery Item");
-      if (seen.has(key)) continue;
-      seen.add(key);
-      items.push({
-        id: item.id,
-        title: item.name || "Stationery Item",
-        description: item.description || "",
-        category: item.specification || undefined,
-        unit_price: Number(item.current_selling_price ?? 0),
-      });
-      if (items.length >= 8) break;
-    }
+    const items = (data || []).map((item) => ({
+      id: item.id,
+      sku: item.sku,
+      title: item.name || "Stationery Item",
+      description: item.description || "",
+      category: item.category || item.specification || undefined,
+      unit_price: Number(item.current_selling_price ?? 0),
+    }));
 
     return NextResponse.json(items);
   } catch (err) {
     console.error("[api/stationery/search] Unexpected error:", err);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
