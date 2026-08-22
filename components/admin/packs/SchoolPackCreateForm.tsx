@@ -158,16 +158,6 @@ export function SchoolPackCreateForm({
       <input type="hidden" name="visible" value="on" />
       <input ref={itemsInputRef} type="hidden" name="items" defaultValue="[]" />
 
-      {/* Top Breadcrumb */}
-      <div>
-        <Link
-          href={`/admin/packs/${schoolId}`}
-          className={`${coreStyles.secondaryBtn} ${coreStyles.backBtn}`}
-        >
-          <ArrowLeft size={14} /> Back to {schoolName}
-        </Link>
-      </div>
-
       {/* Header Title Row matching reference image */}
       <div className={coreStyles.headerRow}>
         <div className={coreStyles.headerTitleGroup}>
