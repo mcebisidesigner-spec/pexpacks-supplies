@@ -1,5 +1,14 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  Box,
+  DollarSign,
+  Eye,
+  EyeOff,
+  FileText,
+  Layers,
+  School,
+} from "lucide-react";
 import { notFound } from "next/navigation";
 import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getPack, listPacks } from "@/lib/admin/packs";
@@ -8,7 +17,7 @@ import { getSchool } from "@/lib/admin/schools";
 import { PackPriceForm } from "@/components/admin/packs/PackPriceForm";
 import { PackItemsSection } from "@/components/admin/packs/PackItemsSection";
 import { SchoolPacksDetailView } from "@/components/admin/views/SchoolPacksDetailView";
-import styles from "@/components/admin/packs/EditPack.module.css";
+import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface EditPackPageProps {
   params: Promise<{ id: string }>;
@@ -20,7 +29,6 @@ export default async function PackOrSchoolPacksPage({
   const session = await requireAdmin({ permission: "packs.view" });
   const { id } = await params;
 
-  // 1. Check if slug/ID matches a School (e.g. /admin/packs/3d-christian-academy)
   const school = await getSchool(id);
 
   if (school) {
@@ -35,7 +43,6 @@ export default async function PackOrSchoolPacksPage({
     );
   }
 
-  // 2. Otherwise, check if slug/ID matches a Grade Pack ID
   const { pack, items } = await getPack(id);
   if (!pack) notFound();
 
@@ -49,21 +56,100 @@ export default async function PackOrSchoolPacksPage({
   const backHref = schoolData
     ? `/admin/packs/${schoolData.slug || schoolData.id}`
     : "/admin/packs";
+  const itemCount = items.length;
+  const formattedSubtotal = `R ${subtotal.toFixed(2)}`;
+  const formattedPrice = `R ${(pack.price ?? 0).toFixed(2)}`;
 
   return (
-    <div className={styles.page}>
-      <section className={styles.editorPanel}>
-        <div className={styles.backRow}>
-          <Link href={backHref} className={styles.backLink}>
-            <ArrowLeft size={15} /> Back to [{schoolName}]
-          </Link>
+    <div className={styles.container}>
+      <Link
+        href={backHref}
+        className={styles.secondaryBtn}
+        style={{ height: 32, fontSize: 11, background: "transparent", border: "none", color: "#94a3b8", paddingLeft: 0 }}
+      >
+        <ArrowLeft size={14} /> Back to {schoolName}
+      </Link>
+
+      <div className={styles.headerRow}>
+        <div className={styles.headerTitleGroup}>
+          <h1 className={styles.headerTitle}>{pack.title}</h1>
+          <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>
+            {schoolName} &middot; {itemCount} items
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.metricsGrid5}>
+        <div className={styles.metricCard}>
+          <div className={styles.metricTop}>
+            <span className={styles.metricLabel}>Pack Price</span>
+            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+              <DollarSign size={16} />
+            </div>
+          </div>
+          <div className={styles.metricValue}>{formattedPrice}</div>
+          <div style={{ fontSize: 11, color: "#64748b" }}>Retail selling price</div>
         </div>
 
-        <div className={styles.stack}>
+        <div className={styles.metricCard}>
+          <div className={styles.metricTop}>
+            <span className={styles.metricLabel}>Item Subtotal</span>
+            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+              <Layers size={16} />
+            </div>
+          </div>
+          <div className={styles.metricValue}>{formattedSubtotal}</div>
+          <div style={{ fontSize: 11, color: "#64748b" }}>Sum of line items</div>
+        </div>
+
+        <div className={styles.metricCard}>
+          <div className={styles.metricTop}>
+            <span className={styles.metricLabel}>Items</span>
+            <div className={`${styles.metricIconWrapper} ${styles.metricIconBlue}`}>
+              <FileText size={16} />
+            </div>
+          </div>
+          <div className={styles.metricValue}>{itemCount}</div>
+          <div style={{ fontSize: 11, color: "#64748b" }}>Line items in pack</div>
+        </div>
+
+        <div className={styles.metricCard}>
+          <div className={styles.metricTop}>
+            <span className={styles.metricLabel}>School</span>
+            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+              <School size={16} />
+            </div>
+          </div>
+          <div className={styles.metricValue} style={{ fontSize: 16 }}>
+            {schoolData ? schoolName : "Unassigned"}
+          </div>
+          <div style={{ fontSize: 11, color: "#64748b" }}>
+            {schoolData?.province || ""}
+          </div>
+        </div>
+
+        <div className={styles.metricCard}>
+          <div className={styles.metricTop}>
+            <span className={styles.metricLabel}>Visibility</span>
+            <div className={`${styles.metricIconWrapper} ${styles.metricIconTeal}`}>
+              {pack.visible ? <Eye size={16} /> : <EyeOff size={16} />}
+            </div>
+          </div>
+          <div className={styles.metricValue} style={{ fontSize: 16 }}>
+            {pack.visible ? "Visible" : "Hidden"}
+          </div>
+          <div style={{ fontSize: 11, color: "#64748b" }}>
+            {pack.visible ? "Public listing" : "Draft / hidden"}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.detailLayout}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <PackPriceForm
             packId={pack.id}
             price={pack.price}
-            itemCount={items.length}
+            itemCount={itemCount}
             subtotal={subtotal}
             schoolName={schoolName}
             packTitle={pack.title}
@@ -77,7 +163,44 @@ export default async function PackOrSchoolPacksPage({
             showImporter={hasPermission(session, "items.import")}
           />
         </div>
-      </section>
+
+        <div className={styles.sidebarColumn}>
+          <div className={styles.sidebarCard}>
+            <div className={styles.sidebarCardHeader}>
+              <div className={styles.sidebarHeaderTitle}>
+                <Box size={16} style={{ color: "#2dd4bf" }} />
+                <span>Pack Summary</span>
+              </div>
+              <span className={styles.badgeGreen} style={{ fontSize: 10 }}>
+                {pack.visible ? "Live" : "Draft"}
+              </span>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div className={styles.sidebarStatRow}>
+                <span className={styles.sidebarStatLabel}>Title</span>
+                <span className={styles.sidebarStatVal}>{pack.title}</span>
+              </div>
+              <div className={styles.sidebarStatRow}>
+                <span className={styles.sidebarStatLabel}>Price</span>
+                <span className={styles.sidebarStatVal}>{formattedPrice}</span>
+              </div>
+              <div className={styles.sidebarStatRow}>
+                <span className={styles.sidebarStatLabel}>Subtotal</span>
+                <span className={styles.sidebarStatVal}>{formattedSubtotal}</span>
+              </div>
+              <div className={styles.sidebarStatRow}>
+                <span className={styles.sidebarStatLabel}>Items</span>
+                <span className={styles.sidebarStatVal}>{itemCount}</span>
+              </div>
+              <div className={styles.sidebarStatRow}>
+                <span className={styles.sidebarStatLabel}>School</span>
+                <span className={styles.sidebarStatVal}>{schoolName}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

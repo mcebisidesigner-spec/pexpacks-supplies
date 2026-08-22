@@ -5,7 +5,7 @@ import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";
 import { SchoolPackCreateForm } from "@/components/admin/packs/SchoolPackCreateForm";
 import { createSchoolPackAction } from "../../actions";
-import styles from "@/components/admin/packs/EditPack.module.css";
+import styles from "@/components/admin/views/CorePagesView.module.css";
 
 export const metadata = {
   title: "Add Pack | Admin | Pexpacks",
@@ -25,12 +25,14 @@ export default async function AddPackPage({ params }: AddPackPageProps) {
   const createAction = createSchoolPackAction.bind(null, school.id, schoolRoute);
 
   return (
-    <div className={styles.page}>
-      <p className={styles.backRow}>
-        <Link href={`/admin/packs/${schoolRoute}`} className={styles.backLink}>
-          <ArrowLeft aria-hidden="true" /> Back to {school.name}
-        </Link>
-      </p>
+    <div className={styles.container}>
+      <Link
+        href={`/admin/packs/${schoolRoute}`}
+        className={styles.secondaryBtn}
+        style={{ height: 32, fontSize: 11, background: "transparent", border: "none", color: "#94a3b8", paddingLeft: 0 }}
+      >
+        <ArrowLeft size={14} /> Back to {school.name}
+      </Link>
       <SchoolPackCreateForm
         schoolId={school.id}
         schoolName={school.name}

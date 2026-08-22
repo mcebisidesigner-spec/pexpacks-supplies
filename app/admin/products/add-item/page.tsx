@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ArrowLeft, Box, Save, ShoppingCart, Tag, Truck } from "lucide-react";
+import { ArrowLeft, Save, ShoppingCart, Tag, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import styles from "@/components/admin/views/CorePagesView.module.css";
-import adminStyles from "../../admin.module.css";
 
 export const metadata = {
   title: "Add Master Item | Admin | Pexpacks",
@@ -13,142 +12,91 @@ export default async function AddMasterItemPage() {
 
   return (
     <div className={styles.container}>
-      {/* Breadcrumb */}
       <div>
-        <Link
-          href="/admin/products"
-          className={styles.secondaryBtn}
-          style={{
-            height: 32,
-            fontSize: 11,
-            background: "transparent",
-            border: "none",
-            color: "#94a3b8",
-            paddingLeft: 0,
-          }}
-        >
+        <Link href="/admin/products" className={styles.backLink}>
           <ArrowLeft size={14} /> Back to Master Products
         </Link>
       </div>
 
-      {/* Header */}
       <div className={styles.headerRow}>
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>Add New Master Item</h1>
           <p className={styles.headerSubtitle}>
-            Create a central stationery master item for school packs and supplier purchase orders.
+            Create a central stationery master item for school packs and
+            supplier purchase orders.
           </p>
         </div>
       </div>
 
-      <form action="/admin/products" method="GET" className={styles.detailLayout}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          {/* Section 1: Item Identity */}
+      <form
+        action="/admin/products"
+        method="GET"
+        className={styles.detailLayout}
+      >
+        <div className={styles.formStack}>
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Tag size={16} style={{ color: "#2dd4bf" }} />
+                <Tag size={16} className={styles.iconTeal} />
                 <span>Item Identity & Categorisation</span>
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
-                  SKU / Item Code *
-                </label>
+            <div className={styles.formGrid2}>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>SKU / Item Code *</label>
                 <input
                   name="sku"
                   required
                   placeholder="e.g. PRO-1029"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.fieldControl}
                 />
               </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
-                  Item Name *
-                </label>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>Item Name *</label>
                 <input
                   name="name"
                   required
                   placeholder="e.g. Staedtler HB Pencils 12 Pack"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.fieldControl}
                 />
               </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
-                  Category
-                </label>
-                <select
-                  name="category"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
-                >
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>Category</label>
+                <select name="category" className={styles.fieldControl}>
                   <option value="Stationery">Stationery</option>
                   <option value="Paper & Books">Paper & Books</option>
-                  <option value="Writing Instruments">Writing Instruments</option>
+                  <option value="Writing Instruments">
+                    Writing Instruments
+                  </option>
                   <option value="Art & Craft">Art & Craft</option>
                 </select>
               </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
-                  Brand
-                </label>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>Brand</label>
                 <input
                   name="brand"
                   placeholder="e.g. Pritt / Staedtler / Croxley"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.fieldControl}
                 />
               </div>
             </div>
           </div>
 
-          {/* Section 2: Pricing & Commercial Terms */}
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <ShoppingCart size={16} style={{ color: "#34d399" }} />
+                <ShoppingCart size={16} className={styles.iconGreen} />
                 <span>Pricing & Commercials</span>
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
+            <div className={styles.formGrid3}>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>
                   Latest Purchase Cost (R) *
                 </label>
                 <input
@@ -157,121 +105,68 @@ export default async function AddMasterItemPage() {
                   name="cost_price"
                   required
                   placeholder="0.00"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.fieldControl}
                 />
               </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
-                  Selling Price (R) *
-                </label>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>Selling Price (R) *</label>
                 <input
                   type="number"
                   step="0.01"
                   name="sell_price"
                   required
                   placeholder="0.00"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.fieldControl}
                 />
               </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
-                  Unit / Pack Format
-                </label>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>Unit / Pack Format</label>
                 <input
                   name="unit"
                   placeholder="Each / Box / Pack"
                   defaultValue="Each"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.fieldControl}
                 />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Sidebar Actions */}
         <div className={styles.sidebarColumn}>
           <div className={styles.sidebarCard}>
             <div className={styles.sidebarCardHeader}>
               <div className={styles.sidebarHeaderTitle}>
-                <Truck size={16} style={{ color: "#60a5fa" }} />
+                <Truck size={16} className={styles.iconBlue} />
                 <span>Supplier & Availability</span>
               </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
-                  Preferred Supplier
-                </label>
-                <select
-                  name="supplier"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
-                >
+            <div className={styles.formStackCompact}>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>Preferred Supplier</label>
+                <select name="supplier" className={styles.fieldControl}>
                   <option value="Waltons">Waltons</option>
                   <option value="Bidvest">Bidvest Paperplus</option>
                   <option value="Croxley">Croxley South Africa</option>
                 </select>
               </div>
 
-              <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 6, color: "#cbd5e1" }}>
-                  Lead Time (Days)
-                </label>
+              <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>Lead Time (Days)</label>
                 <input
                   type="number"
                   name="lead_time"
                   defaultValue="3"
-                  style={{
-                    width: "100%",
-                    background: "#020617",
-                    border: "1px solid #334155",
-                    borderRadius: 8,
-                    padding: "8px 12px",
-                    color: "#ffffff",
-                    fontSize: 13,
-                  }}
+                  className={styles.fieldControl}
                 />
               </div>
 
-              <div style={{ paddingTop: 12 }}>
+              <div className={styles.actionBlock}>
                 <button
                   type="submit"
-                  className={styles.primaryBtn}
-                  style={{ width: "100%", justifyContent: "center" }}
+                  className={`${styles.primaryBtn} ${styles.fullWidthBtn}`}
                 >
                   <Save size={14} /> Save Master Item
                 </button>

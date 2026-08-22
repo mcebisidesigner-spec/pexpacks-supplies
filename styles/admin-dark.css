@@ -34,6 +34,28 @@ body:has(.admin-dark) {
 
   --admin-heading: #ffffff;
 
+  /* DB platform design language */
+  --db-bg: #070b12;
+  --db-sidebar: #070d18;
+  --db-surface: #0c1322;
+  --db-surface-strong: #020617;
+  --db-surface-hover: #111a2e;
+  --db-border: #1e293b;
+  --db-border-strong: #334155;
+  --db-text: #ffffff;
+  --db-text-muted: #94a3b8;
+  --db-text-soft: #cbd5e1;
+  --db-accent: #2dd4bf;
+  --db-accent-strong: #0d9488;
+  --db-accent-hover: #0f766e;
+  --db-green: #34d399;
+  --db-blue: #60a5fa;
+  --db-radius: 12px;
+  --db-radius-control: 8px;
+  --db-shadow-card: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --db-focus-ring: 0 0 0 3px rgba(45, 212, 191, 0.14);
+  --db-transition: 140ms ease;
+
   /* Status badge palettes */
   --badge-paid-bg: rgba(16, 185, 129, 0.14);
   --badge-paid-fg: #34d399;
