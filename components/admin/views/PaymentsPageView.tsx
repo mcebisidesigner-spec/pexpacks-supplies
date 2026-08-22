@@ -55,7 +55,7 @@ export function PaymentsPageView() {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Payments{" "}
-            <span className={styles.titleCount}>({filtered.length})</span>
+            <span className={styles.headerCount}>({filtered.length})</span>
           </h1>
           <p className={styles.headerSubtitle}>Monitor and reconcile all incoming payments.</p>
         </div>

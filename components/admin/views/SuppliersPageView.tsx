@@ -65,7 +65,7 @@ export function SuppliersPageView() {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Suppliers{" "}
-            <span className={styles.titleCount}>({suppliers.length})</span>
+            <span className={styles.headerCount}>({suppliers.length})</span>
           </h1>
           <p className={styles.headerSubtitle}>
             Manage your supplier network and performance.

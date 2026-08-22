@@ -61,7 +61,7 @@ export function MasterProductsPageView() {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Master Products{" "}
-            <span className={styles.titleCount}>({filtered.length})</span>
+            <span className={styles.headerCount}>({filtered.length})</span>
           </h1>
           <p className={styles.headerSubtitle}>Manage the master catalogue used across all school packs.</p>
         </div>

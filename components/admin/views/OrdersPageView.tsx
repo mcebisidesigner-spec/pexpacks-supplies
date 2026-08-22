@@ -48,7 +48,7 @@ export function OrdersPageView() {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Orders &amp; Commerce{" "}
-            <span className={styles.titleCount}>({filtered.length})</span>
+            <span className={styles.headerCount}>({filtered.length})</span>
           </h1>
           <p className={styles.headerSubtitle}>Order status lifecycle &amp; fulfillment tracking</p>
         </div>

@@ -155,7 +155,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         <div className={styles.headerTitleGroup}>
           <h1 className={styles.headerTitle}>
             Schools{" "}
-            <span className={`${styles["text-16"]} ${styles.cSubtle} ${styles["fw-500"]}`}>
+            <span className={styles.headerCount}>
               ({formatCount(total)})
             </span>
           </h1>
