@@ -23,6 +23,7 @@ interface PackItemsSectionProps {
   items: ItemRow[];
   subtotal: number;
   showImporter?: boolean;
+  mode?: "all" | "search" | "list";
 }
 
 export function PackItemsSection({
@@ -31,6 +32,7 @@ export function PackItemsSection({
   items,
   subtotal,
   showImporter = false,
+  mode = "all",
 }: PackItemsSectionProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -104,44 +106,53 @@ export function PackItemsSection({
 
   return (
     <>
-      <section className={styles.searchTotalRow} aria-label="Quick item editor">
-        <div className={styles.searchSlot}>
-          <GradePackItemSelector
-            key={signature}
-            initialItems={initialItems}
-            submitLabel="Save items"
-            busy={busy}
-            showSave={false}
-            hideList={true}
-            searchLabel=""
-            searchPlaceholder="Search items by item name"
-            variant="packEditor"
-            onSelectItem={handleSelectItem}
-            onSave={handleSave}
-          />
-        </div>
-        <div className={styles.totalChip} aria-label="Total price">
-          <span>Total</span>
-          {formatCurrency(subtotal)}
-        </div>
-        {message ? (
-          <p className={styles.importSuccess} role="status">
-            {message}
-          </p>
-        ) : null}
-      </section>
-      <ItemsManager items={items} />
-      {showImporter ? (
+      {mode !== "list" ? (
         <section
-          className={styles.csvBanner}
-          aria-label="Bulk CSV stationery import"
+          className={styles.searchTotalRow}
+          aria-label="Quick item editor"
         >
-          <CSVStationeryImporter
-            packs={[{ id: packId, title: packTitle }]}
-            variant="compact"
-            onImported={() => router.refresh()}
-          />
+          <div className={styles.searchSlot}>
+            <GradePackItemSelector
+              key={signature}
+              initialItems={initialItems}
+              submitLabel="Save items"
+              busy={busy}
+              showSave={false}
+              hideList={true}
+              searchLabel=""
+              searchPlaceholder="Search items by item name"
+              variant="packEditor"
+              onSelectItem={handleSelectItem}
+              onSave={handleSave}
+            />
+          </div>
+          <div className={styles.totalChip} aria-label="Total price">
+            <span>Total</span>
+            {formatCurrency(subtotal)}
+          </div>
+          {message ? (
+            <p className={styles.importSuccess} role="status">
+              {message}
+            </p>
+          ) : null}
         </section>
+      ) : null}
+      {mode !== "search" ? (
+        <>
+          <ItemsManager items={items} />
+          {showImporter ? (
+            <section
+              className={styles.csvBanner}
+              aria-label="Bulk CSV stationery import"
+            >
+              <CSVStationeryImporter
+                packs={[{ id: packId, title: packTitle }]}
+                variant="compact"
+                onImported={() => router.refresh()}
+              />
+            </section>
+          ) : null}
+        </>
       ) : null}
     </>
   );

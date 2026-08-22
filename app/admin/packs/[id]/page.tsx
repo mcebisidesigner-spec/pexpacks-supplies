@@ -169,6 +169,13 @@ export default async function PackOrSchoolPacksPage({
             packTitle={pack.title}
             showSubmit={false}
           />
+          <PackItemsSection
+            packId={pack.id}
+            packTitle={pack.title}
+            items={items}
+            subtotal={subtotal}
+            mode="search"
+          />
         </div>
 
         <div className={styles.sidebarColumn}>
@@ -217,6 +224,7 @@ export default async function PackOrSchoolPacksPage({
         items={items}
         subtotal={subtotal}
         showImporter={hasPermission(session, "items.import")}
+        mode="list"
       />
     </div>
   );
