@@ -22,15 +22,15 @@ export default async function AddPackPage({ params }: AddPackPageProps) {
   if (!school) notFound();
 
   const schoolRoute = school.slug || school.id;
-  const createAction = createSchoolPackAction.bind(null, school.id, schoolRoute);
+  const createAction = createSchoolPackAction.bind(
+    null,
+    school.id,
+    schoolRoute,
+  );
 
   return (
-    <div className={styles.container}>
-      <Link
-        href={`/admin/packs/${schoolRoute}`}
-        className={styles.secondaryBtn}
-        style={{ height: 32, fontSize: 11, background: "transparent", border: "none", color: "#94a3b8", paddingLeft: 0 }}
-      >
+    <div className={`${styles.container} ${styles.packEditorContainer}`}>
+      <Link href={`/admin/packs/${schoolRoute}`} className={styles.backLink}>
         <ArrowLeft size={14} /> Back to {school.name}
       </Link>
       <SchoolPackCreateForm
