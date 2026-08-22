@@ -40,36 +40,36 @@
   inset: 0 auto 0 0;
   display: flex;
   align-items: center;
-  padding-left: 12px;
+  padding-left: 16px;
   pointer-events: none;
   z-index: 5;
 }
 
 .searchIconGlyph {
-  width: 15px;
-  height: 15px;
-  color: #64748b;
+  width: 18px;
+  height: 18px;
+  color: #94a3b8;
 }
 
 .searchInput {
   width: 100%;
-  height: 40px;
-  min-height: 40px;
-  padding: 0 12px 0 38px;
-  border: 1px solid rgba(51, 65, 85, 0.72);
+  height: 44px;
+  min-height: 44px;
+  padding: 0 16px 0 48px;
+  border: 1px solid #1e293b;
   border-radius: 8px;
   background: #020617;
   color: #ffffff;
   font: inherit;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   outline: none;
   box-sizing: border-box;
   transition: all 140ms ease;
 }
 
 .searchInput::placeholder {
-  color: rgba(148, 163, 184, 0.75);
+  color: #64748b;
   font-weight: 500;
 }
 
@@ -88,34 +88,34 @@
 }
 
 .packEditor .searchWrap {
-  min-height: 40px;
+  min-height: 44px;
   background: transparent;
 }
 
 .packEditor .searchIconWrap {
-  padding-left: 12px;
+  padding-left: 16px;
 }
 
 .packEditor .searchIconGlyph {
-  width: 15px;
-  height: 15px;
-  color: #64748b;
+  width: 18px;
+  height: 18px;
+  color: #94a3b8;
 }
 
 .packEditor .searchInput {
-  min-height: 40px;
-  height: 40px;
+  min-height: 44px;
+  height: 44px;
   border-radius: 8px;
-  border: 1px solid rgba(51, 65, 85, 0.72);
+  border: 1px solid #1e293b;
   background: #020617;
   color: #ffffff;
-  padding-left: 38px;
-  font-size: 13px;
-  font-weight: 700;
+  padding-left: 48px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .packEditor .searchInput::placeholder {
-  color: rgba(148, 163, 184, 0.75);
+  color: #64748b;
   font-weight: 500;
 }
 
