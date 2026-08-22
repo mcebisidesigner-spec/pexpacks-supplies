@@ -60,15 +60,27 @@ export function ItemsManager({ items }: ItemsManagerProps) {
                     </td>
                     <td>
                       <div className={styles.actions}>
-                        <form action={deleteItemAction.bind(null, item.id)}>
-                          <ConfirmButton
-                            label="Delete"
-                            title="Delete Item"
-                            confirmLabel="Delete Item"
-                            confirmText={`Delete "${item.name}"?`}
-                            busyLabel="Deleting..."
+                        <form
+                          action={async () => {
+                            await deleteItemAction(item.id);
+                          }}
+                        >
+                          <button
+                            type="submit"
                             className={styles.deleteButton}
-                          />
+                            style={{
+                              background: "none",
+                              border: "none",
+                              color: "#f87171",
+                              cursor: "pointer",
+                              fontWeight: 600,
+                              fontSize: 13,
+                              padding: 0,
+                              fontFamily: "inherit",
+                            }}
+                          >
+                            Delete
+                          </button>
                         </form>
                       </div>
                     </td>
