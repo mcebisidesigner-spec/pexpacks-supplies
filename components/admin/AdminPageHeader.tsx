@@ -24,7 +24,7 @@ export function AdminPageHeader({
   backLabel,
   actions,
 }: AdminPageHeaderProps) {
-  const formattedCount = count !== undefined ? `(${count.toLocaleString()})` : undefined;
+  const formattedCount = count !== undefined ? `(${count.toLocaleString("en-US")})` : undefined;
 
   return (
     <div className={styles.headerWrapper}>
