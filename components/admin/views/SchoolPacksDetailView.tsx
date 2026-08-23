@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { VisibleToggle } from "@/components/admin/packs/VisibleToggle";
 import { DuplicateButton } from "@/components/admin/packs/DuplicateButton";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
@@ -106,35 +108,30 @@ export function SchoolPacksDetailView({
 
   return (
     <div className={styles.container}>
-      {/* Top Breadcrumb */}
-      <div>
-        <Link
-          href="/admin/packs"
-          className={`${styles.secondaryBtn} ${styles.backBtn}`}
-        >
-          <ArrowLeft size={14} /> Back to school packs
-        </Link>
-      </div>
-
       {/* Header Row */}
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>
-            {school.name}{" "}
-            <span className={styles.headerSubtitleBadge}>
-              {totalPacks} {totalPacks === 1 ? "Grade pack" : "Grade packs"}
-            </span>
-          </h1>
-        </div>
-        <div className={styles.headerActions}>
-          <Link
-            href={`/admin/packs/${schoolIdentifier}/add-pack`}
-            className={styles.primaryBtn}
-          >
-            <Plus size={14} /> Add pack
-          </Link>
-        </div>
-      </div>
+      <AdminPageHeader
+        title={school.name}
+        count={totalPacks}
+        subtitle={`${school.city || "Johannesburg"}, ${school.province || "Gauteng"} • Grade Pack Directory`}
+        actions={
+          <div style={{ display: "flex", gap: "8px" }}>
+            <AdminButton
+              href="/admin/packs"
+              variant="secondary"
+              icon={<ArrowLeft size={14} />}
+            >
+              All Schools
+            </AdminButton>
+            <AdminButton
+              href={`/admin/packs/${schoolIdentifier}/add-pack`}
+              variant="primary"
+              icon={<Plus size={14} />}
+            >
+              Add Pack
+            </AdminButton>
+          </div>
+        }
+      />
 
       {/* Metric Summary Row (5 cards) */}
       <div className={adminStyles.metricsGrid5}>

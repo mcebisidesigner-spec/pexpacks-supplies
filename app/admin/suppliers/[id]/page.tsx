@@ -1,6 +1,9 @@
-﻿import Link from "next/link";
-import { ArrowLeft, Building2, Clock, CreditCard, Edit2, Mail, Phone, Save, Truck } from "lucide-react";
+import { ArrowLeft, Building2, Clock, CreditCard, Edit2, Mail, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { MetricCard } from "@/components/admin/ui/AdminCard";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -19,127 +22,89 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
 
   return (
     <div className={styles.container}>
-      {/* Breadcrumb */}
-      <div>
-        <Link href="/admin/suppliers" className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}>
-          <ArrowLeft size={14} /> Back to Suppliers
-        </Link>
-      </div>
-
-      {/* Header */}
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>
-            {title}
-            <span className={adminStyles.badgeTeal}>Preferred Partner</span>
-          </h1>
-          <p className={styles.headerSubtitle}>Supplier Code: SUP-{id.toUpperCase().slice(0, 8)}</p>
-        </div>
-        <div className={styles.headerActions}>
-          <Link href={`/admin/suppliers/${id}/edit`} className={styles.primaryBtn}>
-            <Edit2 size={14} /> Edit Supplier
-          </Link>
-        </div>
-      </div>
+      <AdminPageHeader
+        title={title}
+        subtitle={`Supplier Code: SUP-${id.toUpperCase().slice(0, 8)}`}
+        actions={
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <StatusBadge status="Preferred Partner" tone="emerald" showDot />
+            <AdminButton
+              href="/admin/suppliers"
+              variant="secondary"
+              icon={<ArrowLeft size={14} />}
+            >
+              Back to Suppliers
+            </AdminButton>
+            <AdminButton
+              href={`/admin/suppliers/${id}/edit`}
+              variant="primary"
+              icon={<Edit2 size={14} />}
+            >
+              Edit Supplier
+            </AdminButton>
+          </div>
+        }
+      />
 
       {/* Metrics Grid */}
-      <div className={adminStyles.metricsGrid4}>
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>On-Time Delivery %</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconGreen}`}>
-              <Truck size={16} />
-            </div>
-          </div>
-          <div className={`${adminStyles.metricValue} ${adminStyles["c-green"]}`}>98.4%</div>
-          <div className={`${adminStyles["text-11"]} ${adminStyles["c-subtle"]}`}>Past 90 days performance</div>
-        </div>
-
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Avg. Quote Response</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}>
-              <Clock size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>2.1 hrs</div>
-          <div className={`${adminStyles["text-11"]} ${adminStyles["c-subtle"]}`}>Turnaround speed</div>
-        </div>
-
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Quoted Master Items</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
-              <Building2 size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>412</div>
-          <div className={`${adminStyles["text-11"]} ${adminStyles["c-subtle"]}`}>Catalogue items supplied</div>
-        </div>
-
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Payment Terms</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconAmber}`}>
-              <CreditCard size={16} />
-            </div>
-          </div>
-          <div
-            className={`${adminStyles.metricValue} ${adminStyles["text-18"]} ${adminStyles["mt-6"]} ${adminStyles["c-amber"]}`}
-          >
-            30 Days Net
-          </div>
-          <div className={`${adminStyles["text-11"]} ${adminStyles["c-subtle"]}`}>Agreed commercial term</div>
-        </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+        <MetricCard
+          label="On-Time Delivery %"
+          value="98.4%"
+          subtext="Past 90 days fulfillment"
+          icon={<Truck size={16} />}
+          iconTone="green"
+        />
+        <MetricCard
+          label="Avg. Response"
+          value="2.4 hrs"
+          subtext="Price update turnaround"
+          icon={<Clock size={16} />}
+          iconTone="blue"
+        />
+        <MetricCard
+          label="Active Catalogue"
+          value="1,420 Items"
+          subtext="Indexed stationery lines"
+          icon={<Building2 size={16} />}
+          iconTone="green"
+        />
+        <MetricCard
+          label="Payment Terms"
+          value="30 Days Net"
+          subtext="Trade credit account"
+          icon={<CreditCard size={16} />}
+          iconTone="amber"
+        />
       </div>
 
-      {/* Detail Layout */}
-      <div className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-18"]}`}>
+      <div className={adminStyles.detailBodyGrid}>
+        <div className={adminStyles.detailBodyMain}>
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
                 <Building2 size={16} className={adminStyles.iconTeal} />
-                <span>Supplier Master Details</span>
+                <span>Supplier Overview</span>
               </div>
             </div>
 
             <div className={adminStyles["grid-2equal"]}>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Supplier Name:</span>
+                <span className={adminStyles.sidebarStatLabel}>Company Name:</span>
                 <span className={adminStyles.sidebarStatVal}>{title}</span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Category:</span>
-                <span className={adminStyles.sidebarStatVal}>Stationery & Paper</span>
+                <span className={adminStyles.sidebarStatLabel}>Registration / VAT:</span>
+                <span className={adminStyles.sidebarStatVal}>4920182749</span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Procurement Email:</span>
-                <span className={`${adminStyles.sidebarStatVal} ${adminStyles["c-blue"]}`}>orders@{id}.co.za</span>
+                <span className={adminStyles.sidebarStatLabel}>Primary Email:</span>
+                <span className={adminStyles.sidebarStatVal}>orders@{id.toLowerCase()}.co.za</span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Standard Lead Time:</span>
-                <span className={adminStyles.sidebarStatVal}>2 - 3 business days</span>
+                <span className={adminStyles.sidebarStatLabel}>Warehouse City:</span>
+                <span className={adminStyles.sidebarStatVal}>Johannesburg, Gauteng</span>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={adminStyles.sidebarColumn}>
-          <div className={adminStyles.sidebarCard}>
-            <div className={adminStyles.sidebarCardHeader}>
-              <div className={adminStyles.sidebarHeaderTitle}>
-                <Phone size={16} className={adminStyles.iconTeal} />
-                <span>Primary Contacts</span>
-              </div>
-            </div>
-            <div className={adminStyles.sidebarStatRow}>
-              <span className={adminStyles.sidebarStatLabel}>Account Manager:</span>
-              <span className={adminStyles.sidebarStatVal}>Sarah Jenkins</span>
-            </div>
-            <div className={adminStyles.sidebarStatRow}>
-              <span className={adminStyles.sidebarStatLabel}>Phone:</span>
-              <span className={adminStyles.sidebarStatVal}>+27 11 987 6543</span>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
 import { ArrowLeft, Save, ShoppingCart, Tag, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -13,21 +14,19 @@ export default async function AddMasterItemPage() {
 
   return (
     <div className={styles.container}>
-      <div>
-        <Link href="/admin/products" className={adminStyles.backLink}>
-          <ArrowLeft size={14} /> Back to Master Products
-        </Link>
-      </div>
-
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>Add New Master Item</h1>
-          <p className={styles.headerSubtitle}>
-            Create a central stationery master item for school packs and
-            supplier purchase orders.
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Add New Master Item"
+        subtitle="Create a central stationery master item for school packs and supplier purchase orders."
+        actions={
+          <AdminButton
+            href="/admin/products"
+            variant="secondary"
+            icon={<ArrowLeft size={14} />}
+          >
+            Back to Products
+          </AdminButton>
+        }
+      />
 
       <form
         action="/admin/products"
@@ -39,7 +38,7 @@ export default async function AddMasterItemPage() {
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
                 <Tag size={16} className={adminStyles.iconTeal} />
-                <span>Item Identity & Categorisation</span>
+                <span>Item Identity &amp; Categorisation</span>
               </div>
             </div>
 
@@ -68,11 +67,11 @@ export default async function AddMasterItemPage() {
                 <label className={adminStyles.fieldLabel}>Category</label>
                 <select name="category" className={adminStyles.fieldControl}>
                   <option value="Stationery">Stationery</option>
-                  <option value="Paper & Books">Paper & Books</option>
+                  <option value="Paper & Books">Paper &amp; Books</option>
                   <option value="Writing Instruments">
                     Writing Instruments
                   </option>
-                  <option value="Art & Craft">Art & Craft</option>
+                  <option value="Art & Craft">Art &amp; Craft</option>
                 </select>
               </div>
 
@@ -91,7 +90,7 @@ export default async function AddMasterItemPage() {
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
                 <ShoppingCart size={16} className={adminStyles.iconGreen} />
-                <span>Pricing & Commercials</span>
+                <span>Pricing &amp; Commercials</span>
               </div>
             </div>
 
@@ -140,7 +139,7 @@ export default async function AddMasterItemPage() {
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
                 <Truck size={16} className={adminStyles.iconBlue} />
-                <span>Supplier & Availability</span>
+                <span>Supplier &amp; Availability</span>
               </div>
             </div>
 
@@ -148,8 +147,8 @@ export default async function AddMasterItemPage() {
               <div className={adminStyles.fieldGroup}>
                 <label className={adminStyles.fieldLabel}>Preferred Supplier</label>
                 <select name="supplier" className={adminStyles.fieldControl}>
-                  <option value="Waltons">Waltons</option>
-                  <option value="Bidvest">Bidvest Paperplus</option>
+                  <option value="Makro">Makro</option>
+                  <option value="BSC Stationers">BSC Stationers</option>
                   <option value="Croxley">Croxley South Africa</option>
                 </select>
               </div>

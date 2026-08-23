@@ -1,11 +1,12 @@
-﻿import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";
 import { SchoolForm } from "@/components/admin/schools/SchoolForm";
 import { updateSchoolAction } from "../../actions";
-import adminStyles from "@/app/admin/admin.module.css";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface EditSchoolPageProps {
@@ -27,32 +28,23 @@ export default async function EditSchoolPage({ params }: EditSchoolPageProps) {
 
   return (
     <div className={styles.container}>
-      {/* Breadcrumb */}
-      <div>
-        <Link
-          href={`/admin/schools/${schoolSlugOrId}/info`}
-          className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}
-        >
-          <ArrowLeft size={14} /> Back to {school.name}
-        </Link>
-      </div>
+      <AdminPageHeader
+        title={`Edit School: ${school.name}`}
+        subtitle="Update school profile, primary contacts, address, grades, search badge, logo, and partnership status."
+        actions={
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <StatusBadge status={school.status || "active"} showDot />
+            <AdminButton
+              href={`/admin/schools/${schoolSlugOrId}/info`}
+              variant="secondary"
+              icon={<ArrowLeft size={14} />}
+            >
+              Back to School
+            </AdminButton>
+          </div>
+        }
+      />
 
-      {/* Header */}
-      <div className={`${adminStyles.headerRow} ${adminStyles.mt8} ${adminStyles.mb12}`}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={`${styles.headerTitle} ${adminStyles.itemsCenter} ${adminStyles.gap10}`}>
-            Edit School: {school.name}
-            <span className={`${adminStyles.badgeGreen} ${styles.text11} ${adminStyles.fw600}`}>
-              <span className={adminStyles.text8}>●</span> {school.status ? school.status.toLowerCase() : "active"}
-            </span>
-          </h1>
-          <p className={`${adminStyles.text13} ${adminStyles.cMuted} ${adminStyles.mt4}`}>
-            Update school profile, primary contacts, address, grades, search badge, logo, and partnership status.
-          </p>
-        </div>
-      </div>
-
-      {/* Redesigned DB Design Language Form */}
       <SchoolForm
         school={school}
         action={updateSchoolAction.bind(null, school.id)}

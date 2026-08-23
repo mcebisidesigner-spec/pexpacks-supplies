@@ -1,6 +1,8 @@
-﻿import Link from "next/link";
 import { ArrowLeft, Barcode, CheckSquare, Save } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -31,23 +33,22 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
 
   return (
     <div className={styles.container}>
-      <div>
-        <Link href="/admin/fulfilment" className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}>
-          <ArrowLeft size={14} /> Back to Packing &amp; Fulfilment
-        </Link>
-      </div>
-
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>
-            Fulfilment Workbench: {orderNumber}
-            <span className={adminStyles.badgeTeal}>● In Packing</span>
-          </h1>
-          <p className={styles.headerSubtitle}>
-            School: 3d Christian Academy • Grade 4 Pack • Learner: Ethan Morgan • Opening: 15 Jan 2027
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title={`Fulfilment: ${orderNumber}`}
+        subtitle="School: Primrose Hill Primary • Grade 4 Pack • Learner: Ethan Morgan"
+        actions={
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <StatusBadge status="In Packing" tone="blue" showDot />
+            <AdminButton
+              href="/admin/fulfilment"
+              variant="secondary"
+              icon={<ArrowLeft size={14} />}
+            >
+              Back to Packing Queue
+            </AdminButton>
+          </div>
+        }
+      />
 
       {/* 6-Stage Stepper Bar */}
       <div className={`${adminStyles.tableCard} ${adminStyles.pCard}`}>
@@ -60,99 +61,90 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
               ? `${styles.primaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.stepBtnActive}`
               : item.done
                 ? `${styles.secondaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.stepBtnDone}`
-                : `${styles.secondaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.stepBtnInactive}`;
+                : `${styles.secondaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.opacity50}`;
+
             return (
-              <button key={idx} type="button" className={btnCls}>
-                {item.done ? "\u2713 " : ""}{item.stage}
+              <button key={idx} className={btnCls}>
+                {item.done ? "✓ " : `${idx + 1}. `} {item.stage}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Packing Workbench Layout */}
-      <div className={`${adminStyles.detailLayout} ${adminStyles.mt18}`}>
-        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
-          {/* Interactive Packing Checklist */}
-          <div className={adminStyles.tableCard}>
-            <div className={adminStyles.sectionHeaderBetween}>
-              <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles.gap8}`}>
-                <CheckSquare size={16} className={adminStyles.iconTeal} />
-                <span>Reusable Bag Items Checklist (4 of 5 Checked)</span>
-              </div>
-              <span className={adminStyles.badgeGreen}>80% Complete</span>
-            </div>
-
-            <div className={adminStyles.tableWrapper}>
-              <table className={styles.dataTable}>
-                <thead>
-                  <tr>
-                    <th className={adminStyles.w40}>CHECK</th>
-                    <th>ITEM DESCRIPTION</th>
-                    <th>QTY</th>
-                    <th>UNIT FORMAT</th>
-                    <th>STATUS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((itm, idx) => (
-                    <tr key={idx} className={`${styles.dataRow} ${itm.substitute ? adminStyles.rowHighlight : ""}`}>
-                      <td><input type="checkbox" defaultChecked={itm.checked} className={adminStyles.checkbox} /></td>
-                      <td className={itm.substitute ? `${adminStyles.cAmber} ${adminStyles.fw700}` : `${adminStyles.fw700}`}>{itm.name}</td>
-                      <td>{itm.qty}</td>
-                      <td>{itm.unit}</td>
-                      <td>
-                        {itm.packed
-                          ? <span className={adminStyles.badgeGreen}>Packed</span>
-                          : <span className={adminStyles.badgeAmber}>Pending Verification</span>}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+      {/* Packing Checklist */}
+      <div className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded18} ${adminStyles.mt18}`}>
+        <div className={`${adminStyles.headerRow} ${adminStyles.mb16}`}>
+          <div>
+            <h2 className={styles.sectionHeaderTitle}>Item Pack-Out &amp; Barcode Verification</h2>
+            <p className={styles.sectionSubtitle}>
+              Scan barcodes or manually verify stationery items into the school box.
+            </p>
+          </div>
+          <div className={`${adminStyles.badgeTeal} ${adminStyles.fw700}`}>
+            4 / 5 Items Packed (80%)
           </div>
         </div>
 
-        {/* Packing Notes & Barcode Panel */}
-        <div className={adminStyles.sidebarColumn}>
-          <form action="/admin/fulfilment" method="GET" className={adminStyles.sidebarCard}>
-            <div className={adminStyles.sidebarCardHeader}>
-              <div className={adminStyles.sidebarHeaderTitle}>
-                <Barcode size={16} className={adminStyles.iconTeal} />
-                <span>Bag Tracking &amp; Staff Log</span>
-              </div>
-            </div>
+        <div className={adminStyles.tableWrapper}>
+          <table className={adminStyles.table}>
+            <thead>
+              <tr>
+                <th className={adminStyles.w40}>Pack</th>
+                <th>Stationery Item</th>
+                <th className={adminStyles.w100}>Target Qty</th>
+                <th className={adminStyles.w120}>Format</th>
+                <th className={adminStyles.w140}>Verification</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((row, idx) => (
+                <tr key={idx}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      defaultChecked={row.checked}
+                      className={adminStyles.checkboxAccented}
+                    />
+                  </td>
+                  <td>
+                    <div className={adminStyles.fw600}>
+                      {row.name}
+                      {row.substitute && (
+                        <span className={`${adminStyles.badgeAmber} ${adminStyles.ml8} ${styles.text11}`}>
+                          Substituted Line
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td>
+                    <strong className={adminStyles.fw700}>{row.qty}</strong>
+                  </td>
+                  <td className={adminStyles.cMuted}>{row.unit}</td>
+                  <td>
+                    {row.packed ? (
+                      <span className={`${adminStyles.badgeGreen} ${styles.text11}`}>
+                        <CheckSquare size={12} className={adminStyles.mr4} /> Verified
+                      </span>
+                    ) : (
+                      <span className={`${adminStyles.badgeAmber} ${styles.text11}`}>
+                        <Barcode size={12} className={adminStyles.mr4} /> Scan SKU
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-            <div className={adminStyles.formField}>
-              <div>
-                <label className={adminStyles.formLabel}>Fabric Bag Barcode / Serial</label>
-                <input name="bag_serial" defaultValue="BAG-3DCA-8492" className={`${adminStyles.inputField} ${adminStyles.inputFieldMono}`} />
-              </div>
-              <div>
-                <label className={adminStyles.formLabel}>Assigned Packer</label>
-                <select name="packer" defaultValue="Kwanele G." className={adminStyles.selectField}>
-                  <option value="Kwanele G.">Kwanele G. (Lead Packer)</option>
-                  <option value="Mcebisi M.">Mcebisi M.</option>
-                  <option value="Liam M.">Liam M.</option>
-                </select>
-              </div>
-              <div>
-                <label className={adminStyles.formLabel}>Packing Notes / Substitution Exceptions</label>
-                <textarea
-                  name="notes"
-                  rows={3}
-                  defaultValue="Substituted blue shatterproof ruler with clear 30cm ruler due to supplier stock buffer."
-                  className={adminStyles.textareaField}
-                />
-              </div>
-              <div className={adminStyles.pt8}>
-                <button type="submit" className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}>
-                  <Save size={14} /> Save Packing Log
-                </button>
-              </div>
-            </div>
-          </form>
+        <div className={`${adminStyles.flex} ${adminStyles.justifyBetween} ${adminStyles.itemsCenter} ${adminStyles.mt18} ${adminStyles.pt14} ${adminStyles.borderTopDark}`}>
+          <button className={styles.secondaryBtn}>
+            <Barcode size={14} /> Scan Next Item
+          </button>
+          <button className={`${styles.primaryBtn} ${adminStyles.px24}`}>
+            <Save size={14} /> Complete Pack-Out &amp; Print Box Label
+          </button>
         </div>
       </div>
     </div>

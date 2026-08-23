@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
 import { ArrowLeft, Building2, CreditCard, Mail, Save } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -23,20 +24,19 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
 
   return (
     <div className={styles.container}>
-      <div>
-        <Link href={`/admin/suppliers/${id}`} className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}>
-          <ArrowLeft size={14} /> Back to {title}
-        </Link>
-      </div>
-
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>Edit Supplier — {title}</h1>
-          <p className={styles.headerSubtitle}>
-            Update supplier contact details, lead times, and commercial terms.
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title={`Edit Supplier — ${title}`}
+        subtitle="Update supplier contact details, lead times, and commercial terms."
+        actions={
+          <AdminButton
+            href={`/admin/suppliers/${id}`}
+            variant="secondary"
+            icon={<ArrowLeft size={14} />}
+          >
+            Back to Supplier
+          </AdminButton>
+        }
+      />
 
       <form action={`/admin/suppliers/${id}`} method="GET" className={adminStyles.detailLayout}>
         <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
@@ -72,14 +72,14 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
                 <label className={adminStyles.formLabel}>Primary Contact Person</label>
                 <input
                   name="contact_person"
-                  defaultValue="Account Manager"
+                  defaultValue="Account Representative"
                   className={adminStyles.inputField}
                 />
               </div>
 
               <div>
                 <label className={adminStyles.formLabel}>Status</label>
-                <select name="status" defaultValue="Preferred" className={adminStyles.inputField}>
+                <select name="status" className={adminStyles.inputField} defaultValue="Preferred">
                   <option value="Preferred">Preferred Partner</option>
                   <option value="Approved">Approved Supplier</option>
                   <option value="Prospect">Prospect</option>
@@ -102,7 +102,7 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
                 <input
                   type="email"
                   name="email"
-                  defaultValue={`orders@${id}.co.za`}
+                  defaultValue={`orders@${id.toLowerCase()}.co.za`}
                   required
                   className={adminStyles.inputField}
                 />
@@ -144,14 +144,14 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
                 <input
                   type="number"
                   name="lead_time"
-                  defaultValue="2"
+                  defaultValue="3"
                   className={adminStyles.inputField}
                 />
               </div>
 
               <div className={adminStyles.pt12}>
                 <button type="submit" className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}>
-                  <Save size={14} /> Save Changes
+                  <Save size={14} /> Update Supplier
                 </button>
               </div>
             </div>

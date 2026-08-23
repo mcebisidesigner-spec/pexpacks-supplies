@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
-import { ArrowLeft, Building2, CreditCard, Mail, Phone, Save, Truck } from "lucide-react";
+import { ArrowLeft, Building2, CreditCard, Mail, Save } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -13,20 +14,19 @@ export default async function NewSupplierPage() {
 
   return (
     <div className={styles.container}>
-      <div>
-        <Link href="/admin/suppliers" className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}>
-          <ArrowLeft size={14} /> Back to Suppliers
-        </Link>
-      </div>
-
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>Onboard New Supplier</h1>
-          <p className={styles.headerSubtitle}>
-            Add a stationery manufacturer or distributor to the Pexpacks procurement network.
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Onboard New Supplier"
+        subtitle="Add a stationery manufacturer or distributor to the Pexpacks procurement network."
+        actions={
+          <AdminButton
+            href="/admin/suppliers"
+            variant="secondary"
+            icon={<ArrowLeft size={14} />}
+          >
+            Back to Suppliers
+          </AdminButton>
+        }
+      />
 
       <form action="/admin/suppliers" method="GET" className={adminStyles.detailLayout}>
         <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
@@ -45,7 +45,7 @@ export default async function NewSupplierPage() {
                 <input
                   name="name"
                   required
-                  placeholder="e.g. Waltons Stationery Supplies"
+                  placeholder="e.g. Makro Trade Solutions"
                   className={adminStyles.inputField}
                 />
               </div>
@@ -54,7 +54,7 @@ export default async function NewSupplierPage() {
                 <label className={adminStyles.formLabel}>Supplier Code / Ref</label>
                 <input
                   name="code"
-                  placeholder="e.g. SUP-WALTONS-01"
+                  placeholder="e.g. SUP-MAKRO-01"
                   className={adminStyles.inputField}
                 />
               </div>
@@ -63,7 +63,7 @@ export default async function NewSupplierPage() {
                 <label className={adminStyles.formLabel}>Primary Contact Person</label>
                 <input
                   name="contact_person"
-                  placeholder="e.g. Sarah Jenkins"
+                  placeholder="e.g. Accounts Manager"
                   className={adminStyles.inputField}
                 />
               </div>
