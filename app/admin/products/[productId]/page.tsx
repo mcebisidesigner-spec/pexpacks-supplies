@@ -87,7 +87,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               <TrendingUp size={16} />
             </div>
           </div>
-          <div className={`${adminStyles.metricValue} ${styles["c-green"]}`}>{margin.toFixed(1)}%</div>
+          <div className={`${adminStyles.metricValue} ${adminStyles["c-green"]}`}>{margin.toFixed(1)}%</div>
           <div className={adminStyles.metricSub}>Unit profit margin</div>
         </div>
 
@@ -104,11 +104,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
       </div>
 
       <div className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
+        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-18"]}`}>
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
-                <Barcode size={16} className={styles["c-teal"]} />
+                <Barcode size={16} className={adminStyles["c-teal"]} />
                 <span>Barcode & SKU Mappings</span>
               </div>
             </div>
@@ -122,7 +122,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             </div>
             <div className={adminStyles.sidebarStatRow}>
               <span className={adminStyles.sidebarStatLabel}>Primary Supplier:</span>
-              <span className={`${adminStyles.sidebarStatVal} ${styles["c-blue"]}`}>{supplierName}</span>
+              <span className={`${adminStyles.sidebarStatVal} ${adminStyles["c-blue"]}`}>{supplierName}</span>
             </div>
           </div>
         </div>

@@ -72,7 +72,7 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
 
       {/* Packing Workbench Layout */}
       <div className={`${adminStyles.detailLayout} ${adminStyles.mt18}`}>
-        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap18}`}>
+        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
           {/* Interactive Packing Checklist */}
           <div className={adminStyles.tableCard}>
             <div className={adminStyles.sectionHeaderBetween}>

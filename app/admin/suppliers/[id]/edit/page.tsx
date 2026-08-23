@@ -39,7 +39,7 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
       </div>
 
       <form action={`/admin/suppliers/${id}`} method="GET" className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap18}`}>
+        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>

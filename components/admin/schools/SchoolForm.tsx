@@ -92,58 +92,58 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             </div>
           </div>
 
-          <div className={adminStyles.grid2equal}>
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="name">School Name *</label>
+          <div className={adminStyles.formGrid3Col}>
+            <div className={adminStyles.formFieldGroup}>
+              <label className={adminStyles.formFieldLabel} htmlFor="name">School Name *</label>
               <input id="name" name="name" defaultValue={school?.name ?? ""} placeholder="e.g. Sunnyvale Primary School" required className={adminStyles.inputField} />
               {err("name")}
             </div>
 
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="slug">URL Slug / Identifier</label>
+            <div className={adminStyles.formFieldGroup}>
+              <label className={adminStyles.formFieldLabel} htmlFor="slug">URL Slug / Identifier</label>
               <input id="slug" name="slug" defaultValue={str(school?.slug)} placeholder="auto-generated from name" className={adminStyles.inputField} />
-              <span className={`${styles.text11} ${adminStyles.cSubtle} ${adminStyles.mt4} ${adminStyles.block}`}>Used in public URLs. Leave blank to auto-generate.</span>
+              <span className={adminStyles.formFieldHelper}>Used in public URLs. Leave blank to auto-generate.</span>
               {err("slug")}
             </div>
 
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="city">City / Town</label>
+            <div className={adminStyles.formFieldGroup}>
+              <label className={adminStyles.formFieldLabel} htmlFor="city">City / Town</label>
               <input id="city" name="city" defaultValue={str(school?.city)} placeholder="e.g. Pretoria" className={adminStyles.inputField} />
               {err("city")}
             </div>
 
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="province">Province</label>
+            <div className={adminStyles.formFieldGroup}>
+              <label className={adminStyles.formFieldLabel} htmlFor="province">Province</label>
               <input id="province" name="province" defaultValue={str(school?.province)} placeholder="e.g. Gauteng" className={adminStyles.inputField} />
               {err("province")}
             </div>
 
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="district">District</label>
+            <div className={adminStyles.formFieldGroup}>
+              <label className={adminStyles.formFieldLabel} htmlFor="district">District</label>
               <input id="district" name="district" defaultValue={str(school?.district)} placeholder="e.g. Tshwane South" className={adminStyles.inputField} />
               {err("district")}
             </div>
 
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="email">Contact Email</label>
+            <div className={adminStyles.formFieldGroup}>
+              <label className={adminStyles.formFieldLabel} htmlFor="email">Contact Email</label>
               <input id="email" name="email" type="email" defaultValue={str(school?.email)} placeholder="admin@school.co.za" className={adminStyles.inputField} />
               {err("email")}
             </div>
 
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="telephone">Telephone</label>
+            <div className={adminStyles.formFieldGroup}>
+              <label className={adminStyles.formFieldLabel} htmlFor="telephone">Telephone</label>
               <input id="telephone" name="telephone" defaultValue={str(school?.telephone)} placeholder="+27 12 000 0000" className={adminStyles.inputField} />
               {err("telephone")}
             </div>
 
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="principal">Principal / Headmaster</label>
+            <div className={adminStyles.formFieldGroup}>
+              <label className={adminStyles.formFieldLabel} htmlFor="principal">Principal / Headmaster</label>
               <input id="principal" name="principal" defaultValue={str(school?.principal)} placeholder="e.g. Dr. A. Smith" className={adminStyles.inputField} />
               {err("principal")}
             </div>
 
-            <div style={{ gridColumn: "span 2" }}>
-              <label className={adminStyles.formLabel} htmlFor="address">Physical Address</label>
+            <div className={`${adminStyles.formFieldGroup} ${adminStyles.formGrid3ColFull}`}>
+              <label className={adminStyles.formFieldLabel} htmlFor="address">Physical Address</label>
               <input id="address" name="address" defaultValue={str(school?.address)} placeholder="e.g. 45 School Road, Centurion" className={adminStyles.inputField} />
               {err("address")}
             </div>
@@ -170,41 +170,41 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               {err("description")}
             </div>
 
-            <div className={adminStyles.grid2equal}>
-              <div>
-                <label className={adminStyles.formLabel} htmlFor="grades">Offered Grades</label>
+            <div className={adminStyles.formGrid3Col}>
+              <div className={adminStyles.formFieldGroup}>
+                <label className={adminStyles.formFieldLabel} htmlFor="grades">Offered Grades</label>
                 <input id="grades" name="grades" defaultValue={grades} placeholder="Grade R, Grade 1, Grade 2" className={adminStyles.inputField} />
-                <span className={`${styles.text11} ${adminStyles.cSubtle} ${adminStyles.mt4} ${adminStyles.block}`}>Comma-separated grade names.</span>
+                <span className={adminStyles.formFieldHelper}>Comma-separated grade names.</span>
                 {err("grades")}
               </div>
 
-              <div>
-                <label className={adminStyles.formLabel} htmlFor="custom_badge">Search Pill Badge</label>
+              <div className={adminStyles.formFieldGroup}>
+                <label className={adminStyles.formFieldLabel} htmlFor="custom_badge">Search Pill Badge</label>
                 <input id="custom_badge" name="custom_badge" defaultValue={str(school?.custom_badge) || "2026 Packs"} placeholder="e.g. 2026 Packs" className={adminStyles.inputField} />
-                <span className={`${styles.text11} ${adminStyles.cSubtle} ${adminStyles.mt4} ${adminStyles.block}`}>Badge shown on search cards (e.g. 2026 Packs).</span>
+                <span className={adminStyles.formFieldHelper}>Badge shown on search cards (e.g. 2026 Packs).</span>
                 {err("custom_badge")}
               </div>
 
-              <div>
-                <label className={adminStyles.formLabel} htmlFor="lowest_price">Lowest Pack Price (R)</label>
+              <div className={adminStyles.formFieldGroup}>
+                <label className={adminStyles.formFieldLabel} htmlFor="lowest_price">Lowest Pack Price (R)</label>
                 <input id="lowest_price" name="lowest_price" inputMode="decimal" defaultValue={str(school?.lowest_price)} placeholder="e.g. 245.00" className={adminStyles.inputField} />
                 {err("lowest_price")}
               </div>
 
-              <div>
-                <label className={adminStyles.formLabel} htmlFor="partner_since">Partner Since Date</label>
+              <div className={adminStyles.formFieldGroup}>
+                <label className={adminStyles.formFieldLabel} htmlFor="partner_since">Partner Since Date</label>
                 <DateField id="partner_since" name="partner_since" className={adminStyles.searchInput} defaultValue={str(school?.partner_since)} ariaLabel="Partner since" placeholder="Select partnership date" />
                 {err("partner_since")}
               </div>
 
-              <div>
-                <label className={adminStyles.formLabel} htmlFor="latitude">Latitude</label>
+              <div className={adminStyles.formFieldGroup}>
+                <label className={adminStyles.formFieldLabel} htmlFor="latitude">Latitude</label>
                 <input id="latitude" name="latitude" inputMode="decimal" defaultValue={str(school?.latitude)} placeholder="e.g. -25.7479" className={adminStyles.inputField} />
                 {err("latitude")}
               </div>
 
-              <div>
-                <label className={adminStyles.formLabel} htmlFor="longitude">Longitude</label>
+              <div className={adminStyles.formFieldGroup}>
+                <label className={adminStyles.formFieldLabel} htmlFor="longitude">Longitude</label>
                 <input id="longitude" name="longitude" inputMode="decimal" defaultValue={str(school?.longitude)} placeholder="e.g. 28.2293" className={adminStyles.inputField} />
                 {err("longitude")}
               </div>

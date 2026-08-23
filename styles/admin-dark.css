@@ -5,14 +5,14 @@
 
 :root {
   /* ── Backgrounds ── */
-  --a-bg: #020617;
+  --a-bg: #070b12;
   --a-surface: #0c1322;
-  --a-surface-2: #111a2e;
+  --a-surface-2: #090e17;
   --a-surface-3: #1e293b;
 
   /* ── Borders ── */
-  --a-border: #1e293b;
-  --a-border-strong: #334155;
+  --a-border: rgba(30, 41, 59, 0.9);
+  --a-border-strong: rgba(30, 41, 59, 0.6);
 
   /* ── Text ── */
   --a-text: #ffffff;
@@ -20,26 +20,32 @@
   --a-text-3: #94a3b8;
   --a-text-4: #64748b;
 
-  /* ── Accent (teal) ── */
-  --a-accent: #2dd4bf;
-  --a-accent-strong: #0d9488;
-  --a-accent-hover: #0f766e;
-  --a-accent-subtle: rgba(45, 212, 191, 0.14);
+  /* ── Accent (emerald) ── */
+  --a-accent: #10b981;
+  --a-accent-strong: #059669;
+  --a-accent-hover: #047857;
+  --a-accent-subtle: rgba(16, 185, 129, 0.14);
 
   /* ── Status colours ── */
   --a-green: #34d399;
-  --a-green-subtle: rgba(52, 211, 153, 0.14);
+  --a-green-subtle: rgba(16, 185, 129, 0.1);
   --a-blue: #60a5fa;
-  --a-blue-subtle: rgba(96, 165, 250, 0.14);
+  --a-blue-subtle: rgba(96, 165, 250, 0.1);
   --a-amber: #fbbf24;
-  --a-amber-subtle: rgba(251, 191, 36, 0.14);
+  --a-amber-subtle: rgba(251, 191, 36, 0.1);
   --a-red: #f87171;
-  --a-red-subtle: rgba(248, 113, 113, 0.14);
+  --a-red-subtle: rgba(248, 113, 113, 0.1);
   --a-purple: #c084fc;
   --a-purple-subtle: rgba(192, 132, 252, 0.14);
 
+  /* ── Status badge border variants ── */
+  --a-green-border: rgba(16, 185, 129, 0.2);
+  --a-blue-border: rgba(96, 165, 250, 0.2);
+  --a-amber-border: rgba(251, 191, 36, 0.2);
+  --a-red-border: rgba(248, 113, 113, 0.2);
+
   /* ── Radii ── */
-  --a-radius: 12px;
+  --a-radius: 16px;
   --a-radius-sm: 8px;
   --a-radius-xs: 6px;
   --a-radius-pill: 999px;
@@ -47,8 +53,8 @@
   /* ── Shadows ── */
   --a-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   --a-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
-  --a-shadow-glow: 0 0 14px rgba(45, 212, 191, 0.14);
-  --a-focus-ring: 0 0 0 3px rgba(45, 212, 191, 0.14);
+  --a-shadow-glow: 0 0 14px rgba(16, 185, 129, 0.14);
+  --a-focus-ring: 0 0 0 3px rgba(16, 185, 129, 0.18);
 
   /* ── Transition ── */
   --a-transition: 140ms ease;

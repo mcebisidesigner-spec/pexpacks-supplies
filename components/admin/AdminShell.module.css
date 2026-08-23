@@ -28,7 +28,7 @@
   height: 100dvh;
   flex: 0 0 256px;
   flex-direction: column;
-  background: #070d18;
+  background: var(--a-surface);
   border-right: 1px solid var(--a-border);
   box-sizing: border-box;
   overflow: visible;
@@ -289,7 +289,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 10px 24px;
-  background: rgba(2, 6, 23, 0.94);
+  background: var(--a-surface);
   border-bottom: 1px solid var(--a-border);
   backdrop-filter: blur(12px);
 }
@@ -449,7 +449,7 @@
   color: var(--a-text);
   font-size: 9px;
   font-weight: 700;
-  border: 2px solid #070d18;
+  border: 2px solid var(--a-surface);
 }
 
 .content {

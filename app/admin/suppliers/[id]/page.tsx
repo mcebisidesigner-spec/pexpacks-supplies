@@ -51,8 +51,8 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
               <Truck size={16} />
             </div>
           </div>
-          <div className={`${adminStyles.metricValue} ${styles["c-green"]}`}>98.4%</div>
-          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Past 90 days performance</div>
+          <div className={`${adminStyles.metricValue} ${adminStyles["c-green"]}`}>98.4%</div>
+          <div className={`${adminStyles["text-11"]} ${adminStyles["c-subtle"]}`}>Past 90 days performance</div>
         </div>
 
         <div className={adminStyles.metricCard}>
@@ -63,7 +63,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
             </div>
           </div>
           <div className={adminStyles.metricValue}>2.1 hrs</div>
-          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Turnaround speed</div>
+          <div className={`${adminStyles["text-11"]} ${adminStyles["c-subtle"]}`}>Turnaround speed</div>
         </div>
 
         <div className={adminStyles.metricCard}>
@@ -74,7 +74,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
             </div>
           </div>
           <div className={adminStyles.metricValue}>412</div>
-          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Catalogue items supplied</div>
+          <div className={`${adminStyles["text-11"]} ${adminStyles["c-subtle"]}`}>Catalogue items supplied</div>
         </div>
 
         <div className={adminStyles.metricCard}>
@@ -85,17 +85,17 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
             </div>
           </div>
           <div
-            className={`${adminStyles.metricValue} ${styles["text-18"]} ${styles["mt-6"]} ${styles["c-amber"]}`}
+            className={`${adminStyles.metricValue} ${adminStyles["text-18"]} ${adminStyles["mt-6"]} ${adminStyles["c-amber"]}`}
           >
             30 Days Net
           </div>
-          <div className={`${styles["text-11"]} ${styles["c-subtle"]}`}>Agreed commercial term</div>
+          <div className={`${adminStyles["text-11"]} ${adminStyles["c-subtle"]}`}>Agreed commercial term</div>
         </div>
       </div>
 
       {/* Detail Layout */}
       <div className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${styles["gap-18"]}`}>
+        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-18"]}`}>
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
@@ -104,7 +104,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
               </div>
             </div>
 
-            <div className={styles["grid-2equal"]}>
+            <div className={adminStyles["grid-2equal"]}>
               <div className={adminStyles.sidebarStatRow}>
                 <span className={adminStyles.sidebarStatLabel}>Supplier Name:</span>
                 <span className={adminStyles.sidebarStatVal}>{title}</span>
@@ -115,7 +115,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
               </div>
               <div className={adminStyles.sidebarStatRow}>
                 <span className={adminStyles.sidebarStatLabel}>Procurement Email:</span>
-                <span className={`${adminStyles.sidebarStatVal} ${styles["c-blue"]}`}>orders@{id}.co.za</span>
+                <span className={`${adminStyles.sidebarStatVal} ${adminStyles["c-blue"]}`}>orders@{id}.co.za</span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
                 <span className={adminStyles.sidebarStatLabel}>Standard Lead Time:</span>

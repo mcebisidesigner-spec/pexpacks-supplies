@@ -46,7 +46,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
       </div>
 
       <div className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap18}`}>
+        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
@@ -127,7 +127,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
                 <span>Task Metadata</span>
               </div>
             </div>
-            <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap10}`}>
+            <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap10}`}>
               <div className={adminStyles.sidebarStatRow}>
                 <span className={adminStyles.sidebarStatLabel}>Assignee:</span>
                 <span className={adminStyles.sidebarStatVal}>Mcebisi M.</span>

@@ -35,7 +35,7 @@ export default async function AddItemPage() {
             <ArrowLeft aria-hidden="true" /> Back to items
           </Link>
         </p>
-        <h1 className={`${styles.headerTitle} ${viewStyles.text28} ${adminStyles.mt8} ${adminStyles.mb4}`}>
+        <h1 className={`${viewStyles.headerTitle} ${viewStyles.text28} ${adminStyles.mt8} ${adminStyles.mb4}`}>
           Stationery Items
         </h1>
         <p className={`${adminStyles.muted} ${adminStyles.text14} ${adminStyles.m0}`}>

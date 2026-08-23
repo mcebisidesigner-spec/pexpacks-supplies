@@ -117,7 +117,7 @@
 .kpiCard:hover {
   transform: translateY(-2px);
   border-color: var(--a-border-strong);
-  background: #0f182b;
+  background: var(--a-surface-3);
 }
 
 .kpiIconRed {
@@ -283,7 +283,7 @@
   position: absolute;
   top: -12px;
   transform: translateY(-100%);
-  background: #090d16;
+  background: var(--a-surface-2);
   border: 1px solid var(--a-accent);
   border-radius: 6px;
   padding: 6px 10px;
@@ -453,8 +453,8 @@
 }
 
 .addBtnPrimary:hover {
-  background: #0f766e;
-  box-shadow: 0 0 14px rgba(13, 148, 136, 0.4);
+  background: var(--a-accent-hover);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
 }
 
 /* ===================================================
@@ -482,7 +482,7 @@
 .kanbanCol {
   display: flex;
   flex-direction: column;
-  background: var(--a-bg);
+  background: var(--a-surface);
   border: 1px solid var(--a-border);
   border-radius: 12px;
   overflow: hidden;
@@ -512,7 +512,7 @@
   justify-content: space-between;
   padding: 12px 14px;
   border-bottom: 1px solid var(--a-border);
-  background: rgba(15, 23, 42, 0.5);
+  background: var(--a-surface);
 }
 
 .colHeaderTitle {
@@ -538,8 +538,8 @@
   border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
-  background: var(--a-border);
-  color: var(--a-text-2);
+  background: var(--a-surface-3);
+  color: var(--a-text-3);
 }
 
 .colSubheaders {
@@ -563,20 +563,20 @@
 }
 
 .kanbanCard {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   padding: 10px 12px;
-  background: #090d16;
+  background: var(--a-surface-2);
   border: 1px solid var(--a-border);
   border-radius: 8px;
   cursor: pointer;
   transition: all 140ms ease;
+  overflow: hidden;
 }
 
 .kanbanCard:hover {
-  background: #111a2e;
+  background: var(--a-surface-3);
   border-color: var(--a-border-strong);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -587,12 +587,14 @@
   align-items: center;
   gap: 8px;
   min-width: 0;
+  width: 100%;
 }
 
 .cardDragDots {
   color: var(--a-text-4);
   font-size: 12px;
   letter-spacing: -2px;
+  flex-shrink: 0;
 }
 
 .cardTitle {
@@ -602,11 +604,15 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .cardSubmeta {
   font-size: 10px;
   color: var(--a-text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .avatarBadge {
@@ -625,6 +631,14 @@
 .avatarSB { background: var(--a-purple); color: var(--a-text); }
 .avatarKG { background: var(--a-blue); color: var(--a-text); }
 .avatarDefault { background: var(--a-text-4); color: var(--a-text); }
+
+.cardMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  color: var(--a-text-4);
+}
 
 .cardDueDate {
   font-size: 11px;
@@ -754,7 +768,7 @@
   justify-content: space-between;
   padding: 18px 20px;
   border-bottom: 1px solid var(--a-border);
-  background: #090d16;
+  background: var(--a-surface-2);
 }
 
 .drawerTitle {
@@ -816,7 +830,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: #090d16;
+  background: var(--a-surface-2);
   border: 1px solid var(--a-border);
   border-radius: 10px;
   padding: 14px;
@@ -884,7 +898,7 @@
 
 .actionBtnPrimary {
   background: var(--a-accent);
-  border: 1px solid #0f766e;
+  border: 1px solid var(--a-accent-strong);
   color: var(--a-text);
 }
 
@@ -955,7 +969,7 @@
 }
 
 .commentInput {
-  background: #090d16;
+  background: var(--a-surface-2);
   border: 1px solid var(--a-border);
   border-radius: 8px;
   padding: 10px;
@@ -1041,7 +1055,7 @@
 
 .commandBadge {
   font-size: 10px;
-  background: #090d16;
+  background: var(--a-surface-2);
   border: 1px solid var(--a-border);
   padding: 2px 6px;
   border-radius: 4px;

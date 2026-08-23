@@ -94,7 +94,7 @@ export default async function PaymentDetailPage({ params }: PaymentDetailPagePro
 
       {/* Main Details Grid */}
       <div className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${styles["flex-col"]} ${adminStyles.gap18}`}>
+        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
           {/* Payer Details */}
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
