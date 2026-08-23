@@ -21,16 +21,6 @@ type ActivityMessage =
   | { type: "session-active" }
   | { type: "signed-out"; reason: "idle" | "restart" };
 
-function hasRuntimeSession(): boolean {
-  try {
-    return (
-      window.sessionStorage.getItem(ADMIN_RUNTIME_SESSION_KEY) === "active"
-    );
-  } catch {
-    return true;
-  }
-}
-
 function authorizeRuntimeSession() {
   try {
     window.sessionStorage.setItem(ADMIN_RUNTIME_SESSION_KEY, "active");
@@ -160,7 +150,7 @@ export function IdleLogout() {
         try {
           window.sessionStorage.setItem("pex_console_popup_notice", msg);
         } catch {}
-        window.location.replace("/pex-console-secure");
+        window.location.replace("/");
       }
     };
 

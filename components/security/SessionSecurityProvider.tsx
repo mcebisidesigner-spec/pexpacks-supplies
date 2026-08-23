@@ -78,7 +78,7 @@ export function SessionSecurityProvider({
     try {
       await logoutAction();
     } catch {
-      window.location.replace("/pex-console-secure?reason=timeout");
+      window.location.replace("/");
     }
   }, []);
 
@@ -117,7 +117,7 @@ export function SessionSecurityProvider({
               "Session expired due to 20 minutes of inactivity."
             );
           } catch {}
-          window.location.replace("/pex-console-secure?reason=timeout");
+          window.location.replace("/");
         }
       };
     }
