@@ -127,8 +127,6 @@ function schoolPackItemsTable(admin: SupabaseAdminClient) {
 }
 
 function productSku(data: Pick<ItemFormData, "category" | "name">): string {
-  const entered = data.category?.trim();
-  if (entered) return entered.toUpperCase();
   return `PEX-${inventoryItemNameKey(data.name)
     .toUpperCase()
     .replace(/[^A-Z0-9]+/g, "-")

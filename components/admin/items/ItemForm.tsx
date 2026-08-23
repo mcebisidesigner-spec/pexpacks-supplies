@@ -81,14 +81,14 @@ export function ItemForm({
         <div className={styles.formGrid}>
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="category">
-              Item code
+              Category
             </label>
             <input
               id="category"
               name="category"
               className={formStyles.input}
-              defaultValue={item?.category ?? ""}
-              placeholder="e.g. pex010sku"
+              defaultValue={item?.category ?? "Stationery"}
+              placeholder="e.g. Stationery, Books, Art & Craft"
             />
             {err("category")}
           </div>
