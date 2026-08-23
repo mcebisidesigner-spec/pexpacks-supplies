@@ -72,15 +72,6 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       ),
     },
     {
-      key: "email",
-      header: "CONTACT",
-      render: (row) => (
-        <span className={styles.textMuted}>
-          {row.email || row.telephone || "—"}
-        </span>
-      ),
-    },
-    {
       key: "published",
       header: "STATUS",
       sortable: true,

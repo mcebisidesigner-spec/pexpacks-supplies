@@ -513,6 +513,45 @@
   color: var(--a-text);
 }
 
+.actionToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 140ms ease;
+  white-space: nowrap;
+}
+
+.actionToggleBtnShow {
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(6, 78, 59, 0.25);
+}
+
+.actionToggleBtnShow:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+.actionToggleBtnHide {
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(30, 41, 59, 0.35);
+}
+
+.actionToggleBtnHide:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
 /* Table Pagination Footer */
 .paginationFooter {
   display: flex;

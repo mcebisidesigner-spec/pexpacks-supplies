@@ -1,3 +1,30 @@
+const IS_LOCAL_DEV_HOST = ["localhost", "127.0.0.1", "::1"].includes(self.location.hostname);
+
+if (IS_LOCAL_DEV_HOST) {
+  self.addEventListener("install", (event) => {
+    event.waitUntil(self.skipWaiting());
+  });
+
+  self.addEventListener("activate", (event) => {
+    event.waitUntil(
+      Promise.all([
+        self.registration.unregister(),
+        caches.keys().then((keys) =>
+          Promise.all(
+            keys
+              .filter((key) => key.startsWith("pexpacks-pwa-"))
+              .map((key) => caches.delete(key)),
+          ),
+        ),
+        self.clients.claim(),
+      ]).then(() =>
+        self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) =>
+          clients.forEach((client) => client.navigate(client.url)),
+        ),
+      ),
+    );
+  });
+} else {
 const APP_VERSION = "pexpacks-pwa-v3";
 const STATIC_CACHE = `${APP_VERSION}-static`;
 const IMAGE_CACHE = `${APP_VERSION}-images`;
@@ -165,3 +192,5 @@ self.addEventListener("message", (event) => {
   if (event.data === "SKIP_WAITING") self.skipWaiting();
   if (event.data === "CLEAN_IMAGE_CACHE") event.waitUntil(deleteExpiredImages());
 });
+
+}

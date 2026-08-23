@@ -334,14 +334,18 @@ export async function listSchoolGroupedSummary(
       const totalGradePacks = Number(data.total_grade_packs ?? 0);
 
       const schoolsSummary: SchoolGroupedSummary[] = rawSchools.map(
-        (row: any) => ({
-          school_id: row.school_id,
-          school_name: row.school_name,
-          school_slug: row.school_slug ?? "",
-          grade_packs_count: Number(row.grade_packs_count ?? 0),
-          last_edited: row.last_edited ?? "",
-          visible: Boolean(row.visible),
-        }),
+        (row: any) => {
+          const isRefused = Boolean(row.refused_partnership);
+          const isPartner = row.is_partner !== false;
+          return {
+            school_id: row.school_id,
+            school_name: row.school_name,
+            school_slug: row.school_slug ?? "",
+            grade_packs_count: Number(row.grade_packs_count ?? 0),
+            last_edited: row.last_edited ?? "",
+            visible: !isRefused && (row.visible !== undefined ? Boolean(row.visible) : isPartner),
+          };
+        },
       );
 
       return {
@@ -366,6 +370,8 @@ export async function listSchoolGroupedSummary(
     name: string;
     slug: string | null;
     updated_at?: string | null;
+    refused_partnership?: boolean | null;
+    is_partner?: boolean | null;
   }[] = [];
   const chunk = 1000;
   let chunkPage = 0;
@@ -374,7 +380,7 @@ export async function listSchoolGroupedSummary(
   while (hasMore) {
     let qBuilder = admin
       .from("schools")
-      .select("id, name, slug, updated_at")
+      .select("id, name, slug, updated_at, refused_partnership, is_partner")
       .order("name", { ascending: true })
       .range(chunkPage * chunk, (chunkPage + 1) * chunk - 1);
 
@@ -425,7 +431,11 @@ export async function listSchoolGroupedSummary(
   let groupedList: SchoolGroupedSummary[] = dbSchools.map((s) => {
     const sPacks = packList.filter((p) => p.school_id === s.id);
 
-    const isVisible = sPacks.length > 0 ? sPacks.some((p) => p.visible) : true;
+    const isRefused = Boolean(s.refused_partnership);
+    const isPartner = s.is_partner !== false;
+    const hasVisiblePack = sPacks.some((p) => p.visible);
+    const isVisible = !isRefused && (sPacks.length > 0 ? hasVisiblePack : isPartner);
+
     const latestUpdate = sPacks.reduce(
       (max, p) => (p.updated_at && p.updated_at > max ? p.updated_at : max),
       s.updated_at || "",

@@ -13,14 +13,14 @@ import {
   FileText,
   GraduationCap,
   Package,
+  RefreshCw,
   Search,
-  Trash2,
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
+import { toggleSchoolVisibilityAction } from "@/app/actions/school-packs";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import styles from "./SchoolPacksView.module.css";
-import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 
 export interface SchoolPackRowData {
@@ -199,6 +199,8 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+  const [visibilityMap, setVisibilityMap] = useState<Record<string, "visible" | "hidden">>({});
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   const currentDateStr = useMemo(() => {
     return new Date().toLocaleDateString("en-ZA", {
@@ -211,27 +213,63 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
   const schoolRows = useMemo(() => {
     if (initialData?.schoolsSummary && initialData.schoolsSummary.length > 0) {
       return initialData.schoolsSummary
-        .map((s, idx) => ({
-          id: s.school_id,
-          code: `SCH-${1001 + idx}`,
-          name: s.school_name,
-          gradePacksCount: s.grade_packs_count,
-          season: "2027",
-          lastEdited: formatDateString(s.last_edited),
-          lastEditedBy: "Mcebisi M.",
-          visibility: (s.visible ? "visible" : "hidden") as "visible" | "hidden",
-          status: (s.visible ? "published" : "draft") as "published" | "draft" | "review",
-          health: "good" as "good" | "needs_work",
-          owner: "MC" as "MC" | "KG" | "LM" | "SB",
-          ownerName: "Mcebisi M.",
-          avatarColor: "rgba(45, 212, 191, 0.18)",
-        }))
+        .map((s, idx) => {
+          const currentVis = visibilityMap[s.school_id] ?? (s.visible ? "visible" : "hidden");
+          return {
+            id: s.school_id,
+            code: `SCH-${1001 + idx}`,
+            name: s.school_name,
+            gradePacksCount: s.grade_packs_count,
+            season: "2027",
+            lastEdited: formatDateString(s.last_edited),
+            lastEditedBy: "Mcebisi M.",
+            visibility: currentVis,
+            status: (currentVis === "visible" ? "published" : "draft") as "published" | "draft" | "review",
+            health: "good" as "good" | "needs_work",
+            owner: "MC" as "MC" | "KG" | "LM" | "SB",
+            ownerName: "Mcebisi M.",
+            avatarColor: "rgba(45, 212, 191, 0.18)",
+          };
+        })
         .sort((a, b) =>
           a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" })
         );
     }
-    return SEED_SCHOOL_ROWS;
-  }, [initialData]);
+    return SEED_SCHOOL_ROWS.map((s) => ({
+      ...s,
+      visibility: visibilityMap[s.id] ?? s.visibility,
+    }));
+  }, [initialData, visibilityMap]);
+
+  async function handleToggleVisibility(schoolId: string, currentlyVisible: boolean) {
+    const nextVisible = !currentlyVisible;
+    setTogglingId(schoolId);
+    // Optimistic UI update
+    setVisibilityMap((prev) => ({
+      ...prev,
+      [schoolId]: nextVisible ? "visible" : "hidden",
+    }));
+
+    try {
+      const res = await toggleSchoolVisibilityAction(schoolId, nextVisible);
+      if (!res.ok) {
+        // Revert on failure
+        setVisibilityMap((prev) => ({
+          ...prev,
+          [schoolId]: currentlyVisible ? "visible" : "hidden",
+        }));
+        alert(res.message || "Failed to update school visibility.");
+      }
+    } catch {
+      setVisibilityMap((prev) => ({
+        ...prev,
+        [schoolId]: currentlyVisible ? "visible" : "hidden",
+      }));
+      alert("An unexpected error occurred while toggling visibility.");
+    } finally {
+      setTogglingId(null);
+    }
+  }
 
   // Filtered rows
   const filteredSchools = useMemo(() => {
@@ -532,16 +570,39 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
                         <button
                           type="button"
-                          className={viewStyles.actionDeleteBtn}
-                          title={`Delete ${school.name}`}
-                          aria-label={`Delete ${school.name}`}
-                          onClick={() => {
-                            if (window.confirm(`Are you sure you want to delete school packs for "${school.name}"?`)) {
-                              // Trigger deletion
-                            }
-                          }}
+                          disabled={togglingId === school.id}
+                          className={`${styles.actionToggleBtn} ${
+                            school.visibility === "visible"
+                              ? styles.actionToggleBtnHide
+                              : styles.actionToggleBtnShow
+                          }`}
+                          title={
+                            school.visibility === "visible"
+                              ? `Hide ${school.name} (Shows "Not yet an official partner" page)`
+                              : `Show ${school.name} (Partnered with Grade Packs)`
+                          }
+                          aria-label={
+                            school.visibility === "visible"
+                              ? `Hide ${school.name}`
+                              : `Show ${school.name}`
+                          }
+                          onClick={() =>
+                            handleToggleVisibility(school.id, school.visibility === "visible")
+                          }
                         >
-                          <Trash2 size={14} />
+                          {togglingId === school.id ? (
+                            <RefreshCw size={13} className="animate-spin" />
+                          ) : school.visibility === "visible" ? (
+                            <>
+                              <EyeOff size={13} />
+                              <span>Hide</span>
+                            </>
+                          ) : (
+                            <>
+                              <Eye size={13} />
+                              <span>Show</span>
+                            </>
+                          )}
                         </button>
                       </div>
                     </td>
