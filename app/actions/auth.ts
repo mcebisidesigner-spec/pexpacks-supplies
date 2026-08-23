@@ -148,7 +148,8 @@ export async function authenticatePasswordAction(
  */
 export async function verifyOtpAction(
   email: string,
-  token: string
+  token: string,
+  trustedDevice: boolean = false
 ): Promise<AuthResponse> {
   try {
     const { ip, userAgent } = await getClientContext();
@@ -254,16 +255,14 @@ export async function verifyOtpAction(
       eventType: "LOGIN_SUCCESS",
       email,
       userId: verifiedUserId,
+      metadata: { trustedDevice },
     });
-
-    return {
-      ok: true,
-      redirectUrl: "/admin",
-    };
   } catch (err) {
     console.error("[auth-action] verifyOtpAction exception:", err);
     return { ok: false, message: GENERIC_ERROR_MSG };
   }
+
+  redirect("/admin");
 }
 
 /**

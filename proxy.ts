@@ -42,7 +42,7 @@ export async function proxy(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
+          cookiesToSet.forEach(({ name, value }) => {
             request.cookies.set(name, value);
           });
 
@@ -94,11 +94,25 @@ export async function proxy(request: NextRequest) {
       );
     }
 
+    response.headers.set(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+    );
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+    response.headers.set("Surrogate-Control", "no-store");
+
     return response;
   }
 
-  // 3. Handle Hidden Gateway Route (/pex-console-secure)
-  if (pathname === "/pex-console-secure") {
+  // 3. Handle Hidden Gateway Route (/pex-console-secure & /pex-console)
+  if (pathname === "/pex-console-secure" || pathname === "/pex-console") {
+    if (pathname === "/pex-console") {
+      const targetUrl = new URL("/pex-console-secure", request.url);
+      targetUrl.search = request.nextUrl.search;
+      return NextResponse.redirect(targetUrl);
+    }
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -134,5 +148,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/admin", "/login", "/pex-console-secure"],
+  matcher: ["/admin/:path*", "/admin", "/login", "/pex-console-secure", "/pex-console"],
 };

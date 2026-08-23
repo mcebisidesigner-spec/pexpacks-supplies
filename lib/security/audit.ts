@@ -9,7 +9,13 @@ export type SecurityEventType =
   | "RATE_LIMITED"
   | "PASSWORD_VERIFIED"
   | "UNAUTHORIZED_ACCESS"
-  | "OTP_RESENT";
+  | "OTP_RESENT"
+  | "IDLE_SHIELD_TRIGGERED"
+  | "SESSION_TIMEOUT_SIGNOUT"
+  | "STEP_UP_CHALLENGE_SUCCESS"
+  | "STEP_UP_CHALLENGE_FAILED"
+  | "CONCURRENT_SESSION_REVOCATION"
+  | "HIGH_RISK_ACTION_EXECUTED";
 
 export interface LogSecurityEventParams {
   ipAddress: string;

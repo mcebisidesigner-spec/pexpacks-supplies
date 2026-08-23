@@ -3,7 +3,7 @@ import "@/styles/admin-dark.css";
 import { requireAdmin, displayName } from "@/lib/admin/rbac";
 import { filterNav } from "@/lib/admin/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
-import { IdleLogout } from "@/components/admin/IdleLogout";
+import { SessionSecurityProvider } from "@/components/security/SessionSecurityProvider";
 
 export const metadata: Metadata = {
   title: "Admin | Pexpacks",
@@ -25,15 +25,16 @@ export default async function AdminLayout({
         : null;
 
   return (
-    <AdminShell
-      groups={groups}
-      userName={name}
-      userEmail={session.user.email ?? ""}
-      userRoles={session.roles}
-      avatarUrl={avatarUrl}
-    >
-      <IdleLogout />
-      {children}
-    </AdminShell>
+    <SessionSecurityProvider>
+      <AdminShell
+        groups={groups}
+        userName={name}
+        userEmail={session.user.email ?? ""}
+        userRoles={session.roles}
+        avatarUrl={avatarUrl}
+      >
+        {children}
+      </AdminShell>
+    </SessionSecurityProvider>
   );
 }

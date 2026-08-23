@@ -12,6 +12,7 @@ export default function PexConsoleGateway() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isTrustedDevice, setIsTrustedDevice] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 
   // Step 2: OTP State
@@ -176,14 +177,13 @@ export default function PexConsoleGateway() {
   function submitOtpToken(token: string) {
     setErrorMessage(null);
     startTransition(async () => {
-      const res = await verifyOtpAction(email, token);
-      if (res.ok && res.redirectUrl) {
+      const res = await verifyOtpAction(email, token, isTrustedDevice);
+      if (res.ok) {
         try {
           window.sessionStorage.setItem("px_admin_runtime_session", "active");
         } catch {
           // ignore
         }
-        window.location.replace(res.redirectUrl);
       } else {
         setErrorMessage(res.message || "Invalid login credentials or verification code.");
       }
@@ -292,6 +292,22 @@ export default function PexConsoleGateway() {
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", margin: "14px 0 18px", padding: "10px 12px", backgroundColor: "rgba(12, 19, 34, 0.7)", borderRadius: "8px", border: "1px solid rgba(51, 65, 85, 0.5)" }}>
+              <input
+                id="trusted-device"
+                type="checkbox"
+                checked={isTrustedDevice}
+                onChange={(e) => setIsTrustedDevice(e.target.checked)}
+                style={{ width: "16px", height: "16px", marginTop: "2px", accentColor: "#10b981", cursor: "pointer" }}
+              />
+              <label htmlFor="trusted-device" style={{ fontSize: "12px", color: "#cbd5e1", cursor: "pointer", userSelect: "none" }}>
+                <span style={{ fontWeight: 600, color: "#f8fafc" }}>This is a trusted private computer</span>
+                <span style={{ display: "block", fontSize: "11px", color: "#64748b", marginTop: "2px" }}>
+                  {isTrustedDevice ? "Maintains standard secure session on this device" : "Public/Shared mode: closing browser or tab immediately clears session"}
+                </span>
+              </label>
             </div>
 
             <button
