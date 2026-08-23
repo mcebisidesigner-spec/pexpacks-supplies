@@ -71,7 +71,7 @@ const priceField = z.preprocess(
 );
 
 export const itemSchema = z.object({
-  pack_id: z.string().uuid("Invalid pack id"),
+  pack_id: z.string().optional().nullable().or(z.literal("")),
   name: z
     .string()
     .trim()
@@ -600,18 +600,22 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
   const admin = createSupabaseAdminClient();
 
   try {
+    const packId = parsed.data.pack_id;
+    if (!packId) {
+      return { ok: false, errors: { pack_id: "Pack ID is required" } };
+    }
     let data = parsed.data;
     if (!data.sort_order || data.sort_order <= 0) {
       data = {
         ...data,
-        sort_order: await nextPackItemSortOrder(admin, data.pack_id),
+        sort_order: await nextPackItemSortOrder(admin, packId),
       };
     }
 
     const product = await ensureMasterProduct(admin, data, actor.user.id);
     const { data: createdLink, error } = await schoolPackItemsTable(admin)
       .insert({
-        pack_id: data.pack_id,
+        pack_id: packId,
         product_id: product.id,
         pack_quantity: data.quantity,
         school_wording:
@@ -682,7 +686,7 @@ export async function updateItem(
       );
       const { data: updatedLink, error } = await schoolPackItemsTable(admin)
         .update({
-          pack_id: parsed.data.pack_id,
+          pack_id: parsed.data.pack_id || existing.pack_id,
           product_id: product.id,
           pack_quantity: parsed.data.quantity,
           school_wording:
@@ -1134,20 +1138,22 @@ export async function importItemsCsv(
         result.updated += 1;
       } else {
         const product = await ensureMasterProduct(admin, data, actor.user.id);
-        const { error } = await schoolPackItemsTable(admin).insert({
-          pack_id: data.pack_id,
-          product_id: product.id,
-          pack_quantity: data.quantity,
-          school_wording:
-            data.name.trim() === product.name ? null : data.name.trim(),
-          school_notes: data.description,
-          selling_price_override: data.price,
-          sort_order:
-            data.sort_order ||
-            (await nextPackItemSortOrder(admin, data.pack_id)),
-          active: data.visible,
-        });
-        if (error) throw error;
+        if (data.pack_id) {
+          const { error } = await schoolPackItemsTable(admin).insert({
+            pack_id: data.pack_id,
+            product_id: product.id,
+            pack_quantity: data.quantity,
+            school_wording:
+              data.name.trim() === product.name ? null : data.name.trim(),
+            school_notes: data.description,
+            selling_price_override: data.price,
+            sort_order:
+              data.sort_order ||
+              (await nextPackItemSortOrder(admin, data.pack_id)),
+            active: data.visible,
+          });
+          if (error) throw error;
+        }
         byName.set(key, "new");
         result.created += 1;
       }
