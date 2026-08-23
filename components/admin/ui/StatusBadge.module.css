@@ -1,12 +1,12 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
+  gap: 7px;
+  padding: 5px 13px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
   text-transform: capitalize;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -14,39 +14,39 @@
 }
 
 .emerald {
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(6, 78, 59, 0.35);
   color: #34d399;
-  border-color: rgba(16, 185, 129, 0.3);
-}
-
-.amber {
-  background: rgba(245, 158, 11, 0.12);
-  color: #fbbf24;
-  border-color: rgba(245, 158, 11, 0.3);
-}
-
-.red {
-  background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
-  border-color: rgba(239, 68, 68, 0.3);
+  border-color: rgba(16, 185, 129, 0.35);
 }
 
 .blue {
-  background: rgba(59, 130, 246, 0.12);
+  background: rgba(30, 58, 138, 0.35);
   color: #60a5fa;
-  border-color: rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.amber {
+  background: rgba(120, 53, 15, 0.35);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.red {
+  background: rgba(127, 29, 29, 0.35);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.35);
 }
 
 .teal {
-  background: rgba(45, 212, 191, 0.12);
+  background: rgba(19, 78, 74, 0.35);
   color: #2dd4bf;
-  border-color: rgba(45, 212, 191, 0.3);
+  border-color: rgba(45, 212, 191, 0.35);
 }
 
 .slate {
-  background: rgba(100, 116, 139, 0.12);
+  background: rgba(30, 41, 59, 0.45);
   color: #94a3b8;
-  border-color: rgba(100, 116, 139, 0.3);
+  border-color: rgba(100, 116, 139, 0.35);
 }
 
 .dot {
@@ -54,4 +54,6 @@
   height: 6px;
   border-radius: 50%;
   background: currentColor;
+  box-shadow: 0 0 5px currentColor;
+  flex-shrink: 0;
 }

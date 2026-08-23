@@ -26,6 +26,7 @@ import styles from "./CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { VisibleToggle } from "@/components/admin/packs/VisibleToggle";
 import { DuplicateButton } from "@/components/admin/packs/DuplicateButton";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
@@ -243,15 +244,40 @@ export function SchoolPacksDetailView({
           {/* Data Table */}
           <div className={adminStyles.tableCard}>
             <div className={adminStyles.tableWrapper}>
-              <table className={styles.dataTable}>
+              <table className={adminStyles.table}>
                 <thead>
                   <tr>
-                    <th>GRADE PACK</th>
-                    <th>PRICE</th>
-                    <th>ITEMS</th>
-                    <th>VISIBILITY</th>
-                    <th>LAST EDITED</th>
-                    <th>ACTIONS</th>
+                    <th>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                        <span>Grade Pack &amp; School</span>
+                        <span style={{ color: "#10b981" }}>↑↓</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                        <span>Price</span>
+                        <span style={{ color: "#10b981" }}>↑↓</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                        <span>Total Items</span>
+                        <span style={{ color: "#10b981" }}>↑↓</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                        <span>Status</span>
+                        <span style={{ color: "#10b981" }}>↑↓</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                        <span>Last Edited</span>
+                        <span style={{ color: "#10b981" }}>↑↓</span>
+                      </div>
+                    </th>
+                    <th style={{ textAlign: "right" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -268,43 +294,40 @@ export function SchoolPacksDetailView({
                       return (
                         <tr key={pack.id} className={styles.dataRow}>
                           <td>
-                            <div>
-                              <div>
-                                <Link href={`/admin/packs/${pack.slug || pack.id}`} className={adminStyles.gradePackLink}>
-                                  {formattedGrade}
-                                </Link>
-                              </div>
-                              <div className={adminStyles.schoolNameSub}>
+                            <div className={styles.productCell}>
+                              <Link href={`/admin/packs/${pack.slug || pack.id}`} style={{ color: "#ffffff", fontWeight: 800, fontSize: "14px", textDecoration: "none" }}>
+                                {formattedGrade}
+                              </Link>
+                              <div style={{ color: "#64748b", fontSize: "12px", fontWeight: 500 }}>
                                 {school.name}
                               </div>
                             </div>
                           </td>
-                          <td className={adminStyles.textWhiteBold}>
+                          <td style={{ fontWeight: 700, color: "#ffffff" }}>
                             {money(pack.price)}
                           </td>
-                          <td>
-                            <span className={adminStyles.itemCountSpan}>
-                              {pack.item_count}
-                            </span>{" "}
-                            <span className={adminStyles.itemCountLabel}>items</span>
+                          <td style={{ color: "#e2e8f0" }}>
+                            {pack.item_count} items
                           </td>
                           <td>
-                            <span className={`${adminStyles.badgeTeal} ${styles.badgeIconWrap}`}>
-                              <Eye size={12} /> {pack.visible ? "Visible" : "Hidden"}
-                            </span>
+                            <StatusBadge
+                              status={pack.visible ? "Visible" : "Hidden"}
+                              tone={pack.visible ? "emerald" : "slate"}
+                              showDot
+                            />
                           </td>
                           <td>
-                            <div className={adminStyles.textWhiteMedium}>May 21, 2024</div>
-                            <div className={adminStyles.itemCountLabel}>Liam Morgan</div>
+                            <div style={{ color: "#e2e8f0", fontSize: "13px" }}>May 21, 2024</div>
+                            <div style={{ color: "#64748b", fontSize: "11px" }}>Liam Morgan</div>
                           </td>
-                          <td>
-                            <div className={adminStyles.actionIconBtnGroup}>
+                          <td style={{ textAlign: "right" }}>
+                            <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: "6px" }}>
                               <Link
                                 href={`/admin/packs/${pack.slug || pack.id}`}
-                                className={`${adminStyles.actionIconBtn} ${adminStyles.actionIconBtnTeal}`}
-                                title="Edit Pack"
+                                className={adminStyles.actionIconBtn}
+                                title="View & Edit Pack"
                               >
-                                <Edit2 size={13} />
+                                <Eye size={13} />
                               </Link>
                               <VisibleToggle id={pack.id} visible={pack.visible} />
                               {deletePackAction && (

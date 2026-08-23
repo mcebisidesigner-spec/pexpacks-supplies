@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    PEXPACKS ADMIN — UNIFIED COMPONENT SYSTEM
    Single source of truth for all admin UI components
    ═══════════════════════════════════════════════════════════════ */
@@ -370,10 +370,10 @@
    UNIFIED TABLE / CARD SYSTEM
    ═══════════════════════════════════════════ */
 .tableCard {
-  background: var(--a-surface);
-  border: 1px solid var(--a-border);
-  border-radius: var(--a-card-radius);
-  box-shadow: var(--a-shadow);
+  background: #070d18;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   overflow: hidden;
 }
 
@@ -387,27 +387,27 @@
   min-width: 700px;
   border-collapse: collapse;
   text-align: left;
-  font-size: 12px;
+  font-size: 13.5px;
 }
 
 .table thead {
-  background: rgba(15, 23, 42, 0.6);
-  border-bottom: 1px solid var(--a-border);
+  background: #070d18;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .table th {
-  padding: 12px 14px;
-  font-size: 10px;
-  font-weight: 700;
+  padding: 16px 20px;
+  font-size: 11px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--a-text-4);
+  letter-spacing: 0.06em;
+  color: #10b981;
   white-space: nowrap;
 }
 
 .table tbody tr {
-  border-bottom: 1px solid var(--a-border);
-  transition: background-color var(--a-transition);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background-color 140ms ease;
 }
 
 .table tbody tr:last-child {
@@ -415,13 +415,13 @@
 }
 
 .table tbody tr:hover {
-  background: var(--a-surface-2);
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .table td {
-  padding: 12px 14px;
+  padding: 18px 20px;
   vertical-align: middle;
-  color: var(--a-text-2);
+  color: #e2e8f0;
 }
 
 /* ═══════════════════════════════════════════

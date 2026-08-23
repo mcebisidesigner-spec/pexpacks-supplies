@@ -1,10 +1,11 @@
 .tableCard {
-  background: #0c1322;
-  border: 1px solid rgba(30, 41, 59, 0.9);
+  background: #070d18;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 .tableWrapper {
@@ -17,32 +18,32 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 13px;
+  font-size: 13.5px;
 }
 
 .table thead {
-  background: #090e17;
-  border-bottom: 1px solid #1e293b;
+  background: #070d18;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .table th {
-  padding: 12px 16px;
+  padding: 16px 20px;
   font-size: 11px;
-  font-weight: 700;
-  color: #64748b;
+  font-weight: 800;
+  color: #10b981;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   white-space: nowrap;
   user-select: none;
 }
 
 .sortableHeader {
   cursor: pointer;
-  transition: color 140ms ease;
+  transition: color 140ms ease, opacity 140ms ease;
 }
 
 .sortableHeader:hover {
-  color: #ffffff;
+  color: #34d399;
 }
 
 .headerContent {
@@ -53,11 +54,17 @@
 
 .sortIcon {
   display: inline-flex;
+  align-items: center;
   color: #10b981;
 }
 
+.mutedSortIcon {
+  color: #10b981;
+  opacity: 0.85;
+}
+
 .table tbody tr {
-  border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: background-color 140ms ease;
 }
 
@@ -70,12 +77,12 @@
 }
 
 .clickableRow:hover {
-  background: rgba(30, 41, 59, 0.35);
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .table td {
-  padding: 14px 16px;
-  color: #cbd5e1;
+  padding: 18px 20px;
+  color: #e2e8f0;
   vertical-align: middle;
 }
 
@@ -94,7 +101,7 @@
 
 /* ── Empty & Loading States ── */
 .stateContainer {
-  padding: 48px 24px;
+  padding: 56px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;

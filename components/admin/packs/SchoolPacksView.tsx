@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -510,13 +510,34 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         {/* Left Column: Primary Data Table */}
         <div className={styles.tableCard}>
           <div className={styles.tableWrapper}>
-            <table className={adminStyles.dataTable}>
+            <table className={styles.dataTable}>
               <thead>
                 <tr>
-                  <th>School Name</th>
-                  <th>Grade Packs</th>
-                  <th>Season</th>
-                  <th>Visibility</th>
+                  <th>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <span>School &amp; ID</span>
+                      <span style={{ color: "#10b981" }}>↑↓</span>
+                    </div>
+                  </th>
+                  <th>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <span>Total Packs</span>
+                      <span style={{ color: "#10b981" }}>↑↓</span>
+                    </div>
+                  </th>
+                  <th>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <span>Season</span>
+                      <span style={{ color: "#10b981" }}>↑↓</span>
+                    </div>
+                  </th>
+                  <th>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <span>Status</span>
+                      <span style={{ color: "#10b981" }}>↑↓</span>
+                    </div>
+                  </th>
+                  <th style={{ textAlign: "right" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -543,11 +564,15 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                         </div>
                         <div className={styles.schoolInfo}>
                           <span className={styles.schoolName}>{school.name}</span>
-                          <span className={styles.schoolId}>ID: {school.code}</span>
+                          <span className={styles.schoolId}>{school.code}</span>
                         </div>
                       </div>
                     </td>
-                    <td>{school.gradePacksCount}</td>
+                    <td>
+                      <span style={{ color: "#e2e8f0", fontWeight: 500 }}>
+                        {school.gradePacksCount} {school.gradePacksCount === 1 ? "pack" : "packs"}
+                      </span>
+                    </td>
                     <td>
                       <span className={styles.seasonBadge}>{school.season}</span>
                     </td>
@@ -559,8 +584,16 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                             : styles.visibilityBadgeHidden
                         }
                       >
+                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "currentColor", boxShadow: "0 0 5px currentColor" }} />
                         {school.visibility === "visible" ? "Visible" : "Hidden"}
                       </span>
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "flex-end" }}>
+                        <div className={adminStyles.actionIconBtn} title="View School Packs">
+                          <Eye size={13} />
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 ))}
