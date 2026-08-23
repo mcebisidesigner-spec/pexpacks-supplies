@@ -13,12 +13,10 @@ import {
   FileText,
   GraduationCap,
   Package,
-  RefreshCw,
   Search,
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
-import { toggleSchoolVisibilityAction } from "@/app/actions/school-packs";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import styles from "./SchoolPacksView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -200,7 +198,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [visibilityMap, setVisibilityMap] = useState<Record<string, "visible" | "hidden">>({});
-  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   const currentDateStr = useMemo(() => {
     return new Date().toLocaleDateString("en-ZA", {
@@ -240,36 +237,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
       visibility: visibilityMap[s.id] ?? s.visibility,
     }));
   }, [initialData, visibilityMap]);
-
-  async function handleToggleVisibility(schoolId: string, currentlyVisible: boolean) {
-    const nextVisible = !currentlyVisible;
-    setTogglingId(schoolId);
-    // Optimistic UI update
-    setVisibilityMap((prev) => ({
-      ...prev,
-      [schoolId]: nextVisible ? "visible" : "hidden",
-    }));
-
-    try {
-      const res = await toggleSchoolVisibilityAction(schoolId, nextVisible);
-      if (!res.ok) {
-        // Revert on failure
-        setVisibilityMap((prev) => ({
-          ...prev,
-          [schoolId]: currentlyVisible ? "visible" : "hidden",
-        }));
-        alert(res.message || "Failed to update school visibility.");
-      }
-    } catch {
-      setVisibilityMap((prev) => ({
-        ...prev,
-        [schoolId]: currentlyVisible ? "visible" : "hidden",
-      }));
-      alert("An unexpected error occurred while toggling visibility.");
-    } finally {
-      setTogglingId(null);
-    }
-  }
 
   // Filtered rows
   const filteredSchools = useMemo(() => {
@@ -520,7 +487,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       <span className={styles.sortIcon}>↑↓</span>
                     </div>
                   </th>
-                  <th className={styles.alignRight}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -565,46 +531,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                         tone={school.visibility === "visible" ? "emerald" : "slate"}
                         showDot
                       />
-                    </td>
-                    <td className={styles.alignRight}>
-                      <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-                        <button
-                          type="button"
-                          disabled={togglingId === school.id}
-                          className={`${styles.actionToggleBtn} ${
-                            school.visibility === "visible"
-                              ? styles.actionToggleBtnHide
-                              : styles.actionToggleBtnShow
-                          }`}
-                          title={
-                            school.visibility === "visible"
-                              ? `Hide ${school.name} (Shows "Not yet an official partner" page)`
-                              : `Show ${school.name} (Partnered with Grade Packs)`
-                          }
-                          aria-label={
-                            school.visibility === "visible"
-                              ? `Hide ${school.name}`
-                              : `Show ${school.name}`
-                          }
-                          onClick={() =>
-                            handleToggleVisibility(school.id, school.visibility === "visible")
-                          }
-                        >
-                          {togglingId === school.id ? (
-                            <RefreshCw size={13} className="animate-spin" />
-                          ) : school.visibility === "visible" ? (
-                            <>
-                              <EyeOff size={13} />
-                              <span>Hide</span>
-                            </>
-                          ) : (
-                            <>
-                              <Eye size={13} />
-                              <span>Show</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
                     </td>
                   </tr>
                 ))}
