@@ -72,6 +72,7 @@ const priceField = z.preprocess(
 
 export const itemSchema = z.object({
   pack_id: z.string().optional().nullable().or(z.literal("")),
+  sku: optString(100, "SKU"),
   name: z
     .string()
     .trim()
@@ -138,11 +139,18 @@ async function ensureMasterProduct(
   admin: SupabaseAdminClient,
   data: Pick<
     ItemFormData,
-    "name" | "category" | "description" | "specification" | "visible" | "price"
-  >,
+    | "name"
+    | "category"
+    | "description"
+    | "specification"
+    | "visible"
+    | "price"
+  > & { sku?: string | null },
   actorId: string,
 ): Promise<MasterProductRow> {
-  const sku = productSku(data);
+  const sku = data.sku?.trim()
+    ? data.sku.trim().toUpperCase()
+    : productSku(data);
   const productPatch = {
     sku,
     name: data.name.trim(),
@@ -225,6 +233,7 @@ async function nextPackItemSortOrder(
 export function parseItemForm(formData: FormData): ParsedItemForm {
   const parsed = itemSchema.safeParse({
     pack_id: raw(formData, "pack_id"),
+    sku: raw(formData, "sku"),
     name: raw(formData, "name"),
     category: raw(formData, "category"),
     description: raw(formData, "description"),
@@ -756,10 +765,15 @@ export async function updateItem(
     }
 
     let product: MasterProductRow;
+    const skuVal = parsed.data.sku?.trim()
+      ? parsed.data.sku.trim().toUpperCase()
+      : targetMaster?.sku || productSku(parsed.data);
+
     if (targetMaster) {
       const { data: updated, error } = await admin
         .from("master_products")
         .update({
+          sku: skuVal,
           name: parsed.data.name.trim(),
           category: parsed.data.category,
           description: parsed.data.description,

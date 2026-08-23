@@ -93,8 +93,22 @@ export function ItemForm({
       <div className={formStyles.section}>
         <input type="hidden" name="pack_id" value={item?.pack_id ?? packs[0]?.id ?? ""} />
 
-        {/* Row 1: Item code & ITEM NAME */}
+        {/* Row 1: SKU & Category */}
         <div className={styles.formGrid}>
+          <div className={formStyles.field}>
+            <label className={formStyles.label} htmlFor="sku">
+              SKU
+            </label>
+            <input
+              id="sku"
+              name="sku"
+              className={formStyles.input}
+              defaultValue={item?.sku ?? ""}
+              placeholder="e.g. PEX-A4-CLEAR-FOLDERS"
+            />
+            {err("sku")}
+          </div>
+
           <div className={formStyles.field}>
             <label className={formStyles.label} htmlFor="category">
               Category
@@ -108,21 +122,22 @@ export function ItemForm({
             />
             {err("category")}
           </div>
+        </div>
 
-          <div className={formStyles.field}>
-            <label className={formStyles.label} htmlFor="name">
-              Item name *
-            </label>
-            <input
-              id="name"
-              name="name"
-              className={formStyles.input}
-              defaultValue={item?.name ?? ""}
-              placeholder="e.g. A4 Clear Plastic Folders with Button"
-              required
-            />
-            {err("name")}
-          </div>
+        {/* Row 2: Item Name */}
+        <div className={formStyles.field}>
+          <label className={formStyles.label} htmlFor="name">
+            Item name *
+          </label>
+          <input
+            id="name"
+            name="name"
+            className={formStyles.input}
+            defaultValue={item?.name ?? ""}
+            placeholder="e.g. A4 Clear Plastic Folders with Button"
+            required
+          />
+          {err("name")}
         </div>
 
         <div className={formStyles.field}>
