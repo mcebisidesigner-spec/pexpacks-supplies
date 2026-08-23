@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { listRoles } from "@/lib/admin/roles";
 import { deleteRoleAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "../admin.module.css";
 import styles from "./roles.module.css";
 
@@ -12,19 +15,20 @@ export default async function RolesPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={adminStyles.toolbar}>
-        <div className={adminStyles.headerRow}>
-          <h1 className={adminStyles.pageTitle}>
-            Roles
-            <span className={adminStyles.count}>
-              {roles.length} {roles.length === 1 ? "role" : "roles"}
-            </span>
-          </h1>
-          <Link href="/admin/roles/new" className={adminStyles.addButton}>
-            + New role
-          </Link>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Roles & Permissions"
+        count={roles.length}
+        subtitle="Manage administrative roles and assigned security permissions."
+        actions={
+          <AdminButton
+            href="/admin/roles/new"
+            variant="primary"
+            icon={<Plus size={14} />}
+          >
+            New Role
+          </AdminButton>
+        }
+      />
 
       {roles.length === 0 ? (
         <div className={adminStyles.tableCard}>

@@ -1,13 +1,14 @@
-﻿import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, Plus } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listFaqs } from "@/lib/admin/content";
 import { setFaqVisibleAction, deleteFaqAction, reorderFaqAction } from "../actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { ReorderPanel } from "@/components/admin/ReorderPanel";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "../../admin.module.css";
 import styles from "../content.module.css";
-import reorderStyles from "../reorder.module.css";
 
 export const metadata = {
   title: "FAQs | Admin | Pexpacks",
@@ -22,58 +23,65 @@ export default async function FaqsPage() {
   const canManage = hasPermission(session, "content.manage");
   const faqs = await listFaqs();
 
+  const reorderItems = faqs.map((f) => ({
+    id: f.id,
+    label: f.question,
+    visible: f.visible,
+  }));
+
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={adminStyles.toolbar}>
-        <div className={adminStyles.headerRow}>
-          <div>
-            <h1 className={adminStyles.pageTitle}>
-              FAQs
-              <span className={adminStyles.count}>
-                {faqs.length} {faqs.length === 1 ? "item" : "items"}
-              </span>
-            </h1>
-            <p className={styles.subtitle}>
-              Questions shown on the FAQ page and in the site FAQ marquees.
-            </p>
+      <AdminPageHeader
+        title="Frequently Asked Questions"
+        count={faqs.length}
+        subtitle="Questions shown on the FAQ page and in the site FAQ marquees."
+        actions={
+          <div style={{ display: "flex", gap: "8px" }}>
+            <AdminButton
+              href="/admin/content"
+              variant="secondary"
+              icon={<ArrowLeft size={14} />}
+            >
+              Back to Content
+            </AdminButton>
+            {canManage && (
+              <AdminButton
+                href="/admin/content/faqs/new"
+                variant="primary"
+                icon={<Plus size={14} />}
+              >
+                New FAQ
+              </AdminButton>
+            )}
           </div>
-          {canManage ? (
-            <Link href="/admin/content/faqs/new" className={adminStyles.addButton}>
-              + New FAQ
-            </Link>
-          ) : null}
-        </div>
-        <Link href="/admin/content" className={styles.backLink}>
-          <ArrowLeft aria-hidden="true" /> Website content
-        </Link>
-      </div>
+        }
+      />
 
-      {faqs.length === 0 ? (
-        <div className={adminStyles.tableCard}>
-          <div className={adminStyles.emptyStateContainer}>
-            <div className={adminStyles.emptyStateInner}>
-              <div className={adminStyles.emptyIconWrapper}>
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                  <path d="M12 17h.01" />
-                </svg>
+      <div style={{ display: "grid", gridTemplateColumns: canManage ? "1fr 300px" : "1fr", gap: "20px", alignItems: "start" }}>
+        {faqs.length === 0 ? (
+          <div className={adminStyles.tableCard}>
+            <div className={adminStyles.emptyStateContainer}>
+              <div className={adminStyles.emptyStateInner}>
+                <div className={adminStyles.emptyIconWrapper}>
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <path d="M12 17h.01" />
+                  </svg>
+                </div>
+                <h2 className={adminStyles.emptyStateTitle}>No FAQs yet</h2>
+                <p className={adminStyles.emptyStateText}>
+                  Create your first FAQ to answer common customer questions.
+                </p>
               </div>
-              <h2 className={adminStyles.emptyStateTitle}>No FAQs yet</h2>
-              <p className={adminStyles.emptyStateText}>
-                Add your first question to start building the FAQ content.
-              </p>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className={canManage ? reorderStyles.layout : undefined}>
+        ) : (
           <div className={adminStyles.tableCard}>
             <div className={adminStyles.tableWrapper}>
               <table className={adminStyles.table}>
                 <thead>
                   <tr>
-                    <th>Slug</th>
                     <th>Question</th>
                     <th>Category</th>
                     <th>Links</th>
@@ -83,65 +91,61 @@ export default async function FaqsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {faqs.map((f) => (
-                    <tr key={f.id}>
+                  {faqs.map((faq) => (
+                    <tr key={faq.id}>
                       <td>
-                        <span className={styles.slug}>{f.slug ?? "—"}</span>
-                      </td>
-                      <td>{f.question}</td>
-                      <td>
-                        <span className={adminStyles.badge + " " + adminStyles.badgeInfo}>
-                          {f.category}
-                        </span>
-                      </td>
-                      <td>
-                        <div className={styles.linksList}>
-                          {linkCount(f.links) > 0
-                            ? `${linkCount(f.links)} link${linkCount(f.links) === 1 ? "" : "s"}`
-                            : "—"}
+                        <div className={styles.questionCell}>
+                          <div className={styles.questionText}>{faq.question}</div>
+                          <div className={styles.answerSnippet}>{faq.answer}</div>
                         </div>
                       </td>
-                      <td>{f.sort_order}</td>
+                      <td>
+                        <span className={styles.categoryBadge}>{faq.category}</span>
+                      </td>
+                      <td>{linkCount(faq.links)}</td>
+                      <td>{faq.sort_order}</td>
                       <td>
                         <span
                           className={`${adminStyles.badge} ${
-                            f.visible ? adminStyles.badgePaid : adminStyles.badgeMuted
+                            faq.visible ? styles.badgeLive : styles.badgeDraft
                           }`}
                         >
-                          {f.visible ? "Live" : "Hidden"}
+                          {faq.visible ? "Live" : "Hidden"}
                         </span>
                       </td>
                       <td>
-                        {canManage ? (
-                          <div className={styles.actions}>
-                            <Link
-                              href={`/admin/content/faqs/${f.id}`}
-                              className={adminStyles.actionLink}
-                            >
-                              Edit
-                            </Link>
-                            <form action={setFaqVisibleAction.bind(null, f.id, !f.visible)}>
-                              <button
-                                type="submit"
-                                className={`${adminStyles.rowButton} ${
-                                  f.visible ? styles.rowButtonHide : styles.rowButtonShow
-                                }`}
+                        <div className={styles.actions}>
+                          {canManage ? (
+                            <>
+                              <Link
+                                href={`/admin/content/faqs/${faq.id}`}
+                                className={adminStyles.actionLink}
                               >
-                                {f.visible ? "Hide" : "Show"}
-                              </button>
-                            </form>
-                            <form action={deleteFaqAction.bind(null, f.id)}>
-                              <ConfirmButton
-                                label="Delete"
-                                confirmText={`Delete the FAQ "${f.question}"? This cannot be undone.`}
-                                busyLabel="Deleting…"
-                                className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
-                              />
-                            </form>
-                          </div>
-                        ) : (
-                          <span className={styles.emptyNote}>View only</span>
-                        )}
+                                Edit
+                              </Link>
+                              <form
+                                action={setFaqVisibleAction.bind(null, faq.id, !faq.visible)}
+                              >
+                                <button
+                                  type="submit"
+                                  className={`${adminStyles.rowButton} ${styles.rowButtonToggle}`}
+                                >
+                                  {faq.visible ? "Hide" : "Show"}
+                                </button>
+                              </form>
+                              <form action={deleteFaqAction.bind(null, faq.id)}>
+                                <ConfirmButton
+                                  label="Delete"
+                                  confirmText={`Delete FAQ "${faq.question}"?`}
+                                  busyLabel="Deleting…"
+                                  className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
+                                />
+                              </form>
+                            </>
+                          ) : (
+                            <span className={styles.mutedAction}>View only</span>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -149,16 +153,17 @@ export default async function FaqsPage() {
               </table>
             </div>
           </div>
-          {canManage ? (
-            <ReorderPanel
-              title="Order"
-              subtitle="Use the arrows to slide FAQs up and down. The order is saved automatically and updates the FAQ page and marquees."
-              items={faqs.map((f) => ({ id: f.id, label: f.question, visible: f.visible }))}
-              onReorder={reorderFaqAction}
-            />
-          ) : null}
-        </div>
-      )}
+        )}
+
+        {canManage && faqs.length > 1 && (
+          <ReorderPanel
+            title="Sort Order"
+            subtitle="Drag or step FAQs up and down."
+            items={reorderItems}
+            onReorder={reorderFaqAction}
+          />
+        )}
+      </div>
     </div>
   );
 }

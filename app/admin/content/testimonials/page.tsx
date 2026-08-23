@@ -1,9 +1,11 @@
-﻿import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, Plus } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listTestimonials } from "@/lib/admin/content";
 import { setTestimonialVisibleAction, deleteTestimonialAction } from "../actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "../../admin.module.css";
 import styles from "../content.module.css";
 
@@ -18,29 +20,31 @@ export default async function TestimonialsPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={adminStyles.toolbar}>
-        <div className={adminStyles.headerRow}>
-          <div>
-            <h1 className={adminStyles.pageTitle}>
-              Testimonials
-              <span className={adminStyles.count}>
-                {testimonials.length} {testimonials.length === 1 ? "item" : "items"}
-              </span>
-            </h1>
-            <p className={styles.subtitle}>
-              Shown in the homepage testimonial marquee, newest first by sort order.
-            </p>
+      <AdminPageHeader
+        title="Testimonials"
+        count={testimonials.length}
+        subtitle="Shown in the homepage testimonial marquee, newest first by sort order."
+        actions={
+          <div style={{ display: "flex", gap: "8px" }}>
+            <AdminButton
+              href="/admin/content"
+              variant="secondary"
+              icon={<ArrowLeft size={14} />}
+            >
+              Back to Content
+            </AdminButton>
+            {canManage && (
+              <AdminButton
+                href="/admin/content/testimonials/new"
+                variant="primary"
+                icon={<Plus size={14} />}
+              >
+                New Testimonial
+              </AdminButton>
+            )}
           </div>
-          {canManage ? (
-            <Link href="/admin/content/testimonials/new" className={adminStyles.addButton}>
-              + New testimonial
-            </Link>
-          ) : null}
-        </div>
-        <Link href="/admin/content" className={styles.backLink}>
-          <ArrowLeft aria-hidden="true" /> Website content
-        </Link>
-      </div>
+        }
+      />
 
       {testimonials.length === 0 ? (
         <div className={adminStyles.tableCard}>
@@ -64,71 +68,76 @@ export default async function TestimonialsPage() {
             <table className={adminStyles.table}>
               <thead>
                 <tr>
-                  <th>Person</th>
+                  <th>Author</th>
                   <th>Quote</th>
-                  <th>Rating</th>
+                  <th>Context / School</th>
                   <th>Sort</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {testimonials.map((t) => (
-                  <tr key={t.id}>
+                {testimonials.map((item) => (
+                  <tr key={item.id}>
                     <td>
-                      <strong>{t.name}</strong>
-                      <div className={adminStyles.schoolName}>
-                        {[t.role, t.context].filter(Boolean).join(" · ") || "—"}
+                      <div className={styles.authorCell}>
+                        <div className={styles.authorName}>{item.name}</div>
+                        {item.role ? (
+                          <div className={styles.authorRole}>{item.role}</div>
+                        ) : null}
                       </div>
                     </td>
                     <td>
-                      <div className={styles.quote}>
-                        “{t.quote.slice(0, 90)}
-                        {t.quote.length > 90 ? "…" : ""}”
-                      </div>
+                      <p className={styles.quoteSnippet}>“{item.quote}”</p>
                     </td>
-                    <td>{"★".repeat(t.rating)}</td>
-                    <td>{t.sort_order}</td>
+                    <td>{item.context ?? "—"}</td>
+                    <td>{item.sort_order}</td>
                     <td>
                       <span
                         className={`${adminStyles.badge} ${
-                          t.visible ? adminStyles.badgePaid : adminStyles.badgeMuted
+                          item.visible ? styles.badgeLive : styles.badgeDraft
                         }`}
                       >
-                        {t.visible ? "Live" : "Hidden"}
+                        {item.visible ? "Live" : "Hidden"}
                       </span>
                     </td>
                     <td>
-                      {canManage ? (
-                        <div className={styles.actions}>
-                          <Link
-                            href={`/admin/content/testimonials/${t.id}`}
-                            className={adminStyles.actionLink}
-                          >
-                            Edit
-                          </Link>
-                          <form action={setTestimonialVisibleAction.bind(null, t.id, !t.visible)}>
-                            <button
-                              type="submit"
-                              className={`${adminStyles.rowButton} ${
-                                t.visible ? styles.rowButtonHide : styles.rowButtonShow
-                              }`}
+                      <div className={styles.actions}>
+                        {canManage ? (
+                          <>
+                            <Link
+                              href={`/admin/content/testimonials/${item.id}`}
+                              className={adminStyles.actionLink}
                             >
-                              {t.visible ? "Hide" : "Show"}
-                            </button>
-                          </form>
-                          <form action={deleteTestimonialAction.bind(null, t.id)}>
-                            <ConfirmButton
-                              label="Delete"
-                              confirmText={`Delete the testimonial from ${t.name}? This cannot be undone.`}
-                              busyLabel="Deleting…"
-                              className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
-                            />
-                          </form>
-                        </div>
-                      ) : (
-                        <span className={styles.emptyNote}>View only</span>
-                      )}
+                              Edit
+                            </Link>
+                            <form
+                              action={setTestimonialVisibleAction.bind(
+                                null,
+                                item.id,
+                                !item.visible
+                              )}
+                            >
+                              <button
+                                type="submit"
+                                className={`${adminStyles.rowButton} ${styles.rowButtonToggle}`}
+                              >
+                                {item.visible ? "Hide" : "Show"}
+                              </button>
+                            </form>
+                            <form action={deleteTestimonialAction.bind(null, item.id)}>
+                              <ConfirmButton
+                                label="Delete"
+                                confirmText={`Delete testimonial by ${item.name}?`}
+                                busyLabel="Deleting…"
+                                className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
+                              />
+                            </form>
+                          </>
+                        ) : (
+                          <span className={styles.mutedAction}>View only</span>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

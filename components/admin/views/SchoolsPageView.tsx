@@ -1,377 +1,179 @@
-﻿"use client";
+"use client";
 
-import { useState, useTransition, useMemo } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Eye,
-  EyeOff,
-  GraduationCap,
-  Plus,
-  Search,
-} from "lucide-react";
+import { Edit2, Eye, EyeOff, Plus } from "lucide-react";
 import styles from "./CorePagesView.module.css";
-import adminStyles from "@/app/admin/admin.module.css";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import {
-  listSchoolsAction,
-  toggleSchoolVisibilityAction,
-} from "@/app/admin/schools/actions";
-import type { SchoolListResult } from "@/lib/admin/schools";
+  DataTable,
+  DataTableToolbar,
+  DataTablePagination,
+  useTableParams,
+  type ColumnDef,
+} from "@/components/admin/shared/DataTable";
+import { toggleSchoolVisibilityAction } from "@/app/admin/schools/actions";
+import type { SchoolListResult, SchoolRow } from "@/lib/admin/schools";
 
 interface SchoolsPageViewProps {
   initialData?: SchoolListResult;
 }
 
-function formatCount(value: number): string {
-  return Math.trunc(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
 export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const { params, setParams, isPending } = useTableParams();
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
-  const [schoolsResult, setSchoolsResult] = useState<SchoolListResult>(
-    initialData ?? {
-      schools: [],
-      total: 0,
-      page: 1,
-      pageCount: 1,
-      cities: [],
-      provinces: [],
-    }
-  );
-
-  const [search, setSearch] = useState("");
-  const [cityFilter, setCityFilter] = useState("all");
-  const [provinceFilter, setProvinceFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [pageSize, setPageSize] = useState(20);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // Fetch updated data from Supabase when page, pageSize, or filters change
-  const loadSchools = (
-    page: number,
-    size: number,
-    qStr: string,
-    city: string,
-    province: string,
-    status: string
-  ) => {
-    startTransition(async () => {
-      const res = await listSchoolsAction({
-        page,
-        pageSize: size,
-        q: qStr || undefined,
-        city: city === "all" ? undefined : city,
-        province: province === "all" ? undefined : province,
-        status: status === "all" ? undefined : status,
-      });
-      setSchoolsResult(res);
-    });
+  const data = initialData || {
+    schools: [],
+    total: 0,
+    page: 1,
+    pageCount: 1,
+    cities: [],
+    provinces: [],
   };
 
-  const handleSearchChange = (val: string) => {
-    setSearch(val);
-    setCurrentPage(1);
-    loadSchools(1, pageSize, val, cityFilter, provinceFilter, statusFilter);
-  };
-
-  const handleCityChange = (val: string) => {
-    setCityFilter(val);
-    setCurrentPage(1);
-    loadSchools(1, pageSize, search, val, provinceFilter, statusFilter);
-  };
-
-  const handleProvinceChange = (val: string) => {
-    setProvinceFilter(val);
-    setCurrentPage(1);
-    loadSchools(1, pageSize, search, cityFilter, val, statusFilter);
-  };
-
-  const handleStatusChange = (val: string) => {
-    setStatusFilter(val);
-    setCurrentPage(1);
-    loadSchools(1, pageSize, search, cityFilter, provinceFilter, val);
-  };
-
-  const handlePageSizeChange = (size: number) => {
-    setPageSize(size);
-    setCurrentPage(1);
-    loadSchools(1, size, search, cityFilter, provinceFilter, statusFilter);
-  };
-
-  const handlePageChange = (p: number) => {
-    const targetPage = Math.max(1, Math.min(p, schoolsResult.pageCount || 1));
-    setCurrentPage(targetPage);
-    loadSchools(targetPage, pageSize, search, cityFilter, provinceFilter, statusFilter);
-  };
-
-  const handleApplyClick = () => {
-    setCurrentPage(1);
-    loadSchools(1, pageSize, search, cityFilter, provinceFilter, statusFilter);
-  };
-
-  const handleToggleHide = async (id: string, currentStatus: string, e: React.MouseEvent) => {
+  const handleToggleVisibility = async (id: string, currentVal: boolean, e: React.MouseEvent) => {
     e.stopPropagation();
-    try {
-      const res = await toggleSchoolVisibilityAction(id);
-      if (res.ok) {
-        setSchoolsResult((prev) => ({
-          ...prev,
-          schools: prev.schools.map((s) =>
-            s.id === id
-              ? { ...s, status: s.status === "active" ? "inactive" : "active" }
-              : s
-          ),
-        }));
-      }
-    } catch (err) {
-      console.error("Toggle school status failed:", err);
-    }
+    setTogglingId(id);
+    await toggleSchoolVisibilityAction(id);
+    setTogglingId(null);
+    router.refresh();
   };
 
-  const { schools, total, pageCount } = schoolsResult;
-  const fromRecord = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
-  const toRecord = Math.min(total, currentPage * pageSize);
-
-  // Pagination number buttons logic
-  const pageNumbers = useMemo(() => {
-    const pages: number[] = [];
-    const maxVisible = 5;
-    let start = Math.max(1, currentPage - 2);
-    const end = Math.min(pageCount, start + maxVisible - 1);
-    if (end - start + 1 < maxVisible) {
-      start = Math.max(1, end - maxVisible + 1);
-    }
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
-  }, [currentPage, pageCount]);
+  const columns: ColumnDef<SchoolRow>[] = [
+    {
+      key: "name",
+      header: "School Name",
+      sortable: true,
+      render: (row) => (
+        <div className={styles.productCell}>
+          <Link
+            href={`/admin/schools/${row.id}`}
+            className={styles.productNameLink}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className={styles.productBrand}>
+            {row.city || "Johannesburg"}, {row.province || "Gauteng"}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "email",
+      header: "Contact Email & Phone",
+      render: (row) => (
+        <div className={styles.productCell}>
+          <span>{row.email || "—"}</span>
+          <span className={styles.productBrand}>{row.telephone || "—"}</span>
+        </div>
+      ),
+    },
+    {
+      key: "city",
+      header: "Location",
+      sortable: true,
+      width: "140px",
+      render: (row) => <span>{row.city || "—"}</span>,
+    },
+    {
+      key: "published",
+      header: "Status",
+      sortable: true,
+      align: "center",
+      width: "120px",
+      render: (row) => (
+        <StatusBadge
+          status={row.published ? "Published" : "Hidden"}
+          tone={row.published ? "emerald" : "slate"}
+          showDot
+        />
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right",
+      width: "100px",
+      render: (row) => (
+        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+          <AdminButton
+            type="button"
+            variant="icon"
+            size="sm"
+            aria-label={row.published ? "Hide school" : "Publish school"}
+            loading={togglingId === row.id}
+            onClick={(e) => handleToggleVisibility(row.id, Boolean(row.published), e)}
+            icon={row.published ? <EyeOff size={13} /> : <Eye size={13} />}
+          />
+          <AdminButton
+            href={`/admin/schools/${row.id}/edit`}
+            variant="iconTeal"
+            size="sm"
+            aria-label={`Edit ${row.name}`}
+            icon={<Edit2 size={13} />}
+          />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className={styles.container}>
-      {/* Header */}
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>
-            Schools{" "}
-            <span className={adminStyles.headerCount}>
-              ({formatCount(total)})
-            </span>
-          </h1>
-          <p className={styles.headerSubtitle}>
-            Central directory of all registered partner and non-partner schools in South Africa.
-          </p>
-        </div>
-        <div className={styles.headerActions}>
-          <Link href="/admin/schools/new" className={styles.primaryBtn}>
-            <Plus size={14} /> Add School
-          </Link>
-        </div>
-      </div>
-
-      {/* Toolbar Filters */}
-      <div className={adminStyles.toolbar}>
-        <div className={styles.toolbarLeft}>
-          <div className={styles.searchBox}>
-            <Search />
-            <input
-              className={adminStyles.searchInput}
-              placeholder="Search by school name, city or province..."
-              value={search}
-              onChange={(e) => handleSearchChange(e.target.value)}
-            />
-          </div>
-
-          {/* Cities Dropdown (Populated from DB) */}
-          <select
-            className={styles.selectInput}
-            value={cityFilter}
-            onChange={(e) => handleCityChange(e.target.value)}
+      <AdminPageHeader
+        title="Schools Directory"
+        count={data.total}
+        subtitle="Manage partner schools, locations, contact records, and pack listings."
+        actions={
+          <AdminButton
+            href="/admin/schools/new"
+            variant="primary"
+            icon={<Plus size={14} />}
           >
-            <option value="all">All cities ({schoolsResult.cities?.length ?? 0})</option>
-            {(schoolsResult.cities ?? []).map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+            New School
+          </AdminButton>
+        }
+      />
 
-          {/* Provinces Dropdown (Populated from DB) */}
-          <select
-            className={styles.selectInput}
-            value={provinceFilter}
-            onChange={(e) => handleProvinceChange(e.target.value)}
-          >
-            <option value="all">All provinces ({schoolsResult.provinces?.length ?? 0})</option>
-            {(schoolsResult.provinces ?? []).map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-
-          {/* Status Dropdown */}
-          <select
-            className={styles.selectInput}
-            value={statusFilter}
-            onChange={(e) => handleStatusChange(e.target.value)}
-          >
-            <option value="all">All statuses</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="archived">Hidden</option>
-          </select>
-
-          <button
-            className={styles.primaryBtn}
-            type="button"
-            onClick={handleApplyClick}
-          >
-            Apply
-          </button>
-        </div>
-      </div>
-
-      {/* Data Table Card */}
-      <div className={adminStyles.tableCard} style={{ opacity: isPending ? 0.7 : 1 }}>
-        <div className={adminStyles.tableWrapper}>
-          <table className={styles.dataTable}>
-            <thead>
-              <tr>
-                <th className={adminStyles.textCenter} style={{ width: 36 }}></th>
-                <th>School Name</th>
-                <th>City</th>
-                <th>Province</th>
-                <th>Partner Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {schools.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className={`${adminStyles.textCenter} ${adminStyles.cMuted}`} style={{ padding: "32px" }}>
-                    No matching schools found in the database.
-                  </td>
-                </tr>
-              ) : (
-                schools.map((school) => {
-                  const isPartner = school.is_partner;
-                  const isActive = school.status === "active";
-                  const targetSlugOrId = school.slug || school.id;
-                  return (
-                    <tr
-                      key={school.id}
-                      className={styles.dataRow}
-                      onClick={() => router.push(`/admin/schools/${targetSlugOrId}/info`)}
-                    >
-                      <td>
-                        <div
-                          className={`${adminStyles.avatarBadge} ${adminStyles.iconBlue}`}
-                        >
-                          <GraduationCap size={14} />
-                        </div>
-                      </td>
-                      <td>
-                        <Link
-                          href={`/admin/schools/${targetSlugOrId}/info`}
-                          className={`${adminStyles.cWhite} ${adminStyles.fw700}`}
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {school.name}
-                        </Link>
-                      </td>
-                      <td>{school.city || "—"}</td>
-                      <td>{school.province || "—"}</td>
-                      <td>
-                        <span className={isPartner ? adminStyles.badgeGreen : adminStyles.badgeDark}>
-                          ● {isPartner ? "Partner" : "Non-partner"}
-                        </span>
-                      </td>
-                      <td>
-                        <div
-                          className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles["gap-8"]}`}
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <span className={isActive ? adminStyles.badgeTeal : adminStyles.badgeDark}>
-                            {isActive ? "Active" : "Inactive"}
-                          </span>
-                          <button
-                            className={`${adminStyles.actionBtnDots} ${adminStyles["text-11"]} ${adminStyles["px-8"]}`}
-                            type="button"
-                            onClick={(e) => handleToggleHide(school.id, school.status, e)}
-                          >
-                            {isActive ? <EyeOff size={12} /> : <Eye size={12} />}
-                            {isActive ? "Hide" : "Show"}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Dynamic Pagination & Working "Show Per Page" Selector */}
-        <div className={styles.paginationFooter}>
-          <span>
-            Showing {formatCount(fromRecord)} to {formatCount(toRecord)} of{" "}
-            {formatCount(total)} schools
-          </span>
-
-          {/* Page Controls */}
-          <div className={adminStyles.paginationControls}>
-            <button
-              className={styles.pageBtn}
-              disabled={currentPage <= 1 || isPending}
-              onClick={() => handlePageChange(currentPage - 1)}
+      <DataTableToolbar
+        searchPlaceholder="Search schools by name, city, province..."
+        filters={
+          <div className={styles.filterGroup}>
+            <AdminSelect
+              value={params.status || "all"}
+              onChange={(e) => setParams({ status: e.target.value }, true)}
+              className={styles.toolbarSelect}
             >
-              &lt;
-            </button>
-
-            {pageNumbers.map((p) => (
-              <button
-                key={p}
-                className={`${styles.pageBtn} ${
-                  p === currentPage ? styles.pageBtnActive : ""
-                }`}
-                disabled={isPending}
-                onClick={() => handlePageChange(p)}
-              >
-                {p}
-              </button>
-            ))}
-
-            <button
-              className={styles.pageBtn}
-              disabled={currentPage >= pageCount || isPending}
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              &gt;
-            </button>
+              <option value="all">Status: All</option>
+              <option value="published">Published</option>
+              <option value="hidden">Hidden</option>
+            </AdminSelect>
           </div>
+        }
+      />
 
-          {/* Working Show per page selector */}
-          <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles["gap-6"]}`}>
-            <span>Show</span>
-            <select
-              className={`${styles.selectInput} ${adminStyles["h-28"]} ${adminStyles["text-11"]} ${adminStyles["bg-surface-strong"]}`}
-              value={pageSize}
-              onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-            >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-              <option value={250}>250</option>
-            </select>
-            <span>per page</span>
-          </div>
-        </div>
-      </div>
+      <DataTable
+        data={data.schools}
+        columns={columns}
+        keyExtractor={(row) => row.id}
+        onRowClick={(row) => router.push(`/admin/schools/${row.id}`)}
+        isLoading={isPending}
+        emptyTitle="No schools found"
+        emptySubtitle="Try adjusting your search filters."
+        footer={
+          <DataTablePagination
+            total={data.total}
+            pageSize={data.schools.length || 25}
+            currentPage={data.page}
+          />
+        }
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listTestimonials, listFaqs } from "@/lib/admin/content";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import adminStyles from "../admin.module.css";
 import styles from "./content.module.css";
 
@@ -36,15 +37,10 @@ export default async function ContentHubPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={adminStyles.headerRow}>
-        <div>
-          <h1 className={adminStyles.pageTitle}>Website Content</h1>
-          <p className={styles.subtitle}>
-            Manage testimonials, FAQs and site-wide copy.
-            {canManage ? "" : " You have view-only access."}
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Website Content"
+        subtitle="Manage testimonials, FAQs, and site-wide marketing copy."
+      />
 
       <div className={styles.grid}>
         {cards.map((card) => (
