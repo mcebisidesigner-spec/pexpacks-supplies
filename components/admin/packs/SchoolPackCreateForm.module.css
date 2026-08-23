@@ -1,4 +1,4 @@
-﻿.form {
+.form {
   gap: 14px;
 }
 
@@ -34,6 +34,9 @@
 
 .priceCard {
   min-height: 150px;
+  overflow: visible !important;
+  position: relative;
+  z-index: 100;
 }
 
 .priceHeader {
@@ -52,10 +55,15 @@
   flex-direction: column;
   gap: 16px;
   padding: 16px 22px 22px;
+  overflow: visible;
+  position: relative;
 }
 
 .itemSearchGroup {
   margin-top: 0;
+  overflow: visible;
+  position: relative;
+  z-index: 200;
 }
 
 .fieldGroup {
@@ -63,6 +71,7 @@
   min-width: 0;
   flex-direction: column;
   gap: 8px;
+  position: relative;
 }
 
 .fieldLabel {

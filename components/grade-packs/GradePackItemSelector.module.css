@@ -1,4 +1,4 @@
-﻿/* ===================================================
+/* ===================================================
    PexPacks Supplies — Grade Pack Item Selector
    Token-based styles scoped to this component.
    Assumes rendering inside the .admin-dark theme scope
@@ -143,16 +143,16 @@
 /* Search results dropdown --------------------------------------------- */
 .results {
   position: absolute;
-  z-index: 50;
+  z-index: 99999;
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  max-height: 320px;
+  max-height: 380px;
   overflow-y: auto;
-  border-radius: var(--a-radius);
-  border: 1px solid var(--a-border-strong);
-  background: var(--a-surface);
-  box-shadow: var(--a-shadow-card);
+  border-radius: 10px;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  background: #090e17;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(16, 185, 129, 0.2);
 }
 
 .resultButton {
@@ -162,21 +162,21 @@
   gap: 16px;
   width: 100%;
   min-height: 52px;
-  padding: 14px;
+  padding: 14px 16px;
   text-align: left;
   border: 0;
-  background: var(--a-surface);
+  background: #090e17;
   color: inherit;
   cursor: pointer;
   transition: background 0.14s ease;
 }
 
 .resultButton:hover {
-  background: var(--a-surface-2);
+  background: rgba(16, 185, 129, 0.12);
 }
 
 .resultButton + .resultButton {
-  border-top: 1px solid var(--a-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .resultButton:focus-visible {
@@ -195,18 +195,18 @@
 .resultTitle {
   font-size: 14px;
   font-weight: 800;
-  color: var(--a-text);
+  color: #ffffff;
   transition: color 0.14s ease;
 }
 
 .resultButton:hover .resultTitle {
-  color: var(--a-accent);
+  color: #10b981;
 }
 
 .resultMeta {
   margin: 0;
   overflow: hidden;
-  color: var(--a-accent);
+  color: #38bdf8;
   font-size: 11px;
   font-weight: 700;
   text-overflow: ellipsis;
@@ -218,7 +218,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
-  color: var(--a-text-3);
+  color: #94a3b8;
 }
 
 .resultPriceBlock {
@@ -229,28 +229,28 @@
 .resultPrice {
   font-size: 14px;
   font-weight: 700;
-  color: var(--a-green);
+  color: #10b981;
 }
 
 .resultPriceTag {
   font-size: 10px;
-  color: var(--a-text-4);
+  color: #64748b;
 }
 
 .resultEmpty {
   position: absolute;
-  z-index: 30;
+  z-index: 99999;
   top: calc(100% + 6px);
   left: 0;
   right: 0;
   padding: 16px;
   text-align: center;
   font-size: 14px;
-  color: var(--a-text-3);
-  border-radius: var(--a-radius-sm);
-  border: 1px solid var(--a-border-strong);
-  background: var(--a-surface);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  color: #94a3b8;
+  border-radius: 10px;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  background: #090e17;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.95);
 }
 
 .emptyIcon {
