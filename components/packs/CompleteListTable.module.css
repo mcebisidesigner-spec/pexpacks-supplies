@@ -40,6 +40,17 @@
   vertical-align: top;
 }
 
+.itemWithIcon {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.itemIcon {
+  flex-shrink: 0;
+  color: var(--pex-keppel, #10b981);
+}
+
 .specification {
   padding: 13px var(--space-4);
   color: var(--pex-text-muted);
