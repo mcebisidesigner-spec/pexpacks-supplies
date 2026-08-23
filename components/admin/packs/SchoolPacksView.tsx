@@ -434,7 +434,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
       {/* ===================================================
           3. FILTER & ACTION TOOLBAR
           =================================================== */}
-      <div className={styles.toolbar}>
+      <div>
         <div className={styles.toolbarLeft}>
           <div className={styles.searchBox}>
             <Search />
