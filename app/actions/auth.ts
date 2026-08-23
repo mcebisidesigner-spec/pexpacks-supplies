@@ -309,7 +309,7 @@ export async function logoutAction(): Promise<never> {
 
   try {
     cookieStore.set({
-      name: "pex_admin_last_activity",
+      name: "px_admin_last_activity",
       value: "",
       path: "/",
       expires: new Date(0),

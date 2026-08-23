@@ -179,7 +179,7 @@ export default function PexConsoleGateway() {
       const res = await verifyOtpAction(email, token);
       if (res.ok && res.redirectUrl) {
         try {
-          window.sessionStorage.setItem("pex_admin_runtime_session", "active");
+          window.sessionStorage.setItem("px_admin_runtime_session", "active");
         } catch {
           // ignore
         }

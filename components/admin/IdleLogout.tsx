@@ -160,7 +160,7 @@ export function IdleLogout() {
         try {
           window.sessionStorage.setItem("pex_console_popup_notice", msg);
         } catch {}
-        window.location.replace("/pex-console");
+        window.location.replace("/pex-console-secure");
       }
     };
 
