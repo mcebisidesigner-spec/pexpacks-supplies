@@ -21,6 +21,12 @@ function getProductSlug(item: { slug?: string | null; name?: string | null; sku?
   return item.id || "";
 }
 
+function formatProductNameFromSlug(slug: string): string {
+  return decodeURIComponent(slug)
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 export default async function EditProductPage({ params }: EditProductPageProps) {
   await requireAdmin({ permission: "items.edit" });
   const { productId } = await params;
@@ -35,7 +41,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
   }
 
   const productSlug = item ? getProductSlug(item) : productId;
-  const productName = item?.name || "Product Details";
+  const productName = item?.name || formatProductNameFromSlug(productId);
   const category = item?.category || "Stationery";
 
   return (
@@ -44,7 +50,6 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
         backHref={productSlug ? `/admin/products/${productSlug}` : "/admin/products"}
         backLabel="Back to Product"
         title={productName}
-        titleHighlight="Edit Item"
         badge={<StatusBadge status={category} tone="emerald" showDot />}
         subtitle={`SKU: ${item?.sku || productId} • Manage pricing, cost verification, and master catalogue metadata.`}
       />
@@ -52,6 +57,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
       <ItemForm
         item={item}
         packs={[]}
+        submitLabel="Save item"
         returnTo={productSlug ? `/admin/products/${productSlug}` : "/admin/products"}
       />
     </div>

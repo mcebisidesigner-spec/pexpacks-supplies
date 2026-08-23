@@ -16,6 +16,7 @@ interface ItemFormProps {
   item: ItemRow | null;
   packs: { id: string; title: string }[];
   returnTo?: string;
+  submitLabel?: string;
 }
 
 function SubmitButton({ label }: { label: string }) {
@@ -27,7 +28,12 @@ function SubmitButton({ label }: { label: string }) {
   );
 }
 
-export function ItemForm({ item, packs, returnTo = "/admin/items" }: ItemFormProps) {
+export function ItemForm({
+  item,
+  packs,
+  returnTo = "/admin/items",
+  submitLabel = "Save item",
+}: ItemFormProps) {
   const router = useRouter();
   const action =
     item == null ? createItemAction : updateItemAction.bind(null, item.id);
@@ -225,7 +231,7 @@ export function ItemForm({ item, packs, returnTo = "/admin/items" }: ItemFormPro
         <Link href={returnTo} className={formStyles.cancelButton}>
           Cancel
         </Link>
-        <SubmitButton label={item ? "Save item" : "Add item"} />
+        <SubmitButton label={submitLabel} />
       </div>
     </form>
   );
