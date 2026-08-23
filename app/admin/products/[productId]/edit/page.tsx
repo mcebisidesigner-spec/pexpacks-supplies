@@ -1,10 +1,7 @@
-import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
 import { ItemForm } from "@/components/admin/items/ItemForm";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface EditProductPageProps {
@@ -19,17 +16,11 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
   return (
     <div className={styles.container}>
       <AdminPageHeader
-        title="Edit Product Pricing & Cost"
-        subtitle={item?.name || "Master Product"}
-        actions={
-          <AdminButton
-            href={`/admin/products/${productId}`}
-            variant="secondary"
-            icon={<ArrowLeft size={14} />}
-          >
-            Back to Product
-          </AdminButton>
-        }
+        backHref="/admin/products"
+        backLabel="Back to Products"
+        title={item?.name || "Product Details"}
+        titleHighlight="Edit Item"
+        subtitle={`SKU: ${item?.sku || productId} • Manage pricing, cost verification, and master catalogue metadata.`}
       />
 
       <ItemForm item={item} packs={[]} />

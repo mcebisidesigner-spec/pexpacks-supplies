@@ -6,6 +6,7 @@ import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { getOrder } from "@/lib/admin/orders";
 import { listOrderItems } from "@/lib/admin/operations";
 import { orderStatusLabel, PAYMENT_GATEWAY_LABELS } from "@/lib/admin/order-constants";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { OrderStatusForm } from "@/components/admin/orders/OrderStatusForm";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
@@ -213,37 +214,35 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
   const canDelete = hasPermission(session, "orders.delete") || hasPermission(session, "orders.edit") || session.isSuperAdmin;
 
   return (
-    <div className={adminStyles.adminContainer}>
-      <div className={styles.detailHeader}>
-        <Link href="/admin/orders" className={adminStyles.resetLink}>
-          <ArrowLeft aria-hidden="true" /> Back to orders
-        </Link>
-        <div className={styles.detailTitleRow}>
-          <span className={styles.reference}>{order.order_reference}</span>
-          <OrderStatusBadge status={order.status} />
-          <span className={styles.created}>{formatDateTime(order.created_at)}</span>
-        </div>
-
-        <div className={styles.actionRow}>
-          <div className={styles.statusGroup}>
+    <div className={styles.container}>
+      <AdminPageHeader
+        backHref="/admin/orders"
+        backLabel="Back to Orders"
+        title={order.order_reference}
+        subtitle={`${order.school_name || "General Order"} • Placed ${formatDateTime(order.created_at)}`}
+        actions={
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+            <OrderStatusBadge status={order.status} />
             {canEdit ? (
               <OrderStatusForm id={order.id} current={order.status} />
             ) : null}
+            {canDelete ? (
+              <form action={deleteOrderAction.bind(null, order.id)}>
+                <ConfirmButton
+                  label="Delete order"
+                  title="Delete Permanently"
+                  confirmText={`Permanently delete order ${order.order_reference}? This action cannot be undone.`}
+                  busyLabel="Deleting…"
+                  className={styles.deleteBtn}
+                />
+              </form>
+            ) : null}
           </div>
-          {canDelete ? (
-            <form action={deleteOrderAction.bind(null, order.id)}>
-              <ConfirmButton
-                label="Delete order"
-                title="Delete Permanently"
-                confirmText={`Permanently delete order ${order.order_reference}? This action cannot be undone.`}
-                busyLabel="Deleting…"
-                className={styles.deleteBtn}
-              />
-            </form>
-          ) : null}
-        </div>
+        }
+      />
 
-        {canRefund ? (
+      {canRefund ? (
+        <div className={`${styles.detailCard} ${adminStyles.mb20}`}>
           <form action={refundOrderAction.bind(null, order.id)} className={styles.refundForm}>
             <textarea
               name="reason"
@@ -258,8 +257,8 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
               className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
             />
           </form>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
       <div className={styles.detailGrid}>
         <div className={styles.detailCard}>

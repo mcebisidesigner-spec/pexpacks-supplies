@@ -43,6 +43,8 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
   return (
     <div className={styles.container}>
       <AdminPageHeader
+        backHref="/admin/schools"
+        backLabel="Back to Schools"
         title={school.name}
         subtitle={`${school.city || "South Africa"} ${school.province ? `• ${school.province}` : ""}`}
         actions={
@@ -53,11 +55,11 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
               showDot
             />
             <AdminButton
-              href="/admin/schools"
-              variant="secondary"
-              icon={<ArrowLeft size={14} />}
+              href={`/admin/packs/${school.slug || school.id}`}
+              variant="teal"
+              icon={<GraduationCap size={14} />}
             >
-              Schools Directory
+              Packs ({packData.total})
             </AdminButton>
             <AdminButton
               href={`/admin/schools/${school.id}/edit`}
@@ -65,13 +67,6 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
               icon={<Edit size={14} />}
             >
               Edit School
-            </AdminButton>
-            <AdminButton
-              href={`/admin/packs/${school.slug || school.id}`}
-              variant="teal"
-              icon={<GraduationCap size={14} />}
-            >
-              Packs ({packData.total})
             </AdminButton>
           </div>
         }

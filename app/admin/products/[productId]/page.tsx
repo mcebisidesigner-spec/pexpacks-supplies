@@ -1,4 +1,4 @@
-import { ArrowLeft, Barcode, DollarSign, Edit, Layers, Tag, TrendingUp } from "lucide-react";
+import { DollarSign, Edit, Layers, Tag, TrendingUp } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
@@ -37,18 +37,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   return (
     <div className={styles.container}>
       <AdminPageHeader
+        backHref="/admin/products"
+        backLabel="Back to Products"
         title={name}
         subtitle={`SKU: ${sku} • Barcode: ${barcode}`}
         actions={
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <StatusBadge status={category} tone="emerald" showDot />
-            <AdminButton
-              href="/admin/products"
-              variant="secondary"
-              icon={<ArrowLeft size={14} />}
-            >
-              Master Products
-            </AdminButton>
             <AdminButton
               href={`/admin/products/${productId}/edit`}
               variant="primary"

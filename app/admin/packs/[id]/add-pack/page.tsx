@@ -1,10 +1,9 @@
-import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";
 import { SchoolPackCreateForm } from "@/components/admin/packs/SchoolPackCreateForm";
 import { createSchoolPackAction } from "../../actions";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 export const metadata = {
@@ -30,15 +29,13 @@ export default async function AddPackPage({ params }: AddPackPageProps) {
 
   return (
     <div className={`${styles.container} ${styles.packEditorContainer}`}>
-      <div style={{ marginBottom: "16px" }}>
-        <AdminButton
-          href={`/admin/packs/${schoolRoute}`}
-          variant="secondary"
-          icon={<ArrowLeft size={14} />}
-        >
-          Back to {school.name}
-        </AdminButton>
-      </div>
+      <AdminPageHeader
+        backHref={`/admin/packs/${schoolRoute}`}
+        backLabel={`Back to ${school.name}`}
+        title={school.name}
+        titleHighlight="New Pack"
+        subtitle={`${school.name} / Manage pack items, pricing, and bulk CSV uploads`}
+      />
 
       <SchoolPackCreateForm
         schoolId={school.id}

@@ -1,7 +1,6 @@
-import { ArrowLeft, Save, ShoppingCart, Tag, Truck } from "lucide-react";
+import { Save, ShoppingCart, Tag, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -15,17 +14,10 @@ export default async function AddMasterItemPage() {
   return (
     <div className={styles.container}>
       <AdminPageHeader
+        backHref="/admin/products"
+        backLabel="Back to Products"
         title="Add New Master Item"
         subtitle="Create a central stationery master item for school packs and supplier purchase orders."
-        actions={
-          <AdminButton
-            href="/admin/products"
-            variant="secondary"
-            icon={<ArrowLeft size={14} />}
-          >
-            Back to Products
-          </AdminButton>
-        }
       />
 
       <form
