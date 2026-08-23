@@ -77,7 +77,7 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       header: "Category",
       sortable: true,
       width: "140px",
-      render: (row) => <span>{row.category || "General"}</span>,
+      render: (row) => <span>{row.category || "Stationery"}</span>,
     },
     {
       key: "current_selling_price",
