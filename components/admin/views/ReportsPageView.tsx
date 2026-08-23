@@ -28,15 +28,13 @@ export function ReportsPageView() {
         title="Reports & Analytics"
         subtitle="Explore sales performance, operational fulfillment, and school engagement."
         actions={
-          <div style={{ display: "flex", gap: "8px" }}>
-            <AdminButton
-              href="/admin/reports/export"
-              variant="secondary"
-              icon={<Download size={14} />}
-            >
-              Export Report
-            </AdminButton>
-          </div>
+          <AdminButton
+            href="/admin/reports/export"
+            variant="secondary"
+            icon={<Download size={14} />}
+          >
+            Export Report
+          </AdminButton>
         }
       />
 

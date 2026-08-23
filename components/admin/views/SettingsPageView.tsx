@@ -21,6 +21,7 @@ import {
 import styles from "./CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 
 interface SettingsPageViewProps {
   activeTab?: "general" | "user-roles" | "financial" | "templates";
@@ -237,14 +238,34 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
           {/* User Table */}
           <div className={adminStyles.tableCard}>
             <div className={adminStyles.tableWrapper}>
-              <table className={styles.dataTable}>
+              <table className={adminStyles.table}>
                 <thead>
                   <tr>
-                    <th>USER NAME</th>
-                    <th>EMAIL</th>
-                    <th>ASSIGNED ROLE</th>
-                    <th>PERMISSIONS</th>
-                    <th>STATUS</th>
+                    <th>
+                      <div className={styles.headerContent}>
+                        <span>USER NAME</span>
+                        <span className={styles.sortIcon}>↑↓</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className={styles.headerContent}>
+                        <span>EMAIL</span>
+                        <span className={styles.sortIcon}>↑↓</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className={styles.headerContent}>
+                        <span>ASSIGNED ROLE</span>
+                        <span className={styles.sortIcon}>↑↓</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className={styles.headerContent}>
+                        <span>PERMISSIONS</span>
+                        <span className={styles.sortIcon}>↑↓</span>
+                      </div>
+                    </th>
+                    <th className={styles.alignCenter}>STATUS</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -255,11 +276,13 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
                     { name: "Warehouse Packing Staff", email: "warehouse@pexpacks.co.za", role: "Packing Staff", perms: "Fulfilment & Packing Only", status: "Active" },
                   ].map((user, idx) => (
                     <tr key={idx} className={styles.dataRow}>
-                      <td><strong className={adminStyles.tableUserName}>{user.name}</strong></td>
-                      <td>{user.email}</td>
-                      <td><span className={adminStyles.badgeTeal}>{user.role}</span></td>
-                      <td><span className={adminStyles.tablePerms}>{user.perms}</span></td>
-                      <td><span className={adminStyles.badgeGreen}>{user.status}</span></td>
+                      <td><span className={styles.schoolNameTitle}>{user.name}</span></td>
+                      <td><span className={styles.textMuted}>{user.email}</span></td>
+                      <td><span className={styles.skuBadge}>{user.role}</span></td>
+                      <td><span className={styles.textMuted}>{user.perms}</span></td>
+                      <td className={styles.alignCenter}>
+                        <StatusBadge status={user.status} tone="emerald" showDot />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
