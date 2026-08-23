@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Clock, LayoutGrid, List, MessageSquare, Plus } from "lucide-react";
+import { Clock, Eye, LayoutGrid, List, MessageSquare, Plus } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -95,7 +95,7 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
   const columns: ColumnDef<TaskRow>[] = [
     {
       key: "title",
-      header: "Task & Linked Entity",
+      header: "TASK & LINKED ENTITY",
       sortable: true,
       render: (row) => (
         <div className={styles.productCell}>
@@ -116,28 +116,28 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
     },
     {
       key: "due_at",
-      header: "Due Date",
+      header: "DUE DATE",
       sortable: true,
-      width: "130px",
+      width: "140px",
       render: (row) => (
-        <span>
+        <span className={styles.textMuted}>
           {row.due_at ? new Date(row.due_at).toLocaleDateString("en-ZA") : "No deadline"}
         </span>
       ),
     },
     {
       key: "priority",
-      header: "Priority",
+      header: "PRIORITY",
       sortable: true,
       align: "center",
-      width: "110px",
+      width: "120px",
       render: (row) => (
         <StatusBadge status={row.priority} showDot />
       ),
     },
     {
       key: "status",
-      header: "Status",
+      header: "STATUS",
       sortable: true,
       align: "center",
       width: "130px",
@@ -147,20 +147,19 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
     },
     {
       key: "actions",
-      header: "Actions",
+      header: "ACTIONS",
       align: "right",
-      width: "90px",
+      width: "80px",
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <AdminButton
+          <button
             type="button"
-            variant="teal"
-            size="sm"
+            className={styles.actionEditBtn}
+            aria-label={`Open task ${row.title}`}
             onClick={() => handleOpenDrawer(row)}
-            icon={<MessageSquare size={13} />}
           >
-            Discuss
-          </AdminButton>
+            <Eye size={14} />
+          </button>
         </div>
       ),
     },

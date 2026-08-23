@@ -40,18 +40,18 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
   const columns: ColumnDef<OrderRow>[] = [
     {
       key: "order_reference",
-      header: "Order Ref",
+      header: "ORDER REF",
       sortable: true,
-      width: "140px",
+      width: "160px",
       render: (row) => (
-        <span className={styles.itemSkuBadge}>
-          {row.order_reference || `ORD-${row.id.slice(0, 8)}`}
+        <span className={styles.skuBadge}>
+          {row.order_reference || `ORD-${row.id.slice(0, 8).toUpperCase()}`}
         </span>
       ),
     },
     {
       key: "buyer_name",
-      header: "Customer & School",
+      header: "CUSTOMER & SCHOOL",
       sortable: true,
       render: (row) => (
         <div className={styles.productCell}>
@@ -70,21 +70,21 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
     },
     {
       key: "created_at",
-      header: "Order Date",
+      header: "ORDER DATE",
       sortable: true,
-      width: "130px",
+      width: "140px",
       render: (row) => (
-        <span>
+        <span className={styles.textMuted}>
           {row.created_at ? new Date(row.created_at).toLocaleDateString("en-ZA") : "—"}
         </span>
       ),
     },
     {
       key: "estimated_total",
-      header: "Total",
+      header: "TOTAL",
       sortable: true,
       align: "right",
-      width: "120px",
+      width: "130px",
       render: (row) => (
         <span className={styles.priceHighlight}>
           R {(row.estimated_total || 0).toFixed(2)}
@@ -93,26 +93,26 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
     },
     {
       key: "status",
-      header: "Status",
+      header: "STATUS",
       sortable: true,
       align: "center",
-      width: "120px",
+      width: "140px",
       render: (row) => <StatusBadge status={row.status || "pending"} showDot />,
     },
     {
       key: "actions",
-      header: "Actions",
+      header: "ACTIONS",
       align: "right",
       width: "80px",
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <AdminButton
+          <Link
             href={`/admin/orders/${row.id}`}
-            variant="icon"
-            size="sm"
-            aria-label={`View order ${row.order_reference}`}
-            icon={<Eye size={13} />}
-          />
+            className={styles.actionEditBtn}
+            title={`View order ${row.order_reference}`}
+          >
+            <Eye size={14} />
+          </Link>
         </div>
       ),
     },

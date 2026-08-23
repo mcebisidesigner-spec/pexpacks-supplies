@@ -60,21 +60,21 @@ export function PaymentsPageView() {
   const columns: ColumnDef<PaymentItem>[] = [
     {
       key: "paymentId",
-      header: "Payment Ref",
+      header: "PAYMENT REF",
       sortable: true,
-      width: "140px",
+      width: "160px",
       render: (row) => (
-        <span className={styles.itemSkuBadge}>{row.paymentId}</span>
+        <span className={styles.skuBadge}>{row.paymentId}</span>
       ),
     },
     {
       key: "orderNumber",
-      header: "Order Reference",
+      header: "ORDER REFERENCE",
       sortable: true,
       render: (row) => (
         <Link
           href={`/admin/payments/${row.orderNumber}`}
-          className={styles.productNameLink}
+          className={styles.schoolNameTitle}
           onClick={(e) => e.stopPropagation()}
         >
           {row.orderNumber}
@@ -83,24 +83,24 @@ export function PaymentsPageView() {
     },
     {
       key: "provider",
-      header: "Gateway",
+      header: "GATEWAY",
       sortable: true,
-      width: "120px",
-      render: (row) => <span>{row.provider}</span>,
+      width: "130px",
+      render: (row) => <span className={styles.textMuted}>{row.provider}</span>,
     },
     {
       key: "date",
-      header: "Date",
+      header: "DATE",
       sortable: true,
-      width: "120px",
-      render: (row) => <span>{row.date}</span>,
+      width: "130px",
+      render: (row) => <span className={styles.textMuted}>{row.date}</span>,
     },
     {
       key: "amount",
-      header: "Amount",
+      header: "AMOUNT",
       sortable: true,
       align: "right",
-      width: "130px",
+      width: "140px",
       render: (row) => (
         <span className={styles.priceHighlight}>
           R {row.amount.toFixed(2)}
@@ -109,26 +109,26 @@ export function PaymentsPageView() {
     },
     {
       key: "status",
-      header: "Status",
+      header: "STATUS",
       sortable: true,
       align: "center",
-      width: "120px",
+      width: "130px",
       render: (row) => <StatusBadge status={row.status} showDot />,
     },
     {
       key: "actions",
-      header: "Actions",
+      header: "ACTIONS",
       align: "right",
       width: "80px",
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <AdminButton
+          <Link
             href={`/admin/payments/${row.orderNumber}`}
-            variant="icon"
-            size="sm"
-            aria-label={`View payment for ${row.orderNumber}`}
-            icon={<Eye size={13} />}
-          />
+            className={styles.actionEditBtn}
+            title={`View payment for ${row.orderNumber}`}
+          >
+            <Eye size={14} />
+          </Link>
         </div>
       ),
     },

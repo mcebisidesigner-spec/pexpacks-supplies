@@ -75,50 +75,56 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
 
   const columns: ColumnDef<SupplierRow>[] = [
     {
+      key: "code",
+      header: "CODE",
+      sortable: true,
+      width: "160px",
+      render: (row) => (
+        <span className={styles.skuBadge}>{row.code}</span>
+      ),
+    },
+    {
       key: "name",
-      header: "Supplier Name",
+      header: "SUPPLIER NAME",
       sortable: true,
       render: (row) => (
-        <div className={styles.productCell}>
-          <Link
-            href={`/admin/suppliers/${row.id}`}
-            className={styles.productNameLink}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className={styles.productBrand}>Code: {row.code}</span>
-        </div>
+        <Link
+          href={`/admin/suppliers/${row.id}`}
+          className={styles.schoolNameTitle}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </Link>
       ),
     },
     {
       key: "contact",
-      header: "Contact & Email",
+      header: "CONTACT & EMAIL",
       render: (row) => (
         <div className={styles.productCell}>
-          <span>{row.contact_name || "Account Representative"}</span>
+          <span className={styles.textMuted}>{row.contact_name || "Trade Desk"}</span>
           <span className={styles.productBrand}>{row.email || row.telephone || "—"}</span>
         </div>
       ),
     },
     {
       key: "lead_time_days",
-      header: "Lead Time",
+      header: "LEAD TIME",
       sortable: true,
-      width: "120px",
+      width: "130px",
       render: (row) => (
-        <span>{row.lead_time_days ? `${row.lead_time_days} Days` : "2-3 Days"}</span>
+        <span className={styles.textMuted}>{row.lead_time_days ? `${row.lead_time_days} Days` : "2-3 Days"}</span>
       ),
     },
     {
       key: "payment_terms",
-      header: "Terms",
+      header: "TERMS",
       width: "140px",
-      render: (row) => <span>{row.payment_terms || "30 Days Net"}</span>,
+      render: (row) => <span className={styles.textMuted}>{row.payment_terms || "30 Days Net"}</span>,
     },
     {
       key: "status",
-      header: "Status",
+      header: "STATUS",
       align: "center",
       width: "130px",
       render: (row) => (
@@ -131,26 +137,18 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
     },
     {
       key: "actions",
-      header: "Actions",
+      header: "ACTIONS",
       align: "right",
-      width: "100px",
+      width: "90px",
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <AdminButton
+          <Link
             href={`/admin/suppliers/${row.id}/edit`}
-            variant="iconTeal"
-            size="sm"
-            aria-label={`Edit ${row.name}`}
-            icon={<Edit2 size={13} />}
-          />
-          <AdminButton
-            type="button"
-            variant="iconRed"
-            size="sm"
-            aria-label={`Delete ${row.name}`}
-            onClick={(e) => handleDelete(row.id, e)}
-            icon={<Trash2 size={13} />}
-          />
+            className={styles.actionEditBtn}
+            title={`Edit ${row.name}`}
+          >
+            <Edit2 size={14} />
+          </Link>
         </div>
       ),
     },

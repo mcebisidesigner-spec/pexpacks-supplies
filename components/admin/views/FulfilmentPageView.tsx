@@ -58,13 +58,13 @@ export function FulfilmentPageView() {
   const columns: ColumnDef<FulfilmentRow>[] = [
     {
       key: "orderNumber",
-      header: "Order & Batch",
+      header: "ORDER & BATCH",
       sortable: true,
       render: (row) => (
         <div className={styles.productCell}>
           <Link
             href={`/admin/fulfilment/${row.orderNumber}`}
-            className={styles.productNameLink}
+            className={styles.schoolNameTitle}
             onClick={(e) => e.stopPropagation()}
           >
             {row.orderNumber}
@@ -75,47 +75,47 @@ export function FulfilmentPageView() {
     },
     {
       key: "school",
-      header: "Destination School",
+      header: "DESTINATION SCHOOL",
       sortable: true,
-      render: (row) => <span>{row.school}</span>,
+      render: (row) => <span className={styles.textMuted}>{row.school}</span>,
     },
     {
       key: "itemsCount",
-      header: "Total Items",
+      header: "TOTAL ITEMS",
       sortable: true,
       align: "center",
-      width: "120px",
-      render: (row) => <span>{row.itemsCount} units</span>,
+      width: "130px",
+      render: (row) => <span className={styles.textMuted}>{row.itemsCount} units</span>,
     },
     {
       key: "estDispatch",
-      header: "Target Date",
+      header: "TARGET DATE",
       sortable: true,
-      width: "130px",
-      render: (row) => <span>{row.estDispatch}</span>,
+      width: "140px",
+      render: (row) => <span className={styles.textMuted}>{row.estDispatch}</span>,
     },
     {
       key: "status",
-      header: "Packing Status",
+      header: "PACKING STATUS",
       sortable: true,
       align: "center",
-      width: "140px",
+      width: "150px",
       render: (row) => <StatusBadge status={row.status} showDot />,
     },
     {
       key: "actions",
-      header: "Actions",
+      header: "ACTIONS",
       align: "right",
       width: "80px",
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <AdminButton
+          <Link
             href={`/admin/fulfilment/${row.orderNumber}`}
-            variant="icon"
-            size="sm"
-            aria-label={`View pack sheet for ${row.orderNumber}`}
-            icon={<Eye size={13} />}
-          />
+            className={styles.actionEditBtn}
+            title={`View pack sheet for ${row.orderNumber}`}
+          >
+            <Eye size={14} />
+          </Link>
         </div>
       ),
     },
