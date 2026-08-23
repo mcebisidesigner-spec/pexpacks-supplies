@@ -9,6 +9,7 @@ import type { ItemFormState, ItemRow } from "@/lib/admin/items";
 import { createItemAction, updateItemAction } from "@/app/admin/items/actions";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PACK_ITEM_ICONS, isPackItemIconKey } from "@/lib/packs/itemIcons";
+import adminStyles from "@/app/admin/admin.module.css";
 import formStyles from "../schools/SchoolForm.module.css";
 import styles from "./ItemForm.module.css";
 
@@ -45,7 +46,12 @@ export function ItemForm({
   );
 
   useEffect(() => {
-    if (state?.ok) router.push(returnTo);
+    if (state?.ok) {
+      const timer = setTimeout(() => {
+        router.push(returnTo);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
   }, [state, router, returnTo]);
 
   const err = (field: string) =>
@@ -57,14 +63,28 @@ export function ItemForm({
 
   return (
     <form action={formAction} className={formStyles.form}>
+      {/* Banner Alert Messages */}
       {state?.ok ? (
-        <p className={formStyles.success} role="status">
-          Item saved.
-        </p>
+        <div
+          className={`${adminStyles.badgeGreen} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block}`}
+          style={{ marginBottom: "16px", borderRadius: "8px", width: "100%" }}
+          role="status"
+        >
+          &#x2713; {state.message || `Product "${item?.name || "Item"}" updated.`}
+        </div>
       ) : state?.message ? (
-        <p className={formStyles.error} role="alert">
-          {state.message}
-        </p>
+        <div
+          className={`${adminStyles.badgeRed} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block} ${adminStyles.cRed}`}
+          style={{
+            background: "rgba(239, 68, 68, 0.15)",
+            marginBottom: "16px",
+            borderRadius: "8px",
+            width: "100%",
+          }}
+          role="alert"
+        >
+          &#x26A0; {state.message}
+        </div>
       ) : null}
 
       <input type="hidden" name="sort_order" value={item?.sort_order ?? 0} />

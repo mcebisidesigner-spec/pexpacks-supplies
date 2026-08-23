@@ -96,7 +96,7 @@ export type ParsedItemForm =
   | { ok: false; errors: Record<string, string> };
 
 export type ItemFormResult =
-  | { ok: true; item: ItemRow }
+  | { ok: true; item: ItemRow; message?: string }
   | { ok: false; errors: Record<string, string>; message?: string };
 
 export type ItemFormState = {
@@ -646,7 +646,11 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
     }
     revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 
-    return { ok: true, item: created };
+    return {
+      ok: true,
+      message: `Product "${created.name}" created.`,
+      item: created,
+    };
   } catch (err) {
     console.error("[items] create failed:", err);
     return {
@@ -722,7 +726,11 @@ export async function updateItem(
       revalidatePath("/admin/products");
       revalidatePath("/schools");
 
-      return { ok: true, item: updated };
+      return {
+        ok: true,
+        message: `Product "${updated.name}" updated.`,
+        item: updated,
+      };
     }
 
     // Check if updating an existing Master Product directly
@@ -813,6 +821,7 @@ export async function updateItem(
 
     return {
       ok: true,
+      message: `Product "${product.name}" updated.`,
       item: {
         id: product.id,
         pack_id: "",
