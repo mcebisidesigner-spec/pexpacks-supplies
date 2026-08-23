@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { Edit, Layers, Tag, TrendingUp } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
@@ -17,6 +18,17 @@ function money(v: number): string {
   return `R ${v.toFixed(2)}`;
 }
 
+function getProductSlug(item: { slug?: string | null; name?: string | null; sku?: string | null; id?: string }): string {
+  if (item.slug) return item.slug;
+  if (item.name) {
+    return item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  }
+  if (item.sku) {
+    return item.sku.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  }
+  return item.id || "";
+}
+
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   await requireAdmin({ permission: "items.view" });
   const { productId } = await params;
@@ -33,6 +45,14 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const supplierName = typeof rawItem?.supplier_name === "string" ? rawItem.supplier_name : "Makro";
   const packInclusionsCount = typeof rawItem?.pack_inclusions_count === "number" ? rawItem.pack_inclusions_count : 14;
 
+  const productSlug = getProductSlug({ slug: item?.slug, name, sku, id: item?.id });
+
+  // If accessed by UUID, redirect to clean slugified /admin/products/[product-name]
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(productId);
+  if (isUuid && productSlug && productId !== productSlug) {
+    redirect(`/admin/products/${productSlug}`);
+  }
+
   const margin = price > 0 ? ((price - cost) / price) * 100 : 0;
 
   return (
@@ -46,7 +66,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <StatusBadge status={category} tone="emerald" showDot />
             <AdminButton
-              href={`/admin/products/${productId}/edit`}
+              href={`/admin/products/${productSlug}/edit`}
               variant="primary"
               icon={<Edit size={14} />}
             >

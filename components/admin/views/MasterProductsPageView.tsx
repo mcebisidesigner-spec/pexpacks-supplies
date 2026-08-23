@@ -23,8 +23,17 @@ interface MasterProductsPageViewProps {
     products: MasterProductRow[];
     total: number;
     page: number;
-    pageCount: number;
   };
+}
+
+function getProductSlug(row: MasterProductRow): string {
+  if (row.name) {
+    return row.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  }
+  if (row.sku) {
+    return row.sku.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  }
+  return row.id;
 }
 
 export function MasterProductsPageView({ initialData }: MasterProductsPageViewProps) {
@@ -47,18 +56,21 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       key: "name",
       header: "Product Name",
       sortable: true,
-      render: (row) => (
-        <div className={styles.productCell}>
-          <Link
-            href={`/admin/products/${row.id}`}
-            className={styles.productNameLink}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          {row.brand && <span className={styles.productBrand}>{row.brand}</span>}
-        </div>
-      ),
+      render: (row) => {
+        const slug = getProductSlug(row);
+        return (
+          <div className={styles.productCell}>
+            <Link
+              href={`/admin/products/${slug}`}
+              className={styles.productNameLink}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            {row.brand && <span className={styles.productBrand}>{row.brand}</span>}
+          </div>
+        );
+      },
     },
     {
       key: "category",
@@ -110,17 +122,20 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       header: "Actions",
       align: "right",
       width: "90px",
-      render: (row) => (
-        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <AdminButton
-            href={`/admin/products/${row.id}/edit`}
-            variant="iconTeal"
-            size="sm"
-            aria-label={`Edit ${row.name}`}
-            icon={<Edit2 size={13} />}
-          />
-        </div>
-      ),
+      render: (row) => {
+        const slug = getProductSlug(row);
+        return (
+          <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+            <AdminButton
+              href={`/admin/products/${slug}/edit`}
+              variant="iconTeal"
+              size="sm"
+              aria-label={`Edit ${row.name}`}
+              icon={<Edit2 size={13} />}
+            />
+          </div>
+        );
+      },
     },
   ];
 
@@ -129,22 +144,22 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       <AdminPageHeader
         title="Master Products"
         count={initialData.total}
-        subtitle="Manage the master catalogue used across all school packs."
+        subtitle="Centralised product catalogue managing verified supplier costs and active retail selling prices."
         actions={
           <AdminButton
             href="/admin/products/add-item"
             variant="primary"
             icon={<Plus size={14} />}
           >
-            New Item
+            Add Master Item
           </AdminButton>
         }
       />
 
       <DataTableToolbar
-        searchPlaceholder="Search products by name, SKU, category..."
-        filters={
-          <div className={styles.filterGroup}>
+        searchPlaceholder="Search master products by SKU, name, or brand…"
+        actions={
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
             <AdminSelect
               value={params.category || "all"}
               onChange={(e) => setParams({ category: e.target.value }, true)}
@@ -164,7 +179,7 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
         data={initialData.products}
         columns={columns}
         keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/products/${row.id}`)}
+        onRowClick={(row) => router.push(`/admin/products/${getProductSlug(row)}`)}
         isLoading={isPending}
         emptyTitle="No products found"
         emptySubtitle="Try adjusting your search term or category filter."
