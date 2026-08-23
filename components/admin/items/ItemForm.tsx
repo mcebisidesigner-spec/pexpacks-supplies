@@ -55,10 +55,6 @@ export function ItemForm({
       </span>
     ) : null;
 
-  const isDirectFromInventory =
-    returnTo === "/admin/items" || returnTo.startsWith("/admin/items?");
-  const canEditName = isDirectFromInventory || item == null;
-
   return (
     <form action={formAction} className={formStyles.form}>
       {state?.ok ? (
@@ -97,24 +93,14 @@ export function ItemForm({
             <label className={formStyles.label} htmlFor="name">
               Item name *
             </label>
-            {!canEditName ? (
-              <input type="hidden" name="name" value={item?.name ?? ""} />
-            ) : null}
             <input
               id="name"
-              name={canEditName ? "name" : undefined}
+              name="name"
               className={formStyles.input}
               defaultValue={item?.name ?? ""}
               placeholder="e.g. A4 Clear Plastic Folders with Button"
-              required={canEditName}
-              disabled={!canEditName}
-              readOnly={!canEditName}
+              required
             />
-            {!canEditName ? (
-              <span className={formStyles.hint}>
-                Item name can only be edited directly from the Stationery Items tab.
-              </span>
-            ) : null}
             {err("name")}
           </div>
         </div>

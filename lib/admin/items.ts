@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/lib/supabase/types";
 import {
@@ -664,6 +664,15 @@ export async function updateItem(
   const admin = createSupabaseAdminClient();
   const existing = await readCanonicalItem(admin, id);
 
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      id,
+    );
+  const slugified = id
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
   try {
     if (existing) {
       const product = await ensureMasterProduct(
@@ -706,20 +715,62 @@ export async function updateItem(
         await syncPackTotalPrice(updated.pack_id);
       }
       revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+      revalidatePath("/admin/products");
+      revalidatePath("/schools");
 
       return { ok: true, item: updated };
     }
 
-    // Direct Master Product update (or create if new)
-    const product = await ensureMasterProduct(
-      admin,
-      parsed.data,
-      actor.user.id,
-    );
+    // Check if updating an existing Master Product directly
+    let targetMaster: MasterProductRow | null = null;
+    if (isUuid) {
+      const { data } = await admin
+        .from("master_products")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+      if (data) targetMaster = data as MasterProductRow;
+    }
+    if (!targetMaster) {
+      const { data } = await admin
+        .from("master_products")
+        .select("*")
+        .or(
+          `sku.ilike.${id},sku.ilike.${slugified},name.ilike.${id},name.ilike.%${id.replace(/-/g, " ")}%`,
+        )
+        .limit(1)
+        .maybeSingle();
+      if (data) targetMaster = data as MasterProductRow;
+    }
 
-    // Sync all linked pack items with the new price, description, and visibility
+    let product: MasterProductRow;
+    if (targetMaster) {
+      const { data: updated, error } = await admin
+        .from("master_products")
+        .update({
+          name: parsed.data.name.trim(),
+          category: parsed.data.category,
+          description: parsed.data.description,
+          specification: parsed.data.specification,
+          current_selling_price: parsed.data.price ?? 0,
+          calculated_selling_price: parsed.data.price ?? 0,
+          active: parsed.data.visible,
+          updated_at: new Date().toISOString(),
+          updated_by: actor.user.id,
+        })
+        .eq("id", targetMaster.id)
+        .select("*")
+        .single();
+      if (error) throw error;
+      product = updated as MasterProductRow;
+    } else {
+      product = await ensureMasterProduct(admin, parsed.data, actor.user.id);
+    }
+
+    // Sync all linked pack items with the new name, price, description, and visibility
     const { data: linkedPacks } = await schoolPackItemsTable(admin)
       .update({
+        school_wording: parsed.data.name.trim(),
         school_notes: parsed.data.description,
         selling_price_override: parsed.data.price,
         active: parsed.data.visible,
@@ -745,7 +796,16 @@ export async function updateItem(
       summary: `Updated master product "${product.name}"`,
     });
 
+    const newSlug = product.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
     revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+    revalidatePath("/admin/products");
+    revalidatePath(`/admin/products/${slugified}`);
+    revalidatePath(`/admin/products/${newSlug}`);
+    revalidatePath("/schools");
 
     return {
       ok: true,
@@ -761,14 +821,13 @@ export async function updateItem(
         specification: product.specification || null,
         quantity: 1,
         unit_price: product.current_selling_price ?? 0,
-        unit_cost: 0,
+        unit_cost:
+          (product as unknown as { latest_verified_cost?: number })
+            .latest_verified_cost ?? 0,
         icon: null,
         visible: product.active,
         sort_order: 0,
-        slug: product.name
-          ?.toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, ""),
+        slug: newSlug,
       } as unknown as ItemRow,
     };
   } catch (err) {
