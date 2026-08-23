@@ -8,7 +8,6 @@ import {
   Clock,
   Copy,
   Download,
-  Edit2,
   HeartPulse,
   Layers,
   Plus,
@@ -278,13 +277,6 @@ export function SchoolPacksDetailView({
                           </td>
                           <td className={styles.alignRight}>
                             <div className={styles.actionsCell}>
-                              <Link
-                                href={`/admin/packs/${pack.slug || pack.id}`}
-                                className={styles.actionEditBtn}
-                                title={`Edit ${formattedGrade}`}
-                              >
-                                <Edit2 size={14} />
-                              </Link>
                               <VisibleToggle id={pack.id} visible={pack.visible} />
                               {deletePackAction && (
                                 <form action={deletePackAction.bind(null, pack.id)}>

@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   ChevronDown,
   Clock,
-  Edit2,
   Eye,
   EyeOff,
   FileText,
@@ -27,6 +26,7 @@ import {
   RefreshCw,
   Search,
   SlidersHorizontal,
+  Trash2,
   TrendingDown,
   TrendingUp,
   Users,
@@ -586,10 +586,20 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       />
                     </td>
                     <td className={styles.alignRight}>
-                      <div className={styles.actionsCell}>
-                        <div className={styles.actionEditBtn} title="View & Edit School Packs">
-                          <Edit2 size={14} />
-                        </div>
+                      <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          className={viewStyles.actionDeleteBtn}
+                          title={`Delete ${school.name}`}
+                          aria-label={`Delete ${school.name}`}
+                          onClick={() => {
+                            if (window.confirm(`Are you sure you want to delete school packs for "${school.name}"?`)) {
+                              // Trigger deletion
+                            }
+                          }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
                       </div>
                     </td>
                   </tr>

@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Edit2, Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -123,15 +123,19 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       align: "right",
       width: "90px",
       render: (row) => {
-        const slug = getProductSlug(row);
         return (
           <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
             <AdminButton
-              href={`/admin/products/${slug}/edit`}
-              variant="iconTeal"
+              variant="iconRed"
               size="sm"
-              aria-label={`Edit ${row.name}`}
-              icon={<Edit2 size={13} />}
+              aria-label={`Delete ${row.name}`}
+              title={`Delete ${row.name}`}
+              icon={<Trash2 size={13} />}
+              onClick={() => {
+                if (window.confirm(`Are you sure you want to delete "${row.name}"?`)) {
+                  // Trigger deletion or notice
+                }
+              }}
             />
           </div>
         );

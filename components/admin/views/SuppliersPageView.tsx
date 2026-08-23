@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Edit2, Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -137,13 +137,19 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
       width: "90px",
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <Link
-            href={`/admin/suppliers/${row.id}/edit`}
-            className={styles.actionEditBtn}
-            title={`Edit ${row.name}`}
+          <button
+            type="button"
+            className={styles.actionDeleteBtn}
+            title={`Delete ${row.name}`}
+            aria-label={`Delete ${row.name}`}
+            onClick={() => {
+              if (window.confirm(`Are you sure you want to delete supplier "${row.name}"?`)) {
+                // Trigger deletion
+              }
+            }}
           >
-            <Edit2 size={14} />
-          </Link>
+            <Trash2 size={14} />
+          </button>
         </div>
       ),
     },
