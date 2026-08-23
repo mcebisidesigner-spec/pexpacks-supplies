@@ -22,8 +22,11 @@ const csp = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  output: "standalone",
+  compress: true,
+  poweredByHeader: false,
   experimental: {
-    optimizePackageImports: ["lucide-react"],
+    optimizePackageImports: ["lucide-react", "@supabase/ssr", "@supabase/supabase-js"],
     serverActions: {
       bodySizeLimit: "10mb",
     },
