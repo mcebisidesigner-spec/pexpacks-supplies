@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Clock, Eye, LayoutGrid, List, MessageSquare, Plus } from "lucide-react";
+import { Clock, Eye, LayoutGrid, List, Plus } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -23,60 +21,58 @@ interface TasksPageViewProps {
   initialTasks: TaskRow[];
 }
 
+const DEFAULT_TASKS: TaskRow[] = [
+  {
+    id: "t-1",
+    title: "Review Grade 1-3 packs for Primrose Hill PS",
+    description: "Ensure updated stationery prices and quantities match school list requirements.",
+    entity_type: "school_pack",
+    entity_id: "primrose-hill-primary-school",
+    status: "in_progress",
+    priority: "high",
+    assigned_to: null,
+    due_at: "2026-09-01T00:00:00.000Z",
+    created_at: "2026-08-20T00:00:00.000Z",
+  },
+  {
+    id: "t-2",
+    title: "Confirm PO-11256 with Waltons",
+    description: "Verify delivery date and bulk pack quantities for term 1 intake.",
+    entity_type: "procurement",
+    entity_id: "PO-11256",
+    status: "open",
+    priority: "high",
+    assigned_to: null,
+    due_at: "2026-09-02T00:00:00.000Z",
+    created_at: "2026-08-21T00:00:00.000Z",
+  },
+  {
+    id: "t-3",
+    title: "Approve pricing update for Stationery",
+    description: "Supplier price revision from Makro on Faber-Castell and Pritt items.",
+    entity_type: "pricing_rule",
+    entity_id: "STATIONERY-2026",
+    status: "open",
+    priority: "normal",
+    assigned_to: null,
+    due_at: "2026-09-03T00:00:00.000Z",
+    created_at: "2026-08-22T00:00:00.000Z",
+  },
+];
+
 export function TasksPageView({ initialTasks }: TasksPageViewProps) {
-  const router = useRouter();
   const { params, setParams } = useTableParams();
   const [tasks, setTasks] = useState<TaskRow[]>(initialTasks);
   const [selectedTask, setSelectedTask] = useState<TaskRow | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"table" | "board">("table");
 
-  // Fallback defaults if table is empty
-  const defaultTasks: TaskRow[] = [
-    {
-      id: "t-1",
-      title: "Review Grade 1-3 packs for Primrose Hill PS",
-      description: "Ensure updated stationery prices and quantities match school list requirements.",
-      entity_type: "school_pack",
-      entity_id: "primrose-hill-primary-school",
-      status: "in_progress",
-      priority: "high",
-      assigned_to: null,
-      due_at: new Date(Date.now() + 86400000).toISOString(),
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "t-2",
-      title: "Confirm PO-11256 with Waltons",
-      description: "Verify delivery date and bulk pack quantities for term 1 intake.",
-      entity_type: "procurement",
-      entity_id: "PO-11256",
-      status: "open",
-      priority: "high",
-      assigned_to: null,
-      due_at: new Date(Date.now() + 172800000).toISOString(),
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: "t-3",
-      title: "Approve pricing update for Stationery",
-      description: "Supplier price revision from Makro on Faber-Castell and Pritt items.",
-      entity_type: "pricing_rule",
-      entity_id: "STATIONERY-2026",
-      status: "open",
-      priority: "normal",
-      assigned_to: null,
-      due_at: new Date(Date.now() + 259200000).toISOString(),
-      created_at: new Date().toISOString(),
-    },
-  ];
-
-  const effectiveTasks = tasks.length > 0 ? tasks : defaultTasks;
+  const effectiveTasks = tasks.length > 0 ? tasks : DEFAULT_TASKS;
 
   const filteredTasks = useMemo(() => {
     return effectiveTasks.filter((t) => {
       const matchSearch =
-        !params.q.trim() ||
+        !params.q?.trim() ||
         t.title.toLowerCase().includes(params.q.toLowerCase()) ||
         (t.description && t.description.toLowerCase().includes(params.q.toLowerCase()));
 
