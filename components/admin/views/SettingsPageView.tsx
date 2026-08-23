@@ -1,17 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Building2,
-  Check,
   CreditCard,
   FileText,
   Globe,
   Image as ImageIcon,
   Mail,
-  Plus,
   Receipt,
   Save,
   Shield,
@@ -23,16 +20,18 @@ import adminStyles from "@/app/admin/admin.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 
+type SettingsTab = "general" | "user-roles" | "financial" | "templates";
+
 interface SettingsPageViewProps {
-  activeTab?: "general" | "user-roles" | "financial" | "templates";
+  activeTab?: SettingsTab;
 }
 
 export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProps) {
   const router = useRouter();
-  const [currentTab, setCurrentTab] = useState<"general" | "user-roles" | "financial" | "templates">(activeTab);
+  const [currentTab, setCurrentTab] = useState<SettingsTab>(activeTab);
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  const handleTabChange = (tab: "general" | "user-roles" | "financial" | "templates") => {
+  const handleTabChange = (tab: SettingsTab) => {
     setCurrentTab(tab);
     router.push(`/admin/settings/${tab}`);
   };
@@ -48,10 +47,10 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
       {/* Responsive 4-Tab Navigation Bar */}
       <div className={adminStyles.settingsTabBar}>
         {[
-          { id: "general", label: "1. General Settings", icon: Building2 },
-          { id: "user-roles", label: "2. Users & Roles", icon: Users },
-          { id: "financial", label: "3. Financial & Tax", icon: Receipt },
-          { id: "templates", label: "4. Templates & Media", icon: FileText },
+          { id: "general" as const, label: "1. General Settings", icon: Building2 },
+          { id: "user-roles" as const, label: "2. Users & Roles", icon: Users },
+          { id: "financial" as const, label: "3. Financial & Tax", icon: Receipt },
+          { id: "templates" as const, label: "4. Templates & Media", icon: FileText },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = currentTab === tab.id;
@@ -59,7 +58,7 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
             <button
               key={tab.id}
               type="button"
-              onClick={() => handleTabChange(tab.id as any)}
+              onClick={() => handleTabChange(tab.id)}
               className={[
                 isActive ? styles.primaryBtn : styles.secondaryBtn,
                 isActive ? adminStyles.settingsTabBtnActive : adminStyles.settingsTabBtnInactive,

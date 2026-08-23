@@ -12,7 +12,6 @@ import {
   Copy,
   Download,
   Edit2,
-  Eye,
   HeartPulse,
   Layers,
   Plus,
@@ -28,7 +27,6 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { VisibleToggle } from "@/components/admin/packs/VisibleToggle";
-import { DuplicateButton } from "@/components/admin/packs/DuplicateButton";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 
 interface PackItem {

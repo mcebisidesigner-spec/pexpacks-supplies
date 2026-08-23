@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,6 @@ import {
   Factory,
   Globe,
   History,
-  Info,
   LayoutDashboard,
   PackageSearch,
   Search,
@@ -76,14 +75,13 @@ const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>
 export function SettingsControlCentre({
   initialSettings,
   integrations,
-  performance,
   auditLogs,
 }: SettingsControlCentreProps) {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<SystemSettingCategory>("overview");
   const [searchQuery, setSearchQuery] = useState("");
   const [settingsState, setSettingsState] = useState(initialSettings);
-  const [reason, setReason] = useState("");
+  const [reason] = useState("");
   const [busyKey, setBusyKey] = useState<string | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
   const [restoreJson, setRestoreJson] = useState("");
@@ -138,7 +136,7 @@ export function SettingsControlCentre({
         a.click();
         URL.revokeObjectURL(url);
       }
-    } catch (err) {
+    } catch {
       setFeedbackMessage("Export failed.");
     }
   }

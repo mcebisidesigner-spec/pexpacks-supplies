@@ -3,10 +3,9 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Clock, Eye, PackageCheck, Truck } from "lucide-react";
+import { Clock, Eye, PackageCheck, Truck } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import {
@@ -38,7 +37,7 @@ const SEED_FULFILMENT: FulfilmentRow[] = [
 
 export function FulfilmentPageView() {
   const router = useRouter();
-  const { params, setParams } = useTableParams();
+  const { params } = useTableParams();
 
   const filtered = useMemo(() => {
     return SEED_FULFILMENT.filter((f) => {

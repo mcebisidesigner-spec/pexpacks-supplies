@@ -42,7 +42,7 @@ export const AdminButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElemen
           href={href}
           ref={ref as React.Ref<HTMLAnchorElement>}
           className={classNames}
-          {...(props as any)}
+          {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         >
           {content}
         </Link>

@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Building2, Edit2, Plus, Trash2 } from "lucide-react";
+import { Edit2, Plus } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -23,7 +23,7 @@ interface SuppliersPageViewProps {
 
 export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewProps) {
   const router = useRouter();
-  const { params, setParams } = useTableParams();
+  const { params } = useTableParams();
 
   // Fallback defaults if table is empty
   const defaultSuppliers: SupplierRow[] = [
@@ -53,14 +53,9 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
     },
   ];
 
-  const [suppliers, setSuppliers] = useState<SupplierRow[]>(
+  const [suppliers] = useState<SupplierRow[]>(
     initialSuppliers.length > 0 ? initialSuppliers : defaultSuppliers
   );
-
-  const handleDelete = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSuppliers((prev) => prev.filter((s) => s.id !== id));
-  };
 
   const filtered = useMemo(() => {
     if (!params.q.trim()) return suppliers;

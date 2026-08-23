@@ -1,14 +1,10 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import Link from "next/link";
 import {
   AlertTriangle,
-  ArrowRight,
   Clock,
   DollarSign,
-  FileSpreadsheet,
-  Plus,
   Truck,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
