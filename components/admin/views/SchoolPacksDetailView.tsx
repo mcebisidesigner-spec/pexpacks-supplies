@@ -3,10 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
-  ArrowLeft,
-  BookOpen,
   Box,
-  Calendar,
   ChevronRight,
   Clock,
   Copy,
@@ -16,7 +13,6 @@ import {
   Layers,
   Plus,
   Search,
-  SlidersHorizontal,
   Trash2,
   Upload,
   Zap,
@@ -74,8 +70,6 @@ export function SchoolPacksDetailView({
   deletePackAction,
 }: SchoolPacksDetailViewProps) {
   const [search, setSearch] = useState("");
-  const [visibilityFilter, setVisibilityFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("last-edited");
 
   const totalPacks = initialPacks.length;
   const { publishedPacks, totalItemsCount, totalRevenue } = useMemo(() => {
@@ -91,17 +85,15 @@ export function SchoolPacksDetailView({
   }, [initialPacks]);
 
   const filteredPacks = useMemo(() => {
+    if (!search.trim()) return initialPacks;
+    const q = search.toLowerCase();
     return initialPacks.filter((p) => {
-      const matchSearch =
-        p.title.toLowerCase().includes(search.toLowerCase()) ||
-        (p.slug && p.slug.toLowerCase().includes(search.toLowerCase()));
-      const matchVis =
-        visibilityFilter === "all" ||
-        (visibilityFilter === "visible" && p.visible) ||
-        (visibilityFilter === "hidden" && !p.visible);
-      return matchSearch && matchVis;
+      return (
+        p.title.toLowerCase().includes(q) ||
+        (p.slug && p.slug.toLowerCase().includes(q))
+      );
     });
-  }, [initialPacks, search, visibilityFilter]);
+  }, [initialPacks, search]);
 
   const schoolIdentifier = school.slug || school.id;
 
@@ -109,26 +101,19 @@ export function SchoolPacksDetailView({
     <div className={styles.container}>
       {/* Header Row */}
       <AdminPageHeader
+        backHref="/admin/packs"
+        backLabel="Back to Packs"
         title={school.name}
         count={totalPacks}
         subtitle={`${school.city || "Johannesburg"}, ${school.province || "Gauteng"} • Grade Pack Directory`}
         actions={
-          <div style={{ display: "flex", gap: "8px" }}>
-            <AdminButton
-              href="/admin/packs"
-              variant="secondary"
-              icon={<ArrowLeft size={14} />}
-            >
-              All Schools
-            </AdminButton>
-            <AdminButton
-              href={`/admin/packs/${schoolIdentifier}/add-pack`}
-              variant="primary"
-              icon={<Plus size={14} />}
-            >
-              Add Pack
-            </AdminButton>
-          </div>
+          <AdminButton
+            href={`/admin/packs/${schoolIdentifier}/add-pack`}
+            variant="primary"
+            icon={<Plus size={14} />}
+          >
+            Add Pack
+          </AdminButton>
         }
       />
 
@@ -142,26 +127,24 @@ export function SchoolPacksDetailView({
             </div>
           </div>
           <div className={adminStyles.metricValue}>{totalPacks}</div>
-          <div className={styles.metricSubtext}>Total packs</div>
+          <div className={styles.metricSubtext}>Configured</div>
         </div>
 
         <div className={adminStyles.metricCard}>
           <div className={adminStyles.metricTop}>
             <span className={adminStyles.metricLabel}>Published</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}>
-              <BookOpen size={16} />
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconGreen}`}>
+              <Zap size={16} />
             </div>
           </div>
           <div className={adminStyles.metricValue}>{publishedPacks}</div>
-          <div className={styles.metricSubtext}>
-            {totalPacks > 0 ? Math.round((publishedPacks / totalPacks) * 100) : 0}% published
-          </div>
+          <div className={styles.metricSubtext}>Live on storefront</div>
         </div>
 
         <div className={adminStyles.metricCard}>
           <div className={adminStyles.metricTop}>
             <span className={adminStyles.metricLabel}>Total Items</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconPurple}`}>
               <Layers size={16} />
             </div>
           </div>
@@ -171,20 +154,20 @@ export function SchoolPacksDetailView({
 
         <div className={adminStyles.metricCard}>
           <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Revenue to Date</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
-              <span className={adminStyles.currencyText}>R</span>
+            <span className={adminStyles.metricLabel}>Pack Value</span>
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconEmerald}`}>
+              <HeartPulse size={16} />
             </div>
           </div>
           <div className={adminStyles.metricValue}>{money(totalRevenue)}</div>
-          <div className={styles.metricSubtext}>From grade packs</div>
+          <div className={styles.metricSubtext}>Catalogue total</div>
         </div>
 
         <div className={adminStyles.metricCard}>
           <div className={adminStyles.metricTop}>
             <span className={adminStyles.metricLabel}>Last Updated</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
-              <Calendar size={16} />
+            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}>
+              <Clock size={16} />
             </div>
           </div>
           <div className={`${adminStyles.metricValue} ${styles.metricValueDate}`}>
@@ -199,43 +182,15 @@ export function SchoolPacksDetailView({
         {/* Left Column: Table and Toolbar */}
         <div className={adminStyles.leftColumn}>
           {/* Controls Bar */}
-          <div className={adminStyles.toolbar}>
-            <div className={styles.toolbarLeft}>
-              <div className={styles.searchBox}>
-                <Search />
-                <input
-                  className={adminStyles.searchInput}
-                  placeholder="Search grade packs..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-
-              <button className={styles.secondaryBtn} type="button">
-                <SlidersHorizontal size={14} /> Filters
-              </button>
-
-              <select
-                className={styles.selectInput}
-                value={visibilityFilter}
-                onChange={(e) => setVisibilityFilter(e.target.value)}
-              >
-                <option value="all">Visibility ⌵</option>
-                <option value="visible">Visible only</option>
-                <option value="hidden">Hidden only</option>
-              </select>
-            </div>
-
-            <div className={styles.toolbarRight}>
-              <select
-                className={styles.selectInput}
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                <option value="last-edited">Last Edited ⌵</option>
-                <option value="name">Name</option>
-                <option value="price">Price</option>
-              </select>
+          <div className={styles.toolbar}>
+            <div className={styles.searchBox}>
+              <Search />
+              <input
+                className={adminStyles.searchInput}
+                placeholder="Search grade packs..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
           </div>
 
