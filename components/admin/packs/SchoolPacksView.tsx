@@ -12,11 +12,8 @@ import {
   EyeOff,
   FileText,
   GraduationCap,
-  LayoutGrid,
-  List,
   Package,
   Search,
-  SlidersHorizontal,
   Trash2,
   TrendingDown,
   TrendingUp,
@@ -200,7 +197,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
   const [selectedSeason, setSelectedSeason] = useState("2027");
   const [selectedVisibility, setSelectedVisibility] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
 
@@ -303,9 +299,9 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
       </div>
 
       {/* ===================================================
-          2. 6 KPI SPARKLINE CARDS
+          2. 5 KPI SPARKLINE CARDS
           =================================================== */}
-      <div className={adminStyles.kpiGrid}>
+      <div className={styles.kpiGrid5}>
         {/* Card 1: Total Schools */}
         <div className={adminStyles.kpiCard}>
           <div className={adminStyles.kpiTop}>
@@ -400,31 +396,12 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             <SparklineWave color="#10b981" direction="up" />
           </div>
         </div>
-
-        {/* Card 6: Hidden Packs */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${styles.kpiIconSlate}`}>
-              <EyeOff size={18} />
-            </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Hidden Packs</span>
-              <span className={adminStyles.kpiValue}>10</span>
-            </div>
-          </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
-              <TrendingDown size={12} /> 1 vs last 7 days
-            </span>
-            <SparklineWave color="#ef4444" direction="down" />
-          </div>
-        </div>
       </div>
 
       {/* ===================================================
           3. FILTER & ACTION TOOLBAR
           =================================================== */}
-      <div>
+      <div className={styles.toolbar}>
         <div className={styles.toolbarLeft}>
           <div className={styles.searchBox}>
             <Search />
@@ -442,9 +419,10 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             value={selectedSeason}
             onChange={(e) => setSelectedSeason(e.target.value)}
           >
-            <option value="2024">Season: 2024</option>
-            <option value="2025">Season: 2025</option>
             <option value="2027">Season: 2027</option>
+            <option value="2026">Season: 2026</option>
+            <option value="2025">Season: 2025</option>
+            <option value="2024">Season: 2024</option>
           </select>
 
           <select
@@ -467,31 +445,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             <option value="draft">Draft</option>
             <option value="review">Review</option>
           </select>
-        </div>
-
-        <div className={styles.toolbarRight}>
-          <button className={styles.sortBtn}>
-            <SlidersHorizontal size={13} />
-            <span>Sort by: Last edited</span>
-          </button>
-
-          <div className={styles.viewToggleGroup}>
-            <span className={styles.viewToggleLabel}>View</span>
-            <button
-              className={`${styles.viewToggleBtn} ${viewMode === "list" ? styles.viewToggleBtnActive : ""}`}
-              onClick={() => setViewMode("list")}
-              title="List View"
-            >
-              <List size={14} />
-            </button>
-            <button
-              className={`${styles.viewToggleBtn} ${viewMode === "grid" ? styles.viewToggleBtnActive : ""}`}
-              onClick={() => setViewMode("grid")}
-              title="Grid View"
-            >
-              <LayoutGrid size={14} />
-            </button>
-          </div>
         </div>
       </div>
 
@@ -767,114 +720,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                   <span className={styles.exceptionCount}>10</span>
                   <span className={`${adminStyles.severityBadge} ${adminStyles.severityLow}`}>Low</span>
                   <span className={adminStyles.exceptionTime}>2h ago</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Panel 2: Donut Distribution Chart */}
-          <div className={adminStyles.panel}>
-            <div className={styles.donutContainer}>
-              <div className={styles.donutSvgWrapper}>
-                <svg width="130" height="130" viewBox="0 0 130 130">
-                  {/* Outer glow circle */}
-                  <circle cx="65" cy="65" r="50" fill="transparent" stroke="#1e293b" strokeWidth="12" />
-                  {/* Segment: Visible (64%) */}
-                  <circle
-                    cx="65"
-                    cy="65"
-                    r="50"
-                    fill="transparent"
-                    stroke="#10b981"
-                    strokeWidth="12"
-                    strokeDasharray="201 314"
-                    strokeDashoffset="78"
-                    strokeLinecap="round"
-                  />
-                  {/* Segment: Draft (11%) */}
-                  <circle
-                    cx="65"
-                    cy="65"
-                    r="50"
-                    fill="transparent"
-                    stroke="#3b82f6"
-                    strokeWidth="12"
-                    strokeDasharray="35 314"
-                    strokeDashoffset="-125"
-                  />
-                  {/* Segment: Review (7%) */}
-                  <circle
-                    cx="65"
-                    cy="65"
-                    r="50"
-                    fill="transparent"
-                    stroke="#f59e0b"
-                    strokeWidth="12"
-                    strokeDasharray="22 314"
-                    strokeDashoffset="-162"
-                  />
-                </svg>
-
-                <div className={styles.donutCenterText}>
-                  <span className={styles.donutCenterNumber} suppressHydrationWarning>{formatNumber(totalCount)}</span>
-                  <span className={styles.donutCenterLabel}>Total Schools</span>
-                </div>
-              </div>
-
-              <div className={styles.donutLegend}>
-                <div className={styles.legendRow}>
-                  <div className={styles.legendLabelGroup}>
-                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#10b981" }} />
-                    <span>Visible</span>
-                  </div>
-                  <div>
-                    <span className={styles.legendValue}>82</span>
-                    <span className={styles.legendPercent}>(64%)</span>
-                  </div>
-                </div>
-
-                <div className={styles.legendRow}>
-                  <div className={styles.legendLabelGroup}>
-                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#64748b" }} />
-                    <span>Hidden</span>
-                  </div>
-                  <div>
-                    <span className={styles.legendValue}>10</span>
-                    <span className={styles.legendPercent}>(8%)</span>
-                  </div>
-                </div>
-
-                <div className={styles.legendRow}>
-                  <div className={styles.legendLabelGroup}>
-                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#3b82f6" }} />
-                    <span>Draft</span>
-                  </div>
-                  <div>
-                    <span className={styles.legendValue}>14</span>
-                    <span className={styles.legendPercent}>(11%)</span>
-                  </div>
-                </div>
-
-                <div className={styles.legendRow}>
-                  <div className={styles.legendLabelGroup}>
-                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#f59e0b" }} />
-                    <span>Review</span>
-                  </div>
-                  <div>
-                    <span className={styles.legendValue}>9</span>
-                    <span className={styles.legendPercent}>(7%)</span>
-                  </div>
-                </div>
-
-                <div className={styles.legendRow}>
-                  <div className={styles.legendLabelGroup}>
-                    <span className={`${adminStyles.legendDotInline}`} style={{ background: "#0d9488" }} />
-                    <span>Other</span>
-                  </div>
-                  <div>
-                    <span className={styles.legendValue}>13</span>
-                    <span className={styles.legendPercent}>(10%)</span>
-                  </div>
                 </div>
               </div>
             </div>

@@ -82,24 +82,33 @@
 }
 
 /* ===================================================
-   6 KPI SPARKLINE CARDS
+   5 KPI SPARKLINE CARDS
    =================================================== */
 
-@media (max-width: 1400px) {
+.kpiGrid5 {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1300px) {
+  .kpiGrid5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 860px) {
+  .kpiGrid5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.kpiCard:hover {
-  transform: translateY(-2px);
-  border-color: var(--a-border-strong);
-  background: #0f182b;
+@media (max-width: 520px) {
+  .kpiGrid5 {
+    grid-template-columns: 1fr;
+  }
 }
-.kpiIconSlate { background: rgba(100, 116, 139, 0.18); color: var(--a-text-3); }
 
 /* ===================================================
    FILTER & ACTION TOOLBAR
