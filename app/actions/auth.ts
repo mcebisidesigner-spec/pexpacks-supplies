@@ -257,12 +257,15 @@ export async function verifyOtpAction(
       userId: verifiedUserId,
       metadata: { trustedDevice },
     });
+
+    return {
+      ok: true,
+      redirectUrl: "/admin",
+    };
   } catch (err) {
     console.error("[auth-action] verifyOtpAction exception:", err);
     return { ok: false, message: GENERIC_ERROR_MSG };
   }
-
-  redirect("/admin");
 }
 
 /**

@@ -184,6 +184,7 @@ export default function PexConsoleGateway() {
         } catch {
           // ignore
         }
+        window.location.href = res.redirectUrl || "/admin";
       } else {
         setErrorMessage(res.message || "Invalid login credentials or verification code.");
       }
