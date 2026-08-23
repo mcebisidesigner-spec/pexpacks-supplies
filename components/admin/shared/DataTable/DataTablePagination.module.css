@@ -1,0 +1,74 @@
+.paginationFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: #090e17;
+  border-top: 1px solid #1e293b;
+  font-size: 12px;
+  color: #94a3b8;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rangeText {
+  font-weight: 500;
+}
+
+.rangeHighlight {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pageBtn {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.pageBtn:hover:not(:disabled) {
+  background: rgba(51, 65, 85, 0.8);
+  border-color: #64748b;
+  color: #ffffff;
+}
+
+.pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageBtnActive {
+  background: #10b981;
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #022c22;
+  font-weight: 800;
+}
+
+.pageBtnActive:hover {
+  background: #059669;
+  color: #ffffff;
+}
+
+.ellipsis {
+  padding: 0 4px;
+  color: #64748b;
+  font-weight: 700;
+}

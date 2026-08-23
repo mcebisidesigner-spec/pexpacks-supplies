@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 interface SettingsPageViewProps {
   activeTab?: "general" | "user-roles" | "financial" | "templates";
@@ -38,14 +39,10 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
   return (
     <div className={styles.container}>
       {/* Page Header */}
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>Settings & Configuration</h1>
-          <p className={styles.headerSubtitle}>
-            Manage operational defaults, user access matrix, financial parameters, and document templates.
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Settings & Configuration"
+        subtitle="Manage operational defaults, user access matrix, financial parameters, and document templates."
+      />
 
       {/* Responsive 4-Tab Navigation Bar */}
       <div className={adminStyles.settingsTabBar}>

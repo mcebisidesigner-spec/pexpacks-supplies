@@ -1,15 +1,12 @@
-﻿"use client";
+"use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   BarChart3,
   Calendar,
-  ChevronDown,
   Download,
   Layers,
-  LineChart,
-  PieChart,
   School,
   ShoppingCart,
   TrendingUp,
@@ -18,22 +15,30 @@ import {
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { MetricCard } from "@/components/admin/ui/AdminCard";
 
 export function ReportsPageView() {
   const [activeCategory, setActiveCategory] = useState("overview");
 
   return (
     <div className={styles.container}>
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>Reports</h1>
-          <p className={styles.headerSubtitle}>Explore performance and operational insights.</p>
-        </div>
-        <div className={styles.headerActions}>
-          <button className={styles.secondaryBtn}><Download size={14} /> Export ⌵</button>
-          <button className={styles.secondaryBtn}><Calendar size={14} /> May 27 – Jun 2, 2024</button>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Reports & Analytics"
+        subtitle="Explore sales performance, operational fulfillment, and school engagement."
+        actions={
+          <div style={{ display: "flex", gap: "8px" }}>
+            <AdminButton
+              href="/admin/reports/export"
+              variant="secondary"
+              icon={<Download size={14} />}
+            >
+              Export Report
+            </AdminButton>
+          </div>
+        }
+      />
 
       <div className={adminStyles.reportsLayout}>
         {/* Left Sidebar Menu */}
@@ -71,26 +76,34 @@ export function ReportsPageView() {
         <div className={adminStyles.reportsContent}>
           {/* Top 4 KPI Cards */}
           <div className={adminStyles.metricsGrid4}>
-            <div className={adminStyles.metricCard}>
-              <span className={adminStyles.metricLabel}>Total Revenue</span>
-              <div className={adminStyles.metricValue}>R1,248,950</div>
-              <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 22% vs last month</span>
-            </div>
-            <div className={adminStyles.metricCard}>
-              <span className={adminStyles.metricLabel}>Total Orders</span>
-              <div className={adminStyles.metricValue}>356</div>
-              <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 14% vs last month</span>
-            </div>
-            <div className={adminStyles.metricCard}>
-              <span className={adminStyles.metricLabel}>Average Order Value</span>
-              <div className={adminStyles.metricValue}>R23,540</div>
-              <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 6% vs last month</span>
-            </div>
-            <div className={adminStyles.metricCard}>
-              <span className={adminStyles.metricLabel}>On-Time Deliveries</span>
-              <div className={adminStyles.metricValue}>96.4%</div>
-              <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 1.2% vs last month</span>
-            </div>
+            <MetricCard
+              label="Total Revenue"
+              value="R 1,248,950"
+              subtext="+22% vs last month"
+              icon={<TrendingUp size={16} />}
+              iconTone="green"
+            />
+            <MetricCard
+              label="Total Orders"
+              value="356"
+              subtext="+14% vs last month"
+              icon={<ShoppingCart size={16} />}
+              iconTone="blue"
+            />
+            <MetricCard
+              label="Average Order Value"
+              value="R 23,540"
+              subtext="+6% vs last month"
+              icon={<TrendingUp size={16} />}
+              iconTone="amber"
+            />
+            <MetricCard
+              label="On-Time Deliveries"
+              value="96.4%"
+              subtext="+1.2% vs target"
+              icon={<Truck size={16} />}
+              iconTone="purple"
+            />
           </div>
 
           {/* Revenue Over Time & Top Schools by Revenue */}

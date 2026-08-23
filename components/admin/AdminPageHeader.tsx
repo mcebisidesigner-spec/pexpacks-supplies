@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
-import styles from "@/app/admin/admin.module.css";
+import styles from "./ui/AdminPageHeader.module.css";
 
-
-type AdminPageHeaderProps = {
+export type AdminPageHeaderProps = {
   title: string;
   count?: number;
   subtitle?: string;
@@ -15,18 +14,20 @@ export function AdminPageHeader({
   subtitle,
   actions,
 }: AdminPageHeaderProps) {
+  const formattedCount = count !== undefined ? `(${count.toLocaleString()})` : undefined;
+
   return (
-    <div className={styles.toolbar}>
-      <div className={styles.headerRow}>
-        <h1 className={styles.pageTitle}>
+    <div className={styles.headerRow}>
+      <div className={styles.headerTitleGroup}>
+        <h1 className={styles.headerTitle}>
           {title}
-          {count !== undefined && (
-            <span className={styles.count}>{count}</span>
+          {formattedCount && (
+            <span className={styles.headerCount}>{formattedCount}</span>
           )}
         </h1>
-        {actions && <div className={styles.actions}>{actions}</div>}
+        {subtitle && <p className={styles.headerSubtitle}>{subtitle}</p>}
       </div>
-      {subtitle && <p className={styles.mutedText}>{subtitle}</p>}
+      {actions && <div className={styles.headerActions}>{actions}</div>}
     </div>
   );
 }

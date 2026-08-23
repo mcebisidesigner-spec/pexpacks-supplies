@@ -1,172 +1,178 @@
-﻿"use client";
+"use client";
 
-import { useState } from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Boxes,
-  CheckCircle2,
-  Clock,
-  MoreHorizontal,
-  PackageCheck,
-  Search,
-  TrendingDown,
-  TrendingUp,
-  Truck,
-  Warehouse,
-} from "lucide-react";
+import { CheckCircle2, Clock, Eye, PackageCheck, Truck } from "lucide-react";
 import styles from "./CorePagesView.module.css";
-import adminStyles from "@/app/admin/admin.module.css";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { MetricCard } from "@/components/admin/ui/AdminCard";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import {
+  DataTable,
+  DataTableToolbar,
+  DataTablePagination,
+  useTableParams,
+  type ColumnDef,
+} from "@/components/admin/shared/DataTable";
 
 interface FulfilmentRow {
   id: string;
   orderNumber: string;
   school: string;
-  status: "Ready to Pack" | "In Packing" | "Picking" | "Ready for Dispatch" | "Dispatched" | "Delivered";
+  status: string;
   batchWave: string;
   itemsCount: number;
   estDispatch: string;
 }
 
 const SEED_FULFILMENT: FulfilmentRow[] = [
-  { id: "f-1", orderNumber: "ORD-10528", school: "3d Christian Academy", status: "Ready to Pack", batchWave: "BATCH-064", itemsCount: 128, estDispatch: "May 28, 2024" },
-  { id: "f-2", orderNumber: "ORD-10527", school: "A Re Tlabeng Primary", status: "In Packing", batchWave: "BATCH-063", itemsCount: 76, estDispatch: "May 28, 2024" },
-  { id: "f-3", orderNumber: "ORD-10526", school: "Aa Academy", status: "Picking", batchWave: "WAVE-025", itemsCount: 192, estDispatch: "May 26, 2024" },
-  { id: "f-4", orderNumber: "ORD-10525", school: "Ab Phokompe Sec.", status: "Ready for Dispatch", batchWave: "BATCH-062", itemsCount: 102, estDispatch: "May 25, 2024" },
-  { id: "f-5", orderNumber: "ORD-10524", school: "Crescent Primary", status: "Dispatched", batchWave: "BATCH-061", itemsCount: 58, estDispatch: "May 24, 2024" },
-  { id: "f-6", orderNumber: "ORD-10523", school: "Daleview Secondary", status: "Delivered", batchWave: "BATCH-060", itemsCount: 148, estDispatch: "May 23, 2024" },
+  { id: "f-1", orderNumber: "ORD-10528", school: "Primrose Hill Primary", status: "ready_to_pack", batchWave: "BATCH-064", itemsCount: 128, estDispatch: "2026-05-28" },
+  { id: "f-2", orderNumber: "ORD-10527", school: "Wit Deep Primary", status: "packing", batchWave: "BATCH-063", itemsCount: 76, estDispatch: "2026-05-28" },
+  { id: "f-3", orderNumber: "ORD-10526", school: "Buzy Bee Primary", status: "procurement", batchWave: "WAVE-025", itemsCount: 192, estDispatch: "2026-05-26" },
+  { id: "f-4", orderNumber: "ORD-10525", school: "St Dominic's Catholic", status: "ready_to_pack", batchWave: "BATCH-062", itemsCount: 102, estDispatch: "2026-05-25" },
+  { id: "f-5", orderNumber: "ORD-10524", school: "Crescent Primary", status: "dispatched", batchWave: "BATCH-061", itemsCount: 58, estDispatch: "2026-05-24" },
+  { id: "f-6", orderNumber: "ORD-10523", school: "Daleview Secondary", status: "delivered", batchWave: "BATCH-060", itemsCount: 148, estDispatch: "2026-05-23" },
 ];
 
 export function FulfilmentPageView() {
   const router = useRouter();
+  const { params, setParams } = useTableParams();
+
+  const filtered = useMemo(() => {
+    return SEED_FULFILMENT.filter((f) => {
+      const matchSearch =
+        !params.q.trim() ||
+        f.orderNumber.toLowerCase().includes(params.q.toLowerCase()) ||
+        f.school.toLowerCase().includes(params.q.toLowerCase()) ||
+        f.batchWave.toLowerCase().includes(params.q.toLowerCase());
+
+      const matchStatus =
+        !params.status || params.status === "all" || f.status === params.status;
+
+      return matchSearch && matchStatus;
+    });
+  }, [params.q, params.status]);
+
+  const columns: ColumnDef<FulfilmentRow>[] = [
+    {
+      key: "orderNumber",
+      header: "Order & Batch",
+      sortable: true,
+      render: (row) => (
+        <div className={styles.productCell}>
+          <Link
+            href={`/admin/fulfilment/${row.orderNumber}`}
+            className={styles.productNameLink}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.orderNumber}
+          </Link>
+          <span className={styles.productBrand}>{row.batchWave}</span>
+        </div>
+      ),
+    },
+    {
+      key: "school",
+      header: "Destination School",
+      sortable: true,
+      render: (row) => <span>{row.school}</span>,
+    },
+    {
+      key: "itemsCount",
+      header: "Total Items",
+      sortable: true,
+      align: "center",
+      width: "120px",
+      render: (row) => <span>{row.itemsCount} units</span>,
+    },
+    {
+      key: "estDispatch",
+      header: "Target Date",
+      sortable: true,
+      width: "130px",
+      render: (row) => <span>{row.estDispatch}</span>,
+    },
+    {
+      key: "status",
+      header: "Packing Status",
+      sortable: true,
+      align: "center",
+      width: "140px",
+      render: (row) => <StatusBadge status={row.status} showDot />,
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right",
+      width: "80px",
+      render: (row) => (
+        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+          <AdminButton
+            href={`/admin/fulfilment/${row.orderNumber}`}
+            variant="icon"
+            size="sm"
+            aria-label={`View pack sheet for ${row.orderNumber}`}
+            icon={<Eye size={13} />}
+          />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className={styles.container}>
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>Packing & Fulfilment</h1>
-          <p className={styles.headerSubtitle}>Oversees packing, batching and dispatch.</p>
-        </div>
+      <AdminPageHeader
+        title="Packing & Fulfilment"
+        count={filtered.length}
+        subtitle="School pack assembly queues, box labeling, and courier dispatch management."
+      />
+
+      {/* Metrics Row */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+        <MetricCard
+          label="Ready to Pack"
+          value="356"
+          subtext="Stock fully secured"
+          icon={<PackageCheck size={16} />}
+          iconTone="green"
+        />
+        <MetricCard
+          label="In Assembly"
+          value="84"
+          subtext="Active packing line"
+          icon={<Clock size={16} />}
+          iconTone="blue"
+        />
+        <MetricCard
+          label="Dispatched"
+          value="1,420"
+          subtext="En route / Delivered"
+          icon={<Truck size={16} />}
+          iconTone="purple"
+        />
       </div>
 
-      {/* 4 Metric Cards */}
-      <div className={adminStyles.metricsGrid4}>
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Ready to Pack</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}><PackageCheck size={16} /></div>
-          </div>
-          <div className={adminStyles.metricValue}>356</div>
-          <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 15% vs last 7 days</span>
-        </div>
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>In Packing</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}><Boxes size={16} /></div>
-          </div>
-          <div className={adminStyles.metricValue}>124</div>
-          <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendDown}`}><TrendingDown size={12} /> 5% vs last 7 days</span>
-        </div>
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Ready for Dispatch</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconGreen}`}><Truck size={16} /></div>
-          </div>
-          <div className={adminStyles.metricValue}>78</div>
-          <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 8% vs last 7 days</span>
-        </div>
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Dispatched Today</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconPurple}`}><Warehouse size={16} /></div>
-          </div>
-          <div className={adminStyles.metricValue}>42</div>
-          <span className={`${adminStyles.metricTrend} ${adminStyles.metricTrendUp}`}><TrendingUp size={12} /> 18% vs last 7 days</span>
-        </div>
-      </div>
+      <DataTableToolbar
+        searchPlaceholder="Search packing queue by order, school, batch..."
+      />
 
-      <div className={adminStyles.toolbar}>
-        <div className={styles.toolbarLeft}>
-          <div className={styles.searchBox}>
-            <Search />
-            <input className={adminStyles.searchInput} placeholder="Search orders or schools..." />
-          </div>
-          <select className={styles.selectInput}><option>Status: All</option></select>
-          <select className={styles.selectInput}><option>Batch: All</option></select>
-        </div>
-      </div>
-
-      <div className={adminStyles.tableCard}>
-        <div className={adminStyles.tableWrapper}>
-          <table className={styles.dataTable}>
-            <thead>
-              <tr>
-                <th>Order #</th>
-                <th>School</th>
-                <th>Status</th>
-                <th>Batch / Wave</th>
-                <th>Items</th>
-                <th>Est. Dispatch</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SEED_FULFILMENT.map((row) => (
-                <tr
-                  key={row.id}
-                  className={styles.dataRow}
-                  onClick={() => router.push(`/admin/fulfilment/${row.orderNumber}`)}
-                >
-                  <td>
-                    <Link
-                      href={`/admin/fulfilment/${row.orderNumber}`}
-                      className={adminStyles.badgeTeal}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {row.orderNumber}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/admin/fulfilment/${row.orderNumber}`}
-                      className={`${adminStyles["c-white"]} ${adminStyles["fw-700"]}`}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {row.school}
-                    </Link>
-                  </td>
-                  <td>
-                    <span className={
-                      row.status === "Ready to Pack" ? adminStyles.badgeTeal :
-                      row.status === "In Packing" ? adminStyles.badgeBlue :
-                      row.status === "Ready for Dispatch" ? adminStyles.badgeGreen :
-                      row.status === "Dispatched" ? adminStyles.badgePurple :
-                      row.status === "Delivered" ? adminStyles.badgeGreen :
-                      adminStyles.badgeAmber
-                    }>
-                      {row.status}
-                    </span>
-                  </td>
-                  <td><span className={adminStyles.badgeDark}>{row.batchWave}</span></td>
-                  <td>{row.itemsCount}</td>
-                  <td>{row.estDispatch}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className={styles.paginationFooter}>
-          <span>Showing 1 to 6 of 124 orders</span>
-          <div className={adminStyles.paginationControls}>
-            <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
-            <button className={styles.pageBtn}>2</button>
-            <button className={styles.pageBtn}>3</button>
-            <button className={styles.pageBtn}>4</button>
-            <button className={styles.pageBtn}>5</button>
-            <span style={{ padding: "0 4px" }}>...</span>
-            <button className={styles.pageBtn}>21</button>
-          </div>
-        </div>
-      </div>
+      <DataTable
+        data={filtered}
+        columns={columns}
+        keyExtractor={(row) => row.id}
+        onRowClick={(row) => router.push(`/admin/fulfilment/${row.orderNumber}`)}
+        emptyTitle="No packing jobs found"
+        emptySubtitle="Try adjusting your search query."
+        footer={
+          <DataTablePagination
+            total={filtered.length}
+            pageSize={filtered.length || 25}
+            currentPage={1}
+          />
+        }
+      />
     </div>
   );
 }

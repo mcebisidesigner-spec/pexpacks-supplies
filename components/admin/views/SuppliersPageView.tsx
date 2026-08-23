@@ -1,206 +1,197 @@
-﻿"use client";
+"use client";
 
-import { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Plus,
-  Search,
-  Trash2,
-  Truck,
-} from "lucide-react";
+import { Building2, Edit2, Plus, Trash2 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
-import adminStyles from "@/app/admin/admin.module.css";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import {
+  DataTable,
+  DataTableToolbar,
+  DataTablePagination,
+  useTableParams,
+  type ColumnDef,
+} from "@/components/admin/shared/DataTable";
+import type { SupplierRow } from "@/lib/admin/operations";
 
-interface SupplierRow {
-  id: string;
-  name: string;
-  category: string;
-  leadTime: string;
-  onTimeRate: number;
-  status: "Preferred" | "Approved" | "Prospect";
+interface SuppliersPageViewProps {
+  initialSuppliers?: SupplierRow[];
 }
 
-const DEFAULT_SUPPLIERS: SupplierRow[] = [
-  {
-    id: "sup-makro",
-    name: "Makro",
-    category: "General & Office Supplies",
-    leadTime: "1-2 days",
-    onTimeRate: 99,
-    status: "Preferred",
-  },
-  {
-    id: "sup-bsc",
-    name: "BSC Stationers",
-    category: "Stationery & Paper",
-    leadTime: "2-3 days",
-    onTimeRate: 98,
-    status: "Preferred",
-  },
-];
-
-export function SuppliersPageView() {
+export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewProps) {
   const router = useRouter();
-  const [suppliers, setSuppliers] = useState<SupplierRow[]>(DEFAULT_SUPPLIERS);
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const { params, setParams } = useTableParams();
 
-  const filtered = useMemo(() => {
-    return suppliers.filter((s) => {
-      const matchSearch =
-        s.name.toLowerCase().includes(search.toLowerCase()) ||
-        s.category.toLowerCase().includes(search.toLowerCase());
-      const matchStatus = statusFilter === "all" || s.status === statusFilter;
-      return matchSearch && matchStatus;
-    });
-  }, [suppliers, search, statusFilter]);
+  // Fallback defaults if table is empty
+  const defaultSuppliers: SupplierRow[] = [
+    {
+      id: "sup-makro",
+      code: "SUP-MAKRO",
+      name: "Makro",
+      contact_name: "Trade Desk",
+      email: "orders@makro.co.za",
+      telephone: "+27 11 797 0000",
+      lead_time_days: 2,
+      payment_terms: "30 Days Net",
+      active: true,
+      offer_count: 1420,
+    },
+    {
+      id: "sup-bsc",
+      code: "SUP-BSC",
+      name: "BSC Stationers",
+      contact_name: "Key Accounts",
+      email: "orders@bscstationers.co.za",
+      telephone: "+27 11 837 0000",
+      lead_time_days: 3,
+      payment_terms: "30 Days Net",
+      active: true,
+      offer_count: 850,
+    },
+  ];
 
-  const handleDelete = (id: string) => {
+  const [suppliers, setSuppliers] = useState<SupplierRow[]>(
+    initialSuppliers.length > 0 ? initialSuppliers : defaultSuppliers
+  );
+
+  const handleDelete = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     setSuppliers((prev) => prev.filter((s) => s.id !== id));
   };
 
+  const filtered = useMemo(() => {
+    if (!params.q.trim()) return suppliers;
+    const q = params.q.toLowerCase();
+    return suppliers.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.code.toLowerCase().includes(q) ||
+        (s.email && s.email.toLowerCase().includes(q))
+    );
+  }, [suppliers, params.q]);
+
+  const columns: ColumnDef<SupplierRow>[] = [
+    {
+      key: "name",
+      header: "Supplier Name",
+      sortable: true,
+      render: (row) => (
+        <div className={styles.productCell}>
+          <Link
+            href={`/admin/suppliers/${row.id}`}
+            className={styles.productNameLink}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className={styles.productBrand}>Code: {row.code}</span>
+        </div>
+      ),
+    },
+    {
+      key: "contact",
+      header: "Contact & Email",
+      render: (row) => (
+        <div className={styles.productCell}>
+          <span>{row.contact_name || "Account Representative"}</span>
+          <span className={styles.productBrand}>{row.email || row.telephone || "—"}</span>
+        </div>
+      ),
+    },
+    {
+      key: "lead_time_days",
+      header: "Lead Time",
+      sortable: true,
+      width: "120px",
+      render: (row) => (
+        <span>{row.lead_time_days ? `${row.lead_time_days} Days` : "2-3 Days"}</span>
+      ),
+    },
+    {
+      key: "payment_terms",
+      header: "Terms",
+      width: "140px",
+      render: (row) => <span>{row.payment_terms || "30 Days Net"}</span>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      align: "center",
+      width: "130px",
+      render: (row) => (
+        <StatusBadge
+          status={row.active ? "Preferred" : "Inactive"}
+          tone={row.active ? "emerald" : "slate"}
+          showDot
+        />
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right",
+      width: "100px",
+      render: (row) => (
+        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+          <AdminButton
+            href={`/admin/suppliers/${row.id}/edit`}
+            variant="iconTeal"
+            size="sm"
+            aria-label={`Edit ${row.name}`}
+            icon={<Edit2 size={13} />}
+          />
+          <AdminButton
+            type="button"
+            variant="iconRed"
+            size="sm"
+            aria-label={`Delete ${row.name}`}
+            onClick={(e) => handleDelete(row.id, e)}
+            icon={<Trash2 size={13} />}
+          />
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className={styles.container}>
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>
-            Suppliers{" "}
-            <span className={adminStyles.headerCount}>({suppliers.length})</span>
-          </h1>
-          <p className={styles.headerSubtitle}>
-            Manage your supplier network and performance.
-          </p>
-        </div>
-        <div className={styles.headerActions}>
-          <Link href="/admin/suppliers/new-supplier" className={styles.primaryBtn}>
-            <Plus size={14} /> New Supplier
-          </Link>
-        </div>
-      </div>
-
-      <div className={adminStyles.toolbar}>
-        <div className={styles.toolbarLeft}>
-          <div className={styles.searchBox}>
-            <Search />
-            <input
-              className={adminStyles.searchInput}
-              placeholder="Search by supplier name..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <select
-            className={styles.selectInput}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+      <AdminPageHeader
+        title="Suppliers"
+        count={filtered.length}
+        subtitle="Manage your preferred supplier network and procurement terms."
+        actions={
+          <AdminButton
+            href="/admin/suppliers/new-supplier"
+            variant="primary"
+            icon={<Plus size={14} />}
           >
-            <option value="all">Status: All</option>
-            <option value="Preferred">Preferred</option>
-            <option value="Approved">Approved</option>
-            <option value="Prospect">Prospect</option>
-          </select>
-        </div>
-      </div>
+            New Supplier
+          </AdminButton>
+        }
+      />
 
-      <div className={adminStyles.tableCard}>
-        <div className={adminStyles.tableWrapper}>
-          <table className={styles.dataTable}>
-            <thead>
-              <tr>
-                <th>Supplier</th>
-                <th>Category</th>
-                <th>Lead Time</th>
-                <th>On-Time %</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className={adminStyles.emptyCell}>
-                    No suppliers found matching criteria.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((sup) => {
-                  const supSlug = sup.name
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, "-")
-                    .replace(/^-+|-+$/g, "");
-                  return (
-                    <tr
-                      key={sup.id}
-                      className={styles.dataRow}
-                      onClick={() => router.push(`/admin/suppliers/${supSlug}`)}
-                    >
-                      <td>
-                        <div
-                          className={`${adminStyles.flex} ${adminStyles["items-center"]} ${adminStyles["gap-10"]}`}
-                        >
-                          <div className={adminStyles.supplierAvatar}>
-                            <Truck size={14} />
-                          </div>
-                          <Link
-                            href={`/admin/suppliers/${supSlug}`}
-                            className={`${adminStyles["c-white"]} ${adminStyles["fw-700"]}`}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {sup.name}
-                          </Link>
-                        </div>
-                      </td>
-                      <td>{sup.category}</td>
-                      <td>{sup.leadTime}</td>
-                      <td>
-                        <span
-                          className={`${
-                            sup.onTimeRate >= 95
-                              ? adminStyles["c-green"]
-                              : adminStyles["c-amber"]
-                          } ${adminStyles["fw-700"]}`}
-                        >
-                          {sup.onTimeRate}%
-                        </span>
-                      </td>
-                      <td>
-                        <span
-                          className={
-                            sup.status === "Preferred"
-                              ? adminStyles.badgeTeal
-                              : sup.status === "Approved"
-                              ? adminStyles.badgeGreen
-                              : adminStyles.badgeAmber
-                          }
-                        >
-                          {sup.status}
-                        </span>
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          className={adminStyles.iconBtnRed}
-                          title="Delete Supplier"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(sup.id);
-                          }}
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div className={styles.paginationFooter}>
-          <span>Showing 1 to {filtered.length} of {suppliers.length} suppliers</span>
-        </div>
-      </div>
+      <DataTableToolbar
+        searchPlaceholder="Search suppliers by name, code, email..."
+      />
+
+      <DataTable
+        data={filtered}
+        columns={columns}
+        keyExtractor={(row) => row.id}
+        onRowClick={(row) => router.push(`/admin/suppliers/${row.id}`)}
+        emptyTitle="No suppliers found"
+        emptySubtitle="Try adjusting your search query."
+        footer={
+          <DataTablePagination
+            total={filtered.length}
+            pageSize={filtered.length || 25}
+            currentPage={1}
+          />
+        }
+      />
     </div>
   );
 }

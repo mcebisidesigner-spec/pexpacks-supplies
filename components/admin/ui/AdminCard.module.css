@@ -1,0 +1,108 @@
+.card {
+  background: #0c1322;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  color: #ffffff;
+}
+
+.surface {
+  background: #090e17;
+  border-color: rgba(30, 41, 59, 0.6);
+}
+
+.interactive {
+  transition: transform 140ms ease, border-color 140ms ease;
+  cursor: pointer;
+}
+
+.interactive:hover {
+  transform: translateY(-2px);
+  border-color: #3b82f6;
+}
+
+/* ── Metric Card ── */
+.metricCard {
+  background: #0c1322;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 140ms ease;
+}
+
+.metricCard:hover {
+  border-color: rgba(51, 65, 85, 0.9);
+}
+
+.metricTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.metricLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metricIconWrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.green {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+}
+
+.blue {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+}
+
+.amber {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+}
+
+.red {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+}
+
+.purple {
+  background: rgba(192, 132, 252, 0.14);
+  color: #c084fc;
+}
+
+.metricValue {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.metricFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.metricSubtext {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}

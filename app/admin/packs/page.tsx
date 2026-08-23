@@ -8,8 +8,21 @@ export const metadata = {
   title: "School Packs | Admin | Pexpacks",
 };
 
-export default async function AdminSchoolPacksPage() {
+interface AdminSchoolPacksPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function AdminSchoolPacksPage({ searchParams }: AdminSchoolPacksPageProps) {
   await requireAdmin({ permission: "packs.view" });
-  const initialData = await listSchoolGroupedSummary({ page: 1, pageSize: 5000 });
+  const params = await searchParams;
+  const q = (params.q as string) || "";
+  const page = Math.max(1, parseInt((params.page as string) || "1", 10));
+
+  const initialData = await listSchoolGroupedSummary({
+    page,
+    pageSize: 500,
+    q: q || undefined,
+  });
+
   return <SchoolPacksView initialData={initialData} />;
 }

@@ -1,131 +1,302 @@
-﻿"use client";
+"use client";
 
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  CheckSquare,
-  Clock,
-  Filter,
-  MoreHorizontal,
-  Plus,
-  Search,
-} from "lucide-react";
+import { Clock, LayoutGrid, List, MessageSquare, Plus } from "lucide-react";
 import styles from "./CorePagesView.module.css";
-import adminStyles from "@/app/admin/admin.module.css";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { AdminSelect } from "@/components/admin/ui/AdminSelect";
+import {
+  DataTable,
+  DataTableToolbar,
+  DataTablePagination,
+  useTableParams,
+  type ColumnDef,
+} from "@/components/admin/shared/DataTable";
+import { TaskDrawer } from "@/components/admin/tasks/TaskDrawer";
+import type { TaskRow } from "@/lib/admin/operations";
 
-interface TaskRow {
-  id: string;
-  task: string;
-  assignee: string;
-  assigneeAvatar: "MC" | "KG" | "LM" | "WB" | "FT";
-  dueDate: string;
-  priority: "High" | "Medium" | "Low";
-  status: "In Progress" | "Pending" | "Completed";
+interface TasksPageViewProps {
+  initialTasks: TaskRow[];
 }
 
-const SEED_TASKS: TaskRow[] = [
-  { id: "t-1", task: "Review Grade 1-3 packs for Primrose Hill PS", assignee: "Mcebisi M.", assigneeAvatar: "MC", dueDate: "May 28, 2024", priority: "High", status: "In Progress" },
-  { id: "t-2", task: "Confirm PO-11256 with Waltons", assignee: "Kwanele G.", assigneeAvatar: "KG", dueDate: "May 28, 2024", priority: "High", status: "Pending" },
-  { id: "t-3", task: "Approve pricing update for Stationery", assignee: "Liam M.", assigneeAvatar: "LM", dueDate: "May 29, 2024", priority: "Medium", status: "Pending" },
-  { id: "t-4", task: "Follow up on late payment - ORD-10524", assignee: "Kwanele G.", assigneeAvatar: "KG", dueDate: "May 29, 2024", priority: "Medium", status: "In Progress" },
-  { id: "t-5", task: "Prepare dispatch wave for May 29", assignee: "Warehouse Team", assigneeAvatar: "WB", dueDate: "May 29, 2024", priority: "High", status: "Pending" },
-  { id: "t-6", task: "Update supplier lead times", assignee: "Mcebisi M.", assigneeAvatar: "MC", dueDate: "May 30, 2024", priority: "Low", status: "Completed" },
-  { id: "t-7", task: "Monthly procurement review", assignee: "Liam M.", assigneeAvatar: "LM", dueDate: "May 31, 2024", priority: "Medium", status: "Pending" },
-  { id: "t-8", task: "Reconcile payments (May)", assignee: "Finance Team", assigneeAvatar: "FT", dueDate: "Jun 02, 2024", priority: "High", status: "Pending" },
-];
-
-export function TasksPageView() {
+export function TasksPageView({ initialTasks }: TasksPageViewProps) {
   const router = useRouter();
+  const { params, setParams } = useTableParams();
+  const [tasks, setTasks] = useState<TaskRow[]>(initialTasks);
+  const [selectedTask, setSelectedTask] = useState<TaskRow | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"table" | "board">("table");
+
+  // Fallback defaults if table is empty
+  const defaultTasks: TaskRow[] = [
+    {
+      id: "t-1",
+      title: "Review Grade 1-3 packs for Primrose Hill PS",
+      description: "Ensure updated stationery prices and quantities match school list requirements.",
+      entity_type: "school_pack",
+      entity_id: "primrose-hill-primary-school",
+      status: "in_progress",
+      priority: "high",
+      assigned_to: null,
+      due_at: new Date(Date.now() + 86400000).toISOString(),
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: "t-2",
+      title: "Confirm PO-11256 with Waltons",
+      description: "Verify delivery date and bulk pack quantities for term 1 intake.",
+      entity_type: "procurement",
+      entity_id: "PO-11256",
+      status: "open",
+      priority: "high",
+      assigned_to: null,
+      due_at: new Date(Date.now() + 172800000).toISOString(),
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: "t-3",
+      title: "Approve pricing update for Stationery",
+      description: "Supplier price revision from Makro on Faber-Castell and Pritt items.",
+      entity_type: "pricing_rule",
+      entity_id: "STATIONERY-2026",
+      status: "open",
+      priority: "normal",
+      assigned_to: null,
+      due_at: new Date(Date.now() + 259200000).toISOString(),
+      created_at: new Date().toISOString(),
+    },
+  ];
+
+  const effectiveTasks = tasks.length > 0 ? tasks : defaultTasks;
+
+  const filteredTasks = useMemo(() => {
+    return effectiveTasks.filter((t) => {
+      const matchSearch =
+        !params.q.trim() ||
+        t.title.toLowerCase().includes(params.q.toLowerCase()) ||
+        (t.description && t.description.toLowerCase().includes(params.q.toLowerCase()));
+
+      const matchStatus =
+        !params.status || params.status === "all" || t.status === params.status;
+
+      return matchSearch && matchStatus;
+    });
+  }, [effectiveTasks, params.q, params.status]);
+
+  const handleOpenDrawer = (task: TaskRow) => {
+    setSelectedTask(task);
+    setIsDrawerOpen(true);
+  };
+
+  const columns: ColumnDef<TaskRow>[] = [
+    {
+      key: "title",
+      header: "Task & Linked Entity",
+      sortable: true,
+      render: (row) => (
+        <div className={styles.productCell}>
+          <button
+            type="button"
+            className={styles.taskTitleBtn}
+            onClick={() => handleOpenDrawer(row)}
+          >
+            {row.title}
+          </button>
+          {row.entity_type && (
+            <span className={styles.productBrand}>
+              {row.entity_type.toUpperCase()}: {row.entity_id || "General"}
+            </span>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "due_at",
+      header: "Due Date",
+      sortable: true,
+      width: "130px",
+      render: (row) => (
+        <span>
+          {row.due_at ? new Date(row.due_at).toLocaleDateString("en-ZA") : "No deadline"}
+        </span>
+      ),
+    },
+    {
+      key: "priority",
+      header: "Priority",
+      sortable: true,
+      align: "center",
+      width: "110px",
+      render: (row) => (
+        <StatusBadge status={row.priority} showDot />
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      sortable: true,
+      align: "center",
+      width: "130px",
+      render: (row) => (
+        <StatusBadge status={row.status} showDot />
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right",
+      width: "90px",
+      render: (row) => (
+        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+          <AdminButton
+            type="button"
+            variant="teal"
+            size="sm"
+            onClick={() => handleOpenDrawer(row)}
+            icon={<MessageSquare size={13} />}
+          >
+            Discuss
+          </AdminButton>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className={styles.container}>
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>Tasks</h1>
-          <p className={styles.headerSubtitle}>Track tasks and get things done.</p>
-        </div>
-        <div className={styles.headerActions}>
-          <Link href="/admin/tasks/new" className={styles.primaryBtn}>
-            <Plus size={14} /> + New Task
-          </Link>
-        </div>
-      </div>
-
-      <div className={adminStyles.toolbar}>
-        <div className={styles.toolbarLeft}>
-          <select className={styles.selectInput}><option>All Tasks</option></select>
-          <select className={styles.selectInput}><option>Status: All</option></select>
-          <select className={styles.selectInput}><option>Assignee: All</option></select>
-          <select className={styles.selectInput}><option>Due: This Month</option></select>
-        </div>
-      </div>
-
-      <div className={adminStyles.tableCard}>
-        <div className={adminStyles.tableWrapper}>
-          <table className={styles.dataTable}>
-            <thead>
-              <tr>
-                <th>Task</th>
-                <th>Assignee</th>
-                <th>Due Date</th>
-                <th>Priority</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SEED_TASKS.map((t) => {
-                const taskSlug = t.task.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-                return (
-                  <tr
-                    key={t.id}
-                    className={styles.dataRow}
-                    onClick={() => router.push(`/admin/tasks/${taskSlug}`)}
-                  >
-                    <td>
-                      <Link
-                        href={`/admin/tasks/${taskSlug}`}
-                        className={`${adminStyles["c-white"]} ${adminStyles["fw-700"]}`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {t.task}
-                      </Link>
-                    </td>
-                    <td>
-                      <div className={`${adminStyles.flex} ${adminStyles["items-center"]} ${adminStyles["gap-6"]}`}>
-                        <span className={adminStyles.avatarBadge} style={{ background: t.assigneeAvatar === "MC" ? "#0d9488" : t.assigneeAvatar === "KG" ? "#d97706" : "#2563eb" }}>
-                          {t.assigneeAvatar}
-                        </span>
-                        <span>{t.assignee}</span>
-                      </div>
-                    </td>
-                    <td>{t.dueDate}</td>
-                    <td>
-                      <span className={`${t.priority === "High" ? adminStyles["c-red"] : t.priority === "Medium" ? adminStyles["c-amber"] : adminStyles["c-green"]} ${adminStyles["fw-600"]}`}>
-                        ● {t.priority}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={t.status === "Completed" ? adminStyles.badgeGreen : t.status === "In Progress" ? adminStyles.badgeBlue : adminStyles.badgeAmber}>
-                        {t.status}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div className={styles.paginationFooter}>
-          <span>Showing 1 to 8 of 32 tasks</span>
-          <div className={adminStyles.paginationControls}>
-            <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
-            <button className={styles.pageBtn}>2</button>
-            <button className={styles.pageBtn}>3</button>
-            <button className={styles.pageBtn}>4</button>
+      <AdminPageHeader
+        title="Tasks & Collaboration"
+        count={filteredTasks.length}
+        subtitle="Manage operational tasks, linked records, and collaborative action requests."
+        actions={
+          <div style={{ display: "flex", gap: "8px" }}>
+            <div className={styles.viewToggleGroup}>
+              <button
+                type="button"
+                className={`${styles.viewToggleBtn} ${viewMode === "table" ? styles.viewToggleBtnActive : ""}`}
+                onClick={() => setViewMode("table")}
+                aria-label="Table View"
+              >
+                <List size={14} />
+              </button>
+              <button
+                type="button"
+                className={`${styles.viewToggleBtn} ${viewMode === "board" ? styles.viewToggleBtnActive : ""}`}
+                onClick={() => setViewMode("board")}
+                aria-label="Kanban Board View"
+              >
+                <LayoutGrid size={14} />
+              </button>
+            </div>
+            <AdminButton
+              href="/admin/tasks/new"
+              variant="primary"
+              icon={<Plus size={14} />}
+            >
+              New Task
+            </AdminButton>
           </div>
+        }
+      />
+
+      <DataTableToolbar
+        searchPlaceholder="Search tasks by title, objective, entity..."
+        filters={
+          <div className={styles.filterGroup}>
+            <AdminSelect
+              value={params.status || "all"}
+              onChange={(e) => setParams({ status: e.target.value }, true)}
+              className={styles.toolbarSelect}
+            >
+              <option value="all">Status: All</option>
+              <option value="open">Open</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+              <option value="blocked">Blocked</option>
+            </AdminSelect>
+          </div>
+        }
+      />
+
+      {viewMode === "table" ? (
+        <DataTable
+          data={filteredTasks}
+          columns={columns}
+          keyExtractor={(row) => row.id}
+          onRowClick={(row) => handleOpenDrawer(row)}
+          emptyTitle="No tasks found"
+          emptySubtitle="There are currently no tasks matching the selected filters."
+          footer={
+            <DataTablePagination
+              total={filteredTasks.length}
+              pageSize={filteredTasks.length || 25}
+              currentPage={1}
+            />
+          }
+        />
+      ) : (
+        /* Kanban Board View */
+        <div className={styles.kanbanGrid}>
+          {["open", "in_progress", "completed", "blocked"].map((colStatus) => {
+            const colTasks = filteredTasks.filter((t) => t.status === colStatus);
+            return (
+              <div key={colStatus} className={styles.kanbanCol}>
+                <div className={styles.kanbanHeader}>
+                  <span className={styles.kanbanTitle}>
+                    {colStatus.replace(/_/g, " ").toUpperCase()}
+                  </span>
+                  <span className={styles.kanbanCount}>{colTasks.length}</span>
+                </div>
+                <div className={styles.kanbanCardList}>
+                  {colTasks.map((t) => (
+                    <div
+                      key={t.id}
+                      className={styles.kanbanCard}
+                      onClick={() => handleOpenDrawer(t)}
+                    >
+                      <div className={styles.kanbanCardTop}>
+                        <StatusBadge status={t.priority} showDot />
+                        {t.due_at && (
+                          <span className={styles.kanbanDate}>
+                            <Clock size={11} /> {new Date(t.due_at).toLocaleDateString("en-ZA")}
+                          </span>
+                        )}
+                      </div>
+                      <div className={styles.kanbanCardTitle}>{t.title}</div>
+                      {t.entity_type && (
+                        <div className={styles.kanbanEntity}>
+                          {t.entity_type}: {t.entity_id || "General"}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {colTasks.length === 0 && (
+                    <div className={styles.kanbanEmpty}>No tasks</div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </div>
+      )}
+
+      <TaskDrawer
+        task={selectedTask}
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        onTaskUpdated={() => {
+          // Re-sync local state on task status update
+          if (selectedTask) {
+            setTasks((prev) =>
+              prev.map((t) => (t.id === selectedTask.id ? { ...t, status: "completed" } : t))
+            );
+          }
+        }}
+      />
     </div>
   );
 }

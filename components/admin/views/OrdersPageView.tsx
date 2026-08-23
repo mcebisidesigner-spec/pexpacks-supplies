@@ -1,163 +1,174 @@
-﻿"use client";
+"use client";
 
-import { useState, useMemo } from "react";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, Plus, Search } from "lucide-react";
+import { Eye, Download } from "lucide-react";
 import styles from "./CorePagesView.module.css";
-import adminStyles from "@/app/admin/admin.module.css";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import {
+  DataTable,
+  DataTableToolbar,
+  DataTablePagination,
+  useTableParams,
+  type ColumnDef,
+} from "@/components/admin/shared/DataTable";
+import type { OrderListResult, OrderRow } from "@/lib/admin/orders";
 
-interface OrderRow {
-  id: string;
-  orderNumber: string;
-  school: string;
-  orderDate: string;
-  total: number;
-  paymentStatus: "Paid" | "Part-Paid" | "Unpaid";
-  fulfilmentStatus: "Paid" | "Procurement" | "Ready to Pack" | "At Risk" | "Completed";
+interface OrdersPageViewProps {
+  initialData: OrderListResult;
 }
 
-const SEED_ORDERS: OrderRow[] = [
-  { id: "ord-10528", orderNumber: "ORD-10528", school: "3d Christian Academy", orderDate: "May 27, 2024", total: 28430.00, paymentStatus: "Paid", fulfilmentStatus: "Ready to Pack" },
-  { id: "ord-10527", orderNumber: "ORD-10527", school: "A Re Tlabeng Primary", orderDate: "May 26, 2024", total: 16230.00, paymentStatus: "Paid", fulfilmentStatus: "Procurement" },
-  { id: "ord-10526", orderNumber: "ORD-10526", school: "Aa Academy", orderDate: "May 26, 2024", total: 52851.00, paymentStatus: "Part-Paid", fulfilmentStatus: "At Risk" },
-  { id: "ord-10525", orderNumber: "ORD-10525", school: "Ab Phokompe Secondary", orderDate: "May 25, 2024", total: 34131.00, paymentStatus: "Paid", fulfilmentStatus: "Completed" },
-  { id: "ord-10524", orderNumber: "ORD-10524", school: "Blue Hills School", orderDate: "May 25, 2024", total: 26362.00, paymentStatus: "Paid", fulfilmentStatus: "Paid" },
+const TABS = [
+  { key: "all", label: "All Orders" },
+  { key: "paid", label: "Paid" },
+  { key: "procurement", label: "Procurement" },
+  { key: "ready_to_pack", label: "Ready to Pack" },
+  { key: "packing", label: "Packing" },
+  { key: "completed", label: "Completed" },
+  { key: "at_risk", label: "At Risk" },
 ];
 
-export function OrdersPageView() {
+export function OrdersPageView({ initialData }: OrdersPageViewProps) {
   const router = useRouter();
-  const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
+  const { params, setParams, isPending } = useTableParams();
 
-  const filtered = useMemo(() => {
-    return SEED_ORDERS.filter((o) => {
-      const matchSearch =
-        o.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
-        o.school.toLowerCase().includes(search.toLowerCase());
-      const matchTab =
-        activeTab === "all" ||
-        (activeTab === "Paid" && (o.paymentStatus === "Paid" || o.fulfilmentStatus === "Paid")) ||
-        o.fulfilmentStatus === activeTab;
-      return matchSearch && matchTab;
-    });
-  }, [search, activeTab]);
+  const currentTab = params.status || params.tab || "all";
+
+  const columns: ColumnDef<OrderRow>[] = [
+    {
+      key: "order_reference",
+      header: "Order Ref",
+      sortable: true,
+      width: "140px",
+      render: (row) => (
+        <span className={styles.itemSkuBadge}>
+          {row.order_reference || `ORD-${row.id.slice(0, 8)}`}
+        </span>
+      ),
+    },
+    {
+      key: "buyer_name",
+      header: "Customer & School",
+      sortable: true,
+      render: (row) => (
+        <div className={styles.productCell}>
+          <Link
+            href={`/admin/orders/${row.id}`}
+            className={styles.productNameLink}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.buyer_name || "Guest Customer"}
+          </Link>
+          <span className={styles.productBrand}>
+            {row.school_name || "General Order"} {row.grade ? `• Grade ${row.grade}` : ""}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: "created_at",
+      header: "Order Date",
+      sortable: true,
+      width: "130px",
+      render: (row) => (
+        <span>
+          {row.created_at ? new Date(row.created_at).toLocaleDateString("en-ZA") : "—"}
+        </span>
+      ),
+    },
+    {
+      key: "estimated_total",
+      header: "Total",
+      sortable: true,
+      align: "right",
+      width: "120px",
+      render: (row) => (
+        <span className={styles.priceHighlight}>
+          R {(row.estimated_total || 0).toFixed(2)}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      sortable: true,
+      align: "center",
+      width: "120px",
+      render: (row) => <StatusBadge status={row.status || "pending"} showDot />,
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right",
+      width: "80px",
+      render: (row) => (
+        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+          <AdminButton
+            href={`/admin/orders/${row.id}`}
+            variant="icon"
+            size="sm"
+            aria-label={`View order ${row.order_reference}`}
+            icon={<Eye size={13} />}
+          />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className={styles.container}>
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>
-            Orders &amp; Commerce{" "}
-            <span className={adminStyles.headerCount}>({filtered.length})</span>
-          </h1>
-          <p className={styles.headerSubtitle}>Order status lifecycle &amp; fulfillment tracking</p>
-        </div>
-      </div>
-
-      {/* Tabs Row */}
-      <div className={`${adminStyles.flex} ${adminStyles["gap-8"]} ${adminStyles["border-b"]} ${adminStyles["pb-8"]}`}>
-        {["all", "Paid", "Procurement", "Ready to Pack", "At Risk", "Completed"].map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            className={`${activeTab === tab ? styles.primaryBtn : styles.secondaryBtn} ${adminStyles["h-30"]} ${adminStyles["text-11"]}`}
-            onClick={() => setActiveTab(tab)}
+      <AdminPageHeader
+        title="Orders & Commerce"
+        count={initialData.total}
+        subtitle="Order status lifecycle & fulfillment tracking"
+        actions={
+          <AdminButton
+            href="/admin/orders/export"
+            variant="secondary"
+            icon={<Download size={14} />}
           >
-            {tab === "all" ? "All Orders" : tab}
+            Export Orders
+          </AdminButton>
+        }
+      />
+
+      <div className={styles.tabsRow}>
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            className={`${styles.tabBtn} ${currentTab === tab.key ? styles.tabBtnActive : ""}`}
+            onClick={() => setParams({ status: tab.key, tab: tab.key }, true)}
+          >
+            {tab.label}
           </button>
         ))}
       </div>
 
-      <div className={adminStyles.toolbar}>
-        <div className={styles.toolbarLeft}>
-          <div className={styles.searchBox}>
-            <Search />
-            <input
-              className={adminStyles.searchInput}
-              placeholder="Search orders by number or school..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
+      <DataTableToolbar
+        searchPlaceholder="Search orders by reference, buyer name, email..."
+        className={styles.mt12}
+      />
 
-      <div className={adminStyles.tableCard}>
-        <div className={adminStyles.tableWrapper}>
-          <table className={styles.dataTable}>
-            <thead>
-              <tr>
-                <th>Order Reference</th>
-                <th>School</th>
-                <th>Order Date</th>
-                <th>Total Amount</th>
-                <th>Payment Status</th>
-                <th>Fulfilment Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((ord) => {
-                const refNo = ord.orderNumber;
-                return (
-                  <tr
-                    key={ord.id}
-                    className={styles.dataRow}
-                    onClick={() => router.push(`/admin/orders/${refNo}`)}
-                  >
-                    <td>
-                      <Link
-                        href={`/admin/orders/${refNo}`}
-                        className={`${adminStyles.cTeal} ${adminStyles.fw700}`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {refNo}
-                      </Link>
-                    </td>
-                    <td><strong className={adminStyles.cWhite}>{ord.school}</strong></td>
-                    <td>{ord.orderDate}</td>
-                    <td><strong>R {ord.total.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}</strong></td>
-                    <td>
-                      <span className={ord.paymentStatus === "Paid" ? adminStyles.badgeGreen : adminStyles.badgeAmber}>
-                        {ord.paymentStatus}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={
-                        ord.fulfilmentStatus === "Ready to Pack" ? adminStyles.badgeTeal :
-                        ord.fulfilmentStatus === "Procurement" ? adminStyles.badgeBlue :
-                        ord.fulfilmentStatus === "At Risk" ? adminStyles.badgeRed :
-                        ord.fulfilmentStatus === "Completed" ? adminStyles.badgeGreen :
-                        adminStyles.badgeAmber
-                      }>
-                        {ord.fulfilmentStatus}
-                      </span>
-                    </td>
-                    <td>
-                      <Link
-                        href={`/admin/orders/${refNo}`}
-                        className={`${adminStyles.actionBtnDots} ${adminStyles["text-11"]} ${adminStyles["px-8"]}`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Eye size={12} /> View Detail
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div className={styles.paginationFooter}>
-          <span>Showing 1 to {filtered.length} of {SEED_ORDERS.length} orders</span>
-          <div className={adminStyles.paginationControls}>
-            <button className={styles.pageBtn}>&lt;</button>
-            <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
-            <button className={styles.pageBtn}>&gt;</button>
-          </div>
-        </div>
-      </div>
+      <DataTable
+        data={initialData.orders}
+        columns={columns}
+        keyExtractor={(row) => row.id}
+        onRowClick={(row) => router.push(`/admin/orders/${row.id}`)}
+        isLoading={isPending}
+        emptyTitle="No orders found"
+        emptySubtitle="There are currently no orders matching the selected filter."
+        footer={
+          <DataTablePagination
+            total={initialData.total}
+            pageSize={initialData.orders.length || 25}
+            currentPage={initialData.page}
+          />
+        }
+      />
     </div>
   );
 }

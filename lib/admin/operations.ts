@@ -64,29 +64,55 @@ export type MasterProductRow = {
   active: boolean;
 };
 
-export async function listMasterProducts(query = "", limit = 100) {
+export async function listMasterProducts(options: {
+  query?: string;
+  category?: string;
+  page?: number;
+  pageSize?: number;
+  sort?: string;
+  order?: "asc" | "desc";
+} | string = {}, legacyLimit = 100) {
+  const opts = typeof options === "string" ? { query: options, pageSize: legacyLimit } : options;
+  const page = Math.max(1, opts.page || 1);
+  const pageSize = Math.max(10, Math.min(100, opts.pageSize || 25));
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+  const sortCol = opts.sort || "name";
+  const ascending = opts.order !== "desc";
+
   let request = db()
     .from("master_products")
     .select(
       "id,sku,name,description,category,brand,unit,packaging,availability,current_selling_price,latest_verified_cost,pricing_status,last_verified_at,active",
       { count: "exact" },
-    )
-    .order("name")
-    .limit(limit);
-  if (query.trim()) {
-    const safe = query.trim().replace(/[,%()]/g, " ");
+    );
+
+  if (opts.category && opts.category !== "all") {
+    request = request.eq("category", opts.category);
+  }
+
+  if (opts.query && opts.query.trim()) {
+    const safe = opts.query.trim().replace(/[,%()]/g, " ");
     request = request.or(
       `sku.ilike.%${safe}%,name.ilike.%${safe}%,category.ilike.%${safe}%,brand.ilike.%${safe}%`,
     );
   }
+
+  request = request
+    .order(sortCol, { ascending })
+    .range(from, to);
+
   const { data, error, count } = await request;
   if (isOperationsSchemaUnavailable(error)) {
-    return { products: [] as MasterProductRow[], total: 0 };
+    return { products: [] as MasterProductRow[], total: 0, page: 1, pageCount: 1 };
   }
   assertNoError(error, "Unable to load the master catalogue");
+  const total = count ?? data?.length ?? 0;
   return {
     products: (data ?? []) as MasterProductRow[],
-    total: count ?? data?.length ?? 0,
+    total,
+    page,
+    pageCount: Math.max(1, Math.ceil(total / pageSize)),
   };
 }
 
@@ -1321,10 +1347,10 @@ export async function createTaskComment(input: {
       author_id: input.authorId,
       body: input.body.trim(),
     })
-    .select("id")
+    .select("id,task_id,author_id,body,created_at,updated_at")
     .single();
   assertNoError(error, "Unable to create the comment");
-  return data as { id: string };
+  return data as TaskCommentRow;
 }
 
 export async function deleteTaskComment(commentId: string) {

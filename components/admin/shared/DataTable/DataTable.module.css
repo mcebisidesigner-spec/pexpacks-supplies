@@ -1,0 +1,132 @@
+.tableCard {
+  background: #0c1322;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.table thead {
+  background: #090e17;
+  border-bottom: 1px solid #1e293b;
+}
+
+.table th {
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  transition: color 140ms ease;
+}
+
+.sortableHeader:hover {
+  color: #ffffff;
+}
+
+.headerContent {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sortIcon {
+  display: inline-flex;
+  color: #10b981;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  transition: background-color 140ms ease;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.clickableRow:hover {
+  background: rgba(30, 41, 59, 0.35);
+}
+
+.table td {
+  padding: 14px 16px;
+  color: #cbd5e1;
+  vertical-align: middle;
+}
+
+/* ── Alignments ── */
+.alignLeft {
+  text-align: left;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+/* ── Empty & Loading States ── */
+.stateContainer {
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.stateTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.stateSubtitle {
+  font-size: 13px;
+  color: #64748b;
+  max-width: 400px;
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(16, 185, 129, 0.2);
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 600ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
