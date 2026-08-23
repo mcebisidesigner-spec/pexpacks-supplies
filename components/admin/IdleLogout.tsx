@@ -30,7 +30,7 @@ function authorizeRuntimeSession() {
 }
 
 /**
- * Ends an admin session after 20 minutes of visible dashboard inactivity.
+ * Ends an admin session after 45 minutes of visible dashboard inactivity.
  * Hidden dashboard tabs pause their local timer so work in another application
  * does not cause a logout or require browser-level activity permissions.
  */
@@ -88,7 +88,7 @@ export function IdleLogout() {
 
       const message =
         reason === "idle"
-          ? "Dashboard closed after 20 minutes of inactivity."
+          ? "Dashboard closed after 45 minutes of inactivity."
           : "Dashboard session closed after the browser or device restarted.";
 
       try {
@@ -145,7 +145,7 @@ export function IdleLogout() {
         signingOut = true;
         const msg =
           message.reason === "idle"
-            ? "Dashboard closed after 20 minutes of inactivity."
+            ? "Dashboard closed after 45 minutes of inactivity."
             : "Dashboard session closed after the browser or device restarted.";
         try {
           window.sessionStorage.setItem("pex_console_popup_notice", msg);

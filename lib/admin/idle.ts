@@ -1,5 +1,5 @@
 /** Milliseconds of continuous inactivity before the admin session is force-signed-out. */
-export const ADMIN_IDLE_MS = 20 * 60 * 1000;
+export const ADMIN_IDLE_MS = 45 * 60 * 1000;
 
 /** Cookie used by middleware to track the last admin activity server-side. */
 export const ADMIN_LAST_ACTIVITY_COOKIE = "px_admin_last_activity";

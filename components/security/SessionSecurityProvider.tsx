@@ -11,8 +11,8 @@ import React, {
 import { Lock, Sparkles } from "lucide-react";
 import { logoutAction } from "@/app/actions/auth";
 
-const PRIVACY_SHIELD_IDLE_MS = 2 * 60 * 1000; // 2 minutes (120,000 ms)
-const HARD_SIGNOUT_IDLE_MS = 20 * 60 * 1000; // 20 minutes (1,200,000 ms)
+const PRIVACY_SHIELD_IDLE_MS = 10 * 60 * 1000; // 10 minutes (600,000 ms)
+const HARD_SIGNOUT_IDLE_MS = 45 * 60 * 1000; // 45 minutes (2,700,000 ms)
 const ACTIVITY_CHANNEL_NAME = "pex_security_activity_channel";
 const ACTIVITY_STORAGE_KEY = "pex_security_last_activity";
 const ACTIVITY_THROTTLE_MS = 3_000;
@@ -69,7 +69,7 @@ export function SessionSecurityProvider({
       window.localStorage.removeItem("pex_dashboard_security_notice_v2");
       window.sessionStorage.setItem(
         "pex_console_popup_notice",
-        "Session expired due to 20 minutes of inactivity."
+        "Session expired due to 45 minutes of inactivity."
       );
     } catch {
       // ignore storage errors
@@ -114,7 +114,7 @@ export function SessionSecurityProvider({
           try {
             window.sessionStorage.setItem(
               "pex_console_popup_notice",
-              "Session expired due to 20 minutes of inactivity."
+              "Session expired due to 45 minutes of inactivity."
             );
           } catch {}
           window.location.replace("/");
