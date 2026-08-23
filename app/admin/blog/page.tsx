@@ -1,14 +1,18 @@
-﻿import Link from "next/link";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listBlogPosts } from "@/lib/admin/blog";
 import { setBlogPostPublishedAction, deleteBlogPostAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "../admin.module.css";
 import styles from "./blog.module.css";
 import contentStyles from "../content/content.module.css";
 
 export const metadata = {
-  title: "Blog | Admin | Pexpacks",
+  title: "Blog & Resource Hub | Admin | Pexpacks",
 };
 
 function formatDate(value: string): string {
@@ -24,26 +28,22 @@ export default async function BlogPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <div className={adminStyles.toolbar}>
-        <div className={adminStyles.headerRow}>
-          <div>
-            <h1 className={adminStyles.pageTitle}>
-              Blog
-              <span className={adminStyles.count}>
-                {posts.length} {posts.length === 1 ? "post" : "posts"}
-              </span>
-            </h1>
-            <p className={contentStyles.subtitle}>
-              Articles shown on the public Resource Hub at /blog.
-            </p>
-          </div>
-          {canManage ? (
-            <Link href="/admin/blog/new" className={adminStyles.addButton}>
-              + New post
-            </Link>
-          ) : null}
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Blog & Resource Hub"
+        count={posts.length}
+        subtitle="Articles and stationery buying guides published on the public Resource Hub."
+        actions={
+          canManage ? (
+            <AdminButton
+              href="/admin/blog/new"
+              variant="primary"
+              icon={<Plus size={14} />}
+            >
+              New Post
+            </AdminButton>
+          ) : undefined
+        }
+      />
 
       {posts.length === 0 ? (
         <div className={adminStyles.tableCard}>
@@ -58,7 +58,7 @@ export default async function BlogPage() {
               </div>
               <h2 className={adminStyles.emptyStateTitle}>No blog posts yet</h2>
               <p className={adminStyles.emptyStateText}>
-                Write your first article to start building the Resource Hub.
+                Create your first article to share stationery guides and updates.
               </p>
             </div>
           </div>
@@ -69,10 +69,10 @@ export default async function BlogPage() {
             <table className={adminStyles.table}>
               <thead>
                 <tr>
-                  <th>Title</th>
+                  <th>Post</th>
                   <th>Category</th>
                   <th>Author</th>
-                  <th>Published</th>
+                  <th>Created</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -81,12 +81,12 @@ export default async function BlogPage() {
                 {posts.map((post) => (
                   <tr key={post.id}>
                     <td>
-                      <div className={styles.titleCell}>
+                      <div className={styles.postCell}>
                         <Link
                           href={`/blog/${post.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={styles.titleLink}
+                          className={styles.postTitle}
                         >
                           {post.title}
                         </Link>
@@ -107,13 +107,11 @@ export default async function BlogPage() {
                       <span className={styles.date}>{formatDate(post.created_at)}</span>
                     </td>
                     <td>
-                      <span
-                        className={`${adminStyles.badge} ${
-                          post.published ? adminStyles.badgePaid : adminStyles.badgeMuted
-                        }`}
-                      >
-                        {post.published ? "Live" : "Draft"}
-                      </span>
+                      <StatusBadge
+                        status={post.published ? "Published" : "Draft"}
+                        tone={post.published ? "emerald" : "slate"}
+                        showDot
+                      />
                     </td>
                     <td>
                       {canManage ? (
@@ -139,14 +137,14 @@ export default async function BlogPage() {
                           <form action={deleteBlogPostAction.bind(null, post.id)}>
                             <ConfirmButton
                               label="Delete"
-                              confirmText={`Delete the post "${post.title}"? This cannot be undone.`}
+                              confirmText={`Permanently delete "${post.title}"?`}
                               busyLabel="Deleting…"
                               className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
                             />
                           </form>
                         </div>
                       ) : (
-                        <span className={contentStyles.emptyNote}>View only</span>
+                        <span className={contentStyles.mutedAction}>View only</span>
                       )}
                     </td>
                   </tr>

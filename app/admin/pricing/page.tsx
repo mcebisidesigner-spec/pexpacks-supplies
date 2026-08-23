@@ -1,8 +1,9 @@
-import { Tags } from "lucide-react";
+import { CheckCircle2, DollarSign, Settings2, Tags } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listPricingReview, listPricingRules, listPriceHistory } from "@/lib/admin/operations";
 import { money, formatDate } from "@/lib/admin/ui-utils";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { EmptyState } from "@/components/admin/EmptyState";
 import {
   approveProductPriceAction,
@@ -26,26 +27,35 @@ export default async function PricingPage() {
   return (
     <div className={styles.page}>
       <AdminPageHeader
-        title="Price Review"
-        subtitle="Approve selling prices from verified cost and preserve every commercial change."
+        title="Price Review & Rules"
+        subtitle="Approve selling prices from verified cost and preserve commercial markup integrity."
       />
-      <div className={styles.kpis}>
-        <div className={styles.kpi}>
-          <span>Products reviewed</span>
-          <strong>{products.length}</strong>
-        </div>
-        <div className={styles.kpi}>
-          <span>Require attention</span>
-          <strong>{exceptions}</strong>
-        </div>
-        <div className={styles.kpi}>
-          <span>Approved</span>
-          <strong>{products.length - exceptions}</strong>
-        </div>
-        <div className={styles.kpi}>
-          <span>Active pricing rules</span>
-          <strong>{rules.filter((rule) => rule.active).length}</strong>
-        </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+        <MetricCard
+          label="Products Reviewed"
+          value={products.length}
+          icon={<Tags size={16} />}
+          iconTone="green"
+        />
+        <MetricCard
+          label="Require Attention"
+          value={exceptions}
+          subtext="Pending pricing review"
+          icon={<DollarSign size={16} />}
+          iconTone={exceptions > 0 ? "amber" : "green"}
+        />
+        <MetricCard
+          label="Approved Prices"
+          value={products.length - exceptions}
+          icon={<CheckCircle2 size={16} />}
+          iconTone="green"
+        />
+        <MetricCard
+          label="Active Rules"
+          value={rules.filter((rule) => rule.active).length}
+          icon={<Settings2 size={16} />}
+          iconTone="blue"
+        />
       </div>
       {hasPermission(session, "pricing.manage") ? (
         <section className={styles.formPanel}>

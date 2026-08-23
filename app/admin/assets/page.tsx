@@ -1,10 +1,11 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listAssets, listAssetFolders } from "@/lib/admin/assets";
 import { AssetUploadForm } from "@/components/admin/assets/AssetUploadForm";
 import { AssetEditForm } from "@/components/admin/assets/AssetEditForm";
 import { deleteAssetAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import adminStyles from "../admin.module.css";
 import styles from "./assets.module.css";
 
@@ -48,20 +49,13 @@ export default async function AssetsPage({
 
   return (
     <div className={adminStyles.adminContainer}>
+      <AdminPageHeader
+        title="Assets & Media"
+        count={assets.length}
+        subtitle="Media library for stationery product photos, school badges, and downloadable assets."
+      />
+
       <div className={adminStyles.toolbar}>
-        <div className={adminStyles.headerRow}>
-          <div>
-            <h1 className={adminStyles.pageTitle}>
-              Assets
-              <span className={adminStyles.count}>
-                {assets.length} {assets.length === 1 ? "file" : "files"}
-              </span>
-            </h1>
-            <p className={styles.subtitle}>
-              Media library for images and files used across the site.
-            </p>
-          </div>
-        </div>
 
         <form method="get" action="/admin/assets" className={adminStyles.filterForm}>
           <select name="folder" defaultValue={folder ?? ""} className={adminStyles.filterInput}>

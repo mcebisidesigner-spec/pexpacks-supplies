@@ -1,10 +1,13 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { requireAdmin, hasPermission, displayName } from "@/lib/admin/rbac";
 import { listUsers, isBanned, type UserListFilters } from "@/lib/admin/users";
 import { PAGE_SIZE, formatDate } from "@/lib/admin/ui-utils";
 import { deactivateUserAction, reactivateUserAction, deleteUserAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { Pagination } from "@/components/admin/Pagination";
 import adminStyles from "../admin.module.css";
 import styles from "./users.module.css";
@@ -38,13 +41,18 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
   return (
     <div className={adminStyles.adminContainer}>
       <AdminPageHeader
-        title="Users"
+        title="Users & Team"
         count={total}
+        subtitle="Manage back-office team members, invitations, and administrative roles."
         actions={
           hasPermission(session, "users.create") ? (
-            <Link href="/admin/users/invite" className={adminStyles.addButton}>
-              + Invite user
-            </Link>
+            <AdminButton
+              href="/admin/users/invite"
+              variant="primary"
+              icon={<Plus size={14} />}
+            >
+              Invite User
+            </AdminButton>
           ) : undefined
         }
       />
@@ -161,7 +169,10 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                         </div>
                       </td>
                       <td>
-                        <span className={`${adminStyles.badge} ${statusClass}`}>{statusLabel}</span>
+                        <StatusBadge
+                          status={banned ? "banned" : user.last_sign_in_at ? "active" : "pending"}
+                          showDot
+                        />
                       </td>
                       <td>{formatDate(user.last_sign_in_at)}</td>
                       <td>{formatDate(user.created_at)}</td>

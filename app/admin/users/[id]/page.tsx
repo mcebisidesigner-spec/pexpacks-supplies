@@ -25,6 +25,9 @@ import {
   reactivateUserAction,
   deleteUserAction,
 } from "../actions";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "../../admin.module.css";
 import styles from "../users.module.css";
 
@@ -66,17 +69,26 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
     }
   }
 
+  const userStatus = banned ? "banned" : user.last_sign_in_at ? "active" : "pending";
+
   return (
     <div className={adminStyles.adminContainer}>
-      <p>
-        <Link href="/admin/users" className={adminStyles.resetLink}>
-          <ArrowLeft aria-hidden="true" /> Back to users
-        </Link>
-      </p>
-
-      <div className={adminStyles.headerRow}>
-        <h1 className={adminStyles.pageTitle}>{displayName(user)}</h1>
-      </div>
+      <AdminPageHeader
+        title={displayName(user)}
+        subtitle={`Email: ${user.email ?? "—"} • User ID: ${user.id}`}
+        actions={
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <StatusBadge status={userStatus} showDot />
+            <AdminButton
+              href="/admin/users"
+              variant="secondary"
+              icon={<ArrowLeft size={14} />}
+            >
+              Back to Users
+            </AdminButton>
+          </div>
+        }
+      />
 
       <div className={styles.detailMeta}>
         <div className={styles.metaItem}>
@@ -86,7 +98,7 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
         <div className={styles.metaItem}>
           <div className={styles.metaLabel}>Status</div>
           <div className={styles.metaValue}>
-            {banned ? "Banned" : user.last_sign_in_at ? "Active" : "Invited"}
+            <StatusBadge status={userStatus} showDot />
           </div>
         </div>
         <div className={styles.metaItem}>
@@ -110,106 +122,83 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
                 </span>
               ))
             ) : (
-              <span>No role</span>
+              <span className={styles.roleChipNone}>No roles assigned</span>
             )}
           </div>
         </div>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>User ID</div>
-          <div className={styles.metaValue}>{user.id}</div>
+      </div>
+
+      <div className={styles.sectionGrid}>
+        <div className={styles.sectionCard}>
+          <h2 className={styles.sectionTitle}>Assigned roles</h2>
+          <p className={styles.sectionDesc}>
+            Roles bundle permissions. Users inherit all permissions from their assigned roles.
+          </p>
+          <UserRolesForm
+            userId={user.id}
+            roles={roles}
+            assigned={user.roleIds}
+          />
+        </div>
+
+        <div className={styles.sectionCard}>
+          <h2 className={styles.sectionTitle}>Permission overrides</h2>
+          <p className={styles.sectionDesc}>
+            Grant additional permissions to this specific user beyond their role assignments.
+          </p>
+          <UserPermissionsForm
+            userId={user.id}
+            permissions={permissionOptions}
+            overrides={overrides}
+          />
         </div>
       </div>
 
-      <div className={styles.stack}>
-        {canEdit ? (
-          <section className={styles.card}>
-            <h2 className={styles.cardTitle}>Roles</h2>
-            <p className={styles.cardSubtitle}>
-              Memberships control what this user can do. Changes take effect immediately.
-            </p>
-            <UserRolesForm userId={user.id} roles={roles} assigned={user.roleSlugs} />
-          </section>
-        ) : (
-          <section className={styles.card}>
-            <h2 className={styles.cardTitle}>Roles</h2>
-            <p className={styles.cardSubtitle}>
-              You don’t have permission to edit roles. Current memberships are shown above.
-            </p>
-          </section>
-        )}
+      {!isSelf && (canDeactivate || canDelete) ? (
+        <div className={styles.dangerZone}>
+          <h2 className={styles.dangerTitle}>Danger zone</h2>
+          <p className={styles.dangerDesc}>
+            Deactivating prevents the user from signing in. Deleting removes the user permanently.
+          </p>
+          <div className={styles.dangerActions}>
+            {canDeactivate ? (
+              banned ? (
+                <form action={reactivateUserAction.bind(null, user.id)}>
+                  <ConfirmButton
+                    label="Reactivate user"
+                    title="Reactivate user"
+                    confirmText={`Allow ${displayName(user)} to sign in again?`}
+                    busyLabel="Reactivating…"
+                    className={`${adminStyles.rowButton} ${styles.dangerBtnReactivate}`}
+                  />
+                </form>
+              ) : (
+                <form action={deactivateUserAction.bind(null, user.id)}>
+                  <ConfirmButton
+                    label="Deactivate user"
+                    title="Deactivate user"
+                    confirmText={`Suspend ${displayName(user)} from signing in?`}
+                    busyLabel="Deactivating…"
+                    className={`${adminStyles.rowButton} ${styles.dangerBtnDeactivate}`}
+                  />
+                </form>
+              )
+            ) : null}
 
-        {canEdit ? (
-          <section className={styles.card}>
-            <h2 className={styles.cardTitle}>Permission overrides</h2>
-            <p className={styles.cardSubtitle}>
-              Fine-grained exceptions for this user, on top of their roles.
-            </p>
-            <UserPermissionsForm
-              userId={user.id}
-              permissions={permissionOptions}
-              overrides={overrides}
-            />
-          </section>
-        ) : null}
-
-        {canDeactivate || canDelete ? (
-          <section className={`${styles.card} ${styles.dangerZone}`}>
-            <h2 className={styles.cardTitle}>Danger zone</h2>
-            <div className={styles.stack}>
-              {canDeactivate && !isSelf ? (
-                <div className={styles.dangerRow}>
-                  <div>
-                    <div className={styles.dangerTitle}>
-                      {banned ? "Reactivate account" : "Deactivate account"}
-                    </div>
-                    <p className={styles.dangerText}>
-                      {banned
-                        ? "Allow this user to sign in again."
-                        : "Immediately signs the user out and blocks sign-in. They keep their roles."}
-                    </p>
-                  </div>
-                  <form
-                    action={
-                      banned
-                        ? reactivateUserAction.bind(null, user.id)
-                        : deactivateUserAction.bind(null, user.id)
-                    }
-                  >
-                    <ConfirmButton
-                      label={banned ? "Reactivate" : "Deactivate"}
-                      confirmText={
-                        banned
-                          ? `Reactivate ${displayName(user)}?`
-                          : `Deactivate ${displayName(user)}? They will be signed out immediately.`
-                      }
-                      busyLabel={banned ? "Reactivating…" : "Deactivating…"}
-                      className={`${styles.dangerButton} ${banned ? styles.dangerButtonRestore : ""}`}
-                    />
-                  </form>
-                </div>
-              ) : null}
-              {canDelete && !isSelf ? (
-                <div className={styles.dangerRow}>
-                  <div>
-                    <div className={styles.dangerTitle}>Delete account</div>
-                    <p className={styles.dangerText}>
-                      Permanently removes this user from authentication. Cannot be undone.
-                    </p>
-                  </div>
-                  <form action={deleteUserAction.bind(null, user.id)}>
-                    <ConfirmButton
-                      label="Delete user"
-                      confirmText={`Permanently delete ${displayName(user)} (${user.email})? This cannot be undone.`}
-                      busyLabel="Deleting…"
-                      className={styles.dangerButton}
-                    />
-                  </form>
-                </div>
-              ) : null}
-            </div>
-          </section>
-        ) : null}
-      </div>
+            {canDelete ? (
+              <form action={deleteUserAction.bind(null, user.id)}>
+                <ConfirmButton
+                  label="Delete user"
+                  title="Delete user"
+                  confirmText={`Permanently delete ${displayName(user)}? This action cannot be undone.`}
+                  busyLabel="Deleting…"
+                  className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
+                />
+              </form>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
