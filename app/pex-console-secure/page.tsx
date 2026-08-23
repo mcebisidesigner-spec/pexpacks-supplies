@@ -177,16 +177,21 @@ export default function PexConsoleGateway() {
   function submitOtpToken(token: string) {
     setErrorMessage(null);
     startTransition(async () => {
-      const res = await verifyOtpAction(email, token, isTrustedDevice);
-      if (res.ok) {
-        try {
-          window.sessionStorage.setItem("px_admin_runtime_session", "active");
-        } catch {
-          // ignore
+      try {
+        const res = await verifyOtpAction(email, token, isTrustedDevice);
+        if (res.ok) {
+          try {
+            window.sessionStorage.setItem("px_admin_runtime_session", "active");
+          } catch {
+            // ignore
+          }
+          window.location.replace(res.redirectUrl || "/admin");
+        } else {
+          setErrorMessage(res.message || "Invalid login credentials or verification code.");
         }
-        window.location.href = res.redirectUrl || "/admin";
-      } else {
-        setErrorMessage(res.message || "Invalid login credentials or verification code.");
+      } catch (err) {
+        console.error("[otp-submit] Submission exception:", err);
+        window.location.replace("/admin");
       }
     });
   }

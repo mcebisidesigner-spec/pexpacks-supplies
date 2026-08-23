@@ -192,33 +192,35 @@ export async function verifyOtpAction(
         .update({ used: true })
         .eq("id", matchedTokens[0].id);
 
-      // Check if current server client has an active session from Step 1
-      const { data: userData } = await supabaseServer.auth.getUser();
-      if (userData?.user) {
-        verifiedSession = true;
-        verifiedUserId = userData.user.id;
-      } else {
-        // Issue fresh session cookies via token_hash if session was missing
-        try {
-          const { data: freshLink } = await adminClient.auth.admin.generateLink({
-            type: "magiclink",
-            email: email.trim().toLowerCase(),
-          });
+      // Always issue/refresh clean session cookies via admin token_hash
+      try {
+        const { data: freshLink } = await adminClient.auth.admin.generateLink({
+          type: "magiclink",
+          email: email.trim().toLowerCase(),
+        });
 
-          if (freshLink?.properties?.hashed_token) {
-            const { data: freshSession, error: sessionErr } =
-              await supabaseServer.auth.verifyOtp({
-                token_hash: freshLink.properties.hashed_token,
-                type: "magiclink",
-              });
+        if (freshLink?.properties?.hashed_token) {
+          const { data: freshSession, error: sessionErr } =
+            await supabaseServer.auth.verifyOtp({
+              token_hash: freshLink.properties.hashed_token,
+              type: "magiclink",
+            });
 
-            if (!sessionErr && freshSession?.session) {
-              verifiedSession = true;
-              verifiedUserId = freshSession.user?.id;
-            }
+          if (!sessionErr && freshSession?.session) {
+            verifiedSession = true;
+            verifiedUserId = freshSession.user?.id;
           }
-        } catch (err) {
-          console.error("[auth-action] Session cookie generation error:", err);
+        }
+      } catch (err) {
+        console.error("[auth-action] Session cookie generation error:", err);
+      }
+
+      // Fallback check if existing session from step 1 is active
+      if (!verifiedSession) {
+        const { data: userData } = await supabaseServer.auth.getUser();
+        if (userData?.user) {
+          verifiedSession = true;
+          verifiedUserId = userData.user.id;
         }
       }
     } else {
