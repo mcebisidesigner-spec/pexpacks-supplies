@@ -1,10 +1,11 @@
-import { DollarSign, Edit, Layers, Tag, TrendingUp } from "lucide-react";
+import { Edit, Layers, Tag, TrendingUp } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -60,14 +61,14 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           label="Selling Price"
           value={money(price)}
           subtext="Catalogue list price"
-          icon={<DollarSign size={16} />}
+          icon={<ZarIcon size={16} />}
           iconTone="green"
         />
         <MetricCard
           label="Purchase Cost"
           value={money(cost)}
           subtext="Verified supplier cost"
-          icon={<DollarSign size={16} />}
+          icon={<ZarIcon size={16} />}
           iconTone="blue"
         />
         <MetricCard

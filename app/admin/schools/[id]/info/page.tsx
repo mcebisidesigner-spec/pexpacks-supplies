@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Building2, DollarSign, Edit, GraduationCap, ShieldCheck, User } from "lucide-react";
+import { ArrowLeft, Building2, Edit, GraduationCap, ShieldCheck, User } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";
@@ -9,6 +9,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -92,7 +93,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
           label="Gross Revenue"
           value={money(totalRevenue)}
           subtext="Generated pack sales"
-          icon={<DollarSign size={16} />}
+          icon={<ZarIcon size={16} />}
           iconTone="green"
         />
         <MetricCard

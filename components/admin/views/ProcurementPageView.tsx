@@ -4,7 +4,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   AlertTriangle,
   Clock,
-  DollarSign,
   Truck,
 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
@@ -12,6 +11,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 
 interface KanbanCard {
   id: string;
@@ -85,7 +85,7 @@ export function ProcurementPageView() {
           label="Committed Spend"
           value={`R ${committedSpend.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}`}
           subtext="Total PO value generated"
-          icon={<DollarSign size={16} />}
+          icon={<ZarIcon size={16} />}
           iconTone="green"
         />
         <MetricCard

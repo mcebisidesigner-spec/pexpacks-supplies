@@ -1,9 +1,10 @@
-import { CheckCircle2, DollarSign, Settings2, Tags } from "lucide-react";
+import { CheckCircle2, Settings2, Tags } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listPricingReview, listPricingRules, listPriceHistory } from "@/lib/admin/operations";
 import { money, formatDate } from "@/lib/admin/ui-utils";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
+import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 import { EmptyState } from "@/components/admin/EmptyState";
 import {
   approveProductPriceAction,
@@ -41,7 +42,7 @@ export default async function PricingPage() {
           label="Require Attention"
           value={exceptions}
           subtext="Pending pricing review"
-          icon={<DollarSign size={16} />}
+          icon={<ZarIcon size={16} />}
           iconTone={exceptions > 0 ? "amber" : "green"}
         />
         <MetricCard

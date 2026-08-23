@@ -1,9 +1,9 @@
-import { ArrowLeft, CheckCircle2, CreditCard, DollarSign, RefreshCw, ShieldCheck, User } from "lucide-react";
+import { CheckCircle2, CreditCard, RefreshCw, ShieldCheck, User } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -18,20 +18,11 @@ export default async function PaymentDetailPage({ params }: PaymentDetailPagePro
   return (
     <div className={styles.container}>
       <AdminPageHeader
+        backHref="/admin/payments"
+        backLabel="Back to Payments"
         title={`Payment: ${orderNumber}`}
         subtitle="Gateway Ref: PAY-51218 • Ozow Instant EFT Settlement"
-        actions={
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <StatusBadge status="paid" showDot />
-            <AdminButton
-              href="/admin/payments"
-              variant="secondary"
-              icon={<ArrowLeft size={14} />}
-            >
-              Back to Payments
-            </AdminButton>
-          </div>
-        }
+        actions={<StatusBadge status="paid" showDot />}
       />
 
       {/* 4 Metric Cards */}
@@ -40,7 +31,7 @@ export default async function PaymentDetailPage({ params }: PaymentDetailPagePro
           label="Total Amount Paid"
           value="R 28,430.00"
           subtext="Settled via Ozow"
-          icon={<DollarSign size={16} />}
+          icon={<ZarIcon size={16} />}
           iconTone="green"
         />
         <MetricCard
