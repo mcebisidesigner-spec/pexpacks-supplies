@@ -6,6 +6,7 @@ import styles from "./ui/AdminPageHeader.module.css";
 export type AdminPageHeaderProps = {
   title: string;
   titleHighlight?: string;
+  badge?: ReactNode;
   count?: number;
   subtitle?: string;
   backHref?: string;
@@ -16,6 +17,7 @@ export type AdminPageHeaderProps = {
 export function AdminPageHeader({
   title,
   titleHighlight,
+  badge,
   count,
   subtitle,
   backHref,
@@ -40,6 +42,9 @@ export function AdminPageHeader({
             <span>{title}</span>
             {titleHighlight && (
               <span className={styles.headerTitleHighlight}>{titleHighlight}</span>
+            )}
+            {badge && (
+              <span className={styles.headerBadgeWrapper}>{badge}</span>
             )}
             {formattedCount && (
               <span className={styles.headerCount}>{formattedCount}</span>

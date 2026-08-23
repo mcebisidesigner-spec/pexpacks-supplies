@@ -61,18 +61,16 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         backHref="/admin/products"
         backLabel="Back to Products"
         title={name}
+        badge={<StatusBadge status={category} tone="emerald" showDot />}
         subtitle={`SKU: ${sku} • Barcode: ${barcode}`}
         actions={
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <StatusBadge status={category} tone="emerald" showDot />
-            <AdminButton
-              href={`/admin/products/${productSlug}/edit`}
-              variant="primary"
-              icon={<Edit size={14} />}
-            >
-              Edit Item
-            </AdminButton>
-          </div>
+          <AdminButton
+            href={`/admin/products/${productSlug}/edit`}
+            variant="primary"
+            icon={<Edit size={14} />}
+          >
+            Edit Item
+          </AdminButton>
         }
       />
 

@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
 import { ItemForm } from "@/components/admin/items/ItemForm";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface EditProductPageProps {
@@ -34,14 +35,17 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
   }
 
   const productSlug = item ? getProductSlug(item) : productId;
+  const productName = item?.name || "Product Details";
+  const category = item?.category || "Stationery";
 
   return (
     <div className={styles.container}>
       <AdminPageHeader
         backHref={productSlug ? `/admin/products/${productSlug}` : "/admin/products"}
         backLabel="Back to Product"
-        title={item?.name || "Product Details"}
+        title={productName}
         titleHighlight="Edit Item"
+        badge={<StatusBadge status={category} tone="emerald" showDot />}
         subtitle={`SKU: ${item?.sku || productId} • Manage pricing, cost verification, and master catalogue metadata.`}
       />
 

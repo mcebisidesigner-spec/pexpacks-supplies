@@ -54,14 +54,20 @@
   letter-spacing: -0.03em;
   line-height: 1.15;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .headerTitleHighlight {
   color: #10b981;
   font-weight: 900;
+}
+
+.headerBadgeWrapper {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
 }
 
 .headerCount {
