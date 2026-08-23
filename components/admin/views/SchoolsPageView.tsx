@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Edit2, Eye, EyeOff, Plus } from "lucide-react";
+import { Edit2, Plus } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -16,7 +16,6 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
-import { toggleSchoolVisibilityAction } from "@/app/admin/schools/actions";
 import type { SchoolListResult, SchoolRow } from "@/lib/admin/schools";
 
 interface SchoolsPageViewProps {
@@ -26,7 +25,6 @@ interface SchoolsPageViewProps {
 export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
   const router = useRouter();
   const { params, setParams, isPending } = useTableParams();
-  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   const data = initialData || {
     schools: [],
@@ -37,60 +35,60 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
     provinces: [],
   };
 
-  const handleToggleVisibility = async (id: string, currentVal: boolean, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setTogglingId(id);
-    await toggleSchoolVisibilityAction(id);
-    setTogglingId(null);
-    router.refresh();
-  };
-
   const columns: ColumnDef<SchoolRow>[] = [
     {
-      key: "name",
-      header: "School Name",
+      key: "code",
+      header: "SKU",
       sortable: true,
+      width: "160px",
       render: (row) => (
-        <div className={styles.productCell}>
-          <Link
-            href={`/admin/schools/${row.id}`}
-            className={styles.productNameLink}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className={styles.productBrand}>
-            {row.city || "Johannesburg"}, {row.province || "Gauteng"}
-          </span>
-        </div>
+        <span className={styles.skuBadge}>
+          SCH-{row.slug ? row.slug.slice(0, 10).toUpperCase() : row.id.slice(0, 8).toUpperCase()}
+        </span>
       ),
     },
     {
-      key: "email",
-      header: "Contact Email & Phone",
+      key: "name",
+      header: "SCHOOL NAME",
+      sortable: true,
       render: (row) => (
-        <div className={styles.productCell}>
-          <span>{row.email || "—"}</span>
-          <span className={styles.productBrand}>{row.telephone || "—"}</span>
-        </div>
+        <Link
+          href={`/admin/schools/${row.id}`}
+          className={styles.schoolNameTitle}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.name}
+        </Link>
       ),
     },
     {
       key: "city",
-      header: "Location",
+      header: "LOCATION",
       sortable: true,
-      width: "140px",
-      render: (row) => <span>{row.city || "—"}</span>,
+      render: (row) => (
+        <span className={styles.textMuted}>
+          {row.city || "Johannesburg"}, {row.province || "Gauteng"}
+        </span>
+      ),
+    },
+    {
+      key: "email",
+      header: "CONTACT",
+      render: (row) => (
+        <span className={styles.textMuted}>
+          {row.email || row.telephone || "—"}
+        </span>
+      ),
     },
     {
       key: "published",
-      header: "Status",
+      header: "STATUS",
       sortable: true,
       align: "center",
-      width: "120px",
+      width: "130px",
       render: (row) => (
         <StatusBadge
-          status={row.published ? "Published" : "Hidden"}
+          status={row.published ? "Active" : "Hidden"}
           tone={row.published ? "emerald" : "slate"}
           showDot
         />
@@ -98,27 +96,18 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
     },
     {
       key: "actions",
-      header: "Actions",
+      header: "ACTIONS",
       align: "right",
-      width: "100px",
+      width: "90px",
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <AdminButton
-            type="button"
-            variant="icon"
-            size="sm"
-            aria-label={row.published ? "Hide school" : "Publish school"}
-            loading={togglingId === row.id}
-            onClick={(e) => handleToggleVisibility(row.id, Boolean(row.published), e)}
-            icon={row.published ? <EyeOff size={13} /> : <Eye size={13} />}
-          />
-          <AdminButton
+          <Link
             href={`/admin/schools/${row.id}/edit`}
-            variant="iconTeal"
-            size="sm"
-            aria-label={`Edit ${row.name}`}
-            icon={<Edit2 size={13} />}
-          />
+            className={styles.actionEditBtn}
+            title={`Edit ${row.name}`}
+          >
+            <Edit2 size={14} />
+          </Link>
         </div>
       ),
     },
@@ -151,7 +140,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
               className={styles.toolbarSelect}
             >
               <option value="all">Status: All</option>
-              <option value="published">Published</option>
+              <option value="published">Active</option>
               <option value="hidden">Hidden</option>
             </AdminSelect>
           </div>

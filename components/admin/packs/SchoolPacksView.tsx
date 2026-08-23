@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   ChevronDown,
   Clock,
+  Edit2,
   Eye,
   EyeOff,
   FileText,
@@ -30,6 +31,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import styles from "./SchoolPacksView.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -514,30 +516,30 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
               <thead>
                 <tr>
                   <th>
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <div className={styles.headerContent}>
                       <span>School &amp; ID</span>
-                      <span style={{ color: "#10b981" }}>↑↓</span>
+                      <span className={styles.sortIcon}>↑↓</span>
                     </div>
                   </th>
                   <th>
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <div className={styles.headerContent}>
                       <span>Total Packs</span>
-                      <span style={{ color: "#10b981" }}>↑↓</span>
+                      <span className={styles.sortIcon}>↑↓</span>
                     </div>
                   </th>
                   <th>
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <div className={styles.headerContent}>
                       <span>Season</span>
-                      <span style={{ color: "#10b981" }}>↑↓</span>
+                      <span className={styles.sortIcon}>↑↓</span>
                     </div>
                   </th>
                   <th>
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <div className={styles.headerContent}>
                       <span>Status</span>
-                      <span style={{ color: "#10b981" }}>↑↓</span>
+                      <span className={styles.sortIcon}>↑↓</span>
                     </div>
                   </th>
-                  <th style={{ textAlign: "right" }}>Actions</th>
+                  <th className={styles.alignRight}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -569,7 +571,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       </div>
                     </td>
                     <td>
-                      <span style={{ color: "#e2e8f0", fontWeight: 500 }}>
+                      <span className={styles.textMuted}>
                         {school.gradePacksCount} {school.gradePacksCount === 1 ? "pack" : "packs"}
                       </span>
                     </td>
@@ -577,21 +579,16 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       <span className={styles.seasonBadge}>{school.season}</span>
                     </td>
                     <td>
-                      <span
-                        className={
-                          school.visibility === "visible"
-                            ? styles.visibilityBadgeVisible
-                            : styles.visibilityBadgeHidden
-                        }
-                      >
-                        <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "currentColor", boxShadow: "0 0 5px currentColor" }} />
-                        {school.visibility === "visible" ? "Visible" : "Hidden"}
-                      </span>
+                      <StatusBadge
+                        status={school.visibility === "visible" ? "Active" : "Hidden"}
+                        tone={school.visibility === "visible" ? "emerald" : "slate"}
+                        showDot
+                      />
                     </td>
-                    <td style={{ textAlign: "right" }}>
-                      <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "flex-end" }}>
-                        <div className={adminStyles.actionIconBtn} title="View School Packs">
-                          <Eye size={13} />
+                    <td className={styles.alignRight}>
+                      <div className={styles.actionsCell}>
+                        <div className={styles.actionEditBtn} title="View & Edit School Packs">
+                          <Edit2 size={14} />
                         </div>
                       </div>
                     </td>

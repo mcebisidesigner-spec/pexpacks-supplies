@@ -248,36 +248,36 @@ export function SchoolPacksDetailView({
                 <thead>
                   <tr>
                     <th>
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <div className={styles.headerContent}>
                         <span>Grade Pack &amp; School</span>
-                        <span style={{ color: "#10b981" }}>↑↓</span>
+                        <span className={styles.sortIcon}>↑↓</span>
                       </div>
                     </th>
                     <th>
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                        <span>Price</span>
-                        <span style={{ color: "#10b981" }}>↑↓</span>
+                      <div className={styles.headerContent}>
+                        <span>Selling Price</span>
+                        <span className={styles.sortIcon}>↑↓</span>
                       </div>
                     </th>
                     <th>
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <div className={styles.headerContent}>
                         <span>Total Items</span>
-                        <span style={{ color: "#10b981" }}>↑↓</span>
+                        <span className={styles.sortIcon}>↑↓</span>
                       </div>
                     </th>
                     <th>
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <div className={styles.headerContent}>
                         <span>Status</span>
-                        <span style={{ color: "#10b981" }}>↑↓</span>
+                        <span className={styles.sortIcon}>↑↓</span>
                       </div>
                     </th>
                     <th>
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <div className={styles.headerContent}>
                         <span>Last Edited</span>
-                        <span style={{ color: "#10b981" }}>↑↓</span>
+                        <span className={styles.sortIcon}>↑↓</span>
                       </div>
                     </th>
-                    <th style={{ textAlign: "right" }}>Actions</th>
+                    <th className={styles.alignRight}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -295,39 +295,42 @@ export function SchoolPacksDetailView({
                         <tr key={pack.id} className={styles.dataRow}>
                           <td>
                             <div className={styles.productCell}>
-                              <Link href={`/admin/packs/${pack.slug || pack.id}`} style={{ color: "#ffffff", fontWeight: 800, fontSize: "14px", textDecoration: "none" }}>
+                              <Link
+                                href={`/admin/packs/${pack.slug || pack.id}`}
+                                className={styles.schoolNameTitle}
+                              >
                                 {formattedGrade}
                               </Link>
-                              <div style={{ color: "#64748b", fontSize: "12px", fontWeight: 500 }}>
+                              <div className={styles.productBrand}>
                                 {school.name}
                               </div>
                             </div>
                           </td>
-                          <td style={{ fontWeight: 700, color: "#ffffff" }}>
+                          <td className={styles.priceHighlight}>
                             {money(pack.price)}
                           </td>
-                          <td style={{ color: "#e2e8f0" }}>
+                          <td className={styles.textMuted}>
                             {pack.item_count} items
                           </td>
                           <td>
                             <StatusBadge
-                              status={pack.visible ? "Visible" : "Hidden"}
+                              status={pack.visible ? "Active" : "Hidden"}
                               tone={pack.visible ? "emerald" : "slate"}
                               showDot
                             />
                           </td>
                           <td>
-                            <div style={{ color: "#e2e8f0", fontSize: "13px" }}>May 21, 2024</div>
-                            <div style={{ color: "#64748b", fontSize: "11px" }}>Liam Morgan</div>
+                            <div className={styles.textMuted}>May 21, 2024</div>
+                            <div className={styles.productBrand}>Liam Morgan</div>
                           </td>
-                          <td style={{ textAlign: "right" }}>
-                            <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: "6px" }}>
+                          <td className={styles.alignRight}>
+                            <div className={styles.actionsCell}>
                               <Link
                                 href={`/admin/packs/${pack.slug || pack.id}`}
-                                className={adminStyles.actionIconBtn}
-                                title="View & Edit Pack"
+                                className={styles.actionEditBtn}
+                                title={`Edit ${formattedGrade}`}
                               >
-                                <Eye size={13} />
+                                <Edit2 size={14} />
                               </Link>
                               <VisibleToggle id={pack.id} visible={pack.visible} />
                               {deletePackAction && (
