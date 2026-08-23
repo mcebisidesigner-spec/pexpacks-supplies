@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
+import { RotateCw, Sparkles } from "lucide-react";
 import type { ItemFormState, ItemRow } from "@/lib/admin/items";
 import { createItemAction, updateItemAction } from "@/app/admin/items/actions";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PACK_ITEM_ICONS, isPackItemIconKey } from "@/lib/packs/itemIcons";
+import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
 import adminStyles from "@/app/admin/admin.module.css";
 import formStyles from "../schools/SchoolForm.module.css";
 import styles from "./ItemForm.module.css";
@@ -45,6 +47,13 @@ export function ItemForm({
     item?.icon && isPackItemIconKey(item.icon) ? item.icon : ""
   );
 
+  const [productName, setProductName] = useState<string>(item?.name ?? "");
+  const [category, setCategory] = useState<string>(item?.category ?? "Stationery");
+  const [sku, setSku] = useState<string>(
+    item?.sku ?? (item?.name ? generateSkuFromName(item.name, item.category) : "")
+  );
+  const [isCustomSku, setIsCustomSku] = useState<boolean>(Boolean(item?.sku));
+
   useEffect(() => {
     if (state?.ok) {
       const timer = setTimeout(() => {
@@ -53,6 +62,33 @@ export function ItemForm({
       return () => clearTimeout(timer);
     }
   }, [state, router, returnTo]);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setProductName(val);
+    if (!isCustomSku && val.trim()) {
+      setSku(generateSkuFromName(val, category));
+    }
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setCategory(val);
+    if (!isCustomSku && productName.trim()) {
+      setSku(generateSkuFromName(productName, val));
+    }
+  };
+
+  const handleSkuChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSku(sanitizeSku(e.target.value));
+    setIsCustomSku(true);
+  };
+
+  const handleRegenerateSku = () => {
+    setIsCustomSku(false);
+    const newSku = generateSkuFromName(productName.trim() || "Item", category);
+    setSku(newSku);
+  };
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
@@ -96,16 +132,47 @@ export function ItemForm({
         {/* Row 1: SKU & Category */}
         <div className={styles.formGrid}>
           <div className={formStyles.field}>
-            <label className={formStyles.label} htmlFor="sku">
-              SKU
-            </label>
-            <input
-              id="sku"
-              name="sku"
-              className={formStyles.input}
-              defaultValue={item?.sku ?? ""}
-              placeholder="e.g. PEX-A4-CLEAR-FOLDERS"
-            />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+              <label className={formStyles.label} htmlFor="sku" style={{ margin: 0 }}>
+                SKU
+              </label>
+              <button
+                type="button"
+                onClick={handleRegenerateSku}
+                title={isCustomSku ? "Locked SKU (Click to Auto-generate from Name)" : "Auto-generated SKU (Click to Refresh)"}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  padding: "2px 8px",
+                  borderRadius: "5px",
+                  border: isCustomSku ? "1px solid rgba(234, 179, 8, 0.35)" : "1px solid rgba(16, 185, 129, 0.35)",
+                  background: isCustomSku ? "rgba(234, 179, 8, 0.08)" : "rgba(16, 185, 129, 0.08)",
+                  color: isCustomSku ? "#facc15" : "#10b981",
+                  cursor: "pointer",
+                }}
+              >
+                {isCustomSku ? <RotateCw size={11} /> : <Sparkles size={11} />}
+                <span>{isCustomSku ? "Auto-generate" : "Auto-sync"}</span>
+              </button>
+            </div>
+            <div style={{ position: "relative" }}>
+              <input
+                id="sku"
+                name="sku"
+                className={formStyles.input}
+                value={sku}
+                onChange={handleSkuChange}
+                placeholder="e.g. PEX-WRT-00101"
+              />
+            </div>
+            <span className={formStyles.hint}>
+              {isCustomSku
+                ? "Manual SKU lock active. Click Auto-generate to re-sync with product name."
+                : "Standardized SKU auto-generated from Category and Item name."}
+            </span>
             {err("sku")}
           </div>
 
@@ -117,7 +184,8 @@ export function ItemForm({
               id="category"
               name="category"
               className={formStyles.input}
-              defaultValue={item?.category ?? "Stationery"}
+              value={category}
+              onChange={handleCategoryChange}
               placeholder="e.g. Stationery, Books, Art & Craft"
             />
             {err("category")}
@@ -133,7 +201,8 @@ export function ItemForm({
             id="name"
             name="name"
             className={formStyles.input}
-            defaultValue={item?.name ?? ""}
+            value={productName}
+            onChange={handleNameChange}
             placeholder="e.g. A4 Clear Plastic Folders with Button"
             required
           />

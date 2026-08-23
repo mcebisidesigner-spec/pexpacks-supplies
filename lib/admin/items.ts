@@ -11,6 +11,7 @@ import {
 } from "@/lib/admin/rbac";
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import { inventoryItemNameKey } from "@/lib/admin/item-constants";
+import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
 
 type SupabaseAdminClient = ReturnType<typeof createSupabaseAdminClient>;
 type MasterProductRow = Database["public"]["Tables"]["master_products"]["Row"];
@@ -128,11 +129,7 @@ function schoolPackItemsTable(admin: SupabaseAdminClient) {
 }
 
 function productSku(data: Pick<ItemFormData, "category" | "name">): string {
-  return `PEX-${inventoryItemNameKey(data.name)
-    .toUpperCase()
-    .replace(/[^A-Z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80)}`;
+  return generateSkuFromName(data.name, data.category);
 }
 
 async function ensureMasterProduct(
@@ -149,7 +146,7 @@ async function ensureMasterProduct(
   actorId: string,
 ): Promise<MasterProductRow> {
   const sku = data.sku?.trim()
-    ? data.sku.trim().toUpperCase()
+    ? sanitizeSku(data.sku)
     : productSku(data);
   const productPatch = {
     sku,
@@ -765,11 +762,30 @@ export async function updateItem(
     }
 
     let product: MasterProductRow;
-    const skuVal = parsed.data.sku?.trim()
-      ? parsed.data.sku.trim().toUpperCase()
-      : targetMaster?.sku || productSku(parsed.data);
+    const rawSku =
+      parsed.data.sku?.trim() ||
+      targetMaster?.sku ||
+      productSku(parsed.data);
+    const skuVal = sanitizeSku(rawSku);
 
     if (targetMaster) {
+      const { data: duplicate } = await admin
+        .from("master_products")
+        .select("id, name")
+        .eq("sku", skuVal)
+        .neq("id", targetMaster.id)
+        .maybeSingle();
+
+      if (duplicate) {
+        return {
+          ok: false,
+          errors: {
+            sku: `SKU "${skuVal}" is already in use by "${duplicate.name}".`,
+          },
+          message: `SKU "${skuVal}" is already assigned to "${duplicate.name}".`,
+        };
+      }
+
       const { data: updated, error } = await admin
         .from("master_products")
         .update({
