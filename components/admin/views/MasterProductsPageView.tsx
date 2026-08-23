@@ -92,18 +92,6 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       ),
     },
     {
-      key: "latest_verified_cost",
-      header: "Cost Price",
-      sortable: true,
-      align: "right",
-      width: "120px",
-      render: (row) => (
-        <span className={styles.costPrice}>
-          R {(row.latest_verified_cost || 0).toFixed(2)}
-        </span>
-      ),
-    },
-    {
       key: "active",
       header: "Status",
       sortable: true,

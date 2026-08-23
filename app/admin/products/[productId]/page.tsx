@@ -29,6 +29,12 @@ function getProductSlug(item: { slug?: string | null; name?: string | null; sku?
   return item.id || "";
 }
 
+function formatProductNameFromSlug(slug: string): string {
+  return decodeURIComponent(slug)
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   await requireAdmin({ permission: "items.view" });
   const { productId } = await params;
@@ -36,16 +42,33 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   const rawItem = item as Record<string, unknown> | null;
 
-  const name = typeof rawItem?.name === "string" ? rawItem.name : "A4 Hardcover Book 192pg";
-  const sku = typeof rawItem?.sku === "string" ? rawItem.sku : "BK-A4-192";
-  const barcode = typeof rawItem?.barcode === "string" ? rawItem.barcode : "6001234567890";
-  const category = typeof rawItem?.category === "string" ? rawItem.category : "Stationery";
-  const cost = typeof rawItem?.unit_cost === "number" ? rawItem.unit_cost : 18.50;
-  const price = typeof rawItem?.unit_price === "number" ? rawItem.unit_price : 28.00;
-  const supplierName = typeof rawItem?.supplier_name === "string" ? rawItem.supplier_name : "Makro";
-  const packInclusionsCount = typeof rawItem?.pack_inclusions_count === "number" ? rawItem.pack_inclusions_count : 14;
+  const productSlug = getProductSlug({
+    slug: item?.slug,
+    name: item?.name,
+    sku: item?.sku,
+    id: item?.id,
+  }) || productId;
 
-  const productSlug = getProductSlug({ slug: item?.slug, name, sku, id: item?.id });
+  const name = typeof rawItem?.name === "string" && rawItem.name
+    ? rawItem.name
+    : formatProductNameFromSlug(productId);
+  const sku = typeof rawItem?.sku === "string" && rawItem.sku
+    ? rawItem.sku
+    : `PEX-${productSlug.slice(0, 10).toUpperCase()}`;
+  const barcode = typeof rawItem?.barcode === "string" && rawItem.barcode
+    ? rawItem.barcode
+    : "—";
+  const category = typeof rawItem?.category === "string" && rawItem.category
+    ? rawItem.category
+    : "Stationery";
+  const cost = typeof rawItem?.unit_cost === "number" ? rawItem.unit_cost : 0;
+  const price = typeof rawItem?.unit_price === "number" ? rawItem.unit_price : 0;
+  const supplierName = typeof rawItem?.supplier_name === "string"
+    ? rawItem.supplier_name
+    : "Preferred Supplier";
+  const packInclusionsCount = typeof rawItem?.pack_inclusions_count === "number"
+    ? rawItem.pack_inclusions_count
+    : 0;
 
   // If accessed by UUID, redirect to clean slugified /admin/products/[product-name]
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(productId);
@@ -53,7 +76,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     redirect(`/admin/products/${productSlug}`);
   }
 
-  const margin = price > 0 ? ((price - cost) / price) * 100 : 0;
+  const margin = price > 0 && cost > 0 ? ((price - cost) / price) * 100 : 0;
 
   return (
     <div className={styles.container}>

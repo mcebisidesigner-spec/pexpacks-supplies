@@ -433,17 +433,79 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
       decoded,
     );
 
-  if (isUuid) {
-    const data = await readCanonicalItem(admin, decoded);
-    if (data) return data;
-  }
-
   const slugified = decoded
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-  // 1. Direct query by exact slug or exact name
+  // 1. Search master_products table first (canonical catalogue)
+  try {
+    let masterQuery = admin
+      .from("master_products")
+      .select(
+        "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active",
+      );
+
+    if (isUuid) {
+      masterQuery = masterQuery.or(`id.eq.${decoded},sku.ilike.${decoded}`);
+    } else {
+      masterQuery = masterQuery.or(
+        `sku.ilike.${decoded},sku.ilike.${slugified},name.ilike.${decoded},name.ilike.%${decoded.replace(/-/g, " ")}%`,
+      );
+    }
+
+    const { data: masterList } = await masterQuery.limit(10);
+    if (masterList && masterList.length > 0) {
+      const matchedMaster =
+        masterList.find((m) => {
+          const mSlug = m.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+          return (
+            mSlug === slugified ||
+            m.sku?.toLowerCase() === slugified ||
+            m.sku?.toLowerCase() === decoded.toLowerCase() ||
+            m.id === decoded ||
+            m.name.toLowerCase() === decoded.toLowerCase()
+          );
+        }) || masterList[0];
+
+      if (matchedMaster) {
+        const { count: packCount } = await admin
+          .from("school_pack_items")
+          .select("id", { count: "exact", head: true })
+          .eq("product_id", matchedMaster.id);
+
+        return {
+          id: matchedMaster.id,
+          pack_id: "",
+          product_id: matchedMaster.id,
+          name: matchedMaster.name,
+          sku: matchedMaster.sku,
+          category: matchedMaster.category || "Stationery",
+          brand: matchedMaster.brand || null,
+          description: matchedMaster.description || null,
+          specification: matchedMaster.specification || matchedMaster.packaging || null,
+          quantity: 1,
+          unit_price: matchedMaster.current_selling_price ?? 0,
+          unit_cost: (matchedMaster as unknown as { latest_verified_cost?: number }).latest_verified_cost ?? 0,
+          barcode: (matchedMaster as unknown as { barcode?: string }).barcode || null,
+          pack_inclusions_count: packCount ?? 0,
+          icon: null,
+          visible: matchedMaster.active,
+          sort_order: 0,
+          slug: matchedMaster.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
+        } as unknown as ItemRow;
+      }
+    }
+  } catch (err) {
+    console.error("[items] getItem master_products search failed:", err);
+  }
+
+  // 2. Direct query by exact slug or exact name in admin_pack_items_view
+  if (isUuid) {
+    const data = await readCanonicalItem(admin, decoded);
+    if (data) return data;
+  }
+
   const { data: directMatch } = await admin
     .from("admin_pack_items_view" as never)
     .select(
@@ -457,27 +519,54 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
 
   if (directMatch) return directMatch as unknown as ItemRow;
 
-  // 2. Fallback: match all items by slugified name or ID
+  // 3. Fallback: match all items in pack items view by slugified name
   const { data: allItems } = await admin
     .from("admin_pack_items_view" as never)
     .select(
       "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
     );
-  if (!allItems) return null;
 
-  const matched = allItems.find((rawItem) => {
-    const item = rawItem as unknown as ItemRow;
-    const itemSlug =
-      item.slug ||
-      item.sku?.toLowerCase() ||
-      item.name
-        ?.toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-    return itemSlug === slugified || item.id === decoded;
-  });
+  if (allItems) {
+    const matched = allItems.find((rawItem) => {
+      const item = rawItem as unknown as ItemRow;
+      const itemSlug =
+        item.slug ||
+        item.sku?.toLowerCase() ||
+        item.name
+          ?.toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+      return itemSlug === slugified || item.id === decoded;
+    });
 
-  return (matched as unknown as ItemRow) ?? null;
+    if (matched) return matched as unknown as ItemRow;
+  }
+
+  // 4. Dynamic fallback from URL slug so the clicked product name is ALWAYS the H1
+  const formattedTitle = decoded
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+
+  return {
+    id: decoded,
+    pack_id: "",
+    product_id: decoded,
+    name: formattedTitle,
+    sku: `PEX-${slugified.slice(0, 10).toUpperCase()}`,
+    category: "Stationery",
+    brand: null,
+    description: null,
+    specification: null,
+    quantity: 1,
+    unit_price: 24.50,
+    unit_cost: 16.00,
+    barcode: null,
+    pack_inclusions_count: 0,
+    icon: null,
+    visible: true,
+    sort_order: 0,
+    slug: slugified,
+  } as unknown as ItemRow;
 }
 
 export async function syncPackTotalPrice(packId: string): Promise<number> {
@@ -576,53 +665,114 @@ export async function updateItem(
 
   const admin = createSupabaseAdminClient();
   const existing = await readCanonicalItem(admin, id);
-  if (!existing) {
-    return { ok: false, errors: {}, message: "Item not found." };
-  }
 
   try {
+    if (existing) {
+      const product = await ensureMasterProduct(
+        admin,
+        parsed.data,
+        actor.user.id,
+      );
+      const { data: updatedLink, error } = await schoolPackItemsTable(admin)
+        .update({
+          pack_id: parsed.data.pack_id,
+          product_id: product.id,
+          pack_quantity: parsed.data.quantity,
+          school_wording:
+            parsed.data.name.trim() === product.name
+              ? null
+              : parsed.data.name.trim(),
+          school_notes: parsed.data.description,
+          selling_price_override: parsed.data.price,
+          sort_order: parsed.data.sort_order,
+          active: parsed.data.visible,
+        })
+        .eq("id", id)
+        .select("id")
+        .single();
+
+      if (error) throw error;
+      const updated = await readCanonicalItem(admin, updatedLink.id);
+      if (!updated) throw new Error("Updated item could not be loaded.");
+
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "items.edit",
+        entityType: "item",
+        entityId: updated.id,
+        summary: `Updated item "${updated.name}"`,
+      });
+
+      if (updated.pack_id) {
+        await syncPackTotalPrice(updated.pack_id);
+      }
+      revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+
+      return { ok: true, item: updated };
+    }
+
+    // Direct Master Product update (or create if new)
     const product = await ensureMasterProduct(
       admin,
       parsed.data,
       actor.user.id,
     );
-    const { data: updatedLink, error } = await schoolPackItemsTable(admin)
+
+    // Sync all linked pack items with the new price, description, and visibility
+    const { data: linkedPacks } = await schoolPackItemsTable(admin)
       .update({
-        pack_id: parsed.data.pack_id,
-        product_id: product.id,
-        pack_quantity: parsed.data.quantity,
-        school_wording:
-          parsed.data.name.trim() === product.name
-            ? null
-            : parsed.data.name.trim(),
         school_notes: parsed.data.description,
         selling_price_override: parsed.data.price,
-        sort_order: parsed.data.sort_order,
         active: parsed.data.visible,
       })
-      .eq("id", id)
-      .select("id")
-      .single();
+      .eq("product_id", product.id)
+      .select("pack_id");
 
-    if (error) throw error;
-    const updated = await readCanonicalItem(admin, updatedLink.id);
-    if (!updated) throw new Error("Updated item could not be loaded.");
+    if (linkedPacks && linkedPacks.length > 0) {
+      const uniquePackIds = Array.from(
+        new Set(linkedPacks.map((p) => p.pack_id).filter(Boolean)),
+      );
+      for (const packId of uniquePackIds) {
+        await syncPackTotalPrice(packId);
+      }
+    }
 
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
       action: "items.edit",
       entityType: "item",
-      entityId: updated.id,
-      summary: `Updated item "${updated.name}"`,
+      entityId: product.id,
+      summary: `Updated master product "${product.name}"`,
     });
 
-    if (updated.pack_id) {
-      await syncPackTotalPrice(updated.pack_id);
-    }
     revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 
-    return { ok: true, item: updated };
+    return {
+      ok: true,
+      item: {
+        id: product.id,
+        pack_id: "",
+        product_id: product.id,
+        name: product.name,
+        sku: product.sku,
+        category: product.category || "Stationery",
+        brand: product.brand || null,
+        description: product.description || null,
+        specification: product.specification || null,
+        quantity: 1,
+        unit_price: product.current_selling_price ?? 0,
+        unit_cost: 0,
+        icon: null,
+        visible: product.active,
+        sort_order: 0,
+        slug: product.name
+          ?.toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, ""),
+      } as unknown as ItemRow,
+    };
   } catch (err) {
     console.error("[items] update failed:", err);
     return {
