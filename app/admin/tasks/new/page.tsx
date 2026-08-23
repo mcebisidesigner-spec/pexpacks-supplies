@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
 import { ArrowLeft, Calendar, CheckSquare, Clock, Flag, Save, UserCheck, Tag } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -13,25 +14,19 @@ export default async function NewTaskPage() {
 
   return (
     <div className={styles.container}>
-      {/* Breadcrumb */}
-      <div>
-        <Link
-          href="/admin/tasks"
-          className={`${styles.secondaryBtn} ${adminStyles.backLinkOverride}`}
-        >
-          <ArrowLeft size={14} /> Back to Tasks
-        </Link>
-      </div>
-
-      {/* Header */}
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>Create New Task</h1>
-          <p className={styles.headerSubtitle}>
-            Assign operational action items across procurement, pricing, school approval, and packing.
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Create New Task"
+        subtitle="Assign operational action items across procurement, pricing, school approval, and packing."
+        actions={
+          <AdminButton
+            href="/admin/tasks"
+            variant="secondary"
+            icon={<ArrowLeft size={14} />}
+          >
+            Back to Tasks
+          </AdminButton>
+        }
+      />
 
       <form action="/admin/tasks" method="GET" className={adminStyles.detailLayout}>
         <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-18"]}`}>
@@ -40,7 +35,7 @@ export default async function NewTaskPage() {
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
                 <CheckSquare size={16} className={adminStyles.iconTeal} />
-                <span>Task Overview & Description</span>
+                <span>Task Overview &amp; Description</span>
               </div>
             </div>
 
@@ -59,96 +54,70 @@ export default async function NewTaskPage() {
 
               <div>
                 <label className={adminStyles.formLabel}>
-                  Detailed Description
+                  Detailed Instructions &amp; Notes
                 </label>
                 <textarea
                   name="description"
-                  rows={5}
-                  placeholder="Outline requirements, affected school codes, and expected deliverables..."
-                  className={`${adminStyles.textareaField} ${adminStyles.textareaFieldMd}`}
+                  rows={4}
+                  placeholder="Include links, supplier details, or specific actions required..."
+                  className={adminStyles.inputField}
                 />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Sidebar Controls */}
+        {/* Task Metadata Sidebar */}
         <div className={adminStyles.sidebarColumn}>
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
                 <Tag size={16} className={adminStyles.iconBlue} />
-                <span>Assignment & Priority</span>
+                <span>Properties &amp; Assignment</span>
               </div>
             </div>
 
             <div className={adminStyles.formField}>
               <div>
-                <label className={adminStyles.formLabel}>
-                  Category
-                </label>
-                <select
-                  name="category"
-                  defaultValue="Procurement"
-                  className={adminStyles.selectField}
-                >
+                <label className={adminStyles.formLabel}>Department / Category</label>
+                <select name="category" className={adminStyles.inputField}>
                   <option value="Procurement">Procurement</option>
+                  <option value="Fulfilment">Fulfilment</option>
                   <option value="Pricing">Pricing</option>
-                  <option value="School Approval">School Approval</option>
-                  <option value="Packing">Packing</option>
-                  <option value="General">General</option>
+                  <option value="School Partner">School Partner</option>
                 </select>
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>
-                  Priority Level
-                </label>
-                <select
-                  name="priority"
-                  defaultValue="High"
-                  className={adminStyles.selectField}
-                >
+                <label className={adminStyles.formLabel}>Priority</label>
+                <select name="priority" className={adminStyles.inputField} defaultValue="Medium">
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
                   <option value="High">High</option>
-                  <option value="Critical">Critical</option>
+                  <option value="Urgent">Urgent</option>
                 </select>
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>
-                  Assignee
-                </label>
-                <select
-                  name="assignee"
-                  defaultValue="Kwanele G."
-                  className={adminStyles.selectField}
-                >
-                  <option value="Mcebisi M.">Mcebisi M. (Operations Manager)</option>
-                  <option value="Kwanele G.">Kwanele G. (Procurement Lead)</option>
-                  <option value="Liam M.">Liam M. (General Manager)</option>
-                  <option value="Warehouse Team">Warehouse Packing Team</option>
+                <label className={adminStyles.formLabel}>Assignee</label>
+                <select name="assigned_to" className={adminStyles.inputField}>
+                  <option value="Sarah Jenkins">Sarah Jenkins (Procurement)</option>
+                  <option value="Mcebisi Hlatshwayo">Mcebisi Hlatshwayo (Growth)</option>
+                  <option value="Warehouse Lead">Warehouse Lead (Fulfilment)</option>
                 </select>
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>
-                  Due Date
-                </label>
+                <label className={adminStyles.formLabel}>Due Date</label>
                 <input
                   type="date"
                   name="due_date"
-                  defaultValue="2026-08-30"
                   className={adminStyles.inputField}
                 />
               </div>
 
-              <div className={adminStyles["pt-8"]}>
-                <button
-                  type="submit"
-                  className={`${styles.primaryBtn} ${adminStyles["h-full-btn"]}`}
-                >
+              <div className={adminStyles.pt12}>
+                <button type="submit" className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}>
                   <Save size={14} /> Create Task
                 </button>
               </div>

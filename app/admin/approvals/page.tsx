@@ -1,8 +1,10 @@
-import { ClipboardCheck } from "lucide-react";
+import { CheckCircle2, Clock, XCircle, Ban, ClipboardCheck } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listApprovals } from "@/lib/admin/operations";
 import { formatDateTime } from "@/lib/admin/ui-utils";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { MetricCard } from "@/components/admin/ui/AdminCard";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { updateApprovalAction } from "../operations-actions";
 import admin from "../admin.module.css";
@@ -24,32 +26,44 @@ export default async function ApprovalsPage() {
   return (
     <div className={styles.page}>
       <AdminPageHeader
-        title="Approvals"
-        subtitle="Review and decide on pending approval requests across the system."
+        title="Approvals & Governance"
+        subtitle="Review and action pending authorization requests across procurement and pricing."
       />
 
-      <div className={styles.kpis}>
-        <div className={styles.kpi}>
-          <span>Pending</span>
-          <strong>{pendingApprovals.length}</strong>
-        </div>
-        <div className={styles.kpi}>
-          <span>Approved</span>
-          <strong>{approved}</strong>
-        </div>
-        <div className={styles.kpi}>
-          <span>Rejected</span>
-          <strong>{rejected}</strong>
-        </div>
-        <div className={styles.kpi}>
-          <span>Cancelled</span>
-          <strong>{cancelled}</strong>
-        </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+        <MetricCard
+          label="Pending Approvals"
+          value={pendingApprovals.length}
+          subtext="Awaiting manager sign-off"
+          icon={<Clock size={16} />}
+          iconTone={pendingApprovals.length > 0 ? "amber" : "green"}
+        />
+        <MetricCard
+          label="Approved Requests"
+          value={approved}
+          subtext="Successfully authorized"
+          icon={<CheckCircle2 size={16} />}
+          iconTone="green"
+        />
+        <MetricCard
+          label="Rejected"
+          value={rejected}
+          subtext="Declined requests"
+          icon={<XCircle size={16} />}
+          iconTone="red"
+        />
+        <MetricCard
+          label="Cancelled"
+          value={cancelled}
+          subtext="Withdrawn by requester"
+          icon={<Ban size={16} />}
+          iconTone="blue"
+        />
       </div>
 
       {pendingApprovals.length > 0 ? (
         <section className={styles.formPanel}>
-          <h2>Pending approvals</h2>
+          <h2>Pending approvals ({pendingApprovals.length})</h2>
           <div className={admin.tableCard}>
             <div className={admin.tableWrapper}>
               <table className={admin.table}>
@@ -66,16 +80,14 @@ export default async function ApprovalsPage() {
                   {pendingApprovals.map((approval) => (
                     <tr key={approval.id}>
                       <td>
-                        <span className={styles.badge}>
-                          {approval.approval_type}
-                        </span>
+                        <StatusBadge status={approval.approval_type} tone="blue" showDot />
                       </td>
                       <td>
-                        {approval.entity_type}
+                        <strong>{approval.entity_type}</strong>
                         <div className={styles.mono}>{approval.entity_id}</div>
                       </td>
                       <td className={styles.muted}>
-                        {approval.reason || "-"}
+                        {approval.reason || "—"}
                       </td>
                       <td className={styles.muted}>
                         {formatDateTime(approval.created_at)}
@@ -104,7 +116,7 @@ export default async function ApprovalsPage() {
                             </button>
                           </form>
                         ) : (
-                          "-"
+                          "—"
                         )}
                       </td>
                     </tr>
@@ -118,76 +130,11 @@ export default async function ApprovalsPage() {
         <section className={styles.formPanel}>
           <EmptyState
             icon={<ClipboardCheck aria-hidden="true" />}
-            title="No pending approvals"
-            text="All approval requests have been reviewed."
+            title="All caught up!"
+            text="No pending approval requests require your review at this time."
           />
         </section>
       )}
-
-      {allApprovals.filter((a) => a.status !== "pending").length > 0 ? (
-        <section className={styles.formPanel}>
-          <h2>Decided approvals</h2>
-          <div className={admin.tableCard}>
-            <div className={admin.tableWrapper}>
-              <table className={admin.table}>
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Entity</th>
-                    <th>Status</th>
-                    <th>Decision</th>
-                    <th>Notes</th>
-                    <th>Decided</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allApprovals
-                    .filter((a) => a.status !== "pending")
-                    .map((approval) => (
-                      <tr key={approval.id}>
-                        <td>
-                          <span className={styles.badge}>
-                            {approval.approval_type}
-                          </span>
-                        </td>
-                        <td>
-                          {approval.entity_type}
-                          <div className={styles.mono}>
-                            {approval.entity_id}
-                          </div>
-                        </td>
-                        <td>
-                          <span
-                            className={`${styles.badge} ${
-                              approval.status === "approved"
-                                ? styles.good
-                                : approval.status === "rejected"
-                                  ? styles.danger
-                                  : ""
-                            }`}
-                          >
-                            {approval.status}
-                          </span>
-                        </td>
-                        <td className={styles.mono}>
-                          {approval.decided_by?.slice(0, 8) || "-"}
-                        </td>
-                        <td className={styles.muted}>
-                          {approval.decision_notes || "-"}
-                        </td>
-                        <td className={styles.muted}>
-                          {approval.decided_at
-                            ? formatDateTime(approval.decided_at)
-                            : "-"}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-      ) : null}
     </div>
   );
 }
