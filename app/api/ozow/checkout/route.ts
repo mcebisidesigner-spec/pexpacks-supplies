@@ -89,8 +89,8 @@ export async function POST(request: NextRequest) {
     const packsRaw = Array.isArray(body.packs) ? body.packs : [];
 
     let createdOrderId: string | null = null;
-    let buyerName = typeof body.buyerName === "string" ? body.buyerName : "";
-    let buyerPhone = typeof body.buyerPhone === "string" ? body.buyerPhone : "";
+    const buyerName = typeof body.buyerName === "string" ? body.buyerName : "";
+    const buyerPhone = typeof body.buyerPhone === "string" ? body.buyerPhone : "";
 
     // Convert single-pack checkout to tray format so orders are always created in DB
     if (packsRaw.length === 0 && !isTrayOrder) {

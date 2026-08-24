@@ -474,6 +474,23 @@
   width: 16px;
   height: 16px;
   stroke: currentColor;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color var(--motion-duration-fast) var(--motion-ease),
+              color var(--motion-duration-fast) var(--motion-ease);
+}
+
+.addSchoolLink:hover {
+  border-color: var(--pex-navy);
+  color: var(--pex-coral);
+}
+
+.addSchoolLink svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
   fill: none;
   stroke-width: 2.2;
   transition: transform var(--motion-duration-fast) var(--motion-ease);
@@ -481,4 +498,46 @@
 
 .addSchoolLink:hover svg {
   transform: translateX(4px);
+}
+
+.submitAlert {
+  grid-column: 1 / -1;
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.removeFileBtn {
+  display: block;
+  margin: 8px auto 0;
+  background: none;
+  border: none;
+  color: var(--pex-coral);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.consentField {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.consentLabel {
+  font-size: 13px;
+  color: var(--pex-text-muted);
+  cursor: pointer;
+}
+
+.consentError {
+  display: block;
+  margin-top: -8px;
 }

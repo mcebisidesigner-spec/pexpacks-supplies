@@ -102,7 +102,7 @@ export default async function AddYourSchoolPage() {
             </div>
             <div className={cardStyles.packCard}>
               <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: '20px' }}>Contact us</h3>
+                <h3 className={cardStyles.packTitle}>Contact us</h3>
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>

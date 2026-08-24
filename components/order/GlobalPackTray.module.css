@@ -1,8 +1,8 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 9998;
-  background: rgba(15, 37, 55, 0.52);
+  z-index: var(--z-drawer);
+  background: var(--color-overlay);
   display: flex;
   justify-content: flex-end;
   overflow: hidden;
@@ -30,7 +30,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   background: var(--pex-bg);
-  box-shadow: -24px 0 60px rgba(15, 37, 55, 0.22);
+  box-shadow: var(--shadow-drawer);
   display: flex;
   flex-direction: column;
   animation: slideInTray 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;

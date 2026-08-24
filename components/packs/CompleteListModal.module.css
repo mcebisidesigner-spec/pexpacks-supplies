@@ -84,8 +84,8 @@
 .itemCountSubtitle {
   display: block;
   margin-top: 6px;
-  color: var(--pex-keppel, #10b981);
+  color: var(--pex-keppel);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   letter-spacing: -0.01em;
 }

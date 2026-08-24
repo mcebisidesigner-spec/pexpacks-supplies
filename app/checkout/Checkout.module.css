@@ -19,7 +19,7 @@
 }
 
 .stickyHeaderButton {
-  z-index: 120;
+  z-index: var(--z-sticky-bar);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
@@ -31,21 +31,21 @@
 }
 
 .stickyCtaBtn {
-  background: var(--pex-keppel) !important;
-  color: var(--pex-bg) !important;
-  box-shadow: 0 10px 24px rgba(26, 122, 119, 0.3) !important;
-  gap: 2px !important;
-  padding-inline: var(--space-3) 22px !important;
+  background: var(--pex-keppel);
+  color: var(--pex-bg);
+  box-shadow: 0 10px 24px rgba(26, 122, 119, 0.3);
+  gap: 2px;
+  padding-inline: var(--space-3) 22px;
 }
 
 .stickyCtaBtn:hover {
-  background: #15807c !important;
+  background: var(--pex-keppel-dark);
 }
 
 .stickyCtaLabel {
   display: block;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   opacity: 0.85;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -72,55 +72,55 @@
     transform: translateX(-50%);
     pointer-events: auto;
     box-shadow: 0 14px 32px rgba(26, 42, 64, 0.16);
-    z-index: 999;
+    z-index: var(--z-sticky-bar);
   }
 
   .stickyCtaBtn {
-    background: #20a49f !important;
-    color: var(--pex-bg) !important;
+    background: var(--pex-keppel);
+    color: var(--pex-bg);
     font-family: var(--font-body), sans-serif;
-    font-weight: 700 !important;
-    border-radius: var(--radius-pill) !important;
-    padding-block: var(--space-4) 18px !important;
-    padding-inline: 42px 42px !important;
-    box-shadow: 0 12px 28px rgba(32, 164, 159, 0.35) !important;
-    border: none !important;
-    display: inline-flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.25s ease !important;
-    cursor: pointer !important;
-    height: auto !important;
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-pill);
+    padding-block: var(--space-4) 18px;
+    padding-inline: 42px 42px;
+    box-shadow: 0 12px 28px rgba(26, 122, 119, 0.35);
+    border: none;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    height: auto;
   }
 
   .stickyCtaBtn:hover {
-    background: #1c938e !important;
-    transform: translateY(-2px) scale(1.02) !important;
-    box-shadow: 0 16px 36px rgba(32, 164, 159, 0.45) !important;
+    background: var(--pex-keppel-dark);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 16px 36px rgba(26, 122, 119, 0.45);
   }
 
   .stickyCtaBtn:active {
-    transform: translateY(0) scale(0.98) !important;
+    transform: translateY(0) scale(0.98);
   }
 
   .stickyCtaLabel {
-    display: inline !important;
-    font-size: 21px !important;
-    font-weight: 700 !important;
-    opacity: 1 !important;
-    text-transform: none !important;
-    letter-spacing: -0.3px !important;
-    color: var(--pex-bg) !important;
-    margin-right: 6px !important;
+    display: inline;
+    font-size: 21px;
+    font-weight: var(--font-weight-bold);
+    opacity: 1;
+    text-transform: none;
+    letter-spacing: -0.3px;
+    color: var(--pex-bg);
+    margin-right: 6px;
   }
 
   .stickyCtaPrice {
-    display: inline !important;
-    font-size: 21px !important;
-    font-weight: 700 !important;
-    line-height: inherit !important;
-    color: var(--pex-bg) !important;
+    display: inline;
+    font-size: 21px;
+    font-weight: var(--font-weight-bold);
+    line-height: inherit;
+    color: var(--pex-bg);
   }
 }
 

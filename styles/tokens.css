@@ -18,6 +18,9 @@
   --color-brand-orange: var(--pex-coral);
   --color-brand-orange-hover: var(--pex-coral-hover);
   --color-brand-teal: var(--pex-keppel);
+  --pex-teal: var(--pex-keppel);
+  --pex-ink: var(--pex-text);
+  --pex-bg-subtle: var(--pex-bg-soft);
   --color-background-soft: var(--pex-bg-soft);
   --color-page-background: var(--pex-body-bg);
   --color-surface: var(--pex-bg);
@@ -70,9 +73,25 @@
   --pex-premium: var(--pex-sme-amber);
   --pex-text-muted: var(--pex-muted);
 
-  /* Shadows */
+  /* Shadows & Elevation */
   --color-shadow: rgba(26, 42, 64, 0.18);
   --focus-ring: 3px solid rgba(33, 158, 154, 0.55);
+  --shadow-pill: 0 9px 18px rgba(26, 42, 64, 0.22);
+  --shadow-card: 0 12px 32px rgba(26, 42, 64, 0.05);
+  --shadow-card-hover: 0 20px 48px rgba(26, 42, 64, 0.12);
+  --shadow-drawer: -24px 0 60px rgba(15, 37, 55, 0.22);
+  --shadow-dropdown: 0 18px 42px rgba(15, 35, 58, 0.14);
+
+  /* Layering & Z-Index Scale */
+  --z-base: 1;
+  --z-content-raised: 2;
+  --z-header: 100;
+  --z-dropdown: 200;
+  --z-sticky-bar: 300;
+  --z-drawer: 900;
+  --z-modal: 1000;
+  --z-toast: 1100;
+  --z-skip-link: 9999;
 
   /* Radii */
   --radius-pill: 999px;
@@ -121,6 +140,8 @@
   --form-option-selected-bg: rgba(26, 122, 119, 0.1);
   --form-option-selected-border: var(--pex-keppel);
   --form-option-selected-color: var(--pex-keppel);
+  --form-option-active-bg: var(--form-option-selected-bg);
+  --form-option-active-color: var(--form-option-selected-color);
   --form-option-radius: var(--radius-field);
 
   /* Cards */
@@ -145,16 +166,16 @@
   --gap-card: var(--card-gap);
   --gap-card-mobile: var(--card-gap-mobile);
 
-  /* Elevation */
-  --shadow-pill: 0 9px 18px rgba(26, 42, 64, 0.22);
-  --shadow-card: var(--card-shadow);
-
   /* Typography */
   --font-heading: var(--font-pexpacks-sans-alt), Arial, sans-serif;
   --font-body: var(--font-pexpacks-sans), Arial, sans-serif;
   --font-sans: var(--font-body);
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --font-weight-heading: 800;
+  --font-weight-bold: 800;
+  --font-weight-semibold: 600;
+  --font-weight-medium: 500;
+  --font-weight-regular: 400;
   --section-eyebrow-color: var(--pex-keppel);
   --section-eyebrow-font-size: 14px;
   --section-eyebrow-font-weight: 800;
@@ -186,6 +207,10 @@
   --motion-duration: 220ms;
   --motion-duration-slow: 320ms;
   --motion-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: var(--motion-duration-fast);
+  --duration-normal: var(--motion-duration);
+  --duration-slow: var(--motion-duration-slow);
+  --ease-standard: var(--motion-ease);
   --button-transition:
     transform var(--motion-duration) var(--motion-ease),
     filter var(--motion-duration) var(--motion-ease),
@@ -207,6 +232,7 @@
   /* Layout */
   --layout-max-width: 1280px;
   --container-max: var(--layout-max-width);
+  --content-max-width: var(--layout-max-width);
 
   --gutter-mobile: clamp(16px, 4vw, 24px);
   --gutter-tablet: clamp(24px, 5vw, 40px);
@@ -224,5 +250,4 @@
   --section-padding-y-mobile: 56px;
   --section-padding-y-tablet: 72px;
   --section-padding-y-desktop: 96px;
-
 }

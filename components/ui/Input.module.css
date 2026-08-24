@@ -144,7 +144,7 @@
   transform: translateY(-50%);
   color: var(--pex-text-muted);
   pointer-events: none;
-  transition: transform var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+  transition: transform var(--motion-duration-fast) var(--motion-ease), color var(--motion-duration-fast) var(--motion-ease);
 }
 
 .selectChevron svg {
@@ -153,13 +153,13 @@
 }
 
 .selectWrap:has(.selectButtonOpen) .selectChevron {
-  color: var(--pex-teal);
+  color: var(--pex-keppel);
   transform: translateY(-50%) rotate(180deg);
 }
 
 .selectMenu {
   position: absolute;
-  z-index: 40;
+  z-index: var(--z-dropdown);
   top: calc(100% + 8px);
   left: 0;
   right: 0;
@@ -172,7 +172,7 @@
   border-radius: calc(var(--form-control-radius) - 4px);
   background:
     linear-gradient(180deg, rgba(239, 250, 249, 0.94), rgba(255, 255, 255, 0.98));
-  box-shadow: 0 18px 42px rgba(15, 35, 58, 0.14);
+  box-shadow: var(--shadow-dropdown);
 }
 
 .selectOption {
@@ -186,10 +186,10 @@
   border-radius: var(--radius-md);
   padding: 10px 14px;
   background: transparent;
-  color: var(--pex-ink);
+  color: var(--pex-text);
   font: inherit;
   font-size: var(--form-control-font-size);
-  font-weight: 800;
+  font-weight: var(--font-weight-bold);
   text-align: left;
   cursor: pointer;
   transition: var(--interactive-transition);
@@ -207,9 +207,9 @@
   border-radius: var(--radius-pill);
   padding: 4px var(--space-2);
   background: rgba(9, 119, 113, 0.1);
-  color: var(--pex-teal);
+  color: var(--pex-keppel);
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: var(--font-weight-bold);
 }
 
 .selectOption:hover,
@@ -221,9 +221,9 @@
 
 .selectOptionSelected {
   border-color: rgba(9, 119, 113, 0.28);
-  background: var(--form-option-active-bg);
-  color: var(--form-option-active-color);
-  box-shadow: inset 4px 0 0 var(--pex-teal);
+  background: var(--form-option-selected-bg);
+  color: var(--form-option-selected-color);
+  box-shadow: inset 4px 0 0 var(--pex-keppel);
 }
 
 .selectOption:disabled {

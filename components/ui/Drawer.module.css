@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 9998;
+  z-index: var(--z-drawer);
   background: var(--color-overlay);
   display: flex;
   justify-content: flex-end;
@@ -20,7 +20,7 @@
   height: 100dvh;
   overflow-y: auto;
   background: var(--pex-bg);
-  box-shadow: -24px 0 60px rgba(15, 37, 55, 0.22);
+  box-shadow: var(--shadow-drawer);
   display: flex;
   flex-direction: column;
   animation: slideInDialog 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -34,7 +34,7 @@
 .header {
   position: sticky;
   top: 0;
-  z-index: 3;
+  z-index: var(--z-base);
   padding: clamp(16px, 3vw, 24px);
   border-bottom: 1px solid var(--pex-border);
   background: rgba(255, 255, 255, 0.96);
@@ -56,9 +56,9 @@
 .headerSubtitle {
   display: block;
   margin-top: 6px;
-  color: var(--pex-keppel, #10b981);
+  color: var(--pex-keppel);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
 }
 
 .headerRight {

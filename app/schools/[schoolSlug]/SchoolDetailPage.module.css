@@ -209,27 +209,6 @@
   justify-content: center;
 }
 
-.unpartneredCardActions a:first-child {
-  background: var(--pex-coral) !important;
-  color: #ffffff !important;
-  border-color: var(--pex-coral) !important;
-}
-
-.unpartneredCardActions a:first-child:hover {
-  opacity: 0.9;
-}
-
-.unpartneredCardActions a:last-child {
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: var(--color-surface-glass) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-}
-
-.unpartneredCardActions a:last-child:hover {
-  background: rgba(255, 255, 255, 0.14) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
-}
-
 .unpartneredCardSecondary {
   margin-top: 20px;
   padding: var(--space-6);

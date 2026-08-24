@@ -275,7 +275,7 @@ export function OrderForm() {
             {inputMethod === "upload" ? (
               fileName ? (
                 <div className={styles.successArea}>
-                  <div className={styles.successIcon} style={{ width: 32, height: 32, fontSize: 16 }}>✓</div>
+                  <div className={styles.successIcon}>✓</div>
                   <strong>{fileName}</strong>
                   <button 
                     type="button" 
@@ -283,7 +283,7 @@ export function OrderForm() {
                       setFile(null);
                       setFileName(null);
                     }}
-                    style={{ display: "block", margin: "8px auto 0", background: "none", border: "none", color: "var(--pex-coral)", textDecoration: "underline", cursor: "pointer" }}
+                    className={styles.removeFileBtn}
                   >
                     Remove file
                   </button>
@@ -333,7 +333,7 @@ export function OrderForm() {
             {errors.list && <span className={styles.errorText}>{errors.list}</span>}
 
             <div className={styles.formActions}>
-              <button onClick={prevStep} className={styles.backBtn}>← Back</button>
+              <button type="button" onClick={prevStep} className={styles.backBtn}>← Back</button>
               <Button 
                 onClick={nextStep} 
                 disabled={inputMethod === "upload" ? !fileName : !listText.trim()}
@@ -353,10 +353,7 @@ export function OrderForm() {
             
             <form onSubmit={handleSubmit} className={styles.formGrid}>
               {errors.submit && (
-                <div
-                  role="alert"
-                  style={{ gridColumn: "1 / -1", color: "var(--pex-error)", background: "var(--color-error-bg)", border: "1px solid var(--color-error-border)", padding: "14px 16px", borderRadius: "14px", fontSize: "14px", fontWeight: 500 }}
-                >
+                <div role="alert" className={styles.submitAlert}>
                   {errors.submit}
                 </div>
               )}
@@ -414,7 +411,7 @@ export function OrderForm() {
                 {errors.email && <span id="quote-email-error" className={styles.errorText}>{errors.email}</span>}
               </div>
 
-              <div className={styles.field} style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10, marginTop: 8 }}>
+              <div className={styles.consentField}>
                 <input 
                   id="quote-consent" 
                   type="checkbox" 
@@ -426,11 +423,11 @@ export function OrderForm() {
                   aria-invalid={!!errors.consent}
                   aria-describedby={errors.consent ? "quote-consent-error" : undefined}
                 />
-                <label htmlFor="quote-consent" style={{ fontSize: 13, color: "var(--pex-text-muted)", cursor: "pointer" }}>
+                <label htmlFor="quote-consent" className={styles.consentLabel}>
                   I consent to Pexpacks processing my information to handle this request under POPIA guidelines.
                 </label>
               </div>
-              {errors.consent && <span id="quote-consent-error" className={styles.errorText} style={{ display: "block", marginTop: -8 }}>{errors.consent}</span>}
+              {errors.consent && <span id="quote-consent-error" className={clsx(styles.errorText, styles.consentError)}>{errors.consent}</span>}
 
               <div className={styles.formActions}>
                 <button type="button" onClick={prevStep} className={styles.backBtn}>← Back</button>
