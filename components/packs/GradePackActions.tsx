@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -61,6 +69,7 @@ export function GradePackActions({
   const portalContainer = usePortalContainer();
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [, startTransition] = useTransition();
   const addPack = usePackTrayStore((s) => s.addPack);
   const openTray = usePackTrayStore((s) => s.openTray);
 
@@ -81,11 +90,19 @@ export function GradePackActions({
     createCustomPackSelection(pack.items),
   );
 
+  const deferredSelection = useDeferredValue(selection);
+
   const selectedItems = useMemo(
-    () => selection.filter((item) => item.selected && item.selectedQuantity > 0),
-    [selection],
+    () =>
+      deferredSelection.filter(
+        (item) => item.selected && item.selectedQuantity > 0,
+      ),
+    [deferredSelection],
   );
-  const total = useMemo(() => calculatePackTotal(selection) ?? 0, [selection]);
+  const total = useMemo(
+    () => calculatePackTotal(deferredSelection) ?? 0,
+    [deferredSelection],
+  );
   const displayedTotal = total > 0 ? formatItemCurrency(total) : "R 0";
   const selectedCount = selectedItems.length;
   const pdfItems = useMemo(
@@ -140,7 +157,13 @@ export function GradePackActions({
     if (selectedCount === 0) return;
 
     const modifications: Record<string, number> = {};
-    const trayItems: Array<{ id: string; name: string; category?: string; quantity: number; unitPrice?: number }> = [];
+    const trayItems: Array<{
+      id: string;
+      name: string;
+      category?: string;
+      quantity: number;
+      unitPrice?: number;
+    }> = [];
     const customTotal = calculatePackTotal(selection) ?? 0;
 
     selection.forEach((item) => {
@@ -175,7 +198,8 @@ export function GradePackActions({
     const customPack = {
       ...trayPack,
       packMode: "customised" as const,
-      modifications: Object.keys(modifications).length > 0 ? modifications : undefined,
+      modifications:
+        Object.keys(modifications).length > 0 ? modifications : undefined,
     };
 
     addPack(customPack);
@@ -216,37 +240,43 @@ export function GradePackActions({
   }, [itemsKey]);
 
   function setItemSelected(id: string, selected: boolean) {
-    setSelection((items) =>
-      items.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              selected,
-              selectedQuantity: selected
-                ? item.selectedQuantity || item.requiredQuantity
-                : 0,
-            }
-          : item,
-      ),
-    );
+    startTransition(() => {
+      setSelection((items) =>
+        items.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                selected,
+                selectedQuantity: selected
+                  ? item.selectedQuantity || item.requiredQuantity
+                  : 0,
+              }
+            : item,
+        ),
+      );
+    });
   }
 
   function setItemQuantity(id: string, quantity: number) {
-    setSelection((items) =>
-      items.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              selected: quantity > 0,
-              selectedQuantity: Math.max(0, quantity),
-            }
-          : item,
-      ),
-    );
+    startTransition(() => {
+      setSelection((items) =>
+        items.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                selected: quantity > 0,
+                selectedQuantity: Math.max(0, quantity),
+              }
+            : item,
+        ),
+      );
+    });
   }
 
   function resetToFullPack() {
-    setSelection(createFullPackSelection(pack.items));
+    startTransition(() => {
+      setSelection(createFullPackSelection(pack.items));
+    });
     trackCustomiserReset({ school: pack.schoolName, grade: pack.grade });
   }
 
@@ -349,26 +379,30 @@ export function GradePackActions({
                       </span>
                     </label>
                     <div className={styles.qtyControls}>
-                        <button
-                          type="button"
-                          className={styles.qtyBtn}
-                          onClick={() => setItemQuantity(item.id, item.selectedQuantity - 1)}
-                          aria-label={`Decrease quantity for ${item.name}`}
-                        >
-                          -
-                        </button>
-                        <span className={styles.qtyValue}>
-                          {item.selectedQuantity}
-                        </span>
-                        <button
-                          type="button"
-                          className={styles.qtyBtn}
-                          onClick={() => setItemQuantity(item.id, item.selectedQuantity + 1)}
-                          aria-label={`Increase quantity for ${item.name}`}
-                        >
-                          +
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        className={styles.qtyBtn}
+                        onClick={() =>
+                          setItemQuantity(item.id, item.selectedQuantity - 1)
+                        }
+                        aria-label={`Decrease quantity for ${item.name}`}
+                      >
+                        -
+                      </button>
+                      <span className={styles.qtyValue}>
+                        {item.selectedQuantity}
+                      </span>
+                      <button
+                        type="button"
+                        className={styles.qtyBtn}
+                        onClick={() =>
+                          setItemQuantity(item.id, item.selectedQuantity + 1)
+                        }
+                        aria-label={`Increase quantity for ${item.name}`}
+                      >
+                        +
+                      </button>
+                    </div>
                   </article>
                 );
               })}

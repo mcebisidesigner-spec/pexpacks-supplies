@@ -41,10 +41,11 @@
   z-index: 2;
   height: var(--header-height-desktop);
   width: 100%;
+  max-width: var(--layout-max-width);
   margin-inline: auto;
-  padding-inline: clamp(48px, 5vw, 88px);
+  padding-inline: clamp(24px, 4vw, 56px);
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: 0.75fr auto 1.25fr;
   align-items: center;
 }
 
@@ -56,7 +57,7 @@
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  min-width: 0;
+  justify-self: start;
 }
 
 .adminUserTitle {
@@ -86,24 +87,25 @@
 .desktopNav {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  margin-left: clamp(64px, 8vw, 156px);
-  gap: 44px;
+  justify-content: center;
+  margin: 0 auto;
+  gap: clamp(20px, 2.5vw, 40px);
 }
 
 .navLink {
   position: relative;
   color: var(--pex-navy);
   border-bottom: 2px solid transparent;
-  padding: 7px 0 6px;
+  padding: 6px 0;
   font-family: var(--font-button);
-  font-size: var(--text-lg);
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 980;
   line-height: 1;
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
   transition:
-    color 0.25s ease,
-    border-color 0.25s ease;
+    color 0.2s ease,
+    border-bottom-color 0.2s ease;
 }
 
 .navLinkPending {
@@ -129,10 +131,10 @@
 }
 
 .desktopActions {
-  justify-self: end;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-self: end;
+  gap: 16px;
 }
 
 .desktopLogin {
@@ -416,71 +418,17 @@
   stroke-linejoin: round;
 }
 
-@media (max-width: 1280px) {
-  .logoLink img {
-    width: 118px;
-  }
-
-  .desktopNav {
-    margin-left: clamp(48px, 6vw, 96px);
-    gap: var(--space-6);
-  }
-
-  .navLink {
-    font-size: var(--text-lg);
-  }
-
-  .desktopOrder {
-    font-size: var(--text-sm);
-  }
-}
-
-@media (max-width: 1280px) {
+@media (max-width: 1200px) {
   .headerInner {
-    padding-inline: clamp(32px, 4vw, 48px);
+    padding-inline: clamp(20px, 3vw, 40px);
   }
 
   .desktopNav {
-    margin-left: 36px;
-    gap: 20px;
+    gap: clamp(14px, 1.8vw, 24px);
   }
 
   .navLink {
-    font-size: var(--text-base);
-  }
-
-  .logoLink img {
-    width: 110px;
-  }
-
-  .desktopActions {
-  gap: var(--space-2);
-}
-
-.desktopLogin {
-    width: 38px;
-    height: 38px;
-  }
-
-  .desktopLogin svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .desktopOrder {
-    min-height: 38px;
-    font-size: var(--text-2xs);
-    padding: 0 6px 0 15px;
-  }
-
-  .orderIcon {
-    width: 26px;
-    height: 26px;
-  }
-
-  .orderIcon svg {
-    width: 14px;
-    height: 14px;
+    font-size: 14.5px;
   }
 }
 
@@ -493,7 +441,6 @@
 
   .headerInner {
     height: var(--mobile-header-height);
-    grid-template-columns: 1fr auto;
     padding-inline: var(--gutter-tablet);
   }
 
@@ -509,7 +456,7 @@
   .mobileActions {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
   }
 
   .menuButton {

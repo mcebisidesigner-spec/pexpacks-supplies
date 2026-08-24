@@ -107,11 +107,14 @@ export default async function HomePage() {
             'sharpie',
           ].map((brand, i) => (
             <span key={i} className={homeStyles.brandChip}>
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={`/images/stationery-brands/${brand}.svg`}
                 alt={`${brand} logo`}
                 width={80}
                 height={40}
+                loading="lazy"
+                decoding="async"
                 style={{ objectFit: 'contain', display: 'block' }}
               />
             </span>

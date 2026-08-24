@@ -26,7 +26,15 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   experimental: {
-    optimizePackageImports: ["lucide-react", "@supabase/ssr", "@supabase/supabase-js"],
+    optimizePackageImports: [
+      "lucide-react",
+      "@supabase/ssr",
+      "@supabase/supabase-js",
+      "clsx",
+      "papaparse",
+      "zod",
+      "swr",
+    ],
     serverActions: {
       bodySizeLimit: "10mb",
     },

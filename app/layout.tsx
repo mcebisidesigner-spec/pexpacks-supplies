@@ -177,7 +177,17 @@ export default async function RootLayout({
     >
       <head>
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (
-          <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+          <>
+            <link
+              rel="preconnect"
+              href={process.env.NEXT_PUBLIC_SUPABASE_URL}
+              crossOrigin="anonymous"
+            />
+            <link
+              rel="dns-prefetch"
+              href={process.env.NEXT_PUBLIC_SUPABASE_URL}
+            />
+          </>
         )}
       </head>
       <body suppressHydrationWarning>
