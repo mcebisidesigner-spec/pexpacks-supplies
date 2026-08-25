@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
+import { Backpack } from "lucide-react";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import styles from "./HeaderOrderIcon.module.css";
@@ -35,11 +36,7 @@ export function HeaderOrderIcon() {
         disabled
         style={{ opacity: 0, pointerEvents: "none" }}
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <path d="M16 10a4 4 0 01-8 0" />
-        </svg>
+        <Backpack aria-hidden="true" size={22} strokeWidth={1.8} />
       </button>
     );
   }
@@ -51,11 +48,7 @@ export function HeaderOrderIcon() {
       onClick={handleClick}
       aria-label={`Open saved order (${packCount} pack${packCount === 1 ? "" : "s"})`}
     >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <path d="M16 10a4 4 0 01-8 0" />
-      </svg>
+      <Backpack aria-hidden="true" size={22} strokeWidth={1.8} />
       <span className={styles.badge} aria-hidden="true">
         {packCount > 9 ? "9+" : packCount}
       </span>
