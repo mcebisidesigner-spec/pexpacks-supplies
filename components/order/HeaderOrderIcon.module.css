@@ -1,9 +1,9 @@
 .iconButton {
   position: relative;
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  min-height: 42px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   border: 0;
   border-radius: var(--radius-pill);
   background: transparent;
@@ -28,8 +28,8 @@
 }
 
 .iconButton svg {
-  width: 23px;
-  height: 23px;
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
@@ -39,17 +39,17 @@
 
 .badge {
   position: absolute;
-  top: 3px;
-  right: 2px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
+  top: 1px;
+  right: 1px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
   border-radius: var(--radius-pill);
   background: var(--pex-coral);
   color: var(--pex-bg);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  line-height: 18px;
+  line-height: 16px;
   text-align: center;
   display: flex;
   align-items: center;

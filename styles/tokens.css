@@ -238,10 +238,10 @@
   --gutter-tablet: clamp(24px, 5vw, 40px);
   --gutter-desktop: clamp(40px, 5vw, 64px);
 
-  --header-height-mobile: 88px;
+  --header-height-mobile: 70px;
   --header-height-desktop: 88px;
 
-  --logo-width-mobile: 95px;
+  --logo-width-mobile: 92px;
   --logo-width-desktop: 103px;
 
   --touch-target-min: 48px;

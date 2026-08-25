@@ -440,12 +440,12 @@
   }
 
   .siteHeader {
-    --mobile-header-height: 80px;
+    --mobile-header-height: 70px;
   }
 
   .headerInner {
-    height: var(--mobile-header-height, 80px);
-    padding-inline: clamp(16px, 4vw, 32px);
+    height: var(--mobile-header-height, 70px);
+    padding-inline: clamp(16px, 4vw, 28px);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -459,9 +459,15 @@
     flex-shrink: 0;
   }
 
+  .logoLink {
+    display: inline-flex;
+    align-items: center;
+  }
+
   .logoLink img {
-    width: clamp(96px, 25vw, 114px);
+    width: clamp(92px, 24vw, 106px);
     height: auto;
+    display: block;
   }
 
   .desktopNav,
@@ -473,18 +479,20 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: clamp(8px, 2vw, 14px);
+    gap: 6px;
     flex-shrink: 0;
   }
 
   .menuButton {
-    --menu-line-gap: 7.5px;
-    --menu-line-width: 22px;
+    --menu-line-gap: 6.5px;
+    --menu-line-width: 20px;
     position: relative;
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     border: 0;
     padding: 0;
     background: transparent;
@@ -511,7 +519,7 @@
     top: 50%;
     left: 50%;
     width: var(--menu-line-width);
-    height: 2.2px;
+    height: 2px;
     border-radius: var(--radius-pill);
     background: currentColor;
     transform-origin: center;
@@ -561,11 +569,11 @@
 
 @media (max-width: 480px) {
   .siteHeader {
-    --mobile-header-height: 76px;
+    --mobile-header-height: 68px;
   }
 
   .headerInner {
-    height: var(--mobile-header-height, 76px);
+    height: var(--mobile-header-height, 68px);
     padding-inline: 16px;
   }
 
@@ -574,19 +582,19 @@
   }
 
   .logoLink img {
-    width: 96px;
+    width: 92px;
     height: auto;
   }
 
   .mobileActions {
-    gap: 8px;
+    gap: 4px;
   }
 
   .menuButton {
-    --menu-line-gap: 7px;
+    --menu-line-gap: 6.5px;
     --menu-line-width: 20px;
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
   }
 
   .mobileMenuInner {
