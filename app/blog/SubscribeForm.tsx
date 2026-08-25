@@ -6,12 +6,32 @@ import styles from "./Blog.module.css";
 
 export function SubscribeForm() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    setSubmitted(true);
+    if (!email || loading) return;
+    setLoading(true);
+
+    try {
+      await fetch("/api/forms/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "newsletter-subscribe",
+          fullName: "Newsletter Subscriber",
+          email,
+          consent: true,
+          message: `New blog newsletter subscription request for: ${email}`,
+        }),
+      });
+    } catch {
+      // Graceful fallback
+    } finally {
+      setLoading(false);
+      setSubmitted(true);
+    }
   };
 
   if (submitted) {
@@ -45,8 +65,8 @@ export function SubscribeForm() {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <Button type="submit" variant="primary" size="md">
-          Subscribe
+        <Button type="submit" variant="primary" size="md" disabled={loading}>
+          {loading ? "Subscribing..." : "Subscribe"}
         </Button>
       </form>
     </div>

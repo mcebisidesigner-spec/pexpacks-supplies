@@ -309,3 +309,84 @@ export function articleSchema(post: {
     dateModified: post.date,
   };
 }
+
+export function schoolPageMultiGraphSchema(school: School) {
+  const schoolUrl = `${siteUrl}/schools/${school.slug}`;
+  const logoUrl = school.logo
+    ? school.logo.startsWith("http")
+      ? school.logo
+      : `${siteUrl}${school.logo}`
+    : brandLogoUrls.default;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "EducationalOrganization",
+        "@id": `${schoolUrl}#organization`,
+        name: school.name,
+        url: school.website || schoolUrl,
+        logo: logoUrl,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: school.city,
+          addressRegion: school.province || "Gauteng",
+          addressCountry: "ZA",
+        },
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${schoolUrl}#packlist`,
+        name: `Official 2027 Stationery Packs - ${school.name}`,
+        description: `Verified Grade Stationery Lists for ${school.name}`,
+        itemListElement: (school.grades || []).map((grade, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item: {
+            "@type": "Product",
+            name: `${school.name} - ${grade.grade} Stationery Pack`,
+            description: `Official ${grade.grade} school stationery list pack for ${school.name}.`,
+            image: productPackImage,
+            offers: {
+              "@type": "Offer",
+              price: grade.price,
+              priceCurrency: "ZAR",
+              availability:
+                productAvailability[grade.availability] ||
+                "https://schema.org/InStock",
+              seller: {
+                "@type": "Organization",
+                name: "Pexpacks Supplies",
+                url: siteUrl,
+              },
+            },
+          },
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${schoolUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: siteUrl,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Schools",
+            item: `${siteUrl}/schools`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: school.name,
+            item: schoolUrl,
+          },
+        ],
+      },
+    ],
+  };
+}

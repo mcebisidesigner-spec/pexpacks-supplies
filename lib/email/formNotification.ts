@@ -28,6 +28,7 @@ export async function sendFormNotificationEmail(
     "custom-pack-enquiry": "Custom School Pack Enquiry",
     "school-partnership": "School Partnership Enquiry",
     contact: "Contact Form Query",
+    "newsletter-subscribe": "Newsletter Subscriber Update",
   };
 
   const title = formTypeTitles[data.formType] || "New Form Submission Query";
@@ -107,8 +108,8 @@ export async function sendFormNotificationEmail(
 `;
 
   try {
-    // Primary attempt: Send to official email + account email
-    const recipients = ["orders@pexpacks.co.za", officialEmail, "pexpacks@gmail.com"];
+    // Primary attempt: Send to helpme@pexpacks.co.za + pexpacks@gmail.com
+    const recipients = ["helpme@pexpacks.co.za", "pexpacks@gmail.com"];
     const uniqueRecipients = [...new Set(recipients.filter(Boolean))];
 
     const resendAttachments = attachments.map((att) => ({

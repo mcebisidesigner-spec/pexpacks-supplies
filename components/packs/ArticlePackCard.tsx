@@ -51,7 +51,25 @@ export function ArticlePackCard({
       style={style}
     >
       <div className={styles.media} aria-hidden="true">
-        <span>{gradeLabel}</span>
+        <span className={styles.gradePill}>{gradeLabel}</span>
+        <svg
+          className={styles.backpackVector}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M9 5V3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+          <path d="M5 9a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9z" />
+          <path d="M5 11h14" />
+          <path d="M8 6v6" />
+          <path d="M16 6v6" />
+          <rect x="7.5" y="14" width="9" height="5.5" rx="1.5" />
+          <path d="M5 13H3.5a1.5 1.5 0 0 0-1.5 1.5v4A1.5 1.5 0 0 0 3.5 20H5" />
+          <path d="M19 13h1.5a1.5 1.5 0 0 1 1.5 1.5v4a1.5 1.5 0 0 1-1.5 1.5H19" />
+        </svg>
       </div>
 
       <div className={styles.body}>

@@ -26,6 +26,7 @@ export type School = {
   metro: string;
   province: string;
   logo?: string | null;
+  website?: string | null;
   isPartnerSchool: boolean;
   refusedPartnership?: boolean;
   grades: GradePack[];
@@ -39,6 +40,7 @@ export type SchoolIndexRecord = {
   metro: string;
   province: string;
   logo?: string | null;
+  website?: string | null;
   isPartnerSchool: boolean;
   isFeatured?: boolean;
   lowestPrice?: number;

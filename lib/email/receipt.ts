@@ -260,7 +260,7 @@ export async function sendPurchaseReceipt(
   const { error } = await resend.emails.send({
     from,
     to: [order.buyer_email],
-    bcc: ["orders@pexpacks.co.za", "pexpacks@gmail.com"],
+    bcc: ["helpme@pexpacks.co.za", "pexpacks@gmail.com"],
     subject: `Your Pexpacks receipt ${order.order_reference}`,
     html: buildReceiptHtml(order),
     replyTo: process.env.RESEND_REPLY_TO_EMAIL || "care@pexpacks.co.za",

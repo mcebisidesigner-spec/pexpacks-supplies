@@ -166,7 +166,7 @@ export async function sendOrderStatusUpdate(
   const { error } = await resend.emails.send({
     from,
     to: [order.buyer_email],
-    bcc: ["orders@pexpacks.co.za"],
+    bcc: ["helpme@pexpacks.co.za", "pexpacks@gmail.com"],
     subject: `Order ${order.order_reference} — ${label}`,
     html: buildStatusEmailHtml(order),
     replyTo: process.env.RESEND_REPLY_TO_EMAIL || "care@pexpacks.co.za",

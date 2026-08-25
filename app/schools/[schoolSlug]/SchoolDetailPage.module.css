@@ -1,37 +1,75 @@
-.schoolHeroPanel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+.schoolHeroCard {
+  background: #ffffff;
+  border-radius: var(--radius-card-lg, 28px);
+  padding: 24px 28px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.18);
+  display: flex;
   align-items: center;
-  gap: clamp(18px, 4vw, 36px);
+  justify-content: space-between;
+  gap: clamp(16px, 3vw, 28px);
 }
 
-.schoolHeroCopy {
+.schoolHeroCardLeft {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
-.schoolHeroLabel {
-  display: block;
-  color: var(--pex-text-muted);
-  font-size: clamp(18px, 2.2vw, 22px);
-  line-height: 1.25;
+.schoolHeroYearLabel {
+  color: var(--pex-navy, #1a2a40);
+  font-family: var(--font-button);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
-.schoolHeroTitle {
-  display: block;
-  margin-top: var(--space-3);
-  color: var(--pex-primary);
-  font-size: clamp(28px, 4vw, 34px);
-  line-height: 1;
+.schoolHeroPrepared {
+  color: var(--pex-navy, #1a2a40);
+  font-family: var(--font-heading);
+  font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 4px;
 }
 
-.schoolHeroLogoWrap {
-  width: clamp(92px, 12vw, 136px);
-  aspect-ratio: 1;
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  background: #ffffff;
-  box-shadow: 0 16px 34px rgba(26, 42, 64, 0.14);
-  flex: 0 0 auto;
+.schoolHeroWebsiteLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  color: var(--pex-keppel, #1a7a77);
+  font-family: var(--font-button);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+  width: fit-content;
+}
+
+.schoolHeroWebsiteLink:hover {
+  color: var(--pex-keppel-dark, #156966);
+  transform: translateX(2px);
+}
+
+.schoolHeroWebsiteLink svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  fill: none;
+}
+
+.schoolHeroLogoBox {
+  width: clamp(80px, 10vw, 100px);
+  height: clamp(80px, 10vw, 100px);
+  border-radius: 20px;
+  background: var(--pex-bg-soft, #f4f5f7);
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  flex-shrink: 0;
 }
 
 .schoolHeroLogo {
@@ -41,24 +79,25 @@
   display: block;
 }
 
-@media (max-width: 480px) {
-  .schoolHeroPanel {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 14px;
+@media (max-width: 640px) {
+  .schoolHeroCard {
+    padding: 20px;
+    gap: 16px;
   }
 
-  .schoolHeroLabel {
-    font-size: var(--text-base);
+  .schoolHeroYearLabel {
+    font-size: 16px;
   }
 
-  .schoolHeroTitle {
-    margin-top: 10px;
-    font-size: clamp(24px, 8vw, 30px);
+  .schoolHeroPrepared {
+    font-size: 20px;
   }
 
-  .schoolHeroLogoWrap {
-    width: clamp(76px, 24vw, 96px);
-    border-radius: var(--radius-image);
+  .schoolHeroLogoBox {
+    width: 76px;
+    height: 76px;
+    border-radius: 16px;
+    padding: 8px;
   }
 }
 

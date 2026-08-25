@@ -11,7 +11,7 @@ import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
 import type { GradePack, School } from "@/data/schools";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
-import { breadcrumbSchema, productSchema } from "@/lib/schema";
+import { schoolPageMultiGraphSchema } from "@/lib/schema";
 import { getCachedSchoolBySlug } from "@/lib/school-utils";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildWhatsAppHref } from "@/data/contact";
@@ -104,21 +104,32 @@ export async function generateMetadata({
 
   if (!school) {
     return buildMetadata(
-      "School Not Found",
-      "The requested school pack could not be found.",
+      "School Not Found | Pexpacks Supplies",
+      "The requested school stationery list could not be found.",
       "/schools",
     );
   }
 
-  const titleName = school.name.toLowerCase().includes("school")
-    ? school.name
-    : `${school.name} School`;
+  const title = `${school.name} Stationery List 2027 - Pexpacks`;
+  const locationDesc = school.metro || school.city || "Gauteng";
+  const description = `Get the verified 2027 stationery packs for ${school.name}, ${locationDesc}. Pre-pack customisation, direct delivery, and lay-by savings plans available.`;
 
-  return buildMetadata(
-    `${titleName} Stationery Packs & Grade Lists 2026 | Pexpacks`,
-    `Order official ${school.name} stationery packs online in ${school.city}. 100% grade-matched stationery lists with optional Pexcover book covering & fast delivery.`,
-    `/schools/${school.slug}`,
-  );
+  return {
+    ...buildMetadata(
+      title,
+      description,
+      `/schools/${school.slug}`,
+      school.logo || undefined,
+      [
+        `${school.name} stationery list 2027`,
+        `${school.name} stationery packs`,
+        `${school.name} school supplies`,
+        `${school.city} stationery`,
+      ],
+    ),
+    title,
+    description,
+  };
 }
 
 export default async function SchoolDetailPage({ params }: SchoolPageProps) {
@@ -132,48 +143,44 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   const isRefused = Boolean(school.refusedPartnership);
   const gradesToRender = getNormalizedSchoolGrades(school);
   const schoolWithGrades = { ...school, grades: gradesToRender };
-
-  const heroLabel = isHighSchoolName(school.name)
-    ? "High School Grade Packs"
-    : isPrimarySchoolName(school.name)
-    ? "Primary School Grade Packs"
-    : "Grade-Specific Packs";
+  const officialWebsiteUrl = school.website || `https://www.google.com/search?q=${encodeURIComponent(`${school.name} official website ${school.city}`)}`;
 
   return (
     <>
-      <JsonLd
-        data={breadcrumbSchema([
-          { name: "Home", path: "/" },
-          { name: "Schools", path: "/schools" },
-          { name: school.name, path: `/schools/${school.slug}` },
-        ])}
-      />
-      {schoolWithGrades.grades.map((grade) => (
-        <JsonLd
-          key={grade.id}
-          data={productSchema(schoolWithGrades, grade)}
-        />
-      ))}
+      <JsonLd data={schoolPageMultiGraphSchema(schoolWithGrades)} />
+
       <PageHero
+        variant="navy"
         eyebrow={formatSchoolLocation(school.city, school.metro, school.province)}
         title={school.name}
         panelChildren={
-          <div className={styles.schoolHeroPanel}>
-            <div className={styles.schoolHeroCopy}>
-              <span className={styles.schoolHeroLabel}>
-                {isRefused ? "Awaiting the school list" : heroLabel}
+          <div className={styles.schoolHeroCard}>
+            <div className={styles.schoolHeroCardLeft}>
+              <span className={styles.schoolHeroYearLabel}>
+                Stationery List 2027
               </span>
-              <span className={styles.schoolHeroTitle}>
+              <span className={styles.schoolHeroPrepared}>
                 {isRefused ? "or you could send your list" : "Prepared with care"}
               </span>
+              <a
+                href={officialWebsiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.schoolHeroWebsiteLink}
+              >
+                Visit Official School Website
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </a>
             </div>
-            <div className={styles.schoolHeroLogoWrap}>
+            <div className={styles.schoolHeroLogoBox}>
               {school.logo ? (
                 <Image
                   src={school.logo}
-                  alt={`${school.name} logo`}
-                  width={136}
-                  height={136}
+                  alt={`${school.name} crest`}
+                  width={96}
+                  height={96}
                   className={styles.schoolHeroLogo}
                   priority
                 />

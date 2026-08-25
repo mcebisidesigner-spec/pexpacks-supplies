@@ -8,6 +8,7 @@ export const formTypes = [
   "contact",
   "track-order-interest",
   "quote",
+  "newsletter-subscribe",
 ] as const;
 
 export const formEndpointKinds = [
@@ -15,6 +16,7 @@ export const formEndpointKinds = [
   "order",
   "school-partnership",
   "quote",
+  "newsletter",
 ] as const;
 
 export type FormType = (typeof formTypes)[number];

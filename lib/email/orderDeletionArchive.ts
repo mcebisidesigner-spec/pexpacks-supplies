@@ -171,7 +171,7 @@ export async function sendOrderDeletionArchiveEmail({
   try {
     const data = await resend.emails.send({
       from: "Pexpacks Admin <orders@pexpacks.co.za>",
-      to: ["orders@pexpacks.co.za", "mcebisi@pexpacks.co.za"],
+      to: ["helpme@pexpacks.co.za", "pexpacks@gmail.com"],
       subject: `[ORDER DELETED ARCHIVE] ${orderRef} — ${buyerName}`,
       html,
       text: `Order Deletion Archive Notice:\nOrder ${orderRef} (${buyerName}, ${total}) was deleted by ${deletedBy} on ${deletedAt}.\nAll associated payment and order metadata records have been permanently purged from active tables.`,

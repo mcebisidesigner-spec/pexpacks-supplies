@@ -10,6 +10,7 @@ type PageHeroProps = {
   panelChildren?: ReactNode;
   panelClassName?: string;
   children?: ReactNode;
+  variant?: "default" | "navy";
 };
 
 export function PageHero({
@@ -21,9 +22,10 @@ export function PageHero({
   panelChildren,
   panelClassName,
   children,
+  variant = "default",
 }: PageHeroProps) {
   return (
-    <section className={styles.pageHero}>
+    <section className={variant === "navy" ? styles.heroNavy : styles.pageHero}>
       <div className={styles.pageHeroInner}>
         <div className={styles.pageHeroCompact}>
           <p className={styles.eyebrow}>{eyebrow}</p>

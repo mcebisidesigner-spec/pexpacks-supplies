@@ -18,10 +18,14 @@
 }
 
 .media {
+  position: relative;
+  overflow: hidden;
   display: flex;
-  min-height: 156px;
-  align-items: flex-end;
-  padding: 22px;
+  min-height: 84px;
+  height: 84px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
   background:
     linear-gradient(135deg, rgba(33, 158, 154, 0.84), rgba(26, 42, 64, 0.72)),
     var(--pex-bg-soft);
@@ -39,21 +43,37 @@
     var(--pex-navy);
 }
 
-.media span {
+.gradePill {
+  position: relative;
+  z-index: 2;
   border-radius: var(--radius-pill);
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.94);
-  color: var(--pex-primary);
-  font-size: var(--text-2xs);
+  padding: 6px 14px;
+  background: #ffffff;
+  color: var(--pex-navy);
+  font-size: 13px;
   font-weight: 800;
-  box-shadow: 0 10px 24px var(--color-navy-subtle);
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.backpackVector {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  color: #ffffff;
+  opacity: 0.32;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .body {
   display: grid;
   flex: 1;
   gap: 13px;
-  padding: 26px var(--space-5) var(--space-3);
+  padding: 24px var(--space-5) var(--space-3);
 }
 
 .bestFor {
@@ -120,12 +140,19 @@
   }
 
   .media {
-    min-height: 132px;
-    padding: 18px;
+    min-height: 80px;
+    height: 80px;
+    padding: 14px 18px;
+  }
+
+  .backpackVector {
+    right: 14px;
+    width: 44px;
+    height: 44px;
   }
 
   .body {
-    padding: var(--space-5) 20px 10px;
+    padding: 20px 20px 10px;
   }
 
   .footer {
