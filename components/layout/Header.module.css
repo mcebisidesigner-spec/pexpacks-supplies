@@ -439,13 +439,29 @@
     backdrop-filter: none;
   }
 
+  .siteHeader {
+    --mobile-header-height: 80px;
+  }
+
   .headerInner {
-    height: var(--mobile-header-height);
-    padding-inline: var(--gutter-tablet);
+    height: var(--mobile-header-height, 80px);
+    padding-inline: clamp(16px, 4vw, 32px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .adminBrand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex-shrink: 0;
   }
 
   .logoLink img {
-    width: 118px;
+    width: clamp(96px, 25vw, 114px);
+    height: auto;
   }
 
   .desktopNav,
@@ -456,17 +472,19 @@
   .mobileActions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: flex-end;
+    gap: clamp(8px, 2vw, 14px);
+    flex-shrink: 0;
   }
 
   .menuButton {
-    --menu-line-gap: 8px;
+    --menu-line-gap: 7.5px;
     --menu-line-width: 22px;
     position: relative;
     display: grid;
     place-items: center;
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     border: 0;
     padding: 0;
     background: transparent;
@@ -493,7 +511,7 @@
     top: 50%;
     left: 50%;
     width: var(--menu-line-width);
-    height: 2px;
+    height: 2.2px;
     border-radius: var(--radius-pill);
     background: currentColor;
     transform-origin: center;
@@ -543,22 +561,32 @@
 
 @media (max-width: 480px) {
   .siteHeader {
-    --mobile-header-height: 84px;
+    --mobile-header-height: 76px;
   }
 
   .headerInner {
-    padding-inline: var(--gutter-mobile);
+    height: var(--mobile-header-height, 76px);
+    padding-inline: 16px;
+  }
+
+  .adminBrand {
+    gap: 8px;
   }
 
   .logoLink img {
-    width: var(--logo-width-mobile);
+    width: 96px;
+    height: auto;
+  }
+
+  .mobileActions {
+    gap: 8px;
   }
 
   .menuButton {
     --menu-line-gap: 7px;
     --menu-line-width: 20px;
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
   }
 
   .mobileMenuInner {
@@ -622,3 +650,4 @@
     transform: none;
   }
 }
+
