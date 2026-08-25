@@ -126,7 +126,7 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
                   <input
                     type="email"
                     name="support_email"
-                    defaultValue="care@pexpacks.co.za"
+                    defaultValue="helpme@pexpacks.co.za"
                     className={adminStyles.inputField}
                   />
                 </div>

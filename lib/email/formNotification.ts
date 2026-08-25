@@ -18,7 +18,7 @@ export async function sendFormNotificationEmail(
   }
 
   const resend = new Resend(apiKey);
-  const officialEmail = process.env.RESEND_REPLY_TO_EMAIL || "care@pexpacks.co.za";
+  const officialEmail = process.env.RESEND_REPLY_TO_EMAIL || "helpme@pexpacks.co.za";
   const configuredFrom = process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
 
   const formTypeTitles: Record<string, string> = {
@@ -99,7 +99,7 @@ export async function sendFormNotificationEmail(
     </div>
     <div class="footer">
       This notification was automatically sent by Pexpacks Web App via Resend.<br/>
-      Customer care: <a href="mailto:care@pexpacks.co.za">care@pexpacks.co.za</a>
+      Customer care: <a href="mailto:helpme@pexpacks.co.za">helpme@pexpacks.co.za</a>
       ${emailLegalNoticeHtml}
     </div>
   </div>

@@ -130,7 +130,7 @@ function buildStatusEmailHtml(order: StatusUpdateOrder): string {
                   </div>
 
                   <p style="margin:24px 0 0;color:#94a3b8;font-size:12px;line-height:1.6;text-align:center;font-family:Arial,Helvetica,sans-serif;">
-                    Need help? Email <a href="mailto:care@pexpacks.co.za" style="color:#219e9b;text-decoration:none;font-weight:600;">care@pexpacks.co.za</a> or
+                    Need help? Email <a href="mailto:helpme@pexpacks.co.za" style="color:#219e9b;text-decoration:none;font-weight:600;">helpme@pexpacks.co.za</a> or
                     call <a href="tel:0780036048" style="color:#219e9b;text-decoration:none;font-weight:600;">078 003 6048</a>.<br />
                     Pexpacks Supplies &middot; Pexcover book-covering &middot; School stationery packs
                   </p>
@@ -169,7 +169,7 @@ export async function sendOrderStatusUpdate(
     bcc: ["helpme@pexpacks.co.za", "pexpacks@gmail.com"],
     subject: `Order ${order.order_reference} — ${label}`,
     html: buildStatusEmailHtml(order),
-    replyTo: process.env.RESEND_REPLY_TO_EMAIL || "care@pexpacks.co.za",
+    replyTo: process.env.RESEND_REPLY_TO_EMAIL || "helpme@pexpacks.co.za",
   });
 
   if (error) {

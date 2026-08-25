@@ -327,7 +327,7 @@ export function SettingsControlCentre({
                   <input
                     type="email"
                     className={styles.input}
-                    defaultValue={String(settingsState["business.support_email"]?.value ?? "care@pexpacks.co.za")}
+                    defaultValue={String(settingsState["business.support_email"]?.value ?? "helpme@pexpacks.co.za")}
                     onBlur={(e) => handleSettingSave("business.support_email", e.target.value)}
                   />
                 </div>
@@ -336,7 +336,7 @@ export function SettingsControlCentre({
                   <input
                     type="email"
                     className={styles.input}
-                    defaultValue={String(settingsState["business.legal_email"]?.value ?? "care@pexpacks.co.za")}
+                    defaultValue={String(settingsState["business.legal_email"]?.value ?? "helpme@pexpacks.co.za")}
                     onBlur={(e) => handleSettingSave("business.legal_email", e.target.value)}
                   />
                 </div>

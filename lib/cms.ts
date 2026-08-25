@@ -39,7 +39,7 @@ export const WEBSITE_CONTENT_DEFAULTS: WebsiteContentValue = {
   "homepage.announcement": { enabled: false, text: "" },
   company_info: {
     site_name: "Pexpacks",
-    support_email: "care@pexpacks.co.za",
+    support_email: "helpme@pexpacks.co.za",
     support_phone: "0780036048",
     site_url: "https://pexpacks.co.za",
   },
