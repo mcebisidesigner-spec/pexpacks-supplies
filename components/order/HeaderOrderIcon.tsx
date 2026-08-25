@@ -32,7 +32,8 @@ export function HeaderOrderIcon() {
       <button
         type="button"
         className={styles.iconButton}
-        aria-label="Open saved order"
+        aria-label="Load your Backpack"
+        title="Load your Backpack"
         disabled
         style={{ opacity: 0, pointerEvents: "none" }}
       >
@@ -46,7 +47,8 @@ export function HeaderOrderIcon() {
       type="button"
       className={clsx(styles.iconButton, animate && styles.iconPop)}
       onClick={handleClick}
-      aria-label={`Open saved order (${packCount} pack${packCount === 1 ? "" : "s"})`}
+      title="Load your Backpack"
+      aria-label={`Load your Backpack (${packCount} pack${packCount === 1 ? "" : "s"})`}
     >
       <Backpack aria-hidden="true" size={22} strokeWidth={1.8} />
       <span className={styles.badge} aria-hidden="true">
