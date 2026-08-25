@@ -26,7 +26,6 @@ import {
   Package,
   PackageCheck,
   PackageSearch,
-  Plus,
   RefreshCw,
   School,
   Search,
@@ -36,7 +35,6 @@ import {
   ShoppingCart,
   Tags,
   TrendingUp,
-  Truck,
   User,
   Users,
   Warehouse,
@@ -247,31 +245,6 @@ export function AdminShell({
           })}
         </nav>
 
-        {/* 3. Quick Create Matrix */}
-        <div className={styles.quickCreateSection}>
-          <div className={styles.quickCreateBox}>
-            <div className={styles.quickCreateHeader}>
-              <span className={styles.quickCreateTitle}>Quick Create</span>
-              <button className={styles.quickCreatePlusBtn} aria-label="Create new">
-                <Plus size={12} />
-              </button>
-            </div>
-            <div className={styles.quickCreateList}>
-              <Link href="/admin/schools/new" className={styles.quickCreateItem}>
-                <School size={14} />
-                <span>New School</span>
-              </Link>
-              <Link href="/admin/products/add-item" className={styles.quickCreateItem}>
-                <Package size={14} />
-                <span>New Item</span>
-              </Link>
-              <Link href="/admin/suppliers/new-supplier" className={styles.quickCreateItem}>
-                <Truck size={14} />
-                <span>New Supplier</span>
-              </Link>
-            </div>
-          </div>
-        </div>
       </aside>
 
       {/* ===================================================

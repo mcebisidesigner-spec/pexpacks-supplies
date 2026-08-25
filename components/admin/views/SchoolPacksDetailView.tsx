@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import {
   Box,
@@ -11,7 +11,6 @@ import {
   HeartPulse,
   Layers,
   Plus,
-  Search,
   Trash2,
   Upload,
   Zap,
@@ -68,7 +67,7 @@ export function SchoolPacksDetailView({
   initialPacks,
   deletePackAction,
 }: SchoolPacksDetailViewProps) {
-  const [search, setSearch] = useState("");
+  const filteredPacks = initialPacks;
 
   const totalPacks = initialPacks.length;
   const { publishedPacks, totalItemsCount, totalRevenue } = useMemo(() => {
@@ -82,17 +81,6 @@ export function SchoolPacksDetailView({
     }
     return { publishedPacks, totalItemsCount, totalRevenue };
   }, [initialPacks]);
-
-  const filteredPacks = useMemo(() => {
-    if (!search.trim()) return initialPacks;
-    const q = search.toLowerCase();
-    return initialPacks.filter((p) => {
-      return (
-        p.title.toLowerCase().includes(q) ||
-        (p.slug && p.slug.toLowerCase().includes(q))
-      );
-    });
-  }, [initialPacks, search]);
 
   const schoolIdentifier = school.slug || school.id;
 
@@ -180,18 +168,6 @@ export function SchoolPacksDetailView({
       <div className={adminStyles.detailLayout}>
         {/* Left Column: Table and Toolbar */}
         <div className={adminStyles.leftColumn}>
-          {/* Controls Bar */}
-          <div className={styles.toolbar}>
-            <div className={styles.searchBox}>
-              <Search />
-              <input
-                className={adminStyles.searchInput}
-                placeholder="Search grade packs..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-          </div>
 
           {/* Data Table */}
           <div className={adminStyles.tableCard}>
