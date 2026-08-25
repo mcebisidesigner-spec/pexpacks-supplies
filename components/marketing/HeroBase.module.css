@@ -55,11 +55,13 @@
   color: var(--pex-keppel);
 }
 
-.heroNavy .heroTitle {
+.heroNavy .heroTitle,
+.heroNavy .pageTitle {
   color: #ffffff;
 }
 
-.heroNavy .heroLead {
+.heroNavy .heroLead,
+.heroNavy .pageLead {
   color: rgba(255, 255, 255, 0.78);
 }
 
