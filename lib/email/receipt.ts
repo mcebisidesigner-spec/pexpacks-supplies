@@ -215,7 +215,7 @@ function buildReceiptHtml(order: ReceiptOrder): string {
                   </div>
 
                   <p style="margin:28px 0 0;color:#94a3b8;font-size:12px;line-height:1.6;text-align:center;font-family:Arial,Helvetica,sans-serif;">
-                    Need help? Email <a href="mailto:care@pexpacks.co.za" style="color:#219e9b;text-decoration:none;font-weight:600;">care@pexpacks.co.za</a> or
+                    Need help? Email <a href="mailto:orders@pexpacks.co.za" style="color:#219e9b;text-decoration:none;font-weight:600;">orders@pexpacks.co.za</a> or
                     call <a href="tel:0780036048" style="color:#219e9b;text-decoration:none;font-weight:600;">078 003 6048</a>.<br />
                     Pexpacks Supplies &middot; Pexcover book-covering &middot; School stationery packs
                   </p>
@@ -252,18 +252,17 @@ export async function sendPurchaseReceipt(
     return { success: false, error: "No buyer email" };
   }
 
-  const from =
-    process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
+  const from = "Pexpacks <orders@pexpacks.co.za>";
 
   const resend = new Resend(apiKey);
 
   const { error } = await resend.emails.send({
     from,
     to: [order.buyer_email],
-    bcc: ["helpme@pexpacks.co.za", "pexpacks@gmail.com"],
+    bcc: ["orders@pexpacks.co.za", "helpme@pexpacks.co.za", "pexpacks@gmail.com"],
     subject: `Your Pexpacks receipt ${order.order_reference}`,
     html: buildReceiptHtml(order),
-    replyTo: process.env.RESEND_REPLY_TO_EMAIL || "care@pexpacks.co.za",
+    replyTo: "orders@pexpacks.co.za",
   });
 
   if (error) {

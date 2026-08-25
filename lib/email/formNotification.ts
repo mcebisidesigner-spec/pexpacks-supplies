@@ -108,8 +108,11 @@ export async function sendFormNotificationEmail(
 `;
 
   try {
-    // Primary attempt: Send to helpme@pexpacks.co.za + pexpacks@gmail.com
-    const recipients = ["helpme@pexpacks.co.za", "pexpacks@gmail.com"];
+    // Quote requests route to orders@pexpacks.co.za, helpme@pexpacks.co.za & pexpacks@gmail.com
+    const recipients =
+      data.formType === "quote"
+        ? ["orders@pexpacks.co.za", "helpme@pexpacks.co.za", "pexpacks@gmail.com"]
+        : ["helpme@pexpacks.co.za", "pexpacks@gmail.com"];
     const uniqueRecipients = [...new Set(recipients.filter(Boolean))];
 
     const resendAttachments = attachments.map((att) => ({
