@@ -168,7 +168,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
                 rel="noopener noreferrer"
                 className={styles.schoolHeroWebsiteLink}
               >
-                Visit Official School Website
+                Visit School Website
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M7 17L17 7M17 7H7M17 7V17" />
                 </svg>
