@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  ArrowLeft,
   Box,
   Eye,
   EyeOff,
@@ -8,6 +7,7 @@ import {
   Layers,
   Save,
   School,
+  ExternalLink,
 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
@@ -17,6 +17,8 @@ import { getSchool } from "@/lib/admin/schools";
 import { PackPriceForm } from "@/components/admin/packs/PackPriceForm";
 import { PackItemsSection } from "@/components/admin/packs/PackItemsSection";
 import { SchoolPacksDetailView } from "@/components/admin/views/SchoolPacksDetailView";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -64,32 +66,35 @@ export default async function PackOrSchoolPacksPage({
 
   return (
     <div className={`${styles.container} ${styles.packEditorContainer}`}>
-      <Link href={backHref} className={adminStyles.backLink}>
-        <ArrowLeft size={14} /> Back to {schoolName}
-      </Link>
-
-      <div className={adminStyles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>
-            {schoolName}{" "}
-            <span className={adminStyles.titleAccent}>
-              {pack.title.toLowerCase().startsWith(schoolName.toLowerCase())
-                ? pack.title.slice(schoolName.length).trim() || "Pack"
-                : pack.title}
-            </span>
-          </h1>
-          <p className={styles.headerMeta}>
-            {schoolName} / {itemCount} {itemCount === 1 ? "item" : "items"}
-          </p>
-        </div>
-        <button
-          type="submit"
-          form={priceFormId}
-          className={`${styles.primaryBtn} ${styles.headerSaveBtn}`}
-        >
-          <Save size={14} /> Save pack
-        </button>
-      </div>
+      <AdminPageHeader
+        backHref={backHref}
+        backLabel={`Back to ${schoolName}`}
+        title={schoolName}
+        titleHighlight={pack.title.toLowerCase().startsWith(schoolName.toLowerCase())
+          ? pack.title.slice(schoolName.length).trim() || "Pack"
+          : pack.title}
+        subtitle={`${schoolName} / ${itemCount} ${itemCount === 1 ? "item" : "items"}`}
+        actions={
+          <div style={{ display: "flex", gap: "8px" }}>
+            {schoolData ? (
+              <Link
+                href={`/schools/${schoolData.slug || schoolData.id}`}
+                target="_blank"
+                className={adminStyles.button}
+              >
+                <ExternalLink size={14} /> View Public Page
+              </Link>
+            ) : null}
+            <button
+              type="submit"
+              form={priceFormId}
+              className={`${styles.primaryBtn} ${styles.headerSaveBtn}`}
+            >
+              <Save size={14} /> Save pack
+            </button>
+          </div>
+        }
+      />
 
       <div className={`${adminStyles.metricsGrid5} ${styles.packMetricsGrid}`}>
         <div className={adminStyles.metricCard}>

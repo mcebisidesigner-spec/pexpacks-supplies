@@ -1,11 +1,11 @@
-﻿import Link from "next/link";
-import { ArrowLeft, Package } from "lucide-react";
+﻿import { Package } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import {
   listPurchaseOrdersForReceiving,
   listSupplierReceipts,
 } from "@/lib/admin/operations";
 import { createSupplierReceiptAction } from "../../operations-actions";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import styles from "../../operations.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -20,18 +20,12 @@ export default async function ReceivingPage() {
 
   return (
     <div className={adminStyles.page}>
-      <header className={adminStyles.header}>
-        <div>
-          <Link href="/admin/procurement" className={adminStyles.backLink}>
-            <ArrowLeft aria-hidden="true" />
-            <span>Back to procurement</span>
-          </Link>
-          <h1>Receive Goods</h1>
-          <p>
-            Record incoming stock from suppliers against purchase orders.
-          </p>
-        </div>
-      </header>
+      <AdminPageHeader
+        backHref="/admin/procurement"
+        backLabel="Back to Procurement"
+        title="Receive Goods"
+        subtitle="Record incoming stock from suppliers against purchase orders."
+      />
 
       {purchaseOrders.length === 0 ? (
         <div className={adminStyles.formPanel}>

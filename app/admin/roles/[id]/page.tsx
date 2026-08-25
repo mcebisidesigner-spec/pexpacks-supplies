@@ -1,11 +1,11 @@
 ﻿import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin, displayName } from "@/lib/admin/rbac";
 import { getRole, permissionGroups } from "@/lib/admin/roles";
 import { listUsers } from "@/lib/admin/users";
 import { RoleForm } from "@/components/admin/roles/RoleForm";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { deleteRoleAction } from "../actions";
 import adminStyles from "../../admin.module.css";
 import styles from "../roles.module.css";
@@ -28,18 +28,12 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <p>
-        <Link href="/admin/roles" className={adminStyles.resetLink}>
-          <ArrowLeft aria-hidden="true" /> Back to roles
-        </Link>
-      </p>
-
-      <div className={adminStyles.headerRow}>
-        <h1 className={adminStyles.pageTitle}>
-          {role.name}
-          {role.slug === "super_admin" ? <span className={styles.seedTag}> seed</span> : null}
-        </h1>
-      </div>
+      <AdminPageHeader
+        backHref="/admin/roles"
+        backLabel="Back to Roles"
+        title={role.name}
+        subtitle={role.slug === "super_admin" ? "Seed role" : `Role: ${role.slug}`}
+      />
 
       <div className={adminStyles.stack}>
         <div className={adminStyles.tableCard}>

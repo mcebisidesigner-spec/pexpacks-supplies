@@ -1,7 +1,6 @@
-﻿import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { requireAdmin } from "@/lib/admin/rbac";
+﻿import { requireAdmin } from "@/lib/admin/rbac";
 import { BlogForm } from "@/components/admin/blog/BlogForm";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import adminStyles from "../../admin.module.css";
 import styles from "../../content/content.module.css";
 
@@ -14,19 +13,12 @@ export default async function NewBlogPostPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <p className={styles.backRow}>
-        <Link href="/admin/blog" className={styles.backLink}>
-          <ArrowLeft aria-hidden="true" /> Back to Blog
-        </Link>
-      </p>
-      <div className={adminStyles.headerRow}>
-        <div>
-          <h1 className={adminStyles.pageTitle}>New post</h1>
-          <p className={styles.subtitle}>
-            Write an article for the public Resource Hub at /blog.
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        backHref="/admin/blog"
+        backLabel="Back to Blog"
+        title="New post"
+        subtitle="Write an article for the public Resource Hub at /blog."
+      />
       <div className={styles.card}>
         <BlogForm id={null} />
       </div>

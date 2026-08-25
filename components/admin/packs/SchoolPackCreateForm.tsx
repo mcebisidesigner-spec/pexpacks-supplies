@@ -157,17 +157,8 @@ export function SchoolPackCreateForm({
       <input type="hidden" name="visible" value="on" />
       <input ref={itemsInputRef} type="hidden" name="items" defaultValue="[]" />
 
-      {/* Header Title Row matching reference image */}
       <div className={adminStyles.headerRow}>
-        <div className={coreStyles.headerTitleGroup}>
-          <h1 className={coreStyles.headerTitle}>
-            {schoolName} <span className={styles.titleAccent}>New Pack</span>
-          </h1>
-          <p className={coreStyles.headerMeta}>
-            {schoolName} / {lines.length}{" "}
-            {lines.length === 1 ? "item" : "items"}
-          </p>
-        </div>
+        <div />
         <CreateButton />
       </div>
 
@@ -424,7 +415,7 @@ export function SchoolPackCreateForm({
 
       {showImporter ? (
         <section
-          className={`${itemStyles.csvBanner} ${styles.csvTiles}`}
+          className={itemStyles.csvBannerTiles}
           aria-label="Bulk CSV stationery import"
         >
           <CSVStationeryImporter onStageItems={stageCsvItems} variant="tiles" />

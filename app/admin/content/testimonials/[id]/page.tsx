@@ -1,9 +1,8 @@
-﻿import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getTestimonial } from "@/lib/admin/content";
 import { TestimonialForm } from "@/components/admin/content/TestimonialForm";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import adminStyles from "../../../admin.module.css";
 import styles from "../../content.module.css";
 
@@ -23,17 +22,12 @@ export default async function EditTestimonialPage({
 
   return (
     <div className={adminStyles.adminContainer}>
-      <p className={styles.backRow}>
-        <Link href="/admin/content/testimonials" className={styles.backLink}>
-          <ArrowLeft aria-hidden="true" /> Back to testimonials
-        </Link>
-      </p>
-      <div className={adminStyles.headerRow}>
-        <div>
-          <h1 className={adminStyles.pageTitle}>Edit testimonial</h1>
-          <p className={styles.subtitle}>{row.name}</p>
-        </div>
-      </div>
+      <AdminPageHeader
+        backHref="/admin/content/testimonials"
+        backLabel="Back to Testimonials"
+        title="Edit Testimonial"
+        subtitle={row.name}
+      />
       <div className={styles.card}>
         <TestimonialForm
           id={row.id}

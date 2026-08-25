@@ -8,6 +8,7 @@ import {
   Clock,
   Copy,
   Download,
+  ExternalLink,
   HeartPulse,
   Layers,
   Plus,
@@ -94,13 +95,22 @@ export function SchoolPacksDetailView({
         count={totalPacks}
         subtitle={`${school.city || "Johannesburg"}, ${school.province || "Gauteng"} • Grade Pack Directory`}
         actions={
-          <AdminButton
-            href={`/admin/packs/${schoolIdentifier}/add-pack`}
-            variant="primary"
-            icon={<Plus size={14} />}
-          >
-            Add Pack
-          </AdminButton>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Link
+              href={`/schools/${schoolIdentifier}`}
+              target="_blank"
+              className={adminStyles.button}
+            >
+              <ExternalLink size={14} /> View Public Page
+            </Link>
+            <AdminButton
+              href={`/admin/packs/${schoolIdentifier}/add-pack`}
+              variant="primary"
+              icon={<Plus size={14} />}
+            >
+              Add Pack
+            </AdminButton>
+          </div>
         }
       />
 

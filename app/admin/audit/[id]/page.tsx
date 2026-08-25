@@ -1,8 +1,7 @@
-﻿import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getAuditLog } from "@/lib/admin/audit";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import adminStyles from "../../admin.module.css";
 import styles from "../audit.module.css";
 
@@ -34,18 +33,12 @@ export default async function AuditDetailPage({ params }: AuditDetailPageProps) 
 
   return (
     <div className={adminStyles.adminContainer}>
-      <p>
-        <Link href="/admin/audit" className={adminStyles.resetLink}>
-          <ArrowLeft aria-hidden="true" /> Back to audit logs
-        </Link>
-      </p>
-
-      <div className={adminStyles.headerRow}>
-        <h1 className={adminStyles.pageTitle}>
-          Log #{log.id}
-          <span className={adminStyles.count}>{log.action}</span>
-        </h1>
-      </div>
+      <AdminPageHeader
+        backHref="/admin/audit"
+        backLabel="Back to Audit Logs"
+        title={`Log #${log.id}`}
+        subtitle={log.action}
+      />
 
       <div className={styles.detailMeta}>
         <div className={styles.metaItem}>

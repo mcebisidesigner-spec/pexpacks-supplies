@@ -1,8 +1,7 @@
-﻿import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { requireAdmin } from "@/lib/admin/rbac";
+﻿import { requireAdmin } from "@/lib/admin/rbac";
 import { permissionGroups } from "@/lib/admin/roles";
 import { RoleForm } from "@/components/admin/roles/RoleForm";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import adminStyles from "../../admin.module.css";
 import shared from "../../schools/schools.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
@@ -16,17 +15,12 @@ export default async function NewRolePage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <p>
-        <Link href="/admin/roles" className={adminStyles.resetLink}>
-          <ArrowLeft aria-hidden="true" /> Back to roles
-        </Link>
-      </p>
-      <div className={adminStyles.headerSection}>
-        <h1 className={adminStyles.title}>New role</h1>
-        <p className={adminStyles.subtitle}>
-          Define a named set of permissions you can assign to users.
-        </p>
-      </div>
+      <AdminPageHeader
+        backHref="/admin/roles"
+        backLabel="Back to Roles"
+        title="New Role"
+        subtitle="Define a named set of permissions you can assign to users."
+      />
       <div className={adminStyles.tableCard}>
         <div className={adminStyles.tableWrapper}>
           <div className={adminStyles.formCardInner}>

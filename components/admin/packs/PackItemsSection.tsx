@@ -167,12 +167,12 @@ export function PackItemsSection({
           <ItemsManager items={items} />
           {showImporter ? (
             <section
-              className={styles.csvBanner}
+              className={styles.csvBannerTiles}
               aria-label="Bulk CSV stationery import"
             >
               <CSVStationeryImporter
                 packs={[{ id: packId, title: packTitle }]}
-                variant="compact"
+                variant="tiles"
                 onImported={() => router.refresh()}
               />
             </section>

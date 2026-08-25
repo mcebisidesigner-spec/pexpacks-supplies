@@ -1,9 +1,8 @@
-﻿import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
+﻿import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import { isOperationsSchemaReady } from "@/lib/admin/operations";
 import { listPacksForFilter } from "@/lib/admin/packs";
 import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import {
   createMasterProductAction,
   importMasterProductsAction,
@@ -12,6 +11,7 @@ import shared from "../../schools/schools.module.css";
 import styles from "../../operations.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
+import itemStyles from "@/components/admin/packs/ItemsManager.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -29,19 +29,12 @@ export default async function AddItemPage() {
 
   return (
     <div className={adminStyles.page}>
-      <div className={adminStyles.headerSection}>
-        <p>
-          <Link href="/admin/items" className={adminStyles.resetLink}>
-            <ArrowLeft aria-hidden="true" /> Back to items
-          </Link>
-        </p>
-        <h1 className={`${viewStyles.headerTitle} ${viewStyles.text28} ${adminStyles.mt8} ${adminStyles.mb4}`}>
-          Stationery Items
-        </h1>
-        <p className={`${adminStyles.muted} ${adminStyles.text14} ${adminStyles.m0}`}>
-          Digital stationery products that can be reused across school packs.
-        </p>
-      </div>
+      <AdminPageHeader
+        backHref="/admin/items"
+        backLabel="Back to Items"
+        title="Stationery Items"
+        subtitle="Digital stationery products that can be reused across school packs."
+      />
 
       {schemaReady && canManage ? (
         <section className={adminStyles.formPanel}>
@@ -119,9 +112,9 @@ export default async function AddItemPage() {
         <section
           id="bulk-stationery-import"
           aria-label="Bulk CSV stationery import"
-          className={adminStyles.mt12}
+          className={itemStyles.csvBannerTiles}
         >
-          <CSVStationeryImporter packs={await listPacksForFilter()} />
+          <CSVStationeryImporter packs={await listPacksForFilter()} variant="tiles" />
         </section>
       ) : null}
     </div>

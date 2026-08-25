@@ -1,7 +1,6 @@
-﻿import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { requireAdmin } from "@/lib/admin/rbac";
+﻿import { requireAdmin } from "@/lib/admin/rbac";
 import { FaqForm } from "@/components/admin/content/FaqForm";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import adminStyles from "../../../admin.module.css";
 import styles from "../../content.module.css";
 
@@ -14,17 +13,12 @@ export default async function NewFaqPage() {
 
   return (
     <div className={adminStyles.adminContainer}>
-      <p className={styles.backRow}>
-        <Link href="/admin/content/faqs" className={styles.backLink}>
-          <ArrowLeft aria-hidden="true" /> Back to FAQs
-        </Link>
-      </p>
-      <div className={adminStyles.headerRow}>
-        <div>
-          <h1 className={adminStyles.pageTitle}>New FAQ</h1>
-          <p className={styles.subtitle}>Add a question and answer to the FAQ content.</p>
-        </div>
-      </div>
+      <AdminPageHeader
+        backHref="/admin/content/faqs"
+        backLabel="Back to FAQs"
+        title="New FAQ"
+        subtitle="Add a question and answer to the FAQ content."
+      />
       <div className={styles.card}>
         <FaqForm id={null} />
       </div>
