@@ -57,7 +57,8 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
               className={styles.removeButton}
               onClick={handleRemove}
               aria-label={`Remove ${pack.packName} from order`}
-              title="Remove pack"
+              data-tooltip="Remove pack"
+              data-tooltip-pos="left"
             >
               &times;
             </button>

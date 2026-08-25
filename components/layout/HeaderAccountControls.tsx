@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { logoutAction } from "@/app/actions/auth";
 import { HeaderOrderIcon } from "@/components/order/HeaderOrderIcon";
 import { TrackPackIcon } from "@/components/ui/icons";
+import { Tooltip } from "@/components/ui/Tooltip";
 import headerStyles from "./Header.module.css";
 import styles from "./HeaderAccountControls.module.css";
 
@@ -129,14 +130,15 @@ export function HeaderAccountControls({
 
   return (
     <div className={styles.accountControls}>
-      <Link
-        href="/track-order"
-        className={styles.mobileTrackLink}
-        aria-label="Track Your Pack"
-        title="Track Your Pack"
-      >
-        <TrackPackIcon aria-hidden="true" />
-      </Link>
+      <Tooltip content="Track Your Pack" position="bottom">
+        <Link
+          href="/track-order"
+          className={styles.mobileTrackLink}
+          aria-label="Track Your Pack"
+        >
+          <TrackPackIcon aria-hidden="true" />
+        </Link>
+      </Tooltip>
       <HeaderOrderIcon />
     </div>
   );

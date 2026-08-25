@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { Backpack } from "lucide-react";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { useHasMounted } from "@/hooks/useHasMounted";
+import { Tooltip } from "@/components/ui/Tooltip";
 import styles from "./HeaderOrderIcon.module.css";
 
 export function HeaderOrderIcon() {
@@ -33,7 +34,6 @@ export function HeaderOrderIcon() {
         type="button"
         className={styles.iconButton}
         aria-label="Fill up your Backpack"
-        title="Fill up your Backpack"
         disabled
         style={{ opacity: 0, pointerEvents: "none" }}
       >
@@ -43,17 +43,18 @@ export function HeaderOrderIcon() {
   }
 
   return (
-    <button
-      type="button"
-      className={clsx(styles.iconButton, animate && styles.iconPop)}
-      onClick={handleClick}
-      title="Fill up your Backpack"
-      aria-label={`Fill up your Backpack (${packCount} pack${packCount === 1 ? "" : "s"})`}
-    >
-      <Backpack aria-hidden="true" size={22} strokeWidth={1.8} />
-      <span className={styles.badge} aria-hidden="true">
-        {packCount > 9 ? "9+" : packCount}
-      </span>
-    </button>
+    <Tooltip content="Fill up your Backpack" position="bottom">
+      <button
+        type="button"
+        className={clsx(styles.iconButton, animate && styles.iconPop)}
+        onClick={handleClick}
+        aria-label={`Fill up your Backpack (${packCount} pack${packCount === 1 ? "" : "s"})`}
+      >
+        <Backpack aria-hidden="true" size={22} strokeWidth={1.8} />
+        <span className={styles.badge} aria-hidden="true">
+          {packCount > 9 ? "9+" : packCount}
+        </span>
+      </button>
+    </Tooltip>
   );
 }
