@@ -159,7 +159,7 @@ export function Footer({ company }: FooterContent) {
                 </a>
               </address>
 
-              <details className={styles.policyDisclosure}>
+              <details className={styles.policyDisclosure} suppressHydrationWarning>
               <summary className={styles.policySummary}>
                 <span>{siteName} policies &amp; information:</span>
                 <span className={styles.policyChevron} aria-hidden="true" />
