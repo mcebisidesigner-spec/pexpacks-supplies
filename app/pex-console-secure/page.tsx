@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useTransition } from "react";
 import { ShieldCheck, Eye, EyeOff, Lock, ArrowRight, AlertTriangle, RefreshCw } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { FloatingInput } from "@/components/ui/FloatingInput";
 import { authenticatePasswordAction, verifyOtpAction, resendOtpAction } from "@/app/actions/auth";
 import styles from "./ConsolePage.module.css";
 
@@ -254,63 +255,53 @@ export default function PexConsoleGateway() {
         {/* Step 1: Credentials Form */}
         {step === "credentials" && (
           <form onSubmit={handleCredentialsSubmit} className={styles.form}>
-            <div className={styles.field}>
-              <label htmlFor="email" className={styles.label}>
-                Administrative Email
-              </label>
-              <div className={styles.inputWrapper}>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@pexpacks.co.za"
-                  className={styles.input}
-                  autoComplete="email"
-                  disabled={isPending}
-                />
-              </div>
+            <div className="space-y-4">
+              <FloatingInput
+                id="email"
+                type="email"
+                label="Administrative Email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                disabled={isPending}
+                bgSurface="bg-[#0c1322]"
+              />
+
+              <FloatingInput
+                id="password"
+                type={showPassword ? "text" : "password"}
+                label="Password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                disabled={isPending}
+                bgSurface="bg-[#0c1322]"
+                rightAdornment={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-slate-400 hover:text-slate-200 transition-colors p-1"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                }
+              />
             </div>
 
-            <div className={styles.field}>
-              <label htmlFor="password" className={styles.label}>
-                Password
-              </label>
-              <div className={styles.inputWrapper}>
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className={styles.input}
-                  autoComplete="current-password"
-                  disabled={isPending}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className={styles.passwordToggle}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", margin: "14px 0 18px", padding: "10px 12px", backgroundColor: "rgba(12, 19, 34, 0.7)", borderRadius: "8px", border: "1px solid rgba(51, 65, 85, 0.5)" }}>
+            <div className="flex items-start gap-2.5 my-3.5 p-3 bg-[#090e17]/80 rounded-xl border border-slate-800/80">
               <input
                 id="trusted-device"
                 type="checkbox"
                 checked={isTrustedDevice}
                 onChange={(e) => setIsTrustedDevice(e.target.checked)}
-                style={{ width: "16px", height: "16px", marginTop: "2px", accentColor: "#10b981", cursor: "pointer" }}
+                className="w-4 h-4 mt-0.5 accent-emerald-500 cursor-pointer"
               />
-              <label htmlFor="trusted-device" style={{ fontSize: "12px", color: "#cbd5e1", cursor: "pointer", userSelect: "none" }}>
-                <span style={{ fontWeight: 600, color: "#f8fafc" }}>This is a trusted private computer</span>
-                <span style={{ display: "block", fontSize: "11px", color: "#64748b", marginTop: "2px" }}>
+              <label htmlFor="trusted-device" className="text-xs text-slate-300 cursor-pointer select-none">
+                <span className="font-semibold text-slate-100">This is a trusted private computer</span>
+                <span className="block text-[11px] text-slate-400 mt-0.5">
                   {isTrustedDevice ? "Maintains standard secure session on this device" : "Public/Shared mode: closing browser or tab immediately clears session"}
                 </span>
               </label>

@@ -5,6 +5,7 @@ import { CheckCircle2, Clock, Link2, MessageSquare, Send, X } from "lucide-react
 import styles from "./TaskDrawer.module.css";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { FloatingInput } from "@/components/ui/FloatingInput";
 import {
   loadTaskActivitiesAction,
   addTaskCommentAction,
@@ -182,15 +183,16 @@ export function TaskDrawer({ task, isOpen, onClose, onTaskUpdated }: TaskDrawerP
         </div>
 
         <div className={styles.footer}>
-          <form onSubmit={handleAddComment} className={styles.commentInputGroup}>
-            <input
-              type="text"
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Write a comment or note..."
-              className={styles.commentInput}
-              disabled={isSubmittingComment}
-            />
+          <form onSubmit={handleAddComment} className="flex items-center gap-2 w-full">
+            <div className="flex-1">
+              <FloatingInput
+                label="Write a comment or note..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                disabled={isSubmittingComment}
+                bgSurface="bg-[#090e17]"
+              />
+            </div>
             <AdminButton
               type="submit"
               variant="teal"

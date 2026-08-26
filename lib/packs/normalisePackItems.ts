@@ -27,7 +27,7 @@ function inferCategory(name: string) {
   return "Stationery";
 }
 
-function inferIcon(name: string) {
+export function inferIcon(name: string) {
   const value = name.toLowerCase();
 
   if (/(folder|wallet|sleeve|envelope)/.test(value)) {
@@ -158,7 +158,13 @@ export function createSchoolGradePack(
         id: `${grade.id}-${slugify(item.name) || 0}`,
         name: item.name,
         category: inferCategory(item.name),
-        icon: item.icon && isPackItemIconKey(item.icon) ? item.icon : inferIcon(item.name),
+        icon:
+          item.icon &&
+          isPackItemIconKey(item.icon) &&
+          item.icon !== "box" &&
+          item.icon !== "package"
+            ? item.icon
+            : inferIcon(item.name),
         requiredQuantity: item.quantity,
         unitPrice: item.unitPrice ?? undefined,
         specification: item.specification ?? undefined,

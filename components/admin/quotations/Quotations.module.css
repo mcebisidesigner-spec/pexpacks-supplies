@@ -19,23 +19,24 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #0b121e;
-  border: 1px solid rgba(30, 41, 59, 0.9);
-  color: #94a3b8;
-  padding: 8px 16px;
-  border-radius: 8px;
+  background: var(--a-surface-2, #090e17);
+  border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.6));
+  color: var(--a-text-2, #cbd5e1);
+  height: var(--a-btn-h, 36px);
+  padding: 0 14px;
+  border-radius: var(--a-btn-radius, 8px);
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--a-transition, 140ms ease);
   width: fit-content;
 }
 
 .backButton:hover {
-  background: #131d2e;
-  color: #f8fafc;
-  border-color: rgba(51, 65, 85, 0.9);
+  background: var(--a-surface-3, #1e293b);
+  color: #ffffff;
+  border-color: var(--a-text-4, #64748b);
 }
 
 /* Top Header Row */
@@ -213,19 +214,19 @@
 
 .textInput {
   width: 100%;
-  height: 44px;
-  padding: 0 18px;
+  height: 40px;
+  padding: 0 14px;
   background: #060b13;
   border: 1px solid rgba(30, 41, 59, 0.9);
-  border-radius: 24px;
+  border-radius: 8px;
   color: #f8fafc;
-  font-size: 13.5px;
+  font-size: 13px;
   outline: none;
   transition: all 0.15s ease;
 }
 
 .textInput.textInputWithIcon {
-  padding-left: 54px !important;
+  padding-left: 44px !important;
 }
 
 .textInput:focus {
@@ -437,50 +438,62 @@
 }
 
 .btnGenerate {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 44px;
-  background: #10b981;
+  height: var(--a-btn-h, 36px);
+  padding: 0 16px;
+  background: var(--a-accent-strong, #059669);
   color: #ffffff;
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  border-radius: 24px;
-  font-size: 13.5px;
-  font-weight: 700;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: var(--a-btn-radius, 8px);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  transition: all 0.15s ease;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  transition: all var(--a-transition, 140ms ease);
 }
 
 .btnGenerate:hover {
-  background: #059669;
+  background: var(--a-accent-hover, #047857);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
 }
 
 .btnGenerate:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  pointer-events: none;
 }
 
 .btnDraft {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 42px;
-  background: #060b13;
-  color: #f8fafc;
-  border: 1px solid rgba(30, 41, 59, 0.9);
-  border-radius: 24px;
+  height: var(--a-btn-h, 36px);
+  padding: 0 14px;
+  background: var(--a-surface-2, #090e17);
+  color: var(--a-text-2, #cbd5e1);
+  border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.6));
+  border-radius: var(--a-btn-radius, 8px);
   font-size: 13px;
   font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--a-transition, 140ms ease);
 }
 
 .btnDraft:hover {
-  background: #0b121e;
-  border-color: rgba(51, 65, 85, 0.9);
+  background: var(--a-surface-3, #1e293b);
+  border-color: var(--a-text-4, #64748b);
+  color: #ffffff;
+}
+
+.btnDraft:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Line Items Full Width Card */
@@ -502,19 +515,20 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #060b13;
-  color: #10b981;
+  background: var(--a-surface-2, #090e17);
+  color: var(--a-accent, #10b981);
   border: 1px solid rgba(16, 185, 129, 0.35);
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 12px;
+  height: var(--a-btn-h, 36px);
+  padding: 0 14px;
+  border-radius: var(--a-btn-radius, 8px);
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--a-transition, 140ms ease);
 }
 
 .btnAddItem:hover {
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(16, 185, 129, 0.12);
   border-color: #10b981;
 }
 
@@ -566,23 +580,24 @@
   z-index: 1000;
 }
 
-/* Capsule / Pill Inputs for Table */
+/* Inputs for Table */
 .tablePillInput {
   width: 100%;
-  height: 44px;
+  height: 38px;
   background: #060b13;
   border: 1px solid rgba(30, 41, 59, 0.9);
-  border-radius: 24px;
+  border-radius: 8px;
   color: #f8fafc;
   font-size: 13px;
-  padding: 0 18px;
+  padding: 0 14px;
   outline: none;
   transition: all 0.15s ease;
+  box-sizing: border-box;
 }
 
 /* Explicit high specificity for text inputs with search icon */
 .tablePillInput.textInputWithIcon {
-  padding-left: 54px !important;
+  padding-left: 44px !important;
 }
 
 .tablePillInput::placeholder {

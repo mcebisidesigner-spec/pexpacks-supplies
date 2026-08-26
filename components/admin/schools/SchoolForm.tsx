@@ -1,21 +1,19 @@
-﻿"use client";
+"use client";
 
 import { useActionState, useState } from "react";
-import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import {
-  Building2,
-  GraduationCap,
-  Image as ImageIcon,
-  Save,
-  ShieldCheck,
-} from "lucide-react";
+import Link from "next/link";
+import { Building2, GraduationCap, Image as ImageIcon, Save, ShieldCheck } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
 import { SCHOOL_STATUSES } from "@/lib/admin/school-constants";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import { DateField } from "@/components/admin/DateField";
+import { FloatingInput } from "@/components/ui/FloatingInput";
+import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
+import formStyles from "./SchoolForm.module.css";
 
 interface SchoolFormProps {
   school: SchoolRow | null;
@@ -28,13 +26,15 @@ interface SchoolFormProps {
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button
+    <AdminButton
       type="submit"
-      className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}
-      disabled={pending}
+      variant="primary"
+      size="md"
+      loading={pending}
+      icon={<Save size={14} />}
     >
-      <Save size={14} /> {pending ? "Saving..." : label}
-    </button>
+      {label}
+    </AdminButton>
   );
 }
 
@@ -47,7 +47,10 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
     action,
     { ok: false }
   );
-  const [logoPreview, setLogoPreview] = useState<string | null>(school?.logo ?? null);
+
+  const [logoPreview, setLogoPreview] = useState<string | null>(
+    school?.logo ?? null
+  );
   const [logoValue, setLogoValue] = useState<string>(school?.logo ?? "");
 
   const grades = Array.isArray(school?.grades)
@@ -64,10 +67,10 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
   const schoolSlugOrId = school?.slug || school?.id || "";
 
   return (
-    <form action={formAction} className={adminStyles.detailLayout}>
+    <form action={formAction} className={formStyles.formLayout}>
       <input type="hidden" name="logo" value={logoValue} />
 
-      <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-18"]}`}>
+      <div className={formStyles.mainColumn}>
         {/* Banner Alert Messages */}
         {state?.ok ? (
           <div className={`${adminStyles.badgeGreen} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block}`} role="status">
@@ -80,148 +83,204 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
         ) : null}
 
         {/* Section 1: Identity & Location */}
-        <div className={adminStyles.sidebarCard}>
-          <div className={adminStyles.sidebarCardHeader}>
-            <div className={adminStyles.sidebarHeaderTitle}>
-              <div className={adminStyles.sectionIconTeal}>
-                <Building2 size={16} />
-              </div>
-              <span className={`${adminStyles.text15} ${adminStyles.fw700} ${adminStyles.cWhite}`}>
-                School Identity &amp; Primary Details
-              </span>
+        <div className={formStyles.card}>
+          <div className={formStyles.cardHeader}>
+            <div className={adminStyles.sectionIconTeal}>
+              <Building2 size={16} />
             </div>
+            <span>School Identity &amp; Primary Details</span>
           </div>
 
-          <div className={adminStyles.formGrid3Col}>
-            <div className={adminStyles.formFieldGroup}>
-              <label className={adminStyles.formFieldLabel} htmlFor="name">School Name *</label>
-              <input id="name" name="name" defaultValue={school?.name ?? ""} placeholder="e.g. Sunnyvale Primary School" required className={adminStyles.inputField} />
-              {err("name")}
+          <div className={formStyles.grid3}>
+            <div className={formStyles.colSpan2}>
+              <FloatingInput
+                id="name"
+                name="name"
+                label="School Name"
+                defaultValue={school?.name ?? ""}
+                required
+                error={state?.errors?.name}
+              />
             </div>
 
-            <div className={adminStyles.formFieldGroup}>
-              <label className={adminStyles.formFieldLabel} htmlFor="slug">URL Slug / Identifier</label>
-              <input id="slug" name="slug" defaultValue={str(school?.slug)} placeholder="auto-generated from name" className={adminStyles.inputField} />
-              <span className={adminStyles.formFieldHelper}>Used in public URLs. Leave blank to auto-generate.</span>
-              {err("slug")}
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="slug"
+                name="slug"
+                label="URL Slug / Identifier"
+                defaultValue={str(school?.slug)}
+                error={state?.errors?.slug}
+              />
             </div>
 
-            <div className={adminStyles.formFieldGroup}>
-              <label className={adminStyles.formFieldLabel} htmlFor="city">City / Town</label>
-              <input id="city" name="city" defaultValue={str(school?.city)} placeholder="e.g. Pretoria" className={adminStyles.inputField} />
-              {err("city")}
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="city"
+                name="city"
+                label="City / Town"
+                defaultValue={str(school?.city)}
+                error={state?.errors?.city}
+              />
             </div>
 
-            <div className={adminStyles.formFieldGroup}>
-              <label className={adminStyles.formFieldLabel} htmlFor="province">Province</label>
-              <input id="province" name="province" defaultValue={str(school?.province)} placeholder="e.g. Gauteng" className={adminStyles.inputField} />
-              {err("province")}
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="province"
+                name="province"
+                label="Province"
+                defaultValue={str(school?.province)}
+                error={state?.errors?.province}
+              />
             </div>
 
-            <div className={adminStyles.formFieldGroup}>
-              <label className={adminStyles.formFieldLabel} htmlFor="district">District</label>
-              <input id="district" name="district" defaultValue={str(school?.district)} placeholder="e.g. Tshwane South" className={adminStyles.inputField} />
-              {err("district")}
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="district"
+                name="district"
+                label="District"
+                defaultValue={str(school?.district)}
+                error={state?.errors?.district}
+              />
             </div>
 
-            <div className={adminStyles.formFieldGroup}>
-              <label className={adminStyles.formFieldLabel} htmlFor="email">Contact Email</label>
-              <input id="email" name="email" type="email" defaultValue={str(school?.email)} placeholder="admin@school.co.za" className={adminStyles.inputField} />
-              {err("email")}
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="email"
+                name="email"
+                type="email"
+                label="Contact Email"
+                defaultValue={str(school?.email)}
+                error={state?.errors?.email}
+              />
             </div>
 
-            <div className={adminStyles.formFieldGroup}>
-              <label className={adminStyles.formFieldLabel} htmlFor="telephone">Telephone</label>
-              <input id="telephone" name="telephone" defaultValue={str(school?.telephone)} placeholder="+27 12 000 0000" className={adminStyles.inputField} />
-              {err("telephone")}
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="telephone"
+                name="telephone"
+                label="Telephone"
+                defaultValue={str(school?.telephone)}
+                error={state?.errors?.telephone}
+              />
             </div>
 
-            <div className={adminStyles.formFieldGroup}>
-              <label className={adminStyles.formFieldLabel} htmlFor="principal">Principal / Headmaster</label>
-              <input id="principal" name="principal" defaultValue={str(school?.principal)} placeholder="e.g. Dr. A. Smith" className={adminStyles.inputField} />
-              {err("principal")}
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="principal"
+                name="principal"
+                label="Principal / Headmaster"
+                defaultValue={str(school?.principal)}
+                error={state?.errors?.principal}
+              />
             </div>
 
-            <div className={`${adminStyles.formFieldGroup} ${adminStyles.formGrid3ColFull}`}>
-              <label className={adminStyles.formFieldLabel} htmlFor="address">Physical Address</label>
-              <input id="address" name="address" defaultValue={str(school?.address)} placeholder="e.g. 45 School Road, Centurion" className={adminStyles.inputField} />
-              {err("address")}
+            <div className={formStyles.colSpan3}>
+              <FloatingInput
+                id="address"
+                name="address"
+                label="Physical Address"
+                defaultValue={str(school?.address)}
+                error={state?.errors?.address}
+              />
             </div>
           </div>
         </div>
 
         {/* Section 2: School Profile & Search Pill */}
-        <div className={adminStyles.sidebarCard}>
-          <div className={adminStyles.sidebarCardHeader}>
-            <div className={adminStyles.sidebarHeaderTitle}>
-              <div className={adminStyles.sectionIconBlue}>
-                <GraduationCap size={16} />
-              </div>
-              <span className={`${adminStyles.text15} ${adminStyles.fw700} ${adminStyles.cWhite}`}>
-                School Profile &amp; Search Pill Configuration
-              </span>
+        <div className={formStyles.card}>
+          <div className={formStyles.cardHeader}>
+            <div className={adminStyles.sectionIconBlue}>
+              <GraduationCap size={16} />
             </div>
+            <span>School Profile &amp; Search Pill Configuration</span>
           </div>
 
-          <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-14"]}`}>
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="description">Description &amp; Overview</label>
-              <textarea id="description" name="description" rows={3} defaultValue={str(school?.description)} placeholder="Brief introduction for parents searching school stationery packs..." className={`${adminStyles.textareaField} ${adminStyles.textareaFieldMd}`} />
-              {err("description")}
+          <div className={formStyles.grid3}>
+            <div className={formStyles.colSpan3}>
+              <FloatingTextarea
+                id="description"
+                name="description"
+                label="Description &amp; Overview"
+                defaultValue={str(school?.description)}
+                error={state?.errors?.description}
+              />
             </div>
 
-            <div className={adminStyles.formGrid3Col}>
-              <div className={adminStyles.formFieldGroup}>
-                <label className={adminStyles.formFieldLabel} htmlFor="grades">Offered Grades</label>
-                <input id="grades" name="grades" defaultValue={grades} placeholder="Grade R, Grade 1, Grade 2" className={adminStyles.inputField} />
-                <span className={adminStyles.formFieldHelper}>Comma-separated grade names.</span>
-                {err("grades")}
-              </div>
+            <div className={formStyles.colSpan2}>
+              <FloatingInput
+                id="grades"
+                name="grades"
+                label="Offered Grades"
+                defaultValue={grades}
+                error={state?.errors?.grades}
+              />
+            </div>
 
-              <div className={adminStyles.formFieldGroup}>
-                <label className={adminStyles.formFieldLabel} htmlFor="custom_badge">Search Pill Badge</label>
-                <input id="custom_badge" name="custom_badge" defaultValue={str(school?.custom_badge) || "2026 Packs"} placeholder="e.g. 2026 Packs" className={adminStyles.inputField} />
-                <span className={adminStyles.formFieldHelper}>Badge shown on search cards (e.g. 2026 Packs).</span>
-                {err("custom_badge")}
-              </div>
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="custom_badge"
+                name="custom_badge"
+                label="Search Pill Badge"
+                defaultValue={str(school?.custom_badge) || "2026 Packs"}
+                error={state?.errors?.custom_badge}
+              />
+            </div>
 
-              <div className={adminStyles.formFieldGroup}>
-                <label className={adminStyles.formFieldLabel} htmlFor="lowest_price">Lowest Pack Price (R)</label>
-                <input id="lowest_price" name="lowest_price" inputMode="decimal" defaultValue={str(school?.lowest_price)} placeholder="e.g. 245.00" className={adminStyles.inputField} />
-                {err("lowest_price")}
-              </div>
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="lowest_price"
+                name="lowest_price"
+                inputMode="decimal"
+                label="Lowest Pack Price (R)"
+                defaultValue={str(school?.lowest_price)}
+                error={state?.errors?.lowest_price}
+              />
+            </div>
 
-              <div className={adminStyles.formFieldGroup}>
-                <label className={adminStyles.formFieldLabel} htmlFor="partner_since">Partner Since Date</label>
-                <DateField id="partner_since" name="partner_since" className={adminStyles.searchInput} defaultValue={str(school?.partner_since)} ariaLabel="Partner since" placeholder="Select partnership date" />
-                {err("partner_since")}
-              </div>
+            <div className={`${formStyles.colSpan1} ${formStyles.dateWrapper}`}>
+              <span className={formStyles.dateFloatingLabel}>Partner Since Date</span>
+              <DateField
+                id="partner_since"
+                name="partner_since"
+                defaultValue={str(school?.partner_since)}
+                ariaLabel="Partner since"
+                placeholder="Select partnership date"
+              />
+              {err("partner_since")}
+            </div>
 
-              <div className={adminStyles.formFieldGroup}>
-                <label className={adminStyles.formFieldLabel} htmlFor="latitude">Latitude</label>
-                <input id="latitude" name="latitude" inputMode="decimal" defaultValue={str(school?.latitude)} placeholder="e.g. -25.7479" className={adminStyles.inputField} />
-                {err("latitude")}
-              </div>
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="latitude"
+                name="latitude"
+                inputMode="decimal"
+                label="Latitude"
+                defaultValue={str(school?.latitude)}
+                error={state?.errors?.latitude}
+              />
+            </div>
 
-              <div className={adminStyles.formFieldGroup}>
-                <label className={adminStyles.formFieldLabel} htmlFor="longitude">Longitude</label>
-                <input id="longitude" name="longitude" inputMode="decimal" defaultValue={str(school?.longitude)} placeholder="e.g. 28.2293" className={adminStyles.inputField} />
-                {err("longitude")}
-              </div>
+            <div className={formStyles.colSpan1}>
+              <FloatingInput
+                id="longitude"
+                name="longitude"
+                inputMode="decimal"
+                label="Longitude"
+                defaultValue={str(school?.longitude)}
+                error={state?.errors?.longitude}
+              />
             </div>
           </div>
         </div>
 
         {/* Section 3: School Logo */}
-        <div className={adminStyles.sidebarCard}>
-          <div className={adminStyles.sidebarCardHeader}>
-            <div className={adminStyles.sidebarHeaderTitle}>
-              <ImageIcon size={16} className={adminStyles.iconAmber} />
-              <span>School Logo Branding</span>
-            </div>
+        <div className={formStyles.card}>
+          <div className={formStyles.cardHeader}>
+            <ImageIcon size={16} className={adminStyles.iconAmber} />
+            <span>School Logo Branding</span>
           </div>
 
-          <div className={`${adminStyles.flex} ${adminStyles["gap-16"]} ${adminStyles.itemsCenter}`}>
+          <div className={formStyles.logoUploadContainer}>
             <div className={adminStyles.logoUploadBox}>
               {logoPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -264,23 +323,19 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
       </div>
 
       {/* Right Sidebar: Status & Form Action Controls */}
-      <div className={adminStyles.sidebarColumn}>
-        <div className={adminStyles.sidebarCard}>
-          <div className={adminStyles.sidebarCardHeader}>
-            <div className={adminStyles.sidebarHeaderTitle}>
-              <div className={adminStyles.sectionIconTeal}>
-                <ShieldCheck size={16} />
-              </div>
-              <span className={`${adminStyles.text15} ${adminStyles.fw700} ${adminStyles.cWhite}`}>
-                Status &amp; Partnership Flags
-              </span>
+      <div className={formStyles.sideColumn}>
+        <div className={formStyles.card}>
+          <div className={formStyles.cardHeader}>
+            <div className={adminStyles.sectionIconTeal}>
+              <ShieldCheck size={16} />
             </div>
+            <span>Status &amp; Flags</span>
           </div>
 
-          <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-14"]}`}>
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="status">Publication Status</label>
-              <select id="status" name="status" defaultValue={school?.status ?? "active"} className={adminStyles.inputField}>
+          <div className={formStyles.sideGroup}>
+            <div className={formStyles.sideField}>
+              <label className={formStyles.sideLabel} htmlFor="status">Publication Status</label>
+              <select id="status" name="status" defaultValue={school?.status ?? "active"} className={formStyles.sideSelect}>
                 {SCHOOL_STATUSES.map((s) => (
                   <option key={s} value={s}>{s === "archived" ? "Hidden" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
                 ))}
@@ -288,35 +343,35 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               {err("status")}
             </div>
 
-            <div>
-              <label className={adminStyles.formLabel} htmlFor="parent_collection_accepted">Parent Collection Option</label>
-              <select id="parent_collection_accepted" name="parent_collection_accepted" defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"} className={adminStyles.inputField}>
+            <div className={formStyles.sideField}>
+              <label className={formStyles.sideLabel} htmlFor="parent_collection_accepted">Parent Collection Option</label>
+              <select id="parent_collection_accepted" name="parent_collection_accepted" defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"} className={formStyles.sideSelect}>
                 <option value="accepted">Accepted (Bulk Pickup)</option>
                 <option value="non_accepted">Non-accepted</option>
               </select>
               {err("parent_collection_accepted")}
             </div>
 
-            <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-8"]} ${adminStyles.mt4}`}>
-              <label className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles["gap-8"]} ${adminStyles.text12} ${adminStyles.cWhite} ${adminStyles.cursorPointer}`}>
+            <div className={formStyles.checkboxList}>
+              <label className={formStyles.checkboxLabel}>
                 <input type="checkbox" name="published" defaultChecked={school?.published ?? true} className={adminStyles.checkbox} />
                 Published on Site
               </label>
-              <label className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles["gap-8"]} ${adminStyles.text12} ${adminStyles.cWhite} ${adminStyles.cursorPointer}`}>
+              <label className={formStyles.checkboxLabel}>
                 <input type="checkbox" name="is_partner" defaultChecked={school?.is_partner ?? false} className={adminStyles.checkbox} />
                 Partner School
               </label>
-              <label className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles["gap-8"]} ${adminStyles.text12} ${adminStyles.cWhite} ${adminStyles.cursorPointer}`}>
+              <label className={formStyles.checkboxLabel}>
                 <input type="checkbox" name="is_featured" defaultChecked={school?.is_featured ?? false} className={adminStyles.checkbox} />
                 Featured School
               </label>
-              <label className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles["gap-8"]} ${adminStyles.text12} ${adminStyles.cRed} ${adminStyles.cursorPointer} ${adminStyles.fw600}`}>
-                <input type="checkbox" name="refused_partnership" defaultChecked={(school as any)?.refused_partnership ?? false} className={adminStyles.checkboxRed} />
+              <label className={`${formStyles.checkboxLabel} ${formStyles.checkboxDanger}`}>
+                <input type="checkbox" name="refused_partnership" defaultChecked={(school as { refused_partnership?: boolean } | null)?.refused_partnership ?? false} className={adminStyles.checkboxRed} />
                 Refused Partnership
               </label>
             </div>
 
-            <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-10"]} ${adminStyles.pt10} ${adminStyles.borderT}`}>
+            <div className={formStyles.sideActions}>
               <SubmitButton label={school ? "Save School Details" : "Create School"} />
               <Link href={schoolSlugOrId ? `/admin/schools/${schoolSlugOrId}/info` : "/admin/schools"} className={`${styles.secondaryBtn} ${adminStyles.hFullBtn} ${adminStyles.text12}`}>
                 Cancel

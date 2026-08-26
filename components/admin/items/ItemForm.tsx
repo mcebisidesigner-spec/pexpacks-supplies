@@ -4,15 +4,16 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import Link from "next/link";
-import { RotateCw, Sparkles } from "lucide-react";
+import { RotateCw, Save, Sparkles } from "lucide-react";
 import type { ItemFormState, ItemRow } from "@/lib/admin/items";
 import { createItemAction, updateItemAction } from "@/app/admin/items/actions";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PACK_ITEM_ICONS, isPackItemIconKey } from "@/lib/packs/itemIcons";
 import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
+import { FloatingInput } from "@/components/ui/FloatingInput";
+import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
-import formStyles from "../schools/SchoolForm.module.css";
 import styles from "./ItemForm.module.css";
 
 interface ItemFormProps {
@@ -25,9 +26,15 @@ interface ItemFormProps {
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" className={formStyles.saveButton} disabled={pending}>
-      {pending ? "Saving…" : label}
-    </button>
+    <AdminButton
+      type="submit"
+      variant="primary"
+      size="md"
+      loading={pending}
+      icon={<Save size={14} />}
+    >
+      {label}
+    </AdminButton>
   );
 }
 
@@ -84,21 +91,15 @@ export function ItemForm({
     setIsCustomSku(true);
   };
 
-  const handleRegenerateSku = () => {
+  const handleRegenerateSku = (e: React.MouseEvent) => {
+    e.preventDefault();
     setIsCustomSku(false);
     const newSku = generateSkuFromName(productName.trim() || "Item", category);
     setSku(newSku);
   };
 
-  const err = (field: string) =>
-    state?.errors?.[field] ? (
-      <span className={formStyles.error} role="alert">
-        {state.errors[field]}
-      </span>
-    ) : null;
-
   return (
-    <form action={formAction} className={formStyles.form}>
+    <form action={formAction} className={styles.container}>
       {/* Banner Alert Messages */}
       {state?.ok ? (
         <div
@@ -106,7 +107,7 @@ export function ItemForm({
           style={{ marginBottom: "16px", borderRadius: "8px", width: "100%" }}
           role="status"
         >
-          &#x2713; {state.message || `Product "${item?.name || "Item"}" updated.`}
+          &#x2713; {state.message || `Product "${item?.name || "Item"}" updated successfully.`}
         </div>
       ) : state?.message ? (
         <div
@@ -125,176 +126,127 @@ export function ItemForm({
 
       <input type="hidden" name="sort_order" value={item?.sort_order ?? 0} />
       <input type="hidden" name="icon" value={icon} />
+      <input type="hidden" name="pack_id" value={item?.pack_id ?? packs[0]?.id ?? ""} />
 
-      <div className={formStyles.section}>
-        <input type="hidden" name="pack_id" value={item?.pack_id ?? packs[0]?.id ?? ""} />
+      <div className={styles.card}>
+        <div className={styles.cardHeader}>
+          <div className={adminStyles.sectionIconTeal}>
+            <ItemIcon name={icon || "folder"} size={16} />
+          </div>
+          <span>Product Metadata &amp; Catalogue Information</span>
+        </div>
 
         {/* Row 1: SKU & Category */}
-        <div className={styles.formGrid}>
-          <div className={formStyles.field}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-              <label className={formStyles.label} htmlFor="sku" style={{ margin: 0 }}>
-                SKU
-              </label>
+        <div className={styles.grid2}>
+          <FloatingInput
+            id="sku"
+            name="sku"
+            label="SKU"
+            value={sku}
+            onChange={handleSkuChange}
+            error={state?.errors?.sku}
+            rightAdornment={
               <button
                 type="button"
                 onClick={handleRegenerateSku}
-                title={isCustomSku ? "Locked SKU (Click to Auto-generate from Name)" : "Auto-generated SKU (Click to Refresh)"}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  padding: "2px 8px",
-                  borderRadius: "5px",
-                  border: isCustomSku ? "1px solid rgba(234, 179, 8, 0.35)" : "1px solid rgba(16, 185, 129, 0.35)",
-                  background: isCustomSku ? "rgba(234, 179, 8, 0.08)" : "rgba(16, 185, 129, 0.08)",
-                  color: isCustomSku ? "#facc15" : "#10b981",
-                  cursor: "pointer",
-                }}
+                title={isCustomSku ? "Custom SKU (Click to Auto-sync)" : "Auto-synced (Click to Refresh)"}
+                className={`${styles.skuButtonAdornment} ${isCustomSku ? styles.skuButtonLocked : ""}`}
               >
                 {isCustomSku ? <RotateCw size={11} /> : <Sparkles size={11} />}
-                <span>{isCustomSku ? "Auto-generate" : "Auto-sync"}</span>
+                <span>{isCustomSku ? "Auto-sync" : "Auto-sync"}</span>
               </button>
-            </div>
-            <div style={{ position: "relative" }}>
-              <input
-                id="sku"
-                name="sku"
-                className={formStyles.input}
-                value={sku}
-                onChange={handleSkuChange}
-                placeholder="e.g. PEX-WRT-00101"
-              />
-            </div>
-            <span className={formStyles.hint}>
-              {isCustomSku
-                ? "Manual SKU lock active. Click Auto-generate to re-sync with product name."
-                : "Standardized SKU auto-generated from Category and Item name."}
-            </span>
-            {err("sku")}
-          </div>
+            }
+          />
 
-          <div className={formStyles.field}>
-            <label className={formStyles.label} htmlFor="category">
-              Category
-            </label>
-            <input
-              id="category"
-              name="category"
-              className={formStyles.input}
-              value={category}
-              onChange={handleCategoryChange}
-              placeholder="e.g. Stationery, Books, Art & Craft"
-            />
-            {err("category")}
-          </div>
+          <FloatingInput
+            id="category"
+            name="category"
+            label="Category"
+            value={category}
+            onChange={handleCategoryChange}
+            error={state?.errors?.category}
+          />
         </div>
 
         {/* Row 2: Item Name */}
-        <div className={formStyles.field}>
-          <label className={formStyles.label} htmlFor="name">
-            Item name *
-          </label>
-          <input
-            id="name"
-            name="name"
-            className={formStyles.input}
-            value={productName}
-            onChange={handleNameChange}
-            placeholder="e.g. A4 Clear Plastic Folders with Button"
-            required
+        <FloatingInput
+          id="name"
+          name="name"
+          label="Item Name"
+          value={productName}
+          onChange={handleNameChange}
+          required
+          error={state?.errors?.name}
+        />
+
+        {/* Row 3: Description */}
+        <FloatingTextarea
+          id="description"
+          name="description"
+          label="Description &amp; Specifications"
+          defaultValue={item?.description ?? ""}
+          error={state?.errors?.description}
+        />
+
+        {/* Row 4: Pack / Unit & Qty */}
+        <div className={styles.grid2}>
+          <FloatingInput
+            id="specification"
+            name="specification"
+            label="Pack / Unit (e.g. Pack, Box, Each)"
+            defaultValue={item?.specification ?? ""}
+            error={state?.errors?.specification}
           />
-          {err("name")}
-        </div>
 
-        <div className={formStyles.field}>
-          <label className={formStyles.label} htmlFor="description">
-            Description
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            className={formStyles.textarea}
-            rows={3}
-            defaultValue={item?.description ?? ""}
-            placeholder="e.g. Assorted colours or approved school brand details"
+          <FloatingInput
+            id="quantity"
+            name="quantity"
+            inputMode="numeric"
+            label="Quantity"
+            defaultValue={item?.quantity ?? 1}
+            error={state?.errors?.quantity}
           />
-          {err("description")}
         </div>
 
-        {/* Row 2: Pack / Unit & Qty */}
-        <div className={styles.formGrid}>
-          <div className={formStyles.field}>
-            <label className={formStyles.label} htmlFor="specification">
-              Pack / Unit
-            </label>
-            <input
-              id="specification"
-              name="specification"
-              className={formStyles.input}
-              defaultValue={item?.specification ?? ""}
-              placeholder="e.g. Pack"
-            />
-            {err("specification")}
-          </div>
-
-          <div className={formStyles.field}>
-            <label className={formStyles.label} htmlFor="quantity">
-              Qty
-            </label>
-            <input
-              id="quantity"
-              name="quantity"
-              className={formStyles.input}
-              inputMode="numeric"
-              defaultValue={item?.quantity ?? 1}
-              placeholder="1"
-            />
-            <span className={formStyles.hint}>
-              Quantity of this item.
-            </span>
-            {err("quantity")}
-          </div>
-        </div>
-
-        {/* Row 3: Price & Visible on site */}
-        <div className={styles.formGrid}>
-          <div className={formStyles.field}>
-            <label className={formStyles.label} htmlFor="price">
-              Price (R)
-            </label>
-            <input
-              id="price"
-              name="price"
-              className={formStyles.input}
-              inputMode="decimal"
-              defaultValue={item?.unit_price ?? ""}
-              placeholder="0.00"
-            />
-            <span className={formStyles.hint}>
-              Price of the item. Leave blank for no price.
-            </span>
-            {err("price")}
-          </div>
+        {/* Row 5: Price & Visibility */}
+        <div className={styles.grid2}>
+          <FloatingInput
+            id="price"
+            name="price"
+            inputMode="decimal"
+            label="Selling Price (R)"
+            defaultValue={item?.unit_price ?? ""}
+            error={state?.errors?.price}
+          />
 
           <div className={styles.checkboxCell}>
-            <label className={formStyles.checkbox}>
+            <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
                 name="visible"
                 defaultChecked={item?.visible ?? true}
+                className={adminStyles.checkbox}
               />
-              Visible on site
+              Visible on Public Catalogue
             </label>
           </div>
         </div>
 
         {/* Icon Picker Section */}
-        <div className={styles.iconField}>
-          <label className={formStyles.label}>Icon</label>
-          <div className={styles.iconPicker} role="group" aria-label="Pick an icon">
+        <div className={styles.iconSection}>
+          <div className={styles.iconHeaderRow}>
+            <span className={styles.iconLabel}>Item Icon Symbol</span>
+            {icon ? (
+              <div className={styles.iconSelectedPreview}>
+                <ItemIcon name={icon} size={16} />
+                <span>Selected: {icon}</span>
+              </div>
+            ) : (
+              <span className={styles.hint}>No icon selected (auto fallback used)</span>
+            )}
+          </div>
+
+          <div className={styles.iconGrid} role="group" aria-label="Pick an icon">
             {PACK_ITEM_ICONS.map((option) => (
               <button
                 key={option.key}
@@ -306,22 +258,22 @@ export function ItemForm({
                 title={option.label}
                 aria-pressed={icon === option.key}
               >
-                <ItemIcon name={option.key} size={22} />
+                <ItemIcon name={option.key} size={20} />
               </button>
             ))}
           </div>
-          <span className={formStyles.hint}>
-            Optional. Shown next to the item on the public pack list.
+          <span className={styles.hint}>
+            Optional item emblem displayed alongside the product on school pack checkouts.
           </span>
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className={formStyles.actions}>
-        <Link href={returnTo} className={formStyles.cancelButton}>
-          Cancel
-        </Link>
-        <SubmitButton label={submitLabel} />
+        {/* Action Buttons */}
+        <div className={styles.actionsRow}>
+          <AdminButton href={returnTo} variant="secondary" size="md">
+            Cancel
+          </AdminButton>
+          <SubmitButton label={submitLabel} />
+        </div>
       </div>
     </form>
   );

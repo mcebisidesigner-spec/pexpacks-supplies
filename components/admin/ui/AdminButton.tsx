@@ -3,26 +3,55 @@ import Link from "next/link";
 import clsx from "clsx";
 import styles from "./AdminButton.module.css";
 
-export type ButtonVariant = "primary" | "secondary" | "teal" | "danger" | "ghost" | "icon" | "iconRed" | "iconTeal";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "teal"
+  | "danger"
+  | "ghost"
+  | "icon"
+  | "iconRed"
+  | "iconTeal";
 export type ButtonSize = "sm" | "md" | "lg";
 
-export interface AdminButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface AdminButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   href?: string;
+  target?: string;
+  rel?: string;
   icon?: React.ReactNode;
   loading?: boolean;
   children?: React.ReactNode;
 }
 
-export const AdminButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, AdminButtonProps>(
-  ({ variant = "primary", size = "md", href, icon, loading, children, className, disabled, ...props }, ref) => {
+export const AdminButton = React.forwardRef<
+  HTMLButtonElement | HTMLAnchorElement,
+  AdminButtonProps
+>(
+  (
+    {
+      variant = "primary",
+      size = "md",
+      href,
+      target,
+      rel,
+      icon,
+      loading,
+      children,
+      className,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
     const classNames = clsx(
       styles.button,
       styles[variant],
       styles[size],
       { [styles.loading]: loading },
-      className
+      className,
     );
 
     const content = (
@@ -40,6 +69,8 @@ export const AdminButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElemen
       return (
         <Link
           href={href}
+          target={target}
+          rel={rel}
           ref={ref as React.Ref<HTMLAnchorElement>}
           className={classNames}
           {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
@@ -59,7 +90,7 @@ export const AdminButton = React.forwardRef<HTMLButtonElement | HTMLAnchorElemen
         {content}
       </button>
     );
-  }
+  },
 );
 
 AdminButton.displayName = "AdminButton";

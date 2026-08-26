@@ -77,21 +77,25 @@ export default async function PackOrSchoolPacksPage({
         actions={
           <div style={{ display: "flex", gap: "8px" }}>
             {schoolData ? (
-              <Link
+              <AdminButton
                 href={`/schools/${schoolData.slug || schoolData.id}`}
                 target="_blank"
-                className={adminStyles.button}
+                variant="secondary"
+                size="md"
+                icon={<ExternalLink size={14} />}
               >
-                <ExternalLink size={14} /> View Public Page
-              </Link>
+                View Public Page
+              </AdminButton>
             ) : null}
-            <button
+            <AdminButton
               type="submit"
               form={priceFormId}
-              className={`${styles.primaryBtn} ${styles.headerSaveBtn}`}
+              variant="primary"
+              size="md"
+              icon={<Save size={14} />}
             >
-              <Save size={14} /> Save pack
-            </button>
+              Save pack
+            </AdminButton>
           </div>
         }
       />

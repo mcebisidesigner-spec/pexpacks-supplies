@@ -73,43 +73,72 @@
 }
 
 .headerSaveBtn {
-  min-width: 96px;
-  height: 48px;
+  min-width: 88px;
+  height: var(--a-btn-h, 36px);
   justify-content: center;
-  border-radius: 8px;
+  border-radius: var(--a-btn-radius, 8px);
 }
 
 /* ── Buttons ── */
 .primaryBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 36px;
+  justify-content: center;
+  gap: 8px;
+  height: var(--a-btn-h, 36px);
   padding: 0 14px;
-  background: var(--a-accent-strong);
-  border: none;
-  border-radius: var(--a-radius);
-  color: var(--a-text);
-  font-size: 12px;
-  font-weight: 700;
+  background: var(--a-accent-strong, #059669);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: var(--a-btn-radius, 8px);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: all var(--a-transition);
+  transition: all var(--a-transition, 140ms ease);
+}
+
+.primaryBtn:hover {
+  background: var(--a-accent-hover, #047857);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .secondaryBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 36px;
-  padding: 0 12px;
-  background: var(--a-surface);
-  border: 1px solid var(--a-border);
-  border-radius: var(--a-radius);
-  color: var(--a-text-2);
-  font-size: 12px;
+  justify-content: center;
+  gap: 8px;
+  height: var(--a-btn-h, 36px);
+  padding: 0 14px;
+  background: var(--a-surface-2, #090e17);
+  border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.6));
+  border-radius: var(--a-btn-radius, 8px);
+  color: var(--a-text-2, #cbd5e1);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all var(--a-transition);
+  text-decoration: none;
+  transition: all var(--a-transition, 140ms ease);
+}
+
+.secondaryBtn:hover {
+  background: var(--a-surface-3, #1e293b);
+  border-color: var(--a-text-4, #64748b);
+  color: #ffffff;
+}
+
+.secondaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .fullWidthBtn {

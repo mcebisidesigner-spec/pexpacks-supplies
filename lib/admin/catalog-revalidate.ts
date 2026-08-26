@@ -1,4 +1,3 @@
-import { revalidatePath, revalidateTag } from "next/cache";
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 
 /**
@@ -16,20 +15,34 @@ export function revalidateCatalog(options?: {
   schoolSlug?: string | null;
   packSlug?: string | null;
 }): void {
-  try {
-    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  } catch (err) {
-    console.error("[catalog-revalidate] revalidateTag failed:", err);
-  }
+  if (typeof window !== "undefined") return;
 
-  const paths = ["/schools", "/"];
-  if (options?.schoolSlug) paths.push(`/schools/${options.schoolSlug}`);
-  if (options?.packSlug) paths.push(`/schools/packs/${options.packSlug}`);
-  for (const path of paths) {
-    try {
-      revalidatePath(path);
-    } catch (err) {
-      console.error(`[catalog-revalidate] revalidatePath failed for ${path}:`, err);
+  try {
+    // Dynamically access next/cache at runtime on the server to prevent
+    // bundling server-only next/cache into client component graphs.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const nextCache = require("next/cache");
+    if (typeof nextCache.revalidateTag === "function") {
+      try {
+        nextCache.revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+      } catch (err) {
+        console.error("[catalog-revalidate] revalidateTag failed:", err);
+      }
     }
+
+    const paths = ["/schools", "/"];
+    if (options?.schoolSlug) paths.push(`/schools/${options.schoolSlug}`);
+    if (options?.packSlug) paths.push(`/schools/packs/${options.packSlug}`);
+    if (typeof nextCache.revalidatePath === "function") {
+      for (const path of paths) {
+        try {
+          nextCache.revalidatePath(path);
+        } catch (err) {
+          console.error(`[catalog-revalidate] revalidatePath failed for ${path}:`, err);
+        }
+      }
+    }
+  } catch (err) {
+    console.error("[catalog-revalidate] failed to invoke next/cache:", err);
   }
 }

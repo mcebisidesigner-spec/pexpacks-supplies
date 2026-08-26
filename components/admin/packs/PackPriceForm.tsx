@@ -7,7 +7,7 @@ import { useFormStatus } from "react-dom";
 import { Save } from "lucide-react";
 import { updatePackPriceAction } from "@/app/admin/packs/actions";
 import type { PackFormState } from "@/lib/admin/packs";
-import coreStyles from "@/components/admin/views/CorePagesView.module.css";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./SchoolPackCreateForm.module.css";
 
@@ -20,9 +20,15 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" className={coreStyles.primaryBtn} disabled={pending}>
-      <Save size={14} /> {pending ? "Saving..." : "Save price"}
-    </button>
+    <AdminButton
+      type="submit"
+      variant="primary"
+      size="md"
+      loading={pending}
+      icon={<Save size={14} />}
+    >
+      Save price
+    </AdminButton>
   );
 }
 

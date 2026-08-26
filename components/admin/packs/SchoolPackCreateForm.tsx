@@ -19,6 +19,7 @@ import GradePackItemSelector, {
 import type { CSVStationeryRow } from "@/app/actions/stationery-import";
 import type { PackFormState } from "@/lib/admin/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import itemStyles from "./ItemsManager.module.css";
@@ -34,13 +35,15 @@ function CreateButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
+    <AdminButton
       type="submit"
-      className={`${coreStyles.primaryBtn} ${coreStyles.headerSaveBtn}`}
-      disabled={pending}
+      variant="primary"
+      size="md"
+      loading={pending}
+      icon={<Save size={14} />}
     >
-      <Save size={14} /> {pending ? "Creating..." : "Save pack"}
-    </button>
+      Save pack
+    </AdminButton>
   );
 }
 

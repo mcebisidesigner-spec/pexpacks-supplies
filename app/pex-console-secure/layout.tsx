@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@/styles/db-tokens.css";
 
 export const metadata: Metadata = {
   title: "404 Not Found",

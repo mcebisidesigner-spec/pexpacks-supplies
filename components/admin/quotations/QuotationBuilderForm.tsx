@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { createQuotationAction } from "@/app/admin/quotations/actions";
 import { DateField } from "@/components/admin/DateField";
+import { FloatingInput } from "@/components/ui/FloatingInput";
+import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import type { QuotationStatus } from "@/lib/admin/quotations";
 import styles from "./Quotations.module.css";
 
@@ -436,13 +438,11 @@ export function QuotationBuilderForm({
         </div>
 
         <div className={styles.preparedByArea}>
-          <label className={styles.preparedByLabel}>Prepared by:</label>
-          <input
-            type="text"
-            placeholder="Print your name"
+          <FloatingInput
+            label="Prepared by"
             value={preparedBy}
             onChange={(e) => setPreparedBy(e.target.value)}
-            className={styles.preparedByInput}
+            bgSurface="bg-[#0b121e]"
           />
         </div>
       </div>
@@ -568,44 +568,37 @@ export function QuotationBuilderForm({
 
           {/* Recipient Name & Recipient Email */}
           <div className={styles.formRow2}>
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Recipient Name / Contact Person *</label>
-              <input
-                type="text"
-                placeholder="Bedfordview Primary School Bursar / Finance"
-                value={recipientName}
-                onChange={(e) => setRecipientName(e.target.value)}
-                className={styles.textInput}
-              />
-            </div>
+            <FloatingInput
+              id="recipient_name"
+              label="Recipient Name / Contact Person"
+              required
+              value={recipientName}
+              onChange={(e) => setRecipientName(e.target.value)}
+              bgSurface="bg-[#0b121e]"
+            />
 
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Recipient Email *</label>
-              <input
-                type="email"
-                placeholder="e.g. bursar@school.co.za"
-                value={recipientEmail}
-                onChange={(e) => setRecipientEmail(e.target.value)}
-                className={styles.textInput}
-              />
-            </div>
+            <FloatingInput
+              id="recipient_email"
+              type="email"
+              label="Recipient Email"
+              required
+              value={recipientEmail}
+              onChange={(e) => setRecipientEmail(e.target.value)}
+              bgSurface="bg-[#0b121e]"
+            />
           </div>
 
           {/* Phone Number & Valid Until */}
           <div className={styles.formRow2}>
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Phone Number</label>
-              <input
-                type="text"
-                placeholder="e.g. +27 11 902 4432"
-                value={recipientPhone}
-                onChange={(e) => setRecipientPhone(e.target.value)}
-                className={styles.textInput}
-              />
-            </div>
+            <FloatingInput
+              id="recipient_phone"
+              label="Phone Number"
+              value={recipientPhone}
+              onChange={(e) => setRecipientPhone(e.target.value)}
+              bgSurface="bg-[#0b121e]"
+            />
 
-            <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Valid Until *</label>
+            <div>
               <DateField
                 name="valid_until"
                 value={validUntil}
@@ -882,13 +875,12 @@ export function QuotationBuilderForm({
             </h2>
           </div>
 
-          <div className={styles.notesContainer}>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className={styles.notesTextarea}
-            />
-          </div>
+          <FloatingTextarea
+            label="Terms & Delivery Notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            bgSurface="bg-[#0b121e]"
+          />
         </div>
 
         {/* Right Card: Official Banking Settlement Details */}

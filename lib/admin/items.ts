@@ -809,7 +809,7 @@ export async function updateItem(
       product = await ensureMasterProduct(admin, parsed.data, actor.user.id);
     }
 
-    // Sync all linked pack items with the new name, price, description, and visibility
+    // Sync all linked pack items with the new name, price, description, icon, and visibility
     const { data: linkedPacks } = await schoolPackItemsTable(admin)
       .update({
         school_wording: parsed.data.name.trim(),
@@ -819,6 +819,24 @@ export async function updateItem(
       })
       .eq("product_id", product.id)
       .select("pack_id");
+
+    try {
+      await admin
+        .from("stationery_items" as never)
+        .update({
+          icon: parsed.data.icon || null,
+          name: parsed.data.name.trim(),
+          unit_price: parsed.data.price,
+          description: parsed.data.description,
+          specification: parsed.data.specification,
+          category: parsed.data.category,
+        } as never)
+        .or(
+          `master_product_id.eq.${product.id},sku.ilike.${product.sku},name.ilike.${escapeIlikeLiteral(product.name)}` as never,
+        );
+    } catch {
+      // ignore
+    }
 
     if (linkedPacks && linkedPacks.length > 0) {
       const uniquePackIds = Array.from(
@@ -848,6 +866,8 @@ export async function updateItem(
     revalidatePath(`/admin/products/${slugified}`);
     revalidatePath(`/admin/products/${newSlug}`);
     revalidatePath("/schools");
+    revalidatePath("/schools", "layout");
+    revalidatePath("/");
 
     return {
       ok: true,
