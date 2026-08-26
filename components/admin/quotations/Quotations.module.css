@@ -1,158 +1,169 @@
+/* ==========================================================================
+   Pexpacks Quotations Dark UI Theme - Pixel-Perfect Matching Reference
+   ========================================================================== */
+
 .container {
   display: flex;
   flex-direction: column;
   gap: 20px;
   width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 8px 0 40px 0;
+  color: #f8fafc;
+  font-family: inherit;
 }
 
-.tableCard {
-  background: #0c1322;
-  border: 1px solid rgba(30, 41, 59, 0.85);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-}
-
-.tableWrapper {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.dataTable {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 13px;
-}
-
-.dataTable th {
-  padding: 12px 16px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
+/* Top Back Button */
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0b121e;
+  border: 1px solid rgba(30, 41, 59, 0.9);
   color: #94a3b8;
-  background: rgba(15, 23, 42, 0.6);
-  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
-}
-
-.dataRow {
-  border-bottom: 1px solid rgba(30, 41, 59, 0.4);
-  transition: background 0.15s ease;
-  cursor: pointer;
-}
-
-.dataRow:hover {
-  background: rgba(16, 185, 129, 0.04);
-}
-
-.dataRow td {
-  padding: 14px 16px;
-  vertical-align: middle;
-}
-
-.quoteNumLink {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-weight: 700;
-  color: #10b981;
-  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
   font-size: 13px;
-}
-
-.quoteNumLink:hover {
-  text-decoration: underline;
-}
-
-.recipientCell {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.recipientName {
   font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: fit-content;
+}
+
+.backButton:hover {
+  background: #131d2e;
   color: #f8fafc;
+  border-color: rgba(51, 65, 85, 0.9);
 }
 
-.schoolSubtext {
-  font-size: 11.5px;
-  color: #94a3b8;
-}
-
-.priceText {
-  font-weight: 700;
-  color: #f8fafc;
-}
-
-.textMuted {
-  color: #94a3b8;
-  font-size: 12px;
-}
-
-.statusTabs {
+/* Top Header Row */
+.headerRow {
   display: flex;
-  gap: 6px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
-.statusTab {
-  padding: 6px 14px;
-  border-radius: 20px;
+.titleArea {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pageTitle {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.pageSubtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.preparedByArea {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+
+.preparedByLabel {
   font-size: 12px;
   font-weight: 600;
-  background: rgba(15, 23, 42, 0.6);
   color: #94a3b8;
-  border: 1px solid rgba(30, 41, 59, 0.8);
-  cursor: pointer;
-  transition: all 0.15s ease;
 }
 
-.statusTab:hover {
-  background: rgba(30, 41, 59, 0.8);
+.preparedByInput {
+  height: 38px;
+  padding: 0 14px;
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 8px;
   color: #f8fafc;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease;
 }
 
-.statusTabActive {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-  border-color: rgba(16, 185, 129, 0.4);
+.preparedByInput:focus {
+  border-color: #10b981;
 }
 
-.builderGrid {
+/* Top 2-Column Grid */
+.topGrid {
   display: grid;
   grid-template-columns: 1fr 340px;
-  gap: 24px;
-  align-items: start;
+  gap: 20px;
+  align-items: stretch;
 }
 
 @media (max-width: 1024px) {
-  .builderGrid {
+  .topGrid {
     grid-template-columns: 1fr;
   }
 }
 
-.formCard {
-  background: #0c1322;
+/* Base Card Style */
+.card {
+  background: #0b121e;
   border: 1px solid rgba(30, 41, 59, 0.85);
   border-radius: 12px;
-  padding: 24px;
+  padding: 22px 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
-.formSectionTitle {
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cardTitle {
   font-size: 14px;
   font-weight: 700;
   color: #f8fafc;
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid rgba(30, 41, 59, 0.6);
-  padding-bottom: 10px;
-  margin-bottom: 4px;
+  margin: 0;
 }
 
+/* Radio Group */
+.radioGroup {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #f8fafc;
+  cursor: pointer;
+}
+
+.radioInput {
+  accent-color: #10b981;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Form Inputs & Rows */
 .formRow2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -177,71 +188,69 @@
   color: #94a3b8;
 }
 
-.formInput {
-  height: 38px;
-  padding: 0 12px;
-  background: #070b12;
-  border: 1px solid rgba(30, 41, 59, 0.9);
-  border-radius: 6px;
-  color: #f8fafc;
-  font-size: 13px;
-  font-family: inherit;
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-
-.formInput:focus {
-  border-color: #10b981;
-}
-
-.formTextarea {
-  padding: 10px 12px;
-  background: #070b12;
-  border: 1px solid rgba(30, 41, 59, 0.9);
-  border-radius: 6px;
-  color: #f8fafc;
-  font-size: 13px;
-  font-family: inherit;
-  outline: none;
-  min-height: 80px;
-  resize: vertical;
-  transition: border-color 0.15s ease;
-}
-
-.formTextarea:focus {
-  border-color: #10b981;
-}
-
-.lineItemsTable {
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
-  border-collapse: collapse;
 }
 
-.lineItemsTable th {
-  padding: 8px 10px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #94a3b8;
-  background: rgba(15, 23, 42, 0.5);
-  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  color: #64748b;
+  pointer-events: none;
 }
 
-.lineItemsTable td {
-  padding: 8px 6px;
-  vertical-align: middle;
+.textInput {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 8px;
+  color: #f8fafc;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease;
 }
 
+.textInputWithIcon {
+  padding-left: 40px;
+}
+
+.textInput:focus {
+  border-color: #10b981;
+}
+
+.textInput::placeholder {
+  color: #64748b;
+}
+
+/* Quotation Summary Card */
 .summaryCard {
-  background: #0c1322;
+  background: #0b121e;
   border: 1px solid rgba(30, 41, 59, 0.85);
   border-radius: 12px;
-  padding: 20px;
+  padding: 22px 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  position: sticky;
-  top: 80px;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.summaryTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.summaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .summaryRow {
@@ -252,18 +261,260 @@
   color: #94a3b8;
 }
 
+.summaryRowValue {
+  font-weight: 600;
+  color: #f8fafc;
+}
+
 .summaryRowGrand {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid rgba(30, 41, 59, 0.8);
-  font-size: 16px;
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.grandTotalLabel {
+  font-size: 15px;
   font-weight: 700;
   color: #f8fafc;
 }
 
 .grandTotalAmount {
+  font-size: 20px;
+  font-weight: 800;
   color: #10b981;
-  font-size: 18px;
+}
+
+.summaryActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btnGenerate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  background: #10b981;
+  color: #ffffff;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.btnGenerate:hover {
+  background: #059669;
+}
+
+.btnGenerate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnDraft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  background: #060b13;
+  color: #f8fafc;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnDraft:hover {
+  background: #0b121e;
+  border-color: rgba(51, 65, 85, 0.9);
+}
+
+/* Line Items Full Width Card */
+.lineItemsCard {
+  background: #0b121e;
+  border: 1px solid rgba(30, 41, 59, 0.85);
+  border-radius: 12px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.btnAddItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #060b13;
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnAddItem:hover {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: #10b981;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.lineItemsTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  text-align: left;
+}
+
+.lineItemsTable th {
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  border: none;
+}
+
+.lineItemRow {
+  background: transparent;
+}
+
+.lineItemRow td {
+  padding: 4px 8px;
+  vertical-align: middle;
+}
+
+/* Capsule / Pill Inputs for Table */
+.tablePillInput {
+  width: 100%;
+  height: 40px;
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 8px;
+  color: #f8fafc;
+  font-size: 12.5px;
+  padding: 0 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.tablePillInput:focus {
+  border-color: #10b981;
+}
+
+.tablePillCenter {
+  text-align: center;
+}
+
+.tablePillRight {
+  text-align: right;
+  font-weight: 600;
+}
+
+.tablePillMono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11.5px;
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.deleteBtn:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.deleteBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Bottom 2-Column Grid */
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+@media (max-width: 800px) {
+  .bottomGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notesContainer {
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 8px;
+  padding: 14px 16px;
+  min-height: 110px;
+}
+
+.notesTextarea {
+  width: 100%;
+  height: 80px;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+}
+
+.bankingBox {
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  text-align: right;
+}
+
+.bankingText {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.bankingTextBold {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
 }
