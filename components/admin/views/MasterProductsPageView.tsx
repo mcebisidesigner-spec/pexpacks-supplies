@@ -17,6 +17,8 @@ import {
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
 import type { MasterProductRow } from "@/lib/admin/operations";
+import { ItemIcon } from "@/components/ui/ItemIcon";
+import { inferIcon } from "@/lib/packs/normalisePackItems";
 
 interface MasterProductsPageViewProps {
   initialData: {
@@ -58,16 +60,23 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       sortable: true,
       render: (row) => {
         const slug = getProductSlug(row);
+        const iconName =
+          (row as unknown as { icon?: string }).icon || inferIcon(row.name);
         return (
-          <div className={styles.productCell}>
-            <Link
-              href={`/admin/products/${slug}`}
-              className={styles.productNameLink}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            {row.brand && <span className={styles.productBrand}>{row.brand}</span>}
+          <div className={styles.productCell} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ color: "var(--a-accent, #10b981)", display: "flex", alignItems: "center", flexShrink: 0 }}>
+              <ItemIcon name={iconName} size={16} />
+            </div>
+            <div>
+              <Link
+                href={`/admin/products/${slug}`}
+                className={styles.productNameLink}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {row.name}
+              </Link>
+              {row.brand && <span className={styles.productBrand}>{row.brand}</span>}
+            </div>
           </div>
         );
       },

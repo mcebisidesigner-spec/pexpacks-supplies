@@ -9,6 +9,7 @@ import type { ItemFormState, ItemRow } from "@/lib/admin/items";
 import { createItemAction, updateItemAction } from "@/app/admin/items/actions";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PACK_ITEM_ICONS, isPackItemIconKey } from "@/lib/packs/itemIcons";
+import { inferIcon } from "@/lib/packs/normalisePackItems";
 import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
@@ -50,9 +51,16 @@ export function ItemForm({
   const [state, formAction] = useActionState<ItemFormState, FormData>(action, {
     ok: false,
   });
-  const [icon, setIcon] = useState<string>(
-    item?.icon && isPackItemIconKey(item.icon) ? item.icon : ""
-  );
+  const [icon, setIcon] = useState<string>(() => {
+    if (item?.icon && isPackItemIconKey(item.icon) && item.icon !== "box" && item.icon !== "package") {
+      return item.icon;
+    }
+    if (item?.name) {
+      const inferred = inferIcon(item.name);
+      if (inferred && isPackItemIconKey(inferred)) return inferred;
+    }
+    return "folder";
+  });
 
   const [productName, setProductName] = useState<string>(item?.name ?? "");
   const [category, setCategory] = useState<string>(item?.category ?? "Stationery");
@@ -63,12 +71,9 @@ export function ItemForm({
 
   useEffect(() => {
     if (state?.ok) {
-      const timer = setTimeout(() => {
-        router.push(returnTo);
-      }, 1000);
-      return () => clearTimeout(timer);
+      router.refresh();
     }
-  }, [state, router, returnTo]);
+  }, [state, router]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;

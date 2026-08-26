@@ -12,6 +12,7 @@ import {
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import { inventoryItemNameKey } from "@/lib/admin/item-constants";
 import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
+import { inferIcon } from "@/lib/packs/normalisePackItems";
 
 type SupabaseAdminClient = ReturnType<typeof createSupabaseAdminClient>;
 type MasterProductRow = Database["public"]["Tables"]["master_products"]["Row"];
@@ -473,10 +474,25 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
         }) || masterList[0];
 
       if (matchedMaster) {
-        const { count: packCount } = await admin
-          .from("school_pack_items")
-          .select("id", { count: "exact", head: true })
-          .eq("product_id", matchedMaster.id);
+        const [{ count: packCount }, { data: legacyItem }] = await Promise.all([
+          admin
+            .from("school_pack_items")
+            .select("id", { count: "exact", head: true })
+            .eq("product_id", matchedMaster.id),
+          admin
+            .from("stationery_items" as never)
+            .select("icon")
+            .or(
+              `master_product_id.eq.${matchedMaster.id},sku.ilike.${matchedMaster.sku},name.ilike.${escapeIlikeLiteral(matchedMaster.name)}` as never,
+            )
+            .not("icon" as never, "is" as never, null as never)
+            .limit(1)
+            .maybeSingle(),
+        ]);
+
+        const resolvedIcon =
+          (legacyItem as { icon?: string | null } | null)?.icon ||
+          inferIcon(matchedMaster.name);
 
         return {
           id: matchedMaster.id,
@@ -493,7 +509,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
           unit_cost: (matchedMaster as unknown as { latest_verified_cost?: number }).latest_verified_cost ?? 0,
           barcode: (matchedMaster as unknown as { barcode?: string }).barcode || null,
           pack_inclusions_count: packCount ?? 0,
-          icon: null,
+          icon: resolvedIcon,
           visible: matchedMaster.active,
           sort_order: 0,
           slug: matchedMaster.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
@@ -566,7 +582,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
     unit_cost: 16.00,
     barcode: null,
     pack_inclusions_count: 0,
-    icon: null,
+    icon: inferIcon(formattedTitle),
     visible: true,
     sort_order: 0,
     slug: slugified,

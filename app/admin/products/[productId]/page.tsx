@@ -7,6 +7,8 @@ import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
+import { ItemIcon } from "@/components/ui/ItemIcon";
+import { inferIcon } from "@/lib/packs/normalisePackItems";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -133,7 +135,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
-                <Tag size={16} className={adminStyles.iconTeal} />
+                <div className={adminStyles.sectionIconTeal} style={{ display: "inline-flex", alignItems: "center" }}>
+                  <ItemIcon name={item?.icon || inferIcon(name)} size={16} />
+                </div>
                 <span>Commercial &amp; Supplier Information</span>
               </div>
             </div>
