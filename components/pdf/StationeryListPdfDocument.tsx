@@ -241,7 +241,7 @@ export function StationeryListPdfDocument({
 
           <View style={styles.contactCol}>
             <Text style={styles.contactText}>
-              Care Desk: care@pexpacks.co.za{"\n"}
+              Care Desk: helpme@pexpacks.co.za | pexpack@gmail.com{"\n"}
               Tel / WhatsApp: +27 10 500 8422{"\n"}
               www.pexpacks.co.za • Gauteng, South Africa
             </Text>
@@ -325,7 +325,7 @@ export function StationeryListPdfDocument({
           <Text style={styles.instructionsText}>
             1. Use the checkboxes above to tick off items in your learner&apos;s stationery bag.{"\n"}
             2. To order pre-packed, verified stationery boxes delivered directly, visit www.pexpacks.co.za.{"\n"}
-            3. For custom quotes or bulk school orders, email care@pexpacks.co.za or call +27 10 500 8422.
+            3. For custom quotes or bulk school orders, email helpme@pexpacks.co.za / pexpack@gmail.com or call +27 10 500 8422.
           </Text>
         </View>
 
