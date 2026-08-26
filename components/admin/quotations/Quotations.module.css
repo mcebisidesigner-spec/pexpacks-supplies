@@ -1,158 +1,171 @@
+/* ==========================================================================
+   Pexpacks Quotations Dark UI Theme - Pixel-Perfect Matching Reference
+   ========================================================================== */
+
 .container {
   display: flex;
   flex-direction: column;
   gap: 20px;
   width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 8px 0 40px 0;
+  color: #f8fafc;
+  font-family: inherit;
 }
 
-.tableCard {
-  background: #0c1322;
-  border: 1px solid rgba(30, 41, 59, 0.85);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-}
-
-.tableWrapper {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.dataTable {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 13px;
-}
-
-.dataTable th {
-  padding: 12px 16px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
+/* Top Back Button */
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0b121e;
+  border: 1px solid rgba(30, 41, 59, 0.9);
   color: #94a3b8;
-  background: rgba(15, 23, 42, 0.6);
-  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
-}
-
-.dataRow {
-  border-bottom: 1px solid rgba(30, 41, 59, 0.4);
-  transition: background 0.15s ease;
-  cursor: pointer;
-}
-
-.dataRow:hover {
-  background: rgba(16, 185, 129, 0.04);
-}
-
-.dataRow td {
-  padding: 14px 16px;
-  vertical-align: middle;
-}
-
-.quoteNumLink {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-weight: 700;
-  color: #10b981;
-  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
   font-size: 13px;
-}
-
-.quoteNumLink:hover {
-  text-decoration: underline;
-}
-
-.recipientCell {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.recipientName {
   font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: fit-content;
+}
+
+.backButton:hover {
+  background: #131d2e;
   color: #f8fafc;
+  border-color: rgba(51, 65, 85, 0.9);
 }
 
-.schoolSubtext {
-  font-size: 11.5px;
-  color: #94a3b8;
-}
-
-.priceText {
-  font-weight: 700;
-  color: #f8fafc;
-}
-
-.textMuted {
-  color: #94a3b8;
-  font-size: 12px;
-}
-
-.statusTabs {
+/* Top Header Row */
+.headerRow {
   display: flex;
-  gap: 6px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
-.statusTab {
-  padding: 6px 14px;
-  border-radius: 20px;
+.titleArea {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pageTitle {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.pageSubtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.preparedByArea {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+
+.preparedByLabel {
   font-size: 12px;
   font-weight: 600;
-  background: rgba(15, 23, 42, 0.6);
   color: #94a3b8;
-  border: 1px solid rgba(30, 41, 59, 0.8);
-  cursor: pointer;
-  transition: all 0.15s ease;
 }
 
-.statusTab:hover {
-  background: rgba(30, 41, 59, 0.8);
+.preparedByInput {
+  height: 40px;
+  padding: 0 14px;
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 8px;
   color: #f8fafc;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease;
 }
 
-.statusTabActive {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-  border-color: rgba(16, 185, 129, 0.4);
+.preparedByInput:focus {
+  border-color: #10b981;
 }
 
-.builderGrid {
+/* Top 2-Column Grid */
+.topGrid {
   display: grid;
   grid-template-columns: 1fr 340px;
-  gap: 24px;
-  align-items: start;
+  gap: 20px;
+  align-items: stretch;
 }
 
 @media (max-width: 1024px) {
-  .builderGrid {
+  .topGrid {
     grid-template-columns: 1fr;
   }
 }
 
-.formCard {
-  background: #0c1322;
+/* Base Card Style */
+.card {
+  background: #0b121e;
   border: 1px solid rgba(30, 41, 59, 0.85);
   border-radius: 12px;
-  padding: 24px;
+  padding: 22px 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: visible;
 }
 
-.formSectionTitle {
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cardTitle {
   font-size: 14px;
   font-weight: 700;
   color: #f8fafc;
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid rgba(30, 41, 59, 0.6);
-  padding-bottom: 10px;
-  margin-bottom: 4px;
+  margin: 0;
 }
 
+/* Radio Group */
+.radioGroup {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #f8fafc;
+  cursor: pointer;
+}
+
+.radioInput {
+  accent-color: #10b981;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Form Inputs & Rows */
 .formRow2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -169,6 +182,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
 }
 
 .formLabel {
@@ -177,71 +191,209 @@
   color: #94a3b8;
 }
 
-.formInput {
-  height: 38px;
-  padding: 0 12px;
-  background: #070b12;
-  border: 1px solid rgba(30, 41, 59, 0.9);
-  border-radius: 6px;
-  color: #f8fafc;
-  font-size: 13px;
-  font-family: inherit;
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-
-.formInput:focus {
-  border-color: #10b981;
-}
-
-.formTextarea {
-  padding: 10px 12px;
-  background: #070b12;
-  border: 1px solid rgba(30, 41, 59, 0.9);
-  border-radius: 6px;
-  color: #f8fafc;
-  font-size: 13px;
-  font-family: inherit;
-  outline: none;
-  min-height: 80px;
-  resize: vertical;
-  transition: border-color 0.15s ease;
-}
-
-.formTextarea:focus {
-  border-color: #10b981;
-}
-
-.lineItemsTable {
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
-  border-collapse: collapse;
 }
 
-.lineItemsTable th {
-  padding: 8px 10px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
+/* Search Icon with clean gap */
+.inputIcon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #94a3b8;
-  background: rgba(15, 23, 42, 0.5);
-  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
+  pointer-events: none;
+  z-index: 5;
+  width: 18px;
+  height: 18px;
 }
 
-.lineItemsTable td {
-  padding: 8px 6px;
-  vertical-align: middle;
+.textInput {
+  width: 100%;
+  height: 44px;
+  padding: 0 18px;
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 24px;
+  color: #f8fafc;
+  font-size: 13.5px;
+  outline: none;
+  transition: all 0.15s ease;
 }
 
-.summaryCard {
-  background: #0c1322;
-  border: 1px solid rgba(30, 41, 59, 0.85);
+.textInput.textInputWithIcon {
+  padding-left: 54px !important;
+}
+
+.textInput:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.textInput::placeholder {
+  color: #64748b;
+  font-weight: 400;
+}
+
+/* Unified Results Drawer (matching GradePackItemSelector sample) */
+.searchDrawer {
+  position: absolute;
+  z-index: 9999999 !important;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 520px;
+  max-width: min(700px, 92vw);
+  max-height: 420px;
+  overflow-y: auto;
   border-radius: 12px;
-  padding: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  background: #090e17;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(16, 185, 129, 0.25);
+  scrollbar-width: thin;
+  scrollbar-color: #10b981 #0b1320;
+}
+
+.searchDrawer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.searchDrawer::-webkit-scrollbar-track {
+  background: #0b1320;
+  border-radius: 6px;
+}
+
+.searchDrawer::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 6px;
+}
+
+.searchDrawer::-webkit-scrollbar-thumb:hover {
+  background: #2dd4bf;
+}
+
+.drawerItem {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 18px;
+  text-align: left;
+  border: 0;
+  background: #090e17;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.14s ease;
+}
+
+.drawerItem:hover {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.drawerItem + .drawerItem {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.drawerItemInfo {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  position: sticky;
-  top: 80px;
+  gap: 3px;
+  min-width: 0;
+  padding-right: 16px;
+}
+
+.drawerItemTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: #10b981;
+  margin: 0;
+  transition: color 0.14s ease;
+}
+
+.drawerItem:hover .drawerItemTitle {
+  color: #34d399;
+}
+
+.drawerItemMeta {
+  margin: 2px 0 0 0;
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.drawerItemDesc {
+  margin: 3px 0 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.drawerPriceBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.drawerPrice {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #10b981;
+  margin: 0;
+}
+
+.drawerTag {
+  font-size: 10.5px;
+  color: #64748b;
+  margin: 0;
+}
+
+.drawerEmpty {
+  padding: 20px 24px;
+  font-size: 13px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.drawerSpinnerWrap {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #10b981;
+}
+
+/* Quotation Summary Card */
+.summaryCard {
+  background: #0b121e;
+  border: 1px solid rgba(30, 41, 59, 0.85);
+  border-radius: 12px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.summaryTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.summaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .summaryRow {
@@ -252,18 +404,414 @@
   color: #94a3b8;
 }
 
+.summaryRowValue {
+  font-weight: 600;
+  color: #f8fafc;
+}
+
 .summaryRowGrand {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid rgba(30, 41, 59, 0.8);
-  font-size: 16px;
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.grandTotalLabel {
+  font-size: 15px;
   font-weight: 700;
   color: #f8fafc;
 }
 
 .grandTotalAmount {
+  font-size: 20px;
+  font-weight: 800;
   color: #10b981;
-  font-size: 18px;
+}
+
+.summaryActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btnGenerate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  background: #10b981;
+  color: #ffffff;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: 24px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.btnGenerate:hover {
+  background: #059669;
+}
+
+.btnGenerate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnDraft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  background: #060b13;
+  color: #f8fafc;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnDraft:hover {
+  background: #0b121e;
+  border-color: rgba(51, 65, 85, 0.9);
+}
+
+/* Line Items Full Width Card */
+.lineItemsCard {
+  background: #0b121e;
+  border: 1px solid rgba(30, 41, 59, 0.85);
+  border-radius: 12px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: visible !important;
+  z-index: 30;
+}
+
+.btnAddItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #060b13;
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnAddItem:hover {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: #10b981;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow: visible !important;
+  position: relative;
+}
+
+.lineItemsTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+  text-align: left;
+  position: relative;
+}
+
+/* Datatable Column Headers - Centered & aligned matching reference image */
+.lineItemsTable th {
+  padding: 8px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  border: none;
+  vertical-align: middle;
+  text-align: center;
+  height: 24px;
+}
+
+.lineItemRow {
+  background: transparent;
+  position: relative;
+}
+
+.lineItemRow.activeRowZIndex {
+  position: relative;
+  z-index: 99999 !important;
+}
+
+.lineItemRow td {
+  padding: 0 8px;
+  vertical-align: middle;
+}
+
+.lineItemRow td:first-child {
+  position: relative;
+  z-index: 1000;
+}
+
+/* Capsule / Pill Inputs for Table */
+.tablePillInput {
+  width: 100%;
+  height: 44px;
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 24px;
+  color: #f8fafc;
+  font-size: 13px;
+  padding: 0 18px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+/* Explicit high specificity for text inputs with search icon */
+.tablePillInput.textInputWithIcon {
+  padding-left: 54px !important;
+}
+
+.tablePillInput::placeholder {
+  color: #64748b;
+  font-weight: 400;
+}
+
+.tablePillInput:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.tablePillCenter {
+  text-align: center;
+}
+
+.tablePillRight {
+  text-align: right;
+  font-weight: 600;
+}
+
+.tablePillMono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.deleteBtn:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.deleteBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Bottom 2-Column Grid */
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+  position: relative;
+  z-index: 10;
+}
+
+@media (max-width: 800px) {
+  .bottomGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notesContainer {
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 8px;
+  padding: 14px 16px;
+  min-height: 110px;
+}
+
+.notesTextarea {
+  width: 100%;
+  height: 80px;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+}
+
+.bankingBox {
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  text-align: right;
+}
+
+.bankingText {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.bankingTextBold {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Quotations List View - Status Tabs & Data Table (Pexpacks Dark UI Theme)
+   ========================================================================== */
+
+.statusTabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #060b13;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+  border-radius: 24px;
+  padding: 4px;
+}
+
+.statusTab {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+  font-family: inherit;
+}
+
+.statusTab:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.statusTabActive {
+  background: #0b121e;
+  color: #10b981;
+  font-weight: 700;
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.tableCard {
+  background: #0b121e;
+  border: 1px solid rgba(30, 41, 59, 0.85);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  width: 100%;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.dataTable th {
+  padding: 14px 16px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  background: #060b13;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+}
+
+.dataRow {
+  border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.dataRow:hover {
+  background: rgba(16, 185, 129, 0.04);
+}
+
+.dataRow td {
+  padding: 14px 16px;
+  font-size: 13px;
+  vertical-align: middle;
+  color: #f8fafc;
+}
+
+.quoteNumLink {
+  color: #38bdf8;
+  font-weight: 700;
+  text-decoration: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.quoteNumLink:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+.recipientCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recipientName {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.schoolSubtext {
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+.priceText {
+  font-weight: 700;
+  color: #10b981;
+}
+
+.textMuted {
+  color: #94a3b8;
 }

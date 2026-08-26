@@ -93,4 +93,49 @@ describe("Quotation Generator Logic & Schema Validation", () => {
     const grandTotal = Number((subtotal + vatAmount).toFixed(2));
     expect(grandTotal).toBe(229.94);
   });
+
+  it("renders QuotationPdfDocument with Prepared by text into a valid PDF buffer", async () => {
+    const React = await import("react");
+    const { pdf } = await import("@react-pdf/renderer");
+    const { QuotationPdfDocument } = await import("@/components/pdf/QuotationPdfDocument");
+
+    const sampleData = {
+      quote_number: "PX-Q-2026-0101",
+      created_at: "26/08/2026",
+      valid_until: "25/09/2026",
+      status: "draft",
+      prepared_by: "Mcebisi Hlongwane",
+      recipient_name: "Bedfordview Primary School Bursar",
+      recipient_email: "bursar@bedfordview.co.za",
+      recipient_phone: "+27 11 902 4432",
+      school_name: "Bedfordview Primary School",
+      school_address: "Germiston, Gauteng",
+      subtotal: 1000.0,
+      vat_rate: 15.0,
+      vat_amount: 150.0,
+      total_amount: 1150.0,
+      notes: "Standard settlement: 30 days from official invoice.",
+      items: [
+        {
+          item_title: "A4 Clear Plastic Folders",
+          sku: "PEX-GEN-ACPF-427",
+          unit: "Pack",
+          quantity: 10,
+          unit_price: 28.0,
+          total_price: 280.0,
+        },
+      ],
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const element = React.createElement(QuotationPdfDocument, { data: sampleData }) as any;
+    const blob = await pdf(element).toBlob();
+    const arrayBuffer = await blob.arrayBuffer();
+    const documentBuffer = Buffer.from(arrayBuffer);
+
+    expect(documentBuffer).toBeDefined();
+    expect(documentBuffer.length).toBeGreaterThan(1000);
+    const header = documentBuffer.slice(0, 5).toString("utf-8");
+    expect(header.startsWith("%PDF")).toBe(true);
+  });
 });

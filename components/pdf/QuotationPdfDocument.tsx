@@ -22,6 +22,7 @@ export interface QuotationPdfData {
   created_at: string;
   valid_until: string;
   status: string;
+  prepared_by?: string | null;
   recipient_name: string;
   recipient_email: string;
   recipient_phone?: string | null;
@@ -47,10 +48,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: 24,
+    marginBottom: 20,
     borderBottomWidth: 1.5,
     borderBottomColor: "#10b981",
-    paddingBottom: 16,
+    paddingBottom: 14,
   },
   brandBlock: {
     flexDirection: "column",
@@ -105,10 +106,17 @@ const styles = StyleSheet.create({
     textAlign: "right",
     lineHeight: 1.4,
   },
+  preparedByText: {
+    fontSize: 8,
+    fontFamily: "Helvetica-Bold",
+    color: "#059669",
+    marginTop: 2,
+    textAlign: "right",
+  },
   metaGrid: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 16,
     backgroundColor: "#f8fafc",
     borderRadius: 6,
     padding: 12,
@@ -139,8 +147,8 @@ const styles = StyleSheet.create({
     lineHeight: 1.35,
   },
   table: {
-    marginTop: 10,
-    marginBottom: 16,
+    marginTop: 8,
+    marginBottom: 14,
     borderWidth: 1,
     borderColor: "#e2e8f0",
     borderRadius: 4,
@@ -188,7 +196,7 @@ const styles = StyleSheet.create({
   totalsSection: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    marginBottom: 20,
+    marginBottom: 16,
   },
   totalsTable: {
     width: "45%",
@@ -233,8 +241,8 @@ const styles = StyleSheet.create({
   notesAndBanking: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 10,
-    paddingTop: 12,
+    marginTop: 6,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: "#e2e8f0",
   },
@@ -293,6 +301,11 @@ function formatMoney(amount: number): string {
 }
 
 export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
+  // Clean notes from the trailing Prepared by if it was appended
+  const displayNotes = data.notes
+    ? data.notes.replace(/Prepared by:\s*[^\n\r]+/i, "").trim()
+    : "";
+
   return (
     <Document title={`Quotation ${data.quote_number}`} author="Pexpacks Supplies">
       <Page size="A4" style={styles.page}>
@@ -319,6 +332,9 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
               Valid Until: {data.valid_until}{"\n"}
               Status: {data.status.toUpperCase()}
             </Text>
+            {data.prepared_by ? (
+              <Text style={styles.preparedByText}>Prepared by: {data.prepared_by}</Text>
+            ) : null}
           </View>
         </View>
 
@@ -336,6 +352,11 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
             <Text style={styles.metaName}>{data.school_name || "Custom Client"}</Text>
             {data.school_address ? <Text style={styles.metaText}>{data.school_address}</Text> : null}
             <Text style={styles.metaText}>Currency: South African Rand (ZAR)</Text>
+            {data.prepared_by ? (
+              <Text style={[styles.metaText, { fontFamily: "Helvetica-Bold", color: "#0f172a", marginTop: 2 }]}>
+                Prepared by: {data.prepared_by}
+              </Text>
+            ) : null}
           </View>
         </View>
 
@@ -407,10 +428,11 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
           <View style={styles.bankingCard}>
             <Text style={styles.sectionTitle}>Official Banking Settlement Details</Text>
             <Text style={styles.infoText}>
-              Bank: Standard Bank of South Africa{"\n"}
-              Account Name: Pexpacks Supplies (Pty) Ltd{"\n"}
-              Account Number: 023 948 109{"\n"}
-              Branch Code: 051001 (Sandton City){"\n"}
+              Bank: FNB / RMB{"\n"}
+              Account Holder: Pexpacks{"\n"}
+              Account Type: Current Account{"\n"}
+              Account Number: 63215756991{"\n"}
+              Branch Code: 250655{"\n"}
               Payment Reference: {data.quote_number}
             </Text>
           </View>
@@ -418,8 +440,8 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
           <View style={styles.notesCard}>
             <Text style={styles.sectionTitle}>Terms &amp; Notes</Text>
             <Text style={styles.infoText}>
-              {data.notes ||
-                "1. This quotation is valid for 30 calendar days from the date of issue.\n2. Pricing includes packaging, quality verification, and school delivery coordination.\n3. To accept this quotation, reply with an official stamp/signature or purchase order."}
+              {displayNotes ||
+                "1. This quotation is valid for 30 calendar days from the date of issue.\n2. Pricing includes packaging, quality verification, and school delivery coordination.\n3. Standard settlement: 30 days from official invoice."}
             </Text>
           </View>
         </View>

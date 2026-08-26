@@ -291,11 +291,11 @@ export function QuotationsListView({ initialData }: { initialData: QuotationsLis
                     <tr
                       key={quote.id}
                       className={styles.dataRow}
-                      onClick={() => router.push(`/admin/quotations/${quote.id}`)}
+                      onClick={() => router.push(`/admin/quotations/${quote.quote_number}`)}
                     >
                       <td>
                         <Link
-                          href={`/admin/quotations/${quote.id}`}
+                          href={`/admin/quotations/${quote.quote_number}`}
                           className={styles.quoteNumLink}
                           onClick={(e) => e.stopPropagation()}
                         >
@@ -326,7 +326,7 @@ export function QuotationsListView({ initialData }: { initialData: QuotationsLis
                       <td style={{ textAlign: "right" }} onClick={(e) => e.stopPropagation()}>
                         <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
                           <Link
-                            href={`/admin/quotations/${quote.id}`}
+                            href={`/admin/quotations/${quote.quote_number}`}
                             className={adminStyles.button}
                             style={{ height: "28px", padding: "0 8px", fontSize: "11px" }}
                           >

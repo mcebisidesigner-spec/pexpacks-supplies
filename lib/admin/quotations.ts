@@ -507,3 +507,41 @@ export async function convertQuotationToOrder(
 
   return { ok: true, orderId };
 }
+
+/**
+ * Delete quotation and its associated line items
+ */
+export async function deleteQuotation(
+  quotationId: string
+): Promise<{ ok: boolean; error?: string }> {
+  const actor = await requireAdmin({ permission: "orders.edit" });
+  const admin = createSupabaseAdminClient();
+
+  // Delete line items first
+  await admin
+    .from("quotation_items" as never)
+    .delete()
+    .eq("quotation_id" as never, quotationId);
+
+  // Delete quotation
+  const { error } = await admin
+    .from("quotations" as never)
+    .delete()
+    .eq("id" as never, quotationId);
+
+  if (error) {
+    console.error("[quotations] delete quotation failed:", error);
+    return { ok: false, error: error.message };
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "quotations.delete" as any,
+    entityType: "quotation" as any,
+    entityId: quotationId,
+    summary: `Deleted quotation ${quotationId}`,
+  });
+
+  return { ok: true };
+}

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getQuotation } from "@/lib/admin/quotations";
 import { QuotationDetailView } from "@/components/admin/quotations/QuotationDetailView";
@@ -22,6 +22,11 @@ export default async function QuotationDetailPage({ params }: QuotationDetailPag
 
   if (!quote) {
     notFound();
+  }
+
+  // Canonicalize URL to use [Quote Number] instead of UUID
+  if (id !== quote.quote_number) {
+    redirect(`/admin/quotations/${quote.quote_number}`);
   }
 
   return <QuotationDetailView quotation={quote} />;

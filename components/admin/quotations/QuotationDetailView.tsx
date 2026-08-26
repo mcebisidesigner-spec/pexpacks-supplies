@@ -6,30 +6,31 @@ import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Download,
-  Send,
   ShoppingCart,
-  CheckCircle2,
   Clock,
   Building2,
   FileText,
-  RefreshCw,
-  ExternalLink,
+  Trash2,
+  CheckCircle2,
+  Loader2,
 } from "lucide-react";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import {
   updateQuotationStatusAction,
   convertQuotationToOrderAction,
   regenerateQuotationPdfAction,
+  deleteQuotationAction,
 } from "@/app/admin/quotations/actions";
 import type { QuotationRow, QuotationStatus } from "@/lib/admin/quotations";
 import styles from "./Quotations.module.css";
-import adminStyles from "@/app/admin/admin.module.css";
 
-function formatMoney(amount: number): string {
-  return `R ${Number(amount || 0).toLocaleString("en-ZA", {
+function formatZAR(amount: number): string {
+  const formatted = Number(amount || 0).toLocaleString("en-ZA", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  })}`;
+  });
+  return `R ${formatted}`;
 }
 
 const STATUS_CONFIG: Record<
@@ -37,10 +38,10 @@ const STATUS_CONFIG: Record<
   { label: string; tone: "slate" | "amber" | "emerald" | "red" | "teal" }
 > = {
   draft: { label: "Draft", tone: "slate" },
-  sent: { label: "Sent / Pending", tone: "amber" },
+  sent: { label: "Sent", tone: "amber" },
   accepted: { label: "Accepted", tone: "emerald" },
   declined: { label: "Declined", tone: "red" },
-  converted_to_order: { label: "Converted to Order", tone: "teal" },
+  converted_to_order: { label: "Converted", tone: "teal" },
 };
 
 export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) {
@@ -49,215 +50,322 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
   const [pdfBusy, setPdfBusy] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(quotation.pdf_storage_path);
   const [status, setStatus] = useState<QuotationStatus>(quotation.status);
-  const [msg, setMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showConvertModal, setShowConvertModal] = useState(false);
 
   const cfg = STATUS_CONFIG[status] || { label: status, tone: "slate" };
-  const isConverted = status === "converted_to_order";
 
   // Status Change Handler
   async function handleStatusChange(newStatus: QuotationStatus) {
     setBusy(true);
+    setErrorMsg("");
+    setSuccessMsg("");
     const res = await updateQuotationStatusAction(quotation.id, newStatus);
     setBusy(false);
     if (res.ok) {
       setStatus(newStatus);
-      setMsg(`Status updated to ${newStatus}.`);
+      setSuccessMsg(`Status successfully updated to ${STATUS_CONFIG[newStatus]?.label || newStatus}.`);
+      setTimeout(() => setSuccessMsg(""), 3000);
       router.refresh();
+    } else {
+      setErrorMsg(res.error || "Failed to update status.");
     }
   }
 
   // Convert to Order Handler
-  async function handleConvertToOrder() {
-    if (!confirm(`Convert Quotation ${quotation.quote_number} to an official order?`)) return;
-
+  async function handleExecuteConvert() {
+    setShowConvertModal(false);
     setBusy(true);
+    setErrorMsg("");
     const res = await convertQuotationToOrderAction(quotation.id);
     setBusy(false);
 
     if (res.ok && res.orderId) {
-      alert(`Quotation successfully converted to Order! Redirecting to orders...`);
       router.push(`/admin/orders`);
     } else {
-      alert(res.error || "Failed to convert quotation to order.");
+      setErrorMsg(res.error || "Failed to convert quotation to order.");
     }
   }
 
-  // Regenerate PDF Handler
-  async function handleRegeneratePdf() {
+  // Regenerate / Download PDF Handler
+  async function handleDownloadPdf() {
+    if (pdfUrl) {
+      window.open(pdfUrl, "_blank");
+      return;
+    }
     setPdfBusy(true);
+    setErrorMsg("");
     const res = await regenerateQuotationPdfAction(quotation.id);
     setPdfBusy(false);
     if (res.ok && res.pdfUrl) {
       setPdfUrl(res.pdfUrl);
       window.open(res.pdfUrl, "_blank");
     } else {
-      alert(res.error || "Failed to generate PDF letterhead.");
+      setErrorMsg(res.error || "Failed to generate PDF letterhead.");
     }
   }
 
+  // Delete Quotation Execution Handler
+  async function handleExecuteDelete() {
+    setShowDeleteModal(false);
+    setBusy(true);
+    setErrorMsg("");
+    const res = await deleteQuotationAction(quotation.id);
+    setBusy(false);
+
+    if (res.ok) {
+      router.push("/admin/quotations");
+    } else {
+      setErrorMsg(res.error || "Failed to delete quotation.");
+    }
+  }
+
+  let preparedBy: string | null = null;
+  let displayNotes = quotation.notes || "";
+  if (quotation.notes) {
+    const match = quotation.notes.match(/Prepared by:\s*([^\n\r]+)/i);
+    if (match) {
+      preparedBy = match[1].trim();
+      displayNotes = quotation.notes.replace(/Prepared by:\s*[^\n\r]+/i, "").trim();
+    }
+  }
+
+  const createdDateFormatted = new Date(quotation.created_at).toLocaleDateString("en-GB");
+  const validUntilFormatted = new Date(quotation.valid_until).toLocaleDateString("en-GB");
+
   return (
     <div className={styles.container}>
-      {/* Header */}
-      <div className={adminStyles.headerRow}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <Link
-            href="/admin/quotations"
-            className={adminStyles.button}
-            style={{ width: "32px", height: "32px", padding: 0 }}
-          >
-            <ArrowLeft size={16} />
-          </Link>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <h1 className={adminStyles.pageTitle}>{quotation.quote_number}</h1>
-              <StatusBadge status={cfg.label} tone={cfg.tone} showDot />
-            </div>
-            <p className={adminStyles.pageSubtitle}>
-              Created on {new Date(quotation.created_at).toLocaleDateString("en-GB")} • Valid until{" "}
-              {new Date(quotation.valid_until).toLocaleDateString("en-GB")}
-            </p>
+      {/* 1. Top Back Button */}
+      <Link href="/admin/quotations" className={styles.backButton}>
+        <ArrowLeft size={14} />
+        Back to Quotations
+      </Link>
+
+      {/* 2. Top Header Row */}
+      <div className={styles.headerRow} style={{ alignItems: "center" }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <h1 className={styles.pageTitle}>{quotation.quote_number}</h1>
+            <StatusBadge status={cfg.label} tone={cfg.tone} showDot />
           </div>
+          <p className={styles.pageSubtitle} style={{ marginTop: "4px" }}>
+            Created on {createdDateFormatted} • Valid until {validUntilFormatted}
+            {preparedBy ? ` • Prepared by ${preparedBy}` : ""}
+          </p>
         </div>
 
-        {/* Action Buttons */}
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-          {pdfUrl ? (
-            <a
-              href={pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={adminStyles.button}
-            >
-              <Download size={14} /> Download PDF
-            </a>
-          ) : (
-            <button
-              type="button"
-              disabled={pdfBusy}
-              onClick={handleRegeneratePdf}
-              className={adminStyles.button}
-            >
-              <RefreshCw size={14} className={pdfBusy ? "animate-spin" : ""} />
-              {pdfBusy ? "Generating..." : "Generate PDF"}
-            </button>
-          )}
+        {/* Action Buttons matching DB UI Design Language */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          {/* Download PDF button */}
+          <button
+            type="button"
+            onClick={handleDownloadPdf}
+            disabled={pdfBusy}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              height: "42px",
+              padding: "0 18px",
+              background: "#060b13",
+              border: "1px solid rgba(30, 41, 59, 0.9)",
+              borderRadius: "24px",
+              color: "#f8fafc",
+              fontSize: "13px",
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+            }}
+          >
+            {pdfBusy ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />}
+            Download PDF
+          </button>
 
-          {!isConverted ? (
-            <button
-              type="button"
-              disabled={busy}
-              onClick={handleConvertToOrder}
-              className={adminStyles.button}
-              style={{
-                background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                color: "#ffffff",
-                borderColor: "rgba(16, 185, 129, 0.4)",
-                fontWeight: 600,
-              }}
-            >
-              <ShoppingCart size={14} /> Convert to Official Order
-            </button>
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "0 12px",
-                height: "36px",
-                borderRadius: "6px",
-                background: "rgba(45, 212, 191, 0.12)",
-                color: "#2dd4bf",
-                fontSize: "12px",
-                fontWeight: 600,
-              }}
-            >
-              <CheckCircle2 size={14} /> Converted to Order
-            </div>
-          )}
+          {/* Delete the Quotation button using DB UI Danger Style & Confirmation Modal */}
+          <button
+            type="button"
+            onClick={() => setShowDeleteModal(true)}
+            disabled={busy}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              height: "42px",
+              padding: "0 20px",
+              background: "#ef4444",
+              border: "1px solid rgba(239, 68, 68, 0.6)",
+              borderRadius: "24px",
+              color: "#ffffff",
+              fontSize: "13px",
+              fontWeight: 700,
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+              boxShadow: "0 2px 10px rgba(239, 68, 68, 0.25)",
+            }}
+          >
+            <Trash2 size={15} />
+            Delete the Quotation
+          </button>
+
+          {/* Convert to Official Order button */}
+          <button
+            type="button"
+            onClick={() => setShowConvertModal(true)}
+            disabled={busy || status === "converted_to_order"}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              height: "42px",
+              padding: "0 22px",
+              background: status === "converted_to_order" ? "#065f46" : "#10b981",
+              border: "1px solid rgba(16, 185, 129, 0.5)",
+              borderRadius: "24px",
+              color: "#ffffff",
+              fontSize: "13.5px",
+              fontWeight: 700,
+              cursor: status === "converted_to_order" ? "not-allowed" : "pointer",
+              transition: "all 0.15s ease",
+              boxShadow: "0 4px 14px rgba(16, 185, 129, 0.3)",
+            }}
+          >
+            <ShoppingCart size={15} />
+            {status === "converted_to_order" ? "Converted to Order" : "Convert to Official Order"}
+          </button>
         </div>
       </div>
 
-      {msg ? (
+      {errorMsg ? (
         <div
           style={{
-            padding: "10px 14px",
+            padding: "12px 16px",
+            background: "rgba(239, 68, 68, 0.12)",
+            border: "1px solid rgba(239, 68, 68, 0.3)",
+            borderRadius: "8px",
+            color: "#f87171",
+            fontSize: "13px",
+          }}
+        >
+          {errorMsg}
+        </div>
+      ) : null}
+
+      {successMsg ? (
+        <div
+          style={{
+            padding: "12px 16px",
             background: "rgba(16, 185, 129, 0.12)",
             border: "1px solid rgba(16, 185, 129, 0.3)",
-            borderRadius: "6px",
+            borderRadius: "8px",
             color: "#10b981",
             fontSize: "13px",
           }}
         >
-          {msg}
+          {successMsg}
         </div>
       ) : null}
 
-      <div className={styles.builderGrid}>
-        {/* Left Column: Details & Items */}
+      {/* 3. Main 2-Column Grid */}
+      <div className={styles.topGrid}>
+        {/* Left Column */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {/* Client & School Meta */}
-          <div className={styles.formCard}>
-            <div className={styles.formSectionTitle}>
-              <Building2 size={16} color="#10b981" />
-              Recipient &amp; School Information
+          {/* Card 1: Recipient & School Information */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h2 className={styles.cardTitle}>
+                <Building2 size={16} color="#10b981" />
+                Recipient &amp; School Information
+              </h2>
             </div>
 
             <div className={styles.formRow2}>
-              <div>
-                <span className={styles.formLabel}>Recipient Contact</span>
-                <div style={{ fontSize: "14px", fontWeight: 600, color: "#f8fafc", marginTop: "2px" }}>
+              {/* Recipient Contact */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "#94a3b8" }}>
+                  Recipient Contact
+                </span>
+                <span style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff" }}>
                   {quotation.recipient_name}
-                </div>
-                <div style={{ fontSize: "12px", color: "#94a3b8" }}>{quotation.recipient_email}</div>
-                {quotation.recipient_phone ? (
-                  <div style={{ fontSize: "12px", color: "#94a3b8" }}>{quotation.recipient_phone}</div>
-                ) : null}
+                </span>
+                <span style={{ fontSize: "12.5px", color: "#94a3b8" }}>
+                  {quotation.recipient_email}
+                  {quotation.recipient_phone ? ` • ${quotation.recipient_phone}` : ""}
+                </span>
               </div>
 
-              <div>
-                <span className={styles.formLabel}>School / Entity</span>
-                <div style={{ fontSize: "14px", fontWeight: 600, color: "#f8fafc", marginTop: "2px" }}>
-                  {quotation.school?.name || "Custom Client"}
-                </div>
-                {quotation.school ? (
-                  <div style={{ fontSize: "12px", color: "#94a3b8" }}>
-                    {quotation.school.city || "Johannesburg"}, {quotation.school.province || "Gauteng"}
-                  </div>
-                ) : null}
+              {/* School / Entity */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: "#94a3b8" }}>
+                  School / Entity
+                </span>
+                <span style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff" }}>
+                  {quotation.school?.name || "Direct Client / Private Buyer"}
+                </span>
+                <span style={{ fontSize: "12.5px", color: "#94a3b8" }}>
+                  {quotation.school
+                    ? [quotation.school.city, quotation.school.province].filter(Boolean).join(", ") ||
+                      "South Africa"
+                    : "Non-Partner Institutional Client"}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Line Items Table */}
-          <div className={styles.formCard}>
-            <div className={styles.formSectionTitle}>
-              <FileText size={16} color="#10b981" />
-              Itemized Quotation Lines ({quotation.items?.length || 0})
+          {/* Card 2: Itemized Quotation Lines */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h2 className={styles.cardTitle}>
+                <FileText size={16} color="#10b981" />
+                Itemized Quotation Lines ({quotation.items?.length || 0})
+              </h2>
             </div>
 
             <div className={styles.tableWrapper}>
-              <table className={styles.dataTable}>
+              <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: "0 10px" }}>
                 <thead>
                   <tr>
-                    <th>Item Description</th>
-                    <th>SKU</th>
-                    <th>Unit</th>
-                    <th style={{ textAlign: "center" }}>Qty</th>
-                    <th style={{ textAlign: "right" }}>Unit Price (ZAR)</th>
-                    <th style={{ textAlign: "right" }}>Total (ZAR)</th>
+                    <th style={{ textAlign: "left", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                      ITEM DESCRIPTION
+                    </th>
+                    <th style={{ textAlign: "center", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                      SKU
+                    </th>
+                    <th style={{ textAlign: "center", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                      UNIT
+                    </th>
+                    <th style={{ textAlign: "center", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                      QTY
+                    </th>
+                    <th style={{ textAlign: "center", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                      UNIT PRICE (ZAR)
+                    </th>
+                    <th style={{ textAlign: "right", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                      TOTAL (ZAR)
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {(quotation.items || []).map((item) => (
-                    <tr key={item.id} className={styles.dataRow}>
-                      <td style={{ fontWeight: 600, color: "#f8fafc" }}>{item.item_title}</td>
-                      <td className={styles.textMuted}>{item.sku || "-"}</td>
-                      <td className={styles.textMuted}>{item.unit || "Each"}</td>
-                      <td style={{ textAlign: "center" }}>{item.quantity}</td>
-                      <td style={{ textAlign: "right" }}>{formatMoney(item.unit_price)}</td>
-                      <td style={{ textAlign: "right", fontWeight: 700, color: "#f8fafc" }}>
-                        {formatMoney(item.total_price)}
+                    <tr key={item.id} style={{ background: "#060b13", borderRadius: "8px" }}>
+                      <td style={{ padding: "12px 14px", color: "#ffffff", fontWeight: 600, fontSize: "13.5px" }}>
+                        {item.item_title}
+                      </td>
+                      <td style={{ textAlign: "center", padding: "12px 14px", color: "#38bdf8", fontFamily: "ui-monospace, monospace", fontSize: "12px" }}>
+                        {item.sku || "-"}
+                      </td>
+                      <td style={{ textAlign: "center", padding: "12px 14px", color: "#94a3b8", fontSize: "13px" }}>
+                        {item.unit || "Each"}
+                      </td>
+                      <td style={{ textAlign: "center", padding: "12px 14px", color: "#f8fafc", fontWeight: 700, fontSize: "13px" }}>
+                        {item.quantity}
+                      </td>
+                      <td style={{ textAlign: "center", padding: "12px 14px", color: "#94a3b8", fontSize: "13px" }}>
+                        {formatZAR(item.unit_price)}
+                      </td>
+                      <td style={{ textAlign: "right", padding: "12px 14px", color: "#ffffff", fontWeight: 700, fontSize: "13.5px" }}>
+                        {formatZAR(item.total_price)}
                       </td>
                     </tr>
                   ))}
@@ -266,78 +374,122 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
             </div>
           </div>
 
-          {/* Terms & Banking */}
-          <div className={styles.formRow2}>
-            <div className={styles.formCard}>
-              <div className={styles.formSectionTitle}>Terms &amp; Delivery Notes</div>
-              <p style={{ fontSize: "12px", color: "#94a3b8", lineHeight: 1.5, whiteSpace: "pre-line" }}>
-                {quotation.notes || "Standard 30-day quotation validity terms apply."}
-              </p>
+          {/* Bottom 2-Column Section */}
+          <div className={styles.bottomGrid}>
+            {/* Notes & Delivery Terms */}
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>
+                  <FileText size={16} color="#10b981" />
+                  Terms &amp; Delivery Notes
+                </h2>
+              </div>
+              <div className={styles.notesContainer}>
+                <p style={{ margin: 0, fontSize: "12.5px", color: "#e2e8f0", lineHeight: "1.6", whiteSpace: "pre-line" }}>
+                  {displayNotes || "Standard settlement: 30 days from official invoice."}
+                </p>
+              </div>
             </div>
 
-            <div className={styles.formCard}>
-              <div className={styles.formSectionTitle}>Settlement Banking Info</div>
-              <p style={{ fontSize: "12px", color: "#94a3b8", lineHeight: 1.5 }}>
-                Bank: Standard Bank of South Africa{"\n"}
-                Account: Pexpacks Supplies (Pty) Ltd{"\n"}
-                Acc No: 023 948 109 | Branch: 051001{"\n"}
-                Ref: {quotation.quote_number}
-              </p>
+            {/* Settlement Banking Info */}
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>
+                  <FileText size={16} color="#10b981" />
+                  Settlement Banking Info
+                </h2>
+              </div>
+              <div className={styles.bankingBox}>
+                <p className={styles.bankingText}>Bank: FNB / RMB</p>
+                <p className={styles.bankingText}>Account Holder: Pexpacks</p>
+                <p className={styles.bankingText}>Account Type: Current Account</p>
+                <p className={styles.bankingTextBold}>Account Number: 63215756991</p>
+                <p className={styles.bankingTextBold}>Branch Code: 250655</p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Totals & Lifecycle Control */}
+        {/* Right Column (Total Breakdown & Lifecycle Status) */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {/* Summary Card */}
-          <div className={styles.summaryCard} style={{ position: "static" }}>
-            <div style={{ fontSize: "15px", fontWeight: 700, color: "#f8fafc", borderBottom: "1px solid rgba(30, 41, 59, 0.6)", paddingBottom: "10px" }}>
-              Total Breakdown
-            </div>
+          {/* Total Breakdown */}
+          <div className={styles.summaryCard}>
+            <div className={styles.summaryList}>
+              <h2 className={styles.summaryTitle}>Total Breakdown</h2>
 
-            <div className={styles.summaryRow}>
-              <span>Subtotal (Excl. VAT)</span>
-              <span>{formatMoney(quotation.subtotal)}</span>
-            </div>
+              <div className={styles.summaryRow}>
+                <span>Subtotal (Excl. VAT)</span>
+                <span className={styles.summaryRowValue}>{formatZAR(quotation.subtotal)}</span>
+              </div>
 
-            <div className={styles.summaryRow}>
-              <span>VAT ({quotation.vat_rate}%)</span>
-              <span>{formatMoney(quotation.vat_amount)}</span>
-            </div>
+              <div className={styles.summaryRow}>
+                <span>VAT ({quotation.vat_rate}%)</span>
+                <span className={styles.summaryRowValue}>{formatZAR(quotation.vat_amount)}</span>
+              </div>
 
-            <div className={styles.summaryRowGrand}>
-              <span>Grand Total</span>
-              <span className={styles.grandTotalAmount}>{formatMoney(quotation.total_amount)}</span>
+              <div className={styles.summaryRowGrand}>
+                <span className={styles.grandTotalLabel}>Grand Total</span>
+                <span className={styles.grandTotalAmount}>{formatZAR(quotation.total_amount)}</span>
+              </div>
             </div>
           </div>
 
-          {/* Lifecycle Status Updater */}
-          <div className={styles.formCard}>
-            <div className={styles.formSectionTitle}>
-              <Clock size={16} color="#10b981" />
-              Lifecycle Status
+          {/* Lifecycle Status Card */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h2 className={styles.cardTitle}>
+                <Clock size={16} color="#10b981" />
+                Lifecycle Status
+              </h2>
             </div>
 
             <div className={styles.formGroup}>
               <label className={styles.formLabel}>Update Quote Status</label>
               <select
-                className={styles.formInput}
                 value={status}
                 disabled={busy}
                 onChange={(e) => handleStatusChange(e.target.value as QuotationStatus)}
+                className={styles.textInput}
+                style={{
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  appearance: "auto",
+                }}
               >
                 <option value="draft">Draft</option>
-                <option value="sent">Sent / Pending</option>
+                <option value="sent">Sent</option>
                 <option value="accepted">Accepted</option>
                 <option value="declined">Declined</option>
-                <option value="converted_to_order" disabled>
-                  Converted to Order
-                </option>
+                <option value="converted_to_order">Converted to Order</option>
               </select>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        title="Delete Quotation Permanently"
+        message={`Are you sure you want to delete quotation ${quotation.quote_number}? This will permanently remove the quote record and all line items.`}
+        confirmLabel="Delete Quotation"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={handleExecuteDelete}
+        onCancel={() => setShowDeleteModal(false)}
+      />
+
+      {/* Convert to Order Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showConvertModal}
+        title="Convert Quotation to Official Order"
+        message={`Convert Quotation ${quotation.quote_number} into an official active order for ${quotation.recipient_name}?`}
+        confirmLabel="Convert to Order"
+        cancelLabel="Cancel"
+        variant="primary"
+        onConfirm={handleExecuteConvert}
+        onCancel={() => setShowConvertModal(false)}
+      />
     </div>
   );
 }

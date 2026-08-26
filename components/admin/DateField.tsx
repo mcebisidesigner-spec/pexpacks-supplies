@@ -6,10 +6,12 @@ import styles from "./DateField.module.css";
 
 type DateFieldMode = "date" | "datetime-local";
 
-interface DateFieldProps {
-  name: string;
+export interface DateFieldProps {
+  name?: string;
   id?: string;
+  value?: string;
   defaultValue?: string;
+  onChange?: (value: string) => void;
   className?: string;
   placeholder?: string;
   ariaLabel?: string;
@@ -66,9 +68,11 @@ function formatValue(value: string, mode: DateFieldMode) {
 }
 
 export function DateField({
-  name,
+  name = "date",
   id,
+  value: controlledValue,
   defaultValue = "",
+  onChange,
   className = "",
   placeholder = "Select date",
   ariaLabel,
@@ -81,10 +85,14 @@ export function DateField({
   const triggerId = id ?? `admin-date-${generatedId.replaceAll(":", "")}`;
   const dialogId = `${triggerId}-calendar`;
   const rootRef = useRef<HTMLDivElement>(null);
-  const initialDate = parseDate(defaultValue);
-  const initialTime = parseTime(defaultValue);
+
+  const initialVal = controlledValue !== undefined ? controlledValue : defaultValue;
+  const [internalValue, setInternalValue] = useState(initialVal);
+  const currentValue = controlledValue !== undefined ? controlledValue : internalValue;
+
+  const initialDate = parseDate(currentValue);
+  const initialTime = parseTime(currentValue);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(defaultValue);
   const [draft, setDraft] = useState<Date | null>(initialDate);
   const [viewMonth, setViewMonth] = useState(
     initialDate ?? new Date(new Date().getFullYear(), new Date().getMonth(), 1),
@@ -93,6 +101,16 @@ export function DateField({
   const [minute, setMinute] = useState(initialTime.minute);
 
   const [alignRight, setAlignRight] = useState(false);
+
+  useEffect(() => {
+    if (controlledValue !== undefined) {
+      setInternalValue(controlledValue);
+      const parsed = parseDate(controlledValue);
+      if (parsed) {
+        setDraft(parsed);
+      }
+    }
+  }, [controlledValue]);
 
   useEffect(() => {
     if (!open) return;
@@ -131,29 +149,41 @@ export function DateField({
   }, [viewMonth]);
 
   const openCalendar = () => {
-    const selected = parseDate(value);
+    const selected = parseDate(currentValue);
     setDraft(selected);
     if (selected) setViewMonth(selected);
-    const time = parseTime(value);
+    const time = parseTime(currentValue);
     setHour(time.hour);
     setMinute(time.minute);
     setOpen((current) => !current);
   };
 
+  const handleSelectDate = (date: Date) => {
+    setDraft(date);
+    const dateValue = toDateValue(date);
+    if (mode === "date") {
+      setInternalValue(dateValue);
+      onChange?.(dateValue);
+      setOpen(false);
+    }
+  };
+
   const apply = () => {
     if (!draft) return;
     const dateValue = toDateValue(draft);
-    setValue(
+    const finalVal =
       mode === "datetime-local"
         ? `${dateValue}T${clamp(hour, 0, 23)}:${clamp(minute, 0, 59)}`
-        : dateValue,
-    );
+        : dateValue;
+    setInternalValue(finalVal);
+    onChange?.(finalVal);
     setOpen(false);
   };
 
   const clear = () => {
-    setValue("");
+    setInternalValue("");
     setDraft(null);
+    onChange?.("");
     setOpen(false);
   };
 
@@ -161,6 +191,12 @@ export function DateField({
     const today = new Date();
     setDraft(today);
     setViewMonth(today);
+    const dateValue = toDateValue(today);
+    if (mode === "date") {
+      setInternalValue(dateValue);
+      onChange?.(dateValue);
+      setOpen(false);
+    }
   };
 
   const isDisabled = (date: Date) => {
@@ -173,19 +209,21 @@ export function DateField({
 
   return (
     <div className={styles.root} ref={rootRef}>
-      <input type="hidden" name={name} value={value} required={required} />
+      {name ? <input type="hidden" name={name} value={currentValue} required={required} /> : null}
       <button
         id={triggerId}
         type="button"
-        className={`${styles.trigger} ${value ? styles.hasValue : ""} ${className}`}
+        className={`${styles.trigger} ${currentValue ? styles.hasValue : ""} ${className}`}
         aria-label={ariaLabel ?? placeholder}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={open ? dialogId : undefined}
         onClick={openCalendar}
       >
-        <CalendarDays aria-hidden="true" />
-        <span>{value ? formatValue(value, mode) : placeholder}</span>
+        <CalendarDays aria-hidden="true" className={styles.calendarIcon} />
+        <span className={styles.triggerText}>
+          {currentValue ? formatValue(currentValue, mode) : placeholder}
+        </span>
       </button>
 
       {open ? (
@@ -265,10 +303,7 @@ export function DateField({
                   className={`${outside ? styles.outside : ""} ${today ? styles.today : ""} ${selected ? styles.selected : ""}`}
                   disabled={isDisabled(date)}
                   aria-selected={selected}
-                  onClick={() => {
-                    setDraft(date);
-                    if (outside) setViewMonth(date);
-                  }}
+                  onClick={() => handleSelectDate(date)}
                 >
                   {date.getDate()}
                 </button>
@@ -314,14 +349,16 @@ export function DateField({
                 Clear
               </button>
             ) : null}
-            <button
-              type="button"
-              className={styles.applyButton}
-              onClick={apply}
-              disabled={!draft}
-            >
-              Apply
-            </button>
+            {mode === "datetime-local" ? (
+              <button
+                type="button"
+                className={styles.applyButton}
+                onClick={apply}
+                disabled={!draft}
+              >
+                Apply
+              </button>
+            ) : null}
           </div>
         </div>
       ) : null}

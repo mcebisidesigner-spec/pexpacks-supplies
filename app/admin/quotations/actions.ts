@@ -23,11 +23,20 @@ async function generateAndUploadPdf(quotationId: string): Promise<string | null>
     const quotation = await getQuotation(quotationId);
     if (!quotation) return null;
 
+    let preparedBy: string | null = null;
+    if (quotation.notes) {
+      const match = quotation.notes.match(/Prepared by:\s*([^\n\r]+)/i);
+      if (match) {
+        preparedBy = match[1].trim();
+      }
+    }
+
     const pdfData = {
       quote_number: quotation.quote_number,
       created_at: new Date(quotation.created_at).toLocaleDateString("en-ZA"),
       valid_until: new Date(quotation.valid_until).toLocaleDateString("en-ZA"),
       status: quotation.status,
+      prepared_by: preparedBy,
       recipient_name: quotation.recipient_name,
       recipient_email: quotation.recipient_email,
       recipient_phone: quotation.recipient_phone,
@@ -95,13 +104,14 @@ async function generateAndUploadPdf(quotationId: string): Promise<string | null>
 export async function createQuotationAction(
   input: QuotationInput,
   status: QuotationStatus = "draft"
-): Promise<{ ok: boolean; id?: string; error?: string }> {
+): Promise<{ ok: boolean; id?: string; quoteNumber?: string; error?: string }> {
   const result = await createQuotation(input, status);
   if (!result.ok || !result.quotation) {
     return { ok: false, error: result.error || "Failed to create quotation" };
   }
 
   const quoteId = result.quotation.id;
+  const quoteNumber = result.quotation.quote_number;
 
   // Background render PDF
   void generateAndUploadPdf(quoteId);
@@ -109,7 +119,23 @@ export async function createQuotationAction(
   revalidatePath("/admin/quotations");
   revalidatePath("/admin/quotations", "layout");
 
-  return { ok: true, id: quoteId };
+  return { ok: true, id: quoteId, quoteNumber };
+}
+
+/**
+ * Delete quotation server action
+ */
+export async function deleteQuotationAction(
+  id: string
+): Promise<{ ok: boolean; error?: string }> {
+  const { deleteQuotation } = await import("@/lib/admin/quotations");
+  const result = await deleteQuotation(id);
+  if (!result.ok) {
+    return { ok: false, error: result.error };
+  }
+
+  revalidatePath("/admin/quotations");
+  return { ok: true };
 }
 
 /**
