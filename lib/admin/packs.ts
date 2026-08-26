@@ -292,6 +292,9 @@ export interface SchoolGroupedSummary {
   school_name: string;
   school_slug: string;
   grade_packs_count: number;
+  active_packs_count?: number;
+  stationery_items_count?: number;
+  has_items?: boolean;
   last_edited: string;
   visible: boolean;
 }
@@ -341,11 +344,18 @@ export async function listSchoolGroupedSummary(
         (row: any) => {
           const isRefused = Boolean(row.refused_partnership);
           const isPartner = row.is_partner !== false;
+          const activePacks = Number(row.active_packs_count ?? 0);
+          const stationeryItems = Number(row.stationery_items_count ?? 0);
+          const hasItems = activePacks > 0 || stationeryItems > 0;
+
           return {
             school_id: row.school_id,
             school_name: row.school_name,
             school_slug: row.school_slug ?? "",
             grade_packs_count: Number(row.grade_packs_count ?? 0),
+            active_packs_count: activePacks,
+            stationery_items_count: stationeryItems,
+            has_items: hasItems,
             last_edited: row.last_edited ?? "",
             visible: !isRefused && (row.visible !== undefined ? Boolean(row.visible) : isPartner),
           };
@@ -941,7 +951,7 @@ export async function setPackVisible(
     .from("school_packs")
     .update({ visible, updated_by: actor.user.id })
     .eq("id", id)
-    .select("id, title, visible")
+    .select("id, title, slug, visible, school_id, schools(slug)")
     .single();
 
   if (error) {
@@ -958,7 +968,8 @@ export async function setPackVisible(
     summary: `Set pack "${updated.title}" visibility to ${updated.visible ? "visible" : "hidden"}`,
   });
 
-  revalidateCatalog();
+  const schoolSlug = (updated as { schools?: { slug?: string } | null })?.schools?.slug;
+  revalidateCatalog({ schoolSlug, packSlug: updated.slug || updated.id });
 
   return { ok: true };
 }

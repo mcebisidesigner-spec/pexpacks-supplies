@@ -96,7 +96,7 @@ describe("School Grade Ranges and Packs Tailoring", () => {
     expect(adminPacks[1].price).toBe(0);
     expect(adminPacks[1].grade_label).toBe("Grade 9 – Stationery Pack");
 
-    // Public grades match
+    // Public grades: when DB packs exist, only visible configured packs are shown
     const publicGrades = buildTailoredPublicGrades(school, [
       {
         id: "pack-g8-id",
@@ -110,10 +110,14 @@ describe("School Grade Ranges and Packs Tailoring", () => {
       },
     ]);
 
-    expect(publicGrades).toHaveLength(5);
+    expect(publicGrades).toHaveLength(1);
     expect(publicGrades[0].grade).toBe("Grade 8");
     expect(publicGrades[0].price).toBe(350);
-    expect(publicGrades[1].grade).toBe("Grade 9");
-    expect(publicGrades[1].price).toBe(0);
+
+    // When 0 DB packs exist, all tailored placeholders are generated
+    const placeholderGrades = buildTailoredPublicGrades(school, []);
+    expect(placeholderGrades).toHaveLength(5);
+    expect(placeholderGrades[0].grade).toBe("Grade 8");
+    expect(placeholderGrades[4].grade).toBe("Grade 12");
   });
 });

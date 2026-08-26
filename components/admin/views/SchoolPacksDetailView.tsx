@@ -100,7 +100,7 @@ export function SchoolPacksDetailView({
               <ExternalLink size={14} /> View Public Page
             </Link>
             <AdminButton
-              href={`/admin/packs/${schoolIdentifier}/add-pack`}
+              href={`/admin/${schoolIdentifier}/add-pack-items`}
               variant="primary"
               icon={<Plus size={14} />}
             >
@@ -209,7 +209,7 @@ export function SchoolPacksDetailView({
                       const isConfigured = pack.is_configured;
                       const editHref = isConfigured
                         ? `/admin/packs/${pack.slug || pack.id}`
-                        : `/admin/packs/${schoolIdentifier}/add-pack?grade=${encodeURIComponent(formattedGrade.replace(/ – Stationery Pack/i, ""))}`;
+                        : `/admin/${schoolIdentifier}/add-pack-items?grade=${encodeURIComponent(formattedGrade.replace(/ – Stationery Pack/i, ""))}`;
 
                       return (
                         <tr key={pack.id} className={styles.dataRow}>

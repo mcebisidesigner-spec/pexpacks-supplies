@@ -149,21 +149,16 @@ export function buildTailoredPublicGrades(
   school: { id: string; name: string; slug?: string | null },
   existingGrades: GradePack[] = [],
 ): GradePack[] {
-  const tailoredGrades = getTailoredGradesForSchool(school.name);
-  const gradeMap = new Map<number, GradePack>();
-
-  for (const g of existingGrades) {
-    const order = getGradeOrder(g.grade);
-    gradeMap.set(order, g);
+  // If the school has visible configured grade packs in DB, ONLY show the visible grade packs
+  if (existingGrades && existingGrades.length > 0) {
+    return [...existingGrades].sort(
+      (a, b) => getGradeOrder(a.grade) - getGradeOrder(b.grade),
+    );
   }
 
+  // If no DB packs exist at all for this school, return the tailored placeholders for the school's grade range
+  const tailoredGrades = getTailoredGradesForSchool(school.name);
   return tailoredGrades.map((gradeLabel, idx) => {
-    const order = getGradeOrder(gradeLabel);
-    const existing = gradeMap.get(order);
-    if (existing) {
-      return existing;
-    }
-
     const slug = gradeLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     return {
       id: `std-${school.id}-${slug}-${idx}`,

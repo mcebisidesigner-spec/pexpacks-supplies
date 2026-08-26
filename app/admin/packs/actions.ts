@@ -142,10 +142,33 @@ export async function setPackVisibleAction(
 ): Promise<void> {
   await requireAdmin({ permission: "packs.edit" });
   await setPackVisible(id, visible);
+
+  const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
+  const { revalidateCatalog } = await import("@/lib/admin/catalog-revalidate");
+  const admin = createSupabaseAdminClient();
+
+  const { data: pack } = await admin
+    .from("school_packs")
+    .select("id, slug, school_id, schools(slug)")
+    .eq("id", id)
+    .maybeSingle();
+
+  const schoolSlug = (pack as { schools?: { slug?: string } | null })?.schools?.slug;
+  const packSlug = pack?.slug || pack?.id;
+
   invalidateSchoolSearchCache();
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  revalidateCatalog({ schoolSlug, packSlug });
   revalidatePath("/admin/packs");
   revalidatePath(`/admin/packs/${id}`);
+  if (schoolSlug) {
+    revalidatePath(`/admin/packs/${schoolSlug}`);
+    revalidatePath(`/schools/${schoolSlug}`);
+  }
+  if (packSlug) {
+    revalidatePath(`/admin/packs/${packSlug}`);
+    revalidatePath(`/schools/packs/${packSlug}`);
+  }
   revalidatePath("/schools");
   revalidatePath("/", "layout");
 }

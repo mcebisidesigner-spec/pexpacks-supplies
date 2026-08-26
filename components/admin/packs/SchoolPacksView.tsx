@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   ArrowRight,
   Calendar,
+  CheckCircle2,
   Clock,
   Eye,
   EyeOff,
@@ -30,7 +31,7 @@ export interface SchoolPackRowData {
   lastEdited: string;
   lastEditedBy: string;
   visibility: "visible" | "hidden";
-  status: "published" | "draft" | "review";
+  status: "Active" | "Inactive";
   health: "good" | "needs_work";
   owner: "MC" | "KG" | "LM" | "SB";
   ownerName: string;
@@ -42,12 +43,12 @@ const SEED_SCHOOL_ROWS: SchoolPackRowData[] = [
     id: "sch-1",
     code: "SCH-1001",
     name: "3d Christian Academy",
-    gradePacksCount: 2,
-    season: "2024",
+    gradePacksCount: 0,
+    season: "2027",
     lastEdited: "17/08/26",
     lastEditedBy: "Mcebisi M.",
-    visibility: "visible",
-    status: "published",
+    visibility: "hidden",
+    status: "Inactive",
     health: "good",
     owner: "MC",
     ownerName: "Mcebisi M.",
@@ -56,13 +57,13 @@ const SEED_SCHOOL_ROWS: SchoolPackRowData[] = [
   {
     id: "sch-2",
     code: "SCH-1002",
-    name: "A Re Tlabeng Primary School",
+    name: "A Re Thabang Primary School",
     gradePacksCount: 2,
-    season: "2024",
+    season: "2027",
     lastEdited: "17/08/26",
     lastEditedBy: "Mcebisi M.",
     visibility: "visible",
-    status: "published",
+    status: "Active",
     health: "good",
     owner: "MC",
     ownerName: "Mcebisi M.",
@@ -73,11 +74,11 @@ const SEED_SCHOOL_ROWS: SchoolPackRowData[] = [
     code: "SCH-1003",
     name: "Aa Academy",
     gradePacksCount: 7,
-    season: "2024",
+    season: "2027",
     lastEdited: "15/08/26",
     lastEditedBy: "Kwanele G.",
     visibility: "visible",
-    status: "published",
+    status: "Active",
     health: "good",
     owner: "KG",
     ownerName: "Kwanele G.",
@@ -87,12 +88,12 @@ const SEED_SCHOOL_ROWS: SchoolPackRowData[] = [
     id: "sch-4",
     code: "SCH-1004",
     name: "Ab Phokompe Secondary School",
-    gradePacksCount: 5,
-    season: "2024",
+    gradePacksCount: 0,
+    season: "2027",
     lastEdited: "15/08/26",
     lastEditedBy: "Mcebisi M.",
-    visibility: "visible",
-    status: "published",
+    visibility: "hidden",
+    status: "Inactive",
     health: "good",
     owner: "MC",
     ownerName: "Mcebisi M.",
@@ -103,11 +104,11 @@ const SEED_SCHOOL_ROWS: SchoolPackRowData[] = [
     code: "SCH-1005",
     name: "Buhle High School",
     gradePacksCount: 6,
-    season: "2024",
+    season: "2027",
     lastEdited: "14/08/26",
     lastEditedBy: "Kwanele G.",
-    visibility: "hidden",
-    status: "draft",
+    visibility: "visible",
+    status: "Active",
     health: "needs_work",
     owner: "KG",
     ownerName: "Kwanele G.",
@@ -118,11 +119,11 @@ const SEED_SCHOOL_ROWS: SchoolPackRowData[] = [
     code: "SCH-1006",
     name: "Crescent Primary School",
     gradePacksCount: 3,
-    season: "2024",
+    season: "2027",
     lastEdited: "12/08/26",
     lastEditedBy: "Mcebisi M.",
     visibility: "visible",
-    status: "review",
+    status: "Active",
     health: "needs_work",
     owner: "MC",
     ownerName: "Mcebisi M.",
@@ -133,11 +134,11 @@ const SEED_SCHOOL_ROWS: SchoolPackRowData[] = [
     code: "SCH-1007",
     name: "Daleview Secondary School",
     gradePacksCount: 8,
-    season: "2024",
+    season: "2027",
     lastEdited: "10/08/26",
     lastEditedBy: "Mcebisi M.",
     visibility: "visible",
-    status: "published",
+    status: "Active",
     health: "good",
     owner: "MC",
     ownerName: "Mcebisi M.",
@@ -147,12 +148,12 @@ const SEED_SCHOOL_ROWS: SchoolPackRowData[] = [
     id: "sch-8",
     code: "SCH-1008",
     name: "Edenvale Primary School",
-    gradePacksCount: 4,
-    season: "2024",
+    gradePacksCount: 0,
+    season: "2027",
     lastEdited: "09/08/26",
     lastEditedBy: "Kwanele G.",
     visibility: "hidden",
-    status: "draft",
+    status: "Inactive",
     health: "needs_work",
     owner: "KG",
     ownerName: "Kwanele G.",
@@ -211,7 +212,13 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
     if (initialData?.schoolsSummary && initialData.schoolsSummary.length > 0) {
       return initialData.schoolsSummary
         .map((s, idx) => {
-          const currentVis = visibilityMap[s.school_id] ?? (s.visible ? "visible" : "hidden");
+          const isSchoolActive = Boolean(
+            s.has_items ??
+            (s.active_packs_count !== undefined
+              ? s.active_packs_count > 0
+              : s.grade_packs_count > 0 && s.visible)
+          );
+          const currentVis = visibilityMap[s.school_id] ?? (isSchoolActive ? "visible" : "hidden");
           return {
             id: s.school_id,
             code: `SCH-${1001 + idx}`,
@@ -221,7 +228,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             lastEdited: formatDateString(s.last_edited),
             lastEditedBy: "Mcebisi M.",
             visibility: currentVis,
-            status: (currentVis === "visible" ? "published" : "draft") as "published" | "draft" | "review",
+            status: (isSchoolActive ? "Active" : "Inactive") as "Active" | "Inactive",
             health: "good" as "good" | "needs_work",
             owner: "MC" as "MC" | "KG" | "LM" | "SB",
             ownerName: "Mcebisi M.",
@@ -245,12 +252,28 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         school.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         school.code.toLowerCase().includes(searchQuery.toLowerCase());
       const matchVisibility =
-        selectedVisibility === "all" || school.visibility === selectedVisibility;
+        selectedVisibility === "all" ||
+        (selectedVisibility === "visible"
+          ? school.status === "Active"
+          : school.status === "Inactive");
       const matchStatus =
-        selectedStatus === "all" || school.status === selectedStatus;
+        selectedStatus === "all" || school.status.toLowerCase() === selectedStatus.toLowerCase();
       return matchQuery && matchVisibility && matchStatus;
     });
   }, [schoolRows, searchQuery, selectedVisibility, selectedStatus]);
+
+  const { activeCount, inactiveCount } = useMemo(() => {
+    let active = 0;
+    let inactive = 0;
+    for (const s of schoolRows) {
+      if (s.status === "Active") {
+        active++;
+      } else {
+        inactive++;
+      }
+    }
+    return { activeCount: active, inactiveCount: inactive };
+  }, [schoolRows]);
 
   const totalCount = filteredSchools.length;
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
@@ -368,41 +391,45 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           </div>
         </div>
 
-        {/* Card 4: Ready for Review */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconAmber}`}>
-              <Clock size={18} />
-            </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Ready for Review</span>
-              <span className={adminStyles.kpiValue}>9</span>
-            </div>
-          </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
-              <TrendingUp size={12} /> 3 vs last 7 days
-            </span>
-            <SparklineWave color="#f59e0b" direction="up" />
-          </div>
-        </div>
-
-        {/* Card 5: Visible Packs */}
+        {/* Card 4: Active (based on Status column) */}
         <div className={adminStyles.kpiCard}>
           <div className={adminStyles.kpiTop}>
             <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconEmerald}`}>
-              <Eye size={18} />
+              <CheckCircle2 size={18} />
             </div>
             <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Visible Packs</span>
-              <span className={adminStyles.kpiValue}>82</span>
+              <span className={adminStyles.kpiLabel}>Active</span>
+              <span className={adminStyles.kpiValue} suppressHydrationWarning>
+                {formatNumber(activeCount)}
+              </span>
             </div>
           </div>
           <div className={adminStyles.kpiFooter}>
             <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
-              <TrendingUp size={12} /> 10 vs last 7 days
+              <TrendingUp size={12} /> Active school packs
             </span>
             <SparklineWave color="#10b981" direction="up" />
+          </div>
+        </div>
+
+        {/* Card 5: Inactive (based on Status column) */}
+        <div className={adminStyles.kpiCard}>
+          <div className={adminStyles.kpiTop}>
+            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconSlate}`}>
+              <EyeOff size={18} />
+            </div>
+            <div className={adminStyles.kpiHeaderInfo}>
+              <span className={adminStyles.kpiLabel}>Inactive</span>
+              <span className={adminStyles.kpiValue} suppressHydrationWarning>
+                {formatNumber(inactiveCount)}
+              </span>
+            </div>
+          </div>
+          <div className={adminStyles.kpiFooter}>
+            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
+              <TrendingDown size={12} /> Inactive school packs
+            </span>
+            <SparklineWave color="#64748b" direction="down" />
           </div>
         </div>
       </div>
@@ -440,8 +467,8 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             onChange={(e) => setSelectedVisibility(e.target.value)}
           >
             <option value="all">Visibility: All</option>
-            <option value="visible">Visible</option>
-            <option value="hidden">Hidden</option>
+            <option value="visible">Active</option>
+            <option value="hidden">Inactive</option>
           </select>
 
           <select
@@ -450,9 +477,8 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             onChange={(e) => setSelectedStatus(e.target.value)}
           >
             <option value="all">Status: All</option>
-            <option value="published">Published</option>
-            <option value="draft">Draft</option>
-            <option value="review">Review</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
           </select>
         </div>
       </div>
@@ -531,8 +557,8 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                     </td>
                     <td>
                       <StatusBadge
-                        status={school.visibility === "visible" ? "Active" : "Hidden"}
-                        tone={school.visibility === "visible" ? "emerald" : "slate"}
+                        status={school.status}
+                        tone={school.status === "Active" ? "emerald" : "slate"}
                         showDot
                       />
                     </td>

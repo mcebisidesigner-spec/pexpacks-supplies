@@ -12,7 +12,10 @@ import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
  * When a school's own page is affected (slug/name/status/logo/grade changes)
  * pass `schoolSlug` to also revalidate the page-level ISR paths.
  */
-export function revalidateCatalog(options?: { schoolSlug?: string | null }): void {
+export function revalidateCatalog(options?: {
+  schoolSlug?: string | null;
+  packSlug?: string | null;
+}): void {
   try {
     revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   } catch (err) {
@@ -21,6 +24,7 @@ export function revalidateCatalog(options?: { schoolSlug?: string | null }): voi
 
   const paths = ["/schools", "/"];
   if (options?.schoolSlug) paths.push(`/schools/${options.schoolSlug}`);
+  if (options?.packSlug) paths.push(`/schools/packs/${options.packSlug}`);
   for (const path of paths) {
     try {
       revalidatePath(path);

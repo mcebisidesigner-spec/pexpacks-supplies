@@ -1996,6 +1996,10 @@
   background: rgba(45, 212, 191, 0.15);
   color: var(--a-accent);
 }
+.kpiIconSlate {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+}
 .kpiIconWrapper {
   display: flex;
   align-items: center;
