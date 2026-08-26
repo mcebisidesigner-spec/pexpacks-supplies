@@ -5,7 +5,7 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 
-const careEmail = "care@pexpacks.co.za";
+const careEmail = "helpme@pexpacks.co.za";
 const careEmailHref = `mailto:${careEmail}`;
 const canonicalUrl = "https://pexpacks.co.za/email-disclaimer";
 

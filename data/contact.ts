@@ -1,5 +1,6 @@
 export const generalEmail = "helpme@pexpacks.co.za";
-export const legalEmail = "care@pexpacks.co.za";
+export const legalEmail = "helpme@pexpacks.co.za";
+export const secondaryEmail = "pexpacks@gmail.com";
 export const ordersEmail = "orders@pexpacks.co.za";
 export const phoneNumber = "0780036048";
 

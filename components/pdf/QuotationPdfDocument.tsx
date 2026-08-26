@@ -304,7 +304,7 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
             <Text style={styles.companyMeta}>
               Pexpacks Supplies (Pty) Ltd{"\n"}
               Reg No: 2024/789123/07 | VAT No: 4920182741{"\n"}
-              Email: care@pexpacks.co.za | Tel: +27 10 500 8422{"\n"}
+              Email: helpme@pexpacks.co.za | pexpacks@gmail.com | Tel: +27 10 500 8422{"\n"}
               Sandton City Office Tower, 5th Floor, Sandton, 2196, South Africa
             </Text>
           </View>
@@ -428,7 +428,7 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
         <View style={styles.footer}>
           <Text style={styles.footerText}>
             Thank you for choosing Pexpacks Supplies. All orders subject to standard trading terms.{"\n"}
-            Pexpacks Supplies (Pty) Ltd | Care Desk: care@pexpacks.co.za | www.pexpacks.co.za
+            Pexpacks Supplies (Pty) Ltd | Care Desk: helpme@pexpacks.co.za | pexpacks@gmail.com | www.pexpacks.co.za
           </Text>
         </View>
       </Page>
