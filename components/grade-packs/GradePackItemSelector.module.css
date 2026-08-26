@@ -143,16 +143,36 @@
 /* Search results dropdown --------------------------------------------- */
 .results {
   position: absolute;
-  z-index: 99999;
+  z-index: 999999;
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  max-height: 380px;
+  max-height: 420px;
   overflow-y: auto;
   border-radius: 10px;
   border: 1px solid rgba(16, 185, 129, 0.45);
   background: #090e17;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(16, 185, 129, 0.25);
+  scrollbar-width: thin;
+  scrollbar-color: #219e9a #0b1320;
+}
+
+.results::-webkit-scrollbar {
+  width: 8px;
+}
+
+.results::-webkit-scrollbar-track {
+  background: #0b1320;
+  border-radius: 6px;
+}
+
+.results::-webkit-scrollbar-thumb {
+  background: #219e9a;
+  border-radius: 6px;
+}
+
+.results::-webkit-scrollbar-thumb:hover {
+  background: #2dd4bf;
 }
 
 .resultButton {
@@ -239,7 +259,7 @@
 
 .resultEmpty {
   position: absolute;
-  z-index: 99999;
+  z-index: 999999;
   top: calc(100% + 6px);
   left: 0;
   right: 0;
@@ -250,7 +270,7 @@
   border-radius: 10px;
   border: 1px solid rgba(16, 185, 129, 0.45);
   background: #090e17;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.95);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.95);
 }
 
 .emptyIcon {

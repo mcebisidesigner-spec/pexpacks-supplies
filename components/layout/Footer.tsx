@@ -123,7 +123,7 @@ function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
 export function Footer({ company }: FooterContent) {
   const currentYear = new Date().getFullYear();
   const siteName = company?.site_name || "Pexpacks";
-  const email = company?.support_email || generalEmail;
+  const email = generalEmail;
   const emailHref = `mailto:${email}`;
   const phone = company?.support_phone || phoneNumber;
   const phoneHrefLocal = phone ? telHref(phone) : "#";

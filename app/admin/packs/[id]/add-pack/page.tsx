@@ -12,11 +12,13 @@ export const metadata = {
 
 interface AddPackPageProps {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ grade?: string }>;
 }
 
-export default async function AddPackPage({ params }: AddPackPageProps) {
+export default async function AddPackPage({ params, searchParams }: AddPackPageProps) {
   const session = await requireAdmin({ permission: "packs.create" });
   const { id } = await params;
+  const sParams = searchParams ? await searchParams : {};
   const school = await getSchool(id);
   if (!school) notFound();
 
@@ -41,6 +43,7 @@ export default async function AddPackPage({ params }: AddPackPageProps) {
         schoolId={school.id}
         schoolName={school.name}
         showImporter={hasPermission(session, "items.import")}
+        initialGrade={sParams.grade || "Grade R"}
         action={createAction}
       />
     </div>

@@ -1,0 +1,179 @@
+import { getGradeOrder } from "@/lib/grade-utils";
+import type { GradePack, SchoolPackItem } from "@/data/schools";
+
+export function isHighSchool(name: string): boolean {
+  if (!name) return false;
+  // High schools, secondary schools, hoërskole, colleges, academies without primary in name
+  return (
+    /\b(high(\s*school)?|ho[eë]rskool|secondary(\s*school)?|academy|college)\b/i.test(name) &&
+    !/\b(primary|laerskool|prep|preparatory|pre-primary)\b/i.test(name)
+  );
+}
+
+export function isPrimarySchool(name: string): boolean {
+  if (!name) return false;
+  // Primary schools, laerskole, preparatory schools, junior schools
+  return (
+    /\b(primary(\s*school)?|laerskool|prep|preparatory|pre-primary|junior(\s*school)?)\b/i.test(name) &&
+    !/\b(high|ho[eë]rskool|secondary)\b/i.test(name)
+  );
+}
+
+export function getTailoredGradesForSchool(name: string): string[] {
+  if (isHighSchool(name)) {
+    return ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
+  }
+  if (isPrimarySchool(name)) {
+    return [
+      "Grade R",
+      "Grade 1",
+      "Grade 2",
+      "Grade 3",
+      "Grade 4",
+      "Grade 5",
+      "Grade 6",
+      "Grade 7",
+    ];
+  }
+  // Academies, Colleges, Combined, All-through, or general schools offer full Grades R-12
+  return [
+    "Grade R",
+    "Grade 1",
+    "Grade 2",
+    "Grade 3",
+    "Grade 4",
+    "Grade 5",
+    "Grade 6",
+    "Grade 7",
+    "Grade 8",
+    "Grade 9",
+    "Grade 10",
+    "Grade 11",
+    "Grade 12",
+  ];
+}
+
+export interface TailoredAdminPack {
+  id: string;
+  title: string;
+  slug: string;
+  price: number;
+  item_count: number;
+  visible: boolean;
+  featured?: boolean;
+  updated_at?: string;
+  is_configured: boolean;
+  grade_label: string;
+}
+
+export function matchGrade(gradeA: string, gradeB: string): boolean {
+  return getGradeOrder(gradeA) === getGradeOrder(gradeB);
+}
+
+export function buildTailoredAdminPacks(
+  school: { id: string; name: string; slug?: string | null },
+  dbPacks: {
+    id: string;
+    title: string;
+    slug?: string | null;
+    price: number | null;
+    item_count?: number;
+    visible?: boolean;
+    featured?: boolean;
+    updated_at?: string;
+  }[],
+): TailoredAdminPack[] {
+  const tailoredGrades = getTailoredGradesForSchool(school.name);
+  const matchedPacks: TailoredAdminPack[] = [];
+  const usedDbPackIds = new Set<string>();
+
+  for (const gradeLabel of tailoredGrades) {
+    const existing = dbPacks.find(
+      (p) =>
+        !usedDbPackIds.has(p.id) &&
+        (matchGrade(p.title, gradeLabel) ||
+          matchGrade(p.slug ?? "", gradeLabel)),
+    );
+
+    if (existing) {
+      usedDbPackIds.add(existing.id);
+      matchedPacks.push({
+        id: existing.id,
+        title: existing.title,
+        slug: existing.slug || `${school.slug || school.id}-${gradeLabel.toLowerCase().replace(/\s+/g, "-")}`,
+        price: existing.price ?? 0,
+        item_count: existing.item_count ?? 0,
+        visible: Boolean(existing.visible),
+        featured: existing.featured,
+        updated_at: existing.updated_at,
+        is_configured: true,
+        grade_label: `${gradeLabel} – Stationery Pack`,
+      });
+    } else {
+      const slugKey = gradeLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      matchedPacks.push({
+        id: `unassigned-${school.id}-${slugKey}`,
+        title: `${school.name} ${gradeLabel} Pack`,
+        slug: `${school.slug || school.id}-${slugKey}`,
+        price: 0,
+        item_count: 0,
+        visible: false,
+        is_configured: false,
+        grade_label: `${gradeLabel} – Stationery Pack`,
+      });
+    }
+  }
+
+  // Include any extra DB packs that didn't match standard grade ranges
+  for (const extra of dbPacks) {
+    if (!usedDbPackIds.has(extra.id)) {
+      matchedPacks.push({
+        id: extra.id,
+        title: extra.title,
+        slug: extra.slug || extra.id,
+        price: extra.price ?? 0,
+        item_count: extra.item_count ?? 0,
+        visible: Boolean(extra.visible),
+        featured: extra.featured,
+        updated_at: extra.updated_at,
+        is_configured: true,
+        grade_label: extra.title,
+      });
+    }
+  }
+
+  return matchedPacks.sort((a, b) => getGradeOrder(a.grade_label) - getGradeOrder(b.grade_label));
+}
+
+export function buildTailoredPublicGrades(
+  school: { id: string; name: string; slug?: string | null },
+  existingGrades: GradePack[] = [],
+): GradePack[] {
+  const tailoredGrades = getTailoredGradesForSchool(school.name);
+  const gradeMap = new Map<number, GradePack>();
+
+  for (const g of existingGrades) {
+    const order = getGradeOrder(g.grade);
+    gradeMap.set(order, g);
+  }
+
+  return tailoredGrades.map((gradeLabel, idx) => {
+    const order = getGradeOrder(gradeLabel);
+    const existing = gradeMap.get(order);
+    if (existing) {
+      return existing;
+    }
+
+    const slug = gradeLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    return {
+      id: `std-${school.id}-${slug}-${idx}`,
+      grade: gradeLabel,
+      gradeSlug: slug,
+      price: 0,
+      contents: [],
+      packItems: [],
+      deliveryNote: "Prepared according to official school list.",
+      availability: "in-stock" as const,
+    };
+  });
+}

@@ -30,6 +30,8 @@
   min-width: 0;
   flex-direction: column;
   gap: 16px;
+  position: relative;
+  z-index: 100;
 }
 
 .priceCard {

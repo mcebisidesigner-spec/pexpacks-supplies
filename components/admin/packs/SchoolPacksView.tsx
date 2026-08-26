@@ -334,33 +334,37 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             </div>
             <div className={adminStyles.kpiHeaderInfo}>
               <span className={adminStyles.kpiLabel}>Active Packs</span>
-              <span className={adminStyles.kpiValue}>96</span>
+              <span className={adminStyles.kpiValue} suppressHydrationWarning>
+                {formatNumber(initialData?.activePacksCount ?? 0)}
+              </span>
             </div>
           </div>
           <div className={adminStyles.kpiFooter}>
             <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
-              <TrendingUp size={12} /> 12 vs last 7 days
+              <TrendingUp size={12} /> Live catalog
             </span>
             <SparklineWave color="#06b6d4" direction="up" />
           </div>
         </div>
 
-        {/* Card 3: Draft Packs */}
+        {/* Card 3: Stationery Items */}
         <div className={adminStyles.kpiCard}>
           <div className={adminStyles.kpiTop}>
             <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconBlue}`}>
               <FileText size={18} />
             </div>
             <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Draft Packs</span>
-              <span className={adminStyles.kpiValue}>14</span>
+              <span className={adminStyles.kpiLabel}>Stationery Items</span>
+              <span className={adminStyles.kpiValue} suppressHydrationWarning>
+                {formatNumber(initialData?.totalStationeryItems ?? 0)}
+              </span>
             </div>
           </div>
           <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
-              <TrendingDown size={12} /> 2 vs last 7 days
+            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
+              <TrendingUp size={12} /> In active packs
             </span>
-            <SparklineWave color="#3b82f6" direction="down" />
+            <SparklineWave color="#3b82f6" direction="up" />
           </div>
         </div>
 

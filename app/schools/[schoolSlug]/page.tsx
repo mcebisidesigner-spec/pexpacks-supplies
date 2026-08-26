@@ -37,54 +37,7 @@ function formatSchoolLocation(city: string, district: string, province: string):
     .join(", ");
 }
 
-function isHighSchoolName(name: string): boolean {
-  return /high|hoërskool|secondary|college|academy/i.test(name) && !/primary/i.test(name);
-}
-
-function isPrimarySchoolName(name: string): boolean {
-  return /primary|laerskool|preparatory|pre-primary/i.test(name) && !/high|hoërskool/i.test(name);
-}
-
-function getStandardGradeList(schoolName: string): string[] {
-  if (isHighSchoolName(schoolName)) {
-    return ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
-  }
-  if (isPrimarySchoolName(schoolName)) {
-    return ["Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7"];
-  }
-  return [
-    "Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7",
-    "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"
-  ];
-}
-
-function getNormalizedSchoolGrades(school: School): GradePack[] {
-  const standardGrades = getStandardGradeList(school.name);
-  const existingByLabel = new Map<string, GradePack>();
-
-  for (const grade of school.grades || []) {
-    const key = grade.grade.trim().toLowerCase();
-    existingByLabel.set(key, grade);
-  }
-
-  return standardGrades.map((gradeLabel, idx) => {
-    const key = gradeLabel.trim().toLowerCase();
-    const existing = existingByLabel.get(key);
-    if (existing) return existing;
-
-    const slug = gradeLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    return {
-      id: `std-${school.id}-${slug}-${idx}`,
-      grade: gradeLabel,
-      gradeSlug: slug,
-      price: 0,
-      contents: [],
-      packItems: [],
-      deliveryNote: "Prepared according to official school list.",
-      availability: "in-stock" as const,
-    };
-  });
-}
+import { buildTailoredPublicGrades } from "@/lib/schools/school-grade-packs";
 
 export async function generateStaticParams() {
   if (process.env.NODE_ENV !== "production") return [];
@@ -141,7 +94,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   }
 
   const isRefused = Boolean(school.refusedPartnership);
-  const gradesToRender = getNormalizedSchoolGrades(school);
+  const gradesToRender = buildTailoredPublicGrades(school, school.grades);
   const schoolWithGrades = { ...school, grades: gradesToRender };
   const officialWebsiteUrl = school.website || `https://www.google.com/search?q=${encodeURIComponent(`${school.name} official website ${school.city}`)}`;
 

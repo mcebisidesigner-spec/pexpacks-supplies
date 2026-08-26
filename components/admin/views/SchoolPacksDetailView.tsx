@@ -24,6 +24,8 @@ import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { VisibleToggle } from "@/components/admin/packs/VisibleToggle";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 
+import { buildTailoredAdminPacks } from "@/lib/schools/school-grade-packs";
+
 interface PackItem {
   id: string;
   title: string;
@@ -53,35 +55,29 @@ function money(v: number): string {
   return `R ${v.toFixed(2)}`;
 }
 
-function extractGradeLabel(title: string, slug?: string | null): string {
-  const text = `${title} ${slug ?? ""}`;
-  const match = text.match(/grade\s*([r\d]+)/i);
-  if (match) {
-    const val = match[1].toUpperCase();
-    return val === "R" ? "Grade R – Stationery Pack" : `Grade ${val} – Stationery Pack`;
-  }
-  return title;
-}
-
 export function SchoolPacksDetailView({
   school,
   initialPacks,
   deletePackAction,
 }: SchoolPacksDetailViewProps) {
-  const filteredPacks = initialPacks;
+  const tailoredPacks = useMemo(() => {
+    return buildTailoredAdminPacks(school, initialPacks);
+  }, [school, initialPacks]);
 
-  const totalPacks = initialPacks.length;
+  const filteredPacks = tailoredPacks;
+  const totalPacks = tailoredPacks.length;
+
   const { publishedPacks, totalItemsCount, totalRevenue } = useMemo(() => {
     let publishedPacks = 0;
     let totalItemsCount = 0;
     let totalRevenue = 0;
-    for (const p of initialPacks) {
+    for (const p of tailoredPacks) {
       if (p.visible) publishedPacks++;
       totalItemsCount += p.item_count || 0;
       totalRevenue += p.price || 0;
     }
     return { publishedPacks, totalItemsCount, totalRevenue };
-  }, [initialPacks]);
+  }, [tailoredPacks]);
 
   const schoolIdentifier = school.slug || school.id;
 
@@ -197,44 +193,30 @@ export function SchoolPacksDetailView({
                         <span className={styles.sortIcon}>↑↓</span>
                       </div>
                     </th>
-                    <th>
-                      <div className={styles.headerContent}>
-                        <span>Total Items</span>
-                        <span className={styles.sortIcon}>↑↓</span>
-                      </div>
-                    </th>
-                    <th>
-                      <div className={styles.headerContent}>
-                        <span>Status</span>
-                        <span className={styles.sortIcon}>↑↓</span>
-                      </div>
-                    </th>
-                    <th>
-                      <div className={styles.headerContent}>
-                        <span>Last Edited</span>
-                        <span className={styles.sortIcon}>↑↓</span>
-                      </div>
-                    </th>
                     <th className={styles.alignRight}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredPacks.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className={adminStyles.emptyCell}>
+                      <td colSpan={3} className={adminStyles.emptyCell}>
                         No grade packs found matching criteria.
                       </td>
                     </tr>
                   ) : (
                     filteredPacks.map((pack) => {
-                      const formattedGrade = extractGradeLabel(pack.title, pack.slug);
+                      const formattedGrade = pack.grade_label;
+                      const isConfigured = pack.is_configured;
+                      const editHref = isConfigured
+                        ? `/admin/packs/${pack.slug || pack.id}`
+                        : `/admin/packs/${schoolIdentifier}/add-pack?grade=${encodeURIComponent(formattedGrade.replace(/ – Stationery Pack/i, ""))}`;
 
                       return (
                         <tr key={pack.id} className={styles.dataRow}>
                           <td>
                             <div className={styles.productCell}>
                               <Link
-                                href={`/admin/packs/${pack.slug || pack.id}`}
+                                href={editHref}
                                 className={styles.schoolNameTitle}
                               >
                                 {formattedGrade}
@@ -245,37 +227,47 @@ export function SchoolPacksDetailView({
                             </div>
                           </td>
                           <td className={styles.priceHighlight}>
-                            {money(pack.price)}
-                          </td>
-                          <td className={styles.textMuted}>
-                            {pack.item_count} items
-                          </td>
-                          <td>
-                            <StatusBadge
-                              status={pack.visible ? "Active" : "Hidden"}
-                              tone={pack.visible ? "emerald" : "slate"}
-                              showDot
-                            />
-                          </td>
-                          <td>
-                            <div className={styles.textMuted}>May 21, 2024</div>
-                            <div className={styles.productBrand}>Liam Morgan</div>
+                            {pack.price > 0 ? (
+                              money(pack.price)
+                            ) : (
+                              <span style={{ color: "#94a3b8", fontSize: "12px", fontWeight: 600 }}>
+                                From Quote
+                              </span>
+                            )}
                           </td>
                           <td className={styles.alignRight}>
                             <div className={styles.actionsCell}>
-                              <VisibleToggle id={pack.id} visible={pack.visible} />
-                              {deletePackAction && (
-                                <form action={deletePackAction.bind(null, pack.id)}>
-                                  <ConfirmButton
-                                    label=""
-                                    icon={<Trash2 size={13} />}
-                                    title="Delete Pack Permanently"
-                                    confirmLabel="Delete Pack"
-                                    confirmText={`Permanently delete "${pack.title}"`}
-                                    busyLabel=""
-                                    className={`${adminStyles.actionIconBtn} ${adminStyles.actionIconBtnRed}`}
-                                  />
-                                </form>
+                              {isConfigured ? (
+                                <>
+                                  <VisibleToggle id={pack.id} visible={pack.visible} />
+                                  {deletePackAction && (
+                                    <form action={deletePackAction.bind(null, pack.id)}>
+                                      <ConfirmButton
+                                        label=""
+                                        icon={<Trash2 size={13} />}
+                                        title="Delete Pack Permanently"
+                                        confirmLabel="Delete Pack"
+                                        confirmText={`Permanently delete "${pack.title}"`}
+                                        busyLabel=""
+                                        className={`${adminStyles.actionIconBtn} ${adminStyles.actionIconBtnRed}`}
+                                      />
+                                    </form>
+                                  )}
+                                </>
+                              ) : (
+                                <Link
+                                  href={editHref}
+                                  className={adminStyles.button}
+                                  style={{
+                                    fontSize: "11px",
+                                    height: "30px",
+                                    padding: "0 10px",
+                                    color: "#10b981",
+                                    borderColor: "rgba(16, 185, 129, 0.3)",
+                                  }}
+                                >
+                                  <Plus size={12} /> Set Pack
+                                </Link>
                               )}
                             </div>
                           </td>

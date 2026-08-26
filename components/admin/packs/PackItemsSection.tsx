@@ -107,11 +107,7 @@ export function PackItemsSection({
   return (
     <>
       {mode === "inlineSearch" ? (
-        <section
-          className={styles.inlineSearchBox}
-          aria-label="Quick item editor"
-        >
-          <span className={styles.inlineSearchLabel}>Add Stationery Items</span>
+        <>
           <GradePackItemSelector
             key={signature}
             initialItems={initialItems}
@@ -121,7 +117,7 @@ export function PackItemsSection({
             hideList={true}
             searchLabel=""
             searchPlaceholder="Search items by item name/SKU"
-            variant="packEditor"
+            variant="default"
             onSelectItem={handleSelectItem}
             onSave={handleSave}
           />
@@ -130,7 +126,7 @@ export function PackItemsSection({
               {message}
             </p>
           ) : null}
-        </section>
+        </>
       ) : mode !== "list" ? (
         <section
           className={styles.searchTotalRow}

@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import {
-  legalEmail as generalEmail,
-  legalEmailHref as generalEmailHref,
-  phoneHref,
-  phoneNumber,
-} from "@/data/contact";
+import { phoneHref, phoneNumber } from "@/data/contact";
 import {
   LegalDocumentPage,
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 import { buildMetadata } from "@/lib/seo";
 import { EFFECTIVE_DATE } from "@/lib/constants";
+
+const privacyEmail = "privacy@pexpacks.co.za";
+const privacyEmailHref = `mailto:${privacyEmail}`;
 
 export const metadata: Metadata = buildMetadata(
   "Privacy Policy",
@@ -42,7 +40,7 @@ const config: LegalDocumentConfig = {
       content: (
         <>
           Direct POPIA queries, access requests, or objections to{" "}
-          <a href={generalEmailHref}>{generalEmail}</a> or call{" "}
+          <a href={privacyEmailHref}>{privacyEmail}</a> or call{" "}
           <a href={phoneHref}>{phoneNumber}</a>. Requests are attended to by the
           designated Information Officer.
         </>
@@ -84,11 +82,11 @@ const config: LegalDocumentConfig = {
             </li>
             <li>
               <strong>General Enquiries:</strong>{" "}
-              <a href={generalEmailHref}>{generalEmail}</a>
+              <a href={privacyEmailHref}>{privacyEmail}</a>
             </li>
             <li>
               <strong>Privacy & POPIA Office:</strong>{" "}
-              <a href="mailto:privacy@pexpacks.co.za">privacy@pexpacks.co.za</a>
+              <a href={privacyEmailHref}>{privacyEmail}</a>
             </li>
             <li>
               <strong>Telephone:</strong>{" "}
@@ -296,7 +294,7 @@ const config: LegalDocumentConfig = {
           </ul>
           <h3>Submitting a Privacy Request</h3>
           <p>
-            To submit an access, correction, or objection request, please contact our Information Officer at <a href="mailto:privacy@pexpacks.co.za">privacy@pexpacks.co.za</a> or <a href={generalEmailHref}>{generalEmail}</a>.
+            To submit an access, correction, or objection request, please contact our Information Officer at <a href={privacyEmailHref}>{privacyEmail}</a>.
           </p>
           <h3>Lodging a Complaint with the Information Regulator</h3>
           <p>

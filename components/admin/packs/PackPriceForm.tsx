@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type { ReactNode } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
@@ -9,7 +9,12 @@ import { updatePackPriceAction } from "@/app/admin/packs/actions";
 import type { PackFormState } from "@/lib/admin/packs";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
-import editStyles from "./EditPack.module.css";
+import styles from "./SchoolPackCreateForm.module.css";
+
+const GRADES = [
+  "Grade R",
+  ...Array.from({ length: 12 }, (_, index) => `Grade ${index + 1}`),
+];
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -40,8 +45,10 @@ export function PackPriceForm({
   price,
   itemCount,
   subtotal,
-  showSubmit = true,
-  title = "Set Pack Price",
+  schoolName,
+  packTitle = "",
+  showSubmit = false,
+  title = "Set Pack Grade & Items",
   children,
 }: PackPriceFormProps) {
   const action = updatePackPriceAction.bind(null, packId);
@@ -49,67 +56,57 @@ export function PackPriceForm({
     ok: false,
   });
 
+  const initialGrade = useMemo(() => {
+    const match = packTitle.match(/grade\s*([r\d]+)/i);
+    if (match) {
+      const val = match[1].toUpperCase();
+      return val === "R" ? "Grade R" : `Grade ${val}`;
+    }
+    return "Grade R";
+  }, [packTitle]);
+
+  const [selectedGrade, setSelectedGrade] = useState<string>(initialGrade);
   const suggested = subtotal != null ? Math.round(subtotal * 100) / 100 : null;
   const targetPrice = suggested ?? price;
   const [value, setValue] = useState<string>(String(targetPrice));
-
-  const margin =
-    subtotal != null && subtotal > 0
-      ? (((price - subtotal) / subtotal) * 100).toFixed(1)
-      : null;
-  const marginNumber = margin == null ? null : Number(margin);
-  const marginTone =
-    marginNumber == null
-      ? ""
-      : marginNumber < 10
-        ? editStyles.marginDanger
-        : marginNumber < 20
-          ? editStyles.marginWarning
-          : editStyles.marginPositive;
 
   useEffect(() => {
     setValue(String(targetPrice));
   }, [targetPrice]);
 
   return (
-    <div className={adminStyles.tableCard}>
+    <div className={`${adminStyles.tableCard} ${styles.priceCard}`}>
       <form id={formId} action={formAction}>
         <input type="hidden" name="price" value={value} readOnly />
-        <div className={editStyles.priceHeader}>
-          <div>
-            <div className={editStyles.priceLabel}>{title}</div>
-            <div className={editStyles.priceSub}>
-              {itemCount} {itemCount === 1 ? "item" : "items"} - subtotal{" "}
-              {subtotal != null ? `R ${subtotal.toFixed(2)}` : "-"}
-            </div>
+        <div className={styles.priceHeader}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+            <h2 className={styles.cardTitle}>{title}</h2>
+            {showSubmit ? <SubmitButton /> : null}
           </div>
-          {showSubmit ? <SubmitButton /> : null}
         </div>
 
-        <div className={editStyles.priceInputRow}>
-          <span className={editStyles.currencyPrefix}>R</span>
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            className={editStyles.priceInput}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-          {suggested != null && price !== suggested && (
-            <button
-              type="button"
-              className={editStyles.useSubtotalBtn}
-              onClick={() => setValue(String(suggested))}
+        <div className={styles.priceControls}>
+          <label className={styles.fieldGroup}>
+            <span className={styles.fieldLabel}>Select Grade *</span>
+            <select
+              name="grade"
+              value={selectedGrade}
+              onChange={(event) => setSelectedGrade(event.target.value)}
+              className={styles.fieldSelect}
             >
-              Use subtotal
-            </button>
-          )}
-        </div>
+              {GRADES.map((grade) => (
+                <option key={grade} value={grade}>
+                  {grade}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        {children ? (
-          <div className={editStyles.inlineItemsSlot}>{children}</div>
-        ) : null}
+          <div className={`${styles.fieldGroup} ${styles.itemSearchGroup}`}>
+            <span className={styles.fieldLabel}>Add Stationery Items</span>
+            {children}
+          </div>
+        </div>
 
         {state?.ok ? (
           <div className={adminStyles.success} role="status">

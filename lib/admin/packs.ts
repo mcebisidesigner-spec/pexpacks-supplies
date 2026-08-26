@@ -300,6 +300,8 @@ export interface SchoolGroupedResult {
   schoolsSummary: SchoolGroupedSummary[];
   totalGradePacks: number;
   totalSchools: number;
+  activePacksCount?: number;
+  totalStationeryItems?: number;
   page: number;
   pageCount: number;
   schools: { id: string; name: string; slug?: string | null }[];
@@ -332,6 +334,8 @@ export async function listSchoolGroupedSummary(
       const rawSchools = Array.isArray(data.schools) ? data.schools : [];
       const totalSchools = Number(data.total_schools ?? rawSchools.length);
       const totalGradePacks = Number(data.total_grade_packs ?? 0);
+      const activePacksCount = Number(data.active_packs_count ?? 0);
+      const totalStationeryItems = Number(data.total_stationery_items ?? 0);
 
       const schoolsSummary: SchoolGroupedSummary[] = rawSchools.map(
         (row: any) => {
@@ -352,6 +356,8 @@ export async function listSchoolGroupedSummary(
         schoolsSummary,
         totalGradePacks,
         totalSchools,
+        activePacksCount,
+        totalStationeryItems,
         page: 1,
         pageCount: Math.max(1, Math.ceil(totalSchools / pageSize)),
         schools: allSchools,

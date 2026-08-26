@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useMemo, useRef, useState } from "react";
 import { useActionState } from "react";
@@ -48,6 +48,7 @@ interface SchoolPackCreateFormProps {
   schoolId: string;
   schoolName: string;
   showImporter: boolean;
+  initialGrade?: string;
   action: (
     previous: PackFormState,
     formData: FormData,
@@ -58,13 +59,14 @@ export function SchoolPackCreateForm({
   schoolId,
   schoolName,
   showImporter,
+  initialGrade = "Grade R",
   action,
 }: SchoolPackCreateFormProps) {
   const [state, formAction] = useActionState<PackFormState, FormData>(action, {
     ok: false,
   });
   const [lines, setLines] = useState<PackLine[]>([]);
-  const [selectedGrade, setSelectedGrade] = useState<string>("Grade R");
+  const [selectedGrade, setSelectedGrade] = useState<string>(initialGrade);
   const [customPrice, setCustomPrice] = useState<string>("");
   const [page, setPage] = useState(1);
   const itemsInputRef = useRef<HTMLInputElement>(null);
