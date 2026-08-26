@@ -194,7 +194,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("2027");
-  const [selectedVisibility, setSelectedVisibility] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -251,16 +250,11 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
       const matchQuery =
         school.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         school.code.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchVisibility =
-        selectedVisibility === "all" ||
-        (selectedVisibility === "visible"
-          ? school.status === "Active"
-          : school.status === "Inactive");
       const matchStatus =
         selectedStatus === "all" || school.status.toLowerCase() === selectedStatus.toLowerCase();
-      return matchQuery && matchVisibility && matchStatus;
+      return matchQuery && matchStatus;
     });
-  }, [schoolRows, searchQuery, selectedVisibility, selectedStatus]);
+  }, [schoolRows, searchQuery, selectedStatus]);
 
   const { activeCount, inactiveCount } = useMemo(() => {
     let active = 0;
@@ -459,16 +453,6 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             <option value="2026">Season: 2026</option>
             <option value="2025">Season: 2025</option>
             <option value="2024">Season: 2024</option>
-          </select>
-
-          <select
-            className={adminStyles.filterSelect}
-            value={selectedVisibility}
-            onChange={(e) => setSelectedVisibility(e.target.value)}
-          >
-            <option value="all">Visibility: All</option>
-            <option value="visible">Active</option>
-            <option value="hidden">Inactive</option>
           </select>
 
           <select

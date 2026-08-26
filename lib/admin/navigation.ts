@@ -83,6 +83,13 @@ export const ADMIN_NAV: AdminNavGroup[] = [
         ready: true,
       },
       {
+        label: "Quotations",
+        href: "/admin/quotations",
+        icon: "quotations",
+        permission: "orders.view",
+        ready: true,
+      },
+      {
         label: "Payments",
         href: "/admin/payments",
         icon: "payments",
