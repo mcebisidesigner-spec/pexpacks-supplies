@@ -982,30 +982,6 @@ export interface Database {
         };
         Relationships: [];
       };
-      app_settings: {
-        Row: {
-          key: string;
-          value: Json;
-          updated_by: string | null;
-          updated_at: string;
-          created_at: string;
-        };
-        Insert: {
-          key: string;
-          value?: Json;
-          updated_by?: string | null;
-          updated_at?: string;
-          created_at?: string;
-        };
-        Update: {
-          key?: string;
-          value?: Json;
-          updated_by?: string | null;
-          updated_at?: string;
-          created_at?: string;
-        };
-        Relationships: [];
-      };
       dashboard_summaries: {
         Row: {
           id: string;
@@ -1304,7 +1280,6 @@ export interface Database {
           id: string;
           pack_id: string;
           product_id: string;
-          legacy_item_id: string | null;
           pack_quantity: number;
           school_wording: string | null;
           prescribed_brand: string | null;
@@ -1320,7 +1295,6 @@ export interface Database {
           id?: string;
           pack_id: string;
           product_id: string;
-          legacy_item_id?: string | null;
           pack_quantity?: number;
           school_wording?: string | null;
           prescribed_brand?: string | null;
@@ -1336,7 +1310,6 @@ export interface Database {
           id?: string;
           pack_id?: string;
           product_id?: string;
-          legacy_item_id?: string | null;
           pack_quantity?: number;
           school_wording?: string | null;
           prescribed_brand?: string | null;

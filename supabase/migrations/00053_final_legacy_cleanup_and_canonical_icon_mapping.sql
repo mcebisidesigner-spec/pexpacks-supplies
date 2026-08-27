@@ -33,7 +33,6 @@ select
   spi.id as id,
   spi.pack_id,
   spi.product_id,
-  spi.legacy_item_id,
   coalesce(nullif(spi.school_wording, ''), mp.name) as name,
   coalesce(spi.pack_quantity, 1)::integer as quantity,
   coalesce(spi.selling_price_override, mp.current_selling_price, 0)::numeric(12,2) as unit_price,

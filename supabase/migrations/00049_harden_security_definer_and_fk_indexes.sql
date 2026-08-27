@@ -33,7 +33,6 @@ CREATE INDEX IF NOT EXISTS idx_task_comments_author_id ON public.task_comments(a
 CREATE INDEX IF NOT EXISTS idx_task_mentions_user_id ON public.task_mentions(user_id);
 CREATE INDEX IF NOT EXISTS idx_security_audit_logs_user_id ON public.security_audit_logs(user_id);
 CREATE INDEX IF NOT EXISTS idx_faqs_updated_by ON public.faqs(updated_by);
-CREATE INDEX IF NOT EXISTS idx_app_settings_updated_by ON public.app_settings(updated_by);
 CREATE INDEX IF NOT EXISTS idx_system_settings_updated_by ON public.system_settings(updated_by);
 CREATE INDEX IF NOT EXISTS idx_assets_uploaded_by ON public.assets(uploaded_by);
 

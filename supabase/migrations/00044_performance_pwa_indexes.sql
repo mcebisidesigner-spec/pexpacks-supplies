@@ -25,15 +25,15 @@ CREATE INDEX IF NOT EXISTS idx_schools_city_trgm
   ON public.schools (city)
   WHERE city IS NOT NULL;
 
--- 5. Stationery Packs Grade-Level Composite Index
-CREATE INDEX IF NOT EXISTS idx_stationery_packs_school_grade
-  ON public.stationery_packs (school_id, grade_level, visible)
+-- 5. School Packs Composite Index
+CREATE INDEX IF NOT EXISTS idx_school_packs_school_visible_title
+  ON public.school_packs (school_id, visible, title)
   WHERE visible = true;
 
--- 6. Stationery Items Pack Association and Price Calculation
-CREATE INDEX IF NOT EXISTS idx_stationery_items_pack_calc
-  ON public.stationery_items (pack_id, required_quantity, unit_price);
+-- 6. School Pack Items Association and Price Calculation
+CREATE INDEX IF NOT EXISTS idx_school_pack_items_pack_calc
+  ON public.school_pack_items (pack_id, pack_quantity, selling_price_override);
 
 -- 7. High-Volume Cart / Checkout Idempotency Lookups
 CREATE INDEX IF NOT EXISTS idx_orders_lookup_status
-  ON public.orders (customer_email, status, created_at DESC);
+  ON public.orders (buyer_email, status, created_at DESC);

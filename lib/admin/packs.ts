@@ -293,7 +293,7 @@ export interface SchoolGroupedSummary {
   school_slug: string;
   grade_packs_count: number;
   active_packs_count?: number;
-  stationery_items_count?: number;
+  pack_items_count?: number;
   has_items?: boolean;
   last_edited: string;
   visible: boolean;
@@ -304,7 +304,7 @@ export interface SchoolGroupedResult {
   totalGradePacks: number;
   totalSchools: number;
   activePacksCount?: number;
-  totalStationeryItems?: number;
+  totalPackItems?: number;
   page: number;
   pageCount: number;
   schools: { id: string; name: string; slug?: string | null }[];
@@ -338,15 +338,15 @@ export async function listSchoolGroupedSummary(
       const totalSchools = Number(data.total_schools ?? rawSchools.length);
       const totalGradePacks = Number(data.total_grade_packs ?? 0);
       const activePacksCount = Number(data.active_packs_count ?? 0);
-      const totalStationeryItems = Number(data.total_stationery_items ?? 0);
+      const totalPackItems = Number(data.total_pack_items ?? 0);
 
       const schoolsSummary: SchoolGroupedSummary[] = rawSchools.map(
         (row: any) => {
           const isRefused = Boolean(row.refused_partnership);
           const isPartner = row.is_partner !== false;
           const activePacks = Number(row.active_packs_count ?? 0);
-          const stationeryItems = Number(row.stationery_items_count ?? 0);
-          const hasItems = activePacks > 0 || stationeryItems > 0;
+          const packItems = Number(row.pack_items_count ?? 0);
+          const hasItems = activePacks > 0 || packItems > 0;
 
           return {
             school_id: row.school_id,
@@ -354,7 +354,7 @@ export async function listSchoolGroupedSummary(
             school_slug: row.school_slug ?? "",
             grade_packs_count: Number(row.grade_packs_count ?? 0),
             active_packs_count: activePacks,
-            stationery_items_count: stationeryItems,
+            pack_items_count: packItems,
             has_items: hasItems,
             last_edited: row.last_edited ?? "",
             visible: !isRefused && (row.visible !== undefined ? Boolean(row.visible) : isPartner),
@@ -367,7 +367,7 @@ export async function listSchoolGroupedSummary(
         totalGradePacks,
         totalSchools,
         activePacksCount,
-        totalStationeryItems,
+        totalPackItems,
         page: 1,
         pageCount: Math.max(1, Math.ceil(totalSchools / pageSize)),
         schools: allSchools,

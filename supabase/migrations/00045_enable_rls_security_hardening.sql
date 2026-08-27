@@ -8,60 +8,70 @@
 -- =========================================================================
 -- 1. LAY-BY APPLICATIONS: Enable RLS and define granular access policies
 -- =========================================================================
-ALTER TABLE IF EXISTS public.lay_by_applications ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.lay_by_applications FORCE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+  IF to_regclass('public.lay_by_applications') IS NOT NULL THEN
+    ALTER TABLE public.lay_by_applications ENABLE ROW LEVEL SECURITY;
+    ALTER TABLE public.lay_by_applications FORCE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "Service role full access for lay_by_applications" ON public.lay_by_applications;
-CREATE POLICY "Service role full access for lay_by_applications"
-  ON public.lay_by_applications
-  FOR ALL
-  TO service_role
-  USING (true)
-  WITH CHECK (true);
+    DROP POLICY IF EXISTS "Service role full access for lay_by_applications" ON public.lay_by_applications;
+    CREATE POLICY "Service role full access for lay_by_applications"
+      ON public.lay_by_applications
+      FOR ALL
+      TO service_role
+      USING (true)
+      WITH CHECK (true);
 
-DROP POLICY IF EXISTS "Staff full access for lay_by_applications" ON public.lay_by_applications;
-CREATE POLICY "Staff full access for lay_by_applications"
-  ON public.lay_by_applications
-  FOR ALL
-  TO authenticated
-  USING ((SELECT is_staff()) OR has_permission('orders.view') OR has_permission('forms.view'))
-  WITH CHECK ((SELECT is_staff()) OR has_permission('orders.edit') OR has_permission('forms.edit'));
+    DROP POLICY IF EXISTS "Staff full access for lay_by_applications" ON public.lay_by_applications;
+    CREATE POLICY "Staff full access for lay_by_applications"
+      ON public.lay_by_applications
+      FOR ALL
+      TO authenticated
+      USING ((SELECT is_staff()) OR has_permission('orders.view') OR has_permission('forms.view'))
+      WITH CHECK ((SELECT is_staff()) OR has_permission('orders.edit') OR has_permission('forms.edit'));
 
-DROP POLICY IF EXISTS "Public anonymous insert for lay_by_applications" ON public.lay_by_applications;
-CREATE POLICY "Public anonymous insert for lay_by_applications"
-  ON public.lay_by_applications
-  FOR INSERT
-  TO anon
-  WITH CHECK (true);
+    DROP POLICY IF EXISTS "Public anonymous insert for lay_by_applications" ON public.lay_by_applications;
+    CREATE POLICY "Public anonymous insert for lay_by_applications"
+      ON public.lay_by_applications
+      FOR INSERT
+      TO anon
+      WITH CHECK (true);
+  END IF;
+END $$;
 
 -- =========================================================================
 -- 2. WAITLIST ENTRIES: Enable RLS and define granular access policies
 -- =========================================================================
-ALTER TABLE IF EXISTS public.waitlist_entries ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.waitlist_entries FORCE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+  IF to_regclass('public.waitlist_entries') IS NOT NULL THEN
+    ALTER TABLE public.waitlist_entries ENABLE ROW LEVEL SECURITY;
+    ALTER TABLE public.waitlist_entries FORCE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "Service role full access for waitlist_entries" ON public.waitlist_entries;
-CREATE POLICY "Service role full access for waitlist_entries"
-  ON public.waitlist_entries
-  FOR ALL
-  TO service_role
-  USING (true)
-  WITH CHECK (true);
+    DROP POLICY IF EXISTS "Service role full access for waitlist_entries" ON public.waitlist_entries;
+    CREATE POLICY "Service role full access for waitlist_entries"
+      ON public.waitlist_entries
+      FOR ALL
+      TO service_role
+      USING (true)
+      WITH CHECK (true);
 
-DROP POLICY IF EXISTS "Staff full access for waitlist_entries" ON public.waitlist_entries;
-CREATE POLICY "Staff full access for waitlist_entries"
-  ON public.waitlist_entries
-  FOR ALL
-  TO authenticated
-  USING ((SELECT is_staff()) OR has_permission('schools.view') OR has_permission('forms.view'))
-  WITH CHECK ((SELECT is_staff()) OR has_permission('schools.edit') OR has_permission('forms.edit'));
+    DROP POLICY IF EXISTS "Staff full access for waitlist_entries" ON public.waitlist_entries;
+    CREATE POLICY "Staff full access for waitlist_entries"
+      ON public.waitlist_entries
+      FOR ALL
+      TO authenticated
+      USING ((SELECT is_staff()) OR has_permission('schools.view') OR has_permission('forms.view'))
+      WITH CHECK ((SELECT is_staff()) OR has_permission('schools.edit') OR has_permission('forms.edit'));
 
-DROP POLICY IF EXISTS "Public anonymous insert for waitlist_entries" ON public.waitlist_entries;
-CREATE POLICY "Public anonymous insert for waitlist_entries"
-  ON public.waitlist_entries
-  FOR INSERT
-  TO anon
-  WITH CHECK (true);
+    DROP POLICY IF EXISTS "Public anonymous insert for waitlist_entries" ON public.waitlist_entries;
+    CREATE POLICY "Public anonymous insert for waitlist_entries"
+      ON public.waitlist_entries
+      FOR INSERT
+      TO anon
+      WITH CHECK (true);
+  END IF;
+END $$;
 
 -- =========================================================================
 -- 3. BLOG POSTS: Define policies for RLS-enabled table

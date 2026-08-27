@@ -23,7 +23,6 @@ export type ItemRow = {
   id: string;
   pack_id: string;
   product_id?: string | null;
-  legacy_item_id?: string | null;
   name: string;
   description: string | null;
   specification: string | null;
@@ -877,7 +876,7 @@ export async function updateItem(
         unit_cost:
           (product as unknown as { latest_verified_cost?: number })
             .latest_verified_cost ?? 0,
-        icon: null,
+        icon: product.icon || inferIcon(product.name) || "folder",
         visible: product.active,
         sort_order: 0,
         slug: newSlug,

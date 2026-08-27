@@ -190,8 +190,8 @@
 .submitBtn {
   height: var(--db-control-height-lg, 46px);
   width: 100%;
-  background: linear-gradient(135deg, var(--db-brand) 0%, var(--db-brand-strong) 100%);
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  background: var(--pex-coral, #ff6f59);
+  border: 1px solid rgba(255, 111, 89, 0.4);
   border-radius: var(--db-radius-control);
   color: #ffffff;
   font-size: 0.875rem;
@@ -202,13 +202,14 @@
   justify-content: center;
   gap: 8px;
   transition: all var(--db-transition);
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+  box-shadow: 0 4px 14px rgba(255, 111, 89, 0.25);
   font-family: inherit;
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #18d396 0%, #047857 100%);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  background: var(--pex-coral-hover, #e85e4b);
+  border-color: rgba(255, 111, 89, 0.6);
+  box-shadow: 0 6px 18px rgba(255, 111, 89, 0.35);
   transform: translateY(-1px);
 }
 

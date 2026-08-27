@@ -373,7 +373,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
             <div className={adminStyles.kpiHeaderInfo}>
               <span className={adminStyles.kpiLabel}>Stationery Items</span>
               <span className={adminStyles.kpiValue} suppressHydrationWarning>
-                {formatNumber(initialData?.totalStationeryItems ?? 0)}
+                {formatNumber(initialData?.totalPackItems ?? 0)}
               </span>
             </div>
           </div>

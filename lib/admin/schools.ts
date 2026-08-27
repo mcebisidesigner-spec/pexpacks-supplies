@@ -224,7 +224,15 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
   }
   if (filters.city) query = query.eq("city", filters.city);
   if (filters.province) query = query.eq("province", filters.province);
-  if (filters.status) query = query.eq("status", filters.status);
+  if (filters.status && filters.status !== "all") {
+    if (filters.status === "active" || filters.status === "published") {
+      query = query.eq("published", true).eq("status", "active").eq("refused_partnership", false);
+    } else if (filters.status === "inactive" || filters.status === "hidden") {
+      query = query.or("published.eq.false,status.eq.inactive,refused_partnership.eq.true");
+    } else {
+      query = query.eq("status", filters.status);
+    }
+  }
 
   const { data, count, error } = await query
     .order("is_featured", { ascending: false })

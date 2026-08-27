@@ -1,4 +1,4 @@
-// Legacy marker retained only for old stationery_items compatibility.
+// Marker used to exclude generated pack-line rows from catalogue item filters.
 // Canonical inventory lives in master_products and pack composition in school_pack_items.
 export const PACK_LINE_INVENTORY_MARKER = "__pexpacks_pack_line__";
 export const INVENTORY_ITEM_FILTER =

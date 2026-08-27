@@ -72,18 +72,24 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       ),
     },
     {
-      key: "published",
+      key: "status",
       header: "STATUS",
       sortable: true,
       align: "center",
       width: "130px",
-      render: (row) => (
-        <StatusBadge
-          status={row.published ? "Active" : "Hidden"}
-          tone={row.published ? "emerald" : "slate"}
-          showDot
-        />
-      ),
+      render: (row) => {
+        const isInactive =
+          row.published === false ||
+          row.status === "inactive" ||
+          row.refused_partnership === true;
+        return (
+          <StatusBadge
+            status={isInactive ? "Inactive" : "Active"}
+            tone={isInactive ? "slate" : "emerald"}
+            showDot
+          />
+        );
+      },
     },
     {
       key: "actions",
@@ -137,8 +143,8 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
               className={styles.toolbarSelect}
             >
               <option value="all">Status: All</option>
-              <option value="published">Active</option>
-              <option value="hidden">Hidden</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
             </AdminSelect>
           </div>
         }
