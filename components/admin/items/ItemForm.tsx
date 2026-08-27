@@ -148,6 +148,7 @@ export function ItemForm({
             name="sku"
             label="SKU"
             value={sku}
+            className={styles.skuInput}
             onChange={handleSkuChange}
             error={state?.errors?.sku}
             rightAdornment={

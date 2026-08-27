@@ -255,7 +255,7 @@ export default function PexConsoleGateway() {
         {/* Step 1: Credentials Form */}
         {step === "credentials" && (
           <form onSubmit={handleCredentialsSubmit} className={styles.form}>
-            <div className="space-y-4">
+            <div className={styles.fieldsStack}>
               <FloatingInput
                 id="email"
                 type="email"
@@ -265,7 +265,7 @@ export default function PexConsoleGateway() {
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
                 disabled={isPending}
-                bgSurface="bg-[#0c1322]"
+                bgSurface="#0c1322"
               />
 
               <FloatingInput
@@ -277,12 +277,12 @@ export default function PexConsoleGateway() {
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
                 disabled={isPending}
-                bgSurface="bg-[#0c1322]"
+                bgSurface="#0c1322"
                 rightAdornment={
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-slate-400 hover:text-slate-200 transition-colors p-1"
+                    className={styles.passwordEyeBtn}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -291,18 +291,20 @@ export default function PexConsoleGateway() {
               />
             </div>
 
-            <div className="flex items-start gap-2.5 my-3.5 p-3 bg-[#090e17]/80 rounded-xl border border-slate-800/80">
+            <div className={styles.trustedBox}>
               <input
                 id="trusted-device"
                 type="checkbox"
                 checked={isTrustedDevice}
                 onChange={(e) => setIsTrustedDevice(e.target.checked)}
-                className="w-4 h-4 mt-0.5 accent-emerald-500 cursor-pointer"
+                className={styles.trustedCheckbox}
               />
-              <label htmlFor="trusted-device" className="text-xs text-slate-300 cursor-pointer select-none">
-                <span className="font-semibold text-slate-100">This is a trusted private computer</span>
-                <span className="block text-[11px] text-slate-400 mt-0.5">
-                  {isTrustedDevice ? "Maintains standard secure session on this device" : "Public/Shared mode: closing browser or tab immediately clears session"}
+              <label htmlFor="trusted-device" className={styles.trustedLabel}>
+                <span className={styles.trustedTitle}>This is a trusted private computer</span>
+                <span className={styles.trustedSubtext}>
+                  {isTrustedDevice
+                    ? "Maintains standard secure session on this device"
+                    : "Public/Shared mode: closing browser or tab immediately clears session"}
                 </span>
               </label>
             </div>

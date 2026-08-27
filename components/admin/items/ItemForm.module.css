@@ -45,6 +45,10 @@
   width: 100%;
 }
 
+.skuInput {
+  padding-right: 105px !important;
+}
+
 .skuButtonAdornment {
   display: inline-flex;
   align-items: center;
