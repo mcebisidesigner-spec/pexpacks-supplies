@@ -99,7 +99,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         }
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+      <div className={styles.kpiGrid}>
         <MetricCard
           label="Selling Price"
           value={money(price)}

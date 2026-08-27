@@ -26,7 +26,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
         title={title}
         subtitle={`Supplier Code: SUP-${id.toUpperCase().slice(0, 8)}`}
         actions={
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div className={styles.headerActions}>
             <StatusBadge status="Preferred Partner" tone="emerald" showDot />
             <AdminButton
               href="/admin/suppliers"
@@ -47,7 +47,7 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
       />
 
       {/* Metrics Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+      <div className={styles.kpiGrid}>
         <MetricCard
           label="On-Time Delivery %"
           value="98.4%"

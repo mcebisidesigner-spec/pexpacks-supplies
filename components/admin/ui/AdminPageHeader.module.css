@@ -1,8 +1,8 @@
 .headerWrapper {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: var(--db-space-1-5);
+  margin-bottom: var(--db-space-3);
   width: 100%;
 }
 
@@ -14,54 +14,54 @@
 .backBtn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: #0b1322;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
+  gap: var(--db-space-1);
+  padding: 6px 14px;
+  background-color: var(--db-surface-inner);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-control);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--db-text-secondary);
   text-decoration: none;
-  transition: all 140ms ease;
+  transition: all var(--db-transition);
 }
 
 .backBtn:hover {
-  background: rgba(30, 41, 59, 0.9);
-  border-color: rgba(255, 255, 255, 0.25);
-  color: #10b981;
+  background-color: var(--db-surface);
+  border-color: var(--db-border-strong);
+  color: var(--db-brand);
 }
 
 .headerRow {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--db-space-2);
   flex-wrap: wrap;
 }
 
 .headerTitleGroup {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--db-space-0-5);
 }
 
 .headerTitle {
   margin: 0;
-  font-size: 28px;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--db-text-primary);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--db-space-1);
 }
 
 .headerTitleHighlight {
-  color: #10b981;
-  font-weight: 900;
+  color: var(--db-brand);
+  font-weight: 800;
 }
 
 .headerBadgeWrapper {
@@ -71,22 +71,23 @@
 }
 
 .headerCount {
-  font-size: 28px;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: -0.03em;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--db-text-muted);
+  letter-spacing: -0.025em;
 }
 
 .headerSubtitle {
   margin: 0;
-  font-size: 13px;
-  font-weight: 500;
-  color: #94a3b8;
+  font-size: 0.84375rem;
+  font-weight: 400;
+  color: var(--db-text-muted);
+  line-height: 1.4;
 }
 
 .headerActions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--db-space-1-5);
   flex-wrap: wrap;
 }

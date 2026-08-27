@@ -1,11 +1,11 @@
 .tableCard {
-  background: #070d18;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  background-color: var(--db-surface);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-card);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--db-shadow-card);
 }
 
 .tableWrapper {
@@ -18,32 +18,32 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 13.5px;
+  font-size: 0.8125rem;
 }
 
 .table thead {
-  background: #070d18;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background-color: rgba(15, 23, 42, 0.7);
+  border-bottom: 1px solid var(--db-border);
 }
 
 .table th {
-  padding: 16px 20px;
-  font-size: 11px;
-  font-weight: 800;
-  color: #10b981;
+  padding: 14px 18px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--db-brand);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   white-space: nowrap;
   user-select: none;
 }
 
 .sortableHeader {
   cursor: pointer;
-  transition: color 140ms ease, opacity 140ms ease;
+  transition: color var(--db-transition);
 }
 
 .sortableHeader:hover {
-  color: #34d399;
+  color: var(--db-success-text);
 }
 
 .headerContent {
@@ -55,17 +55,17 @@
 .sortIcon {
   display: inline-flex;
   align-items: center;
-  color: #10b981;
+  color: var(--db-brand);
 }
 
 .mutedSortIcon {
-  color: #10b981;
-  opacity: 0.85;
+  color: var(--db-brand);
+  opacity: 0.7;
 }
 
 .table tbody tr {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background-color 140ms ease;
+  border-bottom: 1px solid var(--db-border-muted);
+  transition: background-color var(--db-transition-fast);
 }
 
 .table tbody tr:last-child {
@@ -77,12 +77,12 @@
 }
 
 .clickableRow:hover {
-  background: rgba(255, 255, 255, 0.025);
+  background-color: var(--db-surface-hover);
 }
 
 .table td {
-  padding: 18px 20px;
-  color: #e2e8f0;
+  padding: 16px 18px;
+  color: var(--db-text-secondary);
   vertical-align: middle;
 }
 
@@ -106,20 +106,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: var(--db-space-1-5);
   text-align: center;
-  color: #94a3b8;
+  color: var(--db-text-muted);
 }
 
 .stateTitle {
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--db-text-primary);
 }
 
 .stateSubtitle {
-  font-size: 13px;
-  color: #64748b;
+  font-size: 0.8125rem;
+  color: var(--db-text-subtle);
   max-width: 400px;
 }
 
@@ -127,7 +127,7 @@
   width: 24px;
   height: 24px;
   border: 2px solid rgba(16, 185, 129, 0.2);
-  border-top-color: #10b981;
+  border-top-color: var(--db-brand);
   border-radius: 50%;
   animation: spin 600ms linear infinite;
 }

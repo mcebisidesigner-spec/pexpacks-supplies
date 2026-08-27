@@ -6,6 +6,7 @@ import styles from "./AdminButton.module.css";
 export type ButtonVariant =
   | "primary"
   | "secondary"
+  | "outline"
   | "teal"
   | "danger"
   | "ghost"

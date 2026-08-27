@@ -1,26 +1,39 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  FileSpreadsheet,
   Plus,
   Search,
-  FileText,
+  FileSpreadsheet,
   Clock,
   CheckCircle2,
   XCircle,
   TrendingUp,
-  ExternalLink,
   Download,
-  ArrowRight,
-  ShoppingCart,
+  Eye,
+  SlidersHorizontal,
 } from "lucide-react";
-import { StatusBadge } from "@/components/admin/ui/StatusBadge";
-import type { QuotationsListResult, QuotationRow, QuotationStatus } from "@/lib/admin/quotations";
+import {
+  AdminPageHeader,
+  AdminButton,
+  MetricCard,
+  StatusBadge,
+  type BadgeTone,
+} from "@/components/admin/ui";
+import { FloatingInput } from "@/components/ui/FloatingInput";
+import type { QuotationsListResult, QuotationRow } from "@/lib/admin/quotations";
 import styles from "./Quotations.module.css";
-import adminStyles from "@/app/admin/admin.module.css";
+
+const STATUS_CONFIG: Record<string, { label: string; tone: BadgeTone }> = {
+  draft: { label: "Draft", tone: "slate" },
+  sent: { label: "Sent", tone: "blue" },
+  accepted: { label: "Accepted", tone: "emerald" },
+  declined: { label: "Declined", tone: "red" },
+  expired: { label: "Expired", tone: "amber" },
+  converted_to_order: { label: "Converted", tone: "teal" },
+};
 
 function formatMoney(amount: number): string {
   return `R ${Number(amount || 0).toLocaleString("en-ZA", {
@@ -29,233 +42,121 @@ function formatMoney(amount: number): string {
   })}`;
 }
 
-function SparklineWave({ color, direction = "up" }: { color: string; direction?: "up" | "down" }) {
-  const path =
-    direction === "up"
-      ? "M 0 18 Q 15 22 30 14 T 50 8 T 72 2"
-      : "M 0 4 Q 15 2 30 10 T 50 16 T 72 22";
-  return (
-    <svg className={adminStyles.kpiSparkline} viewBox="0 0 72 24" fill="none">
-      <path d={path} stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-const STATUS_CONFIG: Record<
-  QuotationStatus,
-  { label: string; tone: "slate" | "amber" | "emerald" | "red" | "teal" }
-> = {
-  draft: { label: "Draft", tone: "slate" },
-  sent: { label: "Sent / Pending", tone: "amber" },
-  accepted: { label: "Accepted", tone: "emerald" },
-  declined: { label: "Declined", tone: "red" },
-  converted_to_order: { label: "Converted", tone: "teal" },
-};
-
-export function QuotationsListView({ initialData }: { initialData: QuotationsListResult }) {
+export function QuotationsListView({
+  initialData,
+}: {
+  initialData: QuotationsListResult;
+}) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 15;
 
-  const filteredQuotes = useMemo(() => {
+  const pendingCount = (initialData.stats.sent || 0) + (initialData.stats.draft || 0);
+
+  const filtered = useMemo(() => {
     return initialData.quotations.filter((q) => {
-      const matchSearch =
-        q.quote_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        q.recipient_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        q.recipient_email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (q.school?.name && q.school.name.toLowerCase().includes(searchQuery.toLowerCase()));
-
-      const matchStatus = statusFilter === "all" || q.status === statusFilter;
-      return matchSearch && matchStatus;
+      // 1. Status Filter
+      if (statusFilter !== "all" && q.status !== statusFilter) {
+        return false;
+      }
+      // 2. Search Query
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        const numMatch = q.quote_number.toLowerCase().includes(query);
+        const nameMatch = q.recipient_name.toLowerCase().includes(query);
+        const emailMatch = q.recipient_email.toLowerCase().includes(query);
+        const schoolMatch = q.school?.name?.toLowerCase().includes(query);
+        return numMatch || nameMatch || emailMatch || Boolean(schoolMatch);
+      }
+      return true;
     });
-  }, [initialData.quotations, searchQuery, statusFilter]);
+  }, [initialData.quotations, statusFilter, searchQuery]);
 
-  const totalFiltered = filteredQuotes.length;
+  const totalPages = Math.ceil(filtered.length / pageSize) || 1;
   const paginated = useMemo(() => {
-    const from = (currentPage - 1) * pageSize;
-    return filteredQuotes.slice(from, from + pageSize);
-  }, [filteredQuotes, currentPage, pageSize]);
+    const start = (currentPage - 1) * pageSize;
+    return filtered.slice(start, start + pageSize);
+  }, [filtered, currentPage, pageSize]);
 
   return (
     <div className={styles.container}>
       {/* 1. Header Toolbar */}
-      <div className={adminStyles.headerRow}>
-        <div>
-          <h1 className={adminStyles.pageTitle}>
-            Quotations{" "}
-            <span className={adminStyles.badgeCount}>({initialData.stats.total})</span>
-          </h1>
-          <p className={adminStyles.pageSubtitle}>
-            Create branded A4 quotations, track quote statuses, and convert to official orders.
-          </p>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <Link
-            href="/admin/quotations/pexpacks-details"
-            className={adminStyles.button}
-            style={{
-              backgroundColor: "#0c1322",
-              border: "1px solid #1e293b",
-              color: "#f8fafc",
-              fontWeight: 500,
-              padding: "0.5rem 1rem",
-              borderRadius: "8px",
-              textDecoration: "none",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              transition: "all 0.15s ease",
-            }}
-          >
-            Pexpacks Details
-          </Link>
-
-          <Link
-            href="/admin/quotations/new"
-            className={adminStyles.button}
-            style={{
-              background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-              color: "#ffffff",
-              borderColor: "rgba(16, 185, 129, 0.4)",
-              fontWeight: 600,
-              boxShadow: "0 2px 10px rgba(16, 185, 129, 0.25)",
-            }}
-          >
-            <Plus size={15} /> New Quotation
-          </Link>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Quotations"
+        count={initialData.stats.total}
+        subtitle="Create branded A4 quotations, track quote statuses, and convert to official orders."
+        actions={
+          <>
+            <AdminButton
+              variant="secondary"
+              href="/admin/quotations/pexpacks-details"
+              icon={<SlidersHorizontal size={14} />}
+            >
+              Pexpacks Details
+            </AdminButton>
+            <AdminButton
+              variant="primary"
+              href="/admin/quotations/new"
+              icon={<Plus size={15} />}
+            >
+              New Quotation
+            </AdminButton>
+          </>
+        }
+      />
 
       {/* 2. 5 KPI Summary Cards */}
-      <div className={adminStyles.metricsGrid5}>
-        {/* Card 1: Total Quotes */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconTeal}`}>
-              <FileSpreadsheet size={18} />
-            </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Total Quotations</span>
-              <span className={adminStyles.kpiValue}>{initialData.stats.total}</span>
-            </div>
-          </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
-              <TrendingUp size={12} /> {formatMoney(initialData.stats.totalValue)}
-            </span>
-            <SparklineWave color="#2dd4bf" direction="up" />
-          </div>
-        </div>
-
-        {/* Card 2: Draft */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconSlate}`}>
-              <FileText size={18} />
-            </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Draft</span>
-              <span className={adminStyles.kpiValue}>{initialData.stats.draft}</span>
-            </div>
-          </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={adminStyles.kpiTrend}>In preparation</span>
-            <SparklineWave color="#94a3b8" direction="up" />
-          </div>
-        </div>
-
-        {/* Card 3: Sent */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconAmber}`}>
-              <Clock size={18} />
-            </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Sent / Pending</span>
-              <span className={adminStyles.kpiValue}>{initialData.stats.sent}</span>
-            </div>
-          </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
-              Awaiting decision
-            </span>
-            <SparklineWave color="#f59e0b" direction="up" />
-          </div>
-        </div>
-
-        {/* Card 4: Accepted */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconEmerald}`}>
-              <CheckCircle2 size={18} />
-            </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Accepted</span>
-              <span className={adminStyles.kpiValue}>{initialData.stats.accepted}</span>
-            </div>
-          </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
-              Ready to convert
-            </span>
-            <SparklineWave color="#10b981" direction="up" />
-          </div>
-        </div>
-
-        {/* Card 5: Converted */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconCyan}`}>
-              <ShoppingCart size={18} />
-            </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Converted</span>
-              <span className={adminStyles.kpiValue}>{initialData.stats.converted}</span>
-            </div>
-          </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
-              Live orders
-            </span>
-            <SparklineWave color="#06b6d4" direction="up" />
-          </div>
-        </div>
+      <div className={styles.kpiGrid5}>
+        <MetricCard
+          label="Total Quotes"
+          value={initialData.stats.total}
+          icon={<FileSpreadsheet size={16} />}
+          iconTone="blue"
+          subtext="Generated in season"
+        />
+        <MetricCard
+          label="Awaiting Acceptance"
+          value={pendingCount}
+          icon={<Clock size={16} />}
+          iconTone="amber"
+          subtext="Sent to clients"
+        />
+        <MetricCard
+          label="Accepted Quotes"
+          value={initialData.stats.accepted}
+          icon={<CheckCircle2 size={16} />}
+          iconTone="green"
+          subtext="Ready for conversion"
+        />
+        <MetricCard
+          label="Declined"
+          value={initialData.stats.declined}
+          icon={<XCircle size={16} />}
+          iconTone="red"
+          subtext="Unsuccessful quotes"
+        />
+        <MetricCard
+          label="Converted to Orders"
+          value={initialData.stats.converted}
+          icon={<TrendingUp size={16} />}
+          iconTone="green"
+          subtext="Live orders"
+        />
       </div>
 
       {/* 3. Search & Status Tabs */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "16px",
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ position: "relative", minWidth: "280px" }}>
-          <Search
-            size={15}
-            style={{
-              position: "absolute",
-              left: "12px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "#64748b",
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Search Quote #, recipient, or school..."
+      <div className={styles.toolbarRow}>
+        <div className={styles.searchWrapper}>
+          <FloatingInput
+            label="Search Quote #, recipient, or school..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
               setCurrentPage(1);
             }}
-            className={adminStyles.inputField}
-            style={{ paddingLeft: "36px", width: "100%", height: "38px" }}
+            icon={<Search size={15} />}
           />
         </div>
 
@@ -302,13 +203,13 @@ export function QuotationsListView({ initialData }: { initialData: QuotationsLis
             <tbody>
               {paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className={adminStyles.emptyCell} style={{ textAlign: "center", padding: "40px" }}>
+                  <td colSpan={8} className={styles.emptyTableState}>
                     No quotations found matching your criteria.
                   </td>
                 </tr>
               ) : (
                 paginated.map((quote) => {
-                  const cfg = STATUS_CONFIG[quote.status] || { label: quote.status, tone: "slate" };
+                  const cfg = STATUS_CONFIG[quote.status] || { label: quote.status, tone: "slate" as BadgeTone };
                   return (
                     <tr
                       key={quote.id}
@@ -333,10 +234,10 @@ export function QuotationsListView({ initialData }: { initialData: QuotationsLis
                         </div>
                       </td>
                       <td className={styles.textMuted}>
-                        {new Date(quote.created_at).toLocaleDateString("en-GB")}
+                        {new Date(quote.created_at).toLocaleDateString("en-ZA")}
                       </td>
                       <td className={styles.textMuted}>
-                        {new Date(quote.valid_until).toLocaleDateString("en-GB")}
+                        {new Date(quote.valid_until).toLocaleDateString("en-ZA")}
                       </td>
                       <td className={styles.textMuted}>
                         {quote.items_count} {quote.items_count === 1 ? "item" : "items"}
@@ -345,25 +246,27 @@ export function QuotationsListView({ initialData }: { initialData: QuotationsLis
                       <td>
                         <StatusBadge status={cfg.label} tone={cfg.tone} showDot />
                       </td>
-                      <td style={{ textAlign: "right" }} onClick={(e) => e.stopPropagation()}>
-                        <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
-                          <Link
+                      <td onClick={(e) => e.stopPropagation()} className={styles.tableActionsCell}>
+                        <div className={styles.tableActionsGroup}>
+                          <AdminButton
+                            variant="secondary"
+                            size="sm"
                             href={`/admin/quotations/${quote.quote_number}`}
-                            className={adminStyles.button}
-                            style={{ height: "28px", padding: "0 8px", fontSize: "11px" }}
+                            icon={<Eye size={12} />}
                           >
                             View
-                          </Link>
+                          </AdminButton>
                           {quote.pdf_storage_path ? (
-                            <a
+                            <AdminButton
+                              variant="outline"
+                              size="sm"
                               href={quote.pdf_storage_path}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className={adminStyles.button}
-                              style={{ height: "28px", padding: "0 8px", fontSize: "11px" }}
+                              icon={<Download size={12} />}
                             >
-                              <Download size={12} /> PDF
-                            </a>
+                              PDF
+                            </AdminButton>
                           ) : null}
                         </div>
                       </td>

@@ -10,6 +10,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { OrderStatusForm } from "@/components/admin/orders/OrderStatusForm";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { refundOrderAction, deleteOrderAction } from "../actions";
 import adminStyles from "../../admin.module.css";
 import styles from "../orders.module.css";
@@ -221,7 +222,7 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
         title={order.order_reference}
         subtitle={`${order.school_name || "General Order"} • Placed ${formatDateTime(order.created_at)}`}
         actions={
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          <div className={styles.headerActionsGroup}>
             <OrderStatusBadge status={order.status} />
             {canEdit ? (
               <OrderStatusForm id={order.id} current={order.status} />
@@ -244,17 +245,16 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
       {canRefund ? (
         <div className={`${styles.detailCard} ${adminStyles.mb20}`}>
           <form action={refundOrderAction.bind(null, order.id)} className={styles.refundForm}>
-            <textarea
+            <FloatingTextarea
               name="reason"
-              placeholder="Refund reason (optional)"
-              className={styles.refundReason}
+              label="Refund Reason (optional)"
               aria-label="Refund reason"
             />
             <ConfirmButton
               label="Refund order"
               confirmText={`Refund ${order.order_reference} for ${money(order.estimated_total)}?`}
               busyLabel="Refunding…"
-              className={`${adminStyles.rowButton} ${adminStyles.rowButtonDelete}`}
+              className={styles.deleteBtn}
             />
           </form>
         </div>

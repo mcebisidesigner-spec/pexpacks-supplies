@@ -8,17 +8,17 @@
 .textarea {
   width: 100%;
   min-height: 110px;
-  background: var(--a-surface-2, #090e17);
-  border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.85));
-  border-radius: var(--a-btn-radius, 8px);
-  color: #f8fafc;
+  background-color: var(--db-surface-inner);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-control);
+  color: var(--db-text-primary);
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 0.84375rem;
   font-weight: 500;
   padding: 20px 14px 10px 14px;
   outline: none;
   resize: vertical;
-  transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+  transition: all var(--db-transition);
   box-sizing: border-box;
 }
 
@@ -27,8 +27,9 @@
 }
 
 .textarea:focus {
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+  border-color: var(--db-brand);
+  box-shadow: var(--db-focus-ring);
+  background-color: #0b121e;
 }
 
 .textarea:disabled {
@@ -39,12 +40,12 @@
 .label {
   position: absolute;
   pointer-events: none;
-  transition: all 140ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--db-transition);
   padding: 0 6px;
-  background: var(--a-surface-2, #090e17);
+  background-color: var(--db-surface-inner);
   border-radius: 4px;
-  color: #94a3b8;
-  font-size: 13px;
+  color: var(--db-text-muted);
+  font-size: 0.8125rem;
   font-weight: 400;
   left: 12px;
   top: 16px;
@@ -59,35 +60,35 @@
   top: 0;
   left: 10px !important;
   transform: translateY(-50%);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
-  background: var(--a-surface-2, #090e17);
+  background-color: var(--db-surface-inner);
   z-index: 5;
 }
 
 .textarea:focus ~ .label {
-  color: #34d399;
+  color: var(--db-brand);
 }
 
 .textarea:not(:placeholder-shown) ~ .label {
-  color: #cbd5e1;
+  color: var(--db-text-secondary);
 }
 
 .textareaError {
-  border-color: #f87171 !important;
+  border-color: var(--db-danger) !important;
 }
 
 .textareaError:focus {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
 }
 
 .textareaError ~ .label {
-  color: #f87171 !important;
+  color: var(--db-danger-text) !important;
 }
 
 .errorMessage {
   margin: 4px 0 0 2px;
-  font-size: 11.5px;
+  font-size: 0.75rem;
   font-weight: 500;
-  color: #f87171;
+  color: var(--db-danger-text);
 }

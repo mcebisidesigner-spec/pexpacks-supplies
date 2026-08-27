@@ -1,52 +1,53 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 5px 13px;
-  border-radius: 9999px;
-  font-size: 12px;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--db-radius-pill);
+  font-size: 0.75rem;
   font-weight: 600;
   line-height: 1.2;
   text-transform: capitalize;
   letter-spacing: 0.02em;
   white-space: nowrap;
   border: 1px solid transparent;
+  box-sizing: border-box;
 }
 
 .emerald {
-  background: rgba(6, 78, 59, 0.35);
-  color: #34d399;
-  border-color: rgba(16, 185, 129, 0.35);
+  background-color: var(--db-success-subtle);
+  color: var(--db-success-text);
+  border-color: var(--db-success-border);
 }
 
 .blue {
-  background: rgba(30, 58, 138, 0.35);
-  color: #60a5fa;
-  border-color: rgba(59, 130, 246, 0.35);
+  background-color: var(--db-info-subtle);
+  color: var(--db-info-text);
+  border-color: var(--db-info-border);
 }
 
 .amber {
-  background: rgba(120, 53, 15, 0.35);
-  color: #fbbf24;
-  border-color: rgba(245, 158, 11, 0.35);
+  background-color: var(--db-warning-subtle);
+  color: var(--db-warning-text);
+  border-color: var(--db-warning-border);
 }
 
 .red {
-  background: rgba(127, 29, 29, 0.35);
-  color: #f87171;
-  border-color: rgba(239, 68, 68, 0.35);
+  background-color: var(--db-danger-subtle);
+  color: var(--db-danger-text);
+  border-color: var(--db-danger-border);
 }
 
 .teal {
-  background: rgba(19, 78, 74, 0.35);
+  background-color: rgba(45, 212, 191, 0.12);
   color: #2dd4bf;
-  border-color: rgba(45, 212, 191, 0.35);
+  border-color: rgba(45, 212, 191, 0.28);
 }
 
 .slate {
-  background: rgba(30, 41, 59, 0.45);
-  color: #94a3b8;
-  border-color: rgba(100, 116, 139, 0.35);
+  background-color: var(--db-neutral-subtle);
+  color: var(--db-neutral-text);
+  border-color: var(--db-neutral-border);
 }
 
 .dot {

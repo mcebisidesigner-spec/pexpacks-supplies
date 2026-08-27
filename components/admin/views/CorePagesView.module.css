@@ -470,6 +470,21 @@
 }
 
 /* ── Kanban Grid ── */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--db-space-2);
+  margin-bottom: var(--db-space-2-5);
+}
+
+.boardCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--db-text-muted);
+}
+
 .kanbanGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

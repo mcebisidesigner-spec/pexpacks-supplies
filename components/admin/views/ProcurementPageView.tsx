@@ -80,7 +80,7 @@ export function ProcurementPageView() {
       />
 
       {/* Metrics Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+      <div className={styles.kpiGrid}>
         <MetricCard
           label="Committed Spend"
           value={`R ${committedSpend.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}`}
@@ -109,22 +109,31 @@ export function ProcurementPageView() {
         {STAGES.map((stg) => {
           const stageCards = cards.filter((c) => c.stage === stg);
           return (
-            <div key={stg} className={styles.kanbanCol}>
-              <div className={styles.kanbanHeader}>
-                <span className={styles.kanbanTitle}>{stg}</span>
-                <span className={styles.kanbanCount}>{stageCards.length}</span>
+            <div key={stg} className={styles.kanbanColumn}>
+              <div className={styles.kanbanColumnHeader}>
+                <span className={styles.columnTitle}>{stg}</span>
+                <span className={styles.columnCount}>{stageCards.length}</span>
               </div>
-              <div className={styles.kanbanCardList}>
-                {stageCards.map((c) => (
-                  <div key={c.id} className={styles.kanbanCard} onClick={() => moveStage(c.id)}>
-                    <div className={styles.kanbanCardTop}>
-                      <span className={styles.itemSkuBadge}>{c.poNumber}</span>
-                      <StatusBadge status={c.stage} showDot />
+              <div className={styles.kanbanCardsList}>
+                {stageCards.map((card) => (
+                  <div
+                    key={card.id}
+                    className={styles.kanbanCard}
+                    onClick={() => moveStage(card.id)}
+                  >
+                    <div className={styles.cardTopRow}>
+                      <span className={styles.poNumber}>{card.poNumber}</span>
+                      <StatusBadge
+                        status={card.stage === "Completed" ? "Completed" : card.stage === "Needs Procurement" ? "Urgent" : "In Progress"}
+                        tone={card.stage === "Completed" ? "emerald" : card.stage === "Needs Procurement" ? "red" : "amber"}
+                      />
                     </div>
-                    <div className={styles.kanbanCardTitle}>{c.supplier}</div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", color: "#94a3b8" }}>
-                      <span>{c.itemsCount} Items</span>
-                      <span className={styles.priceHighlight}>R {c.value.toFixed(2)}</span>
+                    <div className={styles.supplierName}>{card.supplier}</div>
+                    <div className={styles.boardCardFooter}>
+                      <span>{card.itemsCount} SKU units</span>
+                      <span className={styles.cardValue}>
+                        R {card.value.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
+                      </span>
                     </div>
                   </div>
                 ))}

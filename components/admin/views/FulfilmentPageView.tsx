@@ -129,7 +129,7 @@ export function FulfilmentPageView() {
       />
 
       {/* Metrics Row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+      <div className={styles.kpiGrid}>
         <MetricCard
           label="Ready to Pack"
           value="356"

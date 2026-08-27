@@ -1,108 +1,118 @@
 .card {
-  background: #0c1322;
-  border: 1px solid rgba(30, 41, 59, 0.9);
-  border-radius: 12px;
-  padding: 20px;
-  color: #ffffff;
+  background-color: var(--db-surface);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-card);
+  padding: var(--db-space-2-5);
+  color: var(--db-text-primary);
+  box-shadow: var(--db-shadow-card);
 }
 
 .surface {
-  background: #090e17;
-  border-color: rgba(30, 41, 59, 0.6);
+  background-color: var(--db-surface-inner);
+  border-color: var(--db-border-muted);
 }
 
 .interactive {
-  transition: transform 140ms ease, border-color 140ms ease;
+  transition: transform var(--db-transition), border-color var(--db-transition);
   cursor: pointer;
 }
 
 .interactive:hover {
   transform: translateY(-2px);
-  border-color: #3b82f6;
+  border-color: var(--db-brand);
 }
 
-/* ── Metric Card ── */
+/* ── Metric Card (Standard KPI Grammar) ── */
 .metricCard {
-  background: #0c1322;
-  border: 1px solid rgba(30, 41, 59, 0.9);
-  border-radius: 12px;
-  padding: 16px 18px;
+  background-color: var(--db-surface);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-card);
+  padding: var(--db-space-2) var(--db-space-2-5);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  transition: border-color 140ms ease;
+  gap: var(--db-space-1);
+  box-shadow: var(--db-shadow-card);
+  transition: border-color var(--db-transition), transform var(--db-transition);
 }
 
 .metricCard:hover {
-  border-color: rgba(51, 65, 85, 0.9);
+  border-color: var(--db-border-strong);
 }
 
 .metricTop {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--db-space-1);
 }
 
 .metricLabel {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--db-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .metricIconWrapper {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--db-radius-control);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .green {
-  background: rgba(16, 185, 129, 0.12);
-  color: #34d399;
+  background-color: var(--db-success-subtle);
+  color: var(--db-success-text);
+  border: 1px solid var(--db-success-border);
 }
 
 .blue {
-  background: rgba(59, 130, 246, 0.12);
-  color: #60a5fa;
+  background-color: var(--db-info-subtle);
+  color: var(--db-info-text);
+  border: 1px solid var(--db-info-border);
 }
 
 .amber {
-  background: rgba(245, 158, 11, 0.12);
-  color: #fbbf24;
+  background-color: var(--db-warning-subtle);
+  color: var(--db-warning-text);
+  border: 1px solid var(--db-warning-border);
 }
 
 .red {
-  background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
+  background-color: var(--db-danger-subtle);
+  color: var(--db-danger-text);
+  border: 1px solid var(--db-danger-border);
 }
 
 .purple {
-  background: rgba(192, 132, 252, 0.14);
-  color: #c084fc;
+  background-color: var(--db-purple-subtle);
+  color: var(--db-purple-text);
+  border: 1px solid var(--db-purple-border);
 }
 
 .metricValue {
-  font-size: 24px;
-  font-weight: 800;
-  color: #ffffff;
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: var(--db-text-primary);
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.15;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
 }
 
 .metricFooter {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 4px;
+  gap: var(--db-space-1);
+  margin-top: 2px;
 }
 
 .metricSubtext {
-  font-size: 12px;
-  color: #64748b;
+  font-size: 0.75rem;
+  color: var(--db-text-subtle);
   font-weight: 500;
 }

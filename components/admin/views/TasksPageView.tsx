@@ -168,7 +168,7 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
         count={filteredTasks.length}
         subtitle="Manage operational tasks, linked records, and collaborative action requests."
         actions={
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div className={styles.headerActions}>
             <div className={styles.viewToggleGroup}>
               <button
                 type="button"

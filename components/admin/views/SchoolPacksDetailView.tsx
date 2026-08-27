@@ -91,14 +91,15 @@ export function SchoolPacksDetailView({
         count={totalPacks}
         subtitle={`${school.city || "Johannesburg"}, ${school.province || "Gauteng"} • Grade Pack Directory`}
         actions={
-          <div style={{ display: "flex", gap: "8px" }}>
-            <Link
+          <div className={styles.headerActions}>
+            <AdminButton
               href={`/schools/${schoolIdentifier}`}
               target="_blank"
-              className={adminStyles.button}
+              variant="secondary"
+              icon={<ExternalLink size={14} />}
             >
-              <ExternalLink size={14} /> View Public Page
-            </Link>
+              View Public Page
+            </AdminButton>
             <AdminButton
               href={`/admin/${schoolIdentifier}/add-pack-items`}
               variant="primary"
@@ -230,7 +231,7 @@ export function SchoolPacksDetailView({
                             {pack.price > 0 ? (
                               money(pack.price)
                             ) : (
-                              <span style={{ color: "#94a3b8", fontSize: "12px", fontWeight: 600 }}>
+                              <span className={styles.textMuted}>
                                 From Quote
                               </span>
                             )}
@@ -255,19 +256,14 @@ export function SchoolPacksDetailView({
                                   )}
                                 </>
                               ) : (
-                                <Link
+                                <AdminButton
                                   href={editHref}
-                                  className={adminStyles.button}
-                                  style={{
-                                    fontSize: "11px",
-                                    height: "30px",
-                                    padding: "0 10px",
-                                    color: "#10b981",
-                                    borderColor: "rgba(16, 185, 129, 0.3)",
-                                  }}
+                                  variant="outline"
+                                  size="sm"
+                                  icon={<Plus size={12} />}
                                 >
-                                  <Plus size={12} /> Set Pack
-                                </Link>
+                                  Set Pack
+                                </AdminButton>
                               )}
                             </div>
                           </td>

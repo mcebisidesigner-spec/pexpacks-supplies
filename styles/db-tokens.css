@@ -1,45 +1,236 @@
-/* ═══════════════════════════════════════════
-   DATABASE / ADMIN COMPONENT TOKENS
-   Standard Vanilla CSS
-   ═══════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════════
+   PEXPACKS UNIFIED BACK-OFFICE DESIGN SYSTEM (DB TOKENS)
+   Authority: styles/db-tokens.css
+   Scope: /admin/* and /pex-console-secure
+   ═════════════════════════════════════════════════════════════════════════ */
 
-/* Surface Containers */
+:root {
+  /* ── 1. Canvas & Surface Hierarchy ── */
+  --db-canvas: #070b12;
+  --db-surface: #0c1322;
+  --db-surface-inner: #090e17;
+  --db-surface-elevated: #111a2e;
+  --db-surface-hover: rgba(255, 255, 255, 0.04);
+  --db-surface-active: rgba(255, 255, 255, 0.08);
+
+  /* ── 2. Borders ── */
+  --db-border: #1e293b;
+  --db-border-muted: rgba(30, 41, 59, 0.65);
+  --db-border-strong: #334155;
+  --db-border-focus: #10b981;
+
+  /* ── 3. Typography & Text Hierarchy ── */
+  --db-font-family: inherit;
+  --db-text-primary: #f8fafc;
+  --db-text-secondary: #e2e8f0;
+  --db-text-muted: #94a3b8;
+  --db-text-subtle: #64748b;
+  --db-text-disabled: #475569;
+
+  /* Type Scale Tokens */
+  --db-font-page-title: 700 1.75rem/2.125rem var(--db-font-family); /* 28px */
+  --db-font-section-title: 600 1.125rem/1.5rem var(--db-font-family); /* 18px */
+  --db-font-card-title: 600 0.9375rem/1.25rem var(--db-font-family); /* 15px */
+  --db-font-body: 400 0.875rem/1.25rem var(--db-font-family); /* 14px */
+  --db-font-table: 400 0.8125rem/1.125rem var(--db-font-family); /* 13px */
+  --db-font-label: 500 0.75rem/1rem var(--db-font-family); /* 12px */
+  --db-font-caption: 400 0.6875rem/0.875rem var(--db-font-family); /* 11px */
+  --db-font-kpi: 700 2rem/2.25rem var(--db-font-family); /* 32px */
+
+  /* ── 4. Brand & Primary Accent ── */
+  --db-brand: #10b981;
+  --db-brand-strong: #059669;
+  --db-brand-hover: #047857;
+  --db-brand-subtle: rgba(16, 185, 129, 0.12);
+  --db-brand-glow: 0 0 16px rgba(16, 185, 129, 0.25);
+
+  /* ── 5. Semantic Color System ── */
+  /* Success (Emerald) */
+  --db-success: #10b981;
+  --db-success-text: #34d399;
+  --db-success-subtle: rgba(16, 185, 129, 0.12);
+  --db-success-border: rgba(16, 185, 129, 0.28);
+
+  /* Warning / Pending / Attention (Amber) */
+  --db-warning: #f59e0b;
+  --db-warning-text: #fbbf24;
+  --db-warning-subtle: rgba(245, 158, 11, 0.12);
+  --db-warning-border: rgba(245, 158, 11, 0.28);
+
+  /* Danger / Urgent / Failed / Delete (Red/Coral) */
+  --db-danger: #ef4444;
+  --db-danger-text: #f87171;
+  --db-danger-subtle: rgba(239, 68, 68, 0.12);
+  --db-danger-border: rgba(239, 68, 68, 0.28);
+
+  /* Information / In-Progress (Blue/Cyan) */
+  --db-info: #0ea5e9;
+  --db-info-text: #38bdf8;
+  --db-info-subtle: rgba(14, 165, 233, 0.12);
+  --db-info-border: rgba(14, 165, 233, 0.28);
+
+  /* Neutral / Inactive / Archived (Slate) */
+  --db-neutral: #64748b;
+  --db-neutral-text: #94a3b8;
+  --db-neutral-subtle: rgba(100, 116, 139, 0.14);
+  --db-neutral-border: rgba(100, 116, 139, 0.28);
+
+  /* Special Brand Accent (Purple / Operations) */
+  --db-purple: #a855f7;
+  --db-purple-text: #c084fc;
+  --db-purple-subtle: rgba(168, 85, 247, 0.12);
+  --db-purple-border: rgba(168, 85, 247, 0.28);
+
+  /* ── 6. Spacing Scale (Strict 8px rhythm) ── */
+  --db-space-0-5: 4px;
+  --db-space-1: 8px;
+  --db-space-1-5: 12px;
+  --db-space-2: 16px;
+  --db-space-2-5: 20px;
+  --db-space-3: 24px;
+  --db-space-4: 32px;
+  --db-space-5: 40px;
+  --db-space-6: 48px;
+  --db-space-8: 64px;
+
+  /* ── 7. Border Radii ── */
+  --db-radius-xs: 4px;
+  --db-radius-sm: 6px;
+  --db-radius-control: 8px;
+  --db-radius-card: 14px;
+  --db-radius-panel: 16px;
+  --db-radius-lg: 20px;
+  --db-radius-pill: 999px;
+
+  /* ── 8. Controls & Heights ── */
+  --db-control-height-sm: 32px;
+  --db-control-height: 40px;
+  --db-control-height-lg: 48px;
+
+  /* ── 9. Elevation, Shadows & Focus ── */
+  --db-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --db-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --db-shadow-elevated: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --db-shadow-modal: 0 20px 50px rgba(0, 0, 0, 0.6);
+  --db-focus-ring: 0 0 0 3px rgba(16, 185, 129, 0.25);
+
+  /* ── 10. Transitions ── */
+  --db-transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --db-transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  --db-transition-slow: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     BACKWARD COMPATIBILITY ALIASES (Maps legacy --a-* & --admin-* to --db-*)
+     ═══════════════════════════════════════════════════════════════════════ */
+  --a-bg: var(--db-canvas);
+  --a-surface: var(--db-surface);
+  --a-surface-2: var(--db-surface-inner);
+  --a-surface-3: var(--db-border);
+  --a-border: var(--db-border);
+  --a-border-strong: var(--db-border-muted);
+  --a-text: var(--db-text-primary);
+  --a-text-2: var(--db-text-secondary);
+  --a-text-3: var(--db-text-muted);
+  --a-text-4: var(--db-text-subtle);
+  --a-accent: var(--db-brand);
+  --a-accent-strong: var(--db-brand-strong);
+  --a-accent-hover: var(--db-brand-hover);
+  --a-accent-subtle: var(--db-brand-subtle);
+  --a-green: var(--db-success-text);
+  --a-green-subtle: var(--db-success-subtle);
+  --a-green-border: var(--db-success-border);
+  --a-blue: var(--db-info-text);
+  --a-blue-subtle: var(--db-info-subtle);
+  --a-blue-border: var(--db-info-border);
+  --a-amber: var(--db-warning-text);
+  --a-amber-subtle: var(--db-warning-subtle);
+  --a-amber-border: var(--db-warning-border);
+  --a-red: var(--db-danger-text);
+  --a-red-subtle: var(--db-danger-subtle);
+  --a-red-border: var(--db-danger-border);
+  --a-radius: var(--db-radius-panel);
+  --a-radius-sm: var(--db-radius-control);
+  --a-btn-h: var(--db-control-height);
+  --a-btn-radius: var(--db-radius-control);
+  --a-input-h: var(--db-control-height);
+  --a-input-radius: var(--db-radius-control);
+  --a-badge-radius: var(--db-radius-xs);
+  --a-card-radius: var(--db-radius-card);
+
+  --admin-bg: var(--db-canvas);
+  --admin-surface: var(--db-surface);
+  --admin-surface-2: var(--db-surface-inner);
+  --admin-border: var(--db-border);
+  --admin-border-strong: var(--db-border-muted);
+  --admin-text: var(--db-text-primary);
+  --admin-text-2: var(--db-text-secondary);
+  --admin-text-3: var(--db-text-muted);
+  --admin-heading: var(--db-text-primary);
+  --admin-accent: var(--db-brand);
+  --admin-accent-strong: var(--db-brand-strong);
+  --admin-info: var(--db-info-text);
+  --admin-info-subtle: var(--db-info-subtle);
+  --admin-amber: var(--db-warning-text);
+  --admin-amber-subtle: var(--db-warning-subtle);
+  --admin-red: var(--db-danger-text);
+  --admin-red-subtle: var(--db-danger-subtle);
+  --admin-muted: var(--db-text-subtle);
+  --admin-radius: var(--db-radius-panel);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   UNIVERSAL SHARED ATOMIC UTILITY CLASSES
+   ═════════════════════════════════════════════════════════════════════════ */
+
 .db-canvas {
   min-height: 100vh;
-  background-color: var(--a-bg, #070b12);
-  color: var(--a-text-2, #f1f5f9);
+  background-color: var(--db-canvas);
+  color: var(--db-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .db-card {
-  background-color: var(--a-surface, #0c1322);
-  border: 1px solid var(--a-border, rgba(30, 41, 59, 0.9));
-  border-radius: var(--a-radius, 1rem);
-  padding: 1.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: var(--db-surface);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-card);
+  padding: var(--db-space-3);
+  box-shadow: var(--db-shadow-card);
 }
 
 .db-card-subtle {
-  background-color: var(--a-surface-2, #090e17);
-  border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.6));
-  border-radius: 0.75rem;
-  padding: 1rem;
+  background-color: var(--db-surface-inner);
+  border: 1px solid var(--db-border-muted);
+  border-radius: var(--db-radius-control);
+  padding: var(--db-space-2);
 }
 
-/* Unified Form Inputs & Textareas */
+/* ── Floating Input Engine (Pure CSS :placeholder-shown) ── */
+.db-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .db-input-field {
   width: 100%;
-  border-radius: 0.75rem;
-  background-color: var(--a-surface-2, #090e17);
-  border: 1px solid var(--a-surface-3, #1e293b);
-  color: #f8fafc;
+  height: var(--db-control-height);
+  border-radius: var(--db-radius-control);
+  background-color: var(--db-surface-inner);
+  border: 1px solid var(--db-border);
+  color: var(--db-text-primary);
+  font-family: inherit;
   font-weight: 500;
   font-size: 0.875rem;
-  line-height: 1.25rem;
-  padding: 1rem 1rem 0.625rem 1rem;
+  padding: 1.125rem 0.875rem 0.375rem 0.875rem;
   outline: none;
-  transition: all 200ms ease;
+  transition: all var(--db-transition);
+  box-sizing: border-box;
+}
+
+.db-input-field-has-icon {
+  padding-left: 2.5rem;
 }
 
 .db-input-field::placeholder {
@@ -47,64 +238,122 @@
 }
 
 .db-input-field:focus {
-  border-color: #10b981;
-  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.4);
+  border-color: var(--db-brand);
+  box-shadow: var(--db-focus-ring);
+  background-color: #0b121e;
 }
 
 .db-input-field:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.db-input-field-error {
+  border-color: var(--db-danger) !important;
+}
+
+.db-input-field-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
 }
 
 .db-input-label {
   position: absolute;
   pointer-events: none;
-  transition: all 200ms ease-out;
-  background-color: var(--a-surface-2, #090e17);
-  padding: 0 0.375rem;
-  color: #94a3b8;
+  transition: all var(--db-transition);
+  color: var(--db-text-muted);
   font-size: 0.875rem;
   font-weight: 400;
-}
-
-/* Floating label states relative to peer input */
-.db-input-field:placeholder-shown ~ .db-input-label {
+  left: 0.875rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #94a3b8;
+  user-select: none;
 }
 
+.db-input-label-has-icon {
+  left: 2.5rem;
+}
+
+/* Floating Transitions */
 .db-input-field:focus ~ .db-input-label,
 .db-input-field:not(:placeholder-shown) ~ .db-input-label {
-  top: 0;
-  left: 0.75rem;
-  transform: translateY(-50%);
-  font-size: 0.75rem;
+  top: 0.5rem;
+  transform: translateY(0);
+  font-size: 0.6875rem;
   font-weight: 600;
+  left: 0.875rem !important;
 }
 
 .db-input-field:focus ~ .db-input-label {
-  color: #34d399;
+  color: var(--db-brand);
 }
 
 .db-input-field:not(:placeholder-shown) ~ .db-input-label {
-  color: #e2e8f0;
+  color: var(--db-text-secondary);
+}
+
+.db-input-field-error ~ .db-input-label {
+  color: var(--db-danger-text) !important;
+}
+
+.db-input-icon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--db-text-muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--db-transition);
+}
+
+.db-input-field:focus ~ .db-input-icon {
+  color: var(--db-brand);
+}
+
+.db-field-helper {
+  font-size: 0.75rem;
+  color: var(--db-text-subtle);
+  margin-top: 4px;
+  line-height: 1rem;
+}
+
+.db-field-error-text {
+  font-size: 0.75rem;
+  color: var(--db-danger-text);
+  margin-top: 4px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Floating Textarea Engine ── */
+.db-textarea-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .db-textarea-field {
   width: 100%;
-  min-height: 110px;
-  border-radius: 0.75rem;
-  background-color: var(--a-surface-2, #090e17);
-  border: 1px solid var(--a-surface-3, #1e293b);
-  color: #f8fafc;
+  min-height: 100px;
+  border-radius: var(--db-radius-control);
+  background-color: var(--db-surface-inner);
+  border: 1px solid var(--db-border);
+  color: var(--db-text-primary);
+  font-family: inherit;
   font-weight: 500;
   font-size: 0.875rem;
-  line-height: 1.25rem;
-  padding: 1.25rem 1rem 1rem 1rem;
+  line-height: 1.35;
+  padding: 1.375rem 0.875rem 0.75rem 0.875rem;
   outline: none;
-  resize: none;
-  transition: all 200ms ease;
+  resize: vertical;
+  transition: all var(--db-transition);
+  box-sizing: border-box;
 }
 
 .db-textarea-field::placeholder {
@@ -112,94 +361,57 @@
 }
 
 .db-textarea-field:focus {
-  border-color: #10b981;
-  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.4);
+  border-color: var(--db-brand);
+  box-shadow: var(--db-focus-ring);
+  background-color: #0b121e;
+}
+
+.db-textarea-field-error {
+  border-color: var(--db-danger) !important;
 }
 
 .db-textarea-label {
   position: absolute;
   pointer-events: none;
-  transition: all 200ms ease-out;
-  background-color: var(--a-surface-2, #090e17);
-  padding: 0 0.375rem;
-  color: #94a3b8;
+  transition: all var(--db-transition);
+  color: var(--db-text-muted);
   font-size: 0.875rem;
   font-weight: 400;
-}
-
-.db-textarea-field:placeholder-shown ~ .db-textarea-label {
+  left: 0.875rem;
   top: 1rem;
-  left: 1rem;
-  color: #94a3b8;
+  user-select: none;
 }
 
 .db-textarea-field:focus ~ .db-textarea-label,
 .db-textarea-field:not(:placeholder-shown) ~ .db-textarea-label {
-  top: 0;
-  left: 0.75rem;
-  transform: translateY(-50%);
-  font-size: 0.75rem;
+  top: 0.375rem;
+  font-size: 0.6875rem;
   font-weight: 600;
 }
 
 .db-textarea-field:focus ~ .db-textarea-label {
-  color: #34d399;
+  color: var(--db-brand);
 }
 
 .db-textarea-field:not(:placeholder-shown) ~ .db-textarea-label {
-  color: #e2e8f0;
+  color: var(--db-text-secondary);
 }
 
-/* Tables & Headers */
-.db-table-container {
-  overflow-x: auto;
-  border-radius: var(--a-radius, 1rem);
-  border: 1px solid var(--a-border, rgba(30, 41, 59, 0.9));
-  background-color: var(--a-surface, #0c1322);
-}
-
-.db-table-header {
-  background-color: rgba(15, 23, 42, 0.6);
-  border-bottom: 1px solid var(--a-surface-3, #1e293b);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #94a3b8;
-}
-
-.db-table-row {
-  border-bottom: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.6));
-  transition: background-color 150ms ease;
-}
-
-.db-table-row:hover {
-  background-color: rgba(15, 23, 42, 0.4);
-}
-
-.db-table-row:last-child {
-  border-bottom: 0;
-}
-
-/* ═══════════════════════════════════════════
-   UNIFIED BUTTON SYSTEM
-   Single Source of Truth for all DB / Admin Buttons
-   ═══════════════════════════════════════════ */
-
+/* ── Unified Button System ── */
 .db-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: var(--a-btn-h, 36px);
-  padding: 0 14px;
+  height: var(--db-control-height);
+  padding: 0 var(--db-space-2);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
-  border-radius: var(--a-btn-radius, 8px);
+  border-radius: var(--db-radius-control);
   cursor: pointer;
   text-decoration: none;
-  transition: all var(--a-transition, 140ms ease);
+  transition: all var(--db-transition);
   white-space: nowrap;
   user-select: none;
   border: 1px solid transparent;
@@ -208,94 +420,152 @@
 }
 
 .db-btn:focus-visible {
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  box-shadow: var(--db-focus-ring);
 }
 
 .db-btn:disabled,
 .db-btn[aria-disabled="true"] {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-/* Sizes */
 .db-btn-sm {
-  height: 30px;
+  height: var(--db-control-height-sm);
   padding: 0 10px;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .db-btn-md {
-  height: var(--a-btn-h, 36px);
+  height: var(--db-control-height);
   padding: 0 14px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .db-btn-lg {
-  height: 42px;
-  padding: 0 18px;
-  font-size: 14px;
+  height: var(--db-control-height-lg);
+  padding: 0 20px;
+  font-size: 0.9375rem;
 }
 
-/* Variants */
 .db-btn-primary {
-  background: var(--a-accent-strong, #059669);
+  background: linear-gradient(135deg, var(--db-brand) 0%, var(--db-brand-strong) 100%);
   color: #ffffff;
-  font-weight: 600;
   border: 1px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
 }
 
 .db-btn-primary:hover {
-  background: var(--a-accent-hover, #047857);
-  box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
+  background: linear-gradient(135deg, #18d396 0%, #047857 100%);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
 }
 
 .db-btn-secondary {
-  background: var(--a-surface-2, #090e17);
-  color: var(--a-text-2, #cbd5e1);
-  border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.6));
+  background-color: var(--db-surface);
+  color: var(--db-text-primary);
+  border: 1px solid var(--db-border);
 }
 
 .db-btn-secondary:hover {
-  background: var(--a-surface-3, #1e293b);
-  border-color: var(--a-text-4, #64748b);
+  background-color: var(--db-surface-inner);
+  border-color: var(--db-text-subtle);
   color: #ffffff;
 }
 
-.db-btn-teal {
-  background: rgba(45, 212, 191, 0.12);
-  color: #2dd4bf;
-  border: 1px solid rgba(45, 212, 191, 0.4);
+.db-btn-outline {
+  background-color: transparent;
+  color: var(--db-text-secondary);
+  border: 1px solid var(--db-border);
 }
 
-.db-btn-teal:hover {
-  background: rgba(45, 212, 191, 0.22);
+.db-btn-outline:hover {
+  background-color: var(--db-surface-hover);
+  border-color: var(--db-border-strong);
+  color: #ffffff;
 }
 
 .db-btn-danger {
-  background: var(--a-red-subtle, rgba(248, 113, 113, 0.1));
-  color: var(--a-red, #f87171);
-  border: 1px solid rgba(248, 113, 113, 0.4);
+  background-color: var(--db-danger-subtle);
+  color: var(--db-danger-text);
+  border: 1px solid var(--db-danger-border);
 }
 
 .db-btn-danger:hover {
-  background: rgba(248, 113, 113, 0.22);
+  background-color: rgba(239, 68, 68, 0.22);
+  color: #ffffff;
 }
 
 .db-btn-ghost {
-  background: transparent;
-  color: var(--a-text-3, #94a3b8);
+  background-color: transparent;
+  color: var(--db-text-muted);
   border: 1px solid transparent;
 }
 
 .db-btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
+  background-color: var(--db-surface-hover);
+  color: var(--db-text-primary);
 }
 
 .db-btn-icon {
-  width: var(--a-btn-h, 36px);
-  height: var(--a-btn-h, 36px);
+  width: var(--db-control-height);
+  height: var(--db-control-height);
   padding: 0;
-  border-radius: var(--a-btn-radius, 8px);
+  border-radius: var(--db-radius-control);
+}
+
+.db-btn-icon-sm {
+  width: var(--db-control-height-sm);
+  height: var(--db-control-height-sm);
+  padding: 0;
+}
+
+/* ── Tables & Headers ── */
+.db-table-container {
+  overflow-x: auto;
+  border-radius: var(--db-radius-card);
+  border: 1px solid var(--db-border);
+  background-color: var(--db-surface);
+  box-shadow: var(--db-shadow-card);
+}
+
+.db-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.8125rem;
+}
+
+.db-table-header {
+  background-color: rgba(15, 23, 42, 0.7);
+  border-bottom: 1px solid var(--db-border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--db-text-muted);
+}
+
+.db-table-header th {
+  padding: var(--db-space-1-5) var(--db-space-2);
+  white-space: nowrap;
+}
+
+.db-table-row {
+  border-bottom: 1px solid var(--db-border-muted);
+  transition: background-color var(--db-transition-fast);
+}
+
+.db-table-row:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.db-table-row:last-child {
+  border-bottom: none;
+}
+
+.db-table-row td {
+  padding: var(--db-space-1-5) var(--db-space-2);
+  color: var(--db-text-secondary);
+  vertical-align: middle;
 }

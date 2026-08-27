@@ -49,7 +49,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
         title={school.name}
         subtitle={`${school.city || "South Africa"} ${school.province ? `• ${school.province}` : ""}`}
         actions={
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div className={styles.headerActions}>
             <StatusBadge
               status={school.is_partner ? "Partner School" : "Non-partner"}
               tone={school.is_partner ? "emerald" : "slate"}
@@ -74,7 +74,7 @@ export default async function SchoolInfoPage({ params }: SchoolInfoPageProps) {
       />
 
       {/* 4 Metric Cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+      <div className={styles.kpiGrid}>
         <MetricCard
           label="Grade Packs"
           value={packData.total}

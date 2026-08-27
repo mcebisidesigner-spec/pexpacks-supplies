@@ -63,8 +63,8 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
         const iconName =
           (row as unknown as { icon?: string }).icon || inferIcon(row.name);
         return (
-          <div className={styles.productCell} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <div style={{ color: "var(--a-accent, #10b981)", display: "flex", alignItems: "center", flexShrink: 0 }}>
+          <div className={styles.productCell}>
+            <div className={styles.productIconSlot}>
               <ItemIcon name={iconName} size={16} />
             </div>
             <div>
@@ -160,7 +160,7 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       <DataTableToolbar
         searchPlaceholder="Search master products by SKU, name, or brand…"
         actions={
-          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <div className={styles.headerActions}>
             <AdminSelect
               value={params.category || "all"}
               onChange={(e) => setParams({ category: e.target.value }, true)}
