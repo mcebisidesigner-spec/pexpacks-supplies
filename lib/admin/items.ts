@@ -449,7 +449,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
     let masterQuery = admin
       .from("master_products")
       .select(
-        "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active",
+        "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon",
       );
 
     if (isUuid) {
@@ -475,25 +475,15 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
         }) || masterList[0];
 
       if (matchedMaster) {
-        const [{ count: packCount }, { data: legacyItem }] = await Promise.all([
-          admin
-            .from("school_pack_items")
-            .select("id", { count: "exact", head: true })
-            .eq("product_id", matchedMaster.id),
-          admin
-            .from("stationery_items" as never)
-            .select("icon")
-            .or(
-              `master_product_id.eq.${matchedMaster.id},sku.ilike.${matchedMaster.sku},name.ilike.${escapeIlikeLiteral(matchedMaster.name)}` as never,
-            )
-            .not("icon" as never, "is" as never, null as never)
-            .limit(1)
-            .maybeSingle(),
-        ]);
+        const { count: packCount } = await admin
+          .from("school_pack_items")
+          .select("id", { count: "exact", head: true })
+          .eq("product_id", matchedMaster.id);
 
         const resolvedIcon =
-          (legacyItem as { icon?: string | null } | null)?.icon ||
-          inferIcon(matchedMaster.name);
+          (matchedMaster as unknown as { icon?: string | null }).icon ||
+          inferIcon(matchedMaster.name) ||
+          "folder";
 
         return {
           id: matchedMaster.id,
@@ -837,24 +827,6 @@ export async function updateItem(
       })
       .eq("product_id", product.id)
       .select("pack_id");
-
-    try {
-      await admin
-        .from("stationery_items" as never)
-        .update({
-          icon: parsed.data.icon || null,
-          name: parsed.data.name.trim(),
-          unit_price: parsed.data.price,
-          description: parsed.data.description,
-          specification: parsed.data.specification,
-          category: parsed.data.category,
-        } as never)
-        .or(
-          `master_product_id.eq.${product.id},sku.ilike.${product.sku},name.ilike.${escapeIlikeLiteral(product.name)}` as never,
-        );
-    } catch {
-      // ignore
-    }
 
     if (linkedPacks && linkedPacks.length > 0) {
       const uniquePackIds = Array.from(
