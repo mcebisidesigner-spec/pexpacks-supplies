@@ -209,7 +209,7 @@ async function readCanonicalItem(
 ): Promise<ItemRow | null> {
   const { data, error } = await adminPackItemsTable(admin)
     .select(
-      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
+      "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
     )
     .eq("id", id as never)
     .maybeSingle();
@@ -326,7 +326,7 @@ export async function listItems(
   let query = admin
     .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source,pack_title",
+      "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source,pack_title",
       { count: "exact" },
     );
 
@@ -520,7 +520,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   const { data: directMatch } = await admin
     .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
+      "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
     )
     .or(
       `sku.ilike.${decoded},sku.ilike.${slugified},name.ilike.${decoded}` as never,
@@ -534,7 +534,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   const { data: allItems } = await admin
     .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
+      "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
     );
 
   if (allItems) {

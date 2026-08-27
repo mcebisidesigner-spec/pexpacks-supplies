@@ -606,16 +606,39 @@ export async function getPack(
   const { data: pack, error } = await query.maybeSingle();
   if (error || !pack) return { pack: null, items: [] };
 
+  let itemList: ItemRow[] = [];
   const { data: items, error: itemsError } = await admin
     .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
+      "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
     )
     .eq("pack_id" as never, pack.id as never)
     .order("sort_order" as never, { ascending: true })
     .order("name" as never, { ascending: true });
-  if (itemsError) console.error("[packs] pack item load failed:", itemsError);
-  const itemList = (items ?? []) as unknown as ItemRow[];
+
+  if (itemsError) {
+    console.error(
+      "[packs] pack item load from admin_pack_items_view failed:",
+      itemsError.message || itemsError.details || JSON.stringify(itemsError),
+    );
+    const { data: fallbackItems, error: fallbackError } = await admin
+      .from("canonical_pack_items_view" as never)
+      .select(
+        "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
+      )
+      .eq("pack_id" as never, pack.id as never)
+      .order("sort_order" as never, { ascending: true });
+    if (fallbackError) {
+      console.error(
+        "[packs] fallback pack item load failed:",
+        fallbackError.message || fallbackError.details || JSON.stringify(fallbackError),
+      );
+    } else {
+      itemList = (fallbackItems ?? []) as unknown as ItemRow[];
+    }
+  } else {
+    itemList = (items ?? []) as unknown as ItemRow[];
+  }
   const calculatedSum = itemList.reduce(
     (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
     0,
@@ -992,7 +1015,7 @@ export async function duplicatePack(
   const { data: sourceItems } = await admin
     .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,product_id,legacy_item_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
+      "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
     )
     .eq("pack_id" as never, id as never);
 
