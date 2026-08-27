@@ -1,5 +1,5 @@
-﻿/* ===================================================
-   PexPacks Supplies — Bulk CSV Stationery Importer
+/* ===================================================
+   PexPacks Supplies � Bulk CSV Stationery Importer
    Token-based styles scoped to this component.
    Assumes rendering inside the .admin-dark theme scope
    (all --admin-* tokens are defined there).
@@ -19,12 +19,12 @@
 .rootCompact {
   max-width: none;
   margin: 0;
-  gap: 12px;
-  padding: 8px 14px;
-  border: 2px solid var(--a-accent, #00a99d);
-  border-radius: 8px;
-  background: var(--a-bg, #050910);
-  box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.12);
+  gap: var(--db-space-1);
+  padding: var(--db-space-1);
+  border: 2px solid var(--db-brand);
+  border-radius: var(--db-radius-card);
+  background: var(--db-surface-inner);
+  box-shadow: var(--db-shadow-card);
 }
 
 .rootTiles {
@@ -78,7 +78,7 @@
 .cardHeaderTiles {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
   align-items: stretch;
-  gap: 12px;
+  gap: var(--db-space-1);
 }
 
 .cardTitleBlock {
@@ -87,13 +87,13 @@
 
 .cardHeaderTiles .cardTitleBlock {
   display: flex;
-  min-height: 76px;
+  min-height: 72px;
   flex-direction: column;
   justify-content: center;
-  padding: 12px 14px;
-  border: 1px solid var(--a-accent, #14b8a6);
-  border-radius: 6px;
-  background: var(--a-accent, #12a89d);
+  padding: var(--db-space-1-5) var(--db-space-2);
+  border: 1px solid var(--db-brand);
+  border-radius: var(--db-radius-control);
+  background: var(--db-brand);
 }
 
 .cardTitle {
@@ -146,11 +146,11 @@
 }
 
 .tileDropzone {
-  min-height: 76px;
-  padding: 12px 16px;
-  border: 1px dashed var(--a-accent, #00a99d);
-  border-radius: 6px;
-  background: var(--a-bg, #050910);
+  min-height: 72px;
+  padding: var(--db-space-1-5) var(--db-space-2);
+  border: 1px dashed rgba(16, 185, 129, 0.58);
+  border-radius: var(--db-radius-control);
+  background: transparent;
 }
 
 .compactDropzone span {
@@ -206,13 +206,14 @@
 }
 
 .templateBtnTile {
-  min-height: 76px;
+  min-height: 72px;
   justify-self: stretch;
   justify-content: center;
-  padding: 12px 16px;
-  border: 1px dashed var(--a-accent, #00a99d);
-  border-radius: 6px;
-  background: var(--a-bg, #050910);
+  padding: var(--db-space-1-5) var(--db-space-2);
+  border: 1px dashed rgba(16, 185, 129, 0.58);
+  border-radius: var(--db-radius-control);
+  background: transparent;
+  color: var(--db-text-secondary);
   text-align: center;
 }
 

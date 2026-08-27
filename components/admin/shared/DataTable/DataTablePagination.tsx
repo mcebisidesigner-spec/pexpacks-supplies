@@ -12,6 +12,10 @@ export interface DataTablePaginationProps {
   className?: string;
 }
 
+function formatCount(val: number): string {
+  return Number(val || 0).toLocaleString("en-US");
+}
+
 export function DataTablePagination({
   total,
   pageSize: propPageSize,
@@ -63,9 +67,9 @@ export function DataTablePagination({
   return (
     <div className={`${styles.paginationFooter} ${className || ""}`}>
       <div className={styles.rangeText}>
-        Showing <span className={styles.rangeHighlight}>{fromRecord.toLocaleString()}</span> to{" "}
-        <span className={styles.rangeHighlight}>{toRecord.toLocaleString()}</span> of{" "}
-        <span className={styles.rangeHighlight}>{total.toLocaleString()}</span> records
+        Showing <span className={styles.rangeHighlight}>{formatCount(fromRecord)}</span> to{" "}
+        <span className={styles.rangeHighlight}>{formatCount(toRecord)}</span> of{" "}
+        <span className={styles.rangeHighlight}>{formatCount(total)}</span> records
       </div>
 
       <div className={styles.controls}>

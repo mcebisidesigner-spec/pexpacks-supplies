@@ -6,7 +6,6 @@ import Link from "next/link";
 import useSWR from "swr";
 import {
   ArrowLeft,
-  Search,
   Plus,
   Trash2,
   Save,
@@ -34,6 +33,7 @@ import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import type { QuotationStatus } from "@/lib/admin/quotations";
 import styles from "./Quotations.module.css";
+import db from "@/components/admin/ui/AdminDesignSystem.module.css";
 
 export interface MasterProductOption {
   id: string;
@@ -58,7 +58,13 @@ export interface StationerySearchResult {
   title: string;
   description?: string;
   category?: string;
+  unit?: string | null;
+  availability?: string | null;
+  supplier?: string | null;
   unit_price: number;
+  cost_price?: number | null;
+  margin_amount?: number | null;
+  margin_percent?: number | null;
 }
 
 interface FormLineItem {
@@ -70,8 +76,28 @@ interface FormLineItem {
   qtyText: string;
   quantity: number;
   unit_price: number | "";
+  cost_price: number | null;
+  supplier: string | null;
+  availability: string | null;
+  margin_percent: number | null;
 }
 
+function createEmptyLineItem(id: string): FormLineItem {
+  return {
+    id,
+    master_product_id: null,
+    item_title: "",
+    sku: "",
+    unit: "Each",
+    qtyText: "1",
+    quantity: 1,
+    unit_price: "",
+    cost_price: null,
+    supplier: null,
+    availability: null,
+    margin_percent: null,
+  };
+}
 function formatZAR(amount: number): string {
   const formatted = Number(amount || 0).toLocaleString("en-ZA", {
     minimumFractionDigits: 2,
@@ -99,7 +125,6 @@ const STANDARD_NOTE_TEMPLATES = [
 
 export function QuotationBuilderForm({
   schools: initialSchools = [],
-  masterProducts: initialMasterProducts = [],
 }: {
   schools?: SchoolOption[];
   masterProducts?: MasterProductOption[];
@@ -193,16 +218,7 @@ export function QuotationBuilderForm({
 
   // 3. Line Items state
   const [lineItems, setLineItems] = useState<FormLineItem[]>([
-    {
-      id: "item-1",
-      master_product_id: null,
-      item_title: "",
-      sku: "",
-      unit: "Each",
-      qtyText: "1",
-      quantity: 1,
-      unit_price: "",
-    },
+    createEmptyLineItem("item-1"),
   ]);
 
   // Active line item row being searched
@@ -251,10 +267,14 @@ export function QuotationBuilderForm({
               master_product_id: item.id,
               item_title: item.title,
               sku: item.sku || "ST-ITEM-001",
-              unit: "Each",
+              unit: item.unit || "Each",
               qtyText: row.qtyText || "1",
               quantity: row.quantity || 1,
               unit_price: Number(item.unit_price || 0),
+              cost_price: item.cost_price ?? null,
+              supplier: item.supplier ?? null,
+              availability: item.availability ?? null,
+              margin_percent: item.margin_percent ?? null,
             }
           : row
       )
@@ -264,35 +284,12 @@ export function QuotationBuilderForm({
   }
 
   function handleAddItem() {
-    setLineItems((prev) => [
-      ...prev,
-      {
-        id: `item-${Date.now()}`,
-        master_product_id: null,
-        item_title: "",
-        sku: "",
-        unit: "Each",
-        qtyText: "1",
-        quantity: 1,
-        unit_price: "",
-      },
-    ]);
+    setLineItems((prev) => [...prev, createEmptyLineItem(`item-${Date.now()}`)]);
   }
 
   function handleRemoveItem(rowId: string) {
     if (lineItems.length <= 1) {
-      setLineItems([
-        {
-          id: `item-${Date.now()}`,
-          master_product_id: null,
-          item_title: "",
-          sku: "",
-          unit: "Each",
-          qtyText: "1",
-          quantity: 1,
-          unit_price: "",
-        },
-      ]);
+      setLineItems([createEmptyLineItem(`item-${Date.now()}`)]);
       return;
     }
     setLineItems((prev) => prev.filter((item) => item.id !== rowId));
@@ -350,6 +347,10 @@ export function QuotationBuilderForm({
         qtyText: String(it.quantity),
         quantity: it.quantity,
         unit_price: it.unit_price,
+        cost_price: null,
+        supplier: null,
+        availability: null,
+        margin_percent: null,
       }));
 
       setLineItems((prev) => {
@@ -388,6 +389,10 @@ export function QuotationBuilderForm({
           qtyText: String(qty),
           quantity: qty,
           unit_price: price,
+          cost_price: null,
+          supplier: null,
+          availability: null,
+          margin_percent: null,
         });
       }
     }
@@ -465,6 +470,9 @@ export function QuotationBuilderForm({
         unit: item.unit.trim() || "Each",
         quantity: Number(item.quantity) || 1,
         unit_price: typeof item.unit_price === "number" ? item.unit_price : 0,
+        cost_price: item.cost_price,
+        supplier_snapshot: item.supplier,
+        availability_snapshot: item.availability,
       })),
     };
 
@@ -480,18 +488,18 @@ export function QuotationBuilderForm({
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${db.page} ${db.stack}`}>
       {/* 1. Top Back Button */}
-      <Link href="/admin/quotations" className={styles.backButton}>
+      <Link href="/admin/quotations" className={db.backLink}>
         <ArrowLeft size={14} />
         Back to Quotations
       </Link>
 
       {/* 2. Top Header Row */}
-      <div className={styles.headerRow}>
-        <div className={styles.titleArea}>
-          <h1 className={styles.pageTitle}>New Quotation</h1>
-          <p className={styles.pageSubtitle}>
+      <div className={db.pageHeader}>
+        <div className={db.pageHeading}>
+          <h1 className={db.pageTitle}>New Quotation</h1>
+          <p className={db.pageSubtitle}>
             Compose an official school price quotation with live line items and automated calculation.
           </p>
         </div>
@@ -512,14 +520,14 @@ export function QuotationBuilderForm({
         </div>
       ) : null}
 
-      <div className={styles.mainLayout}>
+      <div className={db.splitLayout}>
         {/* LEFT COLUMN: Main Form */}
-        <div className={styles.leftColumn}>
+        <div className={db.mainColumn}>
           {/* Card A: Client Details */}
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <div className={styles.cardTitle}>
-                <Building2 size={16} className={styles.cardIcon} />
+          <div className={`${db.card} ${db.cardPadded}`}>
+            <div className={db.cardHeader}>
+              <div className={db.cardTitle}>
+                <Building2 size={16} className={db.cardIcon} />
                 Client Details
               </div>
               <div className={styles.clientTypeToggle}>
@@ -552,7 +560,7 @@ export function QuotationBuilderForm({
               </div>
             </div>
 
-            <div className={styles.cardBody}>
+            <div className={db.cardBody}>
               {!isCustomClient && (
                 <div
                   className={styles.schoolSearchWrapper}
@@ -604,7 +612,7 @@ export function QuotationBuilderForm({
                 </div>
               )}
 
-              <div className={styles.grid2}>
+              <div className={db.formGrid2}>
                 <FloatingInput
                   label="Recipient / Attn *"
                   value={recipientName}
@@ -620,7 +628,7 @@ export function QuotationBuilderForm({
                 />
               </div>
 
-              <div className={styles.grid2}>
+              <div className={db.formGrid2}>
                 <FloatingInput
                   label="Recipient Phone"
                   value={recipientPhone}
@@ -643,13 +651,13 @@ export function QuotationBuilderForm({
           </div>
 
           {/* Card B: Line Items Table */}
-          <div className={styles.card} ref={lineItemsTableRef}>
-            <div className={styles.cardHeader}>
-              <div className={styles.cardTitle}>
-                <Package size={16} className={styles.cardIcon} />
+          <div className={`${db.card} ${db.cardPadded}`} ref={lineItemsTableRef}>
+            <div className={db.cardHeader}>
+              <div className={db.cardTitle}>
+                <Package size={16} className={db.cardIcon} />
                 Quotation Line Items
               </div>
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <div className={db.actionGroup}>
                 <AdminButton
                   variant="secondary"
                   size="sm"
@@ -682,18 +690,18 @@ export function QuotationBuilderForm({
               </div>
             </div>
 
-            <div className={styles.cardBody} style={{ padding: "0" }}>
+            <div className={db.cardBody}>
               <div className={styles.tableScroll}>
                 <table className={styles.itemsTable}>
                   <thead>
                     <tr>
-                      <th style={{ width: "36%" }}>ITEM DESCRIPTION</th>
-                      <th style={{ width: "16%" }}>SKU</th>
-                      <th style={{ width: "12%" }}>UNIT</th>
-                      <th style={{ width: "10%", textAlign: "center" }}>QTY</th>
-                      <th style={{ width: "12%", textAlign: "right" }}>PRICE (ZAR)</th>
-                      <th style={{ width: "12%", textAlign: "right" }}>TOTAL</th>
-                      <th style={{ width: "40px" }}></th>
+                      <th className={styles.itemDescriptionHeader}>ITEM DESCRIPTION</th>
+                      <th className={styles.itemSkuHeader}>SKU</th>
+                      <th className={styles.itemUnitHeader}>UNIT</th>
+                      <th className={styles.itemQtyHeader}>QTY</th>
+                      <th className={styles.itemPriceHeader}>PRICE (ZAR)</th>
+                      <th className={styles.itemTotalHeader}>TOTAL</th>
+                      <th className={styles.itemActionHeader}></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -705,7 +713,7 @@ export function QuotationBuilderForm({
 
                       return (
                         <tr key={item.id}>
-                          <td style={{ position: "relative" }}>
+                          <td className={styles.relativeCell}>
                             <input
                               type="text"
                               className={styles.tableInput}
@@ -746,6 +754,13 @@ export function QuotationBuilderForm({
                                         <span className={styles.itemOptionPrice}>
                                           {formatZAR(res.unit_price)}
                                         </span>
+                                      </div>
+                                      <div className={styles.itemOptionDetail}>
+                                        <span><strong>Supplier:</strong> {res.supplier || "Not set"}</span>
+                                        <span><strong>Stock:</strong> {res.availability || "available"}</span>
+                                        {res.margin_percent != null ? (
+                                          <span><strong>Margin:</strong> {res.margin_percent.toFixed(1)}%</span>
+                                        ) : null}
                                       </div>
                                     </button>
                                   ))
@@ -831,17 +846,17 @@ export function QuotationBuilderForm({
           </div>
 
           {/* Card C: Notes & Terms */}
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <div className={styles.cardTitle}>
-                <FileText size={16} className={styles.cardIcon} />
+          <div className={`${db.card} ${db.cardPadded}`}>
+            <div className={db.cardHeader}>
+              <div className={db.cardTitle}>
+                <FileText size={16} className={db.cardIcon} />
                 Quotation Notes &amp; Settlement Terms
               </div>
             </div>
 
-            <div className={styles.cardBody}>
+            <div className={db.cardBody}>
               {/* Quick Template Chips */}
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <div className={db.actionGroup}>
                 {STANDARD_NOTE_TEMPLATES.map((tmpl, idx) => (
                   <button
                     key={idx}
@@ -867,19 +882,19 @@ export function QuotationBuilderForm({
         </div>
 
         {/* RIGHT COLUMN: Price Summary Sidebar */}
-        <div className={styles.rightColumn}>
-          <div className={styles.sidebarSticky}>
-            <div className={styles.summaryCard}>
-              <div className={styles.summaryHeader}>Price Summary</div>
+        <div className={db.sideColumn}>
+          <div className={db.stickySide}>
+            <div className={db.summaryCard}>
+              <h2 className={db.summaryTitle}>Price Summary</h2>
 
-              <div className={styles.summaryRow}>
+              <div className={db.summaryRow}>
                 <span className={styles.summaryLabel}>Gross Subtotal</span>
-                <span className={styles.summaryValue}>{formatZAR(rawSubtotal)}</span>
+                <span className={db.summaryValue}>{formatZAR(rawSubtotal)}</span>
               </div>
 
               {/* Discount Row */}
               <div className={styles.summaryAdjustmentRow}>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <div className={styles.summaryLabelIcon}>
                   <Percent size={13} className={styles.textMuted} />
                   <span className={styles.summaryLabel}>Discount (ZAR)</span>
                 </div>
@@ -900,7 +915,7 @@ export function QuotationBuilderForm({
 
               {/* Delivery Fee Row */}
               <div className={styles.summaryAdjustmentRow}>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <div className={styles.summaryLabelIcon}>
                   <Truck size={13} className={styles.textMuted} />
                   <span className={styles.summaryLabel}>Delivery Fee</span>
                 </div>
@@ -930,38 +945,22 @@ export function QuotationBuilderForm({
                   />
                   <span>Apply Standard 15% VAT</span>
                 </label>
-                <span className={styles.summaryValue}>{formatZAR(vatAmount)}</span>
+                <span className={db.summaryValue}>{formatZAR(vatAmount)}</span>
               </div>
 
-              <div className={styles.summaryDivider} />
-
-              <div className={styles.summaryTotalRow}>
-                <span className={styles.summaryTotalLabel}>Total Amount</span>
-                <span className={styles.summaryTotalValue}>
+              <div className={db.summaryTotal}>
+                <span className={db.summaryTotalLabel}>Total Amount</span>
+                <span className={db.summaryTotalValue}>
                   {formatZAR(totalAmount)}
                 </span>
               </div>
 
               <div className={styles.summaryActions}>
-                <button
-                  type="button"
-                  onClick={() => handleSubmit("sent")}
-                  disabled={busy}
-                  className={styles.btnCreatePrimary}
-                >
-                  {busy ? <Loader2 size={15} className={styles.spinIcon} /> : <CheckCircle2 size={15} />}
-                  Create &amp; Issue Quotation
-                </button>
+                <AdminButton type="button" onClick={() => handleSubmit("sent")} disabled={busy} variant="primary" size="lg">{busy ? <Loader2 size={15} className={styles.spinIcon} /> : <CheckCircle2 size={15} />}
+                  Create &amp; Issue Quotation</AdminButton>
 
-                <button
-                  type="button"
-                  onClick={() => handleSubmit("draft")}
-                  disabled={busy}
-                  className={styles.btnDraftSecondary}
-                >
-                  {busy ? <Loader2 size={15} className={styles.spinIcon} /> : <Save size={15} />}
-                  Save as Draft
-                </button>
+                <AdminButton type="button" onClick={() => handleSubmit("draft")} disabled={busy} variant="secondary" size="lg">{busy ? <Loader2 size={15} className={styles.spinIcon} /> : <Save size={15} />}
+                  Save as Draft</AdminButton>
               </div>
             </div>
           </div>
@@ -991,7 +990,7 @@ export function QuotationBuilderForm({
                 Select a registered school and pick a grade pack to import all pack stationery items into this quote.
               </p>
 
-              <div style={{ marginBottom: "16px" }}>
+              <div className={styles.modalFieldSpaced}>
                 <label className={styles.inputLabel}>Select School</label>
                 <select
                   className={styles.modalSelect}
@@ -1070,7 +1069,7 @@ export function QuotationBuilderForm({
                 onChange={(e) => setCsvText(e.target.value)}
               />
 
-              <div style={{ marginTop: "16px", display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+              <div className={styles.modalFooterActions}>
                 <AdminButton variant="secondary" onClick={() => setShowCsvImportModal(false)}>
                   Cancel
                 </AdminButton>
