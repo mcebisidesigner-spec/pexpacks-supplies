@@ -92,19 +92,41 @@ export function QuotationsListView({ initialData }: { initialData: QuotationsLis
           </p>
         </div>
 
-        <Link
-          href="/admin/quotations/new"
-          className={adminStyles.button}
-          style={{
-            background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-            color: "#ffffff",
-            borderColor: "rgba(16, 185, 129, 0.4)",
-            fontWeight: 600,
-            boxShadow: "0 2px 10px rgba(16, 185, 129, 0.25)",
-          }}
-        >
-          <Plus size={15} /> New Quotation
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <Link
+            href="/admin/quotations/pexpacks-details"
+            className={adminStyles.button}
+            style={{
+              backgroundColor: "#0c1322",
+              border: "1px solid #1e293b",
+              color: "#f8fafc",
+              fontWeight: 500,
+              padding: "0.5rem 1rem",
+              borderRadius: "8px",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              transition: "all 0.15s ease",
+            }}
+          >
+            Pexpacks Details
+          </Link>
+
+          <Link
+            href="/admin/quotations/new"
+            className={adminStyles.button}
+            style={{
+              background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+              color: "#ffffff",
+              borderColor: "rgba(16, 185, 129, 0.4)",
+              fontWeight: 600,
+              boxShadow: "0 2px 10px rgba(16, 185, 129, 0.25)",
+            }}
+          >
+            <Plus size={15} /> New Quotation
+          </Link>
+        </div>
       </div>
 
       {/* 2. 5 KPI Summary Cards */}

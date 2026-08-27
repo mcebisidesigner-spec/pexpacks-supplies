@@ -17,6 +17,23 @@ export interface QuotationItemPdf {
   total_price: number;
 }
 
+export interface QuotationCompanyDetailsPdf {
+  registered_name?: string;
+  trading_name?: string;
+  reg_number?: string;
+  vat_number?: string;
+  address_text?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  bank_name?: string;
+  account_holder?: string;
+  account_type?: string;
+  account_number?: string;
+  branch_code?: string;
+  default_terms?: string;
+}
+
 export interface QuotationPdfData {
   quote_number: string;
   created_at: string;
@@ -34,6 +51,7 @@ export interface QuotationPdfData {
   total_amount: number;
   notes?: string | null;
   items: QuotationItemPdf[];
+  company?: QuotationCompanyDetailsPdf;
 }
 
 const styles = StyleSheet.create({
@@ -55,6 +73,7 @@ const styles = StyleSheet.create({
   },
   brandBlock: {
     flexDirection: "column",
+    maxWidth: "58%",
   },
   brandTitle: {
     fontSize: 20,
@@ -306,19 +325,35 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
     ? data.notes.replace(/Prepared by:\s*[^\n\r]+/i, "").trim()
     : "";
 
+  const c = data.company || {};
+  const companyTradingName = c.trading_name || "Pexpacks Supplies";
+  const companyRegName = c.registered_name || "Pexpacks Supplies (Pty) Ltd";
+  const companyRegNo = c.reg_number || "2024/789123/07";
+  const companyVatNo = c.vat_number || "4920182741";
+  const companyAddress = c.address_text || "33 Kelly Rd, Meerzicht Business Park, Jet Park, Boksburg, 1459, South Africa";
+  const companyEmail = c.email || "helpme@pexpacks.co.za";
+  const companyPhone = c.phone || "078 003 6048";
+  const companyWebsite = c.website || "https://pexpacks.co.za";
+
+  const bankName = c.bank_name || "FNB / RMB";
+  const bankHolder = c.account_holder || "Pexpacks";
+  const bankType = c.account_type || "Current Account";
+  const bankNumber = c.account_number || "63215756991";
+  const bankBranch = c.branch_code || "250655";
+
   return (
-    <Document title={`Quotation ${data.quote_number}`} author="Pexpacks Supplies">
+    <Document title={`Quotation ${data.quote_number}`} author={companyTradingName}>
       <Page size="A4" style={styles.page}>
         {/* Company & Quotation Header */}
         <View style={styles.header}>
           <View style={styles.brandBlock}>
-            <Text style={styles.brandTitle}>Pexpacks Supplies</Text>
+            <Text style={styles.brandTitle}>{companyTradingName}</Text>
             <Text style={styles.brandTagline}>School Stationery &amp; Academic Supply Partner</Text>
             <Text style={styles.companyMeta}>
-              Pexpacks Supplies (Pty) Ltd{"\n"}
-              Reg No: 2024/789123/07 | VAT No: 4920182741{"\n"}
-              Email: helpme@pexpacks.co.za | pexpacks@gmail.com | Tel: +27 10 500 8422{"\n"}
-              Sandton City Office Tower, 5th Floor, Sandton, 2196, South Africa
+              {companyRegName}{"\n"}
+              Reg No: {companyRegNo} | VAT No: {companyVatNo}{"\n"}
+              Email: {companyEmail} | Tel: {companyPhone}{"\n"}
+              {companyAddress}
             </Text>
           </View>
 
@@ -428,11 +463,11 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
           <View style={styles.bankingCard}>
             <Text style={styles.sectionTitle}>Official Banking Settlement Details</Text>
             <Text style={styles.infoText}>
-              Bank: FNB / RMB{"\n"}
-              Account Holder: Pexpacks{"\n"}
-              Account Type: Current Account{"\n"}
-              Account Number: 63215756991{"\n"}
-              Branch Code: 250655{"\n"}
+              Bank: {bankName}{"\n"}
+              Account Holder: {bankHolder}{"\n"}
+              Account Type: {bankType}{"\n"}
+              Account Number: {bankNumber}{"\n"}
+              Branch Code: {bankBranch}{"\n"}
               Payment Reference: {data.quote_number}
             </Text>
           </View>
@@ -441,7 +476,8 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
             <Text style={styles.sectionTitle}>Terms &amp; Notes</Text>
             <Text style={styles.infoText}>
               {displayNotes ||
-                "1. This quotation is valid for 30 calendar days from the date of issue.\n2. Pricing includes packaging, quality verification, and school delivery coordination.\n3. Standard settlement: 30 days from official invoice."}
+                c.default_terms ||
+                "1. This quotation is valid for 30 calendar days from the date of issue.\n2. Pricing includes packaging, quality verification, and school delivery coordination.\n3. Standard settlement: payment due upon acceptance."}
             </Text>
           </View>
         </View>
@@ -449,8 +485,8 @@ export function QuotationPdfDocument({ data }: { data: QuotationPdfData }) {
         {/* Footer Disclaimer */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Thank you for choosing Pexpacks Supplies. All orders subject to standard trading terms.{"\n"}
-            Pexpacks Supplies (Pty) Ltd | Care Desk: helpme@pexpacks.co.za | pexpacks@gmail.com | www.pexpacks.co.za
+            Thank you for choosing {companyTradingName}. All orders subject to standard trading terms.{"\n"}
+            {companyRegName} | Care Desk: {companyEmail} | {companyWebsite}
           </Text>
         </View>
       </Page>

@@ -13,6 +13,7 @@ import {
   type QuotationInput,
   type QuotationStatus,
 } from "@/lib/admin/quotations";
+import { getQuotationSettings } from "@/lib/admin/quotation-settings";
 import { QuotationPdfDocument } from "@/components/pdf/QuotationPdfDocument";
 
 /**
@@ -22,6 +23,11 @@ async function generateAndUploadPdf(quotationId: string): Promise<string | null>
   try {
     const quotation = await getQuotation(quotationId);
     if (!quotation) return null;
+
+    const settings = await getQuotationSettings();
+    const formattedAddress = `${settings.address.address_line1}, ${
+      settings.address.address_line2 ? settings.address.address_line2 + ", " : ""
+    }${settings.address.suburb}, ${settings.address.city}, ${settings.address.postal_code}, ${settings.address.country}`;
 
     let preparedBy: string | null = null;
     if (quotation.notes) {
@@ -57,6 +63,22 @@ async function generateAndUploadPdf(quotationId: string): Promise<string | null>
         unit_price: item.unit_price,
         total_price: item.total_price,
       })),
+      company: {
+        registered_name: settings.business.registered_name,
+        trading_name: settings.business.trading_name,
+        reg_number: settings.business.reg_number,
+        vat_number: settings.business.vat_number,
+        address_text: formattedAddress,
+        phone: settings.contacts.main_phone,
+        email: `${settings.contacts.quotation_email} | ${settings.contacts.general_email}`,
+        website: settings.business.website,
+        bank_name: settings.banking.bank_name,
+        account_holder: settings.banking.account_holder,
+        account_type: settings.banking.account_type,
+        account_number: settings.banking.account_number,
+        branch_code: settings.banking.branch_code,
+        default_terms: settings.notesTerms.terms_and_conditions,
+      },
     };
 
     // Render PDF buffer
