@@ -1357,6 +1357,7 @@ export interface Database {
           unit: string | null;
           packaging: string | null;
           specification: string | null;
+          icon: string | null;
           visibility: string;
           availability: string;
           calculated_selling_price: number | null;
@@ -1385,6 +1386,7 @@ export interface Database {
           unit?: string | null;
           packaging?: string | null;
           specification?: string | null;
+          icon?: string | null;
           visibility?: string;
           availability?: string;
           calculated_selling_price?: number | null;
@@ -1413,6 +1415,7 @@ export interface Database {
           unit?: string | null;
           packaging?: string | null;
           specification?: string | null;
+          icon?: string | null;
           visibility?: string;
           availability?: string;
           calculated_selling_price?: number | null;

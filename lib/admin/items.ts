@@ -143,7 +143,7 @@ async function ensureMasterProduct(
     | "specification"
     | "visible"
     | "price"
-  > & { sku?: string | null },
+  > & { sku?: string | null; icon?: string | null },
   actorId: string,
 ): Promise<MasterProductRow> {
   const sku = data.sku?.trim()
@@ -155,6 +155,7 @@ async function ensureMasterProduct(
     description: data.description,
     category: data.category,
     specification: data.specification,
+    icon: data.icon || null,
     visibility: data.visible ? "public" : "internal",
     availability: "available",
     current_selling_price: data.price ?? 0,
@@ -810,6 +811,7 @@ export async function updateItem(
           category: parsed.data.category,
           description: parsed.data.description,
           specification: parsed.data.specification,
+          icon: parsed.data.icon || null,
           current_selling_price: parsed.data.price ?? 0,
           calculated_selling_price: parsed.data.price ?? 0,
           active: parsed.data.visible,
