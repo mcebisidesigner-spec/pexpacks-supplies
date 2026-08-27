@@ -1578,3 +1578,154 @@
   height: 16px;
   cursor: pointer;
 }
+
+/* Detail view DB language utilities */
+.detailHeaderRow {
+  align-items: center;
+}
+
+.detailTitleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--db-space-1-5);
+}
+
+.detailActions {
+  display: flex;
+  align-items: center;
+  gap: var(--db-space-1);
+  flex-wrap: wrap;
+}
+
+.detailStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--db-space-2-5);
+}
+
+.infoStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--db-space-0-5);
+}
+
+.infoLabel {
+  color: var(--db-text-muted);
+  font: var(--db-font-label);
+  font-weight: 700;
+}
+
+.infoValue {
+  color: var(--db-text-primary);
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+.infoMeta {
+  color: var(--db-text-muted);
+  font-size: 0.78125rem;
+}
+
+.successBanner {
+  padding: var(--db-space-1-5) var(--db-space-2);
+  border: 1px solid var(--db-success-border);
+  border-radius: var(--db-radius-control);
+  background: var(--db-success-subtle);
+  color: var(--db-success-text);
+  font: var(--db-font-table);
+  font-weight: 700;
+}
+
+.detailTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 var(--db-space-1);
+}
+
+.detailTable th {
+  padding: 6px var(--db-space-1-5);
+  color: var(--db-text-muted);
+  font: var(--db-font-caption);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detailTable th:not(:first-child) {
+  text-align: center;
+}
+
+.detailTable th:last-child {
+  text-align: right;
+}
+
+.detailTableRow {
+  background: var(--db-surface-inner);
+}
+
+.detailCell,
+.detailCellCenter,
+.detailCellRight,
+.detailCellSku,
+.detailCellTotal {
+  padding: var(--db-space-1-5) var(--db-space-2);
+  color: var(--db-text-secondary);
+  font: var(--db-font-table);
+}
+
+.detailCell {
+  color: var(--db-text-primary);
+  font-weight: 800;
+}
+
+.detailCellCenter {
+  text-align: center;
+}
+
+.detailCellRight,
+.detailCellTotal {
+  text-align: right;
+}
+
+.detailCellSku {
+  color: var(--db-info-text);
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+}
+
+.detailCellTotal {
+  color: var(--db-text-primary);
+  font-weight: 900;
+}
+
+.notesText {
+  margin: 0;
+  color: var(--db-text-secondary);
+  font: var(--db-font-table);
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.discountValue {
+  color: var(--db-danger-text);
+  font-weight: 800;
+}
+
+.convertedLinkWrap {
+  margin-top: var(--db-space-1-5);
+}
+
+.convertLinkInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--db-brand);
+  font-size: 0.78125rem;
+  font-weight: 700;
+}
+
+.cardIcon {
+  color: var(--db-brand);
+  flex: 0 0 auto;
+}

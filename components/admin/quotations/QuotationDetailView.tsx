@@ -11,12 +11,8 @@ import {
   Building2,
   FileText,
   Trash2,
-  CheckCircle2,
   Loader2,
   ExternalLink,
-  ShieldCheck,
-  Percent,
-  Truck,
 } from "lucide-react";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -147,21 +143,21 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
       </Link>
 
       {/* 2. Top Header Row */}
-      <div className={styles.headerRow} style={{ alignItems: "center" }}>
+      <div className={`${styles.headerRow} ${styles.detailHeaderRow}`}>
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div className={styles.detailTitleRow}>
             <h1 className={styles.pageTitle}>{quotation.quote_number}</h1>
             <StatusBadge status={cfg.label} tone={cfg.tone} showDot />
           </div>
-          <p className={styles.pageSubtitle} style={{ marginTop: "4px" }}>
-            Created on {createdDateFormatted} • Valid until {validUntilFormatted}
-            {preparedBy ? ` • Prepared by ${preparedBy}` : ""}
-            {quotation.pdf_version ? ` • PDF v${quotation.pdf_version}` : ""}
+          <p className={styles.pageSubtitle}>
+            Created on {createdDateFormatted} - Valid until {validUntilFormatted}
+            {preparedBy ? ` - Prepared by ${preparedBy}` : ""}
+            {quotation.pdf_version ? ` - PDF v${quotation.pdf_version}` : ""}
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+        <div className={styles.detailActions}>
           <AdminButton
             variant="secondary"
             icon={pdfBusy ? <Loader2 size={14} className={styles.spinIcon} /> : <Download size={14} />}
@@ -197,57 +193,43 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
         </div>
       ) : null}
 
-      {successMsg ? (
-        <div
-          style={{
-            padding: "12px 16px",
-            backgroundColor: "rgba(16, 185, 129, 0.12)",
-            border: "1px solid rgba(16, 185, 129, 0.3)",
-            borderRadius: "8px",
-            color: "#10b981",
-            fontSize: "13px",
-            fontWeight: 600,
-          }}
-        >
-          {successMsg}
-        </div>
-      ) : null}
+      {successMsg ? <div className={styles.successBanner}>{successMsg}</div> : null}
 
       {/* 3. Main 2-Column Grid */}
       <div className={styles.topGrid}>
         {/* Left Column */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div className={styles.detailStack}>
           {/* Card 1: Recipient & School Information */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}>
-                <Building2 size={16} color="#10b981" />
+                <Building2 size={16} className={styles.cardIcon} />
                 Recipient &amp; School Information
               </h2>
             </div>
 
             <div className={styles.formRow2}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#94a3b8" }}>
+              <div className={styles.infoStack}>
+                <span className={styles.infoLabel}>
                   Recipient Contact
                 </span>
-                <span style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff" }}>
+                <span className={styles.infoValue}>
                   {quotation.recipient_name}
                 </span>
-                <span style={{ fontSize: "12.5px", color: "#94a3b8" }}>
+                <span className={styles.infoMeta}>
                   {quotation.recipient_email}
-                  {quotation.recipient_phone ? ` • ${quotation.recipient_phone}` : ""}
+                  {quotation.recipient_phone ? ` - ${quotation.recipient_phone}` : ""}
                 </span>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: "#94a3b8" }}>
+              <div className={styles.infoStack}>
+                <span className={styles.infoLabel}>
                   School / Entity
                 </span>
-                <span style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff" }}>
+                <span className={styles.infoValue}>
                   {quotation.school?.name || "Direct Client / Private Buyer"}
                 </span>
-                <span style={{ fontSize: "12.5px", color: "#94a3b8" }}>
+                <span className={styles.infoMeta}>
                   {quotation.school
                     ? [quotation.school.city, quotation.school.province].filter(Boolean).join(", ") ||
                       "South Africa"
@@ -261,54 +243,54 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}>
-                <FileText size={16} color="#10b981" />
+                <FileText size={16} className={styles.cardIcon} />
                 Itemized Quotation Lines ({quotation.items?.length || 0})
               </h2>
             </div>
 
             <div className={styles.tableWrapper}>
-              <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: "0 10px" }}>
+              <table className={styles.detailTable}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: "left", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                    <th>
                       ITEM DESCRIPTION
                     </th>
-                    <th style={{ textAlign: "center", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                    <th>
                       SKU
                     </th>
-                    <th style={{ textAlign: "center", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                    <th>
                       UNIT
                     </th>
-                    <th style={{ textAlign: "center", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                    <th>
                       QTY
                     </th>
-                    <th style={{ textAlign: "center", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                    <th>
                       UNIT PRICE (ZAR)
                     </th>
-                    <th style={{ textAlign: "right", fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", padding: "6px 12px" }}>
+                    <th>
                       TOTAL (ZAR)
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {(quotation.items || []).map((item) => (
-                    <tr key={item.id} style={{ background: "#060b13", borderRadius: "8px" }}>
-                      <td style={{ padding: "12px 14px", color: "#ffffff", fontWeight: 600, fontSize: "13.5px" }}>
+                    <tr key={item.id} className={styles.detailTableRow}>
+                      <td className={styles.detailCell}>
                         {item.item_title}
                       </td>
-                      <td style={{ textAlign: "center", padding: "12px 14px", color: "#38bdf8", fontFamily: "ui-monospace, monospace", fontSize: "12px" }}>
+                      <td className={styles.detailCellSku}>
                         {item.sku || "-"}
                       </td>
-                      <td style={{ textAlign: "center", padding: "12px 14px", color: "#94a3b8", fontSize: "13px" }}>
+                      <td className={styles.detailCellCenter}>
                         {item.unit || "Each"}
                       </td>
-                      <td style={{ textAlign: "center", padding: "12px 14px", color: "#f8fafc", fontWeight: 700, fontSize: "13px" }}>
+                      <td className={styles.detailCellCenter}>
                         {item.quantity}
                       </td>
-                      <td style={{ textAlign: "center", padding: "12px 14px", color: "#94a3b8", fontSize: "13px" }}>
+                      <td className={styles.detailCellCenter}>
                         {formatZAR(item.unit_price)}
                       </td>
-                      <td style={{ textAlign: "right", padding: "12px 14px", color: "#ffffff", fontWeight: 700, fontSize: "13.5px" }}>
+                      <td className={styles.detailCellTotal}>
                         {formatZAR(item.total_price)}
                       </td>
                     </tr>
@@ -324,12 +306,12 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <h2 className={styles.cardTitle}>
-                  <FileText size={16} color="#10b981" />
+                  <FileText size={16} className={styles.cardIcon} />
                   Terms &amp; Delivery Notes
                 </h2>
               </div>
               <div className={styles.notesContainer}>
-                <p style={{ margin: 0, fontSize: "12.5px", color: "#e2e8f0", lineHeight: "1.6", whiteSpace: "pre-line" }}>
+                <p className={styles.notesText}>
                   {displayNotes || "Standard settlement: 30 days from official invoice."}
                 </p>
               </div>
@@ -339,7 +321,7 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <h2 className={styles.cardTitle}>
-                  <FileText size={16} color="#10b981" />
+                  <FileText size={16} className={styles.cardIcon} />
                   Settlement Banking Info
                 </h2>
               </div>
@@ -355,7 +337,7 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
         </div>
 
         {/* Right Column (Total Breakdown & Lifecycle Status) */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div className={styles.detailStack}>
           {/* Total Breakdown */}
           <div className={styles.summaryCard}>
             <div className={styles.summaryList}>
@@ -369,7 +351,7 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
               {Number(quotation.discount_amount || 0) > 0 && (
                 <div className={styles.summaryRow}>
                   <span>Discount Applied</span>
-                  <span style={{ color: "#ef4444", fontWeight: 600 }}>
+                  <span className={styles.discountValue}>
                     - {formatZAR(Number(quotation.discount_amount))}
                   </span>
                 </div>
@@ -400,7 +382,7 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}>
-                <Clock size={16} color="#10b981" />
+                <Clock size={16} className={styles.cardIcon} />
                 Lifecycle Status
               </h2>
             </div>
@@ -424,18 +406,10 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
             </div>
 
             {status === "converted_to_order" && quotation.converted_order_id && (
-              <div style={{ marginTop: "12px" }}>
+              <div className={styles.convertedLinkWrap}>
                 <Link
                   href="/admin/orders"
-                  className={styles.convertLink}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    color: "#10b981",
-                    fontSize: "12.5px",
-                    fontWeight: 600,
-                  }}
+                  className={`${styles.convertLink} ${styles.convertLinkInline}`}
                 >
                   <ExternalLink size={13} />
                   View Converted Order in Orders Hub

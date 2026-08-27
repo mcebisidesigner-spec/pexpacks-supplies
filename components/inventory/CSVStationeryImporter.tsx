@@ -210,7 +210,7 @@ export function CSVStationeryImporter({
                 accept=".csv"
                 onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
                 className={styles.dropzoneInput}
-                aria-label="Upload CSV file"
+            aria-label="Upload CSV file"
               />
               <Upload className={styles.compactUploadIcon} />
               <span>

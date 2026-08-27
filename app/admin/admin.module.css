@@ -2526,3 +2526,55 @@
   align-items: center;
   gap: 8px;
 }
+
+/* Unified DB form-control corrections */
+.filterInput,
+.searchInput,
+.inputField,
+.textareaField,
+.fieldControl,
+.formFieldInput {
+  width: 100%;
+  max-width: 100%;
+  background: var(--db-surface-inner);
+  border-color: var(--db-border);
+  border-radius: var(--db-radius-control);
+  color: var(--db-text-primary);
+}
+
+.formField > div,
+.formFieldGroup {
+  width: 100%;
+  min-width: 0;
+}
+
+.inputField:is(textarea),
+textarea.inputField,
+.textareaField,
+.fieldControl:is(textarea),
+.formFieldInput:is(textarea) {
+  min-height: 124px;
+  height: auto;
+  padding: 12px 14px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.inputField:focus,
+.textareaField:focus,
+.fieldControl:focus,
+.formFieldInput:focus {
+  border-color: var(--db-brand);
+  box-shadow: var(--db-focus-ring);
+}
+
+.detailLayout {
+  gap: var(--db-space-2);
+}
+
+.sidebarCard {
+  padding: var(--db-space-2-5);
+  border-color: var(--db-border);
+  border-radius: var(--db-radius-card);
+  background: var(--db-surface);
+}
