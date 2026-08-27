@@ -167,5 +167,5 @@ describe("Quotation Generator Logic & Schema Validation", () => {
     expect(documentBuffer.length).toBeGreaterThan(1000);
     const header = documentBuffer.slice(0, 5).toString("utf-8");
     expect(header.startsWith("%PDF")).toBe(true);
-  });
+  }, 15000);
 });

@@ -81,13 +81,12 @@ export async function proxy(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Stealth Edge Masking: Return 404 rewrite if unauthenticated
+    // Redirect unauthenticated back-office requests to secure gateway
     if (!user) {
       return copyCookies(
         response,
         applySecurityHeaders(
-          NextResponse.rewrite(new URL("/not-found", request.url), {
-            status: 404,
+          NextResponse.redirect(new URL("/pex-console-secure", request.url), {
             headers: response.headers,
           }),
         ),

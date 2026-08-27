@@ -221,7 +221,7 @@ export async function requireAdmin(options?: {
 }): Promise<AdminSession> {
   const session = await getAdminUser();
   if (!session) {
-    notFound();
+    redirect("/pex-console-secure");
   }
   if (!session.isSuperAdmin && session.roles.length === 0) {
     notFound();
