@@ -871,3 +871,301 @@
 .textMuted {
   color: #94a3b8;
 }
+
+/* Template Chips */
+.templateChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: var(--db-surface-inner, #090e17);
+  border: 1px solid var(--db-border, rgba(51, 65, 85, 0.4));
+  border-radius: var(--db-radius-pill, 9999px);
+  color: var(--db-text-secondary, #94a3b8);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--db-transition-fast, 120ms ease);
+}
+
+.templateChip:hover {
+  background-color: var(--db-surface-hover, #162235);
+  border-color: var(--db-brand, #10b981);
+  color: var(--db-text-primary, #f8fafc);
+}
+
+/* Adjustments in Price Summary */
+.summaryAdjustmentRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--db-text-secondary, #94a3b8);
+  margin-top: 6px;
+}
+
+.summaryAdjInput {
+  width: 90px;
+  height: 28px;
+  text-align: right;
+  background-color: var(--db-surface-inner, #090e17);
+  border: 1px solid var(--db-border, rgba(51, 65, 85, 0.5));
+  border-radius: 4px;
+  color: var(--db-text-primary, #f8fafc);
+  font-size: 0.75rem;
+  padding: 0 6px;
+  outline: none;
+}
+
+.summaryAdjInput:focus {
+  border-color: var(--db-brand, #10b981);
+}
+
+.summaryVatToggleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--db-text-secondary, #94a3b8);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--db-border-muted, rgba(51, 65, 85, 0.3));
+}
+
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.75rem;
+}
+
+/* Item Autocomplete Dropdown */
+.itemAutocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--db-surface-elevated, #0d1522);
+  border: 1px solid var(--db-border, #1e293b);
+  border-radius: var(--db-radius-control, 6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  max-height: 220px;
+  overflow-y: auto;
+  margin-top: 2px;
+}
+
+.itemAutocompleteLoading,
+.itemAutocompleteEmpty {
+  padding: 10px 12px;
+  font-size: 0.75rem;
+  color: var(--db-text-muted, #64748b);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.itemAutocompleteOption {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--db-border-muted, rgba(51, 65, 85, 0.3));
+  color: var(--db-text-primary, #f8fafc);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--db-transition-fast, 120ms ease);
+}
+
+.itemAutocompleteOption:hover {
+  background-color: var(--db-surface-hover, #162235);
+}
+
+.itemOptionTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.itemOptionMeta {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.6875rem;
+  color: var(--db-text-muted, #94a3b8);
+  margin-top: 2px;
+}
+
+.itemOptionPrice {
+  color: var(--db-brand, #10b981);
+  font-weight: 700;
+}
+
+/* Modals */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 16px;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 560px;
+  background-color: var(--db-surface-elevated, #0d1522);
+  border: 1px solid var(--db-border, #1e293b);
+  border-radius: var(--db-radius-card, 12px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  animation: modalScaleIn 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--db-border, #1e293b);
+  background-color: rgba(15, 23, 42, 0.5);
+}
+
+.modalTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.modalCloseBtn {
+  background: transparent;
+  border: none;
+  color: var(--db-text-muted, #94a3b8);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.modalCloseBtn:hover {
+  color: #ffffff;
+  background-color: var(--db-surface-hover, #162235);
+}
+
+.modalBody {
+  padding: 20px;
+}
+
+.modalSubtitle {
+  font-size: 0.8125rem;
+  color: var(--db-text-secondary, #94a3b8);
+  margin-top: 0;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.inputLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--db-text-secondary, #94a3b8);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.modalSelect {
+  width: 100%;
+  height: 40px;
+  background-color: var(--db-surface-inner, #090e17);
+  border: 1px solid var(--db-border, #1e293b);
+  border-radius: var(--db-radius-control, 6px);
+  color: var(--db-text-primary, #f8fafc);
+  padding: 0 12px;
+  font-size: 0.8125rem;
+  outline: none;
+}
+
+.modalSelect:focus {
+  border-color: var(--db-brand, #10b981);
+}
+
+.modalLoading,
+.modalEmpty {
+  text-align: center;
+  padding: 24px;
+  color: var(--db-text-muted, #94a3b8);
+  font-size: 0.8125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.packList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.packListItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background-color: var(--db-surface-inner, #090e17);
+  border: 1px solid var(--db-border, #1e293b);
+  border-radius: var(--db-radius-control, 6px);
+}
+
+.packItemTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.packItemPrice {
+  font-size: 0.75rem;
+  color: var(--db-brand, #10b981);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.csvTextarea {
+  width: 100%;
+  background-color: var(--db-surface-inner, #090e17);
+  border: 1px solid var(--db-border, #1e293b);
+  border-radius: var(--db-radius-control, 6px);
+  color: var(--db-text-primary, #f8fafc);
+  padding: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.csvTextarea:focus {
+  border-color: var(--db-brand, #10b981);
+}

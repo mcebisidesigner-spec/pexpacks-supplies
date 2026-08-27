@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { pdf } from "@react-pdf/renderer";
 import React from "react";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -10,11 +9,13 @@ import {
   updateQuotationStatus,
   convertQuotationToOrder,
   getQuotation,
+  updateQuotationPdfPath,
   type QuotationInput,
   type QuotationStatus,
 } from "@/lib/admin/quotations";
 import { getQuotationSettings } from "@/lib/admin/quotation-settings";
 import { QuotationPdfDocument } from "@/components/pdf/QuotationPdfDocument";
+import { getPack } from "@/lib/admin/packs";
 
 /**
  * Generate PDF buffer and upload to Supabase Storage
@@ -107,11 +108,8 @@ async function generateAndUploadPdf(quotationId: string): Promise<string | null>
 
     const storagePath = publicUrlData?.publicUrl || filePath;
 
-    // Update quote record with PDF path
-    await admin
-      .from("quotations" as never)
-      .update({ pdf_storage_path: storagePath } as never)
-      .eq("id" as never, quotationId);
+    // Update quote record with PDF path, status, and bumped version
+    await updateQuotationPdfPath(quotationId, storagePath);
 
     return storagePath;
   } catch (err) {
@@ -182,7 +180,7 @@ export async function updateQuotationStatusAction(
  */
 export async function convertQuotationToOrderAction(
   quotationId: string
-): Promise<{ ok: boolean; orderId?: string; error?: string }> {
+): Promise<{ ok: boolean; orderId?: string; orderReference?: string; error?: string }> {
   const result = await convertQuotationToOrder(quotationId);
   if (!result.ok) {
     return { ok: false, error: result.error };
@@ -193,7 +191,11 @@ export async function convertQuotationToOrderAction(
   revalidatePath("/admin/orders");
   revalidatePath("/admin/procurement");
 
-  return { ok: true, orderId: result.orderId };
+  return {
+    ok: true,
+    orderId: result.orderId,
+    orderReference: result.orderReference,
+  };
 }
 
 /**
@@ -208,4 +210,66 @@ export async function regenerateQuotationPdfAction(
   }
   revalidatePath(`/admin/quotations/${quotationId}`);
   return { ok: true, pdfUrl };
+}
+
+/**
+ * Import line items from an existing school grade pack
+ */
+export async function importSchoolPackItemsAction(
+  packId: string
+): Promise<{
+  ok: boolean;
+  packTitle?: string;
+  items?: Array<{
+    master_product_id: string | null;
+    item_title: string;
+    sku: string | null;
+    unit: string;
+    quantity: number;
+    unit_price: number;
+  }>;
+  error?: string;
+}> {
+  try {
+    const { pack, items } = await getPack(packId);
+    if (!pack || !items) {
+      return { ok: false, error: "School pack not found." };
+    }
+
+    const converted = items.map((item) => ({
+      master_product_id: item.product_id || null,
+      item_title: item.name,
+      sku: item.sku || null,
+      unit: "Each",
+      quantity: Number(item.quantity || 1),
+      unit_price: Number(item.unit_price || 0),
+    }));
+
+    return {
+      ok: true,
+      packTitle: pack.title,
+      items: converted,
+    };
+  } catch (err: any) {
+    console.error("[quotations] importSchoolPackItemsAction failed:", err);
+    return { ok: false, error: err?.message || "Failed to load pack items." };
+  }
+}
+
+/**
+ * Fetch list of packs for a specific school
+ */
+export async function listSchoolPacksForQuotation(
+  schoolId: string
+): Promise<Array<{ id: string; title: string; price: number }>> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("school_packs")
+    .select("id, title, price")
+    .eq("school_id", schoolId)
+    .order("sort_order", { ascending: true })
+    .order("title", { ascending: true });
+
+  if (error || !data) return [];
+  return data.map((p) => ({ id: p.id, title: p.title, price: Number(p.price || 0) }));
 }

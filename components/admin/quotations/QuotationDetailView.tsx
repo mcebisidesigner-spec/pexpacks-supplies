@@ -13,8 +13,13 @@ import {
   Trash2,
   CheckCircle2,
   Loader2,
+  ExternalLink,
+  ShieldCheck,
+  Percent,
+  Truck,
 } from "lucide-react";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import {
   updateQuotationStatusAction,
@@ -35,12 +40,14 @@ function formatZAR(amount: number): string {
 
 const STATUS_CONFIG: Record<
   QuotationStatus,
-  { label: string; tone: "slate" | "amber" | "emerald" | "red" | "teal" }
+  { label: string; tone: "slate" | "blue" | "emerald" | "red" | "amber" | "teal" }
 > = {
   draft: { label: "Draft", tone: "slate" },
-  sent: { label: "Sent", tone: "amber" },
+  sent: { label: "Sent", tone: "blue" },
+  viewed: { label: "Viewed", tone: "blue" },
   accepted: { label: "Accepted", tone: "emerald" },
   declined: { label: "Declined", tone: "red" },
+  expired: { label: "Expired", tone: "amber" },
   converted_to_order: { label: "Converted", tone: "teal" },
 };
 
@@ -57,7 +64,6 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
 
   const cfg = STATUS_CONFIG[status] || { label: status, tone: "slate" };
 
-  // Status Change Handler
   async function handleStatusChange(newStatus: QuotationStatus) {
     setBusy(true);
     setErrorMsg("");
@@ -66,7 +72,7 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
     setBusy(false);
     if (res.ok) {
       setStatus(newStatus);
-      setSuccessMsg(`Status successfully updated to ${STATUS_CONFIG[newStatus]?.label || newStatus}.`);
+      setSuccessMsg(`Status updated to ${STATUS_CONFIG[newStatus]?.label || newStatus}.`);
       setTimeout(() => setSuccessMsg(""), 3000);
       router.refresh();
     } else {
@@ -74,7 +80,6 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
     }
   }
 
-  // Convert to Order Handler
   async function handleExecuteConvert() {
     setShowConvertModal(false);
     setBusy(true);
@@ -82,14 +87,13 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
     const res = await convertQuotationToOrderAction(quotation.id);
     setBusy(false);
 
-    if (res.ok && res.orderId) {
+    if (res.ok) {
       router.push(`/admin/orders`);
     } else {
       setErrorMsg(res.error || "Failed to convert quotation to order.");
     }
   }
 
-  // Regenerate / Download PDF Handler
   async function handleDownloadPdf() {
     if (pdfUrl) {
       window.open(pdfUrl, "_blank");
@@ -107,7 +111,6 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
     }
   }
 
-  // Delete Quotation Execution Handler
   async function handleExecuteDelete() {
     setShowDeleteModal(false);
     setBusy(true);
@@ -153,102 +156,44 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
           <p className={styles.pageSubtitle} style={{ marginTop: "4px" }}>
             Created on {createdDateFormatted} • Valid until {validUntilFormatted}
             {preparedBy ? ` • Prepared by ${preparedBy}` : ""}
+            {quotation.pdf_version ? ` • PDF v${quotation.pdf_version}` : ""}
           </p>
         </div>
 
-        {/* Action Buttons matching DB UI Design Language */}
+        {/* Action Buttons */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-          {/* Download PDF button */}
-          <button
-            type="button"
+          <AdminButton
+            variant="secondary"
+            icon={pdfBusy ? <Loader2 size={14} className={styles.spinIcon} /> : <Download size={14} />}
             onClick={handleDownloadPdf}
             disabled={pdfBusy}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              height: "42px",
-              padding: "0 18px",
-              background: "#060b13",
-              border: "1px solid rgba(30, 41, 59, 0.9)",
-              borderRadius: "24px",
-              color: "#f8fafc",
-              fontSize: "13px",
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "all 0.15s ease",
-            }}
           >
-            {pdfBusy ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />}
             Download PDF
-          </button>
+          </AdminButton>
 
-          {/* Delete the Quotation button using DB UI Danger Style & Confirmation Modal */}
-          <button
-            type="button"
+          <AdminButton
+            variant="danger"
+            icon={<Trash2 size={14} />}
             onClick={() => setShowDeleteModal(true)}
             disabled={busy}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              height: "42px",
-              padding: "0 20px",
-              background: "#ef4444",
-              border: "1px solid rgba(239, 68, 68, 0.6)",
-              borderRadius: "24px",
-              color: "#ffffff",
-              fontSize: "13px",
-              fontWeight: 700,
-              cursor: "pointer",
-              transition: "all 0.15s ease",
-              boxShadow: "0 2px 10px rgba(239, 68, 68, 0.25)",
-            }}
           >
-            <Trash2 size={15} />
-            Delete the Quotation
-          </button>
+            Delete Quotation
+          </AdminButton>
 
-          {/* Convert to Official Order button */}
-          <button
-            type="button"
+          <AdminButton
+            variant="primary"
+            icon={<ShoppingCart size={14} />}
             onClick={() => setShowConvertModal(true)}
             disabled={busy || status === "converted_to_order"}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              height: "42px",
-              padding: "0 22px",
-              background: status === "converted_to_order" ? "#065f46" : "#10b981",
-              border: "1px solid rgba(16, 185, 129, 0.5)",
-              borderRadius: "24px",
-              color: "#ffffff",
-              fontSize: "13.5px",
-              fontWeight: 700,
-              cursor: status === "converted_to_order" ? "not-allowed" : "pointer",
-              transition: "all 0.15s ease",
-              boxShadow: "0 4px 14px rgba(16, 185, 129, 0.3)",
-            }}
           >
-            <ShoppingCart size={15} />
             {status === "converted_to_order" ? "Converted to Order" : "Convert to Official Order"}
-          </button>
+          </AdminButton>
         </div>
       </div>
 
       {errorMsg ? (
-        <div
-          style={{
-            padding: "12px 16px",
-            background: "rgba(239, 68, 68, 0.12)",
-            border: "1px solid rgba(239, 68, 68, 0.3)",
-            borderRadius: "8px",
-            color: "#f87171",
-            fontSize: "13px",
-          }}
-        >
-          {errorMsg}
+        <div className={styles.errorBanner}>
+          <span>{errorMsg}</span>
         </div>
       ) : null}
 
@@ -256,11 +201,12 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
         <div
           style={{
             padding: "12px 16px",
-            background: "rgba(16, 185, 129, 0.12)",
+            backgroundColor: "rgba(16, 185, 129, 0.12)",
             border: "1px solid rgba(16, 185, 129, 0.3)",
             borderRadius: "8px",
             color: "#10b981",
             fontSize: "13px",
+            fontWeight: 600,
           }}
         >
           {successMsg}
@@ -281,7 +227,6 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
             </div>
 
             <div className={styles.formRow2}>
-              {/* Recipient Contact */}
               <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 <span style={{ fontSize: "12px", fontWeight: 600, color: "#94a3b8" }}>
                   Recipient Contact
@@ -295,7 +240,6 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
                 </span>
               </div>
 
-              {/* School / Entity */}
               <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 <span style={{ fontSize: "12px", fontWeight: 600, color: "#94a3b8" }}>
                   School / Entity
@@ -422,6 +366,24 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
                 <span className={styles.summaryRowValue}>{formatZAR(quotation.subtotal)}</span>
               </div>
 
+              {Number(quotation.discount_amount || 0) > 0 && (
+                <div className={styles.summaryRow}>
+                  <span>Discount Applied</span>
+                  <span style={{ color: "#ef4444", fontWeight: 600 }}>
+                    - {formatZAR(Number(quotation.discount_amount))}
+                  </span>
+                </div>
+              )}
+
+              {Number(quotation.delivery_fee || 0) > 0 && (
+                <div className={styles.summaryRow}>
+                  <span>Delivery Fee</span>
+                  <span className={styles.summaryRowValue}>
+                    {formatZAR(Number(quotation.delivery_fee))}
+                  </span>
+                </div>
+              )}
+
               <div className={styles.summaryRow}>
                 <span>VAT ({quotation.vat_rate}%)</span>
                 <span className={styles.summaryRowValue}>{formatZAR(quotation.vat_amount)}</span>
@@ -449,43 +411,57 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
                 value={status}
                 disabled={busy}
                 onChange={(e) => handleStatusChange(e.target.value as QuotationStatus)}
-                className={styles.textInput}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  appearance: "auto",
-                }}
+                className={styles.statusSelect}
               >
-                <option value="draft">Draft</option>
-                <option value="sent">Sent</option>
-                <option value="accepted">Accepted</option>
-                <option value="declined">Declined</option>
+                <option value="draft">Draft (Internal)</option>
+                <option value="sent">Sent to Client</option>
+                <option value="viewed">Viewed by Client</option>
+                <option value="accepted">Accepted / Approved</option>
+                <option value="declined">Declined / Rejected</option>
+                <option value="expired">Expired</option>
                 <option value="converted_to_order">Converted to Order</option>
               </select>
             </div>
+
+            {status === "converted_to_order" && quotation.converted_order_id && (
+              <div style={{ marginTop: "12px" }}>
+                <Link
+                  href="/admin/orders"
+                  className={styles.convertLink}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    color: "#10b981",
+                    fontSize: "12.5px",
+                    fontWeight: 600,
+                  }}
+                >
+                  <ExternalLink size={13} />
+                  View Converted Order in Orders Hub
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Confirmation Modals */}
       <ConfirmModal
         isOpen={showDeleteModal}
-        title="Delete Quotation Permanently"
-        message={`Are you sure you want to delete quotation ${quotation.quote_number}? This will permanently remove the quote record and all line items.`}
+        title="Delete Quotation"
+        message={`Are you sure you want to permanently delete quotation ${quotation.quote_number}? This action cannot be undone.`}
         confirmLabel="Delete Quotation"
-        cancelLabel="Cancel"
         variant="danger"
         onConfirm={handleExecuteDelete}
         onCancel={() => setShowDeleteModal(false)}
       />
 
-      {/* Convert to Order Confirmation Modal */}
       <ConfirmModal
         isOpen={showConvertModal}
         title="Convert Quotation to Official Order"
-        message={`Convert Quotation ${quotation.quote_number} into an official active order for ${quotation.recipient_name}?`}
+        message={`Convert quotation ${quotation.quote_number} (Total: ${formatZAR(quotation.total_amount)}) into an active canonical order? This will create order items and update status.`}
         confirmLabel="Convert to Order"
-        cancelLabel="Cancel"
         variant="primary"
         onConfirm={handleExecuteConvert}
         onCancel={() => setShowConvertModal(false)}

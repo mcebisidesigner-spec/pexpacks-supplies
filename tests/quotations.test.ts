@@ -94,6 +94,36 @@ describe("Quotation Generator Logic & Schema Validation", () => {
     expect(grandTotal).toBe(229.94);
   });
 
+  it("handles discount, delivery fee, and VAT exemptions in quotation schema", () => {
+    const inputWithDiscount = {
+      recipient_name: "Finance Department",
+      recipient_email: "finance@school.co.za",
+      valid_until: "2027-01-01",
+      discount_amount: 100.0,
+      delivery_fee: 150.0,
+      vat_enabled: false,
+      items: [
+        { item_title: "Bulk Paper Reams", quantity: 10, unit_price: 60.0 }, // 600
+      ],
+    };
+
+    const parsed = quotationInputSchema.safeParse(inputWithDiscount);
+    expect(parsed.success).toBe(true);
+    if (parsed.success) {
+      expect(parsed.data.discount_amount).toBe(100.0);
+      expect(parsed.data.delivery_fee).toBe(150.0);
+      expect(parsed.data.vat_enabled).toBe(false);
+
+      const rawSubtotal = parsed.data.items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
+      const subtotalAfterDisc = Math.max(0, rawSubtotal - (parsed.data.discount_amount || 0));
+      expect(subtotalAfterDisc).toBe(500.0);
+      const vat = parsed.data.vat_enabled ? subtotalAfterDisc * 0.15 : 0;
+      expect(vat).toBe(0);
+      const total = subtotalAfterDisc + vat + (parsed.data.delivery_fee || 0);
+      expect(total).toBe(650.0);
+    }
+  });
+
   it("renders QuotationPdfDocument with Prepared by text into a valid PDF buffer", async () => {
     const React = await import("react");
     const { pdf } = await import("@react-pdf/renderer");

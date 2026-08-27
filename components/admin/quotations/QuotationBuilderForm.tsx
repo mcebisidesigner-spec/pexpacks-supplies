@@ -9,17 +9,28 @@ import {
   Search,
   Plus,
   Trash2,
-  Send,
   Save,
   Package,
   FileText,
   Building2,
   Loader2,
+  FileSpreadsheet,
+  Layers,
+  Sparkles,
+  Percent,
+  Truck,
+  CheckCircle2,
+  X,
 } from "lucide-react";
-import { createQuotationAction } from "@/app/admin/quotations/actions";
+import {
+  createQuotationAction,
+  listSchoolPacksForQuotation,
+  importSchoolPackItemsAction,
+} from "@/app/admin/quotations/actions";
 import { DateField } from "@/components/admin/DateField";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import type { QuotationStatus } from "@/lib/admin/quotations";
 import styles from "./Quotations.module.css";
 
@@ -58,13 +69,6 @@ interface FormLineItem {
   qtyText: string;
   quantity: number;
   unit_price: number | "";
-  // Placeholders matching reference design
-  placeholderTitle?: string;
-  placeholderSku?: string;
-  placeholderUnit?: string;
-  placeholderQty?: string;
-  placeholderUnitPrice?: string;
-  placeholderTotal?: string;
 }
 
 function formatZAR(amount: number): string {
@@ -76,6 +80,21 @@ function formatZAR(amount: number): string {
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+const STANDARD_NOTE_TEMPLATES = [
+  {
+    label: "Standard 30-Day School Terms",
+    text: "1. This quotation is valid for 30 calendar days from date of issue.\n2. Pricing includes quality packaging and coordinated delivery to school premises.\n3. Settlement: Strictly 30 days from official invoice.",
+  },
+  {
+    label: "Bulk Order Discount Terms",
+    text: "1. Quotation reflects agreed institutional bulk volume pricing.\n2. Stock reserved for 14 calendar days.\n3. Free delivery included for direct school batch intake.",
+  },
+  {
+    label: "Immediate EFT / Direct Supply",
+    text: "1. Valid for 14 days from date of generation.\n2. Dispatch commences upon receipt of official proof of payment / order confirmation.",
+  },
+];
 
 export function QuotationBuilderForm({
   schools: initialSchools = [],
@@ -107,6 +126,22 @@ export function QuotationBuilderForm({
 
   const [validUntil, setValidUntil] = useState(defaultValidUntil);
 
+  // Financial adjustments
+  const [discountAmount, setDiscountAmount] = useState<number | "">("");
+  const [deliveryFee, setDeliveryFee] = useState<number | "">("");
+  const [vatEnabled, setVatEnabled] = useState(true);
+
+  // Modals state
+  const [showPackImportModal, setShowPackImportModal] = useState(false);
+  const [packModalSchools, setPackModalSchools] = useState<SchoolOption[]>(initialSchools);
+  const [packModalSelectedSchool, setPackModalSelectedSchool] = useState<string>("");
+  const [packModalPacks, setPackModalPacks] = useState<Array<{ id: string; title: string; price: number }>>([]);
+  const [packModalLoadingPacks, setPackModalLoadingPacks] = useState(false);
+  const [packModalImporting, setPackModalImporting] = useState(false);
+
+  const [showCsvImportModal, setShowCsvImportModal] = useState(false);
+  const [csvText, setCsvText] = useState("");
+
   // Debounce school search input (150ms)
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -115,7 +150,6 @@ export function QuotationBuilderForm({
     return () => clearTimeout(handler);
   }, [schoolSearch]);
 
-  // Query all 3,342 schools from database when query >= 3 letters
   const shouldFetchSchools = debouncedSchoolQuery.length >= 3;
   const { data: searchedSchools, isValidating: isSearchingSchools } = useSWR<SchoolOption[]>(
     shouldFetchSchools
@@ -156,71 +190,17 @@ export function QuotationBuilderForm({
     setRecipientEmail(`accounts@${schoolSlug}.co.za`);
   }
 
-  // 3. Line Items state - all pre-filled text in initial state are PLACEHOLDERS
+  // 3. Line Items state
   const [lineItems, setLineItems] = useState<FormLineItem[]>([
     {
       id: "item-1",
       master_product_id: null,
       item_title: "",
       sku: "",
-      unit: "",
-      qtyText: "",
+      unit: "Each",
+      qtyText: "1",
       quantity: 1,
       unit_price: "",
-      placeholderTitle: "Search items by item name/SKU",
-      placeholderSku: "ST-PEN-BLU-BOX",
-      placeholderUnit: "Pack",
-      placeholderQty: "Box of 40",
-      placeholderUnitPrice: "180.00",
-      placeholderTotal: "180.00",
-    },
-    {
-      id: "item-2",
-      master_product_id: null,
-      item_title: "",
-      sku: "",
-      unit: "",
-      qtyText: "",
-      quantity: 1,
-      unit_price: "",
-      placeholderTitle: "Search items by item name/SKU",
-      placeholderSku: "ST-PEN-BLU-BOX",
-      placeholderUnit: "Unit",
-      placeholderQty: "01",
-      placeholderUnitPrice: "180.00",
-      placeholderTotal: "180.00",
-    },
-    {
-      id: "item-3",
-      master_product_id: null,
-      item_title: "",
-      sku: "",
-      unit: "",
-      qtyText: "",
-      quantity: 1,
-      unit_price: "",
-      placeholderTitle: "Search items by item name/SKU",
-      placeholderSku: "ST-PEN-BLU-BOX",
-      placeholderUnit: "Pack",
-      placeholderQty: "Box of 01",
-      placeholderUnitPrice: "180.00",
-      placeholderTotal: "180.00",
-    },
-    {
-      id: "item-4",
-      master_product_id: null,
-      item_title: "",
-      sku: "",
-      unit: "",
-      qtyText: "",
-      quantity: 1,
-      unit_price: "",
-      placeholderTitle: "Search items by item name/SKU",
-      placeholderSku: "ST-PEN-BLU-BOX",
-      placeholderUnit: "Pack",
-      placeholderQty: "Box of 50",
-      placeholderUnitPrice: "140.00",
-      placeholderTotal: "140.00",
     },
   ]);
 
@@ -229,7 +209,6 @@ export function QuotationBuilderForm({
   const [itemSearchQuery, setItemSearchQuery] = useState("");
   const [debouncedItemQuery, setDebouncedItemQuery] = useState("");
 
-  // Debounce item query (150ms)
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedItemQuery(itemSearchQuery.trim());
@@ -237,8 +216,7 @@ export function QuotationBuilderForm({
     return () => clearTimeout(handler);
   }, [itemSearchQuery]);
 
-  // Query master stationery inventory when query >= 3 letters
-  const shouldFetchItems = debouncedItemQuery.length >= 3;
+  const shouldFetchItems = debouncedItemQuery.length >= 2;
   const { data: searchResults, isValidating: isSearchingItems } = useSWR<StationerySearchResult[]>(
     shouldFetchItems
       ? `/api/stationery/search?q=${encodeURIComponent(debouncedItemQuery)}`
@@ -249,7 +227,6 @@ export function QuotationBuilderForm({
 
   const matchingItems = Array.isArray(searchResults) ? searchResults : [];
 
-  // Close item dropdown when clicking outside
   const lineItemsTableRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -273,10 +250,10 @@ export function QuotationBuilderForm({
               master_product_id: item.id,
               item_title: item.title,
               sku: item.sku || "ST-ITEM-001",
-              unit: "Pack",
-              qtyText: row.qtyText || "01",
+              unit: "Each",
+              qtyText: row.qtyText || "1",
               quantity: row.quantity || 1,
-              unit_price: item.unit_price || 0,
+              unit_price: Number(item.unit_price || 0),
             }
           : row
       )
@@ -285,7 +262,6 @@ export function QuotationBuilderForm({
     setItemSearchQuery("");
   }
 
-  // Add line item row
   function handleAddItem() {
     setLineItems((prev) => [
       ...prev,
@@ -294,27 +270,33 @@ export function QuotationBuilderForm({
         master_product_id: null,
         item_title: "",
         sku: "",
-        unit: "",
-        qtyText: "",
+        unit: "Each",
+        qtyText: "1",
         quantity: 1,
         unit_price: "",
-        placeholderTitle: "Search items by item name/SKU",
-        placeholderSku: "ST-PEN-BLU-BOX",
-        placeholderUnit: "Pack",
-        placeholderQty: "01",
-        placeholderUnitPrice: "180.00",
-        placeholderTotal: "180.00",
       },
     ]);
   }
 
-  // Remove line item row
   function handleRemoveItem(rowId: string) {
-    if (lineItems.length <= 1) return;
+    if (lineItems.length <= 1) {
+      setLineItems([
+        {
+          id: `item-${Date.now()}`,
+          master_product_id: null,
+          item_title: "",
+          sku: "",
+          unit: "Each",
+          qtyText: "1",
+          quantity: 1,
+          unit_price: "",
+        },
+      ]);
+      return;
+    }
     setLineItems((prev) => prev.filter((item) => item.id !== rowId));
   }
 
-  // Update line item field
   function handleUpdateItem(
     rowId: string,
     field: keyof FormLineItem,
@@ -343,28 +325,107 @@ export function QuotationBuilderForm({
     );
   }
 
-  // 4. Calculations (only sums rows with entered/actual unit prices)
-  const subtotal = useMemo(() => {
+  // 4. Import from Pack Logic
+  async function handleSchoolSelectForPack(schoolId: string) {
+    setPackModalSelectedSchool(schoolId);
+    setPackModalLoadingPacks(true);
+    const packs = await listSchoolPacksForQuotation(schoolId);
+    setPackModalPacks(packs);
+    setPackModalLoadingPacks(false);
+  }
+
+  async function handleImportPackItems(packId: string) {
+    setPackModalImporting(true);
+    const res = await importSchoolPackItemsAction(packId);
+    setPackModalImporting(false);
+
+    if (res.ok && res.items && res.items.length > 0) {
+      const newItems: FormLineItem[] = res.items.map((it, idx) => ({
+        id: `pack-item-${Date.now()}-${idx}`,
+        master_product_id: it.master_product_id,
+        item_title: it.item_title,
+        sku: it.sku || "",
+        unit: it.unit || "Each",
+        qtyText: String(it.quantity),
+        quantity: it.quantity,
+        unit_price: it.unit_price,
+      }));
+
+      // Replace empty lines or append
+      setLineItems((prev) => {
+        const existingValid = prev.filter((it) => it.item_title.trim().length > 0);
+        return [...existingValid, ...newItems];
+      });
+
+      setShowPackImportModal(false);
+    }
+  }
+
+  // 5. Import from CSV Logic
+  function handleImportCsv() {
+    if (!csvText.trim()) return;
+    const lines = csvText.split(/\r?\n/).filter((l) => l.trim().length > 0);
+    const imported: FormLineItem[] = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      // Skip header row if present
+      if (i === 0 && line.toLowerCase().includes("item") && line.toLowerCase().includes("price")) {
+        continue;
+      }
+      const parts = line.split(",").map((s) => s.trim().replace(/^["']|["']$/g, ""));
+      if (parts.length >= 1 && parts[0]) {
+        const title = parts[0];
+        const qty = parseInt(parts[1], 10) || 1;
+        const price = parseFloat(parts[2]) || 0;
+        const sku = parts[3] || "";
+
+        imported.push({
+          id: `csv-${Date.now()}-${i}`,
+          master_product_id: null,
+          item_title: title,
+          sku,
+          unit: "Each",
+          qtyText: String(qty),
+          quantity: qty,
+          unit_price: price,
+        });
+      }
+    }
+
+    if (imported.length > 0) {
+      setLineItems((prev) => {
+        const existingValid = prev.filter((it) => it.item_title.trim().length > 0);
+        return [...existingValid, ...imported];
+      });
+      setCsvText("");
+      setShowCsvImportModal(false);
+    }
+  }
+
+  // 6. Calculations
+  const rawSubtotal = useMemo(() => {
     return lineItems.reduce((sum, item) => {
       const price = typeof item.unit_price === "number" ? item.unit_price : 0;
-      return sum + item.quantity * price;
+      return sum + (item.quantity || 1) * price;
     }, 0);
   }, [lineItems]);
 
-  const vatRate = 15.0;
+  const disc = typeof discountAmount === "number" ? discountAmount : 0;
+  const delivery = typeof deliveryFee === "number" ? deliveryFee : 0;
+  const subtotal = Math.max(0, rawSubtotal - disc);
+
+  const vatRate = vatEnabled ? 15.0 : 0;
   const vatAmount = useMemo(() => {
     return (subtotal * vatRate) / 100;
   }, [subtotal, vatRate]);
 
   const totalAmount = useMemo(() => {
-    return subtotal + vatAmount;
-  }, [subtotal, vatAmount]);
+    return subtotal + vatAmount + delivery;
+  }, [subtotal, vatAmount, delivery]);
 
-  // 5. Notes state (matching reference text)
-  const [notes, setNotes] = useState(
-    `1. This quotation is valid for 30 calendar days from the date of issue.\n2. Pricing includes packaging, quality verification, and school delivery coordination.\n3. Standard settlement: 30 days from official invoice.`
-  );
-
+  // 7. Notes state
+  const [notes, setNotes] = useState(STANDARD_NOTE_TEMPLATES[0].text);
   const [busy, setBusy] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -379,6 +440,13 @@ export function QuotationBuilderForm({
       return;
     }
 
+    // Filter out real items only
+    const validItems = lineItems.filter((item) => item.item_title.trim().length > 0);
+    if (validItems.length === 0) {
+      setErrorMsg("Please add at least one line item with a title.");
+      return;
+    }
+
     setBusy(true);
     setErrorMsg("");
 
@@ -389,24 +457,17 @@ export function QuotationBuilderForm({
       recipient_phone: recipientPhone.trim() || null,
       valid_until: validUntil,
       notes: `${notes.trim()}${preparedBy.trim() ? `\nPrepared by: ${preparedBy.trim()}` : ""}`,
-      items: lineItems.map((item) => {
-        const title = item.item_title.trim() || item.placeholderTitle || "Stationery Item";
-        const sku = item.sku.trim() || item.placeholderSku || null;
-        const unit = item.unit.trim() || item.placeholderUnit || "Pack";
-        const price =
-          typeof item.unit_price === "number"
-            ? item.unit_price
-            : parseFloat(item.placeholderUnitPrice || "0") || 0;
-
-        return {
-          master_product_id: item.master_product_id,
-          item_title: title,
-          sku,
-          unit,
-          quantity: Number(item.quantity) || 1,
-          unit_price: price,
-        };
-      }),
+      discount_amount: disc,
+      delivery_fee: delivery,
+      vat_enabled: vatEnabled,
+      items: validItems.map((item) => ({
+        master_product_id: item.master_product_id,
+        item_title: item.item_title.trim(),
+        sku: item.sku.trim() || null,
+        unit: item.unit.trim() || "Each",
+        quantity: Number(item.quantity) || 1,
+        unit_price: typeof item.unit_price === "number" ? item.unit_price : 0,
+      })),
     };
 
     const res = await createQuotationAction(payload, status);
@@ -433,7 +494,7 @@ export function QuotationBuilderForm({
         <div className={styles.titleArea}>
           <h1 className={styles.pageTitle}>New Quotation</h1>
           <p className={styles.pageSubtitle}>
-            Compose an official school price quotation with live line items and VAT.
+            Compose an official school price quotation with live line items and automated calculation.
           </p>
         </div>
 
@@ -442,465 +503,575 @@ export function QuotationBuilderForm({
             label="Prepared by"
             value={preparedBy}
             onChange={(e) => setPreparedBy(e.target.value)}
-            bgSurface="bg-[#0b121e]"
           />
         </div>
       </div>
 
       {errorMsg ? (
-        <div
-          style={{
-            padding: "12px 16px",
-            background: "rgba(239, 68, 68, 0.12)",
-            border: "1px solid rgba(239, 68, 68, 0.3)",
-            borderRadius: "8px",
-            color: "#f87171",
-            fontSize: "13px",
-          }}
-        >
-          {errorMsg}
+        <div className={styles.errorBanner}>
+          <span>{errorMsg}</span>
         </div>
       ) : null}
 
-      {/* 3. Top 2-Column Grid (Client Details & Quotation Summary) */}
-      <div className={styles.topGrid}>
-        {/* Left Card: Client & Recipient Details */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h2 className={styles.cardTitle}>
-              <Building2 size={16} color="#10b981" />
-              Client &amp; Recipient Details
-            </h2>
-          </div>
-
-          {/* Radio Options */}
-          <div className={styles.radioGroup}>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="clientType"
-                className={styles.radioInput}
-                checked={!isCustomClient}
-                onChange={() => setIsCustomClient(false)}
-              />
-              Existing School
-            </label>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="clientType"
-                className={styles.radioInput}
-                checked={isCustomClient}
-                onChange={() => {
-                  setIsCustomClient(true);
-                  setSelectedSchoolId("");
-                }}
-              />
-              Custom / Non-Partner Client
-            </label>
-          </div>
-
-          {/* Select School Searchable Input with 3-character threshold */}
-          {!isCustomClient ? (
-            <div className={styles.formGroup} ref={schoolSearchContainerRef}>
-              <label className={styles.formLabel}>Select School</label>
-              <div className={styles.inputWrapper}>
-                <Search size={16} className={styles.inputIcon} />
-                <input
-                  type="text"
-                  placeholder="Search school by school name"
-                  value={schoolSearch}
-                  onFocus={() => {
-                    if (schoolSearch.trim().length >= 3) {
-                      setIsSchoolDrawerOpen(true);
-                    }
-                  }}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setSchoolSearch(val);
-                    if (val.trim().length >= 3) {
-                      setIsSchoolDrawerOpen(true);
-                    } else {
-                      setIsSchoolDrawerOpen(false);
-                    }
-                  }}
-                  className={`${styles.textInput} ${styles.textInputWithIcon}`}
-                />
+      <div className={styles.mainLayout}>
+        {/* LEFT COLUMN: Main Form */}
+        <div className={styles.leftColumn}>
+          {/* Card A: Client Details */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardTitle}>
+                <Building2 size={16} className={styles.cardIcon} />
+                Client Details
               </div>
+              <div className={styles.clientTypeToggle}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCustomClient(false);
+                    setSelectedSchoolId("");
+                    setSchoolSearch("");
+                  }}
+                  className={`${styles.clientTypeBtn} ${
+                    !isCustomClient ? styles.clientTypeBtnActive : ""
+                  }`}
+                >
+                  School
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCustomClient(true);
+                    setSelectedSchoolId("");
+                    setSchoolSearch("");
+                  }}
+                  className={`${styles.clientTypeBtn} ${
+                    isCustomClient ? styles.clientTypeBtnActive : ""
+                  }`}
+                >
+                  Custom
+                </button>
+              </div>
+            </div>
 
-              {/* Matching results drawer activated ONLY when query >= 3 letters */}
-              {isSchoolDrawerOpen && debouncedSchoolQuery.length >= 3 && (
-                <div className={styles.searchDrawer}>
-                  {isSearchingSchools ? (
-                    <div className={styles.drawerSpinnerWrap}>
-                      <Loader2 size={16} className="animate-spin" />
-                      <span>Searching across 3,342 schools...</span>
-                    </div>
-                  ) : matchingSchools.length === 0 ? (
-                    <div className={styles.drawerEmpty}>
-                      No schools found matching &ldquo;{debouncedSchoolQuery}&rdquo;.
-                    </div>
-                  ) : (
-                    matchingSchools.map((s) => (
-                      <button
-                        key={s.id}
-                        type="button"
-                        onClick={() => handleSelectSchool(s)}
-                        className={styles.drawerItem}
-                      >
-                        <div className={styles.drawerItemInfo}>
-                          <p className={styles.drawerItemTitle}>{s.name}</p>
-                          <p className={styles.drawerItemDesc}>
-                            {[s.address, s.city, s.province].filter(Boolean).join(" • ") ||
-                              "Gauteng, South Africa"}
-                          </p>
+            <div className={styles.cardBody}>
+              {!isCustomClient && (
+                <div
+                  className={styles.schoolSearchWrapper}
+                  ref={schoolSearchContainerRef}
+                >
+                  <FloatingInput
+                    label="Search Registered Schools (3,342 in DB)..."
+                    value={schoolSearch}
+                    onChange={(e) => {
+                      setSchoolSearch(e.target.value);
+                      setIsSchoolDrawerOpen(true);
+                    }}
+                    onFocus={() => setIsSchoolDrawerOpen(true)}
+                  />
+
+                  {isSchoolDrawerOpen && (
+                    <div className={styles.schoolDropdown}>
+                      {isSearchingSchools ? (
+                        <div className={styles.schoolDropdownLoading}>
+                          <Loader2 size={16} className={styles.spinIcon} />
+                          Searching database...
                         </div>
-                        <div className={styles.drawerPriceBlock}>
-                          <span className={styles.drawerTag}>Active School</span>
+                      ) : matchingSchools.length > 0 ? (
+                        matchingSchools.map((s) => (
+                          <button
+                            key={s.id}
+                            type="button"
+                            className={styles.schoolOptionBtn}
+                            onClick={() => handleSelectSchool(s)}
+                          >
+                            <div className={styles.schoolOptionName}>{s.name}</div>
+                            <div className={styles.schoolOptionMeta}>
+                              {s.city || "Johannesburg"}, {s.province || "Gauteng"}
+                            </div>
+                          </button>
+                        ))
+                      ) : debouncedSchoolQuery.length >= 3 ? (
+                        <div className={styles.schoolDropdownEmpty}>
+                          No schools found for &ldquo;{debouncedSchoolQuery}&rdquo;
                         </div>
-                      </button>
-                    ))
+                      ) : (
+                        <div className={styles.schoolDropdownEmpty}>
+                          Type at least 3 letters to search schools
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
+
+              <div className={styles.grid2}>
+                <FloatingInput
+                  label="Recipient / Attn *"
+                  value={recipientName}
+                  onChange={(e) => setRecipientName(e.target.value)}
+                />
+                <FloatingInput
+                  label="Recipient Email *"
+                  type="email"
+                  value={recipientEmail}
+                  onChange={(e) => setRecipientEmail(e.target.value)}
+                />
+              </div>
+
+              <div className={styles.grid2}>
+                <FloatingInput
+                  label="Recipient Phone"
+                  value={recipientPhone}
+                  onChange={(e) => setRecipientPhone(e.target.value)}
+                />
+                <div>
+                  <label className={styles.inputLabel}>Valid Until</label>
+                  <DateField
+                    value={validUntil}
+                    onChange={(val) => setValidUntil(val)}
+                    min={new Date().toISOString().split("T")[0]}
+                  />
+                </div>
+              </div>
             </div>
-          ) : null}
-
-          {/* Recipient Name & Recipient Email */}
-          <div className={styles.formRow2}>
-            <FloatingInput
-              id="recipient_name"
-              label="Recipient Name / Contact Person"
-              required
-              value={recipientName}
-              onChange={(e) => setRecipientName(e.target.value)}
-              bgSurface="bg-[#0b121e]"
-            />
-
-            <FloatingInput
-              id="recipient_email"
-              type="email"
-              label="Recipient Email"
-              required
-              value={recipientEmail}
-              onChange={(e) => setRecipientEmail(e.target.value)}
-              bgSurface="bg-[#0b121e]"
-            />
           </div>
 
-          {/* Phone Number & Valid Until */}
-          <div className={styles.formRow2}>
-            <FloatingInput
-              id="recipient_phone"
-              label="Phone Number"
-              value={recipientPhone}
-              onChange={(e) => setRecipientPhone(e.target.value)}
-              bgSurface="bg-[#0b121e]"
-            />
+          {/* Card B: Line Items Table */}
+          <div className={styles.card} ref={lineItemsTableRef}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardTitle}>
+                <Package size={16} className={styles.cardIcon} />
+                Quotation Line Items
+              </div>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <AdminButton
+                  variant="secondary"
+                  size="sm"
+                  icon={<Layers size={13} />}
+                  onClick={() => {
+                    if (selectedSchoolId) {
+                      handleSchoolSelectForPack(selectedSchoolId);
+                    }
+                    setShowPackImportModal(true);
+                  }}
+                >
+                  Import Pack
+                </AdminButton>
+                <AdminButton
+                  variant="secondary"
+                  size="sm"
+                  icon={<FileSpreadsheet size={13} />}
+                  onClick={() => setShowCsvImportModal(true)}
+                >
+                  Import CSV
+                </AdminButton>
+                <AdminButton
+                  variant="outline"
+                  size="sm"
+                  icon={<Plus size={13} />}
+                  onClick={handleAddItem}
+                >
+                  Add Item
+                </AdminButton>
+              </div>
+            </div>
 
-            <div>
-              <DateField
-                name="valid_until"
-                value={validUntil}
-                onChange={(val) => setValidUntil(val)}
-                placeholder="Select date"
-                required
+            <div className={styles.cardBody} style={{ padding: "0" }}>
+              <div className={styles.tableScroll}>
+                <table className={styles.itemsTable}>
+                  <thead>
+                    <tr>
+                      <th style={{ width: "38%" }}>ITEM DESCRIPTION</th>
+                      <th style={{ width: "16%" }}>SKU</th>
+                      <th style={{ width: "12%" }}>UNIT</th>
+                      <th style={{ width: "10%" }}>QTY</th>
+                      <th style={{ width: "12%" }}>PRICE (ZAR)</th>
+                      <th style={{ width: "12%" }}>TOTAL</th>
+                      <th style={{ width: "40px" }}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {lineItems.map((item) => {
+                      const lineTotal =
+                        typeof item.unit_price === "number"
+                          ? (item.quantity || 1) * item.unit_price
+                          : 0;
+
+                      return (
+                        <tr key={item.id}>
+                          <td style={{ position: "relative" }}>
+                            <input
+                              type="text"
+                              className={styles.tableInput}
+                              placeholder="Search item or enter description..."
+                              value={item.item_title}
+                              onChange={(e) => {
+                                handleUpdateItem(item.id, "item_title", e.target.value);
+                                setItemSearchQuery(e.target.value);
+                                setActiveItemRowId(item.id);
+                              }}
+                              onFocus={() => {
+                                setItemSearchQuery(item.item_title);
+                                setActiveItemRowId(item.id);
+                              }}
+                            />
+
+                            {/* Autocomplete Dropdown */}
+                            {activeItemRowId === item.id && shouldFetchItems && (
+                              <div className={styles.itemAutocomplete}>
+                                {isSearchingItems ? (
+                                  <div className={styles.itemAutocompleteLoading}>
+                                    <Loader2 size={14} className={styles.spinIcon} />
+                                    Searching catalog...
+                                  </div>
+                                ) : matchingItems.length > 0 ? (
+                                  matchingItems.map((res) => (
+                                    <button
+                                      key={res.id}
+                                      type="button"
+                                      className={styles.itemAutocompleteOption}
+                                      onClick={() => handleSelectItem(item.id, res)}
+                                    >
+                                      <div className={styles.itemOptionTitle}>
+                                        {res.title}
+                                      </div>
+                                      <div className={styles.itemOptionMeta}>
+                                        <span>{res.sku || "NO-SKU"}</span>
+                                        <span className={styles.itemOptionPrice}>
+                                          {formatZAR(res.unit_price)}
+                                        </span>
+                                      </div>
+                                    </button>
+                                  ))
+                                ) : (
+                                  <div className={styles.itemAutocompleteEmpty}>
+                                    No stationery matches found
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </td>
+
+                          <td>
+                            <input
+                              type="text"
+                              className={styles.tableInput}
+                              placeholder="SKU-CODE"
+                              value={item.sku}
+                              onChange={(e) =>
+                                handleUpdateItem(item.id, "sku", e.target.value)
+                              }
+                            />
+                          </td>
+
+                          <td>
+                            <input
+                              type="text"
+                              className={styles.tableInput}
+                              placeholder="Each"
+                              value={item.unit}
+                              onChange={(e) =>
+                                handleUpdateItem(item.id, "unit", e.target.value)
+                              }
+                            />
+                          </td>
+
+                          <td>
+                            <input
+                              type="text"
+                              className={styles.tableInput}
+                              placeholder="1"
+                              value={item.qtyText}
+                              onChange={(e) =>
+                                handleUpdateItem(item.id, "qtyText", e.target.value)
+                              }
+                            />
+                          </td>
+
+                          <td>
+                            <input
+                              type="number"
+                              step="0.01"
+                              className={styles.tableInput}
+                              placeholder="0.00"
+                              value={item.unit_price}
+                              onChange={(e) =>
+                                handleUpdateItem(item.id, "unit_price", e.target.value)
+                              }
+                            />
+                          </td>
+
+                          <td className={styles.totalCell}>
+                            {formatZAR(lineTotal)}
+                          </td>
+
+                          <td className={styles.actionCell}>
+                            <button
+                              type="button"
+                              className={styles.deleteRowBtn}
+                              onClick={() => handleRemoveItem(item.id)}
+                              title="Delete Row"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          {/* Card C: Notes & Terms */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardTitle}>
+                <FileText size={16} className={styles.cardIcon} />
+                Quotation Notes &amp; Settlement Terms
+              </div>
+            </div>
+
+            <div className={styles.cardBody}>
+              {/* Quick Template Chips */}
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
+                {STANDARD_NOTE_TEMPLATES.map((tmpl, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setNotes(tmpl.text)}
+                    className={styles.templateChip}
+                  >
+                    <Sparkles size={11} />
+                    {tmpl.label}
+                  </button>
+                ))}
+              </div>
+
+              <FloatingTextarea
+                label="Quotation Terms and Settlement Notes"
+                rows={4}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
               />
             </div>
           </div>
         </div>
 
-        {/* Right Card: Quotation Summary */}
-        <div className={styles.summaryCard}>
-          <div className={styles.summaryList}>
-            <h2 className={styles.summaryTitle}>Quotation Summary</h2>
+        {/* RIGHT COLUMN: Price Summary Sidebar */}
+        <div className={styles.rightColumn}>
+          <div className={styles.sidebarSticky}>
+            <div className={styles.summaryCard}>
+              <div className={styles.summaryHeader}>Price Summary</div>
 
-            <div className={styles.summaryRow}>
-              <span>Line Items</span>
-              <span className={styles.summaryRowValue}>{lineItems.length} Items</span>
+              <div className={styles.summaryRow}>
+                <span className={styles.summaryLabel}>Gross Subtotal</span>
+                <span className={styles.summaryValue}>{formatZAR(rawSubtotal)}</span>
+              </div>
+
+              {/* Discount Row */}
+              <div className={styles.summaryAdjustmentRow}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <Percent size={13} className={styles.textMuted} />
+                  <span className={styles.summaryLabel}>Discount (ZAR)</span>
+                </div>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0.00"
+                  value={discountAmount}
+                  onChange={(e) =>
+                    setDiscountAmount(
+                      e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value) || 0)
+                    )
+                  }
+                  className={styles.summaryAdjInput}
+                />
+              </div>
+
+              {/* Delivery Fee Row */}
+              <div className={styles.summaryAdjustmentRow}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <Truck size={13} className={styles.textMuted} />
+                  <span className={styles.summaryLabel}>Delivery Fee</span>
+                </div>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0.00"
+                  value={deliveryFee}
+                  onChange={(e) =>
+                    setDeliveryFee(
+                      e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value) || 0)
+                    )
+                  }
+                  className={styles.summaryAdjInput}
+                />
+              </div>
+
+              {/* VAT Toggle */}
+              <div className={styles.summaryVatToggleRow}>
+                <label className={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    checked={vatEnabled}
+                    onChange={(e) => setVatEnabled(e.target.checked)}
+                  />
+                  <span>Apply Standard 15% VAT</span>
+                </label>
+                <span className={styles.summaryValue}>{formatZAR(vatAmount)}</span>
+              </div>
+
+              <div className={styles.summaryDivider} />
+
+              <div className={styles.summaryTotalRow}>
+                <span className={styles.summaryTotalLabel}>Total Amount</span>
+                <span className={styles.summaryTotalValue}>
+                  {formatZAR(totalAmount)}
+                </span>
+              </div>
+
+              <div className={styles.summaryActions}>
+                <AdminButton
+                  variant="primary"
+                  icon={busy ? <Loader2 size={14} className={styles.spinIcon} /> : <CheckCircle2 size={14} />}
+                  onClick={() => handleSubmit("sent")}
+                  disabled={busy}
+                >
+                  Create &amp; Issue Quotation
+                </AdminButton>
+
+                <AdminButton
+                  variant="secondary"
+                  icon={busy ? <Loader2 size={14} className={styles.spinIcon} /> : <Save size={14} />}
+                  onClick={() => handleSubmit("draft")}
+                  disabled={busy}
+                >
+                  Save as Draft
+                </AdminButton>
+              </div>
             </div>
-
-            <div className={styles.summaryRow}>
-              <span>Subtotal (Excl. VAT)</span>
-              <span className={styles.summaryRowValue}>{formatZAR(subtotal)}</span>
-            </div>
-
-            <div className={styles.summaryRow}>
-              <span>VAT (15%)</span>
-              <span className={styles.summaryRowValue}>{formatZAR(vatAmount)}</span>
-            </div>
-
-            <div className={styles.summaryRowGrand}>
-              <span className={styles.grandTotalLabel}>Total (ZAR)</span>
-              <span className={styles.grandTotalAmount}>{formatZAR(totalAmount)}</span>
-            </div>
-          </div>
-
-          <div className={styles.summaryActions}>
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => handleSubmit("sent")}
-              className={styles.btnGenerate}
-            >
-              <Send size={15} />
-              {busy ? "Generating..." : "Save & Generate PDF"}
-            </button>
-
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => handleSubmit("draft")}
-              className={styles.btnDraft}
-            >
-              <Save size={15} />
-              Save as Draft
-            </button>
           </div>
         </div>
       </div>
 
-      {/* 4. Middle Full-Width Card: Line Items */}
-      <div className={styles.lineItemsCard} ref={lineItemsTableRef}>
-        <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>
-            <Package size={16} color="#10b981" />
-            Line Items ({lineItems.length})
-          </h2>
+      {/* MODAL: Import from School Pack */}
+      {showPackImportModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <div className={styles.modalTitle}>
+                <Layers size={18} />
+                Import Line Items from School Pack
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPackImportModal(false)}
+                className={styles.modalCloseBtn}
+              >
+                <X size={16} />
+              </button>
+            </div>
 
-          <button
-            type="button"
-            onClick={handleAddItem}
-            className={styles.btnAddItem}
-          >
-            <Plus size={13} /> Add Line Item
-          </button>
-        </div>
+            <div className={styles.modalBody}>
+              <p className={styles.modalSubtitle}>
+                Select a registered school and pick a grade pack to import all pack stationery items into this quote.
+              </p>
 
-        <div className={styles.tableWrapper}>
-          <table className={styles.lineItemsTable}>
-            <thead>
-              <tr>
-                <th style={{ width: "36%", textAlign: "center" }}>
-                  ITEM DESCRIPTION
-                </th>
-                <th style={{ width: "16%", textAlign: "center" }}>SKU</th>
-                <th style={{ width: "12%", textAlign: "center" }}>UNIT/PACK</th>
-                <th style={{ width: "14%", textAlign: "center" }}>QTY</th>
-                <th style={{ width: "12%", textAlign: "center" }}>UNIT PRICE (R)</th>
-                <th style={{ width: "10%", textAlign: "center" }}>TOTAL</th>
-                <th style={{ width: "4%", textAlign: "center" }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {lineItems.map((item) => {
-                const hasCustomPrice = typeof item.unit_price === "number";
-                const rowPrice: number = hasCustomPrice
-                  ? Number(item.unit_price)
-                  : parseFloat(item.placeholderUnitPrice || "0") || 0;
+              <div style={{ marginBottom: "16px" }}>
+                <label className={styles.inputLabel}>Select School</label>
+                <select
+                  className={styles.modalSelect}
+                  value={packModalSelectedSchool}
+                  onChange={(e) => handleSchoolSelectForPack(e.target.value)}
+                >
+                  <option value="">-- Choose School --</option>
+                  {packModalSchools.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} ({s.city || "Gauteng"})
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                const lineTotal = hasCustomPrice
-                  ? (item.quantity * rowPrice).toFixed(2)
-                  : item.placeholderTotal || "0.00";
-
-                const isRowActive = activeItemRowId === item.id;
-                const showItemDrawer = isRowActive && debouncedItemQuery.length >= 3;
-
-                return (
-                  <tr
-                    key={item.id}
-                    className={`${styles.lineItemRow} ${showItemDrawer ? styles.activeRowZIndex : ""}`}
-                  >
-                    {/* Item Description Search Field with 3-letter threshold & generous icon gap */}
-                    <td style={{ position: "relative" }}>
-                      <div className={styles.inputWrapper}>
-                        <Search size={16} className={styles.inputIcon} />
-                        <input
-                          type="text"
-                          placeholder={item.placeholderTitle || "Search items by item name/SKU"}
-                          value={item.item_title}
-                          onFocus={() => {
-                            setActiveItemRowId(item.id);
-                            setItemSearchQuery(item.item_title);
-                          }}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            handleUpdateItem(item.id, "item_title", val);
-                            setActiveItemRowId(item.id);
-                            setItemSearchQuery(val);
-                          }}
-                          className={`${styles.tablePillInput} ${styles.textInputWithIcon}`}
-                        />
+              {packModalLoadingPacks ? (
+                <div className={styles.modalLoading}>
+                  <Loader2 size={16} className={styles.spinIcon} />
+                  Loading school packs...
+                </div>
+              ) : packModalPacks.length > 0 ? (
+                <div className={styles.packList}>
+                  {packModalPacks.map((p) => (
+                    <div key={p.id} className={styles.packListItem}>
+                      <div>
+                        <div className={styles.packItemTitle}>{p.title}</div>
+                        <div className={styles.packItemPrice}>{formatZAR(p.price)}</div>
                       </div>
-
-                      {/* Matching Results Drawer matching Image 1 on /admin/packs/[slug] */}
-                      {showItemDrawer && (
-                        <div className={styles.searchDrawer}>
-                          {isSearchingItems ? (
-                            <div className={styles.drawerSpinnerWrap}>
-                              <Loader2 size={16} className="animate-spin" />
-                              <span>Searching inventory...</span>
-                            </div>
-                          ) : matchingItems.length === 0 ? (
-                            <div className={styles.drawerEmpty}>
-                              No matching stationery items found for &ldquo;{debouncedItemQuery}&rdquo;.
-                            </div>
-                          ) : (
-                            matchingItems.map((prod) => {
-                              const prodTitle = prod.title || "Stationery Item";
-                              const prodPrice = prod.unit_price ?? 0;
-
-                              return (
-                                <button
-                                  key={prod.id}
-                                  type="button"
-                                  onClick={() => handleSelectItem(item.id, prod)}
-                                  className={styles.drawerItem}
-                                >
-                                  <div className={styles.drawerItemInfo}>
-                                    <p className={styles.drawerItemTitle}>{prodTitle}</p>
-                                    {prod.sku ? (
-                                      <p className={styles.drawerItemMeta}>{prod.sku}</p>
-                                    ) : null}
-                                    {prod.description ? (
-                                      <p className={styles.drawerItemDesc}>{prod.description}</p>
-                                    ) : null}
-                                  </div>
-
-                                  <div className={styles.drawerPriceBlock}>
-                                    <span className={styles.drawerPrice}>
-                                      R {prodPrice.toFixed(2)}
-                                    </span>
-                                    <p className={styles.drawerTag}>Auto-filled</p>
-                                  </div>
-                                </button>
-                              );
-                            })
-                          )}
-                        </div>
-                      )}
-                    </td>
-
-                    {/* SKU - placeholder when empty */}
-                    <td>
-                      <input
-                        type="text"
-                        placeholder={item.placeholderSku || "ST-PEN-BLU-BOX"}
-                        value={item.sku}
-                        onChange={(e) => handleUpdateItem(item.id, "sku", e.target.value)}
-                        className={`${styles.tablePillInput} ${styles.tablePillCenter} ${styles.tablePillMono}`}
-                      />
-                    </td>
-
-                    {/* UNIT/PACK - placeholder when empty */}
-                    <td>
-                      <input
-                        type="text"
-                        placeholder={item.placeholderUnit || "Pack"}
-                        value={item.unit}
-                        onChange={(e) => handleUpdateItem(item.id, "unit", e.target.value)}
-                        className={`${styles.tablePillInput} ${styles.tablePillCenter}`}
-                      />
-                    </td>
-
-                    {/* QTY - placeholder when empty */}
-                    <td>
-                      <input
-                        type="text"
-                        placeholder={item.placeholderQty || "Box of 40"}
-                        value={item.qtyText}
-                        onChange={(e) => handleUpdateItem(item.id, "qtyText", e.target.value)}
-                        className={`${styles.tablePillInput} ${styles.tablePillCenter}`}
-                      />
-                    </td>
-
-                    {/* UNIT PRICE (R) - placeholder when empty */}
-                    <td>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        placeholder={item.placeholderUnitPrice || "180.00"}
-                        value={item.unit_price}
-                        onChange={(e) =>
-                          handleUpdateItem(item.id, "unit_price", e.target.value)
-                        }
-                        className={`${styles.tablePillInput} ${styles.tablePillCenter}`}
-                      />
-                    </td>
-
-                    {/* TOTAL - displays calculated total or placeholder */}
-                    <td>
-                      <div
-                        className={`${styles.tablePillInput} ${styles.tablePillCenter}`}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontWeight: 700,
-                          color: hasCustomPrice ? "#f8fafc" : "#64748b",
-                        }}
+                      <AdminButton
+                        size="sm"
+                        variant="primary"
+                        disabled={packModalImporting}
+                        onClick={() => handleImportPackItems(p.id)}
                       >
-                        {lineTotal}
-                      </div>
-                    </td>
-
-                    {/* Delete */}
-                    <td>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveItem(item.id)}
-                        disabled={lineItems.length <= 1}
-                        className={styles.deleteBtn}
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* 5. Bottom 2-Column Grid (Notes & Banking) */}
-      <div className={styles.bottomGrid}>
-        {/* Left Card: Notes & Settlement Terms */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h2 className={styles.cardTitle}>
-              <FileText size={16} color="#10b981" />
-              Notes &amp; Settlement Terms
-            </h2>
-          </div>
-
-          <FloatingTextarea
-            label="Terms & Delivery Notes"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            bgSurface="bg-[#0b121e]"
-          />
-        </div>
-
-        {/* Right Card: Official Banking Settlement Details */}
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <h2 className={styles.cardTitle}>
-              <FileText size={16} color="#10b981" />
-              Official Banking Settlement Details
-            </h2>
-          </div>
-
-          <div className={styles.bankingBox}>
-            <p className={styles.bankingText}>Bank: FNB / RMB</p>
-            <p className={styles.bankingText}>Account Holder: Pexpacks</p>
-            <p className={styles.bankingText}>Account Type: Current Account</p>
-            <p className={styles.bankingTextBold}>Account Number: 63215756991</p>
-            <p className={styles.bankingTextBold}>Branch Code: 250655</p>
+                        {packModalImporting ? "Importing..." : "Import Items"}
+                      </AdminButton>
+                    </div>
+                  ))}
+                </div>
+              ) : packModalSelectedSchool ? (
+                <div className={styles.modalEmpty}>No packs registered for this school yet.</div>
+              ) : null}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* MODAL: Import from CSV */}
+      {showCsvImportModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <div className={styles.modalTitle}>
+                <FileSpreadsheet size={18} />
+                Import Line Items from CSV / Table
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCsvImportModal(false)}
+                className={styles.modalCloseBtn}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className={styles.modalBody}>
+              <p className={styles.modalSubtitle}>
+                Paste comma-separated rows in format: <code>Item Title, Quantity, Price, SKU</code>
+              </p>
+
+              <textarea
+                className={styles.csvTextarea}
+                rows={8}
+                placeholder={`A4 72-Page Exercise Book, 50, 12.50, ST-EX-001\nStaedtler Noris HB Pencil (Box 12), 10, 48.00, ST-HB-12\nPritt Glue Stick 43g, 30, 29.50, ST-GL-43`}
+                value={csvText}
+                onChange={(e) => setCsvText(e.target.value)}
+              />
+
+              <div style={{ marginTop: "16px", display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+                <AdminButton variant="secondary" onClick={() => setShowCsvImportModal(false)}>
+                  Cancel
+                </AdminButton>
+                <AdminButton variant="primary" onClick={handleImportCsv} disabled={!csvText.trim()}>
+                  Import Lines
+                </AdminButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
