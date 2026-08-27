@@ -8,6 +8,7 @@
 --   3. Rebuild canonical_pack_items_view, public_pack_items_view, and
 --      admin_pack_items_view without legacy joins.
 --   4. Recreate get_public_school_pack RPC to ensure pure canonical item output.
+--   5. Archive legacy tables (stationery_items, stationery_packs) to legacy_archive schema.
 -- ============================================================================
 
 -- Step 1: Ensure master_products.icon column exists and is populated
@@ -163,3 +164,30 @@ as $$
 $$;
 
 grant execute on function public.get_public_school_pack(text) to anon, authenticated, service_role;
+
+-- Step 4: Archive Legacy Tables into 'legacy_archive' schema
+create schema if not exists legacy_archive;
+
+do $$
+begin
+  if exists (
+    select from pg_tables
+    where schemaname = 'public' and tablename = 'stationery_items'
+  ) then
+    alter table public.stationery_items set schema legacy_archive;
+  end if;
+
+  if exists (
+    select from pg_tables
+    where schemaname = 'public' and tablename = 'stationery_packs'
+  ) then
+    alter table public.stationery_packs set schema legacy_archive;
+  end if;
+
+  if exists (
+    select from pg_tables
+    where schemaname = 'public' and tablename = 'app_settings'
+  ) then
+    alter table public.app_settings set schema legacy_archive;
+  end if;
+end $$;
