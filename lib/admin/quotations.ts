@@ -96,6 +96,9 @@ export const quotationItemSchema = z.object({
   unit: z.string().trim().default("Each"),
   quantity: z.coerce.number().int().min(1, "Quantity must be at least 1"),
   unit_price: z.coerce.number().min(0, "Unit price must be positive"),
+  cost_price: z.coerce.number().min(0).nullable().optional(),
+  supplier_snapshot: z.string().trim().nullable().optional(),
+  availability_snapshot: z.string().trim().nullable().optional(),
 });
 
 export const quotationInputSchema = z.object({

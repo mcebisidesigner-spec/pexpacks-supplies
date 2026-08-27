@@ -21,6 +21,7 @@ import {
   Truck,
   CheckCircle2,
   X,
+  Calendar,
 } from "lucide-react";
 import {
   createQuotationAction,
@@ -133,7 +134,7 @@ export function QuotationBuilderForm({
 
   // Modals state
   const [showPackImportModal, setShowPackImportModal] = useState(false);
-  const [packModalSchools, setPackModalSchools] = useState<SchoolOption[]>(initialSchools);
+  const [packModalSchools] = useState<SchoolOption[]>(initialSchools);
   const [packModalSelectedSchool, setPackModalSelectedSchool] = useState<string>("");
   const [packModalPacks, setPackModalPacks] = useState<Array<{ id: string; title: string; price: number }>>([]);
   const [packModalLoadingPacks, setPackModalLoadingPacks] = useState(false);
@@ -351,7 +352,6 @@ export function QuotationBuilderForm({
         unit_price: it.unit_price,
       }));
 
-      // Replace empty lines or append
       setLineItems((prev) => {
         const existingValid = prev.filter((it) => it.item_title.trim().length > 0);
         return [...existingValid, ...newItems];
@@ -369,7 +369,6 @@ export function QuotationBuilderForm({
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      // Skip header row if present
       if (i === 0 && line.toLowerCase().includes("item") && line.toLowerCase().includes("price")) {
         continue;
       }
@@ -440,7 +439,6 @@ export function QuotationBuilderForm({
       return;
     }
 
-    // Filter out real items only
     const validItems = lineItems.filter((item) => item.item_title.trim().length > 0);
     if (validItems.length === 0) {
       setErrorMsg("Please add at least one line item with a title.");
@@ -503,6 +501,7 @@ export function QuotationBuilderForm({
             label="Prepared by"
             value={preparedBy}
             onChange={(e) => setPreparedBy(e.target.value)}
+            bgSurface="bg-[#070b12]"
           />
         </div>
       </div>
@@ -567,6 +566,7 @@ export function QuotationBuilderForm({
                       setIsSchoolDrawerOpen(true);
                     }}
                     onFocus={() => setIsSchoolDrawerOpen(true)}
+                    bgSurface="bg-[#0c1322]"
                   />
 
                   {isSchoolDrawerOpen && (
@@ -609,12 +609,14 @@ export function QuotationBuilderForm({
                   label="Recipient / Attn *"
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
+                  bgSurface="bg-[#0c1322]"
                 />
                 <FloatingInput
                   label="Recipient Email *"
                   type="email"
                   value={recipientEmail}
                   onChange={(e) => setRecipientEmail(e.target.value)}
+                  bgSurface="bg-[#0c1322]"
                 />
               </div>
 
@@ -623,9 +625,13 @@ export function QuotationBuilderForm({
                   label="Recipient Phone"
                   value={recipientPhone}
                   onChange={(e) => setRecipientPhone(e.target.value)}
+                  bgSurface="bg-[#0c1322]"
                 />
-                <div>
-                  <label className={styles.inputLabel}>Valid Until</label>
+                <div className={styles.fieldGroup}>
+                  <label className={styles.datePickerLabel}>
+                    <Calendar size={13} />
+                    Valid Until
+                  </label>
                   <DateField
                     value={validUntil}
                     onChange={(val) => setValidUntil(val)}
@@ -643,7 +649,7 @@ export function QuotationBuilderForm({
                 <Package size={16} className={styles.cardIcon} />
                 Quotation Line Items
               </div>
-              <div style={{ display: "flex", gap: "8px" }}>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                 <AdminButton
                   variant="secondary"
                   size="sm"
@@ -681,12 +687,12 @@ export function QuotationBuilderForm({
                 <table className={styles.itemsTable}>
                   <thead>
                     <tr>
-                      <th style={{ width: "38%" }}>ITEM DESCRIPTION</th>
+                      <th style={{ width: "36%" }}>ITEM DESCRIPTION</th>
                       <th style={{ width: "16%" }}>SKU</th>
                       <th style={{ width: "12%" }}>UNIT</th>
-                      <th style={{ width: "10%" }}>QTY</th>
-                      <th style={{ width: "12%" }}>PRICE (ZAR)</th>
-                      <th style={{ width: "12%" }}>TOTAL</th>
+                      <th style={{ width: "10%", textAlign: "center" }}>QTY</th>
+                      <th style={{ width: "12%", textAlign: "right" }}>PRICE (ZAR)</th>
+                      <th style={{ width: "12%", textAlign: "right" }}>TOTAL</th>
                       <th style={{ width: "40px" }}></th>
                     </tr>
                   </thead>
@@ -779,7 +785,7 @@ export function QuotationBuilderForm({
                           <td>
                             <input
                               type="text"
-                              className={styles.tableInput}
+                              className={`${styles.tableInput} ${styles.tableInputCenter}`}
                               placeholder="1"
                               value={item.qtyText}
                               onChange={(e) =>
@@ -792,7 +798,7 @@ export function QuotationBuilderForm({
                             <input
                               type="number"
                               step="0.01"
-                              className={styles.tableInput}
+                              className={`${styles.tableInput} ${styles.tableInputRight}`}
                               placeholder="0.00"
                               value={item.unit_price}
                               onChange={(e) =>
@@ -812,7 +818,7 @@ export function QuotationBuilderForm({
                               onClick={() => handleRemoveItem(item.id)}
                               title="Delete Row"
                             >
-                              <Trash2 size={13} />
+                              <Trash2 size={14} />
                             </button>
                           </td>
                         </tr>
@@ -835,7 +841,7 @@ export function QuotationBuilderForm({
 
             <div className={styles.cardBody}>
               {/* Quick Template Chips */}
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                 {STANDARD_NOTE_TEMPLATES.map((tmpl, idx) => (
                   <button
                     key={idx}
@@ -854,6 +860,7 @@ export function QuotationBuilderForm({
                 rows={4}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
+                bgSurface="bg-[#0c1322]"
               />
             </div>
           </div>
@@ -919,6 +926,7 @@ export function QuotationBuilderForm({
                     type="checkbox"
                     checked={vatEnabled}
                     onChange={(e) => setVatEnabled(e.target.checked)}
+                    className={styles.checkboxControl}
                   />
                   <span>Apply Standard 15% VAT</span>
                 </label>
@@ -935,23 +943,25 @@ export function QuotationBuilderForm({
               </div>
 
               <div className={styles.summaryActions}>
-                <AdminButton
-                  variant="primary"
-                  icon={busy ? <Loader2 size={14} className={styles.spinIcon} /> : <CheckCircle2 size={14} />}
+                <button
+                  type="button"
                   onClick={() => handleSubmit("sent")}
                   disabled={busy}
+                  className={styles.btnCreatePrimary}
                 >
+                  {busy ? <Loader2 size={15} className={styles.spinIcon} /> : <CheckCircle2 size={15} />}
                   Create &amp; Issue Quotation
-                </AdminButton>
+                </button>
 
-                <AdminButton
-                  variant="secondary"
-                  icon={busy ? <Loader2 size={14} className={styles.spinIcon} /> : <Save size={14} />}
+                <button
+                  type="button"
                   onClick={() => handleSubmit("draft")}
                   disabled={busy}
+                  className={styles.btnDraftSecondary}
                 >
+                  {busy ? <Loader2 size={15} className={styles.spinIcon} /> : <Save size={15} />}
                   Save as Draft
-                </AdminButton>
+                </button>
               </div>
             </div>
           </div>

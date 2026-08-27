@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q") || "";
 
-  if (!query || query.trim().length < 3) {
+  if (!query || query.trim().length < 2) {
     return NextResponse.json([]);
   }
 
@@ -23,16 +23,13 @@ export async function GET(request: Request) {
     const admin = createSupabaseAdminClient();
     const cleanQuery = query.trim();
 
-    // Fast ILIKE typeahead search across the canonical master product fields.
     const { data, error } = await admin
       .from("master_products")
       .select(
-        "id, sku, name, description, category, specification, current_selling_price",
+        "id, sku, name, description, category, specification, unit, availability, current_selling_price, latest_verified_cost, preferred_supplier:suppliers(name)",
       )
       .eq("active", true)
-      .or(
-        `sku.ilike.%${cleanQuery}%,name.ilike.%${cleanQuery}%,description.ilike.%${cleanQuery}%`,
-      )
+      .textSearch("search_vector", cleanQuery, { type: "websearch", config: "simple" })
       .order("name", { ascending: true })
       .limit(40);
 
@@ -41,14 +38,30 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const items = (data || []).map((item) => ({
-      id: item.id,
-      sku: item.sku,
-      title: item.name || "Stationery Item",
-      description: item.description || "",
-      category: item.category || item.specification || undefined,
-      unit_price: Number(item.current_selling_price ?? 0),
-    }));
+    const items = (data || []).map((item) => {
+      const supplier = Array.isArray(item.preferred_supplier)
+        ? item.preferred_supplier[0]
+        : item.preferred_supplier;
+      const unitPrice = Number(item.current_selling_price ?? 0);
+      const costPrice = item.latest_verified_cost == null ? null : Number(item.latest_verified_cost);
+      const marginAmount = costPrice == null ? null : unitPrice - costPrice;
+      const marginPercent = unitPrice > 0 && marginAmount != null ? (marginAmount / unitPrice) * 100 : null;
+
+      return {
+        id: item.id,
+        sku: item.sku,
+        title: item.name || "Stationery Item",
+        description: item.description || "",
+        category: item.category || item.specification || undefined,
+        unit: item.unit || "Each",
+        availability: item.availability || "available",
+        supplier: supplier?.name || null,
+        unit_price: unitPrice,
+        cost_price: costPrice,
+        margin_amount: marginAmount,
+        margin_percent: marginPercent,
+      };
+    });
 
     return NextResponse.json(items);
   } catch (err) {
