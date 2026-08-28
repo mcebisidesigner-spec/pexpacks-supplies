@@ -9,7 +9,6 @@ import {
   Calendar,
   CheckCircle2,
   Clock,
-  Eye,
   EyeOff,
   FileText,
   GraduationCap,
@@ -197,7 +196,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
-  const [visibilityMap, setVisibilityMap] = useState<Record<string, "visible" | "hidden">>({});
+  const [visibilityMap] = useState<Record<string, "visible" | "hidden">>({});
 
   const currentDateStr = useMemo(() => {
     return new Date().toLocaleDateString("en-ZA", {

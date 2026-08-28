@@ -45,7 +45,7 @@ async function insertOrderSnapshots(
     .select("id,sku,name,latest_verified_cost,current_selling_price")
     .in("name", names);
 
-  if (productError && productError.code !== "PGRST205") {
+  if (productError) {
     throw new Error(
       `Unable to resolve order products: ${productError.message}`,
     );
@@ -77,7 +77,7 @@ async function insertOrderSnapshots(
       pack_id: line.pack.packId ?? null,
       sku_snapshot:
         product?.sku ??
-        `LEGACY-${createHash("sha1").update(line.name.trim().toLowerCase()).digest("hex").slice(0, 10).toUpperCase()}`,
+        `UNMATCHED-${createHash("sha1").update(line.name.trim().toLowerCase()).digest("hex").slice(0, 10).toUpperCase()}`,
       product_name_snapshot: line.name,
       quantity: Math.max(1, Math.trunc(line.quantity)),
       unit_selling_price: unitPrice,
@@ -96,14 +96,6 @@ async function insertOrderSnapshots(
     .from("order_items" as never)
     .insert(snapshots as never);
   if (error) {
-    // Deployment compatibility: an app deployment can briefly precede the
-    // additive migration. Existing checkout remains available in that window.
-    if (error.code === "PGRST205") {
-      console.warn(
-        "[orders] order_items is not available yet; legacy order snapshot retained.",
-      );
-      return;
-    }
     throw new Error(`Unable to snapshot order items: ${error.message}`);
   }
 }

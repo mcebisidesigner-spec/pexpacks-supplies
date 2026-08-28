@@ -1,14 +1,14 @@
-﻿.button {
+.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--db-space-1);
   font-family: inherit;
   font-weight: 600;
-  border-radius: var(--db-radius-control);
+  border-radius: 9999px;
   cursor: pointer;
   text-decoration: none;
-  transition: all var(--db-transition);
+  transition: all var(--db-transition, 150ms ease);
   white-space: nowrap;
   user-select: none;
   border: 1px solid transparent;
@@ -17,7 +17,10 @@
 }
 
 .button:focus-visible {
-  box-shadow: var(--db-focus-ring);
+  outline: 2px solid var(--db-brand);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(7, 11, 18, 0.9);
+  z-index: 1;
 }
 
 .button:disabled,
@@ -29,35 +32,43 @@
 
 /* ── Sizes ── */
 .sm {
-  height: var(--db-control-height-sm);
-  padding: 0 10px;
+  height: var(--db-control-height-sm, 32px);
+  padding: 0 14px;
   font-size: 0.75rem;
 }
 
 .md {
-  height: var(--db-control-height);
-  padding: 0 14px;
+  height: var(--db-control-height, 38px);
+  padding: 0 18px;
   font-size: 0.8125rem;
 }
 
 .lg {
-  height: var(--db-control-height-lg);
-  padding: 0 20px;
+  height: var(--db-control-height-lg, 44px);
+  padding: 0 24px;
   font-size: 0.9375rem;
 }
 
 /* ── Variants ── */
 .primary {
-  background: linear-gradient(135deg, var(--db-brand) 0%, var(--db-brand-strong) 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #ffffff;
-  border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
 }
 
 .primary:hover {
-  background: linear-gradient(135deg, var(--db-brand) 0%, var(--db-brand-hover) 100%);
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  color: #030712;
+  border-color: #34d399;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
   transform: translateY(-1px);
+}
+
+.primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
 }
 
 .secondary {
@@ -69,7 +80,8 @@
 .secondary:hover {
   background-color: var(--db-surface-inner);
   border-color: var(--db-text-subtle);
-  color: #ffffff;
+  color: var(--db-text-primary);
+  transform: translateY(-1px);
 }
 
 .outline {
@@ -81,7 +93,7 @@
 .outline:hover {
   background-color: var(--db-surface-hover);
   border-color: var(--db-border-strong);
-  color: #ffffff;
+  color: var(--db-text-primary);
 }
 
 .teal {
@@ -92,6 +104,7 @@
 
 .teal:hover {
   background-color: rgba(45, 212, 191, 0.22);
+  transform: translateY(-1px);
 }
 
 .danger {
@@ -102,7 +115,8 @@
 
 .danger:hover {
   background-color: rgba(239, 68, 68, 0.22);
-  color: #ffffff;
+  color: var(--db-text-primary);
+  transform: translateY(-1px);
 }
 
 .ghost {
@@ -144,7 +158,7 @@
 
 .iconRed:hover {
   background-color: rgba(239, 68, 68, 0.25);
-  color: #ffffff;
+  color: var(--db-text-primary);
 }
 
 .iconTeal {

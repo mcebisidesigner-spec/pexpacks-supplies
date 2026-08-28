@@ -32,20 +32,12 @@ function assertNoError(error: DatabaseError, context: string) {
   if (!error) return;
   if (isOperationsSchemaUnavailable(error)) {
     throw new Error(
-      `${context}: operations database setup is pending. Apply Supabase migration 00030_operations_foundation.sql.`,
+      `${context}: canonical operations database object is unavailable.`,
     );
   }
   throw new Error(`${context}: ${error.message || "Unknown database error"}`);
 }
 
-export async function isOperationsSchemaReady() {
-  const { error } = await db()
-    .from("suppliers")
-    .select("id", { count: "exact", head: true });
-  if (isOperationsSchemaUnavailable(error)) return false;
-  assertNoError(error, "Unable to verify operations database setup");
-  return true;
-}
 
 export type MasterProductRow = {
   id: string;
@@ -71,8 +63,8 @@ export async function listMasterProducts(options: {
   pageSize?: number;
   sort?: string;
   order?: "asc" | "desc";
-} | string = {}, legacyLimit = 100) {
-  const opts = typeof options === "string" ? { query: options, pageSize: legacyLimit } : options;
+} | string = {}) {
+  const opts = typeof options === "string" ? { query: options } : options;
   const page = Math.max(1, opts.page || 1);
   const pageSize = Math.max(10, Math.min(100, opts.pageSize || 25));
   const from = (page - 1) * pageSize;
@@ -103,9 +95,6 @@ export async function listMasterProducts(options: {
     .range(from, to);
 
   const { data, error, count } = await request;
-  if (isOperationsSchemaUnavailable(error)) {
-    return { products: [] as MasterProductRow[], total: 0, page: 1, pageCount: 1 };
-  }
   assertNoError(error, "Unable to load the master catalogue");
   const total = count ?? data?.length ?? 0;
   return {
@@ -199,7 +188,6 @@ export async function listSuppliers() {
       "id,code,name,contact_name,email,telephone,lead_time_days,payment_terms,active,supplier_offers(count)",
     )
     .order("name");
-  if (isOperationsSchemaUnavailable(error)) return [] as SupplierRow[];
   assertNoError(error, "Unable to load suppliers");
   return (data ?? []).map((row: any) => ({
     ...row,
@@ -255,7 +243,6 @@ export async function listSupplierOffers() {
     .eq("active", true)
     .order("created_at", { ascending: false })
     .limit(250);
-  if (isOperationsSchemaUnavailable(error)) return [] as SupplierOfferRow[];
   assertNoError(error, "Unable to load supplier offers");
   return (data ?? []) as SupplierOfferRow[];
 }
@@ -340,12 +327,6 @@ export async function listPricingReview() {
         )
         .eq("active", true),
     ]);
-  if (
-    isOperationsSchemaUnavailable(error) ||
-    isOperationsSchemaUnavailable(rulesError)
-  ) {
-    return [] as PricingReviewRow[];
-  }
   assertNoError(error, "Unable to load pricing review");
   assertNoError(rulesError, "Unable to load pricing rules");
   const rules = (rulesData ?? []) as PricingRule[];
@@ -382,7 +363,6 @@ export async function listPricingRules() {
     .from("pricing_rules")
     .select("id,name,scope,scope_value,method,rate,rounding_increment,priority,active")
     .order("priority");
-  if (isOperationsSchemaUnavailable(error)) return [] as PricingRule[];
   assertNoError(error, "Unable to load pricing rules");
   return (data ?? []) as PricingRule[];
 }
@@ -513,7 +493,6 @@ export async function listProcurementRequirements() {
     .select("id,season_id,product_id,sku,product_name,category,required_quantity,requested_quantity,supplier_confirmed_quantity,secured_quantity,received_quantity,allocated_quantity,outstanding_quantity,procurement_coverage_percent,status,updated_at")
     .order("outstanding_quantity", { ascending: false })
     .order("product_name");
-  if (isOperationsSchemaUnavailable(error)) return [] as ProcurementRow[];
   assertNoError(error, "Unable to load procurement requirements");
   return (data ?? []) as ProcurementRow[];
 }
@@ -586,7 +565,6 @@ export async function listSupplierPurchaseOrders() {
     )
     .order("created_at", { ascending: false })
     .limit(100);
-  if (isOperationsSchemaUnavailable(error)) return [] as PurchaseOrderRow[];
   assertNoError(error, "Unable to load supplier purchase orders");
   return (data ?? []) as PurchaseOrderRow[];
 }
@@ -687,13 +665,6 @@ export async function listFulfilmentRecords() {
     client.from("order_readiness_view").select("order_id,readiness_percent"),
     client.from("packing_records").select("id,order_id,status"),
   ]);
-  if (
-    isOperationsSchemaUnavailable(error) ||
-    isOperationsSchemaUnavailable(readinessError) ||
-    isOperationsSchemaUnavailable(packingError)
-  ) {
-    return [] as FulfilmentRow[];
-  }
   assertNoError(error, "Unable to load fulfilment records");
   assertNoError(readinessError, "Unable to load order readiness");
   assertNoError(packingError, "Unable to load packing records");
@@ -797,7 +768,6 @@ export async function listOperationalTasks() {
     .order("status")
     .order("due_at", { ascending: true, nullsFirst: false })
     .limit(250);
-  if (isOperationsSchemaUnavailable(error)) return [] as TaskRow[];
   assertNoError(error, "Unable to load operational tasks");
   return (data ?? []) as TaskRow[];
 }
@@ -846,7 +816,6 @@ export async function getTask(id: string) {
     .select("id,title,description,entity_type,entity_id,status,priority,assigned_to,due_at,created_at")
     .eq("id", id)
     .single();
-  if (isOperationsSchemaUnavailable(error)) return null;
   assertNoError(error, "Unable to load the task");
   return data as TaskRow | null;
 }
@@ -898,8 +867,6 @@ export async function listPurchaseOrdersForReceiving() {
     `)
     .in("status", ["sent", "confirmed", "partially_received"])
     .order("created_at", { ascending: false });
-  if (isOperationsSchemaUnavailable(error))
-    return [] as PurchaseOrderWithItems[];
   assertNoError(error, "Unable to load purchase orders");
   return (data ?? []) as PurchaseOrderWithItems[];
 }
@@ -910,8 +877,6 @@ export async function listSupplierReceipts(purchaseOrderId: string) {
     .select("id,purchase_order_id,reference,received_by,received_at,notes")
     .eq("purchase_order_id", purchaseOrderId)
     .order("received_at", { ascending: false });
-  if (isOperationsSchemaUnavailable(error))
-    return [] as SupplierReceiptRow[];
   assertNoError(error, "Unable to load supplier receipts");
   return (data ?? []) as SupplierReceiptRow[];
 }
@@ -1009,7 +974,6 @@ export async function listApprovals(status?: string) {
   }
   
   const { data, error } = await query.limit(250);
-  if (isOperationsSchemaUnavailable(error)) return [] as ApprovalRow[];
   assertNoError(error, "Unable to load approvals");
   return (data ?? []) as ApprovalRow[];
 }
@@ -1330,7 +1294,6 @@ export async function listTaskComments(taskId: string) {
     .select("id,task_id,author_id,body,created_at,updated_at")
     .eq("task_id", taskId)
     .order("created_at", { ascending: true });
-  if (isOperationsSchemaUnavailable(error)) return [] as TaskCommentRow[];
   assertNoError(error, "Unable to load task comments");
   return (data ?? []) as TaskCommentRow[];
 }
@@ -1548,7 +1511,6 @@ export async function listOrderItems(orderIdOrRef: string) {
     .select("id,order_id,product_id,pack_id,sku_snapshot,product_name_snapshot,description_snapshot,quantity,unit_selling_price,line_total,estimated_unit_cost,expected_margin,pricing_version,school_name_snapshot,grade_snapshot,created_at")
     .eq("order_id", targetOrderId)
     .order("created_at");
-  if (isOperationsSchemaUnavailable(error)) return [];
   assertNoError(error, "Unable to load order items");
   return (data ?? []) as {
     id: string;
@@ -1580,7 +1542,6 @@ export async function listPriceHistory(limit = 100) {
     .select("id,product_id,supplier_id,previous_cost,new_cost,previous_selling_price,new_selling_price,previous_margin,new_margin,reason,source,changed_by,approved_by,created_at")
     .order("created_at", { ascending: false })
     .limit(limit);
-  if (isOperationsSchemaUnavailable(error)) return [];
   assertNoError(error, "Unable to load price history");
   return (data ?? []) as {
     id: string;

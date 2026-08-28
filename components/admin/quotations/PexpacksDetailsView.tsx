@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useTransition } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import {
   LayoutGrid,
@@ -12,15 +12,11 @@ import {
   CheckCircle2,
   AlertCircle,
   Info,
-  ExternalLink,
   ShieldCheck,
-  Calendar,
   CreditCard,
-  Phone,
   Mail,
   MapPin,
   Clock,
-  Sparkles,
 } from "lucide-react";
 import type {
   QuotationAllSettings,
@@ -36,7 +32,6 @@ import {
   updateBusinessAndAddressAction,
   updateBankingDetailsAction,
   updateNotesAndTermsAction,
-  updateQuotationDefaultsAction,
 } from "@/app/admin/quotations/pexpacks-details/actions";
 import styles from "./PexpacksDetails.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -59,7 +54,7 @@ export function PexpacksDetailsView({ initialSettings, systemInfo }: PexpacksDet
   const [contacts, setContacts] = useState<QuotationContacts>(initialSettings.contacts);
   const [banking, setBanking] = useState<QuotationBanking>(initialSettings.banking);
   const [notesTerms, setNotesTerms] = useState<QuotationNotesTerms>(initialSettings.notesTerms);
-  const [defaults, setDefaults] = useState<QuotationDefaults>(initialSettings.defaults);
+  const [defaults] = useState<QuotationDefaults>(initialSettings.defaults);
 
   // Dirty detection
   const [isAddressDirty, setIsAddressDirty] = useState(false);

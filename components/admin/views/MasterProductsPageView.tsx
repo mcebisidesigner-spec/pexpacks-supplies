@@ -118,6 +118,7 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       key: "actions",
       header: "Actions",
       align: "right",
+      sticky: "right",
       width: "90px",
       render: (row) => {
         return (

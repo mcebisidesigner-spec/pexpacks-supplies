@@ -156,8 +156,8 @@
   --a-red-border: var(--db-danger-border);
   --a-radius: var(--db-radius-panel);
   --a-radius-sm: var(--db-radius-control);
-  --a-btn-h: var(--db-control-height);
-  --a-btn-radius: var(--db-radius-control);
+  --a-btn-h: var(--db-control-height, 38px);
+  --a-btn-radius: 9999px;
   --a-input-h: var(--db-control-height);
   --a-input-radius: var(--db-radius-control);
   --a-badge-radius: var(--db-radius-xs);
@@ -759,4 +759,87 @@
 .db-focus-visible:focus-visible {
   outline: none;
   box-shadow: var(--db-focus-ring);
+}
+
+/* ── Workspace layout (12-column grid architecture) ── */
+.db-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: var(--db-space-5);
+  width: 100%;
+}
+
+.db-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--db-space-2);
+  flex-wrap: wrap;
+}
+
+.db-toolbar-left,
+.db-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--db-space-1-5);
+  flex-wrap: wrap;
+}
+
+.db-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--db-space-4);
+}
+
+.db-grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--db-space-4);
+}
+
+.db-span-8 { grid-column: span 8 / span 8; }
+.db-span-6 { grid-column: span 6 / span 6; }
+.db-span-4 { grid-column: span 4 / span 4; }
+.db-span-3 { grid-column: span 3 / span 3; }
+
+.db-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: var(--db-space-5);
+  align-items: start;
+}
+
+.db-main-panel {
+  min-width: 0;
+}
+
+.db-side-panel {
+  min-width: 0;
+}
+
+.db-sticky-side {
+  position: sticky;
+  top: var(--db-space-3);
+}
+
+@media (max-width: 1024px) {
+  .db-split {
+    grid-template-columns: 1fr;
+  }
+  .db-sticky-side {
+    position: static;
+  }
+}
+
+/* ── Data table helper: sticky header within scroll container ── */
+.db-table-scroll {
+  width: 100%;
+  overflow: auto;
+  max-height: 70vh;
+}
+
+.db-table-scroll thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }

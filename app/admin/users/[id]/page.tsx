@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import {
@@ -57,7 +56,6 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
   if (!user) notFound();
 
   const banned = isBanned(user);
-  const canEdit = hasPermission(session, "users.edit");
   const canDeactivate = hasPermission(session, "users.deactivate");
   const canDelete = hasPermission(session, "users.delete");
   const isSelf = user.id === session.user.id;

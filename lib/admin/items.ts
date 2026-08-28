@@ -529,12 +529,13 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
 
   if (directMatch) return directMatch as unknown as ItemRow;
 
-  // 3. Fallback: match all items in pack items view by slugified name
+  // 3. Match a small ordered slice by slugified name for older item links.
   const { data: allItems } = await admin
     .from("admin_pack_items_view" as never)
     .select(
       "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
-    );
+    )
+    .limit(100);
 
   if (allItems) {
     const matched = allItems.find((rawItem) => {
@@ -552,31 +553,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
     if (matched) return matched as unknown as ItemRow;
   }
 
-  // 4. Dynamic fallback from URL slug so the clicked product name is ALWAYS the H1
-  const formattedTitle = decoded
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-
-  return {
-    id: decoded,
-    pack_id: "",
-    product_id: decoded,
-    name: formattedTitle,
-    sku: `PEX-${slugified.slice(0, 10).toUpperCase()}`,
-    category: "Stationery",
-    brand: null,
-    description: null,
-    specification: null,
-    quantity: 1,
-    unit_price: 24.50,
-    unit_cost: 16.00,
-    barcode: null,
-    pack_inclusions_count: 0,
-    icon: inferIcon(formattedTitle),
-    visible: true,
-    sort_order: 0,
-    slug: slugified,
-  } as unknown as ItemRow;
+  return null;
 }
 
 export async function syncPackTotalPrice(packId: string): Promise<number> {

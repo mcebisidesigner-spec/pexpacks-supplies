@@ -105,6 +105,7 @@ export function FulfilmentPageView() {
       key: "actions",
       header: "ACTIONS",
       align: "right",
+      sticky: "right",
       width: "80px",
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>

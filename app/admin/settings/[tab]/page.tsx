@@ -6,6 +6,6 @@ interface SettingsTabRouteProps {
   params: Promise<{ tab: string }>;
 }
 
-export default async function SettingsTabRoutePage({ params }: SettingsTabRouteProps) {
+export default async function SettingsTabRoutePage() {
   redirect("/admin/settings");
 }

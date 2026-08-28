@@ -349,12 +349,12 @@
 
 .saveBtn {
   padding: 0.625rem 1.25rem;
-  background: linear-gradient(135deg, var(--db-brand) 0%, var(--db-brand-strong) 100%);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  border-radius: 8px;
-  color: #ffffff;
+  background: linear-gradient(180deg, var(--db-brand) 0%, var(--db-brand-strong) 100%);
+  border: 1px solid var(--db-brand-strong);
+  border-radius: var(--db-radius-control);
+  color: var(--db-canvas);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
   transition: all 0.15s ease;

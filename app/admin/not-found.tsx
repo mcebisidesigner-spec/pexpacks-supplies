@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowLeft, AlertCircle, LayoutDashboard } from "lucide-react";
-import styles from "./admin.module.css";
 
 export default function AdminNotFound() {
   return (

@@ -1,6 +1,6 @@
 "use server";
 
-import { updateSystemSetting, exportSystemSettings, getSystemSettings } from "@/lib/admin/system-settings";
+import { updateSystemSetting, exportSystemSettings } from "@/lib/admin/system-settings";
 import { requireAdmin, requireSuperAdmin } from "@/lib/admin/rbac";
 
 export async function updateSystemSettingAction(

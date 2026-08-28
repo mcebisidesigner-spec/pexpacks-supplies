@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { deleteItemAction } from "@/app/admin/items/actions";
-import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { formatCurrency } from "@/lib/formatCurrency";
 import type { ItemRow } from "@/lib/admin/items";
 import styles from "./ItemsManager.module.css";

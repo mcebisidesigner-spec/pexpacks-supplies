@@ -1,5 +1,4 @@
-﻿import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
-import { isOperationsSchemaReady } from "@/lib/admin/operations";
+import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import { listPacksForFilter } from "@/lib/admin/packs";
 import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
@@ -7,9 +6,6 @@ import {
   createMasterProductAction,
   importMasterProductsAction,
 } from "../../operations-actions";
-import shared from "../../schools/schools.module.css";
-import styles from "../../operations.module.css";
-import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import itemStyles from "@/components/admin/packs/ItemsManager.module.css";
 
@@ -20,10 +16,7 @@ export const metadata = {
 };
 
 export default async function AddItemPage() {
-  const [session, schemaReady] = await Promise.all([
-    requireAdmin({ permission: "catalogue.view" }),
-    isOperationsSchemaReady(),
-  ]);
+  const session = await requireAdmin({ permission: "catalogue.view" });
   const canManage = hasPermission(session, "catalogue.manage");
   const canImportExisting = hasPermission(session, "items.import");
 
@@ -36,7 +29,7 @@ export default async function AddItemPage() {
         subtitle="Digital stationery products that can be reused across school packs."
       />
 
-      {schemaReady && canManage ? (
+      {canManage ? (
         <section className={adminStyles.formPanel}>
           <h2>Add catalogue product</h2>
           <form action={createMasterProductAction} className={adminStyles.formGrid}>
@@ -84,7 +77,7 @@ export default async function AddItemPage() {
         </section>
       ) : null}
 
-      {schemaReady && canManage ? (
+      {canManage ? (
         <section className={adminStyles.formPanel}>
           <h2>Bulk CSV catalogue importer</h2>
           <form
@@ -108,7 +101,7 @@ export default async function AddItemPage() {
         </section>
       ) : null}
 
-      {!schemaReady && canImportExisting ? (
+      {!canManage && canImportExisting ? (
         <section
           id="bulk-stationery-import"
           aria-label="Bulk CSV stationery import"

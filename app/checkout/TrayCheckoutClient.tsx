@@ -167,8 +167,6 @@ export function TrayCheckoutClient() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [orderSubmitted, setOrderSubmitted] = useState(false)
-  const [orderReference, setOrderReference] = useState<string | null>(null)
   const idempotencyKeyRef = useRef<string | null>(null)
 
   const [mobileSectionSummaryOpen, setMobileSectionSummaryOpen] = useState<
@@ -525,39 +523,7 @@ export function TrayCheckoutClient() {
       setSubmitting(false)
     }
   }
-
-  if (orderSubmitted && orderReference) {
-    return (
-      <div className={styles.checkoutShell}>
-        <div className={styles.emptyCheckout}>
-          <p className={styles.checkoutKicker}>Order Confirmed</p>
-          <h1>Thank you for your order!</h1>
-          <p>Your order reference is <strong>{orderReference}</strong>.</p>
-          <p>We will be in touch shortly with payment and delivery details.</p>
-          <Button href="/schools" variant="primary" size="lg">
-            Browse more packs
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
-  if (packs.length === 0) {
-    return (
-      <div className={styles.checkoutShell}>
-        <div className={styles.emptyCheckout}>
-          <p className={styles.checkoutKicker}>Checkout</p>
-          <h1>No packs in your order.</h1>
-          <p>Choose a school pack before checkout.</p>
-          <Button href="/schools" variant="primary" size="lg">
-            Find a school pack
-          </Button>
-        </div>
-      </div>
-    )
-  }
-
-  return (
+`r`n  return (
     <div className={styles.checkoutShell}>
       <header className={styles.checkoutHeader}>
         <button

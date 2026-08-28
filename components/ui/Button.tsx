@@ -38,7 +38,6 @@ export function Button({
   const classNames = [styles.button, styles[variant], styles[size], className]
     .filter(Boolean)
     .join(" ");
-  const iconTone = variant === "primary" ? "white" : "orange";
 
   const content = loading ? (
     <span className={styles.spinner} aria-hidden="true" />

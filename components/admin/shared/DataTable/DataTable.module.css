@@ -10,23 +10,29 @@
 
 .tableWrapper {
   width: 100%;
-  overflow-x: auto;
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
+  max-height: 70vh;
+  position: relative;
 }
 
 .table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: left;
   font-size: 0.8125rem;
 }
 
 .table thead {
-  background-color: rgba(15, 23, 42, 0.7);
-  border-bottom: 1px solid var(--db-border);
+  position: sticky;
+  top: 0;
+  z-index: 3;
 }
 
-.table th {
+.table thead th {
+  background-color: var(--db-surface-elevated);
+  border-bottom: 1px solid var(--db-border);
   padding: 14px 18px;
   font-size: 0.75rem;
   font-weight: 700;
@@ -85,6 +91,45 @@
   color: var(--db-text-secondary);
   vertical-align: middle;
 }
+
+/* ── Sticky locked columns ── */
+.stickyRight {
+  position: sticky;
+  right: 0;
+  background-color: var(--db-surface);
+  box-shadow: -12px 0 12px -4px rgba(0, 0, 0, 0.5);
+}
+
+.stickyRightHeader {
+  position: sticky;
+  right: 0;
+  background-color: var(--db-surface-elevated);
+  box-shadow: -12px 0 12px -4px rgba(0, 0, 0, 0.5);
+}
+
+.stickyLeft {
+  position: sticky;
+  left: 0;
+  background-color: var(--db-surface);
+  box-shadow: 12px 0 12px -4px rgba(0, 0, 0, 0.5);
+}
+
+.stickyLeftHeader {
+  position: sticky;
+  left: 0;
+  background-color: var(--db-surface-elevated);
+  box-shadow: 12px 0 12px -4px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Column width presets ── */
+.col80  { width: 80px; }
+.col90  { width: 90px; }
+.col110 { width: 110px; }
+.col120 { width: 120px; }
+.col130 { width: 130px; }
+.col140 { width: 140px; }
+.col150 { width: 150px; }
+.col160 { width: 160px; }
 
 /* ── Alignments ── */
 .alignLeft {

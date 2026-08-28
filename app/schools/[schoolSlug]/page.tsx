@@ -8,7 +8,6 @@ import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholde
 import { Button } from "@/components/ui/Button";
 import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
 import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
-import type { GradePack, School } from "@/data/schools";
 import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { schoolPageMultiGraphSchema } from "@/lib/schema";

@@ -51,7 +51,7 @@ export function MustChangePasswordModal({
         setSuccessMessage("Your permanent password has been established! Redirecting you to sign in with your new password...");
         setTimeout(() => {
           setIsOpen(false);
-          window.location.href = "/pex-console-secure?status=password_updated";
+          router.push("/pex-console-secure?status=password_updated");
         }, 1400);
       } else {
         setErrorMessage(res.message || "Failed to set permanent password.");

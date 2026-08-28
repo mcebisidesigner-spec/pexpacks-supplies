@@ -1,5 +1,5 @@
 import { getGradeOrder } from "@/lib/grade-utils";
-import type { GradePack, SchoolPackItem } from "@/data/schools";
+import type { GradePack } from "@/data/schools";
 
 export function isHighSchool(name: string): boolean {
   if (!name) return false;

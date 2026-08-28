@@ -71,7 +71,7 @@ export function SchoolPackCreateForm({
   });
   const [lines, setLines] = useState<PackLine[]>([]);
   const [selectedGrade, setSelectedGrade] = useState<string>(initialGrade);
-  const [customPrice, setCustomPrice] = useState<string>("");
+  const [customPrice] = useState<string>("");
   const [page, setPage] = useState(1);
   const itemsInputRef = useRef<HTMLInputElement>(null);
 

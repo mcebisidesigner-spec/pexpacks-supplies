@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Plus, FileSpreadsheet, Briefcase, Package, ShoppingCart } from "lucide-react";
-import styles from "./DashboardClient.module.css";
+import { Plus, Briefcase, ShoppingCart } from "lucide-react";
 import adminStyles from "@/app/admin/admin.module.css";
 
 export function QuickCreate() {

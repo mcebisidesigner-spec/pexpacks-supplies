@@ -7,7 +7,6 @@ import { logoutAction } from "@/app/actions/auth";
 import { HeaderOrderIcon } from "@/components/order/HeaderOrderIcon";
 import { TrackPackIcon } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/Tooltip";
-import headerStyles from "./Header.module.css";
 import styles from "./HeaderAccountControls.module.css";
 
 export type AdminUser = {

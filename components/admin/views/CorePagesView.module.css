@@ -1,4 +1,4 @@
-﻿/* ===================================================
+/* ===================================================
    CorePagesView — UNIQUE styles only
    Shared classes (450+) live in admin.module.css.
    Import adminStyles for those.
@@ -85,23 +85,27 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: var(--a-btn-h, 36px);
-  padding: 0 14px;
-  background: var(--a-accent-strong, var(--db-brand-strong));
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  border-radius: var(--a-btn-radius, 8px);
+  height: var(--a-btn-h, 38px);
+  padding: 0 20px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: 9999px;
   color: #ffffff;
   font-family: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: all var(--a-transition, 140ms ease);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  transition: all var(--a-transition, 150ms ease);
 }
 
 .primaryBtn:hover {
-  background: var(--a-accent-hover, var(--db-brand-hover));
-  box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  color: #030712;
+  border-color: #34d399;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+  transform: translateY(-1px);
 }
 
 .primaryBtn:disabled {
@@ -115,24 +119,25 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: var(--a-btn-h, 36px);
-  padding: 0 14px;
+  height: var(--a-btn-h, 38px);
+  padding: 0 18px;
   background: var(--a-surface-2, var(--db-surface-inner));
   border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.6));
-  border-radius: var(--a-btn-radius, 8px);
+  border-radius: 9999px;
   color: var(--a-text-2, var(--db-text-secondary));
   font-family: inherit;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: all var(--a-transition, 140ms ease);
+  transition: all var(--a-transition, 150ms ease);
 }
 
 .secondaryBtn:hover {
   background: var(--a-surface-3, var(--db-border));
   border-color: var(--a-text-4, var(--db-text-subtle));
   color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .secondaryBtn:disabled {
@@ -196,9 +201,11 @@
 /* ── Data Table ── */
 .dataTable {
   width: 100%;
-  border-collapse: collapse;
+  min-width: 700px;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: left;
-  font-size: 12px;
+  font-size: 0.8125rem;
 }
 
 .dataRow {

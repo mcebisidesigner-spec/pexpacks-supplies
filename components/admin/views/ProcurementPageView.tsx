@@ -1,16 +1,11 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import {
-  AlertTriangle,
-  Clock,
-  Truck,
-} from "lucide-react";
-import styles from "./CorePagesView.module.css";
+import { AlertTriangle, Clock, MoreVertical, Truck } from "lucide-react";
+import styles from "./ProcurementPageView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
-import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 
 interface KanbanCard {
@@ -19,14 +14,17 @@ interface KanbanCard {
   supplier: string;
   itemsCount: number;
   value: number;
+  assignee: string;
+  dueLabel: string;
+  category: string;
   stage: "Needs Procurement" | "Partially Secured" | "Fully Secured" | "Completed";
 }
 
 const SEED_KANBAN: KanbanCard[] = [
-  { id: "po-1", poNumber: "PO-10056", supplier: "Makro Trade", itemsCount: 68, value: 54780.00, stage: "Needs Procurement" },
-  { id: "po-2", poNumber: "PO-10057", supplier: "BSC Stationers", itemsCount: 92, value: 82140.00, stage: "Partially Secured" },
-  { id: "po-3", poNumber: "PO-10058", supplier: "Makro Trade", itemsCount: 34, value: 38431.00, stage: "Fully Secured" },
-  { id: "po-4", poNumber: "PO-10059", supplier: "BSC Stationers", itemsCount: 31, value: 28100.12, stage: "Completed" },
+  { id: "po-1", poNumber: "PO-10056", supplier: "Makro Trade", itemsCount: 68, value: 54780.0, assignee: "MN", dueLabel: "Due 02 Sep", category: "Exclusive", stage: "Needs Procurement" },
+  { id: "po-2", poNumber: "PO-10057", supplier: "BSC Stationers", itemsCount: 92, value: 82140.0, assignee: "JW", dueLabel: "Due 05 Sep", category: "Stationery", stage: "Partially Secured" },
+  { id: "po-3", poNumber: "PO-10058", supplier: "Makro Trade", itemsCount: 34, value: 38431.0, assignee: "MN", dueLabel: "Due 09 Sep", category: "Exclusive", stage: "Fully Secured" },
+  { id: "po-4", poNumber: "PO-10059", supplier: "BSC Stationers", itemsCount: 31, value: 28100.12, assignee: "JW", dueLabel: "Due 12 Sep", category: "Stationery", stage: "Completed" },
 ];
 
 const STAGES: KanbanCard["stage"][] = [
@@ -121,18 +119,31 @@ export function ProcurementPageView() {
                     className={styles.kanbanCard}
                     onClick={() => moveStage(card.id)}
                   >
-                    <div className={styles.cardTopRow}>
+                    <div className={styles.cardZoneTop}>
                       <span className={styles.poNumber}>{card.poNumber}</span>
-                      <StatusBadge
-                        status={card.stage === "Completed" ? "Completed" : card.stage === "Needs Procurement" ? "Urgent" : "In Progress"}
-                        tone={card.stage === "Completed" ? "emerald" : card.stage === "Needs Procurement" ? "red" : "amber"}
-                      />
+                      <button
+                        type="button"
+                        className={styles.optionsButton}
+                        aria-label={`Options for ${card.poNumber}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <MoreVertical size={14} />
+                      </button>
                     </div>
-                    <div className={styles.supplierName}>{card.supplier}</div>
-                    <div className={styles.boardCardFooter}>
-                      <span>{card.itemsCount} SKU units</span>
+                    <div className={styles.cardZoneMiddle}>
+                      <span className={styles.supplierName}>{card.supplier}</span>
+                      <span className={styles.supplierMeta}>{card.category}</span>
+                    </div>
+                    <div className={styles.cardZoneFooter}>
+                      <span className={styles.footerMeta}>
+                        <span className={styles.footerAvatar} aria-hidden="true">
+                          {card.assignee}
+                        </span>
+                        <span className={styles.footerDate}>{card.dueLabel}</span>
+                      </span>
                       <span className={styles.cardValue}>
-                        R {card.value.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
+                        {card.itemsCount} SKU · R{" "}
+                        {card.value.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}
                       </span>
                     </div>
                   </div>

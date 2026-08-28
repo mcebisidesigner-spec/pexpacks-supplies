@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import shared from "@/app/admin/schools/schools.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 
 interface ItemFilterFormProps {

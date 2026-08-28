@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { ComponentType } from "react";
 
 const RetailVsPexpacksSlider = dynamic(
   () =>

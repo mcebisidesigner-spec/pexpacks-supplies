@@ -1,0 +1,201 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--db-space-2-5);
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--db-space-2);
+}
+
+.kanbanGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--db-space-2);
+  align-items: start;
+}
+
+.kanbanColumn {
+  background: var(--db-surface);
+  border: 1px solid var(--db-border-muted);
+  border-radius: var(--db-radius-card);
+  padding: var(--db-space-1-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--db-space-1-5);
+}
+
+.kanbanColumnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.columnTitle {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--db-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.columnCount {
+  padding: 2px 7px;
+  background: var(--db-canvas);
+  border-radius: var(--db-radius-pill);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--db-text-subtle);
+}
+
+.kanbanCardsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--db-space-1);
+  min-height: 80px;
+}
+
+.kanbanCard {
+  background: var(--db-surface-inner);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-sm);
+  padding: var(--db-space-1-5);
+  cursor: pointer;
+  transition: transform var(--db-transition-fast), border-color var(--db-transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--db-space-1);
+}
+
+.kanbanCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--db-info);
+}
+
+.cardZoneTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--db-space-1);
+}
+
+.poNumber {
+  font-size: var(--db-font-table);
+  font-weight: 700;
+  color: var(--db-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.optionsButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--db-text-subtle);
+  border-radius: var(--db-radius-xs);
+  cursor: pointer;
+  transition: color var(--db-transition-fast), background-color var(--db-transition-fast);
+}
+
+.optionsButton:hover {
+  color: var(--db-text-primary);
+  background: var(--db-surface-hover);
+}
+
+.optionsButton:focus-visible {
+  outline: 2px solid var(--db-brand);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(7, 11, 18, 0.9);
+  z-index: 1;
+}
+
+.cardZoneMiddle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.supplierName {
+  font-size: var(--db-font-body);
+  font-weight: 600;
+  color: var(--db-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.supplierMeta {
+  font-size: var(--db-font-caption);
+  color: var(--db-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardZoneFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--db-space-1);
+  margin-top: 2px;
+}
+
+.footerMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.footerAvatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--db-radius-pill);
+  background: var(--db-brand-subtle);
+  color: var(--db-brand);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.footerDate {
+  font-size: var(--db-font-caption);
+  color: var(--db-text-subtle);
+  white-space: nowrap;
+}
+
+.cardValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: var(--db-surface-elevated);
+  border: 1px solid var(--db-border-muted);
+  border-radius: var(--db-radius-pill);
+  font-size: var(--db-font-caption);
+  font-weight: 700;
+  color: var(--db-text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.kanbanEmpty {
+  padding: var(--db-space-3);
+  text-align: center;
+  font-size: var(--db-font-caption);
+  color: var(--db-text-disabled);
+}

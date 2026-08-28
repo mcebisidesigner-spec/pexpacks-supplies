@@ -3,28 +3,19 @@
 import { useState, useMemo, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Server,
-  Shield,
-  ShieldCheck,
+  
   Lock,
   KeyRound,
   Eye,
   EyeOff,
   Copy,
   Check,
-  Plus,
   Trash2,
   Edit2,
   Search,
   CheckCircle2,
   AlertCircle,
   RefreshCw,
-  Database,
-  Globe,
-  Cpu,
-  Layers,
-  Sparkles,
-  Info,
 } from "lucide-react";
 import type { SystemVaultCredential } from "@/lib/admin/system-settings-shared";
 import {
@@ -32,7 +23,6 @@ import {
   deleteVaultCredentialAction,
 } from "@/app/admin/settings/actions";
 import styles from "./SettingsControlCentre.module.css";
-import adminStyles from "@/app/admin/admin.module.css";
 
 interface SystemInfoVaultTabProps {
   initialVaultCredentials?: SystemVaultCredential[];

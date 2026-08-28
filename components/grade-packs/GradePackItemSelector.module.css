@@ -516,9 +516,9 @@
   border-radius: var(--a-radius-sm);
   border: none;
   background: var(--a-accent);
-  color: var(--a-text);
+  color: var(--db-canvas);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
   box-shadow: 0 8px 20px var(--a-accent-subtle);
   transition: background 0.16s ease;

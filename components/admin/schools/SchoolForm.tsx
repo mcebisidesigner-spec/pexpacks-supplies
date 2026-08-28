@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Building2, GraduationCap, Image as ImageIcon, Save, ShieldCheck } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
@@ -11,6 +11,7 @@ import { FloatingInput } from "@/components/ui/FloatingInput";
 import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { Field, FieldLabel, FieldError, FormRow } from "@/components/admin/ui/Form";
+import { StickyFormBar } from "@/components/admin/ui/StickyFormBar";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import formStyles from "./SchoolForm.module.css";
@@ -35,6 +36,26 @@ function SubmitButton({ label }: { label: string }) {
     >
       {label}
     </AdminButton>
+  );
+}
+
+function SaveBar({
+  isDirty,
+  onSave,
+  onDiscard,
+}: {
+  isDirty: boolean;
+  onSave: () => void;
+  onDiscard: () => void;
+}) {
+  const { pending } = useFormStatus();
+  return (
+    <StickyFormBar
+      isDirty={isDirty}
+      onSave={onSave}
+      onDiscard={onDiscard}
+      saving={pending}
+    />
   );
 }
 
@@ -64,8 +85,40 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
 
   const schoolSlugOrId = school?.slug || school?.id || "";
 
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isDirty, setIsDirty] = useState(false);
+
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+
+    const markDirty = () => setIsDirty(true);
+    const clearDirty = () => setIsDirty(false);
+
+    form.addEventListener("input", markDirty);
+    form.addEventListener("change", markDirty);
+    form.addEventListener("submit", clearDirty);
+    form.addEventListener("reset", clearDirty);
+
+    return () => {
+      form.removeEventListener("input", markDirty);
+      form.removeEventListener("change", markDirty);
+      form.removeEventListener("submit", clearDirty);
+      form.removeEventListener("reset", clearDirty);
+    };
+  }, []);
+
+  const saveForm = () => {
+    formRef.current?.requestSubmit();
+  };
+
+  const discardChanges = () => {
+    formRef.current?.reset();
+    setIsDirty(false);
+  };
+
   return (
-    <form action={formAction} className={formStyles.formLayout}>
+    <form ref={formRef} action={formAction} className={formStyles.formLayout}>
       <input type="hidden" name="logo" value={logoValue} />
 
       <div className={formStyles.mainColumn}>
@@ -75,7 +128,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             &#x2713; {state.message || "School updated successfully."}
           </div>
         ) : state?.message ? (
-          <div className={`${adminStyles.badgeRed} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block} ${adminStyles.cRed}`} style={{ background: "rgba(239, 68, 68, 0.15)" }} role="alert">
+          <div className={`${adminStyles.badgeRed} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block} ${adminStyles.cRed}`} role="alert">
             &#x26A0; {state.message}
           </div>
         ) : null}
@@ -384,6 +437,8 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
           </div>
         </div>
       </div>
+
+      <SaveBar isDirty={isDirty} onSave={saveForm} onDiscard={discardChanges} />
     </form>
   );
 }

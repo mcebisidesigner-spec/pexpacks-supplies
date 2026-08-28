@@ -12,8 +12,20 @@ export interface ColumnDef<T> {
   sortable?: boolean;
   align?: "left" | "center" | "right";
   width?: string;
+  sticky?: "right" | "left";
   render: (row: T, index: number) => React.ReactNode;
 }
+
+const WIDTH_CLASS: Record<string, string> = {
+  "80px": styles.col80,
+  "90px": styles.col90,
+  "110px": styles.col110,
+  "120px": styles.col120,
+  "130px": styles.col130,
+  "140px": styles.col140,
+  "150px": styles.col150,
+  "160px": styles.col160,
+};
 
 export interface DataTableProps<T> {
   data: T[];
@@ -67,12 +79,24 @@ export function DataTable<T>({
                     : col.align === "right"
                       ? styles.alignRight
                       : styles.alignLeft;
+                const widthClass = col.width ? WIDTH_CLASS[col.width] : undefined;
+                const stickyClass =
+                  col.sticky === "right"
+                    ? styles.stickyRightHeader
+                    : col.sticky === "left"
+                      ? styles.stickyLeftHeader
+                      : undefined;
 
                 return (
                   <th
                     key={col.key}
-                    style={col.width ? { width: col.width } : undefined}
-                    className={clsx(alignClass, { [styles.sortableHeader]: col.sortable })}
+                    scope="col"
+                    className={clsx(
+                      alignClass,
+                      widthClass,
+                      stickyClass,
+                      { [styles.sortableHeader]: col.sortable }
+                    )}
                     onClick={() => handleSort(col.key, col.sortable)}
                   >
                     <div className={styles.headerContent}>
@@ -132,9 +156,16 @@ export function DataTable<T>({
                           : col.align === "right"
                             ? styles.alignRight
                             : styles.alignLeft;
+                      const widthClass = col.width ? WIDTH_CLASS[col.width] : undefined;
+                      const stickyClass =
+                        col.sticky === "right"
+                          ? styles.stickyRight
+                          : col.sticky === "left"
+                            ? styles.stickyLeft
+                            : undefined;
 
                       return (
-                        <td key={col.key} className={alignClass}>
+                        <td key={col.key} className={clsx(alignClass, widthClass, stickyClass)}>
                           {col.render(row, idx)}
                         </td>
                       );

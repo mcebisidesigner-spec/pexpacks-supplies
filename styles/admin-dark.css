@@ -60,8 +60,8 @@
   --a-transition: 140ms ease;
 
   /* ── Component tokens ── */
-  --a-btn-h: 36px;
-  --a-btn-radius: var(--a-radius-sm);
+  --a-btn-h: 38px;
+  --a-btn-radius: 9999px;
   --a-input-h: 36px;
   --a-input-radius: var(--a-radius-sm);
   --a-badge-radius: var(--a-radius-xs);

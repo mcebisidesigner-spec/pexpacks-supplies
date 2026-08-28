@@ -1027,19 +1027,28 @@
 
 .dataTable {
   width: 100%;
-  border-collapse: collapse;
+  min-width: 700px;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: left;
 }
 
+.dataTable thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
 .dataTable th {
-  padding: 14px 16px;
+  padding: 14px 18px;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--db-brand);
-  background-color: rgba(15, 23, 42, 0.7);
+  background-color: var(--db-surface-elevated);
   border-bottom: 1px solid var(--db-border);
+  white-space: nowrap;
 }
 
 .dataRow {
@@ -1053,7 +1062,7 @@
 }
 
 .dataRow td {
-  padding: 14px 16px;
+  padding: 16px 18px;
   font-size: 0.8125rem;
   vertical-align: middle;
   color: var(--db-text-secondary);

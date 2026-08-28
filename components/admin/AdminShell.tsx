@@ -6,43 +6,29 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import {
-  BarChart3,
+  
   Bell,
   Boxes,
   Briefcase,
-  Building2,
   CheckSquare,
-  CircleAlert,
-  ClipboardList,
   CreditCard,
   FileSpreadsheet,
   FileText,
-  Image as ImageIcon,
-  LayoutDashboard,
   LogOut,
-  Mail,
   Menu,
   MessageSquare,
-  Newspaper,
   Package,
   PackageCheck,
-  PackageSearch,
-  RefreshCw,
   School,
   Search,
   Settings,
-  Shield,
-  ShieldCheck,
   ShoppingCart,
-  Tags,
   TrendingUp,
-  User,
   Users,
-  Warehouse,
   X,
   type LucideIcon,
 } from "lucide-react";
-import type { AdminNavGroup, AdminNavItem } from "@/lib/admin/navigation";
+import type { AdminNavGroup } from "@/lib/admin/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAdminNotifications } from "@/hooks/useAdminNotifications";
 import styles from "./AdminShell.module.css";
@@ -82,7 +68,6 @@ function getInitials(name: string) {
 }
 
 export function AdminShell({
-  groups,
   userName,
   userEmail,
   userRoles = [],
@@ -100,7 +85,6 @@ export function AdminShell({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [notificationOpen, setNotificationOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [signingOut, setSigningOut] = useState(false);
@@ -127,7 +111,6 @@ export function AdminShell({
     });
   }, [isSuperUser]);
 
-  const { notifications, refresh: refreshNotifications } = useAdminNotifications(true);
 
   // Search items
   const searchableNav = useMemo(() => {
@@ -146,7 +129,6 @@ export function AdminShell({
       if (event.key === "Escape") {
         setOpen(false);
         setProfileOpen(false);
-        setNotificationOpen(false);
         setSearchOpen(false);
       }
     }
@@ -158,7 +140,6 @@ export function AdminShell({
     function handleOutsideClick(event: MouseEvent) {
       const target = event.target as Node;
       if (profileRef.current && !profileRef.current.contains(target)) setProfileOpen(false);
-      if (notificationRef.current && !notificationRef.current.contains(target)) setNotificationOpen(false);
       if (searchRef.current && !searchRef.current.contains(target)) setSearchOpen(false);
     }
     document.addEventListener("mousedown", handleOutsideClick);
@@ -168,7 +149,6 @@ export function AdminShell({
   useEffect(() => {
     setOpen(false);
     setProfileOpen(false);
-    setNotificationOpen(false);
     setSearchOpen(false);
     setSearchQuery("");
   }, [pathname]);
@@ -178,7 +158,7 @@ export function AdminShell({
       setSigningOut(true);
       const supabase = createClient();
       await supabase.auth.signOut();
-      window.location.href = "/";
+      router.push("/");
     } catch {
       setSigningOut(false);
     }
@@ -331,7 +311,7 @@ export function AdminShell({
               <button
                 type="button"
                 className={styles.utilityButton}
-                onClick={() => setNotificationOpen((val) => !val)}
+                onClick={() => {}}
                 aria-label="Notifications"
               >
                 <Bell size={16} />

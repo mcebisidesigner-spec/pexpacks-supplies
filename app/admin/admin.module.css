@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    PEXPACKS ADMIN — UNIFIED COMPONENT SYSTEM
    Single source of truth for all admin UI components
    ═══════════════════════════════════════════════════════════════ */
@@ -59,47 +59,54 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: var(--a-btn-h);
-  padding: 0 16px;
-  border: 0;
-  border-radius: var(--a-btn-radius);
-  background: var(--a-accent-strong);
-  color: var(--a-text);
+  gap: 8px;
+  height: var(--a-btn-h, 38px);
+  padding: 0 20px;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: var(--a-btn-radius, 9999px);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: all var(--a-transition);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  transition: all var(--a-transition, 150ms ease);
 }
 
 .primaryButton:hover {
-  background: var(--a-accent-hover);
-  box-shadow: 0 0 14px rgba(13, 148, 136, 0.4);
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  color: #030712;
+  border-color: #34d399;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+  transform: translateY(-1px);
 }
 
 .secondaryButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: var(--a-btn-h);
-  padding: 0 14px;
+  gap: 8px;
+  height: var(--a-btn-h, 38px);
+  padding: 0 18px;
   border: 1px solid var(--a-border-strong);
-  border-radius: var(--a-btn-radius);
-  background: var(--a-surface);
-  color: var(--a-text-2);
-  font-size: 12px;
+  border-radius: var(--a-btn-radius, 9999px);
+  background: var(--a-surface-2, var(--db-surface-inner));
+  color: var(--a-text-2, var(--db-text-secondary));
+  font-family: inherit;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: all var(--a-transition);
+  transition: all var(--a-transition, 150ms ease);
 }
 
 .secondaryButton:hover {
-  background: var(--a-surface-2);
-  border-color: var(--a-text-4);
+  background: var(--a-surface-3, var(--db-border));
+  border-color: var(--a-text-4, var(--db-text-subtle));
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .dangerButton {
@@ -107,7 +114,8 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  height: var(--a-btn-h);
+  height: var(--a-btn-h, 38px);
+  border-radius: var(--a-btn-radius, 9999px);
   padding: 0 14px;
   border: 1px solid rgba(248, 113, 113, 0.3);
   border-radius: var(--a-btn-radius);
@@ -385,29 +393,34 @@
 .table {
   width: 100%;
   min-width: 700px;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: left;
-  font-size: 13.5px;
+  font-size: 0.8125rem;
 }
 
 .table thead {
-  background: #070d18;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .table th {
-  padding: 16px 20px;
-  font-size: 11px;
-  font-weight: 800;
+  padding: 14px 18px;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--db-brand);
+  background: var(--db-surface-elevated);
+  border-bottom: 1px solid var(--db-border);
   white-space: nowrap;
+  user-select: none;
 }
 
 .table tbody tr {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background-color 140ms ease;
+  border-bottom: 1px solid var(--db-border-muted);
+  transition: background-color var(--db-transition-fast);
 }
 
 .table tbody tr:last-child {
@@ -415,11 +428,11 @@
 }
 
 .table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--db-surface-hover);
 }
 
 .table td {
-  padding: 18px 20px;
+  padding: 16px 18px;
   vertical-align: middle;
   color: var(--db-text-secondary);
 }
@@ -481,13 +494,13 @@
 .metricsGrid4 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 20px;
 }
 
 .metricsGrid5 {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  gap: 16px;
 }
 
 @media (max-width: 900px) {
@@ -693,13 +706,13 @@
 .formStack {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 }
 
 .formStackCompact {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .formGrid2 {
@@ -1637,13 +1650,13 @@
 }
 
 /* --- Reports page utilities --- */
-.reportsLayout { display: grid; grid-template-columns: 220px 1fr; gap: 16px; align-items: start; }
+.reportsLayout { display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: start; }
 .reportsCatLabel { font-size: 10px; font-weight: 700; color: var(--a-text-4); text-transform: uppercase; margin-bottom: 8px; padding: 0 8px; }
 .reportsCatMenu { display: flex; flex-direction: column; gap: 4px; }
 .reportsCatBtn { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--a-radius-sm); background: transparent; color: var(--a-text-3); border: 1px solid transparent; font-size: 12px; font-weight: 500; cursor: pointer; text-align: left; }
 .reportsCatBtnActive { background: var(--a-accent-subtle); color: var(--a-accent); border: 1px solid rgba(45, 212, 191, 0.4); font-weight: 600; }
-.reportsContent { display: flex; flex-direction: column; gap: 16px; }
-.reportsGrid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+.reportsContent { display: flex; flex-direction: column; gap: 28px; }
+.reportsGrid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
 .reportsChartHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
 .reportsChartTitle { color: var(--a-text); font-size: 14px; }
 .reportsChartSelect { height: 28px; font-size: 11px; }
@@ -1668,9 +1681,9 @@
 .setIconBlue { color: var(--a-blue); }
 .setIconAmber { color: var(--a-amber); }
 .setIconGreen { color: var(--a-green); }
-.settingsGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-.settingsGrid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.permGrid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; font-size: 12px; }
+.settingsGrid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.settingsGrid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.permGrid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; font-size: 12px; }
 .settingsCheckbox { accent-color: var(--a-accent-strong); width: 16px; height: 16px; }
 .prefRow { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
 .prefLabel { color: var(--a-text-2); }
@@ -1750,8 +1763,10 @@
 /* --- Extracted shared KPI/Exception/Panel styles --- */
 .dataTable {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
+  min-width: 700px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.8125rem;
   text-align: left;
 }
 .datePickerBtn {
@@ -2192,8 +2207,9 @@
 .tableFixed {
   width: 100%;
   min-width: 800px;
-  border-collapse: collapse;
-  font-size: 13px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.8125rem;
 }
 .tableFixed thead {
   position: sticky;
@@ -2201,25 +2217,25 @@
   z-index: 2;
 }
 .tableFixed th {
-  padding: 10px 14px;
+  padding: 14px 18px;
   text-align: left;
-  font-size: 11px;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--a-text-4);
+  color: var(--db-brand);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: var(--a-surface-2);
-  border-bottom: 1px solid var(--a-border);
+  background: var(--db-surface-elevated);
+  border-bottom: 1px solid var(--db-border);
   white-space: nowrap;
 }
 .tableFixed td {
-  padding: 10px 14px;
-  color: var(--a-text-2);
-  border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  padding: 16px 18px;
+  color: var(--db-text-secondary);
+  border-bottom: 1px solid var(--db-border-muted);
   white-space: nowrap;
 }
 .tableFixed tbody tr:hover {
-  background: rgba(30, 41, 59, 0.3);
+  background: var(--db-surface-hover);
 }
 .tableFixed tbody tr:last-child td {
   border-bottom: none;

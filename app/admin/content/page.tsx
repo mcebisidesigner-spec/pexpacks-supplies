@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
+import { requireAdmin } from "@/lib/admin/rbac";
 import { listTestimonials, listFaqs } from "@/lib/admin/content";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import adminStyles from "../admin.module.css";
@@ -10,9 +10,8 @@ export const metadata = {
 };
 
 export default async function ContentHubPage() {
-  const session = await requireAdmin({ permission: "content.view" });
+  await requireAdmin({ permission: "content.view" });
   const [testimonials, faqs] = await Promise.all([listTestimonials(), listFaqs()]);
-  const canManage = hasPermission(session, "content.manage");
 
   const cards = [
     {

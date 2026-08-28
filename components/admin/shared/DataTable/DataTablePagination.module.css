@@ -1,74 +1,84 @@
-﻿.paginationFooter {
+.paginationFooter {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 12px 18px;
-  background: var(--db-surface-inner);
-  border-top: 1px solid var(--db-border);
+  background: var(--db-surface-inner, #090e17);
+  border-top: 1px solid var(--db-border, rgba(30, 41, 59, 0.8));
   font-size: 12px;
-  color: var(--db-text-muted);
+  color: var(--db-text-muted, #94a3b8);
+  width: 100%;
+}
+
+.paginationLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   flex-wrap: wrap;
-  gap: 12px;
 }
 
 .rangeText {
+  font-size: 12px;
   font-weight: 500;
+  color: var(--db-text-muted, #94a3b8);
+  white-space: nowrap;
 }
 
 .rangeHighlight {
-  color: #ffffff;
+  color: var(--db-text-primary, #ffffff);
   font-weight: 700;
 }
 
 .controls {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 8px;
+  padding: 3px 4px;
 }
 
 .pageBtn {
-  min-width: 30px;
-  height: 30px;
+  min-width: 26px;
+  height: 26px;
   padding: 0 6px;
   border-radius: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(51, 65, 85, 0.6);
-  color: var(--db-text-secondary);
-  font-size: 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--db-text-secondary, #cbd5e1);
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   outline: none;
-  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+  transition: all 140ms ease;
 }
 
 .pageBtn:hover:not(:disabled) {
-  background: rgba(51, 65, 85, 0.8);
-  border-color: var(--db-text-subtle);
-  color: #ffffff;
+  background: rgba(51, 65, 85, 0.6);
+  color: var(--db-text-primary, #ffffff);
+  border-color: rgba(71, 85, 105, 0.6);
 }
 
 .pageBtn:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
 .pageBtnActive {
-  background: var(--db-brand);
-  border-color: rgba(16, 185, 129, 0.4);
-  color: #022c22;
-  font-weight: 800;
-}
-
-.pageBtnActive:hover {
-  background: var(--db-brand-strong);
-  color: #ffffff;
+  background: #10b981 !important;
+  border-color: #10b981 !important;
+  color: #022c22 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
 }
 
 .ellipsis {
-  padding: 0 4px;
-  color: var(--db-text-subtle);
+  padding: 0 3px;
+  color: var(--db-text-subtle, #64748b);
   font-weight: 700;
+  font-size: 11px;
 }

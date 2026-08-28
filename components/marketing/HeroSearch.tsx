@@ -7,9 +7,6 @@ import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 
-import {
-  getSchoolPhaseLabel,
-} from "@/lib/schools/schoolPhase";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { formatSchoolSearchLocation } from "@/lib/schools/searchPresentation";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";

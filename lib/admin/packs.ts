@@ -316,179 +316,69 @@ export async function listSchoolGroupedSummary(
 ): Promise<SchoolGroupedResult> {
   const admin = createSupabaseAdminClient();
   const page = Math.max(1, filters.page ?? 1);
-  const pageSize = Math.min(10000, Math.max(1, filters.pageSize ?? 5000));
+  const pageSize = Math.min(100, Math.max(1, filters.pageSize ?? 50));
   const q = (filters.q || "").replace(/%/g, "").trim();
+
+  const { data, error } = await (admin.rpc as any)(
+    "get_all_pack_school_groups_json",
+    {
+      q: q || null,
+      visible_filter: filters.visible || null,
+    },
+  );
+
+  if (error) {
+    throw new Error(
+      `Unable to load pack school groups: ${error.message || "get_all_pack_school_groups_json failed"}`,
+    );
+  }
+
+  const rawSchools = Array.isArray(data?.schools) ? data.schools : [];
+  const totalSchools = Number(data?.total_schools ?? rawSchools.length);
+  const totalGradePacks = Number(data?.total_grade_packs ?? 0);
+  const activePacksCount = Number(data?.active_packs_count ?? 0);
+  const totalPackItems = Number(data?.total_pack_items ?? 0);
+  const offset = (page - 1) * pageSize;
+
+  const schoolsSummary: SchoolGroupedSummary[] = rawSchools
+    .slice(offset, offset + pageSize)
+    .map((row: any) => {
+      const isRefused = Boolean(row.refused_partnership);
+      const isPartner = row.is_partner !== false;
+      const activePacks = Number(row.active_packs_count ?? 0);
+      const packItems = Number(row.pack_items_count ?? 0);
+      const hasItems = activePacks > 0 || packItems > 0;
+
+      return {
+        school_id: row.school_id,
+        school_name: row.school_name,
+        school_slug: row.school_slug ?? "",
+        grade_packs_count: Number(row.grade_packs_count ?? 0),
+        active_packs_count: activePacks,
+        pack_items_count: packItems,
+        has_items: hasItems,
+        last_edited: row.last_edited ?? "",
+        visible: !isRefused && (row.visible !== undefined ? Boolean(row.visible) : isPartner),
+      };
+    });
 
   const [allSchools, deliveryTypes] = await Promise.all([
     listPackSchools(),
     listDeliveryTypes(),
   ]);
 
-  try {
-    const { data, error } = await (admin.rpc as any)(
-      "get_all_pack_school_groups_json",
-      {
-        q: q || null,
-        visible_filter: filters.visible || null,
-      },
-    );
-
-    if (!error && data) {
-      const rawSchools = Array.isArray(data.schools) ? data.schools : [];
-      const totalSchools = Number(data.total_schools ?? rawSchools.length);
-      const totalGradePacks = Number(data.total_grade_packs ?? 0);
-      const activePacksCount = Number(data.active_packs_count ?? 0);
-      const totalPackItems = Number(data.total_pack_items ?? 0);
-
-      const schoolsSummary: SchoolGroupedSummary[] = rawSchools.map(
-        (row: any) => {
-          const isRefused = Boolean(row.refused_partnership);
-          const isPartner = row.is_partner !== false;
-          const activePacks = Number(row.active_packs_count ?? 0);
-          const packItems = Number(row.pack_items_count ?? 0);
-          const hasItems = activePacks > 0 || packItems > 0;
-
-          return {
-            school_id: row.school_id,
-            school_name: row.school_name,
-            school_slug: row.school_slug ?? "",
-            grade_packs_count: Number(row.grade_packs_count ?? 0),
-            active_packs_count: activePacks,
-            pack_items_count: packItems,
-            has_items: hasItems,
-            last_edited: row.last_edited ?? "",
-            visible: !isRefused && (row.visible !== undefined ? Boolean(row.visible) : isPartner),
-          };
-        },
-      );
-
-      return {
-        schoolsSummary,
-        totalGradePacks,
-        totalSchools,
-        activePacksCount,
-        totalPackItems,
-        page: 1,
-        pageCount: Math.max(1, Math.ceil(totalSchools / pageSize)),
-        schools: allSchools,
-        deliveryTypes,
-      };
-    }
-  } catch (err) {
-    console.warn(
-      "[packs] grouped summary JSON RPC unavailable, using fallback:",
-      err,
-    );
-  }
-
-  let dbSchools: {
-    id: string;
-    name: string;
-    slug: string | null;
-    updated_at?: string | null;
-    refused_partnership?: boolean | null;
-    is_partner?: boolean | null;
-  }[] = [];
-  const chunk = 1000;
-  let chunkPage = 0;
-  let hasMore = true;
-
-  while (hasMore) {
-    let qBuilder = admin
-      .from("schools")
-      .select("id, name, slug, updated_at, refused_partnership, is_partner")
-      .order("name", { ascending: true })
-      .range(chunkPage * chunk, (chunkPage + 1) * chunk - 1);
-
-    if (q) {
-      qBuilder = qBuilder.or(`name.ilike.%${q}%,slug.ilike.%${q}%`);
-    }
-    if (filters.school_id) {
-      const realSchoolId = await resolveSchoolId(admin, filters.school_id);
-      if (realSchoolId) {
-        qBuilder = qBuilder.eq("id", realSchoolId);
-      }
-    }
-
-    const { data: chunkData } = await qBuilder;
-    if (!chunkData || chunkData.length === 0) {
-      hasMore = false;
-    } else {
-      dbSchools = dbSchools.concat(chunkData);
-      if (chunkData.length < chunk || filters.school_id) {
-        hasMore = false;
-      } else {
-        chunkPage++;
-      }
-    }
-  }
-
-  const { data: dbPacks, count: totalGradePacks } = await admin
-    .from("school_packs")
-    .select("id, title, slug, school_id, visible, updated_at", {
-      count: "exact",
-    })
-    .limit(50000);
-
-  if (dbSchools.length === 0) {
-    return {
-      schoolsSummary: [],
-      totalGradePacks: 0,
-      totalSchools: 0,
-      page: 1,
-      pageCount: 0,
-      schools: allSchools,
-      deliveryTypes,
-    };
-  }
-
-  const packList = dbPacks || [];
-
-  let groupedList: SchoolGroupedSummary[] = dbSchools.map((s) => {
-    const sPacks = packList.filter((p) => p.school_id === s.id);
-
-    const isRefused = Boolean(s.refused_partnership);
-    const isPartner = s.is_partner !== false;
-    const hasVisiblePack = sPacks.some((p) => p.visible);
-    const isVisible = !isRefused && (sPacks.length > 0 ? hasVisiblePack : isPartner);
-
-    const latestUpdate = sPacks.reduce(
-      (max, p) => (p.updated_at && p.updated_at > max ? p.updated_at : max),
-      s.updated_at || "",
-    );
-
-    return {
-      school_id: s.id,
-      school_name: s.name,
-      school_slug: s.slug ?? "",
-      grade_packs_count: sPacks.length,
-      last_edited: latestUpdate,
-      visible: isVisible,
-    };
-  });
-
-  if (filters.visible === "true") {
-    groupedList = groupedList.filter((s) => s.visible);
-  } else if (filters.visible === "false") {
-    groupedList = groupedList.filter((s) => !s.visible);
-  }
-
-  const totalSchools = groupedList.length;
-  const pageCount = Math.max(1, Math.ceil(totalSchools / pageSize));
-  const from = (page - 1) * pageSize;
-  const paginatedList = groupedList.slice(from, from + pageSize);
-
   return {
-    schoolsSummary: paginatedList,
-    totalGradePacks: totalGradePacks ?? packList.length,
+    schoolsSummary,
+    totalGradePacks,
     totalSchools,
+    activePacksCount,
+    totalPackItems,
     page,
-    pageCount,
+    pageCount: Math.max(1, Math.ceil(totalSchools / pageSize)),
     schools: allSchools,
     deliveryTypes,
   };
 }
-
 export interface PackSchool {
   id: string;
   name: string;
@@ -617,28 +507,11 @@ export async function getPack(
     .order("name" as never, { ascending: true });
 
   if (itemsError) {
-    console.error(
-      "[packs] pack item load from admin_pack_items_view failed:",
-      itemsError.message || itemsError.details || JSON.stringify(itemsError),
+    throw new Error(
+      `Unable to load pack items: ${itemsError.message || itemsError.details || "admin_pack_items_view failed"}`,
     );
-    const { data: fallbackItems, error: fallbackError } = await admin
-      .from("canonical_pack_items_view" as never)
-      .select(
-        "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
-      )
-      .eq("pack_id" as never, pack.id as never)
-      .order("sort_order" as never, { ascending: true });
-    if (fallbackError) {
-      console.error(
-        "[packs] fallback pack item load failed:",
-        fallbackError.message || fallbackError.details || JSON.stringify(fallbackError),
-      );
-    } else {
-      itemList = (fallbackItems ?? []) as unknown as ItemRow[];
-    }
-  } else {
-    itemList = (items ?? []) as unknown as ItemRow[];
   }
+  itemList = (items ?? []) as unknown as ItemRow[];
   const calculatedSum = itemList.reduce(
     (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
     0,

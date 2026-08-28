@@ -1,4 +1,4 @@
-import { ArrowLeft, Building2, Clock, CreditCard, Edit2, Mail, Truck } from "lucide-react";
+import { ArrowLeft, Building2, Clock, CreditCard, Edit2, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";

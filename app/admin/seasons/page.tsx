@@ -1,6 +1,6 @@
 import { Calendar } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
-import { listSeasons, isOperationsSchemaReady } from "@/lib/admin/operations";
+import { listSeasons } from "@/lib/admin/operations";
 import { formatDate } from "@/lib/admin/ui-utils";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -8,7 +8,6 @@ import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { EmptyState } from "@/components/admin/EmptyState";
 import {
   createSeasonAction,
-  updateSeasonAction,
   setDefaultSeasonAction,
 } from "../operations-actions";
 import admin from "../admin.module.css";
@@ -19,9 +18,8 @@ export const dynamic = "force-dynamic";
 const STATUS_OPTIONS = ["planning", "active", "closed", "archived"];
 
 export default async function SeasonsPage() {
-  const [session, schemaReady, seasons] = await Promise.all([
+  const [session, seasons] = await Promise.all([
     requireAdmin({ permission: "settings.manage" }),
-    isOperationsSchemaReady(),
     listSeasons(),
   ]);
   const canManage = hasPermission(session, "settings.manage");
@@ -35,14 +33,8 @@ export default async function SeasonsPage() {
         actions={<Calendar size={22} />}
       />
 
-      {!schemaReady ? (
-        <section className={styles.notice} role="status">
-          <strong>Operations database setup required</strong>
-          <p>Apply migration 00030 to activate season management.</p>
-        </section>
-      ) : null}
 
-      {schemaReady && canManage ? (
+      {canManage ? (
         <section className={styles.formPanel}>
           <h2>Add season</h2>
           <form action={createSeasonAction} className={styles.formGrid}>

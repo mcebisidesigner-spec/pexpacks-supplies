@@ -1,4 +1,4 @@
-import { ArrowLeft, Barcode, CheckSquare, Save } from "lucide-react";
+import { ArrowLeft, Barcode, Save } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";

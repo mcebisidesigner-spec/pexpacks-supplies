@@ -269,7 +269,6 @@ export function TrackOrderForm() {
               {TRACKING_STAGES.map((stage, idx) => {
                 const isCompleted = idx < currentStageIndex;
                 const isCurrent = idx === currentStageIndex;
-                const isFuture = idx > currentStageIndex;
 
                 return (
                   <div

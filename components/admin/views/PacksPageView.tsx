@@ -16,26 +16,29 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
-import type { SchoolListResult, SchoolRow } from "@/lib/admin/schools";
+import type { SchoolGroupedResult, SchoolGroupedSummary } from "@/lib/admin/packs";
 
-interface SchoolsPageViewProps {
-  initialData?: SchoolListResult;
+interface PacksPageViewProps {
+  initialData?: SchoolGroupedResult;
 }
 
-export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
+export function PacksPageView({ initialData }: PacksPageViewProps) {
   const router = useRouter();
   const { params, setParams, isPending } = useTableParams();
 
   const data = initialData || {
-    schools: [],
-    total: 0,
+    schoolsSummary: [],
+    totalGradePacks: 0,
+    totalSchools: 0,
+    activePacksCount: 0,
+    totalPackItems: 0,
     page: 1,
     pageCount: 1,
-    cities: [],
-    provinces: [],
+    schools: [],
+    deliveryTypes: [],
   };
 
-  const columns: ColumnDef<SchoolRow>[] = [
+  const columns: ColumnDef<SchoolGroupedSummary>[] = [
     {
       key: "code",
       header: "SKU",
@@ -43,7 +46,10 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       width: "160px",
       render: (row) => (
         <span className={styles.skuBadge}>
-          SCH-{row.slug ? row.slug.slice(0, 10).toUpperCase() : row.id.slice(0, 8).toUpperCase()}
+          PCK-
+          {row.school_slug
+            ? row.school_slug.slice(0, 10).toUpperCase()
+            : row.school_id.slice(0, 8).toUpperCase()}
         </span>
       ),
     },
@@ -51,23 +57,34 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       key: "name",
       header: "SCHOOL NAME",
       sortable: true,
-      render: (row) => (
-        <Link
-          href={`/admin/schools/${row.id}`}
-          className={styles.schoolNameTitle}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
-      ),
+      render: (row) => {
+        const slug =
+          row.school_slug ||
+          row.school_name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
+        return (
+          <Link
+            href={`/admin/packs/${slug}`}
+            className={styles.schoolNameTitle}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.school_name}
+          </Link>
+        );
+      },
     },
     {
-      key: "city",
-      header: "LOCATION",
+      key: "packs",
+      header: "PACKS & ITEMS",
       sortable: true,
       render: (row) => (
         <span className={styles.textMuted}>
-          {row.city || "Johannesburg"}, {row.province || "Gauteng"}
+          {row.grade_packs_count} {row.grade_packs_count === 1 ? "pack" : "packs"}
+          {row.pack_items_count !== undefined && row.pack_items_count > 0
+            ? ` • ${row.pack_items_count} items`
+            : ""}
         </span>
       ),
     },
@@ -78,14 +95,11 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       align: "center",
       width: "130px",
       render: (row) => {
-        const isInactive =
-          row.published === false ||
-          row.status === "inactive" ||
-          row.refused_partnership === true;
+        const isActive = row.visible && row.grade_packs_count > 0;
         return (
           <StatusBadge
-            status={isInactive ? "Inactive" : "Active"}
-            tone={isInactive ? "slate" : "emerald"}
+            status={isActive ? "Active" : "Inactive"}
+            tone={isActive ? "emerald" : "slate"}
             showDot
           />
         );
@@ -102,11 +116,15 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
           <button
             type="button"
             className={styles.actionDeleteBtn}
-            title={`Delete ${row.name}`}
-            aria-label={`Delete ${row.name}`}
+            title={`Delete packs for ${row.school_name}`}
+            aria-label={`Delete packs for ${row.school_name}`}
             onClick={() => {
-              if (window.confirm(`Are you sure you want to delete "${row.name}"?`)) {
-                // Trigger deletion
+              if (
+                window.confirm(
+                  `Are you sure you want to delete packs for "${row.school_name}"?`
+                )
+              ) {
+                // Delete action
               }
             }}
           >
@@ -120,22 +138,22 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
   return (
     <div className={styles.container}>
       <AdminPageHeader
-        title="Schools Directory"
-        count={data.total}
-        subtitle="Manage partner schools, locations, contact records, and pack listings."
+        title="School Packs"
+        count={data.totalSchools}
+        subtitle="Manage school stationery packs, grade requirements, pricing, and pack listings."
         actions={
           <AdminButton
-            href="/admin/schools/new"
+            href="/admin/packs/new"
             variant="primary"
             icon={<Plus size={14} />}
           >
-            New School
+            New Pack
           </AdminButton>
         }
       />
 
       <DataTableToolbar
-        searchPlaceholder="Search schools by name, city, province..."
+        searchPlaceholder="Search school packs by school name, SKU..."
         filters={
           <div className={styles.filterGroup}>
             <AdminSelect
@@ -152,17 +170,25 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       />
 
       <DataTable
-        data={data.schools}
+        data={data.schoolsSummary}
         columns={columns}
-        keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/schools/${row.id}`)}
+        keyExtractor={(row) => row.school_id}
+        onRowClick={(row) => {
+          const slug =
+            row.school_slug ||
+            row.school_name
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-+|-+$/g, "");
+          router.push(`/admin/packs/${slug}`);
+        }}
         isLoading={isPending}
-        emptyTitle="No schools found"
-        emptySubtitle="Try adjusting your search filters."
+        emptyTitle="No school packs found"
+        emptySubtitle="Try adjusting your search filters or create a new pack."
         footer={
           <DataTablePagination
-            total={data.total}
-            pageSize={data.schools.length || 25}
+            total={data.totalSchools}
+            pageSize={data.schoolsSummary.length || 25}
             currentPage={data.page}
           />
         }

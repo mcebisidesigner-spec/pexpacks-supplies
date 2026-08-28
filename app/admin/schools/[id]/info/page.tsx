@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ArrowLeft, Building2, Edit, GraduationCap, ShieldCheck, User } from "lucide-react";
+import {  Building2, Edit, GraduationCap, ShieldCheck, User } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getSchool } from "@/lib/admin/schools";

@@ -134,6 +134,7 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
       key: "actions",
       header: "ACTIONS",
       align: "right",
+      sticky: "right",
       width: "90px",
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>

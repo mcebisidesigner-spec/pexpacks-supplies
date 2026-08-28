@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin, writeAuditLog } from "@/lib/admin/rbac";
-import type { Database } from "@/lib/supabase/types";
 
 export type QuotationStatus =
   | "draft"

@@ -155,8 +155,6 @@ export function CheckoutForm({
   const [submitting, setSubmitting] = useState(false);
   const idempotencyKeyRef = useRef<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [orderSubmitted, setOrderSubmitted] = useState(false);
-  const [orderReference, setOrderReference] = useState<string | null>(null);
 
   useEffect(() => {
     if (!draftId || draftLoaded) return;
@@ -548,24 +546,7 @@ export function CheckoutForm({
         return null;
     }
   }
-
-  if (orderSubmitted && orderReference) {
-    return (
-      <div className={styles.checkoutShell}>
-        <div className={styles.emptyCheckout}>
-          <p className={styles.checkoutKicker}>Order Confirmed</p>
-          <h1>Thank you for your order!</h1>
-          <p>Your order reference is <strong>{orderReference}</strong>.</p>
-          <p>We will be in touch shortly with payment and delivery details.</p>
-          <Button href="/schools" variant="primary" size="lg">
-            Browse more packs
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
+`r`n  return (
     <div className={styles.checkoutShell}>
       <div className={styles.checkoutHeader}>
         {activeStep > 0 ? (

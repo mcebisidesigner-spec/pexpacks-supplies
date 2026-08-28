@@ -66,56 +66,58 @@ export function DataTablePagination({
 
   return (
     <div className={`${styles.paginationFooter} ${className || ""}`}>
-      <div className={styles.rangeText}>
-        Showing <span className={styles.rangeHighlight}>{formatCount(fromRecord)}</span> to{" "}
-        <span className={styles.rangeHighlight}>{formatCount(toRecord)}</span> of{" "}
-        <span className={styles.rangeHighlight}>{formatCount(total)}</span> records
-      </div>
+      <div className={styles.paginationLeft}>
+        <div className={styles.rangeText}>
+          Showing <span className={styles.rangeHighlight}>{formatCount(fromRecord)}</span> to{" "}
+          <span className={styles.rangeHighlight}>{formatCount(toRecord)}</span> of{" "}
+          <span className={styles.rangeHighlight}>{formatCount(total)}</span> records
+        </div>
 
-      <div className={styles.controls}>
-        <button
-          type="button"
-          onClick={() => handlePageClick(currentPage - 1)}
-          disabled={currentPage <= 1}
-          className={styles.pageBtn}
-          aria-label="Previous Page"
-        >
-          <ChevronLeft size={14} />
-        </button>
+        <div className={styles.controls}>
+          <button
+            type="button"
+            onClick={() => handlePageClick(currentPage - 1)}
+            disabled={currentPage <= 1}
+            className={styles.pageBtn}
+            aria-label="Previous Page"
+          >
+            <ChevronLeft size={13} />
+          </button>
 
-        {pageNumbers.map((p, idx) => {
-          if (p === "...") {
+          {pageNumbers.map((p, idx) => {
+            if (p === "...") {
+              return (
+                <span key={`ellipsis-${idx}`} className={styles.ellipsis}>
+                  ...
+                </span>
+              );
+            }
+
+            const pageNum = p as number;
+            const isActive = pageNum === currentPage;
+
             return (
-              <span key={`ellipsis-${idx}`} className={styles.ellipsis}>
-                ...
-              </span>
+              <button
+                key={`page-${pageNum}`}
+                type="button"
+                onClick={() => handlePageClick(pageNum)}
+                className={`${styles.pageBtn} ${isActive ? styles.pageBtnActive : ""}`}
+              >
+                {pageNum}
+              </button>
             );
-          }
+          })}
 
-          const pageNum = p as number;
-          const isActive = pageNum === currentPage;
-
-          return (
-            <button
-              key={`page-${pageNum}`}
-              type="button"
-              onClick={() => handlePageClick(pageNum)}
-              className={`${styles.pageBtn} ${isActive ? styles.pageBtnActive : ""}`}
-            >
-              {pageNum}
-            </button>
-          );
-        })}
-
-        <button
-          type="button"
-          onClick={() => handlePageClick(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-          className={styles.pageBtn}
-          aria-label="Next Page"
-        >
-          <ChevronRight size={14} />
-        </button>
+          <button
+            type="button"
+            onClick={() => handlePageClick(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+            className={styles.pageBtn}
+            aria-label="Next Page"
+          >
+            <ChevronRight size={13} />
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -13,9 +13,7 @@ import { blogPosts, type BlogPost } from "@/data/blog";
 
 export const CMS_BLOG_TAG = "cms-blog";
 export const BLOG_REVALIDATE_SECONDS = 300;
-
-type BlogRow = Database["public"]["Tables"]["blog_posts"]["Row"];
-
+`r`n
 function toContent(value: Json | null): string[] {
   return Array.isArray(value) ? value.map((line) => String(line)) : [];
 }

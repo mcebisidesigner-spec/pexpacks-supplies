@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Edit, Layers, Tag, TrendingUp } from "lucide-react";
+import { Edit, Layers, TrendingUp } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";

@@ -8,9 +8,6 @@ import heroStyles from "@/components/marketing/HeroSearch.module.css";
 
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
-import {
-  getSchoolPhaseLabel,
-} from "@/lib/schools/schoolPhase";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { formatSchoolSearchLocation } from "@/lib/schools/searchPresentation";
 import {

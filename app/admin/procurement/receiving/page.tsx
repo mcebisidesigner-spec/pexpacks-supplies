@@ -1,13 +1,10 @@
-ï»¿import { Package } from "lucide-react";
+import { Package } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import {
   listPurchaseOrdersForReceiving,
-  listSupplierReceipts,
 } from "@/lib/admin/operations";
 import { createSupplierReceiptAction } from "../../operations-actions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import styles from "../../operations.module.css";
-import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 
@@ -58,11 +55,11 @@ export default async function ReceivingPage() {
                 />
               </h2>
               <p className={adminStyles.muted}>
-                {po.suppliers?.name || "Unknown supplier"} Â·{" "}
+                {po.suppliers?.name || "Unknown supplier"} ·{" "}
                 {po.expected_on
                   ? `Expected ${new Date(po.expected_on).toLocaleDateString("en-ZA")}`
                   : "No expected date"}
-                Â· {percentReceived}% received
+                · {percentReceived}% received
               </p>
 
               <div className={adminStyles.tableCard}>

@@ -35,7 +35,7 @@
 .input:focus {
   border-color: var(--db-brand);
   box-shadow: var(--db-focus-ring);
-  background-color: #0b121e;
+  background-color: var(--db-surface-elevated);
 }
 
 .input:disabled {

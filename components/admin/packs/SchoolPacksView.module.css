@@ -292,42 +292,45 @@
 
 .dataTable {
   width: 100%;
-  border-collapse: collapse;
+  min-width: 700px;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: left;
-  font-size: 13.5px;
+  font-size: 0.8125rem;
 }
 
 .dataTable thead {
-  background: #070d18;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .dataTable th {
-  padding: 16px 20px;
-  background: #070d18;
+  padding: 14px 18px;
+  background: var(--db-surface-elevated);
   color: var(--db-brand);
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--db-border);
   white-space: nowrap;
 }
 
 .dataTable td {
-  padding: 18px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--db-border-muted);
   color: var(--db-text-secondary);
   vertical-align: middle;
 }
 
 .dataRow {
   cursor: pointer;
-  transition: background 140ms ease;
+  transition: background var(--db-transition-fast);
 }
 
 .dataRow:hover {
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--db-surface-hover);
 }
 
 /* School Column with Icon */

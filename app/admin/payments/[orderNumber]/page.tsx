@@ -1,4 +1,4 @@
-import { CheckCircle2, CreditCard, RefreshCw, ShieldCheck, User } from "lucide-react";
+import { CheckCircle2, CreditCard, ShieldCheck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { MetricCard } from "@/components/admin/ui/AdminCard";

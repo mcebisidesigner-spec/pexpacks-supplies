@@ -23,7 +23,7 @@ import {
   type BadgeTone,
 } from "@/components/admin/ui";
 import { FloatingInput } from "@/components/ui/FloatingInput";
-import type { QuotationsListResult, QuotationRow } from "@/lib/admin/quotations";
+import type { QuotationsListResult } from "@/lib/admin/quotations";
 import styles from "./Quotations.module.css";
 
 const STATUS_CONFIG: Record<string, { label: string; tone: BadgeTone }> = {
@@ -74,7 +74,6 @@ export function QuotationsListView({
     });
   }, [initialData.quotations, statusFilter, searchQuery]);
 
-  const totalPages = Math.ceil(filtered.length / pageSize) || 1;
   const paginated = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
     return filtered.slice(start, start + pageSize);
