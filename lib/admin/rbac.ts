@@ -97,6 +97,16 @@ const STAFF_ROLE_SLUGS = new Set([
   "viewer",
 ]);
 
+export const SUPERUSER_EMAILS = new Set([
+  "mcebisimhayise@gmail.com",
+  "pexpacks@gmail.com",
+]);
+
+export function isSuperUserEmail(email?: string | null): boolean {
+  if (!email) return false;
+  return SUPERUSER_EMAILS.has(email.trim().toLowerCase());
+}
+
 export function isStaffClaim(
   appMetadata: Record<string, unknown> | undefined,
 ): boolean {
@@ -109,6 +119,11 @@ export function isStaffClaim(
 
 export function displayName(user: User): string {
   const meta = user.user_metadata ?? {};
+  if (user.email && isSuperUserEmail(user.email)) {
+    if (user.email.toLowerCase() === "mcebisimhayise@gmail.com") {
+      return (meta["full_name"] as string) || (meta["name"] as string) || "Mcebisi Hlatshwayo";
+    }
+  }
   return (
     (meta["full_name"] as string) ||
     (meta["name"] as string) ||
@@ -162,7 +177,8 @@ async function loadAdminUser(): Promise<AdminSession | null> {
   ]);
 
   const roleSlugs = (rolesResult.data ?? []).map((r) => r.slug);
-  const isSuperAdmin = legacyAdmin || roleSlugs.includes("super_admin");
+  const isSuperUser = isSuperUserEmail(user.email);
+  const isSuperAdmin = legacyAdmin || isSuperUser || roleSlugs.includes("super_admin");
   if (isSuperAdmin) {
     return {
       user,
@@ -232,6 +248,17 @@ export async function requireAdmin(options?: {
   return session;
 }
 
+/**
+ * Gate strictly for Superusers / Superadmins (e.g. Settings Control Centre).
+ */
+export async function requireSuperAdmin(): Promise<AdminSession> {
+  const session = await requireAdmin();
+  if (!session.isSuperAdmin && !session.roles.includes("super_admin")) {
+    notFound();
+  }
+  return session;
+}
+
 /** True when the session has a permission (super admins always pass). */
 export function hasPermission(
   session: AdminSession,
@@ -252,6 +279,23 @@ export interface AuditEntry {
   userAgent?: string | null;
 }
 
+const CRITICAL_ACTIONS = new Set([
+  "settings.update",
+  "settings.restore",
+  "pricing.update",
+  "pricing.manage",
+  "users.create",
+  "users.update_roles",
+  "users.deactivate",
+  "users.delete",
+  "orders.delete",
+  "orders.refund",
+  "payments.refund",
+  "suppliers.manage",
+  "quotations.delete",
+  "system.restore",
+]);
+
 /** Fire-and-forget audit log insert via the service-role client (bypasses RLS). */
 export async function writeAuditLog(entry: AuditEntry): Promise<void> {
   try {
@@ -267,6 +311,21 @@ export async function writeAuditLog(entry: AuditEntry): Promise<void> {
       ip: entry.ip ?? null,
       user_agent: entry.userAgent ?? null,
     });
+
+    // If a non-superuser performs a critical DB update, notify pexpacks@gmail.com immediately
+    const actorEmail = entry.actorName?.includes("@") ? entry.actorName : null;
+    if (CRITICAL_ACTIONS.has(entry.action) && !isSuperUserEmail(actorEmail)) {
+      const { sendCriticalAlertEmail } = await import("@/lib/email/sendCriticalAlertEmail");
+      void sendCriticalAlertEmail({
+        action: entry.action,
+        entityType: entry.entityType,
+        entityId: entry.entityId,
+        actorName: entry.actorName,
+        actorEmail: actorEmail,
+        summary: entry.summary,
+        details: entry.details,
+      });
+    }
   } catch (err) {
     console.error("[audit] failed to write audit log:", err);
   }

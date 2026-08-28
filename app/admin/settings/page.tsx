@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/rbac";
+import { requireSuperAdmin } from "@/lib/admin/rbac";
 import {
   getSystemSettings,
   getSystemSettingsAuditLogs,
@@ -15,7 +15,7 @@ export const metadata = {
 };
 
 export default async function AdminSettingsPage() {
-  const session = await requireAdmin({ permission: "settings.manage" });
+  const session = await requireSuperAdmin();
 
   const [settings, auditLogs, integrations, performance, roles] = await Promise.all([
     getSystemSettings(),

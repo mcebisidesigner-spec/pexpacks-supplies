@@ -1016,7 +1016,7 @@ export function OperationsCommandCenter({ userName }: OperationsCommandCenterPro
           <h1 className={styles.greetingTitle}>
             {mode === "procurement" ? (
               <>
-                {greetingTime}, {userName || "Liam"} <span className={styles.greetingWave}>👋</span>
+                {greetingTime}, {userName || "Mcebisi Hlatshwayo"} <span className={styles.greetingWave}>👋</span>
               </>
             ) : (
               "School Packs"

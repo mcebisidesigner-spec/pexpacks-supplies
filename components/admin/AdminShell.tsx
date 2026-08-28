@@ -85,13 +85,14 @@ export function AdminShell({
   groups,
   userName,
   userEmail,
+  userRoles = [],
   avatarUrl,
   children,
 }: {
   groups: AdminNavGroup[];
   userName: string;
   userEmail: string;
-  userRoles: string[];
+  userRoles?: string[];
   avatarUrl: string | null;
   children: ReactNode;
 }) {
@@ -112,14 +113,28 @@ export function AdminShell({
   const displayName = userName && userName !== "Admin" ? userName : userEmail;
   const userInitials = getInitials(displayName);
 
+  const isSuperUser =
+    userRoles.includes("super_admin") ||
+    userEmail.toLowerCase() === "mcebisimhayise@gmail.com" ||
+    userEmail.toLowerCase() === "pexpacks@gmail.com";
+
+  const visibleNavItems = useMemo(() => {
+    return ORDERED_NAV_ITEMS.filter((item) => {
+      if (item.href === "/admin/settings") {
+        return isSuperUser;
+      }
+      return true;
+    });
+  }, [isSuperUser]);
+
   const { notifications, refresh: refreshNotifications } = useAdminNotifications(true);
 
   // Search items
   const searchableNav = useMemo(() => {
-    return ORDERED_NAV_ITEMS.filter((item) =>
+    return visibleNavItems.filter((item) =>
       item.label.toLowerCase().includes(searchQuery.toLowerCase()),
     );
-  }, [searchQuery]);
+  }, [visibleNavItems, searchQuery]);
 
   useEffect(() => {
     function handleKey(event: KeyboardEvent) {
@@ -228,9 +243,9 @@ export function AdminShell({
           )}
         </div>
 
-        {/* 2. Navigation Items (12 Exact Items) */}
+        {/* 2. Navigation Items */}
         <nav className={styles.nav}>
-          {ORDERED_NAV_ITEMS.map((item) => {
+          {visibleNavItems.map((item) => {
             const active = isActiveRoute(item.href, pathname, item.exact);
             const NavIcon = item.icon;
             return (

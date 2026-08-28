@@ -260,6 +260,8 @@ export async function inviteUser(formData: FormData): Promise<InviteResult> {
   }
 }
 
+export const MAX_SUPERUSERS = 2;
+
 export interface RoleSyncResult {
   ok: boolean;
   message?: string;
@@ -269,21 +271,50 @@ export interface RoleSyncResult {
 
 export async function syncUserRoles(userId: string, roleSlugs: string[]): Promise<RoleSyncResult> {
   const actor = await assertCan("users.edit");
+  const { isSuperUserEmail } = await import("@/lib/admin/rbac");
   const admin = createSupabaseAdminClient();
 
   const current = await getUser(userId);
   if (!current) return { ok: false, message: "User not found." };
+
+  const targetIsSuperUser =
+    isSuperUserEmail(current.email) || current.roleSlugs.includes("super_admin");
+  const actorIsSuperUser =
+    actor.isSuperAdmin || isSuperUserEmail(actor.user.email);
+
+  // Superusers are not managed by anyone else; their roles/status can only be updated by another superuser.
+  if (targetIsSuperUser && !actorIsSuperUser) {
+    return {
+      ok: false,
+      message: "Superusers are protected and can only be managed by another Superuser.",
+    };
+  }
 
   // Never allow a super admin to remove their own super_admin role (lockout guard).
   if (userId === actor.user.id && current.roleSlugs.includes("super_admin") && !roleSlugs.includes("super_admin")) {
     return { ok: false, message: "You cannot remove your own Super Admin role." };
   }
 
-  // Only super admins may grant or remove the super_admin role.
+  // Only super admins / superusers may grant or remove the super_admin role.
   const superAdminChanged =
     current.roleSlugs.includes("super_admin") !== roleSlugs.includes("super_admin");
-  if (superAdminChanged && !actor.isSuperAdmin) {
-    return { ok: false, message: "Only Super Admins can change the Super Admin role." };
+  if (superAdminChanged && !actorIsSuperUser) {
+    return { ok: false, message: "Only Superusers can change the Super Admin role." };
+  }
+
+  // Enforce MAX 2 Superusers rule
+  if (roleSlugs.includes("super_admin") && !current.roleSlugs.includes("super_admin")) {
+    const roleMap = await buildRoleMap();
+    let superuserCount = 0;
+    for (const [, entry] of roleMap.entries()) {
+      if (entry.roleSlugs.includes("super_admin")) superuserCount++;
+    }
+    if (superuserCount >= MAX_SUPERUSERS) {
+      return {
+        ok: false,
+        message: `Maximum limit reached: Only ${MAX_SUPERUSERS} Superusers are permitted in the system.`,
+      };
+    }
   }
 
   const target = new Set(roleSlugs);
@@ -364,7 +395,19 @@ export async function setUserPermissionOverrides(
 
 export async function deactivateUser(userId: string): Promise<{ ok: boolean; message?: string }> {
   const actor = await assertCan("users.deactivate");
+  const { isSuperUserEmail } = await import("@/lib/admin/rbac");
   if (userId === actor.user.id) return { ok: false, message: "You cannot deactivate your own account." };
+
+  const target = await getUser(userId);
+  const targetIsSuperUser =
+    target?.roleSlugs.includes("super_admin") || isSuperUserEmail(target?.email);
+  const actorIsSuperUser =
+    actor.isSuperAdmin || isSuperUserEmail(actor.user.email);
+
+  if (targetIsSuperUser && !actorIsSuperUser) {
+    return { ok: false, message: "Superuser accounts can only be managed by another Superuser." };
+  }
+
   const admin = createSupabaseAdminClient();
   const { error } = await admin.auth.admin.updateUserById(userId, { ban_duration: "876000h" });
   if (error) {
@@ -403,13 +446,17 @@ export async function reactivateUser(userId: string): Promise<{ ok: boolean; mes
 
 export async function deleteUser(userId: string): Promise<{ ok: boolean; message?: string }> {
   const actor = await assertCan("users.delete");
+  const { isSuperUserEmail } = await import("@/lib/admin/rbac");
   const admin = createSupabaseAdminClient();
 
   if (userId === actor.user.id) return { ok: false, message: "You cannot delete your own account." };
 
   const target = await getUser(userId);
-  if (target?.roleSlugs.includes("super_admin")) {
-    return { ok: false, message: "Super Admin accounts cannot be deleted. Revoke the role first." };
+  const targetIsSuperUser =
+    target?.roleSlugs.includes("super_admin") || isSuperUserEmail(target?.email);
+
+  if (targetIsSuperUser) {
+    return { ok: false, message: "Superuser accounts cannot be deleted. Downgrade or revoke the role first." };
   }
 
   const { error } = await admin.auth.admin.deleteUser(userId);
