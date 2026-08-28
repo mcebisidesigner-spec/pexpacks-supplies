@@ -4,6 +4,7 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { SchoolLogoPlaceholder } from "./SchoolLogoPlaceholder";
+import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
 import styles from "./FeaturedSchools.module.css";
 
 function gradeRangeLabel(grades: string[]) {
@@ -16,6 +17,14 @@ function gradeRangeLabel(grades: string[]) {
   }
 
   return `${grades[0]} to ${grades[grades.length - 1]}`;
+}
+
+function schoolBadge(school: SchoolSearchRecord) {
+  if (school.customBadge) return school.customBadge;
+  if ("custom_badge" in school && typeof school.custom_badge === "string") {
+    return school.custom_badge;
+  }
+  return null;
 }
 
 type FeaturedSchoolsBannerProps = {
@@ -62,9 +71,9 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
             <h3>{school.name}</h3>
             <p>{gradeRangeLabel(school.grades)}</p>
             {school.hasOrderablePacks ? (
-              <span className={styles.yearPillBadge}>{school.customBadge || (school as any).custom_badge || "2027 Packs"}</span>
+              <span className={styles.yearPillBadge}>{schoolBadge(school) || DEFAULT_PACKS_BADGE}</span>
             ) : (
-              <span className={styles.awaitingBadge}>{school.customBadge || (school as any).custom_badge || "Awaiting Lists"}</span>
+              <span className={styles.awaitingBadge}>{schoolBadge(school) || "Awaiting Lists"}</span>
             )}
             <span className={styles.featuredCta}>View packs</span>
           </Link>

@@ -38,8 +38,20 @@ function endOfDay(date: string): string {
   return date;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type FilterableQuery = any;
+type FilterableQueryResult = {
+  data: OrderRow[] | null;
+  count: number | null;
+  error: { message?: string } | null;
+};
+
+type FilterableQuery = Promise<FilterableQueryResult> & {
+  or(filters: string): FilterableQuery;
+  eq(column: string, value: unknown): FilterableQuery;
+  gte(column: string, value: unknown): FilterableQuery;
+  lte(column: string, value: unknown): FilterableQuery;
+  order(column: string, options?: { ascending?: boolean }): FilterableQuery;
+  range(from: number, to: number): FilterableQuery;
+};
 
 function basePaymentFilter(
   query: FilterableQuery,
@@ -67,12 +79,12 @@ export async function listPayments(
   const to = from + pageSize - 1;
 
   // Payment records = anything that touched a gateway or carries a payment status.
-  const base = admin
+  const base = (admin
     .from("orders")
     .select(PAYMENT_FIELDS, { count: "exact" })
     .or(
       `payment_gateway.not.is.null,paid_at.not.is.null,status.in.(${PAYMENT_STATUSES.join(",")})`,
-    );
+    )) as unknown as FilterableQuery;
 
   const query = basePaymentFilter(base, filters);
   const { data, count, error } = await query

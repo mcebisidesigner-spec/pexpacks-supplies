@@ -16,6 +16,25 @@ export type SchoolRow = Database["public"]["Tables"]["schools"]["Row"];
 export type { SchoolStatus };
 export { SCHOOL_STATUSES };
 
+export const PUBLICATION_STATUSES = [
+  "draft",
+  "ready_for_review",
+  "published",
+  "archived",
+] as const;
+export type PublicationStatus = (typeof PUBLICATION_STATUSES)[number];
+
+export const DIRECTORY_STATUSES = ["listed", "hidden", "archived"] as const;
+export type DirectoryStatus = (typeof DIRECTORY_STATUSES)[number];
+
+export const STATIONERY_LIST_STATUSES = [
+  "not_received",
+  "received",
+  "being_digitised",
+  "verified",
+] as const;
+export type StationeryListStatus = (typeof STATIONERY_LIST_STATUSES)[number];
+
 const optString = (max: number, label: string) =>
   z
     .union([z.literal(""), z.string().trim().max(max, `${label} is too long`)])
@@ -86,6 +105,9 @@ export const schoolSchema = z.object({
     .transform((value) => value === "accepted"),
   description: optString(5000, "description"),
   status: z.enum(SCHOOL_STATUSES).default("active"),
+  publication_status: z.enum(PUBLICATION_STATUSES).default("published"),
+  directory_status: z.enum(DIRECTORY_STATUSES).default("listed"),
+  stationery_list_status: z.enum(STATIONERY_LIST_STATUSES).default("verified"),
   published: z.boolean().default(true),
   is_partner: z.boolean().default(false),
   is_featured: z.boolean().default(false),
@@ -135,7 +157,10 @@ export function parseSchoolForm(formData: FormData): ParsedSchoolForm {
       raw(formData, "parent_collection_accepted") || "non_accepted",
     description: raw(formData, "description"),
     status: raw(formData, "status") || "active",
-    published: formData.has("published"),
+    publication_status: raw(formData, "publication_status") || "published",
+    directory_status: raw(formData, "directory_status") || "listed",
+    stationery_list_status: raw(formData, "stationery_list_status") || "verified",
+    published: formData.has("published") || raw(formData, "publication_status") === "published",
     is_partner: formData.has("is_partner"),
     is_featured: formData.has("is_featured"),
     refused_partnership: formData.has("refused_partnership"),
@@ -311,7 +336,7 @@ export async function getSchool(idOrSlug: string): Promise<SchoolRow | null> {
   const decoded = decodeURIComponent(idOrSlug).trim();
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
 
-  let query = admin.from("schools").select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at");
+  let query = admin.from("schools").select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at,publication_status,directory_status,stationery_list_status");
 
   if (isUuid) {
     query = query.eq("id", decoded);

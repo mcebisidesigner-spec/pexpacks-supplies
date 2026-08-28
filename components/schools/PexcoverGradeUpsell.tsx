@@ -13,11 +13,13 @@ import styles from "./GradePackDetails.module.css";
 type PexcoverGradeUpsellProps = {
   school: School;
   grade: GradePack;
+  pexcoverPrice?: number;
 };
 
 export function PexcoverGradeUpsell({
   school,
   grade,
+  pexcoverPrice = PEXCOVER_PRICE,
 }: PexcoverGradeUpsellProps) {
   const router = useRouter();
   const [learnerName, setLearnerName] = useState("");
@@ -74,7 +76,7 @@ export function PexcoverGradeUpsell({
         </small>
       </div>
       <Button type="button" onClick={continueWithPexcover}>
-        Enable Pexcover (+{formatCurrency(PEXCOVER_PRICE)})
+        Enable Pexcover (+{formatCurrency(pexcoverPrice)})
       </Button>
     </section>
   );

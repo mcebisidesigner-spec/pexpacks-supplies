@@ -419,6 +419,9 @@ export interface Database {
           latitude: number | null;
           longitude: number | null;
           published: boolean;
+          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          directory_status?: "listed" | "hidden" | "archived" | null;
+          stationery_list_status?: "not_received" | "received" | "being_digitised" | "verified" | null;
           search_vector: string | null;
           custom_badge: string | null;
           created_at: string;
@@ -448,6 +451,9 @@ export interface Database {
           latitude?: number | null;
           longitude?: number | null;
           published?: boolean;
+          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          directory_status?: "listed" | "hidden" | "archived" | null;
+          stationery_list_status?: "not_received" | "received" | "being_digitised" | "verified" | null;
           updated_by?: string | null;
           custom_badge?: string | null;
           created_at?: string;
@@ -477,6 +483,9 @@ export interface Database {
           latitude?: number | null;
           longitude?: number | null;
           published?: boolean;
+          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          directory_status?: "listed" | "hidden" | "archived" | null;
+          stationery_list_status?: "not_received" | "received" | "being_digitised" | "verified" | null;
           updated_by?: string | null;
           custom_badge?: string | null;
           created_at?: string;
@@ -881,6 +890,10 @@ export interface Database {
           list_version: number;
           pricing_status: string;
           fulfilment_deadline: string | null;
+          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          published_at?: string | null;
+          published_by?: string | null;
+          version?: number;
         };
         Insert: {
           id?: string;
@@ -905,6 +918,10 @@ export interface Database {
           list_version?: number;
           pricing_status?: string;
           fulfilment_deadline?: string | null;
+          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          published_at?: string | null;
+          published_by?: string | null;
+          version?: number;
         };
         Update: {
           id?: string;
@@ -929,6 +946,10 @@ export interface Database {
           list_version?: number;
           pricing_status?: string;
           fulfilment_deadline?: string | null;
+          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          published_at?: string | null;
+          published_by?: string | null;
+          version?: number;
         };
         Relationships: [
           {
@@ -2478,6 +2499,31 @@ export interface Database {
           required_units: number;
           allocated_units: number;
           readiness_percent: number;
+        };
+        Relationships: [];
+      };
+      public_school_directory_view: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          city: string | null;
+          province: string | null;
+          district: string | null;
+          logo: string | null;
+          is_partner: boolean;
+          is_featured: boolean;
+          refused_partnership: boolean;
+          lowest_price: number | null;
+          grades: Json | null;
+          principal: string | null;
+          parent_collection_accepted: boolean;
+          custom_badge: string | null;
+          publication_status: string | null;
+          directory_status: string | null;
+          stationery_list_status: string | null;
+          created_at: string;
+          updated_at: string;
         };
         Relationships: [];
       };

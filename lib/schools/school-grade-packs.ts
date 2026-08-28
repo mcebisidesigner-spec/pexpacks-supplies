@@ -27,7 +27,7 @@ export function getTailoredGradesForSchool(
       const list = schoolOrName.grades
         .map((g) => {
           if (typeof g === "string") return g;
-          if (g && typeof g === "object" && "grade" in g) return String((g as any).grade);
+          if (g && typeof g === "object" && "grade" in g) return String((g as { grade?: unknown }).grade);
           return "";
         })
         .filter(Boolean);

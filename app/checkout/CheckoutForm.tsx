@@ -32,6 +32,7 @@ type CheckoutFormProps = {
   contents: string[];
   deliveryNote: string;
   draftId?: string;
+  pexcoverPrice?: number;
 };
 
 type CheckoutStep = "review" | "details" | "delivery" | "pay";
@@ -80,6 +81,7 @@ export function CheckoutForm({
   contents,
   deliveryNote,
   draftId,
+  pexcoverPrice = PEXCOVER_PRICE,
 }: CheckoutFormProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const router = useRouter();
@@ -174,7 +176,7 @@ export function CheckoutForm({
   }, [draftId, draftLoaded]);
 
   const packPrice = draftTotal ?? defaultPrice;
-  const totalToPay = packPrice + (hasPexcover ? PEXCOVER_PRICE : 0);
+  const totalToPay = packPrice + (hasPexcover ? pexcoverPrice : 0);
   const currentStep = STEPS[activeStep] ?? STEPS[0];
   const itemCount = contents.length;
   const whatsAppHref = useMemo(
@@ -365,7 +367,7 @@ export function CheckoutForm({
                 : "collection_point",
           notes: fulfilmentNotes || undefined,
           pexcoverSelected: hasPexcover,
-          pexcoverAmount: hasPexcover ? PEXCOVER_PRICE : 0,
+          pexcoverAmount: hasPexcover ? pexcoverPrice : 0,
           pexcoverName: pexcoverName.trim() || undefined,
           pexcoverSubjects: pexcoverSubjects.trim() || undefined,
           pexcoverLabelFormat: pexcoverLabelFormat.trim() || undefined,
@@ -436,7 +438,7 @@ export function CheckoutForm({
             onPexcoverLabelFormatChange={setPexcoverLabelFormat}
             pexcoverNotes={pexcoverNotes}
             onPexcoverNotesChange={setPexcoverNotes}
-            pexcoverPrice={PEXCOVER_PRICE}
+            pexcoverPrice={pexcoverPrice}
           />
         );
       case 1:

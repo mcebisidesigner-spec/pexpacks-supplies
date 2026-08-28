@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getSchoolBySlug, getGradeBySlug } from "@/lib/school-utils";
+import { getPublicSiteSettings } from "@/lib/public-data/settings";
 import { CheckoutForm } from "../CheckoutForm";
 import { buildMetadata } from "@/lib/seo";
 
@@ -46,7 +47,10 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
     resolvedDraftId = "customised";
   }
 
-  const school = await getSchoolBySlug(first);
+  const [school, settings] = await Promise.all([
+    getSchoolBySlug(first),
+    getPublicSiteSettings(),
+  ]);
   if (!school) notFound();
 
   const grade = await getGradeBySlug(first, resolvedSecond);
@@ -62,6 +66,7 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
       contents={grade.contents}
       deliveryNote={grade.deliveryNote || ""}
       draftId={resolvedDraftId}
+      pexcoverPrice={settings.pexcoverPrice}
     />
   );
 }

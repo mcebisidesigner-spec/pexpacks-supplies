@@ -18,6 +18,7 @@ type GradePackDetailsProps = {
   descriptions?: Record<string, string>;
   autoCustomise?: boolean;
   readCustomiseFromUrl?: boolean;
+  pexcoverPrice?: number;
 };
 
 function teacherPreferredBadge(item: string) {
@@ -42,6 +43,7 @@ export function GradePackDetails({
   descriptions,
   autoCustomise = false,
   readCustomiseFromUrl = false,
+  pexcoverPrice,
 }: GradePackDetailsProps) {
   const [shouldAutoCustomise, setShouldAutoCustomise] = useState(autoCustomise);
   const pack = createSchoolGradePack(school, grade, descriptions);
@@ -109,7 +111,7 @@ export function GradePackDetails({
           <HappyPayGradePackWidget pack={pack} amount={grade.price} />
         </div>
 
-        <PexcoverGradeUpsell school={school} grade={grade} />
+        <PexcoverGradeUpsell school={school} grade={grade} pexcoverPrice={pexcoverPrice} />
 
         {/* Strategy 4.2: Share buttons */}
         <ShareButtons

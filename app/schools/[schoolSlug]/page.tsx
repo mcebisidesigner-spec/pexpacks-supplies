@@ -12,6 +12,7 @@ import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { schoolPageMultiGraphSchema } from "@/lib/schema";
 import { getCachedSchoolBySlug } from "@/lib/school-utils";
+import { getActivePublicSeason } from "@/lib/public-data/seasons";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildWhatsAppHref } from "@/data/contact";
 import pageStyles from "@/styles/Page.module.css";
@@ -49,7 +50,10 @@ export async function generateMetadata({
   params,
 }: SchoolPageProps): Promise<Metadata> {
   const { schoolSlug } = await params;
-  const school = await getCachedSchoolBySlug(schoolSlug);
+  const [school, season] = await Promise.all([
+    getCachedSchoolBySlug(schoolSlug),
+    getActivePublicSeason(),
+  ]);
 
   if (!school) {
     return buildMetadata(
@@ -59,9 +63,10 @@ export async function generateMetadata({
     );
   }
 
-  const title = `${school.name} Stationery List 2027 - Pexpacks`;
+  const year = season.academicYear;
+  const title = `${school.name} Stationery List ${year} - Pexpacks`;
   const locationDesc = school.metro || school.city || "Gauteng";
-  const description = `Get the verified 2027 stationery packs for ${school.name}, ${locationDesc}. Pre-pack customisation, direct delivery, and lay-by savings plans available.`;
+  const description = `Get the verified ${year} stationery packs for ${school.name}, ${locationDesc}. Pre-pack customisation, direct delivery, and lay-by savings plans available.`;
 
   return {
     ...buildMetadata(
@@ -70,7 +75,7 @@ export async function generateMetadata({
       `/schools/${school.slug}`,
       school.logo || undefined,
       [
-        `${school.name} stationery list 2027`,
+        `${school.name} stationery list ${year}`,
         `${school.name} stationery packs`,
         `${school.name} school supplies`,
         `${school.city} stationery`,
@@ -83,7 +88,10 @@ export async function generateMetadata({
 
 export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   const { schoolSlug } = await params;
-  const school = await getCachedSchoolBySlug(schoolSlug);
+  const [school, season] = await Promise.all([
+    getCachedSchoolBySlug(schoolSlug),
+    getActivePublicSeason(),
+  ]);
 
   if (!school) {
     notFound();
@@ -92,7 +100,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   const isRefused = Boolean(school.refusedPartnership);
   const gradesToRender = buildTailoredPublicGrades(school, school.grades);
   const schoolWithGrades = { ...school, grades: gradesToRender };
-  const websiteRaw = (school.website || (school as any).principal)?.trim();
+  const websiteRaw = school.website?.trim();
   const officialWebsiteUrl = websiteRaw
     ? /^https?:\/\//i.test(websiteRaw)
       ? websiteRaw
@@ -111,7 +119,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <div className={styles.schoolHeroCard}>
             <div className={styles.schoolHeroCardLeft}>
               <span className={styles.schoolHeroYearLabel}>
-                Stationery List 2027
+                Stationery List {season.academicYear}
               </span>
               <span className={styles.schoolHeroPrepared}>
                 {isRefused ? "or you could send your list" : "Prepared with care"}

@@ -10,9 +10,8 @@ import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { breadcrumbSchema, productSchema } from "@/lib/schema";
-import {
-  getCachedSchoolBySlug,
-} from "@/lib/school-utils";
+import { getCachedSchoolBySlug } from "@/lib/school-utils";
+import { getPublicSiteSettings } from "@/lib/public-data/settings";
 import page from "@/styles/Page.module.css";
 
 type GradePageProps = {
@@ -66,7 +65,10 @@ export async function generateMetadata({
 
 export default async function GradePackPage({ params }: GradePageProps) {
   const { schoolSlug, gradeSlug } = await params;
-  const school = await getCachedSchoolBySlug(schoolSlug);
+  const [school, settings] = await Promise.all([
+    getCachedSchoolBySlug(schoolSlug),
+    getPublicSiteSettings(),
+  ]);
   const grade = school?.grades.find((g) => g.gradeSlug === gradeSlug);
 
   if (!school || !grade) {
@@ -112,7 +114,13 @@ export default async function GradePackPage({ params }: GradePageProps) {
       />
       <section className={page.section}>
         <PackBuildingAnimation schoolName={school.name}>
-          <GradePackDetails school={school} grade={grade} descriptions={descriptions} readCustomiseFromUrl />
+          <GradePackDetails
+            school={school}
+            grade={grade}
+            descriptions={descriptions}
+            readCustomiseFromUrl
+            pexcoverPrice={settings.pexcoverPrice}
+          />
         </PackBuildingAnimation>
       </section>
     </>

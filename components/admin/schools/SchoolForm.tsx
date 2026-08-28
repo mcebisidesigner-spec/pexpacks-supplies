@@ -2,15 +2,14 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { Building2, ChevronDown, GraduationCap, Image as ImageIcon, Save, ShieldCheck } from "lucide-react";
+import { Building2, ChevronDown, Image as ImageIcon, Save, ShieldCheck } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
-import { SCHOOL_STATUSES } from "@/lib/admin/school-constants";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
+import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
 import { DateField } from "@/components/admin/DateField";
 import { FloatingInput } from "@/components/ui/FloatingInput";
-import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import { Field, FieldLabel, FieldError, FormRow } from "@/components/admin/ui/Form";
+import { Field, FieldLabel, FieldError } from "@/components/admin/ui/Form";
 import { StickyFormBar } from "@/components/admin/ui/StickyFormBar";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -68,13 +67,15 @@ const ALL_GRADES = [
   "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"
 ];
 
+type GradePreset = "high" | "primary" | "combined" | "custom";
+
 const GRADE_PRESETS = {
   high: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
   primary: ["Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7"],
   combined: ALL_GRADES,
 };
 
-function detectInitialPreset(existingGrades: string[]): "high" | "primary" | "combined" | "custom" {
+function detectInitialPreset(existingGrades: string[]): GradePreset {
   if (!existingGrades || existingGrades.length === 0) return "high";
   const set = new Set(existingGrades);
   const isHigh = GRADE_PRESETS.high.every((g) => set.has(g)) && existingGrades.length === GRADE_PRESETS.high.length;
@@ -104,11 +105,11 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
   const [selectedGrades, setSelectedGrades] = useState<string[]>(
     initialGradesList.length > 0 ? initialGradesList : GRADE_PRESETS.high
   );
-  const [gradePreset, setGradePreset] = useState<"high" | "primary" | "combined" | "custom">(
+  const [gradePreset, setGradePreset] = useState<GradePreset>(
     () => detectInitialPreset(initialGradesList)
   );
 
-  const handlePresetChange = (preset: "high" | "primary" | "combined" | "custom") => {
+  const handlePresetChange = (preset: GradePreset) => {
     setGradePreset(preset);
     if (preset === "high") setSelectedGrades(GRADE_PRESETS.high);
     else if (preset === "primary") setSelectedGrades(GRADE_PRESETS.primary);
@@ -285,7 +286,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                   <select
                     id="school_type_preset"
                     value={gradePreset}
-                    onChange={(e) => handlePresetChange(e.target.value as any)}
+                    onChange={(e) => handlePresetChange(e.target.value as GradePreset)}
                     className={formStyles.floatingSelect}
                   >
                     <option value="high">High School (Grade 8–12)</option>
@@ -310,7 +311,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 id="custom_badge"
                 name="custom_badge"
                 label="Search Pill Badge"
-                defaultValue={str(school?.custom_badge) || "2027 Packs"}
+                defaultValue={str(school?.custom_badge) || DEFAULT_PACKS_BADGE}
                 error={state?.errors?.custom_badge}
               />
             </div>
@@ -416,20 +417,10 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               <ShieldCheck size={16} />
             </div>
             <span>Status &amp; Flags</span>
-          </div>
+</div>
 
           <div className={formStyles.sideGroup}>
             <div className={formStyles.sideFieldsRow}>
-              <div className={formStyles.sideField}>
-                <label className={formStyles.sideLabel} htmlFor="status">Publication Status</label>
-                <select id="status" name="status" defaultValue={school?.status ?? "active"} className={formStyles.sideSelect}>
-                  {SCHOOL_STATUSES.map((s) => (
-                    <option key={s} value={s}>{s === "archived" ? "Hidden" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
-                  ))}
-                </select>
-                {err("status")}
-              </div>
-
               <div className={formStyles.sideField}>
                 <label className={formStyles.sideLabel} htmlFor="parent_collection_accepted">Parent Collection Option</label>
                 <select id="parent_collection_accepted" name="parent_collection_accepted" defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"} className={formStyles.sideSelect}>

@@ -1,4 +1,6 @@
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+import { SEASON_CACHE_TAG } from "@/lib/public-data/seasons";
+import { SETTINGS_CACHE_TAG } from "@/lib/public-data/settings";
 
 /**
  * Shared invalidation for the public catalogue after admin mutations.
@@ -14,6 +16,8 @@ import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 export function revalidateCatalog(options?: {
   schoolSlug?: string | null;
   packSlug?: string | null;
+  revalidateSeason?: boolean;
+  revalidateSettings?: boolean;
 }): void {
   if (typeof window !== "undefined") return;
 
@@ -24,6 +28,12 @@ export function revalidateCatalog(options?: {
     if (typeof nextCache.revalidateTag === "function") {
       try {
         nextCache.revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+        if (options?.revalidateSeason) {
+          nextCache.revalidateTag(SEASON_CACHE_TAG, { expire: 0 });
+        }
+        if (options?.revalidateSettings) {
+          nextCache.revalidateTag(SETTINGS_CACHE_TAG, { expire: 0 });
+        }
       } catch (err) {
         console.error("[catalog-revalidate] revalidateTag failed:", err);
       }

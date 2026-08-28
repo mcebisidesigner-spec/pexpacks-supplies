@@ -17,6 +17,7 @@ import {
 import { SchoolLogoPlaceholder } from "./SchoolLogoPlaceholder";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import { SchoolsHowItWorks } from "./SchoolsHowItWorks";
+import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
 import styles from "./SchoolSearchPanel.module.css";
 
 const resultLimit = 12;
@@ -339,7 +340,7 @@ export function SchoolSearchPanel({
                                 </div>
                                 <div className={heroStyles.heroResultBadges}>
                                   {school.hasOrderablePacks ? (
-                                    <span className={heroStyles.yearPillBadge}>{school.customBadge || "2027 Packs"}</span>
+                                    <span className={heroStyles.yearPillBadge}>{school.customBadge || DEFAULT_PACKS_BADGE}</span>
                                   ) : (
                                     <span className={heroStyles.awaitingBadge}>{school.customBadge || "Awaiting Lists"}</span>
                                   )}

@@ -14,6 +14,7 @@ import {
   trackSchoolNoResultsRecovery,
   trackSchoolResultSelected,
 } from "@/lib/analytics";
+import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
 import clsx from "clsx";
 import styles from "./HeroSearch.module.css";
 
@@ -333,7 +334,7 @@ export function HeroSearch({
                               </div>
                               <div className={styles.heroResultBadges}>
                                 {school.hasOrderablePacks ? (
-                                  <span className={styles.yearPillBadge}>{school.customBadge || "2027 Packs"}</span>
+                                  <span className={styles.yearPillBadge}>{school.customBadge || DEFAULT_PACKS_BADGE}</span>
                                 ) : (
                                   <span className={styles.awaitingBadge}>{school.customBadge || "Awaiting Lists"}</span>
                                 )}

@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
+import { getPublicSiteSettings } from "@/lib/public-data/settings";
 import { TrayCheckoutClient } from "./TrayCheckoutClient";
 
 type CheckoutPageProps = {
@@ -25,7 +26,8 @@ export default async function CheckoutPage({
   const { school, grade, phase, pack, draft } = await searchParams;
 
   if (!school && !grade && !phase && !pack) {
-    return <TrayCheckoutClient />;
+    const settings = await getPublicSiteSettings();
+    return <TrayCheckoutClient pexcoverPrice={settings.pexcoverPrice} />;
   }
 
   let slug: string;

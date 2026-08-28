@@ -8,8 +8,7 @@ import {
 } from "@/lib/operations/pricing";
 
 type DatabaseError = { code?: string; message?: string } | null;
-type DynamicRow = Record<string, any>;
-type DynamicValue = any;
+type DynamicRow = Record<string, unknown>;
 
 type DynamicResult<T> = {
   data: T;
@@ -40,7 +39,7 @@ type DynamicQuery<T = DynamicRow[]> = Promise<DynamicResult<T>> & {
 
 type DynamicClient = {
   from(table: string): DynamicQuery<DynamicRow[]>;
-  rpc(fn: string, args?: unknown): Promise<DynamicResult<DynamicValue>>;
+  rpc(fn: string, args?: unknown): Promise<DynamicResult<unknown>>;
 };
 
 function db(): DynamicClient {
@@ -225,7 +224,7 @@ export async function listSuppliers() {
   assertNoError(error, "Unable to load suppliers");
   return (data ?? []).map((row: DynamicRow) => ({
     ...row,
-    offer_count: row.supplier_offers?.[0]?.count ?? 0,
+    offer_count: ((row.supplier_offers as Array<{ count?: number }> | undefined)?.[0]?.count) ?? 0,
   })) as SupplierRow[];
 }
 
@@ -365,12 +364,15 @@ export async function listPricingReview() {
   assertNoError(rulesError, "Unable to load pricing rules");
   const rules = (rulesData ?? []) as PricingRule[];
   return (data ?? []).map((row: DynamicRow) => {
-    const offer =
-      row.supplier_offers?.find((item: DynamicRow) => item.is_preferred) ??
-      row.supplier_offers?.[0];
+    const offers = (row.supplier_offers ?? []) as DynamicRow[];
+    const offer = offers.find((item) => item.is_preferred) ?? offers[0];
     const cost = row.latest_verified_cost ?? offer?.unit_cost ?? null;
     const price = asNumber(row.current_selling_price);
-    const rule = selectPricingRule(rules, row as any);
+    const rule = selectPricingRule(rules, {
+      id: String(row.id),
+      category: row.category == null ? null : String(row.category),
+      brand: row.brand == null ? null : String(row.brand),
+    });
     const suggested =
       cost == null || !rule
         ? price
@@ -385,7 +387,7 @@ export async function listPricingReview() {
       latest_verified_cost: cost,
       suggested_price: suggested,
       current_margin: cost == null ? null : grossMargin(price, asNumber(cost)),
-      preferred_supplier: offer?.suppliers?.name ?? null,
+      preferred_supplier: ((offer?.suppliers as { name?: unknown } | undefined)?.name as string | null | undefined) ?? null,
       offer_valid_until: offer?.valid_until ?? null,
       pricing_rule: rule?.name ?? null,
     };
@@ -748,7 +750,7 @@ export async function updatePackingRecord(
   assertNoError(error, "Unable to update packing");
   
   if (record?.order_id) {
-    await advanceOrderStatus(record.order_id);
+    await advanceOrderStatus(String(record.order_id));
   }
 }
 
@@ -779,7 +781,7 @@ export async function updateFulfilmentRecord(
   assertNoError(error, "Unable to update fulfilment");
   
   if (record?.order_id) {
-    await advanceOrderStatus(record.order_id);
+    await advanceOrderStatus(String(record.order_id));
   }
 }
 
@@ -962,12 +964,12 @@ export async function createSupplierReceipt(input: {
     .single();
   
   if (po) {
-    const items = po.supplier_purchase_items || [];
+    const items = (po.supplier_purchase_items || []) as Array<{ ordered_quantity: number; received_quantity: number }>;
     const allFullyReceived = items.every(
-      (i: DynamicRow) => i.received_quantity >= i.ordered_quantity,
+      (i) => i.received_quantity >= i.ordered_quantity,
     );
     const anyReceived = items.some(
-      (i: DynamicRow) => i.received_quantity > 0,
+      (i) => i.received_quantity > 0,
     );
     
     let newStatus = "confirmed";
@@ -1203,14 +1205,14 @@ async function sendOrderUpdateNotification(
       .single();
     if (!order?.buyer_email) return;
     await sendOrderStatusUpdate({
-      order_reference: order.order_reference,
-      buyer_email: order.buyer_email,
-      buyer_name: order.buyer_name || "there",
-      tracking_token: order.tracking_token,
+      order_reference: String(order.order_reference),
+      buyer_email: String(order.buyer_email),
+      buyer_name: order.buyer_name ? String(order.buyer_name) : "there",
+      tracking_token: String(order.tracking_token),
       status: newStatus,
-      courier_name: order.courier_name,
-      waybill_number: order.waybill_number,
-      estimated_delivery: order.estimated_delivery,
+      courier_name: order.courier_name ? String(order.courier_name) : null,
+      waybill_number: order.waybill_number ? String(order.waybill_number) : null,
+      estimated_delivery: order.estimated_delivery ? String(order.estimated_delivery) : null,
     });
   } catch (err) {
     console.error("[email] status update notification failed:", err);
@@ -1237,7 +1239,7 @@ export async function upsertCustomerAndLearner(input: {
       .maybeSingle();
     
     if (existing) {
-      customerId = existing.id;
+      customerId = String(existing.id);
     } else {
       const { data: created, error: customerError } = await client
         .from("customers")
@@ -1249,7 +1251,7 @@ export async function upsertCustomerAndLearner(input: {
         .select("id")
         .single();
       assertNoError(customerError, "Failed to create customer");
-      customerId = created.id;
+      customerId = String(created.id);
     }
   }
 
@@ -1265,7 +1267,7 @@ export async function upsertCustomerAndLearner(input: {
       .select("id")
       .eq("slug", input.schoolSlug)
       .maybeSingle();
-    schoolId = school?.id ?? null;
+    schoolId = school?.id ? String(school.id) : null;
   }
 
   // Upsert learner by customer_id + full_name
@@ -1278,7 +1280,7 @@ export async function upsertCustomerAndLearner(input: {
 
   let learnerId: string;
   if (existingLearner) {
-    learnerId = existingLearner.id;
+    learnerId = String(existingLearner.id);
   } else {
     const { data: created, error: learnerError } = await client
       .from("learners")
@@ -1291,7 +1293,7 @@ export async function upsertCustomerAndLearner(input: {
       .select("id")
       .single();
     assertNoError(learnerError, "Failed to create learner");
-    learnerId = created.id;
+    learnerId = String(created.id);
   }
 
   return { customerId, learnerId };
@@ -1538,7 +1540,7 @@ export async function listOrderItems(orderIdOrRef: string) {
     if (orderError || !orderRow?.id) {
       return [];
     }
-    targetOrderId = orderRow.id;
+    targetOrderId = String(orderRow.id);
   }
 
   const { data, error } = await db()

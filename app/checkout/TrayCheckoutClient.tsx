@@ -91,8 +91,8 @@ function fulfilmentToApiMethod(option: FulfilmentOption) {
   return 'collection_point'
 }
 
-function getPackTotal(pack: TrayPackItem) {
-  return pack.totalPrice + (pack.wantsPexcover ? PEXCOVER_PRICE : 0)
+function getPackTotal(pack: TrayPackItem, fee: number = PEXCOVER_PRICE) {
+  return pack.totalPrice + (pack.wantsPexcover ? fee : 0)
 }
 
 function getItemLineTotal(item: TrayPackItem['items'][number]) {
@@ -133,7 +133,13 @@ function FulfilmentIcon({ option }: { option: FulfilmentOption }) {
   )
 }
 
-export function TrayCheckoutClient() {
+type TrayCheckoutClientProps = {
+  pexcoverPrice?: number
+}
+
+export function TrayCheckoutClient({
+  pexcoverPrice = PEXCOVER_PRICE,
+}: TrayCheckoutClientProps = {}) {
   const router = useRouter()
   const packs = usePackTrayStore((s) => s.packs)
   const openTray = usePackTrayStore((s) => s.openTray)
@@ -193,7 +199,7 @@ export function TrayCheckoutClient() {
     () => packs.filter((p) => p.wantsPexcover).length,
     [packs],
   )
-  const pexcoverTotal = pexcoverCount * PEXCOVER_PRICE
+  const pexcoverTotal = pexcoverCount * pexcoverPrice
   const itemsTotal = total - pexcoverTotal
 
   const uniqueSchools = useMemo(() => {
@@ -466,7 +472,7 @@ export function TrayCheckoutClient() {
             totalPrice: pack.totalPrice,
             modifications: pack.modifications,
             wantsPexcover: pack.wantsPexcover || false,
-            pexcoverPrice: pack.wantsPexcover ? PEXCOVER_PRICE : 0,
+            pexcoverPrice: pack.wantsPexcover ? pexcoverPrice : 0,
             basePackPrice: pack.totalPrice,
           })),
           isTrayOrder: true,
@@ -1006,7 +1012,7 @@ export function TrayCheckoutClient() {
                         )}
                       </div>
                       <strong className={styles.orderPackPrice}>
-                        {formatCurrency(getPackTotal(pack))}
+                        {formatCurrency(getPackTotal(pack, pexcoverPrice))}
                       </strong>
                     </div>
 
@@ -1069,7 +1075,7 @@ export function TrayCheckoutClient() {
                               Pexcover <em>(Book covering)</em>
                             </span>
                             <span />
-                            <strong>{formatCurrency(PEXCOVER_PRICE)}</strong>
+                            <strong>{formatCurrency(pexcoverPrice)}</strong>
                           </li>
                         ) : null}
                         {hiddenCount > 0 ? (

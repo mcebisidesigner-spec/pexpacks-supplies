@@ -27,7 +27,7 @@ export function SchoolsFaqAccordion({ className }: SchoolsFaqAccordionProps) {
         </details>
         <details className={homeStyles.accordionItem} name="schools-faq">
           <summary className={homeStyles.accordionSummary}>
-            Are these lists for the upcoming 2027 academic year?
+            Are these lists for the upcoming academic year?
           </summary>
           <div className={homeStyles.accordionAnswer}>
             <p>Yes, every list is updated directly from the school.</p>
