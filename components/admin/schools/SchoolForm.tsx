@@ -2,8 +2,15 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { Building2, ChevronDown, Image as ImageIcon, Save, ShieldCheck } from "lucide-react";
+import {
+  Building2,
+  ChevronDown,
+  Image as ImageIcon,
+  Save,
+  ShieldCheck,
+} from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
+import { SCHOOL_STATUSES } from "@/lib/admin/schools";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
 import { DateField } from "@/components/admin/DateField";
@@ -63,26 +70,52 @@ function str(v: string | number | null | undefined): string {
 }
 
 const ALL_GRADES = [
-  "Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6",
-  "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"
+  "Grade R",
+  "Grade 1",
+  "Grade 2",
+  "Grade 3",
+  "Grade 4",
+  "Grade 5",
+  "Grade 6",
+  "Grade 7",
+  "Grade 8",
+  "Grade 9",
+  "Grade 10",
+  "Grade 11",
+  "Grade 12",
 ];
 
 type GradePreset = "high" | "primary" | "combined" | "custom";
 
 const GRADE_PRESETS = {
   high: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
-  primary: ["Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7"],
+  primary: [
+    "Grade R",
+    "Grade 1",
+    "Grade 2",
+    "Grade 3",
+    "Grade 4",
+    "Grade 5",
+    "Grade 6",
+    "Grade 7",
+  ],
   combined: ALL_GRADES,
 };
 
 function detectInitialPreset(existingGrades: string[]): GradePreset {
   if (!existingGrades || existingGrades.length === 0) return "high";
   const set = new Set(existingGrades);
-  const isHigh = GRADE_PRESETS.high.every((g) => set.has(g)) && existingGrades.length === GRADE_PRESETS.high.length;
+  const isHigh =
+    GRADE_PRESETS.high.every((g) => set.has(g)) &&
+    existingGrades.length === GRADE_PRESETS.high.length;
   if (isHigh) return "high";
-  const isPrimary = GRADE_PRESETS.primary.every((g) => set.has(g)) && existingGrades.length === GRADE_PRESETS.primary.length;
+  const isPrimary =
+    GRADE_PRESETS.primary.every((g) => set.has(g)) &&
+    existingGrades.length === GRADE_PRESETS.primary.length;
   if (isPrimary) return "primary";
-  const isCombined = GRADE_PRESETS.combined.every((g) => set.has(g)) && existingGrades.length === GRADE_PRESETS.combined.length;
+  const isCombined =
+    GRADE_PRESETS.combined.every((g) => set.has(g)) &&
+    existingGrades.length === GRADE_PRESETS.combined.length;
   if (isCombined) return "combined";
   return "custom";
 }
@@ -90,23 +123,25 @@ function detectInitialPreset(existingGrades: string[]): GradePreset {
 export function SchoolForm({ school, action }: SchoolFormProps) {
   const [state, formAction] = useActionState<SchoolFormState, FormData>(
     action,
-    { ok: false }
+    { ok: false },
   );
 
   const [logoPreview, setLogoPreview] = useState<string | null>(
-    school?.logo ?? null
+    school?.logo ?? null,
   );
   const [logoValue, setLogoValue] = useState<string>(school?.logo ?? "");
 
   const initialGradesList = Array.isArray(school?.grades)
-    ? (school.grades.filter((g): g is string => typeof g === "string") as string[])
+    ? (school.grades.filter(
+        (g): g is string => typeof g === "string",
+      ) as string[])
     : GRADE_PRESETS.high;
 
   const [selectedGrades, setSelectedGrades] = useState<string[]>(
-    initialGradesList.length > 0 ? initialGradesList : GRADE_PRESETS.high
+    initialGradesList.length > 0 ? initialGradesList : GRADE_PRESETS.high,
   );
-  const [gradePreset, setGradePreset] = useState<GradePreset>(
-    () => detectInitialPreset(initialGradesList)
+  const [gradePreset, setGradePreset] = useState<GradePreset>(() =>
+    detectInitialPreset(initialGradesList),
   );
 
   const handlePresetChange = (preset: GradePreset) => {
@@ -121,7 +156,9 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
     setSelectedGrades((prev) =>
       prev.includes(grade)
         ? prev.filter((g) => g !== grade)
-        : [...prev, grade].sort((a, b) => ALL_GRADES.indexOf(a) - ALL_GRADES.indexOf(b))
+        : [...prev, grade].sort(
+            (a, b) => ALL_GRADES.indexOf(a) - ALL_GRADES.indexOf(b),
+          ),
     );
   };
 
@@ -170,196 +207,213 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
 
       {/* Banner Alert Messages */}
       {state?.ok ? (
-        <div className={`${adminStyles.badgeGreen} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block}`} role="status">
+        <div
+          className={`${adminStyles.badgeGreen} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block}`}
+          role="status"
+        >
           ✓ {state.message || "School updated successfully."}
         </div>
       ) : state?.message ? (
-        <div className={`${adminStyles.badgeRed} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block} ${adminStyles.cRed}`} role="alert">
+        <div
+          className={`${adminStyles.badgeRed} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block} ${adminStyles.cRed}`}
+          role="alert"
+        >
           ⚠ {state.message}
         </div>
       ) : null}
 
       {/* Section 1: Identity & Location */}
       <div className={formStyles.card}>
-          <div className={formStyles.cardHeader}>
-            <div className={adminStyles.sectionIconTeal}>
-              <Building2 size={16} />
-            </div>
-            <span>School Identity &amp; Primary Details</span>
+        <div className={formStyles.cardHeader}>
+          <div className={adminStyles.sectionIconTeal}>
+            <Building2 size={16} />
+          </div>
+          <span>School Identity &amp; Primary Details</span>
+        </div>
+
+        <div className={formStyles.grid3}>
+          <div className={formStyles.colSpan2}>
+            <FloatingInput
+              id="name"
+              name="name"
+              label="School Name"
+              defaultValue={school?.name ?? ""}
+              required
+              error={state?.errors?.name}
+            />
           </div>
 
-          <div className={formStyles.grid3}>
-            <div className={formStyles.colSpan2}>
-              <FloatingInput
-                id="name"
-                name="name"
-                label="School Name"
-                defaultValue={school?.name ?? ""}
-                required
-                error={state?.errors?.name}
-              />
-            </div>
+          <div className={formStyles.colSpan1}>
+            <FloatingInput
+              id="slug"
+              name="slug"
+              label="URL Slug / Identifier"
+              defaultValue={str(school?.slug)}
+              error={state?.errors?.slug}
+            />
+          </div>
 
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="slug"
-                name="slug"
-                label="URL Slug / Identifier"
-                defaultValue={str(school?.slug)}
-                error={state?.errors?.slug}
-              />
-            </div>
+          <div className={formStyles.colSpan1}>
+            <FloatingInput
+              id="city"
+              name="city"
+              label="City / Town"
+              defaultValue={str(school?.city)}
+              error={state?.errors?.city}
+            />
+          </div>
 
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="city"
-                name="city"
-                label="City / Town"
-                defaultValue={str(school?.city)}
-                error={state?.errors?.city}
-              />
-            </div>
+          <div className={formStyles.colSpan1}>
+            <FloatingInput
+              id="province"
+              name="province"
+              label="Province"
+              defaultValue={str(school?.province)}
+              error={state?.errors?.province}
+            />
+          </div>
 
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="province"
-                name="province"
-                label="Province"
-                defaultValue={str(school?.province)}
-                error={state?.errors?.province}
-              />
-            </div>
+          <div className={formStyles.colSpan1}>
+            <FloatingInput
+              id="district"
+              name="district"
+              label="District"
+              defaultValue={str(school?.district)}
+              error={state?.errors?.district}
+            />
+          </div>
 
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="district"
-                name="district"
-                label="District"
-                defaultValue={str(school?.district)}
-                error={state?.errors?.district}
-              />
-            </div>
+          <div className={formStyles.colSpan1}>
+            <FloatingInput
+              id="email"
+              name="email"
+              type="email"
+              label="Contact Email"
+              defaultValue={str(school?.email)}
+              error={state?.errors?.email}
+            />
+          </div>
 
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="email"
-                name="email"
-                type="email"
-                label="Contact Email"
-                defaultValue={str(school?.email)}
-                error={state?.errors?.email}
-              />
-            </div>
+          <div className={formStyles.colSpan1}>
+            <FloatingInput
+              id="telephone"
+              name="telephone"
+              label="Telephone"
+              defaultValue={str(school?.telephone)}
+              error={state?.errors?.telephone}
+            />
+          </div>
 
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="telephone"
-                name="telephone"
-                label="Telephone"
-                defaultValue={str(school?.telephone)}
-                error={state?.errors?.telephone}
-              />
-            </div>
+          <div className={formStyles.colSpan1}>
+            <FloatingInput
+              id="principal"
+              name="principal"
+              label="School Official Website"
+              defaultValue={str(school?.principal)}
+              error={state?.errors?.principal}
+            />
+          </div>
 
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="principal"
-                name="principal"
-                label="School Official Website"
-                defaultValue={str(school?.principal)}
-                error={state?.errors?.principal}
+          <div className={formStyles.colSpan3}>
+            <FloatingInput
+              id="address"
+              name="address"
+              label="Physical Address"
+              defaultValue={str(school?.address)}
+              error={state?.errors?.address}
+            />
+          </div>
+          <div className={formStyles.colSpan2}>
+            <div className={formStyles.floatingSelectWrapper}>
+              <div className={formStyles.floatingSelectContainer}>
+                <select
+                  id="school_type_preset"
+                  value={gradePreset}
+                  onChange={(e) =>
+                    handlePresetChange(e.target.value as GradePreset)
+                  }
+                  className={formStyles.floatingSelect}
+                >
+                  <option value="high">High School (Grade 8–12)</option>
+                  <option value="primary">Primary School (Grade R–7)</option>
+                  <option value="combined">Combined School (Grade R–12)</option>
+                  <option value="custom">Custom (Select Grades)</option>
+                </select>
+                <label
+                  htmlFor="school_type_preset"
+                  className={formStyles.floatingSelectLabel}
+                >
+                  Offered Grades
+                </label>
+                <span className={formStyles.floatingSelectArrow}>
+                  <ChevronDown size={14} />
+                </span>
+              </div>
+              <input
+                type="hidden"
+                name="grades"
+                value={selectedGrades.join(", ")}
               />
+              {err("grades")}
             </div>
+          </div>
 
+          <div className={formStyles.colSpan1}>
+            <FloatingInput
+              id="custom_badge"
+              name="custom_badge"
+              label="Search Pill Badge"
+              defaultValue={str(school?.custom_badge) || DEFAULT_PACKS_BADGE}
+              error={state?.errors?.custom_badge}
+            />
+          </div>
+
+          {gradePreset === "custom" && (
             <div className={formStyles.colSpan3}>
-              <FloatingInput
-                id="address"
-                name="address"
-                label="Physical Address"
-                defaultValue={str(school?.address)}
-                error={state?.errors?.address}
-              />
-            </div>
-            <div className={formStyles.colSpan2}>
-              <div className={formStyles.floatingSelectWrapper}>
-                <div className={formStyles.floatingSelectContainer}>
-                  <select
-                    id="school_type_preset"
-                    value={gradePreset}
-                    onChange={(e) => handlePresetChange(e.target.value as GradePreset)}
-                    className={formStyles.floatingSelect}
-                  >
-                    <option value="high">High School (Grade 8–12)</option>
-                    <option value="primary">Primary School (Grade R–7)</option>
-                    <option value="combined">Combined School (Grade R–12)</option>
-                    <option value="custom">Custom (Select Grades)</option>
-                  </select>
-                  <label htmlFor="school_type_preset" className={formStyles.floatingSelectLabel}>
-                    Offered Grades
-                  </label>
-                  <span className={formStyles.floatingSelectArrow}>
-                    <ChevronDown size={14} />
-                  </span>
-                </div>
-                <input type="hidden" name="grades" value={selectedGrades.join(", ")} />
-                {err("grades")}
-              </div>
-            </div>
-
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="custom_badge"
-                name="custom_badge"
-                label="Search Pill Badge"
-                defaultValue={str(school?.custom_badge) || DEFAULT_PACKS_BADGE}
-                error={state?.errors?.custom_badge}
-              />
-            </div>
-
-            {gradePreset === "custom" && (
-              <div className={formStyles.colSpan3}>
-                <div className={formStyles.customGradesBox}>
-                  <span className={formStyles.customGradesTitle}>
-                    Select Individual Offered Grades (Grade R – 12):
-                  </span>
-                  <div className={formStyles.gradesChipsGrid}>
-                    {ALL_GRADES.map((g) => {
-                      const isChecked = selectedGrades.includes(g);
-                      return (
-                        <label
-                          key={g}
-                          className={`${formStyles.gradeChip} ${isChecked ? formStyles.gradeChipActive : ""}`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => handleToggleGrade(g)}
-                            className={formStyles.gradeChipCheckbox}
-                          />
-                          <span>{g}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
+              <div className={formStyles.customGradesBox}>
+                <span className={formStyles.customGradesTitle}>
+                  Select Individual Offered Grades (Grade R – 12):
+                </span>
+                <div className={formStyles.gradesChipsGrid}>
+                  {ALL_GRADES.map((g) => {
+                    const isChecked = selectedGrades.includes(g);
+                    return (
+                      <label
+                        key={g}
+                        className={`${formStyles.gradeChip} ${isChecked ? formStyles.gradeChipActive : ""}`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => handleToggleGrade(g)}
+                          className={formStyles.gradeChipCheckbox}
+                        />
+                        <span>{g}</span>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
-            )}
-
-            <div className={formStyles.colSpan1}>
-              <Field>
-                <FieldLabel htmlFor="partner_since">Partner Since Date</FieldLabel>
-                <DateField
-                  id="partner_since"
-                  name="partner_since"
-                  defaultValue={str(school?.partner_since)}
-                  ariaLabel="Partner since"
-                  placeholder="Select partnership date"
-                />
-                {err("partner_since")}
-              </Field>
             </div>
+          )}
+
+          <div className={formStyles.colSpan1}>
+            <Field>
+              <FieldLabel htmlFor="partner_since">
+                Partner Since Date
+              </FieldLabel>
+              <DateField
+                id="partner_since"
+                name="partner_since"
+                defaultValue={str(school?.partner_since)}
+                ariaLabel="Partner since"
+                placeholder="Select partnership date"
+              />
+              {err("partner_since")}
+            </Field>
           </div>
         </div>
+      </div>
 
       {/* Bottom Horizontal Row (Desktop: Side-by-Side, Mobile: Stacked) */}
       <div className={formStyles.bottomRow}>
@@ -374,7 +428,11 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             <div className={formStyles.logoUploadBox}>
               {logoPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={logoPreview} alt="School logo preview" className={formStyles.logoPreviewImg} />
+                <img
+                  src={logoPreview}
+                  alt="School logo preview"
+                  className={formStyles.logoPreviewImg}
+                />
               ) : (
                 <SchoolLogoPlaceholder width={80} height={80} />
               )}
@@ -395,12 +453,20 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             </div>
 
             <div className={formStyles.logoInfoGroup}>
-              <p className={`${adminStyles.cWhite} ${adminStyles.fw600}`}>Upload School Emblem / Logo</p>
-              <p className={`${adminStyles.cSubtle} ${styles.text11}`}>PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder used if empty.</p>
+              <p className={`${adminStyles.cWhite} ${adminStyles.fw600}`}>
+                Upload School Emblem / Logo
+              </p>
+              <p className={`${adminStyles.cSubtle} ${styles.text11}`}>
+                PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder
+                used if empty.
+              </p>
               {logoPreview ? (
                 <button
                   type="button"
-                  onClick={() => { setLogoPreview(null); setLogoValue(""); }}
+                  onClick={() => {
+                    setLogoPreview(null);
+                    setLogoValue("");
+                  }}
                   className={formStyles.removeLogoBtn}
                 >
                   Remove logo
@@ -417,13 +483,103 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               <ShieldCheck size={16} />
             </div>
             <span>Status &amp; Flags</span>
-</div>
+          </div>
 
           <div className={formStyles.sideGroup}>
             <div className={formStyles.sideFieldsRow}>
               <div className={formStyles.sideField}>
-                <label className={formStyles.sideLabel} htmlFor="parent_collection_accepted">Parent Collection Option</label>
-                <select id="parent_collection_accepted" name="parent_collection_accepted" defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"} className={formStyles.sideSelect}>
+                <label className={formStyles.sideLabel} htmlFor="publication_status">
+                  Publication Status
+                </label>
+                <select
+                  id="publication_status"
+                  name="publication_status"
+                  defaultValue={school?.publication_status ?? (school?.published === false ? "draft" : "published")}
+                  className={formStyles.sideSelect}
+                >
+                  <option value="draft">Draft (Back-office only)</option>
+                  <option value="ready_for_review">Ready for Review</option>
+                  <option value="published">Published (Live Storefront)</option>
+                  <option value="archived">Archived</option>
+                </select>
+                {err("publication_status")}
+              </div>
+
+              <div className={formStyles.sideField}>
+                <label className={formStyles.sideLabel} htmlFor="directory_status">
+                  Directory Status
+                </label>
+                <select
+                  id="directory_status"
+                  name="directory_status"
+                  defaultValue={school?.directory_status ?? "listed"}
+                  className={formStyles.sideSelect}
+                >
+                  <option value="listed">Listed in Public Directory</option>
+                  <option value="hidden">Hidden from Directory</option>
+                  <option value="archived">Archived</option>
+                </select>
+                {err("directory_status")}
+              </div>
+            </div>
+
+            <div className={formStyles.sideFieldsRow}>
+              <div className={formStyles.sideField}>
+                <label className={formStyles.sideLabel} htmlFor="stationery_list_status">
+                  Stationery List Status
+                </label>
+                <select
+                  id="stationery_list_status"
+                  name="stationery_list_status"
+                  defaultValue={school?.stationery_list_status ?? (school?.refused_partnership ? "not_received" : "verified")}
+                  className={formStyles.sideSelect}
+                >
+                  <option value="verified">Verified Official List</option>
+                  <option value="being_digitised">Being Digitised</option>
+                  <option value="received">Received (Unprocessed)</option>
+                  <option value="not_received">Not Received / Custom Only</option>
+                </select>
+                {err("stationery_list_status")}
+              </div>
+
+              <div className={formStyles.sideField}>
+                <label className={formStyles.sideLabel} htmlFor="status">
+                  Entity Lifecycle
+                </label>
+                <select
+                  id="status"
+                  name="status"
+                  defaultValue={school?.status ?? "active"}
+                  className={formStyles.sideSelect}
+                >
+                  {SCHOOL_STATUSES.map((s) => (
+                    <option key={s} value={s}>
+                      {s === "archived" ? "Archived" : s.charAt(0).toUpperCase() + s.slice(1)}
+                    </option>
+                  ))}
+                </select>
+                {err("status")}
+              </div>
+            </div>
+
+            <div className={formStyles.sideFieldsRow}>
+              <div className={formStyles.sideField}>
+                <label
+                  className={formStyles.sideLabel}
+                  htmlFor="parent_collection_accepted"
+                >
+                  Parent Collection Option
+                </label>
+                <select
+                  id="parent_collection_accepted"
+                  name="parent_collection_accepted"
+                  defaultValue={
+                    school?.parent_collection_accepted
+                      ? "accepted"
+                      : "non_accepted"
+                  }
+                  className={formStyles.sideSelect}
+                >
                   <option value="accepted">Accepted (Bulk Pickup)</option>
                   <option value="non_accepted">Non-accepted</option>
                 </select>
@@ -433,28 +589,59 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
 
             <div className={formStyles.checkboxList}>
               <label className={formStyles.checkboxLabel}>
-                <input type="checkbox" name="published" defaultChecked={school?.published ?? true} className={adminStyles.checkbox} />
+                <input
+                  type="checkbox"
+                  name="published"
+                  defaultChecked={school?.published ?? true}
+                  className={adminStyles.checkbox}
+                />
                 Published on Site
               </label>
               <label className={formStyles.checkboxLabel}>
-                <input type="checkbox" name="is_partner" defaultChecked={school?.is_partner ?? false} className={adminStyles.checkbox} />
+                <input
+                  type="checkbox"
+                  name="is_partner"
+                  defaultChecked={school?.is_partner ?? false}
+                  className={adminStyles.checkbox}
+                />
                 Partner School
               </label>
               <label className={formStyles.checkboxLabel}>
-                <input type="checkbox" name="is_featured" defaultChecked={school?.is_featured ?? false} className={adminStyles.checkbox} />
+                <input
+                  type="checkbox"
+                  name="is_featured"
+                  defaultChecked={school?.is_featured ?? false}
+                  className={adminStyles.checkbox}
+                />
                 Featured School
               </label>
-              <label className={`${formStyles.checkboxLabel} ${formStyles.checkboxDanger}`}>
-                <input type="checkbox" name="refused_partnership" defaultChecked={(school as { refused_partnership?: boolean } | null)?.refused_partnership ?? false} className={adminStyles.checkboxRed} />
+              <label
+                className={`${formStyles.checkboxLabel} ${formStyles.checkboxDanger}`}
+              >
+                <input
+                  type="checkbox"
+                  name="refused_partnership"
+                  defaultChecked={
+                    (school as { refused_partnership?: boolean } | null)
+                      ?.refused_partnership ?? false
+                  }
+                  className={adminStyles.checkboxRed}
+                />
                 Refused Partnership
               </label>
             </div>
 
             <div className={formStyles.sideActions}>
-              <SubmitButton label={school ? "Save School Details" : "Create School"} />
+              <SubmitButton
+                label={school ? "Save School Details" : "Create School"}
+              />
               <AdminButton
                 variant="secondary"
-                href={schoolSlugOrId ? `/admin/schools/${schoolSlugOrId}/info` : "/admin/schools"}
+                href={
+                  schoolSlugOrId
+                    ? `/admin/schools/${schoolSlugOrId}/info`
+                    : "/admin/schools"
+                }
               >
                 Cancel
               </AdminButton>
