@@ -1,3 +1,7 @@
+import "server-only";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+
 export type GradePack = {
   id: string;
   grade: string;
@@ -99,6 +103,3 @@ export const getSchoolBySlug = async (
   const records = await getSchoolRecordMap();
   return records.get(slug);
 };
-import "server-only";
-import { readFile } from "node:fs/promises";
-import path from "node:path";

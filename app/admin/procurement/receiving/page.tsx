@@ -55,11 +55,11 @@ export default async function ReceivingPage() {
                 />
               </h2>
               <p className={adminStyles.muted}>
-                {po.suppliers?.name || "Unknown supplier"} ·{" "}
+                {po.suppliers?.name || "Unknown supplier"} Â·{" "}
                 {po.expected_on
                   ? `Expected ${new Date(po.expected_on).toLocaleDateString("en-ZA")}`
-                  : "No expected date"}
-                · {percentReceived}% received
+                  : "No expected date"}{" "}
+                Â· {percentReceived}% received
               </p>
 
               <div className={adminStyles.tableCard}>
