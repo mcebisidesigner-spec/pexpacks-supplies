@@ -341,7 +341,7 @@ export function SchoolSearchPanel({
                                   {school.hasOrderablePacks ? (
                                     <span className={heroStyles.yearPillBadge}>{school.customBadge || "2027 Packs"}</span>
                                   ) : (
-                                    <span className={heroStyles.awaitingBadge}>Awaiting Lists</span>
+                                    <span className={heroStyles.awaitingBadge}>{school.customBadge || "Awaiting Lists"}</span>
                                   )}
                                   {school.isPartner ? (
                                     <span className={heroStyles.partnerBadge}>★ Official Partner ★</span>
