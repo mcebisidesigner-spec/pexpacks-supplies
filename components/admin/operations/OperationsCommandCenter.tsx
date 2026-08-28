@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
@@ -855,10 +855,21 @@ const EXCEPTION_BADGE_CLASS_MAP: Record<SeverityLevel, string> = {
 // MAIN COMPONENT
 // ==========================================
 
-export function OperationsCommandCenter() {
+export interface OperationsCommandCenterProps {
+  userName?: string;
+}
+
+export function OperationsCommandCenter({ userName }: OperationsCommandCenterProps = {}) {
   const [mode, setMode] = useState<OperationsMode>("procurement");
   const [workspaceView, setWorkspaceView] = useState<WorkspaceView>("kanban");
   const [activeStageFilter, setActiveStageFilter] = useState<string | null>(null);
+
+  const greetingTime = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  }, []);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState<WorkspaceItem | null>(null);
   const [selectedPack, setSelectedPack] = useState<SchoolPackItem | null>(null);
@@ -1005,7 +1016,7 @@ export function OperationsCommandCenter() {
           <h1 className={styles.greetingTitle}>
             {mode === "procurement" ? (
               <>
-                Good morning, Liam <span className={styles.greetingWave}>👋</span>
+                {greetingTime}, {userName || "Liam"} <span className={styles.greetingWave}>👋</span>
               </>
             ) : (
               "School Packs"

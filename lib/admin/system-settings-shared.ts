@@ -25,6 +25,7 @@ export interface SystemSettingDefinition {
 
 export type SystemSettingCategory =
   | "overview"
+  | "add_users"
   | "general"
   | "business"
   | "pricing"
@@ -50,6 +51,7 @@ export const SYSTEM_SETTING_CATEGORIES: {
   iconName: string;
 }[] = [
   { key: "overview", label: "Overview", description: "Control centre dashboard & system health", iconName: "LayoutDashboard" },
+  { key: "add_users", label: "Add Users", description: "Onboard new administrative staff & send email invitations", iconName: "UserPlus" },
   { key: "general", label: "General", description: "Brand name, site URL, and regional defaults", iconName: "Globe" },
   { key: "business", label: "Business Identity", description: "Legal entity, contact emails, and helpline numbers", iconName: "Building2" },
   { key: "pricing", label: "Pricing & Margin", description: "Markup/margin rules, warning floors, and rounding strategy", iconName: "BadgePercent" },

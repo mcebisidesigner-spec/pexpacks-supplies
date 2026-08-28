@@ -25,6 +25,7 @@ import {
   ToggleRight,
   Truck,
   Upload,
+  UserPlus,
 } from "lucide-react";
 import type {
   IntegrationStatus,
@@ -34,11 +35,13 @@ import type {
   SystemSettingsAuditRecord,
 } from "@/lib/admin/system-settings-shared";
 import { SYSTEM_SETTING_CATEGORIES, SYSTEM_SETTING_DEFINITIONS } from "@/lib/admin/system-settings-shared";
+import type { RoleInfo } from "@/lib/admin/users";
 import {
   exportSettingsAction,
   restoreSettingsAction,
   updateSystemSettingAction,
 } from "@/app/admin/settings/actions";
+import { AddUsersTab } from "./AddUsersTab";
 import styles from "./SettingsControlCentre.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -48,11 +51,13 @@ interface SettingsControlCentreProps {
   integrations: IntegrationStatus[];
   performance: SystemPerformanceMetrics;
   auditLogs: SystemSettingsAuditRecord[];
+  roles?: RoleInfo[];
   userEmail: string;
 }
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   LayoutDashboard,
+  UserPlus,
   Globe,
   Building2,
   BadgePercent,
@@ -76,6 +81,7 @@ export function SettingsControlCentre({
   initialSettings,
   integrations,
   auditLogs,
+  roles = [],
 }: SettingsControlCentreProps) {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<SystemSettingCategory>("overview");
@@ -271,6 +277,11 @@ export function SettingsControlCentre({
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Add Users & Onboarding Panel */}
+          {activeCategory === "add_users" && (
+            <AddUsersTab roles={roles} />
           )}
 
           {/* General Panel */}
