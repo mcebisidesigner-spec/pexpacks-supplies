@@ -19,6 +19,7 @@ const STATUS_TO_TONE: Record<string, StatusTone> = {
   complete: "emerald",
   completed: "emerald",
   active: "emerald",
+  partner: "emerald",
   official: "emerald",
   published: "emerald",
   secured: "emerald",
@@ -96,6 +97,7 @@ const STATUS_TO_TONE: Record<string, StatusTone> = {
 
   // Slate (Neutral, Inactive, Archived, Disabled, Draft static)
   inactive: "slate",
+  non_partner: "slate",
   hidden: "slate",
   draft: "slate",
   archived: "slate",

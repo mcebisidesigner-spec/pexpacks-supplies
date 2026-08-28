@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { randomUUID } from "node:crypto";
 import {
@@ -8,8 +7,44 @@ import {
   type PricingRule,
 } from "@/lib/operations/pricing";
 
-function db() {
-  return createSupabaseAdminClient() as any;
+type DatabaseError = { code?: string; message?: string } | null;
+type DynamicRow = Record<string, any>;
+type DynamicValue = any;
+
+type DynamicResult<T> = {
+  data: T;
+  error: DatabaseError;
+  count?: number | null;
+};
+
+type DynamicQuery<T = DynamicRow[]> = Promise<DynamicResult<T>> & {
+  select(columns?: string, options?: { count?: "exact"; head?: boolean }): DynamicQuery<DynamicRow[]>;
+  insert(values: unknown, options?: unknown): DynamicQuery<DynamicRow[]>;
+  upsert(values: unknown, options?: unknown): DynamicQuery<DynamicRow[]>;
+  update(values: unknown): DynamicQuery<DynamicRow[]>;
+  delete(): DynamicQuery<DynamicRow[]>;
+  eq(column: string, value: unknown): DynamicQuery<T>;
+  neq(column: string, value: unknown): DynamicQuery<T>;
+  in(column: string, values: readonly unknown[]): DynamicQuery<T>;
+  gte(column: string, value: unknown): DynamicQuery<T>;
+  lt(column: string, value: unknown): DynamicQuery<T>;
+  ilike(column: string, pattern: string): DynamicQuery<T>;
+  or(filters: string): DynamicQuery<T>;
+  not(column: string, operator: string, value: unknown): DynamicQuery<T>;
+  order(column: string, options?: { ascending?: boolean; nullsFirst?: boolean }): DynamicQuery<T>;
+  range(from: number, to: number): DynamicQuery<T>;
+  limit(count: number): DynamicQuery<T>;
+  single(): Promise<DynamicResult<DynamicRow>>;
+  maybeSingle(): Promise<DynamicResult<DynamicRow>>;
+};
+
+type DynamicClient = {
+  from(table: string): DynamicQuery<DynamicRow[]>;
+  rpc(fn: string, args?: unknown): Promise<DynamicResult<DynamicValue>>;
+};
+
+function db(): DynamicClient {
+  return createSupabaseAdminClient() as unknown as DynamicClient;
 }
 
 function asNumber(value: unknown): number {
@@ -17,7 +52,6 @@ function asNumber(value: unknown): number {
   return Number.isFinite(number) ? number : 0;
 }
 
-type DatabaseError = { code?: string; message?: string } | null;
 
 function isOperationsSchemaUnavailable(error: DatabaseError) {
   const message = error?.message?.toLowerCase() ?? "";
@@ -189,7 +223,7 @@ export async function listSuppliers() {
     )
     .order("name");
   assertNoError(error, "Unable to load suppliers");
-  return (data ?? []).map((row: any) => ({
+  return (data ?? []).map((row: DynamicRow) => ({
     ...row,
     offer_count: row.supplier_offers?.[0]?.count ?? 0,
   })) as SupplierRow[];
@@ -330,13 +364,13 @@ export async function listPricingReview() {
   assertNoError(error, "Unable to load pricing review");
   assertNoError(rulesError, "Unable to load pricing rules");
   const rules = (rulesData ?? []) as PricingRule[];
-  return (data ?? []).map((row: any) => {
+  return (data ?? []).map((row: DynamicRow) => {
     const offer =
-      row.supplier_offers?.find((item: any) => item.is_preferred) ??
+      row.supplier_offers?.find((item: DynamicRow) => item.is_preferred) ??
       row.supplier_offers?.[0];
     const cost = row.latest_verified_cost ?? offer?.unit_cost ?? null;
     const price = asNumber(row.current_selling_price);
-    const rule = selectPricingRule(rules, row);
+    const rule = selectPricingRule(rules, row as any);
     const suggested =
       cost == null || !rule
         ? price
@@ -417,10 +451,11 @@ export async function approveProductPrice(
   // Margin validation against system_settings thresholds
   if (cost != null && sellingPrice > 0) {
     const margin = (sellingPrice - cost) / sellingPrice;
-    const { data: settings } = await (client.from as (t: string) => any)("system_settings")
+    const { data: settings } = await client
+      .from("system_settings")
       .select("key,value")
       .in("key", ["pricing.low_margin_warning_pct", "pricing.critical_margin_pct"]);
-    const settingsMap = new Map<string, number>((settings ?? []).map((s: any) => [s.key, Number(s.value)]));
+    const settingsMap = new Map<string, number>((settings ?? []).map((s) => [String(s.key), Number(s.value)]));
     const criticalPct: number = settingsMap.get("pricing.critical_margin_pct") ?? 10;
     const warningPct: number = settingsMap.get("pricing.low_margin_warning_pct") ?? 20;
     const marginPct = margin * 100;
@@ -669,18 +704,18 @@ export async function listFulfilmentRecords() {
   assertNoError(readinessError, "Unable to load order readiness");
   assertNoError(packingError, "Unable to load packing records");
   const readinessByOrder = new Map(
-    (readiness ?? []).map((row: any) => [
+    (readiness ?? []).map((row: DynamicRow) => [
       row.order_id,
       asNumber(row.readiness_percent),
     ]),
   );
   const packingByOrder = new Map(
-    (packing ?? []).map((row: any) => [
+    (packing ?? []).map((row: DynamicRow) => [
       row.order_id,
       [{ id: row.id, status: row.status }],
     ]),
   );
-  return (data ?? []).map((row: any) => ({
+  return (data ?? []).map((row: DynamicRow) => ({
     ...row,
     packing_records: packingByOrder.get(row.order_id) ?? [],
     readiness: readinessByOrder.get(row.order_id) ?? 0,
@@ -929,10 +964,10 @@ export async function createSupplierReceipt(input: {
   if (po) {
     const items = po.supplier_purchase_items || [];
     const allFullyReceived = items.every(
-      (i: any) => i.received_quantity >= i.ordered_quantity,
+      (i: DynamicRow) => i.received_quantity >= i.ordered_quantity,
     );
     const anyReceived = items.some(
-      (i: any) => i.received_quantity > 0,
+      (i: DynamicRow) => i.received_quantity > 0,
     );
     
     let newStatus = "confirmed";
@@ -1114,9 +1149,9 @@ export async function advanceOrderStatus(orderId: string) {
     .select("status, target_date, updated_at")
     .eq("order_id", orderId);
   
-  const packingStatuses = (packingRecords || []).map((r: any) => r.status);
-  const fulfilmentStatuses = (fulfilmentRecords || []).map((r: any) => r.status);
-  const fulfilment = (fulfilmentRecords || [])[0] as any;
+  const packingStatuses = (packingRecords || []).map((r) => r.status);
+  const fulfilmentStatuses = (fulfilmentRecords || []).map((r) => r.status);
+  const fulfilment = (fulfilmentRecords || [])[0];
   
   let newStatus: string | null = null;
   
@@ -1366,15 +1401,15 @@ export async function getOperationsSummary() {
     tasks.error,
   ].filter(Boolean);
   if (errors.length)
-    throw new Error(`Unable to load operations summary: ${errors[0].message}`);
+    throw new Error(`Unable to load operations summary: ${errors[0]?.message ?? "Unknown database error"}`);
   return {
     paidOrders: paid.count ?? 0,
     revenueReceived: (revenue.data ?? []).reduce(
-      (sum: number, row: any) => sum + asNumber(row.estimated_total),
+      (sum: number, row: DynamicRow) => sum + asNumber(row.estimated_total),
       0,
     ),
     procurementOutstanding: (outstanding.data ?? []).reduce(
-      (sum: number, row: any) => sum + asNumber(row.outstanding_quantity),
+      (sum: number, row: DynamicRow) => sum + asNumber(row.outstanding_quantity),
       0,
     ),
     readyToPack: ready.count ?? 0,

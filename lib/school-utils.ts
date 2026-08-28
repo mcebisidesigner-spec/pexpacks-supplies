@@ -18,6 +18,8 @@ type DbSchool = {
   logo: string | null;
   is_partner: boolean | null;
   refused_partnership: boolean | null;
+  principal?: string | null;
+  website?: string | null;
 };
 
 type DbPackItem = {
@@ -111,9 +113,11 @@ function toSchool(school: DbSchool, packs: DbPack[]): School {
     name: school.name,
     slug: school.slug,
     city: school.city ?? "",
+    district: school.district ?? "",
     metro: school.district ?? "",
     province: school.province ?? "",
     logo: school.logo,
+    website: school.website || school.principal || null,
     isPartnerSchool: Boolean(school.is_partner),
     refusedPartnership: Boolean(school.refused_partnership),
     grades: toGradePacks(packs),
@@ -131,13 +135,21 @@ async function getSchoolWithBoundedQueries(
   slug: string,
 ): Promise<School | undefined> {
   const supabase = createSupabaseAdminClient();
-  const { data: dbSchool, error: schoolError } = await supabase
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+
+  let query = supabase
     .from("schools")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, refused_partnership, status, published",
-    )
-    .eq("slug", slug)
-    .maybeSingle();
+      "id, name, slug, city, district, province, logo, is_partner, refused_partnership, status, published, principal",
+    );
+
+  if (isUuid) {
+    query = query.eq("id", slug);
+  } else {
+    query = query.ilike("slug", slug);
+  }
+
+  const { data: dbSchool, error: schoolError } = await query.maybeSingle();
 
   if (schoolError) throw schoolError;
   if (!dbSchool) return getStaticSchoolBySlug(slug);

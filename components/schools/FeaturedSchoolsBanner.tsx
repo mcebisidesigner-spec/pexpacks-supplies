@@ -62,7 +62,7 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
             <h3>{school.name}</h3>
             <p>{gradeRangeLabel(school.grades)}</p>
             {school.hasOrderablePacks ? (
-              <span className={styles.yearPillBadge}>2027 Packs</span>
+              <span className={styles.yearPillBadge}>{school.customBadge || (school as any).custom_badge || "2027 Packs"}</span>
             ) : (
               <span className={styles.awaitingBadge}>Awaiting Lists</span>
             )}

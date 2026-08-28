@@ -19,7 +19,24 @@ export function isPrimarySchool(name: string): boolean {
   );
 }
 
-export function getTailoredGradesForSchool(name: string): string[] {
+export function getTailoredGradesForSchool(
+  schoolOrName: { name: string; grades?: unknown } | string
+): string[] {
+  if (typeof schoolOrName === "object" && schoolOrName !== null) {
+    if (Array.isArray(schoolOrName.grades) && schoolOrName.grades.length > 0) {
+      const list = schoolOrName.grades
+        .map((g) => {
+          if (typeof g === "string") return g;
+          if (g && typeof g === "object" && "grade" in g) return String((g as any).grade);
+          return "";
+        })
+        .filter(Boolean);
+      if (list.length > 0) return list;
+    }
+    return getTailoredGradesForSchool(schoolOrName.name);
+  }
+
+  const name = schoolOrName;
   if (isHighSchool(name)) {
     return ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
   }
@@ -71,7 +88,7 @@ export function matchGrade(gradeA: string, gradeB: string): boolean {
 }
 
 export function buildTailoredAdminPacks(
-  school: { id: string; name: string; slug?: string | null },
+  school: { id: string; name: string; slug?: string | null; grades?: unknown },
   dbPacks: {
     id: string;
     title: string;
@@ -83,7 +100,7 @@ export function buildTailoredAdminPacks(
     updated_at?: string;
   }[],
 ): TailoredAdminPack[] {
-  const tailoredGrades = getTailoredGradesForSchool(school.name);
+  const tailoredGrades = getTailoredGradesForSchool(school);
   const matchedPacks: TailoredAdminPack[] = [];
   const usedDbPackIds = new Set<string>();
 
@@ -146,7 +163,7 @@ export function buildTailoredAdminPacks(
 }
 
 export function buildTailoredPublicGrades(
-  school: { id: string; name: string; slug?: string | null },
+  school: { id: string; name: string; slug?: string | null; grades?: unknown },
   existingGrades: GradePack[] = [],
 ): GradePack[] {
   // If the school has visible configured grade packs in DB, ONLY show the visible grade packs
@@ -157,7 +174,7 @@ export function buildTailoredPublicGrades(
   }
 
   // If no DB packs exist at all for this school, return the tailored placeholders for the school's grade range
-  const tailoredGrades = getTailoredGradesForSchool(school.name);
+  const tailoredGrades = getTailoredGradesForSchool(school);
   return tailoredGrades.map((gradeLabel, idx) => {
     const slug = gradeLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     return {

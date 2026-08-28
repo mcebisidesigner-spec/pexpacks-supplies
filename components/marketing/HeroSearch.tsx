@@ -333,9 +333,9 @@ export function HeroSearch({
                               </div>
                               <div className={styles.heroResultBadges}>
                                 {school.hasOrderablePacks ? (
-                                  <span className={styles.yearPillBadge}>2027 Packs</span>
+                                  <span className={styles.yearPillBadge}>{school.customBadge || "2027 Packs"}</span>
                                 ) : (
-                                  <span className={styles.awaitingBadge}>Awaiting Lists</span>
+                                  <span className={styles.awaitingBadge}>{school.customBadge || "Awaiting Lists"}</span>
                                 )}
                                 {school.isPartner ? (
                                   <span className={styles.partnerBadge}>★ Official Partner ★</span>

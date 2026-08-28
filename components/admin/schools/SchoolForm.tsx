@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { Building2, GraduationCap, Image as ImageIcon, Save, ShieldCheck } from "lucide-react";
+import { Building2, ChevronDown, GraduationCap, Image as ImageIcon, Save, ShieldCheck } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
 import { SCHOOL_STATUSES } from "@/lib/admin/school-constants";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
@@ -63,6 +63,29 @@ function str(v: string | number | null | undefined): string {
   return v == null ? "" : String(v);
 }
 
+const ALL_GRADES = [
+  "Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6",
+  "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"
+];
+
+const GRADE_PRESETS = {
+  high: ["Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
+  primary: ["Grade R", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7"],
+  combined: ALL_GRADES,
+};
+
+function detectInitialPreset(existingGrades: string[]): "high" | "primary" | "combined" | "custom" {
+  if (!existingGrades || existingGrades.length === 0) return "high";
+  const set = new Set(existingGrades);
+  const isHigh = GRADE_PRESETS.high.every((g) => set.has(g)) && existingGrades.length === GRADE_PRESETS.high.length;
+  if (isHigh) return "high";
+  const isPrimary = GRADE_PRESETS.primary.every((g) => set.has(g)) && existingGrades.length === GRADE_PRESETS.primary.length;
+  if (isPrimary) return "primary";
+  const isCombined = GRADE_PRESETS.combined.every((g) => set.has(g)) && existingGrades.length === GRADE_PRESETS.combined.length;
+  if (isCombined) return "combined";
+  return "custom";
+}
+
 export function SchoolForm({ school, action }: SchoolFormProps) {
   const [state, formAction] = useActionState<SchoolFormState, FormData>(
     action,
@@ -74,9 +97,32 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
   );
   const [logoValue, setLogoValue] = useState<string>(school?.logo ?? "");
 
-  const grades = Array.isArray(school?.grades)
-    ? school.grades.filter((g): g is string => typeof g === "string").join(", ")
-    : "";
+  const initialGradesList = Array.isArray(school?.grades)
+    ? (school.grades.filter((g): g is string => typeof g === "string") as string[])
+    : GRADE_PRESETS.high;
+
+  const [selectedGrades, setSelectedGrades] = useState<string[]>(
+    initialGradesList.length > 0 ? initialGradesList : GRADE_PRESETS.high
+  );
+  const [gradePreset, setGradePreset] = useState<"high" | "primary" | "combined" | "custom">(
+    () => detectInitialPreset(initialGradesList)
+  );
+
+  const handlePresetChange = (preset: "high" | "primary" | "combined" | "custom") => {
+    setGradePreset(preset);
+    if (preset === "high") setSelectedGrades(GRADE_PRESETS.high);
+    else if (preset === "primary") setSelectedGrades(GRADE_PRESETS.primary);
+    else if (preset === "combined") setSelectedGrades(GRADE_PRESETS.combined);
+  };
+
+  const handleToggleGrade = (grade: string) => {
+    setGradePreset("custom");
+    setSelectedGrades((prev) =>
+      prev.includes(grade)
+        ? prev.filter((g) => g !== grade)
+        : [...prev, grade].sort((a, b) => ALL_GRADES.indexOf(a) - ALL_GRADES.indexOf(b))
+    );
+  };
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
@@ -121,20 +167,19 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
     <form ref={formRef} action={formAction} className={formStyles.formLayout}>
       <input type="hidden" name="logo" value={logoValue} />
 
-      <div className={formStyles.mainColumn}>
-        {/* Banner Alert Messages */}
-        {state?.ok ? (
-          <div className={`${adminStyles.badgeGreen} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block}`} role="status">
-            &#x2713; {state.message || "School updated successfully."}
-          </div>
-        ) : state?.message ? (
-          <div className={`${adminStyles.badgeRed} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block} ${adminStyles.cRed}`} role="alert">
-            &#x26A0; {state.message}
-          </div>
-        ) : null}
+      {/* Banner Alert Messages */}
+      {state?.ok ? (
+        <div className={`${adminStyles.badgeGreen} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block}`} role="status">
+          ✓ {state.message || "School updated successfully."}
+        </div>
+      ) : state?.message ? (
+        <div className={`${adminStyles.badgeRed} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block} ${adminStyles.cRed}`} role="alert">
+          ⚠ {state.message}
+        </div>
+      ) : null}
 
-        {/* Section 1: Identity & Location */}
-        <div className={formStyles.card}>
+      {/* Section 1: Identity & Location */}
+      <div className={formStyles.card}>
           <div className={formStyles.cardHeader}>
             <div className={adminStyles.sectionIconTeal}>
               <Building2 size={16} />
@@ -219,7 +264,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               <FloatingInput
                 id="principal"
                 name="principal"
-                label="Principal / Headmaster"
+                label="School Official Website"
                 defaultValue={str(school?.principal)}
                 error={state?.errors?.principal}
               />
@@ -234,37 +279,30 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 error={state?.errors?.address}
               />
             </div>
-          </div>
-        </div>
-
-        {/* Section 2: School Profile & Search Pill */}
-        <div className={formStyles.card}>
-          <div className={formStyles.cardHeader}>
-            <div className={adminStyles.sectionIconBlue}>
-              <GraduationCap size={16} />
-            </div>
-            <span>School Profile &amp; Search Pill Configuration</span>
-          </div>
-
-          <div className={formStyles.grid3}>
-            <div className={formStyles.colSpan3}>
-              <FloatingTextarea
-                id="description"
-                name="description"
-                label="Description &amp; Overview"
-                defaultValue={str(school?.description)}
-                error={state?.errors?.description}
-              />
-            </div>
-
             <div className={formStyles.colSpan2}>
-              <FloatingInput
-                id="grades"
-                name="grades"
-                label="Offered Grades"
-                defaultValue={grades}
-                error={state?.errors?.grades}
-              />
+              <div className={formStyles.floatingSelectWrapper}>
+                <div className={formStyles.floatingSelectContainer}>
+                  <select
+                    id="school_type_preset"
+                    value={gradePreset}
+                    onChange={(e) => handlePresetChange(e.target.value as any)}
+                    className={formStyles.floatingSelect}
+                  >
+                    <option value="high">High School (Grade 8–12)</option>
+                    <option value="primary">Primary School (Grade R–7)</option>
+                    <option value="combined">Combined School (Grade R–12)</option>
+                    <option value="custom">Custom (Select Grades)</option>
+                  </select>
+                  <label htmlFor="school_type_preset" className={formStyles.floatingSelectLabel}>
+                    Offered Grades
+                  </label>
+                  <span className={formStyles.floatingSelectArrow}>
+                    <ChevronDown size={14} />
+                  </span>
+                </div>
+                <input type="hidden" name="grades" value={selectedGrades.join(", ")} />
+                {err("grades")}
+              </div>
             </div>
 
             <div className={formStyles.colSpan1}>
@@ -272,21 +310,39 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 id="custom_badge"
                 name="custom_badge"
                 label="Search Pill Badge"
-                defaultValue={str(school?.custom_badge) || "2026 Packs"}
+                defaultValue={str(school?.custom_badge) || "2027 Packs"}
                 error={state?.errors?.custom_badge}
               />
             </div>
 
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="lowest_price"
-                name="lowest_price"
-                inputMode="decimal"
-                label="Lowest Pack Price (R)"
-                defaultValue={str(school?.lowest_price)}
-                error={state?.errors?.lowest_price}
-              />
-            </div>
+            {gradePreset === "custom" && (
+              <div className={formStyles.colSpan3}>
+                <div className={formStyles.customGradesBox}>
+                  <span className={formStyles.customGradesTitle}>
+                    Select Individual Offered Grades (Grade R – 12):
+                  </span>
+                  <div className={formStyles.gradesChipsGrid}>
+                    {ALL_GRADES.map((g) => {
+                      const isChecked = selectedGrades.includes(g);
+                      return (
+                        <label
+                          key={g}
+                          className={`${formStyles.gradeChip} ${isChecked ? formStyles.gradeChipActive : ""}`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleToggleGrade(g)}
+                            className={formStyles.gradeChipCheckbox}
+                          />
+                          <span>{g}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className={formStyles.colSpan1}>
               <Field>
@@ -301,82 +357,59 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 {err("partner_since")}
               </Field>
             </div>
-
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="latitude"
-                name="latitude"
-                inputMode="decimal"
-                label="Latitude"
-                defaultValue={str(school?.latitude)}
-                error={state?.errors?.latitude}
-              />
-            </div>
-
-            <div className={formStyles.colSpan1}>
-              <FloatingInput
-                id="longitude"
-                name="longitude"
-                inputMode="decimal"
-                label="Longitude"
-                defaultValue={str(school?.longitude)}
-                error={state?.errors?.longitude}
-              />
-            </div>
           </div>
         </div>
 
-        {/* Section 3: School Logo */}
+      {/* Bottom Horizontal Row (Desktop: Side-by-Side, Mobile: Stacked) */}
+      <div className={formStyles.bottomRow}>
+        {/* Section 3: School Logo Branding (Left Card) */}
         <div className={formStyles.card}>
           <div className={formStyles.cardHeader}>
             <ImageIcon size={16} className={adminStyles.iconAmber} />
             <span>School Logo Branding</span>
           </div>
 
-            <FormRow className={formStyles.logoUploadContainer}>
-              <div className={adminStyles.logoUploadBox}>
-                {logoPreview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={logoPreview} alt="School logo preview" className={adminStyles.logoPreviewImg} />
-                ) : (
-                  <SchoolLogoPlaceholder width={110} height={110} />
-                )}
-                <input
-                  type="file"
-                  name="logo_file"
-                  accept="image/png,image/webp,image/svg+xml,image/jpeg"
-                  className={adminStyles.logoFileInput}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const url = URL.createObjectURL(file);
-                      setLogoPreview(url);
-                      setLogoValue("");
-                    }
-                  }}
-                />
-              </div>
+          <div className={formStyles.logoUploadContainer}>
+            <div className={formStyles.logoUploadBox}>
+              {logoPreview ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={logoPreview} alt="School logo preview" className={formStyles.logoPreviewImg} />
+              ) : (
+                <SchoolLogoPlaceholder width={80} height={80} />
+              )}
+              <input
+                type="file"
+                name="logo_file"
+                accept="image/png,image/webp,image/svg+xml,image/jpeg"
+                className={formStyles.logoFileInput}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const url = URL.createObjectURL(file);
+                    setLogoPreview(url);
+                    setLogoValue("");
+                  }
+                }}
+              />
+            </div>
 
-              <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-6"]} ${adminStyles.text12}`}>
-                <p className={`${adminStyles.cWhite} ${adminStyles.fw600}`}>Upload School Emblem / Logo</p>
-                <p className={`${adminStyles.cSubtle} ${styles.text11}`}>PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder used if empty.</p>
-                {logoPreview ? (
-                  <AdminButton
-                    type="button"
-                    variant="ghost"
-                    onClick={() => { setLogoPreview(null); setLogoValue(""); }}
-                    className={formStyles.removeLogoBtn}
-                  >
-                    Remove logo
-                  </AdminButton>
-                ) : null}
-              </div>
-            </FormRow>
+            <div className={formStyles.logoInfoGroup}>
+              <p className={`${adminStyles.cWhite} ${adminStyles.fw600}`}>Upload School Emblem / Logo</p>
+              <p className={`${adminStyles.cSubtle} ${styles.text11}`}>PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder used if empty.</p>
+              {logoPreview ? (
+                <button
+                  type="button"
+                  onClick={() => { setLogoPreview(null); setLogoValue(""); }}
+                  className={formStyles.removeLogoBtn}
+                >
+                  Remove logo
+                </button>
+              ) : null}
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Right Sidebar: Status & Form Action Controls */}
-      <div className={formStyles.sideColumn}>
+        {/* Section 4: Status & Flags (Right Card) */}
         <div className={formStyles.card}>
           <div className={formStyles.cardHeader}>
             <div className={adminStyles.sectionIconTeal}>
@@ -386,23 +419,25 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
           </div>
 
           <div className={formStyles.sideGroup}>
-            <div className={formStyles.sideField}>
-              <label className={formStyles.sideLabel} htmlFor="status">Publication Status</label>
-              <select id="status" name="status" defaultValue={school?.status ?? "active"} className={formStyles.sideSelect}>
-                {SCHOOL_STATUSES.map((s) => (
-                  <option key={s} value={s}>{s === "archived" ? "Hidden" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
-                ))}
-              </select>
-              {err("status")}
-            </div>
+            <div className={formStyles.sideFieldsRow}>
+              <div className={formStyles.sideField}>
+                <label className={formStyles.sideLabel} htmlFor="status">Publication Status</label>
+                <select id="status" name="status" defaultValue={school?.status ?? "active"} className={formStyles.sideSelect}>
+                  {SCHOOL_STATUSES.map((s) => (
+                    <option key={s} value={s}>{s === "archived" ? "Hidden" : s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                  ))}
+                </select>
+                {err("status")}
+              </div>
 
-            <div className={formStyles.sideField}>
-              <label className={formStyles.sideLabel} htmlFor="parent_collection_accepted">Parent Collection Option</label>
-              <select id="parent_collection_accepted" name="parent_collection_accepted" defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"} className={formStyles.sideSelect}>
-                <option value="accepted">Accepted (Bulk Pickup)</option>
-                <option value="non_accepted">Non-accepted</option>
-              </select>
-              {err("parent_collection_accepted")}
+              <div className={formStyles.sideField}>
+                <label className={formStyles.sideLabel} htmlFor="parent_collection_accepted">Parent Collection Option</label>
+                <select id="parent_collection_accepted" name="parent_collection_accepted" defaultValue={school?.parent_collection_accepted ? "accepted" : "non_accepted"} className={formStyles.sideSelect}>
+                  <option value="accepted">Accepted (Bulk Pickup)</option>
+                  <option value="non_accepted">Non-accepted</option>
+                </select>
+                {err("parent_collection_accepted")}
+              </div>
             </div>
 
             <div className={formStyles.checkboxList}>
@@ -429,7 +464,6 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               <AdminButton
                 variant="secondary"
                 href={schoolSlugOrId ? `/admin/schools/${schoolSlugOrId}/info` : "/admin/schools"}
-                className={adminStyles.hFullBtn}
               >
                 Cancel
               </AdminButton>

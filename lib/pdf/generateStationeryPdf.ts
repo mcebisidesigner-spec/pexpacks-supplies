@@ -24,8 +24,7 @@ export async function generateStationeryPdf(options: StationeryPdfOptions): Prom
   const defaultFilename = `${safeName}-stationery-list.pdf`;
 
   // Render PDF blob via @react-pdf/renderer
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const element = React.createElement(StationeryListPdfDocument, { options }) as any;
+  const element = React.createElement(StationeryListPdfDocument, { options }) as NonNullable<Parameters<typeof pdf>[0]>;
   const pdfBlob = await pdf(element).toBlob();
 
   // 1. Try modern File System Access API if available
@@ -87,8 +86,7 @@ export async function generateStationeryPdf(options: StationeryPdfOptions): Prom
 export async function generateStationeryPdfBuffer(
   options: StationeryPdfOptions
 ): Promise<Buffer> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const element = React.createElement(StationeryListPdfDocument, { options }) as any;
+  const element = React.createElement(StationeryListPdfDocument, { options }) as NonNullable<Parameters<typeof pdf>[0]>;
   const blob = await pdf(element).toBlob();
   const arrayBuffer = await blob.arrayBuffer();
   return Buffer.from(arrayBuffer);

@@ -48,6 +48,7 @@ interface SettingsControlCentreProps {
   users?: UserListItem[];
   vaultCredentials?: SystemVaultCredential[];
   userEmail: string;
+  settingsDbWarning?: string | null;
 }
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -70,6 +71,7 @@ export function SettingsControlCentre({
   users = [],
   vaultCredentials = [],
   userEmail,
+  settingsDbWarning = null,
 }: SettingsControlCentreProps) {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<SystemSettingCategory>("user_identity");
@@ -201,6 +203,13 @@ export function SettingsControlCentre({
           )}
         </div>
       </header>
+
+      {settingsDbWarning && (
+        <div className={styles.dbWarning} role="alert">
+          <strong>System settings database warning</strong>
+          <span>{settingsDbWarning} Current values may be default fallbacks.</span>
+        </div>
+      )}
 
       {feedbackMessage && (
         <div

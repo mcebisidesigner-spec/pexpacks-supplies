@@ -23,12 +23,14 @@ export type School = {
   name: string;
   slug: string;
   city: string;
+  district?: string | null;
   metro: string;
   province: string;
   logo?: string | null;
   website?: string | null;
   isPartnerSchool: boolean;
   refusedPartnership?: boolean;
+  customBadge?: string | null;
   grades: GradePack[];
 };
 
@@ -37,6 +39,7 @@ export type SchoolIndexRecord = {
   name: string;
   slug: string;
   city: string;
+  district?: string | null;
   metro: string;
   province: string;
   logo?: string | null;
@@ -44,6 +47,7 @@ export type SchoolIndexRecord = {
   isPartnerSchool: boolean;
   isFeatured?: boolean;
   lowestPrice?: number;
+  customBadge?: string | null;
   grades: {
     id: string;
     grade: string;

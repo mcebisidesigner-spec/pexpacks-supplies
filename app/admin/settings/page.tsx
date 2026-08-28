@@ -5,6 +5,7 @@ import {
   getIntegrationHealth,
   getPerformanceMetrics,
   getSystemVaultCredentials,
+  checkSystemSettingsHealth,
 } from "@/lib/admin/system-settings";
 import { listRoles, listUsers } from "@/lib/admin/users";
 import { SettingsControlCentre } from "@/components/admin/settings/SettingsControlCentre";
@@ -26,6 +27,7 @@ export default async function AdminSettingsPage() {
     roles,
     usersResult,
     vaultCredentials,
+    settingsHealth,
   ] = await Promise.all([
     getSystemSettings(),
     getSystemSettingsAuditLogs(20),
@@ -34,6 +36,7 @@ export default async function AdminSettingsPage() {
     listRoles(),
     listUsers({ pageSize: 50 }),
     getSystemVaultCredentials(),
+    checkSystemSettingsHealth(),
   ]);
 
   return (
@@ -46,6 +49,7 @@ export default async function AdminSettingsPage() {
       users={usersResult.users}
       vaultCredentials={vaultCredentials}
       userEmail={session.user.email ?? ""}
+      settingsDbWarning={settingsHealth.ok ? null : settingsHealth.message ?? "System settings database is unavailable."}
     />
   );
 }

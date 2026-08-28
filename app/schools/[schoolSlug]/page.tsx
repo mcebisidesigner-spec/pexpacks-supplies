@@ -23,17 +23,14 @@ type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
 };
 
-function formatSchoolLocation(city: string, district: string, province: string): string {
-  const districtLabel = district
-    ? /^city of\b/i.test(district)
-      ? district
-      : `City of ${district}`
-    : "";
+function formatSchoolLocation(city?: string | null, province?: string | null, district?: string | null): string {
+  const parts = [
+    city ? city.trim() : "",
+    province ? province.trim() : "",
+    district ? district.trim() : "",
+  ].filter(Boolean);
 
-  return [city, districtLabel, province]
-    .map((value) => value.trim())
-    .filter(Boolean)
-    .join(", ");
+  return parts.length > 0 ? parts.join(" - ") : "South Africa";
 }
 
 import { buildTailoredPublicGrades } from "@/lib/schools/school-grade-packs";
@@ -95,7 +92,12 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
   const isRefused = Boolean(school.refusedPartnership);
   const gradesToRender = buildTailoredPublicGrades(school, school.grades);
   const schoolWithGrades = { ...school, grades: gradesToRender };
-  const officialWebsiteUrl = school.website || `https://www.google.com/search?q=${encodeURIComponent(`${school.name} official website ${school.city}`)}`;
+  const websiteRaw = (school.website || (school as any).principal)?.trim();
+  const officialWebsiteUrl = websiteRaw
+    ? /^https?:\/\//i.test(websiteRaw)
+      ? websiteRaw
+      : `https://${websiteRaw}`
+    : `https://www.google.com/search?q=${encodeURIComponent(`${school.name} official website ${school.city}`)}`;
 
   return (
     <>
@@ -103,7 +105,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
 
       <PageHero
         variant="navy"
-        eyebrow={formatSchoolLocation(school.city, school.metro, school.province)}
+        eyebrow={formatSchoolLocation(school.city, school.province, school.district || school.metro)}
         title={school.name}
         panelChildren={
           <div className={styles.schoolHeroCard}>

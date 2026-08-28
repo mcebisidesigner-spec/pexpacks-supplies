@@ -99,6 +99,30 @@ const _getSystemSettingsRaw = async (): Promise<
   return map;
 };
 
+export async function checkSystemSettingsHealth(): Promise<{
+  ok: boolean;
+  message?: string;
+}> {
+  const admin = createSupabaseAdminClient();
+  try {
+    const { error } = await dynamicTable(admin, "system_settings").select("key", {
+      count: "exact",
+      head: true,
+    });
+    if (error) {
+      return {
+        ok: false,
+        message: error.message || "The system_settings table could not be queried.",
+      };
+    }
+    return { ok: true };
+  } catch (err) {
+    return {
+      ok: false,
+      message: err instanceof Error ? err.message : "The system_settings table could not be queried.",
+    };
+  }
+}
 export const getSystemSettings = unstable_cache(
   _getSystemSettingsRaw,
   ["system-settings"],

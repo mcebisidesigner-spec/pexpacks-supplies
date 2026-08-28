@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
-import { getSchool } from "@/lib/admin/schools";
+import { getSchool, slugify } from "@/lib/admin/schools";
 import { SchoolForm } from "@/components/admin/schools/SchoolForm";
 import { updateSchoolAction } from "../actions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
@@ -16,6 +16,12 @@ export default async function EditSchoolPage({ params }: EditSchoolPageProps) {
   const school = await getSchool(id);
   if (!school) notFound();
 
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  const canonicalSlug = school.slug || slugify(school.name);
+  if (isUuid && canonicalSlug) {
+    redirect(`/admin/schools/${canonicalSlug}`);
+  }
+
   return (
     <div className={styles.container}>
       <AdminPageHeader
@@ -27,7 +33,7 @@ export default async function EditSchoolPage({ params }: EditSchoolPageProps) {
       />
       <SchoolForm
         school={school}
-        action={updateSchoolAction.bind(null, id)}
+        action={updateSchoolAction.bind(null, school.id)}
       />
     </div>
   );

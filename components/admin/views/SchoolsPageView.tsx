@@ -23,6 +23,19 @@ interface SchoolsPageViewProps {
   initialData?: SchoolListResult;
 }
 
+function getSchoolSlug(school: { id: string; name: string; slug?: string | null }): string {
+  return (
+    school.slug ||
+    school.name
+      .toLowerCase()
+      .trim()
+      .replace(/['’]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") ||
+    school.id
+  );
+}
+
 export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
   const router = useRouter();
   const { params, setParams, isPending } = useTableParams();
@@ -54,7 +67,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       sortable: true,
       render: (row) => (
         <Link
-          href={`/admin/schools/${row.id}`}
+          href={`/admin/schools/${getSchoolSlug(row)}`}
           className={styles.schoolNameTitle}
           onClick={(e) => e.stopPropagation()}
         >
@@ -77,16 +90,30 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       header: "STATUS",
       sortable: true,
       align: "center",
-      width: "130px",
+      width: "140px",
       render: (row) => {
-        const isInactive =
-          row.published === false ||
-          row.status === "inactive" ||
-          row.refused_partnership === true;
+        const isPartner = row.is_partner === true;
         return (
           <StatusBadge
-            status={isInactive ? "Inactive" : "Active"}
-            tone={isInactive ? "slate" : "emerald"}
+            status={isPartner ? "Partner" : "Non-partner"}
+            tone={isPartner ? "emerald" : "slate"}
+            showDot
+          />
+        );
+      },
+    },
+    {
+      key: "published",
+      header: "ONLINE STATUS",
+      sortable: true,
+      align: "center",
+      width: "140px",
+      render: (row) => {
+        const isOnline = row.published !== false;
+        return (
+          <StatusBadge
+            status={isOnline ? "Active" : "Inactive"}
+            tone={isOnline ? "emerald" : "slate"}
             showDot
           />
         );
@@ -201,7 +228,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         data={data.schools}
         columns={columns}
         keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/schools/${row.id}`)}
+        onRowClick={(row) => router.push(`/admin/schools/${getSchoolSlug(row)}`)}
         isLoading={isPending}
         emptyTitle="No schools found"
         emptySubtitle="Try adjusting your search filters."

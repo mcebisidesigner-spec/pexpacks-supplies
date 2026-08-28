@@ -1,4 +1,4 @@
-﻿.container {
+.container {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -137,6 +137,26 @@
   font-size: 11px;
 }
 
+.dbWarning {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--a-text);
+}
+
+.dbWarning strong {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.dbWarning span {
+  color: var(--a-text-2);
+  font-size: 12px;
+}
 .layout {
   display: grid;
   grid-template-columns: 260px 1fr;
