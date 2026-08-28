@@ -9,7 +9,6 @@ import {
   FileSpreadsheet,
   Clock,
   CheckCircle2,
-  XCircle,
   TrendingUp,
   Download,
   Eye,
@@ -18,8 +17,8 @@ import {
 import {
   AdminPageHeader,
   AdminButton,
-  MetricCard,
   StatusBadge,
+  QuickMetricsGrid,
   type BadgeTone,
 } from "@/components/admin/ui";
 import { FloatingInput } from "@/components/ui/FloatingInput";
@@ -106,44 +105,43 @@ export function QuotationsListView({
         }
       />
 
-      {/* 2. 5 KPI Summary Cards */}
-      <div className={styles.kpiGrid5}>
-        <MetricCard
-          label="Total Quotes"
-          value={initialData.stats.total}
-          icon={<FileSpreadsheet size={16} />}
-          iconTone="blue"
-          subtext="Generated in season"
-        />
-        <MetricCard
-          label="Awaiting Acceptance"
-          value={pendingCount}
-          icon={<Clock size={16} />}
-          iconTone="amber"
-          subtext="Sent to clients"
-        />
-        <MetricCard
-          label="Accepted Quotes"
-          value={initialData.stats.accepted}
-          icon={<CheckCircle2 size={16} />}
-          iconTone="green"
-          subtext="Ready for conversion"
-        />
-        <MetricCard
-          label="Declined"
-          value={initialData.stats.declined}
-          icon={<XCircle size={16} />}
-          iconTone="red"
-          subtext="Unsuccessful quotes"
-        />
-        <MetricCard
-          label="Converted to Orders"
-          value={initialData.stats.converted}
-          icon={<TrendingUp size={16} />}
-          iconTone="green"
-          subtext="Live orders"
-        />
-      </div>
+      {/* 2. KPI Summary Cards with Graphs */}
+      <QuickMetricsGrid
+        metrics={[
+          {
+            label: "TOTAL QUOTES",
+            value: initialData.stats.total,
+            subtitle: "Generated in season",
+            trendDirection: "up",
+            tone: "cyan",
+            icon: <FileSpreadsheet size={16} />,
+          },
+          {
+            label: "AWAITING ACCEPTANCE",
+            value: pendingCount,
+            subtitle: "Sent to clients",
+            trendDirection: "neutral",
+            tone: "amber",
+            icon: <Clock size={16} />,
+          },
+          {
+            label: "ACCEPTED QUOTES",
+            value: initialData.stats.accepted,
+            subtitle: "Ready for conversion",
+            trendDirection: "up",
+            tone: "emerald",
+            icon: <CheckCircle2 size={16} />,
+          },
+          {
+            label: "CONVERTED TO ORDERS",
+            value: initialData.stats.converted,
+            subtitle: "Converted to live orders",
+            trendDirection: "up",
+            tone: "blue",
+            icon: <TrendingUp size={16} />,
+          },
+        ]}
+      />
 
       {/* 3. Search & Status Tabs */}
       <div className={styles.toolbarRow}>

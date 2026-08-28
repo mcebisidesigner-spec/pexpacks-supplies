@@ -8,7 +8,7 @@ export interface DashboardClientProps {
   userName?: string;
 }
 
-export function DashboardClient({ stats, userName }: DashboardClientProps) {
+export function DashboardClient({ userName }: DashboardClientProps) {
   return <OperationsCommandCenter userName={userName} />;
 }
 

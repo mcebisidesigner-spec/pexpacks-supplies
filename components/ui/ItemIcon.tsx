@@ -251,7 +251,7 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     case "music":
       return <Music {...props} />;
     case "image":
-      return <Image {...props} />;
+      return <Image aria-label="Image item icon" {...props} />;
     case "laptop":
       return <Laptop {...props} />;
     case "headphones":

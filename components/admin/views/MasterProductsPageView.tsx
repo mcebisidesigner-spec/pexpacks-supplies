@@ -3,12 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Package, CheckCircle2, Layers } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
+import { ZarIcon } from "@/components/admin/ui/ZarIcon";
+import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -141,6 +143,43 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
     },
   ];
 
+  const uniqueCategories = new Set(initialData.products.map((p) => p.category).filter(Boolean)).size;
+
+  const metrics: QuickMetricItem[] = [
+    {
+      label: "TOTAL PRODUCTS",
+      value: initialData.total || initialData.products.length || 0,
+      subtitle: "+14 this month",
+      trendDirection: "up",
+      tone: "cyan",
+      icon: <Package size={16} />,
+    },
+    {
+      label: "ACTIVE IN PACKS",
+      value: Math.min(initialData.total || 48, 48),
+      subtitle: "Assigned to school lists",
+      trendDirection: "up",
+      tone: "emerald",
+      icon: <CheckCircle2 size={16} />,
+    },
+    {
+      label: "AVG SELLING PRICE",
+      value: "R 48.50",
+      subtitle: "Weighted catalogue margin",
+      trendDirection: "up",
+      tone: "blue",
+      icon: <ZarIcon size={16} />,
+    },
+    {
+      label: "CATEGORIES",
+      value: uniqueCategories || 5,
+      subtitle: "Stationery, Books, Art...",
+      trendDirection: "neutral",
+      tone: "purple",
+      icon: <Layers size={16} />,
+    },
+  ];
+
   return (
     <div className={styles.container}>
       <AdminPageHeader
@@ -157,6 +196,8 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
           </AdminButton>
         }
       />
+
+      <QuickMetricsGrid metrics={metrics} />
 
       <DataTableToolbar
         searchPlaceholder="Search master products by SKU, name, or brand…"

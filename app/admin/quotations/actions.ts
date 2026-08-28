@@ -83,8 +83,7 @@ async function generateAndUploadPdf(quotationId: string): Promise<string | null>
     };
 
     // Render PDF buffer
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const element = React.createElement(QuotationPdfDocument, { data: pdfData }) as any;
+    const element = React.createElement(QuotationPdfDocument, { data: pdfData }) as NonNullable<Parameters<typeof pdf>[0]>;
     const documentBuffer = await pdf(element).toBuffer();
 
     const admin = createSupabaseAdminClient();
@@ -250,9 +249,12 @@ export async function importSchoolPackItemsAction(
       packTitle: pack.title,
       items: converted,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[quotations] importSchoolPackItemsAction failed:", err);
-    return { ok: false, error: err?.message || "Failed to load pack items." };
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Failed to load pack items.",
+    };
   }
 }
 

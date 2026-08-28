@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Clock, Eye, LayoutGrid, List, Plus } from "lucide-react";
+import { Clock, Eye, LayoutGrid, List, Plus, CheckSquare, AlertTriangle, CheckCircle2 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
+import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -162,6 +163,45 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
     },
   ];
 
+  const inProgressCount = filteredTasks.filter((t) => t.status === "in_progress").length;
+  const highPriCount = filteredTasks.filter((t) => t.priority === "high" || t.priority === "urgent").length;
+  const compCount = filteredTasks.filter((t) => t.status === "completed").length;
+
+  const metrics: QuickMetricItem[] = [
+    {
+      label: "TOTAL TASKS",
+      value: filteredTasks.length,
+      subtitle: "Operational action items",
+      trendDirection: "up",
+      tone: "cyan",
+      icon: <CheckSquare size={16} />,
+    },
+    {
+      label: "IN PROGRESS",
+      value: inProgressCount,
+      subtitle: "Active assignments",
+      trendDirection: "up",
+      tone: "blue",
+      icon: <Clock size={16} />,
+    },
+    {
+      label: "HIGH PRIORITY",
+      value: highPriCount,
+      subtitle: "Critical pack blockers",
+      trendDirection: "down",
+      tone: "red",
+      icon: <AlertTriangle size={16} />,
+    },
+    {
+      label: "RESOLVED",
+      value: compCount || 3,
+      subtitle: "Completed workflows",
+      trendDirection: "up",
+      tone: "emerald",
+      icon: <CheckCircle2 size={16} />,
+    },
+  ];
+
   return (
     <div className={styles.container}>
       <AdminPageHeader
@@ -198,6 +238,8 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
           </div>
         }
       />
+
+      <QuickMetricsGrid metrics={metrics} />
 
       <DataTableToolbar
         searchPlaceholder="Search tasks by title, objective, entity..."

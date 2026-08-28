@@ -24,6 +24,31 @@ export {
 } from "./system-settings-shared";
 
 export const SYSTEM_SETTINGS_CACHE_TAG = "system_settings";
+type DbError = { message?: string } | null;
+
+type DynamicQueryResult = {
+  data: unknown[] | null;
+  error: DbError;
+  count?: number | null;
+};
+
+type DynamicQuery = Promise<DynamicQueryResult> & {
+  order(column: string, options?: { ascending?: boolean }): DynamicQuery;
+  limit(count: number): DynamicQuery;
+};
+
+type DynamicTable = {
+  select(columns: string, options?: { count?: "exact"; head?: boolean }): DynamicQuery;
+  upsert(values: unknown, options?: { onConflict?: string }): Promise<{ error: DbError }>;
+  insert(values: unknown): Promise<{ error: DbError }>;
+};
+
+function dynamicTable(
+  admin: ReturnType<typeof createSupabaseAdminClient>,
+  table: string,
+): DynamicTable {
+  return (admin.from as unknown as (tableName: string) => DynamicTable)(table);
+}
 
 const _getSystemSettingsRaw = async (): Promise<
   Record<string, SystemSettingRecord>
@@ -47,9 +72,7 @@ const _getSystemSettingsRaw = async (): Promise<
   }
 
   try {
-    const { data, error } = await (
-      admin.from as unknown as (table: string) => any
-    )("system_settings").select(
+    const { data, error } = await dynamicTable(admin, "system_settings").select(
       "key,category,value,value_type,scope,description,is_sensitive,is_public,requires_approval,version,updated_by,updated_at",
     );
 
@@ -135,9 +158,7 @@ export async function updateSystemSetting(
   const oldValue = currentMap[key]?.value ?? null;
 
   try {
-    const { error: upsertErr } = await (
-      admin.from as unknown as (table: string) => any
-    )("system_settings").upsert(
+    const { error: upsertErr } = await dynamicTable(admin, "system_settings").upsert(
       {
         key,
         category: def.category,
@@ -157,9 +178,7 @@ export async function updateSystemSetting(
 
     if (upsertErr) throw upsertErr;
 
-    await (admin.from as unknown as (table: string) => any)(
-      "system_settings_audit",
-    ).insert({
+    await dynamicTable(admin, "system_settings_audit").insert({
       setting_key: key,
       old_value: oldValue as Json,
       new_value: newValue as Json,
@@ -196,9 +215,7 @@ export async function getSystemSettingsAuditLogs(
 ): Promise<SystemSettingsAuditRecord[]> {
   const admin = createSupabaseAdminClient();
   try {
-    const { data, error } = await (
-      admin.from as unknown as (table: string) => any
-    )("system_settings_audit")
+    const { data, error } = await dynamicTable(admin, "system_settings_audit")
       .select(
         "id,setting_key,old_value,new_value,change_reason,actor_id,actor_email,created_at",
       )
@@ -274,9 +291,7 @@ export async function getPerformanceMetrics(): Promise<SystemPerformanceMetrics>
     const [s, p, i, o, a] = await Promise.all([
       admin.from("schools").select("id", { count: "exact", head: true }),
       admin.from("school_packs").select("id", { count: "exact", head: true }),
-      (admin.from as unknown as (table: string) => any)(
-        "school_pack_items",
-      ).select("id", { count: "exact", head: true }),
+      dynamicTable(admin, "school_pack_items").select("id", { count: "exact", head: true }),
       admin.from("orders").select("id", { count: "exact", head: true }),
       admin.from("audit_logs").select("id", { count: "exact", head: true }),
     ]);

@@ -44,7 +44,7 @@ function MiniSparkline({
   tone?: MetricTone;
   direction?: "up" | "down" | "neutral";
 }) {
-  const { stroke, fill } = TONE_COLORS[tone] || TONE_COLORS.emerald;
+  const { stroke } = TONE_COLORS[tone] || TONE_COLORS.emerald;
 
   // Render varied smooth bezier curves based on trend direction
   let pathD = "M 0,18 Q 18,22 36,12 T 72,4";

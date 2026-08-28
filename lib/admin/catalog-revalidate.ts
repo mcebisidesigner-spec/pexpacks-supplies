@@ -20,8 +20,7 @@ export function revalidateCatalog(options?: {
   try {
     // Dynamically access next/cache at runtime on the server to prevent
     // bundling server-only next/cache into client component graphs.
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const nextCache = require("next/cache");
+    const nextCache = require("next/cache") as typeof import("next/cache");
     if (typeof nextCache.revalidateTag === "function") {
       try {
         nextCache.revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });

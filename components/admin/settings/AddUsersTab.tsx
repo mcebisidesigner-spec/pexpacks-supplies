@@ -37,7 +37,6 @@ const DEPARTMENTS = [
 
 export function AddUsersTab({
   roles,
-  currentUserEmail,
   isSuperUser = false,
 }: AddUsersTabProps) {
   const [fullName, setFullName] = useState("");

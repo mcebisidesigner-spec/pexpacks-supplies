@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
+import { getAdminUser, hasPermission, type PermissionKey } from "@/lib/admin/rbac";
 import {
   createOperationalTask,
   updateOperationalTaskStatus,
@@ -10,9 +10,13 @@ import {
   getTask,
 } from "@/lib/admin/operations";
 
-async function assertAdminSession(permission: string) {
+function errorMessage(err: unknown, fallback: string) {
+  return err instanceof Error ? err.message : fallback;
+}
+
+async function assertAdminSession(permission: PermissionKey) {
   const session = await getAdminUser();
-  if (!session || !hasPermission(session, permission as any)) {
+  if (!session || !hasPermission(session, permission)) {
     throw new Error("Unauthorized: Insufficient permissions.");
   }
   return session;
@@ -43,8 +47,8 @@ export async function createTaskAction(formData: FormData) {
     });
     revalidatePath("/admin/tasks");
     return { ok: true, task };
-  } catch (err: any) {
-    return { ok: false, error: err.message || "Failed to create task." };
+  } catch (err: unknown) {
+    return { ok: false, error: errorMessage(err, "Failed to create task.") };
   }
 }
 
@@ -54,8 +58,8 @@ export async function updateTaskStatusAction(taskId: string, status: string) {
     await updateOperationalTaskStatus(taskId, status);
     revalidatePath("/admin/tasks");
     return { ok: true };
-  } catch (err: any) {
-    return { ok: false, error: err.message || "Failed to update task status." };
+  } catch (err: unknown) {
+    return { ok: false, error: errorMessage(err, "Failed to update task status.") };
   }
 }
 
@@ -64,7 +68,7 @@ export async function loadTaskActivitiesAction(taskId: string) {
   try {
     const comments = await listTaskComments(taskId);
     return { ok: true, comments };
-  } catch (err: any) {
+  } catch {
     return { ok: false, comments: [] };
   }
 }
@@ -82,8 +86,8 @@ export async function addTaskCommentAction(taskId: string, body: string) {
       body: body.trim(),
     });
     return { ok: true, comment };
-  } catch (err: any) {
-    return { ok: false, error: err.message || "Failed to add comment." };
+  } catch (err: unknown) {
+    return { ok: false, error: errorMessage(err, "Failed to add comment.") };
   }
 }
 
@@ -108,7 +112,7 @@ export async function approveTaskAction(taskId: string, notes?: string) {
 
     revalidatePath("/admin/tasks");
     return { ok: true };
-  } catch (err: any) {
-    return { ok: false, error: err.message || "Failed to approve task." };
+  } catch (err: unknown) {
+    return { ok: false, error: errorMessage(err, "Failed to approve task.") };
   }
 }

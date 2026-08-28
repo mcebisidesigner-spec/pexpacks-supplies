@@ -498,6 +498,44 @@
   padding: 8px;
 }
 
+
+.notificationTitle {
+  display: block;
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid var(--a-border);
+  color: var(--a-text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.notificationItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: var(--a-radius-sm);
+  color: var(--a-text-2);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.notificationItem:hover {
+  background: var(--a-surface);
+  color: var(--a-text);
+}
+
+.notificationItem strong {
+  color: var(--a-text);
+  font-size: 12px;
+}
+
+.notificationEmpty {
+  margin: 0;
+  padding: 12px 10px;
+  color: var(--a-text-3);
+  font-size: 12px;
+}
 .profileHeader {
   display: flex;
   align-items: center;

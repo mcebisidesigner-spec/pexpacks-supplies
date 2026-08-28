@@ -40,7 +40,6 @@ const VAULT_CATEGORIES = [
 
 export function SystemInfoVaultTab({
   initialVaultCredentials = [],
-  userEmail,
 }: SystemInfoVaultTabProps) {
   const router = useRouter();
   const [credentials, setCredentials] = useState<SystemVaultCredential[]>(

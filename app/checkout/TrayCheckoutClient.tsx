@@ -523,7 +523,8 @@ export function TrayCheckoutClient() {
       setSubmitting(false)
     }
   }
-`r`n  return (
+
+  return (
     <div className={styles.checkoutShell}>
       <header className={styles.checkoutHeader}>
         <button

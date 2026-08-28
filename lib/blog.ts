@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { Database, Json } from "@/lib/supabase/types";
+import type {  Json } from "@/lib/supabase/types";
 import { blogPosts, type BlogPost } from "@/data/blog";
 
 /**
@@ -13,7 +13,7 @@ import { blogPosts, type BlogPost } from "@/data/blog";
 
 export const CMS_BLOG_TAG = "cms-blog";
 export const BLOG_REVALIDATE_SECONDS = 300;
-`r`n
+
 function toContent(value: Json | null): string[] {
   return Array.isArray(value) ? value.map((line) => String(line)) : [];
 }

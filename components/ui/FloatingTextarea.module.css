@@ -8,17 +8,17 @@
 .textarea {
   width: 100%;
   min-height: 110px;
-  background-color: var(--db-surface-inner);
-  border: 1px solid var(--db-border);
-  border-radius: var(--db-radius-control);
-  color: var(--db-text-primary);
+  background-color: var(--db-surface-inner, #090e17);
+  border: 1px solid var(--db-border, rgba(30, 41, 59, 0.8));
+  border-radius: var(--db-radius-control, 8px);
+  color: var(--db-text-primary, #f8fafc);
   font-family: inherit;
   font-size: 0.84375rem;
   font-weight: 500;
   padding: 20px 14px 10px 14px;
   outline: none;
   resize: vertical;
-  transition: all var(--db-transition);
+  transition: border-color var(--db-transition), box-shadow var(--db-transition), background-color var(--db-transition);
   box-sizing: border-box;
 }
 
@@ -27,9 +27,22 @@
 }
 
 .textarea:focus {
-  border-color: var(--db-brand);
+  border-color: #10b981;
   box-shadow: var(--db-focus-ring);
-  background-color: var(--db-surface-elevated);
+  background-color: #0b121e;
+}
+
+.textarea:-webkit-autofill,
+.textarea:-webkit-autofill:hover,
+.textarea:-webkit-autofill:focus,
+.textarea:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #090e17 inset !important;
+  box-shadow: 0 0 0 1000px #090e17 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  caret-color: #f8fafc !important;
+  background-color: #090e17 !important;
+  color: #f8fafc !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .textarea:disabled {

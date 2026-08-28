@@ -546,7 +546,8 @@ export function CheckoutForm({
         return null;
     }
   }
-`r`n  return (
+
+  return (
     <div className={styles.checkoutShell}>
       <div className={styles.checkoutHeader}>
         {activeStep > 0 ? (

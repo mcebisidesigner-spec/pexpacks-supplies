@@ -3,11 +3,12 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Clock, Eye, PackageCheck, Truck } from "lucide-react";
+import { Clock, Eye, PackageCheck, Truck, CheckCircle2 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { AdminSelect } from "@/components/admin/ui/AdminSelect";
+import { QuickMetricsGrid } from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -37,7 +38,7 @@ const SEED_FULFILMENT: FulfilmentRow[] = [
 
 export function FulfilmentPageView() {
   const router = useRouter();
-  const { params } = useTableParams();
+  const { params, setParams } = useTableParams();
 
   const filtered = useMemo(() => {
     return SEED_FULFILMENT.filter((f) => {
@@ -130,32 +131,61 @@ export function FulfilmentPageView() {
       />
 
       {/* Metrics Row */}
-      <div className={styles.kpiGrid}>
-        <MetricCard
-          label="Ready to Pack"
-          value="356"
-          subtext="Stock fully secured"
-          icon={<PackageCheck size={16} />}
-          iconTone="green"
-        />
-        <MetricCard
-          label="In Assembly"
-          value="84"
-          subtext="Active packing line"
-          icon={<Clock size={16} />}
-          iconTone="blue"
-        />
-        <MetricCard
-          label="Dispatched"
-          value="1,420"
-          subtext="En route / Delivered"
-          icon={<Truck size={16} />}
-          iconTone="purple"
-        />
-      </div>
+      <QuickMetricsGrid
+        metrics={[
+          {
+            label: "READY TO PACK",
+            value: 356,
+            subtitle: "Stock fully secured",
+            trendDirection: "up",
+            tone: "emerald",
+            icon: <PackageCheck size={16} />,
+          },
+          {
+            label: "IN ASSEMBLY",
+            value: 84,
+            subtitle: "Workstation queue",
+            trendDirection: "up",
+            tone: "cyan",
+            icon: <Clock size={16} />,
+          },
+          {
+            label: "QUALITY CHECKED",
+            value: 192,
+            subtitle: "Barcode verification",
+            trendDirection: "up",
+            tone: "blue",
+            icon: <CheckCircle2 size={16} />,
+          },
+          {
+            label: "DISPATCHED",
+            value: "1,420",
+            subtitle: "En route / Delivered",
+            trendDirection: "up",
+            tone: "purple",
+            icon: <Truck size={16} />,
+          },
+        ]}
+      />
 
       <DataTableToolbar
         searchPlaceholder="Search packing queue by order, school, batch..."
+        filters={
+          <div className={styles.filterGroup}>
+            <AdminSelect
+              value={params.status || "all"}
+              onChange={(e) => setParams({ status: e.target.value }, true)}
+              className={styles.toolbarSelect}
+            >
+              <option value="all">Status: All</option>
+              <option value="ready_to_pack">Ready to Pack</option>
+              <option value="packing">Packing</option>
+              <option value="procurement">Procurement</option>
+              <option value="dispatched">Dispatched</option>
+              <option value="delivered">Delivered</option>
+            </AdminSelect>
+          </div>
+        }
       />
 
       <DataTable

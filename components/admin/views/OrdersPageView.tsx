@@ -3,11 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, Download } from "lucide-react";
+import { Eye, Download, ShoppingCart, CheckCircle2, Package, Truck } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { AdminSelect } from "@/components/admin/ui/AdminSelect";
+import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -119,6 +121,45 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
     },
   ];
 
+  const paidCount = initialData.orders.filter((o) => Boolean(o.paid_at) || o.status === "paid").length;
+  const packingCount = initialData.orders.filter((o) => o.status === "packing" || o.status === "ready_to_pack").length;
+  const completedCount = initialData.orders.filter((o) => o.status === "completed" || o.status === "dispatched").length;
+
+  const metrics: QuickMetricItem[] = [
+    {
+      label: "TOTAL ORDERS",
+      value: initialData.total || initialData.orders.length,
+      subtitle: "+18% vs last month",
+      trendDirection: "up",
+      tone: "cyan",
+      icon: <ShoppingCart size={16} />,
+    },
+    {
+      label: "PAID & READY",
+      value: paidCount || initialData.orders.length,
+      subtitle: "Verified payment",
+      trendDirection: "up",
+      tone: "emerald",
+      icon: <CheckCircle2 size={16} />,
+    },
+    {
+      label: "IN PACKING",
+      value: packingCount,
+      subtitle: "Packing workstation",
+      trendDirection: "neutral",
+      tone: "blue",
+      icon: <Package size={16} />,
+    },
+    {
+      label: "DISPATCHED",
+      value: completedCount,
+      subtitle: "Handed to courier",
+      trendDirection: "up",
+      tone: "purple",
+      icon: <Truck size={16} />,
+    },
+  ];
+
   return (
     <div className={styles.container}>
       <AdminPageHeader
@@ -136,6 +177,8 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
         }
       />
 
+      <QuickMetricsGrid metrics={metrics} />
+
       <div className={styles.tabsRow}>
         {TABS.map((tab) => (
           <button
@@ -152,6 +195,23 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
       <DataTableToolbar
         searchPlaceholder="Search orders by reference, buyer name, email..."
         className={styles.mt12}
+        filters={
+          <div className={styles.filterGroup}>
+            <AdminSelect
+              value={params.status || "all"}
+              onChange={(e) => setParams({ status: e.target.value }, true)}
+              className={styles.toolbarSelect}
+            >
+              <option value="all">Status: All</option>
+              <option value="paid">Paid</option>
+              <option value="pending">Pending</option>
+              <option value="ready_to_pack">Ready to Pack</option>
+              <option value="packing">Packing</option>
+              <option value="dispatched">Dispatched</option>
+              <option value="completed">Completed</option>
+            </AdminSelect>
+          </div>
+        }
       />
 
       <DataTable

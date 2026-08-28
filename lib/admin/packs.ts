@@ -287,6 +287,35 @@ export async function listPacks(
   };
 }
 
+
+type PackSchoolGroupRpcRow = {
+  school_id: string;
+  school_name: string;
+  school_slug?: string | null;
+  refused_partnership?: boolean | null;
+  is_partner?: boolean | null;
+  active_packs_count?: number | string | null;
+  pack_items_count?: number | string | null;
+  grade_packs_count?: number | string | null;
+  last_edited?: string | null;
+  visible?: boolean | null;
+};
+
+type PackSchoolGroupsRpcResult = {
+  schools?: PackSchoolGroupRpcRow[];
+  total_schools?: number | string | null;
+  total_grade_packs?: number | string | null;
+  active_packs_count?: number | string | null;
+  total_pack_items?: number | string | null;
+};
+
+type PackGroupsRpc = (
+  fn: "get_all_pack_school_groups_json",
+  args: { q: string | null; visible_filter: string | null },
+) => Promise<{
+  data: PackSchoolGroupsRpcResult | null;
+  error: { message?: string } | null;
+}>;
 export interface SchoolGroupedSummary {
   school_id: string;
   school_name: string;
@@ -319,7 +348,8 @@ export async function listSchoolGroupedSummary(
   const pageSize = Math.min(100, Math.max(1, filters.pageSize ?? 50));
   const q = (filters.q || "").replace(/%/g, "").trim();
 
-  const { data, error } = await (admin.rpc as any)(
+  const rpc = admin.rpc.bind(admin) as unknown as PackGroupsRpc;
+  const { data, error } = await rpc(
     "get_all_pack_school_groups_json",
     {
       q: q || null,
@@ -342,7 +372,7 @@ export async function listSchoolGroupedSummary(
 
   const schoolsSummary: SchoolGroupedSummary[] = rawSchools
     .slice(offset, offset + pageSize)
-    .map((row: any) => {
+    .map((row) => {
       const isRefused = Boolean(row.refused_partnership);
       const isPartner = row.is_partner !== false;
       const activePacks = Number(row.active_packs_count ?? 0);

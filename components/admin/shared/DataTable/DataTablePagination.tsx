@@ -66,7 +66,7 @@ export function DataTablePagination({
 
   return (
     <div className={`${styles.paginationFooter} ${className || ""}`}>
-      <div className={styles.paginationLeft}>
+      <div className={styles.paginationRight}>
         <div className={styles.rangeText}>
           Showing <span className={styles.rangeHighlight}>{formatCount(fromRecord)}</span> to{" "}
           <span className={styles.rangeHighlight}>{formatCount(toRecord)}</span> of{" "}

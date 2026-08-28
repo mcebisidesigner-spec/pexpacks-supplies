@@ -15,7 +15,8 @@ import styles from "./CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import { MetricCard } from "@/components/admin/ui/AdminCard";
+import { ZarIcon } from "@/components/admin/ui/ZarIcon";
+import { QuickMetricsGrid } from "@/components/admin/ui/QuickMetricsGrid";
 
 export function ReportsPageView() {
   const [activeCategory, setActiveCategory] = useState("overview");
@@ -71,36 +72,42 @@ export function ReportsPageView() {
         {/* Right Analytics Grid */}
         <div className={adminStyles.reportsContent}>
           {/* Top 4 KPI Cards */}
-          <div className={adminStyles.metricsGrid4}>
-            <MetricCard
-              label="Total Revenue"
-              value="R 1,248,950"
-              subtext="+22% vs last month"
-              icon={<TrendingUp size={16} />}
-              iconTone="green"
-            />
-            <MetricCard
-              label="Total Orders"
-              value="356"
-              subtext="+14% vs last month"
-              icon={<ShoppingCart size={16} />}
-              iconTone="blue"
-            />
-            <MetricCard
-              label="Average Order Value"
-              value="R 23,540"
-              subtext="+6% vs last month"
-              icon={<TrendingUp size={16} />}
-              iconTone="amber"
-            />
-            <MetricCard
-              label="On-Time Deliveries"
-              value="96.4%"
-              subtext="+1.2% vs target"
-              icon={<Truck size={16} />}
-              iconTone="purple"
-            />
-          </div>
+          <QuickMetricsGrid
+            metrics={[
+              {
+                label: "TOTAL REVENUE",
+                value: "R 1,248,950",
+                subtitle: "+22% vs last month",
+                trendDirection: "up",
+                tone: "emerald",
+                icon: <ZarIcon size={16} />,
+              },
+              {
+                label: "TOTAL ORDERS",
+                value: "356",
+                subtitle: "+14% vs last month",
+                trendDirection: "up",
+                tone: "cyan",
+                icon: <ShoppingCart size={16} />,
+              },
+              {
+                label: "AVERAGE ORDER VALUE",
+                value: "R 23,540",
+                subtitle: "+6% vs last month",
+                trendDirection: "up",
+                tone: "amber",
+                icon: <TrendingUp size={16} />,
+              },
+              {
+                label: "ON-TIME DELIVERIES",
+                value: "96.4%",
+                subtitle: "+1.2% vs target",
+                trendDirection: "up",
+                tone: "purple",
+                icon: <Truck size={16} />,
+              },
+            ]}
+          />
 
           {/* Revenue Over Time & Top Schools by Revenue */}
           <div className={adminStyles.reportsGrid}>

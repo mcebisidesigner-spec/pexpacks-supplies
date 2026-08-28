@@ -60,26 +60,28 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: var(--a-btn-h, 38px);
+  height: var(--a-btn-h, 40px);
   padding: 0 20px;
   border: 1px solid rgba(16, 185, 129, 0.5);
-  border-radius: var(--a-btn-radius, 9999px);
+  border-radius: var(--a-btn-radius, 8px);
+  background: #10b981;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #ffffff;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.25);
   transition: all var(--a-transition, 150ms ease);
 }
 
 .primaryButton:hover {
+  background: #059669;
   background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  color: #030712;
+  color: #ffffff;
   border-color: #34d399;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45);
   transform: translateY(-1px);
 }
 
@@ -88,10 +90,10 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: var(--a-btn-h, 38px);
+  height: var(--a-btn-h, 40px);
   padding: 0 18px;
-  border: 1px solid var(--a-border-strong);
-  border-radius: var(--a-btn-radius, 9999px);
+  border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.6));
+  border-radius: var(--a-btn-radius, 8px);
   background: var(--a-surface-2, var(--db-surface-inner));
   color: var(--a-text-2, var(--db-text-secondary));
   font-family: inherit;

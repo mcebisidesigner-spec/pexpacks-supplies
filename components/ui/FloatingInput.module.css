@@ -15,16 +15,16 @@
 .input {
   width: 100%;
   height: var(--db-control-height-lg, 46px);
-  background-color: var(--db-surface-inner);
-  border: 1px solid var(--db-border);
-  border-radius: var(--db-radius-control);
-  color: var(--db-text-primary);
+  background-color: var(--db-surface-inner, #090e17);
+  border: 1px solid var(--db-border, rgba(30, 41, 59, 0.8));
+  border-radius: var(--db-radius-control, 8px);
+  color: var(--db-text-primary, #f8fafc);
   font-family: inherit;
   font-size: 0.84375rem;
   font-weight: 500;
   padding: 16px 14px 4px 14px;
   outline: none;
-  transition: all var(--db-transition);
+  transition: border-color var(--db-transition), box-shadow var(--db-transition), background-color var(--db-transition);
   box-sizing: border-box;
 }
 
@@ -33,9 +33,22 @@
 }
 
 .input:focus {
-  border-color: var(--db-brand);
+  border-color: #10b981;
   box-shadow: var(--db-focus-ring);
-  background-color: var(--db-surface-elevated);
+  background-color: #0b121e;
+}
+
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #090e17 inset !important;
+  box-shadow: 0 0 0 1000px #090e17 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  caret-color: #f8fafc !important;
+  background-color: #090e17 !important;
+  color: #f8fafc !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .input:disabled {
@@ -103,13 +116,14 @@
 
 /* Floating states */
 .input:focus ~ .label,
-.input:not(:placeholder-shown) ~ .label {
+.input:not(:placeholder-shown) ~ .label,
+.input:-webkit-autofill ~ .label {
   top: 0;
   left: 10px !important;
   transform: translateY(-50%);
   font-size: 0.6875rem;
   font-weight: 600;
-  background-color: var(--db-surface-inner);
+  background-color: var(--db-surface-inner, #090e17);
   z-index: 5;
 }
 

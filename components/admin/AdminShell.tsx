@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import {
-  
   Bell,
   Boxes,
   Briefcase,
@@ -30,8 +29,26 @@ import {
 } from "lucide-react";
 import type { AdminNavGroup } from "@/lib/admin/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useAdminNotifications } from "@/hooks/useAdminNotifications";
 import styles from "./AdminShell.module.css";
+type NotificationCounts = {
+  orders_today: number;
+  pending_payments: number;
+  failed_payments: number;
+  awaiting_fulfilment: number;
+  pending_schools: number;
+  procurement_outstanding: number;
+  open_tasks: number;
+};
+
+const EMPTY_NOTIFICATION_COUNTS: NotificationCounts = {
+  orders_today: 0,
+  pending_payments: 0,
+  failed_payments: 0,
+  awaiting_fulfilment: 0,
+  pending_schools: 0,
+  procurement_outstanding: 0,
+  open_tasks: 0,
+};
 
 // Exact navigation items matching the attached reference sample
 const ORDERED_NAV_ITEMS: Array<{
@@ -87,6 +104,8 @@ export function AdminShell({
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notificationCounts, setNotificationCounts] = useState<NotificationCounts>(EMPTY_NOTIFICATION_COUNTS);
   const [signingOut, setSigningOut] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);
@@ -110,8 +129,17 @@ export function AdminShell({
       return true;
     });
   }, [isSuperUser]);
+  const notificationItems = useMemo(() => [
+    { label: "Orders today", value: notificationCounts.orders_today, href: "/admin/orders" },
+    { label: "Pending payments", value: notificationCounts.pending_payments, href: "/admin/payments" },
+    { label: "Failed payments", value: notificationCounts.failed_payments, href: "/admin/payments" },
+    { label: "Awaiting fulfilment", value: notificationCounts.awaiting_fulfilment, href: "/admin/fulfilment" },
+    { label: "Pending schools", value: notificationCounts.pending_schools, href: "/admin/schools" },
+    { label: "Procurement outstanding", value: notificationCounts.procurement_outstanding, href: "/admin/procurement" },
+    { label: "Open tasks", value: notificationCounts.open_tasks, href: "/admin/tasks" },
+  ].filter((item) => item.value > 0), [notificationCounts]);
 
-
+  const notificationTotal = notificationItems.reduce((sum, item) => sum + item.value, 0);
   // Search items
   const searchableNav = useMemo(() => {
     return visibleNavItems.filter((item) =>
@@ -130,6 +158,7 @@ export function AdminShell({
         setOpen(false);
         setProfileOpen(false);
         setSearchOpen(false);
+        setNotificationOpen(false);
       }
     }
     window.addEventListener("keydown", handleKey);
@@ -141,6 +170,7 @@ export function AdminShell({
       const target = event.target as Node;
       if (profileRef.current && !profileRef.current.contains(target)) setProfileOpen(false);
       if (searchRef.current && !searchRef.current.contains(target)) setSearchOpen(false);
+      if (notificationRef.current && !notificationRef.current.contains(target)) setNotificationOpen(false);
     }
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
@@ -150,9 +180,41 @@ export function AdminShell({
     setOpen(false);
     setProfileOpen(false);
     setSearchOpen(false);
+    setNotificationOpen(false);
     setSearchQuery("");
   }, [pathname]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadNotifications() {
+      try {
+        const response = await fetch("/api/admin/notifications", { cache: "no-store" });
+        if (!response.ok) return;
+        const data = await response.json() as Partial<NotificationCounts>;
+        if (!cancelled) {
+          setNotificationCounts({
+            orders_today: Number(data.orders_today ?? 0),
+            pending_payments: Number(data.pending_payments ?? 0),
+            failed_payments: Number(data.failed_payments ?? 0),
+            awaiting_fulfilment: Number(data.awaiting_fulfilment ?? 0),
+            pending_schools: Number(data.pending_schools ?? 0),
+            procurement_outstanding: Number(data.procurement_outstanding ?? 0),
+            open_tasks: Number(data.open_tasks ?? 0),
+          });
+        }
+      } catch (err) {
+        console.error("[admin-shell] notifications failed:", err);
+      }
+    }
+
+    void loadNotifications();
+    const interval = window.setInterval(loadNotifications, 30000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, []);
   const handleSignOut = async () => {
     try {
       setSigningOut(true);
@@ -281,7 +343,7 @@ export function AdminShell({
                 placeholder="Search schools, orders, products, suppliers..."
                 autoComplete="off"
               />
-              <kbd>⌘K</kbd>
+              <kbd>Ctrl K</kbd>
             </form>
 
             {searchOpen && searchQuery.trim() && (
@@ -311,12 +373,31 @@ export function AdminShell({
               <button
                 type="button"
                 className={styles.utilityButton}
-                onClick={() => {}}
+                onClick={() => setNotificationOpen((prev) => !prev)}
                 aria-label="Notifications"
+                aria-expanded={notificationOpen}
               >
                 <Bell size={16} />
-                <span className={styles.utilityBadge}>7</span>
+                {notificationTotal > 0 && (
+                  <span className={styles.utilityBadge}>{notificationTotal > 99 ? "99+" : notificationTotal}</span>
+                )}
               </button>
+
+              {notificationOpen && (
+                <div className={styles.notificationDropdown} role="menu">
+                  <strong className={styles.notificationTitle}>Operational alerts</strong>
+                  {notificationItems.length ? (
+                    notificationItems.map((item) => (
+                      <Link key={item.label} href={item.href} className={styles.notificationItem}>
+                        <span>{item.label}</span>
+                        <strong>{item.value}</strong>
+                      </Link>
+                    ))
+                  ) : (
+                    <p className={styles.notificationEmpty}>No open alerts</p>
+                  )}
+                </div>
+              )}
             </div>
 
             <Link

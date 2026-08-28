@@ -71,6 +71,45 @@ export interface QuotationEventRow {
   created_at: string;
 }
 
+
+type QuotationDashboardStats = {
+  total?: number;
+  draft?: number;
+  sent?: number;
+  accepted?: number;
+  declined?: number;
+  converted?: number;
+  expired?: number;
+  total_pipeline_value?: number;
+  accepted_value?: number;
+  conversion_rate?: number;
+};
+
+type QuotationDashboardResponse = {
+  quotations?: QuotationRow[];
+  total_count?: number;
+  stats?: QuotationDashboardStats;
+};
+
+type QuotationRecord = Omit<QuotationRow, "items">;
+
+type CreatedQuotationResponse = QuotationRow & {
+  id: string;
+  quote_number: string;
+  total_amount: number;
+};
+
+type ConvertedQuotationResponse = {
+  ok: boolean;
+  error?: string;
+  quote_number?: string;
+  order_id?: string;
+  order_reference?: string;
+};
+
+type QuotationPdfVersionRow = {
+  pdf_version?: number | null;
+};
 export interface QuotationsListResult {
   quotations: QuotationRow[];
   totalCount: number;
@@ -169,10 +208,10 @@ export async function listQuotations(options?: {
     };
   }
 
-  const raw = data as any;
+  const raw = data as unknown as QuotationDashboardResponse;
   const stats = raw.stats || {};
   return {
-    quotations: (raw.quotations ?? []) as QuotationRow[],
+    quotations: raw.quotations ?? [],
     totalCount: Number(raw.total_count || 0),
     stats: {
       total: Number(stats.total || 0),
@@ -240,10 +279,10 @@ export async function getQuotation(idOrNumber: string): Promise<QuotationRow | n
   const { data: items } = await admin
     .from("quotation_items" as never)
     .select("*")
-    .eq("quotation_id" as never, (quote as any).id)
+    .eq("quotation_id" as never, (quote as unknown as QuotationRecord).id)
     .order("created_at" as never, { ascending: true });
 
-  const q = quote as any;
+  const q = quote as unknown as QuotationRecord;
   return {
     id: q.id,
     quote_number: q.quote_number,
@@ -269,7 +308,7 @@ export async function getQuotation(idOrNumber: string): Promise<QuotationRow | n
     created_at: q.created_at,
     updated_at: q.updated_at,
     school: q.school,
-    items: ((items ?? []) as any[]).map((item) => ({
+    items: ((items ?? []) as unknown as QuotationItemRow[]).map((item) => ({
       id: item.id,
       quotation_id: item.quotation_id,
       master_product_id: item.master_product_id,
@@ -330,19 +369,20 @@ export async function createQuotation(
     return { ok: false, error: error?.message || "Failed to create quotation." };
   }
 
-  const quoteId = (data as any).id;
+  const createdQuote = data as unknown as CreatedQuotationResponse;
+  const quoteId = createdQuote.id;
 
   void writeAuditLog({
     actorId: actor.user.id,
     actorName: actor.user.email,
-    action: "quotations.create" as any,
-    entityType: "quotation" as any,
+    action: "quotations.create",
+    entityType: "quotation",
     entityId: quoteId,
-    summary: `Created quotation ${(data as any).quote_number} for ${validated.data.recipient_name} (Total: R${(data as any).total_amount})`,
+    summary: `Created quotation ${createdQuote.quote_number} for ${validated.data.recipient_name} (Total: R${createdQuote.total_amount})`,
   });
 
   const created = await getQuotation(quoteId);
-  return { ok: true, quotation: created ?? (data as any) };
+  return { ok: true, quotation: created ?? createdQuote };
 }
 
 /**
@@ -376,8 +416,8 @@ export async function updateQuotationStatus(
   void writeAuditLog({
     actorId: actor.user.id,
     actorName: actor.user.email,
-    action: "quotations.update" as any,
-    entityType: "quotation" as any,
+    action: "quotations.update",
+    entityType: "quotation",
     entityId: id,
     summary: `Updated quotation status to ${status}`,
   });
@@ -402,21 +442,22 @@ export async function convertQuotationToOrder(
     },
   } as never);
 
-  if (error || !data || !(data as any).ok) {
+  const converted = data as unknown as ConvertedQuotationResponse | null;
+  if (error || !converted?.ok) {
     console.error("[quotations] convert_quotation_to_order RPC failed:", error);
     return {
       ok: false,
-      error: error?.message || (data as any)?.error || "Failed to convert quotation to order.",
+      error: error?.message || converted?.error || "Failed to convert quotation to order.",
     };
   }
 
-  const raw = data as any;
+  const raw = converted;
 
   void writeAuditLog({
     actorId: actor.user.id,
     actorName: actor.user.email,
-    action: "quotations.convert" as any,
-    entityType: "quotation" as any,
+    action: "quotations.convert",
+    entityType: "quotation",
     entityId: quotationId,
     summary: `Converted quotation ${raw.quote_number} to canonical order ${raw.order_reference} (${raw.order_id})`,
   });
@@ -471,8 +512,8 @@ export async function deleteQuotation(
   void writeAuditLog({
     actorId: actor.user.id,
     actorName: actor.user.email,
-    action: "quotations.delete" as any,
-    entityType: "quotation" as any,
+    action: "quotations.delete",
+    entityType: "quotation",
     entityId: quotationId,
     summary: `Deleted quotation ${quotationId}`,
   });
@@ -495,7 +536,7 @@ export async function updateQuotationPdfPath(
     .eq("id" as never, quotationId)
     .single();
 
-  const currentVersion = Number((current as any)?.pdf_version || 1);
+  const currentVersion = Number((current as unknown as QuotationPdfVersionRow | null)?.pdf_version || 1);
 
   const { error } = await admin
     .from("quotations" as never)

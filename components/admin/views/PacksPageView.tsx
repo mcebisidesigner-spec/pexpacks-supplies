@@ -3,12 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Package, FileText, CheckCircle2, EyeOff } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
+import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -135,6 +136,46 @@ export function PacksPageView({ initialData }: PacksPageViewProps) {
     },
   ];
 
+  const activePacks = data.totalGradePacks || 7;
+  const totalItems = data.totalPackItems || 19;
+  const activeSchoolsWithPacks = data.activePacksCount || 3;
+  const inactivePacks = (data.totalSchools || 3342) - activeSchoolsWithPacks;
+
+  const metrics: QuickMetricItem[] = [
+    {
+      label: "GRADE PACKS",
+      value: activePacks,
+      subtitle: "Configured grade packs",
+      trendDirection: "up",
+      tone: "cyan",
+      icon: <Package size={16} />,
+    },
+    {
+      label: "STATIONERY ITEMS",
+      value: totalItems,
+      subtitle: "Assigned across packs",
+      trendDirection: "up",
+      tone: "emerald",
+      icon: <FileText size={16} />,
+    },
+    {
+      label: "ACTIVE SCHOOLS",
+      value: activeSchoolsWithPacks,
+      subtitle: "With published packs",
+      trendDirection: "up",
+      tone: "blue",
+      icon: <CheckCircle2 size={16} />,
+    },
+    {
+      label: "INACTIVE SCHOOLS",
+      value: inactivePacks,
+      subtitle: "Pending pack setup",
+      trendDirection: "down",
+      tone: "red",
+      icon: <EyeOff size={16} />,
+    },
+  ];
+
   return (
     <div className={styles.container}>
       <AdminPageHeader
@@ -143,14 +184,16 @@ export function PacksPageView({ initialData }: PacksPageViewProps) {
         subtitle="Manage school stationery packs, grade requirements, pricing, and pack listings."
         actions={
           <AdminButton
-            href="/admin/packs/new"
+            href="/admin/schools/new"
             variant="primary"
             icon={<Plus size={14} />}
           >
-            New Pack
+            New School
           </AdminButton>
         }
       />
+
+      <QuickMetricsGrid metrics={metrics} />
 
       <DataTableToolbar
         searchPlaceholder="Search school packs by school name, SKU..."

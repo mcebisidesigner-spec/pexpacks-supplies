@@ -42,7 +42,7 @@ export function DataTableToolbar({
       <div className={styles.leftGroup}>
         {showSearch && (
           <div className={styles.searchContainer}>
-            <Search size={14} className={styles.searchIcon} />
+            <Search size={15} className={styles.searchIcon} />
             <input
               type="text"
               value={searchTerm}
@@ -52,9 +52,13 @@ export function DataTableToolbar({
             />
           </div>
         )}
-        {filters}
       </div>
-      {actions && <div className={styles.rightGroup}>{actions}</div>}
+      {(filters || actions) && (
+        <div className={styles.rightGroup}>
+          {filters}
+          {actions}
+        </div>
+      )}
     </div>
   );
 }

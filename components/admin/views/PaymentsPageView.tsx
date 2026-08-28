@@ -3,12 +3,14 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Download, Eye } from "lucide-react";
+import { Download, Eye, CheckCircle2, Clock, XCircle } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
+import { ZarIcon } from "@/components/admin/ui/ZarIcon";
+import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -135,6 +137,48 @@ export function PaymentsPageView() {
     },
   ];
 
+  const totalRev = filtered
+    .filter((p) => p.status === "paid")
+    .reduce((sum, p) => sum + p.amount, 0);
+  const paidCount = filtered.filter((p) => p.status === "paid").length;
+  const pendingCount = filtered.filter((p) => p.status === "pending").length;
+  const failedCount = filtered.filter((p) => p.status === "failed").length;
+
+  const metrics: QuickMetricItem[] = [
+    {
+      label: "TOTAL REVENUE",
+      value: `R ${totalRev.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+      subtitle: "+22% vs last month",
+      trendDirection: "up",
+      tone: "emerald",
+      icon: <ZarIcon size={16} />,
+    },
+    {
+      label: "SETTLED ORDERS",
+      value: paidCount,
+      subtitle: "Instant gateway capture",
+      trendDirection: "up",
+      tone: "cyan",
+      icon: <CheckCircle2 size={16} />,
+    },
+    {
+      label: "PENDING ESCROW",
+      value: pendingCount,
+      subtitle: "EFT & PayFast processing",
+      trendDirection: "neutral",
+      tone: "amber",
+      icon: <Clock size={16} />,
+    },
+    {
+      label: "FAILED / VOID",
+      value: failedCount,
+      subtitle: "Unsuccessful transactions",
+      trendDirection: "down",
+      tone: "red",
+      icon: <XCircle size={16} />,
+    },
+  ];
+
   return (
     <div className={styles.container}>
       <AdminPageHeader
@@ -151,6 +195,8 @@ export function PaymentsPageView() {
           </AdminButton>
         }
       />
+
+      <QuickMetricsGrid metrics={metrics} />
 
       <DataTableToolbar
         searchPlaceholder="Search payments by ref or order number..."

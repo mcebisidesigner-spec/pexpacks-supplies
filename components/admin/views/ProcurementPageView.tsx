@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { AlertTriangle, Clock, MoreVertical, Truck } from "lucide-react";
+import { AlertTriangle, Clock, MoreVertical, Truck, CheckCircle2 } from "lucide-react";
 import styles from "./ProcurementPageView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
+import { QuickMetricsGrid } from "@/components/admin/ui/QuickMetricsGrid";
 
 interface KanbanCard {
   id: string;
@@ -78,29 +78,42 @@ export function ProcurementPageView() {
       />
 
       {/* Metrics Row */}
-      <div className={styles.kpiGrid}>
-        <MetricCard
-          label="Committed Spend"
-          value={`R ${committedSpend.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}`}
-          subtext="Total PO value generated"
-          icon={<ZarIcon size={16} />}
-          iconTone="green"
-        />
-        <MetricCard
-          label="Outstanding Deliveries"
-          value={`R ${outstandingPOValue.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}`}
-          subtext="Pending goods receipt"
-          icon={<Clock size={16} />}
-          iconTone="amber"
-        />
-        <MetricCard
-          label="Demand At Risk"
-          value={`R ${revenueAtRisk.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}`}
-          subtext="Needs urgent supplier PO"
-          icon={<AlertTriangle size={16} />}
-          iconTone="red"
-        />
-      </div>
+      <QuickMetricsGrid
+        metrics={[
+          {
+            label: "COMMITTED SPEND",
+            value: `R ${committedSpend.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}`,
+            subtitle: "Total PO value generated",
+            trendDirection: "up",
+            tone: "emerald",
+            icon: <ZarIcon size={16} />,
+          },
+          {
+            label: "OUTSTANDING DELIVERIES",
+            value: `R ${outstandingPOValue.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}`,
+            subtitle: "Pending goods receipt",
+            trendDirection: "up",
+            tone: "amber",
+            icon: <Clock size={16} />,
+          },
+          {
+            label: "DEMAND AT RISK",
+            value: `R ${revenueAtRisk.toLocaleString("en-ZA", { minimumFractionDigits: 2 })}`,
+            subtitle: "Needs urgent supplier PO",
+            trendDirection: "down",
+            tone: "red",
+            icon: <AlertTriangle size={16} />,
+          },
+          {
+            label: "FULFILLED POs",
+            value: cards.filter((c) => c.stage === "Completed").length,
+            subtitle: "Goods checked in & stored",
+            trendDirection: "up",
+            tone: "purple",
+            icon: <CheckCircle2 size={16} />,
+          },
+        ]}
+      />
 
       {/* Kanban Board */}
       <div className={styles.kanbanGrid}>
