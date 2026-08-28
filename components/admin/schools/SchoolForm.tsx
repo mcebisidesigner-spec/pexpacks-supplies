@@ -10,7 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
-import { SCHOOL_STATUSES } from "@/lib/admin/schools";
+import { SCHOOL_STATUSES } from "@/lib/admin/school-constants";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
 import { DateField } from "@/components/admin/DateField";
