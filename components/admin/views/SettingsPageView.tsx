@@ -19,6 +19,7 @@ import styles from "./CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 
 type SettingsTab = "general" | "user-roles" | "financial" | "templates";
 
@@ -206,9 +207,9 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
                 ))}
 
                 <div className={adminStyles.pt12}>
-                  <button type="submit" className={`${styles.primaryBtn} ${adminStyles.wFullBtn}`}>
+                  <AdminButton type="submit" className={adminStyles.wFullBtn}>
                     <Save size={14} /> Save General Settings
-                  </button>
+                  </AdminButton>
                 </div>
               </div>
             </div>
@@ -224,13 +225,12 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
               <h2 className={adminStyles.userSectionTitle}>Administrative Users & Access Matrix</h2>
             </div>
             <div className={styles.headerActions}>
-              <button
+              <AdminButton
                 type="button"
-                className={styles.primaryBtn}
                 onClick={() => setShowInviteModal(!showInviteModal)}
               >
                 <UserPlus size={14} /> Invite New User
-              </button>
+              </AdminButton>
             </div>
           </div>
 
@@ -453,9 +453,9 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
                 </div>
 
                 <div className={adminStyles.pt12}>
-                  <button type="submit" className={`${styles.primaryBtn} ${adminStyles.wFullBtn}`}>
+                  <AdminButton type="submit" className={adminStyles.wFullBtn}>
                     <Save size={14} /> Save Financial Settings
-                  </button>
+                  </AdminButton>
                 </div>
               </div>
             </div>
@@ -488,9 +488,9 @@ export function SettingsPageView({ activeTab = "general" }: SettingsPageViewProp
                     <span className={adminStyles.badgeTeal}>{tmpl.badge}</span>
                   </div>
                   <p className={adminStyles.templateCardDesc}>{tmpl.desc}</p>
-                  <button className={`${styles.secondaryBtn} ${adminStyles.templateEditBtn}`}>
+                  <AdminButton variant="secondary" className={adminStyles.templateEditBtn}>
                     Edit Template
-                  </button>
+                  </AdminButton>
                 </div>
               ))}
             </div>

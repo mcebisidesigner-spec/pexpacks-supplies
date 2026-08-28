@@ -20,6 +20,7 @@ import type { CSVStationeryRow } from "@/app/actions/stationery-import";
 import type { PackFormState } from "@/lib/admin/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { MetricCard } from "@/components/admin/ui/AdminCard";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import itemStyles from "./ItemsManager.module.css";
@@ -182,78 +183,45 @@ export function SchoolPackCreateForm({
       <div
         className={`${adminStyles.metricsGrid5} ${coreStyles.packMetricsGrid}`}
       >
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Pack Price</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
-            >
-              <span className={adminStyles.currencyText}>R</span>
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{formattedPrice}</div>
-          <div className={coreStyles.metricSubtext}>Retail selling price</div>
-        </div>
+        <MetricCard
+          label="Pack Price"
+          value={formattedPrice}
+          subtext="Retail selling price"
+          icon={<span className={adminStyles.currencyText}>R</span>}
+          iconTone="green"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Item Subtotal</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
-            >
-              <Layers size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{formattedSubtotal}</div>
-          <div className={coreStyles.metricSubtext}>Sum of line items</div>
-        </div>
+        <MetricCard
+          label="Item Subtotal"
+          value={formattedSubtotal}
+          subtext="Sum of line items"
+          icon={<Layers size={16} />}
+          iconTone="green"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Items</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}
-            >
-              <FileText size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{lines.length}</div>
-          <div className={coreStyles.metricSubtext}>Line items in pack</div>
-        </div>
+        <MetricCard
+          label="Items"
+          value={lines.length}
+          subtext="Line items in pack"
+          icon={<FileText size={16} />}
+          iconTone="blue"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>School</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
-            >
-              <Building2 size={16} />
-            </div>
-          </div>
-          <div
-            className={`${adminStyles.metricValue} ${adminStyles.metricValueSmall}`}
-          >
-            {schoolName}
-          </div>
-          <div className={coreStyles.metricSubtext}>Gauteng</div>
-        </div>
+        <MetricCard
+          label="School"
+          value={schoolName}
+          subtext="Gauteng"
+          icon={<Building2 size={16} />}
+          iconTone="green"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Visibility</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
-            >
-              <Eye size={16} />
-            </div>
-          </div>
-          <div
-            className={`${adminStyles.metricValue} ${adminStyles.metricValueSmall}`}
-          >
-            Visible
-          </div>
-          <div className={coreStyles.metricSubtext}>Public listing</div>
-        </div>
+        <MetricCard
+          label="Visibility"
+          value="Visible"
+          subtext="Public listing"
+          icon={<Eye size={16} />}
+          iconTone="green"
+        />
       </div>
 
       {/* Middle Section (2-Column Grid: Set Pack Grade & Items + Pack Summary) */}

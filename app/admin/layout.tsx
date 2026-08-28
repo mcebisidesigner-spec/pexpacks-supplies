@@ -5,6 +5,7 @@ import { requireAdmin, displayName } from "@/lib/admin/rbac";
 import { filterNav } from "@/lib/admin/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { SessionSecurityProvider } from "@/components/security/SessionSecurityProvider";
+import { MustChangePasswordModal } from "@/components/security/MustChangePasswordModal";
 
 export const metadata: Metadata = {
   title: "Admin | Pexpacks",
@@ -25,8 +26,14 @@ export default async function AdminLayout({
         ? metadata["picture"]
         : null;
 
+  const mustChangePassword = Boolean(metadata["must_change_password"]);
+
   return (
     <SessionSecurityProvider>
+      <MustChangePasswordModal
+        userEmail={session.user.email ?? ""}
+        mustChangePassword={mustChangePassword}
+      />
       <AdminShell
         groups={groups}
         userName={name}

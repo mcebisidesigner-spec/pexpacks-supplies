@@ -5,6 +5,7 @@ import { formatDateTime } from "@/lib/admin/ui-utils";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { updateApprovalAction } from "../operations-actions";
 import admin from "../admin.module.css";
@@ -111,9 +112,7 @@ export default async function ApprovalsPage() {
                               name="decisionNotes"
                               placeholder="Notes"
                             />
-                            <button className={styles.buttonSecondary}>
-                              Submit
-                            </button>
+                            <AdminButton type="submit">Submit</AdminButton>
                           </form>
                         ) : (
                           "—"

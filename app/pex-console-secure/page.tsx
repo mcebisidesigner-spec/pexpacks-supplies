@@ -77,11 +77,19 @@ export default function PexConsoleGateway() {
         // ignore
       }
 
-      // 2. Check for URL search parameters (Copy AUTH No button)
+      // 2. Check for URL search parameters
       const params = new URLSearchParams(window.location.search);
       const urlOtp = params.get("otp");
+      const statusParam = params.get("status") || params.get("message");
 
-      if (urlOtp && urlOtp.length === 6 && /^\d+$/.test(urlOtp)) {
+      if (statusParam === "password_updated" || statusParam === "password_set") {
+        setModalNotice({
+          title: "Permanent Password Established",
+          message: "Your permanent password has been set successfully! Please sign in using your new password to access the portal.",
+          type: "info",
+        });
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else if (urlOtp && urlOtp.length === 6 && /^\d+$/.test(urlOtp)) {
         setOtpValues(urlOtp.split(""));
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {

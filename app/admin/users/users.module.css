@@ -179,21 +179,6 @@
   color: var(--db-text-muted);
 }
 
-.badgeActive {
-  background: var(--db-success-subtle);
-  color: var(--db-success-text);
-}
-
-.badgeInvited {
-  background: var(--db-warning-subtle);
-  color: var(--db-warning-text);
-}
-
-.badgeBanned {
-  background: var(--db-danger-subtle);
-  color: var(--db-danger-text);
-}
-
 .actions {
   display: flex;
   align-items: center;

@@ -10,6 +10,8 @@ import {
   Check,
   X,
   Edit3,
+  Trash2,
+  AlertTriangle,
   Calendar,
   Mail,
   UserCheck,
@@ -22,7 +24,10 @@ import {
   RefreshCw,
 } from "lucide-react";
 import type { RoleInfo, UserListItem } from "@/lib/admin/users";
-import { updateUserRolesFromSettingsAction } from "@/app/admin/settings/actions";
+import {
+  updateUserRolesFromSettingsAction,
+  deleteUserFromSettingsAction,
+} from "@/app/admin/settings/actions";
 import styles from "./SettingsControlCentre.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 
@@ -40,14 +45,18 @@ export function UserIdentityTab({
   isSuperUser = false,
 }: UserIdentityTabProps) {
   const router = useRouter();
+  const [userList, setUserList] = useState<UserListItem[]>(users);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserListItem | null>(null);
+  const [userToDelete, setUserToDelete] = useState<UserListItem | null>(null);
   const [activeRoleSlugs, setActiveRoleSlugs] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
+  const [isDeleting, startDeleteTransition] = useTransition();
   const [feedback, setFeedback] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Superuser role is strictly only visible to the 2 designated superusers
   const visibleRoles = useMemo(() => {
@@ -62,14 +71,14 @@ export function UserIdentityTab({
 
   const filteredUsers = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return users;
-    return users.filter((u) => {
+    if (!q) return userList;
+    return userList.filter((u) => {
       const meta = (u.user_metadata ?? {}) as Record<string, unknown>;
       const name = String(meta.full_name || meta.name || "").toLowerCase();
       const email = (u.email ?? "").toLowerCase();
       return name.includes(q) || email.includes(q) || u.id.includes(q);
     });
-  }, [users, searchQuery]);
+  }, [userList, searchQuery]);
 
   function handleOpenInspect(user: UserListItem) {
     setSelectedUser(user);
@@ -78,6 +87,13 @@ export function UserIdentityTab({
   }
 
   function toggleRole(roleSlug: string) {
+    if (
+      selectedUser?.email?.toLowerCase() === "mcebisimhayise@gmail.com" &&
+      (roleSlug === "super_admin" || roleSlug === "superuser")
+    ) {
+      // Permanent primary superuser role is locked and cannot be revoked
+      return;
+    }
     setActiveRoleSlugs((prev) =>
       prev.includes(roleSlug)
         ? prev.filter((s) => s !== roleSlug)
@@ -107,6 +123,31 @@ export function UserIdentityTab({
           type: "error",
           text: res.message || "Failed to update user roles.",
         });
+      }
+    });
+  }
+
+  function handleRequestDelete(user: UserListItem) {
+    setUserToDelete(user);
+    setDeleteError(null);
+  }
+
+  function handleConfirmDelete() {
+    if (!userToDelete) return;
+    setDeleteError(null);
+
+    startDeleteTransition(async () => {
+      const res = await deleteUserFromSettingsAction(userToDelete.id);
+      if (res.ok) {
+        // Remove from local list
+        setUserList((prev) => prev.filter((u) => u.id !== userToDelete.id));
+        if (selectedUser?.id === userToDelete.id) {
+          setSelectedUser(null);
+        }
+        setUserToDelete(null);
+        router.refresh();
+      } else {
+        setDeleteError(res.message || "Failed to delete user account.");
       }
     });
   }
@@ -255,9 +296,17 @@ export function UserIdentityTab({
                 filteredUsers.map((user) => {
                   const name = getUserName(user);
                   const initials = getInitials(name);
+                  const isPrimarySuper =
+                    user.email?.toLowerCase() === "mcebisimhayise@gmail.com";
                   const isSuper =
+                    isPrimarySuper ||
                     user.roleSlugs.includes("super_admin") ||
-                    user.email === "mcebisimhayise@gmail.com";
+                    user.email === "pexpacks@gmail.com";
+                  const isSelf =
+                    Boolean(currentUserEmail) &&
+                    user.email?.toLowerCase() === currentUserEmail?.toLowerCase();
+                  const canDelete =
+                    !isPrimarySuper && !isSelf && (!isSuper || isSuperUser);
 
                   return (
                     <tr
@@ -357,28 +406,51 @@ export function UserIdentityTab({
                       </td>
 
                       <td style={{ textAlign: "right" }}>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleOpenInspect(user);
-                          }}
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "6px",
-                            padding: "6px 12px",
-                            backgroundColor: "rgba(56, 189, 248, 0.1)",
-                            border: "1px solid rgba(56, 189, 248, 0.3)",
-                            borderRadius: "6px",
-                            color: "#38bdf8",
-                            fontSize: "12px",
-                            fontWeight: 600,
-                            cursor: "pointer",
-                          }}
-                        >
-                          <Edit3 size={12} /> Inspect Roles
-                        </button>
+                        <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: "8px" }}>
+                          {isPrimarySuper ? (
+                            <span
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                padding: "4px 8px",
+                                borderRadius: "6px",
+                                fontSize: "11px",
+                                fontWeight: 700,
+                                backgroundColor: "rgba(168, 85, 247, 0.15)",
+                                border: "1px solid rgba(168, 85, 247, 0.4)",
+                                color: "#e9d5ff",
+                              }}
+                              title="Permanent Primary Superuser Account (Locked)"
+                            >
+                              🔒 Permanent
+                            </span>
+                          ) : canDelete ? (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRequestDelete(user);
+                              }}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "6px",
+                                padding: "6px 12px",
+                                backgroundColor: "rgba(239, 68, 68, 0.1)",
+                                border: "1px solid rgba(239, 68, 68, 0.3)",
+                                borderRadius: "6px",
+                                color: "#f87171",
+                                fontSize: "12px",
+                                fontWeight: 600,
+                                cursor: "pointer",
+                              }}
+                              title={isSuper ? "Delete Superuser Account" : "Delete User Account"}
+                            >
+                              <Trash2 size={12} /> Delete
+                            </button>
+                          ) : null}
+                        </div>
                       </td>
                     </tr>
                   );
@@ -661,24 +733,63 @@ export function UserIdentityTab({
                 justifyContent: "space-between",
                 backgroundColor: "#060a10",
                 borderRadius: "0 0 16px 16px",
+                gap: "12px",
+                flexWrap: "wrap",
               }}
             >
-              <button
-                type="button"
-                onClick={() => setSelectedUser(null)}
-                style={{
-                  background: "transparent",
-                  border: "1px solid rgba(51, 65, 85, 0.8)",
-                  borderRadius: "8px",
-                  padding: "8px 16px",
-                  color: "#cbd5e1",
-                  fontSize: "0.8125rem",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Close
-              </button>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <button
+                  type="button"
+                  onClick={() => setSelectedUser(null)}
+                  style={{
+                    background: "transparent",
+                    border: "1px solid rgba(51, 65, 85, 0.8)",
+                    borderRadius: "8px",
+                    padding: "8px 16px",
+                    color: "#cbd5e1",
+                    fontSize: "0.8125rem",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  Close
+                </button>
+
+                {(() => {
+                  const selectedIsSuper =
+                    selectedUser.roleSlugs.includes("super_admin") ||
+                    selectedUser.email === "mcebisimhayise@gmail.com" ||
+                    selectedUser.email === "pexpacks@gmail.com";
+                  const selectedIsSelf =
+                    Boolean(currentUserEmail) &&
+                    selectedUser.email?.toLowerCase() === currentUserEmail?.toLowerCase();
+                  const canDeleteSelected =
+                    !selectedIsSelf && (!selectedIsSuper || isSuperUser);
+
+                  return canDeleteSelected ? (
+                    <button
+                      type="button"
+                      onClick={() => handleRequestDelete(selectedUser)}
+                      style={{
+                        background: "rgba(239, 68, 68, 0.1)",
+                        border: "1px solid rgba(239, 68, 68, 0.35)",
+                        borderRadius: "8px",
+                        padding: "8px 14px",
+                        color: "#f87171",
+                        fontSize: "0.8125rem",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }}
+                      title={selectedIsSuper ? "Delete Superuser Account" : "Delete User Account"}
+                    >
+                      <Trash2 size={13} /> {selectedIsSuper ? "Delete Superuser" : "Delete User"}
+                    </button>
+                  ) : null;
+                })()}
+              </div>
 
               <button
                 type="button"
@@ -709,6 +820,154 @@ export function UserIdentityTab({
                   </>
                 )}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete User Confirmation Modal */}
+      {userToDelete && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(3, 7, 18, 0.85)",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+            zIndex: 99999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+          }}
+          onClick={() => setUserToDelete(null)}
+        >
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "460px",
+              backgroundColor: "#090e17",
+              border: "1px solid rgba(239, 68, 68, 0.4)",
+              borderRadius: "16px",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.8)",
+              overflow: "hidden",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                padding: "20px 24px",
+                background: "linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(9, 14, 23, 0.95) 100%)",
+                borderBottom: "1px solid rgba(51, 65, 85, 0.5)",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+              }}
+            >
+              <div
+                style={{
+                  width: "38px",
+                  height: "38px",
+                  borderRadius: "10px",
+                  backgroundColor: "rgba(239, 68, 68, 0.2)",
+                  color: "#f87171",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <AlertTriangle size={20} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#ffffff", margin: "0 0 2px" }}>
+                  Delete User Account
+                </h3>
+                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
+                  Permanent database action
+                </p>
+              </div>
+            </div>
+
+            <div style={{ padding: "20px 24px" }}>
+              {deleteError && (
+                <div
+                  style={{
+                    backgroundColor: "rgba(239, 68, 68, 0.15)",
+                    border: "1px solid rgba(239, 68, 68, 0.4)",
+                    borderRadius: "8px",
+                    padding: "10px 14px",
+                    color: "#fca5a5",
+                    fontSize: "0.8125rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    marginBottom: "16px",
+                  }}
+                >
+                  <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                  <span>{deleteError}</span>
+                </div>
+              )}
+
+              <p style={{ fontSize: "0.875rem", color: "#cbd5e1", lineHeight: 1.5, margin: "0 0 12px" }}>
+                Are you sure you want to permanently delete{" "}
+                <strong style={{ color: "#ffffff" }}>{getUserName(userToDelete)}</strong> (
+                <span style={{ color: "#38bdf8" }}>{userToDelete.email}</span>)?
+              </p>
+              <p style={{ fontSize: "0.8125rem", color: "#94a3b8", lineHeight: 1.4, margin: "0 0 20px" }}>
+                This will immediately remove their account from Supabase Auth and revoke all role permissions. This action cannot be undone.
+              </p>
+
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "10px" }}>
+                <button
+                  type="button"
+                  onClick={() => setUserToDelete(null)}
+                  disabled={isDeleting}
+                  style={{
+                    background: "transparent",
+                    border: "1px solid rgba(51, 65, 85, 0.8)",
+                    borderRadius: "8px",
+                    padding: "8px 16px",
+                    color: "#cbd5e1",
+                    fontSize: "0.8125rem",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleConfirmDelete}
+                  disabled={isDeleting}
+                  style={{
+                    backgroundColor: "#ef4444",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "8px 18px",
+                    fontSize: "0.8125rem",
+                    fontWeight: 700,
+                    cursor: isDeleting ? "not-allowed" : "pointer",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    boxShadow: "0 4px 12px rgba(239, 68, 68, 0.35)",
+                  }}
+                >
+                  {isDeleting ? (
+                    <>
+                      <RefreshCw size={13} className="animate-spin" /> Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={13} /> Yes, Delete User
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>

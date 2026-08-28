@@ -5,6 +5,8 @@ import { money, formatDate } from "@/lib/admin/ui-utils";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { EmptyState } from "@/components/admin/EmptyState";
 import {
   approveProductPriceAction,
@@ -113,7 +115,7 @@ export default async function PricingPage() {
               defaultValue="100"
               aria-label="Priority"
             />
-            <button className={styles.button}>Add rule</button>
+            <AdminButton type="submit">Add rule</AdminButton>
           </form>
         </section>
       ) : null}
@@ -162,11 +164,10 @@ export default async function PricingPage() {
                       {money(product.suggested_price)}
                     </td>
                     <td>
-                      <span
-                        className={`${styles.badge} ${product.pricing_status === "approved" ? styles.good : styles.warn}`}
-                      >
-                        {product.pricing_status}
-                      </span>
+                        <StatusBadge
+                          status={product.pricing_status}
+                          tone={product.pricing_status === "approved" ? "emerald" : "amber"}
+                        />
                     </td>
                     <td>
                       {hasPermission(session, "pricing.manage") ? (
@@ -186,9 +187,7 @@ export default async function PricingPage() {
                             defaultValue={product.suggested_price.toFixed(2)}
                             aria-label={`Selling price for ${product.name}`}
                           />
-                          <button className={styles.buttonSecondary}>
-                            Approve
-                          </button>
+                          <AdminButton type="submit">Approve</AdminButton>
                         </form>
                       ) : (
                         "-"

@@ -67,6 +67,15 @@ export async function restoreSettingsAction(
   }
 }
 
+function generateSecureTempPassword(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+  let randomPart = "";
+  for (let i = 0; i < 8; i++) {
+    randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `Pex#${randomPart}26!`;
+}
+
 export async function inviteUserFromSettingsAction(formData: FormData) {
   const actor = await requireAdmin({ permission: "users.create" });
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
@@ -91,26 +100,54 @@ export async function inviteUserFromSettingsAction(formData: FormData) {
 
   try {
     const admin = createSupabaseAdminClient();
-    const { data: inviteData, error: inviteError } = await admin.auth.admin.inviteUserByEmail(
-      email,
-      {
-        data: {
-          full_name: fullName,
-          name: fullName,
-          department: department || undefined,
-          onboarded_via: "settings_add_users",
-        },
-      }
-    );
+    const tempPassword = generateSecureTempPassword();
+    let userId: string;
 
-    if (inviteError) {
-      if (inviteError.message.includes("already registered")) {
-        return { ok: false, message: `A user with email ${email} is already registered.` };
+    const { data: createData, error: createError } = await admin.auth.admin.createUser({
+      email,
+      password: tempPassword,
+      email_confirm: true,
+      user_metadata: {
+        full_name: fullName,
+        name: fullName,
+        department: department || undefined,
+        must_change_password: true,
+        onboarded_via: "settings_add_users",
+      },
+    });
+
+    if (createError) {
+      const errMsg = createError.message.toLowerCase();
+      if (errMsg.includes("already registered") || errMsg.includes("already exists") || errMsg.includes("duplicate")) {
+        const { data: listData } = await admin.auth.admin.listUsers();
+        const existing = listData?.users?.find(
+          (u) => u.email?.toLowerCase() === email.toLowerCase()
+        );
+
+        if (existing) {
+          userId = existing.id;
+          const { error: updateError } = await admin.auth.admin.updateUserById(userId, {
+            password: tempPassword,
+            email_confirm: true,
+            user_metadata: {
+              ...existing.user_metadata,
+              full_name: fullName,
+              name: fullName,
+              department: department || undefined,
+              must_change_password: true,
+            },
+          });
+          if (updateError) throw updateError;
+        } else {
+          return { ok: false, message: `A user with email ${email} is already registered.` };
+        }
+      } else {
+        throw createError;
       }
-      throw inviteError;
+    } else {
+      userId = createData.user.id;
     }
 
-    const userId = inviteData?.user?.id;
     if (!userId) {
       throw new Error("No user record returned from authentication gateway.");
     }
@@ -146,7 +183,7 @@ export async function inviteUserFromSettingsAction(formData: FormData) {
       action: "users.create",
       entityType: "user",
       entityId: userId,
-      summary: `Onboarded & invited ${fullName} (${email}) via Settings Add Users`,
+      summary: `Onboarded ${fullName} (${email}) with temporary password & assigned roles`,
       details: {
         fullName,
         email,
@@ -156,20 +193,26 @@ export async function inviteUserFromSettingsAction(formData: FormData) {
       },
     });
 
-    // Send custom branded email invitation
-    void sendUserInvitationEmail({
+    // Send custom branded email invitation with temporary credentials
+    const emailResult = await sendUserInvitationEmail({
       toEmail: email,
       fullName,
       department: department || undefined,
       roles: assignedRolesInfo,
       notes: notes || undefined,
       invitedByName: displayName(actor.user) || "Pexpacks Administrator",
+      tempPassword,
     });
+
+    if (!emailResult.success) {
+      console.warn("[settings-invite] Resend email warning:", emailResult.error);
+    }
 
     return {
       ok: true,
-      message: `Invitation email successfully dispatched to ${fullName} (${email}).`,
+      message: `Invitation email with temporary credentials successfully dispatched to ${fullName} (${email}).`,
       userId,
+      tempPassword,
     };
   } catch (err) {
     console.error("[settings-invite] Error:", err);
@@ -235,5 +278,11 @@ export async function deleteVaultCredentialAction(id: string) {
   }
   const { deleteSystemVaultCredential } = await import("@/lib/admin/system-settings");
   return deleteSystemVaultCredential(id.trim(), actor.user.email ?? "Superuser");
+}
+
+export async function deleteUserFromSettingsAction(userId: string) {
+  await requireAdmin({ permission: "users.delete" });
+  const { deleteUser } = await import("@/lib/admin/users");
+  return deleteUser(userId);
 }
 

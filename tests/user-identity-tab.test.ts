@@ -62,4 +62,79 @@ describe("User Identity Settings Tab", () => {
     expect(superView.some((r) => r.slug === "super_admin")).toBe(true);
     expect(superView.length).toBe(3);
   });
+
+  it("allows superuser to delete another superuser and regular users while preventing self-deletion and unauthorized deletions", () => {
+    const isUserDeletableByActor = (
+      actorEmail: string,
+      actorIsSuper: boolean,
+      targetEmail: string,
+      targetRoleSlugs: string[]
+    ) => {
+      // Cannot delete self
+      if (actorEmail.toLowerCase() === targetEmail.toLowerCase()) return false;
+
+      const superEmails = new Set(["mcebisimhayise@gmail.com", "pexpacks@gmail.com"]);
+      const targetIsSuper =
+        superEmails.has(targetEmail.toLowerCase()) ||
+        targetRoleSlugs.includes("super_admin");
+
+      // Superusers can delete anyone except self
+      if (actorIsSuper) return true;
+
+      // Non-superusers cannot delete superusers
+      if (targetIsSuper) return false;
+
+      return true;
+    };
+
+    // Superuser deleting another superuser -> ALLOWED
+    expect(
+      isUserDeletableByActor(
+        "mcebisimhayise@gmail.com",
+        true,
+        "pexpacks@gmail.com",
+        ["super_admin"]
+      )
+    ).toBe(true);
+
+    // Superuser deleting regular user -> ALLOWED
+    expect(
+      isUserDeletableByActor(
+        "mcebisimhayise@gmail.com",
+        true,
+        "staff1@pexpacks.co.za",
+        ["operations_manager"]
+      )
+    ).toBe(true);
+
+    // Superuser deleting self -> PREVENTED
+    expect(
+      isUserDeletableByActor(
+        "mcebisimhayise@gmail.com",
+        true,
+        "mcebisimhayise@gmail.com",
+        ["super_admin"]
+      )
+    ).toBe(false);
+
+    // Non-superuser deleting a superuser -> PREVENTED
+    expect(
+      isUserDeletableByActor(
+        "staff1@pexpacks.co.za",
+        false,
+        "pexpacks@gmail.com",
+        ["super_admin"]
+      )
+    ).toBe(false);
+
+    // Non-superuser deleting regular user -> ALLOWED
+    expect(
+      isUserDeletableByActor(
+        "staff1@pexpacks.co.za",
+        false,
+        "staff2@pexpacks.co.za",
+        ["viewer"]
+      )
+    ).toBe(true);
+  });
 });

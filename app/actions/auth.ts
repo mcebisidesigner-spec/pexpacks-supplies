@@ -325,3 +325,86 @@ export async function logoutAction(): Promise<never> {
   await supabase.auth.signOut();
   redirect("/");
 }
+
+/**
+ * Mandatory First-Time Password Setup: Sets permanent password and clears must_change_password flag
+ */
+export async function setPermanentPasswordAction(
+  password: string,
+  confirmPassword: string
+): Promise<{ ok: boolean; message: string }> {
+  try {
+    const supabaseServer = await createSupabaseServerClient();
+    const { data: userData, error: userError } = await supabaseServer.auth.getUser();
+
+    if (userError || !userData?.user) {
+      return { ok: false, message: "Authentication required to establish a new password." };
+    }
+
+    const user = userData.user;
+
+    if (!password || password.length < 8) {
+      return { ok: false, message: "Password must be at least 8 characters long." };
+    }
+
+    if (password !== confirmPassword) {
+      return { ok: false, message: "Passwords do not match. Please verify and try again." };
+    }
+
+    // 1. Update user password via server client session
+    const { error: updateError } = await supabaseServer.auth.updateUser({
+      password,
+      data: {
+        must_change_password: false,
+      },
+    });
+
+    if (updateError) {
+      return { ok: false, message: updateError.message || "Failed to update password." };
+    }
+
+    // 2. Also ensure Supabase Admin client clears user_metadata
+    try {
+      const adminClient = createSupabaseAdminClient();
+      await adminClient.auth.admin.updateUserById(user.id, {
+        password,
+        user_metadata: {
+          ...user.user_metadata,
+          must_change_password: false,
+        },
+      });
+    } catch {
+      // ignore
+    }
+
+    // 3. Log security event
+    const { ip, userAgent } = await getClientContext();
+    await logSecurityEvent({
+      ipAddress: ip,
+      userAgent,
+      eventType: "PASSWORD_CHANGED",
+      email: user.email ?? "",
+      userId: user.id,
+      metadata: { reason: "first_login_permanent_setup" },
+    });
+
+    // 4. Invalidate temporary session so the user re-authenticates with permanent password
+    try {
+      await supabaseServer.auth.signOut();
+      const cookieStore = await cookies();
+      cookieStore.set({
+        name: "px_admin_last_activity",
+        value: "",
+        path: "/",
+        expires: new Date(0),
+      });
+    } catch {
+      // ignore
+    }
+
+    return { ok: true, message: "Permanent password successfully created! Please log in with your new password." };
+  } catch (err) {
+    console.error("[auth-action] setPermanentPasswordAction exception:", err);
+    return { ok: false, message: "An unexpected error occurred while establishing password." };
+  }
+}

@@ -7,6 +7,7 @@ export interface UserInvitationEmailParams {
   roles: { slug: string; name: string; description: string }[];
   notes?: string;
   invitedByName?: string;
+  tempPassword?: string;
   actionUrl?: string;
 }
 
@@ -17,6 +18,7 @@ export async function sendUserInvitationEmail({
   roles,
   notes,
   invitedByName,
+  tempPassword,
   actionUrl,
 }: UserInvitationEmailParams): Promise<{ success: boolean; error?: string }> {
   try {
@@ -97,6 +99,43 @@ export async function sendUserInvitationEmail({
                   : ""
               }
 
+              <!-- Credentials Box -->
+              <div style="background: #060d1b; border: 1.5px solid #0284c7; border-radius: 12px; padding: 22px 24px; margin-bottom: 26px; box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.2);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 10px;">
+                  <div style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #38bdf8;">
+                    🔐 Your Temporary Login Credentials:
+                  </div>
+                </div>
+
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 14px;">
+                  <tr>
+                    <td style="font-size: 13px; color: #94a3b8; padding: 7px 0; width: 140px; font-weight: 600;">Console Portal:</td>
+                    <td style="font-size: 13px; font-weight: 700; color: #38bdf8; padding: 7px 0;">
+                      <a href="${loginLink}" style="color: #38bdf8; text-decoration: underline;">${loginLink}</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-size: 13px; color: #94a3b8; padding: 7px 0; font-weight: 600;">Username:</td>
+                    <td style="font-size: 14px; font-weight: 800; color: #ffffff; padding: 7px 0;">${toEmail}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-size: 13px; color: #94a3b8; padding: 7px 0; font-weight: 600;">Temporary Password:</td>
+                    <td style="font-size: 15px; font-weight: 800; font-family: 'Courier New', Courier, monospace; color: #34d399; padding: 7px 0;">
+                      <span style="background: #020617; border: 1px solid #10b981; padding: 5px 12px; border-radius: 6px; letter-spacing: 0.08em; display: inline-block;">${tempPassword || "Supplied by Administrator"}</span>
+                    </td>
+                  </tr>
+                </table>
+
+                <div style="background: rgba(56, 189, 248, 0.08); border-left: 3px solid #38bdf8; border-radius: 4px; padding: 10px 14px; font-size: 12px; color: #cbd5e1; line-height: 1.5;">
+                  <strong style="color: #ffffff;">📋 Next Steps on First Sign-In:</strong>
+                  <ol style="margin: 6px 0 0 0; padding-left: 18px;">
+                    <li style="margin-bottom: 3px;">Sign in using your <strong>Username</strong> and <strong>Temporary Password</strong> above.</li>
+                    <li style="margin-bottom: 3px;">You will be prompted immediately to create your private <strong>Permanent Password</strong>.</li>
+                    <li>Once saved, the system will automatically redirect you to <strong>re-login</strong> with your new permanent password.</li>
+                  </ol>
+                </div>
+              </div>
+
               <!-- Roles & Responsibilities Section -->
               <div style="margin-bottom: 24px;">
                 <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 10px;">
@@ -116,8 +155,8 @@ export async function sendUserInvitationEmail({
 
               <!-- Call to Action Button -->
               <div style="text-align: center; margin: 32px 0 24px;">
-                <a href="${loginLink}" style="display: inline-block; background: #10b981; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 8px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);">
-                  Activate Account &amp; Sign In &rarr;
+                <a href="${loginLink}" style="display: inline-block; background: #10b981; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 34px; border-radius: 8px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);">
+                  Sign In with Temporary Password &rarr;
                 </a>
               </div>
 

@@ -97,10 +97,17 @@ const STAFF_ROLE_SLUGS = new Set([
   "viewer",
 ]);
 
+export const PRIMARY_SUPERUSER_EMAIL = "mcebisimhayise@gmail.com";
+
 export const SUPERUSER_EMAILS = new Set([
-  "mcebisimhayise@gmail.com",
+  PRIMARY_SUPERUSER_EMAIL,
   "pexpacks@gmail.com",
 ]);
+
+export function isPrimarySuperUserEmail(email?: string | null): boolean {
+  if (!email) return false;
+  return email.trim().toLowerCase() === PRIMARY_SUPERUSER_EMAIL.toLowerCase();
+}
 
 export function isSuperUserEmail(email?: string | null): boolean {
   if (!email) return false;

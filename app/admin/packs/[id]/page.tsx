@@ -19,6 +19,8 @@ import { PackItemsSection } from "@/components/admin/packs/PackItemsSection";
 import { SchoolPacksDetailView } from "@/components/admin/views/SchoolPacksDetailView";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { MetricCard } from "@/components/admin/ui/AdminCard";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -101,76 +103,45 @@ export default async function PackOrSchoolPacksPage({
       />
 
       <div className={`${adminStyles.metricsGrid5} ${styles.packMetricsGrid}`}>
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Pack Price</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
-            >
-              <span className={adminStyles.currencyText}>R</span>
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{formattedPrice}</div>
-          <div className={adminStyles.metricSub}>Retail selling price</div>
-        </div>
+        <MetricCard
+          label="Pack Price"
+          value={formattedPrice}
+          subtext="Retail selling price"
+          icon={<span className={adminStyles.currencyText}>R</span>}
+          iconTone="green"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Item Subtotal</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
-            >
-              <Layers size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{formattedSubtotal}</div>
-          <div className={adminStyles.metricSub}>Sum of line items</div>
-        </div>
+        <MetricCard
+          label="Item Subtotal"
+          value={formattedSubtotal}
+          subtext="Sum of line items"
+          icon={<Layers size={16} />}
+          iconTone="green"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Items</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}
-            >
-              <FileText size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{itemCount}</div>
-          <div className={adminStyles.metricSub}>Line items in pack</div>
-        </div>
+        <MetricCard
+          label="Items"
+          value={itemCount}
+          subtext="Line items in pack"
+          icon={<FileText size={16} />}
+          iconTone="blue"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>School</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
-            >
-              <School size={16} />
-            </div>
-          </div>
-          <div className={`${adminStyles.metricValue} ${adminStyles.metricValueSmall}`}>
-            {schoolData ? schoolName : "Unassigned"}
-          </div>
-          <div className={adminStyles.metricSub}>{schoolData?.province || ""}</div>
-        </div>
+        <MetricCard
+          label="School"
+          value={schoolData ? schoolName : "Unassigned"}
+          subtext={schoolData?.province || ""}
+          icon={<School size={16} />}
+          iconTone="green"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Visibility</span>
-            <div
-              className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}
-            >
-              {pack.visible ? <Eye size={16} /> : <EyeOff size={16} />}
-            </div>
-          </div>
-          <div className={`${adminStyles.metricValue} ${adminStyles.metricValueSmall}`}>
-            {pack.visible ? "Visible" : "Hidden"}
-          </div>
-          <div className={adminStyles.metricSub}>
-            {pack.visible ? "Public listing" : "Draft / hidden"}
-          </div>
-        </div>
+        <MetricCard
+          label="Visibility"
+          value={pack.visible ? "Visible" : "Hidden"}
+          subtext={pack.visible ? "Live on site" : "Not public"}
+          icon={pack.visible ? <Eye size={16} /> : <EyeOff size={16} />}
+          iconTone="green"
+        />
       </div>
 
       <div className={adminStyles.detailLayout}>
@@ -203,9 +174,10 @@ export default async function PackOrSchoolPacksPage({
                 <Box size={16} className={adminStyles.iconTeal} />
                 <span>Pack Summary</span>
               </div>
-              <span className={`${adminStyles.badgeGreen} ${adminStyles.badgeTiny}`}>
-                {pack.visible ? "Live" : "Draft"}
-              </span>
+              <StatusBadge
+                status={pack.visible ? "Live" : "Draft"}
+                showDot
+              />
             </div>
 
             <div className={adminStyles.summaryStack}>

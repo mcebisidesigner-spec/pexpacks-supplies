@@ -213,6 +213,15 @@ export interface InviteResult {
   userId?: string;
 }
 
+function generateSecureTempPassword(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+  let randomPart = "";
+  for (let i = 0; i < 8; i++) {
+    randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `Pex#${randomPart}26!`;
+}
+
 export async function inviteUser(formData: FormData): Promise<InviteResult> {
   const actor = await assertCan("users.create");
   const parsed = inviteEmailSchema.safeParse(formData.get("email"));
@@ -221,23 +230,75 @@ export async function inviteUser(formData: FormData): Promise<InviteResult> {
   }
   const email = parsed.data;
   const fullName = typeof formData.get("full_name") === "string" ? String(formData.get("full_name")).trim() : "";
+  const department = typeof formData.get("department") === "string" ? String(formData.get("department")).trim() : "";
   const roleSlugsRaw = formData.getAll("roles");
   const roleSlugs = roleSlugsRaw.filter((r): r is string => typeof r === "string" && Boolean(r));
 
   try {
     const admin = createSupabaseAdminClient();
-    const { data, error } = await admin.auth.admin.inviteUserByEmail(email, {
-      data: fullName ? { full_name: fullName } : {},
+    const tempPassword = generateSecureTempPassword();
+    let userId: string;
+
+    const { data: createData, error: createError } = await admin.auth.admin.createUser({
+      email,
+      password: tempPassword,
+      email_confirm: true,
+      user_metadata: {
+        full_name: fullName,
+        name: fullName,
+        department: department || undefined,
+        must_change_password: true,
+        onboarded_via: "users_directory",
+      },
     });
-    if (error) throw error;
-    const userId = data?.user?.id;
+
+    if (createError) {
+      const errMsg = createError.message.toLowerCase();
+      if (errMsg.includes("already registered") || errMsg.includes("already exists") || errMsg.includes("duplicate")) {
+        const { data: listData } = await admin.auth.admin.listUsers();
+        const existing = listData?.users?.find((u) => u.email?.toLowerCase() === email.toLowerCase());
+        if (existing) {
+          userId = existing.id;
+          const { error: updateError } = await admin.auth.admin.updateUserById(userId, {
+            password: tempPassword,
+            email_confirm: true,
+            user_metadata: {
+              ...existing.user_metadata,
+              full_name: fullName,
+              name: fullName,
+              department: department || undefined,
+              must_change_password: true,
+            },
+          });
+          if (updateError) throw updateError;
+        } else {
+          return { ok: false, errors: {}, message: `A user with email ${email} is already registered.` };
+        }
+      } else {
+        throw createError;
+      }
+    } else {
+      userId = createData.user.id;
+    }
+
     if (!userId) throw new Error("No user returned from invite");
 
+    const allRoles = await listRoles();
     const assigned: string[] = [];
+    const assignedRolesInfo: { slug: string; name: string; description: string }[] = [];
+
     for (const slug of roleSlugs) {
       try {
         await admin.rpc("grant_role", { target_user_id: userId, role_slug: slug, granted_by: actor.user.id });
         assigned.push(slug);
+        const matched = allRoles.find((r) => r.slug === slug);
+        if (matched) {
+          assignedRolesInfo.push({
+            slug: matched.slug,
+            name: matched.name,
+            description: matched.description || "",
+          });
+        }
       } catch (err) {
         console.error(`[users] grant_role ${slug} failed:`, err);
       }
@@ -249,11 +310,21 @@ export async function inviteUser(formData: FormData): Promise<InviteResult> {
       action: "users.create",
       entityType: "user",
       entityId: userId,
-      summary: `Invited ${email}`,
+      summary: `Invited ${email} with temporary credentials`,
       details: { roles: assigned },
     });
 
-    return { ok: true, message: `Invitation sent to ${email}.`, userId };
+    const { sendUserInvitationEmail } = await import("@/lib/email/sendUserInvitationEmail");
+    await sendUserInvitationEmail({
+      toEmail: email,
+      fullName: fullName || email.split("@")[0],
+      department: department || undefined,
+      roles: assignedRolesInfo,
+      invitedByName: actor.user.email,
+      tempPassword,
+    });
+
+    return { ok: true, message: `Invitation sent to ${email} with temporary credentials.`, userId };
   } catch (err) {
     console.error("[users] invite failed:", err);
     return { ok: false, errors: {}, message: "Failed to invite user. Check the email is not already registered." };
@@ -271,11 +342,19 @@ export interface RoleSyncResult {
 
 export async function syncUserRoles(userId: string, roleSlugs: string[]): Promise<RoleSyncResult> {
   const actor = await assertCan("users.edit");
-  const { isSuperUserEmail } = await import("@/lib/admin/rbac");
+  const { isSuperUserEmail, isPrimarySuperUserEmail } = await import("@/lib/admin/rbac");
   const admin = createSupabaseAdminClient();
 
   const current = await getUser(userId);
   if (!current) return { ok: false, message: "User not found." };
+
+  // Mcebisi Hlatshwayo is the permanent Superuser and can never have super_admin revoked
+  if (isPrimarySuperUserEmail(current.email) && !roleSlugs.includes("super_admin")) {
+    return {
+      ok: false,
+      message: "Mcebisi Hlatshwayo's permanent Superuser status cannot be modified or revoked.",
+    };
+  }
 
   const targetIsSuperUser =
     isSuperUserEmail(current.email) || current.roleSlugs.includes("super_admin");
@@ -399,6 +478,15 @@ export async function deactivateUser(userId: string): Promise<{ ok: boolean; mes
   if (userId === actor.user.id) return { ok: false, message: "You cannot deactivate your own account." };
 
   const target = await getUser(userId);
+  const { isPrimarySuperUserEmail } = await import("@/lib/admin/rbac");
+
+  if (isPrimarySuperUserEmail(target?.email)) {
+    return {
+      ok: false,
+      message: "Mcebisi Hlatshwayo's permanent Superuser account cannot be deactivated.",
+    };
+  }
+
   const targetIsSuperUser =
     target?.roleSlugs.includes("super_admin") || isSuperUserEmail(target?.email);
   const actorIsSuperUser =
@@ -446,17 +534,30 @@ export async function reactivateUser(userId: string): Promise<{ ok: boolean; mes
 
 export async function deleteUser(userId: string): Promise<{ ok: boolean; message?: string }> {
   const actor = await assertCan("users.delete");
-  const { isSuperUserEmail } = await import("@/lib/admin/rbac");
+  const { isSuperUserEmail, isPrimarySuperUserEmail } = await import("@/lib/admin/rbac");
   const admin = createSupabaseAdminClient();
 
-  if (userId === actor.user.id) return { ok: false, message: "You cannot delete your own account." };
-
   const target = await getUser(userId);
+  const targetEmail = target?.email?.toLowerCase();
+
+  // Mcebisi Hlatshwayo is the permanent primary Superuser and cannot be deleted by anyone
+  if (isPrimarySuperUserEmail(targetEmail)) {
+    return {
+      ok: false,
+      message: "Mcebisi Hlatshwayo's account is the permanent Primary Superuser and cannot be deleted by anyone.",
+    };
+  }
+
+  if (userId === actor.user.id) return { ok: false, message: "You cannot delete your own active account." };
+
   const targetIsSuperUser =
     target?.roleSlugs.includes("super_admin") || isSuperUserEmail(target?.email);
+  const actorIsSuperUser =
+    actor.isSuperAdmin || isSuperUserEmail(actor.user.email);
 
-  if (targetIsSuperUser) {
-    return { ok: false, message: "Superuser accounts cannot be deleted. Downgrade or revoke the role first." };
+  // Superuser accounts can only be deleted by another Superuser (e.g. Mcebisi)
+  if (targetIsSuperUser && !actorIsSuperUser) {
+    return { ok: false, message: "Superusers are protected and can only be deleted by another Superuser." };
   }
 
   const { error } = await admin.auth.admin.deleteUser(userId);
@@ -464,13 +565,21 @@ export async function deleteUser(userId: string): Promise<{ ok: boolean; message
     console.error("[users] delete failed:", error);
     return { ok: false, message: "Failed to delete user." };
   }
+
+  // Also remove user roles from DB table user_roles to ensure clean state
+  try {
+    await admin.from("user_roles").delete().eq("user_id", userId);
+  } catch {
+    // ignore
+  }
+
   void writeAuditLog({
     actorId: actor.user.id,
     actorName: actor.user.email,
     action: "users.delete",
     entityType: "user",
     entityId: userId,
-    summary: `Deleted ${target?.email ?? userId}`,
+    summary: `Deleted ${target?.email ?? userId}${targetIsSuperUser ? " (Superuser)" : ""}`,
   });
-  return { ok: true, message: "User deleted." };
+  return { ok: true, message: "User successfully deleted." };
 }

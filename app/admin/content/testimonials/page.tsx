@@ -6,6 +6,7 @@ import { setTestimonialVisibleAction, deleteTestimonialAction } from "../actions
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "../../admin.module.css";
 import styles from "../content.module.css";
 
@@ -93,13 +94,10 @@ export default async function TestimonialsPage() {
                     <td>{item.context ?? "—"}</td>
                     <td>{item.sort_order}</td>
                     <td>
-                      <span
-                        className={`${adminStyles.badge} ${
-                          item.visible ? styles.badgeLive : styles.badgeDraft
-                        }`}
-                      >
-                        {item.visible ? "Live" : "Hidden"}
-                      </span>
+                        <StatusBadge
+                          status={item.visible ? "Live" : "Hidden"}
+                          showDot
+                        />
                     </td>
                     <td>
                       <div className={styles.actions}>

@@ -2,7 +2,6 @@
 
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
-import Link from "next/link";
 import { Building2, GraduationCap, Image as ImageIcon, Save, ShieldCheck } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
 import { SCHOOL_STATUSES } from "@/lib/admin/school-constants";
@@ -11,6 +10,7 @@ import { DateField } from "@/components/admin/DateField";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { Field, FieldLabel, FieldError, FormRow } from "@/components/admin/ui/Form";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import formStyles from "./SchoolForm.module.css";
@@ -59,9 +59,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
-      <span className={`${styles.text11} ${adminStyles.cRed} ${adminStyles.mt4} ${adminStyles.block}`} role="alert">
-        {state.errors[field]}
-      </span>
+      <FieldError role="alert">{state.errors[field]}</FieldError>
     ) : null;
 
   const schoolSlugOrId = school?.slug || school?.id || "";
@@ -237,16 +235,18 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               />
             </div>
 
-            <div className={`${formStyles.colSpan1} ${formStyles.dateWrapper}`}>
-              <span className={formStyles.dateFloatingLabel}>Partner Since Date</span>
-              <DateField
-                id="partner_since"
-                name="partner_since"
-                defaultValue={str(school?.partner_since)}
-                ariaLabel="Partner since"
-                placeholder="Select partnership date"
-              />
-              {err("partner_since")}
+            <div className={formStyles.colSpan1}>
+              <Field>
+                <FieldLabel htmlFor="partner_since">Partner Since Date</FieldLabel>
+                <DateField
+                  id="partner_since"
+                  name="partner_since"
+                  defaultValue={str(school?.partner_since)}
+                  ariaLabel="Partner since"
+                  placeholder="Select partnership date"
+                />
+                {err("partner_since")}
+              </Field>
             </div>
 
             <div className={formStyles.colSpan1}>
@@ -280,45 +280,45 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             <span>School Logo Branding</span>
           </div>
 
-          <div className={formStyles.logoUploadContainer}>
-            <div className={adminStyles.logoUploadBox}>
-              {logoPreview ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={logoPreview} alt="School logo preview" className={adminStyles.logoPreviewImg} />
-              ) : (
-                <SchoolLogoPlaceholder width={110} height={110} />
-              )}
-              <input
-                type="file"
-                name="logo_file"
-                accept="image/png,image/webp,image/svg+xml,image/jpeg"
-                className={adminStyles.logoFileInput}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const url = URL.createObjectURL(file);
-                    setLogoPreview(url);
-                    setLogoValue("");
-                  }
-                }}
-              />
-            </div>
+            <FormRow className={formStyles.logoUploadContainer}>
+              <div className={adminStyles.logoUploadBox}>
+                {logoPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={logoPreview} alt="School logo preview" className={adminStyles.logoPreviewImg} />
+                ) : (
+                  <SchoolLogoPlaceholder width={110} height={110} />
+                )}
+                <input
+                  type="file"
+                  name="logo_file"
+                  accept="image/png,image/webp,image/svg+xml,image/jpeg"
+                  className={adminStyles.logoFileInput}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      setLogoPreview(url);
+                      setLogoValue("");
+                    }
+                  }}
+                />
+              </div>
 
-            <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-6"]} ${adminStyles.text12}`}>
-              <p className={`${adminStyles.cWhite} ${adminStyles.fw600}`}>Upload School Emblem / Logo</p>
-              <p className={`${adminStyles.cSubtle} ${styles.text11}`}>PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder used if empty.</p>
-              {logoPreview ? (
-                <button
-                  type="button"
-                  className={`${styles.text11} ${adminStyles.fw700} ${adminStyles.cRed} ${adminStyles.underline} ${adminStyles.mt6}`}
-                  style={{ alignSelf: "flex-start", background: "none", border: "none", padding: 0, cursor: "pointer" }}
-                  onClick={() => { setLogoPreview(null); setLogoValue(""); }}
-                >
-                  Remove logo
-                </button>
-              ) : null}
-            </div>
-          </div>
+              <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles["gap-6"]} ${adminStyles.text12}`}>
+                <p className={`${adminStyles.cWhite} ${adminStyles.fw600}`}>Upload School Emblem / Logo</p>
+                <p className={`${adminStyles.cSubtle} ${styles.text11}`}>PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder used if empty.</p>
+                {logoPreview ? (
+                  <AdminButton
+                    type="button"
+                    variant="ghost"
+                    onClick={() => { setLogoPreview(null); setLogoValue(""); }}
+                    className={formStyles.removeLogoBtn}
+                  >
+                    Remove logo
+                  </AdminButton>
+                ) : null}
+              </div>
+            </FormRow>
         </div>
       </div>
 
@@ -373,9 +373,13 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
 
             <div className={formStyles.sideActions}>
               <SubmitButton label={school ? "Save School Details" : "Create School"} />
-              <Link href={schoolSlugOrId ? `/admin/schools/${schoolSlugOrId}/info` : "/admin/schools"} className={`${styles.secondaryBtn} ${adminStyles.hFullBtn} ${adminStyles.text12}`}>
+              <AdminButton
+                variant="secondary"
+                href={schoolSlugOrId ? `/admin/schools/${schoolSlugOrId}/info` : "/admin/schools"}
+                className={adminStyles.hFullBtn}
+              >
                 Cancel
-              </Link>
+              </AdminButton>
             </div>
           </div>
         </div>

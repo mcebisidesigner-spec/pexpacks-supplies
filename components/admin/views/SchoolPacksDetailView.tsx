@@ -21,6 +21,7 @@ import adminStyles from "@/app/admin/admin.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { VisibleToggle } from "@/components/admin/packs/VisibleToggle";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 
@@ -113,62 +114,45 @@ export function SchoolPacksDetailView({
 
       {/* Metric Summary Row (5 cards) */}
       <div className={adminStyles.metricsGrid5}>
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Grade Packs</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconTeal}`}>
-              <Box size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{totalPacks}</div>
-          <div className={styles.metricSubtext}>Configured</div>
-        </div>
+        <MetricCard
+          label="Grade Packs"
+          value={totalPacks}
+          subtext="Configured"
+          icon={<Box size={16} />}
+          iconTone="green"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Published</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconGreen}`}>
-              <Zap size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{publishedPacks}</div>
-          <div className={styles.metricSubtext}>Live on storefront</div>
-        </div>
+        <MetricCard
+          label="Published"
+          value={publishedPacks}
+          subtext="Live on storefront"
+          icon={<Zap size={16} />}
+          iconTone="green"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Total Items</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconPurple}`}>
-              <Layers size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{totalItemsCount}</div>
-          <div className={styles.metricSubtext}>Across all packs</div>
-        </div>
+        <MetricCard
+          label="Total Items"
+          value={totalItemsCount}
+          subtext="Across all packs"
+          icon={<Layers size={16} />}
+          iconTone="purple"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Pack Value</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconEmerald}`}>
-              <HeartPulse size={16} />
-            </div>
-          </div>
-          <div className={adminStyles.metricValue}>{money(totalRevenue)}</div>
-          <div className={styles.metricSubtext}>Catalogue total</div>
-        </div>
+        <MetricCard
+          label="Pack Value"
+          value={money(totalRevenue)}
+          subtext="Catalogue total"
+          icon={<HeartPulse size={16} />}
+          iconTone="green"
+        />
 
-        <div className={adminStyles.metricCard}>
-          <div className={adminStyles.metricTop}>
-            <span className={adminStyles.metricLabel}>Last Updated</span>
-            <div className={`${adminStyles.metricIconWrapper} ${adminStyles.metricIconBlue}`}>
-              <Clock size={16} />
-            </div>
-          </div>
-          <div className={`${adminStyles.metricValue} ${styles.metricValueDate}`}>
-            May 21, 2024
-          </div>
-          <div className={styles.metricSubtext}>By Liam Morgan</div>
-        </div>
+        <MetricCard
+          label="Last Updated"
+          value="May 21, 2024"
+          subtext="By Liam Morgan"
+          icon={<Clock size={16} />}
+          iconTone="blue"
+        />
       </div>
 
       {/* Main 2-Column Layout */}

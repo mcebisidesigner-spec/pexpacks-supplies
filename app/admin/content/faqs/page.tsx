@@ -7,6 +7,7 @@ import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { ReorderPanel } from "@/components/admin/ReorderPanel";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "../../admin.module.css";
 import styles from "../content.module.css";
 
@@ -100,18 +101,15 @@ export default async function FaqsPage() {
                         </div>
                       </td>
                       <td>
-                        <span className={styles.categoryBadge}>{faq.category}</span>
+                        <StatusBadge status={faq.category} tone="blue" />
                       </td>
                       <td>{linkCount(faq.links)}</td>
                       <td>{faq.sort_order}</td>
                       <td>
-                        <span
-                          className={`${adminStyles.badge} ${
-                            faq.visible ? styles.badgeLive : styles.badgeDraft
-                          }`}
-                        >
-                          {faq.visible ? "Live" : "Hidden"}
-                        </span>
+                        <StatusBadge
+                          status={faq.visible ? "Live" : "Hidden"}
+                          showDot
+                        />
                       </td>
                       <td>
                         <div className={styles.actions}>

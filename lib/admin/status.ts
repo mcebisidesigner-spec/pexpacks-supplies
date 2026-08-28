@@ -32,6 +32,9 @@ const STATUS_TO_TONE: Record<string, StatusTone> = {
   available: "emerald",
   live: "emerald",
   enabled: "emerald",
+  healthy: "emerald",
+  verified: "emerald",
+  operational: "emerald",
 
   // Amber (Pending, Awaiting, Review, Partial, Attention)
   pending: "amber",
@@ -48,6 +51,10 @@ const STATUS_TO_TONE: Record<string, StatusTone> = {
   medium: "amber",
   normal: "amber",
   prospect: "amber",
+  partially_received: "amber",
+  substituted: "amber",
+  invited: "amber",
+  not_verified: "amber",
 
   // Red (Failed, Blocked, Cancel, Overdue, At Risk, Urgent)
   cancelled: "red",
@@ -65,6 +72,8 @@ const STATUS_TO_TONE: Record<string, StatusTone> = {
   discontinued: "red",
   low_stock: "red",
   out_of_stock: "red",
+  banned: "red",
+  closed: "red",
 
   // Blue (Info, Processing, In Progress, Draft operational)
   packing: "blue",

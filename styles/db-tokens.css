@@ -666,6 +666,14 @@
   min-width: 0;
 }
 
+.db-field-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--db-text-secondary);
+  line-height: 1.4;
+}
+
 /* ── Board system (spec §71/77/78 — shared board/column/card) ── */
 .db-board {
   display: grid;

@@ -124,16 +124,6 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
               <tbody>
                 {users.map((user) => {
                   const banned = isBanned(user);
-                  const statusClass = banned
-                    ? styles.badgeBanned
-                    : user.last_sign_in_at
-                      ? styles.badgeActive
-                      : styles.badgeInvited;
-                  const statusLabel = banned
-                    ? "Banned"
-                    : user.last_sign_in_at
-                      ? "Active"
-                      : "Invited";
                   return (
                     <tr key={user.id}>
                       <td>

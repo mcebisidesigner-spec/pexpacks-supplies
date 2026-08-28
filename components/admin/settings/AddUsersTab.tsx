@@ -52,7 +52,9 @@ export function AddUsersTab({
   const [statusMessage, setStatusMessage] = useState<{
     type: "success" | "error";
     text: string;
+    tempPassword?: string;
   } | null>(null);
+  const [copiedTemp, setCopiedTemp] = useState(false);
 
   // Superuser role is strictly only visible to the 2 designated superusers
   const visibleRoles = useMemo<RoleInfo[]>(() => {
@@ -74,6 +76,7 @@ export function AddUsersTab({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatusMessage(null);
+    setCopiedTemp(false);
 
     const formData = new FormData();
     formData.append("full_name", fullName);
@@ -90,6 +93,7 @@ export function AddUsersTab({
         setStatusMessage({
           type: "success",
           text: res.message || "Invitation successfully dispatched!",
+          tempPassword: res.tempPassword,
         });
         setFullName("");
         setEmail("");
@@ -102,6 +106,18 @@ export function AddUsersTab({
         });
       }
     });
+  }
+
+  function handleCopyTempPassword(pwd: string) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        void navigator.clipboard.writeText(pwd);
+        setCopiedTemp(true);
+        setTimeout(() => setCopiedTemp(false), 2000);
+      }
+    } catch {
+      // ignore
+    }
   }
 
   return (
@@ -141,8 +157,8 @@ export function AddUsersTab({
           </div>
           <p style={{ fontSize: "0.875rem", color: "#94a3b8", lineHeight: 1.6, margin: 0 }}>
             Empower new administrators and team members with tailored access. Newly invited users
-            receive an automated, branded onboarding email with their assigned roles, responsibilities,
-            and activation link. Their full name will be prominently displayed on their dashboard welcome screen.
+            receive an automated, branded onboarding email with their assigned roles, temporary password,
+            and login gateway. Upon first sign in, they will establish their permanent password.
           </p>
         </div>
 
@@ -171,13 +187,13 @@ export function AddUsersTab({
         <div
           style={{
             display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            padding: "14px 18px",
+            flexDirection: "column",
+            gap: "10px",
+            padding: "16px 20px",
             borderRadius: "10px",
             backgroundColor:
               statusMessage.type === "success"
-                ? "rgba(16, 185, 129, 0.15)"
+                ? "rgba(16, 185, 129, 0.12)"
                 : "rgba(239, 68, 68, 0.15)",
             border:
               statusMessage.type === "success"
@@ -185,15 +201,71 @@ export function AddUsersTab({
                 : "1px solid rgba(239, 68, 68, 0.35)",
             color: statusMessage.type === "success" ? "#34d399" : "#f87171",
             fontSize: "0.875rem",
-            fontWeight: 500,
           }}
         >
-          {statusMessage.type === "success" ? (
-            <CheckCircle2 size={18} />
-          ) : (
-            <AlertCircle size={18} />
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", fontWeight: 600 }}>
+            {statusMessage.type === "success" ? (
+              <CheckCircle2 size={18} />
+            ) : (
+              <AlertCircle size={18} />
+            )}
+            <span>{statusMessage.text}</span>
+          </div>
+
+          {statusMessage.tempPassword && (
+            <div
+              style={{
+                backgroundColor: "rgba(15, 23, 42, 0.9)",
+                border: "1px solid rgba(59, 130, 246, 0.4)",
+                borderRadius: "8px",
+                padding: "10px 14px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: "10px",
+                marginTop: "4px",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.8125rem", color: "#cbd5e1" }}>
+                <span>🔐 Generated Temporary Password:</span>
+                <span
+                  style={{
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    color: "#38bdf8",
+                    backgroundColor: "rgba(59, 130, 246, 0.15)",
+                    padding: "3px 8px",
+                    borderRadius: "4px",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  {statusMessage.tempPassword}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => handleCopyTempPassword(statusMessage.tempPassword!)}
+                style={{
+                  backgroundColor: copiedTemp ? "#10b981" : "rgba(59, 130, 246, 0.2)",
+                  border: copiedTemp ? "1px solid #10b981" : "1px solid rgba(59, 130, 246, 0.4)",
+                  color: "#ffffff",
+                  borderRadius: "6px",
+                  padding: "4px 10px",
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                {copiedTemp ? <Check size={12} strokeWidth={3} /> : null}
+                <span>{copiedTemp ? "Copied!" : "Copy Password"}</span>
+              </button>
+            </div>
           )}
-          <span>{statusMessage.text}</span>
         </div>
       )}
 

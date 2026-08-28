@@ -438,36 +438,6 @@
   line-height: 1;
 }
 
-.badgePaid {
-  background: var(--a-green-subtle);
-  color: var(--a-green);
-}
-
-.badgePending {
-  background: var(--a-amber-subtle);
-  color: var(--a-amber);
-}
-
-.badgeInfo {
-  background: var(--a-blue-subtle);
-  color: var(--a-blue);
-}
-
-.badgeDanger {
-  background: var(--a-red-subtle);
-  color: var(--a-red);
-}
-
-.badgeMuted {
-  background: rgba(100, 116, 139, 0.16);
-  color: var(--a-text-3);
-}
-
-.badgePurple {
-  background: var(--a-purple-subtle);
-  color: var(--a-purple);
-}
-
 .badgeGreen {
   background: var(--a-green-subtle);
   color: var(--a-green);
@@ -478,33 +448,13 @@
   color: var(--a-accent);
 }
 
-.badgeBlue {
-  background: var(--a-blue-subtle);
-  color: var(--a-blue);
-}
-
-.badgeAmber {
-  background: var(--a-amber-subtle);
-  color: var(--a-amber);
-}
-
 .badgeRed {
   background: var(--a-red-subtle);
   color: var(--a-red);
 }
 
-.badgeDark {
-  background: rgba(100, 116, 139, 0.16);
-  color: var(--a-text-3);
-}
-
 .badgeTiny {
   font-size: 10px;
-}
-
-.badgeGreenPadded {
-  padding: 10px 14px;
-  font-size: 13px;
 }
 
 .pillPublished {
@@ -549,80 +499,6 @@
   .metricsGrid4 { grid-template-columns: 1fr; }
   .metricsGrid5 { grid-template-columns: 1fr; }
 }
-
-.metricCard {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 110px;
-  padding: 14px 16px;
-  background: var(--a-surface);
-  border: 1px solid var(--a-border);
-  border-radius: var(--a-card-radius);
-  box-shadow: var(--a-shadow);
-}
-
-.metricTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.metricLabel {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--a-text-3);
-}
-
-.metricIconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-}
-
-.metricIconTeal { background: var(--a-accent-subtle); color: var(--a-accent); }
-.metricIconBlue { background: var(--a-blue-subtle); color: var(--a-blue); }
-.metricIconAmber { background: var(--a-amber-subtle); color: var(--a-amber); }
-.metricIconGreen { background: var(--a-green-subtle); color: var(--a-green); }
-.metricIconPurple { background: var(--a-purple-subtle); color: var(--a-purple); }
-.metricIconRed { background: var(--a-red-subtle); color: var(--a-red); }
-
-.metricValue {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--a-text);
-  letter-spacing: -0.02em;
-  margin: 4px 0 0;
-}
-
-.metricValueSmall {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 16px;
-}
-
-.metricSub {
-  margin-top: 4px;
-  color: var(--a-text-4);
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.metricTrend {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  font-weight: 600;
-  margin-top: 6px;
-}
-
-.metricTrendUp { color: var(--a-green); }
-.metricTrendDown { color: var(--a-red); }
 
 /* KPI Card (light theme legacy) */
 .kpiCard {
@@ -2155,8 +2031,6 @@
 .page { width: 100%; max-width: 100%; margin-inline: auto; }
 .wide { width: 100%; }
 .mono { font-family: monospace; }
-.warn { color: var(--a-amber); }
-.good { color: var(--a-green); }
 .header { font-size: 13px; font-weight: 700; color: var(--a-text); }
 .actions { display: flex; align-items: center; gap: 8px; }
 .pageNav { display: flex; align-items: center; gap: 6px; }

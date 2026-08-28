@@ -8,6 +8,7 @@ export type SecurityEventType =
   | "OTP_FAILED"
   | "RATE_LIMITED"
   | "PASSWORD_VERIFIED"
+  | "PASSWORD_CHANGED"
   | "UNAUTHORIZED_ACCESS"
   | "OTP_RESENT"
   | "IDLE_SHIELD_TRIGGERED"

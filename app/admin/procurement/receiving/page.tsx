@@ -9,6 +9,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import styles from "../../operations.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 
 export const dynamic = "force-dynamic";
 
@@ -50,11 +51,11 @@ export default async function ReceivingPage() {
             <section key={po.id} className={adminStyles.formPanel}>
               <h2>
                 {po.purchase_order_number}
-                <span
-                  className={`${adminStyles.badge} ${po.status === "received" ? adminStyles.good : po.status === "partially_received" ? adminStyles.warn : ""} ${adminStyles.ml8}`}
-                >
-                  {po.status.replace(/_/g, " ")}
-                </span>
+                <StatusBadge
+                  status={po.status}
+                  tone={po.status === "received" ? "emerald" : po.status === "partially_received" ? "amber" : "slate"}
+                  className={adminStyles.ml8}
+                />
               </h2>
               <p className={adminStyles.muted}>
                 {po.suppliers?.name || "Unknown supplier"} ·{" "}

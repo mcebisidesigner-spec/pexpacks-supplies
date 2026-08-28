@@ -95,9 +95,7 @@ export default async function BlogPage() {
                     </td>
                     <td>
                       {post.category ? (
-                        <span className={adminStyles.badge + " " + adminStyles.badgeInfo}>
-                          {post.category}
-                        </span>
+                        <StatusBadge status={post.category} tone="blue" />
                       ) : (
                         <span className={contentStyles.emptyNote}>—</span>
                       )}

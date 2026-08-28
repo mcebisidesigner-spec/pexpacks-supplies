@@ -3,6 +3,8 @@ import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listSeasons, isOperationsSchemaReady } from "@/lib/admin/operations";
 import { formatDate } from "@/lib/admin/ui-utils";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { EmptyState } from "@/components/admin/EmptyState";
 import {
   createSeasonAction,
@@ -93,9 +95,7 @@ export default async function SeasonsPage() {
             <label className={styles.inlineForm}>
               <input name="isDefault" type="checkbox" /> Default season
             </label>
-            <button className={styles.button} type="submit">
-              Add season
-            </button>
+            <AdminButton type="submit">Add season</AdminButton>
           </form>
         </section>
       ) : null}
@@ -122,17 +122,10 @@ export default async function SeasonsPage() {
                     <td className={styles.mono}>{season.academic_year}</td>
                     <td className={styles.name}>{season.name}</td>
                     <td>
-                      <span
-                        className={`${styles.badge} ${
-                          season.status === "active"
-                            ? styles.good
-                            : season.status === "closed"
-                              ? styles.danger
-                              : ""
-                        }`}
-                      >
-                        {season.status}
-                      </span>
+                        <StatusBadge
+                          status={season.status}
+                          tone={season.status === "active" ? "emerald" : season.status === "closed" ? "red" : "slate"}
+                        />
                     </td>
                     <td>{formatDate(season.ordering_closes_on)}</td>
                     <td>{formatDate(season.fulfilment_starts_on)}</td>
@@ -143,9 +136,7 @@ export default async function SeasonsPage() {
                         <div className={styles.actionCell}>
                           {!season.is_default ? (
                             <form action={setDefaultSeasonAction.bind(null, season.id)}>
-                              <button className={styles.button} type="submit">
-                                Set default
-                              </button>
+                              <AdminButton type="submit">Set default</AdminButton>
                             </form>
                           ) : null}
                         </div>

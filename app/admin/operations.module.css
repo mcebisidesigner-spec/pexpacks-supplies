@@ -237,19 +237,6 @@
   text-transform: capitalize;
 }
 
-.good {
-  background: var(--a-accent-subtle);
-  color: var(--a-accent-strong);
-}
-.warn {
-  background: var(--a-amber-subtle);
-  color: var(--a-amber);
-}
-.danger {
-  background: var(--a-red-subtle);
-  color: var(--a-red);
-}
-
 .progress {
   width: 120px;
   height: 8px;

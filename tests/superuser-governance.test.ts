@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { SUPERUSER_EMAILS, isSuperUserEmail, displayName } from "@/lib/admin/rbac";
+import {
+  SUPERUSER_EMAILS,
+  PRIMARY_SUPERUSER_EMAIL,
+  isSuperUserEmail,
+  isPrimarySuperUserEmail,
+  displayName,
+} from "@/lib/admin/rbac";
 import { MAX_SUPERUSERS } from "@/lib/admin/users";
 import type { User } from "@supabase/supabase-js";
 
@@ -40,5 +46,12 @@ describe("Superuser Governance & Security Alerting", () => {
       created_at: new Date().toISOString(),
     };
     expect(displayName(user)).toBe("Sarah Bell");
+  });
+
+  it("identifies Mcebisi as the permanent Primary Superuser who cannot be deleted while having authority to delete others", () => {
+    expect(PRIMARY_SUPERUSER_EMAIL).toBe("mcebisimhayise@gmail.com");
+    expect(isPrimarySuperUserEmail("mcebisimhayise@gmail.com")).toBe(true);
+    expect(isPrimarySuperUserEmail("MCEBISIMHAYISE@GMAIL.COM")).toBe(true);
+    expect(isPrimarySuperUserEmail("pexpacks@gmail.com")).toBe(false);
   });
 });

@@ -29,27 +29,30 @@
 .card {
   background: var(--a-surface, var(--db-surface));
   border: 1px solid var(--a-border, rgba(30, 41, 59, 0.9));
-  border-radius: 12px;
-  padding: 20px 22px;
+  border-radius: var(--db-radius-card);
+  padding: 22px 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   box-shadow: var(--a-shadow, 0 4px 16px rgba(0, 0, 0, 0.25));
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 14px;
   font-weight: 700;
   color: var(--a-text, #ffffff);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--a-border, rgba(30, 41, 59, 0.5));
 }
 
 .grid3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  column-gap: 20px;
+  row-gap: 18px;
   width: 100%;
 }
 
@@ -83,33 +86,25 @@
   }
 }
 
-.dateWrapper {
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.dateFloatingLabel {
-  position: absolute;
-  top: 0;
-  left: 10px;
-  transform: translateY(-50%);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--db-success-text);
-  background: var(--a-surface-2, var(--db-surface-inner));
-  padding: 0 6px;
-  border-radius: 3px;
-  z-index: 5;
-  pointer-events: none;
-  line-height: 1;
-}
-
 .logoUploadContainer {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-wrap: wrap;
+}
+
+.removeLogoBtn {
+  align-self: flex-start;
+  margin-top: 8px;
+  color: var(--db-danger-text);
+  padding: 0;
+  justify-content: flex-start;
+}
+
+.removeLogoBtn:hover {
+  background: none;
+  color: var(--db-danger-text);
+  text-decoration: underline;
 }
 
 .sideGroup {
@@ -125,23 +120,30 @@
 }
 
 .sideLabel {
-  font-size: 12px;
+  font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--a-text-3, var(--db-text-muted));
+  color: var(--db-text-secondary);
+  line-height: 1.4;
 }
 
 .sideSelect {
   width: 100%;
-  height: 38px;
-  background: var(--a-surface-2, var(--db-surface-inner));
-  border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.85));
-  border-radius: var(--a-btn-radius, 8px);
+  height: var(--db-control-height-lg, 46px);
+  background: var(--db-surface-inner);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-control);
   color: var(--a-text, #ffffff);
   padding: 0 12px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   outline: none;
   font-family: inherit;
+  cursor: pointer;
+}
+
+.sideSelect:focus-visible {
+  border-color: var(--db-brand);
+  box-shadow: var(--db-focus-ring);
 }
 
 .checkboxList {

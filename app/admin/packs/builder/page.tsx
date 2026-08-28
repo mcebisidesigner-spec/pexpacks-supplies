@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Calculator, Save, Search, Trash2 } from "lucide-react";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 
 interface SelectedItem {
   id: string;
@@ -252,9 +253,11 @@ export default function PackBuilderPage() {
 
             <div className={adminStyles.sidebarStatRow}>
               <span className={adminStyles.sidebarStatLabel}>Pack Health Score:</span>
-              <span className={healthScore >= 75 ? adminStyles.badgeGreen : adminStyles.badgeAmber}>
-                {healthScore}% Healthy
-              </span>
+              <StatusBadge
+                status="healthy"
+                tone={healthScore >= 75 ? "emerald" : "amber"}
+                label={`${healthScore}% Healthy`}
+              />
             </div>
           </div>
         </div>

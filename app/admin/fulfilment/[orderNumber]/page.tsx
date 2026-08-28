@@ -81,9 +81,12 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
               Scan barcodes or manually verify stationery items into the school box.
             </p>
           </div>
-          <div className={`${adminStyles.badgeTeal} ${adminStyles.fw700}`}>
-            4 / 5 Items Packed (80%)
-          </div>
+          <StatusBadge
+            status="In Progress"
+            tone="teal"
+            label="4 / 5 Items Packed (80%)"
+            className={adminStyles.fw700}
+          />
         </div>
 
         <div className={adminStyles.tableWrapper}>
@@ -111,9 +114,11 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
                     <div className={adminStyles.fw600}>
                       {row.name}
                       {row.substitute && (
-                        <span className={`${adminStyles.badgeAmber} ${adminStyles.ml8} ${styles.text11}`}>
-                          Substituted Line
-                        </span>
+                        <StatusBadge
+                          status="Substituted"
+                          tone="amber"
+                          className={adminStyles.ml8}
+                        />
                       )}
                     </div>
                   </td>
@@ -123,13 +128,9 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
                   <td className={adminStyles.cMuted}>{row.unit}</td>
                   <td>
                     {row.packed ? (
-                      <span className={`${adminStyles.badgeGreen} ${styles.text11}`}>
-                        <CheckSquare size={12} className={adminStyles.mr4} /> Verified
-                      </span>
+                      <StatusBadge status="Verified" tone="emerald" />
                     ) : (
-                      <span className={`${adminStyles.badgeAmber} ${styles.text11}`}>
-                        <Barcode size={12} className={adminStyles.mr4} /> Scan SKU
-                      </span>
+                      <StatusBadge status="Scan SKU" tone="amber" />
                     )}
                   </td>
                 </tr>
