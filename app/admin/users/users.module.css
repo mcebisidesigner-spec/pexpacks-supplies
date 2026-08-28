@@ -1,6 +1,6 @@
 ﻿.card {
   background: var(--pex-bg);
-  border: 1px solid var(--pex-border, #e1e7ea);
+  border: 1px solid var(--db-border);
   border-radius: 16px;
   padding: 22px;
 }
@@ -15,7 +15,7 @@
 .cardSubtitle {
   margin: 0 0 16px;
   font-size: 13px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
 }
 
 .stack {
@@ -31,7 +31,7 @@
 }
 
 .metaItem {
-  background: var(--pex-bg-soft, #f4f5f7);
+  background: var(--db-surface-inner);
   border-radius: 12px;
   padding: 12px 14px;
 }
@@ -41,7 +41,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
 }
 
 .metaValue {
@@ -65,16 +65,16 @@
   padding: 3px 8px;
   border-radius: 999px;
   background: rgba(37, 99, 235, 0.1);
-  color: #1d4ed8;
+  color: var(--db-info);
 }
 
 .roleChipSuper {
-  background: rgba(245, 166, 35, 0.18);
-  color: #a16207;
+  background: var(--db-warning-subtle);
+  color: var(--db-warning-text);
 }
 
 .dangerZone {
-  border-color: rgba(220, 38, 38, 0.25);
+  border-color: var(--db-danger-border);
 }
 
 .dangerRow {
@@ -94,13 +94,13 @@
 .dangerText {
   margin: 2px 0 0;
   font-size: 13px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
 }
 
 .dangerButton {
-  background: rgba(220, 38, 38, 0.1);
-  color: #b42318;
-  border: 1px solid rgba(220, 38, 38, 0.25);
+  background: var(--db-danger-subtle);
+  color: var(--db-danger-text);
+  border: 1px solid var(--db-danger-border);
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 13px;
@@ -110,9 +110,9 @@
 }
 
 .dangerButtonRestore {
-  background: rgba(47, 133, 90, 0.1);
-  color: #1e6b45;
-  border: 1px solid rgba(47, 133, 90, 0.25);
+  background: var(--db-success-subtle);
+  color: var(--db-success-text);
+  border: 1px solid var(--db-success-border);
 }
 
 .userCell {
@@ -125,8 +125,8 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: rgba(26, 122, 119, 0.12);
-  color: var(--pex-keppel, #1a7a77);
+  background: var(--db-brand-subtle);
+  color: var(--db-brand);
   font-weight: 800;
   font-size: 15px;
   display: inline-flex;
@@ -142,12 +142,12 @@
 
 .userEmail {
   font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
   margin-top: 2px;
 }
 
 .selfTag {
-  color: var(--pex-keppel, #1a7a77);
+  color: var(--db-brand);
   font-weight: 700;
 }
 
@@ -165,33 +165,33 @@
 }
 
 .flagSuper {
-  background: rgba(245, 166, 35, 0.18);
-  color: #a16207;
+  background: var(--db-warning-subtle);
+  color: var(--db-warning-text);
 }
 
 .flagRole {
   background: rgba(37, 99, 235, 0.1);
-  color: #1d4ed8;
+  color: var(--db-info);
 }
 
 .noRole {
   font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
 }
 
 .badgeActive {
-  background: rgba(47, 133, 90, 0.12);
-  color: #1e6b45;
+  background: var(--db-success-subtle);
+  color: var(--db-success-text);
 }
 
 .badgeInvited {
-  background: rgba(245, 166, 35, 0.15);
-  color: #a16207;
+  background: var(--db-warning-subtle);
+  color: var(--db-warning-text);
 }
 
 .badgeBanned {
-  background: rgba(220, 38, 38, 0.1);
-  color: #b42318;
+  background: var(--db-danger-subtle);
+  color: var(--db-danger-text);
 }
 
 .actions {
@@ -202,9 +202,9 @@
 }
 
 .rowButtonDeactivate {
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
 }
 
 .rowButtonRestore {
-  color: #1e6b45;
+  color: var(--db-success-text);
 }

@@ -25,10 +25,15 @@ export interface SystemSettingDefinition {
 
 export type SystemSettingCategory =
   | "overview"
+  | "user_identity"
   | "add_users"
-  | "general"
   | "business"
   | "pricing"
+  | "integrations"
+  | "data"
+  | "audit"
+  | "system_info"
+  | "general"
   | "seasons"
   | "orders"
   | "payments"
@@ -36,13 +41,9 @@ export type SystemSettingCategory =
   | "fulfilment"
   | "suppliers"
   | "notifications"
-  | "integrations"
-  | "data"
   | "security"
   | "performance"
-  | "flags"
-  | "audit"
-  | "system_info";
+  | "flags";
 
 export const SYSTEM_SETTING_CATEGORIES: {
   key: SystemSettingCategory;
@@ -50,25 +51,14 @@ export const SYSTEM_SETTING_CATEGORIES: {
   description: string;
   iconName: string;
 }[] = [
-  { key: "overview", label: "Overview", description: "Control centre dashboard & system health", iconName: "LayoutDashboard" },
+  { key: "user_identity", label: "User Identity", description: "Comprehensive user directory, assigned roles, & interactive permissions", iconName: "Users" },
   { key: "add_users", label: "Add Users", description: "Onboard new administrative staff & send email invitations", iconName: "UserPlus" },
-  { key: "general", label: "General", description: "Brand name, site URL, and regional defaults", iconName: "Globe" },
   { key: "business", label: "Business Identity", description: "Legal entity, contact emails, and helpline numbers", iconName: "Building2" },
   { key: "pricing", label: "Pricing & Margin", description: "Markup/margin rules, warning floors, and rounding strategy", iconName: "BadgePercent" },
-  { key: "seasons", label: "Schools & Seasons", description: "Active Back-to-School season & operational windows", iconName: "Calendar" },
-  { key: "orders", label: "Orders & Checkout", description: "Order status rules, timeout limits, & checkout defaults", iconName: "ShoppingBag" },
-  { key: "payments", label: "Payment Gateways", description: "Ozow, Happy Pay, & bank transfer integration controls", iconName: "CreditCard" },
-  { key: "procurement", label: "Procurement Rules", description: "Paid-order procurement triggers & allocation priorities", iconName: "PackageSearch" },
-  { key: "fulfilment", label: "Packing & Dispatch", description: "Packing readiness rules & customer notification triggers", iconName: "Truck" },
-  { key: "suppliers", label: "Supplier Defaults", description: "Lead-time warnings, stale-offer limits, & RFQ defaults", iconName: "Factory" },
-  { key: "notifications", label: "Notifications & Email", description: "Operational dashboard alerts & customer transactional emails", iconName: "Bell" },
   { key: "integrations", label: "Integrations & APIs", description: "Supabase, Vercel, Resend, & payment provider health", iconName: "Cpu" },
   { key: "data", label: "Data Management", description: "Data imports, export tools, & dry-run restore center", iconName: "Database" },
-  { key: "security", label: "Security & Access", description: "RBAC roles, admin idle timeouts, & access auditing", iconName: "ShieldCheck" },
-  { key: "performance", label: "Database Performance", description: "Query latencies, connection counts, & index recommendations", iconName: "Activity" },
-  { key: "flags", label: "Feature Flags", description: "Controlled feature rollout toggles with safety confirmations", iconName: "ToggleRight" },
   { key: "audit", label: "Audit & History", description: "Immutable log of all system configuration modifications", iconName: "History" },
-  { key: "system_info", label: "System Info", description: "Read-only application & environment status", iconName: "Server" },
+  { key: "system_info", label: "System Info", description: "Encrypted credentials vault & system infrastructure", iconName: "Server" },
 ];
 
 export const SYSTEM_SETTING_DEFINITIONS: SystemSettingDefinition[] = [
@@ -106,7 +96,22 @@ export const SYSTEM_SETTING_DEFINITIONS: SystemSettingDefinition[] = [
   // Feature Flags
   { key: "flags.supplier_comparison", category: "flags", label: "Supplier Comparison View", description: "Enable multi-supplier price comparison matrix in procurement", valueType: "boolean", scope: "global", isSensitive: false, isPublic: false, requiresApproval: false, defaultValue: true },
   { key: "flags.happypay_bnpl", category: "flags", label: "Happy Pay BNPL Checkout", description: "Enable Happy Pay Buy-Now-Pay-Later payment option for parents", valueType: "boolean", scope: "global", isSensitive: false, isPublic: true, requiresApproval: true, defaultValue: true },
+
+  // Secure System Vault Credentials (Superuser Only)
+  { key: "system.secure_vault_credentials", category: "system_info", label: "Secure Vault Credentials", description: "Encrypted storage for system, database, and infrastructure credentials", valueType: "json", scope: "global", isSensitive: true, isPublic: false, requiresApproval: true, defaultValue: [] },
 ];
+
+export interface SystemVaultCredential {
+  id: string;
+  productName: string;
+  category: string;
+  username: string;
+  password: string;
+  additionalInfo?: string;
+  createdAt: string;
+  updatedAt: string;
+  updatedBy: string;
+}
 
 export interface SystemSettingRecord {
   key: string;

@@ -9,7 +9,7 @@
   height: 44px;
   border-radius: 8px;
   background: var(--pex-bg-soft);
-  border: 1px solid var(--pex-border, #e1e7ea);
+  border: 1px solid var(--db-border);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -41,13 +41,13 @@
 
 .packSubtitle {
   font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
   margin-top: 2px;
 }
 
 .packSlug {
   font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
   margin-top: 2px;
 }
 
@@ -62,32 +62,32 @@
 }
 
 .stockLow {
-  color: #a93226;
+  color: var(--db-danger-text);
   font-weight: 700;
 }
 
 .itemCount {
   font-size: 13px;
   font-weight: 600;
-  color: #33475b;
+  color: var(--db-border-strong);
 }
 
 .sortCell {
   font-weight: 600;
-  color: #33475b;
+  color: var(--db-border-strong);
 }
 
 .badgeVisible {
-  background: rgba(47, 133, 90, 0.12);
-  color: #1e6b45;
+  background: var(--db-success-subtle);
+  color: var(--db-success-text);
 }
 
 .badgeHidden {
   background: rgba(96, 108, 120, 0.12);
-  color: #3d4a57;
+  color: var(--db-text-subtle);
 }
 
 .badgeFeatured {
-  background: rgba(245, 166, 35, 0.15);
-  color: #a16207;
+  background: var(--db-warning-subtle);
+  color: var(--db-warning-text);
 }

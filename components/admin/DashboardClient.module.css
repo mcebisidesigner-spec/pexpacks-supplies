@@ -90,13 +90,13 @@
 .metricCard:hover {
   transform: translateY(-2px);
   border-color: var(--a-border-strong);
-  background: #121d32;
+  background: var(--db-surface);
 }
 
 .metricCardHighlighted,
 .metricCardHighlighted:hover {
   border-color: rgba(52, 211, 153, 0.48);
-  background: #087a55;
+  background: var(--db-brand-strong);
   color: #ecfdf5;
 }
 
@@ -132,7 +132,7 @@
 .metricCardHighlighted .metricAction {
   border-color: rgba(255, 255, 255, 0.5);
   background: #f0fdf4;
-  color: #065f46;
+  color: var(--db-brand-strong);
 }
 
 .metricValueBlock {
@@ -266,7 +266,7 @@
   width: min(36px, 100%);
   min-height: 16px;
   border-radius: 999px;
-  background: #15946a;
+  background: var(--db-brand);
   transition: height 220ms ease, background-color 160ms ease;
 }
 
@@ -349,14 +349,14 @@
   gap: 7px;
   margin-top: 10px;
   border-radius: 999px;
-  background: #0b6b4d;
+  background: var(--db-brand-strong);
   color: #fff;
   font-size: 9px;
   font-weight: 800;
   text-decoration: none;
 }
 
-.panelAction:hover { background: #0c815c; }
+.panelAction:hover { background: var(--db-brand); }
 .panelAction svg { width: 13px; height: 13px; }
 
 .miniAction {
@@ -458,7 +458,7 @@
 .gauge { width: min(238px, 100%); height: auto; overflow: visible; }
 .gaugeTrack, .gaugeValue { fill: none; stroke-width: 24; stroke-linecap: round; }
 .gaugeTrack { stroke: var(--a-surface-2); }
-.gaugeValue { stroke: #15946a; transition: stroke-dasharray 320ms ease; }
+.gaugeValue { stroke: var(--db-brand); transition: stroke-dasharray 320ms ease; }
 
 .gaugeNumber {
   position: absolute;
@@ -487,7 +487,7 @@
   overflow: hidden;
   border: 1px solid rgba(52, 211, 153, 0.3);
   border-radius: 18px;
-  background: #063625;
+  background: var(--db-brand-hover);
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
 }
 
@@ -525,7 +525,7 @@
   border: 0;
   border-radius: 50%;
   background: #fff;
-  color: #063625;
+  color: var(--db-brand-hover);
   cursor: pointer;
 }
 .liveControls a { background: var(--a-red); color: #fff; text-decoration: none; }

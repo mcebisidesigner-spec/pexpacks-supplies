@@ -1,7 +1,7 @@
 "use server";
 
 import { updateSystemSetting, exportSystemSettings, getSystemSettings } from "@/lib/admin/system-settings";
-import { requireAdmin } from "@/lib/admin/rbac";
+import { requireAdmin, requireSuperAdmin } from "@/lib/admin/rbac";
 
 export async function updateSystemSettingAction(
   key: string,
@@ -178,5 +178,62 @@ export async function inviteUserFromSettingsAction(formData: FormData) {
       message: err instanceof Error ? err.message : "Failed to invite user.",
     };
   }
+}
+
+export async function updateUserRolesFromSettingsAction(
+  userId: string,
+  roleSlugs: string[]
+) {
+  await requireAdmin({ permission: "users.edit" });
+  const { syncUserRoles } = await import("@/lib/admin/users");
+  return syncUserRoles(userId, roleSlugs);
+}
+
+export async function saveVaultCredentialAction(data: {
+  id?: string;
+  productName: string;
+  category?: string;
+  username: string;
+  password: string;
+  additionalInfo?: string;
+}) {
+  const actor = await requireSuperAdmin();
+
+  if (!data.productName?.trim()) {
+    return { ok: false, message: "Product / Service name is required." };
+  }
+  if (!data.username?.trim()) {
+    return { ok: false, message: "Username / Client ID is required." };
+  }
+  if (!data.password?.trim()) {
+    return { ok: false, message: "Password / Secret token is required." };
+  }
+
+  // Security length limits to guard against spam and buffer attacks
+  if (data.productName.length > 120 || data.username.length > 120 || data.password.length > 500) {
+    return { ok: false, message: "Input exceeds allowable security length bounds." };
+  }
+
+  const { saveSystemVaultCredential } = await import("@/lib/admin/system-settings");
+  return saveSystemVaultCredential(
+    {
+      id: data.id,
+      productName: data.productName.trim(),
+      category: data.category?.trim() || "Database",
+      username: data.username.trim(),
+      password: data.password.trim(),
+      additionalInfo: data.additionalInfo?.trim() || "",
+    },
+    actor.user.email ?? "Superuser"
+  );
+}
+
+export async function deleteVaultCredentialAction(id: string) {
+  const actor = await requireSuperAdmin();
+  if (!id?.trim()) {
+    return { ok: false, message: "Credential ID is required." };
+  }
+  const { deleteSystemVaultCredential } = await import("@/lib/admin/system-settings");
+  return deleteSystemVaultCredential(id.trim(), actor.user.email ?? "Superuser");
 }
 

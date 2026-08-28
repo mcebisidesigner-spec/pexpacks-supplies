@@ -1,4 +1,4 @@
-.button {
+﻿.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +55,7 @@
 }
 
 .primary:hover {
-  background: linear-gradient(135deg, #18d396 0%, #047857 100%);
+  background: linear-gradient(135deg, var(--db-brand) 0%, var(--db-brand-hover) 100%);
   box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
   transform: translateY(-1px);
 }
@@ -86,7 +86,7 @@
 
 .teal {
   background-color: rgba(45, 212, 191, 0.12);
-  color: #2dd4bf;
+  color: var(--db-teal-text);
   border-color: rgba(45, 212, 191, 0.35);
 }
 
@@ -154,7 +154,7 @@
   border-radius: var(--db-radius-control);
   background-color: rgba(45, 212, 191, 0.12);
   border: 1px solid rgba(45, 212, 191, 0.4);
-  color: #2dd4bf;
+  color: var(--db-teal-text);
 }
 
 .iconTeal:hover {

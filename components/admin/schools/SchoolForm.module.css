@@ -1,4 +1,4 @@
-.formLayout {
+﻿.formLayout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
   gap: 18px;
@@ -27,7 +27,7 @@
 }
 
 .card {
-  background: var(--a-surface, #0c1322);
+  background: var(--a-surface, var(--db-surface));
   border: 1px solid var(--a-border, rgba(30, 41, 59, 0.9));
   border-radius: 12px;
   padding: 20px 22px;
@@ -97,8 +97,8 @@
   transform: translateY(-50%);
   font-size: 11px;
   font-weight: 600;
-  color: #34d399;
-  background: var(--a-surface-2, #090e17);
+  color: var(--db-success-text);
+  background: var(--a-surface-2, var(--db-surface-inner));
   padding: 0 6px;
   border-radius: 3px;
   z-index: 5;
@@ -127,13 +127,13 @@
 .sideLabel {
   font-size: 12px;
   font-weight: 600;
-  color: var(--a-text-3, #94a3b8);
+  color: var(--a-text-3, var(--db-text-muted));
 }
 
 .sideSelect {
   width: 100%;
   height: 38px;
-  background: var(--a-surface-2, #090e17);
+  background: var(--a-surface-2, var(--db-surface-inner));
   border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.85));
   border-radius: var(--a-btn-radius, 8px);
   color: var(--a-text, #ffffff);
@@ -161,7 +161,7 @@
 }
 
 .checkboxDanger {
-  color: #f87171;
+  color: var(--db-danger-text);
   font-weight: 600;
 }
 

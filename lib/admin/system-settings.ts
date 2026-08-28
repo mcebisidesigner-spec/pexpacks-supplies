@@ -321,3 +321,103 @@ export async function exportSystemSettings(): Promise<string> {
   };
   return JSON.stringify(exportPayload, null, 2);
 }
+
+export async function getSystemVaultCredentials(): Promise<import("./system-settings-shared").SystemVaultCredential[]> {
+  const settings = await getSystemSettings();
+  const raw = settings["system.secure_vault_credentials"]?.value;
+  if (Array.isArray(raw)) {
+    return raw as import("./system-settings-shared").SystemVaultCredential[];
+  }
+  return [];
+}
+
+export async function saveSystemVaultCredential(
+  cred: {
+    id?: string;
+    productName: string;
+    category?: string;
+    username: string;
+    password: string;
+    additionalInfo?: string;
+  },
+  actorEmail?: string
+): Promise<{
+  ok: boolean;
+  message?: string;
+  credentials?: import("./system-settings-shared").SystemVaultCredential[];
+}> {
+  const current = await getSystemVaultCredentials();
+  const now = new Date().toISOString();
+  const operator = actorEmail || "Superuser";
+
+  let updatedList: import("./system-settings-shared").SystemVaultCredential[];
+  if (cred.id) {
+    const exists = current.some((c) => c.id === cred.id);
+    if (!exists) return { ok: false, message: "Credential record not found." };
+    updatedList = current.map((c) =>
+      c.id === cred.id
+        ? {
+            ...c,
+            productName: cred.productName.trim(),
+            category: cred.category?.trim() || "General",
+            username: cred.username.trim(),
+            password: cred.password,
+            additionalInfo: cred.additionalInfo?.trim() || "",
+            updatedAt: now,
+            updatedBy: operator,
+          }
+        : c
+    );
+  } else {
+    const newEntry: import("./system-settings-shared").SystemVaultCredential = {
+      id: "vault_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 6),
+      productName: cred.productName.trim(),
+      category: cred.category?.trim() || "General",
+      username: cred.username.trim(),
+      password: cred.password,
+      additionalInfo: cred.additionalInfo?.trim() || "",
+      createdAt: now,
+      updatedAt: now,
+      updatedBy: operator,
+    };
+    updatedList = [newEntry, ...current];
+  }
+
+  const res = await updateSystemSetting(
+    "system.secure_vault_credentials",
+    updatedList,
+    `Vault credential ${cred.id ? "updated" : "added"}: ${cred.productName}`
+  );
+
+  if (!res.ok) {
+    return { ok: false, message: res.message || "Failed to update vault credentials." };
+  }
+
+  return { ok: true, message: "Credential securely saved to vault.", credentials: updatedList };
+}
+
+export async function deleteSystemVaultCredential(
+  id: string,
+  actorEmail?: string
+): Promise<{
+  ok: boolean;
+  message?: string;
+  credentials?: import("./system-settings-shared").SystemVaultCredential[];
+}> {
+  const current = await getSystemVaultCredentials();
+  const target = current.find((c) => c.id === id);
+  if (!target) return { ok: false, message: "Credential record not found." };
+
+  const updatedList = current.filter((c) => c.id !== id);
+  const res = await updateSystemSetting(
+    "system.secure_vault_credentials",
+    updatedList,
+    `Vault credential deleted: ${target.productName} by ${actorEmail || "Superuser"}`
+  );
+
+  if (!res.ok) {
+    return { ok: false, message: res.message || "Failed to delete vault credential." };
+  }
+
+  return { ok: true, message: "Credential removed from vault.", credentials: updatedList };
+}

@@ -4,8 +4,9 @@ import {
   getSystemSettingsAuditLogs,
   getIntegrationHealth,
   getPerformanceMetrics,
+  getSystemVaultCredentials,
 } from "@/lib/admin/system-settings";
-import { listRoles } from "@/lib/admin/users";
+import { listRoles, listUsers } from "@/lib/admin/users";
 import { SettingsControlCentre } from "@/components/admin/settings/SettingsControlCentre";
 
 export const dynamic = "force-dynamic";
@@ -17,12 +18,22 @@ export const metadata = {
 export default async function AdminSettingsPage() {
   const session = await requireSuperAdmin();
 
-  const [settings, auditLogs, integrations, performance, roles] = await Promise.all([
+  const [
+    settings,
+    auditLogs,
+    integrations,
+    performance,
+    roles,
+    usersResult,
+    vaultCredentials,
+  ] = await Promise.all([
     getSystemSettings(),
     getSystemSettingsAuditLogs(20),
     getIntegrationHealth(),
     getPerformanceMetrics(),
     listRoles(),
+    listUsers({ pageSize: 50 }),
+    getSystemVaultCredentials(),
   ]);
 
   return (
@@ -32,6 +43,8 @@ export default async function AdminSettingsPage() {
       performance={performance}
       auditLogs={auditLogs}
       roles={roles}
+      users={usersResult.users}
+      vaultCredentials={vaultCredentials}
       userEmail={session.user.email ?? ""}
     />
   );

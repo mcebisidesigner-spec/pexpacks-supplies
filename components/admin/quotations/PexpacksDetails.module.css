@@ -1,4 +1,4 @@
-.container {
+﻿.container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -12,10 +12,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.875rem;
-  background-color: #0c1322;
-  border: 1px solid #1e293b;
+  background-color: var(--db-surface);
+  border: 1px solid var(--db-border);
   border-radius: 8px;
-  color: #94a3b8;
+  color: var(--db-text-muted);
   font-size: 0.8125rem;
   font-weight: 500;
   text-decoration: none;
@@ -24,9 +24,9 @@
 }
 
 .backButton:hover {
-  background-color: #111a2e;
-  border-color: #334155;
-  color: #f8fafc;
+  background-color: var(--db-surface-elevated);
+  border-color: var(--db-border-strong);
+  color: var(--db-text-primary);
 }
 
 .layoutGrid {
@@ -44,8 +44,8 @@
 
 /* Left Sidebar Card */
 .sidebarCard {
-  background-color: #0c1322;
-  border: 1px solid #1e293b;
+  background-color: var(--db-surface);
+  border: 1px solid var(--db-border);
   border-radius: 12px;
   padding: 1.25rem;
   display: flex;
@@ -55,20 +55,20 @@
 
 .sidebarHeader {
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #1e293b;
+  border-bottom: 1px solid var(--db-border);
 }
 
 .sidebarTitle {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--db-text-primary);
   margin: 0 0 0.25rem 0;
   letter-spacing: -0.01em;
 }
 
 .sidebarSubtitle {
   font-size: 0.8125rem;
-  color: #64748b;
+  color: var(--db-text-subtle);
   margin: 0;
   line-height: 1.4;
 }
@@ -87,7 +87,7 @@
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #94a3b8;
+  color: var(--db-text-muted);
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
@@ -97,22 +97,22 @@
 }
 
 .navItem:hover {
-  background-color: #111a2e;
-  color: #f8fafc;
-  border-color: #1e293b;
+  background-color: var(--db-surface-elevated);
+  color: var(--db-text-primary);
+  border-color: var(--db-border);
 }
 
 .navItemActive {
   background-color: rgba(16, 185, 129, 0.08);
-  border-color: #10b981;
-  color: #10b981;
+  border-color: var(--db-brand);
+  color: var(--db-brand);
   font-weight: 600;
 }
 
 .navItemActive:hover {
   background-color: rgba(16, 185, 129, 0.12);
-  border-color: #10b981;
-  color: #10b981;
+  border-color: var(--db-brand);
+  color: var(--db-brand);
 }
 
 /* Main Content Panel */
@@ -123,8 +123,8 @@
 }
 
 .sectionHeader {
-  background-color: #0c1322;
-  border: 1px solid #1e293b;
+  background-color: var(--db-surface);
+  border: 1px solid var(--db-border);
   border-radius: 12px;
   padding: 1.25rem 1.5rem;
   display: flex;
@@ -135,13 +135,13 @@
 .sectionTitle {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--db-text-primary);
   margin: 0 0 0.25rem 0;
 }
 
 .sectionSubtitle {
   font-size: 0.8125rem;
-  color: #64748b;
+  color: var(--db-text-subtle);
   margin: 0;
 }
 
@@ -153,7 +153,7 @@
   border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 8px;
   padding: 0.875rem 1rem;
-  color: #93c5fd;
+  color: var(--db-info-text);
   font-size: 0.8125rem;
   line-height: 1.45;
 }
@@ -166,8 +166,8 @@
 }
 
 .card {
-  background-color: #0c1322;
-  border: 1px solid #1e293b;
+  background-color: var(--db-surface);
+  border: 1px solid var(--db-border);
   border-radius: 12px;
   padding: 1.25rem;
   display: flex;
@@ -178,7 +178,7 @@
 }
 
 .card:hover {
-  border-color: #334155;
+  border-color: var(--db-border-strong);
 }
 
 .cardHeader {
@@ -190,13 +190,13 @@
 .cardTitle {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--db-text-primary);
   margin: 0 0 0.25rem 0;
 }
 
 .cardSubtitle {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--db-text-subtle);
   margin: 0;
 }
 
@@ -215,11 +215,11 @@
 }
 
 .infoLabel {
-  color: #64748b;
+  color: var(--db-text-subtle);
 }
 
 .infoValue {
-  color: #e2e8f0;
+  color: var(--db-text-secondary);
   font-weight: 500;
   text-align: right;
 }
@@ -236,10 +236,10 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.75rem;
-  background-color: #090e17;
-  border: 1px solid #1e293b;
+  background-color: var(--db-surface-inner);
+  border: 1px solid var(--db-border);
   border-radius: 6px;
-  color: #94a3b8;
+  color: var(--db-text-muted);
   font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
@@ -247,15 +247,15 @@
 }
 
 .manageBtn:hover {
-  background-color: #111a2e;
-  border-color: #10b981;
-  color: #10b981;
+  background-color: var(--db-surface-elevated);
+  border-color: var(--db-brand);
+  color: var(--db-brand);
 }
 
 /* Forms */
 .formCard {
-  background-color: #0c1322;
-  border: 1px solid #1e293b;
+  background-color: var(--db-surface);
+  border: 1px solid var(--db-border);
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
@@ -284,31 +284,31 @@
 .formLabel {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: #94a3b8;
+  color: var(--db-text-muted);
 }
 
 .formInput {
-  background-color: #090e17;
-  border: 1px solid #1e293b;
+  background-color: var(--db-surface-inner);
+  border: 1px solid var(--db-border);
   border-radius: 8px;
   padding: 0.625rem 0.875rem;
-  color: #f8fafc;
+  color: var(--db-text-primary);
   font-size: 0.875rem;
   outline: none;
   transition: border-color 0.15s ease;
 }
 
 .formInput:focus {
-  border-color: #10b981;
-  box-shadow: 0 0 0 1px #10b981;
+  border-color: var(--db-brand);
+  box-shadow: 0 0 0 1px var(--db-brand);
 }
 
 .formTextarea {
-  background-color: #090e17;
-  border: 1px solid #1e293b;
+  background-color: var(--db-surface-inner);
+  border: 1px solid var(--db-border);
   border-radius: 8px;
   padding: 0.75rem 0.875rem;
-  color: #f8fafc;
+  color: var(--db-text-primary);
   font-size: 0.875rem;
   outline: none;
   min-height: 120px;
@@ -318,8 +318,8 @@
 }
 
 .formTextarea:focus {
-  border-color: #10b981;
-  box-shadow: 0 0 0 1px #10b981;
+  border-color: var(--db-brand);
+  box-shadow: 0 0 0 1px var(--db-brand);
 }
 
 .actionFooter {
@@ -333,9 +333,9 @@
 .cancelBtn {
   padding: 0.625rem 1.25rem;
   background: transparent;
-  border: 1px solid #1e293b;
+  border: 1px solid var(--db-border);
   border-radius: 8px;
-  color: #94a3b8;
+  color: var(--db-text-muted);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -343,13 +343,13 @@
 }
 
 .cancelBtn:hover {
-  background-color: #111a2e;
-  color: #f8fafc;
+  background-color: var(--db-surface-elevated);
+  color: var(--db-text-primary);
 }
 
 .saveBtn {
   padding: 0.625rem 1.25rem;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--db-brand) 0%, var(--db-brand-strong) 100%);
   border: 1px solid rgba(16, 185, 129, 0.4);
   border-radius: 8px;
   color: #ffffff;

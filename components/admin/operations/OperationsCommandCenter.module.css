@@ -98,7 +98,7 @@
 
 .datePickerBtn:hover {
   border-color: var(--a-border-strong);
-  background: #111a2e;
+  background: var(--db-surface-elevated);
 }
 
 /* ===================================================
@@ -176,7 +176,7 @@
 }
 
 .panelSelect {
-  background: #111a2e;
+  background: var(--db-surface-elevated);
   border: 1px solid var(--a-border);
   border-radius: 6px;
   color: var(--a-text-2);
@@ -318,7 +318,7 @@
    =================================================== */
 
 .exceptionItem:hover {
-  background: #111a2e;
+  background: var(--db-surface-elevated);
   border-color: var(--a-border-strong);
   transform: translateX(2px);
 }
@@ -433,7 +433,7 @@
 }
 
 .controlBtn:hover {
-  background: #111a2e;
+  background: var(--db-surface-elevated);
   border-color: var(--a-border-strong);
 }
 
@@ -705,7 +705,7 @@
 }
 
 .dataTable tr:hover td {
-  background: #111a2e;
+  background: var(--db-surface-elevated);
   cursor: pointer;
 }
 
@@ -934,7 +934,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  background: #111a2e;
+  background: var(--db-surface-elevated);
   border-radius: 8px;
   padding: 8px 12px;
   flex: 1;

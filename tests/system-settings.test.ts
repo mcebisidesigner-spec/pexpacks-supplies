@@ -2,15 +2,19 @@ import { describe, expect, it } from "vitest";
 import { SYSTEM_SETTING_CATEGORIES, SYSTEM_SETTING_DEFINITIONS } from "../lib/admin/system-settings";
 
 describe("System Control Centre Settings Architecture", () => {
-  it("defines all 19 categories cleanly including add_users", () => {
-    expect(SYSTEM_SETTING_CATEGORIES.length).toBe(19);
+  it("defines the 8 active categories cleanly without overview", () => {
+    expect(SYSTEM_SETTING_CATEGORIES.length).toBe(8);
     const keys = SYSTEM_SETTING_CATEGORIES.map((c) => c.key);
-    expect(keys).toContain("overview");
-    expect(keys).toContain("add_users");
-    expect(keys).toContain("pricing");
-    expect(keys).toContain("integrations");
-    expect(keys).toContain("security");
-    expect(keys).toContain("audit");
+    expect(keys).toEqual([
+      "user_identity",
+      "add_users",
+      "business",
+      "pricing",
+      "integrations",
+      "data",
+      "audit",
+      "system_info",
+    ]);
   });
 
   it("contains valid setting definitions with mandatory defaults", () => {

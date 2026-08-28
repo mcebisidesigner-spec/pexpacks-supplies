@@ -3,29 +3,19 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Activity,
   BadgePercent,
-  Bell,
   Building2,
-  Calendar,
   CheckCircle2,
   Cpu,
-  CreditCard,
   Database,
   Download,
-  Factory,
-  Globe,
   History,
   LayoutDashboard,
-  PackageSearch,
   Search,
   Server,
-  ShieldCheck,
-  ShoppingBag,
-  ToggleRight,
-  Truck,
   Upload,
   UserPlus,
+  Users,
 } from "lucide-react";
 import type {
   IntegrationStatus,
@@ -33,15 +23,18 @@ import type {
   SystemSettingCategory,
   SystemSettingRecord,
   SystemSettingsAuditRecord,
+  SystemVaultCredential,
 } from "@/lib/admin/system-settings-shared";
 import { SYSTEM_SETTING_CATEGORIES, SYSTEM_SETTING_DEFINITIONS } from "@/lib/admin/system-settings-shared";
-import type { RoleInfo } from "@/lib/admin/users";
+import type { RoleInfo, UserListItem } from "@/lib/admin/users";
 import {
   exportSettingsAction,
   restoreSettingsAction,
   updateSystemSettingAction,
 } from "@/app/admin/settings/actions";
 import { AddUsersTab } from "./AddUsersTab";
+import { UserIdentityTab } from "./UserIdentityTab";
+import { SystemInfoVaultTab } from "./SystemInfoVaultTab";
 import styles from "./SettingsControlCentre.module.css";
 import viewStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -52,27 +45,19 @@ interface SettingsControlCentreProps {
   performance: SystemPerformanceMetrics;
   auditLogs: SystemSettingsAuditRecord[];
   roles?: RoleInfo[];
+  users?: UserListItem[];
+  vaultCredentials?: SystemVaultCredential[];
   userEmail: string;
 }
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   LayoutDashboard,
+  Users,
   UserPlus,
-  Globe,
   Building2,
   BadgePercent,
-  Calendar,
-  ShoppingBag,
-  CreditCard,
-  PackageSearch,
-  Truck,
-  Factory,
-  Bell,
   Cpu,
   Database,
-  ShieldCheck,
-  Activity,
-  ToggleRight,
   History,
   Server,
 };
@@ -82,9 +67,12 @@ export function SettingsControlCentre({
   integrations,
   auditLogs,
   roles = [],
+  users = [],
+  vaultCredentials = [],
+  userEmail,
 }: SettingsControlCentreProps) {
   const router = useRouter();
-  const [activeCategory, setActiveCategory] = useState<SystemSettingCategory>("overview");
+  const [activeCategory, setActiveCategory] = useState<SystemSettingCategory>("user_identity");
   const [searchQuery, setSearchQuery] = useState("");
   const [settingsState, setSettingsState] = useState(initialSettings);
   const [reason] = useState("");
@@ -231,7 +219,6 @@ export function SettingsControlCentre({
       )}
 
       <div className={styles.layout}>
-        {/* Category Sidebar Navigation */}
         <nav className={styles.sidebar} aria-label="System settings categories">
           {SYSTEM_SETTING_CATEGORIES.map((cat) => {
             const IconComp = CATEGORY_ICONS[cat.iconName] ?? LayoutDashboard;
@@ -250,70 +237,29 @@ export function SettingsControlCentre({
           })}
         </nav>
 
-        {/* Content Area */}
         <main className={styles.contentArea}>
-          {/* Overview Panel */}
-          {activeCategory === "overview" && (
-            <div className={styles.panelCard}>
-              <div className={styles.panelHeader}>
-                <h2>Platform Governance Overview</h2>
-                <p>High-level system status and recent operational settings activity</p>
-              </div>
-              <div className={styles.formGrid}>
-                <div className={adminStyles.cardBorder}>
-                  <span className={styles.badgeSuccess}>Connected</span>
-                  <h3 className={adminStyles.settingsStatusCardTitle}>Supabase & RLS</h3>
-                  <p className={adminStyles.settingsStatusCardCaption}>Service Role & Auth RLS Active</p>
-                </div>
-                <div className={adminStyles.cardBorder}>
-                  <span className={styles.badgeSuccess}>Healthy</span>
-                  <h3 className={adminStyles.settingsStatusCardTitle}>Vercel Edge</h3>
-                  <p className={adminStyles.settingsStatusCardCaption}>Caching & Static Routes Live</p>
-                </div>
-                <div className={adminStyles.cardBorder}>
-                  <span className={styles.badgeSuccess}>Active</span>
-                  <h3 className={adminStyles.settingsStatusCardTitle}>Active Season</h3>
-                  <p className={adminStyles.settingsStatusCardCaption}>{String(settingsState["seasons.active_season"]?.value ?? "2027 BTS")}</p>
-                </div>
-              </div>
-            </div>
+          {activeCategory === "user_identity" && (
+            <UserIdentityTab
+              users={users}
+              roles={roles}
+              currentUserEmail={userEmail}
+              isSuperUser={
+                userEmail.toLowerCase() === "mcebisimhayise@gmail.com" ||
+                userEmail.toLowerCase() === "pexpacks@gmail.com"
+              }
+            />
           )}
 
           {/* Add Users & Onboarding Panel */}
           {activeCategory === "add_users" && (
-            <AddUsersTab roles={roles} />
-          )}
-
-          {/* General Panel */}
-          {activeCategory === "general" && (
-            <div className={styles.panelCard}>
-              <div className={styles.panelHeader}>
-                <h2>General Store Settings</h2>
-                <p>Public site identity and localization parameters</p>
-              </div>
-              <div className={styles.formGrid}>
-                <div className={styles.field}>
-                  <label className={styles.label}>Site Name</label>
-                  <input
-                    type="text"
-                    className={styles.input}
-                    defaultValue={String(settingsState["general.site_name"]?.value ?? "Pexpacks")}
-                    onBlur={(e) => handleSettingSave("general.site_name", e.target.value)}
-                  />
-                  <span className={styles.hint}>Public brand title shown across web pages and headers.</span>
-                </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Canonical Site URL</label>
-                  <input
-                    type="url"
-                    className={styles.input}
-                    defaultValue={String(settingsState["general.site_url"]?.value ?? "https://pexpacks.co.za")}
-                    onBlur={(e) => handleSettingSave("general.site_url", e.target.value)}
-                  />
-                  <span className={styles.hint}>Used for canonical SEO tags and transactional email links.</span>
-                </div>
-              </div>
-            </div>
+            <AddUsersTab
+              roles={roles}
+              currentUserEmail={userEmail}
+              isSuperUser={
+                userEmail.toLowerCase() === "mcebisimhayise@gmail.com" ||
+                userEmail.toLowerCase() === "pexpacks@gmail.com"
+              }
+            />
           )}
 
           {/* Business Identity Panel */}
@@ -519,38 +465,12 @@ export function SettingsControlCentre({
             </div>
           )}
 
-          {/* System Info Panel */}
+          {/* System Info & Secure Vault Panel */}
           {activeCategory === "system_info" && (
-            <div className={styles.panelCard}>
-              <div className={styles.panelHeader}>
-                <h2>System & Infrastructure Information</h2>
-                <p>Read-only environment and platform details</p>
-              </div>
-              <table className={styles.table}>
-                <tbody>
-                  <tr>
-                    <td><strong>Application Environment</strong></td>
-                    <td>Production</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Hosting Platform</strong></td>
-                    <td>Vercel Edge Network</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Database Provider</strong></td>
-                    <td>Supabase Postgres (South Africa / EU Edge)</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Email Provider</strong></td>
-                    <td>Resend Transactional API</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Database Migration Version</strong></td>
-                    <td>00032_system_settings_control_centre.sql</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <SystemInfoVaultTab
+              initialVaultCredentials={vaultCredentials}
+              userEmail={userEmail}
+            />
           )}
         </main>
       </div>

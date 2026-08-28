@@ -8,7 +8,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--pex-keppel, #1a7a77);
+  background: var(--db-brand);
   margin-top: 6px;
   flex-shrink: 0;
 }
@@ -21,8 +21,8 @@
 .seedTag {
   font-size: 11px;
   font-weight: 700;
-  color: #a16207;
-  background: rgba(245, 166, 35, 0.15);
+  color: var(--db-warning-text);
+  background: var(--db-warning-subtle);
   border-radius: 999px;
   padding: 2px 8px;
   margin-left: 6px;
@@ -31,13 +31,13 @@
 .roleSlug {
   font-family: var(--font-mono, monospace);
   font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
   margin-top: 2px;
 }
 
 .roleDesc {
   font-size: 13px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
   margin-top: 4px;
   max-width: 360px;
 }
@@ -68,11 +68,11 @@
 .cardSubtitle {
   margin: 4px 0 0;
   font-size: 13px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
 }
 
 .noMembers {
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
 }
 
 .memberLink {
@@ -89,18 +89,18 @@
 
 .memberEmail {
   font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
 }
 
 .moreMembers {
   padding: 12px 22px;
   font-size: 13px;
-  color: var(--pex-muted, #6b7a86);
-  border-top: 1px solid var(--pex-border, #e1e7ea);
+  color: var(--db-text-muted);
+  border-top: 1px solid var(--db-border);
 }
 
 .moreMembers a {
-  color: var(--pex-keppel, #1a7a77);
+  color: var(--db-brand);
   font-weight: 700;
   text-decoration: none;
 }
@@ -112,7 +112,7 @@
   gap: 16px;
   flex-wrap: wrap;
   background: var(--pex-bg);
-  border: 1px solid rgba(220, 38, 38, 0.25);
+  border: 1px solid var(--db-danger-border);
   border-radius: 16px;
   padding: 22px;
 }
@@ -126,14 +126,14 @@
 .deleteText {
   margin: 2px 0 0;
   font-size: 13px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
   max-width: 520px;
 }
 
 .deleteButton {
-  background: rgba(220, 38, 38, 0.1);
-  color: #b42318;
-  border: 1px solid rgba(220, 38, 38, 0.25);
+  background: var(--db-danger-subtle);
+  color: var(--db-danger-text);
+  border: 1px solid var(--db-danger-border);
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 13px;

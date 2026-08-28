@@ -1,4 +1,4 @@
-.form {
+﻿.form {
   gap: 14px;
 }
 
@@ -17,12 +17,12 @@
 
 .statusSuccess {
   background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
+  color: var(--db-success-text);
 }
 
 .statusError {
   background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
+  color: var(--db-danger-text);
 }
 
 .leftStack {
@@ -86,9 +86,9 @@
   width: 100%;
   height: 44px;
   min-height: 44px;
-  border: 1px solid #1e293b;
+  border: 1px solid var(--db-border);
   border-radius: 8px;
-  background: #020617;
+  background: var(--db-canvas);
   color: var(--a-text);
   padding: 0 16px;
   font: inherit;
@@ -127,17 +127,17 @@
 }
 
 .marginLabel {
-  color: #94a3b8;
+  color: var(--db-text-muted);
   font-weight: 600;
 }
 
 .marginPositive {
-  color: #34d399;
+  color: var(--db-success-text);
   font-weight: 700;
 }
 
 .marginDanger {
-  color: #f87171;
+  color: var(--db-danger-text);
   font-weight: 700;
 }
 

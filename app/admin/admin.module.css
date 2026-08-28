@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    PEXPACKS ADMIN — UNIFIED COMPONENT SYSTEM
    Single source of truth for all admin UI components
    ═══════════════════════════════════════════════════════════════ */
@@ -401,7 +401,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #10b981;
+  color: var(--db-brand);
   white-space: nowrap;
 }
 
@@ -421,7 +421,7 @@
 .table td {
   padding: 18px 20px;
   vertical-align: middle;
-  color: #e2e8f0;
+  color: var(--db-text-secondary);
 }
 
 /* ═══════════════════════════════════════════
@@ -1998,7 +1998,7 @@
 }
 .kpiIconSlate {
   background: rgba(148, 163, 184, 0.15);
-  color: #94a3b8;
+  color: var(--db-text-muted);
 }
 .kpiIconWrapper {
   display: flex;

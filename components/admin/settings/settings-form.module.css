@@ -20,7 +20,7 @@
 
 .input,
 .select {
-  border: 1px solid var(--pex-border, #dbe3ec);
+  border: 1px solid var(--db-border);
   border-radius: 10px;
   padding: 10px 14px;
   font-size: 14px;
@@ -34,7 +34,7 @@
 .input:focus,
 .select:focus {
   outline: none;
-  border-color: var(--pex-keppel, #1a7a77);
+  border-color: var(--db-brand);
   box-shadow: 0 0 0 3px rgba(26, 122, 119, 0.15);
 }
 
@@ -43,7 +43,7 @@
   align-items: flex-start;
   gap: 10px;
   padding: 12px 14px;
-  border: 1px solid var(--pex-border, #e1e7ea);
+  border: 1px solid var(--db-border);
   border-radius: 10px;
   cursor: pointer;
   max-width: 480px;
@@ -51,7 +51,7 @@
 
 .checkbox {
   margin-top: 3px;
-  accent-color: var(--pex-keppel, #1a7a77);
+  accent-color: var(--db-brand);
   width: 16px;
   height: 16px;
   flex-shrink: 0;
@@ -67,14 +67,14 @@
 .checkHelp {
   display: block;
   font-size: 12px;
-  color: var(--pex-muted, #6b7a86);
+  color: var(--db-text-muted);
   margin-top: 2px;
 }
 
 .success {
-  background: rgba(47, 133, 90, 0.1);
-  color: #1e6b45;
-  border: 1px solid rgba(47, 133, 90, 0.25);
+  background: var(--db-success-subtle);
+  color: var(--db-success-text);
+  border: 1px solid var(--db-success-border);
   border-radius: 8px;
   padding: 10px 14px;
   font-size: 13px;
@@ -83,9 +83,9 @@
 }
 
 .error {
-  background: rgba(220, 38, 38, 0.08);
-  color: #b42318;
-  border: 1px solid rgba(220, 38, 38, 0.2);
+  background: var(--db-danger-subtle);
+  color: var(--db-danger-text);
+  border: 1px solid var(--db-danger-border);
   border-radius: 8px;
   padding: 10px 14px;
   font-size: 13px;
@@ -101,7 +101,7 @@
 }
 
 .saveButton {
-  background: var(--pex-keppel, #1a7a77);
+  background: var(--db-brand);
   color: var(--a-text);
   border: none;
   border-radius: 8px;

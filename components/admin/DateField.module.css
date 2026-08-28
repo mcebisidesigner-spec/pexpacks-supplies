@@ -1,4 +1,4 @@
-.root {
+﻿.root {
   position: relative;
   width: 100%;
 }
@@ -12,7 +12,7 @@
   gap: 12px;
   text-align: left;
   cursor: pointer;
-  background: var(--a-surface-2, #090e17);
+  background: var(--a-surface-2, var(--db-surface-inner));
   border: 1px solid var(--a-border-strong, rgba(30, 41, 59, 0.85));
   border-radius: var(--a-btn-radius, 8px);
   padding: 0 14px;
@@ -31,7 +31,7 @@
 
 .trigger:focus-visible,
 .trigger:focus {
-  border-color: #10b981;
+  border-color: var(--db-brand);
   box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
 
@@ -40,13 +40,13 @@
   width: 18px;
   height: 18px;
   flex: 0 0 18px;
-  color: #10b981;
+  color: var(--db-brand);
 }
 
 .triggerText,
 .trigger span {
   overflow: hidden;
-  color: #94a3b8;
+  color: var(--db-text-muted);
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 13.5px;
@@ -70,7 +70,7 @@
   padding: 16px;
   border: 1px solid rgba(16, 185, 129, 0.5);
   border-radius: 12px;
-  background: #090e17;
+  background: var(--db-surface-inner);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(16, 185, 129, 0.25);
   box-sizing: border-box;
 }
@@ -92,7 +92,7 @@
   justify-content: space-between;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
+  color: var(--db-text-muted);
   font-size: 11.5px;
   font-weight: 700;
   text-transform: uppercase;
@@ -100,7 +100,7 @@
 }
 
 .brandRow strong {
-  color: #10b981;
+  color: var(--db-brand);
 }
 
 .brandRow button,
@@ -111,8 +111,8 @@
   place-items: center;
   border: 1px solid rgba(30, 41, 59, 0.9);
   border-radius: 8px;
-  background: #060b13;
-  color: #94a3b8;
+  background: var(--db-canvas);
+  color: var(--db-text-muted);
   cursor: pointer;
   transition: all 0.14s ease;
 }
@@ -120,8 +120,8 @@
 .brandRow button:hover,
 .monthRow button:hover {
   background: #0b121e;
-  border-color: #10b981;
-  color: #f8fafc;
+  border-color: var(--db-brand);
+  color: var(--db-text-primary);
 }
 
 .brandRow svg,
@@ -150,7 +150,7 @@
 
 .weekdays span {
   padding: 8px 0;
-  color: #64748b;
+  color: var(--db-text-subtle);
   font-size: 10px;
   font-weight: 800;
   text-align: center;
@@ -162,7 +162,7 @@
   border: 1px solid transparent;
   border-radius: 8px;
   background: transparent;
-  color: #e2e8f0;
+  color: var(--db-text-secondary);
   font: inherit;
   font-size: 12.5px;
   font-weight: 700;
@@ -177,19 +177,19 @@
 }
 
 .grid .outside {
-  color: #475569;
+  color: var(--db-text-disabled);
   opacity: 0.5;
 }
 
 .grid .today {
-  border-color: #10b981;
-  color: #10b981;
+  border-color: var(--db-brand);
+  color: var(--db-brand);
 }
 
 .grid .selected,
 .grid .selected:hover:not(:disabled) {
-  border-color: #10b981;
-  background: #10b981;
+  border-color: var(--db-brand);
+  background: var(--db-brand);
   color: #ffffff;
   box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
 }
@@ -206,8 +206,8 @@
   padding: 10px;
   border: 1px solid rgba(30, 41, 59, 0.9);
   border-radius: 8px;
-  background: #060b13;
-  color: #94a3b8;
+  background: var(--db-canvas);
+  color: var(--db-text-muted);
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
@@ -218,7 +218,7 @@
   height: 34px;
   border: 1px solid rgba(30, 41, 59, 0.9);
   border-radius: 6px;
-  background: #090e17;
+  background: var(--db-surface-inner);
   color: #ffffff;
   font: inherit;
   text-align: center;
@@ -245,8 +245,8 @@
 
 .textButton {
   border: 1px solid rgba(30, 41, 59, 0.9);
-  background: #060b13;
-  color: #94a3b8;
+  background: var(--db-canvas);
+  color: var(--db-text-muted);
 }
 
 .textButton:hover {
@@ -255,14 +255,14 @@
 }
 
 .applyButton {
-  border: 1px solid #10b981;
-  background: #10b981;
+  border: 1px solid var(--db-brand);
+  background: var(--db-brand);
   color: #ffffff;
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .applyButton:hover {
-  background: #059669;
+  background: var(--db-brand-strong);
 }
 
 .applyButton:disabled {
@@ -273,7 +273,7 @@
 .trigger:focus-visible,
 .popover button:focus-visible,
 .popover input:focus-visible {
-  outline: 2px solid #10b981;
+  outline: 2px solid var(--db-brand);
   outline-offset: 2px;
 }
 

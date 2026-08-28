@@ -14,15 +14,15 @@
 }
 
 .block {
-  border: 1px solid var(--pex-border, #dbe3ec);
+  border: 1px solid var(--db-border);
   border-radius: 12px;
   background: var(--pex-bg);
   overflow: hidden;
 }
 
 .block:focus-within {
-  border-color: var(--pex-keppel, #1a7a77);
-  box-shadow: 0 0 0 3px rgba(26, 122, 119, 0.12);
+  border-color: var(--db-brand);
+  box-shadow: 0 0 0 3px var(--db-brand-subtle);
 }
 
 .blockBar {
@@ -30,8 +30,8 @@
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
-  background: #f4f7f9;
-  border-bottom: 1px solid #e7edf1;
+  background: var(--db-surface-inner);
+  border-bottom: 1px solid var(--db-border);
 }
 
 .blockIcon {
@@ -43,7 +43,7 @@
   border-radius: 6px;
   background: var(--pex-bg);
   border: 1px solid #dbe3ec;
-  color: var(--pex-keppel, #1a7a77);
+  color: var(--db-brand);
   font-size: 12px;
   font-weight: 700;
   flex-shrink: 0;
@@ -84,8 +84,8 @@
 }
 
 .blockButton:hover:not(:disabled) {
-  border-color: var(--pex-keppel, #1a7a77);
-  color: var(--pex-keppel, #1a7a77);
+  border-color: var(--db-brand);
+  color: var(--db-brand);
 }
 
 .blockButton:disabled {
@@ -106,7 +106,7 @@
 }
 
 .blockTextarea {
-  border: 1px solid var(--pex-border, #dbe3ec);
+  border: 1px solid var(--db-border);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 14px;
@@ -120,7 +120,7 @@
 
 .blockTextarea:focus {
   outline: none;
-  border-color: var(--pex-keppel, #1a7a77);
+  border-color: var(--db-brand);
 }
 
 .boldRow {
@@ -133,7 +133,7 @@
 }
 
 .boldRow input {
-  accent-color: var(--pex-keppel, #1a7a77);
+  accent-color: var(--db-brand);
   width: 15px;
   height: 15px;
   margin: 0;
@@ -160,7 +160,7 @@
 }
 
 .input {
-  border: 1px solid var(--pex-border, #dbe3ec);
+  border: 1px solid var(--db-border);
   border-radius: 8px;
   padding: 8px 10px;
   font-size: 13px;
@@ -172,7 +172,7 @@
 
 .input:focus {
   outline: none;
-  border-color: var(--pex-keppel, #1a7a77);
+  border-color: var(--db-brand);
 }
 
 .addBlock {
@@ -180,10 +180,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px dashed #c3cfd8;
+  border: 1px dashed var(--db-text-muted);
   border-radius: 10px;
   background: var(--pex-bg);
-  color: var(--pex-keppel, #1a7a77);
+  color: var(--db-brand);
   font-size: 13px;
   font-weight: 700;
   padding: 8px 14px;
@@ -192,6 +192,6 @@
 }
 
 .addBlock:hover {
-  border-color: var(--pex-keppel, #1a7a77);
+  border-color: var(--db-brand);
   background: rgba(26, 122, 119, 0.04);
 }

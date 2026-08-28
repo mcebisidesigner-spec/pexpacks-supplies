@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useMemo } from "react";
 import {
   UserPlus,
   Mail,
@@ -24,6 +24,8 @@ import adminStyles from "@/app/admin/admin.module.css";
 
 interface AddUsersTabProps {
   roles: RoleInfo[];
+  currentUserEmail?: string;
+  isSuperUser?: boolean;
 }
 
 const DEPARTMENTS = [
@@ -36,7 +38,11 @@ const DEPARTMENTS = [
   "Catalog & Content Management",
 ];
 
-export function AddUsersTab({ roles }: AddUsersTabProps) {
+export function AddUsersTab({
+  roles,
+  currentUserEmail,
+  isSuperUser = false,
+}: AddUsersTabProps) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [department, setDepartment] = useState(DEPARTMENTS[0]);
@@ -47,6 +53,17 @@ export function AddUsersTab({ roles }: AddUsersTabProps) {
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  // Superuser role is strictly only visible to the 2 designated superusers
+  const visibleRoles = useMemo<RoleInfo[]>(() => {
+    return (roles || []).filter((r: RoleInfo) => {
+      const isSuperRole = r.slug === "super_admin" || r.slug === "superuser";
+      if (isSuperRole) {
+        return isSuperUser;
+      }
+      return true;
+    });
+  }, [roles, isSuperUser]);
 
   function toggleRole(slug: string) {
     setSelectedRoles((prev) =>
@@ -291,16 +308,28 @@ export function AddUsersTab({ roles }: AddUsersTabProps) {
             </p>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "12px" }}>
-              {roles.map((role) => {
+              {visibleRoles.map((role) => {
                 const isSelected = selectedRoles.includes(role.slug);
+                const isSuper = role.slug === "super_admin" || role.slug === "superuser";
+
                 return (
                   <div
                     key={role.id}
                     onClick={() => toggleRole(role.slug)}
                     style={{
-                      backgroundColor: isSelected ? "rgba(16, 185, 129, 0.1)" : "#090e17",
+                      backgroundColor: isSelected
+                        ? isSuper
+                          ? "rgba(168, 85, 247, 0.15)"
+                          : "rgba(16, 185, 129, 0.1)"
+                        : isSuper
+                        ? "rgba(168, 85, 247, 0.04)"
+                        : "#090e17",
                       border: isSelected
-                        ? "1px solid #10b981"
+                        ? isSuper
+                          ? "1px solid #c084fc"
+                          : "1px solid #10b981"
+                        : isSuper
+                        ? "1px solid rgba(168, 85, 247, 0.4)"
                         : "1px solid rgba(51, 65, 85, 0.6)",
                       borderRadius: "10px",
                       padding: "14px 16px",
@@ -310,19 +339,44 @@ export function AddUsersTab({ roles }: AddUsersTabProps) {
                       flexDirection: "column",
                       justifyContent: "space-between",
                       gap: "8px",
+                      position: "relative",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <span style={{ fontSize: "0.875rem", fontWeight: 700, color: isSelected ? "#34d399" : "#ffffff" }}>
-                        {role.name}
-                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                        {isSuper && <Shield size={14} style={{ color: "#c084fc" }} />}
+                        <span
+                          style={{
+                            fontSize: "0.875rem",
+                            fontWeight: 700,
+                            color: isSelected
+                              ? isSuper
+                                ? "#e9d5ff"
+                                : "#34d399"
+                              : isSuper
+                              ? "#c084fc"
+                              : "#ffffff",
+                          }}
+                        >
+                          {isSuper ? "Superuser" : role.name}
+                        </span>
+                      </div>
+
                       <div
                         style={{
                           width: "18px",
                           height: "18px",
                           borderRadius: "4px",
-                          border: isSelected ? "1px solid #10b981" : "1px solid #475569",
-                          backgroundColor: isSelected ? "#10b981" : "transparent",
+                          border: isSelected
+                            ? isSuper
+                              ? "1px solid #a855f7"
+                              : "1px solid #10b981"
+                            : "1px solid #475569",
+                          backgroundColor: isSelected
+                            ? isSuper
+                              ? "#a855f7"
+                              : "#10b981"
+                            : "transparent",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -333,8 +387,29 @@ export function AddUsersTab({ roles }: AddUsersTabProps) {
                       </div>
                     </div>
 
+                    {isSuper && (
+                      <div style={{ display: "inline-block" }}>
+                        <span
+                          style={{
+                            fontSize: "10px",
+                            fontWeight: 800,
+                            textTransform: "uppercase",
+                            padding: "2px 6px",
+                            borderRadius: "4px",
+                            backgroundColor: "rgba(168, 85, 247, 0.25)",
+                            color: "#e9d5ff",
+                            letterSpacing: "0.04em",
+                          }}
+                        >
+                          👑 Superuser Access Add-on
+                        </span>
+                      </div>
+                    )}
+
                     <p style={{ fontSize: "0.75rem", color: "#94a3b8", lineHeight: 1.4, margin: 0 }}>
-                      {role.description || "General platform access and permissions."}
+                      {isSuper
+                        ? "Full unrestricted access across all DB modules & settings. Max 2 accounts permitted."
+                        : role.description || "General platform access and permissions."}
                     </p>
                   </div>
                 );

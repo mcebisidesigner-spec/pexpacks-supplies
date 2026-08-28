@@ -1,10 +1,10 @@
-.container {
+﻿.container {
   width: 100%;
   max-width: 900px;
 }
 
 .card {
-  background: var(--a-surface, #0c1322);
+  background: var(--a-surface, var(--db-surface));
   border: 1px solid var(--a-border, rgba(30, 41, 59, 0.9));
   border-radius: 12px;
   padding: 24px;
@@ -59,7 +59,7 @@
   border-radius: 6px;
   border: 1px solid rgba(16, 185, 129, 0.4);
   background: rgba(16, 185, 129, 0.12);
-  color: #34d399;
+  color: var(--db-success-text);
   cursor: pointer;
   transition: all 120ms ease;
 }
@@ -114,7 +114,7 @@
 .iconLabel {
   font-size: 12px;
   font-weight: 700;
-  color: var(--a-text-3, #94a3b8);
+  color: var(--a-text-3, var(--db-text-muted));
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -125,7 +125,7 @@
   gap: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--a-accent, #10b981);
+  color: var(--a-accent, var(--db-brand));
 }
 
 .iconGrid {
@@ -135,7 +135,7 @@
   max-height: 180px;
   overflow-y: auto;
   padding: 8px;
-  background: var(--a-surface-2, #090e17);
+  background: var(--a-surface-2, var(--db-surface-inner));
   border: 1px solid var(--a-border, rgba(30, 41, 59, 0.8));
   border-radius: 8px;
 }
@@ -162,28 +162,28 @@
   border: 1px solid var(--a-border, rgba(30, 41, 59, 0.6));
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.02);
-  color: var(--a-text-3, #94a3b8);
+  color: var(--a-text-3, var(--db-text-muted));
   cursor: pointer;
   font-family: inherit;
   transition: all 0.12s ease-in-out;
 }
 
 .iconOption:hover {
-  border-color: var(--a-accent, #10b981);
+  border-color: var(--a-accent, var(--db-brand));
   color: #ffffff;
   background: rgba(16, 185, 129, 0.08);
 }
 
 .iconOptionActive {
-  border-color: var(--a-accent, #10b981) !important;
+  border-color: var(--a-accent, var(--db-brand)) !important;
   background: rgba(16, 185, 129, 0.15) !important;
-  color: var(--a-accent, #10b981) !important;
-  box-shadow: 0 0 0 1px var(--a-accent, #10b981);
+  color: var(--a-accent, var(--db-brand)) !important;
+  box-shadow: 0 0 0 1px var(--a-accent, var(--db-brand));
 }
 
 .hint {
   font-size: 11.5px;
-  color: var(--a-text-3, #94a3b8);
+  color: var(--a-text-3, var(--db-text-muted));
 }
 
 .actionsRow {

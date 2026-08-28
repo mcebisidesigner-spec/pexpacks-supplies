@@ -1,19 +1,19 @@
-.popupWrap {
+﻿.popupWrap {
   position: fixed;
   top: 24px;
   left: 24px;
   z-index: 999999;
   width: min(400px, calc(100vw - 32px));
   padding: 20px;
-  border: 1px solid #1e293b;
-  border-left: 4px solid #10b981;
+  border: 1px solid var(--db-border);
+  border-left: 4px solid var(--db-brand);
   border-radius: 12px;
   background: linear-gradient(145deg, #0d1627 0%, #080d17 100%);
   box-shadow:
     0 24px 60px rgba(0, 0, 0, 0.85),
     0 0 25px rgba(16, 185, 129, 0.2);
   backdrop-filter: blur(16px);
-  color: #f8fafc;
+  color: var(--db-text-primary);
   animation: enter 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -27,14 +27,14 @@
 .header {
   justify-content: space-between;
   padding-bottom: 12px;
-  border-bottom: 1px solid #1e293b;
+  border-bottom: 1px solid var(--db-border);
 }
 
 .domainLabel {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #94a3b8;
+  color: var(--db-text-muted);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.05em;
@@ -42,7 +42,7 @@
 }
 
 .domainTag {
-  color: #34d399;
+  color: var(--db-success-text);
   font-weight: 900;
 }
 
@@ -51,18 +51,18 @@
   width: 32px;
   height: 32px;
   place-items: center;
-  border: 1px solid #334155;
+  border: 1px solid var(--db-border-strong);
   border-radius: 8px;
-  background: #1e293b;
-  color: #cbd5e1;
+  background: var(--db-border);
+  color: var(--db-text-secondary);
   cursor: pointer;
   transition: all 150ms ease;
 }
 
 .closeBtn:hover {
-  background: #334155;
+  background: var(--db-border-strong);
   color: #ffffff;
-  border-color: #475569;
+  border-color: var(--db-text-disabled);
 }
 
 .body {
@@ -80,13 +80,13 @@
   border: 1px solid rgba(52, 211, 153, 0.4);
   border-radius: 10px;
   background: rgba(16, 185, 129, 0.16);
-  color: #34d399;
+  color: var(--db-success-text);
   box-shadow: 0 0 14px rgba(16, 185, 129, 0.18);
 }
 
 .messageText {
   margin: 0;
-  color: #f8fafc;
+  color: var(--db-text-primary);
   font-size: 13.5px;
   font-weight: 600;
   line-height: 1.55;
@@ -112,8 +112,8 @@
 }
 
 .allowBtn {
-  border: 1px solid #34d399;
-  background: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+  border: 1px solid var(--db-success-text);
+  background: linear-gradient(135deg, var(--db-brand) 0%, #0d9488 100%);
   color: #ffffff;
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
 }
@@ -121,23 +121,23 @@
 .allowBtn:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5);
-  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  background: linear-gradient(135deg, var(--db-success-text) 0%, var(--db-brand) 100%);
 }
 
 .blockBtn {
-  border: 1px solid #334155;
-  background: #1e293b;
-  color: #cbd5e1;
+  border: 1px solid var(--db-border-strong);
+  background: var(--db-border);
+  color: var(--db-text-secondary);
 }
 
 .blockBtn:hover {
-  background: #334155;
+  background: var(--db-border-strong);
   color: #ffffff;
-  border-color: #475569;
+  border-color: var(--db-text-disabled);
 }
 
 .popupWrap button:focus-visible {
-  outline: 3px solid #34d399;
+  outline: 3px solid var(--db-success-text);
   outline-offset: 2px;
 }
 
