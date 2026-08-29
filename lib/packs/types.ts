@@ -10,6 +10,10 @@ export type PackItem = {
   notes?: string;
   description?: string;
   specification?: string;
+  requiresPexcover?: boolean;
+  pexcoCode?: string | null;
+  pexcoRateCents?: number | null;
+  pexcoRateActive?: boolean;
 };
 
 export type GradePackForCustomisation = {

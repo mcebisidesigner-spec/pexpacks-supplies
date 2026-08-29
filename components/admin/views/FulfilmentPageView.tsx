@@ -36,7 +36,12 @@ function schoolName(row: FulfilmentRow): string {
 }
 
 function statusForRow(row: FulfilmentRow): string {
-  return row.packing_records[0]?.status || row.status || row.orders?.status || "pending";
+  return (
+    row.packing_records[0]?.status ||
+    row.status ||
+    row.orders?.status ||
+    "pending"
+  );
 }
 
 export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
@@ -52,7 +57,11 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
         orderRef(row).toLowerCase().includes(q) ||
         schoolName(row).toLowerCase().includes(q) ||
         row.method.toLowerCase().includes(q);
-      const matchStatus = !params.status || params.status === "all" || status === params.status || row.status === params.status;
+      const matchStatus =
+        !params.status ||
+        params.status === "all" ||
+        status === params.status ||
+        row.status === params.status;
       return matchSearch && matchStatus;
     });
   }, [initialData, params.q, params.status]);
@@ -77,7 +86,9 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
           >
             {orderRef(row)}
           </Link>
-          <span className={styles.productBrand}>{row.method.replaceAll("_", " ")}</span>
+          <span className={styles.productBrand}>
+            {row.method.replaceAll("_", " ")}
+          </span>
         </div>
       ),
     },
@@ -85,7 +96,9 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       key: "method",
       header: "DESTINATION SCHOOL",
       sortable: true,
-      render: (row) => <span className={styles.textMuted}>{schoolName(row)}</span>,
+      render: (row) => (
+        <span className={styles.textMuted}>{schoolName(row)}</span>
+      ),
     },
     {
       key: "readiness",
@@ -93,14 +106,18 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       sortable: true,
       align: "center",
       width: "130px",
-      render: (row) => <span className={styles.textMuted}>{Math.round(row.readiness)}%</span>,
+      render: (row) => (
+        <span className={styles.textMuted}>{Math.round(row.readiness)}%</span>
+      ),
     },
     {
       key: "target_date",
       header: "TARGET DATE",
       sortable: true,
       width: "140px",
-      render: (row) => <span className={styles.textMuted}>{formatDate(row.target_date)}</span>,
+      render: (row) => (
+        <span className={styles.textMuted}>{formatDate(row.target_date)}</span>
+      ),
     },
     {
       key: "status",
@@ -117,11 +134,14 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       sticky: "right",
       width: "80px",
       render: (row) => (
-        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.actionsCell}
+          onClick={(e) => e.stopPropagation()}
+        >
           <Link
             href={`/admin/fulfilment/${orderRef(row)}`}
             className={styles.actionEditBtn}
-            title={`View pack sheet for ${orderRef(row)}`}
+            data-db-tooltip={`View pack sheet for ${orderRef(row)}`}
           >
             <Eye size={14} />
           </Link>
@@ -130,10 +150,20 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
     },
   ];
 
-  const readyToPack = initialData.filter((row) => row.readiness >= 100 && !["dispatched", "delivered", "collected"].includes(row.status)).length;
-  const inAssembly = initialData.filter((row) => ["packing", "quality_check", "packed"].includes(statusForRow(row))).length;
-  const qualityChecked = initialData.filter((row) => ["quality_check", "packed"].includes(statusForRow(row))).length;
-  const dispatched = initialData.filter((row) => ["dispatched", "delivered", "collected"].includes(row.status)).length;
+  const readyToPack = initialData.filter(
+    (row) =>
+      row.readiness >= 100 &&
+      !["dispatched", "delivered", "collected"].includes(row.status),
+  ).length;
+  const inAssembly = initialData.filter((row) =>
+    ["packing", "quality_check", "packed"].includes(statusForRow(row)),
+  ).length;
+  const qualityChecked = initialData.filter((row) =>
+    ["quality_check", "packed"].includes(statusForRow(row)),
+  ).length;
+  const dispatched = initialData.filter((row) =>
+    ["dispatched", "delivered", "collected"].includes(row.status),
+  ).length;
 
   return (
     <div className={styles.container}>

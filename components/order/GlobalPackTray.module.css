@@ -698,3 +698,56 @@
     transform: translateX(100%);
   }
 }
+
+.pexcoverToggleLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(14, 184, 166, 0.06);
+  border: 1px solid rgba(14, 184, 166, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pexcoverToggleLabel:hover {
+  background: rgba(14, 184, 166, 0.1);
+  border-color: rgba(14, 184, 166, 0.4);
+}
+
+.pexcoverDisabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: rgba(150, 150, 150, 0.05);
+  border-color: rgba(150, 150, 150, 0.15);
+}
+
+.pexcoverDisabled:hover {
+  background: rgba(150, 150, 150, 0.05);
+  border-color: rgba(150, 150, 150, 0.15);
+}
+
+.pexcoverCheckbox {
+  margin-top: 3px;
+  accent-color: var(--pex-keppel);
+  cursor: inherit;
+}
+
+.pexcoverDetails {
+  flex: 1;
+}
+
+.pexcoverTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pex-primary);
+}
+
+.pexcoverDesc {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--color-slate);
+}
+

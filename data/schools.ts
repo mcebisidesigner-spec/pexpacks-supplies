@@ -11,6 +11,10 @@ export type GradePack = {
   deliveryNote: string;
   availability: "in-stock" | "pre-order" | "seasonal";
   packItems?: SchoolPackItem[];
+  itemsCost?: number | null;
+  totalLandedCost?: number | null;
+  marginRateUsed?: number | null;
+  pricingStatus?: string | null;
 };
 
 export type SchoolPackItem = {
@@ -20,6 +24,10 @@ export type SchoolPackItem = {
   icon?: string | null;
   description?: string | null;
   specification?: string | null;
+  requiresPexcover?: boolean;
+  pexcoCode?: string | null;
+  pexcoRateCents?: number | null;
+  pexcoRateActive?: boolean;
 };
 
 export type School = {

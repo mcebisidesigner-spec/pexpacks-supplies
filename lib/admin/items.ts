@@ -41,6 +41,9 @@ export type ItemRow = {
   sku?: string | null;
   brand?: string | null;
   source?: string | null;
+  // Pexcover fields
+  requires_pexcover?: boolean | null;
+  pexco_code?: string | null;
 };
 
 const optString = (max: number, label: string) =>
@@ -89,6 +92,9 @@ export const itemSchema = z.object({
   visible: z.boolean().default(false),
   sort_order: countField,
   slug: slugField.nullable(),
+  // Pexcover
+  requires_pexcover: z.boolean().default(false),
+  pexco_code: optString(20, "PEXCO code").nullable(),
 });
 
 export type ItemFormData = z.infer<typeof itemSchema>;
@@ -142,6 +148,8 @@ async function ensureMasterProduct(
     | "specification"
     | "visible"
     | "price"
+    | "requires_pexcover"
+    | "pexco_code"
   > & { sku?: string | null; icon?: string | null },
   actorId: string,
 ): Promise<MasterProductRow> {
@@ -162,6 +170,9 @@ async function ensureMasterProduct(
     pricing_status: data.price != null ? "review" : "unpriced",
     active: true,
     updated_by: actorId,
+    // Pexcover classification
+    requires_pexcover: data.requires_pexcover ?? false,
+    pexco_code: data.requires_pexcover ? (data.pexco_code ?? null) : null,
   };
 
   const { data: existingBySku } = await masterProductsTable(admin)
@@ -171,7 +182,7 @@ async function ensureMasterProduct(
 
   if (existingBySku) {
     const { data: updated, error } = await masterProductsTable(admin)
-      .update(productPatch)
+      .update(productPatch as never)
       .eq("id", existingBySku.id)
       .select("*")
       .single();
@@ -186,7 +197,7 @@ async function ensureMasterProduct(
 
   if (existingByName) {
     const { data: updated, error } = await masterProductsTable(admin)
-      .update(productPatch)
+      .update(productPatch as never)
       .eq("id", existingByName.id)
       .select("*")
       .single();
@@ -195,7 +206,7 @@ async function ensureMasterProduct(
   }
 
   const { data: created, error } = await masterProductsTable(admin)
-    .insert({ ...productPatch, created_by: actorId })
+    .insert({ ...productPatch, created_by: actorId } as never)
     .select("*")
     .single();
   if (error) throw error;
@@ -243,6 +254,9 @@ export function parseItemForm(formData: FormData): ParsedItemForm {
     visible: formData.has("visible"),
     sort_order: raw(formData, "sort_order") || "0",
     slug: raw(formData, "slug"),
+    // Pexcover
+    requires_pexcover: formData.has("requires_pexcover"),
+    pexco_code: raw(formData, "pexco_code") || null,
   });
 
   if (!parsed.success) {
@@ -1254,6 +1268,8 @@ export async function createPackItems(
         specification: null,
         visible: true,
         price: line.unit_price ?? null,
+        requires_pexcover: false,
+        pexco_code: null,
       },
       createdBy,
     );
@@ -1358,6 +1374,8 @@ export async function reconcilePackItems(
           specification: null,
           visible: true,
           price: line.unit_price ?? null,
+          requires_pexcover: false,
+          pexco_code: null,
         },
         actor.user.id,
       );
@@ -1387,6 +1405,8 @@ export async function reconcilePackItems(
           specification: null,
           visible: true,
           price: line.unit_price ?? null,
+          requires_pexcover: false,
+          pexco_code: null,
         },
         actor.user.id,
       );

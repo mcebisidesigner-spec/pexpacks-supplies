@@ -70,11 +70,7 @@ export function FeaturedSchoolsBanner({ schools }: FeaturedSchoolsBannerProps) {
             <span className={styles.featuredMeta}>{school.region}</span>
             <h3>{school.name}</h3>
             <p>{gradeRangeLabel(school.grades)}</p>
-            {school.hasOrderablePacks ? (
-              <span className={styles.yearPillBadge}>{schoolBadge(school) || DEFAULT_PACKS_BADGE}</span>
-            ) : (
-              <span className={styles.awaitingBadge}>{schoolBadge(school) || "Awaiting Lists"}</span>
-            )}
+            <span className={styles.yearPillBadge}>{schoolBadge(school) || DEFAULT_PACKS_BADGE}</span>
             <span className={styles.featuredCta}>View packs</span>
           </Link>
         ))}

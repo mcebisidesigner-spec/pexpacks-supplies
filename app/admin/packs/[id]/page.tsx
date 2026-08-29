@@ -23,6 +23,18 @@ import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
+/** Augments PackRow with computed columns added by DB triggers (not yet in generated types) */
+type PackWithComputedCosts = Awaited<ReturnType<typeof getPack>>["pack"] & {
+  items_cost?: number | null;
+  packaging_cost?: number | null;
+  assembly_cost?: number | null;
+  freight_cost?: number | null;
+  other_cost?: number | null;
+  total_landed_cost?: number | null;
+  margin_rate_used?: number | null;
+  calculated_selling_price?: number | null;
+};
+
 interface EditPackPageProps {
   params: Promise<{ id: string }>;
 }
@@ -47,8 +59,9 @@ export default async function PackOrSchoolPacksPage({
     );
   }
 
-  const { pack, items } = await getPack(id);
-  if (!pack) notFound();
+  const { pack: rawPack, items } = await getPack(id);
+  if (!rawPack) notFound();
+  const pack = rawPack as PackWithComputedCosts;
 
   const subtotal = items.reduce(
     (sum, item) => sum + (item.unit_price ?? 0) * item.quantity,
@@ -202,6 +215,97 @@ export default async function PackOrSchoolPacksPage({
                 <span className={adminStyles.sidebarStatLabel}>School</span>
                 <span className={adminStyles.sidebarStatVal}>{schoolName}</span>
               </div>
+            </div>
+          </div>
+
+          <div className={adminStyles.sidebarCard} style={{ marginTop: "16px" }}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <span style={{ fontWeight: 700, color: "var(--color-navy)" }}>Automated Pricing Engine</span>
+              </div>
+              <StatusBadge
+                status={pack.pricing_status === "incomplete" ? "Action Required" : "Automated"}
+                tone={pack.pricing_status === "incomplete" ? "amber" : "emerald"}
+                showDot
+              />
+            </div>
+
+            <div className={adminStyles.summaryStack}>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Stationery Items Cost</span>
+                <span className={adminStyles.sidebarStatVal}>
+                  R {(pack.items_cost ?? 0).toFixed(2)}
+                </span>
+              </div>
+              {(pack.packaging_cost ?? 0) > 0 ? (
+                <div className={adminStyles.sidebarStatRow}>
+                  <span className={adminStyles.sidebarStatLabel}>Packaging Cost</span>
+                  <span className={adminStyles.sidebarStatVal}>
+                    R {(pack.packaging_cost ?? 0).toFixed(2)}
+                  </span>
+                </div>
+              ) : null}
+              {(pack.assembly_cost ?? 0) > 0 ? (
+                <div className={adminStyles.sidebarStatRow}>
+                  <span className={adminStyles.sidebarStatLabel}>Assembly Cost</span>
+                  <span className={adminStyles.sidebarStatVal}>
+                    R {(pack.assembly_cost ?? 0).toFixed(2)}
+                  </span>
+                </div>
+              ) : null}
+              {(pack.freight_cost ?? 0) > 0 ? (
+                <div className={adminStyles.sidebarStatRow}>
+                  <span className={adminStyles.sidebarStatLabel}>Freight Cost</span>
+                  <span className={adminStyles.sidebarStatVal}>
+                    R {(pack.freight_cost ?? 0).toFixed(2)}
+                  </span>
+                </div>
+              ) : null}
+              {(pack.other_cost ?? 0) > 0 ? (
+                <div className={adminStyles.sidebarStatRow}>
+                  <span className={adminStyles.sidebarStatLabel}>Other Cost</span>
+                  <span className={adminStyles.sidebarStatVal}>
+                    R {(pack.other_cost ?? 0).toFixed(2)}
+                  </span>
+                </div>
+              ) : null}
+              <div
+                className={adminStyles.sidebarStatRow}
+                style={{ borderTop: "1px solid rgba(0,0,0,0.08)", paddingTop: "8px", fontWeight: 700 }}
+              >
+                <span className={adminStyles.sidebarStatLabel}>Total Landed Cost</span>
+                <span className={adminStyles.sidebarStatVal} style={{ fontWeight: 800 }}>
+                  R {(pack.total_landed_cost ?? pack.items_cost ?? 0).toFixed(2)}
+                </span>
+              </div>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Target Margin Rate</span>
+                <span className={adminStyles.sidebarStatVal} style={{ color: "var(--color-teal)", fontWeight: 700 }}>
+                  {((pack.margin_rate_used ?? 0.499) * 100).toFixed(1)}%
+                </span>
+              </div>
+              <div
+                className={adminStyles.sidebarStatRow}
+                style={{ borderTop: "1px solid rgba(0,0,0,0.08)", paddingTop: "8px" }}
+              >
+                <span className={adminStyles.sidebarStatLabel} style={{ fontWeight: 700, color: "var(--color-navy)" }}>
+                  Calculated Selling Price
+                </span>
+                <span className={adminStyles.sidebarStatVal} style={{ fontSize: "16px", fontWeight: 800, color: "var(--color-teal)" }}>
+                  {formattedPrice}
+                </span>
+              </div>
+            </div>
+
+            <div style={{ marginTop: "14px", paddingTop: "10px", borderTop: "1px dashed rgba(0,0,0,0.08)" }}>
+              <AdminButton
+                href="/admin/settings?tab=pricing"
+                variant="secondary"
+                size="sm"
+                className="w-full justify-center"
+              >
+                Manage Pricing & Margin
+              </AdminButton>
             </div>
           </div>
         </div>

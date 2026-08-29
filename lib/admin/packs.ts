@@ -409,6 +409,7 @@ export async function listSchoolGroupedSummary(
     deliveryTypes,
   };
 }
+
 export interface PackSchool {
   id: string;
   name: string;
@@ -506,31 +507,30 @@ export async function getPack(
       decoded,
     );
 
-  let query = admin
-    .from("school_packs")
+  let query = (admin
+    .from("school_packs") as never as ReturnType<typeof admin.from>)
     .select(
-      "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector,season_id,list_version,pricing_status,fulfilment_deadline",
+      "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector,season_id,list_version,pricing_status,fulfilment_deadline,items_cost,packaging_cost,assembly_cost,freight_cost,other_cost,total_landed_cost,margin_rate_used,calculated_selling_price" as never,
     );
   if (isUuid) {
-    query = query.eq("id", decoded);
+    query = query.eq("id" as never, decoded as never);
   } else {
     const slugified = decoded
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
     query = query.or(
-      `slug.ilike.${decoded},slug.ilike.${slugified},title.ilike.${decoded}`,
+      `slug.ilike.${decoded},slug.ilike.${slugified},title.ilike.${decoded}` as never,
     );
   }
 
-  const { data: pack, error } = await query.maybeSingle();
+  const { data: pack, error } = await (query as unknown as { maybeSingle: () => Promise<{ data: PackRow | null; error: unknown }> }).maybeSingle();
   if (error || !pack) return { pack: null, items: [] };
 
-  let itemList: ItemRow[] = [];
   const { data: items, error: itemsError } = await admin
     .from("admin_pack_items_view" as never)
     .select(
-      "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source",
+      "id,pack_id,product_id,name,description,specification,quantity,unit_price,icon,visible,sort_order,category,sku,brand,source,requires_pexcover,pexco_code,pexco_title,pexco_rate_cents,pexco_rate_active",
     )
     .eq("pack_id" as never, pack.id as never)
     .order("sort_order" as never, { ascending: true })
@@ -541,21 +541,8 @@ export async function getPack(
       `Unable to load pack items: ${itemsError.message || itemsError.details || "admin_pack_items_view failed"}`,
     );
   }
-  itemList = (items ?? []) as unknown as ItemRow[];
-  const calculatedSum = itemList.reduce(
-    (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
-    0,
-  );
-  const roundedSum = Math.round(calculatedSum * 100) / 100;
 
-  if (pack.price !== roundedSum) {
-    await admin
-      .from("school_packs")
-      .update({ price: roundedSum })
-      .eq("id", pack.id);
-    pack.price = roundedSum;
-  }
-
+  const itemList = (items ?? []) as unknown as ItemRow[];
   return { pack, items: itemList };
 }
 

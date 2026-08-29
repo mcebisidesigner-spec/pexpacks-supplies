@@ -50,15 +50,137 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
 }
 
-.arrowIcon {
+.selectButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  height: 42px;
+  background-color: var(--db-surface-inner, #090e17);
+  border: 1px solid var(--db-border, rgba(51, 65, 85, 0.85));
+  border-radius: var(--db-radius-control, 8px);
+  padding: 0 12px;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+  box-sizing: border-box;
+}
+
+.selectButton:hover {
+  border-color: rgba(148, 163, 184, 0.6);
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+.selectButton:focus-visible,
+.selectButton.open {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+  background-color: #0b121e;
+}
+
+.selectButton.open .arrowIcon {
+  color: #10b981;
+  transform: rotate(180deg);
+}
+
+.selectedLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.menu {
   position: absolute;
-  right: 12px;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  margin: 0;
+  padding: 5px;
+  list-style: none;
+  background: #090e17;
+  border: 1px solid rgba(51, 65, 85, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  max-height: 280px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #cbd5e1;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 120ms ease, color 120ms ease;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+/* Hover highlights others */
+.menuItem:not(.menuItemActive):hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+.menuItem:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Active option gets app green background + green label + green tick on the right */
+.menuItemActive {
+  background-color: rgba(16, 185, 129, 0.18) !important;
+  color: #10b981 !important;
+}
+
+.menuItemActive .menuLabel {
+  color: #10b981 !important;
+  font-weight: 600 !important;
+}
+
+.menuItemActive:hover {
+  background-color: rgba(16, 185, 129, 0.26) !important;
+  color: #34d399 !important;
+}
+
+.menuItemActive:hover .menuLabel {
+  color: #34d399 !important;
+}
+
+.menuCheck {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: #10b981 !important;
+  margin-left: auto;
+}
+
+.arrowIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--db-text-subtle);
+  color: #94a3b8;
   pointer-events: none;
-  transition: color var(--db-transition);
+  transition: transform 160ms ease, color 160ms ease;
 }
 
 .select:focus ~ .arrowIcon {

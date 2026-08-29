@@ -82,7 +82,9 @@ function serialize(blocks: Block[]): string[] {
     switch (block.kind) {
       case "text":
         if (block.value.trim()) {
-          lines.push(block.bold ? `<strong>${block.value}</strong>` : block.value);
+          lines.push(
+            block.bold ? `<strong>${block.value}</strong>` : block.value,
+          );
         }
         break;
       case "heading":
@@ -94,7 +96,8 @@ function serialize(blocks: Block[]): string[] {
           .split("\n")
           .map((item) => item.trimEnd())
           .filter((item) => item.trim() !== "");
-        for (const item of items) lines.push(block.kind === "numbered" ? `1. ${item}` : `- ${item}`);
+        for (const item of items)
+          lines.push(block.kind === "numbered" ? `1. ${item}` : `- ${item}`);
         break;
       }
       case "quote":
@@ -118,7 +121,11 @@ function serialize(blocks: Block[]): string[] {
 
 function parse(lines: string[]): Block[] {
   const blocks: Block[] = [];
-  let listBlock: { id: number; kind: "list" | "numbered"; value: string } | null = null;
+  let listBlock: {
+    id: number;
+    kind: "list" | "numbered";
+    value: string;
+  } | null = null;
 
   const flushList = () => {
     if (listBlock) {
@@ -131,33 +138,53 @@ function parse(lines: string[]): Block[] {
     const img = line.match(/^!\[(.*?)\]\((.*?)\)$/);
     if (img) {
       flushList();
-      blocks.push({ id: ++nextId, kind: "image", src: img[2], alt: img[1], caption: "" });
+      blocks.push({
+        id: ++nextId,
+        kind: "image",
+        src: img[2],
+        alt: img[1],
+        caption: "",
+      });
       continue;
     }
 
     if (line.startsWith("## ")) {
       flushList();
-      blocks.push({ id: ++nextId, kind: "heading", value: line.replace("## ", "") });
+      blocks.push({
+        id: ++nextId,
+        kind: "heading",
+        value: line.replace("## ", ""),
+      });
       continue;
     }
 
     if (line.startsWith("> ")) {
       flushList();
-      blocks.push({ id: ++nextId, kind: "quote", value: line.replace("> ", "") });
+      blocks.push({
+        id: ++nextId,
+        kind: "quote",
+        value: line.replace("> ", ""),
+      });
       continue;
     }
 
     const pill = line.match(/^\[link_pill:\s*(.*?)\s*\|\s*(.*?)\s*\]$/);
     if (pill) {
       flushList();
-      blocks.push({ id: ++nextId, kind: "button", label: pill[1], href: pill[2] });
+      blocks.push({
+        id: ++nextId,
+        kind: "button",
+        label: pill[1],
+        href: pill[2],
+      });
       continue;
     }
 
     const bullet = line.match(/^[-*]\s+(.+)/);
     const numbered = line.match(/^\d+[.)]\s+(.+)/);
     if (bullet || numbered) {
-      const listKind: "list" | "numbered" = numbered !== null ? "numbered" : "list";
+      const listKind: "list" | "numbered" =
+        numbered !== null ? "numbered" : "list";
       const text = (bullet ?? numbered)![1];
       if (!listBlock || listBlock.kind !== listKind) {
         flushList();
@@ -212,7 +239,9 @@ export function ContentBlocks({
   const serialized = useMemo(() => serialize(blocks).join("\n"), [blocks]);
 
   const update = (id: number, patch: Partial<Block>) => {
-    setBlocks((prev) => prev.map((b) => (b.id === id ? ({ ...b, ...patch } as Block) : b)));
+    setBlocks((prev) =>
+      prev.map((b) => (b.id === id ? ({ ...b, ...patch } as Block) : b)),
+    );
   };
 
   const move = (index: number, delta: -1 | 1) => {
@@ -235,7 +264,9 @@ export function ContentBlocks({
 
   const isTextish = (b: Block): b is Extract<Block, { value: string }> =>
     b.kind === "text" || b.kind === "heading" || b.kind === "quote";
-  const isList = (b: Block): b is Extract<Block, { kind: "list" | "numbered" }> =>
+  const isList = (
+    b: Block,
+  ): b is Extract<Block, { kind: "list" | "numbered" }> =>
     b.kind === "list" || b.kind === "numbered";
 
   return (
@@ -245,14 +276,21 @@ export function ContentBlocks({
         {blocks.map((block, index) => (
           <li key={block.id} className={styles.block}>
             <div className={styles.blockBar}>
-              <span className={styles.blockIcon} title={KINDS.find((k) => k.value === block.kind)?.label}>
+              <span
+                className={styles.blockIcon}
+                data-db-tooltip={
+                  KINDS.find((k) => k.value === block.kind)?.label
+                }
+              >
                 <BlockIcon kind={block.kind} />
               </span>
               <select
                 className={styles.kindSelect}
                 value={block.kind}
                 aria-label="Block type"
-                onChange={(e) => setKind(block.id, e.target.value as Block["kind"])}
+                onChange={(e) =>
+                  setKind(block.id, e.target.value as Block["kind"])
+                }
               >
                 {KINDS.map((kind) => (
                   <option key={kind.value} value={kind.value}>
@@ -298,7 +336,10 @@ export function ContentBlocks({
                     rows={
                       block.kind === "heading"
                         ? 1
-                        : Math.min(6, Math.max(2, block.value.split("\n").length + 1))
+                        : Math.min(
+                            6,
+                            Math.max(2, block.value.split("\n").length + 1),
+                          )
                     }
                     value={block.value}
                     placeholder={
@@ -308,14 +349,18 @@ export function ContentBlocks({
                           ? "Highlighted quote…"
                           : "Write your paragraph…"
                     }
-                    onChange={(e) => update(block.id, { value: e.target.value })}
+                    onChange={(e) =>
+                      update(block.id, { value: e.target.value })
+                    }
                   />
                   {block.kind === "text" ? (
                     <label className={styles.boldRow}>
                       <input
                         type="checkbox"
                         checked={block.bold}
-                        onChange={(e) => update(block.id, { bold: e.target.checked })}
+                        onChange={(e) =>
+                          update(block.id, { bold: e.target.checked })
+                        }
                       />
                       <span>Bold paragraph</span>
                     </label>
@@ -326,7 +371,10 @@ export function ContentBlocks({
               {isList(block) && (
                 <textarea
                   className={styles.blockTextarea}
-                  rows={Math.min(6, Math.max(2, block.value.split("\n").length + 1))}
+                  rows={Math.min(
+                    6,
+                    Math.max(2, block.value.split("\n").length + 1),
+                  )}
                   value={block.value}
                   placeholder={"One item per line, e.g.\nPencil case\nScissors"}
                   onChange={(e) => update(block.id, { value: e.target.value })}
@@ -342,7 +390,9 @@ export function ContentBlocks({
                       className={styles.input}
                       value={block.src}
                       placeholder="/images/example.webp"
-                      onChange={(e) => update(block.id, { src: e.target.value })}
+                      onChange={(e) =>
+                        update(block.id, { src: e.target.value })
+                      }
                     />
                   </div>
                   <div className={styles.imageField}>
@@ -352,17 +402,23 @@ export function ContentBlocks({
                       className={styles.input}
                       value={block.alt}
                       placeholder="What's in the picture"
-                      onChange={(e) => update(block.id, { alt: e.target.value })}
+                      onChange={(e) =>
+                        update(block.id, { alt: e.target.value })
+                      }
                     />
                   </div>
                   <div className={styles.imageField}>
-                    <label className={styles.imageLabel}>Caption (optional)</label>
+                    <label className={styles.imageLabel}>
+                      Caption (optional)
+                    </label>
                     <input
                       type="text"
                       className={styles.input}
                       value={block.caption}
                       placeholder="Short caption under the image"
-                      onChange={(e) => update(block.id, { caption: e.target.value })}
+                      onChange={(e) =>
+                        update(block.id, { caption: e.target.value })
+                      }
                     />
                   </div>
                 </div>
@@ -377,7 +433,9 @@ export function ContentBlocks({
                       className={styles.input}
                       value={block.label}
                       placeholder="e.g. Find your school pack"
-                      onChange={(e) => update(block.id, { label: e.target.value })}
+                      onChange={(e) =>
+                        update(block.id, { label: e.target.value })
+                      }
                     />
                   </div>
                   <div className={styles.imageField}>
@@ -387,7 +445,9 @@ export function ContentBlocks({
                       className={styles.input}
                       value={block.href}
                       placeholder="/schools or https://…"
-                      onChange={(e) => update(block.id, { href: e.target.value })}
+                      onChange={(e) =>
+                        update(block.id, { href: e.target.value })
+                      }
                     />
                   </div>
                 </div>

@@ -141,7 +141,7 @@ export function MasterProductsPageView({
             <Link
               href={`/admin/products/${slug}`}
               className={styles.actionEditBtn}
-              title={`View ${row.name}`}
+              data-db-tooltip={`View ${row.name}`}
               aria-label={`View ${row.name}`}
             >
               <Eye size={14} />

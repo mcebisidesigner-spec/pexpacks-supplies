@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 
 export type TrayPackLineItem = {
   id: string;
@@ -12,6 +13,10 @@ export type TrayPackLineItem = {
   unitPrice?: number;
   lineTotal?: number;
   isRemoved?: boolean;
+  requiresPexcover?: boolean;
+  pexcoCode?: string | null;
+  pexcoRateCents?: number | null;
+  pexcoRateActive?: boolean;
 };
 
 export type TrayPackItem = {
@@ -133,11 +138,12 @@ export const usePackTrayStore = create<PackTrayState & PackTrayActions>()(
       },
 
       getTotal: () => {
-        const PEXCOVER_PRICE = 350;
-        return get().packs.reduce(
-          (sum, p) => sum + p.totalPrice + (p.wantsPexcover ? PEXCOVER_PRICE : 0),
-          0
-        );
+        return get().packs.reduce((sum, p) => {
+          const pexcoverCost = p.wantsPexcover
+            ? calculatePexcoverTotal(p.items).pexcoverTotalRands
+            : 0;
+          return sum + p.totalPrice + pexcoverCost;
+        }, 0);
       },
 
       getPackCount: () => {

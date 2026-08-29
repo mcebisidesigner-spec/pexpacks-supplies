@@ -18,6 +18,8 @@ type PexcoverAddOnProps = {
   pexcoverNotes: string;
   onNotesChange: (notes: string) => void;
   price: number;
+  eligibleCount?: number;
+  hasEligibleBooks?: boolean;
 };
 
 export function PexcoverAddOn({
@@ -32,40 +34,67 @@ export function PexcoverAddOn({
   pexcoverNotes,
   onNotesChange,
   price,
+  eligibleCount,
+  hasEligibleBooks = true,
 }: PexcoverAddOnProps) {
+  const isEligible = hasEligibleBooks && (eligibleCount === undefined || eligibleCount > 0);
+
   return (
     <section
-      className={clsx(styles.addonCard, selected && styles.addonCardActive)}
+      className={clsx(
+        styles.addonCard,
+        selected && isEligible && styles.addonCardActive,
+        !isEligible && styles.addonCardDisabled
+      )}
       aria-labelledby="pexcover-heading"
     >
-      <div>
-        <h3 id="pexcover-heading">Pexcover book covering</h3>
-        <p>
-          Add covered and labelled exercise books so the pack arrives closer to
-          first-day ready.
-        </p>
+      <div className={styles.addonHeaderRow}>
+        <div className={styles.addonInfo}>
+          <h3 id="pexcover-heading">Pexcover™ Book Covering Service</h3>
+          <p>
+            {isEligible
+              ? `Add durable protective plastic covering & custom printed learner labels for ${eligibleCount ? `${eligibleCount} books` : "all books"} in this pack.`
+              : "No coverable books found in this pack. Stationery-only packs do not require book covering."}
+          </p>
+        </div>
+        <div className={styles.addonPriceFarRight} id="pexcover-price">
+          {isEligible ? formatCurrency(price) : "R0.00"}
+        </div>
       </div>
-      <label className={styles.addonCheckbox}>
+
+      <label className={clsx(styles.addonCheckbox, !isEligible && styles.addonCheckboxDisabled)}>
         <Input
           type="checkbox"
-          checked={selected}
-          onChange={(event) => onToggle(event.target.checked)}
+          checked={selected && isEligible}
+          disabled={!isEligible}
+          onChange={(event) => {
+            if (isEligible) {
+              onToggle(event.target.checked);
+            }
+          }}
           aria-describedby="pexcover-price"
           wrapperClassName="!contents"
           className="!w-[22px] !h-[22px] !min-h-0"
         />
         <span>
-          Add Pexcover for <strong id="pexcover-price">{formatCurrency(price)}</strong>
+          {isEligible ? (
+            <>
+              Add Pexcover covering service for <strong>{formatCurrency(price)}</strong>
+            </>
+          ) : (
+            <span>No coverable books in this pack</span>
+          )}
         </span>
       </label>
-      {selected ? (
+
+      {selected && isEligible ? (
         <div className={styles.formGrid}>
           <Input
             id="pexcover-name"
             label="Learner name for labels"
             autoComplete="off"
             value={pexcoverName}
-            placeholder="Optional"
+            placeholder="e.g. John Doe"
             onChange={(event) => onNameChange(event.target.value)}
           />
           <Select
@@ -76,21 +105,21 @@ export function PexcoverAddOn({
             options={[
               "First Name + Surname",
               "First Name + Initial",
-              "Initials + Surname"
+              "Initials + Surname",
             ]}
           />
           <Input
             id="pexcover-subjects"
-            label="Subject names optional"
+            label="Subject names (optional)"
             value={pexcoverSubjects}
-            placeholder="English, Maths, Life Skills"
+            placeholder="e.g. English, Mathematics, Life Skills"
             onChange={(event) => onSubjectsChange(event.target.value)}
           />
           <Input
             id="pexcover-notes"
-            label="Special notes optional"
+            label="Special covering instructions (optional)"
             value={pexcoverNotes}
-            placeholder="Any covering instructions?"
+            placeholder="e.g. Please use blue labels if available"
             onChange={(event) => onNotesChange(event.target.value)}
           />
         </div>

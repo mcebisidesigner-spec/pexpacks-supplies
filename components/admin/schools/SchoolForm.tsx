@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
 import { WarningBannerModal } from "@/components/admin/ui/WarningBannerModal";
+import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
 // Redundant legacy checkboxes and statuses removed; authoritative constants imported from school-constants
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
@@ -144,6 +145,13 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
     school?.publication_status === "ready_for_review"
       ? "ready_for_review"
       : "published",
+  );
+  const [currentFeature, setCurrentFeature] = useState(
+    (school as { feature_status?: string } | null)?.feature_status ??
+      (school?.is_featured ? "featured" : "unfeatured"),
+  );
+  const [currentCollection, setCurrentCollection] = useState(
+    school?.parent_collection_accepted !== false ? "accepted" : "unaccepted",
   );
   const [showRefusedModal, setShowRefusedModal] = useState(false);
 
@@ -491,16 +499,16 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 <label className={formStyles.sideLabel} htmlFor="publication_status">
                   Publication Status
                 </label>
-                <select
+                <AdminDropdown
                   id="publication_status"
                   name="publication_status"
                   value={currentPublication}
-                  className={formStyles.sideSelect}
-                  onChange={(e) => setCurrentPublication(e.target.value)}
-                >
-                  <option value="published">Published — Live Storefront</option>
-                  <option value="ready_for_review">Ready for Review — Unpublished</option>
-                </select>
+                  onChange={setCurrentPublication}
+                  options={[
+                    { value: "published", label: "Published — Live Storefront" },
+                    { value: "ready_for_review", label: "Ready for Review — Unpublished" },
+                  ]}
+                />
                 {err("publication_status")}
               </div>
 
@@ -508,23 +516,22 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 <label className={formStyles.sideLabel} htmlFor="partnership">
                   Partnership
                 </label>
-                <select
+                <AdminDropdown
                   id="partnership"
                   name="partnership"
                   value={currentPartnership}
-                  className={formStyles.sideSelect}
-                  onChange={(e) => {
-                    const next = e.target.value;
+                  onChange={(next) => {
                     setCurrentPartnership(next);
                     if (next === "refused_partner") {
                       setShowRefusedModal(true);
                     }
                   }}
-                >
-                  <option value="partner">Partner</option>
-                  <option value="non_partner">Non-partner</option>
-                  <option value="refused_partner">Refused Partnership</option>
-                </select>
+                  options={[
+                    { value: "partner", label: "Partner" },
+                    { value: "non_partner", label: "Non-partner" },
+                    { value: "refused_partner", label: "Refused Partnership" },
+                  ]}
+                />
                 {err("partnership")}
               </div>
             </div>
@@ -534,18 +541,16 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 <label className={formStyles.sideLabel} htmlFor="feature_status">
                   Feature Status
                 </label>
-                <select
+                <AdminDropdown
                   id="feature_status"
                   name="feature_status"
-                  defaultValue={
-                    (school as { feature_status?: string } | null)?.feature_status ??
-                    (school?.is_featured ? "featured" : "unfeatured")
-                  }
-                  className={formStyles.sideSelect}
-                >
-                  <option value="featured">Featured</option>
-                  <option value="unfeatured">Unfeatured</option>
-                </select>
+                  value={currentFeature}
+                  onChange={setCurrentFeature}
+                  options={[
+                    { value: "featured", label: "Featured" },
+                    { value: "unfeatured", label: "Unfeatured" },
+                  ]}
+                />
                 {err("feature_status")}
               </div>
 
@@ -556,19 +561,16 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 >
                   Parent Collection Option
                 </label>
-                <select
+                <AdminDropdown
                   id="parent_collection_accepted"
                   name="parent_collection_accepted"
-                  defaultValue={
-                    school?.parent_collection_accepted !== false
-                      ? "accepted"
-                      : "unaccepted"
-                  }
-                  className={formStyles.sideSelect}
-                >
-                  <option value="accepted">Accepted — Bulk Pickup</option>
-                  <option value="unaccepted">Unaccepted</option>
-                </select>
+                  value={currentCollection}
+                  onChange={setCurrentCollection}
+                  options={[
+                    { value: "accepted", label: "Accepted — Bulk Pickup" },
+                    { value: "unaccepted", label: "Unaccepted" },
+                  ]}
+                />
                 {err("parent_collection_accepted")}
               </div>
             </div>

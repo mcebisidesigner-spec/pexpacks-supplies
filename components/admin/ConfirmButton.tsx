@@ -39,7 +39,11 @@ export function ConfirmButton({
   };
 
   const defaultTitle = isDeleteAction ? "Delete Permanently" : "Confirm Action";
-  const defaultConfirmLabel = isDeleteAction ? (label.toLowerCase() === "delete" ? "Delete" : label) : "Confirm";
+  const defaultConfirmLabel = isDeleteAction
+    ? label.toLowerCase() === "delete"
+      ? "Delete"
+      : label
+    : "Confirm";
 
   return (
     <>
@@ -47,7 +51,7 @@ export function ConfirmButton({
         type="button"
         className={className}
         disabled={pending}
-        title={title}
+        data-db-tooltip={title}
         onClick={(e) => {
           e.preventDefault();
           const form = e.currentTarget.closest("form");
@@ -55,7 +59,15 @@ export function ConfirmButton({
           setModalOpen(true);
         }}
       >
-        {pending ? busyLabel : icon ? <>{icon} {label}</> : label}
+        {pending ? (
+          busyLabel
+        ) : icon ? (
+          <>
+            {icon} {label}
+          </>
+        ) : (
+          label
+        )}
       </button>
 
       <ConfirmModal

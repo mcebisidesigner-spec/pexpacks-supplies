@@ -4,7 +4,7 @@ import {
   generateOrderReference,
   getOrderByIdempotencyKey,
 } from "@/lib/orders";
-import { PEXCOVER_PRICE } from "@/lib/constants";
+import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import { getGradeBySlug } from "@/lib/school-utils";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -132,8 +132,13 @@ export async function handleTrayCheckout(input: {
     }
 
     if (pack.packMode === "full") {
-      verifiedTotal +=
-        serverPack.price + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+      const pexcoverResult = calculatePexcoverTotal(serverPack.packItems ?? []);
+      const packPexcoverCost =
+        pack.wantsPexcover && pexcoverResult.hasEligibleBooks
+          ? pexcoverResult.pexcoverTotalRands
+          : 0;
+
+      verifiedTotal += serverPack.price + packPexcoverCost;
       verifiedPacks.push({
         ...pack,
         packId: serverPack.id,
@@ -141,10 +146,14 @@ export async function handleTrayCheckout(input: {
           name: item.name,
           quantity: item.quantity,
           unitPrice: item.unitPrice ?? undefined,
+          requiresPexcover: item.requiresPexcover,
+          pexcoCode: item.pexcoCode,
+          pexcoRateCents: item.pexcoRateCents,
+          pexcoRateActive: item.pexcoRateActive,
         })),
         totalPrice: serverPack.price,
         basePackPrice: serverPack.price,
-        pexcoverPrice: pack.wantsPexcover ? PEXCOVER_PRICE : 0,
+        pexcoverPrice: packPexcoverCost,
       });
     } else {
       const authoritativeItems = new Map(
@@ -169,6 +178,10 @@ export async function handleTrayCheckout(input: {
             name: authoritative.name,
             quantity,
             unitPrice: authoritative.unitPrice ?? 0,
+            requiresPexcover: authoritative.requiresPexcover,
+            pexcoCode: authoritative.pexcoCode,
+            pexcoRateCents: authoritative.pexcoRateCents,
+            pexcoRateActive: authoritative.pexcoRateActive,
           };
         })
         .filter((item) => item.quantity > 0);
@@ -176,14 +189,20 @@ export async function handleTrayCheckout(input: {
         (sum, item) => sum + (item.unitPrice ?? 0) * item.quantity,
         0,
       );
-      verifiedTotal += itemsTotal + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+      const pexcoverResult = calculatePexcoverTotal(selectedItems);
+      const packPexcoverCost =
+        pack.wantsPexcover && pexcoverResult.hasEligibleBooks
+          ? pexcoverResult.pexcoverTotalRands
+          : 0;
+
+      verifiedTotal += itemsTotal + packPexcoverCost;
       verifiedPacks.push({
         ...pack,
         packId: serverPack.id,
         items: selectedItems,
         totalPrice: itemsTotal,
         basePackPrice: itemsTotal,
-        pexcoverPrice: pack.wantsPexcover ? PEXCOVER_PRICE : 0,
+        pexcoverPrice: packPexcoverCost,
       });
     }
   }

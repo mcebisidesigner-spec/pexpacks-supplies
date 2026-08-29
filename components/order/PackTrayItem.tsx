@@ -5,7 +5,7 @@ import clsx from "clsx";
 import type { TrayPackItem } from "@/store/usePackTrayStore";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { PEXCOVER_PRICE } from "@/lib/constants";
+import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import styles from "./GlobalPackTray.module.css";
 
 type PackTrayItemProps = {
@@ -16,6 +16,8 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
   const updatePackDetails = usePackTrayStore((s) => s.updatePackDetails);
   const removePack = usePackTrayStore((s) => s.removePack);
 
+  const pexcoverInfo = calculatePexcoverTotal(pack.items);
+
   const handleLearnerNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       updatePackDetails(pack.id, e.target.value, pack.wantsPexcover || false);
@@ -25,16 +27,21 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
 
   const handlePexcoverToggle = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!pexcoverInfo.hasEligibleBooks) return;
       updatePackDetails(pack.id, pack.learnerName || "", e.target.checked);
     },
-    [pack.id, pack.learnerName, updatePackDetails]
+    [pack.id, pack.learnerName, updatePackDetails, pexcoverInfo.hasEligibleBooks]
   );
 
   const handleRemove = useCallback(() => {
     removePack(pack.id);
   }, [pack.id, removePack]);
 
-  const lineItemTotal = pack.totalPrice + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+  const lineItemTotal =
+    pack.totalPrice +
+    (pack.wantsPexcover && pexcoverInfo.hasEligibleBooks
+      ? pexcoverInfo.pexcoverTotalRands
+      : 0);
 
   return (
     <article className={styles.packCard}>
@@ -81,18 +88,32 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
         </div>
 
         {/* Pexcover Upsell Toggle */}
-        <label className={styles.pexcoverToggleLabel}>
+        <label
+          className={clsx(
+            styles.pexcoverToggleLabel,
+            !pexcoverInfo.hasEligibleBooks && styles.pexcoverDisabled
+          )}
+        >
           <input
             id={`pexcover-${pack.id}`}
             name={`pexcover-${pack.id}`}
             type="checkbox"
-            checked={pack.wantsPexcover || false}
+            checked={(pack.wantsPexcover && pexcoverInfo.hasEligibleBooks) || false}
+            disabled={!pexcoverInfo.hasEligibleBooks}
             className={styles.pexcoverCheckbox}
             onChange={handlePexcoverToggle}
           />
           <div className={styles.pexcoverDetails}>
-            <p className={styles.pexcoverTitle}>Add Pexcover (+{formatCurrency(PEXCOVER_PRICE)})</p>
-            <p className={styles.pexcoverDesc}>We cover books & print name labels</p>
+            <p className={styles.pexcoverTitle}>
+              {pexcoverInfo.hasEligibleBooks
+                ? `Add Pexcover (+${formatCurrency(pexcoverInfo.pexcoverTotalRands)})`
+                : "Pexcover Service (+R0.00)"}
+            </p>
+            <p className={styles.pexcoverDesc}>
+              {pexcoverInfo.hasEligibleBooks
+                ? `Covers ${pexcoverInfo.coverableItemCount} books with durable protective wrap`
+                : "No coverable books in this pack"}
+            </p>
           </div>
         </label>
 

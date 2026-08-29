@@ -31,6 +31,10 @@ type DbPackItem = {
   icon: string | null;
   description: string | null;
   specification: string | null;
+  requires_pexcover?: boolean;
+  pexco_code?: string | null;
+  pexco_rate_cents?: number | null;
+  pexco_rate_active?: boolean;
 };
 
 type DbPack = {
@@ -41,6 +45,10 @@ type DbPack = {
   description: string | null;
   stock: number | null;
   sort_order: number | null;
+  items_cost?: number | null;
+  total_landed_cost?: number | null;
+  margin_rate_used?: number | null;
+  pricing_status?: string | null;
   items: DbPackItem[];
 };
 
@@ -90,6 +98,10 @@ function toGradePacks(packs: DbPack[]): GradePack[] {
         icon: item.icon,
         description: item.description,
         specification: item.specification,
+        requiresPexcover: item.requires_pexcover,
+        pexcoCode: item.pexco_code,
+        pexcoRateCents: item.pexco_rate_cents,
+        pexcoRateActive: item.pexco_rate_active,
       }));
 
       return {
@@ -101,6 +113,10 @@ function toGradePacks(packs: DbPack[]): GradePack[] {
           item.quantity > 1 ? `${item.quantity}x ${item.name}` : item.name,
         ),
         packItems,
+        itemsCost: pack.items_cost,
+        totalLandedCost: pack.total_landed_cost,
+        marginRateUsed: pack.margin_rate_used,
+        pricingStatus: pack.pricing_status,
         deliveryNote:
           pack.description || "Prepared for delivery before school starts.",
         availability: (pack.stock ?? 1) > 0 ? "in-stock" : "pre-order",

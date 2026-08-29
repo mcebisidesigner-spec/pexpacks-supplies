@@ -6,7 +6,7 @@ import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { formatInstalment, happyPayInstalment } from "@/lib/order/happyPay";
-import { PEXCOVER_PRICE } from "@/lib/constants";
+import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
@@ -43,8 +43,12 @@ function isLikelySaPhone(value: string) {
 function getPackTotal(pack: {
   totalPrice: number;
   wantsPexcover?: boolean;
+  items?: Parameters<typeof calculatePexcoverTotal>[0];
 }) {
-  return pack.totalPrice + (pack.wantsPexcover ? PEXCOVER_PRICE : 0);
+  const pexcoverCost = pack.wantsPexcover
+    ? calculatePexcoverTotal(pack.items).pexcoverTotalRands
+    : 0;
+  return pack.totalPrice + pexcoverCost;
 }
 
 export function HappyPayCheckoutClient() {
@@ -212,7 +216,9 @@ export function HappyPayCheckoutClient() {
             totalPrice: pack.totalPrice,
             modifications: pack.modifications,
             wantsPexcover: pack.wantsPexcover || false,
-            pexcoverPrice: pack.wantsPexcover ? PEXCOVER_PRICE : 0,
+            pexcoverPrice: pack.wantsPexcover
+              ? calculatePexcoverTotal(pack.items).pexcoverTotalRands
+              : 0,
             basePackPrice: pack.totalPrice,
           })),
           isTrayOrder: true,

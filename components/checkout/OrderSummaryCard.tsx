@@ -1,4 +1,3 @@
-import { PEXCOVER_PRICE } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { TrustChecklist } from "./TrustChecklist";
 import { WhatsAppHelpBlock } from "./WhatsAppHelpBlock";
@@ -13,6 +12,7 @@ type OrderSummaryCardProps = {
   totalToPay: number;
   fulfilmentOption: string;
   hasPexcover: boolean;
+  pexcoverPrice?: number;
   summaryOpen: boolean;
   whatsAppHref: string;
   deliveryFeePending?: boolean;
@@ -26,6 +26,7 @@ export function OrderSummaryCard({
   totalToPay,
   fulfilmentOption,
   hasPexcover,
+  pexcoverPrice = 0,
   summaryOpen,
   whatsAppHref,
   deliveryFeePending = false,
@@ -54,7 +55,7 @@ export function OrderSummaryCard({
               <dt>
                 Pexcover <span>(Book covering)</span>
               </dt>
-              <dd>{formatCurrency(PEXCOVER_PRICE)}</dd>
+              <dd>{formatCurrency(pexcoverPrice)}</dd>
             </div>
           ) : null}
           <div className={styles.packListRow}>

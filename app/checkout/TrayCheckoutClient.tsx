@@ -6,7 +6,7 @@ import { usePackTrayStore } from '@/store/usePackTrayStore'
 import type { TrayPackItem } from '@/store/usePackTrayStore'
 import { calculateTrayTotal } from '@/lib/order/calculateTrayTotal'
 import { formatCurrency } from '@/lib/formatCurrency'
-import { PEXCOVER_PRICE } from '@/lib/constants'
+import { calculatePexcoverTotal } from '@/lib/pricing/pexcover'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
@@ -91,8 +91,11 @@ function fulfilmentToApiMethod(option: FulfilmentOption) {
   return 'collection_point'
 }
 
-function getPackTotal(pack: TrayPackItem, fee: number = PEXCOVER_PRICE) {
-  return pack.totalPrice + (pack.wantsPexcover ? fee : 0)
+function getPackTotal(pack: TrayPackItem) {
+  const pexcoverCost = pack.wantsPexcover
+    ? calculatePexcoverTotal(pack.items).pexcoverTotalRands
+    : 0;
+  return pack.totalPrice + pexcoverCost;
 }
 
 function getItemLineTotal(item: TrayPackItem['items'][number]) {
@@ -133,13 +136,7 @@ function FulfilmentIcon({ option }: { option: FulfilmentOption }) {
   )
 }
 
-type TrayCheckoutClientProps = {
-  pexcoverPrice?: number
-}
-
-export function TrayCheckoutClient({
-  pexcoverPrice = PEXCOVER_PRICE,
-}: TrayCheckoutClientProps = {}) {
+export function TrayCheckoutClient() {
   const router = useRouter()
   const packs = usePackTrayStore((s) => s.packs)
   const openTray = usePackTrayStore((s) => s.openTray)
@@ -197,11 +194,17 @@ export function TrayCheckoutClient({
 
   const total = useMemo(() => calculateTrayTotal(packs), [packs])
 
-  const pexcoverCount = useMemo(
-    () => packs.filter((p) => p.wantsPexcover).length,
-    [packs],
+  const pexcoverPacks = useMemo(() => packs.filter((p) => p.wantsPexcover), [packs])
+  const pexcoverCount = pexcoverPacks.length
+
+  const pexcoverTotal = useMemo(
+    () =>
+      pexcoverPacks.reduce(
+        (sum, p) => sum + calculatePexcoverTotal(p.items).pexcoverTotalRands,
+        0,
+      ),
+    [pexcoverPacks],
   )
-  const pexcoverTotal = pexcoverCount * pexcoverPrice
   const itemsTotal = total - pexcoverTotal
 
   const uniqueSchools = useMemo(() => {
@@ -508,7 +511,9 @@ export function TrayCheckoutClient({
             totalPrice: pack.totalPrice,
             modifications: pack.modifications,
             wantsPexcover: pack.wantsPexcover || false,
-            pexcoverPrice: pack.wantsPexcover ? pexcoverPrice : 0,
+            pexcoverPrice: pack.wantsPexcover
+              ? calculatePexcoverTotal(pack.items).pexcoverTotalRands
+              : 0,
             basePackPrice: pack.totalPrice,
           })),
           isTrayOrder: true,
@@ -1048,7 +1053,7 @@ export function TrayCheckoutClient({
                         )}
                       </div>
                       <strong className={styles.orderPackPrice}>
-                        {formatCurrency(getPackTotal(pack, pexcoverPrice))}
+                        {formatCurrency(getPackTotal(pack))}
                       </strong>
                     </div>
 
@@ -1111,7 +1116,11 @@ export function TrayCheckoutClient({
                               Pexcover <em>(Book covering)</em>
                             </span>
                             <span />
-                            <strong>{formatCurrency(pexcoverPrice)}</strong>
+                            <strong>
+                              {formatCurrency(
+                                calculatePexcoverTotal(pack.items).pexcoverTotalRands
+                              )}
+                            </strong>
                           </li>
                         ) : null}
                         {hiddenCount > 0 ? (

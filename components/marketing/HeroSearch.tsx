@@ -333,11 +333,9 @@ export function HeroSearch({
                                 ) : null}
                               </div>
                               <div className={styles.heroResultBadges}>
-                                {school.hasOrderablePacks ? (
-                                  <span className={styles.yearPillBadge}>{school.customBadge || DEFAULT_PACKS_BADGE}</span>
-                                ) : (
-                                  <span className={styles.awaitingBadge}>{school.customBadge || "Awaiting Lists"}</span>
-                                )}
+                                <span className={styles.yearPillBadge}>
+                                  {school.customBadge || DEFAULT_PACKS_BADGE}
+                                </span>
                                 {school.isPartner ? (
                                   <span className={styles.partnerBadge}>★ Official Partner ★</span>
                                 ) : null}

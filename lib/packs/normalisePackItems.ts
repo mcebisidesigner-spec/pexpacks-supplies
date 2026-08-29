@@ -169,6 +169,10 @@ export function createSchoolGradePack(
         unitPrice: item.unitPrice ?? undefined,
         specification: item.specification ?? undefined,
         description: item.description ?? undefined,
+        requiresPexcover: item.requiresPexcover,
+        pexcoCode: item.pexcoCode,
+        pexcoRateCents: item.pexcoRateCents,
+        pexcoRateActive: item.pexcoRateActive,
         isRequired: true,
       }))
     : normalisePackItems(grade.contents, grade.id);

@@ -3,13 +3,23 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, Download, ShoppingCart, CheckCircle2, Package, Truck } from "lucide-react";
+import {
+  Eye,
+  Download,
+  ShoppingCart,
+  CheckCircle2,
+  Package,
+  Truck,
+} from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
-import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
+import {
+  QuickMetricsGrid,
+  type QuickMetricItem,
+} from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -65,7 +75,8 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
             {row.buyer_name || "Guest Customer"}
           </Link>
           <span className={styles.productBrand}>
-            {row.school_name || "General Order"} {row.grade ? `• Grade ${row.grade}` : ""}
+            {row.school_name || "General Order"}{" "}
+            {row.grade ? `• Grade ${row.grade}` : ""}
           </span>
         </div>
       ),
@@ -77,7 +88,9 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
       width: "140px",
       render: (row) => (
         <span className={styles.textMuted}>
-          {row.created_at ? new Date(row.created_at).toLocaleDateString("en-ZA") : "—"}
+          {row.created_at
+            ? new Date(row.created_at).toLocaleDateString("en-ZA")
+            : "—"}
         </span>
       ),
     },
@@ -108,11 +121,14 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
       sticky: "right",
       width: "80px",
       render: (row) => (
-        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.actionsCell}
+          onClick={(e) => e.stopPropagation()}
+        >
           <Link
             href={`/admin/orders/${row.id}`}
             className={styles.actionEditBtn}
-            title={`View order ${row.order_reference}`}
+            data-db-tooltip={`View order ${row.order_reference}`}
           >
             <Eye size={14} />
           </Link>
@@ -121,9 +137,15 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
     },
   ];
 
-  const paidCount = initialData.orders.filter((o) => Boolean(o.paid_at) || o.status === "paid").length;
-  const packingCount = initialData.orders.filter((o) => o.status === "packing" || o.status === "ready_to_pack").length;
-  const completedCount = initialData.orders.filter((o) => o.status === "completed" || o.status === "dispatched").length;
+  const paidCount = initialData.orders.filter(
+    (o) => Boolean(o.paid_at) || o.status === "paid",
+  ).length;
+  const packingCount = initialData.orders.filter(
+    (o) => o.status === "packing" || o.status === "ready_to_pack",
+  ).length;
+  const completedCount = initialData.orders.filter(
+    (o) => o.status === "completed" || o.status === "dispatched",
+  ).length;
 
   const metrics: QuickMetricItem[] = [
     {

@@ -28,7 +28,7 @@ export function DuplicateButton({ id, title }: { id: string; title: string }) {
       onClick={handleClick}
       disabled={busy}
       className={styles.button}
-      title={`Duplicate ${title}`}
+      data-db-tooltip={`Duplicate ${title}`}
     >
       {busy ? "Duplicating…" : "Duplicate"}
     </button>

@@ -68,7 +68,7 @@ export function ItemsManager({ items }: ItemsManagerProps) {
                           <button
                             type="submit"
                             className={styles.iconBtnRed}
-                            title="Delete Item"
+                            data-db-tooltip="Delete Item"
                           >
                             <Trash2 size={14} />
                           </button>

@@ -323,47 +323,156 @@ export function SettingsControlCentre({
           {activeCategory === "pricing" && (
             <div className={styles.panelCard}>
               <div className={styles.panelHeader}>
-                <h2>Pricing Strategy & Margin Controls</h2>
-                <p>Configure pricing calculation rules, target margins, warning floors, & PexCover price</p>
+                <h2>Pricing Strategy &amp; Margin Controls</h2>
+                <p>Configure pricing calculation rules, target margins, warning floors &amp; pack-level cost add-ons</p>
               </div>
+
+              {/* ── Automated Pricing Warning ─────────────────── */}
+              <div className={styles.recalcWarning}>
+                <span className={styles.recalcWarningIcon}>⚡</span>
+                <div>
+                  <strong>Automated Pricing Engine Active</strong>
+                  <p>
+                    Changing <em>Target Gross Margin %</em>, <em>Packaging Cost</em>, <em>Assembly Cost</em>, or <em>Freight Cost</em> will automatically
+                    trigger a full recalculation of every Grade Pack&apos;s selling price in the database. This happens instantly via database triggers.
+                  </p>
+                </div>
+              </div>
+
               <div className={styles.formGrid}>
+                {/* Target Margin */}
                 <div className={styles.field}>
                   <label className={styles.label}>Target Gross Margin %</label>
                   <input
                     type="number"
                     step="0.1"
+                    min="0"
+                    max="99"
                     className={styles.input}
-                    defaultValue={Number(settingsState["pricing.target_margin_pct"]?.value ?? 32.0)}
+                    defaultValue={Number(settingsState["pricing.target_margin_pct"]?.value ?? 49.9)}
                     onBlur={(e) => handleSettingSave("pricing.target_margin_pct", parseFloat(e.target.value))}
                   />
-                  <span className={styles.hint}>Applied to cost prices when calculating suggested selling prices.</span>
+                  <span className={styles.hint}>
+                    Applied to total landed cost: <code>Selling Price = Landed Cost ÷ (1 − Margin)</code>. Target: <strong>49.9%</strong>.
+                  </span>
                 </div>
+
+                {/* Low Margin Alert */}
                 <div className={styles.field}>
                   <label className={styles.label}>Low Margin Alert %</label>
                   <input
                     type="number"
                     step="0.1"
+                    min="0"
+                    max="99"
                     className={styles.input}
-                    defaultValue={Number(settingsState["pricing.low_margin_warning_pct"]?.value ?? 20.0)}
+                    defaultValue={Number(settingsState["pricing.low_margin_warning_pct"]?.value ?? 35.0)}
                     onBlur={(e) => handleSettingSave("pricing.low_margin_warning_pct", parseFloat(e.target.value))}
                   />
-                  <span className={styles.hint}>Items with margins below this trigger amber dashboard alerts.</span>
+                  <span className={styles.hint}>Packs with achieved margin below this floor are flagged with a ⚠️ Low Margin badge.</span>
                 </div>
+
+                {/* Packaging Cost */}
                 <div className={styles.field}>
-                  <label className={styles.label}>PexCover Insurance Price (R)</label>
+                  <label className={styles.label}>Packaging Cost per Pack (R)</label>
                   <input
                     type="number"
-                    step="1"
+                    step="0.01"
+                    min="0"
                     className={styles.input}
-                    defaultValue={Number(settingsState["pricing.pexcover_price"]?.value ?? 350.0)}
-                    onBlur={(e) => handleSettingSave("pricing.pexcover_price", parseFloat(e.target.value))}
+                    defaultValue={Number(settingsState["pricing.packaging_cost"]?.value ?? 0)}
+                    onBlur={(e) => handleSettingSave("pricing.packaging_cost", parseFloat(e.target.value))}
                   />
-                  <span className={styles.hint}>Standalone item price for PexCover protection at checkout.</span>
+                  <span className={styles.hint}>Added to every Grade Pack&apos;s landed cost before margin is applied.</span>
+                </div>
+
+                {/* Assembly Cost */}
+                <div className={styles.field}>
+                  <label className={styles.label}>Assembly Cost per Pack (R)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    className={styles.input}
+                    defaultValue={Number(settingsState["pricing.assembly_cost"]?.value ?? 0)}
+                    onBlur={(e) => handleSettingSave("pricing.assembly_cost", parseFloat(e.target.value))}
+                  />
+                  <span className={styles.hint}>Labour / assembly fee per Grade Pack included in landed cost.</span>
+                </div>
+
+                {/* Freight Cost */}
+                <div className={styles.field}>
+                  <label className={styles.label}>Freight / Delivery Cost per Pack (R)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    className={styles.input}
+                    defaultValue={Number(settingsState["pricing.freight_cost"]?.value ?? 0)}
+                    onBlur={(e) => handleSettingSave("pricing.freight_cost", parseFloat(e.target.value))}
+                  />
+                  <span className={styles.hint}>Inbound logistics / freight allocated per pack in the landed cost model.</span>
                 </div>
               </div>
+
+              {/* ── Pricing Precedence ────────────────────────── */}
               <div className={styles.precedenceBox}>
                 <h4>Pricing Precedence Hierarchy</h4>
                 <p>Global Target Rule &rarr; Category Rule &rarr; Brand Rule &rarr; Product Rule &rarr; Manual Grade Pack Price Override</p>
+              </div>
+
+              {/* ── Pexcover™ Rates Manager ───────────────────── */}
+              <div className={styles.pexcoverRatesPanel}>
+                <div className={styles.pexcoverRatesHeader}>
+                  <span>📚</span>
+                  <div>
+                    <strong>Pexcover™ Dynamic Covering Rates</strong>
+                    <p>
+                      These rates are stored in the <code>pexco_rates</code> database table and drive dynamic Pexcover pricing at checkout.
+                      Each stationery product classified with a PEXCO code will use the corresponding rate per book per unit.
+                      To update rates, edit the <code>pexco_rates</code> table directly via Supabase or a future admin UI here.
+                    </p>
+                  </div>
+                </div>
+                <table className={styles.pexcoverRatesTable}>
+                  <thead>
+                    <tr>
+                      <th>Code</th>
+                      <th>Description</th>
+                      <th>Covering Rate</th>
+                      <th>Cost Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>PEXCO01</code></td>
+                      <td>Small book / exercise book</td>
+                      <td><strong>R8.00</strong></td>
+                      <td>R4.00</td>
+                    </tr>
+                    <tr>
+                      <td><code>PEXCO02</code></td>
+                      <td>Large / hard-cover book</td>
+                      <td><strong>R14.00</strong></td>
+                      <td>R7.00</td>
+                    </tr>
+                    <tr>
+                      <td><code>PEXCO03</code></td>
+                      <td>Medium exercise book</td>
+                      <td><strong>R11.00</strong></td>
+                      <td>R5.50</td>
+                    </tr>
+                    <tr>
+                      <td><code>PEXCO04</code></td>
+                      <td>Extra-large atlas / art book</td>
+                      <td><strong>R18.00</strong></td>
+                      <td>R9.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <span className={styles.pexcoverRatesNote}>
+                  ℹ️ Rates above are live from the database seed. Pexcover totals at checkout are always recalculated server-side from authoritative <code>pexco_rates</code> data — never from client-submitted values.
+                </span>
               </div>
             </div>
           )}

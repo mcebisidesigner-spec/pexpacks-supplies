@@ -341,7 +341,7 @@ export function SchoolPackCreateForm({
                           type="button"
                           className={itemStyles.iconBtnRed}
                           onClick={() => removeLine(line.id)}
-                          title="Delete Item"
+                          data-db-tooltip="Delete Item"
                         >
                           <Trash2 size={14} />
                         </button>

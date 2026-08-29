@@ -22,7 +22,10 @@ export function ReorderPanel({
   onReorder: (id: string, direction: "up" | "down") => Promise<void>;
 }) {
   const [isPending, startTransition] = useTransition();
-  const [moving, setMoving] = useState<{ id: string; direction: "up" | "down" } | null>(null);
+  const [moving, setMoving] = useState<{
+    id: string;
+    direction: "up" | "down";
+  } | null>(null);
 
   function handleReorder(id: string, direction: "up" | "down") {
     if (moving) return;
@@ -61,12 +64,17 @@ export function ReorderPanel({
               <li key={item.id} className={styles.item}>
                 <span className={styles.position}>{index + 1}</span>
                 <div className={styles.itemMeta}>
-                  <span className={styles.itemLabel} title={item.label}>
+                  <span
+                    className={styles.itemLabel}
+                    data-db-tooltip={item.label}
+                  >
                     {item.label}
                   </span>
                   <span
                     className={`${styles.visibility} ${
-                      item.visible ? styles.visibilityLive : styles.visibilityHidden
+                      item.visible
+                        ? styles.visibilityLive
+                        : styles.visibilityHidden
                     }`}
                   >
                     {item.visible ? "Live" : "Hidden"}
@@ -94,7 +102,9 @@ export function ReorderPanel({
                     <ChevronDown size={16} />
                   </button>
                 </div>
-                {isBusy ? <span className={styles.busy} aria-live="polite" /> : null}
+                {isBusy ? (
+                  <span className={styles.busy} aria-live="polite" />
+                ) : null}
               </li>
             );
           })}

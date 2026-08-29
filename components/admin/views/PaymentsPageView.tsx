@@ -10,7 +10,10 @@ import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
-import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
+import {
+  QuickMetricsGrid,
+  type QuickMetricItem,
+} from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -34,7 +37,12 @@ function formatMoney(value: number | null | undefined): string {
 }
 
 function paymentRef(row: OrderRow): string {
-  return row.gateway_reference || row.payment_reference || row.order_reference || row.id;
+  return (
+    row.gateway_reference ||
+    row.payment_reference ||
+    row.order_reference ||
+    row.id
+  );
 }
 
 function providerLabel(value: string | null | undefined): string {
@@ -53,7 +61,9 @@ export function PaymentsPageView({ initialData }: PaymentsPageViewProps) {
       header: "PAYMENT REF",
       sortable: true,
       width: "180px",
-      render: (row) => <span className={styles.skuBadge}>{paymentRef(row)}</span>,
+      render: (row) => (
+        <span className={styles.skuBadge}>{paymentRef(row)}</span>
+      ),
     },
     {
       key: "order_reference",
@@ -74,14 +84,22 @@ export function PaymentsPageView({ initialData }: PaymentsPageViewProps) {
       header: "GATEWAY",
       sortable: true,
       width: "130px",
-      render: (row) => <span className={styles.textMuted}>{providerLabel(row.payment_gateway)}</span>,
+      render: (row) => (
+        <span className={styles.textMuted}>
+          {providerLabel(row.payment_gateway)}
+        </span>
+      ),
     },
     {
       key: "created_at",
       header: "DATE",
       sortable: true,
       width: "130px",
-      render: (row) => <span className={styles.textMuted}>{formatDate(row.paid_at || row.created_at)}</span>,
+      render: (row) => (
+        <span className={styles.textMuted}>
+          {formatDate(row.paid_at || row.created_at)}
+        </span>
+      ),
     },
     {
       key: "estimated_total",
@@ -89,7 +107,11 @@ export function PaymentsPageView({ initialData }: PaymentsPageViewProps) {
       sortable: true,
       align: "right",
       width: "140px",
-      render: (row) => <span className={styles.priceHighlight}>{formatMoney(row.estimated_total)}</span>,
+      render: (row) => (
+        <span className={styles.priceHighlight}>
+          {formatMoney(row.estimated_total)}
+        </span>
+      ),
     },
     {
       key: "status",
@@ -97,7 +119,9 @@ export function PaymentsPageView({ initialData }: PaymentsPageViewProps) {
       sortable: true,
       align: "center",
       width: "150px",
-      render: (row) => <StatusBadge status={row.status || "pending_payment"} showDot />,
+      render: (row) => (
+        <StatusBadge status={row.status || "pending_payment"} showDot />
+      ),
     },
     {
       key: "actions",
@@ -106,11 +130,14 @@ export function PaymentsPageView({ initialData }: PaymentsPageViewProps) {
       sticky: "right",
       width: "80px",
       render: (row) => (
-        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.actionsCell}
+          onClick={(e) => e.stopPropagation()}
+        >
           <Link
             href={`/admin/payments/${row.order_reference || row.id}`}
             className={styles.actionEditBtn}
-            title={`View payment for ${row.order_reference || row.id}`}
+            data-db-tooltip={`View payment for ${row.order_reference || row.id}`}
           >
             <Eye size={14} />
           </Link>
@@ -119,8 +146,12 @@ export function PaymentsPageView({ initialData }: PaymentsPageViewProps) {
     },
   ];
 
-  const pendingCount = initialData.payments.filter((p) => ["pending", "pending_payment"].includes(p.status || "")).length;
-  const failedCount = initialData.payments.filter((p) => p.status === "payment_failed").length;
+  const pendingCount = initialData.payments.filter((p) =>
+    ["pending", "pending_payment"].includes(p.status || ""),
+  ).length;
+  const failedCount = initialData.payments.filter(
+    (p) => p.status === "payment_failed",
+  ).length;
 
   const metrics: QuickMetricItem[] = [
     {
@@ -164,7 +195,11 @@ export function PaymentsPageView({ initialData }: PaymentsPageViewProps) {
         count={initialData.total}
         subtitle="Gateway transaction reconciliation and automated payment audit logs."
         actions={
-          <AdminButton href="/admin/payments/export" variant="secondary" icon={<Download size={14} />}>
+          <AdminButton
+            href="/admin/payments/export"
+            variant="secondary"
+            icon={<Download size={14} />}
+          >
             Export Ledger
           </AdminButton>
         }
@@ -196,7 +231,9 @@ export function PaymentsPageView({ initialData }: PaymentsPageViewProps) {
         data={initialData.payments}
         columns={columns}
         keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/payments/${row.order_reference || row.id}`)}
+        onRowClick={(row) =>
+          router.push(`/admin/payments/${row.order_reference || row.id}`)
+        }
         emptyTitle="No payments found"
         emptySubtitle="Try adjusting your search criteria."
         footer={

@@ -4,6 +4,7 @@ import "@/styles/db-tokens.css";
 import { requireAdmin, displayName } from "@/lib/admin/rbac";
 import { filterNav } from "@/lib/admin/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { DbTooltipHost } from "@/components/admin/ui/DbTooltip";
 import { SessionSecurityProvider } from "@/components/security/SessionSecurityProvider";
 import { MustChangePasswordModal } from "@/components/security/MustChangePasswordModal";
 
@@ -43,6 +44,7 @@ export default async function AdminLayout({
       >
         {children}
       </AdminShell>
+      <DbTooltipHost />
     </SessionSecurityProvider>
   );
 }

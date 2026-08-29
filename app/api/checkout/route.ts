@@ -5,7 +5,7 @@ import {
   generateOrderReference,
   getOrderByIdempotencyKey,
 } from "@/lib/orders";
-import { PEXCOVER_PRICE } from "@/lib/constants";
+import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import { getGradeBySlug } from "@/lib/school-utils";
 import {
   isSameOriginRequest,
@@ -40,6 +40,7 @@ async function resolveTrustedPack(input: {
         quantity: item.quantity,
         unitPrice: item.unitPrice ?? undefined,
       })),
+      packItems: schoolGrade.packItems ?? [],
     };
   }
 
@@ -199,11 +200,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const pexcoverAmount = data.pexcoverSelected ? PEXCOVER_PRICE : 0;
+    const pexcoverResult = calculatePexcoverTotal(trustedPack.packItems);
+    const pexcoverAmount =
+      data.pexcoverSelected && pexcoverResult.hasEligibleBooks
+        ? pexcoverResult.pexcoverTotalRands
+        : 0;
     const trustedTotal = trustedPack.price + pexcoverAmount;
-    const trustedItems = data.pexcoverSelected
-      ? [...trustedPack.items, `Pexcover book covering - ${PEXCOVER_PRICE}`]
-      : trustedPack.items;
+    const trustedItems =
+      data.pexcoverSelected && pexcoverResult.hasEligibleBooks
+        ? [
+            ...trustedPack.items,
+            `Pexcover book covering - R ${pexcoverAmount.toFixed(2)} (${pexcoverResult.coverableItemCount} books)`,
+          ]
+        : trustedPack.items;
 
     const orderReference = generateOrderReference();
     const idempotencyKey =

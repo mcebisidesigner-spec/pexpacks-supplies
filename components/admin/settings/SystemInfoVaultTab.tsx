@@ -3,7 +3,6 @@
 import { useState, useMemo, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
-  
   Lock,
   KeyRound,
   Eye,
@@ -43,7 +42,7 @@ export function SystemInfoVaultTab({
 }: SystemInfoVaultTabProps) {
   const router = useRouter();
   const [credentials, setCredentials] = useState<SystemVaultCredential[]>(
-    initialVaultCredentials
+    initialVaultCredentials,
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -75,7 +74,7 @@ export function SystemInfoVaultTab({
         c.productName.toLowerCase().includes(q) ||
         c.username.toLowerCase().includes(q) ||
         c.category.toLowerCase().includes(q) ||
-        (c.additionalInfo || "").toLowerCase().includes(q)
+        (c.additionalInfo || "").toLowerCase().includes(q),
     );
   }, [credentials, searchQuery]);
 
@@ -120,7 +119,10 @@ export function SystemInfoVaultTab({
     setFeedback(null);
 
     if (!productName.trim()) {
-      setFeedback({ type: "error", text: "Product / Service name is required." });
+      setFeedback({
+        type: "error",
+        text: "Product / Service name is required.",
+      });
       return;
     }
     if (!username.trim()) {
@@ -128,7 +130,10 @@ export function SystemInfoVaultTab({
       return;
     }
     if (!password.trim()) {
-      setFeedback({ type: "error", text: "Password / Secret token is required." });
+      setFeedback({
+        type: "error",
+        text: "Password / Secret token is required.",
+      });
       return;
     }
 
@@ -160,7 +165,11 @@ export function SystemInfoVaultTab({
   }
 
   function handleDelete(id: string, name: string) {
-    if (!confirm(`Are you sure you want to permanently delete the vault credential for "${name}"?`)) {
+    if (
+      !confirm(
+        `Are you sure you want to permanently delete the vault credential for "${name}"?`,
+      )
+    ) {
       return;
     }
     setFeedback(null);
@@ -189,7 +198,8 @@ export function SystemInfoVaultTab({
       {/* Security & Shield Banner */}
       <div
         style={{
-          background: "linear-gradient(135deg, rgba(168, 85, 247, 0.12) 0%, rgba(9, 14, 23, 0.95) 100%)",
+          background:
+            "linear-gradient(135deg, rgba(168, 85, 247, 0.12) 0%, rgba(9, 14, 23, 0.95) 100%)",
           border: "1px solid rgba(168, 85, 247, 0.35)",
           borderRadius: "14px",
           padding: "24px 28px",
@@ -200,7 +210,14 @@ export function SystemInfoVaultTab({
         }}
       >
         <div style={{ maxWidth: "680px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              marginBottom: "8px",
+            }}
+          >
             <div
               style={{
                 width: "32px",
@@ -215,7 +232,14 @@ export function SystemInfoVaultTab({
             >
               <Lock size={18} />
             </div>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+            <h2
+              style={{
+                fontSize: "1.25rem",
+                fontWeight: 700,
+                color: "#ffffff",
+                margin: 0,
+              }}
+            >
               Secure System &amp; Database Vault
             </h2>
             <span
@@ -233,9 +257,18 @@ export function SystemInfoVaultTab({
               Superuser Gated
             </span>
           </div>
-          <p style={{ fontSize: "0.875rem", color: "#94a3b8", lineHeight: 1.6, margin: 0 }}>
-            Encrypted vault designated for safely storing and referencing sensitive credentials, database keys,
-            and operational parameters. Records are strictly accessible to authorized Superusers and masked by default.
+          <p
+            style={{
+              fontSize: "0.875rem",
+              color: "#94a3b8",
+              lineHeight: 1.6,
+              margin: 0,
+            }}
+          >
+            Encrypted vault designated for safely storing and referencing
+            sensitive credentials, database keys, and operational parameters.
+            Records are strictly accessible to authorized Superusers and masked
+            by default.
           </p>
         </div>
 
@@ -249,10 +282,24 @@ export function SystemInfoVaultTab({
               textAlign: "center",
             }}
           >
-            <div style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", textTransform: "uppercase" }}>
+            <div
+              style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                color: "#64748b",
+                textTransform: "uppercase",
+              }}
+            >
               Vault Records
             </div>
-            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#c084fc", marginTop: "2px" }}>
+            <div
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: 800,
+                color: "#c084fc",
+                marginTop: "2px",
+              }}
+            >
               {credentials.length}
             </div>
           </div>
@@ -297,7 +344,9 @@ export function SystemInfoVaultTab({
             <KeyRound size={20} style={{ color: "#38bdf8" }} />
             <div>
               <h2 style={{ margin: 0 }}>
-                {editingId ? "Edit Vault Credential Record" : "Input New System Credential"}
+                {editingId
+                  ? "Edit Vault Credential Record"
+                  : "Input New System Credential"}
               </h2>
               <p style={{ margin: "2px 0 0" }}>
                 {editingId
@@ -308,12 +357,16 @@ export function SystemInfoVaultTab({
           </div>
         </div>
 
-        <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+        <form
+          onSubmit={handleSave}
+          style={{ display: "flex", flexDirection: "column", gap: "18px" }}
+        >
           <div className={styles.formGrid}>
             {/* Product Name */}
             <div className={styles.field}>
               <label className={styles.label}>
-                Product / Service / Provider Name <span style={{ color: "#ef4444" }}>*</span>
+                Product / Service / Provider Name{" "}
+                <span style={{ color: "#ef4444" }}>*</span>
               </label>
               <input
                 type="text"
@@ -324,7 +377,9 @@ export function SystemInfoVaultTab({
                 maxLength={120}
                 required
               />
-              <span className={styles.hint}>Target system, database cluster, or external SaaS service.</span>
+              <span className={styles.hint}>
+                Target system, database cluster, or external SaaS service.
+              </span>
             </div>
 
             {/* Category */}
@@ -341,13 +396,16 @@ export function SystemInfoVaultTab({
                   </option>
                 ))}
               </select>
-              <span className={styles.hint}>Grouping for organized referencing and filtering.</span>
+              <span className={styles.hint}>
+                Grouping for organized referencing and filtering.
+              </span>
             </div>
 
             {/* Username / Account */}
             <div className={styles.field}>
               <label className={styles.label}>
-                Username / Client ID / Account Key <span style={{ color: "#ef4444" }}>*</span>
+                Username / Client ID / Account Key{" "}
+                <span style={{ color: "#ef4444" }}>*</span>
               </label>
               <input
                 type="text"
@@ -358,13 +416,16 @@ export function SystemInfoVaultTab({
                 maxLength={120}
                 required
               />
-              <span className={styles.hint}>Authorized principal or service account login username.</span>
+              <span className={styles.hint}>
+                Authorized principal or service account login username.
+              </span>
             </div>
 
             {/* Password / Secret */}
             <div className={styles.field}>
               <label className={styles.label}>
-                Password / Secret Token / Private Key <span style={{ color: "#ef4444" }}>*</span>
+                Password / Secret Token / Private Key{" "}
+                <span style={{ color: "#ef4444" }}>*</span>
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -393,18 +454,28 @@ export function SystemInfoVaultTab({
                     display: "flex",
                     alignItems: "center",
                   }}
-                  title={formPasswordVisible ? "Hide password" : "Show password"}
+                  data-db-tooltip={
+                    formPasswordVisible ? "Hide password" : "Show password"
+                  }
                 >
-                  {formPasswordVisible ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {formPasswordVisible ? (
+                    <EyeOff size={16} />
+                  ) : (
+                    <Eye size={16} />
+                  )}
                 </button>
               </div>
-              <span className={styles.hint}>Stored with encryption; masked on display.</span>
+              <span className={styles.hint}>
+                Stored with encryption; masked on display.
+              </span>
             </div>
           </div>
 
           {/* Additional Relevant Information */}
           <div className={styles.field}>
-            <label className={styles.label}>Additional Relevant Information &amp; Operational Notes</label>
+            <label className={styles.label}>
+              Additional Relevant Information &amp; Operational Notes
+            </label>
             <textarea
               className={styles.textarea}
               rows={3}
@@ -414,12 +485,21 @@ export function SystemInfoVaultTab({
               maxLength={1000}
             />
             <span className={styles.hint}>
-              Include connection URIs, port numbers, regional endpoints, or backup procedures.
+              Include connection URIs, port numbers, regional endpoints, or
+              backup procedures.
             </span>
           </div>
 
           {/* Form Actions */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "12px", marginTop: "8px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              gap: "12px",
+              marginTop: "8px",
+            }}
+          >
             {editingId && (
               <button
                 type="button"
@@ -450,7 +530,8 @@ export function SystemInfoVaultTab({
                 </>
               ) : (
                 <>
-                  <CheckCircle2 size={15} /> {editingId ? "Update Vault Record" : "Save Credential Record"}
+                  <CheckCircle2 size={15} />{" "}
+                  {editingId ? "Update Vault Record" : "Save Credential Record"}
                 </>
               )}
             </button>
@@ -470,15 +551,31 @@ export function SystemInfoVaultTab({
           }}
         >
           <div>
-            <h3 style={{ fontSize: "1.125rem", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+            <h3
+              style={{
+                fontSize: "1.125rem",
+                fontWeight: 700,
+                color: "#ffffff",
+                margin: 0,
+              }}
+            >
               Structured Stored Credentials
             </h3>
-            <p style={{ fontSize: "0.8125rem", color: "#64748b", margin: "2px 0 0" }}>
-              Encrypted credentials stored in the DB. Click reveal to view passwords or copy directly.
+            <p
+              style={{
+                fontSize: "0.8125rem",
+                color: "#64748b",
+                margin: "2px 0 0",
+              }}
+            >
+              Encrypted credentials stored in the DB. Click reveal to view
+              passwords or copy directly.
             </p>
           </div>
 
-          <div style={{ position: "relative", width: "100%", maxWidth: "340px" }}>
+          <div
+            style={{ position: "relative", width: "100%", maxWidth: "340px" }}
+          >
             <Search
               size={15}
               style={{
@@ -511,7 +608,13 @@ export function SystemInfoVaultTab({
         </div>
 
         {filteredCredentials.length > 0 ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: "16px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))",
+              gap: "16px",
+            }}
+          >
             {filteredCredentials.map((cred) => {
               const isRevealed = revealedIds.has(cred.id);
               const isCopied = copiedId === cred.id;
@@ -531,10 +634,30 @@ export function SystemInfoVaultTab({
                   }}
                 >
                   {/* Card Header */}
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      gap: "12px",
+                    }}
+                  >
                     <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <h4 style={{ fontSize: "1rem", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <h4
+                          style={{
+                            fontSize: "1rem",
+                            fontWeight: 700,
+                            color: "#ffffff",
+                            margin: 0,
+                          }}
+                        >
                           {cred.productName}
                         </h4>
                       </div>
@@ -572,7 +695,7 @@ export function SystemInfoVaultTab({
                           gap: "4px",
                           fontSize: "11px",
                         }}
-                        title="Edit credential"
+                        data-db-tooltip="Edit credential"
                       >
                         <Edit2 size={12} /> Edit
                       </button>
@@ -591,7 +714,7 @@ export function SystemInfoVaultTab({
                           gap: "4px",
                           fontSize: "11px",
                         }}
-                        title="Delete credential"
+                        data-db-tooltip="Delete credential"
                       >
                         <Trash2 size={12} />
                       </button>
@@ -599,39 +722,98 @@ export function SystemInfoVaultTab({
                   </div>
 
                   {/* Details Grid */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", backgroundColor: "#060a10", padding: "12px", borderRadius: "8px", border: "1px solid rgba(30, 41, 59, 0.8)" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "10px",
+                      backgroundColor: "#060a10",
+                      padding: "12px",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(30, 41, 59, 0.8)",
+                    }}
+                  >
                     {/* Username */}
                     <div>
-                      <div style={{ fontSize: "11px", color: "#64748b", fontWeight: 600, textTransform: "uppercase" }}>
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          color: "#64748b",
+                          fontWeight: 600,
+                          textTransform: "uppercase",
+                        }}
+                      >
                         Username / Account ID
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2px" }}>
-                        <code style={{ fontSize: "12px", color: "#38bdf8", wordBreak: "break-all" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          marginTop: "2px",
+                        }}
+                      >
+                        <code
+                          style={{
+                            fontSize: "12px",
+                            color: "#38bdf8",
+                            wordBreak: "break-all",
+                          }}
+                        >
                           {cred.username}
                         </code>
                         <button
                           type="button"
-                          onClick={() => handleCopy(cred.username, `${cred.id}-user`)}
+                          onClick={() =>
+                            handleCopy(cred.username, `${cred.id}-user`)
+                          }
                           style={{
                             background: "transparent",
                             border: "none",
-                            color: copiedId === `${cred.id}-user` ? "#34d399" : "#64748b",
+                            color:
+                              copiedId === `${cred.id}-user`
+                                ? "#34d399"
+                                : "#64748b",
                             cursor: "pointer",
                             padding: "2px 6px",
                           }}
-                          title="Copy username"
+                          data-db-tooltip="Copy username"
                         >
-                          {copiedId === `${cred.id}-user` ? <Check size={13} /> : <Copy size={13} />}
+                          {copiedId === `${cred.id}-user` ? (
+                            <Check size={13} />
+                          ) : (
+                            <Copy size={13} />
+                          )}
                         </button>
                       </div>
                     </div>
 
                     {/* Password / Secret */}
-                    <div style={{ borderTop: "1px solid rgba(30, 41, 59, 0.6)", paddingTop: "8px" }}>
-                      <div style={{ fontSize: "11px", color: "#64748b", fontWeight: 600, textTransform: "uppercase" }}>
+                    <div
+                      style={{
+                        borderTop: "1px solid rgba(30, 41, 59, 0.6)",
+                        paddingTop: "8px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          color: "#64748b",
+                          fontWeight: 600,
+                          textTransform: "uppercase",
+                        }}
+                      >
                         Password / Secret Token
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", marginTop: "2px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "8px",
+                          marginTop: "2px",
+                        }}
+                      >
                         <code
                           style={{
                             fontSize: "12px",
@@ -643,7 +825,14 @@ export function SystemInfoVaultTab({
                           {isRevealed ? cred.password : "••••••••••••••••"}
                         </code>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: "4px", flexShrink: 0 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            flexShrink: 0,
+                          }}
+                        >
                           <button
                             type="button"
                             onClick={() => toggleReveal(cred.id)}
@@ -657,16 +846,22 @@ export function SystemInfoVaultTab({
                               display: "flex",
                               alignItems: "center",
                             }}
-                            title={isRevealed ? "Hide" : "Reveal"}
+                            data-db-tooltip={isRevealed ? "Hide" : "Reveal"}
                           >
-                            {isRevealed ? <EyeOff size={13} /> : <Eye size={13} />}
+                            {isRevealed ? (
+                              <EyeOff size={13} />
+                            ) : (
+                              <Eye size={13} />
+                            )}
                           </button>
 
                           <button
                             type="button"
                             onClick={() => handleCopy(cred.password, cred.id)}
                             style={{
-                              background: isCopied ? "rgba(16, 185, 129, 0.2)" : "rgba(51, 65, 85, 0.5)",
+                              background: isCopied
+                                ? "rgba(16, 185, 129, 0.2)"
+                                : "rgba(51, 65, 85, 0.5)",
                               border: "none",
                               borderRadius: "4px",
                               color: isCopied ? "#34d399" : "#94a3b8",
@@ -675,9 +870,13 @@ export function SystemInfoVaultTab({
                               display: "flex",
                               alignItems: "center",
                             }}
-                            title="Copy password"
+                            data-db-tooltip="Copy password"
                           >
-                            {isCopied ? <Check size={13} /> : <Copy size={13} />}
+                            {isCopied ? (
+                              <Check size={13} />
+                            ) : (
+                              <Copy size={13} />
+                            )}
                           </button>
                         </div>
                       </div>
@@ -685,11 +884,30 @@ export function SystemInfoVaultTab({
 
                     {/* Additional Notes */}
                     {cred.additionalInfo && (
-                      <div style={{ borderTop: "1px solid rgba(30, 41, 59, 0.6)", paddingTop: "8px" }}>
-                        <div style={{ fontSize: "11px", color: "#64748b", fontWeight: 600, textTransform: "uppercase" }}>
+                      <div
+                        style={{
+                          borderTop: "1px solid rgba(30, 41, 59, 0.6)",
+                          paddingTop: "8px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: "11px",
+                            color: "#64748b",
+                            fontWeight: 600,
+                            textTransform: "uppercase",
+                          }}
+                        >
                           Additional Info &amp; Notes
                         </div>
-                        <div style={{ fontSize: "12px", color: "#cbd5e1", marginTop: "2px", whiteSpace: "pre-wrap" }}>
+                        <div
+                          style={{
+                            fontSize: "12px",
+                            color: "#cbd5e1",
+                            marginTop: "2px",
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
                           {cred.additionalInfo}
                         </div>
                       </div>
@@ -697,8 +915,19 @@ export function SystemInfoVaultTab({
                   </div>
 
                   {/* Card Footer */}
-                  <div style={{ fontSize: "11px", color: "#64748b", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span>Updated: {new Date(cred.updatedAt).toLocaleDateString("en-ZA")}</span>
+                  <div
+                    style={{
+                      fontSize: "11px",
+                      color: "#64748b",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span>
+                      Updated:{" "}
+                      {new Date(cred.updatedAt).toLocaleDateString("en-ZA")}
+                    </span>
                     <span>By: {cred.updatedBy}</span>
                   </div>
                 </div>
@@ -716,12 +945,24 @@ export function SystemInfoVaultTab({
               color: "#64748b",
             }}
           >
-            <KeyRound size={32} style={{ margin: "0 auto 12px", color: "#475569" }} />
-            <div style={{ fontSize: "0.9375rem", fontWeight: 600, color: "#94a3b8" }}>
-              {searchQuery ? "No matching credentials found." : "No credentials stored in the vault yet."}
+            <KeyRound
+              size={32}
+              style={{ margin: "0 auto 12px", color: "#475569" }}
+            />
+            <div
+              style={{
+                fontSize: "0.9375rem",
+                fontWeight: 600,
+                color: "#94a3b8",
+              }}
+            >
+              {searchQuery
+                ? "No matching credentials found."
+                : "No credentials stored in the vault yet."}
             </div>
             <p style={{ fontSize: "0.8125rem", margin: "4px 0 0" }}>
-              Use the form above to add your first database or service credential.
+              Use the form above to add your first database or service
+              credential.
             </p>
           </div>
         )}
@@ -736,27 +977,41 @@ export function SystemInfoVaultTab({
         <table className={styles.table}>
           <tbody>
             <tr>
-              <td><strong>Application Environment</strong></td>
+              <td>
+                <strong>Application Environment</strong>
+              </td>
               <td>Production (Live Operations)</td>
             </tr>
             <tr>
-              <td><strong>Hosting Platform</strong></td>
+              <td>
+                <strong>Hosting Platform</strong>
+              </td>
               <td>Vercel Edge Network</td>
             </tr>
             <tr>
-              <td><strong>Database Provider</strong></td>
+              <td>
+                <strong>Database Provider</strong>
+              </td>
               <td>Supabase Postgres (Region: eu-west-1 / Ireland)</td>
             </tr>
             <tr>
-              <td><strong>Email Provider</strong></td>
+              <td>
+                <strong>Email Provider</strong>
+              </td>
               <td>Resend Transactional API</td>
             </tr>
             <tr>
-              <td><strong>Database Security Policy</strong></td>
-              <td>Row Level Security (RLS) &amp; Superuser AES Vault Activated</td>
+              <td>
+                <strong>Database Security Policy</strong>
+              </td>
+              <td>
+                Row Level Security (RLS) &amp; Superuser AES Vault Activated
+              </td>
             </tr>
             <tr>
-              <td><strong>Migration Version</strong></td>
+              <td>
+                <strong>Migration Version</strong>
+              </td>
               <td>00032_system_settings_control_centre.sql</td>
             </tr>
           </tbody>

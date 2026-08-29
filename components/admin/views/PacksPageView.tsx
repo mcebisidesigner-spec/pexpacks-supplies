@@ -8,7 +8,10 @@ import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
-import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
+import {
+  QuickMetricsGrid,
+  type QuickMetricItem,
+} from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -16,7 +19,10 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
-import type { SchoolGroupedResult, SchoolGroupedSummary } from "@/lib/admin/packs";
+import type {
+  SchoolGroupedResult,
+  SchoolGroupedSummary,
+} from "@/lib/admin/packs";
 
 interface PacksPageViewProps {
   initialData?: SchoolGroupedResult;
@@ -81,7 +87,8 @@ export function PacksPageView({ initialData }: PacksPageViewProps) {
       sortable: true,
       render: (row) => (
         <span className={styles.textMuted}>
-          {row.grade_packs_count} {row.grade_packs_count === 1 ? "pack" : "packs"}
+          {row.grade_packs_count}{" "}
+          {row.grade_packs_count === 1 ? "pack" : "packs"}
           {row.pack_items_count !== undefined && row.pack_items_count > 0
             ? ` • ${row.pack_items_count} items`
             : ""}
@@ -126,7 +133,7 @@ export function PacksPageView({ initialData }: PacksPageViewProps) {
             <Link
               href={`/admin/packs/${slug}`}
               className={styles.actionEditBtn}
-              title={`View packs for ${row.school_name}`}
+              data-db-tooltip={`View packs for ${row.school_name}`}
               aria-label={`View packs for ${row.school_name}`}
             >
               <Eye size={14} />

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -28,6 +28,7 @@ import {
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
 import type { SchoolListResult, SchoolRow } from "@/lib/admin/schools";
+import { SchoolOverviewModal } from "@/components/admin/schools/SchoolOverviewModal";
 
 interface SchoolsPageViewProps {
   initialData?: SchoolListResult;
@@ -53,6 +54,7 @@ function getSchoolSlug(school: {
 export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
   const router = useRouter();
   const { params, setParams, isPending } = useTableParams();
+  const [overviewSchool, setOverviewSchool] = useState<SchoolRow | null>(null);
 
   const data = initialData || {
     schools: [],
@@ -147,14 +149,15 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
           className={styles.actionsCell}
           onClick={(e) => e.stopPropagation()}
         >
-          <Link
-            href={`/admin/schools/${getSchoolSlug(row)}`}
+          <button
+            type="button"
             className={styles.actionEditBtn}
-            title={`View ${row.name}`}
+            data-db-tooltip={`View ${row.name}`}
             aria-label={`View ${row.name}`}
+            onClick={() => setOverviewSchool(row)}
           >
             <Eye size={14} />
-          </Link>
+          </button>
         </div>
       ),
     },
@@ -261,6 +264,11 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
             currentPage={data.page}
           />
         }
+      />
+
+      <SchoolOverviewModal
+        school={overviewSchool}
+        onClose={() => setOverviewSchool(null)}
       />
     </div>
   );

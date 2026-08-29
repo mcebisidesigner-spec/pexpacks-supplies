@@ -52,7 +52,12 @@ export function ItemForm({
     ok: false,
   });
   const [icon, setIcon] = useState<string>(() => {
-    if (item?.icon && isPackItemIconKey(item.icon) && item.icon !== "box" && item.icon !== "package") {
+    if (
+      item?.icon &&
+      isPackItemIconKey(item.icon) &&
+      item.icon !== "box" &&
+      item.icon !== "package"
+    ) {
       return item.icon;
     }
     if (item?.name) {
@@ -63,11 +68,20 @@ export function ItemForm({
   });
 
   const [productName, setProductName] = useState<string>(item?.name ?? "");
-  const [category, setCategory] = useState<string>(item?.category ?? "Stationery");
+  const [category, setCategory] = useState<string>(
+    item?.category ?? "Stationery",
+  );
   const [sku, setSku] = useState<string>(
-    item?.sku ?? (item?.name ? generateSkuFromName(item.name, item.category) : "")
+    item?.sku ??
+      (item?.name ? generateSkuFromName(item.name, item.category) : ""),
   );
   const [isCustomSku, setIsCustomSku] = useState<boolean>(Boolean(item?.sku));
+  const [requiresPexcover, setRequiresPexcover] = useState<boolean>(
+    item?.requires_pexcover ?? false,
+  );
+  const [pexcoCode, setPexcoCode] = useState<string>(
+    item?.pexco_code ?? "",
+  );
 
   useEffect(() => {
     if (state?.ok) {
@@ -112,7 +126,9 @@ export function ItemForm({
           style={{ marginBottom: "16px", borderRadius: "8px", width: "100%" }}
           role="status"
         >
-          &#x2713; {state.message || `Product "${item?.name || "Item"}" updated successfully.`}
+          &#x2713;{" "}
+          {state.message ||
+            `Product "${item?.name || "Item"}" updated successfully.`}
         </div>
       ) : state?.message ? (
         <div
@@ -131,7 +147,11 @@ export function ItemForm({
 
       <input type="hidden" name="sort_order" value={item?.sort_order ?? 0} />
       <input type="hidden" name="icon" value={icon} />
-      <input type="hidden" name="pack_id" value={item?.pack_id ?? packs[0]?.id ?? ""} />
+      <input
+        type="hidden"
+        name="pack_id"
+        value={item?.pack_id ?? packs[0]?.id ?? ""}
+      />
 
       <div className={styles.card}>
         <div className={styles.cardHeader}>
@@ -155,7 +175,11 @@ export function ItemForm({
               <button
                 type="button"
                 onClick={handleRegenerateSku}
-                title={isCustomSku ? "Custom SKU (Click to Auto-sync)" : "Auto-synced (Click to Refresh)"}
+                data-db-tooltip={
+                  isCustomSku
+                    ? "Custom SKU (Click to Auto-sync)"
+                    : "Auto-synced (Click to Refresh)"
+                }
                 className={`${styles.skuButtonAdornment} ${isCustomSku ? styles.skuButtonLocked : ""}`}
               >
                 {isCustomSku ? <RotateCw size={11} /> : <Sparkles size={11} />}
@@ -238,6 +262,50 @@ export function ItemForm({
           </div>
         </div>
 
+        {/* Row 6: Pexcover Classification */}
+        <div className={styles.pexcoverSection}>
+          <div className={styles.pexcoverHeader}>
+            <span className={styles.pexcoverLabel}>📚 Pexcover™ Book-Covering Classification</span>
+            <span className={styles.pexcoverHint}>Enable if this product is a book or exercise book that requires covering. The PEXCO code determines the covering rate billed at checkout.</span>
+          </div>
+          <div className={styles.pexcoverRow}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                name="requires_pexcover"
+                checked={requiresPexcover}
+                onChange={(e) => {
+                  setRequiresPexcover(e.target.checked);
+                  if (!e.target.checked) setPexcoCode("");
+                }}
+                className={adminStyles.checkbox}
+              />
+              Requires Pexcover™ covering
+            </label>
+            {requiresPexcover && (
+              <div className={styles.pexcoSelect}>
+                <input type="hidden" name="pexco_code" value={pexcoCode} />
+                <select
+                  id="pexco_code_select"
+                  className={styles.select}
+                  value={pexcoCode}
+                  onChange={(e) => setPexcoCode(e.target.value)}
+                  aria-label="PEXCO classification code"
+                >
+                  <option value="">— Select PEXCO Code —</option>
+                  <option value="PEXCO01">PEXCO01 — Small book (R8.00)</option>
+                  <option value="PEXCO02">PEXCO02 — Large/hard-cover book (R14.00)</option>
+                  <option value="PEXCO03">PEXCO03 — Medium exercise book (R11.00)</option>
+                  <option value="PEXCO04">PEXCO04 — Extra-large atlas / art book (R18.00)</option>
+                </select>
+                {state?.errors?.pexco_code && (
+                  <span className={styles.fieldError}>{state.errors.pexco_code}</span>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Icon Picker Section */}
         <div className={styles.iconSection}>
           <div className={styles.iconHeaderRow}>
@@ -248,11 +316,17 @@ export function ItemForm({
                 <span>Selected: {icon}</span>
               </div>
             ) : (
-              <span className={styles.hint}>No icon selected (auto fallback used)</span>
+              <span className={styles.hint}>
+                No icon selected (auto fallback used)
+              </span>
             )}
           </div>
 
-          <div className={styles.iconGrid} role="group" aria-label="Pick an icon">
+          <div
+            className={styles.iconGrid}
+            role="group"
+            aria-label="Pick an icon"
+          >
             {PACK_ITEM_ICONS.map((option) => (
               <button
                 key={option.key}
@@ -261,7 +335,7 @@ export function ItemForm({
                   icon === option.key ? styles.iconOptionActive : ""
                 }`}
                 onClick={() => setIcon(icon === option.key ? "" : option.key)}
-                title={option.label}
+                data-db-tooltip={option.label}
                 aria-pressed={icon === option.key}
               >
                 <ItemIcon name={option.key} size={20} />
@@ -269,7 +343,8 @@ export function ItemForm({
             ))}
           </div>
           <span className={styles.hint}>
-            Optional item emblem displayed alongside the product on school pack checkouts.
+            Optional item emblem displayed alongside the product on school pack
+            checkouts.
           </span>
         </div>
 

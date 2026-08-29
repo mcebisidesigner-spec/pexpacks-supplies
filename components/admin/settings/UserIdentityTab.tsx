@@ -88,7 +88,7 @@ export function UserIdentityTab({
     setActiveRoleSlugs((prev) =>
       prev.includes(roleSlug)
         ? prev.filter((s) => s !== roleSlug)
-        : [...prev, roleSlug]
+        : [...prev, roleSlug],
     );
   }
 
@@ -99,7 +99,7 @@ export function UserIdentityTab({
     startTransition(async () => {
       const res = await updateUserRolesFromSettingsAction(
         selectedUser.id,
-        activeRoleSlugs
+        activeRoleSlugs,
       );
       if (res.ok) {
         setFeedback({
@@ -166,7 +166,8 @@ export function UserIdentityTab({
       {/* Header Banner */}
       <div
         style={{
-          background: "linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(9, 14, 23, 0.95) 100%)",
+          background:
+            "linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(9, 14, 23, 0.95) 100%)",
           border: "1px solid rgba(56, 189, 248, 0.25)",
           borderRadius: "14px",
           padding: "24px 28px",
@@ -177,7 +178,14 @@ export function UserIdentityTab({
         }}
       >
         <div style={{ maxWidth: "640px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              marginBottom: "8px",
+            }}
+          >
             <div
               style={{
                 width: "32px",
@@ -192,13 +200,28 @@ export function UserIdentityTab({
             >
               <Users size={18} />
             </div>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+            <h2
+              style={{
+                fontSize: "1.25rem",
+                fontWeight: 700,
+                color: "#ffffff",
+                margin: 0,
+              }}
+            >
               User Identity &amp; Role Matrix
             </h2>
           </div>
-          <p style={{ fontSize: "0.875rem", color: "#94a3b8", lineHeight: 1.6, margin: 0 }}>
-            Comprehensive directory of all system users. Click on any user to inspect their active
-            identity profile, review assigned roles, and toggle permissions on or off directly in this interface.
+          <p
+            style={{
+              fontSize: "0.875rem",
+              color: "#94a3b8",
+              lineHeight: 1.6,
+              margin: 0,
+            }}
+          >
+            Comprehensive directory of all system users. Click on any user to
+            inspect their active identity profile, review assigned roles, and
+            toggle permissions on or off directly in this interface.
           </p>
         </div>
 
@@ -212,10 +235,24 @@ export function UserIdentityTab({
               textAlign: "center",
             }}
           >
-            <div style={{ fontSize: "11px", fontWeight: 600, color: "#64748b", textTransform: "uppercase" }}>
+            <div
+              style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                color: "#64748b",
+                textTransform: "uppercase",
+              }}
+            >
               Total Users
             </div>
-            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#38bdf8", marginTop: "2px" }}>
+            <div
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: 800,
+                color: "#38bdf8",
+                marginTop: "2px",
+              }}
+            >
               {users.length}
             </div>
           </div>
@@ -264,7 +301,8 @@ export function UserIdentityTab({
         </div>
 
         <div style={{ fontSize: "0.8125rem", color: "#64748b" }}>
-          Showing <strong>{filteredUsers.length}</strong> of <strong>{users.length}</strong> users
+          Showing <strong>{filteredUsers.length}</strong> of{" "}
+          <strong>{users.length}</strong> users
         </div>
       </div>
 
@@ -295,7 +333,8 @@ export function UserIdentityTab({
                     user.email === "pexpacks@gmail.com";
                   const isSelf =
                     Boolean(currentUserEmail) &&
-                    user.email?.toLowerCase() === currentUserEmail?.toLowerCase();
+                    user.email?.toLowerCase() ===
+                      currentUserEmail?.toLowerCase();
                   const canDelete =
                     !isPrimarySuper && !isSelf && (!isSuper || isSuperUser);
 
@@ -306,15 +345,25 @@ export function UserIdentityTab({
                       style={{ cursor: "pointer" }}
                     >
                       <td>
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "12px",
+                          }}
+                        >
                           <div
                             style={{
                               width: "36px",
                               height: "36px",
                               borderRadius: "50%",
-                              backgroundColor: isSuper ? "rgba(168, 85, 247, 0.2)" : "rgba(16, 185, 129, 0.2)",
+                              backgroundColor: isSuper
+                                ? "rgba(168, 85, 247, 0.2)"
+                                : "rgba(16, 185, 129, 0.2)",
                               color: isSuper ? "#c084fc" : "#34d399",
-                              border: isSuper ? "1px solid rgba(168, 85, 247, 0.4)" : "1px solid rgba(16, 185, 129, 0.4)",
+                              border: isSuper
+                                ? "1px solid rgba(168, 85, 247, 0.4)"
+                                : "1px solid rgba(16, 185, 129, 0.4)",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -325,7 +374,13 @@ export function UserIdentityTab({
                             {initials}
                           </div>
                           <div>
-                            <div style={{ fontWeight: 700, color: "#ffffff", fontSize: "0.875rem" }}>
+                            <div
+                              style={{
+                                fontWeight: 700,
+                                color: "#ffffff",
+                                fontSize: "0.875rem",
+                              }}
+                            >
                               {name}
                             </div>
                             <div style={{ fontSize: "11px", color: "#64748b" }}>
@@ -340,10 +395,18 @@ export function UserIdentityTab({
                       </td>
 
                       <td>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "6px",
+                          }}
+                        >
                           {user.roleSlugs.length > 0 ? (
                             user.roleSlugs.map((slug) => {
-                              const roleObj = roles.find((r) => r.slug === slug);
+                              const roleObj = roles.find(
+                                (r) => r.slug === slug,
+                              );
                               const isSuperRole = slug === "super_admin";
                               return (
                                 <span
@@ -356,8 +419,12 @@ export function UserIdentityTab({
                                     borderRadius: "6px",
                                     fontSize: "11px",
                                     fontWeight: 600,
-                                    backgroundColor: isSuperRole ? "rgba(168, 85, 247, 0.15)" : "rgba(16, 185, 129, 0.15)",
-                                    border: isSuperRole ? "1px solid rgba(168, 85, 247, 0.3)" : "1px solid rgba(16, 185, 129, 0.3)",
+                                    backgroundColor: isSuperRole
+                                      ? "rgba(168, 85, 247, 0.15)"
+                                      : "rgba(16, 185, 129, 0.15)",
+                                    border: isSuperRole
+                                      ? "1px solid rgba(168, 85, 247, 0.3)"
+                                      : "1px solid rgba(16, 185, 129, 0.3)",
                                     color: isSuperRole ? "#c084fc" : "#34d399",
                                   }}
                                 >
@@ -367,7 +434,11 @@ export function UserIdentityTab({
                               );
                             })
                           ) : (
-                            <span style={{ fontSize: "11px", color: "#64748b" }}>No roles assigned</span>
+                            <span
+                              style={{ fontSize: "11px", color: "#64748b" }}
+                            >
+                              No roles assigned
+                            </span>
                           )}
                         </div>
                       </td>
@@ -392,12 +463,21 @@ export function UserIdentityTab({
 
                       <td style={{ color: "#94a3b8", fontSize: "0.8125rem" }}>
                         {user.created_at
-                          ? new Date(user.created_at).toLocaleDateString("en-ZA")
+                          ? new Date(user.created_at).toLocaleDateString(
+                              "en-ZA",
+                            )
                           : "—"}
                       </td>
 
                       <td style={{ textAlign: "right" }}>
-                        <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: "8px" }}>
+                        <div
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "flex-end",
+                            gap: "8px",
+                          }}
+                        >
                           {isPrimarySuper ? (
                             <span
                               style={{
@@ -412,7 +492,7 @@ export function UserIdentityTab({
                                 border: "1px solid rgba(168, 85, 247, 0.4)",
                                 color: "#e9d5ff",
                               }}
-                              title="Permanent Primary Superuser Account (Locked)"
+                              data-db-tooltip="Permanent Primary Superuser Account (Locked)"
                             >
                               🔒 Permanent
                             </span>
@@ -436,7 +516,11 @@ export function UserIdentityTab({
                                 fontWeight: 600,
                                 cursor: "pointer",
                               }}
-                              title={isSuper ? "Delete Superuser Account" : "Delete User Account"}
+                              data-db-tooltip={
+                                isSuper
+                                  ? "Delete Superuser Account"
+                                  : "Delete User Account"
+                              }
                             >
                               <Trash2 size={12} /> Delete
                             </button>
@@ -448,7 +532,14 @@ export function UserIdentityTab({
                 })
               ) : (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: "center", padding: "32px", color: "#64748b" }}>
+                  <td
+                    colSpan={6}
+                    style={{
+                      textAlign: "center",
+                      padding: "32px",
+                      color: "#64748b",
+                    }}
+                  >
                     No users matching your search filter.
                   </td>
                 </tr>
@@ -503,7 +594,9 @@ export function UserIdentityTab({
                 gap: "16px",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "16px" }}
+              >
                 <div
                   style={{
                     width: "48px",
@@ -522,11 +615,23 @@ export function UserIdentityTab({
                   {getInitials(getUserName(selectedUser))}
                 </div>
                 <div>
-                  <h3 style={{ fontSize: "1.125rem", fontWeight: 800, color: "#ffffff", margin: "0 0 2px" }}>
+                  <h3
+                    style={{
+                      fontSize: "1.125rem",
+                      fontWeight: 800,
+                      color: "#ffffff",
+                      margin: "0 0 2px",
+                    }}
+                  >
                     {getUserName(selectedUser)}
                   </h3>
                   <div style={{ fontSize: "0.8125rem", color: "#94a3b8" }}>
-                    {selectedUser.email} &bull; Joined: {selectedUser.created_at ? new Date(selectedUser.created_at).toLocaleDateString("en-ZA") : "—"}
+                    {selectedUser.email} &bull; Joined:{" "}
+                    {selectedUser.created_at
+                      ? new Date(selectedUser.created_at).toLocaleDateString(
+                          "en-ZA",
+                        )
+                      : "—"}
                   </div>
                 </div>
               </div>
@@ -579,20 +684,44 @@ export function UserIdentityTab({
             )}
 
             {/* Modal Body: Role Matrix */}
-            <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div
+              style={{
+                padding: "24px 28px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+              }}
+            >
               <div>
-                <div style={{ fontSize: "0.875rem", fontWeight: 700, color: "#ffffff", marginBottom: "4px" }}>
+                <div
+                  style={{
+                    fontSize: "0.875rem",
+                    fontWeight: 700,
+                    color: "#ffffff",
+                    marginBottom: "4px",
+                  }}
+                >
                   Role Access Matrix
                 </div>
-                <p style={{ fontSize: "0.8125rem", color: "#64748b", margin: 0 }}>
-                  Toggle roles ON (checked) or OFF (unchecked) to customize this user's administrative capabilities.
+                <p
+                  style={{ fontSize: "0.8125rem", color: "#64748b", margin: 0 }}
+                >
+                  Toggle roles ON (checked) or OFF (unchecked) to customize this
+                  user's administrative capabilities.
                 </p>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
                 {visibleRoles.map((role) => {
                   const isChecked = activeRoleSlugs.includes(role.slug);
-                  const isSuperRole = role.slug === "super_admin" || role.slug === "superuser";
+                  const isSuperRole =
+                    role.slug === "super_admin" || role.slug === "superuser";
 
                   return (
                     <div
@@ -606,15 +735,15 @@ export function UserIdentityTab({
                             ? "rgba(168, 85, 247, 0.12)"
                             : "rgba(16, 185, 129, 0.08)"
                           : isSuperRole
-                          ? "rgba(168, 85, 247, 0.04)"
-                          : "#0c1322",
+                            ? "rgba(168, 85, 247, 0.04)"
+                            : "#0c1322",
                         border: isChecked
                           ? isSuperRole
                             ? "1px solid rgba(168, 85, 247, 0.6)"
                             : "1px solid rgba(16, 185, 129, 0.4)"
                           : isSuperRole
-                          ? "1px solid rgba(168, 85, 247, 0.3)"
-                          : "1px solid rgba(51, 65, 85, 0.5)",
+                            ? "1px solid rgba(168, 85, 247, 0.3)"
+                            : "1px solid rgba(51, 65, 85, 0.5)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -622,11 +751,38 @@ export function UserIdentityTab({
                         transition: "all 0.15s ease",
                       }}
                     >
-                      <div style={{ display: "flex", flexDirection: "column", gap: "4px", maxWidth: "480px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                          {isSuperRole && <Shield size={14} style={{ color: "#c084fc" }} />}
-                          <span style={{ fontSize: "0.875rem", fontWeight: 700, color: isChecked ? (isSuperRole ? "#e9d5ff" : "#ffffff") : "#cbd5e1" }}>
-                            {isSuperRole ? "Superuser (Full DB Governance)" : role.name}
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "4px",
+                          maxWidth: "480px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          {isSuperRole && (
+                            <Shield size={14} style={{ color: "#c084fc" }} />
+                          )}
+                          <span
+                            style={{
+                              fontSize: "0.875rem",
+                              fontWeight: 700,
+                              color: isChecked
+                                ? isSuperRole
+                                  ? "#e9d5ff"
+                                  : "#ffffff"
+                                : "#cbd5e1",
+                            }}
+                          >
+                            {isSuperRole
+                              ? "Superuser (Full DB Governance)"
+                              : role.name}
                           </span>
                           {isSuperRole && (
                             <span
@@ -666,10 +822,17 @@ export function UserIdentityTab({
                             {isChecked ? "Toggled ON" : "Toggled OFF"}
                           </span>
                         </div>
-                        <span style={{ fontSize: "0.75rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                        <span
+                          style={{
+                            fontSize: "0.75rem",
+                            color: "#94a3b8",
+                            lineHeight: 1.4,
+                          }}
+                        >
                           {isSuperRole
                             ? "Full unrestricted access across all modules in the DB. Max 2 accounts permitted."
-                            : role.description || "Grants specific module and action privileges in the DB."}
+                            : role.description ||
+                              "Grants specific module and action privileges in the DB."}
                         </span>
                       </div>
 
@@ -680,7 +843,9 @@ export function UserIdentityTab({
                           height: "24px",
                           borderRadius: "12px",
                           backgroundColor: isChecked ? "#10b981" : "#1e293b",
-                          border: isChecked ? "1px solid #10b981" : "1px solid #475569",
+                          border: isChecked
+                            ? "1px solid #10b981"
+                            : "1px solid #475569",
                           position: "relative",
                           transition: "all 0.2s ease",
                           flexShrink: 0,
@@ -702,9 +867,17 @@ export function UserIdentityTab({
                           }}
                         >
                           {isChecked ? (
-                            <Check size={10} style={{ color: "#10b981" }} strokeWidth={3} />
+                            <Check
+                              size={10}
+                              style={{ color: "#10b981" }}
+                              strokeWidth={3}
+                            />
                           ) : (
-                            <X size={10} style={{ color: "#94a3b8" }} strokeWidth={3} />
+                            <X
+                              size={10}
+                              style={{ color: "#94a3b8" }}
+                              strokeWidth={3}
+                            />
                           )}
                         </div>
                       </div>
@@ -728,7 +901,9 @@ export function UserIdentityTab({
                 flexWrap: "wrap",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <button
                   type="button"
                   onClick={() => setSelectedUser(null)}
@@ -753,7 +928,8 @@ export function UserIdentityTab({
                     selectedUser.email === "pexpacks@gmail.com";
                   const selectedIsSelf =
                     Boolean(currentUserEmail) &&
-                    selectedUser.email?.toLowerCase() === currentUserEmail?.toLowerCase();
+                    selectedUser.email?.toLowerCase() ===
+                      currentUserEmail?.toLowerCase();
                   const canDeleteSelected =
                     !selectedIsSelf && (!selectedIsSuper || isSuperUser);
 
@@ -774,9 +950,14 @@ export function UserIdentityTab({
                         alignItems: "center",
                         gap: "6px",
                       }}
-                      title={selectedIsSuper ? "Delete Superuser Account" : "Delete User Account"}
+                      data-db-tooltip={
+                        selectedIsSuper
+                          ? "Delete Superuser Account"
+                          : "Delete User Account"
+                      }
                     >
-                      <Trash2 size={13} /> {selectedIsSuper ? "Delete Superuser" : "Delete User"}
+                      <Trash2 size={13} />{" "}
+                      {selectedIsSuper ? "Delete Superuser" : "Delete User"}
                     </button>
                   ) : null;
                 })()}
@@ -798,12 +979,15 @@ export function UserIdentityTab({
                   fontSize: "0.8125rem",
                   fontWeight: 700,
                   cursor: isPending ? "not-allowed" : "pointer",
-                  boxShadow: isPending ? "none" : "0 4px 12px rgba(16, 185, 129, 0.3)",
+                  boxShadow: isPending
+                    ? "none"
+                    : "0 4px 12px rgba(16, 185, 129, 0.3)",
                 }}
               >
                 {isPending ? (
                   <>
-                    <RefreshCw size={14} className="animate-spin" /> Saving Changes...
+                    <RefreshCw size={14} className="animate-spin" /> Saving
+                    Changes...
                   </>
                 ) : (
                   <>
@@ -848,7 +1032,8 @@ export function UserIdentityTab({
             <div
               style={{
                 padding: "20px 24px",
-                background: "linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(9, 14, 23, 0.95) 100%)",
+                background:
+                  "linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(9, 14, 23, 0.95) 100%)",
                 borderBottom: "1px solid rgba(51, 65, 85, 0.5)",
                 display: "flex",
                 alignItems: "center",
@@ -871,7 +1056,14 @@ export function UserIdentityTab({
                 <AlertTriangle size={20} />
               </div>
               <div>
-                <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#ffffff", margin: "0 0 2px" }}>
+                <h3
+                  style={{
+                    fontSize: "1rem",
+                    fontWeight: 700,
+                    color: "#ffffff",
+                    margin: "0 0 2px",
+                  }}
+                >
                   Delete User Account
                 </h3>
                 <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
@@ -901,16 +1093,41 @@ export function UserIdentityTab({
                 </div>
               )}
 
-              <p style={{ fontSize: "0.875rem", color: "#cbd5e1", lineHeight: 1.5, margin: "0 0 12px" }}>
+              <p
+                style={{
+                  fontSize: "0.875rem",
+                  color: "#cbd5e1",
+                  lineHeight: 1.5,
+                  margin: "0 0 12px",
+                }}
+              >
                 Are you sure you want to permanently delete{" "}
-                <strong style={{ color: "#ffffff" }}>{getUserName(userToDelete)}</strong> (
-                <span style={{ color: "#38bdf8" }}>{userToDelete.email}</span>)?
+                <strong style={{ color: "#ffffff" }}>
+                  {getUserName(userToDelete)}
+                </strong>{" "}
+                (<span style={{ color: "#38bdf8" }}>{userToDelete.email}</span>
+                )?
               </p>
-              <p style={{ fontSize: "0.8125rem", color: "#94a3b8", lineHeight: 1.4, margin: "0 0 20px" }}>
-                This will immediately remove their account from Supabase Auth and revoke all role permissions. This action cannot be undone.
+              <p
+                style={{
+                  fontSize: "0.8125rem",
+                  color: "#94a3b8",
+                  lineHeight: 1.4,
+                  margin: "0 0 20px",
+                }}
+              >
+                This will immediately remove their account from Supabase Auth
+                and revoke all role permissions. This action cannot be undone.
               </p>
 
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: "10px",
+                }}
+              >
                 <button
                   type="button"
                   onClick={() => setUserToDelete(null)}
@@ -950,7 +1167,8 @@ export function UserIdentityTab({
                 >
                   {isDeleting ? (
                     <>
-                      <RefreshCw size={13} className="animate-spin" /> Deleting...
+                      <RefreshCw size={13} className="animate-spin" />{" "}
+                      Deleting...
                     </>
                   ) : (
                     <>

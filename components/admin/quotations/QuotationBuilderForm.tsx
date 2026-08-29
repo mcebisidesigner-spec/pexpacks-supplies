@@ -160,8 +160,11 @@ export function QuotationBuilderForm({
   // Modals state
   const [showPackImportModal, setShowPackImportModal] = useState(false);
   const [packModalSchools] = useState<SchoolOption[]>(initialSchools);
-  const [packModalSelectedSchool, setPackModalSelectedSchool] = useState<string>("");
-  const [packModalPacks, setPackModalPacks] = useState<Array<{ id: string; title: string; price: number }>>([]);
+  const [packModalSelectedSchool, setPackModalSelectedSchool] =
+    useState<string>("");
+  const [packModalPacks, setPackModalPacks] = useState<
+    Array<{ id: string; title: string; price: number }>
+  >([]);
   const [packModalLoadingPacks, setPackModalLoadingPacks] = useState(false);
   const [packModalImporting, setPackModalImporting] = useState(false);
 
@@ -177,12 +180,14 @@ export function QuotationBuilderForm({
   }, [schoolSearch]);
 
   const shouldFetchSchools = debouncedSchoolQuery.length >= 3;
-  const { data: searchedSchools, isValidating: isSearchingSchools } = useSWR<SchoolOption[]>(
+  const { data: searchedSchools, isValidating: isSearchingSchools } = useSWR<
+    SchoolOption[]
+  >(
     shouldFetchSchools
       ? `/api/admin/schools/search?q=${encodeURIComponent(debouncedSchoolQuery)}`
       : null,
     fetcher,
-    { keepPreviousData: true }
+    { keepPreviousData: true },
   );
 
   const matchingSchools = Array.isArray(searchedSchools) ? searchedSchools : [];
@@ -234,12 +239,14 @@ export function QuotationBuilderForm({
   }, [itemSearchQuery]);
 
   const shouldFetchItems = debouncedItemQuery.length >= 2;
-  const { data: searchResults, isValidating: isSearchingItems } = useSWR<StationerySearchResult[]>(
+  const { data: searchResults, isValidating: isSearchingItems } = useSWR<
+    StationerySearchResult[]
+  >(
     shouldFetchItems
       ? `/api/stationery/search?q=${encodeURIComponent(debouncedItemQuery)}`
       : null,
     fetcher,
-    { keepPreviousData: true }
+    { keepPreviousData: true },
   );
 
   const matchingItems = Array.isArray(searchResults) ? searchResults : [];
@@ -276,15 +283,18 @@ export function QuotationBuilderForm({
               availability: item.availability ?? null,
               margin_percent: item.margin_percent ?? null,
             }
-          : row
-      )
+          : row,
+      ),
     );
     setActiveItemRowId(null);
     setItemSearchQuery("");
   }
 
   function handleAddItem() {
-    setLineItems((prev) => [...prev, createEmptyLineItem(`item-${Date.now()}`)]);
+    setLineItems((prev) => [
+      ...prev,
+      createEmptyLineItem(`item-${Date.now()}`),
+    ]);
   }
 
   function handleRemoveItem(rowId: string) {
@@ -298,7 +308,7 @@ export function QuotationBuilderForm({
   function handleUpdateItem(
     rowId: string,
     field: keyof FormLineItem,
-    value: string | number
+    value: string | number,
   ) {
     setLineItems((prev) =>
       prev.map((item) => {
@@ -319,7 +329,7 @@ export function QuotationBuilderForm({
           };
         }
         return { ...item, [field]: value };
-      })
+      }),
     );
   }
 
@@ -354,7 +364,9 @@ export function QuotationBuilderForm({
       }));
 
       setLineItems((prev) => {
-        const existingValid = prev.filter((it) => it.item_title.trim().length > 0);
+        const existingValid = prev.filter(
+          (it) => it.item_title.trim().length > 0,
+        );
         return [...existingValid, ...newItems];
       });
 
@@ -370,10 +382,16 @@ export function QuotationBuilderForm({
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      if (i === 0 && line.toLowerCase().includes("item") && line.toLowerCase().includes("price")) {
+      if (
+        i === 0 &&
+        line.toLowerCase().includes("item") &&
+        line.toLowerCase().includes("price")
+      ) {
         continue;
       }
-      const parts = line.split(",").map((s) => s.trim().replace(/^["']|["']$/g, ""));
+      const parts = line
+        .split(",")
+        .map((s) => s.trim().replace(/^["']|["']$/g, ""));
       if (parts.length >= 1 && parts[0]) {
         const title = parts[0];
         const qty = parseInt(parts[1], 10) || 1;
@@ -399,7 +417,9 @@ export function QuotationBuilderForm({
 
     if (imported.length > 0) {
       setLineItems((prev) => {
-        const existingValid = prev.filter((it) => it.item_title.trim().length > 0);
+        const existingValid = prev.filter(
+          (it) => it.item_title.trim().length > 0,
+        );
         return [...existingValid, ...imported];
       });
       setCsvText("");
@@ -444,7 +464,9 @@ export function QuotationBuilderForm({
       return;
     }
 
-    const validItems = lineItems.filter((item) => item.item_title.trim().length > 0);
+    const validItems = lineItems.filter(
+      (item) => item.item_title.trim().length > 0,
+    );
     if (validItems.length === 0) {
       setErrorMsg("Please add at least one line item with a title.");
       return;
@@ -500,7 +522,8 @@ export function QuotationBuilderForm({
         <div className={db.pageHeading}>
           <h1 className={db.pageTitle}>New Quotation</h1>
           <p className={db.pageSubtitle}>
-            Compose an official school price quotation with live line items and automated calculation.
+            Compose an official school price quotation with live line items and
+            automated calculation.
           </p>
         </div>
 
@@ -592,15 +615,19 @@ export function QuotationBuilderForm({
                             className={styles.schoolOptionBtn}
                             onClick={() => handleSelectSchool(s)}
                           >
-                            <div className={styles.schoolOptionName}>{s.name}</div>
+                            <div className={styles.schoolOptionName}>
+                              {s.name}
+                            </div>
                             <div className={styles.schoolOptionMeta}>
-                              {s.city || "Johannesburg"}, {s.province || "Gauteng"}
+                              {s.city || "Johannesburg"},{" "}
+                              {s.province || "Gauteng"}
                             </div>
                           </button>
                         ))
                       ) : debouncedSchoolQuery.length >= 3 ? (
                         <div className={styles.schoolDropdownEmpty}>
-                          No schools found for &ldquo;{debouncedSchoolQuery}&rdquo;
+                          No schools found for &ldquo;{debouncedSchoolQuery}
+                          &rdquo;
                         </div>
                       ) : (
                         <div className={styles.schoolDropdownEmpty}>
@@ -651,7 +678,10 @@ export function QuotationBuilderForm({
           </div>
 
           {/* Card B: Line Items Table */}
-          <div className={`${db.card} ${db.cardPadded}`} ref={lineItemsTableRef}>
+          <div
+            className={`${db.card} ${db.cardPadded}`}
+            ref={lineItemsTableRef}
+          >
             <div className={db.cardHeader}>
               <div className={db.cardTitle}>
                 <Package size={16} className={db.cardIcon} />
@@ -695,7 +725,9 @@ export function QuotationBuilderForm({
                 <table className={styles.itemsTable}>
                   <thead>
                     <tr>
-                      <th className={styles.itemDescriptionHeader}>ITEM DESCRIPTION</th>
+                      <th className={styles.itemDescriptionHeader}>
+                        ITEM DESCRIPTION
+                      </th>
                       <th className={styles.itemSkuHeader}>SKU</th>
                       <th className={styles.itemUnitHeader}>UNIT</th>
                       <th className={styles.itemQtyHeader}>QTY</th>
@@ -720,7 +752,11 @@ export function QuotationBuilderForm({
                               placeholder="Search item or enter description..."
                               value={item.item_title}
                               onChange={(e) => {
-                                handleUpdateItem(item.id, "item_title", e.target.value);
+                                handleUpdateItem(
+                                  item.id,
+                                  "item_title",
+                                  e.target.value,
+                                );
                                 setItemSearchQuery(e.target.value);
                                 setActiveItemRowId(item.id);
                               }}
@@ -731,46 +767,71 @@ export function QuotationBuilderForm({
                             />
 
                             {/* Autocomplete Dropdown */}
-                            {activeItemRowId === item.id && shouldFetchItems && (
-                              <div className={styles.itemAutocomplete}>
-                                {isSearchingItems ? (
-                                  <div className={styles.itemAutocompleteLoading}>
-                                    <Loader2 size={14} className={styles.spinIcon} />
-                                    Searching catalog...
-                                  </div>
-                                ) : matchingItems.length > 0 ? (
-                                  matchingItems.map((res) => (
-                                    <button
-                                      key={res.id}
-                                      type="button"
-                                      className={styles.itemAutocompleteOption}
-                                      onClick={() => handleSelectItem(item.id, res)}
+                            {activeItemRowId === item.id &&
+                              shouldFetchItems && (
+                                <div className={styles.itemAutocomplete}>
+                                  {isSearchingItems ? (
+                                    <div
+                                      className={styles.itemAutocompleteLoading}
                                     >
-                                      <div className={styles.itemOptionTitle}>
-                                        {res.title}
-                                      </div>
-                                      <div className={styles.itemOptionMeta}>
-                                        <span>{res.sku || "NO-SKU"}</span>
-                                        <span className={styles.itemOptionPrice}>
-                                          {formatZAR(res.unit_price)}
-                                        </span>
-                                      </div>
-                                      <div className={styles.itemOptionDetail}>
-                                        <span><strong>Supplier:</strong> {res.supplier || "Not set"}</span>
-                                        <span><strong>Stock:</strong> {res.availability || "available"}</span>
-                                        {res.margin_percent != null ? (
-                                          <span><strong>Margin:</strong> {res.margin_percent.toFixed(1)}%</span>
-                                        ) : null}
-                                      </div>
-                                    </button>
-                                  ))
-                                ) : (
-                                  <div className={styles.itemAutocompleteEmpty}>
-                                    No stationery matches found
-                                  </div>
-                                )}
-                              </div>
-                            )}
+                                      <Loader2
+                                        size={14}
+                                        className={styles.spinIcon}
+                                      />
+                                      Searching catalog...
+                                    </div>
+                                  ) : matchingItems.length > 0 ? (
+                                    matchingItems.map((res) => (
+                                      <button
+                                        key={res.id}
+                                        type="button"
+                                        className={
+                                          styles.itemAutocompleteOption
+                                        }
+                                        onClick={() =>
+                                          handleSelectItem(item.id, res)
+                                        }
+                                      >
+                                        <div className={styles.itemOptionTitle}>
+                                          {res.title}
+                                        </div>
+                                        <div className={styles.itemOptionMeta}>
+                                          <span>{res.sku || "NO-SKU"}</span>
+                                          <span
+                                            className={styles.itemOptionPrice}
+                                          >
+                                            {formatZAR(res.unit_price)}
+                                          </span>
+                                        </div>
+                                        <div
+                                          className={styles.itemOptionDetail}
+                                        >
+                                          <span>
+                                            <strong>Supplier:</strong>{" "}
+                                            {res.supplier || "Not set"}
+                                          </span>
+                                          <span>
+                                            <strong>Stock:</strong>{" "}
+                                            {res.availability || "available"}
+                                          </span>
+                                          {res.margin_percent != null ? (
+                                            <span>
+                                              <strong>Margin:</strong>{" "}
+                                              {res.margin_percent.toFixed(1)}%
+                                            </span>
+                                          ) : null}
+                                        </div>
+                                      </button>
+                                    ))
+                                  ) : (
+                                    <div
+                                      className={styles.itemAutocompleteEmpty}
+                                    >
+                                      No stationery matches found
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                           </td>
 
                           <td>
@@ -792,7 +853,11 @@ export function QuotationBuilderForm({
                               placeholder="Each"
                               value={item.unit}
                               onChange={(e) =>
-                                handleUpdateItem(item.id, "unit", e.target.value)
+                                handleUpdateItem(
+                                  item.id,
+                                  "unit",
+                                  e.target.value,
+                                )
                               }
                             />
                           </td>
@@ -804,7 +869,11 @@ export function QuotationBuilderForm({
                               placeholder="1"
                               value={item.qtyText}
                               onChange={(e) =>
-                                handleUpdateItem(item.id, "qtyText", e.target.value)
+                                handleUpdateItem(
+                                  item.id,
+                                  "qtyText",
+                                  e.target.value,
+                                )
                               }
                             />
                           </td>
@@ -817,7 +886,11 @@ export function QuotationBuilderForm({
                               placeholder="0.00"
                               value={item.unit_price}
                               onChange={(e) =>
-                                handleUpdateItem(item.id, "unit_price", e.target.value)
+                                handleUpdateItem(
+                                  item.id,
+                                  "unit_price",
+                                  e.target.value,
+                                )
                               }
                             />
                           </td>
@@ -831,7 +904,7 @@ export function QuotationBuilderForm({
                               type="button"
                               className={styles.deleteRowBtn}
                               onClick={() => handleRemoveItem(item.id)}
-                              title="Delete Row"
+                              data-db-tooltip="Delete Row"
                             >
                               <Trash2 size={14} />
                             </button>
@@ -889,7 +962,9 @@ export function QuotationBuilderForm({
 
               <div className={db.summaryRow}>
                 <span className={styles.summaryLabel}>Gross Subtotal</span>
-                <span className={db.summaryValue}>{formatZAR(rawSubtotal)}</span>
+                <span className={db.summaryValue}>
+                  {formatZAR(rawSubtotal)}
+                </span>
               </div>
 
               {/* Discount Row */}
@@ -906,7 +981,9 @@ export function QuotationBuilderForm({
                   value={discountAmount}
                   onChange={(e) =>
                     setDiscountAmount(
-                      e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value) || 0)
+                      e.target.value === ""
+                        ? ""
+                        : Math.max(0, parseFloat(e.target.value) || 0),
                     )
                   }
                   className={styles.summaryAdjInput}
@@ -927,7 +1004,9 @@ export function QuotationBuilderForm({
                   value={deliveryFee}
                   onChange={(e) =>
                     setDeliveryFee(
-                      e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value) || 0)
+                      e.target.value === ""
+                        ? ""
+                        : Math.max(0, parseFloat(e.target.value) || 0),
                     )
                   }
                   className={styles.summaryAdjInput}
@@ -956,11 +1035,35 @@ export function QuotationBuilderForm({
               </div>
 
               <div className={styles.summaryActions}>
-                <AdminButton type="button" onClick={() => handleSubmit("sent")} disabled={busy} variant="primary" size="lg">{busy ? <Loader2 size={15} className={styles.spinIcon} /> : <CheckCircle2 size={15} />}
-                  Create &amp; Issue Quotation</AdminButton>
+                <AdminButton
+                  type="button"
+                  onClick={() => handleSubmit("sent")}
+                  disabled={busy}
+                  variant="primary"
+                  size="lg"
+                >
+                  {busy ? (
+                    <Loader2 size={15} className={styles.spinIcon} />
+                  ) : (
+                    <CheckCircle2 size={15} />
+                  )}
+                  Create &amp; Issue Quotation
+                </AdminButton>
 
-                <AdminButton type="button" onClick={() => handleSubmit("draft")} disabled={busy} variant="secondary" size="lg">{busy ? <Loader2 size={15} className={styles.spinIcon} /> : <Save size={15} />}
-                  Save as Draft</AdminButton>
+                <AdminButton
+                  type="button"
+                  onClick={() => handleSubmit("draft")}
+                  disabled={busy}
+                  variant="secondary"
+                  size="lg"
+                >
+                  {busy ? (
+                    <Loader2 size={15} className={styles.spinIcon} />
+                  ) : (
+                    <Save size={15} />
+                  )}
+                  Save as Draft
+                </AdminButton>
               </div>
             </div>
           </div>
@@ -987,7 +1090,8 @@ export function QuotationBuilderForm({
 
             <div className={styles.modalBody}>
               <p className={styles.modalSubtitle}>
-                Select a registered school and pick a grade pack to import all pack stationery items into this quote.
+                Select a registered school and pick a grade pack to import all
+                pack stationery items into this quote.
               </p>
 
               <div className={styles.modalFieldSpaced}>
@@ -1017,7 +1121,9 @@ export function QuotationBuilderForm({
                     <div key={p.id} className={styles.packListItem}>
                       <div>
                         <div className={styles.packItemTitle}>{p.title}</div>
-                        <div className={styles.packItemPrice}>{formatZAR(p.price)}</div>
+                        <div className={styles.packItemPrice}>
+                          {formatZAR(p.price)}
+                        </div>
                       </div>
                       <AdminButton
                         size="sm"
@@ -1031,7 +1137,9 @@ export function QuotationBuilderForm({
                   ))}
                 </div>
               ) : packModalSelectedSchool ? (
-                <div className={styles.modalEmpty}>No packs registered for this school yet.</div>
+                <div className={styles.modalEmpty}>
+                  No packs registered for this school yet.
+                </div>
               ) : null}
             </div>
           </div>
@@ -1058,7 +1166,8 @@ export function QuotationBuilderForm({
 
             <div className={styles.modalBody}>
               <p className={styles.modalSubtitle}>
-                Paste comma-separated rows in format: <code>Item Title, Quantity, Price, SKU</code>
+                Paste comma-separated rows in format:{" "}
+                <code>Item Title, Quantity, Price, SKU</code>
               </p>
 
               <textarea
@@ -1070,10 +1179,17 @@ export function QuotationBuilderForm({
               />
 
               <div className={styles.modalFooterActions}>
-                <AdminButton variant="secondary" onClick={() => setShowCsvImportModal(false)}>
+                <AdminButton
+                  variant="secondary"
+                  onClick={() => setShowCsvImportModal(false)}
+                >
                   Cancel
                 </AdminButton>
-                <AdminButton variant="primary" onClick={handleImportCsv} disabled={!csvText.trim()}>
+                <AdminButton
+                  variant="primary"
+                  onClick={handleImportCsv}
+                  disabled={!csvText.trim()}
+                >
                   Import Lines
                 </AdminButton>
               </div>

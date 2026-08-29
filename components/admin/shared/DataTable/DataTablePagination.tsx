@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
 import styles from "./DataTablePagination.module.css";
 import { useTableParams } from "./useTableParams";
 
@@ -83,21 +84,17 @@ export function DataTablePagination({
   return (
     <div className={`${styles.paginationFooter} ${className || ""}`}>
       <div className={styles.paginationLeft}>
-        <div className={styles.pageSizePill}>
-          <select
-            value={pageSize}
-            onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-            className={styles.pageSizeSelect}
-            aria-label="Records per page"
-          >
-            <option value={10}>10 per page</option>
-            <option value={20}>20 per page</option>
-            <option value={25}>25 per page</option>
-            <option value={50}>50 per page</option>
-            <option value={100}>100 per page</option>
-          </select>
-          <ChevronDown size={14} className={styles.pageSizeChevron} aria-hidden="true" />
-        </div>
+        <AdminDropdown
+          value={pageSize}
+          options={[10, 20, 25, 50, 100].map((opt) => ({
+            value: opt,
+            label: `${opt} per page`,
+          }))}
+          onChange={handlePageSizeChange}
+          pill
+          openUpwards
+          ariaLabel="Records per page"
+        />
       </div>
 
       <div className={styles.paginationRight}>

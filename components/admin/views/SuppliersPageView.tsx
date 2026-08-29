@@ -172,7 +172,7 @@ export function SuppliersPageView({
           <Link
             href={`/admin/suppliers/${row.id}`}
             className={styles.actionEditBtn}
-            title={`View ${row.name}`}
+            data-db-tooltip={`View ${row.name}`}
             aria-label={`View ${row.name}`}
           >
             <Eye size={14} />

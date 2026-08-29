@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { BookOpen, Sparkles, CheckCircle2 } from "lucide-react";
 import type { GradePack, School } from "@/data/schools";
 import { Button } from "@/components/ui/Button";
-import { PEXCOVER_PRICE } from "@/lib/constants";
+import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { saveOrderDraft } from "@/lib/checkout/draft";
 import styles from "./GradePackDetails.module.css";
@@ -19,10 +19,16 @@ type PexcoverGradeUpsellProps = {
 export function PexcoverGradeUpsell({
   school,
   grade,
-  pexcoverPrice = PEXCOVER_PRICE,
+  pexcoverPrice,
 }: PexcoverGradeUpsellProps) {
   const router = useRouter();
   const [learnerName, setLearnerName] = useState("");
+
+  const pexcoverInfo = calculatePexcoverTotal(grade.packItems);
+  const effectivePexcoverPrice =
+    pexcoverInfo.hasEligibleBooks
+      ? pexcoverInfo.pexcoverTotalRands
+      : (pexcoverPrice ?? 0);
 
   function continueWithPexcover() {
     const draft = saveOrderDraft({
@@ -76,7 +82,7 @@ export function PexcoverGradeUpsell({
         </small>
       </div>
       <Button type="button" onClick={continueWithPexcover}>
-        Enable Pexcover (+{formatCurrency(pexcoverPrice)})
+        Enable Pexcover (+{formatCurrency(effectivePexcoverPrice)})
       </Button>
     </section>
   );

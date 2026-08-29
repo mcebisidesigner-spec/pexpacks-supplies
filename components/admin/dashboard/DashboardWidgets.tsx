@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  ArrowUpRight,
-  CheckCircle2,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowUpRight, CheckCircle2, type LucideIcon } from "lucide-react";
 import type { NameCount } from "@/lib/admin/dashboard";
 import { orderStatusLabel, orderStatusTone } from "@/lib/admin/order-constants";
 import styles from "../DashboardClient.module.css";
@@ -37,7 +33,9 @@ export function formatDashboardCurrency(value: number): string {
 }
 
 function formatDashboardCount(value: number): string {
-  return Math.trunc(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return Math.trunc(value)
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function toneClass(tone: DashboardTone) {
@@ -83,7 +81,11 @@ export function MetricCard({
   }`;
 
   return metric.href ? (
-    <Link href={metric.href} className={className} aria-label={`${metric.label}: ${metric.value}`}>
+    <Link
+      href={metric.href}
+      className={className}
+      aria-label={`${metric.label}: ${metric.value}`}
+    >
       {content}
     </Link>
   ) : (
@@ -101,7 +103,11 @@ export function CapsuleBarChart({
   label: string;
 }) {
   if (!points.length) {
-    return <p className={styles.emptyText}>No activity is available for this period.</p>;
+    return (
+      <p className={styles.emptyText}>
+        No activity is available for this period.
+      </p>
+    );
   }
 
   const max = Math.max(1, ...points.map((point) => point.value));
@@ -111,19 +117,25 @@ export function CapsuleBarChart({
     <div className={styles.capsuleChart} role="img" aria-label={label}>
       <div className={styles.capsulePlot}>
         {points.map((point, index) => {
-          const percentage = point.value > 0 ? Math.max(16, (point.value / max) * 100) : 12;
+          const percentage =
+            point.value > 0 ? Math.max(16, (point.value / max) * 100) : 12;
           const isPeak = point.value > 0 && point.value === peakValue;
           return (
-            <div className={styles.capsuleColumn} key={`${point.label}-${index}`}>
+            <div
+              className={styles.capsuleColumn}
+              key={`${point.label}-${index}`}
+            >
               {isPeak ? (
-                <span className={styles.capsuleTooltip}>{valueFormatter(point.value)}</span>
+                <span className={styles.capsuleTooltip}>
+                  {valueFormatter(point.value)}
+                </span>
               ) : null}
               <span
                 className={`${styles.capsuleBar} ${
                   point.value === 0 ? styles.capsuleBarEmpty : ""
                 } ${isPeak ? styles.capsuleBarPeak : ""}`}
                 style={{ height: `${percentage}%` }}
-                title={`${point.label}: ${valueFormatter(point.value)}`}
+                data-db-tooltip={`${point.label}: ${valueFormatter(point.value)}`}
               />
               <span className={styles.capsuleLabel}>{point.shortLabel}</span>
               <span className={styles.srOnly}>
@@ -147,7 +159,8 @@ export function FulfilmentGauge({
   available: boolean;
 }) {
   const total = completed + awaiting;
-  const percentage = available && total > 0 ? Math.round((completed / total) * 100) : 0;
+  const percentage =
+    available && total > 0 ? Math.round((completed / total) * 100) : 0;
 
   return (
     <div className={styles.gaugeWrap}>
@@ -161,7 +174,11 @@ export function FulfilmentGauge({
             : "Fulfilment summary is unavailable"
         }
       >
-        <path className={styles.gaugeTrack} d="M24 112 A88 88 0 0 1 200 112" pathLength="100" />
+        <path
+          className={styles.gaugeTrack}
+          d="M24 112 A88 88 0 0 1 200 112"
+          pathLength="100"
+        />
         <path
           className={styles.gaugeValue}
           d="M24 112 A88 88 0 0 1 200 112"
@@ -174,8 +191,14 @@ export function FulfilmentGauge({
         <span>{available ? "Delivered" : "Unavailable"}</span>
       </div>
       <div className={styles.gaugeLegend}>
-        <span><i className={styles.legendDelivered} />{formatDashboardCount(completed)} completed</span>
-        <span><i className={styles.legendAwaiting} />{formatDashboardCount(awaiting)} awaiting</span>
+        <span>
+          <i className={styles.legendDelivered} />
+          {formatDashboardCount(completed)} completed
+        </span>
+        <span>
+          <i className={styles.legendAwaiting} />
+          {formatDashboardCount(awaiting)} awaiting
+        </span>
       </div>
     </div>
   );
@@ -218,14 +241,20 @@ export function AttentionList({ items }: { items: DashboardAttentionItem[] }) {
 }
 
 export function HorizontalBars({ rows }: { rows: NameCount[] }) {
-  if (!rows.length) return <p className={styles.emptyText}>No data available yet.</p>;
+  if (!rows.length)
+    return <p className={styles.emptyText}>No data available yet.</p>;
   const max = Math.max(1, ...rows.map((row) => row.count));
 
   return (
     <div className={styles.horizontalBars}>
       {rows.map((row) => (
         <div className={styles.horizontalBarRow} key={row.label}>
-          <span className={styles.horizontalBarLabel} title={row.label}>{row.label}</span>
+          <span
+            className={styles.horizontalBarLabel}
+            data-db-tooltip={row.label}
+          >
+            {row.label}
+          </span>
           <span className={styles.horizontalBarTrack}>
             <span
               className={styles.horizontalBarFill}
@@ -242,7 +271,9 @@ export function HorizontalBars({ rows }: { rows: NameCount[] }) {
 export function StatusBadge({ status }: { status: string }) {
   const tone = orderStatusTone(status);
   return (
-    <span className={`${styles.statusBadge} ${styles[`status${tone[0].toUpperCase()}${tone.slice(1)}`]}`}>
+    <span
+      className={`${styles.statusBadge} ${styles[`status${tone[0].toUpperCase()}${tone.slice(1)}`]}`}
+    >
       <i aria-hidden="true" />
       {orderStatusLabel(status)}
     </span>
