@@ -129,7 +129,7 @@ export default async function SchoolDetailPage({
                 Stationery List {season.academicYear}
               </span>
               <span className={styles.schoolHeroPrepared}>
-                {isRefused ? "You could send your list" : "Prepared with care"}
+                {isRefused ? "Non-partner" : "Prepared with care"}
               </span>
               <a
                 href={officialWebsiteUrl}
