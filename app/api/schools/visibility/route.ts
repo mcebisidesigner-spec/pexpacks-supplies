@@ -51,11 +51,23 @@ export async function POST(request: NextRequest) {
       .filter((slug) => /^[a-z0-9-]{1,200}$/.test(slug)),
   )].slice(0, 50);
 
-  const publicSlugs = await getPublicSchoolSlugSet();
-  const visibleSlugs = slugs.filter((slug) => publicSlugs.has(slug));
+  const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
+  const supabase = createSupabaseAdminClient();
+  const { data: schoolsData } = await supabase
+    .from("schools")
+    .select("slug, parent_collection_accepted, publication_status")
+    .in("slug", slugs);
+
+  const visibleSlugs = (schoolsData ?? [])
+    .filter((s) => s.publication_status === "published")
+    .map((s) => s.slug);
+
+  const collectionDisallowedSlugs = (schoolsData ?? [])
+    .filter((s) => s.parent_collection_accepted === false)
+    .map((s) => s.slug);
 
   return NextResponse.json(
-    { success: true, visibleSlugs },
+    { success: true, visibleSlugs, collectionDisallowedSlugs },
     { headers: { "Cache-Control": "private, no-store" } },
   );
 }

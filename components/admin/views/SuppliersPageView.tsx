@@ -3,13 +3,23 @@
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, Building2, CheckCircle2, Package, Clock } from "lucide-react";
+import {
+  Plus,
+  Eye,
+  Building2,
+  CheckCircle2,
+  Package,
+  Clock,
+} from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
-import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
+import {
+  QuickMetricsGrid,
+  type QuickMetricItem,
+} from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -23,7 +33,9 @@ interface SuppliersPageViewProps {
   initialSuppliers?: SupplierRow[];
 }
 
-export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewProps) {
+export function SuppliersPageView({
+  initialSuppliers = [],
+}: SuppliersPageViewProps) {
   const router = useRouter();
   const { params, setParams } = useTableParams();
 
@@ -56,7 +68,7 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
   ];
 
   const [suppliers] = useState<SupplierRow[]>(
-    initialSuppliers.length > 0 ? initialSuppliers : defaultSuppliers
+    initialSuppliers.length > 0 ? initialSuppliers : defaultSuppliers,
   );
 
   const filtered = useMemo(() => {
@@ -66,7 +78,7 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
       (s) =>
         s.name.toLowerCase().includes(q) ||
         s.code.toLowerCase().includes(q) ||
-        (s.email && s.email.toLowerCase().includes(q))
+        (s.email && s.email.toLowerCase().includes(q)),
     );
   }, [suppliers, params.q]);
 
@@ -76,9 +88,7 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
       header: "CODE",
       sortable: true,
       width: "160px",
-      render: (row) => (
-        <span className={styles.skuBadge}>{row.code}</span>
-      ),
+      render: (row) => <span className={styles.skuBadge}>{row.code}</span>,
     },
     {
       key: "name",
@@ -99,8 +109,12 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
       header: "CONTACT & EMAIL",
       render: (row) => (
         <div className={styles.productCell}>
-          <span className={styles.textMuted}>{row.contact_name || "Trade Desk"}</span>
-          <span className={styles.productBrand}>{row.email || row.telephone || "—"}</span>
+          <span className={styles.textMuted}>
+            {row.contact_name || "Trade Desk"}
+          </span>
+          <span className={styles.productBrand}>
+            {row.email || row.telephone || "—"}
+          </span>
         </div>
       ),
     },
@@ -110,14 +124,20 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
       sortable: true,
       width: "130px",
       render: (row) => (
-        <span className={styles.textMuted}>{row.lead_time_days ? `${row.lead_time_days} Days` : "2-3 Days"}</span>
+        <span className={styles.textMuted}>
+          {row.lead_time_days ? `${row.lead_time_days} Days` : "2-3 Days"}
+        </span>
       ),
     },
     {
       key: "payment_terms",
       header: "TERMS",
       width: "140px",
-      render: (row) => <span className={styles.textMuted}>{row.payment_terms || "30 Days Net"}</span>,
+      render: (row) => (
+        <span className={styles.textMuted}>
+          {row.payment_terms || "30 Days Net"}
+        </span>
+      ),
     },
     {
       key: "status",
@@ -139,26 +159,27 @@ export function SuppliersPageView({ initialSuppliers = [] }: SuppliersPageViewPr
       sticky: "right",
       width: "90px",
       render: (row) => (
-        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            className={styles.actionDeleteBtn}
-            title={`Delete ${row.name}`}
-            aria-label={`Delete ${row.name}`}
-            onClick={() => {
-              if (window.confirm(`Are you sure you want to delete supplier "${row.name}"?`)) {
-                // Trigger deletion
-              }
-            }}
+        <div
+          className={styles.actionsCell}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Link
+            href={`/admin/suppliers/${row.id}`}
+            className={styles.actionEditBtn}
+            title={`View ${row.name}`}
+            aria-label={`View ${row.name}`}
           >
-            <Trash2 size={14} />
-          </button>
+            <Eye size={14} />
+          </Link>
         </div>
       ),
     },
   ];
 
-  const totalOffers = filtered.reduce((acc, s) => acc + (s.offer_count || 0), 0);
+  const totalOffers = filtered.reduce(
+    (acc, s) => acc + (s.offer_count || 0),
+    0,
+  );
   const activeVendors = filtered.filter((s) => s.active !== false).length;
 
   const metrics: QuickMetricItem[] = [

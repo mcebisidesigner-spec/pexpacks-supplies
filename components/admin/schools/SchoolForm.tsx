@@ -10,7 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
-import { SCHOOL_STATUSES } from "@/lib/admin/school-constants";
+// Redundant legacy checkboxes and statuses removed; authoritative constants imported from school-constants
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
 import { DateField } from "@/components/admin/DateField";
@@ -130,6 +130,15 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
     school?.logo ?? null,
   );
   const [logoValue, setLogoValue] = useState<string>(school?.logo ?? "");
+
+  const initialPartnership =
+    (school as { partnership?: string } | null)?.partnership ??
+    ((school as { refused_partnership?: boolean } | null)?.refused_partnership
+      ? "refused_partner"
+      : school?.is_partner
+        ? "partner"
+        : "non_partner");
+  const [currentPartnership, setCurrentPartnership] = useState(initialPartnership);
 
   const initialGradesList = Array.isArray(school?.grades)
     ? (school.grades.filter(
@@ -396,22 +405,6 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               </div>
             </div>
           )}
-
-          <div className={formStyles.colSpan1}>
-            <Field>
-              <FieldLabel htmlFor="partner_since">
-                Partner Since Date
-              </FieldLabel>
-              <DateField
-                id="partner_since"
-                name="partner_since"
-                defaultValue={str(school?.partner_since)}
-                ariaLabel="Partner since"
-                placeholder="Select partnership date"
-              />
-              {err("partner_since")}
-            </Field>
-          </div>
         </div>
       </div>
 
@@ -482,7 +475,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             <div className={adminStyles.sectionIconTeal}>
               <ShieldCheck size={16} />
             </div>
-            <span>Status &amp; Flags</span>
+            <span>Public &amp; Partnership</span>
           </div>
 
           <div className={formStyles.sideGroup}>
@@ -494,75 +487,72 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 <select
                   id="publication_status"
                   name="publication_status"
-                  defaultValue={school?.publication_status ?? (school?.published === false ? "draft" : "published")}
+                  defaultValue={
+                    school?.publication_status === "ready_for_review"
+                      ? "ready_for_review"
+                      : "published"
+                  }
                   className={formStyles.sideSelect}
+                  onChange={(e) => {
+                    if (e.target.value === "ready_for_review") {
+                      alert(
+                        "Warning: This School will be removed from the public storefront, School search and public pack browsing.",
+                      );
+                    }
+                  }}
                 >
-                  <option value="draft">Draft (Back-office only)</option>
-                  <option value="ready_for_review">Ready for Review</option>
-                  <option value="published">Published (Live Storefront)</option>
-                  <option value="archived">Archived</option>
+                  <option value="published">Published — Live Storefront</option>
+                  <option value="ready_for_review">Ready for Review — Unpublished</option>
                 </select>
                 {err("publication_status")}
               </div>
 
               <div className={formStyles.sideField}>
-                <label className={formStyles.sideLabel} htmlFor="directory_status">
-                  Directory Status
+                <label className={formStyles.sideLabel} htmlFor="partnership">
+                  Partnership
                 </label>
                 <select
-                  id="directory_status"
-                  name="directory_status"
-                  defaultValue={school?.directory_status ?? "listed"}
+                  id="partnership"
+                  name="partnership"
+                  defaultValue={initialPartnership}
                   className={formStyles.sideSelect}
+                  onChange={(e) => {
+                    setCurrentPartnership(e.target.value);
+                    if (e.target.value === "refused_partner") {
+                      alert(
+                        "Notice: Refused partner schools are excluded from search discovery and render the dedicated 'Not yet an official partner' layout.",
+                      );
+                    }
+                  }}
                 >
-                  <option value="listed">Listed in Public Directory</option>
-                  <option value="hidden">Hidden from Directory</option>
-                  <option value="archived">Archived</option>
+                  <option value="partner">Partner</option>
+                  <option value="non_partner">Non-partner</option>
+                  <option value="refused_partner">Refused Partner</option>
                 </select>
-                {err("directory_status")}
+                {err("partnership")}
               </div>
             </div>
 
             <div className={formStyles.sideFieldsRow}>
               <div className={formStyles.sideField}>
-                <label className={formStyles.sideLabel} htmlFor="stationery_list_status">
-                  Stationery List Status
+                <label className={formStyles.sideLabel} htmlFor="feature_status">
+                  Feature Status
                 </label>
                 <select
-                  id="stationery_list_status"
-                  name="stationery_list_status"
-                  defaultValue={school?.stationery_list_status ?? (school?.refused_partnership ? "not_received" : "verified")}
+                  id="feature_status"
+                  name="feature_status"
+                  defaultValue={
+                    (school as { feature_status?: string } | null)?.feature_status ??
+                    (school?.is_featured ? "featured" : "unfeatured")
+                  }
                   className={formStyles.sideSelect}
                 >
-                  <option value="verified">Verified Official List</option>
-                  <option value="being_digitised">Being Digitised</option>
-                  <option value="received">Received (Unprocessed)</option>
-                  <option value="not_received">Not Received / Custom Only</option>
+                  <option value="featured">Featured</option>
+                  <option value="unfeatured">Unfeatured</option>
                 </select>
-                {err("stationery_list_status")}
+                {err("feature_status")}
               </div>
 
-              <div className={formStyles.sideField}>
-                <label className={formStyles.sideLabel} htmlFor="status">
-                  Entity Lifecycle
-                </label>
-                <select
-                  id="status"
-                  name="status"
-                  defaultValue={school?.status ?? "active"}
-                  className={formStyles.sideSelect}
-                >
-                  {SCHOOL_STATUSES.map((s) => (
-                    <option key={s} value={s}>
-                      {s === "archived" ? "Archived" : s.charAt(0).toUpperCase() + s.slice(1)}
-                    </option>
-                  ))}
-                </select>
-                {err("status")}
-              </div>
-            </div>
-
-            <div className={formStyles.sideFieldsRow}>
               <div className={formStyles.sideField}>
                 <label
                   className={formStyles.sideLabel}
@@ -574,62 +564,42 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                   id="parent_collection_accepted"
                   name="parent_collection_accepted"
                   defaultValue={
-                    school?.parent_collection_accepted
+                    school?.parent_collection_accepted !== false
                       ? "accepted"
-                      : "non_accepted"
+                      : "unaccepted"
                   }
                   className={formStyles.sideSelect}
                 >
-                  <option value="accepted">Accepted (Bulk Pickup)</option>
-                  <option value="non_accepted">Non-accepted</option>
+                  <option value="accepted">Accepted — Bulk Pickup</option>
+                  <option value="unaccepted">Unaccepted</option>
                 </select>
                 {err("parent_collection_accepted")}
               </div>
             </div>
 
-            <div className={formStyles.checkboxList}>
-              <label className={formStyles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  name="published"
-                  defaultChecked={school?.published ?? true}
-                  className={adminStyles.checkbox}
-                />
-                Published on Site
-              </label>
-              <label className={formStyles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  name="is_partner"
-                  defaultChecked={school?.is_partner ?? false}
-                  className={adminStyles.checkbox}
-                />
-                Partner School
-              </label>
-              <label className={formStyles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  name="is_featured"
-                  defaultChecked={school?.is_featured ?? false}
-                  className={adminStyles.checkbox}
-                />
-                Featured School
-              </label>
-              <label
-                className={`${formStyles.checkboxLabel} ${formStyles.checkboxDanger}`}
-              >
-                <input
-                  type="checkbox"
-                  name="refused_partnership"
-                  defaultChecked={
-                    (school as { refused_partnership?: boolean } | null)
-                      ?.refused_partnership ?? false
-                  }
-                  className={adminStyles.checkboxRed}
-                />
-                Refused Partnership
-              </label>
-            </div>
+            {currentPartnership === "partner" ? (
+              <div className={formStyles.sideFieldsRow}>
+                <div className={formStyles.sideField}>
+                  <label className={formStyles.sideLabel} htmlFor="partner_since">
+                    Partner Since Date
+                  </label>
+                  <DateField
+                    id="partner_since"
+                    name="partner_since"
+                    defaultValue={str(school?.partner_since)}
+                    ariaLabel="Partner since"
+                    placeholder="Select partnership date"
+                  />
+                  {err("partner_since")}
+                </div>
+              </div>
+            ) : (
+              <input
+                type="hidden"
+                name="partner_since"
+                value={str(school?.partner_since)}
+              />
+            )}
 
             <div className={formStyles.sideActions}>
               <SubmitButton

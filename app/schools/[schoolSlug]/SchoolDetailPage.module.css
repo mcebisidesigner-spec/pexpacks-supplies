@@ -248,6 +248,18 @@
   justify-content: center;
 }
 
+.unpartneredCardActions a:not(:first-child) {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+}
+
+.unpartneredCardActions a:not(:first-child):hover {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #ffffff;
+}
+
 .unpartneredCardSecondary {
   margin-top: 20px;
   padding: var(--space-6);

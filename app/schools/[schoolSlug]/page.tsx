@@ -22,6 +22,7 @@ export const revalidate = 3600; // Edge ISR cache for 1 hour, auto-revalidated o
 
 type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 function formatSchoolLocation(city?: string | null, province?: string | null, district?: string | null): string {
@@ -86,8 +87,17 @@ export async function generateMetadata({
   };
 }
 
-export default async function SchoolDetailPage({ params }: SchoolPageProps) {
+export default async function SchoolDetailPage({
+  params,
+  searchParams,
+}: SchoolPageProps) {
   const { schoolSlug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const isPreviewUnpartnered =
+    resolvedSearchParams?.unpartnered === "true" ||
+    resolvedSearchParams?.preview === "unpartnered" ||
+    resolvedSearchParams?.status === "not-yet-partner";
+
   const [school, season] = await Promise.all([
     getCachedSchoolBySlug(schoolSlug),
     getActivePublicSeason(),
@@ -97,7 +107,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
     notFound();
   }
 
-  const isRefused = Boolean(school.refusedPartnership);
+  const isRefused = Boolean(school.refusedPartnership) || isPreviewUnpartnered;
   const gradesToRender = buildTailoredPublicGrades(school, school.grades);
   const schoolWithGrades = { ...school, grades: gradesToRender };
   const websiteRaw = school.website?.trim();

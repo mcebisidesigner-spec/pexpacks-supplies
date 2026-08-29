@@ -9,6 +9,7 @@ import styles from "@/app/checkout/Checkout.module.css";
 type FulfilmentOption = "School collection" | "Delivery" | "Collection point";
 
 type DeliveryStepProps = {
+  allowSchoolCollection?: boolean;
   fulfilmentOption: FulfilmentOption;
   onFulfilmentOptionChange: (option: FulfilmentOption) => void;
   address: string;
@@ -103,15 +104,20 @@ export const DeliveryStep = memo(function DeliveryStep({
   onDeliveryNotesChange,
   consent,
   onConsentChange,
+  allowSchoolCollection = true,
   errors,
   onClearError,
 }: DeliveryStepProps) {
+  const availableOptions = FULFILMENT_OPTIONS.filter(
+    (opt) => allowSchoolCollection !== false || opt.value !== "School collection"
+  );
+
   return (
     <div className={styles.fulfilmentStep}>
       <fieldset className={styles.optionFieldset}>
         <legend>Choose how you will receive your pack</legend>
         <div className={styles.deliveryOptions}>
-          {FULFILMENT_OPTIONS.map((option) => (
+          {availableOptions.map((option) => (
             <label
               key={option.value}
               className={clsx(styles.deliveryOption, fulfilmentOption === option.value && styles.deliveryOptionSelected)}

@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Box,
   ChevronRight,
@@ -20,11 +21,19 @@ import styles from "./CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { VisibleToggle } from "@/components/admin/packs/VisibleToggle";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
-
+import {
+  DataTable,
+  DataTableToolbar,
+  DataTablePagination,
+  useTableParams,
+  type ColumnDef,
+} from "@/components/admin/shared/DataTable";
 import { buildTailoredAdminPacks } from "@/lib/schools/school-grade-packs";
+import type { TailoredAdminPack } from "@/lib/schools/school-grade-packs";
 
 interface PackItem {
   id: string;
@@ -60,11 +69,126 @@ export function SchoolPacksDetailView({
   initialPacks,
   deletePackAction,
 }: SchoolPacksDetailViewProps) {
+  const router = useRouter();
+  const { params, setParams } = useTableParams();
+
   const tailoredPacks = useMemo(() => {
     return buildTailoredAdminPacks(school, initialPacks);
   }, [school, initialPacks]);
 
-  const filteredPacks = tailoredPacks;
+  const schoolIdentifier = school.slug || school.id;
+
+  function editHrefFor(pack: TailoredAdminPack): string {
+    if (pack.is_configured) {
+      return `/admin/packs/${pack.slug || pack.id}`;
+    }
+    const grade = pack.grade_label.replace(/ – Stationery Pack/i, "").trim();
+    return `/admin/${schoolIdentifier}/add-pack-items?grade=${encodeURIComponent(grade)}`;
+  }
+
+  const columns: ColumnDef<TailoredAdminPack>[] = [
+    {
+      key: "grade",
+      header: "GRADE PACK & SCHOOL",
+      sortable: true,
+      render: (pack) => (
+        <div className={styles.productCell}>
+          <Link
+            href={editHrefFor(pack)}
+            className={styles.schoolNameTitle}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {pack.grade_label}
+          </Link>
+          <div className={styles.productBrand}>{school.name}</div>
+        </div>
+      ),
+    },
+    {
+      key: "sale_price",
+      header: "SELLING PRICE",
+      sortable: true,
+      render: (pack) =>
+        pack.price > 0 ? (
+          <span className={styles.priceHighlight}>{money(pack.price)}</span>
+        ) : (
+          <span className={styles.textMuted}>R00.00</span>
+        ),
+    },
+    {
+      key: "actions",
+      header: "ACTIONS",
+      align: "right",
+      sticky: "right",
+      render: (pack) => (
+        <div
+          className={styles.actionsCell}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {pack.is_configured ? (
+            <>
+              <VisibleToggle id={pack.id} visible={pack.visible} />
+              {deletePackAction && (
+                <form action={deletePackAction.bind(null, pack.id)}>
+                  <ConfirmButton
+                    label=""
+                    icon={<Trash2 size={13} />}
+                    title="Delete Pack Permanently"
+                    confirmLabel="Delete Pack"
+                    confirmText={`Permanently delete "${pack.title}"`}
+                    busyLabel=""
+                    className={`${adminStyles.actionIconBtn} ${adminStyles.actionIconBtnRed}`}
+                  />
+                </form>
+              )}
+            </>
+          ) : (
+            <AdminButton
+              href={editHrefFor(pack)}
+              variant="outline"
+              size="sm"
+              icon={<Plus size={12} />}
+            >
+              Set Pack
+            </AdminButton>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  const filteredPacks = useMemo(() => {
+    const list = [...tailoredPacks];
+    if (params.sort === "grade") {
+      list.sort((a, b) => a.grade_label.localeCompare(b.grade_label));
+    } else if (params.sort === "sale_price") {
+      list.sort((a, b) => a.price - b.price);
+    }
+    if (params.order === "desc") list.reverse();
+
+    const q = (params.q || "").trim().toLowerCase();
+    if (q) {
+      return list.filter(
+        (pack) =>
+          pack.grade_label.toLowerCase().includes(q) ||
+          pack.title.toLowerCase().includes(q) ||
+          school.name.toLowerCase().includes(q),
+      );
+    }
+    if (params.status && params.status !== "all") {
+      const visible = params.status === "live";
+      return list.filter((pack) => pack.visible === visible);
+    }
+    return list;
+  }, [
+    tailoredPacks,
+    params.q,
+    params.sort,
+    params.order,
+    params.status,
+    school.name,
+  ]);
+
   const totalPacks = tailoredPacks.length;
 
   const { publishedPacks, totalItemsCount, totalRevenue } = useMemo(() => {
@@ -78,8 +202,6 @@ export function SchoolPacksDetailView({
     }
     return { publishedPacks, totalItemsCount, totalRevenue };
   }, [tailoredPacks]);
-
-  const schoolIdentifier = school.slug || school.id;
 
   return (
     <div className={styles.container}>
@@ -158,124 +280,40 @@ export function SchoolPacksDetailView({
       <div className={adminStyles.detailLayout}>
         {/* Left Column: Table and Toolbar */}
         <div className={adminStyles.leftColumn}>
-
-          {/* Data Table */}
-          <div className={adminStyles.tableCard}>
-            <div className={adminStyles.tableWrapper}>
-              <table className={adminStyles.table}>
-                <thead>
-                  <tr>
-                    <th>
-                      <div className={styles.headerContent}>
-                        <span>Grade Pack &amp; School</span>
-                        <span className={styles.sortIcon}>↑↓</span>
-                      </div>
-                    </th>
-                    <th>
-                      <div className={styles.headerContent}>
-                        <span>Selling Price</span>
-                        <span className={styles.sortIcon}>↑↓</span>
-                      </div>
-                    </th>
-                    <th className={styles.alignRight}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredPacks.length === 0 ? (
-                    <tr>
-                      <td colSpan={3} className={adminStyles.emptyCell}>
-                        No grade packs found matching criteria.
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredPacks.map((pack) => {
-                      const formattedGrade = pack.grade_label;
-                      const isConfigured = pack.is_configured;
-                      const editHref = isConfigured
-                        ? `/admin/packs/${pack.slug || pack.id}`
-                        : `/admin/${schoolIdentifier}/add-pack-items?grade=${encodeURIComponent(formattedGrade.replace(/ – Stationery Pack/i, ""))}`;
-
-                      return (
-                        <tr key={pack.id} className={styles.dataRow}>
-                          <td>
-                            <div className={styles.productCell}>
-                              <Link
-                                href={editHref}
-                                className={styles.schoolNameTitle}
-                              >
-                                {formattedGrade}
-                              </Link>
-                              <div className={styles.productBrand}>
-                                {school.name}
-                              </div>
-                            </div>
-                          </td>
-                          <td className={styles.priceHighlight}>
-                            {pack.price > 0 ? (
-                              money(pack.price)
-                            ) : (
-                              <span className={styles.textMuted}>
-                                From Quote
-                              </span>
-                            )}
-                          </td>
-                          <td className={styles.alignRight}>
-                            <div className={styles.actionsCell}>
-                              {isConfigured ? (
-                                <>
-                                  <VisibleToggle id={pack.id} visible={pack.visible} />
-                                  {deletePackAction && (
-                                    <form action={deletePackAction.bind(null, pack.id)}>
-                                      <ConfirmButton
-                                        label=""
-                                        icon={<Trash2 size={13} />}
-                                        title="Delete Pack Permanently"
-                                        confirmLabel="Delete Pack"
-                                        confirmText={`Permanently delete "${pack.title}"`}
-                                        busyLabel=""
-                                        className={`${adminStyles.actionIconBtn} ${adminStyles.actionIconBtnRed}`}
-                                      />
-                                    </form>
-                                  )}
-                                </>
-                              ) : (
-                                <AdminButton
-                                  href={editHref}
-                                  variant="outline"
-                                  size="sm"
-                                  icon={<Plus size={12} />}
-                                >
-                                  Set Pack
-                                </AdminButton>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination Footer */}
-            <div className={styles.paginationFooter}>
-              <span>
-                Showing 1 to {filteredPacks.length} of {filteredPacks.length} grade packs
-              </span>
-              <div className={adminStyles.paginationControls}>
-                <button className={styles.pageBtn}>&lt;</button>
-                <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
-                <button className={styles.pageBtn}>&gt;</button>
+          <DataTableToolbar
+            searchPlaceholder="Search grade packs..."
+            filters={
+              <div className={styles.filterGroup}>
+                <AdminSelect
+                  value={params.status || "all"}
+                  onChange={(e) => setParams({ status: e.target.value }, true)}
+                  className={styles.toolbarSelect}
+                >
+                  <option value="all">Visibility: All</option>
+                  <option value="live">Live</option>
+                  <option value="hidden">Hidden</option>
+                </AdminSelect>
               </div>
-              <div className={adminStyles.paginationSelectWrap}>
-                <select className={`${styles.selectInput} ${adminStyles.paginationSelect}`}>
-                  <option>10 per page</option>
-                  <option>20 per page</option>
-                </select>
-              </div>
-            </div>
-          </div>
+            }
+          />
+
+          <DataTable
+            data={filteredPacks}
+            columns={columns}
+            keyExtractor={(pack) => pack.id}
+            onRowClick={(pack) => router.push(editHrefFor(pack))}
+            emptyTitle="No grade packs found"
+            emptySubtitle="Try adjusting your search or filters."
+            footer={
+              filteredPacks.length > 0 ? (
+                <DataTablePagination
+                  total={filteredPacks.length}
+                  pageSize={filteredPacks.length}
+                  currentPage={1}
+                />
+              ) : undefined
+            }
+          />
         </div>
 
         {/* Right Sidebar Column */}
@@ -287,33 +325,51 @@ export function SchoolPacksDetailView({
                 <HeartPulse size={16} className={adminStyles.iconTeal} />
                 <span>School Health</span>
               </div>
-              <span className={`${adminStyles.badgeGreen} ${adminStyles.badgeTiny}`}>Healthy</span>
+              <span
+                className={`${adminStyles.badgeGreen} ${adminStyles.badgeTiny}`}
+              >
+                Healthy
+              </span>
             </div>
 
             <div className={adminStyles.sidebarStack}>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Grade Packs</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Grade Packs
+                </span>
                 <div className={adminStyles.sidebarStatGroup}>
-                  <span className={adminStyles.sidebarStatVal}>{totalPacks} / {totalPacks}</span>
+                  <span className={adminStyles.sidebarStatVal}>
+                    {totalPacks} / {totalPacks}
+                  </span>
                   <span className={adminStyles.sidebarStatPercent}>100%</span>
                 </div>
               </div>
 
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Published Packs</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Published Packs
+                </span>
                 <div className={adminStyles.sidebarStatGroup}>
-                  <span className={adminStyles.sidebarStatVal}>{publishedPacks}</span>
+                  <span className={adminStyles.sidebarStatVal}>
+                    {publishedPacks}
+                  </span>
                   <span className={adminStyles.sidebarStatPercent}>100%</span>
                 </div>
               </div>
 
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Total Items</span>
-                <span className={adminStyles.sidebarStatVal}>{totalItemsCount}</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Total Items
+                </span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {totalItemsCount}
+                </span>
               </div>
 
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Last Activity</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Last Activity
+                </span>
                 <span className={adminStyles.sidebarStatVal}>May 21, 2024</span>
               </div>
             </div>
@@ -380,13 +436,21 @@ export function SchoolPacksDetailView({
 
             <div className={adminStyles.activityList}>
               <div className={adminStyles.activityItem}>
-                <div className={adminStyles.activityTitle}>Grade R – Stationery Pack updated</div>
-                <div className={adminStyles.activityMeta}>May 21, 2024 • 10:24 AM • Liam Morgan</div>
+                <div className={adminStyles.activityTitle}>
+                  Grade R – Stationery Pack updated
+                </div>
+                <div className={adminStyles.activityMeta}>
+                  May 21, 2024 • 10:24 AM • Liam Morgan
+                </div>
               </div>
 
               <div className={adminStyles.activityItem}>
-                <div className={adminStyles.activityTitle}>Grade R – Stationery Pack created</div>
-                <div className={adminStyles.activityMeta}>May 21, 2024 • 10:15 AM • Liam Morgan</div>
+                <div className={adminStyles.activityTitle}>
+                  Grade R – Stationery Pack created
+                </div>
+                <div className={adminStyles.activityMeta}>
+                  May 21, 2024 • 10:15 AM • Liam Morgan
+                </div>
               </div>
             </div>
           </div>

@@ -228,12 +228,18 @@ export function DateField({
 
       {open ? (
         <div
-          id={dialogId}
-          className={`${styles.popover} ${alignRight ? styles.alignRight : ""}`}
-          role="dialog"
-          aria-modal="false"
-          aria-label={ariaLabel ?? "Choose date"}
+          className={styles.modalBackdrop}
+          onClick={() => setOpen(false)}
+          aria-hidden="false"
         >
+          <div
+            id={dialogId}
+            className={styles.popoverCentered}
+            role="dialog"
+            aria-modal="true"
+            aria-label={ariaLabel ?? "Choose date"}
+            onClick={(e) => e.stopPropagation()}
+          >
           <div className={styles.brandRow}>
             <span>
               <strong>Pexpacks</strong> Calendar
@@ -359,6 +365,7 @@ export function DateField({
                 Apply
               </button>
             ) : null}
+          </div>
           </div>
         </div>
       ) : null}

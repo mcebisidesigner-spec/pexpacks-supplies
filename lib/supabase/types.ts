@@ -419,7 +419,9 @@ export interface Database {
           latitude: number | null;
           longitude: number | null;
           published: boolean;
-          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          publication_status?: "published" | "ready_for_review" | null;
+          partnership?: "partner" | "non_partner" | "refused_partner" | null;
+          feature_status?: "featured" | "unfeatured" | null;
           directory_status?: "listed" | "hidden" | "archived" | null;
           stationery_list_status?: "not_received" | "received" | "being_digitised" | "verified" | null;
           search_vector: string | null;
@@ -451,7 +453,9 @@ export interface Database {
           latitude?: number | null;
           longitude?: number | null;
           published?: boolean;
-          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          publication_status?: "published" | "ready_for_review" | null;
+          partnership?: "partner" | "non_partner" | "refused_partner" | null;
+          feature_status?: "featured" | "unfeatured" | null;
           directory_status?: "listed" | "hidden" | "archived" | null;
           stationery_list_status?: "not_received" | "received" | "being_digitised" | "verified" | null;
           updated_by?: string | null;
@@ -483,7 +487,9 @@ export interface Database {
           latitude?: number | null;
           longitude?: number | null;
           published?: boolean;
-          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          publication_status?: "published" | "ready_for_review" | null;
+          partnership?: "partner" | "non_partner" | "refused_partner" | null;
+          feature_status?: "featured" | "unfeatured" | null;
           directory_status?: "listed" | "hidden" | "archived" | null;
           stationery_list_status?: "not_received" | "received" | "being_digitised" | "verified" | null;
           updated_by?: string | null;
@@ -2511,6 +2517,10 @@ export interface Database {
           province: string | null;
           district: string | null;
           logo: string | null;
+          partnership: string | null;
+          feature_status: string | null;
+          partner_since: string | null;
+          published: boolean;
           is_partner: boolean;
           is_featured: boolean;
           refused_partnership: boolean;
@@ -2519,6 +2529,8 @@ export interface Database {
           principal: string | null;
           parent_collection_accepted: boolean;
           custom_badge: string | null;
+          latitude: number | null;
+          longitude: number | null;
           publication_status: string | null;
           directory_status: string | null;
           stationery_list_status: string | null;

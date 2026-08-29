@@ -67,6 +67,7 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
       deliveryNote={grade.deliveryNote || ""}
       draftId={resolvedDraftId}
       pexcoverPrice={settings.pexcoverPrice}
+      parentCollectionAccepted={school.parentCollectionAccepted !== false}
     />
   );
 }

@@ -7,7 +7,6 @@ import {
 } from "@/data/schools";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { SCHOOL_DATA_TAG, SCHOOL_DATA_REVALIDATE_SECONDS } from "@/lib/school-utils";
-import { isSchoolPublic } from "./visibility";
 
 type SchoolVisibility = Record<string, boolean>;
 
@@ -20,18 +19,15 @@ const getDatabaseSchoolVisibility = unstable_cache(
 
     while (true) {
       const { data, error } = await supabase
-        .from("schools")
-        .select("slug, status, published")
+        .from("public_school_directory_view")
+        .select("slug")
         .range(from, from + pageSize - 1);
 
       if (error) throw error;
       if (!data || data.length === 0) break;
 
       for (const school of data) {
-        visibility[school.slug] = isSchoolPublic(
-          school.status,
-          school.published,
-        );
+        visibility[school.slug] = true;
       }
 
       if (data.length < pageSize) break;
@@ -48,7 +44,8 @@ const getDatabaseSchoolVisibility = unstable_cache(
 );
 
 function isPublicSchool(slug: string, visibility: SchoolVisibility) {
-  return visibility[slug] !== false;
+  const hasDatabaseProjection = Object.keys(visibility).length > 0;
+  return hasDatabaseProjection ? visibility[slug] === true : true;
 }
 
 export async function getPublicSchoolIndex(): Promise<SchoolIndexRecord[]> {

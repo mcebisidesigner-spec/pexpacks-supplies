@@ -3,14 +3,17 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, Package, CheckCircle2, Layers } from "lucide-react";
+import { Plus, Eye, Package, CheckCircle2, Layers } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
-import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
+import {
+  QuickMetricsGrid,
+  type QuickMetricItem,
+} from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -32,15 +35,23 @@ interface MasterProductsPageViewProps {
 
 function getProductSlug(row: MasterProductRow): string {
   if (row.name) {
-    return row.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return row.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   }
   if (row.sku) {
-    return row.sku.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return row.sku
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   }
   return row.id;
 }
 
-export function MasterProductsPageView({ initialData }: MasterProductsPageViewProps) {
+export function MasterProductsPageView({
+  initialData,
+}: MasterProductsPageViewProps) {
   const router = useRouter();
   const { params, setParams, isPending } = useTableParams();
 
@@ -50,11 +61,7 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
       header: "SKU",
       sortable: true,
       width: "120px",
-      render: (row) => (
-        <span className={styles.itemSkuBadge}>
-          {row.sku}
-        </span>
-      ),
+      render: (row) => <span className={styles.itemSkuBadge}>{row.sku}</span>,
     },
     {
       key: "name",
@@ -77,7 +84,9 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
               >
                 {row.name}
               </Link>
-              {row.brand && <span className={styles.productBrand}>{row.brand}</span>}
+              {row.brand && (
+                <span className={styles.productBrand}>{row.brand}</span>
+              )}
             </div>
           </div>
         );
@@ -118,32 +127,34 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
     },
     {
       key: "actions",
-      header: "Actions",
+      header: "ACTIONS",
       align: "right",
       sticky: "right",
       width: "90px",
       render: (row) => {
+        const slug = getProductSlug(row);
         return (
-          <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-            <AdminButton
-              variant="iconRed"
-              size="sm"
-              aria-label={`Delete ${row.name}`}
-              title={`Delete ${row.name}`}
-              icon={<Trash2 size={13} />}
-              onClick={() => {
-                if (window.confirm(`Are you sure you want to delete "${row.name}"?`)) {
-                  // Trigger deletion or notice
-                }
-              }}
-            />
+          <div
+            className={styles.actionsCell}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Link
+              href={`/admin/products/${slug}`}
+              className={styles.actionEditBtn}
+              title={`View ${row.name}`}
+              aria-label={`View ${row.name}`}
+            >
+              <Eye size={14} />
+            </Link>
           </div>
         );
       },
     },
   ];
 
-  const uniqueCategories = new Set(initialData.products.map((p) => p.category).filter(Boolean)).size;
+  const uniqueCategories = new Set(
+    initialData.products.map((p) => p.category).filter(Boolean),
+  ).size;
 
   const metrics: QuickMetricItem[] = [
     {
@@ -222,7 +233,9 @@ export function MasterProductsPageView({ initialData }: MasterProductsPageViewPr
         data={initialData.products}
         columns={columns}
         keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/products/${getProductSlug(row)}`)}
+        onRowClick={(row) =>
+          router.push(`/admin/products/${getProductSlug(row)}`)
+        }
         isLoading={isPending}
         emptyTitle="No products found"
         emptySubtitle="Try adjusting your search term or category filter."

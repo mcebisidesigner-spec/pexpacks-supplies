@@ -42,7 +42,7 @@ function buildCompleteListPack(
     modalTitle: `${grade.grade} Stationery List`,
     contentHeading: "Official school stationery list",
     description: `Prepared according to the official school list for ${grade.grade}.`,
-    priceLabel: pack.items.length > 0 && grade.price > 0 ? `From ${formatCurrency(grade.price)}` : "From Quote",
+    priceLabel: pack.items.length > 0 && grade.price > 0 ? `From ${formatCurrency(grade.price)}` : "R00.00",
     items: toSchoolListItems(pack),
     customiseTargetId: `customise-${pack.id}`,
     footerActions: (
@@ -142,7 +142,7 @@ export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: Grad
 
           const listItems = toSchoolListItems(pack);
           const hasItems = listItems.length > 0;
-          const priceLabel = hasItems && grade.price > 0 ? `From ${formatCurrency(grade.price)}` : "From Quote";
+          const priceLabel = hasItems && grade.price > 0 ? `From ${formatCurrency(grade.price)}` : "R00.00";
 
           return (
             <ArticlePackCard

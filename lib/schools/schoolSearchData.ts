@@ -16,6 +16,8 @@ type SearchSchoolRow = {
   lowest_price: number | null;
   grades: Json | null;
   custom_badge: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   canonical_pack_item_count?: number;
   total_count?: number;
 };
@@ -143,20 +145,17 @@ async function searchPublicSchoolsFallback(
 ) {
   const supabase = createSupabaseAdminClient();
   let query = supabase
-    .from("schools")
+    .from("public_school_directory_view")
     .select(
       "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge",
       { count: "exact" },
     )
-    .eq("status", "active")
-    .eq("published", true);
+    .in("partnership", ["partner", "non_partner"]);
 
   const search = filters.query?.trim();
   if (search) {
-    query = query.textSearch("search_vector", search, {
-      config: "english",
-      type: "websearch",
-    });
+    const q = safeFilterValue(search);
+    query = query.or(`name.ilike.%${q}%,city.ilike.%${q}%,district.ilike.%${q}%,province.ilike.%${q}%`);
   }
 
   if (filters.grade?.trim()) {
@@ -202,12 +201,11 @@ export function invalidateSchoolSearchCache() {}
 export async function getNearbySchoolRecords(userLat: number, userLng: number, limit = 8) {
   const supabase = createSupabaseAdminClient();
   const { data: schools } = await supabase
-    .from("schools")
+    .from("public_school_directory_view")
     .select(
       "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, latitude, longitude"
     )
-    .eq("status", "active")
-    .eq("published", true)
+    .in("partnership", ["partner", "non_partner"])
     .not("latitude", "is", null)
     .not("longitude", "is", null);
 
@@ -252,30 +250,26 @@ export async function getNearbySchoolRecords(userLat: number, userLng: number, l
 export async function getFeaturedSchoolRecords(limit = 4) {
   const supabase = createSupabaseAdminClient();
 
-  const { data: partnerFeatured } = await supabase
-    .from("schools")
+  const { data: featuredData } = await supabase
+    .from("public_school_directory_view")
     .select(
       "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge"
     )
-    .eq("status", "active")
-    .eq("published", true)
-    .eq("is_partner", true)
-    .eq("is_featured", true)
+    .eq("feature_status", "featured")
+    .in("partnership", ["partner", "non_partner"])
     .order("name", { ascending: true });
 
-  let schools = (partnerFeatured ?? []) as SearchSchoolRow[];
+  let schools = (featuredData ?? []) as SearchSchoolRow[];
 
   if (schools.length < limit) {
     const { data: fallbackData } = await supabase
-      .from("schools")
+      .from("public_school_directory_view")
       .select(
         "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge"
       )
-      .eq("status", "active")
-      .eq("published", true)
-      .or("is_partner.eq.true,is_featured.eq.true")
-      .order("is_partner", { ascending: false })
+      .in("partnership", ["partner", "non_partner"])
       .order("is_featured", { ascending: false })
+      .order("is_partner", { ascending: false })
       .order("name", { ascending: true })
       .limit(limit * 2);
 

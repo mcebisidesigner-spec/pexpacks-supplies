@@ -8,21 +8,36 @@ import {
   type PermissionKey,
   type AdminSession,
 } from "@/lib/admin/rbac";
-import { SCHOOL_STATUSES, type SchoolStatus } from "@/lib/admin/school-constants";
+import {
+  SCHOOL_STATUSES,
+  PUBLICATION_STATUSES,
+  PARTNERSHIP_STATUSES,
+  FEATURE_STATUSES,
+  PARENT_COLLECTION_OPTIONS,
+  type SchoolStatus,
+  type PublicationStatus,
+  type PartnershipStatus,
+  type FeatureStatus,
+  type ParentCollectionOption,
+} from "@/lib/admin/school-constants";
 import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 import { getAdminFilterOptions } from "@/lib/admin/filter-options";
 
 export type SchoolRow = Database["public"]["Tables"]["schools"]["Row"];
-export type { SchoolStatus };
-export { SCHOOL_STATUSES };
-
-export const PUBLICATION_STATUSES = [
-  "draft",
-  "ready_for_review",
-  "published",
-  "archived",
-] as const;
-export type PublicationStatus = (typeof PUBLICATION_STATUSES)[number];
+export type {
+  SchoolStatus,
+  PublicationStatus,
+  PartnershipStatus,
+  FeatureStatus,
+  ParentCollectionOption,
+};
+export {
+  SCHOOL_STATUSES,
+  PUBLICATION_STATUSES,
+  PARTNERSHIP_STATUSES,
+  FEATURE_STATUSES,
+  PARENT_COLLECTION_OPTIONS,
+};
 
 export const DIRECTORY_STATUSES = ["listed", "hidden", "archived"] as const;
 export type DirectoryStatus = (typeof DIRECTORY_STATUSES)[number];
@@ -101,11 +116,14 @@ export const schoolSchema = z.object({
   telephone: optString(40, "telephone"),
   principal: optString(120, "principal"),
   parent_collection_accepted: z
-    .enum(["accepted", "non_accepted"])
+    .enum(["accepted", "unaccepted", "non_accepted"])
+    .default("accepted")
     .transform((value) => value === "accepted"),
   description: optString(5000, "description"),
   status: z.enum(SCHOOL_STATUSES).default("active"),
   publication_status: z.enum(PUBLICATION_STATUSES).default("published"),
+  partnership: z.enum(PARTNERSHIP_STATUSES).default("non_partner"),
+  feature_status: z.enum(FEATURE_STATUSES).default("unfeatured"),
   directory_status: z.enum(DIRECTORY_STATUSES).default("listed"),
   stationery_list_status: z.enum(STATIONERY_LIST_STATUSES).default("verified"),
   published: z.boolean().default(true),
@@ -143,6 +161,20 @@ function raw(formData: FormData, key: string): string {
 }
 
 export function parseSchoolForm(formData: FormData): ParsedSchoolForm {
+  const rawPublication = raw(formData, "publication_status") || "published";
+  const rawPartnership =
+    raw(formData, "partnership") ||
+    (formData.has("refused_partnership")
+      ? "refused_partner"
+      : formData.has("is_partner")
+        ? "partner"
+        : "non_partner");
+  const rawFeature =
+    raw(formData, "feature_status") ||
+    (formData.has("is_featured") ? "featured" : "unfeatured");
+  const rawParentCollection =
+    raw(formData, "parent_collection_accepted") || "accepted";
+
   const parsed = schoolSchema.safeParse({
     name: raw(formData, "name"),
     slug: raw(formData, "slug"),
@@ -153,17 +185,18 @@ export function parseSchoolForm(formData: FormData): ParsedSchoolForm {
     email: raw(formData, "email"),
     telephone: raw(formData, "telephone"),
     principal: raw(formData, "principal"),
-    parent_collection_accepted:
-      raw(formData, "parent_collection_accepted") || "non_accepted",
+    parent_collection_accepted: rawParentCollection,
     description: raw(formData, "description"),
     status: raw(formData, "status") || "active",
-    publication_status: raw(formData, "publication_status") || "published",
+    publication_status: rawPublication,
+    partnership: rawPartnership,
+    feature_status: rawFeature,
     directory_status: raw(formData, "directory_status") || "listed",
     stationery_list_status: raw(formData, "stationery_list_status") || "verified",
-    published: formData.has("published") || raw(formData, "publication_status") === "published",
-    is_partner: formData.has("is_partner"),
-    is_featured: formData.has("is_featured"),
-    refused_partnership: formData.has("refused_partnership"),
+    published: rawPublication === "published",
+    is_partner: rawPartnership === "partner",
+    is_featured: rawFeature === "featured",
+    refused_partnership: rawPartnership === "refused_partner",
     lowest_price: raw(formData, "lowest_price"),
     partner_since: raw(formData, "partner_since"),
     latitude: raw(formData, "latitude"),
@@ -239,7 +272,7 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
 
   let query = admin
     .from("schools")
-    .select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at", { count: "exact" });
+    .select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at,publication_status,directory_status,stationery_list_status,partnership,feature_status", { count: "exact" });
 
   if (filters.q) {
     const q = filters.q.replace(/%/g, "").trim();
@@ -336,7 +369,7 @@ export async function getSchool(idOrSlug: string): Promise<SchoolRow | null> {
   const decoded = decodeURIComponent(idOrSlug).trim();
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
 
-  let query = admin.from("schools").select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at,publication_status,directory_status,stationery_list_status");
+  let query = admin.from("schools").select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at,publication_status,directory_status,stationery_list_status,partnership,feature_status");
 
   if (isUuid) {
     query = query.eq("id", decoded);

@@ -6,6 +6,7 @@ import {
 } from "@/lib/orders";
 import { PEXCOVER_PRICE } from "@/lib/constants";
 import { getGradeBySlug } from "@/lib/school-utils";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export class TrayCheckoutError extends Error {
   constructor(
@@ -65,6 +66,44 @@ export async function handleTrayCheckout(input: {
   }
   if (!input.estimatedTotal || input.estimatedTotal <= 0) {
     throw new TrayCheckoutError("Invalid total.", 400);
+  }
+
+  const isSchoolCollection =
+    input.deliveryMethod === "school_collection" ||
+    input.deliveryMethod === "School collection";
+
+  if (isSchoolCollection) {
+    const schoolSlugs = [
+      ...new Set(
+        [
+          ...input.packs.map((p) => p.schoolSlug),
+          input.primarySchoolSlug,
+        ].filter((s): s is string => Boolean(s)),
+      ),
+    ];
+
+    if (schoolSlugs.length > 0) {
+      const supabase = createSupabaseAdminClient();
+      const { data: schoolsData, error: schoolsError } = await supabase
+        .from("schools")
+        .select("id, name, slug, parent_collection_accepted")
+        .in("slug", schoolSlugs);
+
+      if (schoolsError) {
+        console.error("[trayCheckout] Failed to check collection eligibility:", schoolsError);
+      } else if (schoolsData) {
+        const disallowed = schoolsData.filter(
+          (s) => s.parent_collection_accepted === false,
+        );
+        if (disallowed.length > 0) {
+          const names = disallowed.map((s) => s.name).join(", ");
+          throw new TrayCheckoutError(
+            `School collection is not available for ${names}. Please select home delivery or arranged collection.`,
+            400,
+          );
+        }
+      }
+    }
   }
 
   if (input.idempotencyKey) {

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="mp-title mp-desc">
-  <title id="mp-title">Melville Primary School crest</title>
-  <desc id="mp-desc">Melville Primary School coat of arms with MP initials and tree emblem</desc>
-  <rect width="160" height="160" rx="34" fill="#f0faf5"/>
-  <path fill="#2a4a2a" d="M80 22 28 44v34c0 33 22 52 52 60 30-8 52-27 52-60V44L80 22Z"/>
-  <path fill="#f5f7f4" d="M80 38 44 54v24c0 24 14 39 36 46 22-7 36-22 36-46V54L80 38Z"/>
-  <path fill="#3a7a3a" d="M80 52c-14 0-16 14-16 18s2 6 6 6c2 0 3-2 5-4v16l5 3 5-3V72c2 2 3 4 5 4 4 0 6-2 6-6 0-4-2-18-16-18z"/>
-  <text x="80" y="115" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#2a4a2a">MP</text>
-</svg>

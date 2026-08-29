@@ -160,6 +160,8 @@ export function TrayCheckoutClient({
     useState<ContactMethod>('whatsapp')
   const [consent, setConsent] = useState(false)
 
+  const [disallowSchoolCollection, setDisallowSchoolCollection] =
+    useState(false)
   const [fulfilmentOption, setFulfilmentOption] =
     useState<FulfilmentOption>('school_collection')
   const [multiSchoolDrop, setMultiSchoolDrop] = useState<string | null>(null)
@@ -240,6 +242,40 @@ export function TrayCheckoutClient({
       return packs.map((pack, index) => prev[index] ?? pack.learnerName ?? '')
     })
   }, [packs])
+
+  useEffect(() => {
+    if (uniqueSchools.length === 0) return
+    const slugs = uniqueSchools.map((s) => s.slug).filter(Boolean)
+    if (slugs.length === 0) return
+
+    fetch('/api/schools/visibility', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slugs }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (
+          data?.success &&
+          Array.isArray(data.collectionDisallowedSlugs) &&
+          data.collectionDisallowedSlugs.length > 0
+        ) {
+          setDisallowSchoolCollection(true)
+          setFulfilmentOption((cur) =>
+            cur === 'school_collection' ? 'home_delivery' : cur,
+          )
+        } else {
+          setDisallowSchoolCollection(false)
+        }
+      })
+      .catch(() => {})
+  }, [uniqueSchools])
+
+  const availableFulfilmentOptions = useMemo(() => {
+    return fulfilmentOptions.filter(
+      (opt) => !disallowSchoolCollection || opt.value !== 'school_collection',
+    )
+  }, [disallowSchoolCollection])
 
   useEffect(() => {
     if (isSingleSchool && fulfilmentOption === 'school_collection') {
@@ -729,7 +765,7 @@ export function TrayCheckoutClient({
                   Delivery or collection method
                 </legend>
                 <div className={styles.deliveryOptions}>
-                  {fulfilmentOptions.map((option) => (
+                  {availableFulfilmentOptions.map((option) => (
                     <label
                       key={option.value}
                       className={clsx(styles.deliveryOption, fulfilmentOption === option.value && styles.deliveryOptionSelected)}

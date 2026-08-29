@@ -2,7 +2,6 @@ import { unstable_cache } from "next/cache";
 import type { GradePack, School, SchoolPackItem } from "@/data/schools";
 import { getSchoolBySlug as getStaticSchoolBySlug } from "@/data/schools";
 import { getGradeOrder } from "@/lib/grade-utils";
-import { isSchoolPublic } from "@/lib/schools/visibility";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const SCHOOL_DATA_TAG = "school-data";
@@ -18,6 +17,7 @@ type DbSchool = {
   logo: string | null;
   is_partner: boolean | null;
   refused_partnership: boolean | null;
+  parent_collection_accepted?: boolean | null;
   principal?: string | null;
   website?: string | null;
 };
@@ -95,7 +95,7 @@ function toGradePacks(packs: DbPack[]): GradePack[] {
         id: pack.id,
         grade,
         gradeSlug: extractGradeSlug(grade, pack.slug),
-        price: pack.price ?? 0,
+        price: packItems.length === 0 ? 0 : (pack.price ?? 0),
         contents: packItems.map((item) =>
           item.quantity > 1 ? `${item.quantity}x ${item.name}` : item.name,
         ),
@@ -120,6 +120,7 @@ function toSchool(school: DbSchool, packs: DbPack[]): School {
     website: school.website || school.principal || null,
     isPartnerSchool: Boolean(school.is_partner),
     refusedPartnership: Boolean(school.refused_partnership),
+    parentCollectionAccepted: school.parent_collection_accepted !== false,
     grades: toGradePacks(packs),
   };
 }
@@ -138,9 +139,9 @@ async function getSchoolWithBoundedQueries(
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
 
   let query = supabase
-    .from("schools")
+    .from("public_school_directory_view")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, refused_partnership, status, published, principal",
+      "id, name, slug, city, district, province, logo, is_partner, refused_partnership, parent_collection_accepted, principal",
     );
 
   if (isUuid) {
@@ -153,13 +154,13 @@ async function getSchoolWithBoundedQueries(
 
   if (schoolError) throw schoolError;
   if (!dbSchool) return getStaticSchoolBySlug(slug);
-  if (!isSchoolPublic(dbSchool.status, dbSchool.published)) return undefined;
 
   const { data: dbPacks, error: packsError } = await supabase
     .from("school_packs")
     .select("id, title, slug, price, description, stock, sort_order")
     .or(`school_id.eq.${dbSchool.id},slug.ilike.${dbSchool.slug}-%`)
     .eq("visible", true)
+    .or("publication_status.eq.published,and(publication_status.is.null,visible.eq.true)")
     .order("sort_order", { ascending: true })
     .order("title", { ascending: true });
 

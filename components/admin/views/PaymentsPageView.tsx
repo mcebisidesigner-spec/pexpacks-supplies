@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Download, Eye, CheckCircle2, Clock, XCircle } from "lucide-react";
@@ -18,104 +18,86 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
+import type { PaymentListResult, OrderRow } from "@/lib/admin/payments";
 
-export interface PaymentItem {
-  id: string;
-  paymentId: string;
-  orderNumber: string;
-  date: string;
-  provider: string;
-  amount: number;
-  status: string;
-  reconciled: boolean;
+interface PaymentsPageViewProps {
+  initialData: PaymentListResult;
 }
 
-const SEED_PAYMENTS: PaymentItem[] = [
-  { id: "p-1", paymentId: "PAY-51218", orderNumber: "ORD-10528", date: "2026-05-27", provider: "Yoco", amount: 28430.00, status: "paid", reconciled: true },
-  { id: "p-2", paymentId: "PAY-51217", orderNumber: "ORD-10527", date: "2026-05-26", provider: "Ozow", amount: 16230.00, status: "paid", reconciled: true },
-  { id: "p-3", paymentId: "PAY-51216", orderNumber: "ORD-10526", date: "2026-05-26", provider: "EFT", amount: 35435.00, status: "pending", reconciled: false },
-  { id: "p-4", paymentId: "PAY-51215", orderNumber: "ORD-10525", date: "2026-05-25", provider: "Yoco", amount: 34131.00, status: "paid", reconciled: true },
-  { id: "p-5", paymentId: "PAY-51214", orderNumber: "ORD-10524", date: "2026-05-25", provider: "HappyPay", amount: 18360.00, status: "pending", reconciled: false },
-  { id: "p-6", paymentId: "PAY-51213", orderNumber: "ORD-10523", date: "2026-05-24", provider: "EFT", amount: 12450.00, status: "paid", reconciled: true },
-  { id: "p-7", paymentId: "PAY-51212", orderNumber: "ORD-10522", date: "2026-05-24", provider: "Ozow", amount: 28361.00, status: "paid", reconciled: true },
-  { id: "p-8", paymentId: "PAY-51211", orderNumber: "ORD-10521", date: "2026-05-23", provider: "Yoco", amount: 15671.00, status: "failed", reconciled: false },
-];
+function formatDate(value: string | null): string {
+  if (!value) return "-";
+  return new Date(value).toLocaleDateString("en-ZA");
+}
 
-export function PaymentsPageView() {
+function formatMoney(value: number | null | undefined): string {
+  return `R ${Number(value ?? 0).toLocaleString("en-ZA", { minimumFractionDigits: 2 })}`;
+}
+
+function paymentRef(row: OrderRow): string {
+  return row.gateway_reference || row.payment_reference || row.order_reference || row.id;
+}
+
+function providerLabel(value: string | null | undefined): string {
+  if (!value) return "Pending";
+  if (value.toLowerCase() === "ozow") return "Ozow";
+  return value;
+}
+
+export function PaymentsPageView({ initialData }: PaymentsPageViewProps) {
   const router = useRouter();
   const { params, setParams } = useTableParams();
 
-  const filtered = useMemo(() => {
-    return SEED_PAYMENTS.filter((p) => {
-      const matchSearch =
-        !params.q.trim() ||
-        p.paymentId.toLowerCase().includes(params.q.toLowerCase()) ||
-        p.orderNumber.toLowerCase().includes(params.q.toLowerCase());
-
-      const matchProv =
-        !params.category || params.category === "all" || p.provider === params.category;
-
-      return matchSearch && matchProv;
-    });
-  }, [params.q, params.category]);
-
-  const columns: ColumnDef<PaymentItem>[] = [
+  const columns: ColumnDef<OrderRow>[] = [
     {
-      key: "paymentId",
+      key: "gateway_reference",
       header: "PAYMENT REF",
       sortable: true,
-      width: "160px",
-      render: (row) => (
-        <span className={styles.skuBadge}>{row.paymentId}</span>
-      ),
+      width: "180px",
+      render: (row) => <span className={styles.skuBadge}>{paymentRef(row)}</span>,
     },
     {
-      key: "orderNumber",
+      key: "order_reference",
       header: "ORDER REFERENCE",
       sortable: true,
       render: (row) => (
         <Link
-          href={`/admin/payments/${row.orderNumber}`}
+          href={`/admin/payments/${row.order_reference || row.id}`}
           className={styles.schoolNameTitle}
           onClick={(e) => e.stopPropagation()}
         >
-          {row.orderNumber}
+          {row.order_reference || row.id}
         </Link>
       ),
     },
     {
-      key: "provider",
+      key: "payment_gateway",
       header: "GATEWAY",
       sortable: true,
       width: "130px",
-      render: (row) => <span className={styles.textMuted}>{row.provider}</span>,
+      render: (row) => <span className={styles.textMuted}>{providerLabel(row.payment_gateway)}</span>,
     },
     {
-      key: "date",
+      key: "created_at",
       header: "DATE",
       sortable: true,
       width: "130px",
-      render: (row) => <span className={styles.textMuted}>{row.date}</span>,
+      render: (row) => <span className={styles.textMuted}>{formatDate(row.paid_at || row.created_at)}</span>,
     },
     {
-      key: "amount",
+      key: "estimated_total",
       header: "AMOUNT",
       sortable: true,
       align: "right",
       width: "140px",
-      render: (row) => (
-        <span className={styles.priceHighlight}>
-          R {row.amount.toFixed(2)}
-        </span>
-      ),
+      render: (row) => <span className={styles.priceHighlight}>{formatMoney(row.estimated_total)}</span>,
     },
     {
       key: "status",
       header: "STATUS",
       sortable: true,
       align: "center",
-      width: "130px",
-      render: (row) => <StatusBadge status={row.status} showDot />,
+      width: "150px",
+      render: (row) => <StatusBadge status={row.status || "pending_payment"} showDot />,
     },
     {
       key: "actions",
@@ -126,9 +108,9 @@ export function PaymentsPageView() {
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
           <Link
-            href={`/admin/payments/${row.orderNumber}`}
+            href={`/admin/payments/${row.order_reference || row.id}`}
             className={styles.actionEditBtn}
-            title={`View payment for ${row.orderNumber}`}
+            title={`View payment for ${row.order_reference || row.id}`}
           >
             <Eye size={14} />
           </Link>
@@ -137,34 +119,30 @@ export function PaymentsPageView() {
     },
   ];
 
-  const totalRev = filtered
-    .filter((p) => p.status === "paid")
-    .reduce((sum, p) => sum + p.amount, 0);
-  const paidCount = filtered.filter((p) => p.status === "paid").length;
-  const pendingCount = filtered.filter((p) => p.status === "pending").length;
-  const failedCount = filtered.filter((p) => p.status === "failed").length;
+  const pendingCount = initialData.payments.filter((p) => ["pending", "pending_payment"].includes(p.status || "")).length;
+  const failedCount = initialData.payments.filter((p) => p.status === "payment_failed").length;
 
   const metrics: QuickMetricItem[] = [
     {
       label: "TOTAL REVENUE",
-      value: `R ${totalRev.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
-      subtitle: "+22% vs last month",
-      trendDirection: "up",
+      value: formatMoney(initialData.paidTotal),
+      subtitle: "Verified paid orders",
+      trendDirection: "neutral",
       tone: "emerald",
       icon: <ZarIcon size={16} />,
     },
     {
       label: "SETTLED ORDERS",
-      value: paidCount,
-      subtitle: "Instant gateway capture",
-      trendDirection: "up",
+      value: initialData.paidCount,
+      subtitle: "Payment complete",
+      trendDirection: "neutral",
       tone: "cyan",
       icon: <CheckCircle2 size={16} />,
     },
     {
-      label: "PENDING ESCROW",
+      label: "PENDING PAYMENT",
       value: pendingCount,
-      subtitle: "EFT & PayFast processing",
+      subtitle: "Awaiting gateway result",
       trendDirection: "neutral",
       tone: "amber",
       icon: <Clock size={16} />,
@@ -173,7 +151,7 @@ export function PaymentsPageView() {
       label: "FAILED / VOID",
       value: failedCount,
       subtitle: "Unsuccessful transactions",
-      trendDirection: "down",
+      trendDirection: "neutral",
       tone: "red",
       icon: <XCircle size={16} />,
     },
@@ -183,14 +161,10 @@ export function PaymentsPageView() {
     <div className={styles.container}>
       <AdminPageHeader
         title="Payments"
-        count={filtered.length}
+        count={initialData.total}
         subtitle="Gateway transaction reconciliation and automated payment audit logs."
         actions={
-          <AdminButton
-            href="/admin/payments/export"
-            variant="secondary"
-            icon={<Download size={14} />}
-          >
+          <AdminButton href="/admin/payments/export" variant="secondary" icon={<Download size={14} />}>
             Export Ledger
           </AdminButton>
         }
@@ -199,36 +173,37 @@ export function PaymentsPageView() {
       <QuickMetricsGrid metrics={metrics} />
 
       <DataTableToolbar
-        searchPlaceholder="Search payments by ref or order number..."
+        searchPlaceholder="Search payments by ref, order, or customer..."
         filters={
           <div className={styles.filterGroup}>
             <AdminSelect
-              value={params.category || "all"}
-              onChange={(e) => setParams({ category: e.target.value }, true)}
+              value={params.status || "all"}
+              onChange={(e) => setParams({ status: e.target.value }, true)}
               className={styles.toolbarSelect}
             >
-              <option value="all">Gateway: All</option>
-              <option value="Yoco">Yoco</option>
-              <option value="Ozow">Ozow</option>
-              <option value="HappyPay">HappyPay</option>
-              <option value="EFT">Direct EFT</option>
+              <option value="all">Status: All</option>
+              {initialData.statusOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </AdminSelect>
           </div>
         }
       />
 
       <DataTable
-        data={filtered}
+        data={initialData.payments}
         columns={columns}
         keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/payments/${row.orderNumber}`)}
+        onRowClick={(row) => router.push(`/admin/payments/${row.order_reference || row.id}`)}
         emptyTitle="No payments found"
         emptySubtitle="Try adjusting your search criteria."
         footer={
           <DataTablePagination
-            total={filtered.length}
-            pageSize={filtered.length || 25}
-            currentPage={1}
+            total={initialData.total}
+            pageSize={params.pageSize}
+            currentPage={initialData.page}
           />
         }
       />

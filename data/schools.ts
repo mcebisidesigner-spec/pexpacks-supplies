@@ -34,6 +34,7 @@ export type School = {
   website?: string | null;
   isPartnerSchool: boolean;
   refusedPartnership?: boolean;
+  parentCollectionAccepted?: boolean;
   customBadge?: string | null;
   grades: GradePack[];
 };

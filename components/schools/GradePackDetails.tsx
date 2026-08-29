@@ -157,7 +157,11 @@ export function GradePackDetails({
       <StickyOrderBar
         schoolName={school.name}
         gradeLabel={grade.grade}
-        priceLabel={formatCurrency(grade.price)}
+        priceLabel={
+          grade.price > 0 && grade.packItems && grade.packItems.length > 0
+            ? formatCurrency(grade.price)
+            : "R00.00"
+        }
         targetSelector="#grade-actions"
       />
     </article>

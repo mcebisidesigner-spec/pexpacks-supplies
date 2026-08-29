@@ -3,10 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, Package, FileText, CheckCircle2, EyeOff } from "lucide-react";
+import { Eye, Package, FileText, CheckCircle2, EyeOff } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
@@ -111,28 +110,30 @@ export function PacksPageView({ initialData }: PacksPageViewProps) {
       header: "ACTIONS",
       align: "right",
       sticky: "right",
-      width: "90px",
-      render: (row) => (
-        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            className={styles.actionDeleteBtn}
-            title={`Delete packs for ${row.school_name}`}
-            aria-label={`Delete packs for ${row.school_name}`}
-            onClick={() => {
-              if (
-                window.confirm(
-                  `Are you sure you want to delete packs for "${row.school_name}"?`
-                )
-              ) {
-                // Delete action
-              }
-            }}
+      width: "80px",
+      render: (row) => {
+        const slug =
+          row.school_slug ||
+          row.school_name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
+        return (
+          <div
+            className={styles.actionsCell}
+            onClick={(e) => e.stopPropagation()}
           >
-            <Trash2 size={14} />
-          </button>
-        </div>
-      ),
+            <Link
+              href={`/admin/packs/${slug}`}
+              className={styles.actionEditBtn}
+              title={`View packs for ${row.school_name}`}
+              aria-label={`View packs for ${row.school_name}`}
+            >
+              <Eye size={14} />
+            </Link>
+          </div>
+        );
+      },
     },
   ];
 
@@ -182,15 +183,6 @@ export function PacksPageView({ initialData }: PacksPageViewProps) {
         title="School Packs"
         count={data.totalSchools}
         subtitle="Manage school stationery packs, grade requirements, pricing, and pack listings."
-        actions={
-          <AdminButton
-            href="/admin/schools/new"
-            variant="primary"
-            icon={<Plus size={14} />}
-          >
-            New School
-          </AdminButton>
-        }
       />
 
       <QuickMetricsGrid metrics={metrics} />

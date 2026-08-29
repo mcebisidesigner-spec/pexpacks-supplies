@@ -3,13 +3,23 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, GraduationCap, CheckCircle2, EyeOff, Award } from "lucide-react";
+import {
+  Plus,
+  Eye,
+  GraduationCap,
+  CheckCircle2,
+  EyeOff,
+  Award,
+} from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
-import { QuickMetricsGrid, type QuickMetricItem } from "@/components/admin/ui/QuickMetricsGrid";
+import {
+  QuickMetricsGrid,
+  type QuickMetricItem,
+} from "@/components/admin/ui/QuickMetricsGrid";
 import {
   DataTable,
   DataTableToolbar,
@@ -23,7 +33,11 @@ interface SchoolsPageViewProps {
   initialData?: SchoolListResult;
 }
 
-function getSchoolSlug(school: { id: string; name: string; slug?: string | null }): string {
+function getSchoolSlug(school: {
+  id: string;
+  name: string;
+  slug?: string | null;
+}): string {
   return (
     school.slug ||
     school.name
@@ -57,7 +71,10 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       width: "160px",
       render: (row) => (
         <span className={styles.skuBadge}>
-          SCH-{row.slug ? row.slug.slice(0, 10).toUpperCase() : row.id.slice(0, 8).toUpperCase()}
+          SCH-
+          {row.slug
+            ? row.slug.slice(0, 10).toUpperCase()
+            : row.id.slice(0, 8).toUpperCase()}
         </span>
       ),
     },
@@ -126,20 +143,18 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
       sticky: "right",
       width: "90px",
       render: (row) => (
-        <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            className={styles.actionDeleteBtn}
-            title={`Delete ${row.name}`}
-            aria-label={`Delete ${row.name}`}
-            onClick={() => {
-              if (window.confirm(`Are you sure you want to delete "${row.name}"?`)) {
-                // Trigger deletion
-              }
-            }}
+        <div
+          className={styles.actionsCell}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Link
+            href={`/admin/schools/${getSchoolSlug(row)}`}
+            className={styles.actionEditBtn}
+            title={`View ${row.name}`}
+            aria-label={`View ${row.name}`}
           >
-            <Trash2 size={14} />
-          </button>
+            <Eye size={14} />
+          </Link>
         </div>
       ),
     },
@@ -147,10 +162,14 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
 
   const partnerCount = data.schools.filter((s) => s.is_partner === true).length;
   const activeCount = data.schools.filter(
-    (s) => s.published !== false && s.status !== "inactive" && !s.refused_partnership
+    (s) =>
+      s.published !== false &&
+      s.status !== "inactive" &&
+      !s.refused_partnership,
   ).length;
   const inactiveCount = data.schools.filter(
-    (s) => s.published === false || s.status === "inactive" || s.refused_partnership
+    (s) =>
+      s.published === false || s.status === "inactive" || s.refused_partnership,
   ).length;
 
   const metrics: QuickMetricItem[] = [
@@ -180,7 +199,8 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
     },
     {
       label: "INACTIVE SCHOOLS",
-      value: (data.total ? data.total - (activeCount || 3) : inactiveCount) || 3339,
+      value:
+        (data.total ? data.total - (activeCount || 3) : inactiveCount) || 3339,
       subtitle: "Unpublished / Onboarding",
       trendDirection: "down",
       tone: "red",
@@ -228,7 +248,9 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         data={data.schools}
         columns={columns}
         keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/schools/${getSchoolSlug(row)}`)}
+        onRowClick={(row) =>
+          router.push(`/admin/schools/${getSchoolSlug(row)}`)
+        }
         isLoading={isPending}
         emptyTitle="No schools found"
         emptySubtitle="Try adjusting your search filters."

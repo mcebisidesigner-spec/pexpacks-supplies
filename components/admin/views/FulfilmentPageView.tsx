@@ -16,83 +16,85 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
+import type { FulfilmentRow } from "@/lib/admin/operations";
 
-interface FulfilmentRow {
-  id: string;
-  orderNumber: string;
-  school: string;
-  status: string;
-  batchWave: string;
-  itemsCount: number;
-  estDispatch: string;
+interface FulfilmentPageViewProps {
+  initialData: FulfilmentRow[];
 }
 
-const SEED_FULFILMENT: FulfilmentRow[] = [
-  { id: "f-1", orderNumber: "ORD-10528", school: "Primrose Hill Primary", status: "ready_to_pack", batchWave: "BATCH-064", itemsCount: 128, estDispatch: "2026-05-28" },
-  { id: "f-2", orderNumber: "ORD-10527", school: "Wit Deep Primary", status: "packing", batchWave: "BATCH-063", itemsCount: 76, estDispatch: "2026-05-28" },
-  { id: "f-3", orderNumber: "ORD-10526", school: "Buzy Bee Primary", status: "procurement", batchWave: "WAVE-025", itemsCount: 192, estDispatch: "2026-05-26" },
-  { id: "f-4", orderNumber: "ORD-10525", school: "St Dominic's Catholic", status: "ready_to_pack", batchWave: "BATCH-062", itemsCount: 102, estDispatch: "2026-05-25" },
-  { id: "f-5", orderNumber: "ORD-10524", school: "Crescent Primary", status: "dispatched", batchWave: "BATCH-061", itemsCount: 58, estDispatch: "2026-05-24" },
-  { id: "f-6", orderNumber: "ORD-10523", school: "Daleview Secondary", status: "delivered", batchWave: "BATCH-060", itemsCount: 148, estDispatch: "2026-05-23" },
-];
+function formatDate(value: string | null): string {
+  if (!value) return "No target";
+  return new Date(value).toLocaleDateString("en-ZA");
+}
 
-export function FulfilmentPageView() {
+function orderRef(row: FulfilmentRow): string {
+  return row.orders?.order_reference || row.order_id;
+}
+
+function schoolName(row: FulfilmentRow): string {
+  return row.orders?.school_name || "Unassigned school";
+}
+
+function statusForRow(row: FulfilmentRow): string {
+  return row.packing_records[0]?.status || row.status || row.orders?.status || "pending";
+}
+
+export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
   const router = useRouter();
   const { params, setParams } = useTableParams();
 
   const filtered = useMemo(() => {
-    return SEED_FULFILMENT.filter((f) => {
+    const q = params.q.trim().toLowerCase();
+    return initialData.filter((row) => {
+      const status = statusForRow(row);
       const matchSearch =
-        !params.q.trim() ||
-        f.orderNumber.toLowerCase().includes(params.q.toLowerCase()) ||
-        f.school.toLowerCase().includes(params.q.toLowerCase()) ||
-        f.batchWave.toLowerCase().includes(params.q.toLowerCase());
-
-      const matchStatus =
-        !params.status || params.status === "all" || f.status === params.status;
-
+        !q ||
+        orderRef(row).toLowerCase().includes(q) ||
+        schoolName(row).toLowerCase().includes(q) ||
+        row.method.toLowerCase().includes(q);
+      const matchStatus = !params.status || params.status === "all" || status === params.status || row.status === params.status;
       return matchSearch && matchStatus;
     });
-  }, [params.q, params.status]);
+  }, [initialData, params.q, params.status]);
 
   const columns: ColumnDef<FulfilmentRow>[] = [
     {
-      key: "orderNumber",
-      header: "ORDER & BATCH",
+      key: "order_id",
+      header: "ORDER & METHOD",
       sortable: true,
       render: (row) => (
         <div className={styles.productCell}>
           <Link
-            href={`/admin/fulfilment/${row.orderNumber}`}
+            href={`/admin/fulfilment/${orderRef(row)}`}
             className={styles.schoolNameTitle}
             onClick={(e) => e.stopPropagation()}
           >
-            {row.orderNumber}
+            {orderRef(row)}
           </Link>
-          <span className={styles.productBrand}>{row.batchWave}</span>
+          <span className={styles.productBrand}>{row.method.replaceAll("_", " ")}</span>
         </div>
       ),
     },
     {
-      key: "school",
+      key: "method",
       header: "DESTINATION SCHOOL",
       sortable: true,
-      render: (row) => <span className={styles.textMuted}>{row.school}</span>,
+      render: (row) => <span className={styles.textMuted}>{schoolName(row)}</span>,
     },
     {
-      key: "itemsCount",
-      header: "TOTAL ITEMS",
+      key: "readiness",
+      header: "READINESS",
       sortable: true,
       align: "center",
       width: "130px",
-      render: (row) => <span className={styles.textMuted}>{row.itemsCount} units</span>,
+      render: (row) => <span className={styles.textMuted}>{Math.round(row.readiness)}%</span>,
     },
     {
-      key: "estDispatch",
+      key: "target_date",
       header: "TARGET DATE",
       sortable: true,
       width: "140px",
-      render: (row) => <span className={styles.textMuted}>{row.estDispatch}</span>,
+      render: (row) => <span className={styles.textMuted}>{formatDate(row.target_date)}</span>,
     },
     {
       key: "status",
@@ -100,7 +102,7 @@ export function FulfilmentPageView() {
       sortable: true,
       align: "center",
       width: "150px",
-      render: (row) => <StatusBadge status={row.status} showDot />,
+      render: (row) => <StatusBadge status={statusForRow(row)} showDot />,
     },
     {
       key: "actions",
@@ -111,9 +113,9 @@ export function FulfilmentPageView() {
       render: (row) => (
         <div className={styles.actionsCell} onClick={(e) => e.stopPropagation()}>
           <Link
-            href={`/admin/fulfilment/${row.orderNumber}`}
+            href={`/admin/fulfilment/${orderRef(row)}`}
             className={styles.actionEditBtn}
-            title={`View pack sheet for ${row.orderNumber}`}
+            title={`View pack sheet for ${orderRef(row)}`}
           >
             <Eye size={14} />
           </Link>
@@ -121,6 +123,11 @@ export function FulfilmentPageView() {
       ),
     },
   ];
+
+  const readyToPack = initialData.filter((row) => row.readiness >= 100 && !["dispatched", "delivered", "collected"].includes(row.status)).length;
+  const inAssembly = initialData.filter((row) => ["packing", "quality_check", "packed"].includes(statusForRow(row))).length;
+  const qualityChecked = initialData.filter((row) => ["quality_check", "packed"].includes(statusForRow(row))).length;
+  const dispatched = initialData.filter((row) => ["dispatched", "delivered", "collected"].includes(row.status)).length;
 
   return (
     <div className={styles.container}>
@@ -130,38 +137,37 @@ export function FulfilmentPageView() {
         subtitle="School pack assembly queues, box labeling, and courier dispatch management."
       />
 
-      {/* Metrics Row */}
       <QuickMetricsGrid
         metrics={[
           {
             label: "READY TO PACK",
-            value: 356,
+            value: readyToPack,
             subtitle: "Stock fully secured",
-            trendDirection: "up",
+            trendDirection: "neutral",
             tone: "emerald",
             icon: <PackageCheck size={16} />,
           },
           {
             label: "IN ASSEMBLY",
-            value: 84,
+            value: inAssembly,
             subtitle: "Workstation queue",
-            trendDirection: "up",
+            trendDirection: "neutral",
             tone: "cyan",
             icon: <Clock size={16} />,
           },
           {
             label: "QUALITY CHECKED",
-            value: 192,
-            subtitle: "Barcode verification",
-            trendDirection: "up",
+            value: qualityChecked,
+            subtitle: "Packed or checking",
+            trendDirection: "neutral",
             tone: "blue",
             icon: <CheckCircle2 size={16} />,
           },
           {
             label: "DISPATCHED",
-            value: "1,420",
-            subtitle: "En route / Delivered",
-            trendDirection: "up",
+            value: dispatched,
+            subtitle: "En route / delivered",
+            trendDirection: "neutral",
             tone: "purple",
             icon: <Truck size={16} />,
           },
@@ -169,7 +175,7 @@ export function FulfilmentPageView() {
       />
 
       <DataTableToolbar
-        searchPlaceholder="Search packing queue by order, school, batch..."
+        searchPlaceholder="Search packing queue by order, school, method..."
         filters={
           <div className={styles.filterGroup}>
             <AdminSelect
@@ -178,11 +184,14 @@ export function FulfilmentPageView() {
               className={styles.toolbarSelect}
             >
               <option value="all">Status: All</option>
-              <option value="ready_to_pack">Ready to Pack</option>
+              <option value="not_ready">Not Ready</option>
+              <option value="pending">Pending</option>
               <option value="packing">Packing</option>
-              <option value="procurement">Procurement</option>
+              <option value="quality_check">Quality Check</option>
+              <option value="packed">Packed</option>
               <option value="dispatched">Dispatched</option>
               <option value="delivered">Delivered</option>
+              <option value="collected">Collected</option>
             </AdminSelect>
           </div>
         }
@@ -192,7 +201,7 @@ export function FulfilmentPageView() {
         data={filtered}
         columns={columns}
         keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/fulfilment/${row.orderNumber}`)}
+        onRowClick={(row) => router.push(`/admin/fulfilment/${orderRef(row)}`)}
         emptyTitle="No packing jobs found"
         emptySubtitle="Try adjusting your search query."
         footer={

@@ -33,6 +33,7 @@ type CheckoutFormProps = {
   deliveryNote: string;
   draftId?: string;
   pexcoverPrice?: number;
+  parentCollectionAccepted?: boolean;
 };
 
 type CheckoutStep = "review" | "details" | "delivery" | "pay";
@@ -82,6 +83,7 @@ export function CheckoutForm({
   deliveryNote,
   draftId,
   pexcoverPrice = PEXCOVER_PRICE,
+  parentCollectionAccepted = true,
 }: CheckoutFormProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const router = useRouter();
@@ -145,7 +147,9 @@ export function CheckoutForm({
   const [pexcoverNotes, setPexcoverNotes] = useState("");
 
   const [fulfilmentOption, setFulfilmentOption] =
-    useState<FulfilmentOption>("School collection");
+    useState<FulfilmentOption>(
+      parentCollectionAccepted !== false ? "School collection" : "Delivery",
+    );
   const [address, setAddress] = useState("");
   const [suburb, setSuburb] = useState("");
   const [city, setCity] = useState("");
@@ -467,6 +471,7 @@ export function CheckoutForm({
       case 2:
         return (
           <DeliveryStep
+            allowSchoolCollection={parentCollectionAccepted !== false}
             fulfilmentOption={fulfilmentOption}
             onFulfilmentOptionChange={setFulfilmentOption}
             address={address}
