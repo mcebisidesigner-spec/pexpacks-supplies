@@ -39,129 +39,6 @@ export interface SchoolPackRowData {
   avatarColor: string;
 }
 
-const SEED_SCHOOL_ROWS: SchoolPackRowData[] = [
-  {
-    id: "sch-1",
-    code: "SCH-1001",
-    name: "3d Christian Academy",
-    gradePacksCount: 0,
-    season: "2027",
-    lastEdited: "17/08/26",
-    lastEditedBy: "Mcebisi M.",
-    visibility: "hidden",
-    status: "Inactive",
-    health: "good",
-    owner: "MC",
-    ownerName: "Mcebisi M.",
-    avatarColor: "rgba(45, 212, 191, 0.18)",
-  },
-  {
-    id: "sch-2",
-    code: "SCH-1002",
-    name: "A Re Thabang Primary School",
-    gradePacksCount: 2,
-    season: "2027",
-    lastEdited: "17/08/26",
-    lastEditedBy: "Mcebisi M.",
-    visibility: "visible",
-    status: "Active",
-    health: "good",
-    owner: "MC",
-    ownerName: "Mcebisi M.",
-    avatarColor: "rgba(168, 85, 247, 0.18)",
-  },
-  {
-    id: "sch-3",
-    code: "SCH-1003",
-    name: "Aa Academy",
-    gradePacksCount: 7,
-    season: "2027",
-    lastEdited: "15/08/26",
-    lastEditedBy: "Kwanele G.",
-    visibility: "visible",
-    status: "Active",
-    health: "good",
-    owner: "KG",
-    ownerName: "Kwanele G.",
-    avatarColor: "rgba(249, 115, 22, 0.18)",
-  },
-  {
-    id: "sch-4",
-    code: "SCH-1004",
-    name: "Ab Phokompe Secondary School",
-    gradePacksCount: 0,
-    season: "2027",
-    lastEdited: "15/08/26",
-    lastEditedBy: "Mcebisi M.",
-    visibility: "hidden",
-    status: "Inactive",
-    health: "good",
-    owner: "MC",
-    ownerName: "Mcebisi M.",
-    avatarColor: "rgba(59, 130, 246, 0.18)",
-  },
-  {
-    id: "sch-5",
-    code: "SCH-1005",
-    name: "Buhle High School",
-    gradePacksCount: 6,
-    season: "2027",
-    lastEdited: "14/08/26",
-    lastEditedBy: "Kwanele G.",
-    visibility: "visible",
-    status: "Active",
-    health: "needs_work",
-    owner: "KG",
-    ownerName: "Kwanele G.",
-    avatarColor: "rgba(16, 185, 129, 0.18)",
-  },
-  {
-    id: "sch-6",
-    code: "SCH-1006",
-    name: "Crescent Primary School",
-    gradePacksCount: 3,
-    season: "2027",
-    lastEdited: "12/08/26",
-    lastEditedBy: "Mcebisi M.",
-    visibility: "visible",
-    status: "Active",
-    health: "needs_work",
-    owner: "MC",
-    ownerName: "Mcebisi M.",
-    avatarColor: "rgba(239, 68, 68, 0.18)",
-  },
-  {
-    id: "sch-7",
-    code: "SCH-1007",
-    name: "Daleview Secondary School",
-    gradePacksCount: 8,
-    season: "2027",
-    lastEdited: "10/08/26",
-    lastEditedBy: "Mcebisi M.",
-    visibility: "visible",
-    status: "Active",
-    health: "good",
-    owner: "MC",
-    ownerName: "Mcebisi M.",
-    avatarColor: "rgba(139, 92, 246, 0.18)",
-  },
-  {
-    id: "sch-8",
-    code: "SCH-1008",
-    name: "Edenvale Primary School",
-    gradePacksCount: 0,
-    season: "2027",
-    lastEdited: "09/08/26",
-    lastEditedBy: "Kwanele G.",
-    visibility: "hidden",
-    status: "Inactive",
-    health: "needs_work",
-    owner: "KG",
-    ownerName: "Kwanele G.",
-    avatarColor: "rgba(20, 184, 166, 0.18)",
-  },
-];
-
 function SparklineWave({ color, direction = "up" }: { color: string; direction?: "up" | "down" }) {
   const path =
     direction === "up"
@@ -181,13 +58,13 @@ function formatNumber(num: number): string {
 }
 
 function formatDateString(isoOrDateStr?: string | null): string {
-  if (!isoOrDateStr) return "17/08/26";
+  if (!isoOrDateStr) return "Never";
   try {
     const d = new Date(isoOrDateStr);
-    if (isNaN(d.getTime())) return "17/08/26";
+    if (isNaN(d.getTime())) return "Never";
     return d.toLocaleDateString("en-GB");
   } catch {
-    return "17/08/26";
+    return "Never";
   }
 }
 
@@ -239,10 +116,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" })
         );
     }
-    return SEED_SCHOOL_ROWS.map((s) => ({
-      ...s,
-      visibility: visibilityMap[s.id] ?? s.visibility,
-    }));
+    return [];
   }, [initialData, visibilityMap]);
 
   // Filtered rows

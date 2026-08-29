@@ -8,8 +8,10 @@ import {
   Image as ImageIcon,
   Save,
   ShieldCheck,
+  AlertTriangle,
 } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
+import { WarningBannerModal } from "@/components/admin/ui/WarningBannerModal";
 // Redundant legacy checkboxes and statuses removed; authoritative constants imported from school-constants
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
@@ -139,6 +141,12 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
         ? "partner"
         : "non_partner");
   const [currentPartnership, setCurrentPartnership] = useState(initialPartnership);
+  const [currentPublication, setCurrentPublication] = useState(
+    school?.publication_status === "ready_for_review"
+      ? "ready_for_review"
+      : "published",
+  );
+  const [showRefusedModal, setShowRefusedModal] = useState(false);
 
   const initialGradesList = Array.isArray(school?.grades)
     ? (school.grades.filter(
@@ -487,24 +495,22 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 <select
                   id="publication_status"
                   name="publication_status"
-                  defaultValue={
-                    school?.publication_status === "ready_for_review"
-                      ? "ready_for_review"
-                      : "published"
-                  }
+                  value={currentPublication}
                   className={formStyles.sideSelect}
-                  onChange={(e) => {
-                    if (e.target.value === "ready_for_review") {
-                      alert(
-                        "Warning: This School will be removed from the public storefront, School search and public pack browsing.",
-                      );
-                    }
-                  }}
+                  onChange={(e) => setCurrentPublication(e.target.value)}
                 >
                   <option value="published">Published — Live Storefront</option>
                   <option value="ready_for_review">Ready for Review — Unpublished</option>
                 </select>
                 {err("publication_status")}
+                {currentPublication === "ready_for_review" && (
+                  <div className={formStyles.warningBanner}>
+                    <AlertTriangle size={15} className={formStyles.warningIcon} />
+                    <div className={formStyles.warningContent}>
+                      <strong>Unpublished:</strong> School is removed from public storefront, search discovery, and pack browsing.
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className={formStyles.sideField}>
@@ -514,14 +520,13 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 <select
                   id="partnership"
                   name="partnership"
-                  defaultValue={initialPartnership}
+                  value={currentPartnership}
                   className={formStyles.sideSelect}
                   onChange={(e) => {
-                    setCurrentPartnership(e.target.value);
-                    if (e.target.value === "refused_partner") {
-                      alert(
-                        "Notice: Refused partner schools are excluded from search discovery and render the dedicated 'Not yet an official partner' layout.",
-                      );
+                    const next = e.target.value;
+                    setCurrentPartnership(next);
+                    if (next === "refused_partner") {
+                      setShowRefusedModal(true);
                     }
                   }}
                 >
@@ -530,6 +535,14 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                   <option value="refused_partner">Refused Partnership</option>
                 </select>
                 {err("partnership")}
+                {currentPartnership === "refused_partner" && (
+                  <div className={formStyles.warningBanner}>
+                    <AlertTriangle size={15} className={formStyles.warningIcon} />
+                    <div className={formStyles.warningContent}>
+                      <strong>Refused Partnership:</strong> Public page renders the dedicated &ldquo;Not yet an official partner&rdquo; layout. Discoverable in search discovery tray/drawer.
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -621,6 +634,16 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
       </div>
 
       <SaveBar isDirty={isDirty} onSave={saveForm} onDiscard={discardChanges} />
+
+      <WarningBannerModal
+        isOpen={showRefusedModal}
+        schoolName={school?.name || "This school"}
+        onConfirm={() => setShowRefusedModal(false)}
+        onCancel={() => {
+          setCurrentPartnership("non_partner");
+          setShowRefusedModal(false);
+        }}
+      />
     </form>
   );
 }

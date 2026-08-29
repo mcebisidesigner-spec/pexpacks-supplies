@@ -22,45 +22,6 @@ interface TasksPageViewProps {
   initialTasks: TaskRow[];
 }
 
-const DEFAULT_TASKS: TaskRow[] = [
-  {
-    id: "t-1",
-    title: "Review Grade 1-3 packs for Primrose Hill PS",
-    description: "Ensure updated stationery prices and quantities match school list requirements.",
-    entity_type: "school_pack",
-    entity_id: "primrose-hill-primary-school",
-    status: "in_progress",
-    priority: "high",
-    assigned_to: null,
-    due_at: "2026-09-01T00:00:00.000Z",
-    created_at: "2026-08-20T00:00:00.000Z",
-  },
-  {
-    id: "t-2",
-    title: "Confirm PO-11256 with Waltons",
-    description: "Verify delivery date and bulk pack quantities for term 1 intake.",
-    entity_type: "procurement",
-    entity_id: "PO-11256",
-    status: "open",
-    priority: "high",
-    assigned_to: null,
-    due_at: "2026-09-02T00:00:00.000Z",
-    created_at: "2026-08-21T00:00:00.000Z",
-  },
-  {
-    id: "t-3",
-    title: "Approve pricing update for Stationery",
-    description: "Supplier price revision from Makro on Faber-Castell and Pritt items.",
-    entity_type: "pricing_rule",
-    entity_id: "STATIONERY-2026",
-    status: "open",
-    priority: "normal",
-    assigned_to: null,
-    due_at: "2026-09-03T00:00:00.000Z",
-    created_at: "2026-08-22T00:00:00.000Z",
-  },
-];
-
 export function TasksPageView({ initialTasks }: TasksPageViewProps) {
   const { params, setParams } = useTableParams();
   const [tasks, setTasks] = useState<TaskRow[]>(initialTasks);
@@ -68,10 +29,8 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"table" | "board">("table");
 
-  const effectiveTasks = tasks.length > 0 ? tasks : DEFAULT_TASKS;
-
   const filteredTasks = useMemo(() => {
-    return effectiveTasks.filter((t) => {
+    return tasks.filter((t) => {
       const matchSearch =
         !params.q?.trim() ||
         t.title.toLowerCase().includes(params.q.toLowerCase()) ||
@@ -82,7 +41,7 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
 
       return matchSearch && matchStatus;
     });
-  }, [effectiveTasks, params.q, params.status]);
+  }, [tasks, params.q, params.status]);
 
   const page = params.page || 1;
   const pageSize = params.pageSize || 10;

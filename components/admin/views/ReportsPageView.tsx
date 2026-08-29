@@ -17,15 +17,30 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 import { QuickMetricsGrid } from "@/components/admin/ui/QuickMetricsGrid";
+import type { OrderSummary, ReportRange, TopSchool } from "@/lib/admin/reports";
 
-export function ReportsPageView() {
+function money(value: number): string {
+  return new Intl.NumberFormat("en-ZA", {
+    style: "currency",
+    currency: "ZAR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+interface ReportsPageViewProps {
+  range: ReportRange;
+  summary: OrderSummary;
+  topSchools: TopSchool[];
+}
+
+export function ReportsPageView({ range, summary, topSchools }: ReportsPageViewProps) {
   const [activeCategory, setActiveCategory] = useState("overview");
 
   return (
     <div className={styles.container}>
       <AdminPageHeader
         title="Reports & Analytics"
-        subtitle="Explore sales performance, operational fulfillment, and school engagement."
+        subtitle={`Explore sales performance, operational fulfillment, and school engagement from ${range.from} to ${range.to}.`}
         actions={
           <AdminButton
             href="/admin/reports/export"
@@ -76,32 +91,32 @@ export function ReportsPageView() {
             metrics={[
               {
                 label: "TOTAL REVENUE",
-                value: "R 1,248,950",
-                subtitle: "+22% vs last month",
+                value: money(summary.revenue),
+                subtitle: `${summary.paidOrders} paid orders`,
                 trendDirection: "up",
                 tone: "emerald",
                 icon: <ZarIcon size={16} />,
               },
               {
                 label: "TOTAL ORDERS",
-                value: "356",
-                subtitle: "+14% vs last month",
+                value: summary.totalOrders.toString(),
+                subtitle: `${summary.cancelledOrders} cancelled / ${summary.refundedOrders} refunded`,
                 trendDirection: "up",
                 tone: "cyan",
                 icon: <ShoppingCart size={16} />,
               },
               {
                 label: "AVERAGE ORDER VALUE",
-                value: "R 23,540",
-                subtitle: "+6% vs last month",
+                value: money(summary.avgOrderValue),
+                subtitle: "Across selected range",
                 trendDirection: "up",
                 tone: "amber",
                 icon: <TrendingUp size={16} />,
               },
               {
-                label: "ON-TIME DELIVERIES",
-                value: "96.4%",
-                subtitle: "+1.2% vs target",
+                label: "PAID ORDER RATE",
+                value: summary.totalOrders > 0 ? `${Math.round((summary.paidOrders / summary.totalOrders) * 100)}%` : "0%",
+                subtitle: "Paid orders / total orders",
                 trendDirection: "up",
                 tone: "purple",
                 icon: <Truck size={16} />,
@@ -122,33 +137,33 @@ export function ReportsPageView() {
                   <circle cx="300" cy="20" r="5" fill="#2dd4bf" />
                 </svg>
                 <div className={adminStyles.reportsChartTooltip}>
-                  <div className={adminStyles.reportsChartTooltipLabel}>May 24, 2024</div>
-                  <strong className={adminStyles.reportsChartTooltipValue}>R 285,340</strong>
+                  <div className={adminStyles.reportsChartTooltipLabel}>{range.to}</div>
+                  <strong className={adminStyles.reportsChartTooltipValue}>{money(summary.revenue)}</strong>
                 </div>
               </div>
               <div className={adminStyles.reportsChartFooter}>
-                <span>May 20</span><span>May 21</span><span>May 22</span><span>May 23</span><span>May 24</span><span>May 25</span><span>May 26</span><span>May 27</span>
+                <span>{range.from}</span><span>{range.to}</span>
               </div>
             </div>
 
             <div className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded18}`}>
               <strong className={adminStyles.reportsListTitle}>Top Schools by Revenue</strong>
               <div className={adminStyles.reportsList}>
-                {[
-                  { rank: 1, name: "3d Christian Academy", val: "R 285,340" },
-                  { rank: 2, name: "Aa Academy", val: "R 214,520" },
-                  { rank: 3, name: "Ab Phokompe Secondary", val: "R 186,210" },
-                  { rank: 4, name: "A Re Tlabeng Primary", val: "R 142,760" },
-                  { rank: 5, name: "Daleview Secondary", val: "R 121,700" },
-                ].map((s) => (
-                  <div key={s.rank} className={adminStyles.reportsListItem}>
+                {topSchools.map((school, index) => (
+                  <div key={school.schoolName} className={adminStyles.reportsListItem}>
                     <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles.gap8}`}>
-                      <span className={adminStyles.reportsRank}>{s.rank}.</span>
-                      <span className={adminStyles.reportsSchoolName}>{s.name}</span>
+                      <span className={adminStyles.reportsRank}>{index + 1}.</span>
+                      <span className={adminStyles.reportsSchoolName}>{school.schoolName}</span>
                     </div>
-                    <strong className={adminStyles.reportsSchoolValue}>{s.val}</strong>
+                    <strong className={adminStyles.reportsSchoolValue}>{money(school.revenue)}</strong>
                   </div>
                 ))}
+                {topSchools.length === 0 ? (
+                  <div className={adminStyles.reportsListItem}>
+                    <span className={adminStyles.reportsSchoolName}>No school revenue in this range</span>
+                    <strong className={adminStyles.reportsSchoolValue}>{money(0)}</strong>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

@@ -6,7 +6,6 @@ import { GradePackDetails } from "@/components/schools/GradePackDetails";
 import { PackBuildingAnimation } from "@/components/schools/PackBuildingAnimation";
 import { SaveVisitTracker } from "@/components/schools/SaveVisitTracker";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { breadcrumbSchema, productSchema } from "@/lib/schema";
@@ -23,16 +22,7 @@ export const dynamicParams = true;
 export const revalidate = 3600; // Edge ISR cache for 1 hour, auto-revalidated on dashboard edit
 
 export async function generateStaticParams() {
-  if (process.env.NODE_ENV !== "production") return [];
-  const schoolIndex = await getSchoolIndex();
-  return schoolIndex
-    .filter((school) => school.isFeatured || school.isPartnerSchool)
-    .flatMap((school) =>
-      school.grades.map((grade) => ({
-        schoolSlug: school.slug,
-        gradeSlug: grade.gradeSlug,
-      }))
-    );
+  return [];
 }
 
 export async function generateMetadata({

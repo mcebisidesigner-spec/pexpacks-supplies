@@ -56,7 +56,7 @@ export default async function PackOrSchoolPacksPage({
   );
 
   const schoolData = pack.school_id ? await getSchool(pack.school_id) : null;
-  const schoolName = schoolData?.name || "3d Christian Academy";
+  const schoolName = schoolData?.name || "Unassigned school";
   const backHref = schoolData
     ? `/admin/packs/${schoolData.slug || schoolData.id}`
     : "/admin/packs";

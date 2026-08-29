@@ -8,7 +8,6 @@ import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholde
 import { Button } from "@/components/ui/Button";
 import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
 import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
-import { getSchoolIndex } from "@/data/schools";
 import { buildMetadata } from "@/lib/seo";
 import { schoolPageMultiGraphSchema } from "@/lib/schema";
 import { getCachedSchoolBySlug } from "@/lib/school-utils";
@@ -18,6 +17,7 @@ import { buildWhatsAppHref } from "@/data/contact";
 import pageStyles from "@/styles/Page.module.css";
 import styles from "./SchoolDetailPage.module.css";
 
+export const dynamicParams = true;
 export const revalidate = 3600; // Edge ISR cache for 1 hour, auto-revalidated on dashboard edit
 
 type SchoolPageProps = {
@@ -38,13 +38,7 @@ function formatSchoolLocation(city?: string | null, province?: string | null, di
 import { buildTailoredPublicGrades } from "@/lib/schools/school-grade-packs";
 
 export async function generateStaticParams() {
-  if (process.env.NODE_ENV !== "production") return [];
-  const schoolIndex = await getSchoolIndex();
-  return schoolIndex
-    .filter((school) => school.isFeatured || school.isPartnerSchool)
-    .map((school) => ({
-      schoolSlug: school.slug,
-    }));
+  return [];
 }
 
 export async function generateMetadata({

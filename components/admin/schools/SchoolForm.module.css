@@ -393,3 +393,31 @@
 .sideActions > * {
   flex: 1;
 }
+
+.warningBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  animation: fadeIn 180ms ease-out;
+}
+
+.warningIcon {
+  color: #f59e0b;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.warningContent {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #fef3c7;
+}
+
+.warningContent strong {
+  color: #fbbf24;
+}

@@ -197,6 +197,16 @@ export function SchoolPacksDetailView({
 
   const totalPacks = tailoredPacks.length;
 
+  const lastUpdatedPack = useMemo(() => {
+    return [...tailoredPacks]
+      .filter((pack) => Boolean(pack.updated_at))
+      .sort((a, b) => new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime())[0];
+  }, [tailoredPacks]);
+
+  const lastUpdatedLabel = lastUpdatedPack?.updated_at
+    ? new Date(lastUpdatedPack.updated_at).toLocaleDateString("en-ZA")
+    : "No updates";
+
   const { publishedPacks, totalItemsCount, totalRevenue } = useMemo(() => {
     let publishedPacks = 0;
     let totalItemsCount = 0;
@@ -275,8 +285,8 @@ export function SchoolPacksDetailView({
 
         <MetricCard
           label="Last Updated"
-          value="May 21, 2024"
-          subtext="By Liam Morgan"
+          value={lastUpdatedLabel}
+          subtext={lastUpdatedPack?.title ?? "No pack activity"}
           icon={<Clock size={16} />}
           iconTone="blue"
         />
@@ -376,7 +386,7 @@ export function SchoolPacksDetailView({
                 <span className={adminStyles.sidebarStatLabel}>
                   Last Activity
                 </span>
-                <span className={adminStyles.sidebarStatVal}>May 21, 2024</span>
+                <span className={adminStyles.sidebarStatVal}>{lastUpdatedLabel}</span>
               </div>
             </div>
           </div>
@@ -443,19 +453,19 @@ export function SchoolPacksDetailView({
             <div className={adminStyles.activityList}>
               <div className={adminStyles.activityItem}>
                 <div className={adminStyles.activityTitle}>
-                  Grade R – Stationery Pack updated
+                  {lastUpdatedPack?.grade_label ?? "No grade pack activity"}
                 </div>
                 <div className={adminStyles.activityMeta}>
-                  May 21, 2024 • 10:24 AM • Liam Morgan
+                  {lastUpdatedLabel}
                 </div>
               </div>
 
               <div className={adminStyles.activityItem}>
                 <div className={adminStyles.activityTitle}>
-                  Grade R – Stationery Pack created
+                  {lastUpdatedPack?.title ?? "No pack activity"}
                 </div>
                 <div className={adminStyles.activityMeta}>
-                  May 21, 2024 • 10:15 AM • Liam Morgan
+                  {lastUpdatedLabel}
                 </div>
               </div>
             </div>

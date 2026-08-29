@@ -149,8 +149,7 @@ async function searchPublicSchoolsFallback(
     .select(
       "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge",
       { count: "exact" },
-    )
-    .in("partnership", ["partner", "non_partner"]);
+    );
 
   const search = filters.query?.trim();
   if (search) {

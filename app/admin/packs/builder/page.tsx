@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -15,28 +15,16 @@ interface SelectedItem {
   qty: number;
 }
 
-const SAMPLE_MASTER_ITEMS = [
-  { id: "itm-1", name: "A4 Hardcover Book 192pg", sku: "BK-A4-192", supplierCost: 18.50 },
-  { id: "itm-2", name: "Bic Medium Blue Pens (Pack of 10)", sku: "PN-BIC-BLU", supplierCost: 22.00 },
-  { id: "itm-3", name: "Pritt Glue Stick 43g", sku: "GL-PRT-43", supplierCost: 32.00 },
-  { id: "itm-4", name: "Staedtler Tradition HB Pencils (Box 12)", sku: "PC-ST-HB", supplierCost: 45.00 },
-  { id: "itm-5", name: "Faber-Castell 24 Coloured Pencils", sku: "CP-FC-24", supplierCost: 55.00 },
-  { id: "itm-6", name: "MonAmi Retractable Crayons 12s", sku: "CR-MA-12", supplierCost: 38.00 },
-];
-
 export default function PackBuilderPage() {
-  const [packTitle, setPackTitle] = useState("Grade 1 \u2013 2027 Stationery Pack");
-  const [schoolName, setSchoolName] = useState("3d Christian Academy");
-  const [sellingPrice, setSellingPrice] = useState<number>(370.00);
+  const [packTitle, setPackTitle] = useState("New stationery pack");
+  const [schoolName, setSchoolName] = useState("");
+  const [sellingPrice, setSellingPrice] = useState<number>(0);
   const [itemQuery, setItemQuery] = useState("");
-  const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([
-    { id: "itm-1", name: "A4 Hardcover Book 192pg", sku: "BK-A4-192", supplierCost: 18.50, qty: 4 },
-    { id: "itm-3", name: "Pritt Glue Stick 43g", sku: "GL-PRT-43", supplierCost: 32.00, qty: 2 },
-  ]);
+  const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
 
   const searchResults = useMemo(() => {
     if (!itemQuery.trim()) return [];
-    return SAMPLE_MASTER_ITEMS.filter(
+    return ([] as SelectedItem[]).filter(
       (itm) =>
         itm.name.toLowerCase().includes(itemQuery.toLowerCase()) ||
         itm.sku.toLowerCase().includes(itemQuery.toLowerCase())
@@ -51,7 +39,7 @@ export default function PackBuilderPage() {
   const marginPct = sellingPrice > 0 ? (grossProfit / sellingPrice) * 100 : 0;
   const healthScore = marginPct >= 35 ? 100 : marginPct >= 20 ? 75 : 45;
 
-  const addItem = (masterItem: typeof SAMPLE_MASTER_ITEMS[0]) => {
+  const addItem = (masterItem: SelectedItem) => {
     setSelectedItems((prev) => {
       const exists = prev.find((i) => i.id === masterItem.id);
       if (exists) {

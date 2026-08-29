@@ -20,6 +20,7 @@ describe("admin popup design system", () => {
       "components/admin/ConfirmButton.tsx",
       "components/admin/DeviceActivityPrompt.tsx",
       "components/admin/IdleLogout.tsx",
+      "components/admin/schools/SchoolForm.tsx",
     ];
     for (const file of files) {
       const source = readFileSync(resolve(process.cwd(), file), "utf8");
