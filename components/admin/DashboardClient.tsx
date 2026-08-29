@@ -35,8 +35,8 @@ function shortDate(value: string): string {
 
 function statusClass(status: string): string {
   const tone = orderStatusTone(status);
-  if (tone === "success") return styles.statusPaid;
-  if (tone === "warning") return styles.statusPending;
+  if (tone === "paid") return styles.statusPaid;
+  if (tone === "pending") return styles.statusPending;
   if (tone === "danger") return styles.statusDanger;
   if (tone === "info") return styles.statusInfo;
   return styles.statusMuted;

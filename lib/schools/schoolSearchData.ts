@@ -13,6 +13,7 @@ type SearchSchoolRow = {
   logo: string | null;
   is_partner: boolean | null;
   is_featured: boolean | null;
+  partnership?: string | null;
   lowest_price: number | null;
   grades: Json | null;
   custom_badge: string | null;
@@ -93,7 +94,10 @@ function toSearchRecord(row: SearchSchoolRow): SchoolSearchRecord {
     grades,
     phases: getSchoolPhasesFromGrades(grades, row.name),
     isFeatured: Boolean(row.is_featured),
-    isPartner: Boolean(row.is_partner),
+    isPartner:
+      row.partnership != null
+        ? row.partnership === "partner"
+        : Boolean(row.is_partner),
     hasOrderablePacks: Boolean(hasPacks),
     image: row.logo,
     customBadge: row.custom_badge || null,
@@ -147,7 +151,7 @@ async function searchPublicSchoolsFallback(
   let query = supabase
     .from("public_school_directory_view")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge",
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, partnership",
       { count: "exact" },
     );
 
@@ -202,7 +206,7 @@ export async function getNearbySchoolRecords(userLat: number, userLng: number, l
   const { data: schools } = await supabase
     .from("public_school_directory_view")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, latitude, longitude"
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, latitude, longitude, partnership"
     )
     .in("partnership", ["partner", "non_partner"])
     .not("latitude", "is", null)
@@ -252,7 +256,7 @@ export async function getFeaturedSchoolRecords(limit = 4) {
   const { data: featuredData } = await supabase
     .from("public_school_directory_view")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge"
+      "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, partnership"
     )
     .eq("feature_status", "featured")
     .in("partnership", ["partner", "non_partner"])
@@ -264,7 +268,7 @@ export async function getFeaturedSchoolRecords(limit = 4) {
     const { data: fallbackData } = await supabase
       .from("public_school_directory_view")
       .select(
-        "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge"
+        "id, name, slug, city, district, province, logo, is_partner, is_featured, lowest_price, grades, custom_badge, partnership"
       )
       .in("partnership", ["partner", "non_partner"])
       .order("is_featured", { ascending: false })

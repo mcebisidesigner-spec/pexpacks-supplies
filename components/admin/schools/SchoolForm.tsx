@@ -8,7 +8,6 @@ import {
   Image as ImageIcon,
   Save,
   ShieldCheck,
-  AlertTriangle,
 } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
 import { WarningBannerModal } from "@/components/admin/ui/WarningBannerModal";
@@ -503,14 +502,6 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                   <option value="ready_for_review">Ready for Review — Unpublished</option>
                 </select>
                 {err("publication_status")}
-                {currentPublication === "ready_for_review" && (
-                  <div className={formStyles.warningBanner}>
-                    <AlertTriangle size={15} className={formStyles.warningIcon} />
-                    <div className={formStyles.warningContent}>
-                      <strong>Unpublished:</strong> School is removed from public storefront, search discovery, and pack browsing.
-                    </div>
-                  </div>
-                )}
               </div>
 
               <div className={formStyles.sideField}>
@@ -535,14 +526,6 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                   <option value="refused_partner">Refused Partnership</option>
                 </select>
                 {err("partnership")}
-                {currentPartnership === "refused_partner" && (
-                  <div className={formStyles.warningBanner}>
-                    <AlertTriangle size={15} className={formStyles.warningIcon} />
-                    <div className={formStyles.warningContent}>
-                      <strong>Refused Partnership:</strong> Public page renders the dedicated &ldquo;Not yet an official partner&rdquo; layout. Discoverable in search discovery tray/drawer.
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 

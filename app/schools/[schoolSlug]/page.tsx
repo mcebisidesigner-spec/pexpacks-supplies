@@ -101,7 +101,10 @@ export default async function SchoolDetailPage({
     notFound();
   }
 
-  const isRefused = Boolean(school.refusedPartnership) || isPreviewUnpartnered;
+  const isRefused =
+    Boolean(school.refusedPartnership) ||
+    school.partnership === "refused_partner" ||
+    isPreviewUnpartnered;
   const gradesToRender = buildTailoredPublicGrades(school, school.grades);
   const schoolWithGrades = { ...school, grades: gradesToRender };
   const websiteRaw = school.website?.trim();
@@ -126,7 +129,7 @@ export default async function SchoolDetailPage({
                 Stationery List {season.academicYear}
               </span>
               <span className={styles.schoolHeroPrepared}>
-                {isRefused ? "or you could send your list" : "Prepared with care"}
+                {isRefused ? "You could send your list" : "Prepared with care"}
               </span>
               <a
                 href={officialWebsiteUrl}
@@ -166,7 +169,7 @@ export default async function SchoolDetailPage({
           <div className={styles.unpartneredCardBody}>
             <span className={styles.unpartneredBadge}>Not yet an official partner</span>
             <h2 className={styles.unpartneredCardTitle}>
-              {school.name}{' '}isn&apos;t partnered with Pexpacks yet.
+              {`${school.name} isn't partnered with Pexpacks yet.`}
             </h2>
             <p className={styles.unpartneredCardText}>
               You can still order — upload your child&apos;s stationery list and we&apos;ll pack it for you.

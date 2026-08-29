@@ -27,12 +27,33 @@ export function revalidateCatalog(options?: {
     const nextCache = require("next/cache") as typeof import("next/cache");
     if (typeof nextCache.revalidateTag === "function") {
       try {
-        nextCache.revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+        try {
+          (nextCache.revalidateTag as any)(SCHOOL_DATA_TAG, { expire: 0 });
+        } catch {
+          (nextCache.revalidateTag as any)(SCHOOL_DATA_TAG);
+        }
+        if (options?.schoolSlug) {
+          try {
+            (nextCache.revalidateTag as any)(`school-${options.schoolSlug}`, { expire: 0 });
+          } catch {
+            try {
+              (nextCache.revalidateTag as any)(`school-${options.schoolSlug}`);
+            } catch {}
+          }
+        }
         if (options?.revalidateSeason) {
-          nextCache.revalidateTag(SEASON_CACHE_TAG, { expire: 0 });
+          try {
+            (nextCache.revalidateTag as any)(SEASON_CACHE_TAG, { expire: 0 });
+          } catch {
+            (nextCache.revalidateTag as any)(SEASON_CACHE_TAG);
+          }
         }
         if (options?.revalidateSettings) {
-          nextCache.revalidateTag(SETTINGS_CACHE_TAG, { expire: 0 });
+          try {
+            (nextCache.revalidateTag as any)(SETTINGS_CACHE_TAG, { expire: 0 });
+          } catch {
+            (nextCache.revalidateTag as any)(SETTINGS_CACHE_TAG);
+          }
         }
       } catch (err) {
         console.error("[catalog-revalidate] revalidateTag failed:", err);

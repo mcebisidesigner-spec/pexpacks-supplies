@@ -152,4 +152,28 @@ describe("School Status, Public Visibility & Checkout Mapping Architecture", () 
       })
     ).rejects.toThrowError(TrayCheckoutError);
   });
+
+  it("determines Official Partner pill display strictly by partnership status", () => {
+    // Partner -> is_partner: true (Pill rendered)
+    const partnerData = new FormData();
+    partnerData.set("name", "Partner School");
+    partnerData.set("partnership", "partner");
+    const partnerParsed = parseSchoolForm(partnerData);
+    expect(partnerParsed.ok && partnerParsed.data.is_partner).toBe(true);
+
+    // Non-partner -> is_partner: false (Pill removed)
+    const nonPartnerData = new FormData();
+    nonPartnerData.set("name", "Non Partner School");
+    nonPartnerData.set("partnership", "non_partner");
+    const nonPartnerParsed = parseSchoolForm(nonPartnerData);
+    expect(nonPartnerParsed.ok && nonPartnerParsed.data.is_partner).toBe(false);
+
+    // Refused Partnership -> is_partner: false, refused_partnership: true (Pill removed)
+    const refusedData = new FormData();
+    refusedData.set("name", "Refused School");
+    refusedData.set("partnership", "refused_partner");
+    const refusedParsed = parseSchoolForm(refusedData);
+    expect(refusedParsed.ok && refusedParsed.data.is_partner).toBe(false);
+    expect(refusedParsed.ok && refusedParsed.data.refused_partnership).toBe(true);
+  });
 });
