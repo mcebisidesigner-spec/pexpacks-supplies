@@ -16,7 +16,7 @@ import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
 import { DateField } from "@/components/admin/DateField";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import { Field, FieldLabel, FieldError } from "@/components/admin/ui/Form";
+import { FieldError } from "@/components/admin/ui/Form";
 import { StickyFormBar } from "@/components/admin/ui/StickyFormBar";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
@@ -527,7 +527,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 >
                   <option value="partner">Partner</option>
                   <option value="non_partner">Non-partner</option>
-                  <option value="refused_partner">Refused Partner</option>
+                  <option value="refused_partner">Refused Partnership</option>
                 </select>
                 {err("partnership")}
               </div>

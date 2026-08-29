@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { notFound } from "next/navigation";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { getOrder } from "@/lib/admin/orders";
 import { listOrderItems } from "@/lib/admin/operations";
@@ -128,67 +129,6 @@ function KVRows({ rows }: { rows: { label: string; value: ReactNode }[] }) {
   );
 }
 
-function getFallbackOrder(refId: string) {
-  return {
-    id: refId,
-    order_reference: refId,
-    school_name: "3d Christian Academy",
-    school_slug: "3d-christian-academy",
-    grade: "Grade 4",
-    pack_type: "Standard Pack",
-    buyer_name: "Liam Morgan",
-    buyer_email: "liam@pexpacks.co.za",
-    buyer_phone: "+27 82 123 4567",
-    status: "paid",
-    estimated_total: 28430.00,
-    created_at: new Date().toISOString(),
-    paid_at: new Date().toISOString(),
-    payment_gateway: "ozow",
-    payment_reference: `OZOW-${refId}`,
-    gateway_reference: `OZOW-${refId}`,
-    fulfilment_option: "School Collection",
-    delivery_type: "School Collection",
-    pexcover_requested: true,
-    items: [
-      {
-        pack_name: "Grade 4 Stationery Pack",
-        grade: "Grade 4",
-        learner_name: "Ethan Morgan",
-        total_price: 28430.00,
-        wants_pexcover: true,
-        items: [
-          { name: "A4 Hardcover Book 192pg (Quad)", quantity: 4, unit_price: 18.50 },
-          { name: "Pritt Glue Stick 43g", quantity: 2, unit_price: 34.00 },
-          { name: "Staedtler HB Pencils (Box 12)", quantity: 1, unit_price: 42.00 },
-          { name: "Flip File 40 Pocket", quantity: 2, unit_price: 28.50 },
-        ],
-      },
-    ],
-    delivery_address: null,
-    metadata: {
-      source: "Web Checkout",
-      payment_gateway: "Ozow Instant EFT",
-    },
-    submission_id: null,
-    removed_items: null,
-    pexcover_data: null,
-    street_address: null,
-    suburb: null,
-    city: "Pretoria",
-    province: "Gauteng",
-    postal_code: "0002",
-    unique_customer_id: null,
-    tracking_token: null,
-    courier_name: null,
-    waybill_number: null,
-    estimated_delivery: null,
-    idempotency_key: null,
-    updated_at: new Date().toISOString(),
-    preferred_contact_method: "Email",
-    learner_name: "Ethan Morgan",
-  };
-}
-
 export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
   const [session, { id }] = await Promise.all([
     requireAdmin({ permission: "orders.view" }),
@@ -200,7 +140,11 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
     listOrderItems(id),
   ]);
 
-  const order = (fetchedOrder ?? getFallbackOrder(id)) as NonNullable<Awaited<ReturnType<typeof getOrder>>>;
+  if (!fetchedOrder) {
+    notFound();
+  }
+
+  const order = fetchedOrder as NonNullable<Awaited<ReturnType<typeof getOrder>>>;
 
   const metadata = (order.metadata ?? {}) as Record<string, unknown>;
   const refund = (metadata.refund ?? null) as

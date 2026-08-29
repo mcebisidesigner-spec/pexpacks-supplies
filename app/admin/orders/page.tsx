@@ -17,7 +17,7 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
   const params = await searchParams;
 
   const page = Math.max(1, parseInt((params.page as string) || "1", 10));
-  const pageSize = Math.max(10, Math.min(100, parseInt((params.pageSize as string) || "25", 10)));
+  const pageSize = Math.max(10, Math.min(100, parseInt((params.pageSize as string) || "10", 10)));
   const q = (params.q as string) || "";
   const status = (params.status as string) || (params.tab as string) || "";
   const pack_type = (params.pack_type as string) || undefined;

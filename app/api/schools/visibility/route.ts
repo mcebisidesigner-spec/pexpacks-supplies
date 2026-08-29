@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPublicSchoolSlugSet } from "@/lib/schools/publicSchoolData";
 import {
   isSameOriginRequest,
   rateLimitRequest,
@@ -54,13 +53,11 @@ export async function POST(request: NextRequest) {
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const supabase = createSupabaseAdminClient();
   const { data: schoolsData } = await supabase
-    .from("schools")
-    .select("slug, parent_collection_accepted, publication_status")
+    .from("public_school_directory_view")
+    .select("slug, parent_collection_accepted")
     .in("slug", slugs);
 
-  const visibleSlugs = (schoolsData ?? [])
-    .filter((s) => s.publication_status === "published")
-    .map((s) => s.slug);
+  const visibleSlugs = (schoolsData ?? []).map((s) => s.slug);
 
   const collectionDisallowedSlugs = (schoolsData ?? [])
     .filter((s) => s.parent_collection_accepted === false)

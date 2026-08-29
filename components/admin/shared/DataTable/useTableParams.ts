@@ -21,7 +21,7 @@ export function useTableParams() {
   const [isPending, startTransition] = useTransition();
 
   const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
-  const pageSize = Math.max(10, Math.min(100, parseInt(searchParams.get("pageSize") || "25", 10)));
+  const pageSize = Math.max(10, Math.min(100, parseInt(searchParams.get("pageSize") || "10", 10)));
   const q = searchParams.get("q") || "";
   const sort = searchParams.get("sort") || undefined;
   const order = (searchParams.get("order") as "asc" | "desc") || undefined;

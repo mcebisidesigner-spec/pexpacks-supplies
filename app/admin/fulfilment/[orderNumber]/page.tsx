@@ -1,5 +1,8 @@
 import { ArrowLeft, Barcode, Save } from "lucide-react";
+import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
+import { getOrder } from "@/lib/admin/orders";
+import { listOrderItems } from "@/lib/admin/operations";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
@@ -10,81 +13,87 @@ interface FulfilmentDetailPageProps {
   params: Promise<{ orderNumber: string }>;
 }
 
+const STEPS = [
+  { key: "paid", stage: "Queued" },
+  { key: "packing", stage: "Picking" },
+  { key: "packed", stage: "Packed" },
+  { key: "quality_check", stage: "Quality Check" },
+  { key: "dispatched", stage: "Ready for Dispatch" },
+  { key: "delivered", stage: "Completed" },
+];
+
+function stepIndex(status: string | null | undefined) {
+  const value = (status || "").toLowerCase();
+  if (["completed", "delivered", "collected"].includes(value)) return 5;
+  if (["dispatched", "in_transit", "out_for_delivery"].includes(value)) return 4;
+  if (["quality_check"].includes(value)) return 3;
+  if (["packed", "ready_to_pack"].includes(value)) return 2;
+  if (["packing", "processing"].includes(value)) return 1;
+  return 0;
+}
+
 export default async function FulfilmentDetailPage({ params }: FulfilmentDetailPageProps) {
   await requireAdmin({ permission: "fulfilment.view" });
   const { orderNumber } = await params;
+  const [order, items] = await Promise.all([getOrder(orderNumber), listOrderItems(orderNumber)]);
 
-  const steps = [
-    { stage: "Queued", active: false, done: true },
-    { stage: "Picking", active: false, done: true },
-    { stage: "Packed", active: true, done: false },
-    { stage: "Quality Check", active: false, done: false },
-    { stage: "Ready for Dispatch", active: false, done: false },
-    { stage: "Completed", active: false, done: false },
-  ];
+  if (!order) {
+    notFound();
+  }
 
-  const items = [
-    { name: "A4 Counter Book (Quad 192p)", qty: "4", unit: "Each", checked: true, packed: true },
-    { name: "Staedtler HB Pencils (Box 12)", qty: "1", unit: "Box", checked: true, packed: true },
-    { name: "Pritt Glue Stick 43g", qty: "2", unit: "Each", checked: true, packed: true },
-    { name: "Flip File 40 Pocket", qty: "2", unit: "Each", checked: true, packed: true },
-    { name: "Ruler 30cm Shatterproof (Substituted: Clear)", qty: "1", unit: "Each", checked: false, packed: false, substitute: true },
-  ];
+  const currentStep = stepIndex(order.status);
+  const packedCount = items.filter((item) => item.product_id).length;
+  const totalCount = items.length;
+  const packedPercent = totalCount > 0 ? Math.round((packedCount / totalCount) * 100) : 0;
 
   return (
     <div className={styles.container}>
       <AdminPageHeader
-        title={`Fulfilment: ${orderNumber}`}
-        subtitle="School: Primrose Hill Primary • Grade 4 Pack • Learner: Ethan Morgan"
+        title={`Fulfilment: ${order.order_reference}`}
+        subtitle={`School: ${order.school_name || "-"} - ${order.grade || "-"} - Customer: ${order.buyer_name || "-"}`}
         actions={
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <StatusBadge status="In Packing" tone="blue" showDot />
-            <AdminButton
-              href="/admin/fulfilment"
-              variant="secondary"
-              icon={<ArrowLeft size={14} />}
-            >
+            <StatusBadge status={order.status || "pending"} tone="blue" showDot />
+            <AdminButton href="/admin/fulfilment" variant="secondary" icon={<ArrowLeft size={14} />}>
               Back to Packing Queue
             </AdminButton>
           </div>
         }
       />
 
-      {/* 6-Stage Stepper Bar */}
       <div className={`${adminStyles.tableCard} ${adminStyles.pCard}`}>
         <div className={`${styles.text11} ${adminStyles.fw700} ${adminStyles.uppercase} ${adminStyles.lsWide} ${adminStyles.cSubtle} ${adminStyles.mb12}`}>
           Packing Lifecycle Stepper
         </div>
         <div className={adminStyles.grid6}>
-          {steps.map((item, idx) => {
-            const btnCls = item.active
+          {STEPS.map((item, idx) => {
+            const done = idx < currentStep;
+            const active = idx === currentStep;
+            const btnCls = active
               ? `${styles.primaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.stepBtnActive}`
-              : item.done
+              : done
                 ? `${styles.secondaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.stepBtnDone}`
                 : `${styles.secondaryBtn} ${styles.text11} ${adminStyles.justifyCenter} ${adminStyles.opacity50}`;
 
             return (
-              <button key={idx} className={btnCls}>
-                {item.done ? "✓ " : `${idx + 1}. `} {item.stage}
+              <button key={item.key} type="button" className={btnCls}>
+                {done ? "Done " : `${idx + 1}. `} {item.stage}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Packing Checklist */}
       <div className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded18} ${adminStyles.mt18}`}>
         <div className={`${adminStyles.headerRow} ${adminStyles.mb16}`}>
           <div>
             <h2 className={styles.sectionHeaderTitle}>Item Pack-Out &amp; Barcode Verification</h2>
-            <p className={styles.sectionSubtitle}>
-              Scan barcodes or manually verify stationery items into the school box.
-            </p>
+            <p className={styles.sectionSubtitle}>Verify normalized order items against the paid commercial snapshot.</p>
           </div>
           <StatusBadge
-            status="In Progress"
+            status="Snapshot"
             tone="teal"
-            label="4 / 5 Items Packed (80%)"
+            label={`${packedCount} / ${totalCount} Lines Matched (${packedPercent}%)`}
             className={adminStyles.fw700}
           />
         </div>
@@ -96,54 +105,43 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
                 <th className={adminStyles.w40}>Pack</th>
                 <th>Stationery Item</th>
                 <th className={adminStyles.w100}>Target Qty</th>
-                <th className={adminStyles.w120}>Format</th>
+                <th className={adminStyles.w120}>SKU</th>
                 <th className={adminStyles.w140}>Verification</th>
               </tr>
             </thead>
             <tbody>
-              {items.map((row, idx) => (
-                <tr key={idx}>
+              {items.map((row) => (
+                <tr key={row.id}>
                   <td>
-                    <input
-                      type="checkbox"
-                      defaultChecked={row.checked}
-                      className={adminStyles.checkboxAccented}
-                    />
+                    <input type="checkbox" defaultChecked={Boolean(row.product_id)} className={adminStyles.checkboxAccented} />
                   </td>
                   <td>
-                    <div className={adminStyles.fw600}>
-                      {row.name}
-                      {row.substitute && (
-                        <StatusBadge
-                          status="Substituted"
-                          tone="amber"
-                          className={adminStyles.ml8}
-                        />
-                      )}
-                    </div>
+                    <div className={adminStyles.fw600}>{row.product_name_snapshot}</div>
+                    <div className={adminStyles.cMuted}>{row.school_name_snapshot || order.school_name} {row.grade_snapshot || order.grade}</div>
                   </td>
                   <td>
-                    <strong className={adminStyles.fw700}>{row.qty}</strong>
+                    <strong className={adminStyles.fw700}>{row.quantity}</strong>
                   </td>
-                  <td className={adminStyles.cMuted}>{row.unit}</td>
+                  <td className={adminStyles.cMuted}>{row.sku_snapshot}</td>
                   <td>
-                    {row.packed ? (
-                      <StatusBadge status="Verified" tone="emerald" />
-                    ) : (
-                      <StatusBadge status="Scan SKU" tone="amber" />
-                    )}
+                    {row.product_id ? <StatusBadge status="Matched" tone="emerald" /> : <StatusBadge status="Unmatched" tone="amber" />}
                   </td>
                 </tr>
               ))}
+              {items.length === 0 && (
+                <tr>
+                  <td colSpan={5} className={adminStyles.cMuted}>No normalized order items found for this order.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
 
         <div className={`${adminStyles.flex} ${adminStyles.justifyBetween} ${adminStyles.itemsCenter} ${adminStyles.mt18} ${adminStyles.pt14} ${adminStyles.borderTopDark}`}>
-          <button className={styles.secondaryBtn}>
+          <button className={styles.secondaryBtn} type="button">
             <Barcode size={14} /> Scan Next Item
           </button>
-          <button className={`${styles.primaryBtn} ${adminStyles.px24}`}>
+          <button className={`${styles.primaryBtn} ${adminStyles.px24}`} type="button">
             <Save size={14} /> Complete Pack-Out &amp; Print Box Label
           </button>
         </div>

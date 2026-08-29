@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./DataTablePagination.module.css";
 import { useTableParams } from "./useTableParams";
 
@@ -10,6 +10,8 @@ export interface DataTablePaginationProps {
   pageSize?: number;
   currentPage?: number;
   className?: string;
+  onPageSizeChange?: (pageSize: number) => void;
+  onPageChange?: (page: number) => void;
 }
 
 function formatCount(val: number): string {
@@ -21,11 +23,13 @@ export function DataTablePagination({
   pageSize: propPageSize,
   currentPage: propCurrentPage,
   className,
+  onPageSizeChange,
+  onPageChange,
 }: DataTablePaginationProps) {
   const { params, setParams } = useTableParams();
 
   const currentPage = propCurrentPage ?? params.page;
-  const pageSize = propPageSize ?? params.pageSize;
+  const pageSize = propPageSize ?? params.pageSize ?? 10;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   const fromRecord = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
@@ -61,11 +65,41 @@ export function DataTablePagination({
 
   const handlePageClick = (page: number) => {
     if (page === currentPage) return;
-    setParams({ page });
+    if (onPageChange) {
+      onPageChange(page);
+    } else {
+      setParams({ page });
+    }
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    if (onPageSizeChange) {
+      onPageSizeChange(newSize);
+    } else {
+      setParams({ pageSize: newSize, page: 1 });
+    }
   };
 
   return (
     <div className={`${styles.paginationFooter} ${className || ""}`}>
+      <div className={styles.paginationLeft}>
+        <div className={styles.pageSizePill}>
+          <select
+            value={pageSize}
+            onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+            className={styles.pageSizeSelect}
+            aria-label="Records per page"
+          >
+            <option value={10}>10 per page</option>
+            <option value={20}>20 per page</option>
+            <option value={25}>25 per page</option>
+            <option value={50}>50 per page</option>
+            <option value={100}>100 per page</option>
+          </select>
+          <ChevronDown size={14} className={styles.pageSizeChevron} aria-hidden="true" />
+        </div>
+      </div>
+
       <div className={styles.paginationRight}>
         <div className={styles.rangeText}>
           Showing <span className={styles.rangeHighlight}>{formatCount(fromRecord)}</span> to{" "}

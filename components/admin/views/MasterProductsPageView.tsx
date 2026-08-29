@@ -242,7 +242,7 @@ export function MasterProductsPageView({
         footer={
           <DataTablePagination
             total={initialData.total}
-            pageSize={initialData.products.length || 25}
+            pageSize={params.pageSize}
             currentPage={initialData.page}
           />
         }

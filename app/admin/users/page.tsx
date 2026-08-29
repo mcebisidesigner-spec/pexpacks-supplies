@@ -17,6 +17,7 @@ interface UsersPageProps {
     q?: string;
     role?: string;
     page?: string;
+    pageSize?: string;
   }>;
 }
 
@@ -25,15 +26,16 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
   const params = await searchParams;
 
   const page = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
+  const pageSize = Math.max(10, Math.min(100, parseInt(params.pageSize ?? String(PAGE_SIZE), 10) || PAGE_SIZE));
   const filters: UserListFilters = {
     q: params.q?.trim() || undefined,
     role: params.role || undefined,
     page,
-    pageSize: PAGE_SIZE,
+    pageSize,
   };
 
   const { users, total, pageCount, roleOptions } = await listUsers(filters);
-  const baseParams = { q: filters.q, role: filters.role };
+  const baseParams = { q: filters.q, role: filters.role, pageSize: filters.pageSize };
   const hasFilters = Boolean(filters.q || filters.role);
   const canDeactivate = hasPermission(session, "users.deactivate");
   const canDelete = hasPermission(session, "users.delete");

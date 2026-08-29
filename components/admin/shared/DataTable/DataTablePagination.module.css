@@ -1,13 +1,79 @@
 .paginationFooter {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 12px 18px;
   background: var(--db-surface-inner, #090e17);
   border-top: 1px solid var(--db-border, rgba(30, 41, 59, 0.8));
   font-size: 12px;
   color: var(--db-text-muted, #94a3b8);
   width: 100%;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.paginationLeft {
+  display: flex;
+  align-items: center;
+}
+
+.pageSizePill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: #090e17;
+  border: 1px solid rgba(51, 65, 85, 0.85);
+  border-radius: 9999px;
+  padding: 5px 12px 5px 16px;
+  transition: all 150ms ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.pageSizePill:hover {
+  border-color: rgba(148, 163, 184, 0.6);
+  background: #0d1524;
+}
+
+.pageSizePill:focus-within {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+}
+
+.pageSizeSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  padding-right: 22px;
+  margin: 0;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.pageSizeSelect option {
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 12.5px;
+  padding: 6px 10px;
+}
+
+.pageSizeChevron {
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
+  color: #cbd5e1;
+  transition: transform 150ms ease;
+}
+
+.pageSizePill:hover .pageSizeChevron {
+  color: #ffffff;
 }
 
 .paginationRight {

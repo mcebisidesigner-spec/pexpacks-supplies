@@ -57,6 +57,12 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
     });
   }, [initialData, params.q, params.status]);
 
+  const page = params.page || 1;
+  const pageSize = params.pageSize || 10;
+  const pagedFulfilment = useMemo(() => {
+    return filtered.slice((page - 1) * pageSize, page * pageSize);
+  }, [filtered, page, pageSize]);
+
   const columns: ColumnDef<FulfilmentRow>[] = [
     {
       key: "order_id",
@@ -198,7 +204,7 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       />
 
       <DataTable
-        data={filtered}
+        data={pagedFulfilment}
         columns={columns}
         keyExtractor={(row) => row.id}
         onRowClick={(row) => router.push(`/admin/fulfilment/${orderRef(row)}`)}
@@ -207,8 +213,8 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
         footer={
           <DataTablePagination
             total={filtered.length}
-            pageSize={filtered.length || 25}
-            currentPage={1}
+            pageSize={pageSize}
+            currentPage={page}
           />
         }
       />

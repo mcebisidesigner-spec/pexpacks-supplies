@@ -17,6 +17,7 @@ interface AuditPageProps {
     from?: string;
     to?: string;
     page?: string;
+    pageSize?: string;
   }>;
 }
 
@@ -25,6 +26,7 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
   const params = await searchParams;
 
   const page = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
+  const pageSize = Math.max(10, Math.min(100, parseInt(params.pageSize ?? String(PAGE_SIZE), 10) || PAGE_SIZE));
   const filters: AuditFilters = {
     q: params.q?.trim() || undefined,
     entity_type: params.entity_type || undefined,
@@ -33,7 +35,7 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
     from: params.from || undefined,
     to: params.to || undefined,
     page,
-    pageSize: PAGE_SIZE,
+    pageSize,
   };
 
   const { logs, total, pageCount, entityTypes, actions, actors } =
@@ -45,6 +47,7 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
     actor: filters.actor,
     from: filters.from,
     to: filters.to,
+    pageSize: filters.pageSize,
   };
   const hasFilters = Boolean(
     filters.q ||

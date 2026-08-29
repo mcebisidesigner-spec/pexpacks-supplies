@@ -84,6 +84,12 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
     });
   }, [effectiveTasks, params.q, params.status]);
 
+  const page = params.page || 1;
+  const pageSize = params.pageSize || 10;
+  const pagedTasks = useMemo(() => {
+    return filteredTasks.slice((page - 1) * pageSize, page * pageSize);
+  }, [filteredTasks, page, pageSize]);
+
   const handleOpenDrawer = (task: TaskRow) => {
     setSelectedTask(task);
     setIsDrawerOpen(true);
@@ -262,7 +268,7 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
 
       {viewMode === "table" ? (
         <DataTable
-          data={filteredTasks}
+          data={pagedTasks}
           columns={columns}
           keyExtractor={(row) => row.id}
           onRowClick={(row) => handleOpenDrawer(row)}
@@ -271,8 +277,8 @@ export function TasksPageView({ initialTasks }: TasksPageViewProps) {
           footer={
             <DataTablePagination
               total={filteredTasks.length}
-              pageSize={filteredTasks.length || 25}
-              currentPage={1}
+              pageSize={pageSize}
+              currentPage={page}
             />
           }
         />

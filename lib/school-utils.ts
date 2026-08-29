@@ -17,6 +17,7 @@ type DbSchool = {
   logo: string | null;
   is_partner: boolean | null;
   refused_partnership: boolean | null;
+  partnership?: string | null;
   parent_collection_accepted?: boolean | null;
   principal?: string | null;
   website?: string | null;
@@ -118,8 +119,10 @@ function toSchool(school: DbSchool, packs: DbPack[]): School {
     province: school.province ?? "",
     logo: school.logo,
     website: school.website || school.principal || null,
-    isPartnerSchool: Boolean(school.is_partner),
-    refusedPartnership: Boolean(school.refused_partnership),
+    isPartnerSchool: Boolean(school.is_partner) || school.partnership === "partner",
+    refusedPartnership:
+      Boolean(school.refused_partnership) ||
+      school.partnership === "refused_partner",
     parentCollectionAccepted: school.parent_collection_accepted !== false,
     grades: toGradePacks(packs),
   };
@@ -141,7 +144,7 @@ async function getSchoolWithBoundedQueries(
   let query = supabase
     .from("public_school_directory_view")
     .select(
-      "id, name, slug, city, district, province, logo, is_partner, refused_partnership, parent_collection_accepted, principal",
+      "id, name, slug, city, district, province, logo, is_partner, refused_partnership, partnership, parent_collection_accepted, principal",
     );
 
   if (isUuid) {

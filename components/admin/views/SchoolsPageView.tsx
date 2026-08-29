@@ -257,7 +257,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         footer={
           <DataTablePagination
             total={data.total}
-            pageSize={data.schools.length || 25}
+            pageSize={params.pageSize}
             currentPage={data.page}
           />
         }

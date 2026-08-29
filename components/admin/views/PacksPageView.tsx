@@ -223,7 +223,7 @@ export function PacksPageView({ initialData }: PacksPageViewProps) {
         footer={
           <DataTablePagination
             total={data.totalSchools}
-            pageSize={data.schoolsSummary.length || 25}
+            pageSize={params.pageSize}
             currentPage={data.page}
           />
         }

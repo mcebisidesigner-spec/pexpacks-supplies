@@ -16,10 +16,12 @@ import {
   Search,
   TrendingDown,
   TrendingUp,
+  ChevronDown,
 } from "lucide-react";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import styles from "./SchoolPacksView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
+import dtStyles from "@/components/admin/shared/DataTable/DataTablePagination.module.css";
 
 export interface SchoolPackRowData {
   id: string;
@@ -553,58 +555,65 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
 
           {/* Table Pagination Footer */}
           <div className={styles.paginationFooter}>
-            <span suppressHydrationWarning>
-              Showing {totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1} to{" "}
-              {Math.min(currentPage * pageSize, totalCount)} of {formatNumber(totalCount)} schools
-            </span>
-            <div className={styles.paginationControls}>
-              <button
-                className={styles.pageBtn}
-                disabled={currentPage <= 1}
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              >
-                &lt;
-              </button>
-
-              {visiblePageNumbers.map((pageNum) => (
-                <button
-                  key={pageNum}
-                  className={`${styles.pageBtn} ${
-                    currentPage === pageNum ? styles.pageBtnActive : ""
-                  }`}
-                  onClick={() => setCurrentPage(pageNum)}
+            <div className={dtStyles.paginationLeft}>
+              <div className={dtStyles.pageSizePill}>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className={dtStyles.pageSizeSelect}
+                  aria-label="Records per page"
                 >
-                  {pageNum}
-                </button>
-              ))}
-
-              <button
-                className={styles.pageBtn}
-                disabled={currentPage >= totalPages}
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              >
-                &gt;
-              </button>
+                  <option value={10}>10 per page</option>
+                  <option value={20}>20 per page</option>
+                  <option value={50}>50 per page</option>
+                  <option value={100}>100 per page</option>
+                  <option value={250}>250 per page</option>
+                  <option value={500}>500 per page</option>
+                  <option value={1000}>1000 per page</option>
+                  <option value={totalCount || 3342}>All per page</option>
+                </select>
+                <ChevronDown size={14} className={dtStyles.pageSizeChevron} aria-hidden="true" />
+              </div>
             </div>
-            <div className={`${adminStyles.flex} ${adminStyles.itemsCenter} ${adminStyles.gap6}`}>
-              <span>Show</span>
-              <select
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-                className={adminStyles.pageShowSelect}
-              >
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-                <option value={250}>250</option>
-                <option value={500}>500</option>
-                <option value={1000}>1000</option>
-                <option value={totalCount || 3342}>3342 (All)</option>
-              </select>
-              <span>per page</span>
+
+            <div className={styles.paginationRight}>
+              <span suppressHydrationWarning className={dtStyles.rangeText}>
+                Showing <span className={dtStyles.rangeHighlight}>{totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1}</span> to{" "}
+                <span className={dtStyles.rangeHighlight}>{Math.min(currentPage * pageSize, totalCount)}</span> of{" "}
+                <span className={dtStyles.rangeHighlight}>{formatNumber(totalCount)}</span> schools
+              </span>
+              <div className={styles.paginationControls}>
+                <button
+                  className={styles.pageBtn}
+                  disabled={currentPage <= 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                >
+                  &lt;
+                </button>
+
+                {visiblePageNumbers.map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    className={`${styles.pageBtn} ${
+                      currentPage === pageNum ? styles.pageBtnActive : ""
+                    }`}
+                    onClick={() => setCurrentPage(pageNum)}
+                  >
+                    {pageNum}
+                  </button>
+                ))}
+
+                <button
+                  className={styles.pageBtn}
+                  disabled={currentPage >= totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                >
+                  &gt;
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -17,7 +17,7 @@ export default async function AdminSchoolPacksPage({ searchParams }: AdminSchool
   const params = await searchParams;
   const q = (params.q as string) || "";
   const page = Math.max(1, parseInt((params.page as string) || "1", 10));
-  const pageSize = Math.max(10, Math.min(100, parseInt((params.pageSize as string) || "25", 10)));
+  const pageSize = Math.max(10, Math.min(100, parseInt((params.pageSize as string) || "10", 10)));
   const status = (params.status as string) || undefined;
 
   const initialData = await listSchoolGroupedSummary({

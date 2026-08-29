@@ -82,6 +82,12 @@ export function SuppliersPageView({
     );
   }, [suppliers, params.q]);
 
+  const page = params.page || 1;
+  const pageSize = params.pageSize || 10;
+  const pagedSuppliers = useMemo(() => {
+    return filtered.slice((page - 1) * pageSize, page * pageSize);
+  }, [filtered, page, pageSize]);
+
   const columns: ColumnDef<SupplierRow>[] = [
     {
       key: "code",
@@ -254,7 +260,7 @@ export function SuppliersPageView({
       />
 
       <DataTable
-        data={filtered}
+        data={pagedSuppliers}
         columns={columns}
         keyExtractor={(row) => row.id}
         onRowClick={(row) => router.push(`/admin/suppliers/${row.id}`)}
@@ -263,8 +269,8 @@ export function SuppliersPageView({
         footer={
           <DataTablePagination
             total={filtered.length}
-            pageSize={filtered.length || 25}
-            currentPage={1}
+            pageSize={pageSize}
+            currentPage={page}
           />
         }
       />

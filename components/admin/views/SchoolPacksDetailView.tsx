@@ -189,6 +189,12 @@ export function SchoolPacksDetailView({
     school.name,
   ]);
 
+  const page = params.page || 1;
+  const pageSize = params.pageSize || 10;
+  const pagedPacks = useMemo(() => {
+    return filteredPacks.slice((page - 1) * pageSize, page * pageSize);
+  }, [filteredPacks, page, pageSize]);
+
   const totalPacks = tailoredPacks.length;
 
   const { publishedPacks, totalItemsCount, totalRevenue } = useMemo(() => {
@@ -298,7 +304,7 @@ export function SchoolPacksDetailView({
           />
 
           <DataTable
-            data={filteredPacks}
+            data={pagedPacks}
             columns={columns}
             keyExtractor={(pack) => pack.id}
             onRowClick={(pack) => router.push(editHrefFor(pack))}
@@ -308,8 +314,8 @@ export function SchoolPacksDetailView({
               filteredPacks.length > 0 ? (
                 <DataTablePagination
                   total={filteredPacks.length}
-                  pageSize={filteredPacks.length}
-                  currentPage={1}
+                  pageSize={pageSize}
+                  currentPage={page}
                 />
               ) : undefined
             }

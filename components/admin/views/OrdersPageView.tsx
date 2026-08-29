@@ -225,7 +225,7 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
         footer={
           <DataTablePagination
             total={initialData.total}
-            pageSize={initialData.orders.length || 25}
+            pageSize={params.pageSize}
             currentPage={initialData.page}
           />
         }

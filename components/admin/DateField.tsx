@@ -100,7 +100,6 @@ export function DateField({
   const [hour, setHour] = useState(initialTime.hour);
   const [minute, setMinute] = useState(initialTime.minute);
 
-  const [alignRight, setAlignRight] = useState(false);
 
   useEffect(() => {
     if (controlledValue !== undefined) {
@@ -116,8 +115,6 @@ export function DateField({
     if (!open) return;
     const updatePosition = () => {
       if (rootRef.current) {
-        const rect = rootRef.current.getBoundingClientRect();
-        setAlignRight(rect.left + 340 > window.innerWidth);
       }
     };
     updatePosition();
