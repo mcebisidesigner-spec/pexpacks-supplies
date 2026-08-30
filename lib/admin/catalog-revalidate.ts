@@ -13,6 +13,16 @@ import { SETTINGS_CACHE_TAG } from "@/lib/public-data/settings";
  * When a school's own page is affected (slug/name/status/logo/grade changes)
  * pass `schoolSlug` to also revalidate the page-level ISR paths.
  */
+type RevalidateTagFn = (tag: string, options?: { expire?: number }) => void;
+
+function revalidateTagNow(revalidateTag: RevalidateTagFn, tag: string): void {
+  try {
+    revalidateTag(tag, { expire: 0 });
+  } catch {
+    revalidateTag(tag);
+  }
+}
+
 export function revalidateCatalog(options?: {
   schoolSlug?: string | null;
   packSlug?: string | null;
@@ -27,33 +37,16 @@ export function revalidateCatalog(options?: {
     const nextCache = require("next/cache") as typeof import("next/cache");
     if (typeof nextCache.revalidateTag === "function") {
       try {
-        try {
-          (nextCache.revalidateTag as any)(SCHOOL_DATA_TAG, { expire: 0 });
-        } catch {
-          (nextCache.revalidateTag as any)(SCHOOL_DATA_TAG);
-        }
+        const revalidateTag = nextCache.revalidateTag as RevalidateTagFn;
+        revalidateTagNow(revalidateTag, SCHOOL_DATA_TAG);
         if (options?.schoolSlug) {
-          try {
-            (nextCache.revalidateTag as any)(`school-${options.schoolSlug}`, { expire: 0 });
-          } catch {
-            try {
-              (nextCache.revalidateTag as any)(`school-${options.schoolSlug}`);
-            } catch {}
-          }
+          revalidateTagNow(revalidateTag, `school-${options.schoolSlug}`);
         }
         if (options?.revalidateSeason) {
-          try {
-            (nextCache.revalidateTag as any)(SEASON_CACHE_TAG, { expire: 0 });
-          } catch {
-            (nextCache.revalidateTag as any)(SEASON_CACHE_TAG);
-          }
+          revalidateTagNow(revalidateTag, SEASON_CACHE_TAG);
         }
         if (options?.revalidateSettings) {
-          try {
-            (nextCache.revalidateTag as any)(SETTINGS_CACHE_TAG, { expire: 0 });
-          } catch {
-            (nextCache.revalidateTag as any)(SETTINGS_CACHE_TAG);
-          }
+          revalidateTagNow(revalidateTag, SETTINGS_CACHE_TAG);
         }
       } catch (err) {
         console.error("[catalog-revalidate] revalidateTag failed:", err);

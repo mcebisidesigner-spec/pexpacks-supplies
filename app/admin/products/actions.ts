@@ -1,11 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { writeAuditLog } from "@/lib/admin/rbac";
+import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 
 export async function deleteItemAction(id: string): Promise<void> {
   try {
@@ -63,9 +64,8 @@ export async function deleteItemAction(id: string): Promise<void> {
       });
     }
 
-    revalidatePath("/admin/products");
-    revalidatePath("/admin/items");
-    revalidatePath(`/admin/products/${id}`);
+    // Single tag revalidation instead of multiple revalidatePath calls
+    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   } catch (err) {
     // Re-throw Next.js redirect/notFound errors — they must not be caught
     if (isRedirectError(err)) throw err;

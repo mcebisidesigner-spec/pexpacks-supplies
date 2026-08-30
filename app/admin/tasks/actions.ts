@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { getAdminUser, hasPermission, type PermissionKey } from "@/lib/admin/rbac";
 import {
   createOperationalTask,
@@ -45,7 +44,6 @@ export async function createTaskAction(formData: FormData) {
       entityId: entityId || undefined,
       createdBy: session.user.id,
     });
-    revalidatePath("/admin/tasks");
     return { ok: true, task };
   } catch (err: unknown) {
     return { ok: false, error: errorMessage(err, "Failed to create task.") };
@@ -56,7 +54,6 @@ export async function updateTaskStatusAction(taskId: string, status: string) {
   await assertAdminSession("tasks.manage");
   try {
     await updateOperationalTaskStatus(taskId, status);
-    revalidatePath("/admin/tasks");
     return { ok: true };
   } catch (err: unknown) {
     return { ok: false, error: errorMessage(err, "Failed to update task status.") };
@@ -109,8 +106,6 @@ export async function approveTaskAction(taskId: string, notes?: string) {
       authorId: session.user.id,
       body: `Action approved and marked as completed by ${session.user.email || "Administrator"}.${notes ? ` Notes: ${notes}` : ""}`,
     });
-
-    revalidatePath("/admin/tasks");
     return { ok: true };
   } catch (err: unknown) {
     return { ok: false, error: errorMessage(err, "Failed to approve task.") };

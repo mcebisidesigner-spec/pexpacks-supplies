@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { invalidateSchoolSearchCache } from "@/lib/schools/schoolSearchData";
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
@@ -12,9 +12,18 @@ import {
   deletePack,
   duplicatePack,
   setPackVisible,
-  getPublicGradePackPath,
   type PackFormState,
 } from "@/lib/admin/packs";
+
+/**
+ * Single revalidation call for all pack mutations.
+ * Uses revalidateTag instead of multiple revalidatePath calls
+ * to conserve Vercel Hobby-plan ISR writes (200K/month limit).
+ */
+function revalidatePackData() {
+  invalidateSchoolSearchCache();
+  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+}
 
 export async function createPackAction(
   _prev: PackFormState,
@@ -25,12 +34,7 @@ export async function createPackAction(
   if (!result.ok) {
     return { ok: false, errors: result.errors, message: result.message };
   }
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath("/admin/packs");
-  revalidatePath("/admin/packs", "layout");
-  revalidatePath("/schools");
-  revalidatePath("/", "layout");
+  revalidatePackData();
   redirect(`/admin/packs/${result.pack.id}`);
 }
 
@@ -46,15 +50,8 @@ export async function createSchoolPackAction(
   if (!result.ok) {
     return { ok: false, errors: result.errors, message: result.message };
   }
-
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath("/admin/packs");
-  revalidatePath("/admin/packs", "layout");
-  revalidatePath(`/admin/packs/${schoolRoute}`);
-  revalidatePath(`/admin/packs/${result.pack.slug || result.pack.id}`);
-  revalidatePath("/schools");
-  revalidatePath("/", "layout");
+  void schoolRoute; // was used for revalidatePath, no longer needed
+  revalidatePackData();
   redirect(
     `/admin/packs/${encodeURIComponent(result.pack.slug || result.pack.id)}`,
   );
@@ -70,12 +67,7 @@ export async function updatePackAction(
   if (!result.ok) {
     return { ok: false, errors: result.errors, message: result.message };
   }
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath(`/admin/packs/${result.pack.id}`);
-  revalidatePath("/admin/packs");
-  revalidatePath("/schools");
-  revalidatePath("/", "layout");
+  revalidatePackData();
   return { ok: true };
 }
 
@@ -99,26 +91,14 @@ export async function updatePackPriceAction(
     };
   }
 
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath(`/admin/packs/${id}`);
-  revalidatePath("/admin/packs");
-  revalidatePath("/schools");
-  revalidatePath("/", "layout");
-  const path = await getPublicGradePackPath(id);
-  if (path) revalidatePath(path);
+  revalidatePackData();
   return { ok: true, message: "Price saved and synced to the public pages." };
 }
 
 export async function deletePackAction(id: string): Promise<void> {
   await requireAdmin({ permission: "packs.delete" });
   await deletePack(id);
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath("/admin/packs");
-  revalidatePath("/admin/packs", "layout");
-  revalidatePath("/schools");
-  revalidatePath("/", "layout");
+  revalidatePackData();
 }
 
 export async function duplicatePackAction(
@@ -127,12 +107,7 @@ export async function duplicatePackAction(
   await requireAdmin({ permission: "packs.duplicate" });
   const result = await duplicatePack(id);
   if (!result.ok) return { ok: false };
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath("/admin/packs");
-  revalidatePath("/admin/packs", "layout");
-  revalidatePath("/schools");
-  revalidatePath("/", "layout");
+  revalidatePackData();
   return { ok: true, packId: result.packId };
 }
 
@@ -144,33 +119,14 @@ export async function setPackVisibleAction(
   await setPackVisible(id, visible);
 
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
-  const { revalidateCatalog } = await import("@/lib/admin/catalog-revalidate");
   const admin = createSupabaseAdminClient();
-
-  const { data: pack } = await admin
+  await admin
     .from("school_packs")
     .select("id, slug, school_id, schools(slug)")
     .eq("id", id)
     .maybeSingle();
 
-  const schoolSlug = (pack as { schools?: { slug?: string } | null })?.schools?.slug;
-  const packSlug = pack?.slug || pack?.id;
-
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidateCatalog({ schoolSlug, packSlug });
-  revalidatePath("/admin/packs");
-  revalidatePath(`/admin/packs/${id}`);
-  if (schoolSlug) {
-    revalidatePath(`/admin/packs/${schoolSlug}`);
-    revalidatePath(`/schools/${schoolSlug}`);
-  }
-  if (packSlug) {
-    revalidatePath(`/admin/packs/${packSlug}`);
-    revalidatePath(`/schools/packs/${packSlug}`);
-  }
-  revalidatePath("/schools");
-  revalidatePath("/", "layout");
+  revalidatePackData();
 }
 
 export async function setSchoolPacksVisibleAction(
@@ -179,14 +135,13 @@ export async function setSchoolPacksVisibleAction(
 ): Promise<void> {
   await requireAdmin({ permission: "packs.edit" });
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
-  const { revalidateCatalog } = await import("@/lib/admin/catalog-revalidate");
   const admin = createSupabaseAdminClient();
 
   await admin
     .from("school_packs")
     .update({ visible })
     .eq("school_id", schoolId);
-  const { data: school } = await admin
+  await admin
     .from("schools")
     .update({
       status: visible ? "active" : "inactive",
@@ -196,12 +151,7 @@ export async function setSchoolPacksVisibleAction(
     .select("slug")
     .maybeSingle();
 
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidateCatalog({ schoolSlug: school?.slug });
-  revalidatePath("/admin/packs");
-  revalidatePath("/schools");
-  revalidatePath("/", "layout");
+  revalidatePackData();
 }
 
 export async function deleteSchoolPacksAction(schoolId: string): Promise<void> {
@@ -209,10 +159,5 @@ export async function deleteSchoolPacksAction(schoolId: string): Promise<void> {
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const admin = createSupabaseAdminClient();
   await admin.from("school_packs").delete().eq("school_id", schoolId);
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-  revalidatePath("/admin/packs");
-  revalidatePath("/admin/packs", "layout");
-  revalidatePath("/schools");
-  revalidatePath("/", "layout");
+  revalidatePackData();
 }

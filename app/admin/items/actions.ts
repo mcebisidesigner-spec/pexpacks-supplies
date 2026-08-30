@@ -1,8 +1,7 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/admin/rbac";
-import { getPublicGradePackPath } from "@/lib/admin/packs";
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import {
   createItem,
@@ -18,9 +17,12 @@ import {
   type PackLineInput,
 } from "@/lib/admin/items";
 
-async function revalidatePackPublicPage(packId: string) {
-  const path = await getPublicGradePackPath(packId);
-  if (path) revalidatePath(path);
+/**
+ * Single revalidation call for all data mutations.
+ * Uses revalidateTag instead of multiple revalidatePath calls
+ * to conserve Vercel Hobby-plan ISR writes (200K/month limit).
+ */
+function revalidateData() {
   revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 }
 
@@ -33,9 +35,7 @@ export async function createItemAction(
   if (!result.ok) {
     return { ok: false, errors: result.errors, message: result.message };
   }
-  revalidatePath("/admin/items");
-  revalidatePath(`/admin/packs/${result.item.pack_id}`);
-  await revalidatePackPublicPage(result.item.pack_id);
+  revalidateData();
   return { ok: true };
 }
 
@@ -49,12 +49,7 @@ export async function updateItemAction(
   if (!result.ok) {
     return { ok: false, errors: result.errors, message: result.message };
   }
-  revalidatePath("/admin/items");
-  revalidatePath("/admin/products");
-  if (result.item.pack_id) {
-    revalidatePath(`/admin/packs/${result.item.pack_id}`);
-    await revalidatePackPublicPage(result.item.pack_id);
-  }
+  revalidateData();
   return {
     ok: true,
     message: result.message,
@@ -67,19 +62,15 @@ export async function updateItemAction(
 }
 
 export async function deleteItemAction(id: string): Promise<void> {
-  const result = await requireAdmin({ permission: "items.delete" });
-  const deleted = await deleteItem(id);
-  revalidatePath(`/admin/packs`);
-  revalidatePath(`/admin/items`);
-  if (deleted.packId) await revalidatePackPublicPage(deleted.packId);
-  void result;
+  await requireAdmin({ permission: "items.delete" });
+  await deleteItem(id);
+  revalidateData();
 }
 
 export async function reorderItemsAction(packId: string, orderedIds: string[]): Promise<void> {
   await requireAdmin({ permission: "items.reorder" });
   await reorderItems(packId, orderedIds);
-  revalidatePath(`/admin/packs/${packId}`);
-  await revalidatePackPublicPage(packId);
+  revalidateData();
 }
 
 export async function importItemsAction(
@@ -89,8 +80,7 @@ export async function importItemsAction(
   await requireAdmin({ permission: "items.import" });
   try {
     const result = await importItemsCsv(packId, csvText);
-    revalidatePath(`/admin/packs/${packId}`);
-    await revalidatePackPublicPage(packId);
+    revalidateData();
     return result;
   } catch (err) {
     console.error("[items] csv import failed:", err);
@@ -112,9 +102,7 @@ export async function savePackItemsAction(
   if (!result.ok) {
     return { ok: false, message: result.message ?? "Failed to save items." };
   }
-  revalidatePath(`/admin/packs/${packId}`);
-  revalidatePath("/admin/items");
-  await revalidatePackPublicPage(packId);
+  revalidateData();
   return { ok: true };
 }
 

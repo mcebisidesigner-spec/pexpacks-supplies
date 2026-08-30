@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
   inviteUser,
@@ -12,16 +11,15 @@ import {
   type InviteResult,
 } from "@/lib/admin/users";
 
+// NOTE: All /admin/* pages are dynamically rendered behind auth middleware.
+// revalidatePath for admin routes wastes ISR writes with no benefit.
+
 export async function inviteUserAction(
   _prev: InviteResult,
   formData: FormData
 ): Promise<InviteResult> {
   await requireAdmin({ permission: "users.create" });
-  const result = await inviteUser(formData);
-  if (result.ok) {
-    revalidatePath("/admin/users");
-  }
-  return result;
+  return inviteUser(formData);
 }
 
 export async function updateUserRolesAction(
@@ -33,8 +31,6 @@ export async function updateUserRolesAction(
     .getAll("roles")
     .filter((r): r is string => typeof r === "string" && Boolean(r));
   await syncUserRoles(userId, roles);
-  revalidatePath("/admin/users");
-  revalidatePath(`/admin/users/${userId}`);
 }
 
 export interface PermissionOverrideState {
@@ -66,27 +62,20 @@ export async function updateUserPermissionsAction(
     }
   }
   const result = await setUserPermissionOverrides(userId, overrides);
-  revalidatePath("/admin/users");
-  revalidatePath(`/admin/users/${userId}`);
   return { ok: result.ok, message: result.message };
 }
 
 export async function deactivateUserAction(userId: string): Promise<void> {
   await requireAdmin({ permission: "users.deactivate" });
   await deactivateUser(userId);
-  revalidatePath("/admin/users");
-  revalidatePath(`/admin/users/${userId}`);
 }
 
 export async function reactivateUserAction(userId: string): Promise<void> {
   await requireAdmin({ permission: "users.deactivate" });
   await reactivateUser(userId);
-  revalidatePath("/admin/users");
-  revalidatePath(`/admin/users/${userId}`);
 }
 
 export async function deleteUserAction(userId: string): Promise<void> {
   await requireAdmin({ permission: "users.delete" });
   await deleteUser(userId);
-  revalidatePath("/admin/users");
 }

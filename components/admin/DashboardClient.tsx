@@ -26,12 +26,6 @@ export interface DashboardClientProps {
   userName?: string;
 }
 
-function shortDate(value: string): string {
-  return new Date(value).toLocaleDateString("en-ZA", {
-    day: "2-digit",
-    month: "short",
-  });
-}
 
 function statusClass(status: string): string {
   const tone = orderStatusTone(status);

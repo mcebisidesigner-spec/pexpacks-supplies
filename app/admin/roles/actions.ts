@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
   createRole,
@@ -9,6 +8,9 @@ import {
   setRolePermissions,
   type RoleFormState,
 } from "@/lib/admin/roles";
+
+// NOTE: All /admin/* pages are dynamically rendered behind auth middleware.
+// revalidatePath for admin routes wastes ISR writes with no benefit.
 
 function parsePermissionKeys(formData: FormData): string[] {
   const raw = formData.get("permissions");
@@ -35,8 +37,6 @@ export async function createRoleAction(
     if (permissionKeys.length > 0) {
       await setRolePermissions(result.role.id, permissionKeys);
     }
-    revalidatePath("/admin/roles");
-    revalidatePath("/admin");
     return { ok: true, message: `Role "${result.role.name}" created.` };
   }
   return { ok: false, errors: result.errors, message: result.message };
@@ -52,8 +52,6 @@ export async function updateRoleAction(
   const result = await updateRole(id, formData);
   if (result.ok) {
     await setRolePermissions(id, permissionKeys);
-    revalidatePath("/admin/roles");
-    revalidatePath(`/admin/roles/${id}`);
     return { ok: true, message: `Role "${result.role.name}" updated.` };
   }
   return { ok: false, errors: result.errors, message: result.message };
@@ -62,5 +60,4 @@ export async function updateRoleAction(
 export async function deleteRoleAction(roleId: string): Promise<void> {
   await requireAdmin({ permission: "roles.manage" });
   await deleteRole(roleId);
-  revalidatePath("/admin/roles");
 }

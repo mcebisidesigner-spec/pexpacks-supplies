@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/lib/supabase/types";
 import {
@@ -609,7 +608,7 @@ export async function syncPackTotalPrice(packId: string): Promise<number> {
     .update({ price: rounded, updated_at: new Date().toISOString() })
     .eq("id", packId);
 
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  // Revalidation moved to action layer to avoid double-counting ISR writes
   return rounded;
 }
 
@@ -665,7 +664,7 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
     if (created.pack_id) {
       await syncPackTotalPrice(created.pack_id);
     }
-    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+    // Revalidation moved to action layer to avoid double-counting ISR writes
 
     return {
       ok: true,
@@ -743,9 +742,7 @@ export async function updateItem(
       if (updated.pack_id) {
         await syncPackTotalPrice(updated.pack_id);
       }
-      revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-      revalidatePath("/admin/products");
-      revalidatePath("/schools");
+      // Revalidation moved to action layer to avoid double-counting ISR writes
 
       return {
         ok: true,
@@ -859,13 +856,7 @@ export async function updateItem(
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
-    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
-    revalidatePath("/admin/products");
-    revalidatePath(`/admin/products/${slugified}`);
-    revalidatePath(`/admin/products/${newSlug}`);
-    revalidatePath("/schools");
-    revalidatePath("/schools", "layout");
-    revalidatePath("/");
+    // Revalidation moved to action layer to avoid double-counting ISR writes
 
     return {
       ok: true,
@@ -928,7 +919,7 @@ export async function deleteItem(
   if (existing.pack_id) {
     await syncPackTotalPrice(existing.pack_id);
   }
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  // Revalidation moved to action layer to avoid double-counting ISR writes
 
   return { ok: true, packId: existing.pack_id };
 }

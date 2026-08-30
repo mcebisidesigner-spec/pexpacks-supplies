@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
@@ -10,6 +9,10 @@ import {
   deleteOrder,
 } from "@/lib/admin/orders";
 
+// NOTE: Admin pages are dynamically rendered (behind auth middleware).
+// They do NOT use ISR, so revalidatePath("/admin/*") is wasted ISR writes.
+// The router.refresh() on the client side is sufficient for admin pages.
+
 export async function updateOrderStatusAction(
   id: string,
   formData: FormData
@@ -18,10 +21,6 @@ export async function updateOrderStatusAction(
   const parsed = parseOrderStatus(formData);
   if (!parsed.ok) return;
   await updateOrderStatus(id, parsed.status);
-  revalidatePath("/admin/orders");
-  revalidatePath(`/admin/orders/${id}`);
-  revalidatePath("/admin/payments");
-  revalidatePath("/admin");
 }
 
 export async function refundOrderAction(
@@ -31,17 +30,10 @@ export async function refundOrderAction(
   await requireAdmin({ permission: "orders.refund" });
   const reason = formData.get("reason");
   await refundOrder(id, typeof reason === "string" ? reason : undefined);
-  revalidatePath("/admin/orders");
-  revalidatePath(`/admin/orders/${id}`);
-  revalidatePath("/admin/payments");
-  revalidatePath("/admin");
 }
 
 export async function deleteOrderAction(id: string): Promise<void> {
   await requireAdmin({ permission: "orders.edit" });
   await deleteOrder(id, "orders.edit");
-  revalidatePath("/admin/orders");
-  revalidatePath("/admin/payments");
-  revalidatePath("/admin");
   redirect("/admin/orders");
 }
