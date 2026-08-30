@@ -45,22 +45,8 @@ CREATE POLICY "Public read access for active pexco rates"
 DROP POLICY IF EXISTS "Admin write access for pexco rates" ON public.pexco_rates;
 CREATE POLICY "Admin write access for pexco rates"
   ON public.pexco_rates FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.admin_users au
-      WHERE au.user_id = auth.uid()
-        AND au.status = 'active'
-        AND au.role IN ('super_admin', 'admin')
-    )
-  )
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.admin_users au
-      WHERE au.user_id = auth.uid()
-        AND au.status = 'active'
-        AND au.role IN ('super_admin', 'admin')
-    )
-  );
+  USING (public.is_staff())
+  WITH CHECK (public.is_staff());
 
 -- ============================================================================
 -- 2. MASTER PRODUCTS PEXCOVER CLASSIFICATION

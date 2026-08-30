@@ -6,7 +6,9 @@
 --   search, featured, and nearby queries can use one publication-aware source.
 -- ============================================================================
 
-CREATE OR REPLACE VIEW public.public_school_directory_view
+DROP VIEW IF EXISTS public.public_school_directory_view CASCADE;
+
+CREATE VIEW public.public_school_directory_view
 WITH (security_invoker = true)
 AS
 SELECT
