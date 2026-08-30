@@ -203,7 +203,7 @@ export function MasterProductsPageView({
             variant="primary"
             icon={<Plus size={14} />}
           >
-            Add Master Item
+            Add Product
           </AdminButton>
         }
       />

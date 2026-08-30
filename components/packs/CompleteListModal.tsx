@@ -17,13 +17,19 @@ function safeId(value: string) {
   return value.replace(/[^a-zA-Z0-9_-]/g, "-");
 }
 
-export function CompleteListModal({ pack, onClose, onAddToOrder }: CompleteListModalProps) {
+export function CompleteListModal({
+  pack,
+  onClose,
+  onAddToOrder,
+}: CompleteListModalProps) {
   const handleCustomise = useCallback(() => {
     const targetId = pack?.customiseTargetId;
     if (!targetId) return;
     onClose();
     window.setTimeout(() => {
-      const trigger = document.getElementById(targetId) as HTMLButtonElement | null;
+      const trigger = document.getElementById(
+        targetId,
+      ) as HTMLButtonElement | null;
       trigger?.click();
     }, 0);
   }, [onClose, pack]);
@@ -33,7 +39,8 @@ export function CompleteListModal({ pack, onClose, onAddToOrder }: CompleteListM
   const idBase = safeId(pack.id);
   const titleId = `${idBase}-complete-list-title`;
   const countFormatted = String(pack.items.length).padStart(2, "0");
-  const itemWord = pack.items.length === 1 ? "Stationery item" : "Stationery items";
+  const itemWord =
+    pack.items.length === 1 ? "Stationery product" : "Stationery products";
   const subtitleText = `${countFormatted} ${itemWord}`;
 
   return (
@@ -42,12 +49,18 @@ export function CompleteListModal({ pack, onClose, onAddToOrder }: CompleteListM
       onClose={onClose}
       title={pack.modalTitle}
       titleId={titleId}
-      subtitle={<span className={styles.itemCountSubtitle}>{subtitleText}</span>}
+      subtitle={
+        <span className={styles.itemCountSubtitle}>{subtitleText}</span>
+      }
       footer={
         <>
           <p className={styles.price}>{pack.priceLabel}</p>
           {onAddToOrder ? (
-            <button type="button" className={styles.addToOrderButton} onClick={onAddToOrder}>
+            <button
+              type="button"
+              className={styles.addToOrderButton}
+              onClick={onAddToOrder}
+            >
               Add to Order
             </button>
           ) : pack.fullPackHref ? (
@@ -60,7 +73,11 @@ export function CompleteListModal({ pack, onClose, onAddToOrder }: CompleteListM
             </button>
           )}
           {pack.customiseTargetId ? (
-            <button type="button" className={styles.customiseButton} onClick={handleCustomise}>
+            <button
+              type="button"
+              className={styles.customiseButton}
+              onClick={handleCustomise}
+            >
               Customise This Pack
             </button>
           ) : (

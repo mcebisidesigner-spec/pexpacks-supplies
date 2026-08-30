@@ -25,15 +25,15 @@ export function AddItemClient() {
         }
         subtitle={
           liveSku
-            ? `SKU: ${liveSku} • Create a new master catalogue item.`
-            : "Create a new master catalogue item for school packs."
+            ? `SKU: ${liveSku} • Create a new master catalogue product.`
+            : "Create a new master catalogue product for school packs."
         }
       />
 
       <ItemForm
         item={null}
         packs={[]}
-        submitLabel="Add Item"
+        submitLabel="Add Product"
         returnTo="/admin/products"
         onNameChange={setLiveTitle}
         onSkuChange={setLiveSku}

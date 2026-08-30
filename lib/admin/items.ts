@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/lib/supabase/types";
 import {
@@ -9,7 +9,7 @@ import {
   type PermissionKey,
   type AdminSession,
 } from "@/lib/admin/rbac";
-import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 import { inventoryItemNameKey } from "@/lib/admin/item-constants";
 import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
@@ -154,9 +154,7 @@ async function ensureMasterProduct(
   > & { sku?: string | null; icon?: string | null },
   actorId: string,
 ): Promise<MasterProductRow> {
-  const sku = data.sku?.trim()
-    ? sanitizeSku(data.sku)
-    : productSku(data);
+  const sku = data.sku?.trim() ? sanitizeSku(data.sku) : productSku(data);
   const productPatch = {
     sku,
     name: data.name.trim(),
@@ -463,7 +461,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
     let masterQuery = admin
       .from("master_products")
       .select(
-        "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon",
+        "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon,requires_pexcover,pexco_code",
       );
 
     if (isUuid) {
@@ -485,7 +483,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
       const { data: ilikeList } = await admin
         .from("master_products")
         .select(
-          "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon",
+          "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon,requires_pexcover,pexco_code",
         )
         .ilike("name", `%${nameSearch}%`)
         .limit(10);
@@ -495,7 +493,10 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
     if (finalMasterList && finalMasterList.length > 0) {
       const matchedMaster =
         finalMasterList.find((m) => {
-          const mSlug = m.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+          const mSlug = m.name
+            ?.toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
           return (
             mSlug === slugified ||
             m.sku?.toLowerCase() === slugified ||
@@ -525,16 +526,29 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
           category: matchedMaster.category || "Stationery",
           brand: matchedMaster.brand || null,
           description: matchedMaster.description || null,
-          specification: matchedMaster.specification || matchedMaster.packaging || null,
+          specification:
+            matchedMaster.specification || matchedMaster.packaging || null,
           quantity: 1,
           unit_price: matchedMaster.current_selling_price ?? 0,
-          unit_cost: (matchedMaster as unknown as { latest_verified_cost?: number }).latest_verified_cost ?? 0,
-          barcode: (matchedMaster as unknown as { barcode?: string }).barcode || null,
+          unit_cost:
+            (matchedMaster as unknown as { latest_verified_cost?: number })
+              .latest_verified_cost ?? 0,
+          barcode:
+            (matchedMaster as unknown as { barcode?: string }).barcode || null,
           pack_inclusions_count: packCount ?? 0,
           icon: resolvedIcon,
           visible: matchedMaster.active,
           sort_order: 0,
-          slug: matchedMaster.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
+          requires_pexcover:
+            (matchedMaster as unknown as { requires_pexcover?: boolean })
+              .requires_pexcover ?? false,
+          pexco_code:
+            (matchedMaster as unknown as { pexco_code?: string | null })
+              .pexco_code ?? null,
+          slug: matchedMaster.name
+            ?.toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, ""),
         } as unknown as ItemRow;
       }
     }
@@ -609,7 +623,7 @@ export async function syncPackTotalPrice(packId: string): Promise<number> {
     .update({ price: rounded, updated_at: new Date().toISOString() })
     .eq("id", packId);
 
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  revalidateCatalog();
   return rounded;
 }
 
@@ -665,7 +679,7 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
     if (created.pack_id) {
       await syncPackTotalPrice(created.pack_id);
     }
-    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+    revalidateCatalog();
 
     return {
       ok: true,
@@ -694,9 +708,7 @@ export async function updateItem(
   const existing = await readCanonicalItem(admin, id);
 
   const isUuid =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      id,
-    );
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
   const slugified = id
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
@@ -743,7 +755,7 @@ export async function updateItem(
       if (updated.pack_id) {
         await syncPackTotalPrice(updated.pack_id);
       }
-      revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+      revalidateCatalog();
       revalidatePath("/admin/products");
       revalidatePath("/schools");
 
@@ -778,9 +790,7 @@ export async function updateItem(
 
     let product: MasterProductRow;
     const rawSku =
-      parsed.data.sku?.trim() ||
-      targetMaster?.sku ||
-      productSku(parsed.data);
+      parsed.data.sku?.trim() || targetMaster?.sku || productSku(parsed.data);
     const skuVal = sanitizeSku(rawSku);
 
     if (targetMaster) {
@@ -815,6 +825,10 @@ export async function updateItem(
           active: parsed.data.visible,
           updated_at: new Date().toISOString(),
           updated_by: actor.user.id,
+          requires_pexcover: parsed.data.requires_pexcover ?? false,
+          pexco_code: parsed.data.requires_pexcover
+            ? (parsed.data.pexco_code ?? null)
+            : null,
         })
         .eq("id", targetMaster.id)
         .select("*")
@@ -859,7 +873,7 @@ export async function updateItem(
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
-    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+    revalidateCatalog();
     revalidatePath("/admin/products");
     revalidatePath(`/admin/products/${slugified}`);
     revalidatePath(`/admin/products/${newSlug}`);
@@ -928,7 +942,7 @@ export async function deleteItem(
   if (existing.pack_id) {
     await syncPackTotalPrice(existing.pack_id);
   }
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  revalidateCatalog();
 
   return { ok: true, packId: existing.pack_id };
 }
@@ -971,7 +985,7 @@ export async function reorderItems(
       summary: `Reordered ${updates.length} items in a pack`,
     });
 
-    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+    revalidateCatalog();
 
     return { ok: true };
   } catch (err) {
@@ -1231,7 +1245,7 @@ export async function importItemsCsv(
     summary: `Imported items CSV: ${result.created} created, ${result.updated} updated, ${result.errors.length} errors`,
   });
 
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  revalidateCatalog();
 
   return result;
 }
@@ -1470,7 +1484,7 @@ export async function reconcilePackItems(
   }
 
   await syncPackTotalPrice(packId);
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  revalidateCatalog();
 
   return { ok: true, created, updated, deleted };
 }

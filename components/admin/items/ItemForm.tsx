@@ -88,9 +88,7 @@ export function ItemForm({
   const [requiresPexcover, setRequiresPexcover] = useState<boolean>(
     item?.requires_pexcover ?? false,
   );
-  const [pexcoCode, setPexcoCode] = useState<string>(
-    item?.pexco_code ?? "",
-  );
+  const [pexcoCode, setPexcoCode] = useState<string>(item?.pexco_code ?? "");
 
   useEffect(() => {
     if (state?.ok && state.item) {
@@ -226,11 +224,11 @@ export function ItemForm({
           />
         </div>
 
-        {/* Row 2: Item Name */}
+        {/* Row 2: Product Name */}
         <FloatingInput
           id="name"
           name="name"
-          label="Item Name"
+          label="Product Name"
           value={productName}
           onChange={handleNameChange}
           required
@@ -293,8 +291,14 @@ export function ItemForm({
         {/* Row 6: Pexcover Classification */}
         <div className={styles.pexcoverSection}>
           <div className={styles.pexcoverHeader}>
-            <span className={styles.pexcoverLabel}>📚 Pexcover™ Book-Covering Classification</span>
-            <span className={styles.pexcoverHint}>Enable if this product is a book or exercise book that requires covering. The PEXCO code determines the covering rate billed at checkout.</span>
+            <span className={styles.pexcoverLabel}>
+              📚 Pexcover™ Book-Covering Classification
+            </span>
+            <span className={styles.pexcoverHint}>
+              Enable if this product is a book or exercise book that requires
+              covering. The PEXCO code determines the covering rate billed at
+              checkout.
+            </span>
           </div>
           <div className={styles.pexcoverRow}>
             <label className={styles.checkboxLabel}>
@@ -321,13 +325,21 @@ export function ItemForm({
                   aria-label="PEXCO classification code"
                 >
                   <option value="">— Select PEXCO Code —</option>
-                  <option value="PEXCO01">PEXCO01 — Small book (R8.00)</option>
-                  <option value="PEXCO02">PEXCO02 — Large/hard-cover book (R14.00)</option>
-                  <option value="PEXCO03">PEXCO03 — Medium exercise book (R11.00)</option>
-                  <option value="PEXCO04">PEXCO04 — Extra-large atlas / art book (R18.00)</option>
+                  <option value="PEXCO01">
+                    PEXCO01 — 10–30 Page Exercise Book
+                  </option>
+                  <option value="PEXCO02">PEXCO02 — 192 Page Hardcover</option>
+                  <option value="PEXCO03">
+                    PEXCO03 — Softcover Textbook / Reader
+                  </option>
+                  <option value="PEXCO04">
+                    PEXCO04 — Heavy Hardcover Textbook / Atlas
+                  </option>
                 </select>
                 {state?.errors?.pexco_code && (
-                  <span className={styles.fieldError}>{state.errors.pexco_code}</span>
+                  <span className={styles.fieldError}>
+                    {state.errors.pexco_code}
+                  </span>
                 )}
               </div>
             )}

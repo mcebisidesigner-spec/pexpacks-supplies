@@ -33,14 +33,20 @@ export function EditProductClient({
         backHref={returnTo}
         backLabel="Back to Product"
         title={liveTitle || "New Product"}
-        badge={<StatusBadge status={liveCategory || "Stationery"} tone="emerald" showDot />}
+        badge={
+          <StatusBadge
+            status={liveCategory || "Stationery"}
+            tone="emerald"
+            showDot
+          />
+        }
         subtitle={`SKU: ${liveSku || productSlug} • Manage pricing, cost verification, and master catalogue metadata.`}
       />
 
       <ItemForm
         item={item}
         packs={[]}
-        submitLabel="Save item"
+        submitLabel="Save product"
         returnTo={returnTo}
         onNameChange={setLiveTitle}
         onSkuChange={setLiveSku}

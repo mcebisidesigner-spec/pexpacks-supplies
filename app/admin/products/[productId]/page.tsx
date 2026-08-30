@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Edit, Layers, TrendingUp, Trash2 } from "lucide-react";
+import { Edit, BookOpen, TrendingUp, Trash2 } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem } from "@/lib/admin/items";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
@@ -90,10 +90,11 @@ export default async function ProductDetailPage({
     typeof rawItem?.supplier_name === "string"
       ? rawItem.supplier_name
       : "Preferred Supplier";
-  const packInclusionsCount =
-    typeof rawItem?.pack_inclusions_count === "number"
-      ? rawItem.pack_inclusions_count
-      : 0;
+  const requiresPexcover = item?.requires_pexcover === true;
+  const pexcoCode =
+    typeof rawItem?.pexco_code === "string" && rawItem.pexco_code
+      ? rawItem.pexco_code
+      : null;
 
   // If accessed by UUID, redirect to clean slugified /admin/products/[product-name]
   const isUuid =
@@ -121,13 +122,13 @@ export default async function ProductDetailPage({
               variant="primary"
               icon={<Edit size={14} />}
             >
-              Edit Item
+              Edit Product
             </AdminButton>
             {item?.id ? (
               <form action={deleteItemAction.bind(null, item.id)}>
                 <ConfirmButton
-                  label="Delete Item"
-                  title="Delete Item"
+                  label="Delete Product"
+                  title="Delete Product"
                   confirmText={`Delete "${name}"? If the product is referenced by school packs or orders, it will be archived (deactivated) instead of permanently deleted.`}
                   busyLabel="Deleting…"
                   className={adminStyles.dangerButton}
@@ -162,10 +163,14 @@ export default async function ProductDetailPage({
           iconTone="green"
         />
         <MetricCard
-          label="Pack Inclusions"
-          value={`${packInclusionsCount} Packs`}
-          subtext="Active school packs"
-          icon={<Layers size={16} />}
+          label="PEXCOVER"
+          value={requiresPexcover && pexcoCode ? pexcoCode : "Not Covered"}
+          subtext={
+            requiresPexcover && pexcoCode
+              ? "Assigned covering service"
+              : "No covering service selected"
+          }
+          icon={<BookOpen size={16} />}
           iconTone="purple"
         />
       </div>
@@ -187,7 +192,9 @@ export default async function ProductDetailPage({
 
             <div className={adminStyles["grid-2equal"]}>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Item Name:</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Product Name:
+                </span>
                 <span className={adminStyles.sidebarStatVal}>{name}</span>
               </div>
               <div className={adminStyles.sidebarStatRow}>

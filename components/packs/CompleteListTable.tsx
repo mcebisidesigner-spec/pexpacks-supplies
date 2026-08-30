@@ -23,7 +23,7 @@ export function CompleteListTable({ items, label }: CompleteListTableProps) {
             <th scope="col" className={styles.quantityHeading}>
               Qty
             </th>
-            <th scope="col">Item</th>
+            <th scope="col">Products</th>
             <th scope="col">Description</th>
           </tr>
         </thead>
@@ -35,7 +35,11 @@ export function CompleteListTable({ items, label }: CompleteListTableProps) {
               </td>
               <td className={styles.itemName}>
                 <div className={styles.itemWithIcon}>
-                  <ItemIcon name={item.icon} size={18} className={styles.itemIcon} />
+                  <ItemIcon
+                    name={item.icon}
+                    size={18}
+                    className={styles.itemIcon}
+                  />
                   <span>{item.name}</span>
                 </div>
               </td>
