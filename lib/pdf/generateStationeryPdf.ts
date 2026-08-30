@@ -1,17 +1,17 @@
 import React from "react";
-import { pdf } from "@react-pdf/renderer";
-import {
-  StationeryListPdfDocument,
-  type StationeryPdfOptions,
-  type StationeryListItem,
+// @react-pdf/renderer and StationeryListPdfDocument are loaded lazily inside
+// each function — they are only needed when a PDF is actually generated.
+export type {
+  StationeryPdfOptions,
+  StationeryListItem,
 } from "@/components/pdf/StationeryListPdfDocument";
-
-export type { StationeryPdfOptions, StationeryListItem };
 
 /**
  * Generates and downloads the Stationery List PDF in standard A4 format using @react-pdf/renderer
  */
-export async function generateStationeryPdf(options: StationeryPdfOptions): Promise<void> {
+export async function generateStationeryPdf(
+  options: import("@/components/pdf/StationeryListPdfDocument").StationeryPdfOptions
+): Promise<void> {
   const { schoolName, grade, fileName } = options;
 
   const safeName =
@@ -23,8 +23,16 @@ export async function generateStationeryPdf(options: StationeryPdfOptions): Prom
 
   const defaultFilename = `${safeName}-stationery-list.pdf`;
 
+  // Lazy-load heavy PDF dependencies only when user actually requests a download
+  const [{ pdf }, { StationeryListPdfDocument }] = await Promise.all([
+    import("@react-pdf/renderer"),
+    import("@/components/pdf/StationeryListPdfDocument"),
+  ]);
+
   // Render PDF blob via @react-pdf/renderer
-  const element = React.createElement(StationeryListPdfDocument, { options }) as NonNullable<Parameters<typeof pdf>[0]>;
+  const element = React.createElement(StationeryListPdfDocument, {
+    options,
+  }) as NonNullable<Parameters<typeof pdf>[0]>;
   const pdfBlob = await pdf(element).toBlob();
 
   // 1. Try modern File System Access API if available
@@ -84,10 +92,17 @@ export async function generateStationeryPdf(options: StationeryPdfOptions): Prom
  * Server-side buffer generator for stationery list PDF
  */
 export async function generateStationeryPdfBuffer(
-  options: StationeryPdfOptions
+  options: import("@/components/pdf/StationeryListPdfDocument").StationeryPdfOptions
 ): Promise<Buffer> {
-  const element = React.createElement(StationeryListPdfDocument, { options }) as NonNullable<Parameters<typeof pdf>[0]>;
+  const [{ pdf }, { StationeryListPdfDocument }] = await Promise.all([
+    import("@react-pdf/renderer"),
+    import("@/components/pdf/StationeryListPdfDocument"),
+  ]);
+  const element = React.createElement(StationeryListPdfDocument, {
+    options,
+  }) as NonNullable<Parameters<typeof pdf>[0]>;
   const blob = await pdf(element).toBlob();
   const arrayBuffer = await blob.arrayBuffer();
   return Buffer.from(arrayBuffer);
 }
+

@@ -1,7 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import Papa from "papaparse";
+// papaparse is dynamically imported inside importMasterProductsAction
+// to keep it out of the base server bundle.
+
 import { requireAdmin, writeAuditLog } from "@/lib/admin/rbac";
 import {
   approveProductPrice,
@@ -101,12 +103,14 @@ export async function importMasterProductsAction(formData: FormData) {
     throw new Error("Choose a CSV catalogue file.");
   if (file.size > 5 * 1024 * 1024)
     throw new Error("Catalogue CSV files must be 5 MB or smaller.");
+  const { default: Papa } = await import("papaparse");
   const parsed = Papa.parse<Record<string, string>>(await file.text(), {
     header: true,
     skipEmptyLines: true,
     transformHeader: (header) =>
       header.trim().toLowerCase().replaceAll(" ", "_"),
   });
+
   if (parsed.errors.length)
     throw new Error(`CSV parsing failed: ${parsed.errors[0].message}`);
   const rows = parsed.data.flatMap((row) => {

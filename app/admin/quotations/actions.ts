@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { pdf } from "@react-pdf/renderer";
 import React from "react";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
@@ -14,7 +13,8 @@ import {
   type QuotationStatus,
 } from "@/lib/admin/quotations";
 import { getQuotationSettings } from "@/lib/admin/quotation-settings";
-import { QuotationPdfDocument } from "@/components/pdf/QuotationPdfDocument";
+// QuotationPdfDocument and @react-pdf/renderer are loaded dynamically inside
+// generateAndUploadPdf() to keep them out of the base server bundle (~5 MB saved).
 import { getPack } from "@/lib/admin/packs";
 
 /**
@@ -82,7 +82,11 @@ async function generateAndUploadPdf(quotationId: string): Promise<string | null>
       },
     };
 
-    // Render PDF buffer
+    // Lazy-load heavy PDF dependencies only when actually generating a PDF
+    const [{ pdf }, { QuotationPdfDocument }] = await Promise.all([
+      import("@react-pdf/renderer"),
+      import("@/components/pdf/QuotationPdfDocument"),
+    ]);
     const element = React.createElement(QuotationPdfDocument, { data: pdfData }) as NonNullable<Parameters<typeof pdf>[0]>;
     const documentBuffer = await pdf(element).toBuffer();
 
