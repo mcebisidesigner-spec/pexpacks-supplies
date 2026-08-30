@@ -4,63 +4,10 @@
   gap: 20px;
 }
 
-.header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.header h1 {
-  margin: 0;
-  color: var(--a-text);
-  font-size: 30px;
-  line-height: 1.15;
-}
-
-.header p,
 .muted {
   margin: 6px 0 0;
   color: var(--a-text-3);
   font-size: 13px;
-}
-
-.headerActions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.kpis {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.kpi {
-  min-height: 112px;
-  padding: 18px;
-  border: 1px solid var(--a-border);
-  border-radius: 8px;
-  background: var(--a-surface);
-}
-
-.kpi span {
-  display: block;
-  color: var(--a-text-3);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.kpi strong {
-  display: block;
-  margin-top: 10px;
-  color: var(--a-text);
-  font-size: 28px;
 }
 
 .formPanel {
@@ -74,77 +21,6 @@
   margin: 0 0 14px;
   color: var(--a-text);
   font-size: 17px;
-}
-
-.panelHeader {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-
-.panelHeader h2 {
-  margin-bottom: 0;
-}
-
-.sectionButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.sectionButton {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border: 1px solid var(--a-border-strong);
-  border-radius: 8px;
-  background: var(--a-surface-2);
-  color: var(--a-text);
-  font-size: 13px;
-  font-weight: 800;
-  text-decoration: none;
-}
-
-.sectionButton:hover,
-.sectionButtonActive {
-  border-color: var(--a-accent);
-  background: var(--a-accent-subtle);
-  color: var(--a-accent-strong);
-}
-
-.sectionButton strong {
-  display: inline-flex;
-  min-width: 24px;
-  height: 24px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  background: var(--a-bg);
-  color: var(--a-text);
-  font-size: 12px;
-}
-
-.notice {
-  padding: 16px 18px;
-  border: 1px solid var(--a-amber);
-  border-radius: 8px;
-  background: var(--a-amber-subtle);
-  color: var(--a-text);
-}
-
-.notice strong {
-  color: var(--a-text);
-}
-
-.notice p {
-  margin: 5px 0 0;
-  color: var(--a-text-2);
-  font-size: 13px;
 }
 
 .formGrid {
@@ -167,34 +43,6 @@
 .field:focus {
   outline: 2px solid var(--a-accent);
   outline-offset: 1px;
-}
-
-.wide {
-  grid-column: span 2;
-}
-
-.button {
-  min-height: 42px;
-  padding: 0 16px;
-  border: 0;
-  border-radius: 7px;
-  background: var(--a-accent);
-  color: var(--a-text);
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.buttonSecondary {
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid var(--a-border-strong);
-  border-radius: 7px;
-  background: var(--a-surface-2);
-  color: var(--a-text);
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
 }
 
 .inlineForm {
@@ -226,37 +74,6 @@
   white-space: nowrap;
 }
 
-.badge {
-  display: inline-flex;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: var(--a-surface-2);
-  color: var(--a-text-2);
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: capitalize;
-}
-
-.progress {
-  width: 120px;
-  height: 8px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: var(--a-surface-2);
-}
-
-.progress span {
-  display: block;
-  height: 100%;
-  background: var(--a-accent);
-}
-
-.empty {
-  padding: 48px 20px;
-  text-align: center;
-  color: var(--a-text-3);
-}
-
 .actionCell {
   display: flex;
   gap: 6px;
@@ -278,19 +95,14 @@
 }
 
 @media (max-width: 1050px) {
-  .kpis,
   .formGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 620px) {
-  .kpis,
   .formGrid {
     grid-template-columns: 1fr;
-  }
-  .wide {
-    grid-column: auto;
   }
   .inlineForm {
     align-items: stretch;
