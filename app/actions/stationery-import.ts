@@ -1,9 +1,9 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { requireAdmin, writeAuditLog } from "@/lib/admin/rbac";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 
 export interface CSVStationeryRow {
   sku?: string;
@@ -104,7 +104,7 @@ export async function bulkImportStationeryAction(
     summary: `Bulk-imported stationery: ${data?.length ?? formattedProducts.length} products`,
   });
   revalidatePath("/admin/items");
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
+  revalidateCatalog();
   return {
     success: true,
     importedCount: data?.length ?? formattedProducts.length,

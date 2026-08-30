@@ -1,8 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
-import { invalidateSchoolSearchCache } from "@/lib/schools/schoolSearchData";
-import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
+import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/rbac";
 import {
   getSchool,
@@ -23,8 +21,6 @@ export async function createSchoolAction(
   await requireAdmin({ permission: "schools.create" });
   const result = await createSchool(formData);
   if (result.ok) {
-    invalidateSchoolSearchCache();
-    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
     revalidatePublicSchoolSurfaces();
     revalidatePath("/admin");
     if (result.school.slug) {
@@ -43,8 +39,6 @@ export async function updateSchoolAction(
   await requireAdmin({ permission: "schools.edit" });
   const result = await updateSchool(id, formData);
   if (result.ok) {
-    invalidateSchoolSearchCache();
-    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
     revalidatePublicSchoolSurfaces();
     revalidatePath(`/admin/schools/${id}`);
     revalidatePath(`/admin/schools/${id}/profile`);
@@ -67,24 +61,18 @@ function revalidatePublicSchoolSurfaces() {
 export async function hideSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.archive" });
   await setSchoolStatus(id, "archived");
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePublicSchoolSurfaces();
 }
 
 export async function showSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.restore" });
   await setSchoolStatus(id, "active");
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePublicSchoolSurfaces();
 }
 
 export async function deleteSchoolAction(id: string): Promise<void> {
   await requireAdmin({ permission: "schools.delete" });
   await deleteSchool(id);
-  invalidateSchoolSearchCache();
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
   revalidatePublicSchoolSurfaces();
 }
 
@@ -101,8 +89,6 @@ export async function toggleSchoolVisibilityAction(schoolId: string): Promise<{ 
   const nextStatus = school.status === "active" ? "inactive" : "active";
   const res = await setSchoolStatus(school.id, nextStatus);
   if (res.ok) {
-    invalidateSchoolSearchCache();
-    revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
     revalidatePublicSchoolSurfaces();
   }
   return { ...res, newStatus: nextStatus };

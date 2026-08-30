@@ -1,9 +1,8 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getPublicGradePackPath } from "@/lib/admin/packs";
-import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import {
   createItem,
   updateItem,
@@ -21,7 +20,6 @@ import {
 async function revalidatePackPublicPage(packId: string) {
   const path = await getPublicGradePackPath(packId);
   if (path) revalidatePath(path);
-  revalidateTag(SCHOOL_DATA_TAG, { expire: 0 });
 }
 
 export async function createItemAction(
