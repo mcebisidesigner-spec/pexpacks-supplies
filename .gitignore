@@ -36,3 +36,6 @@ next-env.d.ts
 tmp/
 .agents/
 .vercel
+
+# service credentials (never commit)
+supabase_credentials_temp.env
