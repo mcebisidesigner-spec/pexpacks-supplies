@@ -1,11 +1,13 @@
-import { CheckCircle2, CreditCard, ShieldCheck } from "lucide-react";
+import { CheckCircle2, CreditCard, ShieldCheck, Trash2 } from "lucide-react";
 import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/admin/rbac";
+import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { getOrder } from "@/lib/admin/orders";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
+import { ConfirmButton } from "@/components/admin/ConfirmButton";
+import { deletePaymentAction } from "../actions";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -34,8 +36,10 @@ function gatewayLabel(value: string | null | undefined): string {
   return value;
 }
 
-export default async function PaymentDetailPage({ params }: PaymentDetailPageProps) {
-  await requireAdmin({ permission: "payments.view" });
+export default async function PaymentDetailPage({
+  params,
+}: PaymentDetailPageProps) {
+  const session = await requireAdmin({ permission: "payments.view" });
   const { orderNumber } = await params;
   const order = await getOrder(orderNumber);
 
@@ -43,7 +47,15 @@ export default async function PaymentDetailPage({ params }: PaymentDetailPagePro
     notFound();
   }
 
-  const gatewayReference = order.gateway_reference ?? order.payment_reference ?? "Pending gateway reference";
+  const canDelete =
+    hasPermission(session, "orders.delete") ||
+    hasPermission(session, "orders.edit") ||
+    session.isSuperAdmin;
+
+  const gatewayReference =
+    order.gateway_reference ??
+    order.payment_reference ??
+    "Pending gateway reference";
   const paid = Boolean(order.paid_at) || order.status === "paid";
 
   return (
@@ -53,14 +65,41 @@ export default async function PaymentDetailPage({ params }: PaymentDetailPagePro
         backLabel="Back to Payments"
         title={`Payment: ${order.order_reference}`}
         subtitle={`Gateway Ref: ${gatewayReference} - ${gatewayLabel(order.payment_gateway)}`}
-        actions={<StatusBadge status={order.status} showDot />}
+        actions={
+          <>
+            <StatusBadge status={order.status} showDot />
+            {canDelete ? (
+              <form action={deletePaymentAction.bind(null, order.id)}>
+                <ConfirmButton
+                  label="Delete payment"
+                  title="Delete Permanently"
+                  confirmText={`Permanently delete payment ${order.order_reference}? The order and its payment records will be removed. This action cannot be undone.`}
+                  busyLabel="Deleting…"
+                  className={adminStyles.dangerButton}
+                  icon={<Trash2 size={14} />}
+                />
+              </form>
+            ) : null}
+          </>
+        }
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: "14px",
+          marginBottom: "20px",
+        }}
+      >
         <MetricCard
           label="Order Amount"
           value={money(order.estimated_total)}
-          subtext={paid ? `Paid ${formatDateTime(order.paid_at)}` : "Awaiting payment confirmation"}
+          subtext={
+            paid
+              ? `Paid ${formatDateTime(order.paid_at)}`
+              : "Awaiting payment confirmation"
+          }
           icon={<ZarIcon size={16} />}
           iconTone={paid ? "green" : "amber"}
         />
@@ -99,28 +138,48 @@ export default async function PaymentDetailPage({ params }: PaymentDetailPagePro
 
             <div className={adminStyles["grid-2equal"]}>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Order Reference:</span>
-                <span className={adminStyles.sidebarStatVal}>{order.order_reference}</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Order Reference:
+                </span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {order.order_reference}
+                </span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Payment Method:</span>
-                <span className={adminStyles.sidebarStatVal}>{gatewayLabel(order.payment_gateway)}</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Payment Method:
+                </span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {gatewayLabel(order.payment_gateway)}
+                </span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Payer Name:</span>
-                <span className={adminStyles.sidebarStatVal}>{order.buyer_name || "-"}</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Payer Name:
+                </span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {order.buyer_name || "-"}
+                </span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Customer Email:</span>
-                <span className={adminStyles.sidebarStatVal}>{order.buyer_email || "-"}</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Customer Email:
+                </span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {order.buyer_email || "-"}
+                </span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
                 <span className={adminStyles.sidebarStatLabel}>School:</span>
-                <span className={adminStyles.sidebarStatVal}>{order.school_name || "-"}</span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {order.school_name || "-"}
+                </span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
                 <span className={adminStyles.sidebarStatLabel}>Grade:</span>
-                <span className={adminStyles.sidebarStatVal}>{order.grade || "-"}</span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {order.grade || "-"}
+                </span>
               </div>
             </div>
           </div>
