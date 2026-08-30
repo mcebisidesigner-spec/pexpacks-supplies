@@ -22,6 +22,12 @@ interface ItemFormProps {
   packs: { id: string; title: string }[];
   returnTo?: string;
   submitLabel?: string;
+  /** Called when the item name changes — used to keep parent header in sync */
+  onNameChange?: (name: string) => void;
+  /** Called when the SKU changes — used to keep parent header subtitle in sync */
+  onSkuChange?: (sku: string) => void;
+  /** Called when the category changes — used to keep parent header badge in sync */
+  onCategoryChange?: (category: string) => void;
 }
 
 function SubmitButton({ label }: { label: string }) {
@@ -44,6 +50,9 @@ export function ItemForm({
   packs,
   returnTo = "/admin/items",
   submitLabel = "Save item",
+  onNameChange,
+  onSkuChange,
+  onCategoryChange,
 }: ItemFormProps) {
   const router = useRouter();
   const action =
@@ -84,7 +93,17 @@ export function ItemForm({
   );
 
   useEffect(() => {
-    if (state?.ok) {
+    if (state?.ok && state.item) {
+      // If the name changed, the slug changes — navigate to the new edit URL
+      const newSlug =
+        state.item.slug ||
+        (state.item.name || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+      if (newSlug) {
+        router.replace(`/admin/products/${newSlug}/edit`);
+      }
       router.refresh();
     }
   }, [state, router]);
@@ -92,22 +111,30 @@ export function ItemForm({
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setProductName(val);
+    onNameChange?.(val);
     if (!isCustomSku && val.trim()) {
-      setSku(generateSkuFromName(val, category));
+      const newSku = generateSkuFromName(val, category);
+      setSku(newSku);
+      onSkuChange?.(newSku);
     }
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setCategory(val);
+    onCategoryChange?.(val);
     if (!isCustomSku && productName.trim()) {
-      setSku(generateSkuFromName(productName, val));
+      const newSku = generateSkuFromName(productName, val);
+      setSku(newSku);
+      onSkuChange?.(newSku);
     }
   };
 
   const handleSkuChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSku(sanitizeSku(e.target.value));
+    const newSku = sanitizeSku(e.target.value);
+    setSku(newSku);
     setIsCustomSku(true);
+    onSkuChange?.(newSku);
   };
 
   const handleRegenerateSku = (e: React.MouseEvent) => {
@@ -115,6 +142,7 @@ export function ItemForm({
     setIsCustomSku(false);
     const newSku = generateSkuFromName(productName.trim() || "Item", category);
     setSku(newSku);
+    onSkuChange?.(newSku);
   };
 
   return (

@@ -336,58 +336,47 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin-top: 6px;
-  background: var(--pex-bg);
-  padding: var(--space-3);
-  border: 1px solid var(--pex-border);
+  padding: 10px 12px;
+  background: var(--color-teal-subtle, rgba(14, 184, 166, 0.06));
+  border: 1px solid rgba(14, 184, 166, 0.22);
   border-radius: var(--radius-field);
   cursor: pointer;
   transition: var(--interactive-transition);
 }
 
-.pexcoverToggleLabel:hover {
-  border-color: var(--pex-primary);
-  background: var(--pex-bg-soft);
+.pexcoverToggleLabel:hover:not(.pexcoverDisabled) {
+  border-color: rgba(14, 184, 166, 0.45);
+  background: rgba(14, 184, 166, 0.1);
 }
 
 .pexcoverToggleLabel:has(.pexcoverCheckbox:checked) {
-  border-color: rgba(33, 158, 154, 0.45);
-  background: var(--color-teal-subtle);
+  border-color: rgba(33, 158, 154, 0.5);
+  background: var(--color-teal-subtle, rgba(14, 184, 166, 0.08));
+}
+
+.pexcoverDisabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: var(--pex-bg-soft);
+  border-color: var(--pex-border);
+}
+
+.pexcoverDisabled:hover {
+  background: var(--pex-bg-soft);
+  border-color: var(--pex-border);
 }
 
 .pexcoverCheckbox {
-  width: 20px;
-  height: 20px;
-  appearance: none;
-  border: 1.5px solid var(--pex-border);
-  border-radius: 6px;
-  background: var(--pex-bg);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition: var(--interactive-transition);
-}
-
-.pexcoverCheckbox::before {
-  content: "";
-  width: 10px;
-  height: 6px;
-  border-left: 2px solid var(--pex-bg);
-  border-bottom: 2px solid var(--pex-bg);
-  opacity: 0;
-  transform: rotate(-45deg) translateY(-1px);
-}
-
-.pexcoverCheckbox:checked {
-  border-color: var(--pex-keppel);
-  background: var(--pex-keppel);
-}
-
-.pexcoverCheckbox:checked::before {
-  opacity: 1;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--pex-keppel);
+  cursor: inherit;
 }
 
 .pexcoverDetails {
+  flex: 1;
+  min-width: 0;
   display: grid;
   gap: 2px;
 }
@@ -397,12 +386,28 @@
   font-size: var(--text-2xs);
   font-weight: 800;
   color: var(--pex-primary);
+  line-height: 1.3;
 }
 
 .pexcoverDesc {
   margin: 0;
   font-size: 11px;
+  color: var(--color-slate, var(--pex-text-muted));
+  line-height: 1.3;
+}
+
+.pexcoverPrice {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--pex-primary);
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+}
+
+.pexcoverPriceDisabled {
   color: var(--pex-text-muted);
+  font-weight: 600;
 }
 
 .packSummaryRow {
@@ -699,55 +704,4 @@
   }
 }
 
-.pexcoverToggleLabel {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 8px 12px;
-  background: rgba(14, 184, 166, 0.06);
-  border: 1px solid rgba(14, 184, 166, 0.2);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.pexcoverToggleLabel:hover {
-  background: rgba(14, 184, 166, 0.1);
-  border-color: rgba(14, 184, 166, 0.4);
-}
-
-.pexcoverDisabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  background: rgba(150, 150, 150, 0.05);
-  border-color: rgba(150, 150, 150, 0.15);
-}
-
-.pexcoverDisabled:hover {
-  background: rgba(150, 150, 150, 0.05);
-  border-color: rgba(150, 150, 150, 0.15);
-}
-
-.pexcoverCheckbox {
-  margin-top: 3px;
-  accent-color: var(--pex-keppel);
-  cursor: inherit;
-}
-
-.pexcoverDetails {
-  flex: 1;
-}
-
-.pexcoverTitle {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--pex-primary);
-}
-
-.pexcoverDesc {
-  margin: 2px 0 0;
-  font-size: 11px;
-  color: var(--color-slate);
-}
 

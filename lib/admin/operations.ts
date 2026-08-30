@@ -1,6 +1,13 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { randomUUID } from "node:crypto";
 import {
+  getAdminUser,
+  hasPermission,
+  writeAuditLog,
+  type AdminSession,
+  type PermissionKey,
+} from "@/lib/admin/rbac";
+import {
   calculateSellingPrice,
   grossMargin,
   selectPricingRule,
@@ -17,7 +24,10 @@ type DynamicResult<T> = {
 };
 
 type DynamicQuery<T = DynamicRow[]> = Promise<DynamicResult<T>> & {
-  select(columns?: string, options?: { count?: "exact"; head?: boolean }): DynamicQuery<DynamicRow[]>;
+  select(
+    columns?: string,
+    options?: { count?: "exact"; head?: boolean },
+  ): DynamicQuery<DynamicRow[]>;
   insert(values: unknown, options?: unknown): DynamicQuery<DynamicRow[]>;
   upsert(values: unknown, options?: unknown): DynamicQuery<DynamicRow[]>;
   update(values: unknown): DynamicQuery<DynamicRow[]>;
@@ -30,7 +40,10 @@ type DynamicQuery<T = DynamicRow[]> = Promise<DynamicResult<T>> & {
   ilike(column: string, pattern: string): DynamicQuery<T>;
   or(filters: string): DynamicQuery<T>;
   not(column: string, operator: string, value: unknown): DynamicQuery<T>;
-  order(column: string, options?: { ascending?: boolean; nullsFirst?: boolean }): DynamicQuery<T>;
+  order(
+    column: string,
+    options?: { ascending?: boolean; nullsFirst?: boolean },
+  ): DynamicQuery<T>;
   range(from: number, to: number): DynamicQuery<T>;
   limit(count: number): DynamicQuery<T>;
   single(): Promise<DynamicResult<DynamicRow>>;
@@ -51,7 +64,6 @@ function asNumber(value: unknown): number {
   return Number.isFinite(number) ? number : 0;
 }
 
-
 function isOperationsSchemaUnavailable(error: DatabaseError) {
   const message = error?.message?.toLowerCase() ?? "";
   return (
@@ -71,6 +83,15 @@ function assertNoError(error: DatabaseError, context: string) {
   throw new Error(`${context}: ${error.message || "Unknown database error"}`);
 }
 
+async function assertCan(permission: PermissionKey): Promise<AdminSession> {
+  const session = await getAdminUser();
+  if (!session || !hasPermission(session, permission)) {
+    const err = new Error("You don't have permission to do that.");
+    (err as Error & { status?: number }).status = 403;
+    throw err;
+  }
+  return session;
+}
 
 export type MasterProductRow = {
   id: string;
@@ -89,14 +110,18 @@ export type MasterProductRow = {
   active: boolean;
 };
 
-export async function listMasterProducts(options: {
-  query?: string;
-  category?: string;
-  page?: number;
-  pageSize?: number;
-  sort?: string;
-  order?: "asc" | "desc";
-} | string = {}) {
+export async function listMasterProducts(
+  options:
+    | {
+        query?: string;
+        category?: string;
+        page?: number;
+        pageSize?: number;
+        sort?: string;
+        order?: "asc" | "desc";
+      }
+    | string = {},
+) {
   const opts = typeof options === "string" ? { query: options } : options;
   const page = Math.max(1, opts.page || 1);
   const pageSize = Math.max(10, Math.min(100, opts.pageSize || 25));
@@ -123,9 +148,7 @@ export async function listMasterProducts(options: {
     );
   }
 
-  request = request
-    .order(sortCol, { ascending })
-    .range(from, to);
+  request = request.order(sortCol, { ascending }).range(from, to);
 
   const { data, error, count } = await request;
   assertNoError(error, "Unable to load the master catalogue");
@@ -201,6 +224,60 @@ export async function importMasterProducts(
   return payload.length;
 }
 
+export async function deleteMasterProduct(
+  id: string,
+): Promise<{ ok: boolean; message?: string; archived?: boolean }> {
+  const actor = await assertCan("items.delete");
+
+  const { data: existing } = await db()
+    .from("master_products")
+    .select("id, sku, name")
+    .eq("id", id)
+    .maybeSingle();
+  if (!existing) return { ok: false, message: "Item not found." };
+
+  const { error } = await db().from("master_products").delete().eq("id", id);
+  if (error) {
+    console.error("[master_products] delete failed:", error);
+    if (error.code === "23503") {
+      const { error: archiveError } = await db()
+        .from("master_products")
+        .update({ active: false, visibility: "hidden" })
+        .eq("id", id);
+      if (archiveError) {
+        console.error("[master_products] archive failed:", archiveError);
+        return { ok: false, message: "Failed to delete product." };
+      }
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "items.delete",
+        entityType: "master_product",
+        entityId: id,
+        summary: `Archived product "${existing.name}" (referenced by school packs or orders)`,
+      });
+      return {
+        ok: true,
+        archived: true,
+        message:
+          "This product is referenced by school packs or orders and was archived (deactivated) instead.",
+      };
+    }
+    return { ok: false, message: "Failed to delete product." };
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "items.delete",
+    entityType: "master_product",
+    entityId: id,
+    summary: `Deleted product "${existing.name}"`,
+  });
+
+  return { ok: true };
+}
+
 export type SupplierRow = {
   id: string;
   code: string;
@@ -224,7 +301,9 @@ export async function listSuppliers() {
   assertNoError(error, "Unable to load suppliers");
   return (data ?? []).map((row: DynamicRow) => ({
     ...row,
-    offer_count: ((row.supplier_offers as Array<{ count?: number }> | undefined)?.[0]?.count) ?? 0,
+    offer_count:
+      (row.supplier_offers as Array<{ count?: number }> | undefined)?.[0]
+        ?.count ?? 0,
   })) as SupplierRow[];
 }
 
@@ -387,7 +466,11 @@ export async function listPricingReview() {
       latest_verified_cost: cost,
       suggested_price: suggested,
       current_margin: cost == null ? null : grossMargin(price, asNumber(cost)),
-      preferred_supplier: ((offer?.suppliers as { name?: unknown } | undefined)?.name as string | null | undefined) ?? null,
+      preferred_supplier:
+        ((offer?.suppliers as { name?: unknown } | undefined)?.name as
+          | string
+          | null
+          | undefined) ?? null,
       offer_valid_until: offer?.valid_until ?? null,
       pricing_rule: rule?.name ?? null,
     };
@@ -397,7 +480,9 @@ export async function listPricingReview() {
 export async function listPricingRules() {
   const { data, error } = await db()
     .from("pricing_rules")
-    .select("id,name,scope,scope_value,method,rate,rounding_increment,priority,active")
+    .select(
+      "id,name,scope,scope_value,method,rate,rounding_increment,priority,active",
+    )
     .order("priority");
   assertNoError(error, "Unable to load pricing rules");
   return (data ?? []) as PricingRule[];
@@ -456,20 +541,27 @@ export async function approveProductPrice(
     const { data: settings } = await client
       .from("system_settings")
       .select("key,value")
-      .in("key", ["pricing.low_margin_warning_pct", "pricing.critical_margin_pct"]);
-    const settingsMap = new Map<string, number>((settings ?? []).map((s) => [String(s.key), Number(s.value)]));
-    const criticalPct: number = settingsMap.get("pricing.critical_margin_pct") ?? 10;
-    const warningPct: number = settingsMap.get("pricing.low_margin_warning_pct") ?? 20;
+      .in("key", [
+        "pricing.low_margin_warning_pct",
+        "pricing.critical_margin_pct",
+      ]);
+    const settingsMap = new Map<string, number>(
+      (settings ?? []).map((s) => [String(s.key), Number(s.value)]),
+    );
+    const criticalPct: number =
+      settingsMap.get("pricing.critical_margin_pct") ?? 10;
+    const warningPct: number =
+      settingsMap.get("pricing.low_margin_warning_pct") ?? 20;
     const marginPct = margin * 100;
 
     if (marginPct < criticalPct && !isSuperAdmin) {
       throw new Error(
-        `Margin ${marginPct.toFixed(1)}% is below the critical floor (${criticalPct}%). Only a super admin can approve this price.`
+        `Margin ${marginPct.toFixed(1)}% is below the critical floor (${criticalPct}%). Only a super admin can approve this price.`,
       );
     }
     if (marginPct < warningPct) {
       console.warn(
-        `[pricing] Low margin warning: ${marginPct.toFixed(1)}% < ${warningPct}% for product ${productId}`
+        `[pricing] Low margin warning: ${marginPct.toFixed(1)}% < ${warningPct}% for product ${productId}`,
       );
     }
   }
@@ -527,7 +619,9 @@ export type ProcurementRow = {
 export async function listProcurementRequirements() {
   const { data, error } = await db()
     .from("procurement_command_view")
-    .select("id,season_id,product_id,sku,product_name,category,required_quantity,requested_quantity,supplier_confirmed_quantity,secured_quantity,received_quantity,allocated_quantity,outstanding_quantity,procurement_coverage_percent,status,updated_at")
+    .select(
+      "id,season_id,product_id,sku,product_name,category,required_quantity,requested_quantity,supplier_confirmed_quantity,secured_quantity,received_quantity,allocated_quantity,outstanding_quantity,procurement_coverage_percent,status,updated_at",
+    )
     .order("outstanding_quantity", { ascending: false })
     .order("product_name");
   assertNoError(error, "Unable to load procurement requirements");
@@ -736,19 +830,19 @@ export async function updatePackingRecord(
   if (status === "quality_check")
     Object.assign(values, { checked_by: actorId, checked_at: now });
   if (status === "packed") Object.assign(values, { packed_at: now });
-  
+
   const { data: record } = await db()
     .from("packing_records")
     .select("order_id")
     .eq("id", id)
     .single();
-  
+
   const { error } = await db()
     .from("packing_records")
     .update(values)
     .eq("id", id);
   assertNoError(error, "Unable to update packing");
-  
+
   if (record?.order_id) {
     await advanceOrderStatus(String(record.order_id));
   }
@@ -761,13 +855,13 @@ export async function updateFulfilmentRecord(
   waybillNumber?: string,
 ) {
   const completed = ["collected", "delivered"].includes(status);
-  
+
   const { data: record } = await db()
     .from("fulfilment_records")
     .select("order_id")
     .eq("id", id)
     .single();
-  
+
   const { error } = await db()
     .from("fulfilment_records")
     .update({
@@ -779,7 +873,7 @@ export async function updateFulfilmentRecord(
     })
     .eq("id", id);
   assertNoError(error, "Unable to update fulfilment");
-  
+
   if (record?.order_id) {
     await advanceOrderStatus(String(record.order_id));
   }
@@ -801,7 +895,9 @@ export type TaskRow = {
 export async function listOperationalTasks() {
   const { data, error } = await db()
     .from("operational_tasks")
-    .select("id,title,description,entity_type,entity_id,status,priority,assigned_to,due_at,created_at")
+    .select(
+      "id,title,description,entity_type,entity_id,status,priority,assigned_to,due_at,created_at",
+    )
     .order("status")
     .order("due_at", { ascending: true, nullsFirst: false })
     .limit(250);
@@ -850,7 +946,9 @@ export async function updateOperationalTaskStatus(id: string, status: string) {
 export async function getTask(id: string) {
   const { data, error } = await db()
     .from("operational_tasks")
-    .select("id,title,description,entity_type,entity_id,status,priority,assigned_to,due_at,created_at")
+    .select(
+      "id,title,description,entity_type,entity_id,status,priority,assigned_to,due_at,created_at",
+    )
     .eq("id", id)
     .single();
   assertNoError(error, "Unable to load the task");
@@ -889,7 +987,8 @@ export type PurchaseOrderWithItems = {
 export async function listPurchaseOrdersForReceiving() {
   const { data, error } = await db()
     .from("supplier_purchase_orders")
-    .select(`
+    .select(
+      `
       id,purchase_order_number,supplier_id,status,expected_on,notes,created_at,
       suppliers(name, code),
       supplier_purchase_items(
@@ -901,7 +1000,8 @@ export async function listPurchaseOrdersForReceiving() {
         unit_cost,
         master_products(name, sku)
       )
-    `)
+    `,
+    )
     .in("status", ["sent", "confirmed", "partially_received"])
     .order("created_at", { ascending: false });
   assertNoError(error, "Unable to load purchase orders");
@@ -929,7 +1029,7 @@ export async function createSupplierReceipt(input: {
   }>;
 }) {
   const client = db();
-  
+
   const { data: receipt, error: receiptError } = await client
     .from("supplier_receipts")
     .insert({
@@ -941,48 +1041,54 @@ export async function createSupplierReceipt(input: {
     .select("id")
     .single();
   assertNoError(receiptError, "Unable to create supplier receipt");
-  
+
   for (const item of input.items) {
     if (item.receivedQuantity <= 0) continue;
-    
+
     const { error: itemError } = await client
       .from("supplier_purchase_items")
       .update({
         received_quantity: item.receivedQuantity,
       })
       .eq("id", item.purchaseItemId);
-    assertNoError(itemError, "Unable to update purchase item received quantity");
+    assertNoError(
+      itemError,
+      "Unable to update purchase item received quantity",
+    );
   }
-  
+
   const { data: po } = await client
     .from("supplier_purchase_orders")
-    .select(`
+    .select(
+      `
       id,
       supplier_purchase_items(ordered_quantity, received_quantity)
-    `)
+    `,
+    )
     .eq("id", input.purchaseOrderId)
     .single();
-  
+
   if (po) {
-    const items = (po.supplier_purchase_items || []) as Array<{ ordered_quantity: number; received_quantity: number }>;
+    const items = (po.supplier_purchase_items || []) as Array<{
+      ordered_quantity: number;
+      received_quantity: number;
+    }>;
     const allFullyReceived = items.every(
       (i) => i.received_quantity >= i.ordered_quantity,
     );
-    const anyReceived = items.some(
-      (i) => i.received_quantity > 0,
-    );
-    
+    const anyReceived = items.some((i) => i.received_quantity > 0);
+
     let newStatus = "confirmed";
     if (allFullyReceived) newStatus = "received";
     else if (anyReceived) newStatus = "partially_received";
-    
+
     const { error: statusError } = await client
       .from("supplier_purchase_orders")
       .update({ status: newStatus, updated_at: new Date().toISOString() })
       .eq("id", input.purchaseOrderId);
     assertNoError(statusError, "Unable to update purchase order status");
   }
-  
+
   return receipt as { id: string };
 }
 
@@ -1003,13 +1109,15 @@ export type ApprovalRow = {
 export async function listApprovals(status?: string) {
   let query = db()
     .from("approvals")
-    .select("id,entity_type,entity_id,approval_type,status,requested_by,decided_by,reason,decision_notes,created_at,decided_at")
+    .select(
+      "id,entity_type,entity_id,approval_type,status,requested_by,decided_by,reason,decision_notes,created_at,decided_at",
+    )
     .order("created_at", { ascending: false });
-  
+
   if (status) {
     query = query.eq("status", status);
   }
-  
+
   const { data, error } = await query.limit(250);
   assertNoError(error, "Unable to load approvals");
   return (data ?? []) as ApprovalRow[];
@@ -1084,14 +1192,14 @@ export async function updateSupplierOffer(
   },
 ) {
   const client = db();
-  
+
   if (input.isPreferred) {
     const { data: offer } = await client
       .from("supplier_offers")
       .select("supplier_id, product_id")
       .eq("id", id)
       .single();
-    
+
     if (offer) {
       await client
         .from("supplier_offers")
@@ -1101,7 +1209,7 @@ export async function updateSupplierOffer(
         .neq("id", id);
     }
   }
-  
+
   const { error } = await client
     .from("supplier_offers")
     .update({
@@ -1130,33 +1238,38 @@ export async function updateSupplierOffer(
 
 export async function advanceOrderStatus(orderId: string) {
   const client = db();
-  
+
   const { data: order } = await client
     .from("orders")
     .select("id, status")
     .eq("id", orderId)
     .single();
-  
-  if (!order || order.status === "cancelled" || order.status === "refunded" || order.status === "delivered") {
+
+  if (
+    !order ||
+    order.status === "cancelled" ||
+    order.status === "refunded" ||
+    order.status === "delivered"
+  ) {
     return;
   }
-  
+
   const { data: packingRecords } = await client
     .from("packing_records")
     .select("status, updated_at")
     .eq("order_id", orderId);
-  
+
   const { data: fulfilmentRecords } = await client
     .from("fulfilment_records")
     .select("status, target_date, updated_at")
     .eq("order_id", orderId);
-  
+
   const packingStatuses = (packingRecords || []).map((r) => r.status);
   const fulfilmentStatuses = (fulfilmentRecords || []).map((r) => r.status);
   const fulfilment = (fulfilmentRecords || [])[0];
-  
+
   let newStatus: string | null = null;
-  
+
   // Status advancement: paid → scheduled → not_ready → packing → dispatched → delivered
   if (fulfilmentStatuses.includes("delivered")) {
     newStatus = "delivered";
@@ -1168,14 +1281,20 @@ export async function advanceOrderStatus(orderId: string) {
     newStatus = "packing";
   } else if (fulfilment?.target_date && order.status === "paid") {
     newStatus = "scheduled";
-  } else if (packingStatuses.includes("quality_check") || packingStatuses.includes("packing")) {
+  } else if (
+    packingStatuses.includes("quality_check") ||
+    packingStatuses.includes("packing")
+  ) {
     newStatus = "packing";
-  } else if (packingStatuses.includes("ready") && order.status === "not_ready") {
+  } else if (
+    packingStatuses.includes("ready") &&
+    order.status === "not_ready"
+  ) {
     newStatus = "packing";
   } else if (packingStatuses.includes("ready") && order.status === "paid") {
     newStatus = "not_ready";
   }
-  
+
   if (newStatus && newStatus !== order.status) {
     const { error } = await client
       .from("orders")
@@ -1197,10 +1316,13 @@ async function sendOrderUpdateNotification(
   newStatus: string,
 ) {
   try {
-    const { sendOrderStatusUpdate } = await import("@/lib/email/orderStatusUpdate");
+    const { sendOrderStatusUpdate } =
+      await import("@/lib/email/orderStatusUpdate");
     const { data: order } = await client
       .from("orders")
-      .select("order_reference,buyer_email,buyer_name,tracking_token,courier_name,waybill_number,estimated_delivery")
+      .select(
+        "order_reference,buyer_email,buyer_name,tracking_token,courier_name,waybill_number,estimated_delivery",
+      )
       .eq("id", orderId)
       .single();
     if (!order?.buyer_email) return;
@@ -1211,8 +1333,12 @@ async function sendOrderUpdateNotification(
       tracking_token: String(order.tracking_token),
       status: newStatus,
       courier_name: order.courier_name ? String(order.courier_name) : null,
-      waybill_number: order.waybill_number ? String(order.waybill_number) : null,
-      estimated_delivery: order.estimated_delivery ? String(order.estimated_delivery) : null,
+      waybill_number: order.waybill_number
+        ? String(order.waybill_number)
+        : null,
+      estimated_delivery: order.estimated_delivery
+        ? String(order.estimated_delivery)
+        : null,
     });
   } catch (err) {
     console.error("[email] status update notification failed:", err);
@@ -1237,7 +1363,7 @@ export async function upsertCustomerAndLearner(input: {
       .select("id")
       .eq("email", input.buyerEmail)
       .maybeSingle();
-    
+
     if (existing) {
       customerId = String(existing.id);
     } else {
@@ -1403,7 +1529,9 @@ export async function getOperationsSummary() {
     tasks.error,
   ].filter(Boolean);
   if (errors.length)
-    throw new Error(`Unable to load operations summary: ${errors[0]?.message ?? "Unknown database error"}`);
+    throw new Error(
+      `Unable to load operations summary: ${errors[0]?.message ?? "Unknown database error"}`,
+    );
   return {
     paidOrders: paid.count ?? 0,
     revenueReceived: (revenue.data ?? []).reduce(
@@ -1411,7 +1539,8 @@ export async function getOperationsSummary() {
       0,
     ),
     procurementOutstanding: (outstanding.data ?? []).reduce(
-      (sum: number, row: DynamicRow) => sum + asNumber(row.outstanding_quantity),
+      (sum: number, row: DynamicRow) =>
+        sum + asNumber(row.outstanding_quantity),
       0,
     ),
     readyToPack: ready.count ?? 0,
@@ -1428,7 +1557,9 @@ export async function getOperationsSummary() {
 export async function listSeasons() {
   const { data, error } = await db()
     .from("seasons")
-    .select("id,name,academic_year,starts_on,ordering_closes_on,fulfilment_starts_on,fulfilment_ends_on,status,is_default,created_at,updated_at")
+    .select(
+      "id,name,academic_year,starts_on,ordering_closes_on,fulfilment_starts_on,fulfilment_ends_on,status,is_default,created_at,updated_at",
+    )
     .order("academic_year", { ascending: false });
   assertNoError(error, "Unable to load seasons");
   return (data ?? []) as {
@@ -1457,9 +1588,12 @@ export async function createSeason(input: {
   isDefault?: boolean;
 }) {
   if (input.isDefault) {
-    await db().from("seasons").update({ is_default: false }).eq("is_default", true);
+    await db()
+      .from("seasons")
+      .update({ is_default: false })
+      .eq("is_default", true);
   }
-  
+
   const { data, error } = await db()
     .from("seasons")
     .insert({
@@ -1492,16 +1626,26 @@ export async function updateSeason(
   },
 ) {
   if (input.isDefault) {
-    await db().from("seasons").update({ is_default: false }).eq("is_default", true).neq("id", id);
+    await db()
+      .from("seasons")
+      .update({ is_default: false })
+      .eq("is_default", true)
+      .neq("id", id);
   }
-  
-  const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
+
+  const patch: Record<string, unknown> = {
+    updated_at: new Date().toISOString(),
+  };
   if (input.name !== undefined) patch.name = input.name;
-  if (input.academicYear !== undefined) patch.academic_year = input.academicYear;
+  if (input.academicYear !== undefined)
+    patch.academic_year = input.academicYear;
   if (input.startsOn !== undefined) patch.starts_on = input.startsOn || null;
-  if (input.orderingClosesOn !== undefined) patch.ordering_closes_on = input.orderingClosesOn || null;
-  if (input.fulfilmentStartsOn !== undefined) patch.fulfilment_starts_on = input.fulfilmentStartsOn || null;
-  if (input.fulfilmentEndsOn !== undefined) patch.fulfilment_ends_on = input.fulfilmentEndsOn || null;
+  if (input.orderingClosesOn !== undefined)
+    patch.ordering_closes_on = input.orderingClosesOn || null;
+  if (input.fulfilmentStartsOn !== undefined)
+    patch.fulfilment_starts_on = input.fulfilmentStartsOn || null;
+  if (input.fulfilmentEndsOn !== undefined)
+    patch.fulfilment_ends_on = input.fulfilmentEndsOn || null;
   if (input.status !== undefined) patch.status = input.status;
   if (input.isDefault !== undefined) patch.is_default = input.isDefault;
 
@@ -1527,7 +1671,10 @@ export async function setDefaultSeason(id: string) {
    --------------------------------------------------- */
 
 export async function listOrderItems(orderIdOrRef: string) {
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderIdOrRef);
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      orderIdOrRef,
+    );
   let targetOrderId = orderIdOrRef;
 
   if (!isUuid) {
@@ -1545,7 +1692,9 @@ export async function listOrderItems(orderIdOrRef: string) {
 
   const { data, error } = await db()
     .from("order_items")
-    .select("id,order_id,product_id,pack_id,sku_snapshot,product_name_snapshot,description_snapshot,quantity,unit_selling_price,line_total,estimated_unit_cost,expected_margin,pricing_version,school_name_snapshot,grade_snapshot,created_at")
+    .select(
+      "id,order_id,product_id,pack_id,sku_snapshot,product_name_snapshot,description_snapshot,quantity,unit_selling_price,line_total,estimated_unit_cost,expected_margin,pricing_version,school_name_snapshot,grade_snapshot,created_at",
+    )
     .eq("order_id", targetOrderId)
     .order("created_at");
   assertNoError(error, "Unable to load order items");
@@ -1576,7 +1725,9 @@ export async function listOrderItems(orderIdOrRef: string) {
 export async function listPriceHistory(limit = 100) {
   const { data, error } = await db()
     .from("price_history")
-    .select("id,product_id,supplier_id,previous_cost,new_cost,previous_selling_price,new_selling_price,previous_margin,new_margin,reason,source,changed_by,approved_by,created_at")
+    .select(
+      "id,product_id,supplier_id,previous_cost,new_cost,previous_selling_price,new_selling_price,previous_margin,new_margin,reason,source,changed_by,approved_by,created_at",
+    )
     .order("created_at", { ascending: false })
     .limit(limit);
   assertNoError(error, "Unable to load price history");

@@ -50,9 +50,20 @@ export async function updateItemAction(
     return { ok: false, errors: result.errors, message: result.message };
   }
   revalidatePath("/admin/items");
-  revalidatePath(`/admin/packs/${result.item.pack_id}`);
-  await revalidatePackPublicPage(result.item.pack_id);
-  return { ok: true };
+  revalidatePath("/admin/products");
+  if (result.item.pack_id) {
+    revalidatePath(`/admin/packs/${result.item.pack_id}`);
+    await revalidatePackPublicPage(result.item.pack_id);
+  }
+  return {
+    ok: true,
+    message: result.message,
+    item: {
+      id: result.item.id,
+      name: result.item.name,
+      slug: result.item.slug ?? null,
+    },
+  };
 }
 
 export async function deleteItemAction(id: string): Promise<void> {

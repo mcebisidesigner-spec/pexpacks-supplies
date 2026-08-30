@@ -111,6 +111,7 @@ export type ItemFormState = {
   ok?: boolean;
   message?: string;
   errors?: Record<string, string>;
+  item?: { id: string; name: string; slug?: string | null } | null;
 };
 
 function raw(formData: FormData, key: string): string {
@@ -468,15 +469,32 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
     if (isUuid) {
       masterQuery = masterQuery.or(`id.eq.${decoded},sku.ilike.${decoded}`);
     } else {
+      // Supabase .or() does not support % wildcards in the filter string directly;
+      // use exact/SKU match first, then fall through to a separate ilike query.
       masterQuery = masterQuery.or(
-        `sku.ilike.${decoded},sku.ilike.${slugified},name.ilike.${decoded},name.ilike.%${decoded.replace(/-/g, " ")}%`,
+        `sku.ilike.${decoded},sku.ilike.${slugified},name.eq.${decoded}`,
       );
     }
 
     const { data: masterList } = await masterQuery.limit(10);
-    if (masterList && masterList.length > 0) {
+
+    // If exact/SKU match returned nothing, try a name ilike with the slug converted to spaces
+    let finalMasterList = masterList;
+    if (!isUuid && (!masterList || masterList.length === 0)) {
+      const nameSearch = decoded.replace(/-/g, " ");
+      const { data: ilikeList } = await admin
+        .from("master_products")
+        .select(
+          "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon",
+        )
+        .ilike("name", `%${nameSearch}%`)
+        .limit(10);
+      finalMasterList = ilikeList;
+    }
+
+    if (finalMasterList && finalMasterList.length > 0) {
       const matchedMaster =
-        masterList.find((m) => {
+        finalMasterList.find((m) => {
           const mSlug = m.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
           return (
             mSlug === slugified ||
@@ -485,7 +503,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
             m.id === decoded ||
             m.name.toLowerCase() === decoded.toLowerCase()
           );
-        }) || masterList[0];
+        }) || finalMasterList[0];
 
       if (matchedMaster) {
         const { count: packCount } = await admin

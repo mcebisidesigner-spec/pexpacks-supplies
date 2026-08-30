@@ -87,12 +87,13 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
           />
         </div>
 
-        {/* Pexcover Upsell Toggle */}
+        {/* Pexcover Book Covering Section */}
         <label
           className={clsx(
             styles.pexcoverToggleLabel,
             !pexcoverInfo.hasEligibleBooks && styles.pexcoverDisabled
           )}
+          htmlFor={`pexcover-${pack.id}`}
         >
           <input
             id={`pexcover-${pack.id}`}
@@ -104,17 +105,21 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
             onChange={handlePexcoverToggle}
           />
           <div className={styles.pexcoverDetails}>
-            <p className={styles.pexcoverTitle}>
-              {pexcoverInfo.hasEligibleBooks
-                ? `Add Pexcover (+${formatCurrency(pexcoverInfo.pexcoverTotalRands)})`
-                : "Pexcover Service (+R0.00)"}
-            </p>
+            <p className={styles.pexcoverTitle}>Book Covering</p>
             <p className={styles.pexcoverDesc}>
               {pexcoverInfo.hasEligibleBooks
-                ? `Covers ${pexcoverInfo.coverableItemCount} books with durable protective wrap`
+                ? `${pexcoverInfo.coverableItemCount} book${pexcoverInfo.coverableItemCount === 1 ? "" : "s"} covered with protective wrap`
                 : "No coverable books in this pack"}
             </p>
           </div>
+          <span className={clsx(
+            styles.pexcoverPrice,
+            !pexcoverInfo.hasEligibleBooks && styles.pexcoverPriceDisabled
+          )}>
+            {pexcoverInfo.hasEligibleBooks
+              ? formatCurrency(pexcoverInfo.pexcoverTotalRands)
+              : "—"}
+          </span>
         </label>
 
         <div className={styles.packSummaryRow}>
