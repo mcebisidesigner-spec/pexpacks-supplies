@@ -1,5 +1,6 @@
 import type { TrayPackItem, TrayPackLineItem } from "@/store/usePackTrayStore";
 import { calculateItemLineTotal } from "@/lib/packs/calculatePackTotal";
+import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 
 type CreateFullTrayPackInput = {
   packId: string;
@@ -10,12 +11,24 @@ type CreateFullTrayPackInput = {
   schoolName?: string;
   grade?: string;
   gradeSlug?: string;
-  items: { id: string; name: string; category?: string; quantity: number; unitPrice?: number }[];
+  items: {
+    id: string;
+    name: string;
+    category?: string;
+    quantity: number;
+    unitPrice?: number;
+    requiresPexcover?: boolean;
+    pexcoCode?: string | null;
+    pexcoRateCents?: number | null;
+    pexcoRateActive?: boolean;
+  }[];
   totalPrice: number;
   sourcePath?: string;
 };
 
-export function createFullTrayPack(input: CreateFullTrayPackInput): TrayPackItem {
+export function createFullTrayPack(
+  input: CreateFullTrayPackInput,
+): TrayPackItem {
   const now = new Date().toISOString();
   const id = `tray-${crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`}`;
 
@@ -26,11 +39,17 @@ export function createFullTrayPack(input: CreateFullTrayPackInput): TrayPackItem
     category: item.category,
     quantity: item.quantity,
     unitPrice: item.unitPrice,
+    requiresPexcover: item.requiresPexcover,
+    pexcoCode: item.pexcoCode,
+    pexcoRateCents: item.pexcoRateCents,
+    pexcoRateActive: item.pexcoRateActive,
     lineTotal:
       typeof item.unitPrice === "number"
         ? calculateItemLineTotal(item.unitPrice, item.quantity)
         : undefined,
   }));
+
+  const wantsPexcover = calculatePexcoverTotal(lineItems).hasEligibleBooks;
 
   return {
     id,
@@ -45,6 +64,7 @@ export function createFullTrayPack(input: CreateFullTrayPackInput): TrayPackItem
     learnerName: "",
     packMode: "full",
     items: lineItems,
+    wantsPexcover,
     subtotal: input.totalPrice,
     totalPrice: input.totalPrice,
     sourcePath: input.sourcePath,
@@ -52,4 +72,3 @@ export function createFullTrayPack(input: CreateFullTrayPackInput): TrayPackItem
     updatedAt: now,
   };
 }
-

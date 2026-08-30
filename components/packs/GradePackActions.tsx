@@ -139,6 +139,10 @@ export function GradePackActions({
         category: item.category,
         quantity: item.requiredQuantity,
         unitPrice: item.unitPrice,
+        requiresPexcover: item.requiresPexcover,
+        pexcoCode: item.pexcoCode,
+        pexcoRateCents: item.pexcoRateCents,
+        pexcoRateActive: item.pexcoRateActive,
       })),
       totalPrice: pack.fullPackPrice ?? 0,
       sourcePath: window.location.pathname,
@@ -163,6 +167,10 @@ export function GradePackActions({
       category?: string;
       quantity: number;
       unitPrice?: number;
+      requiresPexcover?: boolean;
+      pexcoCode?: string | null;
+      pexcoRateCents?: number | null;
+      pexcoRateActive?: boolean;
     }> = [];
     const customTotal = calculatePackTotal(selection) ?? 0;
 
@@ -174,6 +182,10 @@ export function GradePackActions({
           category: item.category,
           quantity: item.selectedQuantity,
           unitPrice: item.unitPrice,
+          requiresPexcover: item.requiresPexcover,
+          pexcoCode: item.pexcoCode,
+          pexcoRateCents: item.pexcoRateCents,
+          pexcoRateActive: item.pexcoRateActive,
         });
       }
       if (item.selectedQuantity !== item.requiredQuantity) {

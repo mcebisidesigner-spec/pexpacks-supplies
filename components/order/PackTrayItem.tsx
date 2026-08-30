@@ -22,7 +22,7 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       updatePackDetails(pack.id, e.target.value, pack.wantsPexcover || false);
     },
-    [pack.id, pack.wantsPexcover, updatePackDetails]
+    [pack.id, pack.wantsPexcover, updatePackDetails],
   );
 
   const handlePexcoverToggle = useCallback(
@@ -30,7 +30,12 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
       if (!pexcoverInfo.hasEligibleBooks) return;
       updatePackDetails(pack.id, pack.learnerName || "", e.target.checked);
     },
-    [pack.id, pack.learnerName, updatePackDetails, pexcoverInfo.hasEligibleBooks]
+    [
+      pack.id,
+      pack.learnerName,
+      updatePackDetails,
+      pexcoverInfo.hasEligibleBooks,
+    ],
   );
 
   const handleRemove = useCallback(() => {
@@ -55,7 +60,12 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
           </div>
           <div style={{ display: "flex", gap: 6, alignItems: "start" }}>
             <span
-              className={clsx(styles.packModeBadge, pack.packMode === "full" ? styles.packModeFull : styles.packModeCustomised)}
+              className={clsx(
+                styles.packModeBadge,
+                pack.packMode === "full"
+                  ? styles.packModeFull
+                  : styles.packModeCustomised,
+              )}
             >
               {pack.packMode === "full" ? "Full Pack" : "Customised"}
             </span>
@@ -91,7 +101,7 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
         <label
           className={clsx(
             styles.pexcoverToggleLabel,
-            !pexcoverInfo.hasEligibleBooks && styles.pexcoverDisabled
+            !pexcoverInfo.hasEligibleBooks && styles.pexcoverDisabled,
           )}
           htmlFor={`pexcover-${pack.id}`}
         >
@@ -99,23 +109,27 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
             id={`pexcover-${pack.id}`}
             name={`pexcover-${pack.id}`}
             type="checkbox"
-            checked={(pack.wantsPexcover && pexcoverInfo.hasEligibleBooks) || false}
+            checked={
+              (pack.wantsPexcover && pexcoverInfo.hasEligibleBooks) || false
+            }
             disabled={!pexcoverInfo.hasEligibleBooks}
             className={styles.pexcoverCheckbox}
             onChange={handlePexcoverToggle}
           />
           <div className={styles.pexcoverDetails}>
-            <p className={styles.pexcoverTitle}>Book Covering</p>
+            <p className={styles.pexcoverTitle}>Book Covering by Pexcover</p>
             <p className={styles.pexcoverDesc}>
               {pexcoverInfo.hasEligibleBooks
                 ? `${pexcoverInfo.coverableItemCount} book${pexcoverInfo.coverableItemCount === 1 ? "" : "s"} covered with protective wrap`
                 : "No coverable books in this pack"}
             </p>
           </div>
-          <span className={clsx(
-            styles.pexcoverPrice,
-            !pexcoverInfo.hasEligibleBooks && styles.pexcoverPriceDisabled
-          )}>
+          <span
+            className={clsx(
+              styles.pexcoverPrice,
+              !pexcoverInfo.hasEligibleBooks && styles.pexcoverPriceDisabled,
+            )}
+          >
             {pexcoverInfo.hasEligibleBooks
               ? formatCurrency(pexcoverInfo.pexcoverTotalRands)
               : "—"}

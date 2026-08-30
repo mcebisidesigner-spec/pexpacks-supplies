@@ -135,7 +135,8 @@ function toSchool(school: DbSchool, packs: DbPack[]): School {
     province: school.province ?? "",
     logo: school.logo,
     website: school.website || school.principal || null,
-    isPartnerSchool: Boolean(school.is_partner) || school.partnership === "partner",
+    isPartnerSchool:
+      Boolean(school.is_partner) || school.partnership === "partner",
     refusedPartnership:
       Boolean(school.refused_partnership) ||
       school.partnership === "refused_partner",
@@ -155,7 +156,10 @@ async function getSchoolWithBoundedQueries(
   slug: string,
 ): Promise<School | undefined> {
   const supabase = createSupabaseAdminClient();
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      slug,
+    );
 
   let query = supabase
     .from("public_school_directory_view")
@@ -179,7 +183,9 @@ async function getSchoolWithBoundedQueries(
     .select("id, title, slug, price, description, stock, sort_order")
     .or(`school_id.eq.${dbSchool.id},slug.ilike.${dbSchool.slug}-%`)
     .eq("visible", true)
-    .or("publication_status.eq.published,and(publication_status.is.null,visible.eq.true)")
+    .or(
+      "publication_status.eq.published,and(publication_status.is.null,visible.eq.true)",
+    )
     .order("sort_order", { ascending: true })
     .order("title", { ascending: true });
 
@@ -199,7 +205,7 @@ async function getSchoolWithBoundedQueries(
   const { data: dbItems, error: itemsError } = await supabase
     .from("public_pack_items_view" as never)
     .select(
-      "pack_id, name, quantity, unit_price, icon, description, specification",
+      "pack_id, name, quantity, unit_price, icon, description, specification, requires_pexcover, pexco_code, pexco_rate_cents, pexco_rate_active",
     )
     .in("pack_id", packIds)
     .order("sort_order", { ascending: true });

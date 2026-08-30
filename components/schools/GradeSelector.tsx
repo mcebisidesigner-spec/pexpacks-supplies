@@ -8,7 +8,10 @@ import { GradePackActions } from "@/components/packs/GradePackActions";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createSchoolGradePack } from "@/lib/packs/normalisePackItems";
 import type { GradePackForCustomisation } from "@/lib/packs/types";
-import type { CompleteListPack, PackListItem } from "@/components/packs/packListTypes";
+import type {
+  CompleteListPack,
+  PackListItem,
+} from "@/components/packs/packListTypes";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { createFullTrayPack } from "@/lib/order/createTrayPack";
 import { trackInitiatePreOrder } from "@/lib/analytics";
@@ -34,7 +37,7 @@ function toSchoolListItems(pack: GradePackForCustomisation): PackListItem[] {
 
 function buildCompleteListPack(
   grade: GradePack,
-  pack: GradePackForCustomisation
+  pack: GradePackForCustomisation,
 ): CompleteListPack {
   return {
     id: `school-${pack.id}`,
@@ -42,7 +45,10 @@ function buildCompleteListPack(
     modalTitle: `${grade.grade} Stationery List`,
     contentHeading: "Official school stationery list",
     description: `Prepared according to the official school list for ${grade.grade}.`,
-    priceLabel: pack.items.length > 0 && grade.price > 0 ? `From ${formatCurrency(grade.price)}` : "R00.00",
+    priceLabel:
+      pack.items.length > 0 && grade.price > 0
+        ? `From ${formatCurrency(grade.price)}`
+        : "R00.00",
     items: toSchoolListItems(pack),
     customiseTargetId: `customise-${pack.id}`,
     footerActions: (
@@ -55,7 +61,11 @@ function buildCompleteListPack(
   };
 }
 
-export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: GradeSelectorProps) {
+export function GradeSelector({
+  school,
+  gradeDescriptions,
+  onGradeIntent,
+}: GradeSelectorProps) {
   const [selectedGradeId, setSelectedGradeId] = useState<string | null>(null);
   const viewListTriggerRef = useRef<HTMLButtonElement | null>(null);
 
@@ -66,36 +76,43 @@ export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: Grad
     }, 0);
   }, []);
 
-  const handleAddToOrder = useCallback((grade: GradePack, pack: GradePackForCustomisation) => {
-    const trayPack = createFullTrayPack({
-      packId: pack.id,
-      basePackId: pack.id,
-      packName: pack.packName || `${grade.grade} Stationery Pack`,
-      schoolId: school.id,
-      schoolSlug: school.slug,
-      schoolName: school.name,
-      grade: grade.grade,
-      gradeSlug: grade.gradeSlug,
-      items: pack.items.map((item) => ({
-        id: item.id,
-        name: item.name,
-        category: item.category,
-        quantity: item.requiredQuantity,
-        unitPrice: item.unitPrice,
-      })),
-      totalPrice: grade.price ?? 0,
-      sourcePath: window.location.pathname,
-    });
-    usePackTrayStore.getState().addPack(trayPack);
-    trackInitiatePreOrder({
-      school: school.name,
-      grade: grade.grade,
-      packMode: "full",
-      totalPrice: grade.price ?? 0,
-    });
-    usePackTrayStore.getState().openTray();
-    closeCompleteList();
-  }, [school, closeCompleteList]);
+  const handleAddToOrder = useCallback(
+    (grade: GradePack, pack: GradePackForCustomisation) => {
+      const trayPack = createFullTrayPack({
+        packId: pack.id,
+        basePackId: pack.id,
+        packName: pack.packName || `${grade.grade} Stationery Pack`,
+        schoolId: school.id,
+        schoolSlug: school.slug,
+        schoolName: school.name,
+        grade: grade.grade,
+        gradeSlug: grade.gradeSlug,
+        items: pack.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          quantity: item.requiredQuantity,
+          unitPrice: item.unitPrice,
+          requiresPexcover: item.requiresPexcover,
+          pexcoCode: item.pexcoCode,
+          pexcoRateCents: item.pexcoRateCents,
+          pexcoRateActive: item.pexcoRateActive,
+        })),
+        totalPrice: grade.price ?? 0,
+        sourcePath: window.location.pathname,
+      });
+      usePackTrayStore.getState().addPack(trayPack);
+      trackInitiatePreOrder({
+        school: school.name,
+        grade: grade.grade,
+        packMode: "full",
+        totalPrice: grade.price ?? 0,
+      });
+      usePackTrayStore.getState().openTray();
+      closeCompleteList();
+    },
+    [school, closeCompleteList],
+  );
 
   const selectedGrade = selectedGradeId
     ? school.grades.find((grade) => grade.id === selectedGradeId)
@@ -104,7 +121,7 @@ export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: Grad
     ? createSchoolGradePack(
         school,
         selectedGrade,
-        gradeDescriptions?.[selectedGrade.gradeSlug]
+        gradeDescriptions?.[selectedGrade.gradeSlug],
       )
     : null;
   const selectedListPack =
@@ -124,7 +141,7 @@ export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: Grad
         onGradeIntent();
       }
     },
-    [onGradeIntent]
+    [onGradeIntent],
   );
 
   return (
@@ -137,12 +154,15 @@ export function GradeSelector({ school, gradeDescriptions, onGradeIntent }: Grad
           const pack = createSchoolGradePack(
             school,
             grade,
-            gradeDescriptions?.[grade.gradeSlug]
+            gradeDescriptions?.[grade.gradeSlug],
           );
 
           const listItems = toSchoolListItems(pack);
           const hasItems = listItems.length > 0;
-          const priceLabel = hasItems && grade.price > 0 ? `From ${formatCurrency(grade.price)}` : "R00.00";
+          const priceLabel =
+            hasItems && grade.price > 0
+              ? `From ${formatCurrency(grade.price)}`
+              : "R00.00";
 
           return (
             <ArticlePackCard

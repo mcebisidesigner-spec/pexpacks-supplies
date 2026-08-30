@@ -25,13 +25,18 @@ import type {
   SystemSettingsAuditRecord,
   SystemVaultCredential,
 } from "@/lib/admin/system-settings-shared";
-import { SYSTEM_SETTING_CATEGORIES, SYSTEM_SETTING_DEFINITIONS } from "@/lib/admin/system-settings-shared";
+import {
+  SYSTEM_SETTING_CATEGORIES,
+  SYSTEM_SETTING_DEFINITIONS,
+} from "@/lib/admin/system-settings-shared";
 import type { RoleInfo, UserListItem } from "@/lib/admin/users";
 import {
   exportSettingsAction,
   restoreSettingsAction,
+  updatePexcoRateAction,
   updateSystemSettingAction,
 } from "@/app/admin/settings/actions";
+import type { PexcoAdminRate } from "@/lib/admin/pexco-rates";
 import { AddUsersTab } from "./AddUsersTab";
 import { UserIdentityTab } from "./UserIdentityTab";
 import { SystemInfoVaultTab } from "./SystemInfoVaultTab";
@@ -47,11 +52,21 @@ interface SettingsControlCentreProps {
   roles?: RoleInfo[];
   users?: UserListItem[];
   vaultCredentials?: SystemVaultCredential[];
+  initialPexcoRates?: PexcoAdminRate[];
   userEmail: string;
   settingsDbWarning?: string | null;
 }
 
-const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+type PexcoRateDraft = {
+  costSql: string;
+  marginSql: string;
+  isActive: boolean;
+};
+
+const CATEGORY_ICONS: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   LayoutDashboard,
   Users,
   UserPlus,
@@ -70,11 +85,13 @@ export function SettingsControlCentre({
   roles = [],
   users = [],
   vaultCredentials = [],
+  initialPexcoRates = [],
   userEmail,
   settingsDbWarning = null,
 }: SettingsControlCentreProps) {
   const router = useRouter();
-  const [activeCategory, setActiveCategory] = useState<SystemSettingCategory>("user_identity");
+  const [activeCategory, setActiveCategory] =
+    useState<SystemSettingCategory>("user_identity");
   const [searchQuery, setSearchQuery] = useState("");
   const [settingsState, setSettingsState] = useState(initialSettings);
   const [reason] = useState("");
@@ -82,6 +99,21 @@ export function SettingsControlCentre({
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
   const [restoreJson, setRestoreJson] = useState("");
   const [showRestoreModal, setShowRestoreModal] = useState(false);
+
+  const [pexcoDrafts, setPexcoDrafts] = useState<
+    Record<string, PexcoRateDraft>
+  >(() =>
+    Object.fromEntries(
+      initialPexcoRates.map((rate) => [
+        rate.code,
+        {
+          costSql: ((rate.costPriceCents ?? 0) / 100).toFixed(2),
+          marginSql: rate.marginRate.toFixed(4),
+          isActive: rate.isActive,
+        },
+      ]),
+    ),
+  );
 
   const filteredSearch = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -91,7 +123,7 @@ export function SettingsControlCentre({
         def.key.toLowerCase().includes(q) ||
         def.label.toLowerCase().includes(q) ||
         def.description.toLowerCase().includes(q) ||
-        def.category.toLowerCase().includes(q)
+        def.category.toLowerCase().includes(q),
     ).slice(0, 8);
   }, [searchQuery]);
 
@@ -99,7 +131,11 @@ export function SettingsControlCentre({
     setBusyKey(key);
     setFeedbackMessage(null);
     try {
-      const res = await updateSystemSettingAction(key, newValue, reason || "Updated via Control Centre UI");
+      const res = await updateSystemSettingAction(
+        key,
+        newValue,
+        reason || "Updated via Control Centre UI",
+      );
       if (res.ok) {
         setFeedbackMessage(res.message ?? "Setting saved.");
         setSettingsState((prev) => ({
@@ -114,7 +150,9 @@ export function SettingsControlCentre({
         setFeedbackMessage(res.message ?? "Failed to save setting.");
       }
     } catch (err) {
-      setFeedbackMessage(err instanceof Error ? err.message : "Error saving setting.");
+      setFeedbackMessage(
+        err instanceof Error ? err.message : "Error saving setting.",
+      );
     } finally {
       setBusyKey(null);
     }
@@ -140,7 +178,10 @@ export function SettingsControlCentre({
   async function handleRestoreSubmit() {
     setBusyKey("restore");
     try {
-      const res = await restoreSettingsAction(restoreJson, reason || "Data Snapshot Restore");
+      const res = await restoreSettingsAction(
+        restoreJson,
+        reason || "Data Snapshot Restore",
+      );
       if (res.ok) {
         setFeedbackMessage(res.message ?? "Restore complete.");
         setShowRestoreModal(false);
@@ -150,7 +191,68 @@ export function SettingsControlCentre({
         setFeedbackMessage(res.message ?? "Restore failed.");
       }
     } catch (err) {
-      setFeedbackMessage(err instanceof Error ? err.message : "Restore failed.");
+      setFeedbackMessage(
+        err instanceof Error ? err.message : "Restore failed.",
+      );
+    } finally {
+      setBusyKey(null);
+    }
+  }
+
+  function updatePexcoDraft(code: string, patch: Partial<PexcoRateDraft>) {
+    setPexcoDrafts((prev) => ({
+      ...prev,
+      [code]: { ...prev[code], ...patch },
+    }));
+  }
+
+  function pexcoCoveringPreview(draft: PexcoRateDraft): number | null {
+    const costCents = Math.round(parseFloat(draft.costSql) * 100);
+    const margin = parseFloat(draft.marginSql);
+    if (!Number.isFinite(costCents) || costCents < 0) return null;
+    if (!Number.isFinite(margin) || margin <= 0) return null;
+    return Math.round(costCents * margin) / 100;
+  }
+
+  async function handlePexcoSave(rate: PexcoAdminRate) {
+    const draft = pexcoDrafts[rate.code];
+    const costRands = parseFloat(draft.costSql);
+    const margin = parseFloat(draft.marginSql);
+    if (!Number.isFinite(costRands) || costRands < 0) {
+      setFeedbackMessage(
+        `${rate.code}: enter a valid Cost Price (R0.00 or more).`,
+      );
+      return;
+    }
+    if (!Number.isFinite(margin) || margin <= 0 || margin > 100) {
+      setFeedbackMessage(
+        `${rate.code}: Margin Rate must be a positive multiplier between 0 and 100.`,
+      );
+      return;
+    }
+    setBusyKey(`pexco-${rate.code}`);
+    setFeedbackMessage(null);
+    try {
+      const res = await updatePexcoRateAction({
+        code: rate.code,
+        costPriceCents: Math.round(costRands * 100),
+        marginRate: margin,
+        isActive: draft.isActive,
+      });
+      if (res.ok) {
+        setFeedbackMessage(res.message ?? `${rate.code} updated.`);
+        updatePexcoDraft(rate.code, {
+          costSql: (
+            (res.rate?.costPriceCents ?? Math.round(costRands * 100)) / 100
+          ).toFixed(2),
+          marginSql: String(margin),
+          isActive: res.rate?.isActive ?? draft.isActive,
+        });
+      } else {
+        setFeedbackMessage(res.message ?? `Failed to update ${rate.code}.`);
+      }
+    } catch {
+      setFeedbackMessage(`Failed to update ${rate.code}.`);
     } finally {
       setBusyKey(null);
     }
@@ -162,7 +264,9 @@ export function SettingsControlCentre({
       <header className={styles.header}>
         <div className={styles.headerTitleGroup}>
           <h1>System Control Centre</h1>
-          <p>Super Administrator configuration & business data governance plane</p>
+          <p>
+            Super Administrator configuration & business data governance plane
+          </p>
         </div>
         <div className={styles.searchWrapper}>
           <Search className={styles.searchIcon} aria-hidden="true" />
@@ -188,10 +292,16 @@ export function SettingsControlCentre({
                     }}
                   >
                     <div className={styles.searchResultHeader}>
-                      <span className={styles.searchResultTitle}>{def.label}</span>
-                      <span className={styles.searchResultCategory}>{def.category}</span>
+                      <span className={styles.searchResultTitle}>
+                        {def.label}
+                      </span>
+                      <span className={styles.searchResultCategory}>
+                        {def.category}
+                      </span>
                     </div>
-                    <span className={styles.searchResultDesc}>{def.description}</span>
+                    <span className={styles.searchResultDesc}>
+                      {def.description}
+                    </span>
                   </button>
                 ))
               ) : (
@@ -207,7 +317,9 @@ export function SettingsControlCentre({
       {settingsDbWarning && (
         <div className={styles.dbWarning} role="alert">
           <strong>System settings database warning</strong>
-          <span>{settingsDbWarning} Current values may be default fallbacks.</span>
+          <span>
+            {settingsDbWarning} Current values may be default fallbacks.
+          </span>
         </div>
       )}
 
@@ -216,8 +328,16 @@ export function SettingsControlCentre({
           style={{
             padding: "12px 16px",
             borderRadius: 12,
-            background: feedbackMessage.includes("successfully") || feedbackMessage.includes("saved") ? "rgba(16, 185, 129, 0.15)" : "rgba(239, 68, 68, 0.15)",
-            border: feedbackMessage.includes("successfully") || feedbackMessage.includes("saved") ? "1px solid #10b981" : "1px solid #ef4444",
+            background:
+              feedbackMessage.includes("successfully") ||
+              feedbackMessage.includes("saved")
+                ? "rgba(16, 185, 129, 0.15)"
+                : "rgba(239, 68, 68, 0.15)",
+            border:
+              feedbackMessage.includes("successfully") ||
+              feedbackMessage.includes("saved")
+                ? "1px solid #10b981"
+                : "1px solid #ef4444",
             color: "#ffffff",
             fontSize: 13,
             fontWeight: 700,
@@ -276,7 +396,10 @@ export function SettingsControlCentre({
             <div className={styles.panelCard}>
               <div className={styles.panelHeader}>
                 <h2>Business Identity & Contact Details</h2>
-                <p>Legal entity registration and customer support communication channels</p>
+                <p>
+                  Legal entity registration and customer support communication
+                  channels
+                </p>
               </div>
               <div className={styles.formGrid}>
                 <div className={styles.field}>
@@ -284,8 +407,13 @@ export function SettingsControlCentre({
                   <input
                     type="text"
                     className={styles.input}
-                    defaultValue={String(settingsState["business.trading_name"]?.value ?? "Pexpacks Supplies (Pty) Ltd")}
-                    onBlur={(e) => handleSettingSave("business.trading_name", e.target.value)}
+                    defaultValue={String(
+                      settingsState["business.trading_name"]?.value ??
+                        "Pexpacks Supplies (Pty) Ltd",
+                    )}
+                    onBlur={(e) =>
+                      handleSettingSave("business.trading_name", e.target.value)
+                    }
                   />
                 </div>
                 <div className={styles.field}>
@@ -293,8 +421,16 @@ export function SettingsControlCentre({
                   <input
                     type="email"
                     className={styles.input}
-                    defaultValue={String(settingsState["business.support_email"]?.value ?? "helpme@pexpacks.co.za")}
-                    onBlur={(e) => handleSettingSave("business.support_email", e.target.value)}
+                    defaultValue={String(
+                      settingsState["business.support_email"]?.value ??
+                        "helpme@pexpacks.co.za",
+                    )}
+                    onBlur={(e) =>
+                      handleSettingSave(
+                        "business.support_email",
+                        e.target.value,
+                      )
+                    }
                   />
                 </div>
                 <div className={styles.field}>
@@ -302,8 +438,13 @@ export function SettingsControlCentre({
                   <input
                     type="email"
                     className={styles.input}
-                    defaultValue={String(settingsState["business.legal_email"]?.value ?? "helpme@pexpacks.co.za")}
-                    onBlur={(e) => handleSettingSave("business.legal_email", e.target.value)}
+                    defaultValue={String(
+                      settingsState["business.legal_email"]?.value ??
+                        "helpme@pexpacks.co.za",
+                    )}
+                    onBlur={(e) =>
+                      handleSettingSave("business.legal_email", e.target.value)
+                    }
                   />
                 </div>
                 <div className={styles.field}>
@@ -311,8 +452,16 @@ export function SettingsControlCentre({
                   <input
                     type="text"
                     className={styles.input}
-                    defaultValue={String(settingsState["business.support_phone"]?.value ?? "0780036048")}
-                    onBlur={(e) => handleSettingSave("business.support_phone", e.target.value)}
+                    defaultValue={String(
+                      settingsState["business.support_phone"]?.value ??
+                        "0780036048",
+                    )}
+                    onBlur={(e) =>
+                      handleSettingSave(
+                        "business.support_phone",
+                        e.target.value,
+                      )
+                    }
                   />
                 </div>
               </div>
@@ -324,7 +473,10 @@ export function SettingsControlCentre({
             <div className={styles.panelCard}>
               <div className={styles.panelHeader}>
                 <h2>Pricing Strategy &amp; Margin Controls</h2>
-                <p>Configure pricing calculation rules, target margins, warning floors &amp; pack-level cost add-ons</p>
+                <p>
+                  Configure pricing calculation rules, target margins, warning
+                  floors &amp; pack-level cost add-ons
+                </p>
               </div>
 
               {/* ── Automated Pricing Warning ─────────────────── */}
@@ -333,8 +485,11 @@ export function SettingsControlCentre({
                 <div>
                   <strong>Automated Pricing Engine Active</strong>
                   <p>
-                    Changing <em>Target Gross Margin %</em>, <em>Packaging Cost</em>, <em>Assembly Cost</em>, or <em>Freight Cost</em> will automatically
-                    trigger a full recalculation of every Grade Pack&apos;s selling price in the database. This happens instantly via database triggers.
+                    Changing <em>Target Gross Margin %</em>,{" "}
+                    <em>Packaging Cost</em>, <em>Assembly Cost</em>, or{" "}
+                    <em>Freight Cost</em> will automatically trigger a full
+                    recalculation of every Grade Pack&apos;s selling price in
+                    the database. This happens instantly via database triggers.
                   </p>
                 </div>
               </div>
@@ -349,11 +504,20 @@ export function SettingsControlCentre({
                     min="0"
                     max="99"
                     className={styles.input}
-                    defaultValue={Number(settingsState["pricing.target_margin_pct"]?.value ?? 49.9)}
-                    onBlur={(e) => handleSettingSave("pricing.target_margin_pct", parseFloat(e.target.value))}
+                    defaultValue={Number(
+                      settingsState["pricing.target_margin_pct"]?.value ?? 49.9,
+                    )}
+                    onBlur={(e) =>
+                      handleSettingSave(
+                        "pricing.target_margin_pct",
+                        parseFloat(e.target.value),
+                      )
+                    }
                   />
                   <span className={styles.hint}>
-                    Applied to total landed cost: <code>Selling Price = Landed Cost ÷ (1 − Margin)</code>. Target: <strong>49.9%</strong>.
+                    Applied to total landed cost:{" "}
+                    <code>Selling Price = Landed Cost ÷ (1 − Margin)</code>.
+                    Target: <strong>49.9%</strong>.
                   </span>
                 </div>
 
@@ -366,59 +530,109 @@ export function SettingsControlCentre({
                     min="0"
                     max="99"
                     className={styles.input}
-                    defaultValue={Number(settingsState["pricing.low_margin_warning_pct"]?.value ?? 35.0)}
-                    onBlur={(e) => handleSettingSave("pricing.low_margin_warning_pct", parseFloat(e.target.value))}
+                    defaultValue={Number(
+                      settingsState["pricing.low_margin_warning_pct"]?.value ??
+                        35.0,
+                    )}
+                    onBlur={(e) =>
+                      handleSettingSave(
+                        "pricing.low_margin_warning_pct",
+                        parseFloat(e.target.value),
+                      )
+                    }
                   />
-                  <span className={styles.hint}>Packs with achieved margin below this floor are flagged with a ⚠️ Low Margin badge.</span>
+                  <span className={styles.hint}>
+                    Packs with achieved margin below this floor are flagged with
+                    a ⚠️ Low Margin badge.
+                  </span>
                 </div>
 
                 {/* Packaging Cost */}
                 <div className={styles.field}>
-                  <label className={styles.label}>Packaging Cost per Pack (R)</label>
+                  <label className={styles.label}>
+                    Packaging Cost per Pack (R)
+                  </label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
                     className={styles.input}
-                    defaultValue={Number(settingsState["pricing.packaging_cost"]?.value ?? 0)}
-                    onBlur={(e) => handleSettingSave("pricing.packaging_cost", parseFloat(e.target.value))}
+                    defaultValue={Number(
+                      settingsState["pricing.packaging_cost"]?.value ?? 0,
+                    )}
+                    onBlur={(e) =>
+                      handleSettingSave(
+                        "pricing.packaging_cost",
+                        parseFloat(e.target.value),
+                      )
+                    }
                   />
-                  <span className={styles.hint}>Added to every Grade Pack&apos;s landed cost before margin is applied.</span>
+                  <span className={styles.hint}>
+                    Added to every Grade Pack&apos;s landed cost before margin
+                    is applied.
+                  </span>
                 </div>
 
                 {/* Assembly Cost */}
                 <div className={styles.field}>
-                  <label className={styles.label}>Assembly Cost per Pack (R)</label>
+                  <label className={styles.label}>
+                    Assembly Cost per Pack (R)
+                  </label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
                     className={styles.input}
-                    defaultValue={Number(settingsState["pricing.assembly_cost"]?.value ?? 0)}
-                    onBlur={(e) => handleSettingSave("pricing.assembly_cost", parseFloat(e.target.value))}
+                    defaultValue={Number(
+                      settingsState["pricing.assembly_cost"]?.value ?? 0,
+                    )}
+                    onBlur={(e) =>
+                      handleSettingSave(
+                        "pricing.assembly_cost",
+                        parseFloat(e.target.value),
+                      )
+                    }
                   />
-                  <span className={styles.hint}>Labour / assembly fee per Grade Pack included in landed cost.</span>
+                  <span className={styles.hint}>
+                    Labour / assembly fee per Grade Pack included in landed
+                    cost.
+                  </span>
                 </div>
 
                 {/* Freight Cost */}
                 <div className={styles.field}>
-                  <label className={styles.label}>Freight / Delivery Cost per Pack (R)</label>
+                  <label className={styles.label}>
+                    Freight / Delivery Cost per Pack (R)
+                  </label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
                     className={styles.input}
-                    defaultValue={Number(settingsState["pricing.freight_cost"]?.value ?? 0)}
-                    onBlur={(e) => handleSettingSave("pricing.freight_cost", parseFloat(e.target.value))}
+                    defaultValue={Number(
+                      settingsState["pricing.freight_cost"]?.value ?? 0,
+                    )}
+                    onBlur={(e) =>
+                      handleSettingSave(
+                        "pricing.freight_cost",
+                        parseFloat(e.target.value),
+                      )
+                    }
                   />
-                  <span className={styles.hint}>Inbound logistics / freight allocated per pack in the landed cost model.</span>
+                  <span className={styles.hint}>
+                    Inbound logistics / freight allocated per pack in the landed
+                    cost model.
+                  </span>
                 </div>
               </div>
 
               {/* ── Pricing Precedence ────────────────────────── */}
               <div className={styles.precedenceBox}>
                 <h4>Pricing Precedence Hierarchy</h4>
-                <p>Global Target Rule &rarr; Category Rule &rarr; Brand Rule &rarr; Product Rule &rarr; Manual Grade Pack Price Override</p>
+                <p>
+                  Global Target Rule &rarr; Category Rule &rarr; Brand Rule
+                  &rarr; Product Rule &rarr; Manual Grade Pack Price Override
+                </p>
               </div>
 
               {/* ── Pexcover™ Rates Manager ───────────────────── */}
@@ -428,50 +642,121 @@ export function SettingsControlCentre({
                   <div>
                     <strong>Pexcover™ Dynamic Covering Rates</strong>
                     <p>
-                      These rates are stored in the <code>pexco_rates</code> database table and drive dynamic Pexcover pricing at checkout.
-                      Each stationery product classified with a PEXCO code will use the corresponding rate per book per unit.
-                      To update rates, edit the <code>pexco_rates</code> table directly via Supabase or a future admin UI here.
+                      Superuser-editable PEXCO covering rates. Each stationery
+                      product classified with a PEXCO code uses the
+                      corresponding rate per book per unit.{" "}
+                      <strong>Covering Rate = Cost Price × Margin</strong> —
+                      saved straight into the <code>pexco_rates</code> database
+                      table and revalidated on every public school page
+                      instantly.
                     </p>
                   </div>
                 </div>
-                <table className={styles.pexcoverRatesTable}>
-                  <thead>
-                    <tr>
-                      <th>Code</th>
-                      <th>Description</th>
-                      <th>Covering Rate</th>
-                      <th>Cost Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><code>PEXCO01</code></td>
-                      <td>Small book / exercise book</td>
-                      <td><strong>R8.00</strong></td>
-                      <td>R4.00</td>
-                    </tr>
-                    <tr>
-                      <td><code>PEXCO02</code></td>
-                      <td>Large / hard-cover book</td>
-                      <td><strong>R14.00</strong></td>
-                      <td>R7.00</td>
-                    </tr>
-                    <tr>
-                      <td><code>PEXCO03</code></td>
-                      <td>Medium exercise book</td>
-                      <td><strong>R11.00</strong></td>
-                      <td>R5.50</td>
-                    </tr>
-                    <tr>
-                      <td><code>PEXCO04</code></td>
-                      <td>Extra-large atlas / art book</td>
-                      <td><strong>R18.00</strong></td>
-                      <td>R9.00</td>
-                    </tr>
-                  </tbody>
-                </table>
+
+                {pexcoDrafts && Object.keys(pexcoDrafts).length > 0 ? (
+                  <table className={styles.pexcoverRatesTable}>
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Cost Price</th>
+                        <th>Margin (× Cost)</th>
+                        <th>Covering Rate</th>
+                        <th>Active</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {initialPexcoRates.map((rate) => {
+                        const draft = pexcoDrafts[rate.code];
+                        if (!draft) return null;
+                        const covering = pexcoCoveringPreview(draft);
+                        const busy = busyKey === `pexco-${rate.code}`;
+                        return (
+                          <tr key={rate.code}>
+                            <td>
+                              <code>{rate.code}</code>
+                            </td>
+                            <td>{rate.title}</td>
+                            <td>
+                              <span className={styles.pexcoRatePrefix}>R</span>
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                className={`${styles.input} ${styles.pexcoRateInput}`}
+                                value={draft.costSql}
+                                onChange={(e) =>
+                                  updatePexcoDraft(rate.code, {
+                                    costSql: e.target.value,
+                                  })
+                                }
+                                aria-label={`${rate.code} cost price`}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                min="0.01"
+                                step="0.01"
+                                className={`${styles.input} ${styles.pexcoRateInput}`}
+                                value={draft.marginSql}
+                                onChange={(e) =>
+                                  updatePexcoDraft(rate.code, {
+                                    marginSql: e.target.value,
+                                  })
+                                }
+                                aria-label={`${rate.code} margin rate`}
+                              />
+                            </td>
+                            <td>
+                              <strong className={styles.pexcoRateCover}>
+                                {covering === null
+                                  ? "—"
+                                  : `R${covering.toFixed(2)}`}
+                              </strong>
+                            </td>
+                            <td>
+                              <input
+                                type="checkbox"
+                                className={styles.pexcoRateActiveCheck}
+                                checked={draft.isActive}
+                                onChange={(e) =>
+                                  updatePexcoDraft(rate.code, {
+                                    isActive: e.target.checked,
+                                  })
+                                }
+                                aria-label={`${rate.code} active`}
+                              />
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                className={styles.pexcoRateSave}
+                                disabled={busy}
+                                onClick={() => handlePexcoSave(rate)}
+                              >
+                                {busy ? "Saving…" : "Save"}
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className={styles.pexcoverRatesNote}>
+                    No PEXCO rates were found in the <code>pexco_rates</code>{" "}
+                    database table.
+                  </p>
+                )}
                 <span className={styles.pexcoverRatesNote}>
-                  ℹ️ Rates above are live from the database seed. Pexcover totals at checkout are always recalculated server-side from authoritative <code>pexco_rates</code> data — never from client-submitted values.
+                  ℹ️ The covering rate recomputes instantly as Cost Price ×
+                  Margin. Saving writes <code>covering_price_cents</code> and{" "}
+                  <code>cost_price_cents</code> to <code>pexco_rates</code>, and
+                  Pexcover totals at checkout are always recalculated
+                  server-side from this authoritative data — never from
+                  client-submitted values.
                 </span>
               </div>
             </div>
@@ -482,18 +767,39 @@ export function SettingsControlCentre({
             <div className={styles.panelCard}>
               <div className={styles.panelHeader}>
                 <h2>Integration Status & Health</h2>
-                <p>Live operational status of external infrastructure & payment gateways (Secrets are 100% masked)</p>
+                <p>
+                  Live operational status of external infrastructure & payment
+                  gateways (Secrets are 100% masked)
+                </p>
               </div>
               <div className={adminStyles.settingsStatusGrid}>
                 {integrations.map((item) => (
-                  <div key={item.name} className={adminStyles.settingsStatusCard}>
+                  <div
+                    key={item.name}
+                    className={adminStyles.settingsStatusCard}
+                  >
                     <div>
-                      <strong className={adminStyles.cWhite}>{item.name}</strong>
-                      <p className={adminStyles.settingsStatusCardPurpose}>{item.purpose}</p>
-                      <small className={viewStyles.text11}>{item.details}</small>
+                      <strong className={adminStyles.cWhite}>
+                        {item.name}
+                      </strong>
+                      <p className={adminStyles.settingsStatusCardPurpose}>
+                        {item.purpose}
+                      </p>
+                      <small className={viewStyles.text11}>
+                        {item.details}
+                      </small>
                     </div>
-                    <span className={item.status === "connected" ? styles.badgeSuccess : styles.badgeWarning}>
-                      <CheckCircle2 className={adminStyles.settingsIconCheck} /> {item.status === "connected" ? "Connected" : "Action Required"}
+                    <span
+                      className={
+                        item.status === "connected"
+                          ? styles.badgeSuccess
+                          : styles.badgeWarning
+                      }
+                    >
+                      <CheckCircle2 className={adminStyles.settingsIconCheck} />{" "}
+                      {item.status === "connected"
+                        ? "Connected"
+                        : "Action Required"}
                     </span>
                   </div>
                 ))}
@@ -506,21 +812,39 @@ export function SettingsControlCentre({
             <div className={styles.panelCard}>
               <div className={styles.panelHeader}>
                 <h2>Data Management & Snapshot Centre</h2>
-                <p>Export system data snapshots, run dry-run imports, & trigger application data restores</p>
+                <p>
+                  Export system data snapshots, run dry-run imports, & trigger
+                  application data restores
+                </p>
               </div>
               <div className={`${adminStyles.flex} ${adminStyles.gap14}`}>
-                <button type="button" className={styles.saveButton} onClick={handleExport}>
-                  <Download className={adminStyles.settingsExportIcon} /> Export Settings Data Snapshot
+                <button
+                  type="button"
+                  className={styles.saveButton}
+                  onClick={handleExport}
+                >
+                  <Download className={adminStyles.settingsExportIcon} /> Export
+                  Settings Data Snapshot
                 </button>
-                <button type="button" className={styles.discardButton} onClick={() => setShowRestoreModal(true)}>
-                  <Upload className={adminStyles.settingsExportIcon} /> Restore Data Snapshot
+                <button
+                  type="button"
+                  className={styles.discardButton}
+                  onClick={() => setShowRestoreModal(true)}
+                >
+                  <Upload className={adminStyles.settingsExportIcon} /> Restore
+                  Data Snapshot
                 </button>
               </div>
 
               {showRestoreModal && (
                 <div className={adminStyles.settingsRestoreSection}>
-                  <h3 className={adminStyles.settingsRestoreTitle}>Restore System Settings Snapshot</h3>
-                  <p className={adminStyles.settingsRestoreDesc}>Paste the JSON exported snapshot payload to restore configuration parameters.</p>
+                  <h3 className={adminStyles.settingsRestoreTitle}>
+                    Restore System Settings Snapshot
+                  </h3>
+                  <p className={adminStyles.settingsRestoreDesc}>
+                    Paste the JSON exported snapshot payload to restore
+                    configuration parameters.
+                  </p>
                   <textarea
                     rows={6}
                     className={styles.textarea}
@@ -529,10 +853,19 @@ export function SettingsControlCentre({
                     onChange={(e) => setRestoreJson(e.target.value)}
                   />
                   <div className={adminStyles.settingsRestoreActions}>
-                    <button type="button" className={styles.saveButton} onClick={handleRestoreSubmit} disabled={!restoreJson.trim() || busyKey === "restore"}>
+                    <button
+                      type="button"
+                      className={styles.saveButton}
+                      onClick={handleRestoreSubmit}
+                      disabled={!restoreJson.trim() || busyKey === "restore"}
+                    >
                       Confirm Restore
                     </button>
-                    <button type="button" className={styles.discardButton} onClick={() => setShowRestoreModal(false)}>
+                    <button
+                      type="button"
+                      className={styles.discardButton}
+                      onClick={() => setShowRestoreModal(false)}
+                    >
                       Cancel
                     </button>
                   </div>
@@ -546,7 +879,10 @@ export function SettingsControlCentre({
             <div className={styles.panelCard}>
               <div className={styles.panelHeader}>
                 <h2>Settings Change Audit History</h2>
-                <p>Immutable log of configuration modifications made by Super Administrators</p>
+                <p>
+                  Immutable log of configuration modifications made by Super
+                  Administrators
+                </p>
               </div>
               <table className={styles.table}>
                 <thead>
@@ -563,11 +899,21 @@ export function SettingsControlCentre({
                   {auditLogs.length > 0 ? (
                     auditLogs.map((log) => (
                       <tr key={log.id}>
-                        <td>{new Date(log.created_at).toLocaleString("en-ZA")}</td>
+                        <td>
+                          {new Date(log.created_at).toLocaleString("en-ZA")}
+                        </td>
                         <td>{log.actor_email || "System"}</td>
-                        <td><strong className={adminStyles.settingsLogKey}>{log.setting_key}</strong></td>
-                        <td><code>{JSON.stringify(log.old_value)}</code></td>
-                        <td><code>{JSON.stringify(log.new_value)}</code></td>
+                        <td>
+                          <strong className={adminStyles.settingsLogKey}>
+                            {log.setting_key}
+                          </strong>
+                        </td>
+                        <td>
+                          <code>{JSON.stringify(log.old_value)}</code>
+                        </td>
+                        <td>
+                          <code>{JSON.stringify(log.new_value)}</code>
+                        </td>
                         <td>{log.change_reason || "—"}</td>
                       </tr>
                     ))

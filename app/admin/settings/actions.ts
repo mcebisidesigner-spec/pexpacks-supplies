@@ -1,12 +1,15 @@
 "use server";
 
-import { updateSystemSetting, exportSystemSettings } from "@/lib/admin/system-settings";
+import {
+  updateSystemSetting,
+  exportSystemSettings,
+} from "@/lib/admin/system-settings";
 import { requireAdmin, requireSuperAdmin } from "@/lib/admin/rbac";
 
 export async function updateSystemSettingAction(
   key: string,
   rawValue: unknown,
-  reason?: string
+  reason?: string,
 ) {
   await requireAdmin({ permission: "settings.manage" });
   return updateSystemSetting(key, rawValue, reason);
@@ -15,7 +18,7 @@ export async function updateSystemSettingAction(
 export async function updateSettingsAction(
   section: string,
   _prevState: unknown,
-  formData: FormData
+  formData: FormData,
 ) {
   await requireAdmin({ permission: "settings.manage" });
   const key = formData.get("key") ? String(formData.get("key")) : section;
@@ -32,7 +35,7 @@ export async function exportSettingsAction() {
 
 export async function restoreSettingsAction(
   jsonContent: string,
-  reason?: string
+  reason?: string,
 ) {
   await requireAdmin({ permission: "settings.manage" });
   try {
@@ -49,7 +52,7 @@ export async function restoreSettingsAction(
         const res = await updateSystemSetting(
           key,
           item.value,
-          reason || "Restored from system backup snapshot"
+          reason || "Restored from system backup snapshot",
         );
         if (res.ok) updatedCount++;
       }
@@ -62,7 +65,8 @@ export async function restoreSettingsAction(
   } catch (err) {
     return {
       ok: false,
-      message: err instanceof Error ? err.message : "Failed to parse JSON file.",
+      message:
+        err instanceof Error ? err.message : "Failed to parse JSON file.",
     };
   }
 }
@@ -81,13 +85,19 @@ export async function inviteUserFromSettingsAction(formData: FormData) {
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const { listRoles } = await import("@/lib/admin/users");
   const { writeAuditLog, displayName } = await import("@/lib/admin/rbac");
-  const { sendUserInvitationEmail } = await import("@/lib/email/sendUserInvitationEmail");
+  const { sendUserInvitationEmail } =
+    await import("@/lib/email/sendUserInvitationEmail");
 
   const fullName = String(formData.get("full_name") || "").trim();
-  const email = String(formData.get("email") || "").trim().toLowerCase();
+  const email = String(formData.get("email") || "")
+    .trim()
+    .toLowerCase();
   const department = String(formData.get("department") || "").trim();
   const notes = String(formData.get("notes") || "").trim();
-  const roleSlugs = formData.getAll("roles").map((r) => String(r)).filter(Boolean);
+  const roleSlugs = formData
+    .getAll("roles")
+    .map((r) => String(r))
+    .filter(Boolean);
 
   if (!fullName) {
     return { ok: false, message: "Please enter the user's full name." };
@@ -103,43 +113,54 @@ export async function inviteUserFromSettingsAction(formData: FormData) {
     const tempPassword = generateSecureTempPassword();
     let userId: string;
 
-    const { data: createData, error: createError } = await admin.auth.admin.createUser({
-      email,
-      password: tempPassword,
-      email_confirm: true,
-      user_metadata: {
-        full_name: fullName,
-        name: fullName,
-        department: department || undefined,
-        must_change_password: true,
-        onboarded_via: "settings_add_users",
-      },
-    });
+    const { data: createData, error: createError } =
+      await admin.auth.admin.createUser({
+        email,
+        password: tempPassword,
+        email_confirm: true,
+        user_metadata: {
+          full_name: fullName,
+          name: fullName,
+          department: department || undefined,
+          must_change_password: true,
+          onboarded_via: "settings_add_users",
+        },
+      });
 
     if (createError) {
       const errMsg = createError.message.toLowerCase();
-      if (errMsg.includes("already registered") || errMsg.includes("already exists") || errMsg.includes("duplicate")) {
+      if (
+        errMsg.includes("already registered") ||
+        errMsg.includes("already exists") ||
+        errMsg.includes("duplicate")
+      ) {
         const { data: listData } = await admin.auth.admin.listUsers();
         const existing = listData?.users?.find(
-          (u) => u.email?.toLowerCase() === email.toLowerCase()
+          (u) => u.email?.toLowerCase() === email.toLowerCase(),
         );
 
         if (existing) {
           userId = existing.id;
-          const { error: updateError } = await admin.auth.admin.updateUserById(userId, {
-            password: tempPassword,
-            email_confirm: true,
-            user_metadata: {
-              ...existing.user_metadata,
-              full_name: fullName,
-              name: fullName,
-              department: department || undefined,
-              must_change_password: true,
+          const { error: updateError } = await admin.auth.admin.updateUserById(
+            userId,
+            {
+              password: tempPassword,
+              email_confirm: true,
+              user_metadata: {
+                ...existing.user_metadata,
+                full_name: fullName,
+                name: fullName,
+                department: department || undefined,
+                must_change_password: true,
+              },
             },
-          });
+          );
           if (updateError) throw updateError;
         } else {
-          return { ok: false, message: `A user with email ${email} is already registered.` };
+          return {
+            ok: false,
+            message: `A user with email ${email} is already registered.`,
+          };
         }
       } else {
         throw createError;
@@ -154,7 +175,11 @@ export async function inviteUserFromSettingsAction(formData: FormData) {
 
     // Grant roles
     const allRoles = await listRoles();
-    const assignedRolesInfo: { slug: string; name: string; description: string }[] = [];
+    const assignedRolesInfo: {
+      slug: string;
+      name: string;
+      description: string;
+    }[] = [];
 
     for (const slug of roleSlugs) {
       try {
@@ -205,7 +230,10 @@ export async function inviteUserFromSettingsAction(formData: FormData) {
     });
 
     if (!emailResult.success) {
-      console.warn("[settings-invite] Resend email warning:", emailResult.error);
+      console.warn(
+        "[settings-invite] Resend email warning:",
+        emailResult.error,
+      );
     }
 
     return {
@@ -225,7 +253,7 @@ export async function inviteUserFromSettingsAction(formData: FormData) {
 
 export async function updateUserRolesFromSettingsAction(
   userId: string,
-  roleSlugs: string[]
+  roleSlugs: string[],
 ) {
   await requireAdmin({ permission: "users.edit" });
   const { syncUserRoles } = await import("@/lib/admin/users");
@@ -253,11 +281,19 @@ export async function saveVaultCredentialAction(data: {
   }
 
   // Security length limits to guard against spam and buffer attacks
-  if (data.productName.length > 120 || data.username.length > 120 || data.password.length > 500) {
-    return { ok: false, message: "Input exceeds allowable security length bounds." };
+  if (
+    data.productName.length > 120 ||
+    data.username.length > 120 ||
+    data.password.length > 500
+  ) {
+    return {
+      ok: false,
+      message: "Input exceeds allowable security length bounds.",
+    };
   }
 
-  const { saveSystemVaultCredential } = await import("@/lib/admin/system-settings");
+  const { saveSystemVaultCredential } =
+    await import("@/lib/admin/system-settings");
   return saveSystemVaultCredential(
     {
       id: data.id,
@@ -267,7 +303,7 @@ export async function saveVaultCredentialAction(data: {
       password: data.password.trim(),
       additionalInfo: data.additionalInfo?.trim() || "",
     },
-    actor.user.email ?? "Superuser"
+    actor.user.email ?? "Superuser",
   );
 }
 
@@ -276,8 +312,12 @@ export async function deleteVaultCredentialAction(id: string) {
   if (!id?.trim()) {
     return { ok: false, message: "Credential ID is required." };
   }
-  const { deleteSystemVaultCredential } = await import("@/lib/admin/system-settings");
-  return deleteSystemVaultCredential(id.trim(), actor.user.email ?? "Superuser");
+  const { deleteSystemVaultCredential } =
+    await import("@/lib/admin/system-settings");
+  return deleteSystemVaultCredential(
+    id.trim(),
+    actor.user.email ?? "Superuser",
+  );
 }
 
 export async function deleteUserFromSettingsAction(userId: string) {
@@ -286,3 +326,13 @@ export async function deleteUserFromSettingsAction(userId: string) {
   return deleteUser(userId);
 }
 
+export async function updatePexcoRateAction(input: {
+  code: string;
+  costPriceCents: number;
+  marginRate: number;
+  isActive: boolean;
+}) {
+  const actor = await requireSuperAdmin();
+  const { updatePexcoRate } = await import("@/lib/admin/pexco-rates");
+  return updatePexcoRate(input, actor.user);
+}
