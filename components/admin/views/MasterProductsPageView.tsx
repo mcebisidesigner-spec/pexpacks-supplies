@@ -131,6 +131,20 @@ export function MasterProductsPageView({
       render: (row) => <span>{row.category || "Stationery"}</span>,
     },
     {
+      key: "latest_verified_cost",
+      header: "Cost price",
+      sortable: true,
+      align: "right",
+      width: "120px",
+      render: (row) => (
+        <span className={styles.costPrice}>
+          {row.latest_verified_cost != null
+            ? `R ${Number(row.latest_verified_cost).toFixed(2)}`
+            : "—"}
+        </span>
+      ),
+    },
+    {
       key: "current_selling_price",
       header: "Selling Price",
       sortable: true,
