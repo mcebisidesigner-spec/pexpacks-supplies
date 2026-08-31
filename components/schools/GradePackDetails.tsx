@@ -160,7 +160,7 @@ export function GradePackDetails({
         priceLabel={
           grade.price > 0 && grade.packItems && grade.packItems.length > 0
             ? formatCurrency(grade.price)
-            : "R00.00"
+            : formatCurrency(0, { allowQuote: false })
         }
         targetSelector="#grade-actions"
       />

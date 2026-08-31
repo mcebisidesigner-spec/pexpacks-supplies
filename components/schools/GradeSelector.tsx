@@ -48,7 +48,7 @@ function buildCompleteListPack(
     priceLabel:
       pack.items.length > 0 && grade.price > 0
         ? formatCurrency(grade.price)
-        : "R00.00",
+        : formatCurrency(0, { allowQuote: false }),
     items: toSchoolListItems(pack),
     customiseTargetId: `customise-${pack.id}`,
     footerActions: (
@@ -162,7 +162,7 @@ export function GradeSelector({
           const priceLabel =
             hasItems && grade.price > 0
               ? formatCurrency(grade.price)
-              : "R00.00";
+              : formatCurrency(0, { allowQuote: false });
 
           return (
             <ArticlePackCard
