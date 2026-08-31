@@ -12,10 +12,7 @@ import {
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
-import {
-  calculateItemLineTotal,
-  calculatePackTotal,
-} from "@/lib/packs/calculatePackTotal";
+import { calculatePackTotal } from "@/lib/packs/calculatePackTotal";
 import {
   createCustomPackSelection,
   createFullPackSelection,
@@ -346,15 +343,6 @@ export function GradePackActions({
           {selection.length ? (
             <div className={styles.itemList}>
               {selection.map((item) => {
-                const itemTotal =
-                  item.selectedQuantity > 0 &&
-                  typeof item.unitPrice === "number"
-                    ? calculateItemLineTotal(
-                        item.unitPrice,
-                        item.selectedQuantity,
-                      )
-                    : undefined;
-
                 return (
                   <article className={styles.itemRow} key={item.id}>
                     <label className={styles.itemCheckbox}>
@@ -378,16 +366,8 @@ export function GradePackActions({
                           </span>
                         ) : null}
                         <span className={styles.itemMeta}>
-                          School requires: {item.requiredQuantity}
-                          {typeof item.unitPrice === "number"
-                            ? ` - ${formatItemCurrency(item.unitPrice)} each`
-                            : ""}
+                          School requires: {String(item.requiredQuantity).padStart(2, "0")}
                         </span>
-                        {typeof itemTotal === "number" ? (
-                          <span className={styles.lineTotal}>
-                            Line total: {formatItemCurrency(itemTotal)}
-                          </span>
-                        ) : null}
                       </span>
                     </label>
                     <div className={styles.qtyControls}>
