@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
           limit,
           offset: 0,
         },
-        { headers: { "Cache-Control": "private, no-store" } }
+        { headers: { "Cache-Control": "public, s-maxage=600, stale-while-revalidate=86400" } }
       );
     }
   }
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
         offset: 0,
       },
       {
-        headers: { "Cache-Control": "private, no-store" },
+        headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400" },
       }
     );
   }
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
     },
     {
       headers: {
-        "Cache-Control": "private, no-store",
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
       },
     }
   );

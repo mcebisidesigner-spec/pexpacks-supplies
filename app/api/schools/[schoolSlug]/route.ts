@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSchoolBySlug } from "@/lib/school-utils";
+import { getCachedSchoolBySlug } from "@/lib/school-utils";
 import { rateLimitRequest } from "@/lib/security/requestGuards";
 
 export const runtime = "nodejs";
@@ -31,7 +31,7 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
   }
 
   const { schoolSlug } = await params;
-  const school = await getSchoolBySlug(schoolSlug);
+  const school = await getCachedSchoolBySlug(schoolSlug);
 
   if (!school) {
     return NextResponse.json(
@@ -40,22 +40,29 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
     );
   }
 
-  return NextResponse.json({
-    success: true,
-    school: {
-      id: school.id,
-      name: school.name,
-      slug: school.slug,
-      city: school.city,
-      province: school.province,
-      grades: school.grades.map((grade) => ({
-        id: grade.id,
-        grade: grade.grade,
-        gradeSlug: grade.gradeSlug,
-        price: grade.price,
-        contents: grade.contents,
-        deliveryNote: grade.deliveryNote,
-      })),
+  return NextResponse.json(
+    {
+      success: true,
+      school: {
+        id: school.id,
+        name: school.name,
+        slug: school.slug,
+        city: school.city,
+        province: school.province,
+        grades: school.grades.map((grade) => ({
+          id: grade.id,
+          grade: grade.grade,
+          gradeSlug: grade.gradeSlug,
+          price: grade.price,
+          contents: grade.contents,
+          deliveryNote: grade.deliveryNote,
+        })),
+      },
     },
-  });
+    {
+      headers: {
+        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+      },
+    }
+  );
 }

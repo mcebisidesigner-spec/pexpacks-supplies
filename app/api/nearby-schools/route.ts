@@ -27,14 +27,28 @@ export async function GET(request: NextRequest) {
 
   if (city) {
     const { schools, matchedCity } = await getSchoolsByCity(city, limit);
-    return NextResponse.json({
-      schools,
-      city: matchedCity || city,
-      source: matchedCity ? "city" : "default",
-    });
+    return NextResponse.json(
+      {
+        schools,
+        city: matchedCity || city,
+        source: matchedCity ? "city" : "default",
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=600, stale-while-revalidate=86400",
+        },
+      }
+    );
   }
 
   // No city param — fall back to default partnered schools
   const schools = await getDefaultSchools(limit);
-  return NextResponse.json({ schools, city: null, source: "default" });
+  return NextResponse.json(
+    { schools, city: null, source: "default" },
+    {
+      headers: {
+        "Cache-Control": "public, s-maxage=600, stale-while-revalidate=86400",
+      },
+    }
+  );
 }

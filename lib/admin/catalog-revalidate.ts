@@ -39,6 +39,7 @@ export function revalidateCatalog(options?: {
       try {
         const revalidateTag = nextCache.revalidateTag as RevalidateTagFn;
         revalidateTagNow(revalidateTag, SCHOOL_DATA_TAG);
+        revalidateTagNow(revalidateTag, "featured-schools");
         if (options?.schoolSlug) {
           revalidateTagNow(revalidateTag, `school-${options.schoolSlug}`);
         }

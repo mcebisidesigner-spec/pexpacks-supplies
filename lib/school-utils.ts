@@ -170,7 +170,7 @@ async function getSchoolWithBoundedQueries(
   if (isUuid) {
     query = query.eq("id", slug);
   } else {
-    query = query.ilike("slug", slug);
+    query = query.eq("slug", slug.toLowerCase().trim());
   }
 
   const { data: dbSchool, error: schoolError } = await query.maybeSingle();
@@ -181,7 +181,7 @@ async function getSchoolWithBoundedQueries(
   const { data: dbPacks, error: packsError } = await supabase
     .from("school_packs")
     .select("id, title, slug, price, description, stock, sort_order")
-    .or(`school_id.eq.${dbSchool.id},slug.ilike.${dbSchool.slug}-%`)
+    .eq("school_id", dbSchool.id)
     .eq("visible", true)
     .or(
       "publication_status.eq.published,and(publication_status.is.null,visible.eq.true)",

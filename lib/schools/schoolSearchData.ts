@@ -1,4 +1,6 @@
+import { unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import type { Json } from "@/lib/supabase/types";
 import { getSchoolPhasesFromGrades } from "./schoolPhase";
 import type { SchoolSearchFilters, SchoolSearchRecord } from "./types";
@@ -249,7 +251,7 @@ export async function getNearbySchoolRecords(userLat: number, userLng: number, l
   return counted.map(toSearchRecord);
 }
 
-export async function getFeaturedSchoolRecords(limit = 4) {
+async function loadFeaturedSchoolRecords(limit = 4) {
   const supabase = createSupabaseAdminClient();
 
   const { data: featuredData } = await supabase
@@ -295,6 +297,12 @@ export async function getFeaturedSchoolRecords(limit = 4) {
 
   return (await withCanonicalPackCounts(schools)).map(toSearchRecord);
 }
+
+export const getFeaturedSchoolRecords = unstable_cache(
+  async (limit = 4) => loadFeaturedSchoolRecords(limit),
+  ["public-featured-schools-v1"],
+  { revalidate: 300, tags: [SCHOOL_DATA_TAG, "featured-schools"] },
+);
 
 export async function searchSchoolRecords(
   filters: SchoolSearchFilters,
