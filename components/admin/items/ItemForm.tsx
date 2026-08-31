@@ -114,15 +114,10 @@ export function ItemForm({
     cfg?: MasterPricingConfig,
   ): number | null {
     const cost = Number(String(costRaw).replace(",", "."));
-    if (!Number.isFinite(cost) || cost < 0) return null;
+    if (!Number.isFinite(cost) || cost <= 0) return null;
     const marginPct =
       cfg && cfg.marginPct > 0 && cfg.marginPct < 100 ? cfg.marginPct : 49.9;
-    const packingCost = cfg?.packaging ?? 0;
-    const assemblyCost = cfg?.assembly ?? 0;
-    const freightCost = cfg?.freight ?? 0;
-    const landed = cost + packingCost + assemblyCost + freightCost;
-    if (landed <= 0) return 0;
-    return Math.round((landed / (1 - marginPct / 100)) * 100) / 100;
+    return Math.round((cost / (1 - marginPct / 100)) * 100) / 100;
   }
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -330,7 +325,7 @@ export function ItemForm({
                     : "—"}
                 </span>
                 <span className={styles.sellingPreviewHint}>
-                  = Cost + Margin + Packaging + Assembly + Freight (auto)
+                  = Cost + Target Margin (auto)
                 </span>
               </div>
             )}

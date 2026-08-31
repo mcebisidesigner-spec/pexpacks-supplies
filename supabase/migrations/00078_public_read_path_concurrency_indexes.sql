@@ -1,4 +1,4 @@
--- Migration 00079: Public read-path indexes for high-concurrency traffic
+-- Migration 00078: Public read-path indexes for high-concurrency traffic
 -- ============================================================================
 -- These indexes target the exact public catalogue access patterns:
 --   - school search/listing over published schools

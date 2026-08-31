@@ -150,18 +150,15 @@ export interface MasterPricingInput {
 
 export interface MasterPricingConfig {
   marginPct: number;
-  packaging: number;
-  assembly: number;
-  freight: number;
   lowMarginPct: number;
+  packaging?: number;
+  assembly?: number;
+  freight?: number;
 }
 
 export async function getMasterPricingConfig(): Promise<MasterPricingConfig> {
   let marginPct = 49.9;
   let lowMarginPct = 20.0;
-  let packaging = 0;
-  let assembly = 0;
-  let freight = 0;
 
   try {
     const settings = await getSystemSettings();
@@ -172,55 +169,39 @@ export async function getMasterPricingConfig(): Promise<MasterPricingConfig> {
     };
     marginPct = num("pricing.target_margin_pct") || 49.9;
     lowMarginPct = num("pricing.low_margin_warning_pct") || 20.0;
-    packaging = num("pricing.packaging_cost") || 0;
-    assembly = num("pricing.assembly_cost") || 0;
-    freight = num("pricing.freight_cost") || 0;
   } catch (err) {
     console.warn("[items] pricing settings read failed:", err);
   }
 
-  return { marginPct, lowMarginPct, packaging, assembly, freight };
+  return { marginPct, lowMarginPct, packaging: 0, assembly: 0, freight: 0 };
 }
 
 /**
- * Computes the suggested selling price of a master product from its supplier
- * cost price using the configured Pricing & Margin settings:
- *   landed cost = cost + packaging + assembly + freight
- *   selling price = landed cost / (1 - target margin rate)
+ * Computes the suggested selling price of an individual master product from its supplier
+ * cost price using the configured target gross margin rate:
+ *   selling price = cost / (1 - target margin rate)
  *
- * Matches the grade-pack pricing engine formula used by
- * calculate_grade_pack_price.
+ * Pack-level costs (packaging, assembly, freight) are strictly excluded from master products
+ * and apply exclusively at the complete Grade Pack landed cost level.
  */
 export async function computeMasterSellingPrice(
   cost: number | null,
 ): Promise<number> {
   let marginPct = 49.9;
-  let packaging = 0;
-  let assembly = 0;
-  let freight = 0;
 
   try {
     const settings = await getSystemSettings();
-    const num = (key: string): number => {
-      const raw = settings[key]?.value;
-      const n = typeof raw === "number" ? raw : Number(raw);
-      return Number.isFinite(n) ? n : 0;
-    };
-    marginPct = num("pricing.target_margin_pct") || 49.9;
-    packaging = num("pricing.packaging_cost") || 0;
-    assembly = num("pricing.assembly_cost") || 0;
-    freight = num("pricing.freight_cost") || 0;
+    const raw = settings["pricing.target_margin_pct"]?.value;
+    const n = typeof raw === "number" ? raw : Number(raw);
+    marginPct = Number.isFinite(n) && n > 0 && n < 100 ? n : 49.9;
   } catch (err) {
     console.warn("[items] pricing settings read failed:", err);
   }
 
-  if (!(marginPct > 0 && marginPct < 100)) marginPct = 49.9;
-  const marginRate = marginPct / 100;
   const costValue = cost == null || Number.isNaN(cost) ? 0 : cost;
-  const landed = costValue + packaging + assembly + freight;
-
-  if (landed <= 0) return 0;
-  return Math.round((landed / (1 - marginRate)) * 100) / 100;
+  if (costValue <= 0) return 0;
+  const marginRate = marginPct / 100;
+  return Math.round((costValue / (1 - marginRate)) * 100) / 100;
 }
 
 function itemFromMaster(product: MasterProductRow): ItemRow {

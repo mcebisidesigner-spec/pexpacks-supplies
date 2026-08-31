@@ -63,8 +63,8 @@ export function usePaginatedSchoolSearch({
     phase !== phaseAllValue ||
     debouncedQuery.trim().length >= 3;
 
-// Client-side in-memory cache for instant keystroke/backspace results
-const clientSearchCache = new Map<string, PaginatedSchoolResults>();
+  // Client-side in-memory cache for instant keystroke/backspace results.
+  const clientSearchCache = useRef(new Map<string, PaginatedSchoolResults>());
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedQuery(query), 200);
@@ -96,7 +96,7 @@ const clientSearchCache = new Map<string, PaginatedSchoolResults>();
 
       const cacheKey = params.toString();
       if (mode === "replace") {
-        const cached = clientSearchCache.get(cacheKey);
+        const cached = clientSearchCache.current.get(cacheKey);
         if (cached) {
           setResults(cached.results);
           setTotal(cached.total);
@@ -128,10 +128,10 @@ const clientSearchCache = new Map<string, PaginatedSchoolResults>();
         };
 
         if (mode === "replace") {
-          if (clientSearchCache.size > 150) {
-            clientSearchCache.clear();
+          if (clientSearchCache.current.size > 150) {
+            clientSearchCache.current.clear();
           }
-          clientSearchCache.set(cacheKey, data);
+          clientSearchCache.current.set(cacheKey, data);
         }
 
         setResults((current) =>
@@ -224,3 +224,4 @@ const clientSearchCache = new Map<string, PaginatedSchoolResults>();
     updatePhase,
   };
 }
+
