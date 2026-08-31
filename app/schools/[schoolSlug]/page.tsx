@@ -17,8 +17,7 @@ import { buildWhatsAppHref } from "@/data/contact";
 import pageStyles from "@/styles/Page.module.css";
 import styles from "./SchoolDetailPage.module.css";
 
-export const dynamicParams = true;
-export const revalidate = 3600; // Edge ISR cache for 1 hour, auto-revalidated on dashboard edit
+export const dynamic = "force-dynamic";
 
 type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;
@@ -37,9 +36,6 @@ function formatSchoolLocation(city?: string | null, province?: string | null, di
 
 import { buildTailoredPublicGrades } from "@/lib/schools/school-grade-packs";
 
-export async function generateStaticParams() {
-  return [];
-}
 
 export async function generateMetadata({
   params,
