@@ -10,6 +10,7 @@ import {
   type AdminSession,
 } from "@/lib/admin/rbac";
 import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
+import { getSystemSettings } from "@/lib/admin/system-settings";
 import { inventoryItemNameKey } from "@/lib/admin/item-constants";
 import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
@@ -28,6 +29,7 @@ export type ItemRow = {
   specification: string | null;
   quantity: number;
   unit_price: number | null;
+  unit_cost?: number | null;
   image?: string | null;
   icon: string | null;
   visible: boolean;
@@ -139,6 +141,113 @@ function productSku(data: Pick<ItemFormData, "category" | "name">): string {
   return generateSkuFromName(data.name, data.category);
 }
 
+export interface MasterPricingInput {
+  /** Supplier cost price entered on the form (the cost basis). */
+  cost: number | null;
+  /** Computed selling price = cost + margin + per-pack costs. */
+  selling: number;
+}
+
+export interface MasterPricingConfig {
+  marginPct: number;
+  packaging: number;
+  assembly: number;
+  freight: number;
+  lowMarginPct: number;
+}
+
+export async function getMasterPricingConfig(): Promise<MasterPricingConfig> {
+  let marginPct = 49.9;
+  let lowMarginPct = 20.0;
+  let packaging = 0;
+  let assembly = 0;
+  let freight = 0;
+
+  try {
+    const settings = await getSystemSettings();
+    const num = (key: string): number => {
+      const raw = settings[key]?.value;
+      const n = typeof raw === "number" ? raw : Number(raw);
+      return Number.isFinite(n) ? n : 0;
+    };
+    marginPct = num("pricing.target_margin_pct") || 49.9;
+    lowMarginPct = num("pricing.low_margin_warning_pct") || 20.0;
+    packaging = num("pricing.packaging_cost") || 0;
+    assembly = num("pricing.assembly_cost") || 0;
+    freight = num("pricing.freight_cost") || 0;
+  } catch (err) {
+    console.warn("[items] pricing settings read failed:", err);
+  }
+
+  return { marginPct, lowMarginPct, packaging, assembly, freight };
+}
+
+/**
+ * Computes the suggested selling price of a master product from its supplier
+ * cost price using the configured Pricing & Margin settings:
+ *   landed cost = cost + packaging + assembly + freight
+ *   selling price = landed cost / (1 - target margin rate)
+ *
+ * Matches the grade-pack pricing engine formula used by
+ * calculate_grade_pack_price.
+ */
+export async function computeMasterSellingPrice(
+  cost: number | null,
+): Promise<number> {
+  let marginPct = 49.9;
+  let packaging = 0;
+  let assembly = 0;
+  let freight = 0;
+
+  try {
+    const settings = await getSystemSettings();
+    const num = (key: string): number => {
+      const raw = settings[key]?.value;
+      const n = typeof raw === "number" ? raw : Number(raw);
+      return Number.isFinite(n) ? n : 0;
+    };
+    marginPct = num("pricing.target_margin_pct") || 49.9;
+    packaging = num("pricing.packaging_cost") || 0;
+    assembly = num("pricing.assembly_cost") || 0;
+    freight = num("pricing.freight_cost") || 0;
+  } catch (err) {
+    console.warn("[items] pricing settings read failed:", err);
+  }
+
+  if (!(marginPct > 0 && marginPct < 100)) marginPct = 49.9;
+  const marginRate = marginPct / 100;
+  const costValue = cost == null || Number.isNaN(cost) ? 0 : cost;
+  const landed = costValue + packaging + assembly + freight;
+
+  if (landed <= 0) return 0;
+  return Math.round((landed / (1 - marginRate)) * 100) / 100;
+}
+
+function itemFromMaster(product: MasterProductRow): ItemRow {
+  const slug = product.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return {
+    id: product.id,
+    pack_id: "",
+    product_id: product.id,
+    name: product.name,
+    sku: product.sku,
+    category: product.category || "Stationery",
+    brand: product.brand || null,
+    description: product.description || null,
+    specification: product.specification || null,
+    quantity: 1,
+    unit_price: product.current_selling_price ?? 0,
+    unit_cost: product.latest_verified_cost ?? 0,
+    icon: product.icon || inferIcon(product.name) || "folder",
+    visible: product.active,
+    sort_order: 0,
+    slug,
+  } as unknown as ItemRow;
+}
+
 async function ensureMasterProduct(
   admin: SupabaseAdminClient,
   data: Pick<
@@ -153,8 +262,13 @@ async function ensureMasterProduct(
     | "pexco_code"
   > & { sku?: string | null; icon?: string | null },
   actorId: string,
+  pricing?: MasterPricingInput,
 ): Promise<MasterProductRow> {
   const sku = data.sku?.trim() ? sanitizeSku(data.sku) : productSku(data);
+
+  const isPriced = pricing != null && pricing.cost != null;
+  const sellingPrice = pricing != null ? pricing.selling : (data.price ?? 0);
+
   const productPatch = {
     sku,
     name: data.name.trim(),
@@ -164,9 +278,17 @@ async function ensureMasterProduct(
     icon: data.icon || null,
     visibility: data.visible ? "public" : "internal",
     availability: "available",
-    current_selling_price: data.price ?? 0,
-    calculated_selling_price: data.price ?? 0,
-    pricing_status: data.price != null ? "review" : "unpriced",
+    current_selling_price: sellingPrice,
+    calculated_selling_price: sellingPrice,
+    latest_verified_cost: pricing != null ? pricing.cost : undefined,
+    pricing_status:
+      pricing != null
+        ? isPriced
+          ? "review"
+          : "unpriced"
+        : data.price != null
+          ? "review"
+          : "unpriced",
     active: true,
     updated_by: actorId,
     // Pexcover classification
@@ -636,10 +758,41 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
 
   try {
     const packId = parsed.data.pack_id;
-    if (!packId) {
-      return { ok: false, errors: { pack_id: "Pack ID is required" } };
-    }
     let data = parsed.data;
+
+    // Master product (no pack) path: create/update the catalogue product only.
+    if (!packId) {
+      const pricing: MasterPricingInput = {
+        cost: data.price ?? null,
+        selling: await computeMasterSellingPrice(data.price ?? null),
+      };
+      const product = await ensureMasterProduct(
+        admin,
+        data,
+        actor.user.id,
+        pricing,
+      );
+
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "items.create",
+        entityType: "product",
+        entityId: product.id,
+        summary: `Created master product "${product.name}"`,
+      });
+
+      revalidateCatalog();
+      revalidatePath("/admin/products");
+
+      const item = itemFromMaster(product);
+      return {
+        ok: true,
+        message: `Product "${product.name}" created.`,
+        item,
+      };
+    }
+
     if (!data.sort_order || data.sort_order <= 0) {
       data = {
         ...data,
@@ -811,6 +964,9 @@ export async function updateItem(
         };
       }
 
+      const costPrice = parsed.data.price ?? null;
+      const sellingPrice = await computeMasterSellingPrice(costPrice);
+
       const { data: updated, error } = await admin
         .from("master_products")
         .update({
@@ -820,8 +976,10 @@ export async function updateItem(
           description: parsed.data.description,
           specification: parsed.data.specification,
           icon: parsed.data.icon || null,
-          current_selling_price: parsed.data.price ?? 0,
-          calculated_selling_price: parsed.data.price ?? 0,
+          latest_verified_cost: costPrice,
+          current_selling_price: sellingPrice,
+          calculated_selling_price: sellingPrice,
+          pricing_status: costPrice != null ? "review" : "unpriced",
           active: parsed.data.visible,
           updated_at: new Date().toISOString(),
           updated_by: actor.user.id,
@@ -836,7 +994,16 @@ export async function updateItem(
       if (error) throw error;
       product = updated as MasterProductRow;
     } else {
-      product = await ensureMasterProduct(admin, parsed.data, actor.user.id);
+      const pricing: MasterPricingInput = {
+        cost: parsed.data.price ?? null,
+        selling: await computeMasterSellingPrice(parsed.data.price ?? null),
+      };
+      product = await ensureMasterProduct(
+        admin,
+        parsed.data,
+        actor.user.id,
+        pricing,
+      );
     }
 
     // Sync all linked pack items with the new name, price, description, icon, and visibility

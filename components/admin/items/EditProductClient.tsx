@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ItemRow } from "@/lib/admin/items";
+import type { ItemRow, MasterPricingConfig } from "@/lib/admin/items";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { ItemForm } from "@/components/admin/items/ItemForm";
@@ -13,6 +13,7 @@ interface EditProductClientProps {
   initialCategory: string;
   productSlug: string;
   returnTo: string;
+  pricingConfig: MasterPricingConfig;
 }
 
 export function EditProductClient({
@@ -22,6 +23,7 @@ export function EditProductClient({
   initialCategory,
   productSlug,
   returnTo,
+  pricingConfig,
 }: EditProductClientProps) {
   const [liveTitle, setLiveTitle] = useState(initialName);
   const [liveSku, setLiveSku] = useState(initialSku);
@@ -46,6 +48,8 @@ export function EditProductClient({
       <ItemForm
         item={item}
         packs={[]}
+        masterMode
+        pricingConfig={pricingConfig}
         submitLabel="Save product"
         returnTo={returnTo}
         onNameChange={setLiveTitle}

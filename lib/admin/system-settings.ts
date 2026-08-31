@@ -59,6 +59,48 @@ function dynamicTable(
   return (admin.from as unknown as (tableName: string) => DynamicTable)(table);
 }
 
+function revalidateSystemSettingsCache(): void {
+  try {
+    (
+      revalidateTag as unknown as (
+        tag: string,
+        options?: { expire?: number },
+      ) => void
+    )(SYSTEM_SETTINGS_CACHE_TAG, { expire: 0 });
+  } catch (err) {
+    try {
+      (revalidateTag as unknown as (tag: string) => void)(
+        SYSTEM_SETTINGS_CACHE_TAG,
+      );
+    } catch (fallbackErr) {
+      console.error("[system-settings] cache revalidation failed:", fallbackErr);
+      if (err instanceof Error) {
+        console.error("[system-settings] initial cache revalidation failed:", err);
+      }
+    }
+  }
+}
+
+async function recalculateGradePackPrices(
+  admin: ReturnType<typeof createSupabaseAdminClient>,
+): Promise<{ ok: boolean; message?: string }> {
+  const rpc = admin.rpc as unknown as (
+    fn: string,
+    args?: Record<string, unknown>,
+  ) => Promise<{ data: unknown; error: DbError }>;
+  const { error } = await rpc("recalculate_all_grade_pack_prices");
+  if (error) {
+    console.error("[system-settings] grade pack recalculation failed:", error);
+    return {
+      ok: false,
+      message:
+        error.message ||
+        "Settings were saved, but Grade Pack prices could not be recalculated.",
+    };
+  }
+  return { ok: true };
+}
+
 const _getSystemSettingsRaw = async (): Promise<
   Record<string, SystemSettingRecord>
 > => {
@@ -160,6 +202,58 @@ export async function getPublicSystemSettings(): Promise<
   return publicValues;
 }
 
+function normalizeSettingValue(
+  def: SystemSettingDefinition,
+  rawValue: unknown,
+): { ok: true; value: unknown } | { ok: false; message: string } {
+  if (def.valueType === "boolean") {
+    if (typeof rawValue === "boolean") return { ok: true, value: rawValue };
+    if (typeof rawValue === "string") {
+      const normalised = rawValue.trim().toLowerCase();
+      if (["true", "1", "yes", "on"].includes(normalised)) {
+        return { ok: true, value: true };
+      }
+      if (["false", "0", "no", "off"].includes(normalised)) {
+        return { ok: true, value: false };
+      }
+    }
+    return { ok: false, message: "Value must be a boolean." };
+  }
+
+  if (
+    def.valueType === "number" ||
+    def.valueType === "currency" ||
+    def.valueType === "percentage"
+  ) {
+    const value =
+      typeof rawValue === "number"
+        ? rawValue
+        : typeof rawValue === "string"
+          ? Number(rawValue.trim())
+          : Number.NaN;
+    if (!Number.isFinite(value)) {
+      return { ok: false, message: "Value must be a valid number." };
+    }
+    return { ok: true, value };
+  }
+
+  if (def.valueType === "json" && typeof rawValue === "string") {
+    try {
+      return { ok: true, value: JSON.parse(rawValue) };
+    } catch {
+      return { ok: false, message: "Value must be valid JSON." };
+    }
+  }
+
+  if (
+    def.valueType === "email" &&
+    (typeof rawValue !== "string" || !rawValue.includes("@"))
+  ) {
+    return { ok: false, message: "Value must be a valid email address." };
+  }
+
+  return { ok: true, value: rawValue };
+}
 async function writeSystemSettingRow(
   admin: ReturnType<typeof createSupabaseAdminClient>,
   key: string,
@@ -228,22 +322,9 @@ export async function updateSystemSetting(
     return { ok: false, message: `Setting "${key}" is not defined.` };
   }
 
-  if (def.valueType === "boolean" && typeof newValue !== "boolean") {
-    return { ok: false, message: "Value must be a boolean." };
-  }
-  if (
-    (def.valueType === "number" ||
-      def.valueType === "currency" ||
-      def.valueType === "percentage") &&
-    (typeof newValue !== "number" || !Number.isFinite(newValue))
-  ) {
-    return { ok: false, message: "Value must be a valid number." };
-  }
-  if (
-    def.valueType === "email" &&
-    (typeof newValue !== "string" || !newValue.includes("@"))
-  ) {
-    return { ok: false, message: "Value must be a valid email address." };
+  const normalized = normalizeSettingValue(def, newValue);
+  if (!normalized.ok) {
+    return { ok: false, message: normalized.message };
   }
 
   const admin = createSupabaseAdminClient();
@@ -255,16 +336,15 @@ export async function updateSystemSetting(
       admin,
       key,
       def,
-      newValue,
+      normalized.value,
       oldValue,
       { id: session.user.id, email: session.user.email ?? null },
       (currentMap[key]?.version ?? 1) + 1,
       changeReason,
     );
 
-    (revalidateTag as unknown as (tag: string) => void)(
-      SYSTEM_SETTINGS_CACHE_TAG,
-    );
+    revalidateSystemSettingsCache();
+    revalidateCatalog({ revalidateSettings: true });
     return { ok: true, message: `${def.label} updated successfully.` };
   } catch (err) {
     console.error("[system-settings] update failed:", err);
@@ -424,10 +504,20 @@ export async function savePricingSettings(
       };
     }
 
-    (revalidateTag as unknown as (tag: string) => void)(
-      SYSTEM_SETTINGS_CACHE_TAG,
-    );
-    revalidateCatalog();
+    if (pricingUpdates.length > 0 || pexcoResult.updatedCount > 0) {
+      const recalcResult = await recalculateGradePackPrices(admin);
+      if (!recalcResult.ok) {
+        return {
+          ok: false,
+          message: recalcResult.message,
+          updatedKeys,
+          pexcoRates: pexcoResult.rates,
+        };
+      }
+    }
+
+    revalidateSystemSettingsCache();
+    revalidateCatalog({ revalidateSettings: true });
 
     const parts: string[] = [];
     if (updatedKeys.length > 0) {

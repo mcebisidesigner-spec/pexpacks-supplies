@@ -15,6 +15,7 @@ import { FloatingInput } from "@/components/ui/FloatingInput";
 import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { PEXCO_CLASSIFICATIONS } from "@/lib/admin/system-settings-shared";
+import type { MasterPricingConfig } from "@/lib/admin/items";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./ItemForm.module.css";
 
@@ -23,6 +24,10 @@ interface ItemFormProps {
   packs: { id: string; title: string }[];
   returnTo?: string;
   submitLabel?: string;
+  /** Master product mode: the price field is the supplier Cost Price and a
+   *  selling price is auto-computed from Pricing & Margin settings. */
+  masterMode?: boolean;
+  pricingConfig?: MasterPricingConfig;
   /** Called when the item name changes — used to keep parent header in sync */
   onNameChange?: (name: string) => void;
   /** Called when the SKU changes — used to keep parent header subtitle in sync */
@@ -51,6 +56,8 @@ export function ItemForm({
   packs,
   returnTo = "/admin/items",
   submitLabel = "Save item",
+  masterMode = false,
+  pricingConfig,
   onNameChange,
   onSkuChange,
   onCategoryChange,
@@ -90,6 +97,37 @@ export function ItemForm({
     item?.requires_pexcover ?? false,
   );
   const [pexcoCode, setPexcoCode] = useState<string>(item?.pexco_code ?? "");
+
+  const initialCostValue = masterMode
+    ? (item?.unit_cost ?? item?.unit_price ?? "")
+    : (item?.unit_price ?? "");
+  const [costValue, setCostValue] = useState<string>(
+    String(initialCostValue ?? ""),
+  );
+
+  const computedSellingPrice = masterMode
+    ? computeSellingFromCost(costValue, pricingConfig)
+    : null;
+
+  function computeSellingFromCost(
+    costRaw: string,
+    cfg?: MasterPricingConfig,
+  ): number | null {
+    const cost = Number(String(costRaw).replace(",", "."));
+    if (!Number.isFinite(cost) || cost < 0) return null;
+    const marginPct =
+      cfg && cfg.marginPct > 0 && cfg.marginPct < 100 ? cfg.marginPct : 49.9;
+    const packingCost = cfg?.packaging ?? 0;
+    const assemblyCost = cfg?.assembly ?? 0;
+    const freightCost = cfg?.freight ?? 0;
+    const landed = cost + packingCost + assemblyCost + freightCost;
+    if (landed <= 0) return 0;
+    return Math.round((landed / (1 - marginPct / 100)) * 100) / 100;
+  }
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCostValue(e.target.value);
+  };
 
   useEffect(() => {
     if (state?.ok && state.item) {
@@ -267,14 +305,36 @@ export function ItemForm({
 
         {/* Row 5: Price & Visibility */}
         <div className={styles.grid2}>
-          <FloatingInput
-            id="price"
-            name="price"
-            inputMode="decimal"
-            label="Selling Price (R)"
-            defaultValue={item?.unit_price ?? ""}
-            error={state?.errors?.price}
-          />
+          <div className={styles.priceCell}>
+            <FloatingInput
+              id="price"
+              name="price"
+              inputMode="decimal"
+              label={masterMode ? "Cost Price (R)" : "Selling Price (R)"}
+              defaultValue={masterMode ? undefined : (item?.unit_price ?? "")}
+              value={masterMode ? costValue : undefined}
+              onChange={masterMode ? handlePriceChange : undefined}
+              error={state?.errors?.price}
+            />
+            {masterMode && (
+              <div
+                className={styles.sellingPreview}
+                data-testid="selling-preview"
+              >
+                <span className={styles.sellingPreviewLabel}>
+                  Calculated Selling Price
+                </span>
+                <span className={styles.sellingPreviewValue}>
+                  {computedSellingPrice != null
+                    ? `R ${computedSellingPrice.toFixed(2)}`
+                    : "—"}
+                </span>
+                <span className={styles.sellingPreviewHint}>
+                  = Cost + Margin + Packaging + Assembly + Freight (auto)
+                </span>
+              </div>
+            )}
+          </div>
 
           <div className={styles.checkboxCell}>
             <label className={styles.checkboxLabel}>

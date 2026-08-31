@@ -6,7 +6,7 @@ import {
   normalizeWebsiteUrl,
 } from "@/lib/public-data/mappers";
 import { DEFAULT_PUBLIC_SEASON } from "@/lib/public-data/seasons";
-import { DEFAULT_SITE_SETTINGS } from "@/lib/public-data/settings";
+import { DEFAULT_SITE_SETTINGS, PUBLIC_SITE_SETTING_KEYS } from "@/lib/public-data/settings";
 import type { GradePack, SchoolPackItem } from "@/data/schools";
 
 describe("Public Data Adapter Layer", () => {
@@ -94,6 +94,14 @@ describe("Public Data Adapter Layer", () => {
     expect(page.listStatus).toBe("verified");
     expect(page.packs).toHaveLength(1);
     expect(page.packs[0].price).toBe(1100);
+  });
+
+  it("loads public settings from the same keys saved by admin settings", () => {
+    expect(PUBLIC_SITE_SETTING_KEYS).toContain("business.support_phone");
+    expect(PUBLIC_SITE_SETTING_KEYS).toContain("business.support_email");
+    expect(PUBLIC_SITE_SETTING_KEYS).toContain("pricing.pexcover_price");
+    expect(PUBLIC_SITE_SETTING_KEYS).not.toContain("company.support_phone");
+    expect(PUBLIC_SITE_SETTING_KEYS).not.toContain("company.support_email");
   });
 
   it("provides fallback settings and defaults when database is cold", () => {

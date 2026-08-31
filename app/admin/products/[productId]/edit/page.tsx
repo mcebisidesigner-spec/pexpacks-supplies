@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
-import { getItem } from "@/lib/admin/items";
+import { getItem, getMasterPricingConfig } from "@/lib/admin/items";
 import { EditProductClient } from "@/components/admin/items/EditProductClient";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -61,6 +61,7 @@ export default async function EditProductPage({
   const returnTo = productSlug
     ? `/admin/products/${productSlug}`
     : "/admin/products";
+  const pricingConfig = await getMasterPricingConfig();
 
   return (
     <div className={styles.container}>
@@ -71,6 +72,7 @@ export default async function EditProductPage({
         initialCategory={initialCategory}
         productSlug={productSlug}
         returnTo={returnTo}
+        pricingConfig={pricingConfig}
       />
     </div>
   );

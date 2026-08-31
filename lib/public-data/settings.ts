@@ -8,6 +8,14 @@ import { phoneNumber, generalEmail } from "@/data/contact";
 export const SETTINGS_CACHE_TAG = "public-site-settings-v1";
 export const SETTINGS_REVALIDATE_SECONDS = 3600;
 
+export const PUBLIC_SITE_SETTING_KEYS = [
+  "pricing.pexcover_price",
+  "payments.ozow_enabled",
+  "payments.happypay_enabled",
+  "business.support_phone",
+  "business.support_email",
+] as const;
+
 export const DEFAULT_SITE_SETTINGS: PublicSiteSettings = {
   activeSeason: {
     id: "season-2027",
@@ -37,13 +45,7 @@ export const getPublicSiteSettings = unstable_cache(
       const { data } = await supabase
         .from("system_settings" as never)
         .select("key, value")
-        .in("key", [
-          "pricing.pexcover_price",
-          "payments.ozow_enabled",
-          "payments.happypay_enabled",
-          "company.support_phone",
-          "company.support_email",
-        ]);
+        .in("key", PUBLIC_SITE_SETTING_KEYS);
 
       const settingsMap = new Map(
         (data as Array<{ key: string; value: unknown }> || []).map((s) => [s.key, s.value])
@@ -58,8 +60,8 @@ export const getPublicSiteSettings = unstable_cache(
       if (ozowEnabled) enabledPaymentMethods.push("ozow");
       if (happyPayEnabled) enabledPaymentMethods.push("happypay");
 
-      const phone = String(settingsMap.get("company.support_phone") || DEFAULT_SITE_SETTINGS.supportPhone);
-      const email = String(settingsMap.get("company.support_email") || DEFAULT_SITE_SETTINGS.supportEmail);
+      const phone = String(settingsMap.get("business.support_phone") || DEFAULT_SITE_SETTINGS.supportPhone);
+      const email = String(settingsMap.get("business.support_email") || DEFAULT_SITE_SETTINGS.supportEmail);
 
       return {
         activeSeason,
