@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getPublicGradePackPath } from "@/lib/admin/packs";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
   createItem,
   updateItem,
@@ -121,4 +122,38 @@ export async function searchStationeryInventoryAction(
 ): Promise<StationeryInventoryItem[]> {
   await requireAdmin({ permission: "items.view" });
   return listStationeryInventory(prefix);
+}
+
+export async function updatePackItemQuantityAction(
+  itemId: string,
+  quantity: number
+): Promise<{ ok: boolean; message?: string }> {
+  await requireAdmin({ permission: "items.edit" });
+  const sanitizedQty = Math.max(1, Math.floor(quantity));
+  const admin = createSupabaseAdminClient();
+
+  const { data: item, error: fetchErr } = await admin
+    .from("school_pack_items")
+    .select("id, pack_id")
+    .eq("id", itemId)
+    .maybeSingle();
+
+  if (fetchErr || !item) {
+    return { ok: false, message: "Item not found in pack." };
+  }
+
+  const { error: updateErr } = await admin
+    .from("school_pack_items")
+    .update({ pack_quantity: sanitizedQty, updated_at: new Date().toISOString() })
+    .eq("id", itemId);
+
+  if (updateErr) {
+    return { ok: false, message: updateErr.message };
+  }
+
+  revalidatePath(`/admin/packs/${item.pack_id}`);
+  revalidatePath("/admin/packs");
+  revalidatePath("/admin/items");
+  await revalidatePackPublicPage(item.pack_id);
+  return { ok: true };
 }

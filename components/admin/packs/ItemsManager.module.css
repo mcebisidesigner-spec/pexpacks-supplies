@@ -39,8 +39,78 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  padding: 24px 0 12px;
+  gap: 16px;
+  padding: 16px 0 8px;
+  width: 100%;
+}
+
+.scrollableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.qtyControl {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 8px;
+  padding: 2px 4px;
+  gap: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.qtyBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 120ms ease;
+  user-select: none;
+}
+
+.qtyBtn:hover:not(:disabled) {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.qtyBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.qtyInput {
+  width: 38px;
+  height: 26px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  font-family: inherit;
+  -moz-appearance: textfield;
+}
+
+.qtyInput::-webkit-outer-spin-button,
+.qtyInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.qtySaving {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .emptyBanner {
