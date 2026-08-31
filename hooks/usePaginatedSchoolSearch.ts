@@ -63,8 +63,11 @@ export function usePaginatedSchoolSearch({
     phase !== phaseAllValue ||
     debouncedQuery.trim().length >= 3;
 
+// Client-side in-memory cache for instant keystroke/backspace results
+const clientSearchCache = new Map<string, PaginatedSchoolResults>();
+
   useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedQuery(query), 350);
+    const timer = window.setTimeout(() => setDebouncedQuery(query), 200);
     return () => window.clearTimeout(timer);
   }, [query]);
 
@@ -76,12 +79,6 @@ export function usePaginatedSchoolSearch({
         setHasMore(false);
         return;
       }
-
-      activeRequest.current?.abort();
-      const controller = new AbortController();
-      activeRequest.current = controller;
-      setIsLoading(true);
-      setError("");
 
       const params = new URLSearchParams({
         q: debouncedQuery.trim(),
@@ -97,8 +94,28 @@ export function usePaginatedSchoolSearch({
         params.set("phase", phase);
       }
 
+      const cacheKey = params.toString();
+      if (mode === "replace") {
+        const cached = clientSearchCache.get(cacheKey);
+        if (cached) {
+          setResults(cached.results);
+          setTotal(cached.total);
+          setHasMore(cached.hasMore);
+          setHasSearched(true);
+          setIsLoading(false);
+          setError("");
+          return;
+        }
+      }
+
+      activeRequest.current?.abort();
+      const controller = new AbortController();
+      activeRequest.current = controller;
+      setIsLoading(true);
+      setError("");
+
       try {
-        const response = await fetch(`/api/schools/search?${params.toString()}`, {
+        const response = await fetch(`/api/schools/search?${cacheKey}`, {
           signal: controller.signal,
         });
 
@@ -109,6 +126,14 @@ export function usePaginatedSchoolSearch({
         const data = (await response.json()) as PaginatedSchoolResults & {
           success: boolean;
         };
+
+        if (mode === "replace") {
+          if (clientSearchCache.size > 150) {
+            clientSearchCache.clear();
+          }
+          clientSearchCache.set(cacheKey, data);
+        }
+
         setResults((current) =>
           mode === "append" ? [...current, ...data.results] : data.results
         );
