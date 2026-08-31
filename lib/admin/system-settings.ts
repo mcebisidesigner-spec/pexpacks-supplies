@@ -84,11 +84,15 @@ function revalidateSystemSettingsCache(): void {
 async function recalculateGradePackPrices(
   admin: ReturnType<typeof createSupabaseAdminClient>,
 ): Promise<{ ok: boolean; message?: string }> {
-  const rpc = admin.rpc as unknown as (
-    fn: string,
-    args?: Record<string, unknown>,
-  ) => Promise<{ data: unknown; error: DbError }>;
-  const { error } = await rpc("recalculate_all_grade_pack_prices");
+  // Call admin.rpc() directly — do NOT extract it into a standalone variable.
+  // Extracting a method loses its `this` binding; Supabase internals then fail
+  // with "Cannot read properties of undefined (reading 'rest')".
+  const { error } = await (
+    admin.rpc as unknown as (
+      fn: string,
+      args?: Record<string, unknown>,
+    ) => Promise<{ data: unknown; error: DbError }>
+  ).call(admin, "recalculate_all_grade_pack_prices");
   if (error) {
     console.error("[system-settings] grade pack recalculation failed:", error);
     return {
@@ -100,6 +104,7 @@ async function recalculateGradePackPrices(
   }
   return { ok: true };
 }
+
 
 const _getSystemSettingsRaw = async (): Promise<
   Record<string, SystemSettingRecord>
