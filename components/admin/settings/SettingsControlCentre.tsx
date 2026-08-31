@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  AlertCircle,
   BadgePercent,
   Building2,
   CheckCircle2,
@@ -104,7 +105,31 @@ export function SettingsControlCentre({
   const [settingsState, setSettingsState] = useState(initialSettings);
   const [reason] = useState("");
   const [busyKey, setBusyKey] = useState<string | null>(null);
-  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
+  const setFeedbackMessage = (
+    message: string | null,
+    type?: "success" | "error",
+  ) => {
+    if (!message) {
+      setFeedback(null);
+      return;
+    }
+    const isPositive =
+      type === "success" ||
+      (!type &&
+        (message.toLowerCase().includes("successfully") ||
+          message.toLowerCase().includes("saved") ||
+          message.toLowerCase().includes("updated") ||
+          message.toLowerCase().includes("complete")));
+    setFeedback({
+      message,
+      type: isPositive ? "success" : "error",
+    });
+  };
   const [restoreJson, setRestoreJson] = useState("");
   const [showRestoreModal, setShowRestoreModal] = useState(false);
 
@@ -167,7 +192,7 @@ export function SettingsControlCentre({
         reason || "Updated via Control Centre UI",
       );
       if (res.ok) {
-        setFeedbackMessage(res.message ?? "Setting saved.");
+        setFeedbackMessage(res.message ?? "Setting saved.", "success");
         setSettingsState((prev) => ({
           ...prev,
           [key]: {
@@ -177,11 +202,12 @@ export function SettingsControlCentre({
         }));
         router.refresh();
       } else {
-        setFeedbackMessage(res.message ?? "Failed to save setting.");
+        setFeedbackMessage(res.message ?? "Failed to save setting.", "error");
       }
     } catch (err) {
       setFeedbackMessage(
         err instanceof Error ? err.message : "Error saving setting.",
+        "error",
       );
     } finally {
       setBusyKey(null);
@@ -201,7 +227,7 @@ export function SettingsControlCentre({
         URL.revokeObjectURL(url);
       }
     } catch {
-      setFeedbackMessage("Export failed.");
+      setFeedbackMessage("Export failed.", "error");
     }
   }
 
@@ -213,16 +239,17 @@ export function SettingsControlCentre({
         reason || "Data Snapshot Restore",
       );
       if (res.ok) {
-        setFeedbackMessage(res.message ?? "Restore complete.");
+        setFeedbackMessage(res.message ?? "Restore complete.", "success");
         setShowRestoreModal(false);
         setRestoreJson("");
         router.refresh();
       } else {
-        setFeedbackMessage(res.message ?? "Restore failed.");
+        setFeedbackMessage(res.message ?? "Restore failed.", "error");
       }
     } catch (err) {
       setFeedbackMessage(
         err instanceof Error ? err.message : "Restore failed.",
+        "error",
       );
     } finally {
       setBusyKey(null);
@@ -341,11 +368,11 @@ export function SettingsControlCentre({
         "Saved via Control Centre Save Changes",
       );
       if (!res.ok) {
-        setFeedbackMessage(res.message ?? "Failed to save pricing changes.");
+        setFeedbackMessage(res.message ?? "Failed to save pricing changes.", "error");
         return;
       }
 
-      setFeedbackMessage(res.message ?? "All pricing changes saved.");
+      setFeedbackMessage(res.message ?? "All pricing changes saved.", "success");
       setSettingsState((prev) => {
         const next = { ...prev };
         for (const p of pricing) {
@@ -392,6 +419,7 @@ export function SettingsControlCentre({
     } catch (err) {
       setFeedbackMessage(
         err instanceof Error ? err.message : "Failed to save pricing changes.",
+        "error",
       );
     } finally {
       setBusyKey(null);
@@ -463,27 +491,35 @@ export function SettingsControlCentre({
         </div>
       )}
 
-      {feedbackMessage && (
+      {feedback && (
         <div
+          role="status"
           style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
             padding: "12px 16px",
             borderRadius: 12,
             background:
-              feedbackMessage.includes("successfully") ||
-              feedbackMessage.includes("saved")
+              feedback.type === "success"
                 ? "rgba(16, 185, 129, 0.15)"
                 : "rgba(239, 68, 68, 0.15)",
             border:
-              feedbackMessage.includes("successfully") ||
-              feedbackMessage.includes("saved")
+              feedback.type === "success"
                 ? "1px solid #10b981"
                 : "1px solid #ef4444",
             color: "#ffffff",
             fontSize: 13,
             fontWeight: 700,
+            marginBottom: "1rem",
           }}
         >
-          {feedbackMessage}
+          {feedback.type === "success" ? (
+            <CheckCircle2 size={18} style={{ color: "#10b981", flexShrink: 0 }} />
+          ) : (
+            <AlertCircle size={18} style={{ color: "#ef4444", flexShrink: 0 }} />
+          )}
+          <span>{feedback.message}</span>
         </div>
       )}
 
