@@ -989,12 +989,11 @@ export async function updateItem(
       );
     }
 
-    // Sync all linked pack items with the new name, price, description, icon, and visibility
+    // Sync all linked pack items with the new name, description, and visibility
     const { data: linkedPacks } = await schoolPackItemsTable(admin)
       .update({
         school_wording: parsed.data.name.trim(),
         school_notes: parsed.data.description,
-        selling_price_override: parsed.data.price,
         active: parsed.data.visible,
       })
       .eq("product_id", product.id)

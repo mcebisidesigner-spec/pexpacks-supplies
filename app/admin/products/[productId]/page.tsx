@@ -112,7 +112,9 @@ export default async function ProductDetailPage({
 
   const marginPct = (await getMasterPricingConfig()).marginPct;
   const marginAmount =
-    cost > 0 ? Math.round(cost * (marginPct / 100) * 100) / 100 : 0;
+    cost > 0 && price > cost
+      ? Math.round((price - cost) * 100) / 100
+      : 0;
 
   return (
     <div className={styles.container}>
