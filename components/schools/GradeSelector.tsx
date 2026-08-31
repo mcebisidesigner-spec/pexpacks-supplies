@@ -47,7 +47,7 @@ function buildCompleteListPack(
     description: `Prepared according to the official school list for ${grade.grade}.`,
     priceLabel:
       pack.items.length > 0 && grade.price > 0
-        ? `From ${formatCurrency(grade.price)}`
+        ? formatCurrency(grade.price)
         : "R00.00",
     items: toSchoolListItems(pack),
     customiseTargetId: `customise-${pack.id}`,
@@ -161,7 +161,7 @@ export function GradeSelector({
           const hasItems = listItems.length > 0;
           const priceLabel =
             hasItems && grade.price > 0
-              ? `From ${formatCurrency(grade.price)}`
+              ? formatCurrency(grade.price)
               : "R00.00";
 
           return (

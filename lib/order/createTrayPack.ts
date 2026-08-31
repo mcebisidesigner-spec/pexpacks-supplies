@@ -1,6 +1,5 @@
 import type { TrayPackItem, TrayPackLineItem } from "@/store/usePackTrayStore";
 import { calculateItemLineTotal } from "@/lib/packs/calculatePackTotal";
-import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 
 type CreateFullTrayPackInput = {
   packId: string;
@@ -49,7 +48,6 @@ export function createFullTrayPack(
         : undefined,
   }));
 
-  const wantsPexcover = calculatePexcoverTotal(lineItems).hasEligibleBooks;
 
   return {
     id,
@@ -64,7 +62,7 @@ export function createFullTrayPack(
     learnerName: "",
     packMode: "full",
     items: lineItems,
-    wantsPexcover,
+    wantsPexcover: false,
     subtotal: input.totalPrice,
     totalPrice: input.totalPrice,
     sourcePath: input.sourcePath,

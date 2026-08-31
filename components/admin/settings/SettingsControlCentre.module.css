@@ -46,7 +46,9 @@
   color: var(--a-text);
   font-size: 13px;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .searchInput:focus {
@@ -215,6 +217,34 @@
   flex: 0 0 18px;
 }
 
+.sidebarSaveAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: 4px;
+  padding: 12px 14px;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  border-radius: 12px;
+  background: var(--db-brand);
+  color: #0b1329;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.sidebarSaveAction:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.sidebarSaveAction:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .contentArea {
   display: flex;
   flex-direction: column;
@@ -266,7 +296,9 @@
   font-weight: 700;
 }
 
-.input, .select, .textarea {
+.input,
+.select,
+.textarea {
   width: 100%;
   padding: 10px 14px;
   border: 1px solid var(--a-border);
@@ -277,7 +309,9 @@
   outline: none;
 }
 
-.input:focus, .select:focus, .textarea:focus {
+.input:focus,
+.select:focus,
+.textarea:focus {
   border-color: var(--db-brand);
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
 }
@@ -548,10 +582,20 @@
   font-weight: 700;
 }
 
-.pexcoverRatesNote {
-  font-size: 11px;
-  color: var(--a-text-3);
-  line-height: 1.5;
+.pexcoverClassification {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.pexcoverClassificationTitle {
+  font-size: 12px;
+  font-weight: 800;
+  color: #a5b4fc;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .pexcoRatePrefix {
@@ -567,40 +611,3 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-
-.pexcoRateCover {
-  font-size: 14px;
-  font-weight: 800;
-  color: #a5b4fc;
-  font-variant-numeric: tabular-nums;
-}
-
-.pexcoRateActiveCheck {
-  width: 17px;
-  height: 17px;
-  accent-color: var(--db-brand);
-  cursor: pointer;
-}
-
-.pexcoRateSave {
-  padding: 6px 14px;
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  border-radius: 8px;
-  background: rgba(16, 185, 129, 0.12);
-  color: #10b981;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.pexcoRateSave:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 0.22);
-  color: #34d399;
-}
-
-.pexcoRateSave:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-

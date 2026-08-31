@@ -1,4 +1,5 @@
 import { createSupabaseAdminClient } from "../supabase/admin";
+import { PEXCO_CLASSIFICATIONS } from "./system-settings-shared";
 import { revalidateCatalog } from "./catalog-revalidate";
 import { writeAuditLog } from "./rbac";
 
@@ -13,6 +14,10 @@ type PexcoRatesQuery = Promise<{ data: unknown[] | null; error: DbError }> & {
 
 type PexcoRatesTable = {
   select(columns: string): PexcoRatesQuery;
+  insert(
+    values: Record<string, unknown>,
+    options?: { onConflict?: string },
+  ): Promise<{ data: unknown[] | null; error: DbError }>;
   update(values: Record<string, unknown>): {
     eq(
       column: string,
@@ -91,39 +96,16 @@ export async function listPexcoRates(): Promise<PexcoAdminRate[]> {
   }
 }
 
-export async function updatePexcoRate(
-  input: {
-    code: string;
-    costPriceCents: number;
-    marginRate: number;
-    isActive: boolean;
-  },
+export async function savePexcoCoveringRates(
+  coveringUpdates: { code: string; coveringPriceCents: number }[],
   actor: { id?: string; email?: string | null },
-): Promise<{ ok: boolean; message?: string; rate?: PexcoAdminRate }> {
-  const code = input.code.trim().toUpperCase();
-  if (!code) {
-    return { ok: false, message: "PEXCO code is required." };
-  }
-
-  const costPriceCents = Math.round(input.costPriceCents);
-  if (!Number.isFinite(costPriceCents) || costPriceCents < 0) {
-    return {
-      ok: false,
-      message:
-        "Cost Price must be a valid amount greater than or equal to R0.00.",
-    };
-  }
-
-  const marginRate = Number(input.marginRate);
-  if (!Number.isFinite(marginRate) || marginRate <= 0 || marginRate > 100) {
-    return {
-      ok: false,
-      message: "Margin Rate must be a positive multiplier between 0 and 100.",
-    };
-  }
-
-  const coveringPriceCents = Math.round(costPriceCents * marginRate);
-
+  reason?: string,
+): Promise<{
+  ok: boolean;
+  message?: string;
+  rates: PexcoAdminRate[];
+  updatedCount: number;
+}> {
   const admin = createSupabaseAdminClient();
   const { data, error: listErr } = await pexcoRatesTable(admin)
     .select(
@@ -132,70 +114,131 @@ export async function updatePexcoRate(
     .order("code", { ascending: true });
 
   if (listErr) {
-    console.error("[pexco-rates] find failed:", listErr.message);
-    return { ok: false, message: "Could not locate the Pexcover rate record." };
-  }
-
-  const row = (data ?? []).find(
-    (r) => (r as unknown as PexcoRateRow).code === code,
-  ) as unknown as PexcoRateRow | undefined;
-
-  if (!row) {
-    return { ok: false, message: `PEXCO code "${code}" not found.` };
-  }
-
-  const prev = toAdminRate(row);
-  const { data: updatedRows, error: updateErr } = await pexcoRatesTable(admin)
-    .update({
-      covering_price_cents: coveringPriceCents,
-      cost_price_cents: costPriceCents,
-      is_active: input.isActive,
-      updated_at: new Date().toISOString(),
-      updated_by: actor.id ?? null,
-    })
-    .eq("code", code);
-
-  if (updateErr) {
-    console.error("[pexco-rates] update failed:", updateErr.message);
+    console.error("[pexco-rates] save failed:", listErr.message);
     return {
       ok: false,
-      message: updateErr.message || "Failed to update the Pexcover rate.",
+      message: "Could not load existing Pexcover rates.",
+      rates: [],
+      updatedCount: 0,
     };
   }
 
-  const updatedRow = updatedRows?.[0] as unknown as PexcoRateRow | undefined;
-  const rate = updatedRow ? toAdminRate(updatedRow) : prev;
+  const rows = (data ?? []) as unknown as PexcoRateRow[];
+  const existingByCode = new Map(rows.map((r) => [r.code, r]));
+  const classificationByCode = new Map(
+    PEXCO_CLASSIFICATIONS.map((c) => [c.code, c]),
+  );
+  const now = new Date().toISOString();
 
-  void writeAuditLog({
-    actorId: actor.id,
-    actorName: actor.email ?? "Superuser",
-    action: "pexco_rates.update",
-    entityType: "pexco_rate",
-    entityId: code,
-    summary: `Updated PEXCO ${code} ${rate.title} — covering R${(
-      coveringPriceCents / 100
-    ).toFixed(2)} at ${marginRate}× cost`,
-    details: {
-      code,
-      costPriceCents,
-      coveringPriceCents,
-      marginRate,
-      isActive: input.isActive,
-      prevCostPriceCents: prev.costPriceCents,
-      prevCoveringPriceCents: prev.coveringPriceCents,
-      prevIsActive: prev.isActive,
-    },
-  });
+  const updates: { code: string; coveringPriceCents: number }[] = [];
 
-  revalidateCatalog();
+  for (const update of coveringUpdates) {
+    const code = String(update.code).trim().toUpperCase();
+    const covering = Math.round(Number(update.coveringPriceCents));
+    if (!Number.isFinite(covering) || covering < 0) {
+      return {
+        ok: false,
+        message: `PEXCO ${code}: Covering Rate must be a valid amount of R0.00 or more.`,
+        rates: rows.map((r) => toAdminRate(r)),
+        updatedCount: 0,
+      };
+    }
+    const classification = classificationByCode.get(code);
+    if (!classification) {
+      return {
+        ok: false,
+        message: `PEXCO code "${code}" is not a recognised covering classification.`,
+        rates: rows.map((r) => toAdminRate(r)),
+        updatedCount: 0,
+      };
+    }
+    const existing = existingByCode.get(code);
+    if (existing === undefined || existing.covering_price_cents !== covering) {
+      updates.push({ code, coveringPriceCents: covering });
+    }
+  }
+
+  let updatedCount = 0;
+  if (updates.length > 0) {
+    for (const u of updates) {
+      const existing = existingByCode.get(u.code);
+      if (existing) {
+        const { error: updateErr } = await pexcoRatesTable(admin)
+          .update({
+            covering_price_cents: u.coveringPriceCents,
+            updated_at: now,
+            updated_by: actor.id ?? null,
+          })
+          .eq("code", u.code);
+        if (updateErr) {
+          console.error(
+            "[pexco-rates] covering write failed:",
+            updateErr.message,
+          );
+          return {
+            ok: false,
+            message:
+              updateErr.message ||
+              "Failed to write the Pexcover covering rate to the database.",
+            rates: rows.map((r) => toAdminRate(r)),
+            updatedCount,
+          };
+        }
+      } else {
+        const classification = classificationByCode.get(u.code)!;
+        const { error: insertErr } = await pexcoRatesTable(admin).insert({
+          code: u.code,
+          title: classification.label,
+          description: null,
+          covering_price_cents: u.coveringPriceCents,
+          cost_price_cents: null,
+          is_active: true,
+          updated_at: now,
+          updated_by: actor.id ?? null,
+        });
+        if (insertErr) {
+          console.error(
+            "[pexco-rates] covering insert failed:",
+            insertErr.message,
+          );
+          return {
+            ok: false,
+            message:
+              insertErr.message ||
+              "Failed to create the Pexcover covering rate in the database.",
+            rates: rows.map((r) => toAdminRate(r)),
+            updatedCount,
+          };
+        }
+      }
+      updatedCount++;
+    }
+
+    void writeAuditLog({
+      actorId: actor.id,
+      actorName: actor.email ?? "Superuser",
+      action: "pexco_rates.covering_update",
+      entityType: "pexco_rate",
+      entityId: "PEXCO-ALL",
+      summary: `Updated ${updatedCount} Pexcover covering rate(s)`,
+      details: {
+        reason: reason ?? "Pricing & Margin control centre",
+        updates,
+      },
+    });
+
+    revalidateCatalog();
+  }
+
+  const refreshed = await listPexcoRates();
 
   return {
     ok: true,
-    message: `PEXCO ${code} updated. New covering rate R${(
-      coveringPriceCents / 100
-    ).toFixed(2)} (cost R${(costPriceCents / 100).toFixed(
-      2,
-    )} × ${marginRate}).`,
-    rate,
+    message:
+      updatedCount > 0
+        ? `Saved ${updatedCount} Pexcover covering rate(s).`
+        : "Pexcover covering rates already up to date.",
+    rates: refreshed.length > 0 ? refreshed : rows.map((r) => toAdminRate(r)),
+    updatedCount,
   };
 }

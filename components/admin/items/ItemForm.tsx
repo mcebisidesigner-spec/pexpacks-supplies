@@ -14,6 +14,7 @@ import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
 import { FloatingInput } from "@/components/ui/FloatingInput";
 import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { PEXCO_CLASSIFICATIONS } from "@/lib/admin/system-settings-shared";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./ItemForm.module.css";
 
@@ -296,8 +297,9 @@ export function ItemForm({
             </span>
             <span className={styles.pexcoverHint}>
               Enable if this product is a book or exercise book that requires
-              covering. The PEXCO code determines the covering rate billed at
-              checkout.
+              covering. The PEXCO code selects the covering classification — its
+              covering rate is set in System Control Centre → Pricing &amp;
+              Margin and billed at checkout.
             </span>
           </div>
           <div className={styles.pexcoverRow}>
@@ -325,16 +327,14 @@ export function ItemForm({
                   aria-label="PEXCO classification code"
                 >
                   <option value="">— Select PEXCO Code —</option>
-                  <option value="PEXCO01">
-                    PEXCO01 — 10–30 Page Exercise Book
-                  </option>
-                  <option value="PEXCO02">PEXCO02 — 192 Page Hardcover</option>
-                  <option value="PEXCO03">
-                    PEXCO03 — Softcover Textbook / Reader
-                  </option>
-                  <option value="PEXCO04">
-                    PEXCO04 — Heavy Hardcover Textbook / Atlas
-                  </option>
+                  {PEXCO_CLASSIFICATIONS.map((classification) => (
+                    <option
+                      key={classification.code}
+                      value={classification.code}
+                    >
+                      {classification.code} — {classification.label}
+                    </option>
+                  ))}
                 </select>
                 {state?.errors?.pexco_code && (
                   <span className={styles.fieldError}>

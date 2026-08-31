@@ -187,7 +187,13 @@ export async function deleteSchoolPacksAction(schoolId: string): Promise<void> {
   await requireAdmin({ permission: "packs.delete" });
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const admin = createSupabaseAdminClient();
+  const { data: school } = await admin
+    .from("schools")
+    .select("slug")
+    .eq("id", schoolId)
+    .maybeSingle();
   await admin.from("school_packs").delete().eq("school_id", schoolId);
+  revalidateCatalog({ schoolSlug: school?.slug });
   revalidatePath("/admin/packs");
   revalidatePath("/admin/packs", "layout");
   revalidatePath("/schools");

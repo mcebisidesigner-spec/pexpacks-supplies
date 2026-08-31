@@ -326,13 +326,14 @@ export async function deleteUserFromSettingsAction(userId: string) {
   return deleteUser(userId);
 }
 
-export async function updatePexcoRateAction(input: {
-  code: string;
-  costPriceCents: number;
-  marginRate: number;
-  isActive: boolean;
-}) {
+export async function savePricingSettingsAction(
+  input: {
+    pricing: { key: string; value: number }[];
+    pexco: { code: string; coveringPriceCents: number }[];
+  },
+  reason?: string,
+) {
   const actor = await requireSuperAdmin();
-  const { updatePexcoRate } = await import("@/lib/admin/pexco-rates");
-  return updatePexcoRate(input, actor.user);
+  const { savePricingSettings } = await import("@/lib/admin/system-settings");
+  return savePricingSettings(input, actor.user, reason);
 }

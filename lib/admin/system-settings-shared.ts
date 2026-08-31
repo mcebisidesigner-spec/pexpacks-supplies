@@ -7,7 +7,12 @@ export type SettingValueType =
   | "percentage"
   | "currency";
 
-export type SettingScope = "global" | "season" | "school" | "category" | "product";
+export type SettingScope =
+  | "global"
+  | "season"
+  | "school"
+  | "category"
+  | "product";
 
 export interface SystemSettingDefinition {
   key: string;
@@ -51,54 +56,431 @@ export const SYSTEM_SETTING_CATEGORIES: {
   description: string;
   iconName: string;
 }[] = [
-  { key: "user_identity", label: "User Identity", description: "Comprehensive user directory, assigned roles, & interactive permissions", iconName: "Users" },
-  { key: "add_users", label: "Add Users", description: "Onboard new administrative staff & send email invitations", iconName: "UserPlus" },
-  { key: "business", label: "Business Identity", description: "Legal entity, contact emails, and helpline numbers", iconName: "Building2" },
-  { key: "pricing", label: "Pricing & Margin", description: "Markup/margin rules, warning floors, and rounding strategy", iconName: "BadgePercent" },
-  { key: "integrations", label: "Integrations & APIs", description: "Supabase, Vercel, Resend, & payment provider health", iconName: "Cpu" },
-  { key: "data", label: "Data Management", description: "Data imports, export tools, & dry-run restore center", iconName: "Database" },
-  { key: "audit", label: "Audit & History", description: "Immutable log of all system configuration modifications", iconName: "History" },
-  { key: "system_info", label: "System Info", description: "Encrypted credentials vault & system infrastructure", iconName: "Server" },
+  {
+    key: "user_identity",
+    label: "User Identity",
+    description:
+      "Comprehensive user directory, assigned roles, & interactive permissions",
+    iconName: "Users",
+  },
+  {
+    key: "add_users",
+    label: "Add Users",
+    description: "Onboard new administrative staff & send email invitations",
+    iconName: "UserPlus",
+  },
+  {
+    key: "business",
+    label: "Business Identity",
+    description: "Legal entity, contact emails, and helpline numbers",
+    iconName: "Building2",
+  },
+  {
+    key: "pricing",
+    label: "Pricing & Margin",
+    description: "Markup/margin rules, warning floors, and rounding strategy",
+    iconName: "BadgePercent",
+  },
+  {
+    key: "integrations",
+    label: "Integrations & APIs",
+    description: "Supabase, Vercel, Resend, & payment provider health",
+    iconName: "Cpu",
+  },
+  {
+    key: "data",
+    label: "Data Management",
+    description: "Data imports, export tools, & dry-run restore center",
+    iconName: "Database",
+  },
+  {
+    key: "audit",
+    label: "Audit & History",
+    description: "Immutable log of all system configuration modifications",
+    iconName: "History",
+  },
+  {
+    key: "system_info",
+    label: "System Info",
+    description: "Encrypted credentials vault & system infrastructure",
+    iconName: "Server",
+  },
 ];
 
 export const SYSTEM_SETTING_DEFINITIONS: SystemSettingDefinition[] = [
   // General
-  { key: "general.site_name", category: "general", label: "Site Name", description: "Primary customer-facing brand name", valueType: "string", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: "Pexpacks" },
-  { key: "general.site_url", category: "general", label: "Canonical Site URL", description: "Official web application canonical base URL", valueType: "string", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: "https://pexpacks.co.za" },
-  { key: "general.locale", category: "general", label: "Default Locale", description: "Language and regional format code", valueType: "string", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: "en-ZA" },
-  { key: "general.timezone", category: "general", label: "Timezone", description: "Default server and reporting timezone", valueType: "string", scope: "global", isSensitive: false, isPublic: false, requiresApproval: false, defaultValue: "Africa/Johannesburg" },
+  {
+    key: "general.site_name",
+    category: "general",
+    label: "Site Name",
+    description: "Primary customer-facing brand name",
+    valueType: "string",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: "Pexpacks",
+  },
+  {
+    key: "general.site_url",
+    category: "general",
+    label: "Canonical Site URL",
+    description: "Official web application canonical base URL",
+    valueType: "string",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: "https://pexpacks.co.za",
+  },
+  {
+    key: "general.locale",
+    category: "general",
+    label: "Default Locale",
+    description: "Language and regional format code",
+    valueType: "string",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: "en-ZA",
+  },
+  {
+    key: "general.timezone",
+    category: "general",
+    label: "Timezone",
+    description: "Default server and reporting timezone",
+    valueType: "string",
+    scope: "global",
+    isSensitive: false,
+    isPublic: false,
+    requiresApproval: false,
+    defaultValue: "Africa/Johannesburg",
+  },
 
   // Business Identity
-  { key: "business.trading_name", category: "business", label: "Legal Trading Name", description: "Registered corporate legal entity name", valueType: "string", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: "Pexpacks Supplies (Pty) Ltd" },
-  { key: "business.support_email", category: "business", label: "Customer Support Email", description: "Primary public customer service email address", valueType: "email", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: "helpme@pexpacks.co.za" },
-  { key: "business.legal_email", category: "business", label: "Legal & POPIA Email", description: "POPIA compliance & legal notice email address", valueType: "email", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: "helpme@pexpacks.co.za" },
-  { key: "business.support_phone", category: "business", label: "Support Telephone", description: "Public customer helpline telephone number", valueType: "string", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: "0780036048" },
-  { key: "business.whatsapp_number", category: "business", label: "WhatsApp Support Number", description: "Direct WhatsApp support channel phone number", valueType: "string", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: "27780036048" },
+  {
+    key: "business.trading_name",
+    category: "business",
+    label: "Legal Trading Name",
+    description: "Registered corporate legal entity name",
+    valueType: "string",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: "Pexpacks Supplies (Pty) Ltd",
+  },
+  {
+    key: "business.support_email",
+    category: "business",
+    label: "Customer Support Email",
+    description: "Primary public customer service email address",
+    valueType: "email",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: "helpme@pexpacks.co.za",
+  },
+  {
+    key: "business.legal_email",
+    category: "business",
+    label: "Legal & POPIA Email",
+    description: "POPIA compliance & legal notice email address",
+    valueType: "email",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: "helpme@pexpacks.co.za",
+  },
+  {
+    key: "business.support_phone",
+    category: "business",
+    label: "Support Telephone",
+    description: "Public customer helpline telephone number",
+    valueType: "string",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: "0780036048",
+  },
+  {
+    key: "business.whatsapp_number",
+    category: "business",
+    label: "WhatsApp Support Number",
+    description: "Direct WhatsApp support channel phone number",
+    valueType: "string",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: "27780036048",
+  },
 
   // Pricing & Margin
-  { key: "pricing.default_method", category: "pricing", label: "Default Pricing Method", description: "Base calculation method for suggested selling prices", valueType: "string", scope: "global", isSensitive: true, isPublic: false, requiresApproval: true, defaultValue: "margin", options: [{ value: "margin", label: "Gross Margin %" }, { value: "markup", label: "Cost Markup %" }] },
-  { key: "pricing.target_margin_pct", category: "pricing", label: "Target Gross Margin %", description: "Target gross margin percentage applied to cost prices", valueType: "percentage", scope: "global", isSensitive: true, isPublic: false, requiresApproval: true, defaultValue: 32.0 },
-  { key: "pricing.low_margin_warning_pct", category: "pricing", label: "Low Margin Alert %", description: "Threshold percentage below which items trigger low-margin alerts", valueType: "percentage", scope: "global", isSensitive: false, isPublic: false, requiresApproval: false, defaultValue: 20.0 },
-  { key: "pricing.critical_margin_pct", category: "pricing", label: "Critical Margin Floor %", description: "Minimum allowable margin percentage requiring Superuser approval", valueType: "percentage", scope: "global", isSensitive: true, isPublic: false, requiresApproval: true, defaultValue: 10.0 },
-  { key: "pricing.verify_days", category: "pricing", label: "Price Verification Period", description: "Days before supplier catalog prices are flagged as unverified/stale", valueType: "number", scope: "global", isSensitive: false, isPublic: false, requiresApproval: false, defaultValue: 90 },
-  { key: "pricing.pexcover_price", category: "pricing", label: "PexCover Item Price (R)", description: "Standalone unit price for optional PexCover insurance protection", valueType: "currency", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: 350.0 },
+  {
+    key: "pricing.default_method",
+    category: "pricing",
+    label: "Default Pricing Method",
+    description: "Base calculation method for suggested selling prices",
+    valueType: "string",
+    scope: "global",
+    isSensitive: true,
+    isPublic: false,
+    requiresApproval: true,
+    defaultValue: "margin",
+    options: [
+      { value: "margin", label: "Gross Margin %" },
+      { value: "markup", label: "Cost Markup %" },
+    ],
+  },
+  {
+    key: "pricing.target_margin_pct",
+    category: "pricing",
+    label: "Target Gross Margin %",
+    description: "Target gross margin percentage applied to cost prices",
+    valueType: "percentage",
+    scope: "global",
+    isSensitive: true,
+    isPublic: false,
+    requiresApproval: true,
+    defaultValue: 32.0,
+  },
+  {
+    key: "pricing.low_margin_warning_pct",
+    category: "pricing",
+    label: "Low Margin Alert %",
+    description:
+      "Threshold percentage below which items trigger low-margin alerts",
+    valueType: "percentage",
+    scope: "global",
+    isSensitive: false,
+    isPublic: false,
+    requiresApproval: false,
+    defaultValue: 20.0,
+  },
+  {
+    key: "pricing.critical_margin_pct",
+    category: "pricing",
+    label: "Critical Margin Floor %",
+    description:
+      "Minimum allowable margin percentage requiring Superuser approval",
+    valueType: "percentage",
+    scope: "global",
+    isSensitive: true,
+    isPublic: false,
+    requiresApproval: true,
+    defaultValue: 10.0,
+  },
+  {
+    key: "pricing.verify_days",
+    category: "pricing",
+    label: "Price Verification Period",
+    description:
+      "Days before supplier catalog prices are flagged as unverified/stale",
+    valueType: "number",
+    scope: "global",
+    isSensitive: false,
+    isPublic: false,
+    requiresApproval: false,
+    defaultValue: 90,
+  },
+  {
+    key: "pricing.packaging_cost",
+    category: "pricing",
+    label: "Packaging Cost per Pack (R)",
+    description:
+      "Applicable pack packaging and protective bagging cost in Rands",
+    valueType: "currency",
+    scope: "global",
+    isSensitive: false,
+    isPublic: false,
+    requiresApproval: false,
+    defaultValue: 0,
+  },
+  {
+    key: "pricing.assembly_cost",
+    category: "pricing",
+    label: "Assembly Cost per Pack (R)",
+    description:
+      "Applicable pack assembly, picking, and packing labour cost in Rands",
+    valueType: "currency",
+    scope: "global",
+    isSensitive: false,
+    isPublic: false,
+    requiresApproval: false,
+    defaultValue: 0,
+  },
+  {
+    key: "pricing.freight_cost",
+    category: "pricing",
+    label: "Freight / Delivery Cost per Pack (R)",
+    description: "Applicable inward courier and freight cost per pack in Rands",
+    valueType: "currency",
+    scope: "global",
+    isSensitive: false,
+    isPublic: false,
+    requiresApproval: false,
+    defaultValue: 0,
+  },
+  {
+    key: "pricing.pexcover_price",
+    category: "pricing",
+    label: "PexCover Item Price (R)",
+    description:
+      "Standalone unit price for optional PexCover insurance protection",
+    valueType: "currency",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: 350.0,
+  },
 
   // Seasons
-  { key: "seasons.active_season", category: "seasons", label: "Active Commercial Season", description: "Default Back-to-School operational season driving catalog & dashboards", valueType: "string", scope: "global", isSensitive: false, isPublic: true, requiresApproval: true, defaultValue: "2027 Back-to-School" },
+  {
+    key: "seasons.active_season",
+    category: "seasons",
+    label: "Active Commercial Season",
+    description:
+      "Default Back-to-School operational season driving catalog & dashboards",
+    valueType: "string",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: true,
+    defaultValue: "2027 Back-to-School",
+  },
 
   // Orders
-  { key: "orders.default_fulfilment", category: "orders", label: "Default Fulfilment Option", description: "Default selected delivery method on customer checkout form", valueType: "string", scope: "global", isSensitive: false, isPublic: true, requiresApproval: false, defaultValue: "School collection", options: [{ value: "School collection", label: "School collection" }, { value: "Home delivery", label: "Home delivery" }] },
-  { key: "orders.idle_timeout_mins", category: "orders", label: "Admin Inactivity Timeout (Mins)", description: "Minutes of continuous inactivity before dashboard auto-logout", valueType: "number", scope: "global", isSensitive: false, isPublic: false, requiresApproval: false, defaultValue: 20 },
+  {
+    key: "orders.default_fulfilment",
+    category: "orders",
+    label: "Default Fulfilment Option",
+    description: "Default selected delivery method on customer checkout form",
+    valueType: "string",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: false,
+    defaultValue: "School collection",
+    options: [
+      { value: "School collection", label: "School collection" },
+      { value: "Home delivery", label: "Home delivery" },
+    ],
+  },
+  {
+    key: "orders.idle_timeout_mins",
+    category: "orders",
+    label: "Admin Inactivity Timeout (Mins)",
+    description:
+      "Minutes of continuous inactivity before dashboard auto-logout",
+    valueType: "number",
+    scope: "global",
+    isSensitive: false,
+    isPublic: false,
+    requiresApproval: false,
+    defaultValue: 20,
+  },
 
   // Procurement
-  { key: "procurement.payment_required", category: "procurement", label: "Payment Required Before Procurement", description: "Enforce full order payment before generating supplier procurement demand", valueType: "boolean", scope: "global", isSensitive: true, isPublic: false, requiresApproval: true, defaultValue: true },
+  {
+    key: "procurement.payment_required",
+    category: "procurement",
+    label: "Payment Required Before Procurement",
+    description:
+      "Enforce full order payment before generating supplier procurement demand",
+    valueType: "boolean",
+    scope: "global",
+    isSensitive: true,
+    isPublic: false,
+    requiresApproval: true,
+    defaultValue: true,
+  },
 
   // Feature Flags
-  { key: "flags.supplier_comparison", category: "flags", label: "Supplier Comparison View", description: "Enable multi-supplier price comparison matrix in procurement", valueType: "boolean", scope: "global", isSensitive: false, isPublic: false, requiresApproval: false, defaultValue: true },
-  { key: "flags.happypay_bnpl", category: "flags", label: "Happy Pay BNPL Checkout", description: "Enable Happy Pay Buy-Now-Pay-Later payment option for parents", valueType: "boolean", scope: "global", isSensitive: false, isPublic: true, requiresApproval: true, defaultValue: true },
+  {
+    key: "flags.supplier_comparison",
+    category: "flags",
+    label: "Supplier Comparison View",
+    description: "Enable multi-supplier price comparison matrix in procurement",
+    valueType: "boolean",
+    scope: "global",
+    isSensitive: false,
+    isPublic: false,
+    requiresApproval: false,
+    defaultValue: true,
+  },
+  {
+    key: "flags.happypay_bnpl",
+    category: "flags",
+    label: "Happy Pay BNPL Checkout",
+    description:
+      "Enable Happy Pay Buy-Now-Pay-Later payment option for parents",
+    valueType: "boolean",
+    scope: "global",
+    isSensitive: false,
+    isPublic: true,
+    requiresApproval: true,
+    defaultValue: true,
+  },
 
   // Secure System Vault Credentials (Superuser Only)
-  { key: "system.secure_vault_credentials", category: "system_info", label: "Secure Vault Credentials", description: "Encrypted storage for system, database, and infrastructure credentials", valueType: "json", scope: "global", isSensitive: true, isPublic: false, requiresApproval: true, defaultValue: [] },
+  {
+    key: "system.secure_vault_credentials",
+    category: "system_info",
+    label: "Secure Vault Credentials",
+    description:
+      "Encrypted storage for system, database, and infrastructure credentials",
+    valueType: "json",
+    scope: "global",
+    isSensitive: true,
+    isPublic: false,
+    requiresApproval: true,
+    defaultValue: [],
+  },
+];
+
+export interface PexcoClassification {
+  code: string;
+  label: string;
+  dimensions: string;
+}
+
+export const PEXCO_CLASSIFICATIONS: PexcoClassification[] = [
+  {
+    code: "PEXCO01",
+    label: "Thin Exercise Books (10–36 pages, A5/A4 softcover)",
+    dimensions: "A5 / A4 Slim",
+  },
+  {
+    code: "PEXCO02",
+    label: "Standard Exercise Books (72–80 pages, A4 college)",
+    dimensions: "A4 Standard",
+  },
+  {
+    code: "PEXCO03",
+    label: "Softcover Readers & Textbooks",
+    dimensions: "Varied (A5–A4)",
+  },
+  {
+    code: "PEXCO04",
+    label: "Hardcovers (1–2 Quire, 92–192 pages)",
+    dimensions: "A4 Thick Hardboard",
+  },
+  {
+    code: "PEXCO05",
+    label: "Heavy Hardcover Textbooks, Atlases & Dictionaries",
+    dimensions: "Oversized / Bulky",
+  },
+  {
+    code: "PEXCO06",
+    label: "Files & Ring Binders (Lever arch, display, folio)",
+    dimensions: "Large Spine / Mechanism",
+  },
 ];
 
 export interface SystemVaultCredential {

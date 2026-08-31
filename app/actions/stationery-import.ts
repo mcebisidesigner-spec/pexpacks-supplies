@@ -104,6 +104,7 @@ export async function bulkImportStationeryAction(
     summary: `Bulk-imported stationery: ${data?.length ?? formattedProducts.length} products`,
   });
   revalidatePath("/admin/items");
+  revalidatePath("/admin/products");
   revalidateCatalog();
   return {
     success: true,

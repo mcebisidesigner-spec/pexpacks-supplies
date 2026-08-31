@@ -11,6 +11,7 @@ import {
   Download,
   History,
   LayoutDashboard,
+  Save,
   Search,
   Server,
   Upload,
@@ -26,6 +27,7 @@ import type {
   SystemVaultCredential,
 } from "@/lib/admin/system-settings-shared";
 import {
+  PEXCO_CLASSIFICATIONS,
   SYSTEM_SETTING_CATEGORIES,
   SYSTEM_SETTING_DEFINITIONS,
 } from "@/lib/admin/system-settings-shared";
@@ -33,7 +35,7 @@ import type { RoleInfo, UserListItem } from "@/lib/admin/users";
 import {
   exportSettingsAction,
   restoreSettingsAction,
-  updatePexcoRateAction,
+  savePricingSettingsAction,
   updateSystemSettingAction,
 } from "@/app/admin/settings/actions";
 import type { PexcoAdminRate } from "@/lib/admin/pexco-rates";
@@ -58,10 +60,16 @@ interface SettingsControlCentreProps {
 }
 
 type PexcoRateDraft = {
-  costSql: string;
-  marginSql: string;
-  isActive: boolean;
+  coveringSql: string;
 };
+
+const PRICING_DRAFT_KEYS = [
+  "pricing.target_margin_pct",
+  "pricing.low_margin_warning_pct",
+  "pricing.packaging_cost",
+  "pricing.assembly_cost",
+  "pricing.freight_cost",
+] as const;
 
 const CATEGORY_ICONS: Record<
   string,
@@ -104,15 +112,37 @@ export function SettingsControlCentre({
     Record<string, PexcoRateDraft>
   >(() =>
     Object.fromEntries(
-      initialPexcoRates.map((rate) => [
-        rate.code,
-        {
-          costSql: ((rate.costPriceCents ?? 0) / 100).toFixed(2),
-          marginSql: rate.marginRate.toFixed(4),
-          isActive: rate.isActive,
-        },
-      ]),
+      PEXCO_CLASSIFICATIONS.map((c) => {
+        const rate = initialPexcoRates.find((r) => r.code === c.code);
+        return [
+          c.code,
+          {
+            coveringSql: rate ? (rate.coveringPriceCents / 100).toFixed(2) : "",
+          },
+        ];
+      }),
     ),
+  );
+
+  const [pricingDrafts, setPricingDrafts] = useState<Record<string, string>>(
+    () => {
+      const mk = (key: string, fallback: number) => {
+        const value = initialSettings[key]?.value;
+        return String(
+          value === undefined || value === null ? fallback : Number(value),
+        );
+      };
+      return {
+        "pricing.target_margin_pct": mk("pricing.target_margin_pct", 49.9),
+        "pricing.low_margin_warning_pct": mk(
+          "pricing.low_margin_warning_pct",
+          35.0,
+        ),
+        "pricing.packaging_cost": mk("pricing.packaging_cost", 0),
+        "pricing.assembly_cost": mk("pricing.assembly_cost", 0),
+        "pricing.freight_cost": mk("pricing.freight_cost", 0),
+      };
+    },
   );
 
   const filteredSearch = useMemo(() => {
@@ -206,53 +236,163 @@ export function SettingsControlCentre({
     }));
   }
 
-  function pexcoCoveringPreview(draft: PexcoRateDraft): number | null {
-    const costCents = Math.round(parseFloat(draft.costSql) * 100);
-    const margin = parseFloat(draft.marginSql);
-    if (!Number.isFinite(costCents) || costCents < 0) return null;
-    if (!Number.isFinite(margin) || margin <= 0) return null;
-    return Math.round(costCents * margin) / 100;
+  function setPricingDraft(key: string, value: string) {
+    setPricingDrafts((prev) => ({ ...prev, [key]: value }));
   }
 
-  async function handlePexcoSave(rate: PexcoAdminRate) {
-    const draft = pexcoDrafts[rate.code];
-    const costRands = parseFloat(draft.costSql);
-    const margin = parseFloat(draft.marginSql);
-    if (!Number.isFinite(costRands) || costRands < 0) {
+  function draftMarginPercent(): number {
+    const raw = parseFloat(pricingDrafts["pricing.target_margin_pct"]);
+    if (Number.isFinite(raw) && raw >= 0 && raw < 100) return raw;
+    return Number(settingsState["pricing.target_margin_pct"]?.value ?? 49.9);
+  }
+
+  async function handleSaveAllChanges() {
+    const marginPct = parseFloat(pricingDrafts["pricing.target_margin_pct"]);
+    const lowMargin = parseFloat(
+      pricingDrafts["pricing.low_margin_warning_pct"],
+    );
+    const packaging = parseFloat(pricingDrafts["pricing.packaging_cost"]);
+    const assembly = parseFloat(pricingDrafts["pricing.assembly_cost"]);
+    const freight = parseFloat(pricingDrafts["pricing.freight_cost"]);
+
+    if (!Number.isFinite(marginPct) || marginPct < 0 || marginPct >= 100) {
       setFeedbackMessage(
-        `${rate.code}: enter a valid Cost Price (R0.00 or more).`,
+        "Target Gross Margin % must be a number between 0 and 100.",
       );
       return;
     }
-    if (!Number.isFinite(margin) || margin <= 0 || margin > 100) {
+    if (!Number.isFinite(lowMargin) || lowMargin < 0 || lowMargin >= 100) {
       setFeedbackMessage(
-        `${rate.code}: Margin Rate must be a positive multiplier between 0 and 100.`,
+        "Low Margin Alert % must be a number between 0 and 100.",
       );
       return;
     }
-    setBusyKey(`pexco-${rate.code}`);
+    const costFields: [number, string][] = [
+      [packaging, "Packaging Cost"],
+      [assembly, "Assembly Cost"],
+      [freight, "Freight / Delivery Cost"],
+    ];
+    for (const [value, label] of costFields) {
+      if (!Number.isFinite(value) || value < 0) {
+        setFeedbackMessage(`${label} per Pack must be R0.00 or more.`);
+        return;
+      }
+    }
+
+    const changed = (key: string, value: number) => {
+      const saved = settingsState[key]?.value;
+      const savedNum = typeof saved === "number" ? saved : Number(saved ?? 0);
+      return Math.abs(value - savedNum) > 1e-6;
+    };
+
+    const candidateValues = new Map<string, number>([
+      ["pricing.target_margin_pct", marginPct],
+      ["pricing.low_margin_warning_pct", lowMargin],
+      ["pricing.packaging_cost", packaging],
+      ["pricing.assembly_cost", assembly],
+      ["pricing.freight_cost", freight],
+    ]);
+    const pricing: { key: string; value: number }[] = [];
+    for (const key of PRICING_DRAFT_KEYS) {
+      const value = candidateValues.get(key);
+      if (value !== undefined && changed(key, value)) {
+        pricing.push({ key, value });
+      }
+    }
+
+    const pexco: { code: string; coveringPriceCents: number }[] = [];
+    for (const item of PEXCO_CLASSIFICATIONS) {
+      const draft = pexcoDrafts[item.code];
+      const raw = draft?.coveringSql?.trim() ?? "";
+      const rate = initialPexcoRates.find((r) => r.code === item.code);
+      if (!raw) {
+        if (rate) {
+          setFeedbackMessage(
+            `${item.code}: enter a valid Covering Rate (R0.00 or more).`,
+          );
+          return;
+        }
+        continue;
+      }
+      const coveringRands = parseFloat(raw);
+      if (!Number.isFinite(coveringRands) || coveringRands < 0) {
+        setFeedbackMessage(
+          `${item.code}: enter a valid Covering Rate (R0.00 or more).`,
+        );
+        return;
+      }
+      const coveringCents = Math.round(coveringRands * 100);
+      const baseline = rate?.coveringPriceCents ?? null;
+      if (baseline === null || coveringCents !== baseline) {
+        pexco.push({ code: item.code, coveringPriceCents: coveringCents });
+      }
+    }
+
+    if (pricing.length === 0 && pexco.length === 0) {
+      setFeedbackMessage("No pending changes to save.");
+      return;
+    }
+
+    setBusyKey("save-all");
     setFeedbackMessage(null);
     try {
-      const res = await updatePexcoRateAction({
-        code: rate.code,
-        costPriceCents: Math.round(costRands * 100),
-        marginRate: margin,
-        isActive: draft.isActive,
-      });
-      if (res.ok) {
-        setFeedbackMessage(res.message ?? `${rate.code} updated.`);
-        updatePexcoDraft(rate.code, {
-          costSql: (
-            (res.rate?.costPriceCents ?? Math.round(costRands * 100)) / 100
-          ).toFixed(2),
-          marginSql: String(margin),
-          isActive: res.rate?.isActive ?? draft.isActive,
-        });
-      } else {
-        setFeedbackMessage(res.message ?? `Failed to update ${rate.code}.`);
+      const res = await savePricingSettingsAction(
+        { pricing, pexco },
+        "Saved via Control Centre Save Changes",
+      );
+      if (!res.ok) {
+        setFeedbackMessage(res.message ?? "Failed to save pricing changes.");
+        return;
       }
-    } catch {
-      setFeedbackMessage(`Failed to update ${rate.code}.`);
+
+      setFeedbackMessage(res.message ?? "All pricing changes saved.");
+      setSettingsState((prev) => {
+        const next = { ...prev };
+        for (const p of pricing) {
+          const def = SYSTEM_SETTING_DEFINITIONS.find((d) => d.key === p.key);
+          next[p.key] = {
+            ...(next[p.key] as SystemSettingRecord),
+            key: p.key,
+            category: def?.category ?? "pricing",
+            value: p.value,
+            value_type: def?.valueType ?? "number",
+            scope: def?.scope ?? "global",
+            description: def?.description ?? "",
+            is_sensitive: def?.isSensitive ?? false,
+            is_public: def?.isPublic ?? false,
+            requires_approval: def?.requiresApproval ?? false,
+            version: (next[p.key]?.version ?? 1) + 1,
+          };
+        }
+        return next;
+      });
+      setPricingDrafts((prev) => {
+        const next = { ...prev };
+        for (const p of pricing) next[p.key] = String(p.value);
+        return next;
+      });
+      if (res.pexcoRates && res.pexcoRates.length > 0) {
+        setPexcoDrafts(
+          Object.fromEntries(
+            PEXCO_CLASSIFICATIONS.map((c) => {
+              const rate = res.pexcoRates.find((r) => r.code === c.code);
+              return [
+                c.code,
+                {
+                  coveringSql: rate
+                    ? (rate.coveringPriceCents / 100).toFixed(2)
+                    : "",
+                },
+              ];
+            }),
+          ),
+        );
+      }
+      router.refresh();
+    } catch (err) {
+      setFeedbackMessage(
+        err instanceof Error ? err.message : "Failed to save pricing changes.",
+      );
     } finally {
       setBusyKey(null);
     }
@@ -364,6 +504,16 @@ export function SettingsControlCentre({
               </button>
             );
           })}
+
+          <button
+            type="button"
+            className={styles.sidebarSaveAction}
+            onClick={handleSaveAllChanges}
+            disabled={busyKey === "save-all"}
+          >
+            <Save className={styles.categoryIcon} aria-hidden="true" />
+            {busyKey === "save-all" ? "Saving Changes…" : "Save Changes"}
+          </button>
         </nav>
 
         <main className={styles.contentArea}>
@@ -504,20 +654,20 @@ export function SettingsControlCentre({
                     min="0"
                     max="99"
                     className={styles.input}
-                    defaultValue={Number(
-                      settingsState["pricing.target_margin_pct"]?.value ?? 49.9,
-                    )}
-                    onBlur={(e) =>
-                      handleSettingSave(
+                    value={pricingDrafts["pricing.target_margin_pct"]}
+                    onChange={(e) =>
+                      setPricingDraft(
                         "pricing.target_margin_pct",
-                        parseFloat(e.target.value),
+                        e.target.value,
                       )
                     }
                   />
                   <span className={styles.hint}>
                     Applied to total landed cost:{" "}
                     <code>Selling Price = Landed Cost ÷ (1 − Margin)</code>.
-                    Target: <strong>49.9%</strong>.
+                    Pexcover covering rates are set per classification in the
+                    Pexcover™ panel below. Target:{" "}
+                    <strong>{draftMarginPercent().toFixed(1)}%</strong>.
                   </span>
                 </div>
 
@@ -530,14 +680,11 @@ export function SettingsControlCentre({
                     min="0"
                     max="99"
                     className={styles.input}
-                    defaultValue={Number(
-                      settingsState["pricing.low_margin_warning_pct"]?.value ??
-                        35.0,
-                    )}
-                    onBlur={(e) =>
-                      handleSettingSave(
+                    value={pricingDrafts["pricing.low_margin_warning_pct"]}
+                    onChange={(e) =>
+                      setPricingDraft(
                         "pricing.low_margin_warning_pct",
-                        parseFloat(e.target.value),
+                        e.target.value,
                       )
                     }
                   />
@@ -557,14 +704,9 @@ export function SettingsControlCentre({
                     step="0.01"
                     min="0"
                     className={styles.input}
-                    defaultValue={Number(
-                      settingsState["pricing.packaging_cost"]?.value ?? 0,
-                    )}
-                    onBlur={(e) =>
-                      handleSettingSave(
-                        "pricing.packaging_cost",
-                        parseFloat(e.target.value),
-                      )
+                    value={pricingDrafts["pricing.packaging_cost"]}
+                    onChange={(e) =>
+                      setPricingDraft("pricing.packaging_cost", e.target.value)
                     }
                   />
                   <span className={styles.hint}>
@@ -583,14 +725,9 @@ export function SettingsControlCentre({
                     step="0.01"
                     min="0"
                     className={styles.input}
-                    defaultValue={Number(
-                      settingsState["pricing.assembly_cost"]?.value ?? 0,
-                    )}
-                    onBlur={(e) =>
-                      handleSettingSave(
-                        "pricing.assembly_cost",
-                        parseFloat(e.target.value),
-                      )
+                    value={pricingDrafts["pricing.assembly_cost"]}
+                    onChange={(e) =>
+                      setPricingDraft("pricing.assembly_cost", e.target.value)
                     }
                   />
                   <span className={styles.hint}>
@@ -609,14 +746,9 @@ export function SettingsControlCentre({
                     step="0.01"
                     min="0"
                     className={styles.input}
-                    defaultValue={Number(
-                      settingsState["pricing.freight_cost"]?.value ?? 0,
-                    )}
-                    onBlur={(e) =>
-                      handleSettingSave(
-                        "pricing.freight_cost",
-                        parseFloat(e.target.value),
-                      )
+                    value={pricingDrafts["pricing.freight_cost"]}
+                    onChange={(e) =>
+                      setPricingDraft("pricing.freight_cost", e.target.value)
                     }
                   />
                   <span className={styles.hint}>
@@ -643,41 +775,46 @@ export function SettingsControlCentre({
                     <strong>Pexcover™ Dynamic Covering Rates</strong>
                     <p>
                       Superuser-editable PEXCO covering rates. Each stationery
-                      product classified with a PEXCO code uses the
-                      corresponding rate per book per unit.{" "}
-                      <strong>Covering Rate = Cost Price × Margin</strong> —
-                      saved straight into the <code>pexco_rates</code> database
-                      table and revalidated on every public school page
-                      instantly.
+                      product classified with a PEXCO code is charged the
+                      covering rate you set below, per book per unit. Enter a
+                      Rand value (R0.00 or more) next to each classification and
+                      press <strong>Save Changes</strong> below the side menu —
+                      rates are written directly to the <code>pexco_rates</code>{" "}
+                      database table and revalidated on every public school page
+                      and at checkout instantly.
                     </p>
                   </div>
                 </div>
 
-                {pexcoDrafts && Object.keys(pexcoDrafts).length > 0 ? (
+                <div className={styles.pexcoverClassification}>
+                  <strong className={styles.pexcoverClassificationTitle}>
+                    PEXCO Classification · Editable Covering Rate
+                  </strong>
                   <table className={styles.pexcoverRatesTable}>
                     <thead>
                       <tr>
-                        <th>Code</th>
-                        <th>Description</th>
-                        <th>Cost Price</th>
-                        <th>Margin (× Cost)</th>
-                        <th>Covering Rate</th>
-                        <th>Active</th>
-                        <th></th>
+                        <th>Suggested Code</th>
+                        <th>Item Classification</th>
+                        <th>Standard Book Dimensions</th>
+                        <th>Covering Rate (R)</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {initialPexcoRates.map((rate) => {
-                        const draft = pexcoDrafts[rate.code];
-                        if (!draft) return null;
-                        const covering = pexcoCoveringPreview(draft);
-                        const busy = busyKey === `pexco-${rate.code}`;
+                      {PEXCO_CLASSIFICATIONS.map((item) => {
+                        const draft = pexcoDrafts[item.code];
+                        const rate = initialPexcoRates.find(
+                          (r) => r.code === item.code,
+                        );
                         return (
-                          <tr key={rate.code}>
+                          <tr key={item.code}>
                             <td>
-                              <code>{rate.code}</code>
+                              <code>
+                                {item.code}
+                                {!rate ? " (New)" : ""}
+                              </code>
                             </td>
-                            <td>{rate.title}</td>
+                            <td>{item.label}</td>
+                            <td>{item.dimensions}</td>
                             <td>
                               <span className={styles.pexcoRatePrefix}>R</span>
                               <input
@@ -685,79 +822,22 @@ export function SettingsControlCentre({
                                 min="0"
                                 step="0.01"
                                 className={`${styles.input} ${styles.pexcoRateInput}`}
-                                value={draft.costSql}
+                                value={draft?.coveringSql ?? ""}
+                                placeholder="—"
                                 onChange={(e) =>
-                                  updatePexcoDraft(rate.code, {
-                                    costSql: e.target.value,
+                                  updatePexcoDraft(item.code, {
+                                    coveringSql: e.target.value,
                                   })
                                 }
-                                aria-label={`${rate.code} cost price`}
+                                aria-label={`${item.code} covering rate`}
                               />
-                            </td>
-                            <td>
-                              <input
-                                type="number"
-                                min="0.01"
-                                step="0.01"
-                                className={`${styles.input} ${styles.pexcoRateInput}`}
-                                value={draft.marginSql}
-                                onChange={(e) =>
-                                  updatePexcoDraft(rate.code, {
-                                    marginSql: e.target.value,
-                                  })
-                                }
-                                aria-label={`${rate.code} margin rate`}
-                              />
-                            </td>
-                            <td>
-                              <strong className={styles.pexcoRateCover}>
-                                {covering === null
-                                  ? "—"
-                                  : `R${covering.toFixed(2)}`}
-                              </strong>
-                            </td>
-                            <td>
-                              <input
-                                type="checkbox"
-                                className={styles.pexcoRateActiveCheck}
-                                checked={draft.isActive}
-                                onChange={(e) =>
-                                  updatePexcoDraft(rate.code, {
-                                    isActive: e.target.checked,
-                                  })
-                                }
-                                aria-label={`${rate.code} active`}
-                              />
-                            </td>
-                            <td>
-                              <button
-                                type="button"
-                                className={styles.pexcoRateSave}
-                                disabled={busy}
-                                onClick={() => handlePexcoSave(rate)}
-                              >
-                                {busy ? "Saving…" : "Save"}
-                              </button>
                             </td>
                           </tr>
                         );
                       })}
                     </tbody>
                   </table>
-                ) : (
-                  <p className={styles.pexcoverRatesNote}>
-                    No PEXCO rates were found in the <code>pexco_rates</code>{" "}
-                    database table.
-                  </p>
-                )}
-                <span className={styles.pexcoverRatesNote}>
-                  ℹ️ The covering rate recomputes instantly as Cost Price ×
-                  Margin. Saving writes <code>covering_price_cents</code> and{" "}
-                  <code>cost_price_cents</code> to <code>pexco_rates</code>, and
-                  Pexcover totals at checkout are always recalculated
-                  server-side from this authoritative data — never from
-                  client-submitted values.
-                </span>
+                </div>
               </div>
             </div>
           )}

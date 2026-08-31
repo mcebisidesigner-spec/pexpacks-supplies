@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Eye, Package, CheckCircle2, Layers } from "lucide-react";
+import { Plus, Eye, Package, CheckCircle2, Layers, Trash2 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -24,6 +24,9 @@ import {
 import type { MasterProductRow } from "@/lib/admin/operations";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
+import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
+import { clearMasterProductsAction } from "@/app/admin/products/actions";
 
 interface MasterProductsPageViewProps {
   initialData: {
@@ -54,6 +57,34 @@ export function MasterProductsPageView({
 }: MasterProductsPageViewProps) {
   const router = useRouter();
   const { params, setParams, isPending } = useTableParams();
+  const [isClearing, setIsClearing] = useState(false);
+  const [catalogueMessage, setCatalogueMessage] = useState<string | null>(null);
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+
+  async function performClear() {
+    if (isClearing) return;
+    setConfirmClearOpen(false);
+    setIsClearing(true);
+    setCatalogueMessage(null);
+    try {
+      const res = await clearMasterProductsAction();
+      if (res.ok) {
+        setCatalogueMessage(
+          `Catalogue cleared — ${res.deleted ?? 0} products removed. You can now add products manually or via the CSV importer below.`,
+        );
+        setParams({}, true);
+        router.refresh();
+      } else {
+        setCatalogueMessage(
+          res.message || "Failed to clear the product catalogue.",
+        );
+      }
+    } catch {
+      setCatalogueMessage("Failed to clear the product catalogue.");
+    } finally {
+      setIsClearing(false);
+    }
+  }
 
   const columns: ColumnDef<MasterProductRow>[] = [
     {
@@ -246,6 +277,56 @@ export function MasterProductsPageView({
             currentPage={initialData.page}
           />
         }
+      />
+
+      {catalogueMessage && (
+        <p className={styles.catalogueMessage} role="status">
+          {catalogueMessage}
+        </p>
+      )}
+
+      <section className={styles.catalogueReset} aria-label="Catalogue reset">
+        <div className={styles.resetCopy}>
+          <Trash2 className={styles.resetIcon} size={18} />
+          <div>
+            <strong>Reset the product catalogue</strong>
+            <small>
+              Permanently removes every master product (pack compositions are
+              reset too). Order line items and quotations keep their snapshots.
+              Rebuild the list manually or with the CSV importer below.
+            </small>
+          </div>
+        </div>
+        <AdminButton
+          type="button"
+          variant="danger"
+          loading={isClearing}
+          disabled={isClearing}
+          onClick={() => setConfirmClearOpen(true)}
+        >
+          {isClearing ? "Clearing…" : "Clear all products"}
+        </AdminButton>
+      </section>
+
+      <section
+        className={styles.csvBanner}
+        aria-label="Bulk CSV product import"
+      >
+        <CSVStationeryImporter
+          variant="tiles"
+          onImported={() => router.refresh()}
+        />
+      </section>
+
+      <ConfirmModal
+        isOpen={confirmClearOpen}
+        variant="danger"
+        title="Clear all products?"
+        message={`Permanently delete ALL ${initialData.total || 0} products from the master catalogue? Pack compositions referencing them will also be removed. Order and quotation history is preserved as snapshots. This cannot be undone.`}
+        confirmLabel="Clear all products"
+        cancelLabel="Cancel"
+        onConfirm={performClear}
+        onCancel={() => setConfirmClearOpen(false)}
       />
     </div>
   );

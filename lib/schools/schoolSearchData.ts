@@ -199,7 +199,6 @@ async function searchPublicSchoolsFallback(
   };
 }
 
-export function invalidateSchoolSearchCache() {}
 
 export async function getNearbySchoolRecords(userLat: number, userLng: number, limit = 8) {
   const supabase = createSupabaseAdminClient();

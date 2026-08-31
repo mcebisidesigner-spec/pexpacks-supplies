@@ -61,7 +61,7 @@ export function StickyOrderBar({
           <p className={styles.title}>
             {schoolName} &mdash; {gradeLabel} Pack
           </p>
-          <p className={styles.price}>From {priceLabel}</p>
+          <p className={styles.price}>{priceLabel}</p>
         </div>
         <button
           type="button"

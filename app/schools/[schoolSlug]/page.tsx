@@ -220,7 +220,7 @@ export default async function SchoolDetailPage({
               <div className={styles.pexcoverBannerContent}>
                 <h4 className={styles.pexcoverBannerTitle}>Simplify prep with Pexcover book covering</h4>
                 <p className={styles.pexcoverBannerText}>
-                  Add covered books and custom-printed name labels for just <strong>R 350</strong> per pack. 
+                  Add covered books and custom-printed name labels for as little as <strong>R200</strong>, depending on the pack items. 
                   We cover the books and print matching labels so your child is first-day ready.
                 </p>
                 <Link href="/blog/what-is-pexcover-book-covering" className={styles.pexcoverBannerLink}>
