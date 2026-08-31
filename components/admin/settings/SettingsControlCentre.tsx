@@ -368,11 +368,17 @@ export function SettingsControlCentre({
         "Saved via Control Centre Save Changes",
       );
       if (!res.ok) {
-        setFeedbackMessage(res.message ?? "Failed to save pricing changes.", "error");
+        setFeedbackMessage(
+          res.message ?? "Failed to save pricing changes.",
+          "error",
+        );
         return;
       }
 
-      setFeedbackMessage(res.message ?? "All pricing changes saved.", "success");
+      setFeedbackMessage(
+        res.message ?? "All pricing changes saved.",
+        "success",
+      );
       setSettingsState((prev) => {
         const next = { ...prev };
         for (const p of pricing) {
@@ -515,9 +521,15 @@ export function SettingsControlCentre({
           }}
         >
           {feedback.type === "success" ? (
-            <CheckCircle2 size={18} style={{ color: "#10b981", flexShrink: 0 }} />
+            <CheckCircle2
+              size={18}
+              style={{ color: "#10b981", flexShrink: 0 }}
+            />
           ) : (
-            <AlertCircle size={18} style={{ color: "#ef4444", flexShrink: 0 }} />
+            <AlertCircle
+              size={18}
+              style={{ color: "#ef4444", flexShrink: 0 }}
+            />
           )}
           <span>{feedback.message}</span>
         </div>
@@ -699,10 +711,9 @@ export function SettingsControlCentre({
                     }
                   />
                   <span className={styles.hint}>
-                    Applied to total landed cost:{" "}
-                    <code>Selling Price = Landed Cost ÷ (1 − Margin)</code>.
-                    Pexcover covering rates are set per classification in the
-                    Pexcover™ panel below. Target:{" "}
+                    This percentage represents the costs of payment gateway
+                    services for online transactions, including fees and service
+                    charges. Target:{" "}
                     <strong>{draftMarginPercent().toFixed(1)}%</strong>.
                   </span>
                 </div>
