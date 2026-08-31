@@ -12,6 +12,7 @@ import { listPexcoRates } from "@/lib/admin/pexco-rates";
 import { SettingsControlCentre } from "@/components/admin/settings/SettingsControlCentre";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 export const metadata = {
   title: "Settings Control Centre | Admin | Pexpacks",

@@ -1,12 +1,5 @@
 "use server";
 
-// Extend Server Action execution limit to 60 s.
-// The default on Vercel Hobby is 10 s — the pricing recalculation that runs
-// after saving settings takes ~8 s over 23k packs, which was causing:
-//   "canceling statement due to statement timeout"
-// maxDuration must be exported from the SAME file as the Server Action.
-export const maxDuration = 60;
-
 import {
   updateSystemSetting,
   exportSystemSettings,
