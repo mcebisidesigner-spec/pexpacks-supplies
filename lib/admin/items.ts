@@ -178,8 +178,10 @@ export async function getMasterPricingConfig(): Promise<MasterPricingConfig> {
 
 /**
  * Computes the suggested selling price of an individual master product from its supplier
- * cost price using the configured target gross margin rate:
- *   selling price = cost / (1 - target margin rate)
+ * cost price using the configured target margin applied as a markup:
+ *   selling price = cost x (1 + target margin%)
+ *
+ * Example: cost R100, target margin 32% -> R132.
  *
  * Pack-level costs (packaging, assembly, freight) are strictly excluded from master products
  * and apply exclusively at the complete Grade Pack landed cost level.
@@ -200,8 +202,8 @@ export async function computeMasterSellingPrice(
 
   const costValue = cost == null || Number.isNaN(cost) ? 0 : cost;
   if (costValue <= 0) return 0;
-  const marginRate = marginPct / 100;
-  return Math.round((costValue / (1 - marginRate)) * 100) / 100;
+  const markupMultiplier = 1 + marginPct / 100;
+  return Math.round(costValue * markupMultiplier * 100) / 100;
 }
 
 function itemFromMaster(product: MasterProductRow): ItemRow {

@@ -1,7 +1,11 @@
 import { redirect } from "next/navigation";
 import { Edit, BookOpen, TrendingUp, Trash2 } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
-import { getItem } from "@/lib/admin/items";
+import {
+  getItem,
+  computeMasterSellingPrice,
+  getMasterPricingConfig,
+} from "@/lib/admin/items";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
@@ -84,8 +88,9 @@ export default async function ProductDetailPage({
       ? rawItem.category
       : "Stationery";
   const cost = typeof rawItem?.unit_cost === "number" ? rawItem.unit_cost : 0;
-  const price =
-    typeof rawItem?.unit_price === "number" ? rawItem.unit_price : 0;
+  const price = await computeMasterSellingPrice(
+    typeof rawItem?.unit_cost === "number" ? rawItem.unit_cost : null,
+  );
   const supplierName =
     typeof rawItem?.supplier_name === "string"
       ? rawItem.supplier_name
@@ -105,7 +110,9 @@ export default async function ProductDetailPage({
     redirect(`/admin/products/${productSlug}`);
   }
 
-  const margin = price > 0 && cost > 0 ? ((price - cost) / price) * 100 : 0;
+  const marginPct = (await getMasterPricingConfig()).marginPct;
+  const marginAmount =
+    cost > 0 ? Math.round(cost * (marginPct / 100) * 100) / 100 : 0;
 
   return (
     <div className={styles.container}>
@@ -144,7 +151,7 @@ export default async function ProductDetailPage({
         <MetricCard
           label="Selling Price"
           value={money(price)}
-          subtext="Catalogue list price"
+          subtext={`Cost ${money(cost)} + Target Margin ${marginPct.toFixed(0)}% (${money(marginAmount)}) = Calculated Selling Price`}
           icon={<ZarIcon size={16} />}
           iconTone="green"
         />
@@ -157,8 +164,8 @@ export default async function ProductDetailPage({
         />
         <MetricCard
           label="Gross Margin"
-          value={`${margin.toFixed(1)}%`}
-          subtext="Unit profitability"
+          value={`${marginPct.toFixed(0)}%`}
+          subtext="Target margin from Pricing & Margin settings"
           icon={<TrendingUp size={16} />}
           iconTone="green"
         />

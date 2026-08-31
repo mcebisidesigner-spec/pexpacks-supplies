@@ -124,7 +124,7 @@ export function ItemForm({
     if (!Number.isFinite(cost) || cost <= 0) return null;
     const marginPct =
       cfg && cfg.marginPct > 0 && cfg.marginPct < 100 ? cfg.marginPct : 49.9;
-    return Math.round((cost / (1 - marginPct / 100)) * 100) / 100;
+    return Math.round(cost * (1 + marginPct / 100) * 100) / 100;
   }
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
