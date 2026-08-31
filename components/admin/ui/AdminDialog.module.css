@@ -1,0 +1,258 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: grid;
+  padding: 20px;
+  place-items: center;
+  background: rgba(4, 8, 16, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: dialogFadeIn 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal {
+  position: relative;
+  display: flex;
+  width: min(460px, 100%);
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 24px 20px;
+  border: 1px solid var(--db-border, #1e293b);
+  border-radius: var(--db-radius-card, 14px);
+  background: var(--db-surface, #0c1322);
+  box-shadow: 
+    0 24px 60px -12px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 0 30px rgba(0, 0, 0, 0.5);
+  animation: dialogScaleIn 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--db-border-muted, rgba(30, 41, 59, 0.65));
+}
+
+.brandBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--db-text-muted, #94a3b8);
+}
+
+.brandDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--db-brand, #10b981);
+  box-shadow: 0 0 8px var(--db-brand, #10b981);
+}
+
+.brandDotDanger {
+  background: var(--db-danger, #ef4444);
+  box-shadow: 0 0 8px var(--db-danger, #ef4444);
+}
+
+.brandDotWarning {
+  background: var(--db-warning, #f59e0b);
+  box-shadow: 0 0 8px var(--db-warning, #f59e0b);
+}
+
+.closeBtn {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--db-border, #1e293b);
+  border-radius: 6px;
+  background: var(--db-surface-inner, #090e17);
+  color: var(--db-text-muted, #94a3b8);
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--db-text-primary, #f8fafc);
+  border-color: var(--db-border-strong, #334155);
+}
+
+.contentRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.iconSlot {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border-radius: 10px;
+}
+
+.iconSlotDanger {
+  border: 1px solid var(--db-danger-border, rgba(239, 68, 68, 0.28));
+  background: var(--db-danger-subtle, rgba(239, 68, 68, 0.12));
+  color: var(--db-danger-text, #f87171);
+}
+
+.iconSlotWarning {
+  border: 1px solid var(--db-warning-border, rgba(245, 158, 11, 0.28));
+  background: var(--db-warning-subtle, rgba(245, 158, 11, 0.12));
+  color: var(--db-warning-text, #fbbf24);
+}
+
+.iconSlotSuccess {
+  border: 1px solid var(--db-success-border, rgba(16, 185, 129, 0.28));
+  background: var(--db-success-subtle, rgba(16, 185, 129, 0.12));
+  color: var(--db-success-text, #34d399);
+}
+
+.iconSlotInfo {
+  border: 1px solid var(--db-info-border, rgba(14, 165, 233, 0.28));
+  background: var(--db-info-subtle, rgba(14, 165, 233, 0.12));
+  color: var(--db-info-text, #38bdf8);
+}
+
+.textBlock {
+  min-width: 0;
+  flex: 1;
+}
+
+.dialogTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--db-text-primary, #f8fafc);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.dialogMessage {
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  color: var(--db-text-muted, #94a3b8);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: var(--db-radius-control, 8px);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: all 140ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btnCancel {
+  border: 1px solid var(--db-border, #1e293b);
+  background: var(--db-surface-inner, #090e17);
+  color: var(--db-text-secondary, #e2e8f0);
+}
+
+.btnCancel:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--db-border-strong, #334155);
+  color: var(--db-text-primary, #f8fafc);
+}
+
+.btnDanger {
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: #dc2626;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+
+.btnDanger:hover {
+  background: #ef4444;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.45);
+}
+
+.btnPrimary {
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  background: #10b981;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.btnPrimary:hover {
+  background: #059669;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45);
+}
+
+.btnWarning {
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: #f59e0b;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+}
+
+.btnWarning:hover {
+  background: #d97706;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.45);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--db-brand, #10b981);
+  outline-offset: 2px;
+}
+
+@keyframes dialogFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialogScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 520px) {
+  .overlay {
+    padding: 14px;
+  }
+  .modal {
+    padding: 18px 18px 16px;
+  }
+  .buttonRow {
+    flex-direction: column-reverse;
+  }
+  .btn {
+    width: 100%;
+  }
+}

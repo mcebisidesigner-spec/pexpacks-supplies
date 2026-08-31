@@ -21,6 +21,7 @@ import {
   saveVaultCredentialAction,
   deleteVaultCredentialAction,
 } from "@/app/admin/settings/actions";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 import styles from "./SettingsControlCentre.module.css";
 
 interface SystemInfoVaultTabProps {
@@ -41,6 +42,7 @@ export function SystemInfoVaultTab({
   initialVaultCredentials = [],
 }: SystemInfoVaultTabProps) {
   const router = useRouter();
+  const dialog = useAdminDialog();
   const [credentials, setCredentials] = useState<SystemVaultCredential[]>(
     initialVaultCredentials,
   );
@@ -164,12 +166,14 @@ export function SystemInfoVaultTab({
     });
   }
 
-  function handleDelete(id: string, name: string) {
-    if (
-      !confirm(
-        `Are you sure you want to permanently delete the vault credential for "${name}"?`,
-      )
-    ) {
+  async function handleDelete(id: string, name: string) {
+    const confirmed = await dialog.confirm({
+      title: "Delete Vault Credential",
+      message: `Are you sure you want to permanently delete the vault credential for "${name}"?`,
+      confirmLabel: "Delete Permanently",
+      variant: "danger",
+    });
+    if (!confirmed) {
       return;
     }
     setFeedback(null);

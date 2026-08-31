@@ -18,6 +18,7 @@ import {
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 import styles from "./ItemsManager.module.css";
 
 interface ItemsManagerProps {
@@ -26,6 +27,7 @@ interface ItemsManagerProps {
 
 export function ItemsManager({ items }: ItemsManagerProps) {
   const router = useRouter();
+  const dialog = useAdminDialog();
   const { params } = useTableParams();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -71,11 +73,19 @@ export function ItemsManager({ items }: ItemsManagerProps) {
           router.refresh();
         });
       } else {
-        alert(res.message || "Failed to update quantity");
+        await dialog.alert({
+          title: "Update Failed",
+          message: res.message || "Failed to update quantity.",
+          variant: "danger",
+        });
         setQuantities((prev) => ({ ...prev, [itemId]: previousQty }));
       }
     } catch {
-      alert("Failed to update quantity. Please try again.");
+      await dialog.alert({
+        title: "Update Error",
+        message: "Failed to update quantity. Please try again.",
+        variant: "danger",
+      });
       setQuantities((prev) => ({ ...prev, [itemId]: previousQty }));
     } finally {
       setUpdatingIds((prev) => {
@@ -260,17 +270,25 @@ export function ItemsManager({ items }: ItemsManagerProps) {
       sortable: true,
       align: "right",
       width: "120px",
-      render: (row) => (
-        <span
-          style={{
-            fontWeight: 800,
-            color: "var(--db-text-primary, #ffffff)",
-            fontSize: "14px",
-          }}
-        >
-          {row.unit_price != null ? formatCurrency(row.unit_price) : "—"}
-        </span>
-      ),
+      render: (row) => {
+        const unitPrice = row.unit_price;
+        if (unitPrice == null) {
+          return <span style={{ color: "var(--text-muted)" }}>—</span>;
+        }
+        const currentQty = quantities[row.id] ?? row.quantity ?? 1;
+        const lineTotal = unitPrice * currentQty;
+        return (
+          <span
+            style={{
+              fontWeight: 800,
+              color: "var(--db-text-primary, #ffffff)",
+              fontSize: "14px",
+            }}
+          >
+            {formatCurrency(lineTotal)}
+          </span>
+        );
+      },
     },
     {
       key: "actions",
@@ -284,25 +302,29 @@ export function ItemsManager({ items }: ItemsManagerProps) {
           style={{ justifyContent: "flex-end" }}
           onClick={(e) => e.stopPropagation()}
         >
-          <form
-            action={async () => {
-              await deleteItemAction(row.id);
-            }}
-            onSubmit={(e) => {
-              if (!confirm(`Delete "${row.name}" from this pack?`)) {
-                e.preventDefault();
-              }
+          <button
+            type="button"
+            className={coreStyles.actionDeleteBtn}
+            data-db-tooltip={`Delete ${row.name}`}
+            aria-label={`Delete ${row.name}`}
+            onClick={async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const confirmed = await dialog.confirm({
+                title: "Delete Pack Item",
+                message: `Are you sure you want to delete "${row.name}" from this pack?`,
+                confirmLabel: "Delete Item",
+                variant: "danger",
+              });
+              if (!confirmed) return;
+              startTransition(async () => {
+                await deleteItemAction(row.id);
+                router.refresh();
+              });
             }}
           >
-            <button
-              type="submit"
-              className={coreStyles.actionDeleteBtn}
-              data-db-tooltip={`Delete ${row.name}`}
-              aria-label={`Delete ${row.name}`}
-            >
-              <Trash2 size={14} />
-            </button>
-          </form>
+            <Trash2 size={14} />
+          </button>
         </div>
       ),
     },

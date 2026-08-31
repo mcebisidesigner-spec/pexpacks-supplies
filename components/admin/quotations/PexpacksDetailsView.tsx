@@ -35,6 +35,7 @@ import {
 } from "@/app/admin/quotations/pexpacks-details/actions";
 import styles from "./PexpacksDetails.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 
 type TabKey = "overview" | "address_contacts" | "banking" | "notes_terms" | "system_info";
 
@@ -44,6 +45,7 @@ interface PexpacksDetailsViewProps {
 }
 
 export function PexpacksDetailsView({ initialSettings, systemInfo }: PexpacksDetailsViewProps) {
+  const dialog = useAdminDialog();
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [isPending, startTransition] = useTransition();
   const [toastMessage, setToastMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -68,14 +70,21 @@ export function PexpacksDetailsView({ initialSettings, systemInfo }: PexpacksDet
     }, 4000);
   };
 
-  const handleTabChange = (tab: TabKey) => {
+  const handleTabChange = async (tab: TabKey) => {
     const hasUnsaved =
       (activeTab === "address_contacts" && isAddressDirty) ||
       (activeTab === "banking" && isBankingDirty) ||
       (activeTab === "notes_terms" && isTermsDirty);
 
     if (hasUnsaved) {
-      if (!window.confirm("You have unsaved changes. Discard changes and switch tabs?")) {
+      const discard = await dialog.confirm({
+        title: "Unsaved Changes",
+        message: "You have unsaved changes in this section. Discard changes and switch tabs?",
+        confirmLabel: "Discard & Switch",
+        cancelLabel: "Keep Editing",
+        variant: "warning",
+      });
+      if (!discard) {
         return;
       }
     }
