@@ -19,6 +19,13 @@ import type { MasterPricingConfig } from "@/lib/admin/items";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./ItemForm.module.css";
 
+const PRODUCT_CATEGORIES = [
+  "Stationery",
+  "Books",
+  "Art & Craft",
+  "Packaging",
+] as const;
+
 interface ItemFormProps {
   item: ItemRow | null;
   packs: { id: string; title: string }[];
@@ -151,7 +158,7 @@ export function ItemForm({
     }
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value;
     setCategory(val);
     onCategoryChange?.(val);
@@ -248,14 +255,28 @@ export function ItemForm({
             }
           />
 
-          <FloatingInput
-            id="category"
-            name="category"
-            label="Category"
-            value={category}
-            onChange={handleCategoryChange}
-            error={state?.errors?.category}
-          />
+          <div className={styles.categoryField}>
+            <label htmlFor="category" className={styles.categoryLabel}>
+              Category
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={category}
+              onChange={handleCategoryChange}
+              className={styles.select}
+              aria-label="Category"
+            >
+              {PRODUCT_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+            {state?.errors?.category && (
+              <span className={styles.fieldError}>{state.errors.category}</span>
+            )}
+          </div>
         </div>
 
         {/* Row 2: Product Name */}

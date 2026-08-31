@@ -311,3 +311,16 @@
   font-size: 11px;
   color: rgba(148, 163, 184, 0.9);
 }
+
+.categoryField {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.categoryLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(148, 163, 184, 1);
+}
