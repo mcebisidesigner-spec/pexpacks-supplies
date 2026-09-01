@@ -16,6 +16,7 @@ import {
   PackageCheck,
   CheckSquare,
   Layers,
+  TrendingUp,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -43,6 +44,7 @@ export const ORDERED_NAV_ITEMS: Array<{
   },
   { label: "Tasks", href: "/admin/tasks", icon: CheckSquare },
   { label: "Content CMS", href: "/admin/content", icon: Layers },
+  { label: "Reports", href: "/admin/reports", icon: TrendingUp },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
