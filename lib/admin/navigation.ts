@@ -174,13 +174,6 @@ export const ADMIN_NAV: AdminNavGroup[] = [
         permission: "assets.view",
         ready: true,
       },
-      {
-        label: "Reports",
-        href: "/admin/reports",
-        icon: "reports",
-        permission: "reports.view",
-        ready: true,
-      },
     ],
   },
   {

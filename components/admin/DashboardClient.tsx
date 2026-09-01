@@ -69,7 +69,7 @@ export function DashboardClient({ stats, userName }: DashboardClientProps) {
       icon: BarChart3,
       tone: "emerald",
       currency: true,
-      href: "/admin/reports",
+      href: "/admin/payments",
     },
   ];
 
@@ -187,8 +187,8 @@ export function DashboardClient({ stats, userName }: DashboardClientProps) {
               <span>{(stats?.users ?? 0).toLocaleString("en-ZA")} admin users / {(stats?.assets.total ?? 0).toLocaleString("en-ZA")} assets</span>
             </div>
           </div>
-          <Link href="/admin/reports" className={styles.panelAction}>
-            Open reports
+          <Link href="/admin/payments" className={styles.panelAction}>
+            Open payments
           </Link>
         </article>
       </section>

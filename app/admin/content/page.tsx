@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useEffect, useTransition, useMemo } from "react";
 import {
   Megaphone,
   HelpCircle,
@@ -9,19 +9,19 @@ import {
   Plus,
   Trash2,
   Edit2,
-  CheckCircle2,
   ExternalLink,
   Star,
-  UploadCloud,
-  FileText,
-  Search,
+  Download,
   Eye,
   EyeOff,
   X,
-  Loader2,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
-import { FloatingInput } from "@/components/ui/FloatingInput";
-import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { DataTable, type ColumnDef } from "@/components/admin/shared/DataTable";
 import {
   fetchCmsDataAction,
   saveAnnouncementAction,
@@ -37,6 +37,8 @@ import {
   deleteResourceAction,
   toggleResourcePublicAction,
 } from "@/actions/cms";
+import styles from "./content.module.css";
+import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 
 type ContentTab = "eyebrows" | "faqs" | "testimonials" | "resources";
 
@@ -84,9 +86,10 @@ interface ResourceItem {
 export default function ContentCMSPage() {
   const [activeTab, setActiveTab] = useState<ContentTab>("eyebrows");
   const [isPending, startTransition] = useTransition();
-  const [loading, setLoading] = useState(true);
+  const [faqCategoryFilter, setFaqCategoryFilter] = useState<string>("all");
+  const [expandedFaqId, setExpandedFaqId] = useState<string | null>(null);
 
-  // Seed / DB state
+  // Data state
   const [announcements, setAnnouncements] = useState<Announcement[]>([
     {
       id: "1",
@@ -121,10 +124,19 @@ export default function ContentCMSPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([
     {
       id: "1",
-      author_name: "Nokuthula Dlamini",
+      author_name: "Sarah M.",
       author_role: "Parent of Grade 4 Learner",
       school_name: "Primrose Hill Primary",
-      quote: "Ordering stationery was effortless this year. Everything was labeled and packed according to the teacher’s exact requirements.",
+      quote: "Saved us hours of shopping in crowded malls. Everything was pre-covered and labeled to exact school requirements.",
+      rating: 5,
+      is_featured: true,
+    },
+    {
+      id: "2",
+      author_name: "David K.",
+      author_role: "Head of Department",
+      school_name: "St Andrews College",
+      quote: "The stationery arrived on day one with 100% accuracy. Pexpacks made stationery list distribution seamless.",
       rating: 5,
       is_featured: true,
     },
@@ -133,23 +145,34 @@ export default function ContentCMSPage() {
   const [resources, setResources] = useState<ResourceItem[]>([
     {
       id: "1",
-      title: "2027 Back-to-School Stationery Parent Guide",
-      description: "Comprehensive guide explaining stationery grades, item substitutions, and delivery deadlines.",
+      title: "2027 Back-to-School Stationery Checklist",
+      description: "Official printable guide for parents covering essential requirements per phase.",
       category: "Parent Guides",
       file_type: "PDF",
-      file_size_label: "1.8 MB",
-      file_url: "/assets/guides/2027-guide.pdf",
-      download_count: 142,
+      file_size_label: "1.2 MB",
+      file_url: "/assets/guides/stationery-checklist.pdf",
+      download_count: 342,
+      is_public: true,
+    },
+    {
+      id: "2",
+      title: "School Stationery Partnership Guide",
+      description: "Information pack for principals and bursars detailing our consignment and packaging model.",
+      category: "School Packs",
+      file_type: "PDF",
+      file_size_label: "2.8 MB",
+      file_url: "/assets/guides/school-partnership-handbook.pdf",
+      download_count: 118,
       is_public: true,
     },
   ]);
 
-  // Modal states
+  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [modalError, setModalError] = useState<string | null>(null);
 
-  // Form input fields
+  // Form Fields - Announcement
   const [annBadge, setAnnBadge] = useState("");
   const [annMessage, setAnnMessage] = useState("");
   const [annLinkUrl, setAnnLinkUrl] = useState("");
@@ -157,11 +180,13 @@ export default function ContentCMSPage() {
   const [annLocation, setAnnLocation] = useState<"global_top" | "hero_banner" | "schools_page">("global_top");
   const [annActive, setAnnActive] = useState(true);
 
+  // Form Fields - FAQ
   const [faqCategory, setFaqCategory] = useState("Ordering");
   const [faqQuestion, setFaqQuestion] = useState("");
   const [faqAnswer, setFaqAnswer] = useState("");
   const [faqPublished, setFaqPublished] = useState(true);
 
+  // Form Fields - Testimonial
   const [testAuthor, setTestAuthor] = useState("");
   const [testRole, setTestRole] = useState("");
   const [testSchool, setTestSchool] = useState("");
@@ -169,6 +194,7 @@ export default function ContentCMSPage() {
   const [testRating, setTestRating] = useState(5);
   const [testFeatured, setTestFeatured] = useState(true);
 
+  // Form Fields - Resource
   const [resTitle, setResTitle] = useState("");
   const [resDesc, setResDesc] = useState("");
   const [resCat, setResCat] = useState("Parent Guides");
@@ -177,14 +203,15 @@ export default function ContentCMSPage() {
   const [resSize, setResSize] = useState("1.5 MB");
   const [resPublic, setResPublic] = useState(true);
 
-  // Hydrate from database on mount
+  // Hydrate from live DB via Server Action
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    void (async () => {
       try {
         const data = await fetchCmsDataAction();
-        if (!cancelled && data) {
-          if (data.announcements.length > 0) {
+        if (cancelled) return;
+        if (data) {
+          if (data.announcements && data.announcements.length > 0) {
             setAnnouncements(
               data.announcements.map((a) => ({
                 id: a.id,
@@ -197,7 +224,7 @@ export default function ContentCMSPage() {
               }))
             );
           }
-          if (data.faqs.length > 0) {
+          if (data.faqs && data.faqs.length > 0) {
             setFaqs(
               data.faqs.map((f) => ({
                 id: f.id,
@@ -209,7 +236,7 @@ export default function ContentCMSPage() {
               }))
             );
           }
-          if (data.testimonials.length > 0) {
+          if (data.testimonials && data.testimonials.length > 0) {
             setTestimonials(
               data.testimonials.map((t) => ({
                 id: t.id,
@@ -222,7 +249,7 @@ export default function ContentCMSPage() {
               }))
             );
           }
-          if (data.resources.length > 0) {
+          if (data.resources && data.resources.length > 0) {
             setResources(
               data.resources.map((r) => ({
                 id: r.id,
@@ -239,9 +266,7 @@ export default function ContentCMSPage() {
           }
         }
       } catch (err) {
-        console.warn("[cms-page] using offline seeds:", err);
-      } finally {
-        if (!cancelled) setLoading(false);
+        console.warn("[cms-page] using fallback seeds:", err);
       }
     })();
     return () => {
@@ -275,7 +300,7 @@ export default function ContentCMSPage() {
       setResTitle("");
       setResDesc("");
       setResCat("Parent Guides");
-      setResUrl("/assets/guides/checklist.pdf");
+      setResUrl("/assets/guides/stationery-checklist.pdf");
       setResType("PDF");
       setResSize("1.5 MB");
       setResPublic(true);
@@ -283,9 +308,7 @@ export default function ContentCMSPage() {
     setIsModalOpen(true);
   };
 
-  // ------------------------------------------------------
-  // Handlers for Eyebrows
-  // ------------------------------------------------------
+  // Handlers for Announcements
   const handleToggleAnnouncement = (id: string, current: boolean) => {
     startTransition(async () => {
       setAnnouncements((prev) =>
@@ -296,7 +319,7 @@ export default function ContentCMSPage() {
   };
 
   const handleDeleteAnnouncement = (id: string) => {
-    if (!confirm("Delete this announcement banner?")) return;
+    if (!confirm("Are you sure you want to delete this announcement banner?")) return;
     startTransition(async () => {
       setAnnouncements((prev) => prev.filter((a) => a.id !== id));
       await deleteAnnouncementAction(id);
@@ -315,9 +338,7 @@ export default function ContentCMSPage() {
     setIsModalOpen(true);
   };
 
-  // ------------------------------------------------------
   // Handlers for FAQs
-  // ------------------------------------------------------
   const handleToggleFaq = (id: string, current: boolean) => {
     startTransition(async () => {
       setFaqs((prev) =>
@@ -328,7 +349,7 @@ export default function ContentCMSPage() {
   };
 
   const handleDeleteFaq = (id: string) => {
-    if (!confirm("Delete this FAQ item?")) return;
+    if (!confirm("Are you sure you want to delete this FAQ item?")) return;
     startTransition(async () => {
       setFaqs((prev) => prev.filter((f) => f.id !== id));
       await deleteFaqAction(id);
@@ -345,9 +366,7 @@ export default function ContentCMSPage() {
     setIsModalOpen(true);
   };
 
-  // ------------------------------------------------------
   // Handlers for Testimonials
-  // ------------------------------------------------------
   const handleToggleTestimonial = (id: string, current: boolean) => {
     startTransition(async () => {
       setTestimonials((prev) =>
@@ -358,7 +377,7 @@ export default function ContentCMSPage() {
   };
 
   const handleDeleteTestimonial = (id: string) => {
-    if (!confirm("Delete this testimonial?")) return;
+    if (!confirm("Are you sure you want to delete this testimonial?")) return;
     startTransition(async () => {
       setTestimonials((prev) => prev.filter((t) => t.id !== id));
       await deleteTestimonialAction(id);
@@ -377,9 +396,7 @@ export default function ContentCMSPage() {
     setIsModalOpen(true);
   };
 
-  // ------------------------------------------------------
   // Handlers for Resources
-  // ------------------------------------------------------
   const handleToggleResource = (id: string, current: boolean) => {
     startTransition(async () => {
       setResources((prev) =>
@@ -390,7 +407,7 @@ export default function ContentCMSPage() {
   };
 
   const handleDeleteResource = (id: string) => {
-    if (!confirm("Delete this resource guide?")) return;
+    if (!confirm("Are you sure you want to delete this resource guide?")) return;
     startTransition(async () => {
       setResources((prev) => prev.filter((r) => r.id !== id));
       await deleteResourceAction(id);
@@ -410,9 +427,7 @@ export default function ContentCMSPage() {
     setIsModalOpen(true);
   };
 
-  // ------------------------------------------------------
-  // Save Modal Submit Handler
-  // ------------------------------------------------------
+  // Modal Submit
   const handleModalSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setModalError(null);
@@ -450,6 +465,7 @@ export default function ContentCMSPage() {
           question: faqQuestion,
           answer: faqAnswer,
           is_published: faqPublished,
+          sort_order: 1,
         });
         if (res.ok) {
           setIsModalOpen(false);
@@ -471,7 +487,6 @@ export default function ContentCMSPage() {
         const res = await saveTestimonialAction(editingId, {
           author_name: testAuthor,
           author_role: testRole,
-          school_name: testSchool || undefined,
           quote: testQuote,
           rating: testRating,
           is_featured: testFeatured,
@@ -484,7 +499,7 @@ export default function ContentCMSPage() {
               id: t.id,
               author_name: t.author_name,
               author_role: t.author_role,
-              school_name: testSchool || null,
+              school_name: null,
               quote: t.quote,
               rating: t.rating,
               is_featured: t.is_featured,
@@ -498,7 +513,7 @@ export default function ContentCMSPage() {
           title: resTitle,
           description: resDesc,
           category: resCat,
-          file_url: resUrl || "/assets/guides/checklist.pdf",
+          file_url: resUrl || "/assets/guides/stationery-checklist.pdf",
           file_type: resType,
           file_size_label: resSize,
           is_public: resPublic,
@@ -526,598 +541,816 @@ export default function ContentCMSPage() {
     });
   };
 
-  return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 p-6 lg:p-10">
-      {/* Context Header */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">
-              Site Content & CMS Hub
-            </h1>
-            <p className="text-sm text-slate-400 mt-1">
-              Manage public copy, FAQs, announcement banners, parent testimonials, and resource downloads.
-            </p>
-          </div>
+  // Filtered FAQs
+  const filteredFaqs = useMemo(() => {
+    if (faqCategoryFilter === "all") return faqs;
+    return faqs.filter((f) => f.category === faqCategoryFilter);
+  }, [faqs, faqCategoryFilter]);
+
+  // Resource DataTable Columns
+  const resourceColumns: ColumnDef<ResourceItem>[] = [
+    {
+      key: "file_type",
+      header: "TYPE",
+      width: "90px",
+      align: "center",
+      render: (row) => <span className={styles.badgeFormat}>{row.file_type}</span>,
+    },
+    {
+      key: "title",
+      header: "DOCUMENT TITLE & DESCRIPTION",
+      sortable: true,
+      render: (row) => (
+        <div className={coreStyles.productCell}>
+          <span className={coreStyles.schoolNameTitle}>{row.title}</span>
+          <span className={coreStyles.productBrand}>{row.description}</span>
+        </div>
+      ),
+    },
+    {
+      key: "category",
+      header: "CATEGORY",
+      width: "140px",
+      render: (row) => <span className={styles.badgeCategory}>{row.category}</span>,
+    },
+    {
+      key: "file_size_label",
+      header: "FILE SIZE",
+      width: "110px",
+      align: "center",
+      render: (row) => <span className={coreStyles.textMuted}>{row.file_size_label}</span>,
+    },
+    {
+      key: "download_count",
+      header: "DOWNLOADS",
+      width: "110px",
+      align: "center",
+      render: (row) => (
+        <span className={coreStyles.skuBadge}>{row.download_count.toLocaleString()}</span>
+      ),
+    },
+    {
+      key: "is_public",
+      header: "VISIBILITY",
+      width: "120px",
+      align: "center",
+      render: (row) => (
+        <StatusBadge
+          status={row.is_public ? "Public" : "Internal"}
+          tone={row.is_public ? "emerald" : "amber"}
+          showDot
+        />
+      ),
+    },
+    {
+      key: "actions",
+      header: "ACTIONS",
+      width: "120px",
+      align: "right",
+      sticky: "right",
+      render: (row) => (
+        <div className={styles.cardActions} onClick={(e) => e.stopPropagation()}>
+          {row.file_url && (
+            <a
+              href={row.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.iconBtn}
+              data-db-tooltip="Download File"
+              aria-label="Download File"
+            >
+              <Download size={14} />
+            </a>
+          )}
           <button
-            onClick={openNewModal}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-semibold text-sm transition-all shadow-sm w-fit"
+            type="button"
+            className={styles.iconBtn}
+            data-db-tooltip="Edit Resource"
+            aria-label="Edit Resource"
+            onClick={() => handleEditResource(row)}
           >
-            <Plus className="w-4 h-4" />
-            <span>
-              {activeTab === "eyebrows" && "New Announcement"}
-              {activeTab === "faqs" && "New FAQ Item"}
-              {activeTab === "testimonials" && "New Testimonial"}
-              {activeTab === "resources" && "Upload Resource"}
-            </span>
+            <Edit2 size={14} />
+          </button>
+          <button
+            type="button"
+            className={styles.iconBtnDanger}
+            data-db-tooltip="Delete Resource"
+            aria-label="Delete Resource"
+            onClick={() => handleDeleteResource(row.id)}
+          >
+            <Trash2 size={14} />
           </button>
         </div>
+      ),
+    },
+  ];
 
-        {/* Multi-Tab Navigation */}
-        <div className="flex items-center gap-2 border-b border-slate-800/80 pb-3 mt-8 overflow-x-auto">
-          <TabButton
-            active={activeTab === "eyebrows"}
-            onClick={() => setActiveTab("eyebrows")}
-            icon={<Megaphone className="w-4 h-4" />}
-            label="Eyebrows & Banners"
-            count={announcements.length}
-          />
-          <TabButton
-            active={activeTab === "faqs"}
-            onClick={() => setActiveTab("faqs")}
-            icon={<HelpCircle className="w-4 h-4" />}
-            label="FAQs"
-            count={faqs.length}
-          />
-          <TabButton
-            active={activeTab === "testimonials"}
-            onClick={() => setActiveTab("testimonials")}
-            icon={<MessageSquareQuote className="w-4 h-4" />}
-            label="Testimonials"
-            count={testimonials.length}
-          />
-          <TabButton
-            active={activeTab === "resources"}
-            onClick={() => setActiveTab("resources")}
-            icon={<FolderDown className="w-4 h-4" />}
-            label="Resources Hub"
-            count={resources.length}
-          />
-        </div>
-      </div>
+  const totalItemCount =
+    announcements.length + faqs.length + testimonials.length + resources.length;
 
-      {/* Tab Panels */}
-      <div className="max-w-7xl mx-auto">
-        {activeTab === "eyebrows" && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 gap-4">
-              {announcements.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-[#0c1322] border border-slate-800/90 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:border-emerald-500/30 transition-all shadow-sm"
-                >
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
-                        {item.badge_text}
-                      </span>
-                      <span className="text-xs text-slate-400 uppercase tracking-wider font-mono">
-                        Location: {item.display_location}
-                      </span>
-                    </div>
-                    <p className="text-base font-semibold text-white">{item.message}</p>
-                    {item.link_url && (
-                      <p className="text-xs text-slate-400 flex items-center gap-1.5">
-                        Link:{" "}
-                        <span className="text-emerald-400">
-                          {item.link_label || item.link_url}
-                        </span>
-                        <ExternalLink className="w-3 h-3 text-slate-400" />
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-3 self-end md:self-center shrink-0">
-                    <button
-                      onClick={() => handleToggleAnnouncement(item.id, item.is_active)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border flex items-center gap-1.5 transition-all ${
-                        item.is_active
-                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                          : "bg-slate-800/60 text-slate-400 border-slate-700/60"
-                      }`}
-                    >
-                      {item.is_active ? (
-                        <Eye className="w-3.5 h-3.5" />
-                      ) : (
-                        <EyeOff className="w-3.5 h-3.5" />
-                      )}
-                      {item.is_active ? "Live" : "Hidden"}
-                    </button>
-                    <button
-                      onClick={() => handleEditAnnouncement(item)}
-                      className="p-2 rounded-lg bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-                      title="Edit"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteAnnouncement(item.id)}
-                      className="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === "faqs" && (
-          <div className="space-y-4">
-            {faqs.map((faq) => (
-              <div
-                key={faq.id}
-                className="bg-[#0c1322] border border-slate-800/90 rounded-2xl p-6 space-y-3 hover:border-emerald-500/30 transition-all shadow-sm"
-              >
-                <div className="flex justify-between items-start gap-4">
-                  <div className="space-y-1">
-                    <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-emerald-400 border border-slate-700">
-                      {faq.category}
-                    </span>
-                    <h3 className="text-base font-semibold text-white pt-1">
-                      {faq.question}
-                    </h3>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      onClick={() => handleToggleFaq(faq.id, faq.is_published)}
-                      className={`px-3 py-1 rounded-lg text-xs font-medium border flex items-center gap-1.5 transition-all ${
-                        faq.is_published
-                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                          : "bg-slate-800/60 text-slate-400 border-slate-700/60"
-                      }`}
-                    >
-                      {faq.is_published ? (
-                        <Eye className="w-3.5 h-3.5" />
-                      ) : (
-                        <EyeOff className="w-3.5 h-3.5" />
-                      )}
-                      {faq.is_published ? "Published" : "Draft"}
-                    </button>
-                    <button
-                      onClick={() => handleEditFaq(faq)}
-                      className="p-2 rounded-lg bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-                      title="Edit"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteFaq(faq.id)}
-                      className="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed pt-2 border-t border-slate-800/60">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {activeTab === "testimonials" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {testimonials.map((item) => (
-              <div
-                key={item.id}
-                className="bg-[#0c1322] border border-slate-800/90 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500/30 transition-all shadow-sm"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex text-amber-400">
-                      {Array.from({ length: item.rating }).map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
-                    {item.is_featured && (
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-slate-200 italic mb-6">
-                    &ldquo;{item.quote}&rdquo;
-                  </p>
-                </div>
-
-                <div className="border-t border-slate-800/60 pt-4 flex justify-between items-center">
-                  <div>
-                    <h4 className="text-sm font-semibold text-white">
-                      {item.author_name}
-                    </h4>
-                    <p className="text-xs text-slate-400">{item.author_role}</p>
-                    {item.school_name && (
-                      <p className="text-xs text-emerald-400 mt-0.5">
-                        {item.school_name}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleToggleTestimonial(item.id, item.is_featured)}
-                      className={`p-2 rounded-lg transition-all ${
-                        item.is_featured
-                          ? "bg-emerald-500/10 text-emerald-400"
-                          : "bg-slate-800 text-slate-400"
-                      }`}
-                      title={item.is_featured ? "Featured in marquee" : "Hidden"}
-                    >
-                      {item.is_featured ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                    </button>
-                    <button
-                      onClick={() => handleEditTestimonial(item)}
-                      className="p-2 rounded-lg bg-slate-800/80 text-slate-400 hover:text-white transition-colors"
-                      title="Edit"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteTestimonial(item.id)}
-                      className="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {activeTab === "resources" && (
-          <div className="space-y-4">
-            <div className="overflow-x-auto rounded-2xl border border-slate-800/90 bg-[#0c1322]">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-900/60 border-b border-slate-800 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                    <th className="p-4">Title & Details</th>
-                    <th className="p-4">Category</th>
-                    <th className="p-4">File Type / Size</th>
-                    <th className="p-4">Downloads</th>
-                    <th className="p-4">Visibility</th>
-                    <th className="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60 text-sm">
-                  {resources.map((res) => (
-                    <tr key={res.id} className="hover:bg-slate-900/40 transition-colors">
-                      <td className="p-4">
-                        <div className="font-semibold text-white">{res.title}</div>
-                        <div className="text-xs text-slate-400 truncate max-w-sm mt-0.5">
-                          {res.description}
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                          {res.category}
-                        </span>
-                      </td>
-                      <td className="p-4 font-mono text-xs text-slate-300">
-                        {res.file_type} • {res.file_size_label}
-                      </td>
-                      <td className="p-4 font-mono text-xs text-emerald-400">
-                        {res.download_count}
-                      </td>
-                      <td className="p-4">
-                        <button
-                          onClick={() => handleToggleResource(res.id, res.is_public)}
-                          className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg border ${
-                            res.is_public
-                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                              : "bg-slate-800/60 text-slate-400 border-slate-700/60"
-                          }`}
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          {res.is_public ? "Public" : "Draft"}
-                        </button>
-                      </td>
-                      <td className="p-4 text-right">
-                        <div className="inline-flex items-center gap-2">
-                          <button
-                            onClick={() => handleEditResource(res)}
-                            className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors"
-                            title="Edit"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteResource(res.id)}
-                            className="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-colors"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Interactive Creation / Edit Modal */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-          onClick={() => setIsModalOpen(false)}
-        >
-          <div
-            className="bg-[#0c1322] border border-slate-800/90 rounded-2xl w-full max-w-xl p-6 shadow-2xl space-y-5"
-            onClick={(e) => e.stopPropagation()}
+  return (
+    <div className={styles.container}>
+      {/* 1. Page Header */}
+      <AdminPageHeader
+        title="Site Content CMS"
+        count={totalItemCount}
+        subtitle="Manage storefront announcement banners, FAQs, parent testimonials, and resource downloads."
+        actions={
+          <AdminButton
+            variant="primary"
+            icon={<Plus size={15} />}
+            onClick={openNewModal}
           >
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-lg font-bold text-white">
-                {editingId ? "Edit" : "New"}{" "}
-                {activeTab === "eyebrows" && "Announcement Banner"}
-                {activeTab === "faqs" && "FAQ Item"}
-                {activeTab === "testimonials" && "Testimonial"}
-                {activeTab === "resources" && "Resource Document"}
-              </h3>
+            {activeTab === "eyebrows" && "New Announcement"}
+            {activeTab === "faqs" && "New FAQ Item"}
+            {activeTab === "testimonials" && "New Testimonial"}
+            {activeTab === "resources" && "Upload Resource"}
+          </AdminButton>
+        }
+      />
+
+      {/* 2. Responsive Segmented Tab Bar */}
+      <div className={styles.tabBar} role="tablist">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "eyebrows"}
+          className={`${styles.tabBtn} ${activeTab === "eyebrows" ? styles.tabBtnActive : styles.tabBtnInactive}`}
+          onClick={() => setActiveTab("eyebrows")}
+        >
+          <Megaphone size={15} />
+          <span>Eyebrows & Banners</span>
+          <span className={styles.tabCount}>{announcements.length}</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "faqs"}
+          className={`${styles.tabBtn} ${activeTab === "faqs" ? styles.tabBtnActive : styles.tabBtnInactive}`}
+          onClick={() => setActiveTab("faqs")}
+        >
+          <HelpCircle size={15} />
+          <span>FAQs</span>
+          <span className={styles.tabCount}>{faqs.length}</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "testimonials"}
+          className={`${styles.tabBtn} ${activeTab === "testimonials" ? styles.tabBtnActive : styles.tabBtnInactive}`}
+          onClick={() => setActiveTab("testimonials")}
+        >
+          <MessageSquareQuote size={15} />
+          <span>Testimonials</span>
+          <span className={styles.tabCount}>{testimonials.length}</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "resources"}
+          className={`${styles.tabBtn} ${activeTab === "resources" ? styles.tabBtnActive : styles.tabBtnInactive}`}
+          onClick={() => setActiveTab("resources")}
+        >
+          <FolderDown size={15} />
+          <span>Resources Hub</span>
+          <span className={styles.tabCount}>{resources.length}</span>
+        </button>
+      </div>
+
+      {/* 3. Tab Panels */}
+
+      {/* ── TAB 1: EYEBROWS & ANNOUNCEMENTS ── */}
+      {activeTab === "eyebrows" && (
+        <div className={styles.grid1}>
+          {announcements.length === 0 ? (
+            <div className={styles.emptyState}>
+              <Megaphone size={32} />
+              <div className={styles.emptyTitle}>No announcements found</div>
+              <div className={styles.emptySubtitle}>
+                Create an announcement banner to display discounts or notices to visitors.
+              </div>
+              <AdminButton variant="primary" icon={<Plus size={14} />} onClick={openNewModal}>
+                Create Announcement
+              </AdminButton>
+            </div>
+          ) : (
+            announcements.map((item) => (
+              <div key={item.id} className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <div className={styles.cardBadges}>
+                    <span className={styles.badgeLocation}>{item.display_location}</span>
+                    <span className={styles.badgeCategory}>{item.badge_text}</span>
+                  </div>
+                  <StatusBadge
+                    status={item.is_active ? "Live" : "Hidden"}
+                    tone={item.is_active ? "emerald" : "slate"}
+                    showDot
+                  />
+                </div>
+
+                <p className={styles.cardMessage}>{item.message}</p>
+
+                {item.link_url && (
+                  <a
+                    href={item.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.cardLinkRow}
+                  >
+                    <span>{item.link_label || "View Destination"}</span>
+                    <ExternalLink size={13} />
+                  </a>
+                )}
+
+                <div className={styles.cardFooter}>
+                  <AdminButton
+                    variant="outline"
+                    size="sm"
+                    icon={item.is_active ? <EyeOff size={13} /> : <Eye size={13} />}
+                    onClick={() => handleToggleAnnouncement(item.id, item.is_active)}
+                  >
+                    {item.is_active ? "Deactivate" : "Activate"}
+                  </AdminButton>
+
+                  <div className={styles.cardActions}>
+                    <button
+                      type="button"
+                      className={styles.iconBtn}
+                      data-db-tooltip="Edit Banner"
+                      aria-label="Edit Banner"
+                      onClick={() => handleEditAnnouncement(item)}
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.iconBtnDanger}
+                      data-db-tooltip="Delete Banner"
+                      aria-label="Delete Banner"
+                      onClick={() => handleDeleteAnnouncement(item.id)}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* ── TAB 2: FAQs ── */}
+      {activeTab === "faqs" && (
+        <div>
+          {/* Category Filter Pills */}
+          <div className={styles.filterBar}>
+            {["all", "Ordering", "Delivery & Pickup", "School Packs", "Payments"].map((cat) => (
               <button
-                onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                key={cat}
+                type="button"
+                className={`${styles.filterPill} ${faqCategoryFilter === cat ? styles.filterPillActive : styles.filterPillInactive}`}
+                onClick={() => setFaqCategoryFilter(cat)}
               >
-                <X className="w-5 h-5" />
+                {cat === "all" ? "All Categories" : cat}
+              </button>
+            ))}
+          </div>
+
+          <div className={styles.grid1}>
+            {filteredFaqs.length === 0 ? (
+              <div className={styles.emptyState}>
+                <HelpCircle size={32} />
+                <div className={styles.emptyTitle}>No FAQs found in this category</div>
+                <div className={styles.emptySubtitle}>
+                  Add common customer questions and clear answers for the storefront.
+                </div>
+                <AdminButton variant="primary" icon={<Plus size={14} />} onClick={openNewModal}>
+                  New FAQ
+                </AdminButton>
+              </div>
+            ) : (
+              filteredFaqs.map((faq) => {
+                const isExpanded = expandedFaqId === faq.id;
+                return (
+                  <div key={faq.id} className={styles.card}>
+                    <div
+                      className={styles.faqHeader}
+                      onClick={() => setExpandedFaqId(isExpanded ? null : faq.id)}
+                    >
+                      <div className={styles.faqQuestion}>
+                        <span className={styles.badgeCategory}>{faq.category}</span>
+                        <span>{faq.question}</span>
+                      </div>
+                      <div className={styles.cardActions}>
+                        <StatusBadge
+                          status={faq.is_published ? "Published" : "Draft"}
+                          tone={faq.is_published ? "emerald" : "slate"}
+                          showDot
+                        />
+                        <button
+                          type="button"
+                          className={styles.iconBtn}
+                          aria-label={isExpanded ? "Collapse Answer" : "Expand Answer"}
+                        >
+                          {isExpanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {isExpanded && <div className={styles.faqAnswer}>{faq.answer}</div>}
+
+                    <div className={styles.cardFooter}>
+                      <AdminButton
+                        variant="outline"
+                        size="sm"
+                        icon={faq.is_published ? <EyeOff size={13} /> : <Eye size={13} />}
+                        onClick={() => handleToggleFaq(faq.id, faq.is_published)}
+                      >
+                        {faq.is_published ? "Unpublish" : "Publish"}
+                      </AdminButton>
+
+                      <div className={styles.cardActions}>
+                        <button
+                          type="button"
+                          className={styles.iconBtn}
+                          data-db-tooltip="Edit FAQ"
+                          aria-label="Edit FAQ"
+                          onClick={() => handleEditFaq(faq)}
+                        >
+                          <Edit2 size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.iconBtnDanger}
+                          data-db-tooltip="Delete FAQ"
+                          aria-label="Delete FAQ"
+                          onClick={() => handleDeleteFaq(faq.id)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── TAB 3: TESTIMONIALS ── */}
+      {activeTab === "testimonials" && (
+        <div className={styles.grid2}>
+          {testimonials.length === 0 ? (
+            <div className={styles.emptyState} style={{ gridColumn: "1 / -1" }}>
+              <MessageSquareQuote size={32} />
+              <div className={styles.emptyTitle}>No testimonials yet</div>
+              <div className={styles.emptySubtitle}>
+                Add verified quotes from parents, teachers, and school heads.
+              </div>
+              <AdminButton variant="primary" icon={<Plus size={14} />} onClick={openNewModal}>
+                Add Testimonial
+              </AdminButton>
+            </div>
+          ) : (
+            testimonials.map((test) => (
+              <div key={test.id} className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <div className={styles.starRow}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        size={14}
+                        fill={i < test.rating ? "#eab308" : "none"}
+                        stroke={i < test.rating ? "#eab308" : "#64748b"}
+                      />
+                    ))}
+                  </div>
+                  <StatusBadge
+                    status={test.is_featured ? "Featured" : "Standard"}
+                    tone={test.is_featured ? "emerald" : "slate"}
+                    showDot
+                  />
+                </div>
+
+                <p className={styles.quoteText}>&ldquo;{test.quote}&rdquo;</p>
+
+                <div className={styles.authorRow}>
+                  <span className={styles.authorName}>{test.author_name}</span>
+                  <span className={styles.authorRole}>{test.author_role}</span>
+                </div>
+
+                {test.school_name && (
+                  <div>
+                    <span className={styles.badgeSchool}>{test.school_name}</span>
+                  </div>
+                )}
+
+                <div className={styles.cardFooter}>
+                  <AdminButton
+                    variant="outline"
+                    size="sm"
+                    icon={test.is_featured ? <EyeOff size={13} /> : <Eye size={13} />}
+                    onClick={() => handleToggleTestimonial(test.id, test.is_featured)}
+                  >
+                    {test.is_featured ? "Unfeature" : "Feature"}
+                  </AdminButton>
+
+                  <div className={styles.cardActions}>
+                    <button
+                      type="button"
+                      className={styles.iconBtn}
+                      data-db-tooltip="Edit Testimonial"
+                      aria-label="Edit Testimonial"
+                      onClick={() => handleEditTestimonial(test)}
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.iconBtnDanger}
+                      data-db-tooltip="Delete Testimonial"
+                      aria-label="Delete Testimonial"
+                      onClick={() => handleDeleteTestimonial(test.id)}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* ── TAB 4: RESOURCES HUB (DATA TABLE) ── */}
+      {activeTab === "resources" && (
+        <DataTable
+          data={resources}
+          columns={resourceColumns}
+          keyExtractor={(row) => row.id}
+          emptyTitle="No resource documents uploaded"
+          emptySubtitle="Upload stationery checklists, packaging policies, or parent guides."
+        />
+      )}
+
+      {/* ── 4. Add / Edit Modal Dialog ── */}
+      {isModalOpen && (
+        <div className={styles.modalOverlay} onClick={() => setIsModalOpen(false)}>
+          <div className={styles.modalDialog} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
+                {editingId ? "Edit Item" : "Create New Item"} —{" "}
+                {activeTab === "eyebrows" && "Announcement Banner"}
+                {activeTab === "faqs" && "FAQ Entry"}
+                {activeTab === "testimonials" && "Parent Testimonial"}
+                {activeTab === "resources" && "Resource Document"}
+              </h2>
+              <button
+                type="button"
+                className={styles.modalCloseBtn}
+                onClick={() => setIsModalOpen(false)}
+                aria-label="Close modal"
+              >
+                <X size={18} />
               </button>
             </div>
 
-            {modalError && (
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-xs text-rose-400">
-                {modalError}
-              </div>
-            )}
+            <form onSubmit={handleModalSubmit}>
+              <div className={styles.modalBody}>
+                {modalError && <div className={styles.errorMessage}>{modalError}</div>}
 
-            <form onSubmit={handleModalSubmit} className="space-y-4">
-              {activeTab === "eyebrows" && (
-                <>
-                  <FloatingInput
-                    label="Badge Text (e.g. Pre-Orders Open)"
-                    value={annBadge}
-                    onChange={(e) => setAnnBadge(e.target.value)}
-                    required
-                  />
-                  <FloatingTextarea
-                    label="Announcement Message"
-                    value={annMessage}
-                    onChange={(e) => setAnnMessage(e.target.value)}
-                    required
-                    rows={3}
-                  />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <FloatingInput
-                      label="Link URL (e.g. /schools)"
-                      value={annLinkUrl}
-                      onChange={(e) => setAnnLinkUrl(e.target.value)}
-                    />
-                    <FloatingInput
-                      label="Link Label (e.g. Find Your School)"
-                      value={annLinkLabel}
-                      onChange={(e) => setAnnLinkLabel(e.target.value)}
-                    />
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <label className="block text-xs font-medium text-slate-400 mb-1">
-                        Display Slot
-                      </label>
-                      <select
-                        value={annLocation}
-                        onChange={(e) =>
-                          setAnnLocation(
-                            e.target.value as "global_top" | "hero_banner" | "schools_page"
-                          )
-                        }
-                        className="w-full bg-[#090e17] border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 outline-none focus:border-emerald-500"
-                      >
-                        <option value="global_top">Global Top Header</option>
-                        <option value="hero_banner">Homepage Hero Banner</option>
-                        <option value="schools_page">Schools Page</option>
-                      </select>
+                {/* Eyebrow Form */}
+                {activeTab === "eyebrows" && (
+                  <>
+                    <div className={styles.formGrid2}>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Badge Tag</label>
+                        <input
+                          type="text"
+                          required
+                          value={annBadge}
+                          onChange={(e) => setAnnBadge(e.target.value)}
+                          placeholder="e.g. Back-to-School 2027"
+                          className={styles.formInput}
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Display Placement</label>
+                        <select
+                          value={annLocation}
+                          onChange={(e) =>
+                            setAnnLocation(
+                              e.target.value as "global_top" | "hero_banner" | "schools_page"
+                            )
+                          }
+                          className={styles.formSelect}
+                        >
+                          <option value="global_top">Global Top Bar</option>
+                          <option value="hero_banner">Storefront Hero Banner</option>
+                          <option value="schools_page">Schools Directory Page</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
 
-              {activeTab === "faqs" && (
-                <>
-                  <FloatingInput
-                    label="Category (Ordering, Delivery & Pickup, etc.)"
-                    value={faqCategory}
-                    onChange={(e) => setFaqCategory(e.target.value)}
-                    required
-                  />
-                  <FloatingInput
-                    label="Question"
-                    value={faqQuestion}
-                    onChange={(e) => setFaqQuestion(e.target.value)}
-                    required
-                  />
-                  <FloatingTextarea
-                    label="Answer"
-                    value={faqAnswer}
-                    onChange={(e) => setFaqAnswer(e.target.value)}
-                    required
-                    rows={4}
-                  />
-                </>
-              )}
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Banner Message</label>
+                      <textarea
+                        required
+                        value={annMessage}
+                        onChange={(e) => setAnnMessage(e.target.value)}
+                        placeholder="e.g. Save 15% on official stationery packs before term begins!"
+                        className={styles.formTextarea}
+                      />
+                    </div>
 
-              {activeTab === "testimonials" && (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <FloatingInput
-                      label="Author Name"
-                      value={testAuthor}
-                      onChange={(e) => setTestAuthor(e.target.value)}
-                      required
-                    />
-                    <FloatingInput
-                      label="Author Role"
-                      value={testRole}
-                      onChange={(e) => setTestRole(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <FloatingInput
-                    label="School Name (Optional association pill)"
-                    value={testSchool}
-                    onChange={(e) => setTestSchool(e.target.value)}
-                  />
-                  <FloatingTextarea
-                    label="Testimonial Quote"
-                    value={testQuote}
-                    onChange={(e) => setTestQuote(e.target.value)}
-                    required
-                    rows={3}
-                  />
-                  <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1">
-                      Rating
+                    <div className={styles.formGrid2}>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Destination URL (Optional)</label>
+                        <input
+                          type="text"
+                          value={annLinkUrl}
+                          onChange={(e) => setAnnLinkUrl(e.target.value)}
+                          placeholder="/schools or https://..."
+                          className={styles.formInput}
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Link Label (Optional)</label>
+                        <input
+                          type="text"
+                          value={annLinkLabel}
+                          onChange={(e) => setAnnLinkLabel(e.target.value)}
+                          placeholder="e.g. View Packs"
+                          className={styles.formInput}
+                        />
+                      </div>
+                    </div>
+
+                    <label className={styles.checkboxWrap}>
+                      <input
+                        type="checkbox"
+                        checked={annActive}
+                        onChange={(e) => setAnnActive(e.target.checked)}
+                        className={styles.checkbox}
+                      />
+                      <span>Active on storefront immediately</span>
                     </label>
-                    <select
-                      value={testRating}
-                      onChange={(e) => setTestRating(Number(e.target.value))}
-                      className="w-full bg-[#090e17] border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 outline-none focus:border-emerald-500"
-                    >
-                      <option value={5}>★★★★★ (5 Stars)</option>
-                      <option value={4}>★★★★☆ (4 Stars)</option>
-                      <option value={3}>★★★☆☆ (3 Stars)</option>
-                    </select>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
 
-              {activeTab === "resources" && (
-                <>
-                  <FloatingInput
-                    label="Resource Document Title"
-                    value={resTitle}
-                    onChange={(e) => setResTitle(e.target.value)}
-                    required
-                  />
-                  <FloatingTextarea
-                    label="Short Description"
-                    value={resDesc}
-                    onChange={(e) => setResDesc(e.target.value)}
-                    rows={2}
-                  />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <FloatingInput
-                      label="Category (e.g. Parent Guides)"
-                      value={resCat}
-                      onChange={(e) => setResCat(e.target.value)}
-                      required
-                    />
-                    <FloatingInput
-                      label="File Size (e.g. 1.8 MB)"
-                      value={resSize}
-                      onChange={(e) => setResSize(e.target.value)}
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <FloatingInput
-                      label="File URL / Storage Path"
-                      value={resUrl}
-                      onChange={(e) => setResUrl(e.target.value)}
-                      required
-                    />
-                    <div>
-                      <label className="block text-xs font-medium text-slate-400 mb-1">
-                        Format
-                      </label>
+                {/* FAQ Form */}
+                {activeTab === "faqs" && (
+                  <>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Category</label>
                       <select
-                        value={resType}
-                        onChange={(e) => setResType(e.target.value)}
-                        className="w-full bg-[#090e17] border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 outline-none focus:border-emerald-500"
+                        value={faqCategory}
+                        onChange={(e) => setFaqCategory(e.target.value)}
+                        className={styles.formSelect}
                       >
-                        <option value="PDF">PDF Document</option>
-                        <option value="DOCX">Word Document (.docx)</option>
-                        <option value="XLSX">Excel Sheet (.xlsx)</option>
+                        <option value="Ordering">Ordering</option>
+                        <option value="Delivery & Pickup">Delivery & Pickup</option>
+                        <option value="School Packs">School Packs</option>
+                        <option value="Payments">Payments</option>
+                        <option value="Returns & Policies">Returns & Policies</option>
                       </select>
                     </div>
-                  </div>
-                </>
-              )}
 
-              <div className="pt-4 border-t border-slate-800 flex justify-end gap-3">
-                <button
-                  type="button"
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Question</label>
+                      <input
+                        type="text"
+                        required
+                        value={faqQuestion}
+                        onChange={(e) => setFaqQuestion(e.target.value)}
+                        placeholder="e.g. Can I order for multiple children in different grades?"
+                        className={styles.formInput}
+                      />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Answer</label>
+                      <textarea
+                        required
+                        value={faqAnswer}
+                        onChange={(e) => setFaqAnswer(e.target.value)}
+                        placeholder="Detailed answer explaining procedure or policy..."
+                        className={styles.formTextarea}
+                      />
+                    </div>
+
+                    <label className={styles.checkboxWrap}>
+                      <input
+                        type="checkbox"
+                        checked={faqPublished}
+                        onChange={(e) => setFaqPublished(e.target.checked)}
+                        className={styles.checkbox}
+                      />
+                      <span>Publish on storefront FAQ page</span>
+                    </label>
+                  </>
+                )}
+
+                {/* Testimonial Form */}
+                {activeTab === "testimonials" && (
+                  <>
+                    <div className={styles.formGrid2}>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Author Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={testAuthor}
+                          onChange={(e) => setTestAuthor(e.target.value)}
+                          placeholder="e.g. Amanda Khumalo"
+                          className={styles.formInput}
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Role / Association</label>
+                        <input
+                          type="text"
+                          required
+                          value={testRole}
+                          onChange={(e) => setTestRole(e.target.value)}
+                          placeholder="e.g. Parent of Grade 2 Learner"
+                          className={styles.formInput}
+                        />
+                      </div>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>School Name (Optional)</label>
+                      <input
+                        type="text"
+                        value={testSchool}
+                        onChange={(e) => setTestSchool(e.target.value)}
+                        placeholder="e.g. Primrose Hill Primary"
+                        className={styles.formInput}
+                      />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Rating (1 to 5 Stars)</label>
+                      <div className={styles.starRow}>
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setTestRating(star)}
+                            style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}
+                          >
+                            <Star
+                              size={20}
+                              fill={star <= testRating ? "#eab308" : "none"}
+                              stroke={star <= testRating ? "#eab308" : "#64748b"}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Quote Text</label>
+                      <textarea
+                        required
+                        value={testQuote}
+                        onChange={(e) => setTestQuote(e.target.value)}
+                        placeholder="Customer review or recommendation quote..."
+                        className={styles.formTextarea}
+                      />
+                    </div>
+
+                    <label className={styles.checkboxWrap}>
+                      <input
+                        type="checkbox"
+                        checked={testFeatured}
+                        onChange={(e) => setTestFeatured(e.target.checked)}
+                        className={styles.checkbox}
+                      />
+                      <span>Feature in storefront homepage marquee</span>
+                    </label>
+                  </>
+                )}
+
+                {/* Resource Form */}
+                {activeTab === "resources" && (
+                  <>
+                    <div className={styles.formGrid2}>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Document Title</label>
+                        <input
+                          type="text"
+                          required
+                          value={resTitle}
+                          onChange={(e) => setResTitle(e.target.value)}
+                          placeholder="e.g. 2027 Stationery List"
+                          className={styles.formInput}
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Category</label>
+                        <select
+                          value={resCat}
+                          onChange={(e) => setResCat(e.target.value)}
+                          className={styles.formSelect}
+                        >
+                          <option value="Parent Guides">Parent Guides</option>
+                          <option value="School Packs">School Packs</option>
+                          <option value="Policies">Policies & Guidelines</option>
+                          <option value="Forms">Order Forms</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Description</label>
+                      <textarea
+                        value={resDesc}
+                        onChange={(e) => setResDesc(e.target.value)}
+                        placeholder="Brief summary of document contents..."
+                        className={styles.formTextarea}
+                      />
+                    </div>
+
+                    <div className={styles.formGrid2}>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>File Format</label>
+                        <select
+                          value={resType}
+                          onChange={(e) => setResType(e.target.value)}
+                          className={styles.formSelect}
+                        >
+                          <option value="PDF">PDF</option>
+                          <option value="DOCX">DOCX</option>
+                          <option value="XLSX">XLSX</option>
+                          <option value="ZIP">ZIP</option>
+                        </select>
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>File Size</label>
+                        <input
+                          type="text"
+                          value={resSize}
+                          onChange={(e) => setResSize(e.target.value)}
+                          placeholder="e.g. 1.5 MB"
+                          className={styles.formInput}
+                        />
+                      </div>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>File Storage Path or URL</label>
+                      <input
+                        type="text"
+                        value={resUrl}
+                        onChange={(e) => setResUrl(e.target.value)}
+                        placeholder="/assets/guides/... or Supabase storage URL"
+                        className={styles.formInput}
+                      />
+                    </div>
+
+                    <label className={styles.checkboxWrap}>
+                      <input
+                        type="checkbox"
+                        checked={resPublic}
+                        onChange={(e) => setResPublic(e.target.checked)}
+                        className={styles.checkbox}
+                      />
+                      <span>Make available for public parent downloads</span>
+                    </label>
+                  </>
+                )}
+              </div>
+
+              <div className={styles.modalFooter}>
+                <AdminButton
+                  variant="secondary"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors"
                 >
                   Cancel
-                </button>
-                <button
+                </AdminButton>
+                <AdminButton
+                  variant="primary"
                   type="submit"
                   disabled={isPending}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-semibold text-sm transition-all shadow-sm disabled:opacity-50"
                 >
-                  {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-                  <span>{editingId ? "Update Record" : "Save Record"}</span>
-                </button>
+                  {isPending ? "Saving..." : editingId ? "Save Changes" : "Create Item"}
+                </AdminButton>
               </div>
             </form>
           </div>
         </div>
       )}
     </div>
-  );
-}
-
-function TabButton({
-  active,
-  onClick,
-  icon,
-  label,
-  count,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: React.ReactNode;
-  label: string;
-  count?: number;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
-        active
-          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 shadow-sm"
-          : "text-slate-400 hover:text-white hover:bg-slate-800/40 border border-transparent"
-      }`}
-    >
-      {icon}
-      <span>{label}</span>
-      {count !== undefined && (
-        <span
-          className={`text-xs px-2 py-0.5 rounded-full font-mono ${
-            active
-              ? "bg-emerald-500/20 text-emerald-300"
-              : "bg-slate-800 text-slate-400"
-          }`}
-        >
-          {count}
-        </span>
-      )}
-    </button>
   );
 }
