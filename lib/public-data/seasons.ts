@@ -3,7 +3,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { PublicSeason } from "./contracts";
 
 export const SEASON_CACHE_TAG = "public-season-v1";
-export const SEASON_REVALIDATE_SECONDS = 3600;
+export const SEASON_REVALIDATE_SECONDS = 300;
 
 export const DEFAULT_PUBLIC_SEASON: PublicSeason = {
   id: "season-2027",

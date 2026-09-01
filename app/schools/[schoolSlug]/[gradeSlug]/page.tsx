@@ -17,7 +17,7 @@ type GradePageProps = {
   params: Promise<{ schoolSlug: string; gradeSlug: string }>;
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 
 export async function generateMetadata({

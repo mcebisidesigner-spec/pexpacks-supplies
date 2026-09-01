@@ -1,6 +1,7 @@
 import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import { SEASON_CACHE_TAG } from "@/lib/public-data/seasons";
 import { SETTINGS_CACHE_TAG } from "@/lib/public-data/settings";
+import { CMS_TAGS } from "@/lib/cms";
 
 /**
  * Shared invalidation for the public catalogue after admin mutations.
@@ -8,7 +9,7 @@ import { SETTINGS_CACHE_TAG } from "@/lib/public-data/settings";
  * Public school/pack pages read through `getCachedSchoolBySlug` and friends,
  * which are cached under SCHOOL_DATA_TAG. Invalidating the tag forces those
  * cached reads (and the ISR pages that depend on them) to refresh immediately
- * instead of waiting out their 1-hour revalidate window.
+ * instead of waiting out their 5-minute revalidate window.
  *
  * When a school's own page is affected (slug/name/status/logo/grade changes)
  * pass `schoolSlug` to also revalidate the page-level ISR paths.
@@ -40,14 +41,14 @@ export function revalidateCatalog(options?: {
         const revalidateTag = nextCache.revalidateTag as RevalidateTagFn;
         revalidateTagNow(revalidateTag, SCHOOL_DATA_TAG);
         revalidateTagNow(revalidateTag, "featured-schools");
+        revalidateTagNow(revalidateTag, SEASON_CACHE_TAG);
+        revalidateTagNow(revalidateTag, SETTINGS_CACHE_TAG);
+        revalidateTagNow(revalidateTag, CMS_TAGS.testimonials);
+        revalidateTagNow(revalidateTag, CMS_TAGS.faqs);
+        revalidateTagNow(revalidateTag, CMS_TAGS.websiteContent);
+
         if (options?.schoolSlug) {
           revalidateTagNow(revalidateTag, `school-${options.schoolSlug}`);
-        }
-        if (options?.revalidateSeason) {
-          revalidateTagNow(revalidateTag, SEASON_CACHE_TAG);
-        }
-        if (options?.revalidateSettings) {
-          revalidateTagNow(revalidateTag, SETTINGS_CACHE_TAG);
         }
       } catch (err) {
         console.error("[catalog-revalidate] revalidateTag failed:", err);

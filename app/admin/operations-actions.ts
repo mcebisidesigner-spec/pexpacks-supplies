@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 // papaparse is dynamically imported inside importMasterProductsAction
 // to keep it out of the base server bundle.
 
@@ -94,6 +95,7 @@ export async function createMasterProductAction(formData: FormData) {
   });
   revalidatePath("/admin/items");
   revalidatePath("/admin/pricing");
+  revalidateCatalog();
 }
 
 export async function importMasterProductsAction(formData: FormData) {
@@ -145,6 +147,7 @@ export async function importMasterProductsAction(formData: FormData) {
   });
   revalidatePath("/admin/items");
   revalidatePath("/admin/pricing");
+  revalidateCatalog();
 }
 
 export async function createSupplierAction(formData: FormData) {
@@ -367,6 +370,7 @@ export async function createSeasonAction(formData: FormData) {
     actorId: session.user.id,
   });
   revalidatePath("/admin/seasons");
+  revalidateCatalog({ revalidateSeason: true });
 }
 
 export async function updateSeasonAction(id: string, formData: FormData) {
@@ -389,6 +393,7 @@ export async function updateSeasonAction(id: string, formData: FormData) {
     actorId: session.user.id,
   });
   revalidatePath("/admin/seasons");
+  revalidateCatalog({ revalidateSeason: true });
 }
 
 export async function setDefaultSeasonAction(id: string) {
@@ -402,6 +407,7 @@ export async function setDefaultSeasonAction(id: string) {
     actorId: session.user.id,
   });
   revalidatePath("/admin/seasons");
+  revalidateCatalog({ revalidateSeason: true });
 }
 
 export async function createTaskCommentAction(

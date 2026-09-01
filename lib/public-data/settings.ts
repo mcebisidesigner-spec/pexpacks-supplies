@@ -6,7 +6,7 @@ import { PEXCOVER_PRICE } from "@/lib/constants";
 import { phoneNumber, generalEmail } from "@/data/contact";
 
 export const SETTINGS_CACHE_TAG = "public-site-settings-v1";
-export const SETTINGS_REVALIDATE_SECONDS = 3600;
+export const SETTINGS_REVALIDATE_SECONDS = 300;
 
 export const PUBLIC_SITE_SETTING_KEYS = [
   "pricing.pexcover_price",

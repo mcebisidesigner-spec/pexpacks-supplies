@@ -17,7 +17,7 @@ import { buildWhatsAppHref } from "@/data/contact";
 import pageStyles from "@/styles/Page.module.css";
 import styles from "./SchoolDetailPage.module.css";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 type SchoolPageProps = {
   params: Promise<{ schoolSlug: string }>;

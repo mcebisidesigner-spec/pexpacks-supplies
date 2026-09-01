@@ -53,16 +53,6 @@ type DbPack = {
   items: DbPackItem[];
 };
 
-let aggregateRpcAvailable: boolean | undefined;
-
-function isMissingRpc(error: { code?: string; message?: string } | null) {
-  return Boolean(
-    error &&
-    (error.code === "PGRST202" ||
-      error.message?.toLowerCase().includes("could not find the function")),
-  );
-}
-
 function extractGradeName(title: string | null, slug: string | null): string {
   const match =
     (title ?? "").match(/Grade\s+([R\d]+)/i) ||
@@ -153,98 +143,17 @@ function parseAggregatePayload(value: unknown): School | null {
   return toSchool(payload.school, payload.packs);
 }
 
-async function getSchoolWithBoundedQueries(
-  slug: string,
-): Promise<School | undefined> {
-  const supabase = createSupabaseAdminClient();
-  const isUuid =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      slug,
-    );
-
-  let query = supabase
-    .from("public_school_directory_view")
-    .select(
-      "id, name, slug, city, district, province, logo, is_partner, refused_partnership, partnership, parent_collection_accepted, principal",
-    );
-
-  if (isUuid) {
-    query = query.eq("id", slug);
-  } else {
-    query = query.eq("slug", slug.toLowerCase().trim());
-  }
-
-  const { data: dbSchool, error: schoolError } = await query.maybeSingle();
-
-  if (schoolError) throw schoolError;
-  if (!dbSchool) return getStaticSchoolBySlug(slug);
-
-  const { data: dbPacks, error: packsError } = await supabase
-    .from("school_packs")
-    .select("id, title, slug, price, description, stock, sort_order")
-    .eq("school_id", dbSchool.id)
-    .eq("visible", true)
-    .or(
-      "publication_status.eq.published,and(publication_status.is.null,visible.eq.true)",
-    )
-    .order("sort_order", { ascending: true })
-    .order("title", { ascending: true });
-
-  if (packsError) throw packsError;
-  if (!dbPacks?.length) {
-    const staticSchool = await getStaticSchoolBySlug(slug);
-    return staticSchool
-      ? {
-          ...staticSchool,
-          ...toSchool(dbSchool, []),
-          grades: staticSchool.grades,
-        }
-      : toSchool(dbSchool, []);
-  }
-
-  const packIds = dbPacks.map((pack) => pack.id);
-  const { data: dbItems, error: itemsError } = await supabase
-    .from("public_pack_items_view" as never)
-    .select(
-      "id, pack_id, name, quantity, unit_price, icon, description, specification, requires_pexcover, pexco_code, pexco_rate_cents, pexco_rate_active",
-    )
-    .in("pack_id", packIds)
-    .order("sort_order", { ascending: true });
-
-  if (itemsError) throw itemsError;
-  const itemsByPack = new Map<string, DbPackItem[]>();
-  for (const item of (dbItems ?? []) as unknown as DbPackItem[]) {
-    const items = itemsByPack.get(item.pack_id) ?? [];
-    items.push(item);
-    itemsByPack.set(item.pack_id, items);
-  }
-
-  return toSchool(
-    dbSchool,
-    dbPacks.map((pack) => ({ ...pack, items: itemsByPack.get(pack.id) ?? [] })),
-  );
-}
-
 export async function getSchoolBySlug(
   slug: string,
 ): Promise<School | undefined> {
   try {
     const supabase = createSupabaseAdminClient();
-    if (aggregateRpcAvailable !== false) {
-      const { data, error } = await supabase.rpc("get_public_school_pack", {
-        school_slug: slug,
-      });
+    const { data, error } = await supabase.rpc("get_public_school_pack", {
+      school_slug: slug,
+    });
 
-      if (!error) {
-        aggregateRpcAvailable = true;
-        const school = parseAggregatePayload(data);
-        if (school) return school;
-        if (data === null) return undefined;
-      }
-      if (isMissingRpc(error)) aggregateRpcAvailable = false;
-    }
-
-    return await getSchoolWithBoundedQueries(slug);
+    if (error) throw error;
+    return parseAggregatePayload(data) ?? (await getStaticSchoolBySlug(slug)) ?? undefined;
   } catch (error) {
     console.error("[school-utils] public school lookup failed:", error);
     return undefined;

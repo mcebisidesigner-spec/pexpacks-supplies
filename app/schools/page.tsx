@@ -23,6 +23,8 @@ export const metadata: Metadata = buildMetadata(
   "/schools"
 );
 
+export const revalidate = 300;
+
 export default async function SchoolsPage() {
   const featuredSchools = await getFeaturedSchoolRecords();
 
