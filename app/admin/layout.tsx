@@ -8,6 +8,7 @@ import { DbTooltipHost } from "@/components/admin/ui/DbTooltip";
 import { SessionSecurityProvider } from "@/components/security/SessionSecurityProvider";
 import { MustChangePasswordModal } from "@/components/security/MustChangePasswordModal";
 import { AdminDialogProvider } from "@/components/admin/ui/AdminDialogContext";
+import { DbNoticeProvider } from "@/components/admin/ui/DbNotice";
 
 export const metadata: Metadata = {
   title: "Admin | Pexpacks",
@@ -37,15 +38,17 @@ export default async function AdminLayout({
         mustChangePassword={mustChangePassword}
       />
       <AdminDialogProvider>
-        <AdminShell
-          groups={groups}
-          userName={name}
-          userEmail={session.user.email ?? ""}
-          userRoles={session.roles}
-          avatarUrl={avatarUrl}
-        >
-          {children}
-        </AdminShell>
+        <DbNoticeProvider>
+          <AdminShell
+            groups={groups}
+            userName={name}
+            userEmail={session.user.email ?? ""}
+            userRoles={session.roles}
+            avatarUrl={avatarUrl}
+          >
+            {children}
+          </AdminShell>
+        </DbNoticeProvider>
       </AdminDialogProvider>
       <DbTooltipHost />
     </SessionSecurityProvider>

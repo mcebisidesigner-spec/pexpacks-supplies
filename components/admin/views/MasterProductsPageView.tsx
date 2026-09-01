@@ -27,6 +27,7 @@ import { inferIcon } from "@/lib/packs/normalisePackItems";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { clearMasterProductsAction } from "@/app/admin/products/actions";
+import { useDbNotice, DbNotice } from "@/components/admin/ui/DbNotice";
 
 interface MasterProductsPageViewProps {
   initialData: {
@@ -56,6 +57,7 @@ export function MasterProductsPageView({
   initialData,
 }: MasterProductsPageViewProps) {
   const router = useRouter();
+  const { notifySuccess, notifyError } = useDbNotice();
   const { params, setParams, isPending } = useTableParams();
   const [isClearing, setIsClearing] = useState(false);
   const [catalogueMessage, setCatalogueMessage] = useState<string | null>(null);
@@ -69,18 +71,18 @@ export function MasterProductsPageView({
     try {
       const res = await clearMasterProductsAction();
       if (res.ok) {
-        setCatalogueMessage(
-          `Catalogue cleared — ${res.deleted ?? 0} products removed. You can now add products manually or via the CSV importer below.`,
+        notifySuccess(
+          `Catalogue cleared — ${res.deleted ?? 0} products removed.`,
         );
         setParams({}, true);
         router.refresh();
       } else {
-        setCatalogueMessage(
+        notifyError(
           res.message || "Failed to clear the product catalogue.",
         );
       }
     } catch {
-      setCatalogueMessage("Failed to clear the product catalogue.");
+      notifyError("Failed to clear the product catalogue.");
     } finally {
       setIsClearing(false);
     }

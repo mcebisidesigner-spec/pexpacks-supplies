@@ -15,7 +15,6 @@ import {
   Info,
   Trash2,
   X,
-  AlertCircle,
 } from "lucide-react";
 import styles from "./AdminDialog.module.css";
 

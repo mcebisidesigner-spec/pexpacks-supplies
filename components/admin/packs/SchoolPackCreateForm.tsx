@@ -21,6 +21,7 @@ import type { PackFormState } from "@/lib/admin/packs";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import itemStyles from "./ItemsManager.module.css";
@@ -169,14 +170,10 @@ export function SchoolPackCreateForm({
       </div>
 
       {state?.message ? (
-        <p
-          className={`${styles.statusMessage} ${
-            state.ok ? styles.statusSuccess : styles.statusError
-          }`}
-          role="status"
-        >
-          {state.message}
-        </p>
+        <DbNotice
+          type={state.ok ? "success" : "error"}
+          message={state.message}
+        />
       ) : null}
 
       {/* 5 Summary Metric Stat Cards matching reference image */}

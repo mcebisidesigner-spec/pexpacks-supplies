@@ -14,6 +14,7 @@ import {
   bulkImportStationeryAction,
   type CSVStationeryRow,
 } from "@/app/actions/stationery-import";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 import styles from "./CSVStationeryImporter.module.css";
 
 type CsvRow = Record<string, string | number | undefined>;
@@ -273,36 +274,24 @@ export function CSVStationeryImporter({
 
         {/* Global Error Notice */}
         {globalError && (
-          <div className={styles.errorBanner}>
-            <div className={styles.errorBannerInner}>
-              <AlertTriangle className={styles.errorIcon} />
-              <span>{globalError}</span>
-            </div>
-            <button
-              onClick={() => setGlobalError(null)}
-              className={styles.dismissBtn}
-              aria-label="Dismiss error"
-            >
-              <X className={styles.dismissIcon} />
-            </button>
-          </div>
+          <DbNotice
+            type="error"
+            message={globalError}
+            onClose={() => setGlobalError(null)}
+          />
         )}
 
         {/* Import Success Banner */}
         {uploadSuccess && (
-          <div className={styles.successBanner}>
-            <CheckCircle2 className={styles.successIcon} />
-            <div>
-              <p className={styles.successTitle}>
-                {onStageItems ? "Items added to pack" : "Import Successful!"}
-              </p>
-              <p className={styles.successText}>
-                {onStageItems
-                  ? `${uploadSuccess.count} stationery items are ready to be created with this pack.`
-                  : `Successfully processed and upserted ${uploadSuccess.count} stationery items into Supabase.`}
-              </p>
-            </div>
-          </div>
+          <DbNotice
+            type="success"
+            message={
+              onStageItems
+                ? `${uploadSuccess.count} stationery items are ready to be created with this pack.`
+                : `Successfully processed and upserted ${uploadSuccess.count} stationery items into Supabase.`
+            }
+            onClose={() => setUploadSuccess(null)}
+          />
         )}
       </div>
 

@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  AlertCircle,
   BadgePercent,
   Building2,
   CheckCircle2,
@@ -33,6 +32,7 @@ import {
   SYSTEM_SETTING_DEFINITIONS,
 } from "@/lib/admin/system-settings-shared";
 import type { RoleInfo, UserListItem } from "@/lib/admin/users";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 import {
   exportSettingsAction,
   restoreSettingsAction,
@@ -498,41 +498,11 @@ export function SettingsControlCentre({
       )}
 
       {feedback && (
-        <div
-          role="status"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "12px 16px",
-            borderRadius: 12,
-            background:
-              feedback.type === "success"
-                ? "rgba(16, 185, 129, 0.15)"
-                : "rgba(239, 68, 68, 0.15)",
-            border:
-              feedback.type === "success"
-                ? "1px solid #10b981"
-                : "1px solid #ef4444",
-            color: "#ffffff",
-            fontSize: 13,
-            fontWeight: 700,
-            marginBottom: "1rem",
-          }}
-        >
-          {feedback.type === "success" ? (
-            <CheckCircle2
-              size={18}
-              style={{ color: "#10b981", flexShrink: 0 }}
-            />
-          ) : (
-            <AlertCircle
-              size={18}
-              style={{ color: "#ef4444", flexShrink: 0 }}
-            />
-          )}
-          <span>{feedback.message}</span>
-        </div>
+        <DbNotice
+          type={feedback.type}
+          message={feedback.message}
+          onClose={() => setFeedback(null)}
+        />
       )}
 
       <div className={styles.layout}>
@@ -687,7 +657,8 @@ export function SettingsControlCentre({
                     <em>Packaging Cost</em>, <em>Assembly Cost</em>, or{" "}
                     <em>Freight Cost</em> will automatically trigger a full
                     recalculation of every Grade Pack&apos;s selling price in
-                    the database. This happens instantly via database triggers.
+                    the database. Margin is applied to item cost first, then fixed
+                    pack costs are added.
                   </p>
                 </div>
               </div>
@@ -711,10 +682,9 @@ export function SettingsControlCentre({
                     }
                   />
                   <span className={styles.hint}>
-                    This percentage represents the costs of payment gateway
-                    services for online transactions, including fees and service
-                    charges. Target:{" "}
-                    <strong>{draftMarginPercent().toFixed(1)}%</strong>.
+                    Applied to stationery item raw purchase cost first. Fixed
+                    packaging, assembly, and freight are then added per pack.
+                    Target: <strong>{draftMarginPercent().toFixed(1)}%</strong>.
                   </span>
                 </div>
 
@@ -757,8 +727,7 @@ export function SettingsControlCentre({
                     }
                   />
                   <span className={styles.hint}>
-                    Added to every Grade Pack&apos;s landed cost before margin
-                    is applied.
+                    Added to every Grade Pack after the item margin calculation.
                   </span>
                 </div>
 
@@ -778,8 +747,7 @@ export function SettingsControlCentre({
                     }
                   />
                   <span className={styles.hint}>
-                    Labour / assembly fee per Grade Pack included in landed
-                    cost.
+                    Labour / assembly fee added after the item margin calculation.
                   </span>
                 </div>
 
@@ -799,8 +767,7 @@ export function SettingsControlCentre({
                     }
                   />
                   <span className={styles.hint}>
-                    Inbound logistics / freight allocated per pack in the landed
-                    cost model.
+                    Inbound logistics / freight added after the item margin calculation.
                   </span>
                 </div>
               </div>

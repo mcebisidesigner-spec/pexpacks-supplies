@@ -23,6 +23,7 @@ import { StickyFormBar } from "@/components/admin/ui/StickyFormBar";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import formStyles from "./SchoolForm.module.css";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 interface SchoolFormProps {
   school: SchoolRow | null;
@@ -231,19 +232,15 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
 
       {/* Banner Alert Messages */}
       {state?.ok ? (
-        <div
-          className={`${adminStyles.badgeGreen} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block}`}
-          role="status"
-        >
-          ✓ {state.message || "School updated successfully."}
-        </div>
+        <DbNotice
+          type="success"
+          message={state.message || "School updated successfully."}
+        />
       ) : state?.message ? (
-        <div
-          className={`${adminStyles.badgeRed} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block} ${adminStyles.cRed}`}
-          role="alert"
-        >
-          ⚠ {state.message}
-        </div>
+        <DbNotice
+          type="error"
+          message={state.message}
+        />
       ) : null}
 
       {/* Section 1: Identity & Location */}

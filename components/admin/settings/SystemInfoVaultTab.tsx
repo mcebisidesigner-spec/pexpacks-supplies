@@ -13,7 +13,6 @@ import {
   Edit2,
   Search,
   CheckCircle2,
-  AlertCircle,
   RefreshCw,
 } from "lucide-react";
 import type { SystemVaultCredential } from "@/lib/admin/system-settings-shared";
@@ -22,6 +21,7 @@ import {
   deleteVaultCredentialAction,
 } from "@/app/admin/settings/actions";
 import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 import styles from "./SettingsControlCentre.module.css";
 
 interface SystemInfoVaultTabProps {
@@ -312,33 +312,11 @@ export function SystemInfoVaultTab({
 
       {/* Feedback Alert */}
       {feedback && (
-        <div
-          style={{
-            padding: "14px 18px",
-            borderRadius: "10px",
-            backgroundColor:
-              feedback.type === "success"
-                ? "rgba(16, 185, 129, 0.15)"
-                : "rgba(239, 68, 68, 0.15)",
-            border:
-              feedback.type === "success"
-                ? "1px solid rgba(16, 185, 129, 0.35)"
-                : "1px solid rgba(239, 68, 68, 0.35)",
-            color: feedback.type === "success" ? "#34d399" : "#f87171",
-            fontSize: "0.875rem",
-            fontWeight: 600,
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          {feedback.type === "success" ? (
-            <CheckCircle2 size={18} />
-          ) : (
-            <AlertCircle size={18} />
-          )}
-          <span>{feedback.text}</span>
-        </div>
+        <DbNotice
+          type={feedback.type}
+          message={feedback.text}
+          onClose={() => setFeedback(null)}
+        />
       )}
 
       {/* Input / Edit Form Card */}

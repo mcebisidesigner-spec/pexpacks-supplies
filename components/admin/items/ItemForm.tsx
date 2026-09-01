@@ -18,6 +18,7 @@ import { PEXCO_CLASSIFICATIONS } from "@/lib/admin/system-settings-shared";
 import type { MasterPricingConfig } from "@/lib/admin/items";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./ItemForm.module.css";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 const PRODUCT_CATEGORIES = [
   "Stationery",
@@ -188,28 +189,18 @@ export function ItemForm({
     <form action={formAction} className={styles.container}>
       {/* Banner Alert Messages */}
       {state?.ok ? (
-        <div
-          className={`${adminStyles.badgeGreen} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block}`}
-          style={{ marginBottom: "16px", borderRadius: "8px", width: "100%" }}
-          role="status"
-        >
-          &#x2713;{" "}
-          {state.message ||
-            `Product "${item?.name || "Item"}" updated successfully.`}
-        </div>
+        <DbNotice
+          type="success"
+          message={
+            state.message ||
+            `Product "${item?.name || "Item"}" updated successfully.`
+          }
+        />
       ) : state?.message ? (
-        <div
-          className={`${adminStyles.badgeRed} ${adminStyles.p12} ${adminStyles.text13} ${adminStyles.block} ${adminStyles.cRed}`}
-          style={{
-            background: "rgba(239, 68, 68, 0.15)",
-            marginBottom: "16px",
-            borderRadius: "8px",
-            width: "100%",
-          }}
-          role="alert"
-        >
-          &#x26A0; {state.message}
-        </div>
+        <DbNotice
+          type="error"
+          message={state.message}
+        />
       ) : null}
 
       <input type="hidden" name="sort_order" value={item?.sort_order ?? 0} />

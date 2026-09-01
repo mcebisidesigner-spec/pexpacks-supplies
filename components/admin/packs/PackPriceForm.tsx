@@ -10,6 +10,7 @@ import type { PackFormState } from "@/lib/admin/packs";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./SchoolPackCreateForm.module.css";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 const GRADES = [
   "Grade R",
@@ -113,13 +114,15 @@ export function PackPriceForm({
         </div>
 
         {state?.ok ? (
-          <div className={adminStyles.success} role="status">
-            {state.message}
-          </div>
+          <DbNotice
+            type="success"
+            message={state.message || "Price updated successfully."}
+          />
         ) : state?.errors?.price ? (
-          <div className={adminStyles.error} role="alert">
-            {state.errors.price}
-          </div>
+          <DbNotice
+            type="error"
+            message={state.errors.price}
+          />
         ) : null}
       </form>
     </div>

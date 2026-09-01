@@ -19,6 +19,7 @@ import { ItemIcon } from "@/components/ui/ItemIcon";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
+import { useDbNotice } from "@/components/admin/ui/DbNotice";
 import styles from "./ItemsManager.module.css";
 
 interface ItemsManagerProps {
@@ -28,6 +29,7 @@ interface ItemsManagerProps {
 export function ItemsManager({ items }: ItemsManagerProps) {
   const router = useRouter();
   const dialog = useAdminDialog();
+  const { notifySuccess, notifyError } = useDbNotice();
   const { params } = useTableParams();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -69,23 +71,16 @@ export function ItemsManager({ items }: ItemsManagerProps) {
     try {
       const res = await updatePackItemQuantityAction(itemId, newQty);
       if (res.ok) {
+        notifySuccess("Pack item quantity updated.");
         startTransition(() => {
           router.refresh();
         });
       } else {
-        await dialog.alert({
-          title: "Update Failed",
-          message: res.message || "Failed to update quantity.",
-          variant: "danger",
-        });
+        notifyError(res.message || "Failed to update quantity.");
         setQuantities((prev) => ({ ...prev, [itemId]: previousQty }));
       }
     } catch {
-      await dialog.alert({
-        title: "Update Error",
-        message: "Failed to update quantity. Please try again.",
-        variant: "danger",
-      });
+      notifyError("Failed to update quantity. Please try again.");
       setQuantities((prev) => ({ ...prev, [itemId]: previousQty }));
     } finally {
       setUpdatingIds((prev) => {
@@ -319,6 +314,7 @@ export function ItemsManager({ items }: ItemsManagerProps) {
               if (!confirmed) return;
               startTransition(async () => {
                 await deleteItemAction(row.id);
+                notifySuccess(`"${row.name}" removed from this pack.`);
                 router.refresh();
               });
             }}

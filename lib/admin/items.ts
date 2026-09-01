@@ -707,30 +707,6 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
   return null;
 }
 
-export async function syncPackTotalPrice(packId: string): Promise<number> {
-  if (!packId) return 0;
-  const admin = createSupabaseAdminClient();
-  const { data: items } = await admin
-    .from("admin_pack_items_view" as never)
-    .select("unit_price, quantity")
-    .eq("pack_id" as never, packId as never);
-
-  const totalPrice = (
-    (items ?? []) as unknown as Pick<ItemRow, "unit_price" | "quantity">[]
-  ).reduce(
-    (sum, item) => sum + (item.unit_price ?? 0) * (item.quantity ?? 1),
-    0,
-  );
-
-  const rounded = Math.round(totalPrice * 100) / 100;
-  await admin
-    .from("school_packs")
-    .update({ price: rounded, updated_at: new Date().toISOString() })
-    .eq("id", packId);
-
-  revalidateCatalog();
-  return rounded;
-}
 
 export async function createItem(formData: FormData): Promise<ItemFormResult> {
   const actor = await assertCan("items.create");
@@ -812,9 +788,6 @@ export async function createItem(formData: FormData): Promise<ItemFormResult> {
       summary: `Created item "${created.name}"`,
     });
 
-    if (created.pack_id) {
-      await syncPackTotalPrice(created.pack_id);
-    }
     revalidateCatalog();
 
     return {
@@ -888,9 +861,6 @@ export async function updateItem(
         summary: `Updated item "${updated.name}"`,
       });
 
-      if (updated.pack_id) {
-        await syncPackTotalPrice(updated.pack_id);
-      }
       revalidateCatalog();
       revalidatePath("/admin/products");
       revalidatePath("/schools");
@@ -989,24 +959,17 @@ export async function updateItem(
       );
     }
 
-    // Sync all linked pack items with the new name, description, and visibility
-    const { data: linkedPacks } = await schoolPackItemsTable(admin)
+    // Sync all linked pack items with the new name, description, and visibility.
+    // Price-affecting active changes are handled by the database pricing trigger.
+    const { error: linkedItemsError } = await schoolPackItemsTable(admin)
       .update({
         school_wording: parsed.data.name.trim(),
         school_notes: parsed.data.description,
         active: parsed.data.visible,
       })
-      .eq("product_id", product.id)
-      .select("pack_id");
+      .eq("product_id", product.id);
 
-    if (linkedPacks && linkedPacks.length > 0) {
-      const uniquePackIds = Array.from(
-        new Set(linkedPacks.map((p) => p.pack_id).filter(Boolean)),
-      );
-      for (const packId of uniquePackIds) {
-        await syncPackTotalPrice(packId);
-      }
-    }
+    if (linkedItemsError) throw linkedItemsError;
 
     void writeAuditLog({
       actorId: actor.user.id,
@@ -1088,9 +1051,6 @@ export async function deleteItem(
     summary: `Deleted item "${existing.name}"`,
   });
 
-  if (existing.pack_id) {
-    await syncPackTotalPrice(existing.pack_id);
-  }
   revalidateCatalog();
 
   return { ok: true, packId: existing.pack_id };
@@ -1632,7 +1592,6 @@ export async function reconcilePackItems(
     });
   }
 
-  await syncPackTotalPrice(packId);
   revalidateCatalog();
 
   return { ok: true, created, updated, deleted };

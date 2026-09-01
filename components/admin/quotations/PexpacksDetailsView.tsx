@@ -9,8 +9,6 @@ import {
   ScrollText,
   FileCode,
   ArrowLeft,
-  CheckCircle2,
-  AlertCircle,
   Info,
   ShieldCheck,
   CreditCard,
@@ -36,6 +34,7 @@ import {
 import styles from "./PexpacksDetails.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 type TabKey = "overview" | "address_contacts" | "banking" | "notes_terms" | "system_info";
 
@@ -154,31 +153,12 @@ export function PexpacksDetailsView({ initialSettings, systemInfo }: PexpacksDet
 
       {/* Toast Feedback */}
       {toastMessage && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: "2rem",
-            right: "2rem",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            backgroundColor: toastMessage.type === "success" ? "#064e3b" : "#7f1d1d",
-            border: `1px solid ${toastMessage.type === "success" ? "#10b981" : "#ef4444"}`,
-            color: "#ffffff",
-            padding: "0.875rem 1.25rem",
-            borderRadius: "8px",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
-            fontSize: "0.875rem",
-            fontWeight: 500,
-          }}
-        >
-          {toastMessage.type === "success" ? (
-            <CheckCircle2 size={18} color="#34d399" />
-          ) : (
-            <AlertCircle size={18} color="#f87171" />
-          )}
-          <span>{toastMessage.text}</span>
+        <div style={{ position: "fixed", top: "24px", right: "24px", zIndex: 999999, maxWidth: "min(440px, calc(100vw - 32px))", width: "100%" }}>
+          <DbNotice
+            type={toastMessage.type}
+            message={toastMessage.text}
+            onClose={() => setToastMessage(null)}
+          />
         </div>
       )}
 

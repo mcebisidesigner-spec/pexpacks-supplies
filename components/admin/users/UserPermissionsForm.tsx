@@ -7,6 +7,7 @@ import {
   type PermissionOverrideState,
 } from "@/app/admin/users/actions";
 import styles from "./user-forms.module.css";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 export interface PermissionOption {
   key: string;
@@ -62,13 +63,15 @@ export function UserPermissionsForm({
     <form action={formAction} className={styles.rolesForm}>
       <input type="hidden" name="overrides" value={JSON.stringify(overrideList)} />
       {state?.ok ? (
-        <p className={styles.success} role="status">
-          {state.message ?? "Saved."}
-        </p>
+        <DbNotice
+          type="success"
+          message={state.message ?? "Saved."}
+        />
       ) : state?.message ? (
-        <p className={styles.error} role="alert">
-          {state.message}
-        </p>
+        <DbNotice
+          type="error"
+          message={state.message}
+        />
       ) : null}
 
       <div className={styles.matrixNote}>

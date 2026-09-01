@@ -6,6 +6,7 @@ import { useFormStatus } from "react-dom";
 import type { InviteResult, RoleInfo } from "@/lib/admin/users";
 import { inviteUserAction } from "@/app/admin/users/actions";
 import styles from "./user-forms.module.css";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -24,13 +25,15 @@ export function InviteUserForm({ roles }: { roles: RoleInfo[] }) {
   return (
     <form action={formAction} className={styles.form}>
       {state?.ok ? (
-        <p className={styles.success} role="status">
-          {state.message}
-        </p>
+        <DbNotice
+          type="success"
+          message={state.message || "Invitation sent successfully."}
+        />
       ) : state?.message ? (
-        <p className={styles.error} role="alert">
-          {state.message}
-        </p>
+        <DbNotice
+          type="error"
+          message={state.message}
+        />
       ) : null}
 
       <div className={styles.field}>

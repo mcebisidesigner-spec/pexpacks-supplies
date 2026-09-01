@@ -14,6 +14,7 @@ import GradePackItemSelector, {
 import { formatCurrency } from "@/lib/formatCurrency";
 import formStyles from "../schools/SchoolForm.module.css";
 import styles from "./PackForm.module.css";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -181,13 +182,15 @@ export function PackForm({ schools, defaultSchoolId = "", action }: PackFormProp
         aria-hidden="true"
       />
       {state?.ok ? (
-        <p className={formStyles.success} role="status">
-          {state.message}
-        </p>
+        <DbNotice
+          type="success"
+          message={state.message || "Pack saved successfully."}
+        />
       ) : state?.message ? (
-        <p className={formStyles.error} role="alert">
-          {state.message}
-        </p>
+        <DbNotice
+          type="error"
+          message={state.message}
+        />
       ) : null}
 
       <div className={formStyles.section}>

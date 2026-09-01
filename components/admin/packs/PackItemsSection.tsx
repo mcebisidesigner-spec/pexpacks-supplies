@@ -15,6 +15,7 @@ import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImpor
 import { formatCurrency } from "@/lib/formatCurrency";
 import type { ItemRow } from "@/lib/admin/items";
 import { PACK_LINE_INVENTORY_MARKER } from "@/lib/admin/item-constants";
+import { useDbNotice, DbNotice } from "@/components/admin/ui/DbNotice";
 import styles from "./ItemsManager.module.css";
 
 interface PackItemsSectionProps {
@@ -35,6 +36,7 @@ export function PackItemsSection({
   mode = "all",
 }: PackItemsSectionProps) {
   const router = useRouter();
+  const { notifySuccess, notifyError } = useDbNotice();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -74,13 +76,13 @@ export function PackItemsSection({
 
       const result = await createItemAction({ ok: false }, formData);
       if (result.ok) {
-        setMessage(`Added "${titleVal}" to pack.`);
+        notifySuccess(`Added "${titleVal}" to pack.`);
         router.refresh();
       } else {
-        setMessage(result.message ?? "Could not add item.");
+        notifyError(result.message ?? "Could not add item.");
       }
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Could not add item.");
+      notifyError(err instanceof Error ? err.message : "Could not add item.");
     } finally {
       setBusy(false);
     }
@@ -92,13 +94,13 @@ export function PackItemsSection({
     try {
       const result = await savePackItemsAction(packId, lines);
       if (result.ok) {
-        setMessage("Items saved and synced to the public pages.");
+        notifySuccess("Items saved and synced to the public pages.");
         router.refresh();
       } else {
-        setMessage(result.message ?? "Could not save items.");
+        notifyError(result.message ?? "Could not save items.");
       }
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Could not save items.");
+      notifyError(err instanceof Error ? err.message : "Could not save items.");
     } finally {
       setBusy(false);
     }
@@ -121,11 +123,6 @@ export function PackItemsSection({
             onSelectItem={handleSelectItem}
             onSave={handleSave}
           />
-          {message ? (
-            <p className={styles.inlineSuccess} role="status">
-              {message}
-            </p>
-          ) : null}
         </>
       ) : mode !== "list" ? (
         <section
@@ -151,11 +148,6 @@ export function PackItemsSection({
             <span>Total</span>
             {formatCurrency(subtotal)}
           </div>
-          {message ? (
-            <p className={styles.importSuccess} role="status">
-              {message}
-            </p>
-          ) : null}
         </section>
       ) : null}
       {mode !== "search" && mode !== "inlineSearch" ? (

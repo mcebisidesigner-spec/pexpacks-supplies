@@ -6,6 +6,7 @@ import { useFormStatus } from "react-dom";
 import { createRoleAction, updateRoleAction } from "@/app/admin/roles/actions";
 import type { RoleFormState } from "@/lib/admin/roles";
 import styles from "./role-form.module.css";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 export interface PermissionGroupOption {
   group: string;
@@ -47,13 +48,15 @@ export function RoleForm({
   return (
     <form action={formAction} className={styles.form}>
       {state?.ok ? (
-        <p className={styles.success} role="status">
-          {state.message}
-        </p>
+        <DbNotice
+          type="success"
+          message={state.message || "Role updated successfully."}
+        />
       ) : state?.message ? (
-        <p className={styles.error} role="alert">
-          {state.message}
-        </p>
+        <DbNotice
+          type="error"
+          message={state.message}
+        />
       ) : null}
 
       <div className={styles.grid}>

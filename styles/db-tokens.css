@@ -872,3 +872,106 @@ select:focus:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px #0b121e inset !important;
   box-shadow: 0 0 0 1000px #0b121e inset !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   UNIFIED DB MESSAGE POPUP & NOTICE SYSTEM
+   Authority: Used across all DB datatables, pages, and tabs
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.db-message-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  animation: dbMessageSlideIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.db-message-banner.db-message-success {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid #10b981;
+  color: #ffffff;
+}
+
+.db-message-banner.db-message-error,
+.db-message-banner.db-message-warning {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  color: #ffffff;
+}
+
+.db-message-banner .db-message-icon-success {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.db-message-banner .db-message-icon-error,
+.db-message-banner .db-message-icon-warning {
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+.db-message-banner .db-message-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.db-message-banner .db-message-close {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: all 120ms ease;
+}
+
+.db-message-banner .db-message-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* Floating toast / popup host */
+.db-message-popup-host {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  max-width: min(480px, calc(100vw - 32px));
+  width: 100%;
+}
+
+.db-message-popup-host .db-message-banner {
+  pointer-events: auto;
+  margin-bottom: 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 12px 36px -6px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+@keyframes dbMessageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

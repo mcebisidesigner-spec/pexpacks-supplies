@@ -19,6 +19,7 @@ import {
   updateUserRolesFromSettingsAction,
   deleteUserFromSettingsAction,
 } from "@/app/admin/settings/actions";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 import styles from "./SettingsControlCentre.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 
@@ -258,6 +259,15 @@ export function UserIdentityTab({
           </div>
         </div>
       </div>
+
+      {/* Feedback Notice */}
+      {feedback && (
+        <DbNotice
+          type={feedback.type}
+          message={feedback.text}
+          onClose={() => setFeedback(null)}
+        />
+      )}
 
       {/* Search & Filter Toolbar */}
       <div

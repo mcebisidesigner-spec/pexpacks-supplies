@@ -5,6 +5,7 @@ import { useFormStatus } from "react-dom";
 import { updateSettingsAction } from "@/app/admin/settings/actions";
 import type { SettingField, SettingFormState, SettingSection } from "@/lib/admin/settings";
 import styles from "./settings-form.module.css";
+import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -30,13 +31,15 @@ export function SettingsForm({
   return (
     <form action={formAction} className={styles.form}>
       {state?.ok ? (
-        <p className={styles.success} role="status">
-          {state.message}
-        </p>
+        <DbNotice
+          type="success"
+          message={state.message || "Settings saved."}
+        />
       ) : state?.message ? (
-        <p className={styles.error} role="alert">
-          {state.message}
-        </p>
+        <DbNotice
+          type="error"
+          message={state.message}
+        />
       ) : null}
 
       {section.fields.map((field) => (
