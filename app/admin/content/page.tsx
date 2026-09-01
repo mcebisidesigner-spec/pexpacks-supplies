@@ -21,6 +21,7 @@ import {
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 import { DataTable, type ColumnDef } from "@/components/admin/shared/DataTable";
 import {
   fetchCmsDataAction,
@@ -84,6 +85,7 @@ interface ResourceItem {
 }
 
 export default function ContentCMSPage() {
+  const dialog = useAdminDialog();
   const [activeTab, setActiveTab] = useState<ContentTab>("eyebrows");
   const [isPending, startTransition] = useTransition();
   const [faqCategoryFilter, setFaqCategoryFilter] = useState<string>("all");
@@ -318,11 +320,18 @@ export default function ContentCMSPage() {
     });
   };
 
-  const handleDeleteAnnouncement = (id: string) => {
-    if (!confirm("Are you sure you want to delete this announcement banner?")) return;
+  const handleDeleteAnnouncement = async (item: Announcement) => {
+    const confirmed = await dialog.confirm({
+      title: "Delete Announcement Banner",
+      message: `Are you sure you want to delete "${item.badge_text}"? This will immediately remove it from all storefront banner displays.`,
+      confirmLabel: "Delete Banner",
+      cancelLabel: "Cancel",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     startTransition(async () => {
-      setAnnouncements((prev) => prev.filter((a) => a.id !== id));
-      await deleteAnnouncementAction(id);
+      setAnnouncements((prev) => prev.filter((a) => a.id !== item.id));
+      await deleteAnnouncementAction(item.id);
     });
   };
 
@@ -348,11 +357,18 @@ export default function ContentCMSPage() {
     });
   };
 
-  const handleDeleteFaq = (id: string) => {
-    if (!confirm("Are you sure you want to delete this FAQ item?")) return;
+  const handleDeleteFaq = async (faq: FAQItem) => {
+    const confirmed = await dialog.confirm({
+      title: "Delete FAQ Entry",
+      message: `Are you sure you want to delete "${faq.question}"? This will remove it from the customer help centre.`,
+      confirmLabel: "Delete Question",
+      cancelLabel: "Cancel",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     startTransition(async () => {
-      setFaqs((prev) => prev.filter((f) => f.id !== id));
-      await deleteFaqAction(id);
+      setFaqs((prev) => prev.filter((f) => f.id !== faq.id));
+      await deleteFaqAction(faq.id);
     });
   };
 
@@ -376,11 +392,18 @@ export default function ContentCMSPage() {
     });
   };
 
-  const handleDeleteTestimonial = (id: string) => {
-    if (!confirm("Are you sure you want to delete this testimonial?")) return;
+  const handleDeleteTestimonial = async (test: Testimonial) => {
+    const confirmed = await dialog.confirm({
+      title: "Delete Testimonial",
+      message: `Are you sure you want to delete the review by ${test.author_name}? It will be removed from customer reviews and homepage highlights.`,
+      confirmLabel: "Delete Testimonial",
+      cancelLabel: "Cancel",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     startTransition(async () => {
-      setTestimonials((prev) => prev.filter((t) => t.id !== id));
-      await deleteTestimonialAction(id);
+      setTestimonials((prev) => prev.filter((t) => t.id !== test.id));
+      await deleteTestimonialAction(test.id);
     });
   };
 
@@ -406,11 +429,18 @@ export default function ContentCMSPage() {
     });
   };
 
-  const handleDeleteResource = (id: string) => {
-    if (!confirm("Are you sure you want to delete this resource guide?")) return;
+  const handleDeleteResource = async (row: ResourceItem) => {
+    const confirmed = await dialog.confirm({
+      title: "Delete Resource Document",
+      message: `Are you sure you want to delete "${row.title}"? Any existing download links will be deactivated.`,
+      confirmLabel: "Delete Resource",
+      cancelLabel: "Cancel",
+      variant: "danger",
+    });
+    if (!confirmed) return;
     startTransition(async () => {
-      setResources((prev) => prev.filter((r) => r.id !== id));
-      await deleteResourceAction(id);
+      setResources((prev) => prev.filter((r) => r.id !== row.id));
+      await deleteResourceAction(row.id);
     });
   };
 
@@ -636,7 +666,7 @@ export default function ContentCMSPage() {
             className={styles.iconBtnDanger}
             data-db-tooltip="Delete Resource"
             aria-label="Delete Resource"
-            onClick={() => handleDeleteResource(row.id)}
+            onClick={() => handleDeleteResource(row)}
           >
             <Trash2 size={14} />
           </button>
@@ -790,7 +820,7 @@ export default function ContentCMSPage() {
                       className={styles.iconBtnDanger}
                       data-db-tooltip="Delete Banner"
                       aria-label="Delete Banner"
-                      onClick={() => handleDeleteAnnouncement(item.id)}
+                      onClick={() => handleDeleteAnnouncement(item)}
                     >
                       <Trash2 size={14} />
                     </button>
@@ -887,7 +917,7 @@ export default function ContentCMSPage() {
                           className={styles.iconBtnDanger}
                           data-db-tooltip="Delete FAQ"
                           aria-label="Delete FAQ"
-                          onClick={() => handleDeleteFaq(faq.id)}
+                          onClick={() => handleDeleteFaq(faq)}
                         >
                           <Trash2 size={14} />
                         </button>
@@ -974,7 +1004,7 @@ export default function ContentCMSPage() {
                       className={styles.iconBtnDanger}
                       data-db-tooltip="Delete Testimonial"
                       aria-label="Delete Testimonial"
-                      onClick={() => handleDeleteTestimonial(test.id)}
+                      onClick={() => handleDeleteTestimonial(test)}
                     >
                       <Trash2 size={14} />
                     </button>
