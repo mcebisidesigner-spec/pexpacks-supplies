@@ -1,0 +1,26 @@
+.success {
+  background: var(--db-success-subtle);
+  color: var(--db-success-text);
+  border: 1px solid var(--db-success-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.error {
+  background: var(--db-danger-subtle);
+  color: var(--db-danger-text);
+  border: 1px solid var(--db-danger-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.fieldError {
+  display: block;
+  color: var(--db-danger-text);
+  font-size: 12px;
+  margin-top: 4px;
+}

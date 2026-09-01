@@ -283,12 +283,9 @@ export function MasterProductsPageView({
     },
     {
       label: "SUPPLIER",
-      value:
-        mappedProducts > 0
-          ? `${mappedProducts} / ${totalCatalogProducts}`
-          : `${activeSuppliersCount} Active`,
-      subtitle: supplierNamesLabel,
-      trend: supplierNamesLabel,
+      value: supplierNamesLabel !== "Unassigned" ? supplierNamesLabel : "—",
+      subtitle: "Preferred Supplier",
+      trend: "Preferred Supplier",
       trendDirection: "neutral",
       tone: "purple",
       icon: <Truck size={16} />,

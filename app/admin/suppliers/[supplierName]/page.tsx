@@ -1,14 +1,15 @@
 import { Building2, Clock, CreditCard, Edit2, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
-import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
-import { MetricCard } from "@/components/admin/ui/AdminCard";
-import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import { getSupplierBySlug } from "@/lib/admin/suppliers";
 import {
   supplierCodeFromSlug,
   supplierEmailFromSlug,
   supplierNameFromSlug,
 } from "@/lib/admin/supplier-slug";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { MetricCard } from "@/components/admin/ui/AdminCard";
+import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -22,9 +23,16 @@ export default async function SupplierDetailPage({
   await requireAdmin({ permission: "suppliers.view" });
   const { supplierName } = await params;
 
-  const name = supplierNameFromSlug(supplierName);
-  const code = supplierCodeFromSlug(supplierName);
-  const email = supplierEmailFromSlug(supplierName);
+  const row = await getSupplierBySlug(supplierName);
+  const name = row?.name ?? supplierNameFromSlug(supplierName);
+  const code = row?.code ?? supplierCodeFromSlug(supplierName);
+  const email = row?.email ?? supplierEmailFromSlug(supplierName);
+  const contactName = row?.contact_name ?? "Account Representative";
+  const telephone = row?.telephone ?? "+27 11 000 0000";
+  const paymentTerms = row?.payment_terms ?? "30 Days Net";
+  const leadTimeDays =
+    row?.lead_time_days != null ? String(row.lead_time_days) : "3";
+  const active = row?.active ?? true;
 
   return (
     <div className={styles.container}>
@@ -35,7 +43,11 @@ export default async function SupplierDetailPage({
         backLabel="Back to Suppliers"
         actions={
           <div className={styles.headerActions}>
-            <StatusBadge status="Preferred Partner" tone="emerald" showDot />
+            <StatusBadge
+              status={active ? "Preferred Partner" : "Prospect"}
+              tone={active ? "emerald" : "amber"}
+              showDot
+            />
             <AdminButton
               href={`/admin/suppliers/${supplierName}/edit`}
               variant="primary"
@@ -72,7 +84,7 @@ export default async function SupplierDetailPage({
         />
         <MetricCard
           label="Payment Terms"
-          value="30 Days Net"
+          value={paymentTerms}
           subtext="Trade credit account"
           icon={<CreditCard size={16} />}
           iconTone="amber"
@@ -98,9 +110,11 @@ export default async function SupplierDetailPage({
               </div>
               <div className={adminStyles.sidebarStatRow}>
                 <span className={adminStyles.sidebarStatLabel}>
-                  Registration / VAT:
+                  Primary Contact:
                 </span>
-                <span className={adminStyles.sidebarStatVal}>4920182749</span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {contactName}
+                </span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
                 <span className={adminStyles.sidebarStatLabel}>
@@ -109,11 +123,23 @@ export default async function SupplierDetailPage({
                 <span className={adminStyles.sidebarStatVal}>{email}</span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>Telephone:</span>
+                <span className={adminStyles.sidebarStatVal}>{telephone}</span>
+              </div>
+              <div className={adminStyles.sidebarStatRow}>
                 <span className={adminStyles.sidebarStatLabel}>
-                  Warehouse City:
+                  Payment Terms:
                 </span>
                 <span className={adminStyles.sidebarStatVal}>
-                  Johannesburg, Gauteng
+                  {paymentTerms}
+                </span>
+              </div>
+              <div className={adminStyles.sidebarStatRow}>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Standard Lead Time:
+                </span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {leadTimeDays} days
                 </span>
               </div>
             </div>
