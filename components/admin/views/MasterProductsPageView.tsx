@@ -27,7 +27,7 @@ import { inferIcon } from "@/lib/packs/normalisePackItems";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { clearMasterProductsAction } from "@/app/admin/products/actions";
-import { useDbNotice, DbNotice } from "@/components/admin/ui/DbNotice";
+import { useDbNotice } from "@/components/admin/ui/DbNotice";
 
 interface MasterProductsPageViewProps {
   initialData: {

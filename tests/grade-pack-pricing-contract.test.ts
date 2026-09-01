@@ -27,4 +27,40 @@ describe("Grade Pack pricing contract", () => {
     expect(adminItems).not.toContain("syncPackTotalPrice");
     expect(adminItems).not.toContain("update({ price: rounded");
   });
+
+  it("ensures get_public_school_pack aggregates pexcover fields and calculates pexcover totals", async () => {
+    const migrationSql = readRepoFile(
+      "supabase/migrations/00082_restore_pexcover_fields_to_public_school_pack.sql",
+    );
+
+    expect(migrationSql).toContain("'requires_pexcover', COALESCE(i.requires_pexcover, false)");
+    expect(migrationSql).toContain("'pexco_code', i.pexco_code");
+    expect(migrationSql).toContain("'pexco_rate_cents', i.pexco_rate_cents");
+    expect(migrationSql).toContain("'pexco_rate_active', COALESCE(i.pexco_rate_active, false)");
+
+    const { calculatePexcoverTotal } = await import("@/lib/pricing/pexcover");
+    const result = calculatePexcoverTotal([
+      {
+        id: "item-1",
+        name: "College Exercise Unruled",
+        quantity: 1,
+        requires_pexcover: true,
+        pexco_code: "PEXCO02",
+        pexco_rate_cents: 1000,
+        pexco_rate_active: true,
+      },
+      {
+        id: "item-2",
+        name: "Pencil Case Small",
+        quantity: 1,
+        requires_pexcover: false,
+        pexco_code: null,
+      },
+    ]);
+
+    expect(result.hasEligibleBooks).toBe(true);
+    expect(result.coverableItemCount).toBe(1);
+    expect(result.pexcoverTotalCents).toBe(1000);
+    expect(result.pexcoverTotalRands).toBe(10);
+  });
 });

@@ -24,6 +24,7 @@ type DbSchool = {
 };
 
 type DbPackItem = {
+  id?: string;
   pack_id: string;
   name: string;
   quantity: number;
@@ -205,7 +206,7 @@ async function getSchoolWithBoundedQueries(
   const { data: dbItems, error: itemsError } = await supabase
     .from("public_pack_items_view" as never)
     .select(
-      "pack_id, name, quantity, unit_price, icon, description, specification, requires_pexcover, pexco_code, pexco_rate_cents, pexco_rate_active",
+      "id, pack_id, name, quantity, unit_price, icon, description, specification, requires_pexcover, pexco_code, pexco_rate_cents, pexco_rate_active",
     )
     .in("pack_id", packIds)
     .order("sort_order", { ascending: true });

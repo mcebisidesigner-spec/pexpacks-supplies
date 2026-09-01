@@ -15,7 +15,7 @@ import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImpor
 import { formatCurrency } from "@/lib/formatCurrency";
 import type { ItemRow } from "@/lib/admin/items";
 import { PACK_LINE_INVENTORY_MARKER } from "@/lib/admin/item-constants";
-import { useDbNotice, DbNotice } from "@/components/admin/ui/DbNotice";
+import { useDbNotice } from "@/components/admin/ui/DbNotice";
 import styles from "./ItemsManager.module.css";
 
 interface PackItemsSectionProps {
@@ -38,7 +38,6 @@ export function PackItemsSection({
   const router = useRouter();
   const { notifySuccess, notifyError } = useDbNotice();
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
 
   const signature = useMemo(
     () =>
@@ -58,7 +57,6 @@ export function PackItemsSection({
 
   async function handleSelectItem(item: StationeryItem) {
     setBusy(true);
-    setMessage(null);
     try {
       const priceVal = item.unit_price ?? item.price ?? 0;
       const titleVal = item.title || item.name || "Stationery Item";
@@ -90,7 +88,6 @@ export function PackItemsSection({
 
   async function handleSave(lines: PackLine[]) {
     setBusy(true);
-    setMessage(null);
     try {
       const result = await savePackItemsAction(packId, lines);
       if (result.ok) {

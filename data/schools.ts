@@ -18,6 +18,7 @@ export type GradePack = {
 };
 
 export type SchoolPackItem = {
+  id?: string;
   name: string;
   quantity: number;
   unitPrice?: number | null;
