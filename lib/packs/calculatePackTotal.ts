@@ -69,7 +69,8 @@ export function calculateCustomPackTotal(
   const isFullPack =
     items.length > 0 &&
     items.every(
-      (item) => item.selected && item.selectedQuantity === item.requiredQuantity,
+      (item) =>
+        item.selected && item.selectedQuantity === item.requiredQuantity,
     );
 
   const fullPackPrice = options?.fullPackPrice ?? null;
@@ -83,7 +84,7 @@ export function calculateCustomPackTotal(
     return sum + calculateItemLineTotal(item.unitPrice, item.requiredQuantity);
   }, 0);
 
-  let marginRate = options?.marginRate ?? null;
+  const marginRate = options?.marginRate ?? null;
   let fixedPackCost = options?.fixedPackCost ?? null;
 
   // If fixedPackCost is not explicitly provided (or 0) but fullPackPrice and baseItemsSubtotal exist,
@@ -109,21 +110,35 @@ export function calculateCustomPackTotal(
     const safeFixedCost =
       typeof fixedPackCost === "number" ? Math.max(0, fixedPackCost) : 0;
     const itemsWithMargin = selectedItemsSubtotal / (1 - marginRate);
-    return Math.round((itemsWithMargin + safeFixedCost + Number.EPSILON) * 100) / 100;
+    return (
+      Math.round((itemsWithMargin + safeFixedCost + Number.EPSILON) * 100) / 100
+    );
   }
 
   // If marginRate was not given, but fullPackPrice and baseItemsSubtotal exist
-  if (typeof fullPackPrice === "number" && fullPackPrice > 0 && baseItemsSubtotal > 0) {
+  if (
+    typeof fullPackPrice === "number" &&
+    fullPackPrice > 0 &&
+    baseItemsSubtotal > 0
+  ) {
     if (typeof fixedPackCost === "number" && fullPackPrice > fixedPackCost) {
-      const derivedMarginRate = 1 - baseItemsSubtotal / (fullPackPrice - fixedPackCost);
+      const derivedMarginRate =
+        1 - baseItemsSubtotal / (fullPackPrice - fixedPackCost);
       if (derivedMarginRate > 0 && derivedMarginRate < 1) {
         const itemsWithMargin = selectedItemsSubtotal / (1 - derivedMarginRate);
-        return Math.round((itemsWithMargin + fixedPackCost + Number.EPSILON) * 100) / 100;
+        return (
+          Math.round((itemsWithMargin + fixedPackCost + Number.EPSILON) * 100) /
+          100
+        );
       }
     }
     // Fallback markup multiplier
     const markupMultiplier = fullPackPrice / baseItemsSubtotal;
-    return Math.round((selectedItemsSubtotal * markupMultiplier + Number.EPSILON) * 100) / 100;
+    return (
+      Math.round(
+        (selectedItemsSubtotal * markupMultiplier + Number.EPSILON) * 100,
+      ) / 100
+    );
   }
 
   // Final fallback to raw item subtotal if no pack pricing metadata exists

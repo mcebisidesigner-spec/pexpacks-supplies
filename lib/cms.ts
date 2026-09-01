@@ -14,6 +14,8 @@ export const CMS_TAGS = {
   testimonials: "cms-testimonials",
   faqs: "cms-faqs",
   websiteContent: "cms-website-content",
+  announcements: "cms-announcements",
+  resources: "cms-resources",
 } as const;
 
 /** Public routes that render testimonials / FAQs from the CMS. */
@@ -142,5 +144,155 @@ export const getWebsiteContent = unstable_cache(
   {
     revalidate: CMS_REVALIDATE_SECONDS,
     tags: [CMS_TAGS.websiteContent],
+  }
+);
+
+// ---------------------------------------------------------------------------
+// Unified CMS Content Getters (Storefront)
+// ---------------------------------------------------------------------------
+
+export interface PublicAnnouncement {
+  id: string;
+  badge_text: string;
+  message: string;
+  link_url: string | null;
+  link_label: string | null;
+  display_location: "global_top" | "hero_banner" | "schools_page";
+}
+
+async function fetchActiveAnnouncement(
+  location: "global_top" | "hero_banner" | "schools_page" = "global_top"
+): Promise<PublicAnnouncement | null> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("cms_announcements")
+    .select("id, badge_text, message, link_url, link_label, display_location")
+    .eq("is_active", true)
+    .eq("display_location", location)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[cms] active announcement:", error);
+    return null;
+  }
+
+  return data;
+}
+
+export const getActiveAnnouncement = unstable_cache(
+  fetchActiveAnnouncement,
+  ["cms-active-announcement"],
+  {
+    revalidate: CMS_REVALIDATE_SECONDS,
+    tags: [CMS_TAGS.announcements],
+  }
+);
+
+export interface PublicCmsFaq {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
+  sort_order: number;
+}
+
+async function fetchPublishedCmsFaqs(): Promise<PublicCmsFaq[]> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("cms_faqs")
+    .select("id, category, question, answer, sort_order")
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("[cms] published faqs:", error);
+    return [];
+  }
+
+  return data ?? [];
+}
+
+export const getPublishedCmsFaqs = unstable_cache(
+  fetchPublishedCmsFaqs,
+  ["cms-published-faqs"],
+  {
+    revalidate: CMS_REVALIDATE_SECONDS,
+    tags: [CMS_TAGS.faqs],
+  }
+);
+
+export interface PublicCmsTestimonial {
+  id: string;
+  author_name: string;
+  author_role: string;
+  quote: string;
+  rating: number;
+  avatar_url: string | null;
+  school_id: string | null;
+}
+
+async function fetchFeaturedCmsTestimonials(): Promise<PublicCmsTestimonial[]> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("cms_testimonials")
+    .select("id, author_name, author_role, quote, rating, avatar_url, school_id")
+    .eq("is_featured", true)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("[cms] featured testimonials:", error);
+    return [];
+  }
+
+  return data ?? [];
+}
+
+export const getFeaturedCmsTestimonials = unstable_cache(
+  fetchFeaturedCmsTestimonials,
+  ["cms-featured-testimonials"],
+  {
+    revalidate: CMS_REVALIDATE_SECONDS,
+    tags: [CMS_TAGS.testimonials],
+  }
+);
+
+export interface PublicCmsResource {
+  id: string;
+  title: string;
+  description: string | null;
+  category: string;
+  file_url: string;
+  file_type: string;
+  file_size_label: string | null;
+  download_count: number;
+}
+
+async function fetchPublicCmsResources(): Promise<PublicCmsResource[]> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("cms_resources")
+    .select("id, title, description, category, file_url, file_type, file_size_label, download_count")
+    .eq("is_public", true)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("[cms] public resources:", error);
+    return [];
+  }
+
+  return data ?? [];
+}
+
+export const getPublicCmsResources = unstable_cache(
+  fetchPublicCmsResources,
+  ["cms-public-resources"],
+  {
+    revalidate: CMS_REVALIDATE_SECONDS,
+    tags: [CMS_TAGS.resources],
   }
 );

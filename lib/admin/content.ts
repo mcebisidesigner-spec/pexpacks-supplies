@@ -26,6 +26,11 @@ export type TestimonialRow = Database["public"]["Tables"]["testimonials"]["Row"]
 export type FaqRow = Database["public"]["Tables"]["faqs"]["Row"];
 export type WebsiteContentRow = Database["public"]["Tables"]["website_content"]["Row"];
 
+export type CmsAnnouncementRow = Database["public"]["Tables"]["cms_announcements"]["Row"];
+export type CmsFaqRow = Database["public"]["Tables"]["cms_faqs"]["Row"];
+export type CmsTestimonialRow = Database["public"]["Tables"]["cms_testimonials"]["Row"];
+export type CmsResourceRow = Database["public"]["Tables"]["cms_resources"]["Row"];
+
 export type ContentFormState = {
   ok?: boolean;
   message?: string;
@@ -599,4 +604,601 @@ export async function updateWebsiteContent(
     console.error("[content] update section failed:", err);
     return { ok: false, message: "Failed to save content." };
   }
+}
+
+// ===========================================================================
+// 1. Announcements & Eyebrow Banners (cms_announcements)
+// ===========================================================================
+
+export const cmsAnnouncementSchema = z.object({
+  badge_text: z.string().trim().min(1, "Badge text is required").max(50, "Max 50 characters"),
+  message: z.string().trim().min(1, "Message is required").max(300, "Max 300 characters"),
+  link_url: z.string().trim().max(500, "Max 500 characters").optional().nullable(),
+  link_label: z.string().trim().max(50, "Max 50 characters").optional().nullable(),
+  is_active: z.boolean().default(true),
+  display_location: z.enum(["global_top", "hero_banner", "schools_page"]).default("global_top"),
+});
+
+export type CmsAnnouncementInput = z.infer<typeof cmsAnnouncementSchema>;
+
+export async function listCmsAnnouncements(): Promise<CmsAnnouncementRow[]> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("cms_announcements")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("[cms] list announcements failed:", error);
+    return [];
+  }
+  return data ?? [];
+}
+
+export async function saveCmsAnnouncement(
+  input: CmsAnnouncementInput,
+  id?: string
+): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const parsed = cmsAnnouncementSchema.safeParse(input);
+  if (!parsed.success) {
+    const errors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      const fieldKey = String(issue.path[0]);
+      if (!errors[fieldKey]) errors[fieldKey] = issue.message;
+    }
+    return { ok: false, errors };
+  }
+
+  const admin = createSupabaseAdminClient();
+  const payload = {
+    badge_text: parsed.data.badge_text,
+    message: parsed.data.message,
+    link_url: parsed.data.link_url || null,
+    link_label: parsed.data.link_label || null,
+    is_active: parsed.data.is_active,
+    display_location: parsed.data.display_location,
+    updated_at: new Date().toISOString(),
+  };
+
+  try {
+    if (id) {
+      const { error } = await admin.from("cms_announcements").update(payload).eq("id", id);
+      if (error) throw error;
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "content.announcement.update",
+        entityType: "cms_announcement",
+        entityId: id,
+        summary: `Updated announcement: "${payload.badge_text}"`,
+      });
+    } else {
+      const { data, error } = await admin.from("cms_announcements").insert(payload).select("id").single();
+      if (error) throw error;
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "content.announcement.create",
+        entityType: "cms_announcement",
+        entityId: data?.id,
+        summary: `Created announcement: "${payload.badge_text}"`,
+      });
+    }
+
+    revalidateTag(CMS_TAGS.announcements, { expire: 0 });
+    revalidatePath("/");
+    revalidatePath("/schools");
+    revalidatePath("/admin/content");
+    return { ok: true, message: "Announcement saved." };
+  } catch (err) {
+    console.error("[cms] save announcement failed:", err);
+    return { ok: false, message: "Failed to save announcement." };
+  }
+}
+
+export async function deleteCmsAnnouncement(id: string): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const admin = createSupabaseAdminClient();
+  const { error } = await admin.from("cms_announcements").delete().eq("id", id);
+  if (error) {
+    console.error("[cms] delete announcement failed:", error);
+    return { ok: false, message: "Failed to delete announcement." };
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.announcement.delete",
+    entityType: "cms_announcement",
+    entityId: id,
+    summary: `Deleted announcement ${id}`,
+  });
+
+  revalidateTag(CMS_TAGS.announcements, { expire: 0 });
+  revalidatePath("/");
+  revalidatePath("/schools");
+  revalidatePath("/admin/content");
+  return { ok: true, message: "Announcement deleted." };
+}
+
+export async function toggleCmsAnnouncementActive(id: string, active: boolean): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const admin = createSupabaseAdminClient();
+  const { error } = await admin
+    .from("cms_announcements")
+    .update({ is_active: active, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) {
+    return { ok: false, message: "Failed to toggle status." };
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.announcement.toggle",
+    entityType: "cms_announcement",
+    entityId: id,
+    summary: `${active ? "Activated" : "Deactivated"} announcement ${id}`,
+  });
+
+  revalidateTag(CMS_TAGS.announcements, { expire: 0 });
+  revalidatePath("/");
+  revalidatePath("/admin/content");
+  return { ok: true };
+}
+
+// ===========================================================================
+// 2. FAQs (cms_faqs)
+// ===========================================================================
+
+export const cmsFaqSchema = z.object({
+  category: z.string().trim().min(1, "Category is required").max(60, "Max 60 characters"),
+  question: z.string().trim().min(1, "Question is required").max(300, "Max 300 characters"),
+  answer: z.string().trim().min(1, "Answer is required").max(2000, "Max 2000 characters"),
+  sort_order: z.coerce.number().int().min(0).default(0),
+  is_published: z.boolean().default(true),
+});
+
+export type CmsFaqInput = z.infer<typeof cmsFaqSchema>;
+
+export async function listCmsFaqs(): Promise<CmsFaqRow[]> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("cms_faqs")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("[cms] list faqs failed:", error);
+    return [];
+  }
+  return data ?? [];
+}
+
+export async function saveCmsFaq(
+  input: CmsFaqInput,
+  id?: string
+): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const parsed = cmsFaqSchema.safeParse(input);
+  if (!parsed.success) {
+    const errors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      const fieldKey = String(issue.path[0]);
+      if (!errors[fieldKey]) errors[fieldKey] = issue.message;
+    }
+    return { ok: false, errors };
+  }
+
+  const admin = createSupabaseAdminClient();
+  const payload = {
+    category: parsed.data.category,
+    question: parsed.data.question,
+    answer: parsed.data.answer,
+    sort_order: parsed.data.sort_order,
+    is_published: parsed.data.is_published,
+    updated_at: new Date().toISOString(),
+  };
+
+  try {
+    if (id) {
+      const { error } = await admin.from("cms_faqs").update(payload).eq("id", id);
+      if (error) throw error;
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "content.faq.update",
+        entityType: "cms_faq",
+        entityId: id,
+        summary: `Updated FAQ: "${payload.question.slice(0, 60)}"`,
+      });
+    } else {
+      const { data, error } = await admin.from("cms_faqs").insert(payload).select("id").single();
+      if (error) throw error;
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "content.faq.create",
+        entityType: "cms_faq",
+        entityId: data?.id,
+        summary: `Created FAQ: "${payload.question.slice(0, 60)}"`,
+      });
+    }
+
+    revalidateTag(CMS_TAGS.faqs, { expire: 0 });
+    revalidatePath("/faq");
+    revalidatePath("/admin/content");
+    return { ok: true, message: "FAQ saved." };
+  } catch (err) {
+    console.error("[cms] save FAQ failed:", err);
+    return { ok: false, message: "Failed to save FAQ." };
+  }
+}
+
+export async function deleteCmsFaq(id: string): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const admin = createSupabaseAdminClient();
+  const { error } = await admin.from("cms_faqs").delete().eq("id", id);
+  if (error) {
+    return { ok: false, message: "Failed to delete FAQ." };
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.faq.delete",
+    entityType: "cms_faq",
+    entityId: id,
+    summary: `Deleted FAQ ${id}`,
+  });
+
+  revalidateTag(CMS_TAGS.faqs, { expire: 0 });
+  revalidatePath("/faq");
+  revalidatePath("/admin/content");
+  return { ok: true, message: "FAQ deleted." };
+}
+
+export async function toggleCmsFaqPublished(id: string, published: boolean): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const admin = createSupabaseAdminClient();
+  const { error } = await admin
+    .from("cms_faqs")
+    .update({ is_published: published, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) return { ok: false, message: "Failed to toggle status." };
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.faq.toggle",
+    entityType: "cms_faq",
+    entityId: id,
+    summary: `${published ? "Published" : "Unpublished"} FAQ ${id}`,
+  });
+
+  revalidateTag(CMS_TAGS.faqs, { expire: 0 });
+  revalidatePath("/faq");
+  revalidatePath("/admin/content");
+  return { ok: true };
+}
+
+// ===========================================================================
+// 3. Testimonials & Social Proof (cms_testimonials)
+// ===========================================================================
+
+export const cmsTestimonialSchema = z.object({
+  author_name: z.string().trim().min(1, "Author name is required").max(100, "Max 100 characters"),
+  author_role: z.string().trim().min(1, "Role is required").max(120, "Max 120 characters"),
+  school_id: z.string().uuid().optional().nullable(),
+  quote: z.string().trim().min(1, "Quote is required").max(1200, "Max 1200 characters"),
+  rating: z.coerce.number().int().min(1).max(5).default(5),
+  avatar_url: z.string().trim().max(500).optional().nullable(),
+  is_featured: z.boolean().default(true),
+  sort_order: z.coerce.number().int().min(0).default(0),
+});
+
+export type CmsTestimonialInput = z.infer<typeof cmsTestimonialSchema>;
+
+export async function listCmsTestimonials(): Promise<CmsTestimonialRow[]> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("cms_testimonials")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("[cms] list testimonials failed:", error);
+    return [];
+  }
+  return data ?? [];
+}
+
+export async function saveCmsTestimonial(
+  input: CmsTestimonialInput,
+  id?: string
+): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const parsed = cmsTestimonialSchema.safeParse(input);
+  if (!parsed.success) {
+    const errors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      const fieldKey = String(issue.path[0]);
+      if (!errors[fieldKey]) errors[fieldKey] = issue.message;
+    }
+    return { ok: false, errors };
+  }
+
+  const admin = createSupabaseAdminClient();
+  const payload = {
+    author_name: parsed.data.author_name,
+    author_role: parsed.data.author_role,
+    school_id: parsed.data.school_id || null,
+    quote: parsed.data.quote,
+    rating: parsed.data.rating,
+    avatar_url: parsed.data.avatar_url || null,
+    is_featured: parsed.data.is_featured,
+    sort_order: parsed.data.sort_order,
+  };
+
+  try {
+    if (id) {
+      const { error } = await admin.from("cms_testimonials").update(payload).eq("id", id);
+      if (error) throw error;
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "content.testimonial.update",
+        entityType: "cms_testimonial",
+        entityId: id,
+        summary: `Updated testimonial from ${payload.author_name}`,
+      });
+    } else {
+      const { data, error } = await admin.from("cms_testimonials").insert(payload).select("id").single();
+      if (error) throw error;
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "content.testimonial.create",
+        entityType: "cms_testimonial",
+        entityId: data?.id,
+        summary: `Created testimonial from ${payload.author_name}`,
+      });
+    }
+
+    revalidateTag(CMS_TAGS.testimonials, { expire: 0 });
+    revalidatePath("/");
+    revalidatePath("/admin/content");
+    return { ok: true, message: "Testimonial saved." };
+  } catch (err) {
+    console.error("[cms] save testimonial failed:", err);
+    return { ok: false, message: "Failed to save testimonial." };
+  }
+}
+
+export async function deleteCmsTestimonial(id: string): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const admin = createSupabaseAdminClient();
+  const { error } = await admin.from("cms_testimonials").delete().eq("id", id);
+  if (error) {
+    return { ok: false, message: "Failed to delete testimonial." };
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.testimonial.delete",
+    entityType: "cms_testimonial",
+    entityId: id,
+    summary: `Deleted testimonial ${id}`,
+  });
+
+  revalidateTag(CMS_TAGS.testimonials, { expire: 0 });
+  revalidatePath("/");
+  revalidatePath("/admin/content");
+  return { ok: true, message: "Testimonial deleted." };
+}
+
+export async function toggleCmsTestimonialFeatured(id: string, featured: boolean): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const admin = createSupabaseAdminClient();
+  const { error } = await admin
+    .from("cms_testimonials")
+    .update({ is_featured: featured })
+    .eq("id", id);
+
+  if (error) return { ok: false, message: "Failed to toggle status." };
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.testimonial.toggle",
+    entityType: "cms_testimonial",
+    entityId: id,
+    summary: `${featured ? "Featured" : "Unfeatured"} testimonial ${id}`,
+  });
+
+  revalidateTag(CMS_TAGS.testimonials, { expire: 0 });
+  revalidatePath("/");
+  revalidatePath("/admin/content");
+  return { ok: true };
+}
+
+// ===========================================================================
+// 4. Resource Hub (cms_resources)
+// ===========================================================================
+
+export const cmsResourceSchema = z.object({
+  title: z.string().trim().min(1, "Title is required").max(150, "Max 150 characters"),
+  description: z.string().trim().max(500, "Max 500 characters").optional().nullable(),
+  category: z.string().trim().min(1, "Category is required").max(60, "Max 60 characters").default("Parent Guides"),
+  file_url: z.string().trim().min(1, "File URL is required").max(500),
+  file_type: z.string().trim().min(1, "File type is required").max(10).default("PDF"),
+  file_size_label: z.string().trim().max(20).optional().nullable(),
+  is_public: z.boolean().default(true),
+  sort_order: z.coerce.number().int().min(0).default(0),
+});
+
+export type CmsResourceInput = z.infer<typeof cmsResourceSchema>;
+
+export async function listCmsResources(): Promise<CmsResourceRow[]> {
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
+    .from("cms_resources")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("[cms] list resources failed:", error);
+    return [];
+  }
+  return data ?? [];
+}
+
+export async function saveCmsResource(
+  input: CmsResourceInput,
+  id?: string
+): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const parsed = cmsResourceSchema.safeParse(input);
+  if (!parsed.success) {
+    const errors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) {
+      const fieldKey = String(issue.path[0]);
+      if (!errors[fieldKey]) errors[fieldKey] = issue.message;
+    }
+    return { ok: false, errors };
+  }
+
+  const admin = createSupabaseAdminClient();
+  const payload = {
+    title: parsed.data.title,
+    description: parsed.data.description || null,
+    category: parsed.data.category,
+    file_url: parsed.data.file_url,
+    file_type: parsed.data.file_type.toUpperCase(),
+    file_size_label: parsed.data.file_size_label || null,
+    is_public: parsed.data.is_public,
+    sort_order: parsed.data.sort_order,
+    updated_at: new Date().toISOString(),
+  };
+
+  try {
+    if (id) {
+      const { error } = await admin.from("cms_resources").update(payload).eq("id", id);
+      if (error) throw error;
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "content.resource.update",
+        entityType: "cms_resource",
+        entityId: id,
+        summary: `Updated resource: "${payload.title}"`,
+      });
+    } else {
+      const { data, error } = await admin.from("cms_resources").insert(payload).select("id").single();
+      if (error) throw error;
+      void writeAuditLog({
+        actorId: actor.user.id,
+        actorName: actor.user.email,
+        action: "content.resource.create",
+        entityType: "cms_resource",
+        entityId: data?.id,
+        summary: `Created resource: "${payload.title}"`,
+      });
+    }
+
+    revalidateTag(CMS_TAGS.resources, { expire: 0 });
+    revalidatePath("/admin/content");
+    return { ok: true, message: "Resource saved." };
+  } catch (err) {
+    console.error("[cms] save resource failed:", err);
+    return { ok: false, message: "Failed to save resource." };
+  }
+}
+
+export async function deleteCmsResource(id: string): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const admin = createSupabaseAdminClient();
+  const { error } = await admin.from("cms_resources").delete().eq("id", id);
+  if (error) {
+    return { ok: false, message: "Failed to delete resource." };
+  }
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.resource.delete",
+    entityType: "cms_resource",
+    entityId: id,
+    summary: `Deleted resource ${id}`,
+  });
+
+  revalidateTag(CMS_TAGS.resources, { expire: 0 });
+  revalidatePath("/admin/content");
+  return { ok: true, message: "Resource deleted." };
+}
+
+export async function toggleCmsResourcePublic(id: string, isPublic: boolean): Promise<ContentFormState> {
+  const actor = await assertCan("content.manage");
+  const admin = createSupabaseAdminClient();
+  const { error } = await admin
+    .from("cms_resources")
+    .update({ is_public: isPublic, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) return { ok: false, message: "Failed to toggle status." };
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "content.resource.toggle",
+    entityType: "cms_resource",
+    entityId: id,
+    summary: `${isPublic ? "Published" : "Hidden"} resource ${id}`,
+  });
+
+  revalidateTag(CMS_TAGS.resources, { expire: 0 });
+  revalidatePath("/admin/content");
+  return { ok: true };
+}
+
+export async function getCmsOverviewMetrics(): Promise<{
+  announcementsCount: number;
+  activeAnnouncementsCount: number;
+  faqsCount: number;
+  publishedFaqsCount: number;
+  testimonialsCount: number;
+  featuredTestimonialsCount: number;
+  resourcesCount: number;
+  publicResourcesCount: number;
+}> {
+  const admin = createSupabaseAdminClient();
+  const [announcements, faqs, testimonials, resources] = await Promise.all([
+    admin.from("cms_announcements").select("is_active"),
+    admin.from("cms_faqs").select("is_published"),
+    admin.from("cms_testimonials").select("is_featured"),
+    admin.from("cms_resources").select("is_public"),
+  ]);
+
+  const annData = announcements.data ?? [];
+  const faqData = faqs.data ?? [];
+  const testData = testimonials.data ?? [];
+  const resData = resources.data ?? [];
+
+  return {
+    announcementsCount: annData.length,
+    activeAnnouncementsCount: annData.filter((a) => a.is_active).length,
+    faqsCount: faqData.length,
+    publishedFaqsCount: faqData.filter((f) => f.is_published).length,
+    testimonialsCount: testData.length,
+    featuredTestimonialsCount: testData.filter((t) => t.is_featured).length,
+    resourcesCount: resData.length,
+    publicResourcesCount: resData.filter((r) => r.is_public).length,
+  };
 }

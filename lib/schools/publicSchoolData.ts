@@ -6,37 +6,27 @@ import {
   type SchoolIndexRecord,
 } from "@/data/schools";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { SCHOOL_DATA_TAG, SCHOOL_DATA_REVALIDATE_SECONDS } from "@/lib/school-utils";
+import {
+  SCHOOL_DATA_REVALIDATE_SECONDS,
+  SCHOOL_DATA_TAG,
+} from "@/lib/school-utils";
 
 type SchoolVisibility = Record<string, boolean>;
 
 const getDatabaseSchoolVisibility = unstable_cache(
   async (): Promise<SchoolVisibility> => {
     const supabase = createSupabaseAdminClient();
-    const visibility: SchoolVisibility = {};
-    const pageSize = 1000;
-    let from = 0;
+    const { data, error } = await supabase.rpc(
+      "get_public_school_visibility" as never,
+      { school_slugs: null } as never,
+    );
 
-    while (true) {
-      const { data, error } = await supabase
-        .from("public_school_directory_view")
-        .select("slug")
-        .range(from, from + pageSize - 1);
+    if (error) throw error;
 
-      if (error) throw error;
-      if (!data || data.length === 0) break;
-
-      for (const school of data) {
-        visibility[school.slug] = true;
-      }
-
-      if (data.length < pageSize) break;
-      from += pageSize;
-    }
-
-    return visibility;
+    const rows = (data as unknown as Array<{ slug: string }> | null) ?? [];
+    return Object.fromEntries(rows.map((school) => [school.slug, true]));
   },
-  ["public-school-visibility"],
+  ["public-school-visibility-v2"],
   {
     revalidate: SCHOOL_DATA_REVALIDATE_SECONDS,
     tags: [SCHOOL_DATA_TAG],

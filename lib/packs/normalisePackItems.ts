@@ -127,7 +127,7 @@ export function inferIcon(name: string) {
 
 export function normalisePackItems(
   contents: string[],
-  packId: string
+  packId: string,
 ): PackItem[] {
   return contents.map((content, index) => {
     const trimmed = content.trim();
@@ -151,11 +151,11 @@ export function normalisePackItems(
 export function createSchoolGradePack(
   school: School,
   grade: GradePack,
-  descriptions?: Record<string, string>
+  descriptions?: Record<string, string>,
 ): GradePackForCustomisation {
   const items = grade.packItems
     ? grade.packItems.map((item) => ({
-        id: `${grade.id}-${slugify(item.name) || 0}`,
+        id: item.id ?? `${grade.id}-${slugify(item.name) || 0}`,
         name: item.name,
         category: inferCategory(item.name),
         icon:
@@ -178,10 +178,12 @@ export function createSchoolGradePack(
     : normalisePackItems(grade.contents, grade.id);
   const totalRequiredQuantity = items.reduce(
     (total, item) => total + item.requiredQuantity,
-    0
+    0,
   );
   const estimatedUnitPrice =
-    grade.price && totalRequiredQuantity ? grade.price / totalRequiredQuantity : 0;
+    grade.price && totalRequiredQuantity
+      ? grade.price / totalRequiredQuantity
+      : 0;
 
   return {
     id: grade.id,
@@ -204,13 +206,5 @@ export function createSchoolGradePack(
     fullPackPrice: grade.price,
     deliveryNote: grade.deliveryNote,
     isCustomisable: true,
-    marginRate: grade.marginRateUsed !== undefined ? grade.marginRateUsed : null,
-    fixedPackCost:
-      (grade.packagingCost ?? 0) +
-      (grade.assemblyCost ?? 0) +
-      (grade.freightCost ?? 0),
-    packagingCost: grade.packagingCost ?? null,
-    assemblyCost: grade.assemblyCost ?? null,
-    freightCost: grade.freightCost ?? null,
   };
 }

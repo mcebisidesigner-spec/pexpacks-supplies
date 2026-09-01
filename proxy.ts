@@ -77,9 +77,13 @@ export async function proxy(request: NextRequest) {
 
   // 2. Protect Back-Office /admin and Sub-Routes (/admin/*)
   if (pathname.startsWith("/admin")) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    let user = null;
+    try {
+      const authResult = await supabase.auth.getUser();
+      user = authResult.data?.user ?? null;
+    } catch (err) {
+      console.error("[proxy] auth check failed:", err);
+    }
 
     // Redirect unauthenticated back-office requests to secure gateway
     if (!user) {
@@ -112,9 +116,13 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(targetUrl);
     }
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    let user = null;
+    try {
+      const authResult = await supabase.auth.getUser();
+      user = authResult.data?.user ?? null;
+    } catch (err) {
+      console.error("[proxy] console auth check failed:", err);
+    }
 
     // If already authenticated, redirect directly to /admin
     if (user) {

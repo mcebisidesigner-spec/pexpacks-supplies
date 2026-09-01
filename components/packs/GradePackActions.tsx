@@ -12,7 +12,6 @@ import {
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { calculateCustomPackTotal } from "@/lib/packs/calculatePackTotal";
 import {
   createCustomPackSelection,
   createFullPackSelection,
@@ -105,15 +104,8 @@ export function GradePackActions({
       ),
     [deferredSelection],
   );
-  const total = useMemo(
-    () =>
-      calculateCustomPackTotal(deferredSelection, {
-        fullPackPrice: pack.fullPackPrice,
-        marginRate: pack.marginRate,
-        fixedPackCost: pack.fixedPackCost,
-      }) ?? 0,
-    [deferredSelection, pack.fullPackPrice, pack.marginRate, pack.fixedPackCost],
-  );
+  const [total, setTotal] = useState(pack.fullPackPrice ?? 0);
+  const [isPricingTotal, setIsPricingTotal] = useState(false);
   const displayedTotal = total > 0 ? formatItemCurrency(total) : "R 0";
   const selectedCount = selectedItems.length;
   const pdfItems = useMemo(
@@ -126,6 +118,67 @@ export function GradePackActions({
       })),
     [pack.items],
   );
+
+  useEffect(() => {
+    if (selectedItems.length === 0) {
+      setIsPricingTotal(false);
+      setTotal(0);
+      return;
+    }
+
+    if (isFullSelection) {
+      setIsPricingTotal(false);
+      setTotal(pack.fullPackPrice ?? 0);
+      return;
+    }
+
+    const controller = new AbortController();
+    setIsPricingTotal(true);
+
+    const timer = window.setTimeout(() => {
+      fetch("/api/packs/custom-total", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          packId: pack.id,
+          items: deferredSelection.map((item) => ({
+            id: item.id,
+            quantity: item.selected ? item.selectedQuantity : 0,
+          })),
+        }),
+        signal: controller.signal,
+      })
+        .then(async (response) => {
+          const payload = (await response.json()) as {
+            success?: boolean;
+            total?: number;
+          };
+          if (!response.ok || payload.success !== true) {
+            throw new Error("Custom pack pricing failed");
+          }
+          setTotal(typeof payload.total === "number" ? payload.total : 0);
+        })
+        .catch((error) => {
+          if ((error as Error).name !== "AbortError") {
+            console.error("[pack customiser] pricing update failed:", error);
+          }
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setIsPricingTotal(false);
+        });
+    }, 120);
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timer);
+    };
+  }, [
+    deferredSelection,
+    isFullSelection,
+    pack.fullPackPrice,
+    pack.id,
+    selectedItems.length,
+  ]);
 
   const closeCustomiser = useCallback(() => {
     setIsOpen(false);
@@ -183,12 +236,7 @@ export function GradePackActions({
       pexcoRateCents?: number | null;
       pexcoRateActive?: boolean;
     }> = [];
-    const customTotal =
-      calculateCustomPackTotal(selection, {
-        fullPackPrice: pack.fullPackPrice,
-        marginRate: pack.marginRate,
-        fixedPackCost: pack.fixedPackCost,
-      }) ?? 0;
+    const customTotal = total;
 
     selection.forEach((item) => {
       if (item.selected && item.selectedQuantity > 0) {
@@ -239,7 +287,15 @@ export function GradePackActions({
     });
     closeCustomiser();
     openTray();
-  }, [selectedCount, selection, pack, addPack, closeCustomiser, openTray]);
+  }, [
+    selectedCount,
+    selection,
+    pack,
+    addPack,
+    closeCustomiser,
+    openTray,
+    total,
+  ]);
 
   // Mount check for portal rendering
   useEffect(() => {
@@ -385,7 +441,8 @@ export function GradePackActions({
                           </span>
                         ) : null}
                         <span className={styles.itemMeta}>
-                          School requires: {String(item.requiredQuantity).padStart(2, "0")}
+                          School requires:{" "}
+                          {String(item.requiredQuantity).padStart(2, "0")}
                         </span>
                       </span>
                     </label>
@@ -439,7 +496,7 @@ export function GradePackActions({
             type="button"
             className={styles.submitButton}
             onClick={handleSaveCustomPack}
-            disabled={selectedCount === 0}
+            disabled={selectedCount === 0 || isPricingTotal}
           >
             Add Customised Pack
           </button>

@@ -11,13 +11,6 @@ export type GradePack = {
   deliveryNote: string;
   availability: "in-stock" | "pre-order" | "seasonal";
   packItems?: SchoolPackItem[];
-  itemsCost?: number | null;
-  totalLandedCost?: number | null;
-  marginRateUsed?: number | null;
-  pricingStatus?: string | null;
-  packagingCost?: number | null;
-  assemblyCost?: number | null;
-  freightCost?: number | null;
 };
 
 export type SchoolPackItem = {
@@ -104,7 +97,7 @@ export const getFullSchoolRecords = async (): Promise<School[]> => {
 export const getSchoolRecordMap = async (): Promise<SchoolRecordMap> => {
   if (!schoolRecordMapPromise) {
     schoolRecordMapPromise = getFullSchoolRecords().then(
-      (records) => new Map(records.map((school) => [school.slug, school]))
+      (records) => new Map(records.map((school) => [school.slug, school])),
     );
   }
 
@@ -112,7 +105,7 @@ export const getSchoolRecordMap = async (): Promise<SchoolRecordMap> => {
 };
 
 export const getSchoolBySlug = async (
-  slug: string
+  slug: string,
 ): Promise<School | undefined> => {
   const records = await getSchoolRecordMap();
   return records.get(slug);

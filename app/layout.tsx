@@ -7,7 +7,7 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { TrayProviders } from "@/components/order/TrayProviders";
 import { buildMetadata } from "@/lib/seo";
-import { getWebsiteContent } from "@/lib/cms";
+import { getWebsiteContent, getActiveAnnouncement } from "@/lib/cms";
 import {
   onlineStoreSchema,
   organizationSchema,
@@ -134,14 +134,26 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const content = await getWebsiteContent();
+  const [content, activeAnnouncement] = await Promise.all([
+    getWebsiteContent(),
+    getActiveAnnouncement("global_top"),
+  ]);
 
-  const announcementValue = content["homepage.announcement"];
-  const announcement = {
-    enabled: announcementValue.enabled === true,
-    text:
-      typeof announcementValue.text === "string" ? announcementValue.text : "",
-  };
+  const announcement = activeAnnouncement
+    ? {
+        enabled: true,
+        text: activeAnnouncement.message,
+        badge: activeAnnouncement.badge_text,
+        linkUrl: activeAnnouncement.link_url,
+        linkLabel: activeAnnouncement.link_label,
+      }
+    : {
+        enabled: content["homepage.announcement"].enabled === true,
+        text:
+          typeof content["homepage.announcement"].text === "string"
+            ? content["homepage.announcement"].text
+            : "",
+      };
 
   const companyInfo = content.company_info;
   const company = {

@@ -15,6 +15,18 @@ import {
   updateWebsiteContent,
   testimonialInputSchema,
   faqInputSchema,
+  saveCmsAnnouncement,
+  deleteCmsAnnouncement,
+  toggleCmsAnnouncementActive,
+  saveCmsFaq,
+  deleteCmsFaq,
+  toggleCmsFaqPublished,
+  saveCmsTestimonial,
+  deleteCmsTestimonial,
+  toggleCmsTestimonialFeatured,
+  saveCmsResource,
+  deleteCmsResource,
+  toggleCmsResourcePublic,
   type ContentFormState,
 } from "@/lib/admin/content";
 
@@ -168,3 +180,158 @@ export async function updateWebsiteContentAction(
   if (result.ok) revalidatePath("/admin/content/sections");
   return result;
 }
+
+// ---------------------------------------------------------------------------
+// Unified CMS Server Actions
+// ---------------------------------------------------------------------------
+
+export async function saveCmsAnnouncementAction(
+  id: string | null,
+  _prev: ContentFormState,
+  formData: FormData
+): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  const badge_text = raw(formData, "badge_text");
+  const message = raw(formData, "message");
+  const link_url = raw(formData, "link_url");
+  const link_label = raw(formData, "link_label");
+  const display_location = (raw(formData, "display_location") || "global_top") as "global_top" | "hero_banner" | "schools_page";
+  const is_active = formData.get("is_active") === "true" || formData.get("is_active") === "on";
+
+  return saveCmsAnnouncement(
+    {
+      badge_text,
+      message,
+      link_url: link_url || null,
+      link_label: link_label || null,
+      display_location,
+      is_active,
+    },
+    id ?? undefined
+  );
+}
+
+export async function deleteCmsAnnouncementAction(id: string): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  return deleteCmsAnnouncement(id);
+}
+
+export async function toggleCmsAnnouncementActiveAction(id: string, active: boolean): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  return toggleCmsAnnouncementActive(id, active);
+}
+
+export async function saveCmsFaqAction(
+  id: string | null,
+  _prev: ContentFormState,
+  formData: FormData
+): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  const category = raw(formData, "category") || "General";
+  const question = raw(formData, "question");
+  const answer = raw(formData, "answer");
+  const sort_order = parseInt(raw(formData, "sort_order") || "0", 10);
+  const is_published = formData.get("is_published") === "true" || formData.get("is_published") === "on";
+
+  return saveCmsFaq(
+    {
+      category,
+      question,
+      answer,
+      sort_order: Number.isNaN(sort_order) ? 0 : sort_order,
+      is_published,
+    },
+    id ?? undefined
+  );
+}
+
+export async function deleteCmsFaqAction(id: string): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  return deleteCmsFaq(id);
+}
+
+export async function toggleCmsFaqPublishedAction(id: string, published: boolean): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  return toggleCmsFaqPublished(id, published);
+}
+
+export async function saveCmsTestimonialAction(
+  id: string | null,
+  _prev: ContentFormState,
+  formData: FormData
+): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  const author_name = raw(formData, "author_name");
+  const author_role = raw(formData, "author_role");
+  const school_id = raw(formData, "school_id") || null;
+  const quote = raw(formData, "quote");
+  const rating = parseInt(raw(formData, "rating") || "5", 10);
+  const avatar_url = raw(formData, "avatar_url") || null;
+  const sort_order = parseInt(raw(formData, "sort_order") || "0", 10);
+  const is_featured = formData.get("is_featured") === "true" || formData.get("is_featured") === "on";
+
+  return saveCmsTestimonial(
+    {
+      author_name,
+      author_role,
+      school_id,
+      quote,
+      rating: Number.isNaN(rating) ? 5 : rating,
+      avatar_url,
+      sort_order: Number.isNaN(sort_order) ? 0 : sort_order,
+      is_featured,
+    },
+    id ?? undefined
+  );
+}
+
+export async function deleteCmsTestimonialAction(id: string): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  return deleteCmsTestimonial(id);
+}
+
+export async function toggleCmsTestimonialFeaturedAction(id: string, featured: boolean): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  return toggleCmsTestimonialFeatured(id, featured);
+}
+
+export async function saveCmsResourceAction(
+  id: string | null,
+  _prev: ContentFormState,
+  formData: FormData
+): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  const title = raw(formData, "title");
+  const description = raw(formData, "description");
+  const category = raw(formData, "category") || "Parent Guides";
+  const file_url = raw(formData, "file_url");
+  const file_type = raw(formData, "file_type") || "PDF";
+  const file_size_label = raw(formData, "file_size_label");
+  const sort_order = parseInt(raw(formData, "sort_order") || "0", 10);
+  const is_public = formData.get("is_public") === "true" || formData.get("is_public") === "on";
+
+  return saveCmsResource(
+    {
+      title,
+      description: description || null,
+      category,
+      file_url,
+      file_type,
+      file_size_label: file_size_label || null,
+      sort_order: Number.isNaN(sort_order) ? 0 : sort_order,
+      is_public,
+    },
+    id ?? undefined
+  );
+}
+
+export async function deleteCmsResourceAction(id: string): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  return deleteCmsResource(id);
+}
+
+export async function toggleCmsResourcePublicAction(id: string, isPublic: boolean): Promise<ContentFormState> {
+  await requireAdmin({ permission: "content.manage" });
+  return toggleCmsResourcePublic(id, isPublic);
+}
+

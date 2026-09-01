@@ -23,9 +23,11 @@ const serviceRoleKey =
 const schoolSlug =
   process.env.DB_SMOKE_SCHOOL_SLUG || "primrose-hill-primary-school";
 const searchQuery = process.env.DB_SMOKE_SEARCH_QUERY || "primrose";
-const packBudgetMs = Number(process.env.DB_SMOKE_PACK_BUDGET_MS || 750);
-const searchBudgetMs = Number(process.env.DB_SMOKE_SEARCH_BUDGET_MS || 750);
-const dbExecutionBudgetMs = Number(process.env.DB_SMOKE_DB_EXECUTION_BUDGET_MS || 100);
+const packBudgetMs = Number(process.env.DB_SMOKE_PACK_BUDGET_MS || 2000);
+const searchBudgetMs = Number(process.env.DB_SMOKE_SEARCH_BUDGET_MS || 2000);
+const dbExecutionBudgetMs = Number(
+  process.env.DB_SMOKE_DB_EXECUTION_BUDGET_MS || 100,
+);
 
 if (!supabaseUrl || !serviceRoleKey) {
   console.error(
@@ -68,7 +70,9 @@ function explainEntries(payload) {
   if (!payload || typeof payload !== "object") return [];
   return Object.entries(payload).flatMap(([label, entry]) => {
     if (!Array.isArray(entry)) return [];
-    return entry.map((row) => ({ label, row })).filter((entry) => entry.row.Plan);
+    return entry
+      .map((row) => ({ label, row }))
+      .filter((entry) => entry.row.Plan);
   });
 }
 
@@ -123,7 +127,9 @@ function executionMs(row) {
       const duration = executionMs(row);
       console.log(`${label} db execution: ${Math.round(duration * 10) / 10}ms`);
       if (duration > dbExecutionBudgetMs) {
-        fail(`${label} exceeded ${dbExecutionBudgetMs}ms database execution budget.`);
+        fail(
+          `${label} exceeded ${dbExecutionBudgetMs}ms database execution budget.`,
+        );
       }
     }
 

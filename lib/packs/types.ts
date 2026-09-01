@@ -29,11 +29,6 @@ export type GradePackForCustomisation = {
   fullPackPrice?: number;
   deliveryNote?: string;
   isCustomisable: boolean;
-  marginRate?: number | null;
-  fixedPackCost?: number | null;
-  packagingCost?: number | null;
-  assemblyCost?: number | null;
-  freightCost?: number | null;
 };
 
 export type PackSelectionItem = PackItem & {

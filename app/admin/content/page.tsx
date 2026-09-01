@@ -1,55 +1,44 @@
-import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/rbac";
-import { listTestimonials, listFaqs } from "@/lib/admin/content";
+import {
+  getCmsOverviewMetrics,
+  listCmsAnnouncements,
+  listCmsFaqs,
+  listCmsTestimonials,
+  listCmsResources,
+} from "@/lib/admin/content";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { UnifiedCmsView } from "@/components/admin/content/UnifiedCmsView";
 import adminStyles from "../admin.module.css";
-import styles from "./content.module.css";
 
 export const metadata = {
-  title: "Website Content | Admin | Pexpacks",
+  title: "Website Content CMS | Admin | Pexpacks",
 };
 
 export default async function ContentHubPage() {
   await requireAdmin({ permission: "content.view" });
-  const [testimonials, faqs] = await Promise.all([listTestimonials(), listFaqs()]);
 
-  const cards = [
-    {
-      href: "/admin/content/testimonials",
-      title: "Testimonials",
-      text: "Manage the quotes shown in the homepage testimonial marquee.",
-      count: `${testimonials.filter((t) => t.visible).length} live of ${testimonials.length}`,
-    },
-    {
-      href: "/admin/content/faqs",
-      title: "FAQs",
-      text: "Manage the questions and answers shown on the FAQ page and site sections.",
-      count: `${faqs.filter((f) => f.visible).length} live of ${faqs.length}`,
-    },
-    {
-      href: "/admin/content/sections",
-      title: "Content sections",
-      text: "Edit homepage, footer and SEO copy that appears across the site.",
-      count: "5 sections",
-    },
-  ];
+  const [metrics, announcements, faqs, testimonials, resources] = await Promise.all([
+    getCmsOverviewMetrics(),
+    listCmsAnnouncements(),
+    listCmsFaqs(),
+    listCmsTestimonials(),
+    listCmsResources(),
+  ]);
 
   return (
     <div className={adminStyles.adminContainer}>
       <AdminPageHeader
-        title="Website Content"
-        subtitle="Manage testimonials, FAQs, and site-wide marketing copy."
+        title="Storefront Content CMS"
+        subtitle="Dynamically manage announcement eyebrows, FAQs, testimonials, and resource downloads."
       />
 
-      <div className={styles.grid}>
-        {cards.map((card) => (
-          <Link key={card.href} href={card.href} className={styles.hubCard}>
-            <h2 className={styles.hubCardTitle}>{card.title}</h2>
-            <p className={styles.hubCardText}>{card.text}</p>
-            <span className={styles.hubCardCount}>{card.count}</span>
-          </Link>
-        ))}
-      </div>
+      <UnifiedCmsView
+        metrics={metrics}
+        announcements={announcements}
+        faqs={faqs}
+        testimonials={testimonials}
+        resources={resources}
+      />
     </div>
   );
 }

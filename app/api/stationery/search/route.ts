@@ -1,13 +1,40 @@
-import { NextResponse } from "next/server";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
+import {
+  isSameOriginRequest,
+  rateLimitRequest,
+} from "@/lib/security/requestGuards";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
-export async function GET(request: Request) {
+export const runtime = "nodejs";
+
+export async function GET(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json(
+      { error: "Invalid request origin." },
+      { status: 403 },
+    );
+  }
+
+  const limit = rateLimitRequest(request, {
+    keyPrefix: "admin-stationery-search",
+    windowMs: 60 * 1000,
+    max: 120,
+  });
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Too many stationery searches." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q") || "";
 
   if (!query || query.trim().length < 2) {
-    return NextResponse.json([]);
+    return NextResponse.json([], {
+      headers: { "Cache-Control": "private, no-store" },
+    });
   }
 
   // Only authenticated staff with item access may search the inventory.
@@ -29,7 +56,10 @@ export async function GET(request: Request) {
         "id, sku, name, description, category, specification, unit, availability, current_selling_price, latest_verified_cost, preferred_supplier:suppliers(name)",
       )
       .eq("active", true)
-      .textSearch("search_vector", cleanQuery, { type: "websearch", config: "simple" })
+      .textSearch("search_vector", cleanQuery, {
+        type: "websearch",
+        config: "simple",
+      })
       .order("name", { ascending: true })
       .limit(40);
 
@@ -43,9 +73,15 @@ export async function GET(request: Request) {
         ? item.preferred_supplier[0]
         : item.preferred_supplier;
       const unitPrice = Number(item.current_selling_price ?? 0);
-      const costPrice = item.latest_verified_cost == null ? null : Number(item.latest_verified_cost);
+      const costPrice =
+        item.latest_verified_cost == null
+          ? null
+          : Number(item.latest_verified_cost);
       const marginAmount = costPrice == null ? null : unitPrice - costPrice;
-      const marginPercent = unitPrice > 0 && marginAmount != null ? (marginAmount / unitPrice) * 100 : null;
+      const marginPercent =
+        unitPrice > 0 && marginAmount != null
+          ? (marginAmount / unitPrice) * 100
+          : null;
 
       return {
         id: item.id,
@@ -63,7 +99,9 @@ export async function GET(request: Request) {
       };
     });
 
-    return NextResponse.json(items);
+    return NextResponse.json(items, {
+      headers: { "Cache-Control": "private, no-store" },
+    });
   } catch (err) {
     console.error("[api/stationery/search] Unexpected error:", err);
     return NextResponse.json(

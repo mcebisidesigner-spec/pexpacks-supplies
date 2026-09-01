@@ -9,6 +9,167 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      cms_announcements: {
+        Row: {
+          id: string;
+          badge_text: string;
+          message: string;
+          link_url: string | null;
+          link_label: string | null;
+          is_active: boolean;
+          display_location: "global_top" | "hero_banner" | "schools_page";
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          badge_text: string;
+          message: string;
+          link_url?: string | null;
+          link_label?: string | null;
+          is_active?: boolean;
+          display_location?: "global_top" | "hero_banner" | "schools_page";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          badge_text?: string;
+          message?: string;
+          link_url?: string | null;
+          link_label?: string | null;
+          is_active?: boolean;
+          display_location?: "global_top" | "hero_banner" | "schools_page";
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      cms_faqs: {
+        Row: {
+          id: string;
+          category: string;
+          question: string;
+          answer: string;
+          sort_order: number;
+          is_published: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          category?: string;
+          question: string;
+          answer: string;
+          sort_order?: number;
+          is_published?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          category?: string;
+          question?: string;
+          answer?: string;
+          sort_order?: number;
+          is_published?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      cms_testimonials: {
+        Row: {
+          id: string;
+          author_name: string;
+          author_role: string;
+          school_id: string | null;
+          quote: string;
+          rating: number;
+          avatar_url: string | null;
+          is_featured: boolean;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          author_name: string;
+          author_role: string;
+          school_id?: string | null;
+          quote: string;
+          rating?: number;
+          avatar_url?: string | null;
+          is_featured?: boolean;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          author_name?: string;
+          author_role?: string;
+          school_id?: string | null;
+          quote?: string;
+          rating?: number;
+          avatar_url?: string | null;
+          is_featured?: boolean;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cms_testimonials_school_id_fkey";
+            columns: ["school_id"];
+            isOneToOne: false;
+            referencedRelation: "schools";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      cms_resources: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          category: string;
+          file_url: string;
+          file_type: string;
+          file_size_label: string | null;
+          download_count: number;
+          is_public: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          category?: string;
+          file_url: string;
+          file_type?: string;
+          file_size_label?: string | null;
+          download_count?: number;
+          is_public?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string | null;
+          category?: string;
+          file_url?: string;
+          file_type?: string;
+          file_size_label?: string | null;
+          download_count?: number;
+          is_public?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       auth_otp_tokens: {
         Row: {
           id: string;
