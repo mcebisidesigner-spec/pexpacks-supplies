@@ -9,16 +9,16 @@ function readRepoFile(path: string) {
 }
 
 describe("Grade Pack pricing contract", () => {
-  it("calculates Grade Pack selling price from raw purchase cost, margin, then fixed pack costs", () => {
+  it("calculates Grade Pack selling price from pack item selling subtotal, margin, then fixed pack costs", () => {
     const pricingSql = readRepoFile(
-      "supabase/migrations/00081_apply_pack_costs_after_margin.sql",
+      "supabase/migrations/00083_use_pack_item_selling_subtotal_for_grade_pack_pricing.sql",
     );
 
-    expect(pricingSql).toContain("mp.latest_verified_cost");
+    expect(pricingSql).toContain("spi.selling_price_override");
+    expect(pricingSql).toContain("mp.current_selling_price");
     expect(pricingSql).toContain("COALESCE(pic.items_cost, 0) / (1.0 - s.margin_rate)");
     expect(pricingSql).toContain("+ s.packaging_cost + s.assembly_cost + s.freight_cost");
-    expect(pricingSql).not.toContain("mp.current_selling_price");
-    expect(pricingSql).not.toContain("selling_price_override");
+    expect(pricingSql).not.toContain("mp.latest_verified_cost");
   });
 
   it("does not overwrite school_packs.price from standalone item selling prices in admin code", () => {

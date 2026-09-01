@@ -682,7 +682,7 @@ export function SettingsControlCentre({
                     }
                   />
                   <span className={styles.hint}>
-                    Applied to stationery item raw purchase cost first. Fixed
+                    Applied to the stationery item subtotal first. Fixed
                     packaging, assembly, and freight are then added per pack.
                     Target: <strong>{draftMarginPercent().toFixed(1)}%</strong>.
                   </span>

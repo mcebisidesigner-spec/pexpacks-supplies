@@ -96,10 +96,23 @@ export function GradePackActions({
       ),
     [deferredSelection],
   );
-  const total = useMemo(
+  const isFullSelection = useMemo(
+    () =>
+      deferredSelection.length > 0 &&
+      deferredSelection.every(
+        (item) =>
+          item.selected && item.selectedQuantity === item.requiredQuantity,
+      ),
+    [deferredSelection],
+  );
+  const itemSubtotal = useMemo(
     () => calculatePackTotal(deferredSelection) ?? 0,
     [deferredSelection],
   );
+  const total =
+    isFullSelection && typeof pack.fullPackPrice === "number"
+      ? pack.fullPackPrice
+      : itemSubtotal;
   const displayedTotal = total > 0 ? formatItemCurrency(total) : "R 0";
   const selectedCount = selectedItems.length;
   const pdfItems = useMemo(
@@ -169,7 +182,16 @@ export function GradePackActions({
       pexcoRateCents?: number | null;
       pexcoRateActive?: boolean;
     }> = [];
-    const customTotal = calculatePackTotal(selection) ?? 0;
+    const isSavingFullSelection =
+      selection.length > 0 &&
+      selection.every(
+        (item) =>
+          item.selected && item.selectedQuantity === item.requiredQuantity,
+      );
+    const customTotal =
+      isSavingFullSelection && typeof pack.fullPackPrice === "number"
+        ? pack.fullPackPrice
+        : (calculatePackTotal(selection) ?? 0);
 
     selection.forEach((item) => {
       if (item.selected && item.selectedQuantity > 0) {
@@ -480,13 +502,7 @@ export function GradePackActions({
                 schoolName: pack.schoolName,
                 grade: pack.grade,
                 items: pdfItems,
-                estimatedPrice: formatCurrency(
-                  pack.items.reduce(
-                    (sum, item) =>
-                      sum + (item.unitPrice ?? 0) * item.requiredQuantity,
-                    0,
-                  ),
-                ),
+                estimatedPrice: formatCurrency(pack.fullPackPrice ?? 0),
                 fileName: `${pack.schoolSlug}-${pack.gradeSlug}`,
               }}
               className={styles.downloadLink}
@@ -538,13 +554,7 @@ export function GradePackActions({
             schoolName: pack.schoolName,
             grade: pack.grade,
             items: pdfItems,
-            estimatedPrice: formatCurrency(
-              pack.items.reduce(
-                (sum, item) =>
-                  sum + (item.unitPrice ?? 0) * item.requiredQuantity,
-                0,
-              ),
-            ),
+            estimatedPrice: formatCurrency(pack.fullPackPrice ?? 0),
             fileName: `${pack.schoolSlug}-${pack.gradeSlug}`,
           }}
         >
