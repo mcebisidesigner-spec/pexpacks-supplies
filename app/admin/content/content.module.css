@@ -593,6 +593,11 @@
 }
 
 .eyebrowPanelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
   margin-bottom: 14px;
 }
 
@@ -601,6 +606,49 @@
   color: var(--db-text-muted);
   margin: 4px 0 0;
   max-width: 560px;
+}
+
+.eyebrowPanelToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--db-border);
+  background: var(--db-surface);
+  color: var(--db-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--db-transition-fast, 140ms ease);
+}
+
+.eyebrowPanelToggle:hover {
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.eyebrowPanelToggle:focus-visible {
+  outline: 2px solid rgba(16, 185, 129, 0.6);
+  outline-offset: 2px;
+}
+
+.eyebrowCollapsible {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--db-transition-fast, 180ms ease);
+}
+
+.eyebrowCollapsibleOpen {
+  grid-template-rows: 1fr;
+}
+
+.eyebrowCollapsibleInner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .eyebrowFeedback {

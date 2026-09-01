@@ -4,6 +4,7 @@ import React, { useState, useEffect, useTransition, useMemo } from "react";
 import {
   Megaphone,
   HelpCircle,
+  Minus,
   MessageSquareQuote,
   FolderDown,
   Plus,
@@ -223,6 +224,7 @@ export default function ContentCMSPage() {
     tone: "success" | "error";
     text: string;
   } | null>(null);
+  const [eyebrowOpen, setEyebrowOpen] = useState(true);
 
   // Hydrate from live DB via Server Action
   useEffect(() => {
@@ -817,65 +819,91 @@ export default function ContentCMSPage() {
         <>
           <div className={styles.eyebrowPanel}>
             <div className={styles.eyebrowPanelHeader}>
-              <h2 className={styles.cardTitle}>Page hero eyebrows</h2>
-              <p>
-                The short label shown above the title in each page&rsquo;s hero
-                section. Save updates the live site immediately.
-              </p>
-            </div>
-            {eyebrowFeedback ? (
-              <p
-                role="status"
-                className={`${styles.eyebrowFeedback} ${
-                  eyebrowFeedback.tone === "success"
-                    ? styles.eyebrowFeedbackSuccess
-                    : styles.eyebrowFeedbackError
-                }`}
+              <div>
+                <h2 className={styles.cardTitle}>Page hero eyebrows</h2>
+                <p>
+                  The short label shown above the title in each page&rsquo;s
+                  hero section. Save updates the live site immediately.
+                </p>
+              </div>
+              <button
+                type="button"
+                className={styles.eyebrowPanelToggle}
+                onClick={() => setEyebrowOpen((prev) => !prev)}
+                aria-expanded={eyebrowOpen}
+                aria-controls="page-hero-eyebrows-panel"
+                aria-label={
+                  eyebrowOpen
+                    ? "Collapse page hero eyebrows"
+                    : "Expand page hero eyebrows"
+                }
               >
-                {eyebrowFeedback.text}
-              </p>
-            ) : null}
-            <div className={styles.eyebrowRows}>
-              {PAGE_HERO_SECTIONS.map((section) => (
-                <div key={section.key} className={styles.eyebrowRow}>
-                  <div className={styles.eyebrowRowMeta}>
-                    <span className={styles.eyebrowRowLabel}>
-                      {section.label}
-                    </span>
-                    <a
-                      href={section.route}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.cardLinkRow}
-                    >
-                      <span>View page</span>
-                      <ExternalLink size={12} />
-                    </a>
-                  </div>
-                  <input
-                    type="text"
-                    className={styles.formInput}
-                    value={eyebrows[section.key] ?? ""}
-                    onChange={(e) =>
-                      setEyebrows((prev) => ({
-                        ...prev,
-                        [section.key]: e.target.value,
-                      }))
-                    }
-                    placeholder="Page eyebrow text"
-                    aria-label={`${section.label} eyebrow`}
-                  />
-                  <button
-                    type="button"
-                    className={styles.eyebrowSaveBtn}
-                    disabled={eyebrowSaving === section.key}
-                    onClick={() => handleSaveEyebrow(section.key)}
+                {eyebrowOpen ? <Minus size={14} /> : <Plus size={14} />}
+                {eyebrowOpen ? "Collapse" : "Expand"}
+              </button>
+            </div>
+            <div
+              id="page-hero-eyebrows-panel"
+              className={`${styles.eyebrowCollapsible} ${
+                eyebrowOpen ? styles.eyebrowCollapsibleOpen : ""
+              }`}
+            >
+              <div className={styles.eyebrowCollapsibleInner}>
+                {eyebrowFeedback ? (
+                  <p
+                    role="status"
+                    className={`${styles.eyebrowFeedback} ${
+                      eyebrowFeedback.tone === "success"
+                        ? styles.eyebrowFeedbackSuccess
+                        : styles.eyebrowFeedbackError
+                    }`}
                   >
-                    <Save size={14} />
-                    {eyebrowSaving === section.key ? "Saving…" : "Save"}
-                  </button>
+                    {eyebrowFeedback.text}
+                  </p>
+                ) : null}
+                <div className={styles.eyebrowRows}>
+                  {PAGE_HERO_SECTIONS.map((section) => (
+                    <div key={section.key} className={styles.eyebrowRow}>
+                      <div className={styles.eyebrowRowMeta}>
+                        <span className={styles.eyebrowRowLabel}>
+                          {section.label}
+                        </span>
+                        <a
+                          href={section.route}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.cardLinkRow}
+                        >
+                          <span>View page</span>
+                          <ExternalLink size={12} />
+                        </a>
+                      </div>
+                      <input
+                        type="text"
+                        className={styles.formInput}
+                        value={eyebrows[section.key] ?? ""}
+                        onChange={(e) =>
+                          setEyebrows((prev) => ({
+                            ...prev,
+                            [section.key]: e.target.value,
+                          }))
+                        }
+                        placeholder="Page eyebrow text"
+                        aria-label={`${section.label} eyebrow`}
+                      />
+                      <button
+                        type="button"
+                        className={styles.eyebrowSaveBtn}
+                        disabled={eyebrowSaving === section.key}
+                        onClick={() => handleSaveEyebrow(section.key)}
+                      >
+                        <Save size={14} />
+                        {eyebrowSaving === section.key ? "Saving…" : "Save"}
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
 
