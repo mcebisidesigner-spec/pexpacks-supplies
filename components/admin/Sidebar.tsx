@@ -15,7 +15,7 @@ import {
   ShoppingCart,
   PackageCheck,
   CheckSquare,
-  TrendingUp,
+  Layers,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -36,9 +36,13 @@ export const ORDERED_NAV_ITEMS: Array<{
   { label: "Quotations", href: "/admin/quotations", icon: FileSpreadsheet },
   { label: "Payments", href: "/admin/payments", icon: CreditCard },
   { label: "Procurement", href: "/admin/procurement", icon: ShoppingCart },
-  { label: "Packing & Fulfilment", href: "/admin/fulfilment", icon: PackageCheck },
+  {
+    label: "Packing & Fulfilment",
+    href: "/admin/fulfilment",
+    icon: PackageCheck,
+  },
   { label: "Tasks", href: "/admin/tasks", icon: CheckSquare },
-  { label: "Reports", href: "/admin/reports", icon: TrendingUp },
+  { label: "Content CMS", href: "/admin/content", icon: Layers },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
