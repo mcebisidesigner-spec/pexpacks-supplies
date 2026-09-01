@@ -15,6 +15,9 @@ export type GradePack = {
   totalLandedCost?: number | null;
   marginRateUsed?: number | null;
   pricingStatus?: string | null;
+  packagingCost?: number | null;
+  assemblyCost?: number | null;
+  freightCost?: number | null;
 };
 
 export type SchoolPackItem = {

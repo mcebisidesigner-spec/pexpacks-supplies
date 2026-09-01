@@ -93,9 +93,6 @@ export function PackTrayFooter() {
         >
           Checkout &amp; Pay Now
         </button>
-        <p className={styles.trustSubtext}>
-          Includes Instant EFT, Card, Apple Pay &amp; Happy Pay (Pay in 2)
-        </p>
         <button
           type="button"
           className={styles.secondaryButton}

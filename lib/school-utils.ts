@@ -49,6 +49,9 @@ type DbPack = {
   total_landed_cost?: number | null;
   margin_rate_used?: number | null;
   pricing_status?: string | null;
+  packaging_cost?: number | null;
+  assembly_cost?: number | null;
+  freight_cost?: number | null;
   items: DbPackItem[];
 };
 
@@ -107,6 +110,9 @@ function toGradePacks(packs: DbPack[]): GradePack[] {
         totalLandedCost: pack.total_landed_cost,
         marginRateUsed: pack.margin_rate_used,
         pricingStatus: pack.pricing_status,
+        packagingCost: pack.packaging_cost,
+        assemblyCost: pack.assembly_cost,
+        freightCost: pack.freight_cost,
         deliveryNote:
           pack.description || "Prepared for delivery before school starts.",
         availability: (pack.stock ?? 1) > 0 ? "in-stock" : "pre-order",

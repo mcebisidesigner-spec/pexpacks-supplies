@@ -12,7 +12,7 @@ import {
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { calculatePackTotal } from "@/lib/packs/calculatePackTotal";
+import { calculateCustomPackTotal } from "@/lib/packs/calculatePackTotal";
 import {
   createCustomPackSelection,
   createFullPackSelection,
@@ -105,14 +105,15 @@ export function GradePackActions({
       ),
     [deferredSelection],
   );
-  const itemSubtotal = useMemo(
-    () => calculatePackTotal(deferredSelection) ?? 0,
-    [deferredSelection],
+  const total = useMemo(
+    () =>
+      calculateCustomPackTotal(deferredSelection, {
+        fullPackPrice: pack.fullPackPrice,
+        marginRate: pack.marginRate,
+        fixedPackCost: pack.fixedPackCost,
+      }) ?? 0,
+    [deferredSelection, pack.fullPackPrice, pack.marginRate, pack.fixedPackCost],
   );
-  const total =
-    isFullSelection && typeof pack.fullPackPrice === "number"
-      ? pack.fullPackPrice
-      : itemSubtotal;
   const displayedTotal = total > 0 ? formatItemCurrency(total) : "R 0";
   const selectedCount = selectedItems.length;
   const pdfItems = useMemo(
@@ -182,16 +183,12 @@ export function GradePackActions({
       pexcoRateCents?: number | null;
       pexcoRateActive?: boolean;
     }> = [];
-    const isSavingFullSelection =
-      selection.length > 0 &&
-      selection.every(
-        (item) =>
-          item.selected && item.selectedQuantity === item.requiredQuantity,
-      );
     const customTotal =
-      isSavingFullSelection && typeof pack.fullPackPrice === "number"
-        ? pack.fullPackPrice
-        : (calculatePackTotal(selection) ?? 0);
+      calculateCustomPackTotal(selection, {
+        fullPackPrice: pack.fullPackPrice,
+        marginRate: pack.marginRate,
+        fixedPackCost: pack.fixedPackCost,
+      }) ?? 0;
 
     selection.forEach((item) => {
       if (item.selected && item.selectedQuantity > 0) {

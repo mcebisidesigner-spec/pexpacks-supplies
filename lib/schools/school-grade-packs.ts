@@ -76,6 +76,7 @@ export interface TailoredAdminPack {
   slug: string;
   price: number;
   item_count: number;
+  total_quantity: number;
   visible: boolean;
   featured?: boolean;
   updated_at?: string;
@@ -95,6 +96,7 @@ export function buildTailoredAdminPacks(
     slug?: string | null;
     price: number | null;
     item_count?: number;
+    total_quantity?: number;
     visible?: boolean;
     featured?: boolean;
     updated_at?: string;
@@ -120,6 +122,7 @@ export function buildTailoredAdminPacks(
         slug: existing.slug || `${school.slug || school.id}-${gradeLabel.toLowerCase().replace(/\s+/g, "-")}`,
         price: existing.price ?? 0,
         item_count: existing.item_count ?? 0,
+        total_quantity: existing.total_quantity ?? 0,
         visible: Boolean(existing.visible),
         featured: existing.featured,
         updated_at: existing.updated_at,

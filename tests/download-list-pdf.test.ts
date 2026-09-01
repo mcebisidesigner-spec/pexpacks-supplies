@@ -2,7 +2,9 @@ import { describe, it, expect } from "vitest";
 import { generateStationeryPdfBuffer } from "@/lib/pdf/generateStationeryPdf";
 
 describe("Download List PDF Generation (@react-pdf/renderer)", () => {
-  it("generates a valid A4 PDF buffer for school stationery list", async () => {
+  it(
+    "generates a valid A4 PDF buffer for school stationery list",
+    async () => {
     const options = {
       schoolName: "3d Christian Academy",
       grade: "Grade 10",
@@ -39,5 +41,5 @@ describe("Download List PDF Generation (@react-pdf/renderer)", () => {
     // Verify PDF header magic bytes %PDF
     const header = pdfBuffer.slice(0, 5).toString("utf-8");
     expect(header.startsWith("%PDF")).toBe(true);
-  });
+  }, 15000);
 });

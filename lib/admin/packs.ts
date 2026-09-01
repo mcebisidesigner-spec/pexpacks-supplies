@@ -143,6 +143,7 @@ export interface PackListFilters {
 export interface PackListItem extends PackRow {
   school_name: string | null;
   item_count: number;
+  total_quantity: number;
 }
 
 export interface PackListResult {
@@ -248,6 +249,7 @@ export async function listPacks(
   })[];
   const packIds = rows.map((row) => row.id);
   const itemCounts = new Map<string, number>();
+  const totalQuantities = new Map<string, number>();
   if (packIds.length > 0) {
     const { data: countRows } = await admin
       .from("pack_subtotals" as never)
@@ -258,6 +260,20 @@ export async function listPacks(
       item_count: number;
     }[]) {
       itemCounts.set(row.pack_id, Number(row.item_count ?? 0));
+    }
+
+    const { data: qtyRows } = await admin
+      .from("school_pack_items")
+      .select("pack_id,quantity")
+      .in("pack_id", packIds);
+    for (const row of (qtyRows ?? []) as unknown as {
+      pack_id: string;
+      quantity: number | null;
+    }[]) {
+      totalQuantities.set(
+        row.pack_id,
+        (totalQuantities.get(row.pack_id) ?? 0) + Number(row.quantity ?? 0),
+      );
     }
   }
 
@@ -278,6 +294,7 @@ export async function listPacks(
       ...row,
       school_name: row.schools?.name ?? null,
       item_count: itemCounts.get(row.id) ?? 0,
+      total_quantity: totalQuantities.get(row.id) ?? 0,
     })),
     total: count ?? 0,
     page,

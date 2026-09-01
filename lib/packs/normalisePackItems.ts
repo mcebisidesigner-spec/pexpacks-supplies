@@ -204,5 +204,13 @@ export function createSchoolGradePack(
     fullPackPrice: grade.price,
     deliveryNote: grade.deliveryNote,
     isCustomisable: true,
+    marginRate: grade.marginRateUsed !== undefined ? grade.marginRateUsed : null,
+    fixedPackCost:
+      (grade.packagingCost ?? 0) +
+      (grade.assemblyCost ?? 0) +
+      (grade.freightCost ?? 0),
+    packagingCost: grade.packagingCost ?? null,
+    assemblyCost: grade.assemblyCost ?? null,
+    freightCost: grade.freightCost ?? null,
   };
 }
