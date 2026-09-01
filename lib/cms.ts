@@ -161,14 +161,21 @@ export interface PublicAnnouncement {
 }
 
 async function fetchActiveAnnouncement(
-  location: "global_top" | "hero_banner" | "schools_page" = "global_top"
+  location?: "global_top" | "hero_banner" | "schools_page"
 ): Promise<PublicAnnouncement | null> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
+  let query = admin
     .from("cms_announcements")
     .select("id, badge_text, message, link_url, link_label, display_location")
-    .eq("is_active", true)
-    .eq("display_location", location)
+    .eq("is_active", true);
+
+  if (location === "schools_page") {
+    query = query.eq("display_location", "schools_page");
+  } else {
+    query = query.in("display_location", ["global_top", "hero_banner"]);
+  }
+
+  const { data, error } = await query
     .order("updated_at", { ascending: false })
     .limit(1)
     .maybeSingle();

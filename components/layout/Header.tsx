@@ -10,9 +10,21 @@ import { HeaderScrollWrapper } from "./HeaderScrollWrapper";
 import { mainNavLinks } from "@/data/navigation";
 import { HeaderAccountControls } from "./HeaderAccountControls";
 import { TrackPackIcon } from "@/components/ui/icons";
+import { AnnouncementBar } from "./AnnouncementBar";
 import styles from "./Header.module.css";
 
-export function Header() {
+export interface HeaderProps {
+  announcement?: {
+    id?: string;
+    enabled: boolean;
+    text: string;
+    badge?: string;
+    linkUrl?: string | null;
+    linkLabel?: string | null;
+  };
+}
+
+export function Header({ announcement }: HeaderProps = {}) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
   const [adminUser, setAdminUser] = useState<{
@@ -111,6 +123,15 @@ export function Header() {
           {!isAdmin && <HeaderMenu />}
         </div>
       </div>
+      {!isAdmin && announcement?.enabled && (
+        <AnnouncementBar
+          id={announcement.id}
+          text={announcement.text}
+          badge={announcement.badge}
+          linkUrl={announcement.linkUrl}
+          linkLabel={announcement.linkLabel}
+        />
+      )}
     </HeaderScrollWrapper>
   );
 }

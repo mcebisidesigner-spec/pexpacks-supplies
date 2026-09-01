@@ -141,6 +141,7 @@ export default async function RootLayout({
 
   const announcement = activeAnnouncement
     ? {
+        id: activeAnnouncement.id,
         enabled: true,
         text: activeAnnouncement.message,
         badge: activeAnnouncement.badge_text,
@@ -148,6 +149,7 @@ export default async function RootLayout({
         linkLabel: activeAnnouncement.link_label,
       }
     : {
+        id: "default",
         enabled: content["homepage.announcement"].enabled === true,
         text:
           typeof content["homepage.announcement"].text === "string"

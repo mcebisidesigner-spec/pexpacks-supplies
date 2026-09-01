@@ -4,11 +4,11 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { AnnouncementBar } from "./AnnouncementBar";
 import { SiteRatingStrip } from "@/components/shared/SiteRatingStrip";
 
 export type SiteContentProps = {
   announcement?: {
+    id?: string;
     enabled: boolean;
     text: string;
     badge?: string;
@@ -52,15 +52,7 @@ export function SiteChrome({
 
   return (
     <>
-      {announcement?.enabled ? (
-        <AnnouncementBar
-          text={announcement.text ?? ""}
-          badge={announcement.badge}
-          linkUrl={announcement.linkUrl}
-          linkLabel={announcement.linkLabel}
-        />
-      ) : null}
-      <Header />
+      <Header announcement={announcement} />
       <main id="site-main" className="site-main">
         {children}
       </main>
