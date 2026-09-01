@@ -22,9 +22,13 @@ export default async function AddYourSchoolPage() {
   const [faqs, content] = await Promise.all([getFaqs(), getWebsiteContent()])
   const hero = content['add-your-school.hero']
   const heroEyebrow =
-    typeof hero.eyebrow === 'string' && hero.eyebrow
+    typeof hero?.eyebrow === 'string' && hero.eyebrow
       ? hero.eyebrow
       : 'Not listed?'
+  const heroTitle =
+    typeof hero?.title === 'string' && hero.title
+      ? hero.title
+      : 'Bring your school list into the future.'
   return (
     <>
       <PageHero

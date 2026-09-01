@@ -13,6 +13,10 @@ import {
   Trash2,
   Loader2,
   ExternalLink,
+  Landmark,
+  AlertCircle,
+  CheckCircle2,
+  Receipt,
 } from "lucide-react";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -31,7 +35,7 @@ function formatZAR(amount: number): string {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-  return `R ${formatted}`;
+  return `R\u00a0${formatted}`;
 }
 
 const STATUS_CONFIG: Record<
@@ -82,7 +86,6 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
     setErrorMsg("");
     const res = await convertQuotationToOrderAction(quotation.id);
     setBusy(false);
-
     if (res.ok) {
       router.push(`/admin/orders`);
     } else {
@@ -113,7 +116,6 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
     setErrorMsg("");
     const res = await deleteQuotationAction(quotation.id);
     setBusy(false);
-
     if (res.ok) {
       router.push("/admin/quotations");
     } else {
@@ -131,18 +133,28 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
     }
   }
 
-  const createdDateFormatted = new Date(quotation.created_at).toLocaleDateString("en-GB");
-  const validUntilFormatted = new Date(quotation.valid_until).toLocaleDateString("en-GB");
+  const createdDateFormatted = new Date(quotation.created_at).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+  const validUntilFormatted = new Date(quotation.valid_until).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  const lineCount = quotation.items?.length || 0;
 
   return (
     <div className={styles.container}>
-      {/* 1. Top Back Button */}
+      {/* Back button */}
       <Link href="/admin/quotations" className={styles.backButton}>
         <ArrowLeft size={14} />
         Back to Quotations
       </Link>
 
-      {/* 2. Top Header Row */}
+      {/* Header Row */}
       <div className={`${styles.headerRow} ${styles.detailHeaderRow}`}>
         <div>
           <div className={styles.detailTitleRow}>
@@ -150,17 +162,20 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
             <StatusBadge status={cfg.label} tone={cfg.tone} showDot />
           </div>
           <p className={styles.pageSubtitle}>
-            Created on {createdDateFormatted} - Valid until {validUntilFormatted}
-            {preparedBy ? ` - Prepared by ${preparedBy}` : ""}
-            {quotation.pdf_version ? ` - PDF v${quotation.pdf_version}` : ""}
+            Created&nbsp;{createdDateFormatted}&nbsp;&middot;&nbsp;Valid until&nbsp;{validUntilFormatted}
+            {preparedBy ? <>&nbsp;&middot;&nbsp;Prepared by&nbsp;<strong>{preparedBy}</strong></> : null}
+            {quotation.pdf_version ? <>&nbsp;&middot;&nbsp;PDF&nbsp;v{quotation.pdf_version}</> : null}
           </p>
         </div>
 
-        {/* Action Buttons */}
         <div className={styles.detailActions}>
           <AdminButton
             variant="secondary"
-            icon={pdfBusy ? <Loader2 size={14} className={styles.spinIcon} /> : <Download size={14} />}
+            icon={
+              pdfBusy
+                ? <Loader2 size={14} className={styles.spinIcon} />
+                : <Download size={14} />
+            }
             onClick={handleDownloadPdf}
             disabled={pdfBusy}
           >
@@ -187,19 +202,27 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
         </div>
       </div>
 
-      {errorMsg ? (
+      {/* Alerts */}
+      {errorMsg && (
         <div className={styles.errorBanner}>
+          <AlertCircle size={14} style={{ flexShrink: 0 }} />
           <span>{errorMsg}</span>
         </div>
-      ) : null}
+      )}
+      {successMsg && (
+        <div className={styles.successBanner}>
+          <CheckCircle2 size={14} style={{ flexShrink: 0 }} />
+          <span>{successMsg}</span>
+        </div>
+      )}
 
-      {successMsg ? <div className={styles.successBanner}>{successMsg}</div> : null}
-
-      {/* 3. Main 2-Column Grid */}
+      {/* Main Grid: left content | right sidebar */}
       <div className={styles.topGrid}>
-        {/* Left Column */}
+
+        {/* ── LEFT COLUMN ── */}
         <div className={styles.detailStack}>
-          {/* Card 1: Recipient & School Information */}
+
+          {/* Card 1 — Recipient & School */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}>
@@ -207,92 +230,75 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
                 Recipient &amp; School Information
               </h2>
             </div>
-
             <div className={styles.formRow2}>
               <div className={styles.infoStack}>
-                <span className={styles.infoLabel}>
-                  Recipient Contact
-                </span>
-                <span className={styles.infoValue}>
-                  {quotation.recipient_name}
-                </span>
+                <span className={styles.infoLabel}>Recipient Contact</span>
+                <span className={styles.infoValue}>{quotation.recipient_name}</span>
                 <span className={styles.infoMeta}>
                   {quotation.recipient_email}
-                  {quotation.recipient_phone ? ` - ${quotation.recipient_phone}` : ""}
+                  {quotation.recipient_phone ? ` · ${quotation.recipient_phone}` : ""}
                 </span>
               </div>
 
               <div className={styles.infoStack}>
-                <span className={styles.infoLabel}>
-                  School / Entity
-                </span>
+                <span className={styles.infoLabel}>School / Entity</span>
                 <span className={styles.infoValue}>
                   {quotation.school?.name || "Direct Client / Private Buyer"}
                 </span>
                 <span className={styles.infoMeta}>
                   {quotation.school
-                    ? [quotation.school.city, quotation.school.province].filter(Boolean).join(", ") ||
-                      "South Africa"
+                    ? [quotation.school.city, quotation.school.province]
+                        .filter(Boolean)
+                        .join(", ") || "South Africa"
                     : "Non-Partner Institutional Client"}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Card 2: Itemized Quotation Lines */}
+          {/* Card 2 — Itemized Lines */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}>
-                <FileText size={16} className={styles.cardIcon} />
-                Itemized Quotation Lines ({quotation.items?.length || 0})
+                <Receipt size={16} className={styles.cardIcon} />
+                Itemized Quotation Lines
+                <span
+                  style={{
+                    marginLeft: 4,
+                    background: "var(--db-surface-inner)",
+                    border: "1px solid var(--db-border)",
+                    borderRadius: 999,
+                    fontSize: "0.6875rem",
+                    fontWeight: 700,
+                    color: "var(--db-text-muted)",
+                    padding: "1px 8px",
+                  }}
+                >
+                  {lineCount}
+                </span>
               </h2>
             </div>
-
             <div className={styles.tableWrapper}>
               <table className={styles.detailTable}>
                 <thead>
                   <tr>
-                    <th>
-                      ITEM DESCRIPTION
-                    </th>
-                    <th>
-                      SKU
-                    </th>
-                    <th>
-                      UNIT
-                    </th>
-                    <th>
-                      QTY
-                    </th>
-                    <th>
-                      UNIT PRICE (ZAR)
-                    </th>
-                    <th>
-                      TOTAL (ZAR)
-                    </th>
+                    <th>Item Description</th>
+                    <th>SKU</th>
+                    <th>Unit</th>
+                    <th>Qty</th>
+                    <th>Unit Price (ZAR)</th>
+                    <th>Total (ZAR)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {(quotation.items || []).map((item) => (
                     <tr key={item.id} className={styles.detailTableRow}>
-                      <td className={styles.detailCell}>
-                        {item.item_title}
-                      </td>
-                      <td className={styles.detailCellSku}>
-                        {item.sku || "-"}
-                      </td>
-                      <td className={styles.detailCellCenter}>
-                        {item.unit || "Each"}
-                      </td>
-                      <td className={styles.detailCellCenter}>
-                        {item.quantity}
-                      </td>
-                      <td className={styles.detailCellCenter}>
-                        {formatZAR(item.unit_price)}
-                      </td>
-                      <td className={styles.detailCellTotal}>
-                        {formatZAR(item.total_price)}
-                      </td>
+                      <td className={styles.detailCell}>{item.item_title}</td>
+                      <td className={styles.detailCellSku}>{item.sku || "—"}</td>
+                      <td className={styles.detailCellCenter}>{item.unit || "Each"}</td>
+                      <td className={styles.detailCellCenter}>{item.quantity}</td>
+                      <td className={styles.detailCellCenter}>{formatZAR(item.unit_price)}</td>
+                      <td className={styles.detailCellTotal}>{formatZAR(item.total_price)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -300,9 +306,9 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
             </div>
           </div>
 
-          {/* Bottom 2-Column Section */}
+          {/* Bottom 2-col: Notes | Banking */}
           <div className={styles.bottomGrid}>
-            {/* Notes & Delivery Terms */}
+            {/* Terms & Notes */}
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <h2 className={styles.cardTitle}>
@@ -310,34 +316,39 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
                   Terms &amp; Delivery Notes
                 </h2>
               </div>
-              <div className={styles.notesContainer}>
-                <p className={styles.notesText}>
-                  {displayNotes || "Standard settlement: 30 days from official invoice."}
-                </p>
+              <div style={{ padding: "16px 22px" }}>
+                <div className={styles.notesContainer}>
+                  <p className={styles.notesText}>
+                    {displayNotes || "Standard settlement: 30 days from official invoice."}
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Settlement Banking Info */}
+            {/* Banking Info */}
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <h2 className={styles.cardTitle}>
-                  <FileText size={16} className={styles.cardIcon} />
+                  <Landmark size={16} className={styles.cardIcon} />
                   Settlement Banking Info
                 </h2>
               </div>
-              <div className={styles.bankingBox}>
-                <p className={styles.bankingText}>Bank: FNB / RMB</p>
-                <p className={styles.bankingText}>Account Holder: Pexpacks</p>
-                <p className={styles.bankingText}>Account Type: Current Account</p>
-                <p className={styles.bankingTextBold}>Account Number: 63215756991</p>
-                <p className={styles.bankingTextBold}>Branch Code: 250655</p>
+              <div style={{ padding: "16px 22px" }}>
+                <div className={styles.bankingBox}>
+                  <p className={styles.bankingText}>Bank: FNB / RMB</p>
+                  <p className={styles.bankingText}>Account Holder: Pexpacks</p>
+                  <p className={styles.bankingText}>Account Type: Current Account</p>
+                  <p className={styles.bankingTextBold}>Account Number: 63215756991</p>
+                  <p className={styles.bankingTextBold}>Branch Code: 250655</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column (Total Breakdown & Lifecycle Status) */}
+        {/* ── RIGHT SIDEBAR ── */}
         <div className={styles.detailStack}>
+
           {/* Total Breakdown */}
           <div className={styles.summaryCard}>
             <div className={styles.summaryList}>
@@ -352,7 +363,7 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
                 <div className={styles.summaryRow}>
                   <span>Discount Applied</span>
                   <span className={styles.discountValue}>
-                    - {formatZAR(Number(quotation.discount_amount))}
+                    &minus;&nbsp;{formatZAR(Number(quotation.discount_amount))}
                   </span>
                 </div>
               )}
@@ -371,6 +382,8 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
                 <span className={styles.summaryRowValue}>{formatZAR(quotation.vat_amount)}</span>
               </div>
 
+              <div className={styles.summaryDivider} />
+
               <div className={styles.summaryRowGrand}>
                 <span className={styles.grandTotalLabel}>Grand Total</span>
                 <span className={styles.grandTotalAmount}>{formatZAR(quotation.total_amount)}</span>
@@ -378,7 +391,7 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
             </div>
           </div>
 
-          {/* Lifecycle Status Card */}
+          {/* Lifecycle Status */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h2 className={styles.cardTitle}>
@@ -406,7 +419,7 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
             </div>
 
             {status === "converted_to_order" && quotation.converted_order_id && (
-              <div className={styles.convertedLinkWrap}>
+              <div className={styles.convertedLinkWrap} style={{ paddingInline: 22, paddingBottom: 18 }}>
                 <Link
                   href="/admin/orders"
                   className={`${styles.convertLink} ${styles.convertLinkInline}`}
@@ -416,6 +429,46 @@ export function QuotationDetailView({ quotation }: { quotation: QuotationRow }) 
                 </Link>
               </div>
             )}
+          </div>
+
+          {/* Quote Metadata */}
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h2 className={styles.cardTitle}>
+                <FileText size={16} className={styles.cardIcon} />
+                Quote Metadata
+              </h2>
+            </div>
+            <div style={{ padding: "16px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
+              <div className={styles.infoStack}>
+                <span className={styles.infoLabel}>Quote Number</span>
+                <span className={styles.infoValue}>{quotation.quote_number}</span>
+              </div>
+              <div className={styles.infoStack}>
+                <span className={styles.infoLabel}>Date Issued</span>
+                <span className={styles.infoValue}>{createdDateFormatted}</span>
+              </div>
+              <div className={styles.infoStack}>
+                <span className={styles.infoLabel}>Valid Until</span>
+                <span className={styles.infoValue}>{validUntilFormatted}</span>
+              </div>
+              {preparedBy && (
+                <div className={styles.infoStack}>
+                  <span className={styles.infoLabel}>Prepared By</span>
+                  <span className={styles.infoValue}>{preparedBy}</span>
+                </div>
+              )}
+              {quotation.pdf_version && (
+                <div className={styles.infoStack}>
+                  <span className={styles.infoLabel}>PDF Version</span>
+                  <span className={styles.infoValue}>v{quotation.pdf_version}</span>
+                </div>
+              )}
+              <div className={styles.infoStack}>
+                <span className={styles.infoLabel}>Line Items</span>
+                <span className={styles.infoValue}>{lineCount} item{lineCount !== 1 ? "s" : ""}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

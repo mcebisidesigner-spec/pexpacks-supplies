@@ -14,6 +14,7 @@ interface EditProductClientProps {
   productSlug: string;
   returnTo: string;
   pricingConfig: MasterPricingConfig;
+  suppliers?: { id: string; name: string; code?: string }[];
 }
 
 export function EditProductClient({
@@ -24,6 +25,7 @@ export function EditProductClient({
   productSlug,
   returnTo,
   pricingConfig,
+  suppliers = [],
 }: EditProductClientProps) {
   const [liveTitle, setLiveTitle] = useState(initialName);
   const [liveSku, setLiveSku] = useState(initialSku);
@@ -50,6 +52,7 @@ export function EditProductClient({
         packs={[]}
         masterMode
         pricingConfig={pricingConfig}
+        suppliers={suppliers}
         submitLabel="Save product"
         returnTo={returnTo}
         onNameChange={setLiveTitle}

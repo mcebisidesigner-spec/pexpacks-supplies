@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    Pexpacks Quotations Dark UI Theme - Pixel-Perfect Matching Reference
    ========================================================================== */
 
@@ -1737,4 +1737,151 @@
 .cardIcon {
   color: var(--db-brand);
   flex: 0 0 auto;
+}
+
+/* ============================================================
+   Quotation Detail View — missing DB-token classes
+   ============================================================ */
+
+/* Shared card container */
+.card {
+  background: var(--db-surface);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-card, 14px);
+  overflow: hidden;
+  box-shadow: var(--db-shadow-card);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--db-border);
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--db-text-primary);
+}
+
+.cardBody {
+  padding: 20px 22px;
+}
+
+/* Two-column recipient grid inside a card */
+.formRow2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 28px;
+  padding: 18px 22px;
+}
+
+@media (max-width: 640px) {
+  .formRow2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Top two-column layout: main content | sidebar */
+.topGrid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 22px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .topGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Status & lifecycle form utilities */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 22px;
+}
+
+.formLabel {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--db-text-muted);
+}
+
+.statusSelect {
+  height: 40px;
+  padding: 0 14px;
+  background: var(--db-canvas);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-control, 8px);
+  color: var(--db-text-primary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+  appearance: auto;
+}
+
+.statusSelect:focus {
+  border-color: var(--db-brand);
+  box-shadow: var(--db-focus-ring, 0 0 0 3px rgba(16, 185, 129, 0.18));
+}
+
+.statusSelect:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Converted-order link */
+.convertLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--db-brand);
+  font-size: 0.78125rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.convertLink:hover {
+  color: var(--db-brand-hover);
+  text-decoration: underline;
+}
+
+/* Spin animation for loader icon */
+.spinIcon {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Grand total divider line inside summaryCard */
+.summaryDivider {
+  height: 1px;
+  background: var(--db-border);
+  margin: 2px 0;
+}
+
+/* Quotation detail: info sub-divider between recipient & school */
+.infoDivider {
+  height: 1px;
+  background: var(--db-border);
+  margin: 4px 0;
+  grid-column: 1 / -1;
 }

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Eye, Package, CheckCircle2, Layers, Trash2 } from "lucide-react";
+import { Plus, Eye, Package, CheckCircle2, Truck, Trash2 } from "lucide-react";
 import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -21,7 +21,7 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
-import type { MasterProductRow } from "@/lib/admin/operations";
+import type { MasterProductRow, SupplierCostStats } from "@/lib/admin/operations";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
@@ -35,6 +35,7 @@ interface MasterProductsPageViewProps {
     total: number;
     page: number;
   };
+  supplierStats?: SupplierCostStats;
 }
 
 function getProductSlug(row: MasterProductRow): string {
@@ -55,6 +56,7 @@ function getProductSlug(row: MasterProductRow): string {
 
 export function MasterProductsPageView({
   initialData,
+  supplierStats,
 }: MasterProductsPageViewProps) {
   const router = useRouter();
   const { notifySuccess, notifyError } = useDbNotice();
@@ -137,13 +139,28 @@ export function MasterProductsPageView({
       header: "Cost price",
       sortable: true,
       align: "right",
-      width: "120px",
+      width: "130px",
       render: (row) => (
-        <span className={styles.costPrice}>
-          {row.latest_verified_cost != null
-            ? `R ${Number(row.latest_verified_cost).toFixed(2)}`
-            : "—"}
-        </span>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2px" }}>
+          <span className={styles.costPrice}>
+            {row.latest_verified_cost != null
+              ? `R ${Number(row.latest_verified_cost).toFixed(2)}`
+              : "—"}
+          </span>
+          {row.supplier?.name ? (
+            <span
+              style={{
+                fontSize: "10.5px",
+                color: "var(--db-brand, #10b981)",
+                fontWeight: 600,
+                letterSpacing: "0.02em",
+              }}
+              title={`Supplier cost source: ${row.supplier.name}`}
+            >
+              {row.supplier.code || row.supplier.name}
+            </span>
+          ) : null}
+        </div>
       ),
     },
     {
@@ -199,9 +216,45 @@ export function MasterProductsPageView({
     },
   ];
 
-  const uniqueCategories = new Set(
-    initialData.products.map((p) => p.category).filter(Boolean),
-  ).size;
+  const mappedProducts =
+    supplierStats?.totalAssigned ??
+    initialData.products.filter(
+      (p) => p.preferred_supplier_id || p.supplier?.id,
+    ).length;
+
+  const totalCatalogProducts =
+    supplierStats?.totalProducts ||
+    initialData.total ||
+    initialData.products.length ||
+    0;
+
+  const activeSuppliersCount =
+    supplierStats?.activeSuppliersCount ??
+    new Set(
+      initialData.products
+        .map((p) => p.preferred_supplier_id || p.supplier?.id)
+        .filter(Boolean),
+    ).size;
+
+  // Determine distinct supplier names/codes mapped across products (e.g. "BSC/Makro")
+  const supplierNamesLabel = (() => {
+    if (supplierStats?.supplierNamesLabel && supplierStats.supplierNamesLabel !== "Unassigned") {
+      return supplierStats.supplierNamesLabel;
+    }
+    const names = Array.from(
+      new Set(
+        initialData.products
+          .map((p) => {
+            if (!p.supplier && !p.preferred_supplier_id) return null;
+            const code = p.supplier?.code?.trim() || "";
+            const name = p.supplier?.name?.trim() || "";
+            return code && code.length > 0 && code.length < name.length ? code : (name || code);
+          })
+          .filter(Boolean) as string[],
+      ),
+    );
+    return names.length > 0 ? names.join("/") : "Unassigned";
+  })();
 
   const metrics: QuickMetricItem[] = [
     {
@@ -229,12 +282,16 @@ export function MasterProductsPageView({
       icon: <ZarIcon size={16} />,
     },
     {
-      label: "CATEGORIES",
-      value: uniqueCategories || 5,
-      subtitle: "Stationery, Books, Art...",
+      label: "SUPPLIER",
+      value:
+        mappedProducts > 0
+          ? `${mappedProducts} / ${totalCatalogProducts}`
+          : `${activeSuppliersCount} Active`,
+      subtitle: supplierNamesLabel,
+      trend: supplierNamesLabel,
       trendDirection: "neutral",
       tone: "purple",
-      icon: <Layers size={16} />,
+      icon: <Truck size={16} />,
     },
   ];
 

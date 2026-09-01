@@ -8,9 +8,10 @@ import type { MasterPricingConfig } from "@/lib/admin/items";
 
 interface AddItemClientProps {
   pricingConfig: MasterPricingConfig;
+  suppliers?: { id: string; name: string; code?: string }[];
 }
 
-export function AddItemClient({ pricingConfig }: AddItemClientProps) {
+export function AddItemClient({ pricingConfig, suppliers = [] }: AddItemClientProps) {
   const [liveTitle, setLiveTitle] = useState("");
   const [liveSku, setLiveSku] = useState("");
   const [liveCategory, setLiveCategory] = useState("Stationery");
@@ -40,6 +41,7 @@ export function AddItemClient({ pricingConfig }: AddItemClientProps) {
         packs={[]}
         masterMode
         pricingConfig={pricingConfig}
+        suppliers={suppliers}
         submitLabel="Add Product"
         returnTo="/admin/products"
         onNameChange={setLiveTitle}

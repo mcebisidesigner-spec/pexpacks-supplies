@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem, getMasterPricingConfig } from "@/lib/admin/items";
+import { listSuppliersSimple } from "@/lib/admin/operations";
 import { EditProductClient } from "@/components/admin/items/EditProductClient";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -41,7 +42,11 @@ export default async function EditProductPage({
 }: EditProductPageProps) {
   await requireAdmin({ permission: "items.edit" });
   const { productId } = await params;
-  const item = await getItem(productId);
+  const [item, pricingConfig, suppliers] = await Promise.all([
+    getItem(productId),
+    getMasterPricingConfig(),
+    listSuppliersSimple(),
+  ]);
 
   if (item) {
     const productSlug = getProductSlug(item);
@@ -61,7 +66,6 @@ export default async function EditProductPage({
   const returnTo = productSlug
     ? `/admin/products/${productSlug}`
     : "/admin/products";
-  const pricingConfig = await getMasterPricingConfig();
 
   return (
     <div className={styles.container}>
@@ -73,6 +77,7 @@ export default async function EditProductPage({
         productSlug={productSlug}
         returnTo={returnTo}
         pricingConfig={pricingConfig}
+        suppliers={suppliers}
       />
     </div>
   );

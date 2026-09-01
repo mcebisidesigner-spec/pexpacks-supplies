@@ -1,5 +1,5 @@
 import { requireAdmin } from "@/lib/admin/rbac";
-import { listMasterProducts } from "@/lib/admin/operations";
+import { listMasterProducts, getSupplierCostStats } from "@/lib/admin/operations";
 import { MasterProductsPageView } from "@/components/admin/views/MasterProductsPageView";
 
 export const dynamic = "force-dynamic";
@@ -23,14 +23,17 @@ export default async function AdminProductsPage({ searchParams }: AdminProductsP
   const sort = (params.sort as string) || "name";
   const order = (params.order as "asc" | "desc") || "asc";
 
-  const data = await listMasterProducts({
-    page,
-    pageSize,
-    query,
-    category,
-    sort,
-    order,
-  });
+  const [data, supplierStats] = await Promise.all([
+    listMasterProducts({
+      page,
+      pageSize,
+      query,
+      category,
+      sort,
+      order,
+    }),
+    getSupplierCostStats(),
+  ]);
 
-  return <MasterProductsPageView initialData={data} />;
+  return <MasterProductsPageView initialData={data} supplierStats={supplierStats} />;
 }

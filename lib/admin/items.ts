@@ -46,6 +46,8 @@ export type ItemRow = {
   // Pexcover fields
   requires_pexcover?: boolean | null;
   pexco_code?: string | null;
+  // Supplier cost price source
+  supplier_id?: string | null;
 };
 
 const optString = (max: number, label: string) =>
@@ -97,6 +99,8 @@ export const itemSchema = z.object({
   // Pexcover
   requires_pexcover: z.boolean().default(false),
   pexco_code: optString(20, "PEXCO code").nullable(),
+  // Supplier cost price source
+  supplier_id: optString(100, "supplier_id").nullable().optional(),
 });
 
 export type ItemFormData = z.infer<typeof itemSchema>;
@@ -228,6 +232,7 @@ function itemFromMaster(product: MasterProductRow): ItemRow {
     visible: product.active,
     sort_order: 0,
     slug,
+    supplier_id: (product as unknown as { preferred_supplier_id?: string | null }).preferred_supplier_id || null,
   } as unknown as ItemRow;
 }
 
@@ -243,7 +248,7 @@ async function ensureMasterProduct(
     | "price"
     | "requires_pexcover"
     | "pexco_code"
-  > & { sku?: string | null; icon?: string | null },
+  > & { sku?: string | null; icon?: string | null; supplier_id?: string | null },
   actorId: string,
   pricing?: MasterPricingInput,
 ): Promise<MasterProductRow> {
@@ -277,6 +282,8 @@ async function ensureMasterProduct(
     // Pexcover classification
     requires_pexcover: data.requires_pexcover ?? false,
     pexco_code: data.requires_pexcover ? (data.pexco_code ?? null) : null,
+    // Supplier cost price source
+    ...(data.supplier_id ? { preferred_supplier_id: data.supplier_id } : {}),
   };
 
   const { data: existingBySku } = await masterProductsTable(admin)
@@ -361,6 +368,8 @@ export function parseItemForm(formData: FormData): ParsedItemForm {
     // Pexcover
     requires_pexcover: formData.has("requires_pexcover"),
     pexco_code: raw(formData, "pexco_code") || null,
+    // Supplier cost price source
+    supplier_id: raw(formData, "supplier_id") || null,
   });
 
   if (!parsed.success) {
@@ -566,7 +575,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
     let masterQuery = admin
       .from("master_products")
       .select(
-        "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon,requires_pexcover,pexco_code",
+        "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon,requires_pexcover,pexco_code,preferred_supplier_id",
       );
 
     if (isUuid) {
@@ -588,7 +597,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
       const { data: ilikeList } = await admin
         .from("master_products")
         .select(
-          "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon,requires_pexcover,pexco_code",
+          "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon,requires_pexcover,pexco_code,preferred_supplier_id",
         )
         .ilike("name", `%${nameSearch}%`)
         .limit(10);
@@ -650,6 +659,9 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
           pexco_code:
             (matchedMaster as unknown as { pexco_code?: string | null })
               .pexco_code ?? null,
+          supplier_id:
+            (matchedMaster as unknown as { preferred_supplier_id?: string | null })
+              .preferred_supplier_id ?? null,
           slug: matchedMaster.name
             ?.toLowerCase()
             .replace(/[^a-z0-9]+/g, "-")
@@ -940,6 +952,7 @@ export async function updateItem(
           pexco_code: parsed.data.requires_pexcover
             ? (parsed.data.pexco_code ?? null)
             : null,
+          preferred_supplier_id: parsed.data.supplier_id || null,
         })
         .eq("id", targetMaster.id)
         .select("*")

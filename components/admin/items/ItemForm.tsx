@@ -36,6 +36,7 @@ interface ItemFormProps {
    *  selling price is auto-computed from Pricing & Margin settings. */
   masterMode?: boolean;
   pricingConfig?: MasterPricingConfig;
+  suppliers?: { id: string; name: string; code?: string }[];
   /** Called when the item name changes — used to keep parent header in sync */
   onNameChange?: (name: string) => void;
   /** Called when the SKU changes — used to keep parent header subtitle in sync */
@@ -66,6 +67,7 @@ export function ItemForm({
   submitLabel = "Save item",
   masterMode = false,
   pricingConfig,
+  suppliers = [],
   onNameChange,
   onSkuChange,
   onCategoryChange,
@@ -105,6 +107,7 @@ export function ItemForm({
     item?.requires_pexcover ?? false,
   );
   const [pexcoCode, setPexcoCode] = useState<string>(item?.pexco_code ?? "");
+  const [supplierId, setSupplierId] = useState<string>(item?.supplier_id ?? "");
 
   const initialCostValue = masterMode
     ? (item?.unit_cost ?? item?.unit_price ?? "")
@@ -310,7 +313,7 @@ export function ItemForm({
           />
         </div>
 
-        {/* Row 5: Price & Visibility */}
+        {/* Row 5: Price, Supplier Source & Visibility */}
         <div className={styles.grid2}>
           <div className={styles.priceCell}>
             <FloatingInput
@@ -343,16 +346,40 @@ export function ItemForm({
             )}
           </div>
 
-          <div className={styles.checkboxCell}>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                name="visible"
-                defaultChecked={item?.visible ?? true}
-                className={adminStyles.checkbox}
-              />
-              Visible on Public Catalogue
+          <div className={styles.categoryField}>
+            <label htmlFor="supplier_id" className={styles.categoryLabel}>
+              Supplier (Cost Price Source)
             </label>
+            <select
+              id="supplier_id"
+              name="supplier_id"
+              value={supplierId}
+              onChange={(e) => setSupplierId(e.target.value)}
+              className={styles.select}
+              aria-label="Supplier whose cost price is used"
+            >
+              <option value="">— Select Supplier (Cost Price Source) —</option>
+              {suppliers.map((sup) => (
+                <option key={sup.id} value={sup.id}>
+                  {sup.name} {sup.code ? `(${sup.code})` : ""}
+                </option>
+              ))}
+            </select>
+            <span className={styles.hint}>
+              Select the supplier whose cost price is used for this product.
+            </span>
+
+            <div className={styles.checkboxCell} style={{ marginTop: "10px" }}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  name="visible"
+                  defaultChecked={item?.visible ?? true}
+                  className={adminStyles.checkbox}
+                />
+                Visible on Public Catalogue
+              </label>
+            </div>
           </div>
         </div>
 

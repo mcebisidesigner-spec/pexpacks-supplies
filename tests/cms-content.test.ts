@@ -149,7 +149,7 @@ describe("Pexpacks Content CMS Module", () => {
     const migration = readRepoFile(
       "supabase/migrations/00090_harden_cms_admin_policies.sql",
     );
-    expect(migration).toContain('public.has_permission(''content.manage'')');
+    expect(migration).toContain("public.has_permission('content.manage')");
     expect(migration).toContain('DROP POLICY IF EXISTS "Admin full CMS access"');
     expect(migration).toContain('CREATE POLICY "CMS managers write announcements"');
     expect(migration).toContain('CREATE POLICY "CMS managers write FAQs"');

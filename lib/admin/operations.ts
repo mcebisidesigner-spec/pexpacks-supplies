@@ -108,6 +108,8 @@ export type MasterProductRow = {
   pricing_status: string;
   last_verified_at: string | null;
   active: boolean;
+  preferred_supplier_id: string | null;
+  supplier?: { id: string; name: string; code: string } | null;
 };
 
 export async function listMasterProducts(
@@ -133,7 +135,7 @@ export async function listMasterProducts(
   let request = db()
     .from("master_products")
     .select(
-      "id,sku,name,description,category,brand,unit,packaging,availability,current_selling_price,latest_verified_cost,pricing_status,last_verified_at,active",
+      "id,sku,name,description,category,brand,unit,packaging,availability,current_selling_price,latest_verified_cost,pricing_status,last_verified_at,active,preferred_supplier_id,suppliers:preferred_supplier_id(id,name,code)",
       { count: "exact" },
     );
 
@@ -154,7 +156,10 @@ export async function listMasterProducts(
   assertNoError(error, "Unable to load the master catalogue");
   const total = count ?? data?.length ?? 0;
   return {
-    products: (data ?? []) as MasterProductRow[],
+    products: (data ?? []).map((row: DynamicRow) => ({
+      ...row,
+      supplier: (row as { suppliers?: { id: string; name: string; code: string } | null }).suppliers ?? null,
+    })) as MasterProductRow[],
     total,
     page,
     pageCount: Math.max(1, Math.ceil(total / pageSize)),
@@ -305,6 +310,108 @@ export async function listSuppliers() {
       (row.supplier_offers as Array<{ count?: number }> | undefined)?.[0]
         ?.count ?? 0,
   })) as SupplierRow[];
+}
+
+/** Minimal supplier list for form dropdowns — only active suppliers. */
+export type SupplierSimple = { id: string; name: string; code: string };
+
+export async function listSuppliersSimple(): Promise<SupplierSimple[]> {
+  const { data, error } = await db()
+    .from("suppliers")
+    .select("id,name,code")
+    .eq("active", true)
+    .order("name");
+  if (error) {
+    console.error("[operations] listSuppliersSimple failed:", error);
+    return [];
+  }
+  return (data ?? []) as SupplierSimple[];
+}
+
+/** Returns unique supplier count and per-supplier product counts for the chart. */
+export type SupplierDistributionRow = {
+  supplier_id: string | null;
+  supplier_name: string;
+  supplier_code: string | null;
+  product_count: number;
+};
+
+export async function listSupplierCostDistribution(): Promise<SupplierDistributionRow[]> {
+  // Fetch all master products with their preferred_supplier_id
+  const { data: products, error } = await db()
+    .from("master_products")
+    .select("preferred_supplier_id")
+    .eq("active", true);
+  if (error || !products) return [];
+
+  // Fetch all suppliers for name lookup
+  const { data: suppliers } = await db()
+    .from("suppliers")
+    .select("id,name,code")
+    .eq("active", true);
+  const supplierMap = new Map<string, { name: string; code: string | null }>(
+    ((suppliers ?? []) as Array<{ id: string; name: string; code?: string | null }>).map((s) => [
+      s.id,
+      { name: s.name, code: s.code ?? null },
+    ]),
+  );
+
+  const countMap = new Map<string | null, number>();
+  for (const p of products as Array<{ preferred_supplier_id: string | null }>) {
+    const sid = p.preferred_supplier_id ?? null;
+    countMap.set(sid, (countMap.get(sid) ?? 0) + 1);
+  }
+
+  const rows: SupplierDistributionRow[] = [];
+  for (const [sid, count] of countMap.entries()) {
+    const info = sid ? supplierMap.get(sid) : null;
+    rows.push({
+      supplier_id: sid,
+      supplier_name: info ? info.name : sid ? "Unknown" : "Unassigned",
+      supplier_code: info ? info.code : null,
+      product_count: count,
+    });
+  }
+  return rows.sort((a, b) => b.product_count - a.product_count);
+}
+
+export type SupplierCostStats = {
+  totalAssigned: number;
+  totalProducts: number;
+  activeSuppliersCount: number;
+  topSupplierName: string | null;
+  supplierNamesLabel: string;
+  distribution: SupplierDistributionRow[];
+};
+
+export async function getSupplierCostStats(): Promise<SupplierCostStats> {
+  const distribution = await listSupplierCostDistribution();
+  const assignedRows = distribution.filter((d) => d.supplier_id != null);
+  const totalAssigned = assignedRows.reduce((sum, r) => sum + r.product_count, 0);
+  const unassignedRow = distribution.find((d) => d.supplier_id == null);
+  const totalProducts = totalAssigned + (unassignedRow?.product_count ?? 0);
+  const topSupplier = assignedRows[0] ? assignedRows[0].supplier_name : null;
+
+  // Format supplier names as e.g. "BSC/Makro"
+  const formattedNames = assignedRows.map((r) => {
+    const code = r.supplier_code?.trim() || "";
+    const name = r.supplier_name.trim();
+    if (code && code.length > 0 && code.length < name.length) {
+      return code;
+    }
+    return name || code;
+  });
+  const supplierNamesLabel =
+    formattedNames.length > 0 ? formattedNames.join("/") : "Unassigned";
+
+  return {
+    totalAssigned,
+    totalProducts,
+    activeSuppliersCount: assignedRows.length,
+    topSupplierName: topSupplier,
+    supplierNamesLabel,
+    distribution,
+  };
 }
 
 export async function createSupplier(input: {

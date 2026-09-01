@@ -86,9 +86,13 @@ export default async function PartnerWithSchoolsPage() {
   ])
   const hero = content['partnership.hero']
   const heroEyebrow =
-    typeof hero.eyebrow === 'string' && hero.eyebrow
+    typeof hero?.eyebrow === 'string' && hero.eyebrow
       ? hero.eyebrow
       : 'Partner with us'
+  const heroTitle =
+    typeof hero?.title === 'string' && hero.title
+      ? hero.title
+      : 'Empower your school with effortless stationery packs.'
   const partnerCount = schoolIndex.filter((school) => school.isPartnerSchool)
     .length
 
