@@ -9,6 +9,9 @@
 
 -- 1. Create Public School Directory View --------------------------------------
 
+DROP VIEW IF EXISTS public.public_pack_items_view CASCADE;
+DROP VIEW IF EXISTS public.public_school_directory_view CASCADE;
+
 CREATE OR REPLACE VIEW public.public_school_directory_view
 WITH (security_invoker = true)
 AS

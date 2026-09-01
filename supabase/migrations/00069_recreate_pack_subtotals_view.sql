@@ -6,6 +6,8 @@
 -- the canonical school_packs + school_pack_items tables.
 -- ===================================================
 
+DROP VIEW IF EXISTS public.pack_subtotals CASCADE;
+
 CREATE OR REPLACE VIEW public.pack_subtotals AS
 SELECT
   sp.school_id,

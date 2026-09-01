@@ -155,7 +155,7 @@ export const usePackTrayStore = create<PackTrayState & PackTrayActions>()(
       },
     }),
     {
-      name: "pexpacks-order-tray",
+      name: "pexpacks-order-tray-v2",
       partialize: (state) => ({
         packs: state.packs,
       }),
