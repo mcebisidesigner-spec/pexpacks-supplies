@@ -1,42 +1,43 @@
-import { ArrowLeft, Building2, Clock, CreditCard, Edit2, Truck } from "lucide-react";
+import { Building2, Clock, CreditCard, Edit2, Truck } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
+import {
+  supplierCodeFromSlug,
+  supplierEmailFromSlug,
+  supplierNameFromSlug,
+} from "@/lib/admin/supplier-slug";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface SupplierDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ supplierName: string }>;
 }
 
-export default async function SupplierDetailPage({ params }: SupplierDetailPageProps) {
+export default async function SupplierDetailPage({
+  params,
+}: SupplierDetailPageProps) {
   await requireAdmin({ permission: "suppliers.view" });
-  const { id } = await params;
+  const { supplierName } = await params;
 
-  const title = id
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+  const name = supplierNameFromSlug(supplierName);
+  const code = supplierCodeFromSlug(supplierName);
+  const email = supplierEmailFromSlug(supplierName);
 
   return (
     <div className={styles.container}>
       <AdminPageHeader
-        title={title}
-        subtitle={`Supplier Code: SUP-${id.toUpperCase().slice(0, 8)}`}
+        title={name}
+        subtitle={`Supplier Code: ${code}`}
+        backHref="/admin/suppliers"
+        backLabel="Back to Suppliers"
         actions={
           <div className={styles.headerActions}>
             <StatusBadge status="Preferred Partner" tone="emerald" showDot />
             <AdminButton
-              href="/admin/suppliers"
-              variant="secondary"
-              icon={<ArrowLeft size={14} />}
-            >
-              Back to Suppliers
-            </AdminButton>
-            <AdminButton
-              href={`/admin/suppliers/${id}/edit`}
+              href={`/admin/suppliers/${supplierName}/edit`}
               variant="primary"
               icon={<Edit2 size={14} />}
             >
@@ -90,20 +91,30 @@ export default async function SupplierDetailPage({ params }: SupplierDetailPageP
 
             <div className={adminStyles["grid-2equal"]}>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Company Name:</span>
-                <span className={adminStyles.sidebarStatVal}>{title}</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Company Name:
+                </span>
+                <span className={adminStyles.sidebarStatVal}>{name}</span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Registration / VAT:</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Registration / VAT:
+                </span>
                 <span className={adminStyles.sidebarStatVal}>4920182749</span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Primary Email:</span>
-                <span className={adminStyles.sidebarStatVal}>orders@{id.toLowerCase()}.co.za</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Primary Email:
+                </span>
+                <span className={adminStyles.sidebarStatVal}>{email}</span>
               </div>
               <div className={adminStyles.sidebarStatRow}>
-                <span className={adminStyles.sidebarStatLabel}>Warehouse City:</span>
-                <span className={adminStyles.sidebarStatVal}>Johannesburg, Gauteng</span>
+                <span className={adminStyles.sidebarStatLabel}>
+                  Warehouse City:
+                </span>
+                <span className={adminStyles.sidebarStatVal}>
+                  Johannesburg, Gauteng
+                </span>
               </div>
             </div>
           </div>

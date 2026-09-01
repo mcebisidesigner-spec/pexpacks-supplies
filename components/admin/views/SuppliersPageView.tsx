@@ -28,6 +28,7 @@ import {
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
 import type { SupplierRow } from "@/lib/admin/operations";
+import { supplierSlug } from "@/lib/admin/supplier-slug";
 
 interface SuppliersPageViewProps {
   initialSuppliers?: SupplierRow[];
@@ -102,7 +103,7 @@ export function SuppliersPageView({
       sortable: true,
       render: (row) => (
         <Link
-          href={`/admin/suppliers/${row.id}`}
+          href={`/admin/suppliers/${supplierSlug(row.name)}`}
           className={styles.schoolNameTitle}
           onClick={(e) => e.stopPropagation()}
         >
@@ -170,7 +171,7 @@ export function SuppliersPageView({
           onClick={(e) => e.stopPropagation()}
         >
           <Link
-            href={`/admin/suppliers/${row.id}`}
+            href={`/admin/suppliers/${supplierSlug(row.name)}`}
             className={styles.actionEditBtn}
             data-db-tooltip={`View ${row.name}`}
             aria-label={`View ${row.name}`}
@@ -263,7 +264,9 @@ export function SuppliersPageView({
         data={pagedSuppliers}
         columns={columns}
         keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/suppliers/${row.id}`)}
+        onRowClick={(row) =>
+          router.push(`/admin/suppliers/${supplierSlug(row.name)}`)
+        }
         emptyTitle="No suppliers found"
         emptySubtitle="Try adjusting your search query."
         footer={

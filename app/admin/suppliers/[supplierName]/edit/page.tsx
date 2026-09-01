@@ -1,45 +1,49 @@
-import { ArrowLeft, Building2, CreditCard, Mail, Save } from "lucide-react";
+import { Building2, CreditCard, Mail, Save } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
+import {
+  supplierCodeFromSlug,
+  supplierEmailFromSlug,
+  supplierNameFromSlug,
+} from "@/lib/admin/supplier-slug";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface EditSupplierPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ supplierName: string }>;
 }
 
 export const metadata = {
   title: "Edit Supplier | Admin | Pexpacks",
 };
 
-export default async function EditSupplierPage({ params }: EditSupplierPageProps) {
+export default async function EditSupplierPage({
+  params,
+}: EditSupplierPageProps) {
   await requireAdmin({ permission: "suppliers.manage" });
-  const { id } = await params;
+  const { supplierName } = await params;
 
-  const title = id
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+  const name = supplierNameFromSlug(supplierName);
+  const code = supplierCodeFromSlug(supplierName);
+  const email = supplierEmailFromSlug(supplierName);
 
   return (
     <div className={styles.container}>
       <AdminPageHeader
-        title={`Edit Supplier — ${title}`}
+        title={`Edit Supplier — ${name}`}
         subtitle="Update supplier contact details, lead times, and commercial terms."
-        actions={
-          <AdminButton
-            href={`/admin/suppliers/${id}`}
-            variant="secondary"
-            icon={<ArrowLeft size={14} />}
-          >
-            Back to Supplier
-          </AdminButton>
-        }
+        backHref={`/admin/suppliers/${supplierName}`}
+        backLabel="Back to Supplier"
       />
 
-      <form action={`/admin/suppliers/${id}`} method="GET" className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
+      <form
+        action={`/admin/suppliers/${supplierName}`}
+        method="GET"
+        className={adminStyles.detailLayout}
+      >
+        <div
+          className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}
+        >
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
@@ -53,23 +57,27 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
                 <label className={adminStyles.formLabel}>Supplier Name *</label>
                 <input
                   name="name"
-                  defaultValue={title}
+                  defaultValue={name}
                   required
                   className={adminStyles.inputField}
                 />
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>Supplier Code / Ref</label>
+                <label className={adminStyles.formLabel}>
+                  Supplier Code / Ref
+                </label>
                 <input
                   name="code"
-                  defaultValue={`SUP-${id.toUpperCase().slice(0, 8)}`}
+                  defaultValue={code}
                   className={adminStyles.inputField}
                 />
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>Primary Contact Person</label>
+                <label className={adminStyles.formLabel}>
+                  Primary Contact Person
+                </label>
                 <input
                   name="contact_person"
                   defaultValue="Account Representative"
@@ -79,7 +87,11 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
 
               <div>
                 <label className={adminStyles.formLabel}>Status</label>
-                <select name="status" className={adminStyles.inputField} defaultValue="Preferred">
+                <select
+                  name="status"
+                  className={adminStyles.inputField}
+                  defaultValue="Preferred"
+                >
                   <option value="Preferred">Preferred Partner</option>
                   <option value="Approved">Approved Supplier</option>
                   <option value="Prospect">Prospect</option>
@@ -98,11 +110,13 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
 
             <div className={adminStyles.grid2equal}>
               <div>
-                <label className={adminStyles.formLabel}>Procurement Email *</label>
+                <label className={adminStyles.formLabel}>
+                  Procurement Email *
+                </label>
                 <input
                   type="email"
                   name="email"
-                  defaultValue={`orders@${id.toLowerCase()}.co.za`}
+                  defaultValue={email}
                   required
                   className={adminStyles.inputField}
                 />
@@ -140,7 +154,9 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>Standard Lead Time (Days)</label>
+                <label className={adminStyles.formLabel}>
+                  Standard Lead Time (Days)
+                </label>
                 <input
                   type="number"
                   name="lead_time"
@@ -150,7 +166,10 @@ export default async function EditSupplierPage({ params }: EditSupplierPageProps
               </div>
 
               <div className={adminStyles.pt12}>
-                <button type="submit" className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}>
+                <button
+                  type="submit"
+                  className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}
+                >
                   <Save size={14} /> Update Supplier
                 </button>
               </div>
