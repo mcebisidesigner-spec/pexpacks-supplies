@@ -266,7 +266,7 @@ export interface SchoolListResult {
 export async function listSchools(filters: SchoolListFilters = {}): Promise<SchoolListResult> {
   const admin = createSupabaseAdminClient();
   const page = Math.max(1, filters.page ?? 1);
-  const pageSize = Math.min(500, Math.max(1, filters.pageSize ?? 20));
+  const pageSize = Math.min(100, Math.max(1, filters.pageSize ?? 20));
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 

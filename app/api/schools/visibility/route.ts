@@ -40,26 +40,40 @@ export async function POST(request: NextRequest) {
   }
 
   const rawSlugs =
-    body && typeof body === "object" && Array.isArray((body as { slugs?: unknown }).slugs)
+    body &&
+    typeof body === "object" &&
+    Array.isArray((body as { slugs?: unknown }).slugs)
       ? (body as { slugs: unknown[] }).slugs
       : [];
-  const slugs = [...new Set(
-    rawSlugs
-      .filter((slug): slug is string => typeof slug === "string")
-      .map((slug) => slug.trim().toLowerCase())
-      .filter((slug) => /^[a-z0-9-]{1,200}$/.test(slug)),
-  )].slice(0, 50);
+  const slugs = [
+    ...new Set(
+      rawSlugs
+        .filter((slug): slug is string => typeof slug === "string")
+        .map((slug) => slug.trim().toLowerCase())
+        .filter((slug) => /^[a-z0-9-]{1,200}$/.test(slug)),
+    ),
+  ].slice(0, 50);
 
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const supabase = createSupabaseAdminClient();
-  const { data: schoolsData } = await supabase
-    .from("public_school_directory_view")
-    .select("slug, parent_collection_accepted")
-    .in("slug", slugs);
+  const { data: schoolsData, error } = await supabase.rpc(
+    "get_public_school_visibility" as never,
+    { school_slugs: slugs } as never,
+  );
 
-  const visibleSlugs = (schoolsData ?? []).map((s) => s.slug);
+  if (error) {
+    console.error("[schools visibility] public visibility RPC failed:", error);
+    return NextResponse.json(
+      { success: false, visibleSlugs: [], collectionDisallowedSlugs: [] },
+      { status: 500, headers: { "Cache-Control": "private, no-store" } },
+    );
+  }
 
-  const collectionDisallowedSlugs = (schoolsData ?? [])
+  type VisibilityRow = { slug: string; parent_collection_accepted?: boolean | null };
+  const rows = (schoolsData as unknown as VisibilityRow[] | null) ?? [];
+  const visibleSlugs = rows.map((s) => s.slug);
+
+  const collectionDisallowedSlugs = rows
     .filter((s) => s.parent_collection_accepted === false)
     .map((s) => s.slug);
 

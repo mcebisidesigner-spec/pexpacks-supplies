@@ -9,7 +9,7 @@ export const metadata = {
 
 export default async function QuotationsPage() {
   await requireAdmin({ permission: "orders.view" });
-  const data = await listQuotations({ pageSize: 100 });
+  const data = await listQuotations({ pageSize: 20 });
 
   return <QuotationsListView initialData={data} />;
 }

@@ -1,6 +1,5 @@
 import { unstable_cache } from "next/cache";
 import type { GradePack, School, SchoolPackItem } from "@/data/schools";
-import { getSchoolBySlug as getStaticSchoolBySlug } from "@/data/schools";
 import { getGradeOrder } from "@/lib/grade-utils";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -153,7 +152,7 @@ export async function getSchoolBySlug(
     });
 
     if (error) throw error;
-    return parseAggregatePayload(data) ?? (await getStaticSchoolBySlug(slug)) ?? undefined;
+    return parseAggregatePayload(data) ?? undefined;
   } catch (error) {
     console.error("[school-utils] public school lookup failed:", error);
     return undefined;

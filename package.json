@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "analyze": "cross-env ANALYZE=true next build"
+    "analyze": "cross-env ANALYZE=true next build",
+    "db:smoke": "node scripts/db-performance-smoke.cjs"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.8.1",
