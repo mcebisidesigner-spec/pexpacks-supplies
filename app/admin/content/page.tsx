@@ -17,6 +17,7 @@ import {
   X,
   ChevronDown,
   ChevronUp,
+  Save,
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -37,7 +38,9 @@ import {
   saveResourceAction,
   deleteResourceAction,
   toggleResourcePublicAction,
+  saveHeroEyebrowAction,
 } from "@/actions/cms";
+import { PAGE_HERO_SECTIONS } from "@/lib/admin/content-constants";
 import styles from "./content.module.css";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -108,8 +111,10 @@ export default function ContentCMSPage() {
     {
       id: "1",
       category: "Ordering",
-      question: "How do I know my pack contains the exact items requested by the school?",
-      answer: "Every Pexpacks Grade Pack is compiled directly from the verified official school stationery list supplied by partner schools.",
+      question:
+        "How do I know my pack contains the exact items requested by the school?",
+      answer:
+        "Every Pexpacks Grade Pack is compiled directly from the verified official school stationery list supplied by partner schools.",
       is_published: true,
       sort_order: 1,
     },
@@ -117,7 +122,8 @@ export default function ContentCMSPage() {
       id: "2",
       category: "Delivery & Pickup",
       question: "Can I choose between home delivery and school collection?",
-      answer: "Yes. During checkout, you can select direct home delivery or free bulk delivery to the school before term starts.",
+      answer:
+        "Yes. During checkout, you can select direct home delivery or free bulk delivery to the school before term starts.",
       is_published: true,
       sort_order: 2,
     },
@@ -129,7 +135,8 @@ export default function ContentCMSPage() {
       author_name: "Sarah M.",
       author_role: "Parent of Grade 4 Learner",
       school_name: "Primrose Hill Primary",
-      quote: "Saved us hours of shopping in crowded malls. Everything was pre-covered and labeled to exact school requirements.",
+      quote:
+        "Saved us hours of shopping in crowded malls. Everything was pre-covered and labeled to exact school requirements.",
       rating: 5,
       is_featured: true,
     },
@@ -138,7 +145,8 @@ export default function ContentCMSPage() {
       author_name: "David K.",
       author_role: "Head of Department",
       school_name: "St Andrews College",
-      quote: "The stationery arrived on day one with 100% accuracy. Pexpacks made stationery list distribution seamless.",
+      quote:
+        "The stationery arrived on day one with 100% accuracy. Pexpacks made stationery list distribution seamless.",
       rating: 5,
       is_featured: true,
     },
@@ -148,7 +156,8 @@ export default function ContentCMSPage() {
     {
       id: "1",
       title: "2027 Back-to-School Stationery Checklist",
-      description: "Official printable guide for parents covering essential requirements per phase.",
+      description:
+        "Official printable guide for parents covering essential requirements per phase.",
       category: "Parent Guides",
       file_type: "PDF",
       file_size_label: "1.2 MB",
@@ -159,7 +168,8 @@ export default function ContentCMSPage() {
     {
       id: "2",
       title: "School Stationery Partnership Guide",
-      description: "Information pack for principals and bursars detailing our consignment and packaging model.",
+      description:
+        "Information pack for principals and bursars detailing our consignment and packaging model.",
       category: "School Packs",
       file_type: "PDF",
       file_size_label: "2.8 MB",
@@ -179,7 +189,9 @@ export default function ContentCMSPage() {
   const [annMessage, setAnnMessage] = useState("");
   const [annLinkUrl, setAnnLinkUrl] = useState("");
   const [annLinkLabel, setAnnLinkLabel] = useState("");
-  const [annLocation, setAnnLocation] = useState<"global_top" | "hero_banner" | "schools_page">("global_top");
+  const [annLocation, setAnnLocation] = useState<
+    "global_top" | "hero_banner" | "schools_page"
+  >("global_top");
   const [annActive, setAnnActive] = useState(true);
 
   // Form Fields - FAQ
@@ -205,6 +217,13 @@ export default function ContentCMSPage() {
   const [resSize, setResSize] = useState("1.5 MB");
   const [resPublic, setResPublic] = useState(true);
 
+  const [eyebrows, setEyebrows] = useState<Record<string, string>>({});
+  const [eyebrowSaving, setEyebrowSaving] = useState<string | null>(null);
+  const [eyebrowFeedback, setEyebrowFeedback] = useState<{
+    tone: "success" | "error";
+    text: string;
+  } | null>(null);
+
   // Hydrate from live DB via Server Action
   useEffect(() => {
     let cancelled = false;
@@ -223,7 +242,7 @@ export default function ContentCMSPage() {
                 link_label: a.link_label,
                 is_active: a.is_active,
                 display_location: a.display_location,
-              }))
+              })),
             );
           }
           if (data.faqs && data.faqs.length > 0) {
@@ -235,7 +254,7 @@ export default function ContentCMSPage() {
                 answer: f.answer,
                 is_published: f.is_published,
                 sort_order: f.sort_order,
-              }))
+              })),
             );
           }
           if (data.testimonials && data.testimonials.length > 0) {
@@ -248,7 +267,7 @@ export default function ContentCMSPage() {
                 quote: t.quote,
                 rating: t.rating,
                 is_featured: t.is_featured,
-              }))
+              })),
             );
           }
           if (data.resources && data.resources.length > 0) {
@@ -263,8 +282,11 @@ export default function ContentCMSPage() {
                 file_url: r.file_url,
                 download_count: r.download_count,
                 is_public: r.is_public,
-              }))
+              })),
             );
+          }
+          if (data.eyebrows) {
+            setEyebrows((prev) => ({ ...prev, ...data.eyebrows }));
           }
         }
       } catch (err) {
@@ -281,7 +303,9 @@ export default function ContentCMSPage() {
     setModalError(null);
     if (activeTab === "eyebrows") {
       setAnnBadge("Pre-Orders Open");
-      setAnnMessage("Save up to 15% on 2027 Grade Stationery Packs until Sept 30");
+      setAnnMessage(
+        "Save up to 15% on 2027 Grade Stationery Packs until Sept 30",
+      );
       setAnnLinkUrl("/schools");
       setAnnLinkLabel("Find Your School");
       setAnnLocation("global_top");
@@ -314,10 +338,35 @@ export default function ContentCMSPage() {
   const handleToggleAnnouncement = (id: string, current: boolean) => {
     startTransition(async () => {
       setAnnouncements((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, is_active: !current } : a))
+        prev.map((a) => (a.id === id ? { ...a, is_active: !current } : a)),
       );
       await toggleAnnouncementActiveAction(id, !current);
     });
+  };
+
+  const handleSaveEyebrow = async (key: string) => {
+    const value = (eyebrows[key] ?? "").trim();
+    setEyebrowSaving(key);
+    setEyebrowFeedback(null);
+    try {
+      const res = await saveHeroEyebrowAction(key, value);
+      if (res.ok) {
+        setEyebrows((prev) => ({ ...prev, [key]: value }));
+        setEyebrowFeedback({
+          tone: "success",
+          text: res.message || "Eyebrow saved and live.",
+        });
+      } else {
+        setEyebrowFeedback({
+          tone: "error",
+          text: res.message || "Failed to save eyebrow.",
+        });
+      }
+    } catch {
+      setEyebrowFeedback({ tone: "error", text: "Failed to save eyebrow." });
+    } finally {
+      setEyebrowSaving(null);
+    }
   };
 
   const handleDeleteAnnouncement = async (item: Announcement) => {
@@ -351,7 +400,7 @@ export default function ContentCMSPage() {
   const handleToggleFaq = (id: string, current: boolean) => {
     startTransition(async () => {
       setFaqs((prev) =>
-        prev.map((f) => (f.id === id ? { ...f, is_published: !current } : f))
+        prev.map((f) => (f.id === id ? { ...f, is_published: !current } : f)),
       );
       await toggleFaqPublishedAction(id, !current);
     });
@@ -386,7 +435,7 @@ export default function ContentCMSPage() {
   const handleToggleTestimonial = (id: string, current: boolean) => {
     startTransition(async () => {
       setTestimonials((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, is_featured: !current } : t))
+        prev.map((t) => (t.id === id ? { ...t, is_featured: !current } : t)),
       );
       await toggleTestimonialFeaturedAction(id, !current);
     });
@@ -423,7 +472,7 @@ export default function ContentCMSPage() {
   const handleToggleResource = (id: string, current: boolean) => {
     startTransition(async () => {
       setResources((prev) =>
-        prev.map((r) => (r.id === id ? { ...r, is_public: !current } : r))
+        prev.map((r) => (r.id === id ? { ...r, is_public: !current } : r)),
       );
       await toggleResourcePublicAction(id, !current);
     });
@@ -484,7 +533,7 @@ export default function ContentCMSPage() {
               link_label: a.link_label,
               is_active: a.is_active,
               display_location: a.display_location,
-            }))
+            })),
           );
         } else {
           setModalError(res.message || "Failed to save announcement");
@@ -508,7 +557,7 @@ export default function ContentCMSPage() {
               answer: f.answer,
               is_published: f.is_published,
               sort_order: f.sort_order,
-            }))
+            })),
           );
         } else {
           setModalError(res.message || "Failed to save FAQ");
@@ -533,7 +582,7 @@ export default function ContentCMSPage() {
               quote: t.quote,
               rating: t.rating,
               is_featured: t.is_featured,
-            }))
+            })),
           );
         } else {
           setModalError(res.message || "Failed to save testimonial");
@@ -562,7 +611,7 @@ export default function ContentCMSPage() {
               file_url: r.file_url,
               download_count: r.download_count,
               is_public: r.is_public,
-            }))
+            })),
           );
         } else {
           setModalError(res.message || "Failed to save resource");
@@ -584,7 +633,9 @@ export default function ContentCMSPage() {
       header: "TYPE",
       width: "90px",
       align: "center",
-      render: (row) => <span className={styles.badgeFormat}>{row.file_type}</span>,
+      render: (row) => (
+        <span className={styles.badgeFormat}>{row.file_type}</span>
+      ),
     },
     {
       key: "title",
@@ -601,14 +652,18 @@ export default function ContentCMSPage() {
       key: "category",
       header: "CATEGORY",
       width: "140px",
-      render: (row) => <span className={styles.badgeCategory}>{row.category}</span>,
+      render: (row) => (
+        <span className={styles.badgeCategory}>{row.category}</span>
+      ),
     },
     {
       key: "file_size_label",
       header: "FILE SIZE",
       width: "110px",
       align: "center",
-      render: (row) => <span className={coreStyles.textMuted}>{row.file_size_label}</span>,
+      render: (row) => (
+        <span className={coreStyles.textMuted}>{row.file_size_label}</span>
+      ),
     },
     {
       key: "download_count",
@@ -616,7 +671,9 @@ export default function ContentCMSPage() {
       width: "110px",
       align: "center",
       render: (row) => (
-        <span className={coreStyles.skuBadge}>{row.download_count.toLocaleString()}</span>
+        <span className={coreStyles.skuBadge}>
+          {row.download_count.toLocaleString()}
+        </span>
       ),
     },
     {
@@ -639,7 +696,10 @@ export default function ContentCMSPage() {
       align: "right",
       sticky: "right",
       render: (row) => (
-        <div className={styles.cardActions} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.cardActions}
+          onClick={(e) => e.stopPropagation()}
+        >
           {row.file_url && (
             <a
               href={row.file_url}
@@ -754,82 +814,165 @@ export default function ContentCMSPage() {
 
       {/* ── TAB 1: EYEBROWS & ANNOUNCEMENTS ── */}
       {activeTab === "eyebrows" && (
-        <div className={styles.grid1}>
-          {announcements.length === 0 ? (
-            <div className={styles.emptyState}>
-              <Megaphone size={32} />
-              <div className={styles.emptyTitle}>No announcements found</div>
-              <div className={styles.emptySubtitle}>
-                Create an announcement banner to display discounts or notices to visitors.
-              </div>
-              <AdminButton variant="primary" icon={<Plus size={14} />} onClick={openNewModal}>
-                Create Announcement
-              </AdminButton>
+        <>
+          <div className={styles.eyebrowPanel}>
+            <div className={styles.eyebrowPanelHeader}>
+              <h2 className={styles.cardTitle}>Page hero eyebrows</h2>
+              <p>
+                The short label shown above the title in each page&rsquo;s hero
+                section. Save updates the live site immediately.
+              </p>
             </div>
-          ) : (
-            announcements.map((item) => (
-              <div key={item.id} className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <div className={styles.cardBadges}>
-                    <span className={styles.badgeLocation}>{item.display_location}</span>
-                    <span className={styles.badgeCategory}>{item.badge_text}</span>
+            {eyebrowFeedback ? (
+              <p
+                role="status"
+                className={`${styles.eyebrowFeedback} ${
+                  eyebrowFeedback.tone === "success"
+                    ? styles.eyebrowFeedbackSuccess
+                    : styles.eyebrowFeedbackError
+                }`}
+              >
+                {eyebrowFeedback.text}
+              </p>
+            ) : null}
+            <div className={styles.eyebrowRows}>
+              {PAGE_HERO_SECTIONS.map((section) => (
+                <div key={section.key} className={styles.eyebrowRow}>
+                  <div className={styles.eyebrowRowMeta}>
+                    <span className={styles.eyebrowRowLabel}>
+                      {section.label}
+                    </span>
+                    <a
+                      href={section.route}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.cardLinkRow}
+                    >
+                      <span>View page</span>
+                      <ExternalLink size={12} />
+                    </a>
                   </div>
-                  <StatusBadge
-                    status={item.is_active ? "Live" : "Hidden"}
-                    tone={item.is_active ? "emerald" : "slate"}
-                    showDot
+                  <input
+                    type="text"
+                    className={styles.formInput}
+                    value={eyebrows[section.key] ?? ""}
+                    onChange={(e) =>
+                      setEyebrows((prev) => ({
+                        ...prev,
+                        [section.key]: e.target.value,
+                      }))
+                    }
+                    placeholder="Page eyebrow text"
+                    aria-label={`${section.label} eyebrow`}
                   />
+                  <button
+                    type="button"
+                    className={styles.eyebrowSaveBtn}
+                    disabled={eyebrowSaving === section.key}
+                    onClick={() => handleSaveEyebrow(section.key)}
+                  >
+                    <Save size={14} />
+                    {eyebrowSaving === section.key ? "Saving…" : "Save"}
+                  </button>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                <p className={styles.cardMessage}>{item.message}</p>
+          <div className={styles.grid1}>
+            {announcements.length === 0 ? (
+              <div className={styles.emptyState}>
+                <Megaphone size={32} />
+                <div className={styles.emptyTitle}>No announcements found</div>
+                <div className={styles.emptySubtitle}>
+                  Create an announcement banner to display discounts or notices
+                  to visitors.
+                </div>
+                <AdminButton
+                  variant="primary"
+                  icon={<Plus size={14} />}
+                  onClick={openNewModal}
+                >
+                  Create Announcement
+                </AdminButton>
+              </div>
+            ) : (
+              announcements.map((item) => (
+                <div key={item.id} className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <div className={styles.cardBadges}>
+                      <span className={styles.badgeLocation}>
+                        {item.display_location}
+                      </span>
+                      <span className={styles.badgeCategory}>
+                        {item.badge_text}
+                      </span>
+                    </div>
+                    <StatusBadge
+                      status={item.is_active ? "Live" : "Hidden"}
+                      tone={item.is_active ? "emerald" : "slate"}
+                      showDot
+                    />
+                  </div>
 
-                {item.link_url && (
-                  <a
-                    href={item.link_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.cardLinkRow}
-                  >
-                    <span>{item.link_label || "View Destination"}</span>
-                    <ExternalLink size={13} />
-                  </a>
-                )}
+                  <p className={styles.cardMessage}>{item.message}</p>
 
-                <div className={styles.cardFooter}>
-                  <AdminButton
-                    variant="outline"
-                    size="sm"
-                    icon={item.is_active ? <EyeOff size={13} /> : <Eye size={13} />}
-                    onClick={() => handleToggleAnnouncement(item.id, item.is_active)}
-                  >
-                    {item.is_active ? "Deactivate" : "Activate"}
-                  </AdminButton>
-
-                  <div className={styles.cardActions}>
-                    <button
-                      type="button"
-                      className={styles.iconBtn}
-                      data-db-tooltip="Edit Banner"
-                      aria-label="Edit Banner"
-                      onClick={() => handleEditAnnouncement(item)}
+                  {item.link_url && (
+                    <a
+                      href={item.link_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.cardLinkRow}
                     >
-                      <Edit2 size={14} />
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.iconBtnDanger}
-                      data-db-tooltip="Delete Banner"
-                      aria-label="Delete Banner"
-                      onClick={() => handleDeleteAnnouncement(item)}
+                      <span>{item.link_label || "View Destination"}</span>
+                      <ExternalLink size={13} />
+                    </a>
+                  )}
+
+                  <div className={styles.cardFooter}>
+                    <AdminButton
+                      variant="outline"
+                      size="sm"
+                      icon={
+                        item.is_active ? (
+                          <EyeOff size={13} />
+                        ) : (
+                          <Eye size={13} />
+                        )
+                      }
+                      onClick={() =>
+                        handleToggleAnnouncement(item.id, item.is_active)
+                      }
                     >
-                      <Trash2 size={14} />
-                    </button>
+                      {item.is_active ? "Deactivate" : "Activate"}
+                    </AdminButton>
+
+                    <div className={styles.cardActions}>
+                      <button
+                        type="button"
+                        className={styles.iconBtn}
+                        data-db-tooltip="Edit Banner"
+                        aria-label="Edit Banner"
+                        onClick={() => handleEditAnnouncement(item)}
+                      >
+                        <Edit2 size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.iconBtnDanger}
+                        data-db-tooltip="Delete Banner"
+                        aria-label="Delete Banner"
+                        onClick={() => handleDeleteAnnouncement(item)}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-          )}
-        </div>
+              ))
+            )}
+          </div>
+        </>
       )}
 
       {/* ── TAB 2: FAQs ── */}
@@ -837,7 +980,13 @@ export default function ContentCMSPage() {
         <div>
           {/* Category Filter Pills */}
           <div className={styles.filterBar}>
-            {["all", "Ordering", "Delivery & Pickup", "School Packs", "Payments"].map((cat) => (
+            {[
+              "all",
+              "Ordering",
+              "Delivery & Pickup",
+              "School Packs",
+              "Payments",
+            ].map((cat) => (
               <button
                 key={cat}
                 type="button"
@@ -853,11 +1002,18 @@ export default function ContentCMSPage() {
             {filteredFaqs.length === 0 ? (
               <div className={styles.emptyState}>
                 <HelpCircle size={32} />
-                <div className={styles.emptyTitle}>No FAQs found in this category</div>
-                <div className={styles.emptySubtitle}>
-                  Add common customer questions and clear answers for the storefront.
+                <div className={styles.emptyTitle}>
+                  No FAQs found in this category
                 </div>
-                <AdminButton variant="primary" icon={<Plus size={14} />} onClick={openNewModal}>
+                <div className={styles.emptySubtitle}>
+                  Add common customer questions and clear answers for the
+                  storefront.
+                </div>
+                <AdminButton
+                  variant="primary"
+                  icon={<Plus size={14} />}
+                  onClick={openNewModal}
+                >
                   New FAQ
                 </AdminButton>
               </div>
@@ -868,10 +1024,14 @@ export default function ContentCMSPage() {
                   <div key={faq.id} className={styles.card}>
                     <div
                       className={styles.faqHeader}
-                      onClick={() => setExpandedFaqId(isExpanded ? null : faq.id)}
+                      onClick={() =>
+                        setExpandedFaqId(isExpanded ? null : faq.id)
+                      }
                     >
                       <div className={styles.faqQuestion}>
-                        <span className={styles.badgeCategory}>{faq.category}</span>
+                        <span className={styles.badgeCategory}>
+                          {faq.category}
+                        </span>
                         <span>{faq.question}</span>
                       </div>
                       <div className={styles.cardActions}>
@@ -883,21 +1043,37 @@ export default function ContentCMSPage() {
                         <button
                           type="button"
                           className={styles.iconBtn}
-                          aria-label={isExpanded ? "Collapse Answer" : "Expand Answer"}
+                          aria-label={
+                            isExpanded ? "Collapse Answer" : "Expand Answer"
+                          }
                         >
-                          {isExpanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                          {isExpanded ? (
+                            <ChevronUp size={15} />
+                          ) : (
+                            <ChevronDown size={15} />
+                          )}
                         </button>
                       </div>
                     </div>
 
-                    {isExpanded && <div className={styles.faqAnswer}>{faq.answer}</div>}
+                    {isExpanded && (
+                      <div className={styles.faqAnswer}>{faq.answer}</div>
+                    )}
 
                     <div className={styles.cardFooter}>
                       <AdminButton
                         variant="outline"
                         size="sm"
-                        icon={faq.is_published ? <EyeOff size={13} /> : <Eye size={13} />}
-                        onClick={() => handleToggleFaq(faq.id, faq.is_published)}
+                        icon={
+                          faq.is_published ? (
+                            <EyeOff size={13} />
+                          ) : (
+                            <Eye size={13} />
+                          )
+                        }
+                        onClick={() =>
+                          handleToggleFaq(faq.id, faq.is_published)
+                        }
                       >
                         {faq.is_published ? "Unpublish" : "Publish"}
                       </AdminButton>
@@ -941,7 +1117,11 @@ export default function ContentCMSPage() {
               <div className={styles.emptySubtitle}>
                 Add verified quotes from parents, teachers, and school heads.
               </div>
-              <AdminButton variant="primary" icon={<Plus size={14} />} onClick={openNewModal}>
+              <AdminButton
+                variant="primary"
+                icon={<Plus size={14} />}
+                onClick={openNewModal}
+              >
                 Add Testimonial
               </AdminButton>
             </div>
@@ -975,7 +1155,9 @@ export default function ContentCMSPage() {
 
                 {test.school_name && (
                   <div>
-                    <span className={styles.badgeSchool}>{test.school_name}</span>
+                    <span className={styles.badgeSchool}>
+                      {test.school_name}
+                    </span>
                   </div>
                 )}
 
@@ -983,8 +1165,16 @@ export default function ContentCMSPage() {
                   <AdminButton
                     variant="outline"
                     size="sm"
-                    icon={test.is_featured ? <EyeOff size={13} /> : <Eye size={13} />}
-                    onClick={() => handleToggleTestimonial(test.id, test.is_featured)}
+                    icon={
+                      test.is_featured ? (
+                        <EyeOff size={13} />
+                      ) : (
+                        <Eye size={13} />
+                      )
+                    }
+                    onClick={() =>
+                      handleToggleTestimonial(test.id, test.is_featured)
+                    }
                   >
                     {test.is_featured ? "Unfeature" : "Feature"}
                   </AdminButton>
@@ -1029,8 +1219,14 @@ export default function ContentCMSPage() {
 
       {/* ── 4. Add / Edit Modal Dialog ── */}
       {isModalOpen && (
-        <div className={styles.modalOverlay} onClick={() => setIsModalOpen(false)}>
-          <div className={styles.modalDialog} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className={styles.modalDialog}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>
                 {editingId ? "Edit Item" : "Create New Item"} —{" "}
@@ -1051,7 +1247,9 @@ export default function ContentCMSPage() {
 
             <form onSubmit={handleModalSubmit}>
               <div className={styles.modalBody}>
-                {modalError && <div className={styles.errorMessage}>{modalError}</div>}
+                {modalError && (
+                  <div className={styles.errorMessage}>{modalError}</div>
+                )}
 
                 {/* Eyebrow Form */}
                 {activeTab === "eyebrows" && (
@@ -1070,19 +1268,28 @@ export default function ContentCMSPage() {
                       </div>
 
                       <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>Display Placement</label>
+                        <label className={styles.formLabel}>
+                          Display Placement
+                        </label>
                         <select
                           value={annLocation}
                           onChange={(e) =>
                             setAnnLocation(
-                              e.target.value as "global_top" | "hero_banner" | "schools_page"
+                              e.target.value as
+                                | "global_top"
+                                | "hero_banner"
+                                | "schools_page",
                             )
                           }
                           className={styles.formSelect}
                         >
                           <option value="global_top">Global Top Bar</option>
-                          <option value="hero_banner">Storefront Hero Banner</option>
-                          <option value="schools_page">Schools Directory Page</option>
+                          <option value="hero_banner">
+                            Storefront Hero Banner
+                          </option>
+                          <option value="schools_page">
+                            Schools Directory Page
+                          </option>
                         </select>
                       </div>
                     </div>
@@ -1100,7 +1307,9 @@ export default function ContentCMSPage() {
 
                     <div className={styles.formGrid2}>
                       <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>Destination URL (Optional)</label>
+                        <label className={styles.formLabel}>
+                          Destination URL (Optional)
+                        </label>
                         <input
                           type="text"
                           value={annLinkUrl}
@@ -1111,7 +1320,9 @@ export default function ContentCMSPage() {
                       </div>
 
                       <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>Link Label (Optional)</label>
+                        <label className={styles.formLabel}>
+                          Link Label (Optional)
+                        </label>
                         <input
                           type="text"
                           value={annLinkLabel}
@@ -1145,10 +1356,14 @@ export default function ContentCMSPage() {
                         className={styles.formSelect}
                       >
                         <option value="Ordering">Ordering</option>
-                        <option value="Delivery & Pickup">Delivery & Pickup</option>
+                        <option value="Delivery & Pickup">
+                          Delivery & Pickup
+                        </option>
                         <option value="School Packs">School Packs</option>
                         <option value="Payments">Payments</option>
-                        <option value="Returns & Policies">Returns & Policies</option>
+                        <option value="Returns & Policies">
+                          Returns & Policies
+                        </option>
                       </select>
                     </div>
 
@@ -1204,7 +1419,9 @@ export default function ContentCMSPage() {
                       </div>
 
                       <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>Role / Association</label>
+                        <label className={styles.formLabel}>
+                          Role / Association
+                        </label>
                         <input
                           type="text"
                           required
@@ -1217,7 +1434,9 @@ export default function ContentCMSPage() {
                     </div>
 
                     <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>School Name (Optional)</label>
+                      <label className={styles.formLabel}>
+                        School Name (Optional)
+                      </label>
                       <input
                         type="text"
                         value={testSchool}
@@ -1228,19 +1447,28 @@ export default function ContentCMSPage() {
                     </div>
 
                     <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Rating (1 to 5 Stars)</label>
+                      <label className={styles.formLabel}>
+                        Rating (1 to 5 Stars)
+                      </label>
                       <div className={styles.starRow}>
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
                             key={star}
                             type="button"
                             onClick={() => setTestRating(star)}
-                            style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                              padding: "4px",
+                            }}
                           >
                             <Star
                               size={20}
                               fill={star <= testRating ? "#eab308" : "none"}
-                              stroke={star <= testRating ? "#eab308" : "#64748b"}
+                              stroke={
+                                star <= testRating ? "#eab308" : "#64748b"
+                              }
                             />
                           </button>
                         ))}
@@ -1275,7 +1503,9 @@ export default function ContentCMSPage() {
                   <>
                     <div className={styles.formGrid2}>
                       <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>Document Title</label>
+                        <label className={styles.formLabel}>
+                          Document Title
+                        </label>
                         <input
                           type="text"
                           required
@@ -1295,7 +1525,9 @@ export default function ContentCMSPage() {
                         >
                           <option value="Parent Guides">Parent Guides</option>
                           <option value="School Packs">School Packs</option>
-                          <option value="Policies">Policies & Guidelines</option>
+                          <option value="Policies">
+                            Policies & Guidelines
+                          </option>
                           <option value="Forms">Order Forms</option>
                         </select>
                       </div>
@@ -1339,7 +1571,9 @@ export default function ContentCMSPage() {
                     </div>
 
                     <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>File Storage Path or URL</label>
+                      <label className={styles.formLabel}>
+                        File Storage Path or URL
+                      </label>
                       <input
                         type="text"
                         value={resUrl}
@@ -1374,7 +1608,11 @@ export default function ContentCMSPage() {
                   type="submit"
                   disabled={isPending}
                 >
-                  {isPending ? "Saving..." : editingId ? "Save Changes" : "Create Item"}
+                  {isPending
+                    ? "Saving..."
+                    : editingId
+                      ? "Save Changes"
+                      : "Create Item"}
                 </AdminButton>
               </div>
             </form>

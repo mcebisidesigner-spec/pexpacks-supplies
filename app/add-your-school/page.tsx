@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
 import { SectionHeader } from '@/components/marketing/SectionHeader'
 import { FaqMarquee } from '@/components/shared/FaqMarquee'
-import { getFaqs } from '@/lib/cms'
+import { getFaqs, getWebsiteContent } from '@/lib/cms'
 import { buildMetadata } from '@/lib/seo'
 import heroStyles from '@/components/marketing/HeroBase.module.css'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
@@ -19,11 +19,16 @@ export const metadata: Metadata = buildMetadata(
 )
 
 export default async function AddYourSchoolPage() {
-  const faqs = await getFaqs()
+  const [faqs, content] = await Promise.all([getFaqs(), getWebsiteContent()])
+  const hero = content['add-your-school.hero']
+  const heroEyebrow =
+    typeof hero.eyebrow === 'string' && hero.eyebrow
+      ? hero.eyebrow
+      : 'Not listed?'
   return (
     <>
       <PageHero
-        eyebrow="Not listed?"
+        eyebrow={heroEyebrow}
         title="Is your school not an official partner yet? Add your school now."
         panelText="Need a pack today?"
         panelTitle="Use a standard grade combo while your school list is being reviewed."

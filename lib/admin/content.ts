@@ -14,7 +14,12 @@ import {
   CMS_TAGS,
   WEBSITE_CONTENT_DEFAULTS as contentDefaults,
 } from "@/lib/cms";
-import { FAQ_CATEGORIES } from "@/lib/admin/content-constants";
+import {
+  FAQ_CATEGORIES,
+  PAGE_HERO_SECTIONS,
+} from "@/lib/admin/content-constants";
+
+export { PAGE_HERO_SECTIONS };
 
 /**
  * Website content module: testimonials, FAQs and free-form website_content
@@ -22,14 +27,19 @@ import { FAQ_CATEGORIES } from "@/lib/admin/content-constants";
  * change and revalidate the public CMS cache tags.
  */
 
-export type TestimonialRow = Database["public"]["Tables"]["testimonials"]["Row"];
+export type TestimonialRow =
+  Database["public"]["Tables"]["testimonials"]["Row"];
 export type FaqRow = Database["public"]["Tables"]["faqs"]["Row"];
-export type WebsiteContentRow = Database["public"]["Tables"]["website_content"]["Row"];
+export type WebsiteContentRow =
+  Database["public"]["Tables"]["website_content"]["Row"];
 
-export type CmsAnnouncementRow = Database["public"]["Tables"]["cms_announcements"]["Row"];
+export type CmsAnnouncementRow =
+  Database["public"]["Tables"]["cms_announcements"]["Row"];
 export type CmsFaqRow = Database["public"]["Tables"]["cms_faqs"]["Row"];
-export type CmsTestimonialRow = Database["public"]["Tables"]["cms_testimonials"]["Row"];
-export type CmsResourceRow = Database["public"]["Tables"]["cms_resources"]["Row"];
+export type CmsTestimonialRow =
+  Database["public"]["Tables"]["cms_testimonials"]["Row"];
+export type CmsResourceRow =
+  Database["public"]["Tables"]["cms_resources"]["Row"];
 
 export type ContentFormState = {
   ok?: boolean;
@@ -56,7 +66,11 @@ export const testimonialInputSchema = z.object({
   role: z.string().trim().max(120, "Too long"),
   context: z.string().trim().max(120, "Too long"),
   quote: z.string().trim().min(1, "Quote is required").max(1200, "Too long"),
-  rating: z.coerce.number().int().min(1, "Rating must be 1–5").max(5, "Rating must be 1–5"),
+  rating: z.coerce
+    .number()
+    .int()
+    .min(1, "Rating must be 1–5")
+    .max(5, "Rating must be 1–5"),
   visible: z.boolean(),
   sort_order: z.coerce.number().int().min(0, "Sort order must be 0 or more"),
 });
@@ -67,7 +81,9 @@ export async function listTestimonials(): Promise<TestimonialRow[]> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("testimonials")
-    .select("id,name,role,context,quote,avatar,rating,visible,sort_order,updated_by,updated_at,created_at")
+    .select(
+      "id,name,role,context,quote,avatar,rating,visible,sort_order,updated_by,updated_at,created_at",
+    )
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
   if (error) {
@@ -77,11 +93,15 @@ export async function listTestimonials(): Promise<TestimonialRow[]> {
   return data ?? [];
 }
 
-export async function getTestimonial(id: string): Promise<TestimonialRow | null> {
+export async function getTestimonial(
+  id: string,
+): Promise<TestimonialRow | null> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("testimonials")
-    .select("id,name,role,context,quote,avatar,rating,visible,sort_order,updated_by,updated_at,created_at")
+    .select(
+      "id,name,role,context,quote,avatar,rating,visible,sort_order,updated_by,updated_at,created_at",
+    )
     .eq("id", id)
     .maybeSingle();
   if (error) {
@@ -93,7 +113,7 @@ export async function getTestimonial(id: string): Promise<TestimonialRow | null>
 
 export async function saveTestimonial(
   input: TestimonialInput,
-  id?: string
+  id?: string,
 ): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
@@ -110,7 +130,10 @@ export async function saveTestimonial(
 
   try {
     if (id) {
-      const { error } = await admin.from("testimonials").update(payload).eq("id", id);
+      const { error } = await admin
+        .from("testimonials")
+        .update(payload)
+        .eq("id", id);
       if (error) throw error;
     } else {
       const { error } = await admin.from("testimonials").insert(payload);
@@ -131,10 +154,16 @@ export async function saveTestimonial(
     entityId: id ?? null,
     summary: `${id ? "Updated" : "Created"} testimonial ${input.name}`,
   });
-  return { ok: true, message: id ? "Testimonial updated." : "Testimonial created." };
+  return {
+    ok: true,
+    message: id ? "Testimonial updated." : "Testimonial created.",
+  };
 }
 
-export async function setTestimonialVisible(id: string, visible: boolean): Promise<ContentFormState> {
+export async function setTestimonialVisible(
+  id: string,
+  visible: boolean,
+): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
   try {
@@ -147,7 +176,7 @@ export async function setTestimonialVisible(id: string, visible: boolean): Promi
     if (error) throw error;
     if (!data) return { ok: false, message: "Testimonial not found." };
     revalidateTag(CMS_TAGS.testimonials, { expire: 0 });
-  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
+    for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -156,7 +185,12 @@ export async function setTestimonialVisible(id: string, visible: boolean): Promi
       entityId: id,
       summary: `${visible ? "Showed" : "Hidden"} testimonial ${data.name}`,
     });
-    return { ok: true, message: visible ? "Testimonial shown on the site." : "Testimonial hidden." };
+    return {
+      ok: true,
+      message: visible
+        ? "Testimonial shown on the site."
+        : "Testimonial hidden.",
+    };
   } catch (err) {
     console.error("[content] toggle testimonial failed:", err);
     return { ok: false, message: "Failed to update testimonial." };
@@ -170,7 +204,7 @@ export async function deleteTestimonial(id: string): Promise<ContentFormState> {
     const { error } = await admin.from("testimonials").delete().eq("id", id);
     if (error) throw error;
     revalidateTag(CMS_TAGS.testimonials, { expire: 0 });
-  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
+    for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -188,7 +222,7 @@ export async function deleteTestimonial(id: string): Promise<ContentFormState> {
 
 export async function reorderTestimonial(
   id: string,
-  direction: "up" | "down"
+  direction: "up" | "down",
 ): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const rows = await listTestimonials();
@@ -196,7 +230,10 @@ export async function reorderTestimonial(
   if (from < 0) return { ok: false, message: "Testimonial not found." };
   const to = from + (direction === "up" ? -1 : 1);
   if (to < 0 || to >= rows.length) {
-    return { ok: false, message: "This item is already at the edge of the list." };
+    return {
+      ok: false,
+      message: "This item is already at the edge of the list.",
+    };
   }
 
   const reordered = [...rows];
@@ -208,7 +245,7 @@ export async function reorderTestimonial(
     admin
       .from("testimonials")
       .update({ sort_order: index + 1, updated_by: actor.user.id })
-      .eq("id", row.id)
+      .eq("id", row.id),
   );
   const results = await Promise.all(updates);
   const failed = results.find((result) => result.error);
@@ -235,7 +272,11 @@ export async function reorderTestimonial(
 // ---------------------------------------------------------------------------
 
 const linkItemSchema = z.object({
-  label: z.string().trim().min(1, "Link label is required").max(120, "Too long"),
+  label: z
+    .string()
+    .trim()
+    .min(1, "Link label is required")
+    .max(120, "Too long"),
   href: z.string().trim().min(1, "Link URL is required").max(500, "Too long"),
 });
 
@@ -248,7 +289,11 @@ export const faqInputSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "Use lowercase letters, numbers and hyphens only")
     .max(120, "Too long"),
   category: z.enum(FAQ_CATEGORIES),
-  question: z.string().trim().min(1, "Question is required").max(300, "Too long"),
+  question: z
+    .string()
+    .trim()
+    .min(1, "Question is required")
+    .max(300, "Too long"),
   answer: z.string().trim().min(1, "Answer is required").max(3000, "Too long"),
   links: z.array(linkItemSchema).max(8, "At most 8 links"),
   visible: z.boolean(),
@@ -261,7 +306,9 @@ export async function listFaqs(): Promise<FaqRow[]> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("faqs")
-    .select("id,slug,question,answer,category,links,visible,sort_order,updated_by,updated_at,created_at")
+    .select(
+      "id,slug,question,answer,category,links,visible,sort_order,updated_by,updated_at,created_at",
+    )
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
   if (error) {
@@ -273,7 +320,13 @@ export async function listFaqs(): Promise<FaqRow[]> {
 
 export async function getFaq(id: string): Promise<FaqRow | null> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("faqs").select("id,slug,question,answer,category,links,visible,sort_order,updated_by,updated_at,created_at").eq("id", id).maybeSingle();
+  const { data, error } = await admin
+    .from("faqs")
+    .select(
+      "id,slug,question,answer,category,links,visible,sort_order,updated_by,updated_at,created_at",
+    )
+    .eq("id", id)
+    .maybeSingle();
   if (error) {
     console.error("[content] get faq failed:", error);
     return null;
@@ -281,7 +334,10 @@ export async function getFaq(id: string): Promise<FaqRow | null> {
   return data;
 }
 
-export async function saveFaq(input: FaqInput, id?: string): Promise<ContentFormState> {
+export async function saveFaq(
+  input: FaqInput,
+  id?: string,
+): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
   const payload = {
@@ -306,7 +362,9 @@ export async function saveFaq(input: FaqInput, id?: string): Promise<ContentForm
   } catch (err) {
     console.error("[content] save faq failed:", err);
     const msg =
-      err && typeof err === "object" && "message" in err &&
+      err &&
+      typeof err === "object" &&
+      "message" in err &&
       String((err as { message: unknown }).message).includes("idx_faqs_slug")
         ? "A FAQ with that slug already exists."
         : "Failed to save FAQ.";
@@ -326,7 +384,10 @@ export async function saveFaq(input: FaqInput, id?: string): Promise<ContentForm
   return { ok: true, message: id ? "FAQ updated." : "FAQ created." };
 }
 
-export async function setFaqVisible(id: string, visible: boolean): Promise<ContentFormState> {
+export async function setFaqVisible(
+  id: string,
+  visible: boolean,
+): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
   try {
@@ -339,7 +400,7 @@ export async function setFaqVisible(id: string, visible: boolean): Promise<Conte
     if (error) throw error;
     if (!data) return { ok: false, message: "FAQ not found." };
     revalidateTag(CMS_TAGS.faqs, { expire: 0 });
-  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
+    for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -348,7 +409,10 @@ export async function setFaqVisible(id: string, visible: boolean): Promise<Conte
       entityId: id,
       summary: `${visible ? "Showed" : "Hidden"} FAQ ${data.question}`,
     });
-    return { ok: true, message: visible ? "FAQ shown on the site." : "FAQ hidden." };
+    return {
+      ok: true,
+      message: visible ? "FAQ shown on the site." : "FAQ hidden.",
+    };
   } catch (err) {
     console.error("[content] toggle faq failed:", err);
     return { ok: false, message: "Failed to update FAQ." };
@@ -362,7 +426,7 @@ export async function deleteFaq(id: string): Promise<ContentFormState> {
     const { error } = await admin.from("faqs").delete().eq("id", id);
     if (error) throw error;
     revalidateTag(CMS_TAGS.faqs, { expire: 0 });
-  for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
+    for (const path of CMS_PUBLIC_PATHS) revalidatePath(path);
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -380,7 +444,7 @@ export async function deleteFaq(id: string): Promise<ContentFormState> {
 
 export async function reorderFaq(
   id: string,
-  direction: "up" | "down"
+  direction: "up" | "down",
 ): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const rows = await listFaqs();
@@ -388,7 +452,10 @@ export async function reorderFaq(
   if (from < 0) return { ok: false, message: "FAQ not found." };
   const to = from + (direction === "up" ? -1 : 1);
   if (to < 0 || to >= rows.length) {
-    return { ok: false, message: "This item is already at the edge of the list." };
+    return {
+      ok: false,
+      message: "This item is already at the edge of the list.",
+    };
   }
 
   const reordered = [...rows];
@@ -400,7 +467,7 @@ export async function reorderFaq(
     admin
       .from("faqs")
       .update({ sort_order: index + 1, updated_by: actor.user.id })
-      .eq("id", row.id)
+      .eq("id", row.id),
   );
   const results = await Promise.all(updates);
   const failed = results.find((result) => result.error);
@@ -455,6 +522,91 @@ const contentDefs = {
       lead: z.string().trim().max(500, "Too long"),
     }),
   },
+  "schools.hero": {
+    label: "Schools page hero",
+    description:
+      "Eyebrow and headline shown at the top of the school pack finder.",
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+    ] as ContentField[],
+    schema: z.object({
+      eyebrow: z
+        .string()
+        .trim()
+        .min(1, "Eyebrow is required")
+        .max(200, "Too long"),
+      title: z.string().trim().min(1, "Title is required").max(300, "Too long"),
+    }),
+  },
+  "track-order.hero": {
+    label: "Track order hero",
+    description:
+      "Eyebrow and headline shown at the top of the track order page.",
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+    ] as ContentField[],
+    schema: z.object({
+      eyebrow: z
+        .string()
+        .trim()
+        .min(1, "Eyebrow is required")
+        .max(200, "Too long"),
+      title: z.string().trim().min(1, "Title is required").max(300, "Too long"),
+    }),
+  },
+  "add-your-school.hero": {
+    label: "Add your school hero",
+    description:
+      "Eyebrow and headline shown at the top of the add your school page.",
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+    ] as ContentField[],
+    schema: z.object({
+      eyebrow: z
+        .string()
+        .trim()
+        .min(1, "Eyebrow is required")
+        .max(200, "Too long"),
+      title: z.string().trim().min(1, "Title is required").max(300, "Too long"),
+    }),
+  },
+  "faq.hero": {
+    label: "FAQ page hero",
+    description:
+      "Eyebrow and headline shown at the top of the frequently asked questions page.",
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+    ] as ContentField[],
+    schema: z.object({
+      eyebrow: z
+        .string()
+        .trim()
+        .min(1, "Eyebrow is required")
+        .max(200, "Too long"),
+      title: z.string().trim().min(1, "Title is required").max(300, "Too long"),
+    }),
+  },
+  "partnership.hero": {
+    label: "Partnership page hero",
+    description:
+      "Eyebrow and headline shown at the top of the school partnership page.",
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+    ] as ContentField[],
+    schema: z.object({
+      eyebrow: z
+        .string()
+        .trim()
+        .min(1, "Eyebrow is required")
+        .max(200, "Too long"),
+      title: z.string().trim().min(1, "Title is required").max(300, "Too long"),
+    }),
+  },
   "homepage.announcement": {
     label: "Announcement bar",
     description: "Optional promo banner shown across the top of the site.",
@@ -477,8 +629,16 @@ const contentDefs = {
       { key: "site_url", label: "Site URL", type: "text" },
     ] as ContentField[],
     schema: z.object({
-      site_name: z.string().trim().min(1, "Site name is required").max(120, "Too long"),
-      support_email: z.string().trim().email("Enter a valid email").max(200, "Too long"),
+      site_name: z
+        .string()
+        .trim()
+        .min(1, "Site name is required")
+        .max(120, "Too long"),
+      support_email: z
+        .string()
+        .trim()
+        .email("Enter a valid email")
+        .max(200, "Too long"),
       support_phone: z.string().trim().max(60, "Too long"),
       site_url: z.string().trim().url("Enter a valid URL").max(200, "Too long"),
     }),
@@ -497,19 +657,30 @@ const contentDefs = {
   },
   seo_defaults: {
     label: "SEO defaults",
-    description: "Fallback title and description for pages that do not define their own.",
+    description:
+      "Fallback title and description for pages that do not define their own.",
     fields: [
       { key: "default_title", label: "Default title", type: "text" },
-      { key: "default_description", label: "Default description", type: "textarea" },
+      {
+        key: "default_description",
+        label: "Default description",
+        type: "textarea",
+      },
     ] as ContentField[],
     schema: z.object({
-      default_title: z.string().trim().min(1, "Title is required").max(200, "Too long"),
+      default_title: z
+        .string()
+        .trim()
+        .min(1, "Title is required")
+        .max(200, "Too long"),
       default_description: z.string().trim().max(400, "Too long"),
     }),
   },
 } as const;
 
-type ContentKeyOf<T> = T extends readonly unknown[] ? never : Extract<keyof T, string>;
+type ContentKeyOf<T> = T extends readonly unknown[]
+  ? never
+  : Extract<keyof T, string>;
 export type WebsiteContentKey = ContentKeyOf<typeof contentDefs>;
 
 const BOOLEAN_FIELDS: Record<string, string[]> = {
@@ -525,10 +696,14 @@ export async function contentSections(): Promise<ContentSection[]> {
   }));
 }
 
-export async function getWebsiteContent(): Promise<Record<WebsiteContentKey, Record<string, unknown>>> {
+export async function getWebsiteContent(): Promise<
+  Record<WebsiteContentKey, Record<string, unknown>>
+> {
   const result = structuredClone(contentDefaults);
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("website_content").select("key, value");
+  const { data, error } = await admin
+    .from("website_content")
+    .select("key, value");
   if (error || !data) return result;
 
   for (const row of data) {
@@ -550,7 +725,7 @@ function raw(formData: FormData, key: string): string {
 
 export async function updateWebsiteContent(
   key: string,
-  formData: FormData
+  formData: FormData,
 ): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const def = contentDefs[key as WebsiteContentKey];
@@ -584,7 +759,7 @@ export async function updateWebsiteContent(
         value: parsed.data as unknown as Json,
         updated_by: actor.user.id,
       },
-      { onConflict: "key" }
+      { onConflict: "key" },
     );
     if (error) throw error;
 
@@ -606,17 +781,65 @@ export async function updateWebsiteContent(
   }
 }
 
+/**
+ * Updates only the eyebrow of one of the public page hero sections, keeping
+ * the other fields (title, lead) unchanged. Reuses the full section
+ * validation + upsert + audit + revalidation path.
+ */
+export async function saveHeroEyebrow(
+  key: WebsiteContentKey,
+  eyebrow: string,
+): Promise<ContentFormState> {
+  const def = contentDefs[key];
+  if (!def || !PAGE_HERO_SECTIONS.some((section) => section.key === key)) {
+    return { ok: false, message: "Unknown page." };
+  }
+
+  const current: Record<string, unknown> =
+    (await getWebsiteContent())[key] ?? {};
+  const formData = new FormData();
+  for (const field of def.fields) {
+    if (field.type === "checkbox") {
+      if (current[field.key]) formData.set(field.key, "on");
+    } else {
+      formData.set(field.key, String(current[field.key] ?? ""));
+    }
+  }
+  formData.set("eyebrow", eyebrow);
+  return updateWebsiteContent(key, formData);
+}
+
 // ===========================================================================
 // 1. Announcements & Eyebrow Banners (cms_announcements)
 // ===========================================================================
 
 export const cmsAnnouncementSchema = z.object({
-  badge_text: z.string().trim().min(1, "Badge text is required").max(50, "Max 50 characters"),
-  message: z.string().trim().min(1, "Message is required").max(300, "Max 300 characters"),
-  link_url: z.string().trim().max(500, "Max 500 characters").optional().nullable(),
-  link_label: z.string().trim().max(50, "Max 50 characters").optional().nullable(),
+  badge_text: z
+    .string()
+    .trim()
+    .min(1, "Badge text is required")
+    .max(50, "Max 50 characters"),
+  message: z
+    .string()
+    .trim()
+    .min(1, "Message is required")
+    .max(300, "Max 300 characters"),
+  link_url: z
+    .string()
+    .trim()
+    .max(500, "Max 500 characters")
+    .optional()
+    .nullable(),
+  link_label: z
+    .string()
+    .trim()
+    .max(50, "Max 50 characters")
+    .optional()
+    .nullable(),
   is_active: z.boolean().default(true),
-  display_location: z.enum(["global_top", "hero_banner", "schools_page"]).default("global_top"),
+  display_location: z
+    .enum(["global_top", "hero_banner", "schools_page"])
+    .default("global_top"),
 });
 
 export type CmsAnnouncementInput = z.infer<typeof cmsAnnouncementSchema>;
@@ -637,7 +860,7 @@ export async function listCmsAnnouncements(): Promise<CmsAnnouncementRow[]> {
 
 export async function saveCmsAnnouncement(
   input: CmsAnnouncementInput,
-  id?: string
+  id?: string,
 ): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const parsed = cmsAnnouncementSchema.safeParse(input);
@@ -663,7 +886,10 @@ export async function saveCmsAnnouncement(
 
   try {
     if (id) {
-      const { error } = await admin.from("cms_announcements").update(payload).eq("id", id);
+      const { error } = await admin
+        .from("cms_announcements")
+        .update(payload)
+        .eq("id", id);
       if (error) throw error;
       void writeAuditLog({
         actorId: actor.user.id,
@@ -674,7 +900,11 @@ export async function saveCmsAnnouncement(
         summary: `Updated announcement: "${payload.badge_text}"`,
       });
     } else {
-      const { data, error } = await admin.from("cms_announcements").insert(payload).select("id").single();
+      const { data, error } = await admin
+        .from("cms_announcements")
+        .insert(payload)
+        .select("id")
+        .single();
       if (error) throw error;
       void writeAuditLog({
         actorId: actor.user.id,
@@ -697,7 +927,9 @@ export async function saveCmsAnnouncement(
   }
 }
 
-export async function deleteCmsAnnouncement(id: string): Promise<ContentFormState> {
+export async function deleteCmsAnnouncement(
+  id: string,
+): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
   const { error } = await admin.from("cms_announcements").delete().eq("id", id);
@@ -722,7 +954,10 @@ export async function deleteCmsAnnouncement(id: string): Promise<ContentFormStat
   return { ok: true, message: "Announcement deleted." };
 }
 
-export async function toggleCmsAnnouncementActive(id: string, active: boolean): Promise<ContentFormState> {
+export async function toggleCmsAnnouncementActive(
+  id: string,
+  active: boolean,
+): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
   const { error } = await admin
@@ -754,9 +989,21 @@ export async function toggleCmsAnnouncementActive(id: string, active: boolean): 
 // ===========================================================================
 
 export const cmsFaqSchema = z.object({
-  category: z.string().trim().min(1, "Category is required").max(60, "Max 60 characters"),
-  question: z.string().trim().min(1, "Question is required").max(300, "Max 300 characters"),
-  answer: z.string().trim().min(1, "Answer is required").max(2000, "Max 2000 characters"),
+  category: z
+    .string()
+    .trim()
+    .min(1, "Category is required")
+    .max(60, "Max 60 characters"),
+  question: z
+    .string()
+    .trim()
+    .min(1, "Question is required")
+    .max(300, "Max 300 characters"),
+  answer: z
+    .string()
+    .trim()
+    .min(1, "Answer is required")
+    .max(2000, "Max 2000 characters"),
   sort_order: z.coerce.number().int().min(0).default(0),
   is_published: z.boolean().default(true),
 });
@@ -780,7 +1027,7 @@ export async function listCmsFaqs(): Promise<CmsFaqRow[]> {
 
 export async function saveCmsFaq(
   input: CmsFaqInput,
-  id?: string
+  id?: string,
 ): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const parsed = cmsFaqSchema.safeParse(input);
@@ -805,7 +1052,10 @@ export async function saveCmsFaq(
 
   try {
     if (id) {
-      const { error } = await admin.from("cms_faqs").update(payload).eq("id", id);
+      const { error } = await admin
+        .from("cms_faqs")
+        .update(payload)
+        .eq("id", id);
       if (error) throw error;
       void writeAuditLog({
         actorId: actor.user.id,
@@ -816,7 +1066,11 @@ export async function saveCmsFaq(
         summary: `Updated FAQ: "${payload.question.slice(0, 60)}"`,
       });
     } else {
-      const { data, error } = await admin.from("cms_faqs").insert(payload).select("id").single();
+      const { data, error } = await admin
+        .from("cms_faqs")
+        .insert(payload)
+        .select("id")
+        .single();
       if (error) throw error;
       void writeAuditLog({
         actorId: actor.user.id,
@@ -861,7 +1115,10 @@ export async function deleteCmsFaq(id: string): Promise<ContentFormState> {
   return { ok: true, message: "FAQ deleted." };
 }
 
-export async function toggleCmsFaqPublished(id: string, published: boolean): Promise<ContentFormState> {
+export async function toggleCmsFaqPublished(
+  id: string,
+  published: boolean,
+): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
   const { error } = await admin
@@ -891,10 +1148,22 @@ export async function toggleCmsFaqPublished(id: string, published: boolean): Pro
 // ===========================================================================
 
 export const cmsTestimonialSchema = z.object({
-  author_name: z.string().trim().min(1, "Author name is required").max(100, "Max 100 characters"),
-  author_role: z.string().trim().min(1, "Role is required").max(120, "Max 120 characters"),
+  author_name: z
+    .string()
+    .trim()
+    .min(1, "Author name is required")
+    .max(100, "Max 100 characters"),
+  author_role: z
+    .string()
+    .trim()
+    .min(1, "Role is required")
+    .max(120, "Max 120 characters"),
   school_id: z.string().uuid().optional().nullable(),
-  quote: z.string().trim().min(1, "Quote is required").max(1200, "Max 1200 characters"),
+  quote: z
+    .string()
+    .trim()
+    .min(1, "Quote is required")
+    .max(1200, "Max 1200 characters"),
   rating: z.coerce.number().int().min(1).max(5).default(5),
   avatar_url: z.string().trim().max(500).optional().nullable(),
   is_featured: z.boolean().default(true),
@@ -920,7 +1189,7 @@ export async function listCmsTestimonials(): Promise<CmsTestimonialRow[]> {
 
 export async function saveCmsTestimonial(
   input: CmsTestimonialInput,
-  id?: string
+  id?: string,
 ): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const parsed = cmsTestimonialSchema.safeParse(input);
@@ -947,7 +1216,10 @@ export async function saveCmsTestimonial(
 
   try {
     if (id) {
-      const { error } = await admin.from("cms_testimonials").update(payload).eq("id", id);
+      const { error } = await admin
+        .from("cms_testimonials")
+        .update(payload)
+        .eq("id", id);
       if (error) throw error;
       void writeAuditLog({
         actorId: actor.user.id,
@@ -958,7 +1230,11 @@ export async function saveCmsTestimonial(
         summary: `Updated testimonial from ${payload.author_name}`,
       });
     } else {
-      const { data, error } = await admin.from("cms_testimonials").insert(payload).select("id").single();
+      const { data, error } = await admin
+        .from("cms_testimonials")
+        .insert(payload)
+        .select("id")
+        .single();
       if (error) throw error;
       void writeAuditLog({
         actorId: actor.user.id,
@@ -980,7 +1256,9 @@ export async function saveCmsTestimonial(
   }
 }
 
-export async function deleteCmsTestimonial(id: string): Promise<ContentFormState> {
+export async function deleteCmsTestimonial(
+  id: string,
+): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
   const { error } = await admin.from("cms_testimonials").delete().eq("id", id);
@@ -1003,7 +1281,10 @@ export async function deleteCmsTestimonial(id: string): Promise<ContentFormState
   return { ok: true, message: "Testimonial deleted." };
 }
 
-export async function toggleCmsTestimonialFeatured(id: string, featured: boolean): Promise<ContentFormState> {
+export async function toggleCmsTestimonialFeatured(
+  id: string,
+  featured: boolean,
+): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
   const { error } = await admin
@@ -1033,11 +1314,30 @@ export async function toggleCmsTestimonialFeatured(id: string, featured: boolean
 // ===========================================================================
 
 export const cmsResourceSchema = z.object({
-  title: z.string().trim().min(1, "Title is required").max(150, "Max 150 characters"),
-  description: z.string().trim().max(500, "Max 500 characters").optional().nullable(),
-  category: z.string().trim().min(1, "Category is required").max(60, "Max 60 characters").default("Parent Guides"),
+  title: z
+    .string()
+    .trim()
+    .min(1, "Title is required")
+    .max(150, "Max 150 characters"),
+  description: z
+    .string()
+    .trim()
+    .max(500, "Max 500 characters")
+    .optional()
+    .nullable(),
+  category: z
+    .string()
+    .trim()
+    .min(1, "Category is required")
+    .max(60, "Max 60 characters")
+    .default("Parent Guides"),
   file_url: z.string().trim().min(1, "File URL is required").max(500),
-  file_type: z.string().trim().min(1, "File type is required").max(10).default("PDF"),
+  file_type: z
+    .string()
+    .trim()
+    .min(1, "File type is required")
+    .max(10)
+    .default("PDF"),
   file_size_label: z.string().trim().max(20).optional().nullable(),
   is_public: z.boolean().default(true),
   sort_order: z.coerce.number().int().min(0).default(0),
@@ -1062,7 +1362,7 @@ export async function listCmsResources(): Promise<CmsResourceRow[]> {
 
 export async function saveCmsResource(
   input: CmsResourceInput,
-  id?: string
+  id?: string,
 ): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const parsed = cmsResourceSchema.safeParse(input);
@@ -1090,7 +1390,10 @@ export async function saveCmsResource(
 
   try {
     if (id) {
-      const { error } = await admin.from("cms_resources").update(payload).eq("id", id);
+      const { error } = await admin
+        .from("cms_resources")
+        .update(payload)
+        .eq("id", id);
       if (error) throw error;
       void writeAuditLog({
         actorId: actor.user.id,
@@ -1101,7 +1404,11 @@ export async function saveCmsResource(
         summary: `Updated resource: "${payload.title}"`,
       });
     } else {
-      const { data, error } = await admin.from("cms_resources").insert(payload).select("id").single();
+      const { data, error } = await admin
+        .from("cms_resources")
+        .insert(payload)
+        .select("id")
+        .single();
       if (error) throw error;
       void writeAuditLog({
         actorId: actor.user.id,
@@ -1144,7 +1451,10 @@ export async function deleteCmsResource(id: string): Promise<ContentFormState> {
   return { ok: true, message: "Resource deleted." };
 }
 
-export async function toggleCmsResourcePublic(id: string, isPublic: boolean): Promise<ContentFormState> {
+export async function toggleCmsResourcePublic(
+  id: string,
+  isPublic: boolean,
+): Promise<ContentFormState> {
   const actor = await assertCan("content.manage");
   const admin = createSupabaseAdminClient();
   const { error } = await admin

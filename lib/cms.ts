@@ -19,7 +19,12 @@ export const CMS_TAGS = {
 } as const;
 
 /** Public routes that render testimonials / FAQs from the CMS. */
-export const CMS_PUBLIC_PATHS = ["/", "/faq", "/track-order", "/add-your-school"] as const;
+export const CMS_PUBLIC_PATHS = [
+  "/",
+  "/faq",
+  "/track-order",
+  "/add-your-school",
+] as const;
 
 export const CMS_REVALIDATE_SECONDS = 300;
 
@@ -28,15 +33,43 @@ export type WebsiteContentKey =
   | "homepage.announcement"
   | "company_info"
   | "footer"
-  | "seo_defaults";
+  | "seo_defaults"
+  | "schools.hero"
+  | "track-order.hero"
+  | "add-your-school.hero"
+  | "faq.hero"
+  | "partnership.hero";
 
-export type WebsiteContentValue = Record<WebsiteContentKey, Record<string, unknown>>;
+export type WebsiteContentValue = Record<
+  WebsiteContentKey,
+  Record<string, unknown>
+>;
 
 export const WEBSITE_CONTENT_DEFAULTS: WebsiteContentValue = {
   "homepage.hero": {
     eyebrow: "School stationery made simple",
     title: "Your school stationery list, perfectly packed.",
     lead: "Your official school stationery list, perfectly packed and delivered.",
+  },
+  "schools.hero": {
+    eyebrow: "Pack finder",
+    title: "Find your pack",
+  },
+  "track-order.hero": {
+    eyebrow: "Track your pack",
+    title: "Check your stationery pack status",
+  },
+  "add-your-school.hero": {
+    eyebrow: "Not listed?",
+    title: "Is your school not an official partner yet? Add your school now.",
+  },
+  "faq.hero": {
+    eyebrow: "Got questions?",
+    title: "Answers without the back-and-forth",
+  },
+  "partnership.hero": {
+    eyebrow: "Partner with us",
+    title: "Free school website + stationery fundraising.",
   },
   "homepage.announcement": { enabled: false, text: "" },
   company_info: {
@@ -102,17 +135,20 @@ async function fetchFaqs(): Promise<FAQ[]> {
     category: (row.category || "general") as FAQ["category"],
     question: row.question,
     answer: row.answer,
-    links:
-      Array.isArray(row.links)
-        ? (row.links as { label: string; href: string }[])
-        : undefined,
+    links: Array.isArray(row.links)
+      ? (row.links as { label: string; href: string }[])
+      : undefined,
   }));
 }
 
-export const getTestimonials = unstable_cache(fetchTestimonials, ["cms-testimonials"], {
-  revalidate: CMS_REVALIDATE_SECONDS,
-  tags: [CMS_TAGS.testimonials],
-});
+export const getTestimonials = unstable_cache(
+  fetchTestimonials,
+  ["cms-testimonials"],
+  {
+    revalidate: CMS_REVALIDATE_SECONDS,
+    tags: [CMS_TAGS.testimonials],
+  },
+);
 
 export const getFaqs = unstable_cache(fetchFaqs, ["cms-faqs"], {
   revalidate: CMS_REVALIDATE_SECONDS,
@@ -120,9 +156,13 @@ export const getFaqs = unstable_cache(fetchFaqs, ["cms-faqs"], {
 });
 
 async function fetchWebsiteContent(): Promise<WebsiteContentValue> {
-  const result = structuredClone(WEBSITE_CONTENT_DEFAULTS) as WebsiteContentValue;
+  const result = structuredClone(
+    WEBSITE_CONTENT_DEFAULTS,
+  ) as WebsiteContentValue;
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.from("website_content").select("key, value");
+  const { data, error } = await admin
+    .from("website_content")
+    .select("key, value");
   if (error || !data) return result;
 
   for (const row of data) {
@@ -144,7 +184,7 @@ export const getWebsiteContent = unstable_cache(
   {
     revalidate: CMS_REVALIDATE_SECONDS,
     tags: [CMS_TAGS.websiteContent],
-  }
+  },
 );
 
 // ---------------------------------------------------------------------------
@@ -161,7 +201,7 @@ export interface PublicAnnouncement {
 }
 
 async function fetchActiveAnnouncement(
-  location?: "global_top" | "hero_banner" | "schools_page"
+  location?: "global_top" | "hero_banner" | "schools_page",
 ): Promise<PublicAnnouncement | null> {
   const admin = createSupabaseAdminClient();
   let query = admin
@@ -194,7 +234,7 @@ export const getActiveAnnouncement = unstable_cache(
   {
     revalidate: CMS_REVALIDATE_SECONDS,
     tags: [CMS_TAGS.announcements],
-  }
+  },
 );
 
 export interface PublicCmsFaq {
@@ -228,7 +268,7 @@ export const getPublishedCmsFaqs = unstable_cache(
   {
     revalidate: CMS_REVALIDATE_SECONDS,
     tags: [CMS_TAGS.faqs],
-  }
+  },
 );
 
 export interface PublicCmsTestimonial {
@@ -245,7 +285,9 @@ async function fetchFeaturedCmsTestimonials(): Promise<PublicCmsTestimonial[]> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("cms_testimonials")
-    .select("id, author_name, author_role, quote, rating, avatar_url, school_id")
+    .select(
+      "id, author_name, author_role, quote, rating, avatar_url, school_id",
+    )
     .eq("is_featured", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
@@ -264,7 +306,7 @@ export const getFeaturedCmsTestimonials = unstable_cache(
   {
     revalidate: CMS_REVALIDATE_SECONDS,
     tags: [CMS_TAGS.testimonials],
-  }
+  },
 );
 
 export interface PublicCmsResource {
@@ -282,7 +324,9 @@ async function fetchPublicCmsResources(): Promise<PublicCmsResource[]> {
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin
     .from("cms_resources")
-    .select("id, title, description, category, file_url, file_type, file_size_label, download_count")
+    .select(
+      "id, title, description, category, file_url, file_type, file_size_label, download_count",
+    )
     .eq("is_public", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
@@ -301,5 +345,5 @@ export const getPublicCmsResources = unstable_cache(
   {
     revalidate: CMS_REVALIDATE_SECONDS,
     tags: [CMS_TAGS.resources],
-  }
+  },
 );

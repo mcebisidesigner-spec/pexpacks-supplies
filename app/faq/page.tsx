@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { getFaqs } from "@/lib/cms";
+import { getFaqs, getWebsiteContent } from "@/lib/cms";
 import { FAQExperience } from "@/components/marketing/FAQExperience";
 import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
@@ -14,16 +14,21 @@ import cardStyles from "@/components/marketing/MarketingCards.module.css";
 export const metadata: Metadata = buildMetadata(
   "Frequently Asked Questions",
   "Answers to common questions about Pexpacks school stationery packs, delivery, payment and partnerships.",
-  "/faq"
+  "/faq",
 );
 
 export default async function FAQPage() {
-  const faqs = await getFaqs();
+  const [faqs, content] = await Promise.all([getFaqs(), getWebsiteContent()]);
+  const hero = content["faq.hero"];
+  const heroEyebrow =
+    typeof hero.eyebrow === "string" && hero.eyebrow
+      ? hero.eyebrow
+      : "Got questions?";
   return (
     <>
       <JsonLd data={faqPageSchema(faqs)} />
       <PageHero
-        eyebrow="Got questions?"
+        eyebrow={heroEyebrow}
         title="Answers without the back-and-forth"
         panelTitle={`${faqs.length} practical answers`}
         panelText="Start with a category, open what matters, and jump straight to the next action."
@@ -45,11 +50,24 @@ export default async function FAQPage() {
               <p className={sectionStyles.sectionEyebrow}>Ready to order?</p>
               <h2>Find your school pack</h2>
               <p>
-                Search for your school or choose a standard grade pack. Your stationery is handled.
+                Search for your school or choose a standard grade pack. Your
+                stationery is handled.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/schools" variant="primary" data-conversion-event="faq_find_school_pack">Find Your School Pack</Button>
-                <Button href="/partnership" variant="white" data-conversion-event="faq_partner">Partner With Us</Button>
+                <Button
+                  href="/schools"
+                  variant="primary"
+                  data-conversion-event="faq_find_school_pack"
+                >
+                  Find Your School Pack
+                </Button>
+                <Button
+                  href="/partnership"
+                  variant="white"
+                  data-conversion-event="faq_partner"
+                >
+                  Partner With Us
+                </Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>
@@ -58,11 +76,16 @@ export default async function FAQPage() {
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  Still have questions? Reach out to the Pexpacks support team for help.
+                  Still have questions? Reach out to the Pexpacks support team
+                  for help.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/contact" className={cardStyles.cardLink} data-conversion-event="faq_contact">
+                <Link
+                  href="/contact"
+                  className={cardStyles.cardLink}
+                  data-conversion-event="faq_contact"
+                >
                   Contact Pexpacks &rarr;
                 </Link>
               </div>

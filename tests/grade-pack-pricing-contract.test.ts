@@ -61,6 +61,9 @@ describe("Grade Pack pricing contract", () => {
     const hardeningSql = readRepoFile(
       "supabase/migrations/00086_harden_public_pricing_privacy.sql",
     );
+    const viewHardeningSql = readRepoFile(
+      "supabase/migrations/00089_revoke_direct_public_pack_item_views.sql",
+    );
 
     expect(hardeningSql).toContain(
       "REVOKE SELECT ON public.pexco_rates FROM anon, authenticated",
@@ -73,6 +76,15 @@ describe("Grade Pack pricing contract", () => {
     );
     expect(hardeningSql).toContain(
       "REVOKE ALL ON FUNCTION public.recalculate_all_grade_pack_prices() FROM PUBLIC, anon, authenticated",
+    );
+    expect(viewHardeningSql).toContain(
+      "REVOKE SELECT ON public.public_pack_items_view FROM anon, authenticated",
+    );
+    expect(viewHardeningSql).toContain(
+      "REVOKE SELECT ON public.admin_pack_items_view FROM anon, authenticated",
+    );
+    expect(viewHardeningSql).toContain(
+      "GRANT EXECUTE ON FUNCTION public.get_public_school_pack(text) TO anon, authenticated, service_role",
     );
   });
 

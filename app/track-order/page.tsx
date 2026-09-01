@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { CTASection } from "@/components/marketing/CTASection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
-import { getFaqs } from "@/lib/cms";
+import { getFaqs, getWebsiteContent } from "@/lib/cms";
 import { buildMetadata } from "@/lib/seo";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import cardStyles from "@/components/marketing/MarketingCards.module.css";
@@ -13,24 +13,41 @@ import cardStyles from "@/components/marketing/MarketingCards.module.css";
 export const metadata: Metadata = buildMetadata(
   "Track Order",
   "Track your Pexpacks stationery order by order number, phone number or email address.",
-  "/track-order"
+  "/track-order",
 );
 
 import { Suspense } from "react";
 
 export default async function TrackOrderPage() {
-  const faqs = await getFaqs();
+  const [faqs, content] = await Promise.all([getFaqs(), getWebsiteContent()]);
+  const hero = content["track-order.hero"];
+  const heroEyebrow =
+    typeof hero.eyebrow === "string" && hero.eyebrow
+      ? hero.eyebrow
+      : "Track your pack";
   return (
     <>
       <PageHero
-        eyebrow="Track your pack"
+        eyebrow={heroEyebrow}
         title="Check your stationery pack status"
         panelTitle="Order Tracking"
         panelText="Stay updated on your pack."
       />
       <section className={sectionStyles.section}>
         <div className={sectionStyles.inner}>
-          <Suspense fallback={<div style={{ minHeight: 300, display: "grid", placeItems: "center" }}>Loading tracker...</div>}>
+          <Suspense
+            fallback={
+              <div
+                style={{
+                  minHeight: 300,
+                  display: "grid",
+                  placeItems: "center",
+                }}
+              >
+                Loading tracker...
+              </div>
+            }
+          >
             <TrackOrderForm />
           </Suspense>
         </div>
@@ -46,7 +63,7 @@ export default async function TrackOrderPage() {
             "proof-of-payment",
             "delivery-areas",
             "track-order-missing-ref",
-          ].includes(f.id)
+          ].includes(f.id),
         )}
       />
 
@@ -67,11 +84,16 @@ export default async function TrackOrderPage() {
               <p className={sectionStyles.sectionEyebrow}>Need help?</p>
               <h2>Contact Pexpacks</h2>
               <p>
-                If you cannot find your order status, reach out to the support team for assistance.
+                If you cannot find your order status, reach out to the support
+                team for assistance.
               </p>
               <div className={sectionStyles.buttonRow}>
-                <Button href="/contact" variant="primary">Contact Support</Button>
-                <Button href="/faq" variant="white">Read All FAQs</Button>
+                <Button href="/contact" variant="primary">
+                  Contact Support
+                </Button>
+                <Button href="/faq" variant="white">
+                  Read All FAQs
+                </Button>
               </div>
             </div>
             <div className={cardStyles.packCard}>
@@ -80,7 +102,8 @@ export default async function TrackOrderPage() {
               </div>
               <div className={cardStyles.packCardBody}>
                 <p className={cardStyles.packDescription}>
-                  Ready to order? Find your school pack or have your school list packed exactly as specified.
+                  Ready to order? Find your school pack or have your school list
+                  packed exactly as specified.
                 </p>
               </div>
               <div className={cardStyles.packCardButtonWrap}>

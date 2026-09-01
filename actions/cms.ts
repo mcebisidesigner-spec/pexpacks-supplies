@@ -23,21 +23,34 @@ import {
   cmsFaqSchema,
   cmsTestimonialSchema,
   cmsResourceSchema,
+  getWebsiteContent,
+  PAGE_HERO_SECTIONS,
+  saveHeroEyebrow,
+  type WebsiteContentKey,
 } from "@/lib/admin/content";
 
 export async function fetchCmsDataAction() {
   await requireAdmin({ permission: "content.manage" });
-  const [announcements, faqs, testimonials, resources] = await Promise.all([
-    listCmsAnnouncements(),
-    listCmsFaqs(),
-    listCmsTestimonials(),
-    listCmsResources(),
-  ]);
+  const [announcements, faqs, testimonials, resources, content] =
+    await Promise.all([
+      listCmsAnnouncements(),
+      listCmsFaqs(),
+      listCmsTestimonials(),
+      listCmsResources(),
+      getWebsiteContent(),
+    ]);
+  const eyebrows: Record<string, string> = {};
+  for (const section of PAGE_HERO_SECTIONS) {
+    const value = content[section.key];
+    eyebrows[section.key] =
+      typeof value?.eyebrow === "string" && value.eyebrow ? value.eyebrow : "";
+  }
   return {
     announcements,
     faqs,
     testimonials,
     resources,
+    eyebrows,
   };
 }
 
@@ -46,8 +59,14 @@ function triggerRevalidations() {
     revalidatePath("/");
     revalidatePath("/faq");
     revalidatePath("/schools");
+    revalidatePath("/track-order");
+    revalidatePath("/add-your-school");
+    revalidatePath("/partnership");
     revalidatePath("/admin/content");
-    const reval = revalidateTag as unknown as (tag: string, options?: { expire?: number }) => void;
+    const reval = revalidateTag as unknown as (
+      tag: string,
+      options?: { expire?: number },
+    ) => void;
     reval("public-cms", { expire: 0 });
     reval("cms-announcements", { expire: 0 });
     reval("cms-faqs", { expire: 0 });
@@ -70,12 +89,15 @@ export async function saveAnnouncementAction(
     link_label?: string;
     display_location: "global_top" | "hero_banner" | "schools_page";
     is_active: boolean;
-  }
+  },
 ) {
   await requireAdmin({ permission: "content.manage" });
   const parsed = cmsAnnouncementSchema.safeParse(payload);
   if (!parsed.success) {
-    return { ok: false, message: parsed.error.issues[0]?.message || "Validation failed" };
+    return {
+      ok: false,
+      message: parsed.error.issues[0]?.message || "Validation failed",
+    };
   }
 
   const res = await saveCmsAnnouncement(parsed.data, id || undefined);
@@ -90,9 +112,19 @@ export async function deleteAnnouncementAction(id: string) {
   return res;
 }
 
-export async function toggleAnnouncementActiveAction(id: string, is_active: boolean) {
+export async function toggleAnnouncementActiveAction(
+  id: string,
+  is_active: boolean,
+) {
   await requireAdmin({ permission: "content.manage" });
   const res = await toggleCmsAnnouncementActive(id, is_active);
+  if (res.ok) triggerRevalidations();
+  return res;
+}
+
+export async function saveHeroEyebrowAction(key: string, eyebrow: string) {
+  await requireAdmin({ permission: "content.manage" });
+  const res = await saveHeroEyebrow(key as WebsiteContentKey, eyebrow);
   if (res.ok) triggerRevalidations();
   return res;
 }
@@ -108,12 +140,15 @@ export async function saveFaqAction(
     answer: string;
     sort_order?: number;
     is_published: boolean;
-  }
+  },
 ) {
   await requireAdmin({ permission: "content.manage" });
   const parsed = cmsFaqSchema.safeParse(payload);
   if (!parsed.success) {
-    return { ok: false, message: parsed.error.issues[0]?.message || "Validation failed" };
+    return {
+      ok: false,
+      message: parsed.error.issues[0]?.message || "Validation failed",
+    };
   }
 
   const res = await saveCmsFaq(parsed.data, id || undefined);
@@ -128,7 +163,10 @@ export async function deleteFaqAction(id: string) {
   return res;
 }
 
-export async function toggleFaqPublishedAction(id: string, is_published: boolean) {
+export async function toggleFaqPublishedAction(
+  id: string,
+  is_published: boolean,
+) {
   await requireAdmin({ permission: "content.manage" });
   const res = await toggleCmsFaqPublished(id, is_published);
   if (res.ok) triggerRevalidations();
@@ -149,12 +187,15 @@ export async function saveTestimonialAction(
     avatar_url?: string;
     is_featured: boolean;
     sort_order?: number;
-  }
+  },
 ) {
   await requireAdmin({ permission: "content.manage" });
   const parsed = cmsTestimonialSchema.safeParse(payload);
   if (!parsed.success) {
-    return { ok: false, message: parsed.error.issues[0]?.message || "Validation failed" };
+    return {
+      ok: false,
+      message: parsed.error.issues[0]?.message || "Validation failed",
+    };
   }
 
   const res = await saveCmsTestimonial(parsed.data, id || undefined);
@@ -169,7 +210,10 @@ export async function deleteTestimonialAction(id: string) {
   return res;
 }
 
-export async function toggleTestimonialFeaturedAction(id: string, is_featured: boolean) {
+export async function toggleTestimonialFeaturedAction(
+  id: string,
+  is_featured: boolean,
+) {
   await requireAdmin({ permission: "content.manage" });
   const res = await toggleCmsTestimonialFeatured(id, is_featured);
   if (res.ok) triggerRevalidations();
@@ -190,12 +234,15 @@ export async function saveResourceAction(
     file_size_label?: string;
     sort_order?: number;
     is_public: boolean;
-  }
+  },
 ) {
   await requireAdmin({ permission: "content.manage" });
   const parsed = cmsResourceSchema.safeParse(payload);
   if (!parsed.success) {
-    return { ok: false, message: parsed.error.issues[0]?.message || "Validation failed" };
+    return {
+      ok: false,
+      message: parsed.error.issues[0]?.message || "Validation failed",
+    };
   }
 
   const res = await saveCmsResource(parsed.data, id || undefined);
@@ -210,7 +257,10 @@ export async function deleteResourceAction(id: string) {
   return res;
 }
 
-export async function toggleResourcePublicAction(id: string, is_public: boolean) {
+export async function toggleResourcePublicAction(
+  id: string,
+  is_public: boolean,
+) {
   await requireAdmin({ permission: "content.manage" });
   const res = await toggleCmsResourcePublic(id, is_public);
   if (res.ok) triggerRevalidations();

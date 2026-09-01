@@ -9,6 +9,7 @@
     "build:webpack": "next build --webpack",
     "start": "next start",
     "lint": "eslint . && tsc --noEmit",
+    "db:link": "node scripts/ensure-supabase-linked.cjs",
     "db:lint": "supabase db lint --local --schema public --level warning --fail-on error",
     "check:images": "node scripts/check-image-budget.cjs",
     "format": "prettier --write .",

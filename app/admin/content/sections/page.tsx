@@ -13,7 +13,10 @@ export const metadata = {
 export default async function ContentSectionsPage() {
   const session = await requireAdmin({ permission: "content.view" });
   const sections = await contentSections();
-  const values = (await getWebsiteContent()) as Record<string, Record<string, unknown>>;
+  const values = (await getWebsiteContent()) as Record<
+    string,
+    Record<string, unknown>
+  >;
   const canManage = hasPermission(session, "content.manage");
 
   return (
@@ -22,8 +25,9 @@ export default async function ContentSectionsPage() {
         <div>
           <h1 className={adminStyles.pageTitle}>Content sections</h1>
           <p className={styles.subtitle}>
-            Site-wide copy for the homepage, announcement bar, footer and SEO defaults.
-            Changes publish to the live site immediately.
+            Site-wide copy for the homepage, page heroes, announcement bar,
+            footer and SEO defaults. Changes publish to the live site
+            immediately.
           </p>
         </div>
       </div>

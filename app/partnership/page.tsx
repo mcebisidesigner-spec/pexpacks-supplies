@@ -4,6 +4,7 @@ import { PartnerForm } from '@/components/forms/PartnerForm'
 import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
 import { getPublicSchoolIndex } from '@/lib/schools/publicSchoolData'
+import { getWebsiteContent } from '@/lib/cms'
 import { buildMetadata } from '@/lib/seo'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import cardStyles from '@/components/marketing/MarketingCards.module.css'
@@ -79,7 +80,15 @@ export const metadata: Metadata = buildMetadata(
 export const dynamic = 'force-static'
 
 export default async function PartnerWithSchoolsPage() {
-  const schoolIndex = await getPublicSchoolIndex()
+  const [schoolIndex, content] = await Promise.all([
+    getPublicSchoolIndex(),
+    getWebsiteContent(),
+  ])
+  const hero = content['partnership.hero']
+  const heroEyebrow =
+    typeof hero.eyebrow === 'string' && hero.eyebrow
+      ? hero.eyebrow
+      : 'Partner with us'
   const partnerCount = schoolIndex.filter((school) => school.isPartnerSchool)
     .length
 
@@ -93,7 +102,7 @@ export default async function PartnerWithSchoolsPage() {
   return (
     <>
       <PageHero
-        eyebrow="Partner with us"
+        eyebrow={heroEyebrow}
         title="Free school website + stationery fundraising."
         text="Become an official Pexpacks partner. We build and host your school's website and parent ordering portal for free — and your school earns 1.5% on every pack sold."
         panelTitle="What your school gets"
