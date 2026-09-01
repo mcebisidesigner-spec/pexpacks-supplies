@@ -41,6 +41,7 @@ interface PackItem {
   slug?: string | null;
   price: number;
   item_count: number;
+  total_quantity?: number;
   visible: boolean;
   featured?: boolean;
   updated_at?: string;
@@ -200,7 +201,11 @@ export function SchoolPacksDetailView({
   const lastUpdatedPack = useMemo(() => {
     return [...tailoredPacks]
       .filter((pack) => Boolean(pack.updated_at))
-      .sort((a, b) => new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime())[0];
+      .sort(
+        (a, b) =>
+          new Date(b.updated_at || 0).getTime() -
+          new Date(a.updated_at || 0).getTime(),
+      )[0];
   }, [tailoredPacks]);
 
   const lastUpdatedLabel = lastUpdatedPack?.updated_at
@@ -213,7 +218,7 @@ export function SchoolPacksDetailView({
     let totalRevenue = 0;
     for (const p of tailoredPacks) {
       if (p.visible) publishedPacks++;
-      totalItemsCount += p.item_count || 0;
+      totalItemsCount += p.total_quantity || 0;
       totalRevenue += p.price || 0;
     }
     return { publishedPacks, totalItemsCount, totalRevenue };
@@ -386,7 +391,9 @@ export function SchoolPacksDetailView({
                 <span className={adminStyles.sidebarStatLabel}>
                   Last Activity
                 </span>
-                <span className={adminStyles.sidebarStatVal}>{lastUpdatedLabel}</span>
+                <span className={adminStyles.sidebarStatVal}>
+                  {lastUpdatedLabel}
+                </span>
               </div>
             </div>
           </div>

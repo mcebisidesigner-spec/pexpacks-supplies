@@ -304,7 +304,6 @@ export async function listPacks(
   };
 }
 
-
 type PackSchoolGroupRpcRow = {
   school_id: string;
   school_name: string;
@@ -366,13 +365,10 @@ export async function listSchoolGroupedSummary(
   const q = (filters.q || "").replace(/%/g, "").trim();
 
   const rpc = admin.rpc.bind(admin) as unknown as PackGroupsRpc;
-  const { data, error } = await rpc(
-    "get_all_pack_school_groups_json",
-    {
-      q: q || null,
-      visible_filter: filters.visible || null,
-    },
-  );
+  const { data, error } = await rpc("get_all_pack_school_groups_json", {
+    q: q || null,
+    visible_filter: filters.visible || null,
+  });
 
   if (error) {
     throw new Error(
@@ -405,7 +401,9 @@ export async function listSchoolGroupedSummary(
         pack_items_count: packItems,
         has_items: hasItems,
         last_edited: row.last_edited ?? "",
-        visible: !isRefused && (row.visible !== undefined ? Boolean(row.visible) : isPartner),
+        visible:
+          !isRefused &&
+          (row.visible !== undefined ? Boolean(row.visible) : isPartner),
       };
     });
 
@@ -524,11 +522,11 @@ export async function getPack(
       decoded,
     );
 
-  let query = (admin
-    .from("school_packs") as never as ReturnType<typeof admin.from>)
-    .select(
-      "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector,season_id,list_version,pricing_status,fulfilment_deadline,items_cost,packaging_cost,assembly_cost,freight_cost,other_cost,total_landed_cost,margin_rate_used,calculated_selling_price" as never,
-    );
+  let query = (
+    admin.from("school_packs") as never as ReturnType<typeof admin.from>
+  ).select(
+    "id,school_id,title,slug,description,price,stock,featured,visible,academic_year,delivery_type,pack_image,sort_order,created_by,updated_by,created_at,updated_at,search_vector,season_id,list_version,pricing_status,fulfilment_deadline,items_cost,packaging_cost,assembly_cost,freight_cost,other_cost,total_landed_cost,margin_rate_used,calculated_selling_price" as never,
+  );
   if (isUuid) {
     query = query.eq("id" as never, decoded as never);
   } else {
@@ -541,7 +539,11 @@ export async function getPack(
     );
   }
 
-  const { data: pack, error } = await (query as unknown as { maybeSingle: () => Promise<{ data: PackRow | null; error: unknown }> }).maybeSingle();
+  const { data: pack, error } = await (
+    query as unknown as {
+      maybeSingle: () => Promise<{ data: PackRow | null; error: unknown }>;
+    }
+  ).maybeSingle();
   if (error || !pack) return { pack: null, items: [] };
 
   const { data: items, error: itemsError } = await admin
@@ -870,6 +872,41 @@ export async function updatePackPrice(
   return { ok: true };
 }
 
+export async function recalculatePackPrice(
+  id: string,
+): Promise<{ ok: boolean; price?: number; message?: string }> {
+  const actor = await assertCan("packs.edit");
+  const admin = createSupabaseAdminClient();
+
+  const { data, error } = await admin.rpc(
+    "recalculate_grade_pack_price" as never,
+    {
+      p_pack_id: id,
+    } as never,
+  );
+
+  if (error) {
+    console.error("[packs] recalculate_grade_pack_price failed:", error);
+    return { ok: false, message: "Failed to recalculate pack price." };
+  }
+
+  const calculatedPrice = Number(
+    (data as Record<string, unknown>)?.calculated_selling_price ?? 0,
+  );
+
+  void writeAuditLog({
+    actorId: actor.user.id,
+    actorName: actor.user.email,
+    action: "packs.edit",
+    entityType: "pack",
+    entityId: id,
+    summary: `Recalculated automated price for pack (R ${calculatedPrice.toFixed(2)})`,
+  });
+
+  revalidateCatalog();
+  return { ok: true, price: calculatedPrice };
+}
+
 export async function setPackVisible(
   id: string,
   visible: boolean,
@@ -898,7 +935,8 @@ export async function setPackVisible(
     summary: `Set pack "${updated.title}" visibility to ${updated.visible ? "visible" : "hidden"}`,
   });
 
-  const schoolSlug = (updated as { schools?: { slug?: string } | null })?.schools?.slug;
+  const schoolSlug = (updated as { schools?: { slug?: string } | null })
+    ?.schools?.slug;
   revalidateCatalog({ schoolSlug, packSlug: updated.slug || updated.id });
 
   return { ok: true };

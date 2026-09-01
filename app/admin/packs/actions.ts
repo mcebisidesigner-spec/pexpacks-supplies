@@ -8,6 +8,7 @@ import {
   createPack,
   updatePack,
   updatePackPrice,
+  recalculatePackPrice,
   deletePack,
   duplicatePack,
   setPackVisible,
@@ -78,7 +79,31 @@ export async function updatePackPriceAction(
   formData: FormData,
 ): Promise<PackFormState> {
   await requireAdmin({ permission: "packs.edit" });
+
+  const shouldRecalculate = formData.get("recalculate") === "true";
   const rawPrice = formData.get("price");
+
+  if (shouldRecalculate || !rawPrice) {
+    const result = await recalculatePackPrice(id);
+    if (!result.ok) {
+      return {
+        ok: false,
+        errors: { price: result.message ?? "Failed to recalculate price." },
+      };
+    }
+    revalidateCatalog();
+    revalidatePath(`/admin/packs/${id}`);
+    revalidatePath("/admin/packs");
+    revalidatePath("/schools");
+    revalidatePath("/", "layout");
+    const path = await getPublicGradePackPath(id);
+    if (path) revalidatePath(path);
+    return {
+      ok: true,
+      message: `Price recalculated and synced (R ${(result.price ?? 0).toFixed(2)}).`,
+    };
+  }
+
   const price = typeof rawPrice === "string" ? Number(rawPrice) : Number.NaN;
   if (!Number.isFinite(price)) {
     return { ok: false, errors: { price: "Enter a valid price." } };

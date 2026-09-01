@@ -162,7 +162,7 @@ export default async function PackOrSchoolPacksPage({
           <PackPriceForm
             formId={priceFormId}
             packId={pack.id}
-            price={pack.price}
+            price={pack.calculated_selling_price ?? pack.price}
             itemCount={itemCount}
             subtotal={subtotal}
             schoolName={schoolName}

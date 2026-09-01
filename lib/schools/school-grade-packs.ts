@@ -5,8 +5,9 @@ export function isHighSchool(name: string): boolean {
   if (!name) return false;
   // High schools, secondary schools, hoërskole, colleges, academies without primary in name
   return (
-    /\b(high(\s*school)?|ho[eë]rskool|secondary(\s*school)?|academy|college)\b/i.test(name) &&
-    !/\b(primary|laerskool|prep|preparatory|pre-primary)\b/i.test(name)
+    /\b(high(\s*school)?|ho[eë]rskool|secondary(\s*school)?|academy|college)\b/i.test(
+      name,
+    ) && !/\b(primary|laerskool|prep|preparatory|pre-primary)\b/i.test(name)
   );
 }
 
@@ -14,20 +15,22 @@ export function isPrimarySchool(name: string): boolean {
   if (!name) return false;
   // Primary schools, laerskole, preparatory schools, junior schools
   return (
-    /\b(primary(\s*school)?|laerskool|prep|preparatory|pre-primary|junior(\s*school)?)\b/i.test(name) &&
-    !/\b(high|ho[eë]rskool|secondary)\b/i.test(name)
+    /\b(primary(\s*school)?|laerskool|prep|preparatory|pre-primary|junior(\s*school)?)\b/i.test(
+      name,
+    ) && !/\b(high|ho[eë]rskool|secondary)\b/i.test(name)
   );
 }
 
 export function getTailoredGradesForSchool(
-  schoolOrName: { name: string; grades?: unknown } | string
+  schoolOrName: { name: string; grades?: unknown } | string,
 ): string[] {
   if (typeof schoolOrName === "object" && schoolOrName !== null) {
     if (Array.isArray(schoolOrName.grades) && schoolOrName.grades.length > 0) {
       const list = schoolOrName.grades
         .map((g) => {
           if (typeof g === "string") return g;
-          if (g && typeof g === "object" && "grade" in g) return String((g as { grade?: unknown }).grade);
+          if (g && typeof g === "object" && "grade" in g)
+            return String((g as { grade?: unknown }).grade);
           return "";
         })
         .filter(Boolean);
@@ -119,7 +122,9 @@ export function buildTailoredAdminPacks(
       matchedPacks.push({
         id: existing.id,
         title: existing.title,
-        slug: existing.slug || `${school.slug || school.id}-${gradeLabel.toLowerCase().replace(/\s+/g, "-")}`,
+        slug:
+          existing.slug ||
+          `${school.slug || school.id}-${gradeLabel.toLowerCase().replace(/\s+/g, "-")}`,
         price: existing.price ?? 0,
         item_count: existing.item_count ?? 0,
         total_quantity: existing.total_quantity ?? 0,
@@ -137,6 +142,7 @@ export function buildTailoredAdminPacks(
         slug: `${school.slug || school.id}-${slugKey}`,
         price: 0,
         item_count: 0,
+        total_quantity: 0,
         visible: false,
         is_configured: false,
         grade_label: `${gradeLabel} – Stationery Pack`,
@@ -153,6 +159,7 @@ export function buildTailoredAdminPacks(
         slug: extra.slug || extra.id,
         price: extra.price ?? 0,
         item_count: extra.item_count ?? 0,
+        total_quantity: extra.total_quantity ?? 0,
         visible: Boolean(extra.visible),
         featured: extra.featured,
         updated_at: extra.updated_at,
@@ -162,7 +169,9 @@ export function buildTailoredAdminPacks(
     }
   }
 
-  return matchedPacks.sort((a, b) => getGradeOrder(a.grade_label) - getGradeOrder(b.grade_label));
+  return matchedPacks.sort(
+    (a, b) => getGradeOrder(a.grade_label) - getGradeOrder(b.grade_label),
+  );
 }
 
 export function buildTailoredPublicGrades(

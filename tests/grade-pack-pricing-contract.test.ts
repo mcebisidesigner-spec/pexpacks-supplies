@@ -63,4 +63,10 @@ describe("Grade Pack pricing contract", () => {
     expect(result.pexcoverTotalCents).toBe(1000);
     expect(result.pexcoverTotalRands).toBe(10);
   });
+
+  it("does not default targetPrice to raw items subtotal in PackPriceForm and triggers recalculation", () => {
+    const packPriceForm = readRepoFile("components/admin/packs/PackPriceForm.tsx");
+    expect(packPriceForm).not.toContain("suggested ?? price");
+    expect(packPriceForm).toContain('name="recalculate"');
+  });
 });

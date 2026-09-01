@@ -71,8 +71,7 @@ export function PackPriceForm({
   }, [packTitle]);
 
   const [selectedGrade, setSelectedGrade] = useState<string>(initialGrade);
-  const suggested = subtotal != null ? Math.round(subtotal * 100) / 100 : null;
-  const targetPrice = suggested ?? price;
+  const targetPrice = price > 0 ? price : (subtotal != null ? Math.round(subtotal * 100) / 100 : 0);
   const [value, setValue] = useState<string>(String(targetPrice));
 
   useEffect(() => {
@@ -82,6 +81,7 @@ export function PackPriceForm({
   return (
     <div className={`${adminStyles.tableCard} ${styles.priceCard}`}>
       <form id={formId} action={formAction}>
+        <input type="hidden" name="recalculate" value="true" />
         <input type="hidden" name="price" value={value} readOnly />
         <div className={styles.priceHeader}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
