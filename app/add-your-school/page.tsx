@@ -29,7 +29,7 @@ export default async function AddYourSchoolPage() {
     <>
       <PageHero
         eyebrow={heroEyebrow}
-        title="Is your school not an official partner yet? Add your school now."
+        title={heroTitle}
         panelText="Need a pack today?"
         panelTitle="Use a standard grade combo while your school list is being reviewed."
       >

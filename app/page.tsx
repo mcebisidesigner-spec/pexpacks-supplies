@@ -41,6 +41,16 @@ export default async function HomePage() {
       ? hero.lead
       : 'Your official school stationery list, perfectly packed and delivered.'
   const featuredTestimonial = testimonials[0] ?? confirmedTestimonials[0]
+  const homepageFaqs = allFaqs.filter((f) =>
+    [
+      'school-not-listed',
+      'delivery-timing',
+      'exercise-books',
+      'payment-flow',
+      'find-grade-pack',
+    ].includes(f.id),
+  )
+  const visibleHomepageFaqs = homepageFaqs.length > 0 ? homepageFaqs : allFaqs.slice(0, 5)
   return (
     <>
       <section className={heroStyles.heroNavy}>
@@ -213,17 +223,7 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <FaqMarquee
-        faqs={allFaqs.filter((f) =>
-          [
-            'school-not-listed',
-            'delivery-timing',
-            'exercise-books',
-            'payment-flow',
-            'find-grade-pack',
-          ].includes(f.id),
-        )}
-      />
+      <FaqMarquee faqs={visibleHomepageFaqs} />
     </>
   )
 }

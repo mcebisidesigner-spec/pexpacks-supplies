@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { listBlogPosts } from "@/lib/blog";
+import { getPublicCmsResources } from "@/lib/cms";
 import styles from "./Blog.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import { buildMetadata } from "@/lib/seo";
@@ -21,7 +22,10 @@ import { SubscribeForm } from "./SubscribeForm";
 export const revalidate = 300;
 
 export default async function BlogIndex() {
-  const posts = await listBlogPosts();
+  const [posts, resources] = await Promise.all([
+    listBlogPosts(),
+    getPublicCmsResources(),
+  ]);
 
   return (
     <>
@@ -48,6 +52,28 @@ export default async function BlogIndex() {
           <div className={styles.stickySidebar}>
             {/* WIDGET 1: GAUTENG SCHOOL PACK SEARCH */}
             <SchoolSearchWidget headingLevel="h3" />
+
+            {resources.length > 0 ? (
+              <div className={styles.resourceHubCard}>
+                <span className={styles.resourceHubEyebrow}>Resource Hub</span>
+                <h3 className={styles.resourceHubTitle}>Live parent resources</h3>
+                <div className={styles.resourceHubList}>
+                  {resources.slice(0, 4).map((resource) => (
+                    <Link
+                      key={resource.id}
+                      href={resource.file_url}
+                      className={styles.resourceHubLink}
+                    >
+                      <span>
+                        <strong>{resource.title}</strong>
+                        {resource.description ? <small>{resource.description}</small> : null}
+                      </span>
+                      <em>{resource.file_type}</em>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             {/* WIDGET 2: 100% CORRECT PACK GUARANTEE */}
             <div className={styles.guaranteeCard}>

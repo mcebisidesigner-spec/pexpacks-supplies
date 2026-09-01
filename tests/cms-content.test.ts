@@ -104,4 +104,55 @@ describe("Pexpacks Content CMS Module", () => {
     expect(CMS_TAGS.faqs).toBe("cms-faqs");
     expect(CMS_TAGS.testimonials).toBe("cms-testimonials");
   });
-});
+
+  it("wires storefront FAQ and testimonial readers to the unified CMS tables first", () => {
+    const cms = readRepoFile("lib/cms.ts");
+    expect(cms).toContain('.from("cms_faqs")');
+    expect(cms).toContain('.eq("is_published", true)');
+    expect(cms).toContain('.from("cms_testimonials")');
+    expect(cms).toContain('.eq("is_featured", true)');
+    expect(cms).toContain('"/blog"');
+    expect(cms).toContain('"/schools"');
+    expect(cms).toContain('"/partnership"');
+  });
+
+  it("links the public blog resource hub to published CMS resources", () => {
+    const blogPage = readRepoFile("app/blog/page.tsx");
+    const blogStyles = readRepoFile("app/blog/Blog.module.css");
+    const actions = readRepoFile("actions/cms.ts");
+    const adminContent = readRepoFile("lib/admin/content.ts");
+
+    expect(blogPage).toContain("getPublicCmsResources");
+    expect(blogPage).toContain("resources.slice(0, 4)");
+    expect(blogPage).toContain("href={resource.file_url}");
+    expect(blogStyles).toContain(".resourceHubCard");
+    expect(actions).toContain('revalidatePath("/blog")');
+    expect(adminContent).toContain('revalidatePath("/blog")');
+  });
+
+  it("keeps public page H1 titles and eyebrows connected to website_content", () => {
+    for (const page of [
+      "app/schools/page.tsx",
+      "app/faq/page.tsx",
+      "app/track-order/page.tsx",
+      "app/add-your-school/page.tsx",
+      "app/partnership/page.tsx",
+    ]) {
+      const source = readRepoFile(page);
+      expect(source).toContain("hero.eyebrow");
+      expect(source).toContain("hero.title");
+      expect(source).toContain("title={heroTitle}");
+    }
+  });
+
+  it("restricts direct CMS table writes to content managers", () => {
+    const migration = readRepoFile(
+      "supabase/migrations/00090_harden_cms_admin_policies.sql",
+    );
+    expect(migration).toContain('public.has_permission(''content.manage'')');
+    expect(migration).toContain('DROP POLICY IF EXISTS "Admin full CMS access"');
+    expect(migration).toContain('CREATE POLICY "CMS managers write announcements"');
+    expect(migration).toContain('CREATE POLICY "CMS managers write FAQs"');
+    expect(migration).toContain('CREATE POLICY "CMS managers write testimonials"');
+    expect(migration).toContain('CREATE POLICY "CMS managers write resources"');
+  });});

@@ -34,13 +34,15 @@ export default async function SchoolsPage() {
     typeof hero.eyebrow === "string" && hero.eyebrow
       ? hero.eyebrow
       : "Pack finder";
+  const heroTitle =
+    typeof hero.title === "string" && hero.title ? hero.title : "Find your pack";
 
   return (
     <>
       <div id="schools-search">
         <PageHero
           eyebrow={heroEyebrow}
-          title="Find your pack"
+          title={heroTitle}
           panelTitle="Fast delivery anywhere in Gauteng"
           panelText="Each pack is packed according to your&nbsp; school&rsquo;s official stationery list."
           panelClassName={heroStyles.heroPanelSearchAligned}

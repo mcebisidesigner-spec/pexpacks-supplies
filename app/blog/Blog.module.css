@@ -557,6 +557,82 @@
   gap: var(--space-6);
 }
 
+
+.resourceHubCard {
+  border: 1px solid rgba(33, 158, 154, 0.18);
+  border-radius: var(--radius-card, 20px);
+  padding: var(--space-5);
+  background: #ffffff;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.resourceHubEyebrow {
+  color: var(--pex-keppel);
+  font-family: var(--font-button);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.resourceHubTitle {
+  color: var(--pex-navy);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.resourceHubList {
+  display: grid;
+  gap: 10px;
+}
+
+.resourceHubLink {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--pex-border);
+  color: var(--pex-navy);
+  text-decoration: none;
+}
+
+.resourceHubLink strong,
+.resourceHubLink small {
+  display: block;
+  min-width: 0;
+}
+
+.resourceHubLink strong {
+  font-size: 13.5px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.resourceHubLink small {
+  color: var(--pex-text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+  margin-top: 4px;
+}
+
+.resourceHubLink em {
+  border-radius: 999px;
+  background: rgba(33, 158, 154, 0.1);
+  color: var(--pex-keppel);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 800;
+  padding: 5px 8px;
+  text-transform: uppercase;
+}
+
+.resourceHubLink:hover strong {
+  color: var(--pex-keppel);
+}
 .guaranteeCard {
   background: linear-gradient(135deg, rgba(33, 158, 154, 0.03), rgba(26, 42, 64, 0.01));
   border: 1px solid rgba(33, 158, 154, 0.15);

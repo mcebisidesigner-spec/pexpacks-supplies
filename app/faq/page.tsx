@@ -24,12 +24,16 @@ export default async function FAQPage() {
     typeof hero.eyebrow === "string" && hero.eyebrow
       ? hero.eyebrow
       : "Got questions?";
+  const heroTitle =
+    typeof hero.title === "string" && hero.title
+      ? hero.title
+      : "Answers without the back-and-forth";
   return (
     <>
       <JsonLd data={faqPageSchema(faqs)} />
       <PageHero
         eyebrow={heroEyebrow}
-        title="Answers without the back-and-forth"
+        title={heroTitle}
         panelTitle={`${faqs.length} practical answers`}
         panelText="Start with a category, open what matters, and jump straight to the next action."
       />

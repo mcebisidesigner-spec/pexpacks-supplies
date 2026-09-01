@@ -1421,6 +1421,7 @@ export async function saveCmsResource(
     }
 
     revalidateTag(CMS_TAGS.resources, { expire: 0 });
+    revalidatePath("/blog");
     revalidatePath("/admin/content");
     return { ok: true, message: "Resource saved." };
   } catch (err) {
@@ -1447,6 +1448,7 @@ export async function deleteCmsResource(id: string): Promise<ContentFormState> {
   });
 
   revalidateTag(CMS_TAGS.resources, { expire: 0 });
+  revalidatePath("/blog");
   revalidatePath("/admin/content");
   return { ok: true, message: "Resource deleted." };
 }
@@ -1474,6 +1476,7 @@ export async function toggleCmsResourcePublic(
   });
 
   revalidateTag(CMS_TAGS.resources, { expire: 0 });
+  revalidatePath("/blog");
   revalidatePath("/admin/content");
   return { ok: true };
 }

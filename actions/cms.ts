@@ -57,6 +57,7 @@ export async function fetchCmsDataAction() {
 function triggerRevalidations() {
   try {
     revalidatePath("/");
+    revalidatePath("/blog");
     revalidatePath("/faq");
     revalidatePath("/schools");
     revalidatePath("/track-order");

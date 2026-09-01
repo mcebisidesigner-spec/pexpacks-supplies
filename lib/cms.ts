@@ -21,7 +21,10 @@ export const CMS_TAGS = {
 /** Public routes that render testimonials / FAQs from the CMS. */
 export const CMS_PUBLIC_PATHS = [
   "/",
+  "/blog",
   "/faq",
+  "/partnership",
+  "/schools",
   "/track-order",
   "/add-your-school",
 ] as const;
@@ -95,6 +98,29 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 async function fetchTestimonials(): Promise<Testimonial[]> {
   const admin = createSupabaseAdminClient();
+  const { data: cmsData, error: cmsError } = await admin
+    .from("cms_testimonials")
+    .select("id, author_name, author_role, quote, rating, avatar_url")
+    .eq("is_featured", true)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (cmsError) {
+    console.error("[cms] cms_testimonials:", cmsError);
+  }
+
+  if (cmsData && cmsData.length > 0) {
+    return cmsData.map((row) => ({
+      id: row.id,
+      name: row.author_name,
+      role: row.author_role,
+      context: "",
+      quote: row.quote,
+      avatar: row.avatar_url ?? undefined,
+      rating: row.rating,
+    }));
+  }
+
   const { data, error } = await admin
     .from("testimonials")
     .select("id, name, role, context, quote, avatar, rating")
@@ -119,6 +145,26 @@ async function fetchTestimonials(): Promise<Testimonial[]> {
 
 async function fetchFaqs(): Promise<FAQ[]> {
   const admin = createSupabaseAdminClient();
+  const { data: cmsData, error: cmsError } = await admin
+    .from("cms_faqs")
+    .select("id, category, question, answer, sort_order")
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (cmsError) {
+    console.error("[cms] cms_faqs:", cmsError);
+  }
+
+  if (cmsData && cmsData.length > 0) {
+    return cmsData.map((row) => ({
+      id: row.id,
+      category: (row.category || "general") as FAQ["category"],
+      question: row.question,
+      answer: row.answer,
+    }));
+  }
+
   const { data, error } = await admin
     .from("faqs")
     .select("id, slug, question, answer, category, links")

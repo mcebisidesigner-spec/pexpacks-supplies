@@ -103,7 +103,7 @@ export default async function PartnerWithSchoolsPage() {
     <>
       <PageHero
         eyebrow={heroEyebrow}
-        title="Free school website + stationery fundraising."
+        title={heroTitle}
         text="Become an official Pexpacks partner. We build and host your school's website and parent ordering portal for free — and your school earns 1.5% on every pack sold."
         panelTitle="What your school gets"
         panelText="Free website, hosting, SSL, parent portal & 1.5% rebate"

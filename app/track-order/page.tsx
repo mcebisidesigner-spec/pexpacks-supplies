@@ -25,11 +25,29 @@ export default async function TrackOrderPage() {
     typeof hero.eyebrow === "string" && hero.eyebrow
       ? hero.eyebrow
       : "Track your pack";
+  const heroTitle =
+    typeof hero.title === "string" && hero.title
+      ? hero.title
+      : "Check your stationery pack status";
+  const trackingFaqs = faqs.filter((f) =>
+    [
+      "track-order-how",
+      "track-order-status-meaning",
+      "delivery-timing",
+      "order-changes",
+      "proof-of-payment",
+      "delivery-areas",
+      "track-order-missing-ref",
+    ].includes(f.id),
+  );
+  const visibleTrackingFaqs =
+    trackingFaqs.length > 0 ? trackingFaqs : faqs.slice(0, 5);
+
   return (
     <>
       <PageHero
         eyebrow={heroEyebrow}
-        title="Check your stationery pack status"
+        title={heroTitle}
         panelTitle="Order Tracking"
         panelText="Stay updated on your pack."
       />
@@ -53,19 +71,7 @@ export default async function TrackOrderPage() {
         </div>
       </section>
 
-      <FaqMarquee
-        faqs={faqs.filter((f) =>
-          [
-            "track-order-how",
-            "track-order-status-meaning",
-            "delivery-timing",
-            "order-changes",
-            "proof-of-payment",
-            "delivery-areas",
-            "track-order-missing-ref",
-          ].includes(f.id),
-        )}
-      />
+      <FaqMarquee faqs={visibleTrackingFaqs} />
 
       <CTASection
         eyebrow="Need another?"
