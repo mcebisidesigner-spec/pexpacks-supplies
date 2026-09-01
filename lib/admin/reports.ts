@@ -63,11 +63,7 @@ export function parseRange(from?: string, to?: string): ReportRange {
 async function rpc<T>(name: string, args: Record<string, unknown>): Promise<T | null> {
   try {
     const admin = createSupabaseAdminClient();
-    const call = admin.rpc as unknown as (
-      fn: string,
-      params: Record<string, unknown>
-    ) => Promise<{ data: unknown; error: unknown }>;
-    const { data, error } = await call(name, args);
+    const { data, error } = await admin.rpc(name as never, args as never);
     if (error) {
       console.error(`[reports] ${name} failed:`, error);
       return null;

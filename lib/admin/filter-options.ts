@@ -11,12 +11,9 @@ type FilterOptions = {
 async function fetchFilterOptions(): Promise<FilterOptions> {
   try {
     const admin = createSupabaseAdminClient();
-    const rpc = admin.rpc as unknown as (
-      fn: string
-    ) => Promise<{ data: FilterOptions | null; error: unknown }>;
-    const { data, error } = await rpc("get_admin_filter_options");
+    const { data, error } = await admin.rpc("get_admin_filter_options" as never);
     if (error || !data) return {};
-    return data;
+    return data as FilterOptions;
   } catch {
     return {};
   }
