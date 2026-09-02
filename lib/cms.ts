@@ -100,6 +100,7 @@ type PublicCmsTestimonialRpcRow = {
   id: string;
   author_name: string;
   author_role: string;
+  school_name: string | null;
   quote: string;
   rating: number | null;
   avatar_url: string | null;
@@ -121,7 +122,8 @@ async function fetchTestimonials(): Promise<Testimonial[]> {
       id: row.id,
       name: row.author_name,
       role: row.author_role,
-      context: "",
+      schoolName: row.school_name ?? undefined,
+      context: row.school_name ?? "",
       quote: row.quote,
       avatar: row.avatar_url ?? undefined,
       rating: row.rating ?? 5,
@@ -334,6 +336,7 @@ export const getFeaturedCmsTestimonials = unstable_cache(
 
 export interface PublicCmsResource {
   id: string;
+  kind: "file" | "article";
   title: string;
   description: string | null;
   category: string;
@@ -341,6 +344,12 @@ export interface PublicCmsResource {
   file_type: string;
   file_size_label: string | null;
   download_count: number;
+  slug: string | null;
+  author: string | null;
+  image: string | null;
+  content: string[] | null;
+  published_at: string | null;
+  sort_order: number | null;
 }
 
 async function fetchPublicCmsResources(): Promise<PublicCmsResource[]> {
@@ -352,7 +361,26 @@ async function fetchPublicCmsResources(): Promise<PublicCmsResource[]> {
     return [];
   }
 
-  return (data as unknown as PublicCmsResource[] | null) ?? [];
+  const rows = (data as unknown as Array<Record<string, unknown>> | null) ?? [];
+  return rows.map((row) => ({
+    id: String(row.id),
+    kind: row.kind === "article" ? "article" : "file",
+    title: String(row.title ?? ""),
+    description: (row.description as string | null) ?? null,
+    category: String(row.category ?? ""),
+    file_url: String(row.file_url ?? ""),
+    file_type: String(row.file_type ?? ""),
+    file_size_label: (row.file_size_label as string | null) ?? null,
+    download_count: Number(row.download_count ?? 0),
+    slug: (row.slug as string | null) ?? null,
+    author: (row.author as string | null) ?? null,
+    image: (row.image as string | null) ?? null,
+    content: Array.isArray(row.content)
+      ? (row.content as unknown[]).map((line) => String(line))
+      : null,
+    published_at: (row.published_at as string | null) ?? null,
+    sort_order: row.sort_order == null ? null : Number(row.sort_order),
+  }));
 }
 
 export const getPublicCmsResources = unstable_cache(
@@ -363,3 +391,37 @@ export const getPublicCmsResources = unstable_cache(
     tags: [CMS_TAGS.resources],
   },
 );
+
+/** Articles (blog posts) living in the unified Resource Hub. */
+export interface PublicCmsArticle extends PublicCmsResource {
+  kind: "article";
+  slug: string;
+  title: string;
+  excerpt: string;
+}
+
+export const isCmsArticle = (
+  resource: PublicCmsResource,
+): resource is PublicCmsArticle =>
+  resource.kind === "article" && Boolean(resource.slug);
+
+export async function listPublicCmsArticles(): Promise<PublicCmsArticle[]> {
+  const resources = await getPublicCmsResources();
+  return resources
+    .filter(isCmsArticle)
+    .map((r) => ({ ...r, excerpt: r.description ?? "" }));
+}
+
+/** Returns a single published article by slug. */
+export async function getPublicCmsArticle(
+  slug: string,
+): Promise<PublicCmsArticle | null> {
+  const articles = await listPublicCmsArticles();
+  return articles.find((a) => a.slug === slug) ?? null;
+}
+
+/** Downloadable documents (kind = 'file') for the Resource Hub sidebar. */
+export async function listPublicCmsFiles(): Promise<PublicCmsResource[]> {
+  const resources = await getPublicCmsResources();
+  return resources.filter((r) => r.kind === "file");
+}

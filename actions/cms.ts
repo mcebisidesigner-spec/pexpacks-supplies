@@ -2,6 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/admin/rbac";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
   listCmsAnnouncements,
   listCmsFaqs,
@@ -229,18 +230,83 @@ export async function toggleTestimonialFeaturedAction(
   return res;
 }
 
+export async function uploadTestimonialAvatarAction(
+  formData: FormData,
+): Promise<{
+  ok: boolean;
+  url?: string;
+  message?: string;
+}> {
+  await requireAdmin({ permission: "content.manage" });
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, message: "Please select an image file to upload." };
+  }
+
+  const validMimes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+    "image/svg+xml",
+  ];
+  if (!validMimes.includes(file.type)) {
+    return {
+      ok: false,
+      message:
+        "Unsupported file type. Please upload a PNG, WebP, JPG, or SVG image.",
+    };
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    return { ok: false, message: "Avatar image must be smaller than 5 MB." };
+  }
+
+  try {
+    const admin = createSupabaseAdminClient();
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const filePath = `testimonials/${crypto.randomUUID()}.${ext}`;
+
+    const { data, error } = await admin.storage
+      .from("school-assets")
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: true,
+      });
+
+    if (error) {
+      console.error("[cms] avatar upload error:", error);
+      return { ok: false, message: error.message || "Failed to upload avatar" };
+    }
+
+    const { data: urlData } = admin.storage
+      .from("school-assets")
+      .getPublicUrl(data.path);
+
+    return { ok: true, url: urlData.publicUrl };
+  } catch (err) {
+    console.error("[cms] avatar upload exception:", err);
+    return { ok: false, message: "Server error during avatar upload." };
+  }
+}
+
 // ----------------------------------------------------
 // 4. Resources
 // ----------------------------------------------------
 export async function saveResourceAction(
   id: string | null,
   payload: {
+    kind: "file" | "article";
     title: string;
     description?: string;
     category: string;
-    file_url: string;
-    file_type: string;
+    file_url?: string;
+    file_type?: string;
     file_size_label?: string;
+    slug?: string;
+    author?: string;
+    image?: string;
+    content?: string[];
     sort_order?: number;
     is_public: boolean;
   },

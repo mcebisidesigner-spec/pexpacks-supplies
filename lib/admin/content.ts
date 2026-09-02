@@ -1191,6 +1191,7 @@ export const cmsTestimonialSchema = z.object({
     .min(1, "Role is required")
     .max(120, "Max 120 characters"),
   school_id: z.string().uuid().optional().nullable(),
+  school_name: z.string().trim().max(150).optional().nullable(),
   quote: z
     .string()
     .trim()
@@ -1240,6 +1241,7 @@ export async function saveCmsTestimonial(
     author_name: parsed.data.author_name,
     author_role: parsed.data.author_role,
     school_id: parsed.data.school_id || null,
+    school_name: parsed.data.school_name || null,
     quote: parsed.data.quote,
     rating: parsed.data.rating,
     avatar_url: parsed.data.avatar_url || null,
@@ -1356,35 +1358,83 @@ export async function toggleCmsTestimonialFeatured(
 // 4. Resource Hub (cms_resources)
 // ===========================================================================
 
-export const cmsResourceSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(1, "Title is required")
-    .max(150, "Max 150 characters"),
-  description: z
-    .string()
-    .trim()
-    .max(500, "Max 500 characters")
-    .optional()
-    .nullable(),
-  category: z
-    .string()
-    .trim()
-    .min(1, "Category is required")
-    .max(60, "Max 60 characters")
-    .default("Parent Guides"),
-  file_url: z.string().trim().min(1, "File URL is required").max(500),
-  file_type: z
-    .string()
-    .trim()
-    .min(1, "File type is required")
-    .max(10)
-    .default("PDF"),
-  file_size_label: z.string().trim().max(20).optional().nullable(),
-  is_public: z.boolean().default(true),
-  sort_order: z.coerce.number().int().min(0).default(0),
-});
+export const cmsResourceSchema = z
+  .object({
+    kind: z.enum(["file", "article"]).default("file"),
+    title: z
+      .string()
+      .trim()
+      .min(1, "Title is required")
+      .max(150, "Max 150 characters"),
+    description: z
+      .string()
+      .trim()
+      .max(500, "Max 500 characters")
+      .optional()
+      .nullable(),
+    category: z
+      .string()
+      .trim()
+      .min(1, "Category is required")
+      .max(60, "Max 60 characters")
+      .default("Parent Guides"),
+    file_url: z.string().trim().max(500).optional().nullable(),
+    file_type: z
+      .string()
+      .trim()
+      .min(1, "File type is required")
+      .max(10)
+      .default("PDF"),
+    file_size_label: z.string().trim().max(20).optional().nullable(),
+    slug: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .regex(/^[a-z0-9-]+$/, "Use lowercase letters, numbers and hyphens only")
+      .max(120)
+      .optional()
+      .nullable(),
+    author: z.string().trim().max(120).optional().nullable(),
+    image: z.string().trim().max(500).optional().nullable(),
+    content: z
+      .array(z.string().max(5000, "A content line is too long"))
+      .max(500, "Too many content lines")
+      .optional()
+      .nullable(),
+    is_public: z.boolean().default(true),
+    sort_order: z.coerce.number().int().min(0).default(0),
+  })
+  .superRefine((value, ctx) => {
+    if (value.kind === "article") {
+      if (!value.slug) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["slug"],
+          message: "Slug is required for articles",
+        });
+      }
+      if (!value.image) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["image"],
+          message: "A cover image is required for articles",
+        });
+      }
+      if (!value.content || value.content.length === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["content"],
+          message: "Add at least one content line",
+        });
+      }
+    } else if (!value.file_url) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["file_url"],
+        message: "File URL is required for downloads",
+      });
+    }
+  });
 
 export type CmsResourceInput = z.infer<typeof cmsResourceSchema>;
 
@@ -1420,20 +1470,60 @@ export async function saveCmsResource(
 
   const admin = createSupabaseAdminClient();
   const now = new Date().toISOString();
-  const payload = {
+  const userId = actor.user.id;
+
+  // Enforce unique article slugs (kind = 'article' only)
+  if (parsed.data.kind === "article" && parsed.data.slug) {
+    let slugQuery = admin
+      .from("cms_resources")
+      .select("id, title")
+      .eq("kind", "article")
+      .eq("slug", parsed.data.slug);
+    if (id) slugQuery = slugQuery.neq("id", id);
+    const { data: existing } = await slugQuery.maybeSingle();
+    if (existing) {
+      return {
+        ok: false,
+        errors: { slug: "An article with that slug already exists." },
+      };
+    }
+  }
+
+  const base = {
+    kind: parsed.data.kind,
     title: parsed.data.title,
     description: parsed.data.description || null,
     category: parsed.data.category,
-    file_url: parsed.data.file_url,
-    file_type: parsed.data.file_type.toUpperCase(),
-    file_size_label: parsed.data.file_size_label || null,
     is_public: parsed.data.is_public,
     sort_order: parsed.data.sort_order,
     status: parsed.data.is_public ? "published" : "draft",
     published_at: now,
     updated_at: now,
-    updated_by: actor.user.id,
+    updated_by: userId,
   };
+
+  const payload =
+    parsed.data.kind === "article"
+      ? {
+          ...base,
+          slug: parsed.data.slug || null,
+          author: parsed.data.author || null,
+          image: parsed.data.image || null,
+          content: parsed.data.content as Json | null,
+          file_url: parsed.data.file_url || null,
+          file_type: "ARTICLE",
+          file_size_label: null,
+        }
+      : {
+          ...base,
+          slug: parsed.data.slug || null,
+          author: parsed.data.author || null,
+          image: parsed.data.image || null,
+          content: parsed.data.content as Json | null,
+          file_url: parsed.data.file_url || null,
+          file_type: parsed.data.file_type.toUpperCase(),
+          file_size_label: parsed.data.file_size_label || null,
+        };
 
   try {
     if (id) {
@@ -1443,12 +1533,12 @@ export async function saveCmsResource(
         .eq("id", id);
       if (error) throw error;
       void writeAuditLog({
-        actorId: actor.user.id,
+        actorId: userId,
         actorName: actor.user.email,
         action: "content.resource.update",
         entityType: "cms_resource",
         entityId: id,
-        summary: `Updated resource: "${payload.title}"`,
+        summary: `Updated ${parsed.data.kind}: "${payload.title}"`,
       });
     } else {
       const { data, error } = await admin
@@ -1458,12 +1548,12 @@ export async function saveCmsResource(
         .single();
       if (error) throw error;
       void writeAuditLog({
-        actorId: actor.user.id,
+        actorId: userId,
         actorName: actor.user.email,
         action: "content.resource.create",
         entityType: "cms_resource",
         entityId: data?.id,
-        summary: `Created resource: "${payload.title}"`,
+        summary: `Created ${parsed.data.kind}: "${payload.title}"`,
       });
     }
 

@@ -108,6 +108,7 @@ export interface Database {
           author_name: string;
           author_role: string;
           school_id: string | null;
+          school_name: string | null;
           quote: string;
           rating: number;
           avatar_url: string | null;
@@ -120,6 +121,7 @@ export interface Database {
           author_name: string;
           author_role: string;
           school_id?: string | null;
+          school_name?: string | null;
           quote: string;
           rating?: number;
           avatar_url?: string | null;
@@ -132,6 +134,7 @@ export interface Database {
           author_name?: string;
           author_role?: string;
           school_id?: string | null;
+          school_name?: string | null;
           quote?: string;
           rating?: number;
           avatar_url?: string | null;
@@ -152,12 +155,17 @@ export interface Database {
       cms_resources: {
         Row: {
           id: string;
+          kind: "file" | "article" | string | null;
           title: string;
           description: string | null;
           category: string;
           file_url: string;
           file_type: string;
           file_size_label: string | null;
+          slug: string | null;
+          author: string | null;
+          image: string | null;
+          content: string[] | string | null;
           download_count: number;
           is_public: boolean;
           sort_order: number;
@@ -166,12 +174,17 @@ export interface Database {
         };
         Insert: {
           id?: string;
+          kind?: "file" | "article" | string | null;
           title: string;
           description?: string | null;
           category?: string;
           file_url: string;
           file_type?: string;
           file_size_label?: string | null;
+          slug?: string | null;
+          author?: string | null;
+          image?: string | null;
+          content?: string[] | string | null;
           download_count?: number;
           is_public?: boolean;
           sort_order?: number;
@@ -180,12 +193,17 @@ export interface Database {
         };
         Update: {
           id?: string;
+          kind?: "file" | "article" | string | null;
           title?: string;
           description?: string | null;
           category?: string;
           file_url?: string;
           file_type?: string;
           file_size_label?: string | null;
+          slug?: string | null;
+          author?: string | null;
+          image?: string | null;
+          content?: string[] | string | null;
           download_count?: number;
           is_public?: boolean;
           sort_order?: number;

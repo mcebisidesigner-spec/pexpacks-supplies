@@ -339,6 +339,83 @@
   text-transform: uppercase;
 }
 
+.badgeArticle {
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.3);
+}
+
+/* ── Article (blog) Resource Cell ── */
+.articleCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.articleThumb {
+  width: 56px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.articleThumbPlaceholder {
+  width: 56px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: var(--db-text-muted);
+  flex-shrink: 0;
+}
+
+.articlePreviewImg {
+  display: block;
+  margin-top: 8px;
+  max-width: 220px;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ── Resource Kind Toggle ── */
+.resourceKindToggle {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.resourceKindBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--db-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.resourceKindBtn:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #e2f3ff;
+}
+
+.resourceKindBtnActive {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #7dd3fc;
+}
+
 /* ── Testimonial Card Elements ── */
 .starRow {
   display: flex;
@@ -508,12 +585,51 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .modalBody {
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.modalBody::-webkit-scrollbar,
+.formTextarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modalBody::-webkit-scrollbar-track,
+.formTextarea::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 8px;
+}
+
+.modalBody::-webkit-scrollbar-thumb,
+.formTextarea::-webkit-scrollbar-thumb {
+  background: rgba(33, 158, 154, 0.45);
+  border-radius: 8px;
+  border: 2px solid rgba(15, 23, 42, 0.6);
+}
+
+.modalBody::-webkit-scrollbar-thumb:hover,
+.formTextarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(33, 158, 154, 0.8);
+}
+
+.modalBody,
+.formTextarea {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(33, 158, 154, 0.5) rgba(15, 23, 42, 0.6);
 }
 
 .modalFooter {
@@ -574,6 +690,8 @@
 
 .formTextarea {
   min-height: 90px;
+  max-height: 240px;
+  overflow-y: auto;
   padding: 10px 12px;
   background: var(--db-surface-inner);
   border: 1px solid var(--db-border);
@@ -825,4 +943,121 @@
     grid-template-columns: 1fr;
     align-items: stretch;
   }
+}
+
+/* Avatar / Photo Upload in CMS Modal */
+.avatarUploadRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+  background: var(--db-surface-inner);
+  border: 1px dashed var(--db-border);
+  border-radius: 10px;
+}
+
+.avatarPreview {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--db-brand);
+  background: var(--db-surface);
+  flex-shrink: 0;
+}
+
+.avatarPlaceholder {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(33, 158, 154, 0.15);
+  color: var(--db-brand);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 17px;
+  flex-shrink: 0;
+  border: 1px solid rgba(33, 158, 154, 0.3);
+  user-select: none;
+}
+
+.avatarControls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.avatarButtons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.uploadFileBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--db-brand);
+  color: #ffffff;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 140ms ease;
+  user-select: none;
+}
+
+.uploadFileBtn:hover {
+  opacity: 0.9;
+}
+
+.uploadFileBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.removeAvatarBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: transparent;
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.removeAvatarBtn:hover {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: #f87171;
+}
+
+.avatarUrlInput {
+  height: 32px;
+  padding: 0 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--db-border);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 12px;
+  outline: none;
+  width: 100%;
+}
+
+.avatarUrlInput:focus {
+  border-color: var(--db-brand);
+}
+
+.avatarHelp {
+  font-size: 11.5px;
+  color: var(--db-text-muted);
 }

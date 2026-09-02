@@ -3,6 +3,7 @@ export type Testimonial = {
   name: string;
   role: string;
   context: string;
+  schoolName?: string;
   quote: string;
   avatar?: string;
   rating: number;

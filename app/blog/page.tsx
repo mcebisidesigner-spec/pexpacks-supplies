@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { listBlogPosts } from "@/lib/blog";
-import { getPublicCmsResources } from "@/lib/cms";
+import { listPublicCmsFiles } from "@/lib/cms";
 import styles from "./Blog.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import { buildMetadata } from "@/lib/seo";
@@ -24,7 +24,7 @@ export const revalidate = 300;
 export default async function BlogIndex() {
   const [posts, resources] = await Promise.all([
     listBlogPosts(),
-    getPublicCmsResources(),
+    listPublicCmsFiles(),
   ]);
 
   return (

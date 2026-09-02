@@ -114,6 +114,33 @@ describe("Pexpacks Content CMS Module", () => {
     expect(valid.success).toBe(true);
   });
 
+  it("validates article resources require slug, image, and content", () => {
+    const valid = cmsResourceSchema.safeParse({
+      kind: "article",
+      title: "How to Pack a Stationery Kit",
+      category: "Guides",
+      slug: "how-to-pack-a-stationery-kit",
+      image: "/images/guide.webp",
+      author: "Mcebisi Mhayise",
+      content: ["## Intro", "Some body text"],
+    });
+    expect(valid.success).toBe(true);
+
+    const missingArticleFields = cmsResourceSchema.safeParse({
+      kind: "article",
+      title: "No slug",
+      category: "Guides",
+    });
+    expect(missingArticleFields.success).toBe(false);
+
+    const missingFileUrl = cmsResourceSchema.safeParse({
+      kind: "file",
+      title: "No file",
+      category: "Guides",
+    });
+    expect(missingFileUrl.success).toBe(false);
+  });
+
   it("ensures CMS_TAGS includes announcements and resources for revalidation", () => {
     expect(CMS_TAGS.announcements).toBe("cms-announcements");
     expect(CMS_TAGS.resources).toBe("cms-resources");
@@ -135,12 +162,20 @@ describe("Pexpacks Content CMS Module", () => {
   it("links the public blog resource hub to published CMS resources", () => {
     const blogPage = readRepoFile("app/blog/page.tsx");
     const blogStyles = readRepoFile("app/blog/Blog.module.css");
+    const cms = readRepoFile("lib/cms.ts");
+    const blogLib = readRepoFile("lib/blog.ts");
     const actions = readRepoFile("actions/cms.ts");
     const adminContent = readRepoFile("lib/admin/content.ts");
 
-    expect(blogPage).toContain("getPublicCmsResources");
+    // Blog cards are fed by the unified Resource Hub, files by the sidebar.
+    expect(blogPage).toContain("listPublicCmsFiles");
     expect(blogPage).toContain("resources.slice(0, 4)");
     expect(blogPage).toContain("href={resource.file_url}");
+    expect(cms).toContain("listPublicCmsFiles");
+    expect(cms).toContain("listPublicCmsArticles");
+    expect(cms).toContain('kind === "article"');
+    expect(blogLib).toContain("getPublicCmsResources");
+    expect(blogLib).toContain('r.kind === "article"');
     expect(blogStyles).toContain(".resourceHubCard");
     expect(actions).toContain('revalidatePath("/blog")');
     expect(adminContent).toContain('revalidatePath("/blog")');
@@ -208,6 +243,30 @@ describe("Pexpacks Content CMS Module", () => {
     expect(migration).toContain(
       "REVOKE SELECT ON public.cms_announcements FROM anon",
     );
+  });
+
+  it("migration 00094 unifies blog articles into the resource hub", () => {
+    const migration = readRepoFile(
+      "supabase/migrations/00094_articles_in_resource_hub.sql",
+    );
+    // article-supporting columns
+    expect(migration).toContain(
+      "ADD COLUMN IF NOT EXISTS kind TEXT NOT NULL DEFAULT 'file'",
+    );
+    expect(migration).toContain("ADD COLUMN IF NOT EXISTS slug TEXT");
+    expect(migration).toContain("ADD COLUMN IF NOT EXISTS author TEXT");
+    expect(migration).toContain("ADD COLUMN IF NOT EXISTS image TEXT");
+    expect(migration).toContain("ADD COLUMN IF NOT EXISTS content JSONB");
+    // unique article slug partial index
+    expect(migration).toContain("idx_cms_resources_article_slug");
+    expect(migration).toContain("WHERE kind = 'article' AND slug IS NOT NULL");
+    // backfill from blog_posts
+    expect(migration).toContain("FROM public.blog_posts bp");
+    // rewritten public RPC exposes article fields
+    expect(migration).toContain(
+      "CREATE OR REPLACE FUNCTION public.get_public_cms_resources()",
+    );
+    expect(migration).toContain("r.slug, r.author, r.image, r.content");
   });
 
   it("admin CMS writes include status, published_at, and updated_by", () => {
@@ -314,7 +373,9 @@ describe("Pexpacks Content CMS Module", () => {
     const migration = readRepoFile(
       "supabase/migrations/00093_cms_all_pages_faqs_and_announcements.sql",
     );
-    expect(migration).toContain("ALTER TABLE public.cms_faqs DROP CONSTRAINT IF EXISTS cms_faqs_target_page_check;");
+    expect(migration).toContain(
+      "ALTER TABLE public.cms_faqs DROP CONSTRAINT IF EXISTS cms_faqs_target_page_check;",
+    );
     expect(migration).toContain("'happy_pay'");
     expect(migration).toContain("'partnership'");
     expect(migration).toContain("'track_order'");
@@ -324,7 +385,9 @@ describe("Pexpacks Content CMS Module", () => {
     expect(migration).toContain("How do I track my order delivery?");
     expect(migration).toContain("What if my school is not listed yet?");
     expect(migration).toContain("idx_cms_announcements_one_active_hero_banner");
-    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.get_public_cms_faqs(p_page text DEFAULT NULL)");
+    expect(migration).toContain(
+      "CREATE OR REPLACE FUNCTION public.get_public_cms_faqs(p_page text DEFAULT NULL)",
+    );
   });
 
   it("ensures FAQ admin views use App Page tabs instead of category filter tabs", () => {
@@ -332,8 +395,10 @@ describe("Pexpacks Content CMS Module", () => {
     const faqsTab = readRepoFile("components/admin/content/FaqsTab.tsx");
 
     // Ensure category filter pills are removed from FAQ tab views
-    expect(adminPage).not.toContain('onClick={() => setFaqCategoryFilter(cat)}');
-    expect(faqsTab).not.toContain('onClick={() => setSelectedCategory(cat)}');
+    expect(adminPage).not.toContain(
+      "onClick={() => setFaqCategoryFilter(cat)}",
+    );
+    expect(faqsTab).not.toContain("onClick={() => setSelectedCategory(cat)}");
 
     // Ensure App Page tabs are present with all pages
     expect(adminPage).toContain('label: "Schools Directory"');

@@ -267,7 +267,9 @@ export async function saveCmsFaqAction(
     "add_your_school",
     "partnership",
   ] as const;
-  const target_page = validPages.includes(rawTarget as (typeof validPages)[number])
+  const target_page = validPages.includes(
+    rawTarget as (typeof validPages)[number],
+  )
     ? (rawTarget as (typeof validPages)[number])
     : "all";
 
@@ -364,6 +366,7 @@ export async function saveCmsResourceAction(
 
   return saveCmsResource(
     {
+      kind: "file",
       title,
       description: description || null,
       category,

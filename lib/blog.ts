@@ -1,82 +1,72 @@
 import { unstable_cache } from "next/cache";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type {  Json } from "@/lib/supabase/types";
-import { blogPosts, type BlogPost } from "@/data/blog";
+import { getPublicCmsResources, type PublicCmsArticle } from "@/lib/cms";
+import type { BlogPost } from "@/data/blog";
 
 /**
- * Public-facing blog reader. Server components use this to render the
- * Resource Hub from the `blog_posts` table (published posts only). The static
- * `data/blog.ts` array is used only as a bootstrap: when the table has no
- * posts at all, the site keeps rendering the shipped defaults so a fresh
+ * Public-facing blog reader. Articles now live inside the unified Resource
+ * Hub (cms_resources, kind = 'article') alongside downloadable files. Server
+ * components use these helpers to render /blog and /blog/[slug]. The static
+ * `data/blog.ts` array remains as a bootstrap fallback only — if the Resource
+ * Hub has no articles at all, the shipped defaults are used so a fresh
  * environment is never left with an empty blog.
  */
 
 export const CMS_BLOG_TAG = "cms-blog";
 export const BLOG_REVALIDATE_SECONDS = 300;
 
-function toContent(value: Json | null): string[] {
-  return Array.isArray(value) ? value.map((line) => String(line)) : [];
+function toContent(content: string[] | null | undefined): string[] {
+  return Array.isArray(content) ? content.map((line) => String(line)) : [];
 }
 
-function toPost(row: { id: string; slug: string; title: string; excerpt?: string | null; content?: Json; author?: string | null; category?: string | null; image?: string | null; created_at?: string | null }): BlogPost {
+function toPost(article: PublicCmsArticle): BlogPost {
   return {
-    id: row.id,
-    slug: row.slug,
-    title: row.title,
-    excerpt: row.excerpt ?? "",
-    content: toContent(row.content ?? null),
-    date: row.created_at ? row.created_at.slice(0, 10) : "",
-    author: row.author ?? "",
-    category: row.category ?? "",
-    image: row.image ?? "",
+    id: article.id,
+    slug: article.slug,
+    title: article.title,
+    excerpt: article.excerpt ?? "",
+    content: toContent(article.content),
+    date: article.published_at ? article.published_at.slice(0, 10) : "",
+    author: article.author ?? "",
+    category: article.category ?? "",
+    image: article.image ?? "",
   };
-}
-
-async function hasAnyPosts(admin: ReturnType<typeof createSupabaseAdminClient>): Promise<boolean> {
-  const { data, error } = await admin.from("blog_posts").select("id").limit(1);
-  if (error) return true;
-  return (data?.length ?? 0) > 0;
 }
 
 async function fetchPublishedPosts(): Promise<BlogPost[]> {
   try {
-    const admin = createSupabaseAdminClient();
-    const { data, error } = await admin
-      .from("blog_posts")
-      .select("id,slug,title,excerpt,content,author,category,image,published,created_at,updated_at")
-      .eq("published", true)
-      .order("created_at", { ascending: false });
+    const resources = await getPublicCmsResources();
+    const articles = resources.filter(
+      (r): r is PublicCmsArticle =>
+        r.kind === "article" && Boolean(r.slug) && r.slug !== null,
+    );
 
-    if (error) throw error;
-    if ((data?.length ?? 0) === 0) {
-      if (!(await hasAnyPosts(admin))) return blogPosts;
-      return [];
+    if (articles.length === 0) {
+      // Fresh environment with no articles yet -> show the shipped defaults.
+      const { blogPosts } = await import("@/data/blog");
+      return blogPosts;
     }
-    return (data ?? []).map(toPost);
+
+    return articles.map(toPost);
   } catch (err) {
     console.error("[blog] fetch published posts failed:", err);
+    const { blogPosts } = await import("@/data/blog");
     return blogPosts;
   }
 }
 
 async function fetchPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
-    const admin = createSupabaseAdminClient();
-    const { data, error } = await admin
-      .from("blog_posts")
-      .select("id,slug,title,excerpt,content,author,category,image,published,created_at,updated_at")
-      .eq("slug", slug)
-      .eq("published", true)
-      .maybeSingle();
-
-    if (error) throw error;
-    if (data) return toPost(data);
-    if (!(await hasAnyPosts(admin))) {
-      return blogPosts.find((post) => post.slug === slug) ?? null;
-    }
-    return null;
+    const resources = await getPublicCmsResources();
+    const article = resources.find(
+      (r): r is PublicCmsArticle =>
+        r.kind === "article" && r.slug === slug,
+    );
+    if (article) return toPost(article);
+    const { blogPosts } = await import("@/data/blog");
+    return blogPosts.find((post) => post.slug === slug) ?? null;
   } catch (err) {
     console.error("[blog] fetch post failed:", err);
+    const { blogPosts } = await import("@/data/blog");
     return blogPosts.find((post) => post.slug === slug) ?? null;
   }
 }

@@ -122,6 +122,7 @@ export function TestimonialsTab({ initialTestimonials }: TestimonialsTabProps) {
               rating,
               avatar_url: avatarUrl || null,
               school_id: null,
+              school_name: null,
               sort_order: sortOrder,
               is_featured: isFeatured,
               created_at: new Date().toISOString(),

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useTransition, useMemo } from "react";
+import Link from "next/link";
+import clsx from "clsx";
 import {
   Megaphone,
   HelpCircle,
@@ -15,10 +17,13 @@ import {
   Download,
   Eye,
   EyeOff,
+  FileText,
   X,
   ChevronDown,
   ChevronUp,
   Save,
+  Upload,
+  Image as ImageIcon,
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -36,6 +41,7 @@ import {
   saveTestimonialAction,
   deleteTestimonialAction,
   toggleTestimonialFeaturedAction,
+  uploadTestimonialAvatarAction,
   saveResourceAction,
   deleteResourceAction,
   toggleResourcePublicAction,
@@ -79,6 +85,7 @@ interface Testimonial {
   author_name: string;
   author_role: string;
   school_name?: string | null;
+  avatar_url?: string | null;
   quote: string;
   rating: number;
   is_featured: boolean;
@@ -86,6 +93,7 @@ interface Testimonial {
 
 interface ResourceItem {
   id: string;
+  kind: "file" | "article";
   title: string;
   description: string;
   category: string;
@@ -94,6 +102,10 @@ interface ResourceItem {
   file_url?: string;
   download_count: number;
   is_public: boolean;
+  slug?: string;
+  author?: string;
+  image?: string;
+  content?: string[];
 }
 
 export default function ContentCMSPage() {
@@ -174,6 +186,7 @@ export default function ContentCMSPage() {
   const [resources, setResources] = useState<ResourceItem[]>([
     {
       id: "1",
+      kind: "file",
       title: "2027 Back-to-School Stationery Checklist",
       description:
         "Official printable guide for parents covering essential requirements per phase.",
@@ -186,6 +199,7 @@ export default function ContentCMSPage() {
     },
     {
       id: "2",
+      kind: "file",
       title: "School Stationery Partnership Guide",
       description:
         "Information pack for principals and bursars detailing our consignment and packaging model.",
@@ -232,11 +246,17 @@ export default function ContentCMSPage() {
   const [testAuthor, setTestAuthor] = useState("");
   const [testRole, setTestRole] = useState("");
   const [testSchool, setTestSchool] = useState("");
+  const [testAvatarUrl, setTestAvatarUrl] = useState("");
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [avatarUploadError, setAvatarUploadError] = useState<string | null>(
+    null,
+  );
   const [testQuote, setTestQuote] = useState("");
   const [testRating, setTestRating] = useState(5);
   const [testFeatured, setTestFeatured] = useState(true);
 
   // Form Fields - Resource
+  const [resKind, setResKind] = useState<"file" | "article">("file");
   const [resTitle, setResTitle] = useState("");
   const [resDesc, setResDesc] = useState("");
   const [resCat, setResCat] = useState("Parent Guides");
@@ -244,6 +264,10 @@ export default function ContentCMSPage() {
   const [resType, setResType] = useState("PDF");
   const [resSize, setResSize] = useState("1.5 MB");
   const [resPublic, setResPublic] = useState(true);
+  const [resSlug, setResSlug] = useState("");
+  const [resAuthor, setResAuthor] = useState("");
+  const [resImage, setResImage] = useState("");
+  const [resContent, setResContent] = useState("");
 
   const [eyebrows, setEyebrows] = useState<Record<string, string>>({});
   const [eyebrowSaving, setEyebrowSaving] = useState<string | null>(null);
@@ -283,8 +307,7 @@ export default function ContentCMSPage() {
                 answer: f.answer,
                 is_published: f.is_published,
                 sort_order: f.sort_order,
-                target_page:
-                  (f.target_page as FAQItem["target_page"]) || "all",
+                target_page: (f.target_page as FAQItem["target_page"]) || "all",
               })),
             );
           }
@@ -294,7 +317,8 @@ export default function ContentCMSPage() {
                 id: t.id,
                 author_name: t.author_name,
                 author_role: t.author_role,
-                school_name: null,
+                school_name: t.school_name ?? null,
+                avatar_url: t.avatar_url ?? null,
                 quote: t.quote,
                 rating: t.rating,
                 is_featured: t.is_featured,
@@ -305,6 +329,7 @@ export default function ContentCMSPage() {
             setResources(
               data.resources.map((r) => ({
                 id: r.id,
+                kind: r.kind === "article" ? "article" : "file",
                 title: r.title,
                 description: r.description || "",
                 category: r.category,
@@ -313,6 +338,14 @@ export default function ContentCMSPage() {
                 file_url: r.file_url,
                 download_count: r.download_count,
                 is_public: r.is_public,
+                slug: r.slug || undefined,
+                author: r.author || undefined,
+                image: r.image || undefined,
+                content: Array.isArray(r.content)
+                  ? r.content
+                  : typeof r.content === "string"
+                    ? [r.content]
+                    : undefined,
               })),
             );
           }
@@ -351,10 +384,13 @@ export default function ContentCMSPage() {
       setTestAuthor("");
       setTestRole("Parent of Grade 4 Learner");
       setTestSchool("Primrose Hill Primary");
+      setTestAvatarUrl("");
+      setAvatarUploadError(null);
       setTestQuote("");
       setTestRating(5);
       setTestFeatured(true);
     } else if (activeTab === "resources") {
+      setResKind("file");
       setResTitle("");
       setResDesc("");
       setResCat("Parent Guides");
@@ -362,6 +398,10 @@ export default function ContentCMSPage() {
       setResType("PDF");
       setResSize("1.5 MB");
       setResPublic(true);
+      setResSlug("");
+      setResAuthor("");
+      setResImage("");
+      setResContent("");
     }
     setIsModalOpen(true);
   };
@@ -378,15 +418,15 @@ export default function ContentCMSPage() {
 
   const handleSaveEyebrow = async (key: string) => {
     const value = (eyebrows[key] ?? "").trim();
+    if (!value) return;
     setEyebrowSaving(key);
     setEyebrowFeedback(null);
     try {
       const res = await saveHeroEyebrowAction(key, value);
       if (res.ok) {
-        setEyebrows((prev) => ({ ...prev, [key]: value }));
         setEyebrowFeedback({
           tone: "success",
-          text: res.message || "Eyebrow saved and live.",
+          text: "Eyebrow banner updated.",
         });
       } else {
         setEyebrowFeedback({
@@ -497,6 +537,8 @@ export default function ContentCMSPage() {
     setTestAuthor(item.author_name);
     setTestRole(item.author_role);
     setTestSchool(item.school_name || "Primrose Hill Primary");
+    setTestAvatarUrl(item.avatar_url || "");
+    setAvatarUploadError(null);
     setTestQuote(item.quote);
     setTestRating(item.rating);
     setTestFeatured(item.is_featured);
@@ -531,6 +573,7 @@ export default function ContentCMSPage() {
 
   const handleEditResource = (item: ResourceItem) => {
     setEditingId(item.id);
+    setResKind(item.kind);
     setResTitle(item.title);
     setResDesc(item.description);
     setResCat(item.category);
@@ -538,6 +581,10 @@ export default function ContentCMSPage() {
     setResType(item.file_type);
     setResSize(item.file_size_label);
     setResPublic(item.is_public);
+    setResSlug(item.slug || "");
+    setResAuthor(item.author || "");
+    setResImage(item.image || "");
+    setResContent(Array.isArray(item.content) ? item.content.join("\n") : "");
     setModalError(null);
     setIsModalOpen(true);
   };
@@ -597,8 +644,7 @@ export default function ContentCMSPage() {
               answer: f.answer,
               is_published: f.is_published,
               sort_order: f.sort_order,
-              target_page:
-                (f.target_page as FAQItem["target_page"]) || "all",
+              target_page: (f.target_page as FAQItem["target_page"]) || "all",
             })),
           );
         } else {
@@ -608,6 +654,8 @@ export default function ContentCMSPage() {
         const res = await saveTestimonialAction(editingId, {
           author_name: testAuthor,
           author_role: testRole,
+          school_name: testSchool || undefined,
+          avatar_url: testAvatarUrl || undefined,
           quote: testQuote,
           rating: testRating,
           is_featured: testFeatured,
@@ -620,7 +668,8 @@ export default function ContentCMSPage() {
               id: t.id,
               author_name: t.author_name,
               author_role: t.author_role,
-              school_name: null,
+              school_name: t.school_name ?? null,
+              avatar_url: t.avatar_url ?? null,
               quote: t.quote,
               rating: t.rating,
               is_featured: t.is_featured,
@@ -630,13 +679,22 @@ export default function ContentCMSPage() {
           setModalError(res.message || "Failed to save testimonial");
         }
       } else if (activeTab === "resources") {
+        const contentLines = resContent
+          .split("\n")
+          .map((line) => line.trimEnd())
+          .filter((line) => line.trim().length > 0);
         const res = await saveResourceAction(editingId, {
+          kind: resKind,
           title: resTitle,
           description: resDesc,
           category: resCat,
-          file_url: resUrl || "/assets/guides/stationery-checklist.pdf",
-          file_type: resType,
-          file_size_label: resSize,
+          file_url: resKind === "file" ? resUrl : undefined,
+          file_type: resKind === "file" ? resType : undefined,
+          file_size_label: resKind === "file" ? resSize : undefined,
+          slug: resKind === "article" ? resSlug : undefined,
+          author: resKind === "article" ? resAuthor : undefined,
+          image: resKind === "article" ? resImage : undefined,
+          content: resKind === "article" ? contentLines : undefined,
           is_public: resPublic,
         });
         if (res.ok) {
@@ -645,6 +703,7 @@ export default function ContentCMSPage() {
           setResources(
             data.resources.map((r) => ({
               id: r.id,
+              kind: r.kind === "article" ? "article" : "file",
               title: r.title,
               description: r.description || "",
               category: r.category,
@@ -653,10 +712,25 @@ export default function ContentCMSPage() {
               file_url: r.file_url,
               download_count: r.download_count,
               is_public: r.is_public,
+              slug: r.slug || undefined,
+              author: r.author || undefined,
+              image: r.image || undefined,
+              content: Array.isArray(r.content)
+                ? r.content
+                : typeof r.content === "string"
+                  ? [r.content]
+                  : undefined,
             })),
           );
         } else {
-          setModalError(res.message || "Failed to save resource");
+          setModalError(
+            res.errors?.slug ||
+              res.errors?.image ||
+              res.errors?.content ||
+              res.errors?.file_url ||
+              res.message ||
+              "Failed to save resource",
+          );
         }
       }
     });
@@ -667,9 +741,7 @@ export default function ContentCMSPage() {
     return faqs.filter((f) => {
       const target = f.target_page || "all";
       return (
-        faqPageFilter === "all" ||
-        target === faqPageFilter ||
-        target === "all"
+        faqPageFilter === "all" || target === faqPageFilter || target === "all"
       );
     });
   }, [faqs, faqPageFilter]);
@@ -677,24 +749,57 @@ export default function ContentCMSPage() {
   // Resource DataTable Columns
   const resourceColumns: ColumnDef<ResourceItem>[] = [
     {
-      key: "file_type",
+      key: "kind",
       header: "TYPE",
       width: "90px",
       align: "center",
       render: (row) => (
-        <span className={styles.badgeFormat}>{row.file_type}</span>
+        <span
+          className={clsx(
+            styles.badgeFormat,
+            row.kind === "article" && styles.badgeArticle,
+          )}
+        >
+          {row.kind === "article" ? "ARTICLE" : row.file_type}
+        </span>
       ),
     },
     {
       key: "title",
       header: "DOCUMENT TITLE & DESCRIPTION",
       sortable: true,
-      render: (row) => (
-        <div className={coreStyles.productCell}>
-          <span className={coreStyles.schoolNameTitle}>{row.title}</span>
-          <span className={coreStyles.productBrand}>{row.description}</span>
-        </div>
-      ),
+      render: (row) =>
+        row.kind === "article" ? (
+          <div className={styles.articleCell}>
+            {row.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={row.image} alt="" className={styles.articleThumb} />
+            ) : (
+              <div className={styles.articleThumbPlaceholder}>
+                <ImageIcon size={20} />
+              </div>
+            )}
+            <div>
+              <Link
+                href={`/blog/${row.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={coreStyles.schoolNameTitle}
+              >
+                {row.title}
+              </Link>
+              {row.author ? (
+                <span className={coreStyles.productBrand}>{row.author}</span>
+              ) : null}
+              <span className={coreStyles.textMuted}>{row.description}</span>
+            </div>
+          </div>
+        ) : (
+          <div className={coreStyles.productCell}>
+            <span className={coreStyles.schoolNameTitle}>{row.title}</span>
+            <span className={coreStyles.productBrand}>{row.description}</span>
+          </div>
+        ),
     },
     {
       key: "category",
@@ -709,9 +814,12 @@ export default function ContentCMSPage() {
       header: "FILE SIZE",
       width: "110px",
       align: "center",
-      render: (row) => (
-        <span className={coreStyles.textMuted}>{row.file_size_label}</span>
-      ),
+      render: (row) =>
+        row.kind === "article" ? (
+          <span className={coreStyles.textMuted}>Article</span>
+        ) : (
+          <span className={coreStyles.textMuted}>{row.file_size_label}</span>
+        ),
     },
     {
       key: "download_count",
@@ -720,7 +828,7 @@ export default function ContentCMSPage() {
       align: "center",
       render: (row) => (
         <span className={coreStyles.skuBadge}>
-          {row.download_count.toLocaleString()}
+          {row.kind === "article" ? "-" : row.download_count.toLocaleString()}
         </span>
       ),
     },
@@ -763,7 +871,18 @@ export default function ContentCMSPage() {
           className={styles.cardActions}
           onClick={(e) => e.stopPropagation()}
         >
-          {row.file_url && (
+          {row.kind === "article" && row.slug ? (
+            <a
+              href={`/blog/${row.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.iconBtn}
+              data-db-tooltip="View Article"
+              aria-label="View Article"
+            >
+              <ExternalLink size={14} />
+            </a>
+          ) : row.file_url ? (
             <a
               href={row.file_url}
               target="_blank"
@@ -774,7 +893,7 @@ export default function ContentCMSPage() {
             >
               <Download size={14} />
             </a>
-          )}
+          ) : null}
           <button
             type="button"
             className={styles.iconBtn}
@@ -1292,9 +1411,63 @@ export default function ContentCMSPage() {
 
                 <p className={styles.quoteText}>&ldquo;{test.quote}&rdquo;</p>
 
-                <div className={styles.authorRow}>
-                  <span className={styles.authorName}>{test.author_name}</span>
-                  <span className={styles.authorRole}>{test.author_role}</span>
+                <div
+                  className={styles.authorRow}
+                  style={{ display: "flex", alignItems: "center", gap: "12px" }}
+                >
+                  {test.avatar_url ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={test.avatar_url}
+                      alt=""
+                      style={{
+                        width: "38px",
+                        height: "38px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        border: "1.5px solid var(--db-brand)",
+                        flexShrink: 0,
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: "38px",
+                        height: "38px",
+                        borderRadius: "50%",
+                        background: "rgba(33, 158, 154, 0.15)",
+                        color: "var(--db-brand)",
+                        display: "grid",
+                        placeItems: "center",
+                        fontSize: "13px",
+                        fontWeight: "700",
+                        flexShrink: 0,
+                        border: "1px solid rgba(33, 158, 154, 0.3)",
+                      }}
+                    >
+                      {test.author_name
+                        .split(" ")
+                        .filter(Boolean)
+                        .map((n) => n[0])
+                        .slice(0, 2)
+                        .join("")
+                        .toUpperCase() || "P"}
+                    </div>
+                  )}
+                  <div
+                    style={{
+                      minWidth: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <span className={styles.authorName}>
+                      {test.author_name}
+                    </span>
+                    <span className={styles.authorRole}>
+                      {test.author_role}
+                    </span>
+                  </div>
                 </div>
 
                 {test.school_name && (
@@ -1389,7 +1562,7 @@ export default function ContentCMSPage() {
               </button>
             </div>
 
-            <form onSubmit={handleModalSubmit}>
+            <form onSubmit={handleModalSubmit} className={styles.modalForm}>
               <div className={styles.modalBody}>
                 {modalError && (
                   <div className={styles.errorMessage}>{modalError}</div>
@@ -1621,6 +1794,110 @@ export default function ContentCMSPage() {
 
                     <div className={styles.formGroup}>
                       <label className={styles.formLabel}>
+                        Author Avatar / Photo (Optional)
+                      </label>
+                      <div className={styles.avatarUploadRow}>
+                        {testAvatarUrl ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={testAvatarUrl}
+                            alt="Avatar preview"
+                            className={styles.avatarPreview}
+                          />
+                        ) : (
+                          <div
+                            className={styles.avatarPlaceholder}
+                            aria-hidden="true"
+                          >
+                            {testAuthor ? (
+                              testAuthor
+                                .split(" ")
+                                .filter(Boolean)
+                                .map((n) => n[0])
+                                .slice(0, 2)
+                                .join("")
+                                .toUpperCase()
+                            ) : (
+                              <ImageIcon size={22} />
+                            )}
+                          </div>
+                        )}
+                        <div className={styles.avatarControls}>
+                          <div className={styles.avatarButtons}>
+                            <label className={styles.uploadFileBtn}>
+                              <Upload size={14} />
+                              <span>
+                                {isUploadingAvatar
+                                  ? "Uploading…"
+                                  : "Upload Photo"}
+                              </span>
+                              <input
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+                                disabled={isUploadingAvatar}
+                                style={{ display: "none" }}
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (!file) return;
+                                  setIsUploadingAvatar(true);
+                                  setAvatarUploadError(null);
+                                  try {
+                                    const fd = new FormData();
+                                    fd.append("file", file);
+                                    const res =
+                                      await uploadTestimonialAvatarAction(fd);
+                                    if (res.ok && res.url) {
+                                      setTestAvatarUrl(res.url);
+                                    } else {
+                                      setAvatarUploadError(
+                                        res.message || "Upload failed",
+                                      );
+                                    }
+                                  } catch {
+                                    setAvatarUploadError(
+                                      "Failed to upload image",
+                                    );
+                                  } finally {
+                                    setIsUploadingAvatar(false);
+                                  }
+                                }}
+                              />
+                            </label>
+                            {testAvatarUrl ? (
+                              <button
+                                type="button"
+                                className={styles.removeAvatarBtn}
+                                onClick={() => setTestAvatarUrl("")}
+                              >
+                                <X size={13} />
+                                <span>Remove</span>
+                              </button>
+                            ) : null}
+                          </div>
+                          <input
+                            type="text"
+                            value={testAvatarUrl}
+                            onChange={(e) => setTestAvatarUrl(e.target.value)}
+                            placeholder="Or paste image URL (https://...)"
+                            className={styles.avatarUrlInput}
+                          />
+                          {avatarUploadError && (
+                            <span
+                              style={{ color: "#f87171", fontSize: "11.5px" }}
+                            >
+                              {avatarUploadError}
+                            </span>
+                          )}
+                          <span className={styles.avatarHelp}>
+                            PNG, WebP or JPG. Shown in the homepage testimonials
+                            marquee.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>
                         Rating (1 to 5 Stars)
                       </label>
                       <div className={styles.starRow}>
@@ -1674,17 +1951,52 @@ export default function ContentCMSPage() {
                 {/* Resource Form */}
                 {activeTab === "resources" && (
                   <>
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel}>Resource Type</label>
+                      <div className={styles.resourceKindToggle}>
+                        <button
+                          type="button"
+                          className={clsx(
+                            styles.resourceKindBtn,
+                            resKind === "file" && styles.resourceKindBtnActive,
+                          )}
+                          onClick={() => setResKind("file")}
+                        >
+                          <FolderDown size={15} />
+                          Downloadable File
+                        </button>
+                        <button
+                          type="button"
+                          className={clsx(
+                            styles.resourceKindBtn,
+                            resKind === "article" &&
+                              styles.resourceKindBtnActive,
+                          )}
+                          onClick={() => setResKind("article")}
+                        >
+                          <FileText size={15} />
+                          Blog Article
+                        </button>
+                      </div>
+                    </div>
+
                     <div className={styles.formGrid2}>
                       <div className={styles.formGroup}>
                         <label className={styles.formLabel}>
-                          Document Title
+                          {resKind === "article"
+                            ? "Article Title"
+                            : "Document Title"}
                         </label>
                         <input
                           type="text"
                           required
                           value={resTitle}
                           onChange={(e) => setResTitle(e.target.value)}
-                          placeholder="e.g. 2027 Stationery List"
+                          placeholder={
+                            resKind === "article"
+                              ? "e.g. The Ultimate Stationery Checklist"
+                              : "e.g. 2027 Stationery List"
+                          }
                           className={styles.formInput}
                         />
                       </div>
@@ -1696,65 +2008,167 @@ export default function ContentCMSPage() {
                           onChange={(e) => setResCat(e.target.value)}
                           className={styles.formSelect}
                         >
-                          <option value="Parent Guides">Parent Guides</option>
-                          <option value="School Packs">School Packs</option>
-                          <option value="Policies">
-                            Policies & Guidelines
-                          </option>
-                          <option value="Forms">Order Forms</option>
+                          {resKind === "article" ? (
+                            <>
+                              <option value="Parenting Tips">
+                                Parenting Tips
+                              </option>
+                              <option value="Guides">Guides</option>
+                              <option value="Education">Education</option>
+                              <option value="Services">Services</option>
+                            </>
+                          ) : (
+                            <>
+                              <option value="Parent Guides">
+                                Parent Guides
+                              </option>
+                              <option value="School Packs">School Packs</option>
+                              <option value="Policies">
+                                Policies & Guidelines
+                              </option>
+                              <option value="Forms">Order Forms</option>
+                            </>
+                          )}
                         </select>
                       </div>
                     </div>
 
+                    {resKind === "article" && (
+                      <div className={styles.formGrid2}>
+                        <div className={styles.formGroup}>
+                          <label className={styles.formLabel}>Slug</label>
+                          <input
+                            type="text"
+                            required
+                            value={resSlug}
+                            onChange={(e) => setResSlug(e.target.value)}
+                            placeholder="e.g. ultimate-stationery-checklist"
+                            className={styles.formInput}
+                          />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                          <label className={styles.formLabel}>Author</label>
+                          <input
+                            type="text"
+                            value={resAuthor}
+                            onChange={(e) => setResAuthor(e.target.value)}
+                            placeholder="e.g. Mcebisi Mhayise"
+                            className={styles.formInput}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {resKind === "article" && (
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>
+                          Cover Image Path
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={resImage}
+                          onChange={(e) => setResImage(e.target.value)}
+                          placeholder="/images/pex-stationery-checklist-v2.webp"
+                          className={styles.formInput}
+                        />
+                        {resImage ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={resImage}
+                            alt="Cover preview"
+                            className={styles.articlePreviewImg}
+                          />
+                        ) : null}
+                      </div>
+                    )}
+
                     <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Description</label>
+                      <label className={styles.formLabel}>
+                        {resKind === "article"
+                          ? "Excerpt / Short Summary"
+                          : "Description"}
+                      </label>
                       <textarea
                         value={resDesc}
                         onChange={(e) => setResDesc(e.target.value)}
-                        placeholder="Brief summary of document contents..."
+                        placeholder={
+                          resKind === "article"
+                            ? "One-line summary shown on the blog card..."
+                            : "Brief summary of document contents..."
+                        }
                         className={styles.formTextarea}
                       />
                     </div>
 
-                    <div className={styles.formGrid2}>
-                      <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>File Format</label>
-                        <select
-                          value={resType}
-                          onChange={(e) => setResType(e.target.value)}
-                          className={styles.formSelect}
-                        >
-                          <option value="PDF">PDF</option>
-                          <option value="DOCX">DOCX</option>
-                          <option value="XLSX">XLSX</option>
-                          <option value="ZIP">ZIP</option>
-                        </select>
-                      </div>
+                    {resKind === "file" ? (
+                      <>
+                        <div className={styles.formGrid2}>
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>
+                              File Format
+                            </label>
+                            <select
+                              value={resType}
+                              onChange={(e) => setResType(e.target.value)}
+                              className={styles.formSelect}
+                            >
+                              <option value="PDF">PDF</option>
+                              <option value="DOCX">DOCX</option>
+                              <option value="XLSX">XLSX</option>
+                              <option value="ZIP">ZIP</option>
+                            </select>
+                          </div>
 
+                          <div className={styles.formGroup}>
+                            <label className={styles.formLabel}>
+                              File Size
+                            </label>
+                            <input
+                              type="text"
+                              value={resSize}
+                              onChange={(e) => setResSize(e.target.value)}
+                              placeholder="e.g. 1.5 MB"
+                              className={styles.formInput}
+                            />
+                          </div>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                          <label className={styles.formLabel}>
+                            File Storage Path or URL
+                          </label>
+                          <input
+                            type="text"
+                            value={resUrl}
+                            onChange={(e) => setResUrl(e.target.value)}
+                            placeholder="/assets/guides/... or Supabase storage URL"
+                            className={styles.formInput}
+                          />
+                        </div>
+                      </>
+                    ) : (
                       <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>File Size</label>
-                        <input
-                          type="text"
-                          value={resSize}
-                          onChange={(e) => setResSize(e.target.value)}
-                          placeholder="e.g. 1.5 MB"
-                          className={styles.formInput}
+                        <label className={styles.formLabel}>Article Body</label>
+                        <textarea
+                          value={resContent}
+                          onChange={(e) => setResContent(e.target.value)}
+                          rows={10}
+                          placeholder={
+                            "Write your article, one block per line. Supported:\n" +
+                            "  ## Heading\n" +
+                            "  ![alt text](/image/path.webp)\n" +
+                            "  > quoted text\n" +
+                            "  - bullet item\n" +
+                            "  1. numbered item\n" +
+                            "  [link_pill: Text|/path]\n" +
+                            "  <strong>bold</strong>"
+                          }
+                          className={styles.formTextarea}
                         />
                       </div>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>
-                        File Storage Path or URL
-                      </label>
-                      <input
-                        type="text"
-                        value={resUrl}
-                        onChange={(e) => setResUrl(e.target.value)}
-                        placeholder="/assets/guides/... or Supabase storage URL"
-                        className={styles.formInput}
-                      />
-                    </div>
+                    )}
 
                     <label className={styles.checkboxWrap}>
                       <input
@@ -1763,7 +2177,11 @@ export default function ContentCMSPage() {
                         onChange={(e) => setResPublic(e.target.checked)}
                         className={styles.checkbox}
                       />
-                      <span>Make available for public parent downloads</span>
+                      <span>
+                        {resKind === "article"
+                          ? "Publish article on the public Resource Hub"
+                          : "Make available for public parent downloads"}
+                      </span>
                     </label>
                   </>
                 )}
