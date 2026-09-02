@@ -17,15 +17,31 @@ function readRepoFile(path: string) {
 
 describe("Pexpacks Content CMS Module", () => {
   it("verifies migration 00087 defines all 4 CMS tables and RLS policies", () => {
-    const migration = readRepoFile("supabase/migrations/00087_create_cms_content.sql");
-    expect(migration).toContain("CREATE TABLE IF NOT EXISTS public.cms_announcements");
+    const migration = readRepoFile(
+      "supabase/migrations/00087_create_cms_content.sql",
+    );
+    expect(migration).toContain(
+      "CREATE TABLE IF NOT EXISTS public.cms_announcements",
+    );
     expect(migration).toContain("CREATE TABLE IF NOT EXISTS public.cms_faqs");
-    expect(migration).toContain("CREATE TABLE IF NOT EXISTS public.cms_testimonials");
-    expect(migration).toContain("CREATE TABLE IF NOT EXISTS public.cms_resources");
-    expect(migration).toContain("ALTER TABLE public.cms_announcements ENABLE ROW LEVEL SECURITY");
-    expect(migration).toContain("ALTER TABLE public.cms_faqs ENABLE ROW LEVEL SECURITY");
-    expect(migration).toContain("ALTER TABLE public.cms_testimonials ENABLE ROW LEVEL SECURITY");
-    expect(migration).toContain("ALTER TABLE public.cms_resources ENABLE ROW LEVEL SECURITY");
+    expect(migration).toContain(
+      "CREATE TABLE IF NOT EXISTS public.cms_testimonials",
+    );
+    expect(migration).toContain(
+      "CREATE TABLE IF NOT EXISTS public.cms_resources",
+    );
+    expect(migration).toContain(
+      "ALTER TABLE public.cms_announcements ENABLE ROW LEVEL SECURITY",
+    );
+    expect(migration).toContain(
+      "ALTER TABLE public.cms_faqs ENABLE ROW LEVEL SECURITY",
+    );
+    expect(migration).toContain(
+      "ALTER TABLE public.cms_testimonials ENABLE ROW LEVEL SECURITY",
+    );
+    expect(migration).toContain(
+      "ALTER TABLE public.cms_resources ENABLE ROW LEVEL SECURITY",
+    );
     expect(migration).toContain("Public read active CMS content");
     expect(migration).toContain("Public read published FAQs");
     expect(migration).toContain("Public read featured testimonials");
@@ -105,12 +121,12 @@ describe("Pexpacks Content CMS Module", () => {
     expect(CMS_TAGS.testimonials).toBe("cms-testimonials");
   });
 
-  it("wires storefront FAQ and testimonial readers to the unified CMS tables first", () => {
+  it("wires storefront FAQ and testimonial readers to public CMS RPCs", () => {
     const cms = readRepoFile("lib/cms.ts");
-    expect(cms).toContain('.from("cms_faqs")');
-    expect(cms).toContain('.eq("is_published", true)');
-    expect(cms).toContain('.from("cms_testimonials")');
-    expect(cms).toContain('.eq("is_featured", true)');
+    expect(cms).toContain('"get_public_cms_faqs" as never');
+    expect(cms).toContain('"get_public_cms_testimonials" as never');
+    expect(cms).toContain('"get_public_cms_announcements" as never');
+    expect(cms).toContain('"get_public_cms_resources" as never');
     expect(cms).toContain('"/blog"');
     expect(cms).toContain('"/schools"');
     expect(cms).toContain('"/partnership"');
@@ -150,9 +166,69 @@ describe("Pexpacks Content CMS Module", () => {
       "supabase/migrations/00090_harden_cms_admin_policies.sql",
     );
     expect(migration).toContain("public.has_permission('content.manage')");
-    expect(migration).toContain('DROP POLICY IF EXISTS "Admin full CMS access"');
-    expect(migration).toContain('CREATE POLICY "CMS managers write announcements"');
+    expect(migration).toContain(
+      'DROP POLICY IF EXISTS "Admin full CMS access"',
+    );
+    expect(migration).toContain(
+      'CREATE POLICY "CMS managers write announcements"',
+    );
     expect(migration).toContain('CREATE POLICY "CMS managers write FAQs"');
-    expect(migration).toContain('CREATE POLICY "CMS managers write testimonials"');
+    expect(migration).toContain(
+      'CREATE POLICY "CMS managers write testimonials"',
+    );
     expect(migration).toContain('CREATE POLICY "CMS managers write resources"');
-  });});
+  });
+
+  it("migration 00091 adds scheduled publishing, public RPCs, and unique banner rules", () => {
+    const migration = readRepoFile(
+      "supabase/migrations/00091_cms_public_rpcs_and_scheduled_publishing.sql",
+    );
+    // scheduled publishing columns
+    expect(migration).toContain("status text NOT NULL DEFAULT 'published'");
+    expect(migration).toContain("published_at timestamptz");
+    expect(migration).toContain("expires_at timestamptz");
+    expect(migration).toContain("updated_by uuid");
+    // status check constraints
+    expect(migration).toContain(
+      "CHECK (status IN ('draft', 'published', 'archived'))",
+    );
+    // public RPCs
+    expect(migration).toContain("get_public_cms_announcements");
+    expect(migration).toContain("get_public_cms_faqs");
+    expect(migration).toContain("get_public_cms_testimonials");
+    expect(migration).toContain("get_public_cms_resources");
+    // content.view read policy
+    expect(migration).toContain("public.has_permission('content.view')");
+    // unique active banner rules
+    expect(migration).toContain("idx_cms_announcements_one_active_global_top");
+    expect(migration).toContain(
+      "idx_cms_announcements_one_active_schools_page",
+    );
+    // revoke anon direct reads
+    expect(migration).toContain(
+      "REVOKE SELECT ON public.cms_announcements FROM anon",
+    );
+  });
+
+  it("admin CMS writes include status, published_at, and updated_by", () => {
+    const adminContent = readRepoFile("lib/admin/content.ts");
+    // announcements
+    expect(adminContent).toContain(
+      'status: parsed.data.is_active ? "published" : "draft"',
+    );
+    expect(adminContent).toContain("published_at: now");
+    expect(adminContent).toContain("updated_by: actor.user.id");
+    // FAQs
+    expect(adminContent).toContain(
+      'status: parsed.data.is_published ? "published" : "draft"',
+    );
+    // testimonials
+    expect(adminContent).toContain(
+      'status: parsed.data.is_featured ? "published" : "draft"',
+    );
+    // resources
+    expect(adminContent).toContain(
+      'status: parsed.data.is_public ? "published" : "draft"',
+    );
+  });
+});

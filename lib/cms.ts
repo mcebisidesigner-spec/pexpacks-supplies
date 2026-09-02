@@ -96,95 +96,63 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+type PublicCmsTestimonialRpcRow = {
+  id: string;
+  author_name: string;
+  author_role: string;
+  quote: string;
+  rating: number | null;
+  avatar_url: string | null;
+};
+
 async function fetchTestimonials(): Promise<Testimonial[]> {
   const admin = createSupabaseAdminClient();
-  const { data: cmsData, error: cmsError } = await admin
-    .from("cms_testimonials")
-    .select("id, author_name, author_role, quote, rating, avatar_url")
-    .eq("is_featured", true)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: true });
+  const { data, error } = await admin.rpc(
+    "get_public_cms_testimonials" as never,
+  );
 
-  if (cmsError) {
-    console.error("[cms] cms_testimonials:", cmsError);
+  if (error) {
+    console.error("[cms] public testimonials rpc:", error);
+    return [];
   }
 
-  if (cmsData && cmsData.length > 0) {
-    return cmsData.map((row) => ({
+  return ((data as unknown as PublicCmsTestimonialRpcRow[] | null) ?? []).map(
+    (row) => ({
       id: row.id,
       name: row.author_name,
       role: row.author_role,
       context: "",
       quote: row.quote,
       avatar: row.avatar_url ?? undefined,
-      rating: row.rating,
-    }));
-  }
-
-  const { data, error } = await admin
-    .from("testimonials")
-    .select("id, name, role, context, quote, avatar, rating")
-    .eq("visible", true)
-    .order("sort_order", { ascending: true });
-
-  if (error) {
-    console.error("[cms] testimonials:", error);
-    return [];
-  }
-
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    name: row.name,
-    role: row.role,
-    context: row.context ?? "",
-    quote: row.quote,
-    avatar: row.avatar ?? undefined,
-    rating: row.rating,
-  }));
+      rating: row.rating ?? 5,
+    }),
+  );
 }
+
+type PublicCmsFaqRpcRow = {
+  id: string;
+  category: string | null;
+  question: string;
+  answer: string;
+};
 
 async function fetchFaqs(): Promise<FAQ[]> {
   const admin = createSupabaseAdminClient();
-  const { data: cmsData, error: cmsError } = await admin
-    .from("cms_faqs")
-    .select("id, category, question, answer, sort_order")
-    .eq("is_published", true)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: true });
+  const { data, error } = await admin.rpc("get_public_cms_faqs" as never);
 
-  if (cmsError) {
-    console.error("[cms] cms_faqs:", cmsError);
+  if (error) {
+    console.error("[cms] public faqs rpc:", error);
+    return [];
   }
 
-  if (cmsData && cmsData.length > 0) {
-    return cmsData.map((row) => ({
+  return ((data as unknown as PublicCmsFaqRpcRow[] | null) ?? []).map(
+    (row) => ({
       id: row.id,
       category: (row.category || "general") as FAQ["category"],
       question: row.question,
       answer: row.answer,
-    }));
-  }
-
-  const { data, error } = await admin
-    .from("faqs")
-    .select("id, slug, question, answer, category, links")
-    .eq("visible", true)
-    .order("sort_order", { ascending: true });
-
-  if (error) {
-    console.error("[cms] faqs:", error);
-    return [];
-  }
-
-  return (data ?? []).map((row) => ({
-    id: row.slug ?? row.id,
-    category: (row.category || "general") as FAQ["category"],
-    question: row.question,
-    answer: row.answer,
-    links: Array.isArray(row.links)
-      ? (row.links as { label: string; href: string }[])
-      : undefined,
-  }));
+    }),
+  );
 }
 
 export const getTestimonials = unstable_cache(
@@ -250,28 +218,19 @@ async function fetchActiveAnnouncement(
   location?: "global_top" | "hero_banner" | "schools_page",
 ): Promise<PublicAnnouncement | null> {
   const admin = createSupabaseAdminClient();
-  let query = admin
-    .from("cms_announcements")
-    .select("id, badge_text, message, link_url, link_label, display_location")
-    .eq("is_active", true);
-
-  if (location === "schools_page") {
-    query = query.eq("display_location", "schools_page");
-  } else {
-    query = query.in("display_location", ["global_top", "hero_banner"]);
-  }
-
-  const { data, error } = await query
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const rpcLocation = location ?? "site_header";
+  const { data, error } = await admin.rpc(
+    "get_public_cms_announcements" as never,
+    { p_location: rpcLocation } as never,
+  );
 
   if (error) {
-    console.error("[cms] active announcement:", error);
+    console.error("[cms] public announcements rpc:", error);
     return null;
   }
 
-  return data;
+  const rows = (data as unknown as PublicAnnouncement[] | null) ?? [];
+  return rows[0] ?? null;
 }
 
 export const getActiveAnnouncement = unstable_cache(
@@ -293,19 +252,14 @@ export interface PublicCmsFaq {
 
 async function fetchPublishedCmsFaqs(): Promise<PublicCmsFaq[]> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
-    .from("cms_faqs")
-    .select("id, category, question, answer, sort_order")
-    .eq("is_published", true)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: true });
+  const { data, error } = await admin.rpc("get_public_cms_faqs" as never);
 
   if (error) {
-    console.error("[cms] published faqs:", error);
+    console.error("[cms] public faqs rpc:", error);
     return [];
   }
 
-  return data ?? [];
+  return (data as unknown as PublicCmsFaq[] | null) ?? [];
 }
 
 export const getPublishedCmsFaqs = unstable_cache(
@@ -329,21 +283,16 @@ export interface PublicCmsTestimonial {
 
 async function fetchFeaturedCmsTestimonials(): Promise<PublicCmsTestimonial[]> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
-    .from("cms_testimonials")
-    .select(
-      "id, author_name, author_role, quote, rating, avatar_url, school_id",
-    )
-    .eq("is_featured", true)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: true });
+  const { data, error } = await admin.rpc(
+    "get_public_cms_testimonials" as never,
+  );
 
   if (error) {
-    console.error("[cms] featured testimonials:", error);
+    console.error("[cms] public testimonials rpc:", error);
     return [];
   }
 
-  return data ?? [];
+  return (data as unknown as PublicCmsTestimonial[] | null) ?? [];
 }
 
 export const getFeaturedCmsTestimonials = unstable_cache(
@@ -368,21 +317,14 @@ export interface PublicCmsResource {
 
 async function fetchPublicCmsResources(): Promise<PublicCmsResource[]> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
-    .from("cms_resources")
-    .select(
-      "id, title, description, category, file_url, file_type, file_size_label, download_count",
-    )
-    .eq("is_public", true)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: true });
+  const { data, error } = await admin.rpc("get_public_cms_resources" as never);
 
   if (error) {
-    console.error("[cms] public resources:", error);
+    console.error("[cms] public resources rpc:", error);
     return [];
   }
 
-  return data ?? [];
+  return (data as unknown as PublicCmsResource[] | null) ?? [];
 }
 
 export const getPublicCmsResources = unstable_cache(

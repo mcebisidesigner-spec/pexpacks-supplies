@@ -874,6 +874,7 @@ export async function saveCmsAnnouncement(
   }
 
   const admin = createSupabaseAdminClient();
+  const now = new Date().toISOString();
   const payload = {
     badge_text: parsed.data.badge_text,
     message: parsed.data.message,
@@ -881,14 +882,17 @@ export async function saveCmsAnnouncement(
     link_label: parsed.data.link_label || null,
     is_active: parsed.data.is_active,
     display_location: parsed.data.display_location,
-    updated_at: new Date().toISOString(),
+    status: parsed.data.is_active ? "published" : "draft",
+    published_at: now,
+    updated_at: now,
+    updated_by: actor.user.id,
   };
 
   try {
     if (id) {
       const { error } = await admin
         .from("cms_announcements")
-        .update(payload)
+        .update(payload as never)
         .eq("id", id);
       if (error) throw error;
       void writeAuditLog({
@@ -902,7 +906,7 @@ export async function saveCmsAnnouncement(
     } else {
       const { data, error } = await admin
         .from("cms_announcements")
-        .insert(payload)
+        .insert(payload as never)
         .select("id")
         .single();
       if (error) throw error;
@@ -962,7 +966,13 @@ export async function toggleCmsAnnouncementActive(
   const admin = createSupabaseAdminClient();
   const { error } = await admin
     .from("cms_announcements")
-    .update({ is_active: active, updated_at: new Date().toISOString() })
+    .update({
+      is_active: active,
+      status: active ? "published" : "draft",
+      published_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      updated_by: actor.user.id,
+    } as never)
     .eq("id", id);
 
   if (error) {
@@ -1041,20 +1051,24 @@ export async function saveCmsFaq(
   }
 
   const admin = createSupabaseAdminClient();
+  const now = new Date().toISOString();
   const payload = {
     category: parsed.data.category,
     question: parsed.data.question,
     answer: parsed.data.answer,
     sort_order: parsed.data.sort_order,
     is_published: parsed.data.is_published,
-    updated_at: new Date().toISOString(),
+    status: parsed.data.is_published ? "published" : "draft",
+    published_at: now,
+    updated_at: now,
+    updated_by: actor.user.id,
   };
 
   try {
     if (id) {
       const { error } = await admin
         .from("cms_faqs")
-        .update(payload)
+        .update(payload as never)
         .eq("id", id);
       if (error) throw error;
       void writeAuditLog({
@@ -1068,7 +1082,7 @@ export async function saveCmsFaq(
     } else {
       const { data, error } = await admin
         .from("cms_faqs")
-        .insert(payload)
+        .insert(payload as never)
         .select("id")
         .single();
       if (error) throw error;
@@ -1123,7 +1137,13 @@ export async function toggleCmsFaqPublished(
   const admin = createSupabaseAdminClient();
   const { error } = await admin
     .from("cms_faqs")
-    .update({ is_published: published, updated_at: new Date().toISOString() })
+    .update({
+      is_published: published,
+      status: published ? "published" : "draft",
+      published_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      updated_by: actor.user.id,
+    } as never)
     .eq("id", id);
 
   if (error) return { ok: false, message: "Failed to toggle status." };
@@ -1203,6 +1223,7 @@ export async function saveCmsTestimonial(
   }
 
   const admin = createSupabaseAdminClient();
+  const now = new Date().toISOString();
   const payload = {
     author_name: parsed.data.author_name,
     author_role: parsed.data.author_role,
@@ -1212,13 +1233,17 @@ export async function saveCmsTestimonial(
     avatar_url: parsed.data.avatar_url || null,
     is_featured: parsed.data.is_featured,
     sort_order: parsed.data.sort_order,
+    status: parsed.data.is_featured ? "published" : "draft",
+    published_at: now,
+    updated_at: now,
+    updated_by: actor.user.id,
   };
 
   try {
     if (id) {
       const { error } = await admin
         .from("cms_testimonials")
-        .update(payload)
+        .update(payload as never)
         .eq("id", id);
       if (error) throw error;
       void writeAuditLog({
@@ -1232,7 +1257,7 @@ export async function saveCmsTestimonial(
     } else {
       const { data, error } = await admin
         .from("cms_testimonials")
-        .insert(payload)
+        .insert(payload as never)
         .select("id")
         .single();
       if (error) throw error;
@@ -1289,7 +1314,13 @@ export async function toggleCmsTestimonialFeatured(
   const admin = createSupabaseAdminClient();
   const { error } = await admin
     .from("cms_testimonials")
-    .update({ is_featured: featured })
+    .update({
+      is_featured: featured,
+      status: featured ? "published" : "draft",
+      published_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      updated_by: actor.user.id,
+    } as never)
     .eq("id", id);
 
   if (error) return { ok: false, message: "Failed to toggle status." };
@@ -1376,6 +1407,7 @@ export async function saveCmsResource(
   }
 
   const admin = createSupabaseAdminClient();
+  const now = new Date().toISOString();
   const payload = {
     title: parsed.data.title,
     description: parsed.data.description || null,
@@ -1385,14 +1417,17 @@ export async function saveCmsResource(
     file_size_label: parsed.data.file_size_label || null,
     is_public: parsed.data.is_public,
     sort_order: parsed.data.sort_order,
-    updated_at: new Date().toISOString(),
+    status: parsed.data.is_public ? "published" : "draft",
+    published_at: now,
+    updated_at: now,
+    updated_by: actor.user.id,
   };
 
   try {
     if (id) {
       const { error } = await admin
         .from("cms_resources")
-        .update(payload)
+        .update(payload as never)
         .eq("id", id);
       if (error) throw error;
       void writeAuditLog({
@@ -1406,7 +1441,7 @@ export async function saveCmsResource(
     } else {
       const { data, error } = await admin
         .from("cms_resources")
-        .insert(payload)
+        .insert(payload as never)
         .select("id")
         .single();
       if (error) throw error;
@@ -1461,7 +1496,13 @@ export async function toggleCmsResourcePublic(
   const admin = createSupabaseAdminClient();
   const { error } = await admin
     .from("cms_resources")
-    .update({ is_public: isPublic, updated_at: new Date().toISOString() })
+    .update({
+      is_public: isPublic,
+      status: isPublic ? "published" : "draft",
+      published_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      updated_by: actor.user.id,
+    } as never)
     .eq("id", id);
 
   if (error) return { ok: false, message: "Failed to toggle status." };
