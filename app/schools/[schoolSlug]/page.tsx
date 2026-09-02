@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
@@ -95,6 +95,11 @@ export default async function SchoolDetailPage({
 
   if (!school) {
     notFound();
+  }
+
+  // Canonical 301 permanent redirect if accessed via alias / suffix variation (e.g. Google index legacy URLs)
+  if (school.slug !== schoolSlug) {
+    permanentRedirect(`/schools/${school.slug}`);
   }
 
   const isRefused =

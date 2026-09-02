@@ -137,14 +137,83 @@ function parseAggregatePayload(value: unknown): School | null {
 export async function getSchoolBySlug(
   slug: string,
 ): Promise<School | undefined> {
+  const normalizedSlug = (slug || "").toLowerCase().trim();
+  if (!normalizedSlug) return undefined;
+
   try {
     const supabase = createSupabaseAdminClient();
+    // 1. Direct exact lookup via database RPC
     const { data, error } = await supabase.rpc("get_public_school_pack", {
-      school_slug: slug,
+      school_slug: normalizedSlug,
     });
 
-    if (error) throw error;
-    return parseAggregatePayload(data) ?? undefined;
+    if (!error) {
+      const parsed = parseAggregatePayload(data);
+      if (parsed) return parsed;
+    }
+
+    // 2. Prefix fallback (e.g. "brakpan-high" -> "brakpan-high-school", "pretoria-high" -> "pretoria-high-school-for-girls")
+    const { data: prefixCandidates } = await supabase
+      .from("schools")
+      .select("slug")
+      .or(`slug.ilike.${normalizedSlug}-%,slug.ilike.${normalizedSlug}%`)
+      .eq("published", true)
+      .limit(1);
+
+    if (
+      prefixCandidates &&
+      prefixCandidates.length > 0 &&
+      prefixCandidates[0].slug !== normalizedSlug
+    ) {
+      const { data: prefixData } = await supabase.rpc(
+        "get_public_school_pack",
+        {
+          school_slug: prefixCandidates[0].slug,
+        },
+      );
+      const parsedPrefix = parseAggregatePayload(prefixData);
+      if (parsedPrefix) return parsedPrefix;
+    }
+
+    // 3. Keyword / distinctive word fallback (e.g. "randhart-high" -> "laerskool-randhart", "langaville-high" -> "langaville-secondary-school")
+    const noiseWords = new Set([
+      "high",
+      "school",
+      "primary",
+      "secondary",
+      "laerskool",
+      "hoerskool",
+      "preparatory",
+      "college",
+    ]);
+    const distinctiveWords = normalizedSlug
+      .split("-")
+      .filter((w) => w.length > 2 && !noiseWords.has(w));
+
+    if (distinctiveWords.length > 0) {
+      const keywordPattern = distinctiveWords.join("%");
+      const { data: keywordCandidates } = await supabase
+        .from("schools")
+        .select("slug")
+        .or(
+          `slug.ilike.%${keywordPattern}%,name.ilike.%${distinctiveWords.join(" ")}%`,
+        )
+        .eq("published", true)
+        .limit(1);
+
+      if (keywordCandidates && keywordCandidates.length > 0) {
+        const { data: keywordData } = await supabase.rpc(
+          "get_public_school_pack",
+          {
+            school_slug: keywordCandidates[0].slug,
+          },
+        );
+        const parsedKeyword = parseAggregatePayload(keywordData);
+        if (parsedKeyword) return parsedKeyword;
+      }
+    }
+
+    return undefined;
   } catch (error) {
     console.error("[school-utils] public school lookup failed:", error);
     return undefined;

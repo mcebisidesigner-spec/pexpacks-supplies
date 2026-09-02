@@ -104,6 +104,36 @@ const nextConfig: NextConfig = {
         destination: "/",
         permanent: true,
       },
+      {
+        source: "/packs/:schoolSlug/:grade*",
+        destination: "/schools/:schoolSlug/:grade*",
+        permanent: true,
+      },
+      {
+        source: "/packs/:schoolSlug",
+        destination: "/schools/:schoolSlug",
+        permanent: true,
+      },
+      {
+        source: "/admin/login",
+        destination: "/pex-console-secure",
+        permanent: false,
+      },
+      {
+        source: "/contact-us",
+        destination: "/contact",
+        permanent: true,
+      },
+      {
+        source: "/contactus",
+        destination: "/contact",
+        permanent: true,
+      },
+      {
+        source: "/about-us",
+        destination: "/",
+        permanent: true,
+      },
     ];
   },
   async headers() {
@@ -191,7 +221,8 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+            value:
+              "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
           },
           {
             key: "Pragma",
@@ -205,6 +236,10 @@ const nextConfig: NextConfig = {
             key: "Surrogate-Control",
             value: "no-store",
           },
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, nosnippet, nocache",
+          },
         ],
       },
       {
@@ -212,7 +247,8 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+            value:
+              "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
           },
           {
             key: "Pragma",

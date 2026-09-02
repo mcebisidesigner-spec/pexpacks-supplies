@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradePackDetails } from "@/components/schools/GradePackDetails";
 import { PackBuildingAnimation } from "@/components/schools/PackBuildingAnimation";
@@ -25,7 +25,11 @@ export async function generateMetadata({
 }: GradePageProps): Promise<Metadata> {
   const { schoolSlug, gradeSlug } = await params;
   const school = await getCachedSchoolBySlug(schoolSlug);
-  const grade = school?.grades.find((g) => g.gradeSlug === gradeSlug);
+  const normalizedGrade = gradeSlug.toLowerCase();
+  const grade =
+    school?.grades.find((g) => g.gradeSlug === normalizedGrade) ||
+    school?.grades.find((g) => g.id === gradeSlug) ||
+    school?.grades.find((g) => normalizedGrade.endsWith(g.gradeSlug));
 
   if (!school || !grade) {
     return buildMetadata(
@@ -54,10 +58,31 @@ export default async function GradePackPage({ params }: GradePageProps) {
     getCachedSchoolBySlug(schoolSlug),
     getPublicSiteSettings(),
   ]);
-  const grade = school?.grades.find((g) => g.gradeSlug === gradeSlug);
 
-  if (!school || !grade) {
+  if (!school) {
     notFound();
+  }
+
+  // Canonical 301 permanent redirect if school was resolved via slug alias
+  if (school.slug !== schoolSlug) {
+    permanentRedirect(`/schools/${school.slug}/${gradeSlug}`);
+  }
+
+  // Match grade with fallback support (e.g. "brakpan-high-school-grade-12" -> "grade-12")
+  const normalizedGrade = gradeSlug.toLowerCase();
+  const grade =
+    school.grades.find((g) => g.gradeSlug === normalizedGrade) ||
+    school.grades.find((g) => g.id === gradeSlug) ||
+    school.grades.find((g) => normalizedGrade.endsWith(g.gradeSlug)) ||
+    school.grades.find((g) => g.grade.toLowerCase().replace(/[^a-z0-9]/g, "") === normalizedGrade.replace(/[^a-z0-9]/g, ""));
+
+  if (!grade) {
+    // If grade is not found on this school, gracefully redirect to the school's overview page
+    permanentRedirect(`/schools/${school.slug}`);
+  }
+
+  if (grade.gradeSlug !== gradeSlug) {
+    permanentRedirect(`/schools/${school.slug}/${grade.gradeSlug}`);
   }
 
   const descriptions = Object.fromEntries(

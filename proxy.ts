@@ -62,13 +62,16 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  // 1. Mask Legacy /login Route with Stealth 404
+  // 1. Handle Legacy /login Route by safely redirecting to the console gateway
   if (pathname === "/login") {
+    response.headers.set(
+      "X-Robots-Tag",
+      "noindex, nofollow, noarchive, nosnippet, nocache",
+    );
     return copyCookies(
       response,
       applySecurityHeaders(
-        NextResponse.rewrite(new URL("/not-found", request.url), {
-          status: 404,
+        NextResponse.redirect(new URL("/pex-console-secure", request.url), {
           headers: response.headers,
         }),
       ),
@@ -155,5 +158,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/admin", "/login", "/pex-console-secure", "/pex-console"],
+  matcher: [
+    "/admin/:path*",
+    "/admin",
+    "/login",
+    "/pex-console-secure",
+    "/pex-console",
+  ],
 };

@@ -21,7 +21,10 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
-import type { MasterProductRow, SupplierCostStats } from "@/lib/admin/operations";
+import type {
+  MasterProductRow,
+  SupplierCostStats,
+} from "@/lib/admin/operations";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
@@ -79,9 +82,7 @@ export function MasterProductsPageView({
         setParams({}, true);
         router.refresh();
       } else {
-        notifyError(
-          res.message || "Failed to clear the product catalogue.",
-        );
+        notifyError(res.message || "Failed to clear the product catalogue.");
       }
     } catch {
       notifyError("Failed to clear the product catalogue.");
@@ -141,7 +142,14 @@ export function MasterProductsPageView({
       align: "right",
       width: "130px",
       render: (row) => (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2px" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: "2px",
+          }}
+        >
           <span className={styles.costPrice}>
             {row.latest_verified_cost != null
               ? `R ${Number(row.latest_verified_cost).toFixed(2)}`
@@ -216,29 +224,12 @@ export function MasterProductsPageView({
     },
   ];
 
-  const mappedProducts =
-    supplierStats?.totalAssigned ??
-    initialData.products.filter(
-      (p) => p.preferred_supplier_id || p.supplier?.id,
-    ).length;
-
-  const totalCatalogProducts =
-    supplierStats?.totalProducts ||
-    initialData.total ||
-    initialData.products.length ||
-    0;
-
-  const activeSuppliersCount =
-    supplierStats?.activeSuppliersCount ??
-    new Set(
-      initialData.products
-        .map((p) => p.preferred_supplier_id || p.supplier?.id)
-        .filter(Boolean),
-    ).size;
-
   // Determine distinct supplier names/codes mapped across products (e.g. "BSC/Makro")
   const supplierNamesLabel = (() => {
-    if (supplierStats?.supplierNamesLabel && supplierStats.supplierNamesLabel !== "Unassigned") {
+    if (
+      supplierStats?.supplierNamesLabel &&
+      supplierStats.supplierNamesLabel !== "Unassigned"
+    ) {
       return supplierStats.supplierNamesLabel;
     }
     const names = Array.from(
@@ -248,7 +239,9 @@ export function MasterProductsPageView({
             if (!p.supplier && !p.preferred_supplier_id) return null;
             const code = p.supplier?.code?.trim() || "";
             const name = p.supplier?.name?.trim() || "";
-            return code && code.length > 0 && code.length < name.length ? code : (name || code);
+            return code && code.length > 0 && code.length < name.length
+              ? code
+              : name || code;
           })
           .filter(Boolean) as string[],
       ),

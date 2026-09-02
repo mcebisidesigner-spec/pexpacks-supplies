@@ -29,19 +29,8 @@ export default async function TrackOrderPage() {
     typeof hero.title === "string" && hero.title
       ? hero.title
       : "Check your stationery pack status";
-  const trackingFaqs = faqs.filter((f) =>
-    [
-      "track-order-how",
-      "track-order-status-meaning",
-      "delivery-timing",
-      "order-changes",
-      "proof-of-payment",
-      "delivery-areas",
-      "track-order-missing-ref",
-    ].includes(f.id),
-  );
-  const visibleTrackingFaqs =
-    trackingFaqs.length > 0 ? trackingFaqs : faqs.slice(0, 5);
+  const visibleTrackingFaqs = faqs.slice(0, 5);
+
 
   return (
     <>
