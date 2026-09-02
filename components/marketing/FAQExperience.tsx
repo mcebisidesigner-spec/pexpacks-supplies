@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import clsx from "clsx";
 import type { FAQ } from "@/data/faqs";
+import { getFaqLinks } from "@/data/faqs";
 import styles from "./FAQExperience.module.css";
 
 type FAQExperienceProps = {
@@ -145,25 +146,43 @@ export function FAQExperience({ faqs }: FAQExperienceProps) {
                       aria-controls={`${faq.id}-answer`}
                     >
                       <span className={styles.questionText}>{faq.question}</span>
-                      <span className={styles.categoryPill}>{faq.category}</span>
-                      <span className={styles.toggleIcon} aria-hidden="true" />
+                      <div className={styles.headerRight}>
+                        {faq.category ? (
+                          <span className={styles.categoryPill}>{faq.category}</span>
+                        ) : null}
+                        <span className={styles.toggleIcon} aria-hidden="true" />
+                      </div>
                     </button>
 
                     {isOpen ? (
                       <div className={styles.answer} id={`${faq.id}-answer`}>
                         <p>{faq.answer}</p>
-                        {faq.links?.length ? (
-                          <div
-                            className={styles.faqLinks}
-                            aria-label="Related FAQ links"
-                          >
-                            {faq.links.map((link) => (
-                              <Link href={link.href} key={link.href}>
-                                {link.label}
-                              </Link>
-                            ))}
-                          </div>
-                        ) : null}
+                        {(() => {
+                          const links = getFaqLinks(faq);
+                          return links.length > 0 ? (
+                            <div
+                              className={styles.faqLinks}
+                              aria-label="Related FAQ links"
+                            >
+                              {links.map((link) => (
+                                <Link
+                                  href={link.href}
+                                  key={link.href + link.label}
+                                  className={styles.linkPill}
+                                >
+                                  <span>
+                                    {link.label
+                                      .replace(/\s*→\s*$/, "")
+                                      .replace(/\s*->\s*$/, "")}
+                                  </span>
+                                  <span className={styles.pillArrow} aria-hidden="true">
+                                    &rarr;
+                                  </span>
+                                </Link>
+                              ))}
+                            </div>
+                          ) : null;
+                        })()}
                       </div>
                     ) : null}
                   </article>

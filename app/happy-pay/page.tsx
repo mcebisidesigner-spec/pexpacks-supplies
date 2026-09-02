@@ -5,6 +5,8 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
 import { buildMetadata } from "@/lib/seo";
 import { getFaqs } from "@/lib/cms";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import type { FAQ } from "@/data/faqs";
 import styles from "./HappyPayPage.module.css";
 
 export const metadata: Metadata = {
@@ -125,51 +127,105 @@ const benefits = [
   },
 ];
 
-const fallbackFaqs = [
+const fallbackFaqs: FAQ[] = [
   {
+    id: "happy-pay-what-is",
+    category: "Happy Pay (BNPL)",
     question: "What is Happy Pay?",
     answer:
-      "Happy Pay is a South African Buy Now Pay Later (BNPL) provider. With Pexpacks, it lets you split your order total into 2 equal, interest-free payments \u2014 50% today and 50% in 30 days.",
+      "Happy Pay is a South African Buy Now Pay Later (BNPL) provider. With Pexpacks, it lets you split your order total into 2 equal, interest-free payments — 50% today and 50% in 30 days.",
+    links: [
+      { label: "Learn about Happy Pay", href: "/happy-pay" },
+      { label: "Find your school pack", href: "/schools" },
+    ],
   },
   {
+    id: "happy-pay-how-two-payments",
+    category: "Happy Pay (BNPL)",
     question: "How do the two payments work?",
     answer:
       "At checkout you pay your first 50%. Happy Pay settles your full order with Pexpacks immediately, so your packs are dispatched right away. Your second 50% is collected automatically 30 days later.",
+    links: [
+      { label: "Start an order", href: "/order" },
+      { label: "Happy Pay terms", href: "/happy-pay-terms" },
+    ],
   },
   {
+    id: "happy-pay-interest-charges",
+    category: "Happy Pay (BNPL)",
     question: "Are there any interest charges or fees?",
     answer:
-      "No. There is 0% interest and no application fee. If a scheduled payment is ever missed, a late fee may apply in line with Happy Pay\u2019s terms \u2014 but the price you pay for your packs never increases.",
+      "No. There is 0% interest and no application fee. If a scheduled payment is ever missed, a late fee may apply in line with Happy Pay’s terms — but the price you pay for your packs never increases.",
+    links: [
+      { label: "Happy Pay terms", href: "/happy-pay-terms" },
+      { label: "Terms of use", href: "/terms" },
+    ],
   },
   {
+    id: "happy-pay-credit-score",
+    category: "Happy Pay (BNPL)",
     question: "Will using Happy Pay affect my credit score?",
     answer:
       "No. Checking your eligibility and splitting your payment with Happy Pay does not impact your credit score.",
+    links: [
+      { label: "Learn about Happy Pay", href: "/happy-pay" },
+      { label: "Contact support", href: "/contact" },
+    ],
   },
   {
+    id: "happy-pay-approval-time",
+    category: "Happy Pay (BNPL)",
     question: "How long does approval take?",
     answer:
-      "Approval typically takes under 60 seconds. You\u2019ll receive an instant decision at checkout, and if approved, your first instalment is paid immediately.",
+      "Approval typically takes under 60 seconds. You’ll receive an instant decision at checkout, and if approved, your first instalment is paid immediately.",
+    links: [
+      { label: "Start an order", href: "/order" },
+      { label: "Find your school", href: "/schools" },
+    ],
   },
   {
+    id: "happy-pay-who-eligible",
+    category: "Happy Pay (BNPL)",
     question: "Who can use Happy Pay?",
     answer:
       "You need to be 18 years or older, a South African resident, and pay with a South African bank card. Eligibility is determined by Happy Pay at checkout.",
+    links: [
+      { label: "Happy Pay terms", href: "/happy-pay-terms" },
+      { label: "Find your school pack", href: "/schools" },
+    ],
   },
   {
-    question: "What happens if my second payment can\u2019t be processed?",
+    id: "happy-pay-second-payment",
+    category: "Happy Pay (BNPL)",
+    question: "What happens if my second payment can’t be processed?",
     answer:
-      "Happy Pay will attempt to collect the instalment again and may charge a late fee if it remains unpaid. Your order is never affected \u2014 your packs have already been dispatched to you.",
+      "Happy Pay will attempt to collect the instalment again and may charge a late fee if it remains unpaid. Your order is never affected — your packs have already been dispatched to you.",
+    links: [
+      { label: "Track an order", href: "/track-order" },
+      { label: "Delivery policy", href: "/delivery-policy" },
+    ],
   },
   {
+    id: "happy-pay-receive-packs",
+    category: "Happy Pay (BNPL)",
     question: "When will I receive my packs?",
     answer:
-      "Right away. Because Happy Pay settles your full order with Pexpacks today, your pack is prepared and dispatched as soon as packing is complete \u2014 you don\u2019t wait for the second payment.",
+      "Right away. Because Happy Pay settles your full order with Pexpacks today, your pack is prepared and dispatched as soon as packing is complete — you don’t wait for the second payment.",
+    links: [
+      { label: "Track an order", href: "/track-order" },
+      { label: "Delivery policy", href: "/delivery-policy" },
+    ],
   },
   {
+    id: "happy-pay-card-safe",
+    category: "Happy Pay (BNPL)",
     question: "Is my card and personal information safe?",
     answer:
       "Yes. Payments are processed by Ozow, a PCI DSS compliant payment gateway, so your card details never touch Pexpacks servers. Your personal information is handled in line with POPIA and shared with Happy Pay only to process your split.",
+    links: [
+      { label: "Terms of use", href: "/terms" },
+      { label: "Contact support", href: "/contact" },
+    ],
   },
 ];
 
@@ -190,7 +246,16 @@ const security = [
 
 export default async function HappyPayPage() {
   const cmsFaqs = await getFaqs("happy_pay");
-  const displayFaqs = cmsFaqs && cmsFaqs.length > 0 ? cmsFaqs : fallbackFaqs;
+  const displayFaqs: FAQ[] =
+    cmsFaqs && cmsFaqs.length > 0
+      ? cmsFaqs.map((faq, index) => ({
+          id: faq.id ?? `happy-pay-${index}`,
+          category: faq.category ?? "Happy Pay (BNPL)",
+          question: faq.question,
+          answer: faq.answer,
+          links: faq.links && faq.links.length > 0 ? faq.links : undefined,
+        }))
+      : fallbackFaqs;
 
   return (
     <>
@@ -285,27 +350,14 @@ export default async function HappyPayPage() {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <div className={styles.sectionInner}>
-          <SectionHeader
-            eyebrow="Questions"
-            title="Happy Pay FAQ"
-            text="Answers to the questions parents ask us most about splitting their payment."
-            headingId="faq"
-          />
-          <div className={styles.faqList}>
-            {displayFaqs.map((faq) => (
-              <details className={styles.faqItem} key={faq.question}>
-                <summary className={styles.faqQuestion}>
-                  <span>{faq.question}</span>
-                  <span className={styles.faqChevron} aria-hidden="true" />
-                </summary>
-                <p className={styles.faqAnswer}>{faq.answer}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+      <div id="faq">
+        <FaqMarquee
+          faqs={displayFaqs}
+          eyebrow="Questions"
+          title="Happy Pay FAQ"
+          seeAllHref="/faq"
+        />
+      </div>
 
       <section className={styles.sectionSoft}>
         <div className={styles.sectionInner}>

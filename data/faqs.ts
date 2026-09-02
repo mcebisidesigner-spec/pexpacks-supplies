@@ -25,6 +25,45 @@ export type FAQ = {
   }[];
 };
 
+export function getFaqLinks(faq: FAQ): { label: string; href: string }[] {
+  if (faq.links && faq.links.length > 0) {
+    return faq.links;
+  }
+
+  const category = (faq.category || "").toLowerCase();
+  const question = (faq.question || "").toLowerCase();
+
+  if (category.includes("happy pay") || question.includes("happy pay") || question.includes("bnpl")) {
+    return [
+      { label: "Learn about Happy Pay", href: "/happy-pay" },
+      { label: "Happy Pay terms", href: "/happy-pay-terms" },
+    ];
+  }
+  if (category.includes("delivery") || question.includes("deliver") || question.includes("pack")) {
+    return [
+      { label: "Track an order", href: "/track-order" },
+      { label: "Delivery policy", href: "/delivery-policy" },
+    ];
+  }
+  if (category.includes("payment") || question.includes("pay")) {
+    return [
+      { label: "Start an order", href: "/order" },
+      { label: "Contact Pexpacks", href: "/contact" },
+    ];
+  }
+  if (category.includes("school") || question.includes("school")) {
+    return [
+      { label: "Find your school", href: "/schools" },
+      { label: "School partnership", href: "/partnership" },
+    ];
+  }
+
+  return [
+    { label: "Find your school pack", href: "/schools" },
+    { label: "Contact support", href: "/contact" },
+  ];
+}
+
 export const faqs: FAQ[] = [
   {
     id: "school-not-listed",

@@ -26,14 +26,14 @@
 .accordionList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 14px;
 }
 
 .accordionItem {
   background: #ffffff;
-  border-radius: var(--radius-image);
-  border: 1px solid rgba(26, 42, 64, 0.1);
-  box-shadow: 0 12px 34px rgba(26, 42, 64, 0.06);
+  border-radius: 20px;
+  border: 1px solid rgba(26, 42, 64, 0.09);
+  box-shadow: 0 4px 18px rgba(26, 42, 64, 0.04);
   overflow: hidden;
   transition:
     box-shadow var(--motion-duration) var(--motion-ease),
@@ -41,23 +41,23 @@
 }
 
 .accordionItem:hover {
-  border-color: rgba(33, 158, 154, 0.22);
-  box-shadow: 0 18px 42px rgba(26, 42, 64, 0.09);
+  border-color: rgba(33, 158, 154, 0.25);
+  box-shadow: 0 8px 26px rgba(26, 42, 64, 0.07);
 }
 
 .accordionItem.open {
-  border-color: rgba(33, 158, 154, 0.34);
-  box-shadow: 0 18px 44px rgba(26, 42, 64, 0.1);
+  border: 1.5px solid rgba(26, 122, 119, 0.42);
+  box-shadow: 0 12px 36px rgba(26, 122, 119, 0.08);
 }
 
 .accordionButton {
   width: 100%;
   min-height: 64px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 20px var(--space-5);
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 26px;
   background: none;
   border: none;
   cursor: pointer;
@@ -65,17 +65,38 @@
   font-family: inherit;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.categoryPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: rgba(26, 122, 119, 0.09);
+  color: var(--pex-keppel);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
 .questionText {
   color: var(--pex-primary);
-  font-size: var(--text-base);
-  font-weight: 900;
-  line-height: 1.25;
+  font-size: 16.5px;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
 }
 
 .iconContainer {
   position: relative;
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
   color: var(--pex-primary);
 }
@@ -86,12 +107,14 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 15px;
+  width: 14px;
   height: 2px;
-  border-radius: var(--radius-pill);
+  border-radius: 2px;
   background: currentColor;
   transform: translate(-50%, -50%);
-  transition: transform var(--motion-duration) var(--motion-ease);
+  transition:
+    transform var(--motion-duration) var(--motion-ease),
+    opacity 0.2s var(--motion-ease);
 }
 
 .plusIcon::after {
@@ -100,6 +123,7 @@
 
 .accordionItem.open .plusIcon::after {
   transform: translate(-50%, -50%) rotate(0deg);
+  opacity: 0;
 }
 
 .accordionContent {
@@ -125,11 +149,11 @@
 }
 
 .answerInner {
-  padding: 0 var(--space-5) 22px;
-  color: var(--pex-text);
-  font-size: var(--text-base);
-  line-height: 1.6;
-  font-weight: 500;
+  padding: 0 26px 24px;
+  color: #334155;
+  font-size: 15px;
+  line-height: 1.65;
+  font-weight: 450;
 }
 
 .answerInner p {
@@ -139,34 +163,51 @@
 .relatedLinks {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: 14px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
 }
 
-.relatedLinks a {
+.linkPill {
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
-  border: 1px solid var(--color-teal-border);
+  gap: 6px;
+  min-height: 34px;
+  padding: 7px 16px;
+  background: rgba(26, 122, 119, 0.08);
+  border: 1px solid rgba(26, 122, 119, 0.24);
   border-radius: var(--radius-pill);
-  padding: 6px 11px;
-  background: var(--color-teal-subtle);
-  color: var(--pex-primary);
-  font-size: var(--text-2xs);
-  font-weight: 800;
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 700;
   line-height: 1.2;
   text-decoration: none;
   transition:
-    background var(--motion-duration) var(--motion-ease),
-    border-color var(--motion-duration) var(--motion-ease),
-    color var(--motion-duration) var(--motion-ease);
+    background 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.relatedLinks a:hover,
-.relatedLinks a:focus-visible {
+.linkPill:hover,
+.linkPill:focus-visible {
   border-color: var(--pex-keppel);
   background: var(--pex-keppel);
-  color: var(--pex-bg);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(26, 122, 119, 0.25);
+}
+
+.pillArrow {
+  font-size: 14px;
+  line-height: 1;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.linkPill:hover .pillArrow {
+  transform: translateX(4px);
 }
 
 @media (max-width: 768px) {

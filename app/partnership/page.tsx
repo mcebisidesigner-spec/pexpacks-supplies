@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { PartnerForm } from '@/components/forms/PartnerForm'
 import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
 import { getPublicSchoolIndex } from '@/lib/schools/publicSchoolData'
 import { getWebsiteContent, getFaqs } from '@/lib/cms'
 import { buildMetadata } from '@/lib/seo'
+import { FaqMarquee } from '@/components/shared/FaqMarquee'
+import type { FAQ } from '@/data/faqs'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import cardStyles from '@/components/marketing/MarketingCards.module.css'
 
@@ -32,26 +33,61 @@ const steps = [
   },
 ]
 
-const faqItems = [
+const fallbackPartnershipFaqs: FAQ[] = [
   {
-    q: 'Is the website and hosting really 100% free?',
-    a: 'Yes. Zero setup costs, monthly fees, or hidden charges. Pexpacks covers all development and hosting costs out of our standard stationery margins.',
+    id: 'free-website',
+    category: 'Schools',
+    question: 'Is the website and hosting really 100% free?',
+    answer:
+      'Yes. Zero setup costs, monthly fees, or hidden charges. Pexpacks covers all development and hosting costs out of our standard stationery margins.',
+    links: [
+      { label: 'School partnership', href: '/partnership' },
+      { label: 'School partnership terms', href: '/school-partnership-terms' },
+    ],
   },
   {
-    q: 'How does the 1.5% rebate work?',
-    a: "Every time a parent orders through your school portal, 1.5% of the pack cost goes to your school's development fund. We transfer it annually.",
+    id: 'rebate-work',
+    category: 'Schools',
+    question: 'How does the 1.5% rebate work?',
+    answer:
+      "Every time a parent orders through your school portal, 1.5% of the pack cost goes to your school's development fund. We transfer it annually.",
+    links: [
+      { label: 'School partnership', href: '/partnership' },
+      { label: 'Contact Pexpacks', href: '/contact' },
+    ],
   },
   {
-    q: 'Does this create admin work for my staff?',
-    a: 'None. We handle packing, delivery, payments, and parent support. Your staff do nothing after sharing the link.',
+    id: 'admin-work',
+    category: 'Schools',
+    question: 'Does this create admin work for my staff?',
+    answer:
+      'None. We handle packing, delivery, payments, and parent support. Your staff do nothing after sharing the link.',
+    links: [
+      { label: 'Find school packs', href: '/schools' },
+      { label: 'Contact support', href: '/contact' },
+    ],
   },
   {
-    q: 'How long does it take to go live?',
-    a: 'Once we receive your grade lists, we typically launch your school portal within 96 hours.',
+    id: 'time-to-live',
+    category: 'Schools',
+    question: 'How long does it take to go live?',
+    answer:
+      'Once we receive your grade lists, we typically launch your school portal within 96 hours.',
+    links: [
+      { label: 'Add your school', href: '/add-your-school' },
+      { label: 'School partnership', href: '/partnership' },
+    ],
   },
   {
-    q: 'What happens after I apply?',
-    a: 'We review your enquiry and get in touch to confirm your grade lists and launch your school portal. There is nothing to pay at any point.',
+    id: 'after-apply',
+    category: 'Schools',
+    question: 'What happens after I apply?',
+    answer:
+      'We review your enquiry and get in touch to confirm your grade lists and launch your school portal. There is nothing to pay at any point.',
+    links: [
+      { label: 'School partnership', href: '/partnership' },
+      { label: 'Contact support', href: '/contact' },
+    ],
   },
 ]
 
@@ -85,10 +121,10 @@ export default async function PartnerWithSchoolsPage() {
     getWebsiteContent(),
     getFaqs('partnership'),
   ])
-  const displayFaqs =
+  const displayFaqs: FAQ[] =
     cmsFaqs && cmsFaqs.length > 0
-      ? cmsFaqs.map((f) => ({ q: f.question, a: f.answer }))
-      : faqItems
+      ? cmsFaqs
+      : fallbackPartnershipFaqs
   const hero = content['partnership.hero']
   const heroEyebrow =
     typeof hero?.eyebrow === 'string' && hero.eyebrow
@@ -314,101 +350,14 @@ export default async function PartnerWithSchoolsPage() {
         </div>
       </section>
 
-      <section className={sectionStyles.sectionAlt} id="partnership-faq">
-        <div className={sectionStyles.inner}>
-          <p className={sectionStyles.sectionEyebrow}>FAQ</p>
-          <h2
-            style={{
-              margin: 0,
-              fontSize: 'clamp(32px, 4.6vw, 56px)',
-              lineHeight: 1,
-              fontWeight: 800,
-            }}
-          >
-            Common questions
-          </h2>
-          <p
-            style={{
-              margin: '14px 0 0',
-              color: 'var(--pex-text-muted)',
-              fontSize: 18,
-              lineHeight: 1.45,
-            }}
-          >
-            Straight answers for school boards, principals, and admin teams.
-          </p>
-          <div
-            style={{
-              display: 'grid',
-              gap: 16,
-              marginTop: 36,
-              maxWidth: 860,
-              marginInline: 'auto',
-            }}
-          >
-            {displayFaqs.map((item, index) => (
-              <details
-                key={index}
-                style={{
-                  border: 'var(--card-border)',
-                  borderRadius: 20,
-                  background: 'var(--card-bg)',
-                  boxShadow: 'var(--card-shadow)',
-                  overflow: 'hidden',
-                }}
-              >
-                <summary
-                  style={{
-                    padding: '22px 28px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: 18,
-                    cursor: 'pointer',
-                    color: 'var(--pex-navy)',
-                    fontSize: 16,
-                    fontWeight: 800,
-                    listStyle: 'none',
-                    userSelect: 'none',
-                  }}
-                >
-                  <span>{item.q}</span>
-                </summary>
-                <div
-                  style={{
-                    padding: '0 28px 22px',
-                    color: 'var(--color-text-muted)',
-                    fontSize: 15,
-                    lineHeight: 1.6,
-                    borderTop: '1px solid rgba(26, 42, 64, 0.04)',
-                  }}
-                >
-                  <p style={{ margin: '12px 0 0' }}>{item.a}</p>
-                </div>
-              </details>
-            ))}
-          </div>
-          <div style={{ textAlign: 'center', marginTop: 28 }}>
-            <Link
-              href="/faq"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '10px 22px',
-                borderRadius: 'var(--radius-pill)',
-                background: 'rgba(33, 158, 154, 0.1)',
-                color: 'var(--pex-keppel)',
-                fontWeight: 800,
-                fontSize: 15,
-                textDecoration: 'none',
-              }}
-            >
-              Read all FAQs &rarr;
-            </Link>
-          </div>
-        </div>
-      </section>
+      <div id="partnership-faq">
+        <FaqMarquee
+          faqs={displayFaqs}
+          eyebrow="FAQ"
+          title="Common questions"
+          seeAllHref="/faq"
+        />
+      </div>
 
       <section className={sectionStyles.section} id="partner-form">
         <div className={sectionStyles.inner}>

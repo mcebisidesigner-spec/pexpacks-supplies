@@ -198,60 +198,75 @@
 
 .accordion {
   display: grid;
-  gap: var(--space-3);
+  gap: 14px;
 }
 
 .faqItem {
   overflow: hidden;
-  border: 1px solid rgba(26, 42, 64, 0.1);
-  border-radius: var(--radius-image);
+  border: 1px solid rgba(26, 42, 64, 0.09);
+  border-radius: 20px;
   background: #ffffff;
-  box-shadow: 0 12px 34px rgba(26, 42, 64, 0.06);
+  box-shadow: 0 4px 18px rgba(26, 42, 64, 0.04);
   transition:
     border-color var(--motion-duration) var(--motion-ease),
     box-shadow var(--motion-duration) var(--motion-ease);
 }
 
+.faqItem:hover {
+  border-color: rgba(33, 158, 154, 0.25);
+  box-shadow: 0 8px 26px rgba(26, 42, 64, 0.07);
+}
+
 .faqItemOpen {
-  border-color: rgba(33, 158, 154, 0.35);
-  box-shadow: 0 18px 44px rgba(26, 42, 64, 0.1);
+  border: 1.5px solid rgba(26, 122, 119, 0.42);
+  box-shadow: 0 12px 36px rgba(26, 122, 119, 0.08);
 }
 
 .faqItem button {
   width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: 14px;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   border: 0;
-  min-height: 66px;
-  padding: 18px var(--space-5);
+  min-height: 64px;
+  padding: 22px 26px;
   background: transparent;
   color: var(--pex-primary);
   text-align: left;
   cursor: pointer;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
 .questionText {
-  font-size: clamp(16px, 1.8vw, 20px);
-  font-weight: 900;
-  line-height: 1.2;
+  font-size: 16.5px;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
 }
 
 .categoryPill {
+  display: inline-flex;
+  align-items: center;
   border-radius: var(--radius-pill);
-  padding: 7px 10px;
-  background: rgba(33, 158, 154, 0.1);
+  padding: 4px 12px;
+  background: rgba(26, 122, 119, 0.09);
   color: var(--pex-keppel);
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .toggleIcon {
   position: relative;
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   color: var(--pex-primary);
   flex: 0 0 auto;
 }
@@ -264,59 +279,84 @@
   left: 50%;
   width: 14px;
   height: 2px;
-  border-radius: var(--radius-pill);
+  border-radius: 2px;
   background: currentColor;
   transform: translate(-50%, -50%);
+  transition:
+    transform var(--motion-duration) var(--motion-ease),
+    opacity 0.2s var(--motion-ease);
 }
 
 .toggleIcon::after {
   transform: translate(-50%, -50%) rotate(90deg);
-  transition: transform var(--motion-duration) var(--motion-ease);
 }
 
 .faqItemOpen .toggleIcon::after {
   transform: translate(-50%, -50%) rotate(0deg);
+  opacity: 0;
 }
 
 .answer {
-  padding: 0 var(--space-5) 22px;
+  padding: 0 26px 24px;
 }
 
 .answer p {
   max-width: 760px;
   margin: 0;
-  color: var(--pex-text);
-  font-size: var(--text-base);
-  font-weight: 700;
-  line-height: 1.58;
+  color: #334155;
+  font-size: 15px;
+  font-weight: 450;
+  line-height: 1.65;
 }
 
 .faqLinks {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-4);
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
 }
 
-.faqLinks a {
+.linkPill {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
-  border: 1px solid var(--color-teal-border);
+  gap: 6px;
+  min-height: 34px;
+  padding: 7px 16px;
+  background: rgba(26, 122, 119, 0.08);
+  border: 1px solid rgba(26, 122, 119, 0.24);
   border-radius: var(--radius-pill);
-  padding: 7px var(--space-3);
-  background: var(--color-teal-subtle);
-  color: var(--pex-primary);
-  font-size: var(--text-2xs);
-  font-weight: 900;
+  color: var(--pex-keppel);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
   text-decoration: none;
+  transition:
+    background 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.faqLinks a:hover,
-.faqLinks a:focus-visible {
+.linkPill:hover,
+.linkPill:focus-visible {
   border-color: var(--pex-keppel);
   background: var(--pex-keppel);
   color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(26, 122, 119, 0.25);
+}
+
+.pillArrow {
+  font-size: 14px;
+  line-height: 1;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.linkPill:hover .pillArrow {
+  transform: translateX(4px);
 }
 
 .emptyState {
