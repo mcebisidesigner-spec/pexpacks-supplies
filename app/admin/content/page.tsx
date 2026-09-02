@@ -64,6 +64,7 @@ interface FAQItem {
   answer: string;
   is_published: boolean;
   sort_order: number;
+  target_page?: "all" | "homepage" | "schools";
 }
 
 interface Testimonial {
@@ -93,6 +94,9 @@ export default function ContentCMSPage() {
   const [activeTab, setActiveTab] = useState<ContentTab>("eyebrows");
   const [isPending, startTransition] = useTransition();
   const [faqCategoryFilter, setFaqCategoryFilter] = useState<string>("all");
+  const [faqPageFilter, setFaqPageFilter] = useState<
+    "all" | "homepage" | "schools"
+  >("all");
   const [expandedFaqId, setExpandedFaqId] = useState<string | null>(null);
 
   // Data state
@@ -118,6 +122,7 @@ export default function ContentCMSPage() {
         "Every Pexpacks Grade Pack is compiled directly from the verified official school stationery list supplied by partner schools.",
       is_published: true,
       sort_order: 1,
+      target_page: "homepage",
     },
     {
       id: "2",
@@ -127,6 +132,7 @@ export default function ContentCMSPage() {
         "Yes. During checkout, you can select direct home delivery or free bulk delivery to the school before term starts.",
       is_published: true,
       sort_order: 2,
+      target_page: "homepage",
     },
   ]);
 
@@ -200,6 +206,9 @@ export default function ContentCMSPage() {
   const [faqQuestion, setFaqQuestion] = useState("");
   const [faqAnswer, setFaqAnswer] = useState("");
   const [faqPublished, setFaqPublished] = useState(true);
+  const [faqTargetPage, setFaqTargetPage] = useState<
+    "all" | "homepage" | "schools"
+  >("all");
 
   // Form Fields - Testimonial
   const [testAuthor, setTestAuthor] = useState("");
@@ -256,6 +265,8 @@ export default function ContentCMSPage() {
                 answer: f.answer,
                 is_published: f.is_published,
                 sort_order: f.sort_order,
+                target_page:
+                  (f.target_page as "all" | "homepage" | "schools") || "all",
               })),
             );
           }
@@ -317,6 +328,7 @@ export default function ContentCMSPage() {
       setFaqQuestion("");
       setFaqAnswer("");
       setFaqPublished(true);
+      setFaqTargetPage(faqPageFilter !== "all" ? faqPageFilter : "all");
     } else if (activeTab === "testimonials") {
       setTestAuthor("");
       setTestRole("Parent of Grade 4 Learner");
@@ -361,11 +373,14 @@ export default function ContentCMSPage() {
       } else {
         setEyebrowFeedback({
           tone: "error",
-          text: res.message || "Failed to save eyebrow.",
+          text: res.message || "Failed to update eyebrow.",
         });
       }
     } catch {
-      setEyebrowFeedback({ tone: "error", text: "Failed to save eyebrow." });
+      setEyebrowFeedback({
+        tone: "error",
+        text: "Network error saving eyebrow.",
+      });
     } finally {
       setEyebrowSaving(null);
     }
@@ -373,8 +388,8 @@ export default function ContentCMSPage() {
 
   const handleDeleteAnnouncement = async (item: Announcement) => {
     const confirmed = await dialog.confirm({
-      title: "Delete Announcement Banner",
-      message: `Are you sure you want to delete "${item.badge_text}"? This will immediately remove it from all storefront banner displays.`,
+      title: "Delete Announcement",
+      message: `Are you sure you want to delete "${item.badge_text}"? This will permanently remove it from the site.`,
       confirmLabel: "Delete Banner",
       cancelLabel: "Cancel",
       variant: "danger",
@@ -429,6 +444,7 @@ export default function ContentCMSPage() {
     setFaqQuestion(item.question);
     setFaqAnswer(item.answer);
     setFaqPublished(item.is_published);
+    setFaqTargetPage(item.target_page ?? "all");
     setModalError(null);
     setIsModalOpen(true);
   };
@@ -443,18 +459,18 @@ export default function ContentCMSPage() {
     });
   };
 
-  const handleDeleteTestimonial = async (test: Testimonial) => {
+  const handleDeleteTestimonial = async (item: Testimonial) => {
     const confirmed = await dialog.confirm({
       title: "Delete Testimonial",
-      message: `Are you sure you want to delete the review by ${test.author_name}? It will be removed from customer reviews and homepage highlights.`,
+      message: `Are you sure you want to delete the testimonial from "${item.author_name}"?`,
       confirmLabel: "Delete Testimonial",
       cancelLabel: "Cancel",
       variant: "danger",
     });
     if (!confirmed) return;
     startTransition(async () => {
-      setTestimonials((prev) => prev.filter((t) => t.id !== test.id));
-      await deleteTestimonialAction(test.id);
+      setTestimonials((prev) => prev.filter((t) => t.id !== item.id));
+      await deleteTestimonialAction(item.id);
     });
   };
 
@@ -462,7 +478,7 @@ export default function ContentCMSPage() {
     setEditingId(item.id);
     setTestAuthor(item.author_name);
     setTestRole(item.author_role);
-    setTestSchool(item.school_name || "");
+    setTestSchool(item.school_name || "Primrose Hill Primary");
     setTestQuote(item.quote);
     setTestRating(item.rating);
     setTestFeatured(item.is_featured);
@@ -480,18 +496,18 @@ export default function ContentCMSPage() {
     });
   };
 
-  const handleDeleteResource = async (row: ResourceItem) => {
+  const handleDeleteResource = async (item: ResourceItem) => {
     const confirmed = await dialog.confirm({
       title: "Delete Resource Document",
-      message: `Are you sure you want to delete "${row.title}"? Any existing download links will be deactivated.`,
+      message: `Are you sure you want to remove "${item.title}" from downloadable resources?`,
       confirmLabel: "Delete Resource",
       cancelLabel: "Cancel",
       variant: "danger",
     });
     if (!confirmed) return;
     startTransition(async () => {
-      setResources((prev) => prev.filter((r) => r.id !== row.id));
-      await deleteResourceAction(row.id);
+      setResources((prev) => prev.filter((r) => r.id !== item.id));
+      await deleteResourceAction(item.id);
     });
   };
 
@@ -508,11 +524,14 @@ export default function ContentCMSPage() {
     setIsModalOpen(true);
   };
 
-  // Modal Submit
   const handleModalSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setModalError(null);
+    handleSave();
+  };
 
+  // Generic Save Handler
+  const handleSave = () => {
+    setModalError(null);
     startTransition(async () => {
       if (activeTab === "eyebrows") {
         const res = await saveAnnouncementAction(editingId, {
@@ -520,8 +539,8 @@ export default function ContentCMSPage() {
           message: annMessage,
           link_url: annLinkUrl || undefined,
           link_label: annLinkLabel || undefined,
-          display_location: annLocation,
           is_active: annActive,
+          display_location: annLocation,
         });
         if (res.ok) {
           setIsModalOpen(false);
@@ -546,6 +565,7 @@ export default function ContentCMSPage() {
           question: faqQuestion,
           answer: faqAnswer,
           is_published: faqPublished,
+          target_page: faqTargetPage,
           sort_order: 1,
         });
         if (res.ok) {
@@ -559,6 +579,8 @@ export default function ContentCMSPage() {
               answer: f.answer,
               is_published: f.is_published,
               sort_order: f.sort_order,
+              target_page:
+                (f.target_page as "all" | "homepage" | "schools") || "all",
             })),
           );
         } else {
@@ -624,9 +646,15 @@ export default function ContentCMSPage() {
 
   // Filtered FAQs
   const filteredFaqs = useMemo(() => {
-    if (faqCategoryFilter === "all") return faqs;
-    return faqs.filter((f) => f.category === faqCategoryFilter);
-  }, [faqs, faqCategoryFilter]);
+    return faqs.filter((f) => {
+      const matchCategory =
+        faqCategoryFilter === "all" || f.category === faqCategoryFilter;
+      const target = f.target_page || "all";
+      const matchPage =
+        faqPageFilter === "all" || target === faqPageFilter || target === "all";
+      return matchCategory && matchPage;
+    });
+  }, [faqs, faqCategoryFilter, faqPageFilter]);
 
   // Resource DataTable Columns
   const resourceColumns: ColumnDef<ResourceItem>[] = [
@@ -684,11 +712,26 @@ export default function ContentCMSPage() {
       width: "120px",
       align: "center",
       render: (row) => (
-        <StatusBadge
-          status={row.is_public ? "Public" : "Internal"}
-          tone={row.is_public ? "emerald" : "amber"}
-          showDot
-        />
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggleResource(row.id, row.is_public);
+          }}
+          style={{
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            padding: 0,
+          }}
+          data-db-tooltip="Click to toggle visibility"
+        >
+          <StatusBadge
+            status={row.is_public ? "Public" : "Internal"}
+            tone={row.is_public ? "emerald" : "amber"}
+            showDot
+          />
+        </button>
       ),
     },
     {
@@ -1006,6 +1049,49 @@ export default function ContentCMSPage() {
       {/* ── TAB 2: FAQs ── */}
       {activeTab === "faqs" && (
         <div>
+          {/* Target Page Filter Pills */}
+          <div className={styles.filterBar} style={{ marginBottom: "10px" }}>
+            {[
+              { id: "all", label: "All FAQs", count: faqs.length },
+              {
+                id: "homepage",
+                label: "Homepage FAQs",
+                count: faqs.filter(
+                  (f) =>
+                    f.target_page === "homepage" || f.target_page === "all",
+                ).length,
+              },
+              {
+                id: "schools",
+                label: "Schools Page FAQs",
+                count: faqs.filter(
+                  (f) => f.target_page === "schools" || f.target_page === "all",
+                ).length,
+              },
+            ].map((pageTab) => (
+              <button
+                key={pageTab.id}
+                type="button"
+                className={`${styles.filterPill} ${faqPageFilter === pageTab.id ? styles.filterPillActive : styles.filterPillInactive}`}
+                onClick={() =>
+                  setFaqPageFilter(pageTab.id as "all" | "homepage" | "schools")
+                }
+              >
+                <span>{pageTab.label}</span>
+                <span
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 700,
+                    opacity: 0.75,
+                    marginLeft: "4px",
+                  }}
+                >
+                  ({pageTab.count})
+                </span>
+              </button>
+            ))}
+          </div>
+
           {/* Category Filter Pills */}
           <div className={styles.filterBar}>
             {[
@@ -1057,6 +1143,21 @@ export default function ContentCMSPage() {
                       }
                     >
                       <div className={styles.faqQuestion}>
+                        <span
+                          className={
+                            faq.target_page === "homepage"
+                              ? styles.badgePageHomepage
+                              : faq.target_page === "schools"
+                                ? styles.badgePageSchools
+                                : styles.badgePageAll
+                          }
+                        >
+                          {faq.target_page === "homepage"
+                            ? "Homepage"
+                            : faq.target_page === "schools"
+                              ? "Schools Page"
+                              : "All Pages"}
+                        </span>
                         <span className={styles.badgeCategory}>
                           {faq.category}
                         </span>
@@ -1376,23 +1477,44 @@ export default function ContentCMSPage() {
                 {/* FAQ Form */}
                 {activeTab === "faqs" && (
                   <>
-                    <div className={styles.formGroup}>
-                      <label className={styles.formLabel}>Category</label>
-                      <select
-                        value={faqCategory}
-                        onChange={(e) => setFaqCategory(e.target.value)}
-                        className={styles.formSelect}
-                      >
-                        <option value="Ordering">Ordering</option>
-                        <option value="Delivery & Pickup">
-                          Delivery & Pickup
-                        </option>
-                        <option value="School Packs">School Packs</option>
-                        <option value="Payments">Payments</option>
-                        <option value="Returns & Policies">
-                          Returns & Policies
-                        </option>
-                      </select>
+                    <div className={styles.formRow2}>
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>
+                          Target Page / Placement
+                        </label>
+                        <select
+                          value={faqTargetPage}
+                          onChange={(e) =>
+                            setFaqTargetPage(
+                              e.target.value as "all" | "homepage" | "schools",
+                            )
+                          }
+                          className={styles.formSelect}
+                        >
+                          <option value="all">All FAQs (Everywhere)</option>
+                          <option value="homepage">Homepage FAQs</option>
+                          <option value="schools">Schools Page FAQs</option>
+                        </select>
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>Category</label>
+                        <select
+                          value={faqCategory}
+                          onChange={(e) => setFaqCategory(e.target.value)}
+                          className={styles.formSelect}
+                        >
+                          <option value="Ordering">Ordering</option>
+                          <option value="Delivery & Pickup">
+                            Delivery & Pickup
+                          </option>
+                          <option value="School Packs">School Packs</option>
+                          <option value="Payments">Payments</option>
+                          <option value="Returns & Policies">
+                            Returns & Policies
+                          </option>
+                        </select>
+                      </div>
                     </div>
 
                     <div className={styles.formGroup}>

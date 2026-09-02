@@ -141,6 +141,7 @@ export async function saveFaqAction(
     answer: string;
     sort_order?: number;
     is_published: boolean;
+    target_page?: "all" | "homepage" | "schools";
   },
 ) {
   await requireAdmin({ permission: "content.manage" });

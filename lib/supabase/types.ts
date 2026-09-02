@@ -53,6 +53,7 @@ export interface Database {
           answer: string;
           sort_order: number;
           is_published: boolean;
+          target_page: "all" | "homepage" | "schools";
           created_at: string;
           updated_at: string;
         };
@@ -63,6 +64,7 @@ export interface Database {
           answer: string;
           sort_order?: number;
           is_published?: boolean;
+          target_page?: "all" | "homepage" | "schools";
           created_at?: string;
           updated_at?: string;
         };
@@ -73,6 +75,7 @@ export interface Database {
           answer?: string;
           sort_order?: number;
           is_published?: boolean;
+          target_page?: "all" | "homepage" | "schools";
           created_at?: string;
           updated_at?: string;
         };
@@ -584,7 +587,12 @@ export interface Database {
           partnership?: "partner" | "non_partner" | "refused_partner" | null;
           feature_status?: "featured" | "unfeatured" | null;
           directory_status?: "listed" | "hidden" | "archived" | null;
-          stationery_list_status?: "not_received" | "received" | "being_digitised" | "verified" | null;
+          stationery_list_status?:
+            | "not_received"
+            | "received"
+            | "being_digitised"
+            | "verified"
+            | null;
           search_vector: string | null;
           custom_badge: string | null;
           created_at: string;
@@ -618,7 +626,12 @@ export interface Database {
           partnership?: "partner" | "non_partner" | "refused_partner" | null;
           feature_status?: "featured" | "unfeatured" | null;
           directory_status?: "listed" | "hidden" | "archived" | null;
-          stationery_list_status?: "not_received" | "received" | "being_digitised" | "verified" | null;
+          stationery_list_status?:
+            | "not_received"
+            | "received"
+            | "being_digitised"
+            | "verified"
+            | null;
           updated_by?: string | null;
           custom_badge?: string | null;
           created_at?: string;
@@ -652,7 +665,12 @@ export interface Database {
           partnership?: "partner" | "non_partner" | "refused_partner" | null;
           feature_status?: "featured" | "unfeatured" | null;
           directory_status?: "listed" | "hidden" | "archived" | null;
-          stationery_list_status?: "not_received" | "received" | "being_digitised" | "verified" | null;
+          stationery_list_status?:
+            | "not_received"
+            | "received"
+            | "being_digitised"
+            | "verified"
+            | null;
           updated_by?: string | null;
           custom_badge?: string | null;
           created_at?: string;
@@ -1057,7 +1075,12 @@ export interface Database {
           list_version: number;
           pricing_status: string;
           fulfilment_deadline: string | null;
-          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          publication_status?:
+            | "draft"
+            | "ready_for_review"
+            | "published"
+            | "archived"
+            | null;
           published_at?: string | null;
           published_by?: string | null;
           version?: number;
@@ -1085,7 +1108,12 @@ export interface Database {
           list_version?: number;
           pricing_status?: string;
           fulfilment_deadline?: string | null;
-          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          publication_status?:
+            | "draft"
+            | "ready_for_review"
+            | "published"
+            | "archived"
+            | null;
           published_at?: string | null;
           published_by?: string | null;
           version?: number;
@@ -1113,7 +1141,12 @@ export interface Database {
           list_version?: number;
           pricing_status?: string;
           fulfilment_deadline?: string | null;
-          publication_status?: "draft" | "ready_for_review" | "published" | "archived" | null;
+          publication_status?:
+            | "draft"
+            | "ready_for_review"
+            | "published"
+            | "archived"
+            | null;
           published_at?: string | null;
           published_by?: string | null;
           version?: number;

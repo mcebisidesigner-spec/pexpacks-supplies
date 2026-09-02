@@ -35,7 +35,9 @@ function raw(formData: FormData, key: string): string {
   return typeof v === "string" ? v : "";
 }
 
-type ParseResult<T> = { ok: true; data: T } | { ok: false; state: ContentFormState };
+type ParseResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; state: ContentFormState };
 
 function zodErrors(issues: z.ZodIssue[]): Record<string, string> {
   const errors: Record<string, string> = {};
@@ -46,7 +48,9 @@ function zodErrors(issues: z.ZodIssue[]): Record<string, string> {
   return errors;
 }
 
-function parseTestimonial(formData: FormData): ParseResult<z.infer<typeof testimonialInputSchema>> {
+function parseTestimonial(
+  formData: FormData,
+): ParseResult<z.infer<typeof testimonialInputSchema>> {
   const parsed = testimonialInputSchema.safeParse({
     name: raw(formData, "name"),
     role: raw(formData, "role"),
@@ -56,11 +60,17 @@ function parseTestimonial(formData: FormData): ParseResult<z.infer<typeof testim
     visible: formData.has("visible"),
     sort_order: raw(formData, "sort_order") || "0",
   });
-  if (!parsed.success) return { ok: false, state: { ok: false, errors: zodErrors(parsed.error.issues) } };
+  if (!parsed.success)
+    return {
+      ok: false,
+      state: { ok: false, errors: zodErrors(parsed.error.issues) },
+    };
   return { ok: true, data: parsed.data };
 }
 
-function parseFaq(formData: FormData): ParseResult<z.infer<typeof faqInputSchema>> {
+function parseFaq(
+  formData: FormData,
+): ParseResult<z.infer<typeof faqInputSchema>> {
   let links: { label: string; href: string }[] = [];
   const rawLinks = raw(formData, "links");
   if (rawLinks.trim()) {
@@ -97,7 +107,7 @@ function parseFaq(formData: FormData): ParseResult<z.infer<typeof faqInputSchema
 export async function saveTestimonialAction(
   id: string | null,
   _prev: ContentFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   const parsed = parseTestimonial(formData);
@@ -107,7 +117,10 @@ export async function saveTestimonialAction(
   return result;
 }
 
-export async function setTestimonialVisibleAction(id: string, visible: boolean): Promise<void> {
+export async function setTestimonialVisibleAction(
+  id: string,
+  visible: boolean,
+): Promise<void> {
   await requireAdmin({ permission: "content.manage" });
   const result = await setTestimonialVisible(id, visible);
   if (result.ok) revalidatePath("/admin/content/testimonials");
@@ -121,7 +134,7 @@ export async function deleteTestimonialAction(id: string): Promise<void> {
 
 export async function reorderTestimonialAction(
   id: string,
-  direction: "up" | "down"
+  direction: "up" | "down",
 ): Promise<void> {
   await requireAdmin({ permission: "content.manage" });
   const result = await reorderTestimonial(id, direction);
@@ -135,7 +148,7 @@ export async function reorderTestimonialAction(
 export async function saveFaqAction(
   id: string | null,
   _prev: ContentFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   const parsed = parseFaq(formData);
@@ -145,7 +158,10 @@ export async function saveFaqAction(
   return result;
 }
 
-export async function setFaqVisibleAction(id: string, visible: boolean): Promise<void> {
+export async function setFaqVisibleAction(
+  id: string,
+  visible: boolean,
+): Promise<void> {
   await requireAdmin({ permission: "content.manage" });
   const result = await setFaqVisible(id, visible);
   if (result.ok) revalidatePath("/admin/content/faqs");
@@ -159,7 +175,7 @@ export async function deleteFaqAction(id: string): Promise<void> {
 
 export async function reorderFaqAction(
   id: string,
-  direction: "up" | "down"
+  direction: "up" | "down",
 ): Promise<void> {
   await requireAdmin({ permission: "content.manage" });
   const result = await reorderFaq(id, direction);
@@ -173,7 +189,7 @@ export async function reorderFaqAction(
 export async function updateWebsiteContentAction(
   key: string,
   _prev: ContentFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   const result = await updateWebsiteContent(key, formData);
@@ -188,15 +204,17 @@ export async function updateWebsiteContentAction(
 export async function saveCmsAnnouncementAction(
   id: string | null,
   _prev: ContentFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   const badge_text = raw(formData, "badge_text");
   const message = raw(formData, "message");
   const link_url = raw(formData, "link_url");
   const link_label = raw(formData, "link_label");
-  const display_location = (raw(formData, "display_location") || "global_top") as "global_top" | "hero_banner" | "schools_page";
-  const is_active = formData.get("is_active") === "true" || formData.get("is_active") === "on";
+  const display_location = (raw(formData, "display_location") ||
+    "global_top") as "global_top" | "hero_banner" | "schools_page";
+  const is_active =
+    formData.get("is_active") === "true" || formData.get("is_active") === "on";
 
   return saveCmsAnnouncement(
     {
@@ -207,16 +225,21 @@ export async function saveCmsAnnouncementAction(
       display_location,
       is_active,
     },
-    id ?? undefined
+    id ?? undefined,
   );
 }
 
-export async function deleteCmsAnnouncementAction(id: string): Promise<ContentFormState> {
+export async function deleteCmsAnnouncementAction(
+  id: string,
+): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   return deleteCmsAnnouncement(id);
 }
 
-export async function toggleCmsAnnouncementActiveAction(id: string, active: boolean): Promise<ContentFormState> {
+export async function toggleCmsAnnouncementActiveAction(
+  id: string,
+  active: boolean,
+): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   return toggleCmsAnnouncementActive(id, active);
 }
@@ -224,14 +247,19 @@ export async function toggleCmsAnnouncementActiveAction(id: string, active: bool
 export async function saveCmsFaqAction(
   id: string | null,
   _prev: ContentFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   const category = raw(formData, "category") || "General";
   const question = raw(formData, "question");
   const answer = raw(formData, "answer");
   const sort_order = parseInt(raw(formData, "sort_order") || "0", 10);
-  const is_published = formData.get("is_published") === "true" || formData.get("is_published") === "on";
+  const is_published =
+    formData.get("is_published") === "true" ||
+    formData.get("is_published") === "on";
+  const rawTarget = raw(formData, "target_page");
+  const target_page =
+    rawTarget === "homepage" || rawTarget === "schools" ? rawTarget : "all";
 
   return saveCmsFaq(
     {
@@ -240,17 +268,23 @@ export async function saveCmsFaqAction(
       answer,
       sort_order: Number.isNaN(sort_order) ? 0 : sort_order,
       is_published,
+      target_page,
     },
-    id ?? undefined
+    id ?? undefined,
   );
 }
 
-export async function deleteCmsFaqAction(id: string): Promise<ContentFormState> {
+export async function deleteCmsFaqAction(
+  id: string,
+): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   return deleteCmsFaq(id);
 }
 
-export async function toggleCmsFaqPublishedAction(id: string, published: boolean): Promise<ContentFormState> {
+export async function toggleCmsFaqPublishedAction(
+  id: string,
+  published: boolean,
+): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   return toggleCmsFaqPublished(id, published);
 }
@@ -258,7 +292,7 @@ export async function toggleCmsFaqPublishedAction(id: string, published: boolean
 export async function saveCmsTestimonialAction(
   id: string | null,
   _prev: ContentFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   const author_name = raw(formData, "author_name");
@@ -268,7 +302,9 @@ export async function saveCmsTestimonialAction(
   const rating = parseInt(raw(formData, "rating") || "5", 10);
   const avatar_url = raw(formData, "avatar_url") || null;
   const sort_order = parseInt(raw(formData, "sort_order") || "0", 10);
-  const is_featured = formData.get("is_featured") === "true" || formData.get("is_featured") === "on";
+  const is_featured =
+    formData.get("is_featured") === "true" ||
+    formData.get("is_featured") === "on";
 
   return saveCmsTestimonial(
     {
@@ -281,16 +317,21 @@ export async function saveCmsTestimonialAction(
       sort_order: Number.isNaN(sort_order) ? 0 : sort_order,
       is_featured,
     },
-    id ?? undefined
+    id ?? undefined,
   );
 }
 
-export async function deleteCmsTestimonialAction(id: string): Promise<ContentFormState> {
+export async function deleteCmsTestimonialAction(
+  id: string,
+): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   return deleteCmsTestimonial(id);
 }
 
-export async function toggleCmsTestimonialFeaturedAction(id: string, featured: boolean): Promise<ContentFormState> {
+export async function toggleCmsTestimonialFeaturedAction(
+  id: string,
+  featured: boolean,
+): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   return toggleCmsTestimonialFeatured(id, featured);
 }
@@ -298,7 +339,7 @@ export async function toggleCmsTestimonialFeaturedAction(id: string, featured: b
 export async function saveCmsResourceAction(
   id: string | null,
   _prev: ContentFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   const title = raw(formData, "title");
@@ -308,7 +349,8 @@ export async function saveCmsResourceAction(
   const file_type = raw(formData, "file_type") || "PDF";
   const file_size_label = raw(formData, "file_size_label");
   const sort_order = parseInt(raw(formData, "sort_order") || "0", 10);
-  const is_public = formData.get("is_public") === "true" || formData.get("is_public") === "on";
+  const is_public =
+    formData.get("is_public") === "true" || formData.get("is_public") === "on";
 
   return saveCmsResource(
     {
@@ -321,17 +363,21 @@ export async function saveCmsResourceAction(
       sort_order: Number.isNaN(sort_order) ? 0 : sort_order,
       is_public,
     },
-    id ?? undefined
+    id ?? undefined,
   );
 }
 
-export async function deleteCmsResourceAction(id: string): Promise<ContentFormState> {
+export async function deleteCmsResourceAction(
+  id: string,
+): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   return deleteCmsResource(id);
 }
 
-export async function toggleCmsResourcePublicAction(id: string, isPublic: boolean): Promise<ContentFormState> {
+export async function toggleCmsResourcePublicAction(
+  id: string,
+  isPublic: boolean,
+): Promise<ContentFormState> {
   await requireAdmin({ permission: "content.manage" });
   return toggleCmsResourcePublic(id, isPublic);
 }
-

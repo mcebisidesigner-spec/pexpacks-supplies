@@ -231,4 +231,58 @@ describe("Pexpacks Content CMS Module", () => {
       'status: parsed.data.is_public ? "published" : "draft"',
     );
   });
+
+  it("verifies migration 00092 defines target_page and per-page get_public_cms_faqs RPC", () => {
+    const migration = readRepoFile(
+      "supabase/migrations/00092_cms_faqs_target_page.sql",
+    );
+    expect(migration).toContain("target_page text NOT NULL DEFAULT 'all'");
+    expect(migration).toContain(
+      "CHECK (target_page IN ('all', 'homepage', 'schools'))",
+    );
+    expect(migration).toContain(
+      "CREATE OR REPLACE FUNCTION public.get_public_cms_faqs(p_page text DEFAULT NULL)",
+    );
+    expect(migration).toContain("f.target_page = p_page");
+    expect(migration).toContain("f.target_page = 'all'");
+  });
+
+  it("validates FAQ target_page in schema", () => {
+    const validHomepage = cmsFaqSchema.safeParse({
+      category: "Ordering",
+      question: "Homepage question?",
+      answer: "Answer.",
+      target_page: "homepage",
+    });
+    expect(validHomepage.success).toBe(true);
+    if (validHomepage.success) {
+      expect(validHomepage.data.target_page).toBe("homepage");
+    }
+
+    const validSchools = cmsFaqSchema.safeParse({
+      category: "School Packs",
+      question: "Schools question?",
+      answer: "Answer.",
+      target_page: "schools",
+    });
+    expect(validSchools.success).toBe(true);
+
+    const validDefault = cmsFaqSchema.safeParse({
+      category: "Payments",
+      question: "Payment question?",
+      answer: "Answer.",
+    });
+    expect(validDefault.success).toBe(true);
+    if (validDefault.success) {
+      expect(validDefault.data.target_page).toBe("all");
+    }
+
+    const invalidPage = cmsFaqSchema.safeParse({
+      category: "Ordering",
+      question: "Invalid page question?",
+      answer: "Answer.",
+      target_page: "invalid_page",
+    });
+    expect(invalidPage.success).toBe(false);
+  });
 });

@@ -1,8 +1,16 @@
 export type FAQ = {
   id: string;
-  category: "School packs" | "Orders" | "Delivery" | "Payment" | "Schools" | "Happy Pay (BNPL)";
+  category:
+    | "School packs"
+    | "Orders"
+    | "Delivery"
+    | "Payment"
+    | "Schools"
+    | "Happy Pay (BNPL)"
+    | string;
   question: string;
   answer: string;
+  target_page?: "all" | "homepage" | "schools" | string;
   links?: {
     label: string;
     href: string;
@@ -163,9 +171,7 @@ export const faqs: FAQ[] = [
     question: "What do the different order tracking statuses mean?",
     answer:
       "Order Placed means your order was received. Processing & Packed means items are being assembled. Handed to Courier means your pack is in transit. Out for Delivery means it is arriving today. Delivered means receipt is confirmed.",
-    links: [
-      { label: "Contact support", href: "/contact" },
-    ],
+    links: [{ label: "Contact support", href: "/contact" }],
   },
   {
     id: "track-order-missing-ref",
@@ -173,9 +179,7 @@ export const faqs: FAQ[] = [
     question: "What if I cannot find my order reference or customer ID?",
     answer:
       "Check your order confirmation email or SMS receipt for your Order Reference or Unique Customer ID. If you still cannot locate your details, contact Pexpacks support with your buyer email or proof of payment.",
-    links: [
-      { label: "Contact support", href: "/contact" },
-    ],
+    links: [{ label: "Contact support", href: "/contact" }],
   },
   {
     id: "payment-before-packing",
@@ -219,9 +223,7 @@ export const faqs: FAQ[] = [
     question: "What is Happy Pay Buy Now, Pay Later (BNPL)?",
     answer:
       "Happy Pay allows you to split your school stationery pack purchase into equal, zero-interest instalments over time while your learner gets their stationery delivered upfront.",
-    links: [
-      { label: "Learn about Happy Pay", href: "/happy-pay" },
-    ],
+    links: [{ label: "Learn about Happy Pay", href: "/happy-pay" }],
   },
   {
     id: "happypay-interest",
@@ -229,9 +231,7 @@ export const faqs: FAQ[] = [
     question: "Are there any interest or hidden fees?",
     answer:
       "No. Happy Pay is 100% interest-free with zero hidden fees when instalments are paid on schedule.",
-    links: [
-      { label: "Happy Pay terms", href: "/happy-pay-terms" },
-    ],
+    links: [{ label: "Happy Pay terms", href: "/happy-pay-terms" }],
   },
   {
     id: "happypay-eligibility",
@@ -239,9 +239,7 @@ export const faqs: FAQ[] = [
     question: "Who is eligible to use Happy Pay?",
     answer:
       "Any South African resident over 18 with a valid ID, South African mobile number, and debit or credit card can select Happy Pay at checkout.",
-    links: [
-      { label: "Find your school pack", href: "/schools" },
-    ],
+    links: [{ label: "Find your school pack", href: "/schools" }],
   },
   {
     id: "school-rebate",

@@ -1016,6 +1016,7 @@ export const cmsFaqSchema = z.object({
     .max(2000, "Max 2000 characters"),
   sort_order: z.coerce.number().int().min(0).default(0),
   is_published: z.boolean().default(true),
+  target_page: z.enum(["all", "homepage", "schools"]).default("all"),
 });
 
 export type CmsFaqInput = z.infer<typeof cmsFaqSchema>;
@@ -1032,7 +1033,7 @@ export async function listCmsFaqs(): Promise<CmsFaqRow[]> {
     console.error("[cms] list faqs failed:", error);
     return [];
   }
-  return data ?? [];
+  return (data as unknown as CmsFaqRow[]) ?? [];
 }
 
 export async function saveCmsFaq(
@@ -1058,6 +1059,7 @@ export async function saveCmsFaq(
     answer: parsed.data.answer,
     sort_order: parsed.data.sort_order,
     is_published: parsed.data.is_published,
+    target_page: parsed.data.target_page,
     status: parsed.data.is_published ? "published" : "draft",
     published_at: now,
     updated_at: now,

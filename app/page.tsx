@@ -1,47 +1,47 @@
-import Image from 'next/image'
-import { Button } from '@/components/ui/Button'
-import { SectionHeader } from '@/components/marketing/SectionHeader'
-import { HeroSearch } from '@/components/marketing/HeroSearch'
-import { ConciergeSection } from '@/components/marketing/ConciergeSection'
-import { SuperpowerSection } from '@/components/marketing/SuperpowerSection'
+import Image from "next/image";
+import { Button } from "@/components/ui/Button";
+import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { HeroSearch } from "@/components/marketing/HeroSearch";
+import { ConciergeSection } from "@/components/marketing/ConciergeSection";
+import { SuperpowerSection } from "@/components/marketing/SuperpowerSection";
 import {
   RetailVsPexpacksSlider,
   FaqMarquee,
   TestimonialMarquee,
   HappyPayBanner,
   HappyPaySteps,
-} from '@/components/marketing/HomeBelowFold'
-import { IMAGE_BLUR_DATA_URL } from '@/lib/constants'
-import { getFaqs, getTestimonials, getWebsiteContent } from '@/lib/cms'
-import { testimonials as confirmedTestimonials } from '@/data/testimonials'
+} from "@/components/marketing/HomeBelowFold";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
+import { getFaqs, getTestimonials, getWebsiteContent } from "@/lib/cms";
+import { testimonials as confirmedTestimonials } from "@/data/testimonials";
 
-import heroStyles from '@/components/marketing/HeroBase.module.css'
-import sectionStyles from '@/components/marketing/MarketingSections.module.css'
-import homeStyles from '@/components/marketing/MarketingHome.module.css'
+import heroStyles from "@/components/marketing/HeroBase.module.css";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
-export const revalidate = 300
+export const revalidate = 300;
 
 export default async function HomePage() {
   const [testimonials, allFaqs, content] = await Promise.all([
     getTestimonials(),
-    getFaqs(),
+    getFaqs("homepage"),
     getWebsiteContent(),
-  ])
-  const hero = content['homepage.hero']
+  ]);
+  const hero = content["homepage.hero"];
   const heroEyebrow =
-    typeof hero.eyebrow === 'string' && hero.eyebrow
+    typeof hero.eyebrow === "string" && hero.eyebrow
       ? hero.eyebrow
-      : 'School stationery made simple'
+      : "School stationery made simple";
   const heroTitle =
-    typeof hero.title === 'string' && hero.title
+    typeof hero.title === "string" && hero.title
       ? hero.title
-      : 'Your school stationery list, perfectly packed.'
+      : "Your school stationery list, perfectly packed.";
   const heroLead =
-    typeof hero.lead === 'string' && hero.lead
+    typeof hero.lead === "string" && hero.lead
       ? hero.lead
-      : 'Your official school stationery list, perfectly packed and delivered.'
-  const featuredTestimonial = testimonials[0] ?? confirmedTestimonials[0]
-  const visibleHomepageFaqs = allFaqs.slice(0, 5)
+      : "Your official school stationery list, perfectly packed and delivered.";
+  const featuredTestimonial = testimonials[0] ?? confirmedTestimonials[0];
+  const visibleHomepageFaqs = allFaqs.slice(0, 5);
 
   return (
     <>
@@ -73,40 +73,40 @@ export default async function HomePage() {
       <div className={homeStyles.brandMarquee} aria-hidden="true">
         <div className={homeStyles.brandMarqueeTrack}>
           {[
-            'croxley',
-            'bic',
-            'pilot',
-            'pritt',
-            'staedtler',
-            'post-it',
-            'bantex',
-            'penflex',
-            'freedom',
-            'casio',
-            'marlin',
-            'pentel',
-            'rapid',
-            'rexel',
-            'sellotape',
-            'stabilo',
-            'sharpie',
-            'croxley',
-            'bic',
-            'pilot',
-            'pritt',
-            'staedtler',
-            'post-it',
-            'bantex',
-            'penflex',
-            'freedom',
-            'casio',
-            'marlin',
-            'pentel',
-            'rapid',
-            'rexel',
-            'sellotape',
-            'stabilo',
-            'sharpie',
+            "croxley",
+            "bic",
+            "pilot",
+            "pritt",
+            "staedtler",
+            "post-it",
+            "bantex",
+            "penflex",
+            "freedom",
+            "casio",
+            "marlin",
+            "pentel",
+            "rapid",
+            "rexel",
+            "sellotape",
+            "stabilo",
+            "sharpie",
+            "croxley",
+            "bic",
+            "pilot",
+            "pritt",
+            "staedtler",
+            "post-it",
+            "bantex",
+            "penflex",
+            "freedom",
+            "casio",
+            "marlin",
+            "pentel",
+            "rapid",
+            "rexel",
+            "sellotape",
+            "stabilo",
+            "sharpie",
           ].map((brand, i) => (
             <span key={i} className={homeStyles.brandChip}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -117,14 +117,17 @@ export default async function HomePage() {
                 height={40}
                 loading="lazy"
                 decoding="async"
-                style={{ objectFit: 'contain', display: 'block' }}
+                style={{ objectFit: "contain", display: "block" }}
               />
             </span>
           ))}
         </div>
       </div>
 
-      <section className={sectionStyles.section} style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <section
+        className={sectionStyles.section}
+        style={{ paddingTop: "2rem", paddingBottom: "2rem" }}
+      >
         <div className={sectionStyles.inner}>
           <HappyPayBanner variant="homepage" />
           <div style={{ marginTop: 24 }}>
@@ -165,7 +168,9 @@ export default async function HomePage() {
               </h2>
               {featuredTestimonial ? (
                 <>
-                  <blockquote>&ldquo;{featuredTestimonial.quote}&rdquo;</blockquote>
+                  <blockquote>
+                    &ldquo;{featuredTestimonial.quote}&rdquo;
+                  </blockquote>
                   <p className={sectionStyles.socialProofAuthor}>
                     {featuredTestimonial.name}, {featuredTestimonial.role}
                   </p>
@@ -217,5 +222,5 @@ export default async function HomePage() {
 
       <FaqMarquee faqs={visibleHomepageFaqs} />
     </>
-  )
+  );
 }

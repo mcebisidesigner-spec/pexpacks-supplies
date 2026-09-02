@@ -134,11 +134,18 @@ type PublicCmsFaqRpcRow = {
   category: string | null;
   question: string;
   answer: string;
+  sort_order?: number;
+  target_page?: string | null;
 };
 
-async function fetchFaqs(): Promise<FAQ[]> {
+async function fetchFaqs(page?: string): Promise<FAQ[]> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.rpc("get_public_cms_faqs" as never);
+  const { data, error } = await admin.rpc(
+    "get_public_cms_faqs" as never,
+    {
+      p_page: page && page !== "all" ? page : null,
+    } as never,
+  );
 
   if (error) {
     console.error("[cms] public faqs rpc:", error);
@@ -148,9 +155,10 @@ async function fetchFaqs(): Promise<FAQ[]> {
   return ((data as unknown as PublicCmsFaqRpcRow[] | null) ?? []).map(
     (row) => ({
       id: row.id,
-      category: (row.category || "general") as FAQ["category"],
+      category: (row.category || "General") as FAQ["category"],
       question: row.question,
       answer: row.answer,
+      target_page: row.target_page ?? "all",
     }),
   );
 }
@@ -164,10 +172,11 @@ export const getTestimonials = unstable_cache(
   },
 );
 
-export const getFaqs = unstable_cache(fetchFaqs, ["cms-faqs"], {
-  revalidate: CMS_REVALIDATE_SECONDS,
-  tags: [CMS_TAGS.faqs],
-});
+export const getFaqs = (page?: "all" | "homepage" | "schools" | string) =>
+  unstable_cache(() => fetchFaqs(page), ["cms-faqs", page || "all"], {
+    revalidate: CMS_REVALIDATE_SECONDS,
+    tags: [CMS_TAGS.faqs],
+  })();
 
 async function fetchWebsiteContent(): Promise<WebsiteContentValue> {
   const result = structuredClone(
@@ -248,11 +257,17 @@ export interface PublicCmsFaq {
   question: string;
   answer: string;
   sort_order: number;
+  target_page?: string;
 }
 
-async function fetchPublishedCmsFaqs(): Promise<PublicCmsFaq[]> {
+async function fetchPublishedCmsFaqs(page?: string): Promise<PublicCmsFaq[]> {
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin.rpc("get_public_cms_faqs" as never);
+  const { data, error } = await admin.rpc(
+    "get_public_cms_faqs" as never,
+    {
+      p_page: page && page !== "all" ? page : null,
+    } as never,
+  );
 
   if (error) {
     console.error("[cms] public faqs rpc:", error);
@@ -262,14 +277,17 @@ async function fetchPublishedCmsFaqs(): Promise<PublicCmsFaq[]> {
   return (data as unknown as PublicCmsFaq[] | null) ?? [];
 }
 
-export const getPublishedCmsFaqs = unstable_cache(
-  fetchPublishedCmsFaqs,
-  ["cms-published-faqs"],
-  {
-    revalidate: CMS_REVALIDATE_SECONDS,
-    tags: [CMS_TAGS.faqs],
-  },
-);
+export const getPublishedCmsFaqs = (
+  page?: "all" | "homepage" | "schools" | string,
+) =>
+  unstable_cache(
+    () => fetchPublishedCmsFaqs(page),
+    ["cms-published-faqs", page || "all"],
+    {
+      revalidate: CMS_REVALIDATE_SECONDS,
+      tags: [CMS_TAGS.faqs],
+    },
+  )();
 
 export interface PublicCmsTestimonial {
   id: string;

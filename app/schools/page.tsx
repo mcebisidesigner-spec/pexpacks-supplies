@@ -12,7 +12,7 @@ import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
 import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import { getFeaturedSchoolRecords } from "@/lib/schools/schoolSearchData";
-import { getWebsiteContent } from "@/lib/cms";
+import { getWebsiteContent, getFaqs } from "@/lib/cms";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
@@ -25,9 +25,10 @@ export const metadata: Metadata = buildMetadata(
 export const revalidate = 300;
 
 export default async function SchoolsPage() {
-  const [featuredSchools, content] = await Promise.all([
+  const [featuredSchools, content, schoolsFaqs] = await Promise.all([
     getFeaturedSchoolRecords(),
     getWebsiteContent(),
+    getFaqs("schools"),
   ]);
   const hero = content["schools.hero"];
   const heroEyebrow =
@@ -35,7 +36,9 @@ export default async function SchoolsPage() {
       ? hero.eyebrow
       : "Pack finder";
   const heroTitle =
-    typeof hero.title === "string" && hero.title ? hero.title : "Find your pack";
+    typeof hero.title === "string" && hero.title
+      ? hero.title
+      : "Find your pack";
 
   return (
     <>
@@ -122,6 +125,7 @@ export default async function SchoolsPage() {
       </div>
 
       <SchoolsFaqAccordion
+        faqs={schoolsFaqs}
         className={homeStyles.schoolsAccordionBeforeRating}
       />
     </>
