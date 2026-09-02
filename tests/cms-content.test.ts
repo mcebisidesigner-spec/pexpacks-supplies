@@ -413,4 +413,21 @@ describe("Pexpacks Content CMS Module", () => {
     expect(faqsTab).toContain('label: "Add Your School"');
     expect(faqsTab).toContain('label: "Partnerships"');
   });
+
+  it("verifies public announcement mapping from DB Content CMS and migration 00096", () => {
+    const migration = readRepoFile(
+      "supabase/migrations/00096_link_public_cms_announcements.sql",
+    );
+    expect(migration).toContain("public.get_public_cms_announcements");
+    expect(migration).toContain(
+      "(p_location = 'site_header' AND a.display_location IN ('global_top', 'hero_banner'))",
+    );
+
+    const layout = readRepoFile("app/layout.tsx");
+    expect(layout).toContain('getActiveAnnouncement("site_header")');
+
+    const homePage = readRepoFile("app/page.tsx");
+    expect(homePage).not.toContain("heroBannerPill");
+  });
 });
+

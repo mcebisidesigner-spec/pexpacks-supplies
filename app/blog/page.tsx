@@ -8,16 +8,15 @@ import { listPublicCmsFiles } from "@/lib/cms";
 import styles from "./Blog.module.css";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import { buildMetadata } from "@/lib/seo";
+import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
+import { BlogFilter } from "./BlogFilter";
+import { SubscribeForm } from "./SubscribeForm";
 
 export const metadata: Metadata = buildMetadata(
   "Digital Backpack Resources | Pexpacks",
   "Free printables, expert parent guides, and study tools to empower your child's academic year.",
   "/blog"
 );
-
-import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
-import { BlogFilter } from "./BlogFilter";
-import { SubscribeForm } from "./SubscribeForm";
 
 export const revalidate = 300;
 
@@ -31,9 +30,10 @@ export default async function BlogIndex() {
     <>
       <PageHero
         eyebrow="Digital Backpack"
-        title="Everything you need, beyond the box."
+        title="Everything you need."
+        text="Download free grade stationery checklists, printable study tools, and expert parent guides to help learners excel all school year long."
         panelText="Free resources for parents and learners"
-        panelTitle="Expert guides, printables, study tools &amp; more"
+        panelTitle="Expert guides, printables, study tools & more"
       >
         <div className={sectionStyles.buttonRow}>
           <Button href="#blog-content" variant="primary">Browse Resources</Button>

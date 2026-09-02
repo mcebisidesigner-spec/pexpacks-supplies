@@ -5,12 +5,14 @@ import { useState } from "react";
 import clsx from "clsx";
 import styles from "./FaqAccordion.module.css";
 import { FAQ, getFaqLinks } from "@/data/faqs";
+import { trackFaqOpened } from "@/lib/analytics";
 
 type FaqAccordionProps = {
   faqs: FAQ[];
   title?: string;
   subtitle?: string;
   showCategory?: boolean;
+  trackSection?: string;
 };
 
 export function FaqAccordion({
@@ -18,12 +20,17 @@ export function FaqAccordion({
   title = "Frequently Asked Questions",
   subtitle = "Got a question? We've got answers.",
   showCategory = false,
+  trackSection,
 }: FaqAccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleAccordion = (event: React.MouseEvent<HTMLButtonElement>) => {
     const index = Number(event.currentTarget.dataset.index);
-    setOpenIndex(openIndex === index ? null : index);
+    const next = openIndex === index ? null : index;
+    setOpenIndex(next);
+    if (next !== null && trackSection) {
+      trackFaqOpened({ faqId: faqs[next].id, section: trackSection });
+    }
   };
 
   return (

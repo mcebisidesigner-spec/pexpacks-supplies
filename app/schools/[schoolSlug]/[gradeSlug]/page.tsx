@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
+import { SchoolsBreadcrumbs } from "@/components/schools/SchoolsBreadcrumbs";
 import { GradePackDetails } from "@/components/schools/GradePackDetails";
 import { PackBuildingAnimation } from "@/components/schools/PackBuildingAnimation";
 import { SaveVisitTracker } from "@/components/schools/SaveVisitTracker";
@@ -19,7 +20,6 @@ type GradePageProps = {
 
 export const revalidate = 300;
 
-
 export async function generateMetadata({
   params,
 }: GradePageProps): Promise<Metadata> {
@@ -35,7 +35,7 @@ export async function generateMetadata({
     return buildMetadata(
       "Pack Not Found",
       "The requested grade stationery pack could not be found.",
-      "/schools"
+      "/schools",
     );
   }
 
@@ -48,7 +48,7 @@ export async function generateMetadata({
     `${grade.grade} Stationery Pack for ${school.name}`,
     `Order a ready-to-use ${grade.grade} stationery pack for ${school.name}, prepared according to school stationery requirements and delivery planning.`,
     `/schools/${school.slug}/${grade.gradeSlug}`,
-    ogUrl.toString()
+    ogUrl.toString(),
   );
 }
 
@@ -74,7 +74,11 @@ export default async function GradePackPage({ params }: GradePageProps) {
     school.grades.find((g) => g.gradeSlug === normalizedGrade) ||
     school.grades.find((g) => g.id === gradeSlug) ||
     school.grades.find((g) => normalizedGrade.endsWith(g.gradeSlug)) ||
-    school.grades.find((g) => g.grade.toLowerCase().replace(/[^a-z0-9]/g, "") === normalizedGrade.replace(/[^a-z0-9]/g, ""));
+    school.grades.find(
+      (g) =>
+        g.grade.toLowerCase().replace(/[^a-z0-9]/g, "") ===
+        normalizedGrade.replace(/[^a-z0-9]/g, ""),
+    );
 
   if (!grade) {
     // If grade is not found on this school, gracefully redirect to the school's overview page
@@ -89,8 +93,12 @@ export default async function GradePackPage({ params }: GradePageProps) {
     (grade.packItems ?? []).flatMap((item) => {
       const description = item.description?.trim();
       if (!description) return [];
-      const contentLabel = item.quantity > 1 ? `${item.quantity}x ${item.name}` : item.name;
-      return [[item.name, description], [contentLabel, description]];
+      const contentLabel =
+        item.quantity > 1 ? `${item.quantity}x ${item.name}` : item.name;
+      return [
+        [item.name, description],
+        [contentLabel, description],
+      ];
     }),
   );
 
@@ -116,6 +124,10 @@ export default async function GradePackPage({ params }: GradePageProps) {
           gradeSlug={grade.gradeSlug}
         />
       </Suspense>
+      <SchoolsBreadcrumbs
+        school={{ name: school.name, slug: school.slug }}
+        grade={grade.grade}
+      />
       <PageHero
         eyebrow={school.name}
         title={`${grade.grade} Stationery Pack`}

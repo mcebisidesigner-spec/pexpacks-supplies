@@ -18,6 +18,10 @@ export interface Database {
           link_label: string | null;
           is_active: boolean;
           display_location: "global_top" | "hero_banner" | "schools_page";
+          status: "draft" | "published" | "archived";
+          published_at: string;
+          expires_at: string | null;
+          updated_by: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -29,6 +33,10 @@ export interface Database {
           link_label?: string | null;
           is_active?: boolean;
           display_location?: "global_top" | "hero_banner" | "schools_page";
+          status?: "draft" | "published" | "archived";
+          published_at?: string;
+          expires_at?: string | null;
+          updated_by?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -40,6 +48,10 @@ export interface Database {
           link_label?: string | null;
           is_active?: boolean;
           display_location?: "global_top" | "hero_banner" | "schools_page";
+          status?: "draft" | "published" | "archived";
+          published_at?: string;
+          expires_at?: string | null;
+          updated_by?: string | null;
           created_at?: string;
           updated_at?: string;
         };

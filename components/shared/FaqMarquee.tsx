@@ -9,6 +9,7 @@ type FaqMarqueeProps = {
   eyebrow?: string;
   title?: string;
   seeAllHref?: string;
+  trackSection?: string;
 };
 
 export function FaqMarquee({
@@ -16,18 +17,27 @@ export function FaqMarquee({
   eyebrow = "Quick answers",
   title = "Frequently asked questions",
   seeAllHref = "/faq",
+  trackSection,
 }: FaqMarqueeProps) {
   if (faqs.length === 0) return null;
 
   return (
-    <section className={sectionStyles.section} aria-labelledby="faq-marquee-heading">
+    <section
+      className={sectionStyles.section}
+      aria-labelledby="faq-marquee-heading"
+    >
       <div className={sectionStyles.inner}>
         <SectionHeader
           eyebrow={eyebrow}
           title={title}
           headingId="faq-marquee-heading"
         />
-        <FaqAccordion faqs={faqs} title="" subtitle="" />
+        <FaqAccordion
+          faqs={faqs}
+          title=""
+          subtitle=""
+          trackSection={trackSection}
+        />
         {seeAllHref ? (
           <div style={{ textAlign: "center", marginTop: "28px" }}>
             <Link

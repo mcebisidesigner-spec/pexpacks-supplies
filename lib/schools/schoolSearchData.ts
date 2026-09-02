@@ -181,6 +181,39 @@ export const getFeaturedSchoolRecords = unstable_cache(
   { revalidate: 300, tags: [SCHOOL_DATA_TAG, "featured-schools"] },
 );
 
+/**
+ * Retrieves every visible public school (lightweight search records) for the
+ * "browse all schools" directory. Returns an empty query to search_public_schools,
+ * which lists all active + published schools, ordered for the directory grid.
+ */
+export const getAllPublicSchoolRecords = unstable_cache(
+  async (): Promise<SchoolSearchRecord[]> => {
+    const supabase = createSupabaseAdminClient();
+    const { data, error } = await supabase.rpc("search_public_schools", {
+      search_query: "",
+      grade_filter: "",
+      phase_filter: "",
+      region_filter: "",
+      result_limit: 500,
+      result_offset: 0,
+    } as never);
+
+    if (error) {
+      console.error("[schoolSearchData] browse all schools RPC failed:", error);
+      return [];
+    }
+
+    const rows = (data as unknown as SearchSchoolRow[] | null) ?? [];
+
+    return rows
+      .map(toSearchRecord)
+      .filter((school) => school.slug)
+      .sort((a, b) => a.name.localeCompare(b.name));
+  },
+  ["public-all-schools-v1"],
+  { revalidate: 300, tags: [SCHOOL_DATA_TAG, "all-schools"] },
+);
+
 export async function searchSchoolRecords(
   filters: SchoolSearchFilters,
   limit = 12,

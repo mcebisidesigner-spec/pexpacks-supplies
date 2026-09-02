@@ -85,7 +85,7 @@
 
 .featuredCta {
   width: fit-content;
-  min-height: 44px;
+  min-height: var(--touch-target-min);
   margin-top: 10px;
   padding: var(--space-2) var(--space-2) var(--space-2) 20px;
   border-radius: var(--radius-pill);

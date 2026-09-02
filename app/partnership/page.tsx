@@ -131,9 +131,9 @@ export default async function PartnerWithSchoolsPage() {
       ? hero.eyebrow
       : 'Partner with us'
   const heroTitle =
-    typeof hero?.title === 'string' && hero.title
+    typeof hero?.title === "string" && hero.title
       ? hero.title
-      : 'Empower your school with effortless stationery packs.'
+      : "Free school website +";
   const partnerCount = schoolIndex.filter((school) => school.isPartnerSchool)
     .length
 
@@ -149,7 +149,7 @@ export default async function PartnerWithSchoolsPage() {
       <PageHero
         eyebrow={heroEyebrow}
         title={heroTitle}
-        text="Become an official Pexpacks partner. We build and host your school's website and parent ordering portal for free — and your school earns 1.5% on every pack sold."
+        text="Empower your school with a free custom website, parent ordering portal, and a 1.5% fundraising rebate on every stationery pack sold."
         panelTitle="What your school gets"
         panelText="Free website, hosting, SSL, parent portal & 1.5% rebate"
       >

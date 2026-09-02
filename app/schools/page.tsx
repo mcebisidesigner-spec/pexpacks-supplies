@@ -5,14 +5,20 @@ import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchool
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsFaqAccordion } from "@/components/schools/SchoolsFaqAccordion";
 import { SchoolsHowItWorks } from "@/components/schools/SchoolsHowItWorks";
+import { BrowseAllSchools } from "@/components/schools/BrowseAllSchools";
+import { SchoolsTrustSection } from "@/components/marketing/SchoolsTrustSection";
 import { ConciergeSection } from "@/components/marketing/ConciergeSection";
 import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
 import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
-import { getFeaturedSchoolRecords } from "@/lib/schools/schoolSearchData";
-import { getWebsiteContent, getFaqs } from "@/lib/cms";
+import {
+  getFeaturedSchoolRecords,
+  getAllPublicSchoolRecords,
+} from "@/lib/schools/schoolSearchData";
+import { getWebsiteContent, getFaqs, getTestimonials } from "@/lib/cms";
+import { getActivePublicSeason } from "@/lib/public-data/seasons";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
 import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
@@ -25,10 +31,20 @@ export const metadata: Metadata = buildMetadata(
 export const revalidate = 300;
 
 export default async function SchoolsPage() {
-  const [featuredSchools, content, schoolsFaqs] = await Promise.all([
+  const [
+    featuredSchools,
+    allSchools,
+    content,
+    schoolsFaqs,
+    testimonials,
+    season,
+  ] = await Promise.all([
     getFeaturedSchoolRecords(),
+    getAllPublicSchoolRecords(),
     getWebsiteContent(),
     getFaqs("schools"),
+    getTestimonials(),
+    getActivePublicSeason(),
   ]);
   const hero = content["schools.hero"];
   const heroEyebrow =
@@ -46,8 +62,8 @@ export default async function SchoolsPage() {
         <PageHero
           eyebrow={heroEyebrow}
           title={heroTitle}
-          panelTitle="Fast delivery anywhere in Gauteng"
-          panelText="Each pack is packed according to your&nbsp; school&rsquo;s official stationery list."
+          panelTitle="Your school&rsquo;s exact list, packed for you"
+          panelText={`Packed to your school&rsquo;s official list and delivered for ${season.academicYear}.`}
           panelClassName={heroStyles.heroPanelSearchAligned}
         >
           <SchoolSearchPanel readQueryFromUrl />
@@ -62,6 +78,10 @@ export default async function SchoolsPage() {
         <FeaturedSchoolsBanner schools={featuredSchools} />
       )}
 
+      <SchoolsTrustSection testimonials={testimonials} />
+
+      {allSchools.length > 0 && <BrowseAllSchools schools={allSchools} />}
+
       <ConciergeSection />
 
       <section className={sectionStyles.section}>
@@ -72,57 +92,6 @@ export default async function SchoolsPage() {
           </div>
         </div>
       </section>
-
-      <div className={homeStyles.paymentRow}>
-        <div className={homeStyles.paymentRowInner}>
-          <span className={homeStyles.paymentTagline}>
-            Lock in 2026 prices &middot; Buy Now Pay Later
-          </span>
-          <div className={homeStyles.paymentLogos}>
-            <span className={homeStyles.paymentChip} title="Ozow">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <rect
-                  x="2"
-                  y="4"
-                  width="20"
-                  height="16"
-                  rx="3"
-                  fill="#231F20"
-                />
-                <path
-                  d="M8 10v4M12 9v6M16 11v3"
-                  stroke="#fff"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-              Ozow
-            </span>
-            <span className={homeStyles.paymentChip} title="Instant EFT">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#0f172a"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <rect x="2" y="5" width="20" height="14" rx="2" />
-                <line x1="2" y1="10" x2="22" y2="10" />
-              </svg>
-              Instant EFT
-            </span>
-          </div>
-        </div>
-      </div>
 
       <SchoolsFaqAccordion
         faqs={schoolsFaqs}

@@ -8,6 +8,12 @@ export const AnalyticsEvents = {
   schoolSearchFailed: "School Search Failed",
   schoolResultSelected: "School Result Selected",
   schoolNoResultsRecovery: "School No Results Recovery",
+  schoolCardClicked: "School Card Clicked",
+  schoolImpression: "School Impression",
+  schoolDirectoryBrowse: "School Directory Browse",
+  faqOpened: "FAQ Opened",
+  whatsappClicked: "WhatsApp Clicked",
+  conciergeCtaClicked: "Concierge CTA Clicked",
   initiatePreOrder: "Initiate Pre-Order",
   customiserOpened: "Pack Customiser Opened",
   customiserReset: "Pack Customiser Reset",
@@ -94,6 +100,72 @@ export function trackSchoolNoResultsRecovery({
   source: SearchSource;
 }) {
   track(AnalyticsEvents.schoolNoResultsRecovery, { source });
+}
+
+export function trackSchoolCardClicked({
+  schoolSlug,
+  placement,
+  position,
+}: {
+  schoolSlug: string;
+  placement: "featured" | "browse" | "recent";
+  position: number;
+}) {
+  track(AnalyticsEvents.schoolCardClicked, {
+    schoolSlug,
+    placement,
+    position,
+  });
+}
+
+export function trackSchoolImpression({
+  schoolSlug,
+  placement,
+}: {
+  schoolSlug: string;
+  placement: "featured" | "browse";
+}) {
+  track(AnalyticsEvents.schoolImpression, { schoolSlug, placement });
+}
+
+export function trackSchoolDirectoryBrowse({
+  filter,
+  visibleCount,
+}: {
+  filter: string;
+  visibleCount: number;
+}) {
+  track(AnalyticsEvents.schoolDirectoryBrowse, { filter, visibleCount });
+}
+
+export function trackFaqOpened({
+  faqId,
+  section,
+}: {
+  faqId: string;
+  section: string;
+}) {
+  track(AnalyticsEvents.faqOpened, { faqId, section });
+}
+
+export function trackWhatsAppClicked({
+  sourcePath,
+  label,
+}: {
+  sourcePath: string;
+  label: string;
+}) {
+  track(AnalyticsEvents.whatsappClicked, { sourcePath, label });
+}
+
+export function trackConciergeCtaClicked({
+  cta,
+  sourcePath,
+}: {
+  cta: "upload" | "whatsapp";
+  sourcePath: string;
+}) {
+  track(AnalyticsEvents.conciergeCtaClicked, { cta, sourcePath });
 }
 
 export function trackInitiatePreOrder({

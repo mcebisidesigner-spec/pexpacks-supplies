@@ -100,6 +100,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/resources",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
         source: "/copex",
         destination: "/",
         permanent: true,

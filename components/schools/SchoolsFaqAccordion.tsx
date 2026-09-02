@@ -65,6 +65,7 @@ export function SchoolsFaqAccordion({
         eyebrow="Quick answers"
         title="Frequently asked questions"
         seeAllHref="/faq"
+        trackSection="schools"
       />
     </div>
   );

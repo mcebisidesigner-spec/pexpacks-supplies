@@ -70,10 +70,22 @@ export function AnnouncementBar({
           {badge && <span className={styles.badge}>{badge}</span>}
           <span className={styles.message}>{text}</span>
           {linkUrl && (
-            <Link href={linkUrl} className={styles.actionLink}>
-              <span>{linkLabel || "Find Your School"}</span>
-              <ArrowRight size={13} aria-hidden="true" />
-            </Link>
+            linkUrl.startsWith("http://") || linkUrl.startsWith("https://") ? (
+              <a
+                href={linkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.actionLink}
+              >
+                <span>{linkLabel || "Find Your School"}</span>
+                <ArrowRight size={13} aria-hidden="true" />
+              </a>
+            ) : (
+              <Link href={linkUrl} className={styles.actionLink}>
+                <span>{linkLabel || "Find Your School"}</span>
+                <ArrowRight size={13} aria-hidden="true" />
+              </Link>
+            )
           )}
         </div>
 

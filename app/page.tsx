@@ -61,8 +61,6 @@ export default async function HomePage() {
                 alt="Pexpacks Stationery Box"
                 fill
                 priority
-                placeholder="blur"
-                blurDataURL={IMAGE_BLUR_DATA_URL}
                 sizes="(min-width: 1024px) 44vw, 100vw"
               />
             </span>

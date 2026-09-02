@@ -136,7 +136,7 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const [content, activeAnnouncement] = await Promise.all([
     getWebsiteContent(),
-    getActiveAnnouncement("global_top"),
+    getActiveAnnouncement("site_header"),
   ]);
 
   const announcement = activeAnnouncement

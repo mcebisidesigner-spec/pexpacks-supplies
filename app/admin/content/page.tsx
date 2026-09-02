@@ -1127,7 +1127,12 @@ export default function ContentCMSPage() {
 
                   {item.link_url && (
                     <a
-                      href={item.link_url}
+                      href={
+                        item.link_url.startsWith("http") ||
+                        item.link_url.startsWith("/")
+                          ? item.link_url
+                          : `/${item.link_url}`
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.cardLinkRow}

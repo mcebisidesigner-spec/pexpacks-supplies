@@ -77,6 +77,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
       <PageHero
         eyebrow="We're here"
         title="Talk to Pexpacks"
+        text="Have a question about your order, school pack, or partnership enquiry? Our dedicated Gauteng support team is here to help you get quick answers."
         panelText="Service area"
         panelTitle="We currently service Gauteng"
       >

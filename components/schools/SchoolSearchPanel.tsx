@@ -55,7 +55,9 @@ export function SchoolSearchPanel({
   readQueryFromUrl = false,
 }: SchoolSearchPanelProps) {
   const [isSchoolInputFocused, setIsSchoolInputFocused] = useState(false);
-  const [trendingSchools, setTrendingSchools] = useState<{ name: string; slug: string; image?: string | null }[]>([]);
+  const [trendingSchools, setTrendingSchools] = useState<
+    { name: string; slug: string; image?: string | null }[]
+  >([]);
   const [trendingVisible, setTrendingVisible] = useState(false);
   const trendingFetched = useRef(false);
   const urlQueryApplied = useRef(false);
@@ -87,7 +89,9 @@ export function SchoolSearchPanel({
   useEffect(() => {
     if (!readQueryFromUrl || urlQueryApplied.current) return;
     urlQueryApplied.current = true;
-    const queryFromUrl = new URLSearchParams(window.location.search).get("q")?.trim();
+    const queryFromUrl = new URLSearchParams(window.location.search)
+      .get("q")
+      ?.trim();
     if (queryFromUrl) updateQuery(queryFromUrl);
   }, [readQueryFromUrl, updateQuery]);
 
@@ -124,14 +128,12 @@ export function SchoolSearchPanel({
             .catch(fetchDefault);
         },
         fetchDefault,
-        { timeout: 4000, maximumAge: 120000 }
+        { timeout: 4000, maximumAge: 120000 },
       );
     } else {
       fetchDefault();
     }
   }, [query]);
-
-
 
   useEffect(() => {
     if (!panelOpen) return;
@@ -150,7 +152,10 @@ export function SchoolSearchPanel({
   return (
     <section
       id="school-search"
-      className={clsx(styles.searchExperience, "pex-school-search-focus-anchor")}
+      className={clsx(
+        styles.searchExperience,
+        "pex-school-search-focus-anchor",
+      )}
     >
       {searchActive && <div className={heroStyles.searchBackdrop} />}
       <div className={styles.searchFormWrapper}>
@@ -168,10 +173,7 @@ export function SchoolSearchPanel({
           aria-controls="school-search-results"
           data-mobile-search-active={searchActive ? "true" : "false"}
         >
-          <label
-            className={heroStyles.field}
-            htmlFor="schoolQuery"
-          >
+          <label className={heroStyles.field} htmlFor="schoolQuery">
             <span>School Name</span>
             <input
               id="schoolQuery"
@@ -190,7 +192,9 @@ export function SchoolSearchPanel({
           </label>
           {trendingVisible && query.length < 3 && trendingSchools.length > 0 ? (
             <div className={heroStyles.trendingRow}>
-              <span className={heroStyles.trendingLabel}>Trending Near You</span>
+              <span className={heroStyles.trendingLabel}>
+                Trending Near You
+              </span>
               <div className={heroStyles.trendingTrack}>
                 {trendingSchools.map((school, index) => (
                   <Link
@@ -222,7 +226,9 @@ export function SchoolSearchPanel({
                         title={`${school.name} logo`}
                       />
                     )}
-                    <span className={heroStyles.trendingCardName}>{school.name}</span>
+                    <span className={heroStyles.trendingCardName}>
+                      {school.name}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -261,7 +267,9 @@ export function SchoolSearchPanel({
                 <>
                   <div className={heroStyles.resultsCount}>
                     <strong>
-                      {total === 1 ? "1 school found" : `${total} schools found`}
+                      {total === 1
+                        ? "1 school found"
+                        : `${total} schools found`}
                     </strong>
                     {total > 0 ? (
                       <span>
@@ -273,7 +281,10 @@ export function SchoolSearchPanel({
                     <>
                       <div className={heroStyles.heroResultsList}>
                         {results.map((school, index) => (
-                          <article className={heroStyles.heroResultCard} key={school.id}>
+                          <article
+                            className={heroStyles.heroResultCard}
+                            key={school.id}
+                          >
                             <div className={heroStyles.heroResultContent}>
                               <div className={heroStyles.heroResultRow}>
                                 {school.image ? (
@@ -307,7 +318,10 @@ export function SchoolSearchPanel({
                                         })
                                       }
                                     >
-                                      <HighlightMatch text={school.name} query={query} />
+                                      <HighlightMatch
+                                        text={school.name}
+                                        query={query}
+                                      />
                                     </Link>
                                   </h3>
                                   <p>{formatSchoolSearchLocation(school)}</p>
@@ -343,7 +357,9 @@ export function SchoolSearchPanel({
                                     {school.customBadge || DEFAULT_PACKS_BADGE}
                                   </span>
                                   {school.isPartner ? (
-                                    <span className={heroStyles.partnerBadge}>★ Official Partner ★</span>
+                                    <span className={heroStyles.partnerBadge}>
+                                      ★ Official Partner ★
+                                    </span>
                                   ) : null}
                                 </div>
                               </div>
@@ -369,7 +385,9 @@ export function SchoolSearchPanel({
                       <SchoolResultsAutoLoad
                         hasMore={hasMore}
                         isLoading={isLoading}
-                        onLoadMore={() => fetchResults(results.length, "append")}
+                        onLoadMore={() =>
+                          fetchResults(results.length, "append")
+                        }
                         className={heroStyles.loadMoreSentinel}
                       />
                       {hasMore && !isLoading ? (
@@ -384,14 +402,20 @@ export function SchoolSearchPanel({
                     </>
                   ) : (
                     <div className={heroStyles.noResultsState}>
-                      <p className={heroStyles.heroSearchState}>No matching schools found.</p>
+                      <p className={heroStyles.heroSearchState}>
+                        No matching schools found.
+                      </p>
                     </div>
                   )}
                   {results.length === 0 ? (
                     <div className={heroStyles.searchCatchall}>
-                      <p className={heroStyles.searchCatchallEyebrow}>Edge case? Covered.</p>
+                      <p className={heroStyles.searchCatchallEyebrow}>
+                        Edge case? Covered.
+                      </p>
                       <p className={heroStyles.searchCatchallText}>
-                        Don&rsquo;t see your school? Upload your stationery list or send it to us on WhatsApp and we&rsquo;ll pack every item exactly as specified.
+                        Don&rsquo;t see your school? Upload your stationery list
+                        or send it to us on WhatsApp and we&rsquo;ll pack every
+                        item exactly as specified.
                       </p>
                       <div className={heroStyles.searchCatchallActions}>
                         <Link
@@ -420,6 +444,22 @@ export function SchoolSearchPanel({
         inputValue={query}
         className={styles.searchHelper}
       />
+
+      <a href="#browse-schools-heading" className={styles.directoryCta}>
+        <span>Can&rsquo;t remember the exact name?</span>
+        Browse all schools
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </a>
     </section>
   );
 }

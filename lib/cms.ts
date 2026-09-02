@@ -234,31 +234,92 @@ export interface PublicAnnouncement {
   display_location: "global_top" | "hero_banner" | "schools_page";
 }
 
+function normalizeCmsUrl(url?: string | null): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (!trimmed) return null;
+  if (
+    trimmed.startsWith("/") ||
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("#") ||
+    trimmed.startsWith("mailto:") ||
+    trimmed.startsWith("tel:")
+  ) {
+    return trimmed;
+  }
+  return `/${trimmed}`;
+}
+
 async function fetchActiveAnnouncement(
-  location?: "global_top" | "hero_banner" | "schools_page" | string,
+  location?: "global_top" | "hero_banner" | "schools_page" | "site_header" | string,
 ): Promise<PublicAnnouncement | null> {
   const admin = createSupabaseAdminClient();
-  const rpcLocation = location ?? "global_top";
+  const rpcLocation = location ?? "site_header";
   const { data, error } = await admin.rpc(
     "get_public_cms_announcements" as never,
     { p_location: rpcLocation } as never,
   );
 
-  if (error) {
-    console.error("[cms] public announcements rpc:", error);
-    return null;
+  if (!error && data) {
+    const rows = (data as unknown as PublicAnnouncement[] | null) ?? [];
+    if (rows.length > 0 && rows[0]) {
+      const item = rows[0];
+      return {
+        ...item,
+        link_url: normalizeCmsUrl(item.link_url),
+      };
+    }
   }
 
-  const rows = (data as unknown as PublicAnnouncement[] | null) ?? [];
-  return rows[0] ?? null;
+  if (error) {
+    console.error("[cms] public announcements rpc:", error);
+  }
+
+  // Resilient fallback directly against cms_announcements table
+  try {
+    let query = admin
+      .from("cms_announcements")
+      .select("id, badge_text, message, link_url, link_label, display_location")
+      .eq("is_active", true)
+      .eq("status", "published");
+
+    if (location === "schools_page") {
+      query = query.eq("display_location", "schools_page");
+    } else if (location === "hero_banner") {
+      query = query.eq("display_location", "hero_banner");
+    } else if (location === "global_top") {
+      query = query.eq("display_location", "global_top");
+    } else {
+      // Default / site_header: accept global_top and hero_banner
+      query = query.in("display_location", ["global_top", "hero_banner"]);
+    }
+
+    const { data: fallbackData } = await query
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (fallbackData) {
+      const item = fallbackData as unknown as PublicAnnouncement;
+      return {
+        ...item,
+        link_url: normalizeCmsUrl(item.link_url),
+      };
+    }
+  } catch (fallbackErr) {
+    console.warn("[cms] fallback announcements query warning:", fallbackErr);
+  }
+
+  return null;
 }
 
 export const getActiveAnnouncement = (
-  location?: "global_top" | "hero_banner" | "schools_page" | string,
+  location?: "global_top" | "hero_banner" | "schools_page" | "site_header" | string,
 ) =>
   unstable_cache(
     () => fetchActiveAnnouncement(location),
-    ["cms-active-announcement", location || "global_top"],
+    ["cms-active-announcement", location || "site_header"],
     {
       revalidate: CMS_REVALIDATE_SECONDS,
       tags: [CMS_TAGS.announcements],
