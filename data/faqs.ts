@@ -10,7 +10,15 @@ export type FAQ = {
     | string;
   question: string;
   answer: string;
-  target_page?: "all" | "homepage" | "schools" | string;
+  target_page?:
+    | "all"
+    | "homepage"
+    | "schools"
+    | "track_order"
+    | "happy_pay"
+    | "add_your_school"
+    | "partnership"
+    | string;
   links?: {
     label: string;
     href: string;

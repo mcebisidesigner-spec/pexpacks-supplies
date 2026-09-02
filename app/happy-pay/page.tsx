@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
 import { buildMetadata } from "@/lib/seo";
+import { getFaqs } from "@/lib/cms";
 import styles from "./HappyPayPage.module.css";
 
 export const metadata: Metadata = {
@@ -124,7 +125,7 @@ const benefits = [
   },
 ];
 
-const faqs = [
+const fallbackFaqs = [
   {
     question: "What is Happy Pay?",
     answer:
@@ -187,7 +188,10 @@ const security = [
   },
 ];
 
-export default function HappyPayPage() {
+export default async function HappyPayPage() {
+  const cmsFaqs = await getFaqs("happy_pay");
+  const displayFaqs = cmsFaqs && cmsFaqs.length > 0 ? cmsFaqs : fallbackFaqs;
+
   return (
     <>
       <section className={styles.hero}>
@@ -290,7 +294,7 @@ export default function HappyPayPage() {
             headingId="faq"
           />
           <div className={styles.faqList}>
-            {faqs.map((faq) => (
+            {displayFaqs.map((faq) => (
               <details className={styles.faqItem} key={faq.question}>
                 <summary className={styles.faqQuestion}>
                   <span>{faq.question}</span>

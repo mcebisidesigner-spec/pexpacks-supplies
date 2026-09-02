@@ -284,5 +284,68 @@ describe("Pexpacks Content CMS Module", () => {
       target_page: "invalid_page",
     });
     expect(invalidPage.success).toBe(false);
+
+    // Assert all 7 supported target pages in schema
+    const supportedPages = [
+      "all",
+      "homepage",
+      "schools",
+      "track_order",
+      "happy_pay",
+      "add_your_school",
+      "partnership",
+    ] as const;
+
+    for (const target of supportedPages) {
+      const parsed = cmsFaqSchema.safeParse({
+        category: "Ordering",
+        question: `Question for ${target}?`,
+        answer: "Sample answer.",
+        target_page: target,
+      });
+      expect(parsed.success).toBe(true);
+      if (parsed.success) {
+        expect(parsed.data.target_page).toBe(target);
+      }
+    }
+  });
+
+  it("verifies migration 00093 expands target_page check constraint, seeds page FAQs, and configures hero_banner placement", () => {
+    const migration = readRepoFile(
+      "supabase/migrations/00093_cms_all_pages_faqs_and_announcements.sql",
+    );
+    expect(migration).toContain("ALTER TABLE public.cms_faqs DROP CONSTRAINT IF EXISTS cms_faqs_target_page_check;");
+    expect(migration).toContain("'happy_pay'");
+    expect(migration).toContain("'partnership'");
+    expect(migration).toContain("'track_order'");
+    expect(migration).toContain("'add_your_school'");
+    expect(migration).toContain("What is Happy Pay?");
+    expect(migration).toContain("Is the website and hosting really 100% free?");
+    expect(migration).toContain("How do I track my order delivery?");
+    expect(migration).toContain("What if my school is not listed yet?");
+    expect(migration).toContain("idx_cms_announcements_one_active_hero_banner");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.get_public_cms_faqs(p_page text DEFAULT NULL)");
+  });
+
+  it("ensures FAQ admin views use App Page tabs instead of category filter tabs", () => {
+    const adminPage = readRepoFile("app/admin/content/page.tsx");
+    const faqsTab = readRepoFile("components/admin/content/FaqsTab.tsx");
+
+    // Ensure category filter pills are removed from FAQ tab views
+    expect(adminPage).not.toContain('onClick={() => setFaqCategoryFilter(cat)}');
+    expect(faqsTab).not.toContain('onClick={() => setSelectedCategory(cat)}');
+
+    // Ensure App Page tabs are present with all pages
+    expect(adminPage).toContain('label: "Schools Directory"');
+    expect(adminPage).toContain('label: "Track Order"');
+    expect(adminPage).toContain('label: "Happy Pay"');
+    expect(adminPage).toContain('label: "Add Your School"');
+    expect(adminPage).toContain('label: "Partnerships"');
+
+    expect(faqsTab).toContain('label: "Schools Directory"');
+    expect(faqsTab).toContain('label: "Track Order"');
+    expect(faqsTab).toContain('label: "Happy Pay"');
+    expect(faqsTab).toContain('label: "Add Your School"');
+    expect(faqsTab).toContain('label: "Partnerships"');
   });
 });

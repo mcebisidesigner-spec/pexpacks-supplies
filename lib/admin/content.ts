@@ -1016,7 +1016,17 @@ export const cmsFaqSchema = z.object({
     .max(2000, "Max 2000 characters"),
   sort_order: z.coerce.number().int().min(0).default(0),
   is_published: z.boolean().default(true),
-  target_page: z.enum(["all", "homepage", "schools"]).default("all"),
+  target_page: z
+    .enum([
+      "all",
+      "homepage",
+      "schools",
+      "track_order",
+      "happy_pay",
+      "add_your_school",
+      "partnership",
+    ])
+    .default("all"),
 });
 
 export type CmsFaqInput = z.infer<typeof cmsFaqSchema>;

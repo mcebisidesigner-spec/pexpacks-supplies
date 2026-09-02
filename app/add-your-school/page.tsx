@@ -19,7 +19,10 @@ export const metadata: Metadata = buildMetadata(
 )
 
 export default async function AddYourSchoolPage() {
-  const [faqs, content] = await Promise.all([getFaqs(), getWebsiteContent()])
+  const [faqs, content] = await Promise.all([
+    getFaqs("add_your_school"),
+    getWebsiteContent(),
+  ])
   const hero = content['add-your-school.hero']
   const heroEyebrow =
     typeof hero?.eyebrow === 'string' && hero.eyebrow
@@ -77,17 +80,7 @@ export default async function AddYourSchoolPage() {
       </section>
 
       <div id="contact-faq">
-        <FaqMarquee
-          faqs={faqs.filter((f) =>
-            [
-              'school-not-listed',
-              'school-list-submission',
-              'find-grade-pack',
-              'delivery-timing',
-              'school-rebate',
-            ].includes(f.id),
-          )}
-        />
+        <FaqMarquee faqs={faqs} />
       </div>
 
       <section className={sectionStyles.section}>

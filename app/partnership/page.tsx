@@ -4,7 +4,7 @@ import { PartnerForm } from '@/components/forms/PartnerForm'
 import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
 import { getPublicSchoolIndex } from '@/lib/schools/publicSchoolData'
-import { getWebsiteContent } from '@/lib/cms'
+import { getWebsiteContent, getFaqs } from '@/lib/cms'
 import { buildMetadata } from '@/lib/seo'
 import sectionStyles from '@/components/marketing/MarketingSections.module.css'
 import cardStyles from '@/components/marketing/MarketingCards.module.css'
@@ -80,10 +80,15 @@ export const metadata: Metadata = buildMetadata(
 export const dynamic = 'force-static'
 
 export default async function PartnerWithSchoolsPage() {
-  const [schoolIndex, content] = await Promise.all([
+  const [schoolIndex, content, cmsFaqs] = await Promise.all([
     getPublicSchoolIndex(),
     getWebsiteContent(),
+    getFaqs('partnership'),
   ])
+  const displayFaqs =
+    cmsFaqs && cmsFaqs.length > 0
+      ? cmsFaqs.map((f) => ({ q: f.question, a: f.answer }))
+      : faqItems
   const hero = content['partnership.hero']
   const heroEyebrow =
     typeof hero?.eyebrow === 'string' && hero.eyebrow
@@ -341,7 +346,7 @@ export default async function PartnerWithSchoolsPage() {
               marginInline: 'auto',
             }}
           >
-            {faqItems.map((item, index) => (
+            {displayFaqs.map((item, index) => (
               <details
                 key={index}
                 style={{

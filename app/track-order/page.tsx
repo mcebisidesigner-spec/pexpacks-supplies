@@ -19,7 +19,10 @@ export const metadata: Metadata = buildMetadata(
 import { Suspense } from "react";
 
 export default async function TrackOrderPage() {
-  const [faqs, content] = await Promise.all([getFaqs(), getWebsiteContent()]);
+  const [faqs, content] = await Promise.all([
+    getFaqs("track_order"),
+    getWebsiteContent(),
+  ]);
   const hero = content["track-order.hero"];
   const heroEyebrow =
     typeof hero.eyebrow === "string" && hero.eyebrow
@@ -29,7 +32,7 @@ export default async function TrackOrderPage() {
     typeof hero.title === "string" && hero.title
       ? hero.title
       : "Check your stationery pack status";
-  const visibleTrackingFaqs = faqs.slice(0, 5);
+  const visibleTrackingFaqs = faqs;
 
 
   return (

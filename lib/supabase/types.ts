@@ -53,7 +53,14 @@ export interface Database {
           answer: string;
           sort_order: number;
           is_published: boolean;
-          target_page: "all" | "homepage" | "schools";
+          target_page:
+            | "all"
+            | "homepage"
+            | "schools"
+            | "track_order"
+            | "happy_pay"
+            | "add_your_school"
+            | "partnership";
           created_at: string;
           updated_at: string;
         };
@@ -64,7 +71,14 @@ export interface Database {
           answer: string;
           sort_order?: number;
           is_published?: boolean;
-          target_page?: "all" | "homepage" | "schools";
+          target_page?:
+            | "all"
+            | "homepage"
+            | "schools"
+            | "track_order"
+            | "happy_pay"
+            | "add_your_school"
+            | "partnership";
           created_at?: string;
           updated_at?: string;
         };
@@ -75,7 +89,14 @@ export interface Database {
           answer?: string;
           sort_order?: number;
           is_published?: boolean;
-          target_page?: "all" | "homepage" | "schools";
+          target_page?:
+            | "all"
+            | "homepage"
+            | "schools"
+            | "track_order"
+            | "happy_pay"
+            | "add_your_school"
+            | "partnership";
           created_at?: string;
           updated_at?: string;
         };

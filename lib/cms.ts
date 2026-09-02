@@ -172,7 +172,16 @@ export const getTestimonials = unstable_cache(
   },
 );
 
-export const getFaqs = (page?: "all" | "homepage" | "schools" | string) =>
+export type CmsFaqTargetPage =
+  | "all"
+  | "homepage"
+  | "schools"
+  | "track_order"
+  | "happy_pay"
+  | "add_your_school"
+  | "partnership";
+
+export const getFaqs = (page?: CmsFaqTargetPage | string) =>
   unstable_cache(() => fetchFaqs(page), ["cms-faqs", page || "all"], {
     revalidate: CMS_REVALIDATE_SECONDS,
     tags: [CMS_TAGS.faqs],
@@ -224,10 +233,10 @@ export interface PublicAnnouncement {
 }
 
 async function fetchActiveAnnouncement(
-  location?: "global_top" | "hero_banner" | "schools_page",
+  location?: "global_top" | "hero_banner" | "schools_page" | string,
 ): Promise<PublicAnnouncement | null> {
   const admin = createSupabaseAdminClient();
-  const rpcLocation = location ?? "site_header";
+  const rpcLocation = location ?? "global_top";
   const { data, error } = await admin.rpc(
     "get_public_cms_announcements" as never,
     { p_location: rpcLocation } as never,
@@ -242,14 +251,17 @@ async function fetchActiveAnnouncement(
   return rows[0] ?? null;
 }
 
-export const getActiveAnnouncement = unstable_cache(
-  fetchActiveAnnouncement,
-  ["cms-active-announcement"],
-  {
-    revalidate: CMS_REVALIDATE_SECONDS,
-    tags: [CMS_TAGS.announcements],
-  },
-);
+export const getActiveAnnouncement = (
+  location?: "global_top" | "hero_banner" | "schools_page" | string,
+) =>
+  unstable_cache(
+    () => fetchActiveAnnouncement(location),
+    ["cms-active-announcement", location || "global_top"],
+    {
+      revalidate: CMS_REVALIDATE_SECONDS,
+      tags: [CMS_TAGS.announcements],
+    },
+  )();
 
 export interface PublicCmsFaq {
   id: string;
@@ -277,9 +289,7 @@ async function fetchPublishedCmsFaqs(page?: string): Promise<PublicCmsFaq[]> {
   return (data as unknown as PublicCmsFaq[] | null) ?? [];
 }
 
-export const getPublishedCmsFaqs = (
-  page?: "all" | "homepage" | "schools" | string,
-) =>
+export const getPublishedCmsFaqs = (page?: CmsFaqTargetPage | string) =>
   unstable_cache(
     () => fetchPublishedCmsFaqs(page),
     ["cms-published-faqs", page || "all"],

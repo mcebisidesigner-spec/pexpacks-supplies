@@ -258,8 +258,18 @@ export async function saveCmsFaqAction(
     formData.get("is_published") === "true" ||
     formData.get("is_published") === "on";
   const rawTarget = raw(formData, "target_page");
-  const target_page =
-    rawTarget === "homepage" || rawTarget === "schools" ? rawTarget : "all";
+  const validPages = [
+    "all",
+    "homepage",
+    "schools",
+    "track_order",
+    "happy_pay",
+    "add_your_school",
+    "partnership",
+  ] as const;
+  const target_page = validPages.includes(rawTarget as (typeof validPages)[number])
+    ? (rawTarget as (typeof validPages)[number])
+    : "all";
 
   return saveCmsFaq(
     {

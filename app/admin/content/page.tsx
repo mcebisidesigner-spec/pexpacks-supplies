@@ -64,7 +64,14 @@ interface FAQItem {
   answer: string;
   is_published: boolean;
   sort_order: number;
-  target_page?: "all" | "homepage" | "schools";
+  target_page?:
+    | "all"
+    | "homepage"
+    | "schools"
+    | "track_order"
+    | "happy_pay"
+    | "add_your_school"
+    | "partnership";
 }
 
 interface Testimonial {
@@ -93,9 +100,14 @@ export default function ContentCMSPage() {
   const dialog = useAdminDialog();
   const [activeTab, setActiveTab] = useState<ContentTab>("eyebrows");
   const [isPending, startTransition] = useTransition();
-  const [faqCategoryFilter, setFaqCategoryFilter] = useState<string>("all");
   const [faqPageFilter, setFaqPageFilter] = useState<
-    "all" | "homepage" | "schools"
+    | "all"
+    | "homepage"
+    | "schools"
+    | "track_order"
+    | "happy_pay"
+    | "add_your_school"
+    | "partnership"
   >("all");
   const [expandedFaqId, setExpandedFaqId] = useState<string | null>(null);
 
@@ -207,7 +219,13 @@ export default function ContentCMSPage() {
   const [faqAnswer, setFaqAnswer] = useState("");
   const [faqPublished, setFaqPublished] = useState(true);
   const [faqTargetPage, setFaqTargetPage] = useState<
-    "all" | "homepage" | "schools"
+    | "all"
+    | "homepage"
+    | "schools"
+    | "track_order"
+    | "happy_pay"
+    | "add_your_school"
+    | "partnership"
   >("all");
 
   // Form Fields - Testimonial
@@ -266,7 +284,7 @@ export default function ContentCMSPage() {
                 is_published: f.is_published,
                 sort_order: f.sort_order,
                 target_page:
-                  (f.target_page as "all" | "homepage" | "schools") || "all",
+                  (f.target_page as FAQItem["target_page"]) || "all",
               })),
             );
           }
@@ -580,7 +598,7 @@ export default function ContentCMSPage() {
               is_published: f.is_published,
               sort_order: f.sort_order,
               target_page:
-                (f.target_page as "all" | "homepage" | "schools") || "all",
+                (f.target_page as FAQItem["target_page"]) || "all",
             })),
           );
         } else {
@@ -647,14 +665,14 @@ export default function ContentCMSPage() {
   // Filtered FAQs
   const filteredFaqs = useMemo(() => {
     return faqs.filter((f) => {
-      const matchCategory =
-        faqCategoryFilter === "all" || f.category === faqCategoryFilter;
       const target = f.target_page || "all";
-      const matchPage =
-        faqPageFilter === "all" || target === faqPageFilter || target === "all";
-      return matchCategory && matchPage;
+      return (
+        faqPageFilter === "all" ||
+        target === faqPageFilter ||
+        target === "all"
+      );
     });
-  }, [faqs, faqCategoryFilter, faqPageFilter]);
+  }, [faqs, faqPageFilter]);
 
   // Resource DataTable Columns
   const resourceColumns: ColumnDef<ResourceItem>[] = [
@@ -1049,67 +1067,48 @@ export default function ContentCMSPage() {
       {/* ── TAB 2: FAQs ── */}
       {activeTab === "faqs" && (
         <div>
-          {/* Target Page Filter Pills */}
-          <div className={styles.filterBar} style={{ marginBottom: "10px" }}>
+          {/* App Page Filter Tabs */}
+          <div className={styles.filterBar} style={{ marginBottom: "16px" }}>
             {[
-              { id: "all", label: "All FAQs", count: faqs.length },
-              {
-                id: "homepage",
-                label: "Homepage FAQs",
-                count: faqs.filter(
-                  (f) =>
-                    f.target_page === "homepage" || f.target_page === "all",
-                ).length,
-              },
-              {
-                id: "schools",
-                label: "Schools Page FAQs",
-                count: faqs.filter(
-                  (f) => f.target_page === "schools" || f.target_page === "all",
-                ).length,
-              },
-            ].map((pageTab) => (
-              <button
-                key={pageTab.id}
-                type="button"
-                className={`${styles.filterPill} ${faqPageFilter === pageTab.id ? styles.filterPillActive : styles.filterPillInactive}`}
-                onClick={() =>
-                  setFaqPageFilter(pageTab.id as "all" | "homepage" | "schools")
-                }
-              >
-                <span>{pageTab.label}</span>
-                <span
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: 700,
-                    opacity: 0.75,
-                    marginLeft: "4px",
-                  }}
-                >
-                  ({pageTab.count})
-                </span>
-              </button>
-            ))}
-          </div>
+              { id: "all", label: "All Pages" },
+              { id: "homepage", label: "Homepage" },
+              { id: "schools", label: "Schools Directory" },
+              { id: "track_order", label: "Track Order" },
+              { id: "happy_pay", label: "Happy Pay" },
+              { id: "add_your_school", label: "Add Your School" },
+              { id: "partnership", label: "Partnerships" },
+            ].map((pageTab) => {
+              const count =
+                pageTab.id === "all"
+                  ? faqs.length
+                  : faqs.filter(
+                      (f) =>
+                        f.target_page === pageTab.id || f.target_page === "all",
+                    ).length;
 
-          {/* Category Filter Pills */}
-          <div className={styles.filterBar}>
-            {[
-              "all",
-              "Ordering",
-              "Delivery & Pickup",
-              "School Packs",
-              "Payments",
-            ].map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                className={`${styles.filterPill} ${faqCategoryFilter === cat ? styles.filterPillActive : styles.filterPillInactive}`}
-                onClick={() => setFaqCategoryFilter(cat)}
-              >
-                {cat === "all" ? "All Categories" : cat}
-              </button>
-            ))}
+              return (
+                <button
+                  key={pageTab.id}
+                  type="button"
+                  className={`${styles.filterPill} ${faqPageFilter === pageTab.id ? styles.filterPillActive : styles.filterPillInactive}`}
+                  onClick={() =>
+                    setFaqPageFilter(pageTab.id as typeof faqPageFilter)
+                  }
+                >
+                  <span>{pageTab.label}</span>
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      opacity: 0.75,
+                      marginLeft: "4px",
+                    }}
+                  >
+                    ({count})
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
           <div className={styles.grid1}>
@@ -1117,7 +1116,7 @@ export default function ContentCMSPage() {
               <div className={styles.emptyState}>
                 <HelpCircle size={32} />
                 <div className={styles.emptyTitle}>
-                  No FAQs found in this category
+                  No FAQs found for this page
                 </div>
                 <div className={styles.emptySubtitle}>
                   Add common customer questions and clear answers for the
@@ -1149,14 +1148,30 @@ export default function ContentCMSPage() {
                               ? styles.badgePageHomepage
                               : faq.target_page === "schools"
                                 ? styles.badgePageSchools
-                                : styles.badgePageAll
+                                : faq.target_page === "track_order"
+                                  ? styles.badgePageTrackOrder
+                                  : faq.target_page === "happy_pay"
+                                    ? styles.badgePageHappyPay
+                                    : faq.target_page === "add_your_school"
+                                      ? styles.badgePageAddSchool
+                                      : faq.target_page === "partnership"
+                                        ? styles.badgePagePartnership
+                                        : styles.badgePageAll
                           }
                         >
                           {faq.target_page === "homepage"
                             ? "Homepage"
                             : faq.target_page === "schools"
-                              ? "Schools Page"
-                              : "All Pages"}
+                              ? "Schools Directory"
+                              : faq.target_page === "track_order"
+                                ? "Track Order"
+                                : faq.target_page === "happy_pay"
+                                  ? "Happy Pay"
+                                  : faq.target_page === "add_your_school"
+                                    ? "Add Your School"
+                                    : faq.target_page === "partnership"
+                                      ? "Partnerships"
+                                      : "All Pages"}
                         </span>
                         <span className={styles.badgeCategory}>
                           {faq.category}
@@ -1486,14 +1501,22 @@ export default function ContentCMSPage() {
                           value={faqTargetPage}
                           onChange={(e) =>
                             setFaqTargetPage(
-                              e.target.value as "all" | "homepage" | "schools",
+                              e.target.value as typeof faqTargetPage,
                             )
                           }
                           className={styles.formSelect}
                         >
-                          <option value="all">All FAQs (Everywhere)</option>
-                          <option value="homepage">Homepage FAQs</option>
-                          <option value="schools">Schools Page FAQs</option>
+                          <option value="all">
+                            All Pages (Everywhere / Global)
+                          </option>
+                          <option value="homepage">Homepage</option>
+                          <option value="schools">Schools Directory</option>
+                          <option value="track_order">Track Order</option>
+                          <option value="happy_pay">Happy Pay</option>
+                          <option value="add_your_school">
+                            Add Your School
+                          </option>
+                          <option value="partnership">Partnerships</option>
                         </select>
                       </div>
 
