@@ -1,0 +1,90 @@
+.eyeToggleBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 38px;
+  min-height: 0;
+  min-width: 0;
+  max-height: 38px;
+  max-width: 44px;
+  padding: 0;
+  margin: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  color: #64748b;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.eyeToggleBtn:hover {
+  transform: translateY(-1px) scale(1.05);
+  color: #94a3b8;
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.eyeToggleBtn:active {
+  transform: translateY(0) scale(0.94);
+}
+
+.eyeToggleBtn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35);
+  border-color: #10b981;
+}
+
+/* Open / Active state */
+.eyeToggleBtnOpen {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #10b981;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.22);
+}
+
+.eyeToggleBtnOpen:hover {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: #10b981;
+  color: #34d399;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.38);
+}
+
+/* Closed / Inactive state */
+.eyeToggleBtnClosed {
+  background: rgba(15, 23, 42, 0.4);
+  border-color: rgba(148, 163, 184, 0.18);
+  color: #64748b;
+}
+
+.eyeToggleBtnClosed:hover {
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #cbd5e1;
+}
+
+/* SVG icon wrapper */
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.eyeSvg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* Subtle ripple on click */
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

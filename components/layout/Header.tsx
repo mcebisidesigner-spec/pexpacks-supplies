@@ -125,6 +125,7 @@ export function Header({ announcement }: HeaderProps = {}) {
       </div>
       {!isAdmin && announcement?.enabled && (
         <AnnouncementBar
+          key={announcement.id || "storefront-announcement-bar"}
           id={announcement.id}
           text={announcement.text}
           badge={announcement.badge}

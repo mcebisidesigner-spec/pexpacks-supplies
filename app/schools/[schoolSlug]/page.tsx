@@ -4,7 +4,6 @@ import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { PageHero } from "@/components/marketing/PageHero";
 import { GradeSelector } from "@/components/schools/GradeSelector";
-import { SchoolsBreadcrumbs } from "@/components/schools/SchoolsBreadcrumbs";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import { Button } from "@/components/ui/Button";
 import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
@@ -122,8 +121,6 @@ export default async function SchoolDetailPage({
   return (
     <>
       <JsonLd data={schoolPageMultiGraphSchema(schoolWithGrades)} />
-
-      <SchoolsBreadcrumbs school={{ name: school.name, slug: school.slug }} />
 
       <PageHero
         variant="navy"

@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { PhysicalEyeToggle } from "@/components/admin/ui/PhysicalEyeToggle";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 import { DataTable, type ColumnDef } from "@/components/admin/shared/DataTable";
@@ -1143,22 +1144,13 @@ export default function ContentCMSPage() {
                   )}
 
                   <div className={styles.cardFooter}>
-                    <AdminButton
-                      variant="outline"
-                      size="sm"
-                      icon={
-                        item.is_active ? (
-                          <EyeOff size={13} />
-                        ) : (
-                          <Eye size={13} />
-                        )
-                      }
-                      onClick={() =>
+                    <PhysicalEyeToggle
+                      isOpen={item.is_active}
+                      onToggle={() =>
                         handleToggleAnnouncement(item.id, item.is_active)
                       }
-                    >
-                      {item.is_active ? "Deactivate" : "Activate"}
-                    </AdminButton>
+                      type="announcement"
+                    />
 
                     <div className={styles.cardActions}>
                       <button
@@ -1329,22 +1321,13 @@ export default function ContentCMSPage() {
                     )}
 
                     <div className={styles.cardFooter}>
-                      <AdminButton
-                        variant="outline"
-                        size="sm"
-                        icon={
-                          faq.is_published ? (
-                            <EyeOff size={13} />
-                          ) : (
-                            <Eye size={13} />
-                          )
-                        }
-                        onClick={() =>
+                      <PhysicalEyeToggle
+                        isOpen={faq.is_published}
+                        onToggle={() =>
                           handleToggleFaq(faq.id, faq.is_published)
                         }
-                      >
-                        {faq.is_published ? "Unpublish" : "Publish"}
-                      </AdminButton>
+                        type="faq"
+                      />
 
                       <div className={styles.cardActions}>
                         <button
@@ -1484,22 +1467,13 @@ export default function ContentCMSPage() {
                 )}
 
                 <div className={styles.cardFooter}>
-                  <AdminButton
-                    variant="outline"
-                    size="sm"
-                    icon={
-                      test.is_featured ? (
-                        <EyeOff size={13} />
-                      ) : (
-                        <Eye size={13} />
-                      )
-                    }
-                    onClick={() =>
+                  <PhysicalEyeToggle
+                    isOpen={test.is_featured}
+                    onToggle={() =>
                       handleToggleTestimonial(test.id, test.is_featured)
                     }
-                  >
-                    {test.is_featured ? "Unfeature" : "Feature"}
-                  </AdminButton>
+                    type="testimonial"
+                  />
 
                   <div className={styles.cardActions}>
                     <button
