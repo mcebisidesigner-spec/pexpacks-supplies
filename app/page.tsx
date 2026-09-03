@@ -4,6 +4,7 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { ConciergeSection } from "@/components/marketing/ConciergeSection";
 import { SuperpowerSection } from "@/components/marketing/SuperpowerSection";
+import { HomepageStickyCta } from "@/components/marketing/HomepageStickyCta";
 import {
   RetailVsPexpacksSlider,
   FaqMarquee,
@@ -45,7 +46,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className={heroStyles.heroNavy}>
+      <section id="home-hero" className={heroStyles.heroNavy}>
         <div className={heroStyles.heroInner}>
           <div>
             <p className={heroStyles.eyebrow}>{heroEyebrow}</p>
@@ -219,6 +220,8 @@ export default async function HomePage() {
       ) : null}
 
       <FaqMarquee faqs={visibleHomepageFaqs} />
+
+      <HomepageStickyCta targetSelector="#home-hero" />
     </>
   );
 }

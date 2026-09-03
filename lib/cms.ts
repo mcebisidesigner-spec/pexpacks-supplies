@@ -72,7 +72,7 @@ export const WEBSITE_CONTENT_DEFAULTS: WebsiteContentValue = {
   },
   "partnership.hero": {
     eyebrow: "Partner with us",
-    title: "Free school website + stationery fundraising.",
+    title: "Free school website +",
   },
   "homepage.announcement": { enabled: false, text: "" },
   company_info: {

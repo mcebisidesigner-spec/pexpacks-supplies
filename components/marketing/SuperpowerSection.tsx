@@ -1,13 +1,24 @@
+import Link from "next/link";
+import type { ReactNode } from "react";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import clsx from "clsx";
 import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import styles from "./SuperpowerSection.module.css";
 
-const steps = [
+const steps: Array<{
+  title: string;
+  text: string;
+  accent?: boolean;
+  href?: string;
+  dataConversionEvent?: string;
+  icon: ReactNode;
+}> = [
   {
     title: "Find Your List",
     text: "We have partnered with schools to digitize the exact grade requirements. Search for your school and select your grade — your official list is ready instantly.",
+    href: "/schools",
+    dataConversionEvent: "homepage_how_it_works_find_list",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="11" cy="11" r="8" />
@@ -62,7 +73,17 @@ export function SuperpowerSection() {
                   {step.icon}
                 </div>
                 <div className={styles.number}>{idx + 1}</div>
-                <h3 className={styles.title}>{step.title}</h3>
+                {step.href ? (
+                  <Link
+                    href={step.href}
+                    className={styles.titleLink}
+                    data-conversion-event={step.dataConversionEvent}
+                  >
+                    <h3 className={styles.title}>{step.title}</h3>
+                  </Link>
+                ) : (
+                  <h3 className={styles.title}>{step.title}</h3>
+                )}
                 <p className={styles.text}>{step.text}</p>
                 {step.accent ? <div className={styles.badge}>Save money</div> : null}
               </div>

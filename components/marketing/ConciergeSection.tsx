@@ -40,6 +40,7 @@ export function ConciergeSection() {
               <Link
                 href="/order"
                 className={styles.uploadBtn}
+                data-conversion-event="homepage_concierge_upload"
                 onClick={() =>
                   trackConciergeCtaClicked({
                     cta: "upload",
@@ -64,6 +65,7 @@ export function ConciergeSection() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.whatsappBtn}
+                data-conversion-event="homepage_concierge_whatsapp"
                 onClick={() => {
                   trackConciergeCtaClicked({
                     cta: "whatsapp",

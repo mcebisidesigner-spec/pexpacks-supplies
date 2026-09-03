@@ -91,22 +91,6 @@ const fallbackPartnershipFaqs: FAQ[] = [
   },
 ]
 
-// Fictional examples only. Replace with approved partner names as the network grows.
-const EXAMPLE_SCHOOL_NAMES = [
-  'Willowcrest Learning Academy',
-  'Cedarbrook Preparatory',
-  'Northstar Heights School',
-  'Brightfield College',
-  'Meadowridge Learning School',
-  'Silveroak Academy',
-  'Riverstone Preparatory',
-  'Greenhaven College',
-  'Horizon Gate School',
-  'Maplewood Learning Academy',
-  'Sunrise Ridge Preparatory',
-  'Bluebell Heights School',
-]
-
 export const metadata: Metadata = buildMetadata(
   'Partner With Pexpacks | Free School Website',
   'Partner with Pexpacks and get a free school website, parent ordering portal, and 1.5% fundraising rebate on every pack sold.',
@@ -213,41 +197,6 @@ export default async function PartnerWithSchoolsPage() {
               </div>
             ))}
           </div>
-          <p
-            id="partnership-stats-heading"
-            className={sectionStyles.sectionEyebrow}
-            style={{ textAlign: 'center', margin: '36px 0 14px' }}
-          >
-            Example schools we are built to support
-          </p>
-          <ul
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              gap: 10,
-              listStyle: 'none',
-              margin: 0,
-              padding: 0,
-            }}
-          >
-            {EXAMPLE_SCHOOL_NAMES.map((name) => (
-              <li
-                key={name}
-                style={{
-                  padding: '9px 16px',
-                  border: '1px solid var(--color-teal-border)',
-                  borderRadius: 'var(--radius-pill)',
-                  background: 'var(--color-teal-subtle)',
-                  color: 'var(--pex-primary)',
-                  fontSize: 13,
-                  fontWeight: 800,
-                }}
-              >
-                {name}
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 

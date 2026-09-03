@@ -1,0 +1,71 @@
+.stickyBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--pex-navy);
+  color: white;
+  z-index: 50;
+  transform: translateY(110%);
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  display: none;
+}
+
+.visible {
+  transform: translateY(0);
+}
+
+.inner {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  padding: var(--space-3) var(--gutter-desktop);
+}
+
+.primaryButton,
+.secondaryButton {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-pill);
+  padding: 14px var(--space-4);
+  font-family: var(--font-button);
+  font-size: var(--text-base);
+  font-weight: 800;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: var(--button-transition);
+}
+
+.primaryButton {
+  background: var(--pex-coral);
+  color: white;
+}
+
+.primaryButton:hover {
+  filter: brightness(110%);
+  transform: var(--button-hover-transform);
+}
+
+.secondaryButton {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  .stickyBar {
+    display: block;
+  }
+}

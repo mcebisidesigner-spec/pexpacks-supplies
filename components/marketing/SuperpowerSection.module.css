@@ -97,6 +97,20 @@
   line-height: 1.1;
 }
 
+.titleLink {
+  text-decoration: none;
+}
+
+.titleLink .title {
+  transition: color 0.3s ease;
+}
+
+.card:hover .titleLink .title {
+  color: var(--pex-keppel);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .text {
   margin: 0;
   color: var(--pex-text);

@@ -197,6 +197,7 @@ export function HeroSearch({
                   key={school.slug}
                   href={`/schools/${school.slug}`}
                   className={styles.trendingCard}
+                  data-conversion-event="homepage_trending_school"
                   onClick={() =>
                     handleSchoolSelected(school.slug, index + 1, "trending")
                   }
@@ -346,6 +347,7 @@ export function HeroSearch({
                             href={`/schools/${school.slug}`}
                             className={styles.heroResultLink}
                             aria-label={`View ${school.name} packs in ${formatSchoolSearchLocation(school)}`}
+                            data-conversion-event="homepage_school_result"
                             onClick={() =>
                               handleSchoolSelected(
                                 school.slug,
@@ -390,6 +392,7 @@ export function HeroSearch({
                       <Link
                         href="/order"
                         className={styles.searchCatchallUpload}
+                        data-conversion-event="homepage_upload_list"
                         onClick={() => {
                           trackSchoolNoResultsRecovery({ source });
                           onResultClick?.();

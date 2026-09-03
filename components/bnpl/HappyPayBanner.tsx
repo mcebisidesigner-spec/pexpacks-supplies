@@ -80,10 +80,16 @@ export function HappyPayBanner({
               variant="primary"
               size="md"
               iconDirection="right"
+              data-conversion-event={`${variant === "homepage" ? "homepage" : "school"}_happy_pay_learn_more`}
             >
               Learn How It Works
             </Button>
-            <Button href="/checkout" variant="white" size="md">
+            <Button
+              href="/checkout"
+              variant="white"
+              size="md"
+              data-conversion-event={`${variant === "homepage" ? "homepage" : "school"}_happy_pay_split`}
+            >
               Split my pack in 2
             </Button>
           </div>
