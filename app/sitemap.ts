@@ -107,14 +107,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: school.isPartnerSchool ? 0.9 : 0.8,
   }));
 
-  const gradeEntries: MetadataRoute.Sitemap = schools.flatMap((school) =>
-    (school.grades || []).map((grade) => ({
-      url: `${siteUrl}/schools/${school.slug}/${grade.gradeSlug}`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: school.isPartnerSchool ? 0.85 : 0.75,
-    })),
-  );
-
-  return [...staticEntries, ...blogEntries, ...schoolEntries, ...gradeEntries];
+  return [...staticEntries, ...blogEntries, ...schoolEntries];
 }

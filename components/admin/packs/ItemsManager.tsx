@@ -15,8 +15,6 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
-import { ItemIcon } from "@/components/ui/ItemIcon";
-import { inferIcon } from "@/lib/packs/normalisePackItems";
 import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 import { useDbNotice } from "@/components/admin/ui/DbNotice";
@@ -151,35 +149,22 @@ export function ItemsManager({ items }: ItemsManagerProps) {
       header: "Product name",
       sortable: true,
       render: (row) => {
-        const iconName = row.icon || inferIcon(row.name);
         return (
           <div
             className={coreStyles.productCell}
             style={{
               display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              gap: "10px",
+              flexDirection: "column",
+              gap: "2px",
+              minWidth: 0,
             }}
           >
-            <div className={coreStyles.productIconSlot}>
-              <ItemIcon name={iconName} size={16} />
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "2px",
-                minWidth: 0,
-              }}
-            >
-              <span className={coreStyles.schoolNameTitle}>{row.name}</span>
-              {row.specification && (
-                <span className={coreStyles.productBrand}>
-                  {row.specification}
-                </span>
-              )}
-            </div>
+            <span className={coreStyles.schoolNameTitle}>{row.name}</span>
+            {row.specification && (
+              <span className={coreStyles.productBrand}>
+                {row.specification}
+              </span>
+            )}
           </div>
         );
       },

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
 import { formatCurrency } from "@/lib/formatCurrency";
 import {
@@ -25,20 +26,28 @@ function priceLabel(school: SchoolSearchRecord) {
   return null;
 }
 
+function formatCount(count: number): string {
+  return count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
   const [query, setQuery] = useState("");
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
+  const [region, setRegion] = useState<string>("");
+  const [visibleCount, setVisibleCount] = useState(4);
+
+  useEffect(() => {
+    setVisibleCount(4);
+  }, [query, activeLetter, region]);
 
   const regions = useMemo(() => {
     const set = new Set<string>();
     for (const school of schools) {
-      const region = school.region?.trim();
-      if (region) set.add(region);
+      const reg = school.region?.trim();
+      if (reg) set.add(reg);
     }
     return Array.from(set).sort((a, b) => a.localeCompare(b));
   }, [schools]);
-
-  const [region, setRegion] = useState<string>("");
 
   const filtered = useMemo(() => {
     let list = schools;
@@ -57,11 +66,17 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
       list = list.filter(
         (s) =>
           s.name.toLowerCase().includes(needle) ||
-          (s.region ?? "").toLowerCase().includes(needle),
+          (s.region ?? "").toLowerCase().includes(needle) ||
+          (s.metro ?? "").toLowerCase().includes(needle) ||
+          (s.province ?? "").toLowerCase().includes(needle),
       );
     }
     return list;
   }, [schools, activeLetter, region, query]);
+
+  const displayed = useMemo(() => {
+    return filtered.slice(0, visibleCount);
+  }, [filtered, visibleCount]);
 
   const remainingLetters = useMemo(() => {
     const present = new Set(
@@ -133,13 +148,10 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
     >
       <div className={styles.directoryIntro}>
         <p className={styles.eyebrow}>Full directory</p>
-        <h2 id="browse-schools-heading">
-          Browse all {schools.length > 0 ? schools.length : ""} schools
-        </h2>
+        <h2 id="browse-schools-heading">Browse school directory</h2>
         <p className={styles.lead}>
-          Can&rsquo;t find your school in the search? Explore the full list
-          below &mdash; every school has grade-specific packs prepared to its
-          official stationery list.
+          Explore the full list below &mdash; every school has grade-specific
+          packs prepared to its official stationery list.
         </p>
       </div>
 
@@ -213,42 +225,86 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
         })}
       </div>
 
-      <p className={styles.countLine} aria-live="polite">
-        {filtered.length === 1 ? "1 school" : `${filtered.length} schools`}
+      <p
+        className={styles.countLine}
+        aria-live="polite"
+        suppressHydrationWarning
+      >
+        {filtered.length === 0
+          ? "0 schools"
+          : filtered.length <= 4
+            ? filtered.length === 1
+              ? "1 school"
+              : `${filtered.length} schools`
+            : `Showing ${displayed.length} of ${formatCount(filtered.length)} schools`}
       </p>
 
       {filtered.length > 0 ? (
-        <ul className={styles.list}>
-          {filtered.map((school, index) => (
-            <li key={school.id}>
-              <Link
-                href={`/schools/${school.slug}`}
-                className={styles.row}
-                onClick={() =>
-                  trackSchoolCardClicked({
-                    schoolSlug: school.slug,
-                    placement: "browse",
-                    position: index + 1,
-                  })
-                }
+        <>
+          <ul className={styles.list}>
+            {displayed.map((school, index) => (
+              <li key={school.id}>
+                <Link
+                  href={`/schools/${school.slug}`}
+                  className={styles.row}
+                  onClick={() =>
+                    trackSchoolCardClicked({
+                      schoolSlug: school.slug,
+                      placement: "browse",
+                      position: index + 1,
+                    })
+                  }
+                >
+                  <span className={styles.rowName}>{school.name}</span>
+                  <span className={styles.rowRegion}>{school.region}</span>
+                  <span className={styles.rowGrades}>
+                    {school.grades.length > 0
+                      ? `${school.grades[0]} to ${
+                          school.grades[school.grades.length - 1]
+                        }`
+                      : "Multiple grades"}
+                  </span>
+                  {priceLabel(school) ? (
+                    <span className={styles.rowPrice}>{priceLabel(school)}</span>
+                  ) : null}
+                  <span className={styles.rowCta}>View packs</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          {visibleCount < filtered.length && (
+            <div className={styles.expandWrapper}>
+              <button
+                type="button"
+                className={styles.expandButton}
+                onClick={() => setVisibleCount((prev) => prev + 6)}
+                aria-label="Expand to show 6 more schools"
               >
-                <span className={styles.rowName}>{school.name}</span>
-                <span className={styles.rowRegion}>{school.region}</span>
-                <span className={styles.rowGrades}>
-                  {school.grades.length > 0
-                    ? `${school.grades[0]} to ${
-                        school.grades[school.grades.length - 1]
-                      }`
-                    : "Multiple grades"}
+                <span className={styles.expandIconCircle}>
+                  <ChevronDown size={18} />
                 </span>
-                {priceLabel(school) ? (
-                  <span className={styles.rowPrice}>{priceLabel(school)}</span>
-                ) : null}
-                <span className={styles.rowCta}>View packs</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                <span>Show 6 more schools</span>
+              </button>
+            </div>
+          )}
+
+          {visibleCount > 4 && visibleCount >= filtered.length && (
+            <div className={styles.expandWrapper}>
+              <button
+                type="button"
+                className={styles.collapseButton}
+                onClick={() => setVisibleCount(4)}
+                aria-label="Collapse back to 4 schools"
+              >
+                <span className={styles.expandIconCircle}>
+                  <ChevronUp size={18} />
+                </span>
+                <span>Show less</span>
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         <div className={styles.emptyState}>
           <p className={styles.emptyTitle}>No schools match that filter.</p>

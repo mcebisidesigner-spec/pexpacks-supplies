@@ -208,6 +208,69 @@
   transform: translateY(-1px);
 }
 
+.expandWrapper {
+  margin-top: clamp(24px, 4vw, 36px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.expandButton,
+.collapseButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 28px;
+  border-radius: var(--radius-pill, 9999px);
+  background: var(--pex-bg, #ffffff);
+  border: 1.5px solid var(--color-navy-border, rgba(16, 28, 43, 0.15));
+  color: var(--pex-navy, #101c2b);
+  font-family: var(--font-button, inherit);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 28, 43, 0.05);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.expandButton:hover,
+.collapseButton:hover {
+  border-color: var(--pex-keppel, #00a88f);
+  color: var(--pex-keppel, #00a88f);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 168, 143, 0.18);
+}
+
+.expandButton:active,
+.collapseButton:active {
+  transform: translateY(0);
+}
+
+.expandIconCircle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(0, 168, 143, 0.12);
+  color: var(--pex-keppel, #00a88f);
+  transition: all 0.2s ease;
+}
+
+.expandButton:hover .expandIconCircle {
+  background: var(--pex-keppel, #00a88f);
+  color: #ffffff;
+  transform: translateY(2px);
+}
+
+.collapseButton:hover .expandIconCircle {
+  background: var(--pex-keppel, #00a88f);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
 .emptyState {
   padding: var(--space-6);
   text-align: center;

@@ -43,12 +43,24 @@ export async function generateMetadata({
   ogUrl.searchParams.set("grade", grade.grade);
   if (grade.price) ogUrl.searchParams.set("price", grade.price.toString());
 
-  return buildMetadata(
+  const meta = buildMetadata(
     `${grade.grade} Stationery Pack for ${school.name}`,
     `Order a ready-to-use ${grade.grade} stationery pack for ${school.name}, prepared according to school stationery requirements and delivery planning.`,
     `/schools/${school.slug}/${grade.gradeSlug}`,
     ogUrl.toString(),
   );
+
+  return {
+    ...meta,
+    robots: {
+      index: false,
+      follow: true,
+      googleBot: {
+        index: false,
+        follow: true,
+      },
+    },
+  };
 }
 
 export default async function GradePackPage({ params }: GradePageProps) {
@@ -60,6 +72,11 @@ export default async function GradePackPage({ params }: GradePageProps) {
 
   if (!school) {
     notFound();
+  }
+
+  // Canonical redirect if school is not an official partner with individual pack pages
+  if (!school.isPartnerSchool) {
+    permanentRedirect(`/schools/${school.slug}`);
   }
 
   // Canonical 301 permanent redirect if school was resolved via slug alias

@@ -25,8 +25,6 @@ import type {
   MasterProductRow,
   SupplierCostStats,
 } from "@/lib/admin/operations";
-import { ItemIcon } from "@/components/ui/ItemIcon";
-import { inferIcon } from "@/lib/packs/normalisePackItems";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { clearMasterProductsAction } from "@/app/admin/products/actions";
@@ -105,25 +103,18 @@ export function MasterProductsPageView({
       sortable: true,
       render: (row) => {
         const slug = getProductSlug(row);
-        const iconName =
-          (row as unknown as { icon?: string }).icon || inferIcon(row.name);
         return (
           <div className={styles.productCell}>
-            <div className={styles.productIconSlot}>
-              <ItemIcon name={iconName} size={16} />
-            </div>
-            <div>
-              <Link
-                href={`/admin/products/${slug}`}
-                className={styles.productNameLink}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {row.name}
-              </Link>
-              {row.brand && (
-                <span className={styles.productBrand}>{row.brand}</span>
-              )}
-            </div>
+            <Link
+              href={`/admin/products/${slug}`}
+              className={styles.productNameLink}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            {row.brand && (
+              <span className={styles.productBrand}>{row.brand}</span>
+            )}
           </div>
         );
       },

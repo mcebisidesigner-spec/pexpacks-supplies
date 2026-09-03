@@ -120,11 +120,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/admin/login",
-        destination: "/pex-console-secure",
-        permanent: false,
-      },
-      {
         source: "/contact-us",
         destination: "/contact",
         permanent: true,

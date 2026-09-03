@@ -4,6 +4,7 @@ import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import type { Json } from "@/lib/supabase/types";
 import { getSchoolPhasesFromGrades } from "./schoolPhase";
 import type { SchoolSearchFilters, SchoolSearchRecord } from "./types";
+import { getSchoolIndex } from "@/data/schools";
 
 type SearchSchoolRow = {
   id: string;
@@ -183,34 +184,72 @@ export const getFeaturedSchoolRecords = unstable_cache(
 
 /**
  * Retrieves every visible public school (lightweight search records) for the
- * "browse all schools" directory. Returns an empty query to search_public_schools,
- * which lists all active + published schools, ordered for the directory grid.
+ * "browse all schools" directory. Loads all 3,342 indexed schools, enriched with
+ * any active database projection.
  */
 export const getAllPublicSchoolRecords = unstable_cache(
   async (): Promise<SchoolSearchRecord[]> => {
-    const supabase = createSupabaseAdminClient();
-    const { data, error } = await supabase.rpc("search_public_schools", {
-      search_query: "",
-      grade_filter: "",
-      phase_filter: "",
-      region_filter: "",
-      result_limit: 500,
-      result_offset: 0,
-    } as never);
+    const allIndexSchools = await getSchoolIndex();
 
-    if (error) {
-      console.error("[schoolSearchData] browse all schools RPC failed:", error);
-      return [];
+    const supabase = createSupabaseAdminClient();
+    const dbMap = new Map<string, SearchSchoolRow>();
+    try {
+      const { data } = await supabase.rpc("search_public_schools", {
+        search_query: "",
+        grade_filter: "",
+        phase_filter: "",
+        region_filter: "",
+        result_limit: 1000,
+        result_offset: 0,
+      } as never);
+
+      if (data && Array.isArray(data)) {
+        for (const row of data as SearchSchoolRow[]) {
+          if (row.slug) dbMap.set(row.slug, row);
+        }
+      }
+    } catch {
+      // Fallback directly to static index
     }
 
-    const rows = (data as unknown as SearchSchoolRow[] | null) ?? [];
+    return allIndexSchools
+      .map((item) => {
+        const dbRow = dbMap.get(item.slug);
+        const grades = (item.grades || []).map((g) => g.grade);
+        const city = item.city || "";
+        const isPartner =
+          dbRow?.is_partner != null
+            ? Boolean(dbRow.is_partner)
+            : item.isPartnerSchool;
+        const isFeatured =
+          dbRow?.is_featured != null
+            ? Boolean(dbRow.is_featured)
+            : Boolean(item.isFeatured);
+        const lowestPrice =
+          dbRow?.lowest_price != null ? dbRow.lowest_price : item.lowestPrice;
 
-    return rows
-      .map(toSearchRecord)
-      .filter((school) => school.slug)
+        return {
+          id: item.id,
+          name: item.name,
+          slug: item.slug,
+          region: city,
+          city,
+          metro: item.metro || "",
+          province: item.province || "",
+          grades,
+          phases: getSchoolPhasesFromGrades(grades, item.name),
+          isFeatured,
+          isPartner,
+          hasOrderablePacks:
+            isPartner || (lowestPrice != null && lowestPrice > 0),
+          image: dbRow?.logo || item.logo || null,
+          customBadge: dbRow?.custom_badge || item.customBadge || null,
+          lowestPrice: lowestPrice ?? undefined,
+        };
+      })
       .sort((a, b) => a.name.localeCompare(b.name));
   },
-  ["public-all-schools-v1"],
+  ["public-all-schools-full-3342-v1"],
   { revalidate: 300, tags: [SCHOOL_DATA_TAG, "all-schools"] },
 );
 
@@ -231,12 +270,58 @@ export async function searchSchoolRecords(
     result_offset: safeOffset,
   });
 
-  if (error) {
-    console.error("[schoolSearchData] search_public_schools failed:", error);
-    return { results: [], total: 0, hasMore: false };
+  const rows = (data as unknown as SearchSchoolRow[] | null) ?? [];
+
+  if (error || rows.length === 0) {
+    const all = await getSchoolIndex();
+    const q = (filters.query || "").trim().toLowerCase();
+    const region = (filters.region || "").trim().toLowerCase();
+    let matches = all;
+    if (q) {
+      matches = matches.filter(
+        (s) =>
+          s.name.toLowerCase().includes(q) ||
+          (s.city || "").toLowerCase().includes(q) ||
+          (s.metro || "").toLowerCase().includes(q) ||
+          (s.province || "").toLowerCase().includes(q),
+      );
+    }
+    if (region) {
+      matches = matches.filter(
+        (s) => (s.city || "").toLowerCase() === region,
+      );
+    }
+    const totalCount = matches.length;
+    const paged = matches.slice(safeOffset, safeOffset + safeLimit);
+    return {
+      results: paged.map((item) => {
+        const grades = (item.grades || []).map((g) => g.grade);
+        const city = item.city || "";
+        return {
+          id: item.id,
+          name: item.name,
+          slug: item.slug,
+          region: city,
+          city,
+          metro: item.metro || "",
+          province: item.province || "",
+          grades,
+          phases: getSchoolPhasesFromGrades(grades, item.name),
+          isFeatured: Boolean(item.isFeatured),
+          isPartner: Boolean(item.isPartnerSchool),
+          hasOrderablePacks:
+            Boolean(item.isPartnerSchool) ||
+            (item.lowestPrice != null && item.lowestPrice > 0),
+          image: item.logo || null,
+          customBadge: item.customBadge || null,
+          lowestPrice: item.lowestPrice ?? undefined,
+        };
+      }),
+      total: totalCount,
+      hasMore: safeOffset + safeLimit < totalCount,
+    };
   }
 
-  const rows = (data as unknown as SearchSchoolRow[] | null) ?? [];
   const total = Number(rows[0]?.total_count ?? rows.length);
 
   return {

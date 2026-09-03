@@ -62,20 +62,16 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  // 1. Handle Legacy /login Route by safely redirecting to the console gateway
-  if (pathname === "/login") {
-    response.headers.set(
-      "X-Robots-Tag",
-      "noindex, nofollow, noarchive, nosnippet, nocache",
-    );
-    return copyCookies(
-      response,
-      applySecurityHeaders(
-        NextResponse.redirect(new URL("/pex-console-secure", request.url), {
-          headers: response.headers,
-        }),
-      ),
-    );
+  // 1. Terminate legacy /login and /admin/login routes with 404 (do not link or redirect to console login)
+  if (pathname === "/login" || pathname === "/admin/login") {
+    const deadRouteResponse = new NextResponse(null, {
+      status: 404,
+      statusText: "Not Found",
+      headers: {
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet, nocache",
+      },
+    });
+    return applySecurityHeaders(deadRouteResponse);
   }
 
   // 2. Protect Back-Office /admin and Sub-Routes (/admin/*)

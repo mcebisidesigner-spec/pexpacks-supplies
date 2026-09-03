@@ -1,6 +1,26 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import robots from "@/app/robots";
 import nextConfig from "@/next.config";
+
+vi.mock("next/cache", () => ({
+  unstable_cache: (fn: any) => fn,
+  revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
+}));
+
+vi.mock("@/lib/schools/publicSchoolData", () => ({
+  getPublicSchoolRecords: vi.fn(async () => [
+    {
+      id: "school-1",
+      slug: "brakpan-high-school",
+      name: "Brakpan High School",
+      isPartnerSchool: false,
+      grades: [
+        { id: "brakpan-high-school-grade-12", grade: "Grade 12", gradeSlug: "grade-12" },
+      ],
+    },
+  ]),
+}));
 
 describe("Sitemap, Robots and Canonical SEO Redirects", () => {
   it("generates correct robots.txt directives blocking admin, console and private routes", () => {
@@ -43,8 +63,7 @@ describe("Sitemap, Robots and Canonical SEO Redirects", () => {
       const adminLoginRedirect = redirects.find(
         (r) => r.source === "/admin/login",
       );
-      expect(adminLoginRedirect).toBeDefined();
-      expect(adminLoginRedirect?.destination).toBe("/pex-console-secure");
+      expect(adminLoginRedirect).toBeUndefined();
 
       const contactUsRedirect = redirects.find(
         (r) => r.source === "/contact-us",
@@ -52,5 +71,17 @@ describe("Sitemap, Robots and Canonical SEO Redirects", () => {
       expect(contactUsRedirect).toBeDefined();
       expect(contactUsRedirect?.destination).toBe("/contact");
     }
+  });
+
+  it("ensures sitemap excludes /login and individual grade pack deep-links", async () => {
+    const sitemapFn = (await import("@/app/sitemap")).default;
+    const entries = await sitemapFn();
+    const urls = entries.map((e) => e.url);
+
+    // /login should never be indexed in sitemap
+    expect(urls.some((u) => u.endsWith("/login"))).toBe(false);
+
+    // Legacy school grade pack deep links (e.g. /schools/.../grade-12) must not be in sitemap
+    expect(urls.some((u) => u.includes("/grade-"))).toBe(false);
   });
 });
