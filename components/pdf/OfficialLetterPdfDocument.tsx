@@ -425,6 +425,7 @@ export function OfficialLetterPdfDocument({
 
         {/* Header: Logo on left, Badge and Company Metadata on right */}
         <View style={styles.headerRow}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image src={PEXPACKS_LETTERHEAD_LOGO_BASE64} style={styles.logo} />
 
           <View style={styles.companyMetaBlock}>
