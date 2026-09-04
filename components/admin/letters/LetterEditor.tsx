@@ -67,6 +67,12 @@ function formatRand(amount: number): string {
 
 const PRESET_TEMPLATES = [
   {
+    id: "new_letter",
+    name: "New Letter",
+    subject: "",
+    content: "",
+  },
+  {
     id: "partnership",
     name: "Partnership Proposal",
     subject:
@@ -176,11 +182,10 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
 
   // Document Fields
   const [subject, setSubject] = useState<string>(
-    initialLetter?.subject ||
-      "Institutional Stationery & Scholastic Supply Partnership",
+    initialLetter?.subject || "",
   );
   const [content, setContent] = useState<string>(
-    initialLetter?.body_markdown || PRESET_TEMPLATES[0].content,
+    initialLetter?.body_markdown || "",
   );
   const [signatoryName, setSignatoryName] = useState<string>(
     initialLetter?.signatory_name || "Mcebisi Hlatshwayo",
@@ -223,7 +228,9 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
   );
 
   // UI state
-  const [activeTemplate, setActiveTemplate] = useState<string>("partnership");
+  const [activeTemplate, setActiveTemplate] = useState<string>(
+    initialLetter ? "" : "new_letter",
+  );
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [emailModalOpen, setEmailModalOpen] = useState<boolean>(false);
   const [emailSubject, setEmailSubject] = useState<string>(
@@ -290,6 +297,11 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
     setActiveTemplate(template.id);
     setSubject(template.subject);
     setContent(template.content);
+    if (template.id === "new_letter") {
+      setIncludeQuotation(false);
+    } else if (template.id === "quotation_transmittal") {
+      setIncludeQuotation(true);
+    }
   }
 
   // Quotation calculations (rands)
@@ -419,7 +431,9 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
           message: `Letter successfully saved as ${status.toUpperCase()} (${saved.reference_number}).`,
         });
         if (!initialLetter?.id) {
-          router.push(`/admin/letters/${saved.id}`);
+          router.push(
+            `/admin/letters/${encodeURIComponent(saved.reference_number)}`,
+          );
         } else {
           router.refresh();
         }

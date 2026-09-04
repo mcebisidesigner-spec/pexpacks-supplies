@@ -30,8 +30,7 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
-import { LetterPreviewModal } from "./LetterPreviewModal";
-import { EmailDispatchModal } from "./EmailDispatchModal";
+import { LetterActionWorkbench } from "./LetterActionWorkbench";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { deleteLetterAction } from "@/app/admin/letters/actions";
 import type { AdminLetterRecord, ListLettersResult } from "@/lib/admin/letters";
@@ -56,16 +55,30 @@ export function LettersListView({
     initialData.letters || [],
   );
 
-  // Modals state
-  const [previewLetter, setPreviewLetter] = useState<AdminLetterRecord | null>(
+  // Bottom Workbench state (anchored preview & email)
+  const [activeLetter, setActiveLetter] = useState<AdminLetterRecord | null>(
     null,
   );
-  const [emailLetter, setEmailLetter] = useState<AdminLetterRecord | null>(
-    null,
+  const [workbenchMode, setWorkbenchMode] = useState<"preview" | "email">(
+    "preview",
   );
   const [deleteTarget, setDeleteTarget] = useState<AdminLetterRecord | null>(
     null,
   );
+
+  const handleOpenWorkbench = (
+    row: AdminLetterRecord,
+    mode: "preview" | "email",
+  ) => {
+    setActiveLetter(row);
+    setWorkbenchMode(mode);
+    setTimeout(() => {
+      const el = document.getElementById("letter-workbench");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 60);
+  };
 
   // Metrics
   const totalLetters = letters.length;
@@ -158,7 +171,7 @@ export function LettersListView({
               />
             )}
             <Link
-              href={`/admin/letters/${row.id}`}
+              href={`/admin/letters/${encodeURIComponent(row.reference_number || row.id)}`}
               className={styles.schoolNameTitle}
               onClick={(e) => e.stopPropagation()}
             >
@@ -229,7 +242,7 @@ export function LettersListView({
           onClick={(e) => e.stopPropagation()}
         >
           <Link
-            href={`/admin/letters/${row.id}`}
+            href={`/admin/letters/${encodeURIComponent(row.reference_number || row.id)}`}
             className={styles.actionEditBtn}
             data-db-tooltip={`Edit ${row.reference_number}`}
             aria-label={`Edit ${row.reference_number}`}
@@ -241,7 +254,7 @@ export function LettersListView({
             className={styles.actionEditBtn}
             data-db-tooltip="Preview / Download PDF"
             aria-label={`Preview ${row.reference_number}`}
-            onClick={() => setPreviewLetter(row)}
+            onClick={() => handleOpenWorkbench(row, "preview")}
           >
             <Download size={14} />
           </button>
@@ -250,7 +263,7 @@ export function LettersListView({
             className={styles.actionEditBtn}
             data-db-tooltip="Send via Email"
             aria-label={`Email ${row.reference_number}`}
-            onClick={() => setEmailLetter(row)}
+            onClick={() => handleOpenWorkbench(row, "email")}
           >
             <Mail size={14} />
           </button>
@@ -399,7 +412,11 @@ export function LettersListView({
         data={filteredAndSorted}
         columns={columns}
         keyExtractor={(row) => row.id}
-        onRowClick={(row) => router.push(`/admin/letters/${row.id}`)}
+        onRowClick={(row) =>
+          router.push(
+            `/admin/letters/${encodeURIComponent(row.reference_number || row.id)}`,
+          )
+        }
         isLoading={isPending}
         emptyTitle="No official letters found"
         emptySubtitle="Try adjusting your search filters or draft a new official letter."
@@ -412,24 +429,17 @@ export function LettersListView({
         }
       />
 
-      {/* 5. Modals */}
-      {previewLetter && (
-        <LetterPreviewModal
-          isOpen={Boolean(previewLetter)}
-          onClose={() => setPreviewLetter(null)}
-          letter={previewLetter}
-        />
-      )}
-
-      {emailLetter && (
-        <EmailDispatchModal
-          isOpen={Boolean(emailLetter)}
-          onClose={() => setEmailLetter(null)}
-          letter={emailLetter}
-          onSuccess={() => {
+      {/* 5. Anchored Document Workbench */}
+      {activeLetter && (
+        <LetterActionWorkbench
+          letter={activeLetter}
+          mode={workbenchMode}
+          onModeChange={(mode) => setWorkbenchMode(mode)}
+          onClose={() => setActiveLetter(null)}
+          onEmailSent={() => {
             setLetters((prev) =>
               prev.map((l) =>
-                l.id === emailLetter.id
+                l.id === activeLetter.id
                   ? {
                       ...l,
                       status: "emailed",

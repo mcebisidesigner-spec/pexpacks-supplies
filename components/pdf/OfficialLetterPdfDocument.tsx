@@ -1,5 +1,6 @@
 import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
+import { PEXPACKS_LETTERHEAD_LOGO_BASE64 } from "./letterhead-logo";
 import type { LetterQuotationData } from "@/lib/admin/letters";
 
 export interface OfficialLetterPdfData {
@@ -24,197 +25,228 @@ export interface OfficialLetterPdfData {
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 36,
-    paddingBottom: 48,
+    paddingTop: 24,
+    paddingBottom: 40,
     paddingHorizontal: 40,
     fontSize: 9.5,
     fontFamily: "Helvetica",
-    color: "#1e293b",
+    color: "#334155",
     backgroundColor: "#ffffff",
-    lineHeight: 1.45,
+    lineHeight: 1.5,
   },
+  // Top thin border rule
   topAccentBar: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    height: 4,
-    backgroundColor: "#059669",
-  },
-  // Running Header (fixed for multi-page overflow)
-  runningHeader: {
-    position: "absolute",
-    top: 14,
-    left: 40,
-    right: 40,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingBottom: 4,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#cbd5e1",
-  },
-  runningHeaderText: {
-    fontSize: 7.5,
-    color: "#64748b",
+    height: 3.5,
+    backgroundColor: "#0d9488",
   },
   // Primary Letterhead Header
-  letterhead: {
+  headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: 20,
-    paddingBottom: 14,
-    borderBottomWidth: 1.5,
-    borderBottomColor: "#059669",
-  },
-  brandBlock: {
-    flexDirection: "column",
-    maxWidth: "58%",
-  },
-  brandTitle: {
-    fontSize: 18,
-    fontFamily: "Helvetica-Bold",
-    color: "#0f172a",
-    letterSpacing: -0.5,
-  },
-  brandTagline: {
-    fontSize: 8,
-    color: "#059669",
-    fontFamily: "Helvetica-Bold",
-    marginTop: 2,
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
-  },
-  companyMeta: {
-    fontSize: 7.5,
-    color: "#64748b",
     marginTop: 6,
-    lineHeight: 1.35,
+    marginBottom: 8,
   },
-  letterheadMeta: {
+  logo: {
+    width: 140,
+    height: 54.5,
+  },
+  companyMetaBlock: {
     alignItems: "flex-end",
   },
-  badge: {
-    backgroundColor: "#ecfdf5",
-    borderWidth: 1,
-    borderColor: "#059669",
+  badgePill: {
+    backgroundColor: "#f0fdf4",
+    borderWidth: 1.2,
+    borderColor: "#0d9488",
     borderRadius: 4,
     paddingVertical: 3,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     marginBottom: 6,
+    alignSelf: "flex-end",
   },
-  badgeText: {
-    fontSize: 8.5,
+  badgePillText: {
+    fontSize: 8,
     fontFamily: "Helvetica-Bold",
     color: "#047857",
-    letterSpacing: 0.5,
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
   },
-  refNumber: {
-    fontSize: 10,
-    fontFamily: "Helvetica-Bold",
-    color: "#0f172a",
-  },
-  issueDate: {
+  companyTitle: {
     fontSize: 8.5,
+    fontFamily: "Helvetica-Bold",
+    color: "#1e293b",
+    textAlign: "right",
+  },
+  companyMetaText: {
+    fontSize: 7.8,
+    fontFamily: "Helvetica",
     color: "#64748b",
-    marginTop: 3,
+    textAlign: "right",
+    marginTop: 2,
+    lineHeight: 1.3,
   },
-  // Recipient Block
+  // Horizontal divider below header
+  headerDivider: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#0d9488",
+    marginTop: 8,
+    marginBottom: 14,
+  },
+  // Recipient Details & Document Reference
   recipientSection: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  recipientCol: {
-    maxWidth: "60%",
+    marginBottom: 14,
   },
   recipientLabel: {
-    fontSize: 7.5,
+    fontSize: 8,
     fontFamily: "Helvetica-Bold",
     color: "#64748b",
     textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 3,
+    letterSpacing: 0.8,
+    marginBottom: 6,
   },
-  recipientTitle: {
-    fontSize: 9,
-    fontFamily: "Helvetica",
-    color: "#334155",
-    marginBottom: 1,
+  metaColumnsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
   },
-  recipientName: {
+  recipientCol: {
+    maxWidth: "65%",
+  },
+  recipientNameText: {
     fontSize: 10.5,
     fontFamily: "Helvetica-Bold",
     color: "#0f172a",
-    marginBottom: 2,
+    textTransform: "uppercase",
+    letterSpacing: 0.2,
   },
-  recipientOrg: {
-    fontSize: 9.5,
-    fontFamily: "Helvetica-Bold",
-    color: "#059669",
-    marginBottom: 2,
-  },
-  recipientAddress: {
+  recipientAddressLine: {
     fontSize: 8.5,
-    color: "#475569",
-    lineHeight: 1.35,
+    fontFamily: "Helvetica",
+    color: "#0d9488",
+    marginTop: 2,
+    lineHeight: 1.3,
   },
-  // Subject Block
-  subjectBox: {
+  refNumberCol: {
+    alignItems: "flex-end",
+  },
+  refNumberText: {
+    fontSize: 12.5,
+    fontFamily: "Helvetica-Bold",
+    color: "#0f172a",
+    textAlign: "right",
+  },
+  issueDateText: {
+    fontSize: 9.5,
+    fontFamily: "Helvetica",
+    color: "#475569",
+    textAlign: "right",
+    marginTop: 3,
+  },
+  // Subject Banner
+  subjectBanner: {
+    flexDirection: "row",
+    alignItems: "stretch",
     backgroundColor: "#f8fafc",
-    borderLeftWidth: 3,
-    borderLeftColor: "#059669",
-    paddingVertical: 7,
-    paddingHorizontal: 10,
-    marginBottom: 16,
-    borderRadius: 2,
+    marginTop: 14,
+    marginBottom: 18,
+    borderRadius: 1,
+    overflow: "hidden",
+  },
+  subjectAccentBar: {
+    width: 5,
+    backgroundColor: "#059669",
+  },
+  subjectContent: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    flex: 1,
   },
   subjectText: {
     fontSize: 10.5,
     fontFamily: "Helvetica-Bold",
     color: "#0f172a",
-    letterSpacing: 0.2,
+    textTransform: "uppercase",
+    letterSpacing: 0.25,
   },
-  // Body & Paragraphs
-  bodyContainer: {
-    marginBottom: 16,
+  // Body and Typography
+  bodyWrapper: {
+    marginBottom: 14,
+  },
+  salutationText: {
+    fontSize: 10,
+    fontFamily: "Helvetica-Bold",
+    color: "#0f172a",
+    marginBottom: 10,
   },
   paragraph: {
     fontSize: 9.5,
-    color: "#1e293b",
+    fontFamily: "Helvetica",
+    color: "#334155",
+    lineHeight: 1.55,
     marginBottom: 10,
-    lineHeight: 1.5,
-    textAlign: "justify",
+    textAlign: "left",
   },
   heading2: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontFamily: "Helvetica-Bold",
     color: "#0f172a",
     marginTop: 8,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   bulletRow: {
     flexDirection: "row",
     marginBottom: 4,
-    paddingLeft: 8,
+    paddingLeft: 4,
   },
   bulletDot: {
     width: 12,
     fontSize: 9.5,
-    color: "#059669",
-    fontFamily: "Helvetica-Bold",
+    color: "#334155",
+    fontFamily: "Helvetica",
   },
   bulletText: {
     flex: 1,
     fontSize: 9.5,
-    color: "#1e293b",
-    lineHeight: 1.4,
+    fontFamily: "Helvetica",
+    color: "#334155",
+    lineHeight: 1.45,
   },
-  // Quotation Table Block
-  quotationContainer: {
+  // Sign-off
+  signatorySection: {
     marginTop: 10,
     marginBottom: 16,
+  },
+  valediction: {
+    fontSize: 9.5,
+    fontFamily: "Helvetica",
+    color: "#334155",
+    marginBottom: 14,
+  },
+  signatoryName: {
+    fontSize: 10.5,
+    fontFamily: "Helvetica-Bold",
+    color: "#0f172a",
+  },
+  signatoryTitle: {
+    fontSize: 9.5,
+    fontFamily: "Helvetica-Bold",
+    color: "#0d9488",
+    marginTop: 2,
+  },
+  signatoryCompany: {
+    fontSize: 9,
+    fontFamily: "Helvetica",
+    color: "#64748b",
+    marginTop: 2,
+  },
+  // Quotation Table Styling
+  quotationContainer: {
+    marginTop: 10,
+    marginBottom: 14,
     borderWidth: 1,
     borderColor: "#e2e8f0",
     borderRadius: 4,
@@ -263,115 +295,55 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   tableRowEven: {
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#fafaf9",
   },
-  colDesc: { width: "50%" },
-  colSku: { width: "16%" },
-  colQty: { width: "10%", textAlign: "center" },
-  colUnit: { width: "12%", textAlign: "right" },
-  colTotal: { width: "12%", textAlign: "right" },
-  cellText: {
-    fontSize: 8,
-    color: "#334155",
-  },
-  cellTextBold: {
-    fontSize: 8,
-    fontFamily: "Helvetica-Bold",
-    color: "#0f172a",
-  },
-  // Quotation Totals
+  colDesc: { flex: 3 },
+  colSku: { flex: 1.2 },
+  colQty: { flex: 0.8, textAlign: "center" },
+  colUnit: { flex: 1.2, textAlign: "right" },
+  colTotal: { flex: 1.2, textAlign: "right" },
+  cellText: { fontSize: 8, color: "#334155" },
+  cellTextBold: { fontSize: 8, fontFamily: "Helvetica-Bold", color: "#0f172a" },
   totalsContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    marginTop: 6,
+    marginTop: 8,
     marginBottom: 14,
   },
   totalsBox: {
-    width: "45%",
-    backgroundColor: "#f8fafc",
-    borderRadius: 4,
+    width: 200,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    padding: 8,
+    borderColor: "#cbd5e1",
+    borderRadius: 4,
+    overflow: "hidden",
   },
   totalsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 2,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#e2e8f0",
   },
+  totalsLabel: { fontSize: 8, color: "#64748b" },
+  totalsValue: { fontSize: 8, fontFamily: "Helvetica-Bold", color: "#1e293b" },
   totalsRowGrand: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 4,
-    marginTop: 3,
-    borderTopWidth: 1,
-    borderTopColor: "#059669",
-  },
-  totalsLabel: {
-    fontSize: 8,
-    color: "#64748b",
-  },
-  totalsValue: {
-    fontSize: 8,
-    fontFamily: "Helvetica-Bold",
-    color: "#0f172a",
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    backgroundColor: "#f0fdf4",
   },
   totalsGrandLabel: {
-    fontSize: 9.5,
+    fontSize: 8.5,
     fontFamily: "Helvetica-Bold",
-    color: "#0f172a",
+    color: "#065f46",
+    textTransform: "uppercase",
   },
   totalsGrandValue: {
-    fontSize: 10.5,
-    fontFamily: "Helvetica-Bold",
-    color: "#059669",
-  },
-  // Signatory Block
-  signatorySection: {
-    marginTop: 14,
-    marginBottom: 20,
-  },
-  valediction: {
-    fontSize: 9.5,
-    color: "#1e293b",
-    marginBottom: 24,
-  },
-  signatoryName: {
-    fontSize: 10.5,
-    fontFamily: "Helvetica-Bold",
-    color: "#0f172a",
-  },
-  signatoryTitle: {
     fontSize: 9,
     fontFamily: "Helvetica-Bold",
-    color: "#059669",
-  },
-  signatoryCompany: {
-    fontSize: 8.5,
-    color: "#64748b",
-    marginTop: 1,
-  },
-  // Running Footer
-  runningFooter: {
-    position: "absolute",
-    bottom: 20,
-    left: 40,
-    right: 40,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderTopWidth: 0.5,
-    borderTopColor: "#e2e8f0",
-    paddingTop: 6,
-  },
-  footerText: {
-    fontSize: 7,
-    color: "#94a3b8",
-  },
-  pageNumberText: {
-    fontSize: 7.5,
-    fontFamily: "Helvetica-Bold",
-    color: "#64748b",
+    color: "#065f46",
   },
 });
 
@@ -407,6 +379,30 @@ export function OfficialLetterPdfDocument({
         year: "numeric",
       });
 
+  // Badge text: OFFICIAL QUOTATION if quotation included, otherwise OFFICIAL CORRESPONDENCE
+  const badgeLabel = data.include_quotation
+    ? "OFFICIAL QUOTATION"
+    : "OFFICIAL CORRESPONDENCE";
+
+  // Extract recipient display details
+  const recipientDisplayName = (
+    data.recipient_organization ||
+    data.recipient_name ||
+    "Valued Client"
+  ).trim();
+
+  const addressLines: string[] = [];
+  if (data.recipient_address) {
+    data.recipient_address
+      .split(/[\n,]/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach((line) => addressLines.push(line));
+  } else {
+    addressLines.push("Kelly Rd, Meerzicht Business Park");
+    addressLines.push("Jet Park, Boksburg, 1459, South Africa");
+  }
+
   // Parse body text into structured paragraphs, headings, and bullet points
   const rawParagraphs = (data.body_markdown || "")
     .split(/\n\s*\n/)
@@ -424,83 +420,70 @@ export function OfficialLetterPdfDocument({
       author="Pexpacks Supplies (Pty) Ltd"
     >
       <Page size="A4" style={styles.page}>
-        {/* Top green accent border */}
+        {/* Top accent teal bar */}
         <View style={styles.topAccentBar} fixed />
 
-        {/* Running Header for multi-page documents */}
-        <View style={styles.runningHeader} fixed>
-          <Text style={styles.runningHeaderText}>
-            Pexpacks Supplies • Official Correspondence
-          </Text>
-          <Text style={styles.runningHeaderText}>
-            Ref: {data.reference_number}
-          </Text>
-        </View>
+        {/* Header: Logo on left, Badge and Company Metadata on right */}
+        <View style={styles.headerRow}>
+          <Image src={PEXPACKS_LETTERHEAD_LOGO_BASE64} style={styles.logo} />
 
-        {/* Primary Letterhead Header */}
-        <View style={styles.letterhead}>
-          <View style={styles.brandBlock}>
-            <Text style={styles.brandTitle}>Pexpacks Supplies</Text>
-            <Text style={styles.brandTagline}>
-              Official School Stationery &amp; Academic Supply Partner
-            </Text>
-            <Text style={styles.companyMeta}>
-              Pexpacks Supplies (Pty) Ltd | Reg: 2024/789123/07 | VAT:
-              4920182741{"\n"}
-              Email: helpme@pexpacks.co.za | Tel: 078 003 6048{"\n"}
-              33 Kelly Rd, Meerzicht Business Park, Jet Park, Boksburg, 1459,
-              South Africa
-            </Text>
-          </View>
-
-          <View style={styles.letterheadMeta}>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>OFFICIAL CORRESPONDENCE</Text>
+          <View style={styles.companyMetaBlock}>
+            <View style={styles.badgePill}>
+              <Text style={styles.badgePillText}>{badgeLabel}</Text>
             </View>
-            <Text style={styles.refNumber}>{data.reference_number}</Text>
-            <Text style={styles.issueDate}>{dateStr}</Text>
+            <Text style={styles.companyTitle}>Pexpacks Supplies (Pty) Ltd</Text>
+            <Text style={styles.companyMetaText}>
+              Kelly Rd, Meerzicht Business Park
+            </Text>
+            <Text style={styles.companyMetaText}>
+              Jet Park, Boksburg, 1459, South Africa
+            </Text>
+            <Text style={styles.companyMetaText}>
+              helpme@pexpacks.co.za | Tel: 078 003 6048
+            </Text>
           </View>
         </View>
 
-        {/* Recipient Metadata Block */}
+        {/* Horizontal teal separator divider */}
+        <View style={styles.headerDivider} />
+
+        {/* Recipient Details & Document Reference */}
         <View style={styles.recipientSection}>
-          <View style={styles.recipientCol}>
-            <Text style={styles.recipientLabel}>Recipient Details</Text>
-            {data.recipient_title ? (
-              <Text style={styles.recipientTitle}>{data.recipient_title}</Text>
-            ) : null}
-            <Text style={styles.recipientName}>{data.recipient_name}</Text>
-            <Text style={styles.recipientOrg}>
-              {data.recipient_organization}
-            </Text>
-            {data.school_emis ? (
-              <Text style={styles.recipientAddress}>
-                EMIS / Reg ID: {data.school_emis}
+          <Text style={styles.recipientLabel}>RECIPIENT DETAILS</Text>
+
+          <View style={styles.metaColumnsRow}>
+            <View style={styles.recipientCol}>
+              <Text style={styles.recipientNameText}>
+                {recipientDisplayName}
               </Text>
-            ) : null}
-            {data.recipient_address ? (
-              <Text style={styles.recipientAddress}>
-                {data.recipient_address}
-              </Text>
-            ) : null}
-            <Text style={styles.recipientAddress}>
-              {data.recipient_country || "South Africa"} •{" "}
-              {data.recipient_email}
+              {addressLines.slice(0, 3).map((line, idx) => (
+                <Text key={idx} style={styles.recipientAddressLine}>
+                  {line}
+                </Text>
+              ))}
+            </View>
+
+            <View style={styles.refNumberCol}>
+              <Text style={styles.refNumberText}>{data.reference_number}</Text>
+              <Text style={styles.issueDateText}>{dateStr}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Subject Header Banner */}
+        <View style={styles.subjectBanner}>
+          <View style={styles.subjectAccentBar} />
+          <View style={styles.subjectContent}>
+            <Text style={styles.subjectText}>
+              RE: {data.subject.toUpperCase()}
             </Text>
           </View>
         </View>
 
-        {/* Subject Header */}
-        <View style={styles.subjectBox}>
-          <Text style={styles.subjectText}>
-            RE: {data.subject.toUpperCase()}
-          </Text>
-        </View>
-
-        {/* Letter Body / Markdown Parsed Blocks */}
-        <View style={styles.bodyContainer} wrap={true}>
+        {/* Letter Body */}
+        <View style={styles.bodyWrapper} wrap={true}>
           {rawParagraphs.map((para, index) => {
-            // Heading 2 check
+            // Heading check
             if (para.startsWith("## ") || para.startsWith("# ")) {
               const headingText = para.replace(/^#+\s*/, "");
               return (
@@ -510,24 +493,37 @@ export function OfficialLetterPdfDocument({
               );
             }
 
+            // Salutation bold check (e.g. "Dear ...")
+            if (index === 0 && /^dear/i.test(para)) {
+              return (
+                <Text key={index} style={styles.salutationText}>
+                  {para}
+                </Text>
+              );
+            }
+
             // Bullet list check
             if (
               para.includes("\n* ") ||
               para.includes("\n- ") ||
+              para.includes("\n• ") ||
               para.startsWith("* ") ||
-              para.startsWith("- ")
+              para.startsWith("- ") ||
+              para.startsWith("• ")
             ) {
               const lines = para
                 .split("\n")
                 .map((l) => l.trim())
                 .filter(Boolean);
               return (
-                <View key={index} style={{ marginBottom: 8 }}>
+                <View key={index} style={{ marginBottom: 10 }}>
                   {lines.map((line, lIdx) => {
                     const isBullet =
-                      line.startsWith("* ") || line.startsWith("- ");
+                      line.startsWith("* ") ||
+                      line.startsWith("- ") ||
+                      line.startsWith("• ");
                     const cleanText = isBullet
-                      ? line.replace(/^[*\-]\s*/, "")
+                      ? line.replace(/^[*\-•]\s*/, "")
                       : line;
                     return (
                       <View
@@ -539,7 +535,20 @@ export function OfficialLetterPdfDocument({
                         {isBullet ? (
                           <Text style={styles.bulletDot}>•</Text>
                         ) : null}
-                        <Text style={styles.bulletText}>{cleanText}</Text>
+                        <Text
+                          style={
+                            isBullet
+                              ? styles.bulletText
+                              : {
+                                  fontSize: 9.5,
+                                  fontFamily: "Helvetica",
+                                  color: "#334155",
+                                  marginBottom: 4,
+                                }
+                          }
+                        >
+                          {cleanText}
+                        </Text>
                       </View>
                     );
                   })}
@@ -663,20 +672,6 @@ export function OfficialLetterPdfDocument({
           <Text style={styles.signatoryCompany}>
             Pexpacks Supplies (Pty) Ltd
           </Text>
-        </View>
-
-        {/* Running Footer */}
-        <View style={styles.runningFooter} fixed>
-          <Text style={styles.footerText}>
-            Pexpacks Supplies (Pty) Ltd • Official Letterhead • Care Desk:
-            helpme@pexpacks.co.za
-          </Text>
-          <Text
-            style={styles.pageNumberText}
-            render={({ pageNumber, totalPages }) =>
-              `Page ${pageNumber} of ${totalPages}`
-            }
-          />
         </View>
       </Page>
     </Document>

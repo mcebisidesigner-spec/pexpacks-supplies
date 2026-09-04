@@ -180,41 +180,76 @@ export async function listLetters(
 }
 
 /**
- * Gets a single letter by ID.
+ * Gets a single letter by ID or reference number (e.g. PX-DOC-YYYY-XXXX).
  */
 export async function getLetterById(
-  id: string,
+  idOrRef: string,
 ): Promise<AdminLetterRecord | null> {
   const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase
-    .from("admin_letters")
-    .select(
-      `
-      *,
-      school:schools (
-        id,
-        name,
-        slug,
-        address,
-        city,
-        province
-      ),
-      quotation:quotations (
-        id,
-        quote_number,
-        total_amount
-      )
-    `,
-    )
-    .eq("id", id)
-    .single();
+  const trimmed = decodeURIComponent(idOrRef).trim();
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      trimmed,
+    );
 
-  if (error || !data) {
-    return null;
+  const selectFields = `
+    *,
+    school:schools (
+      id,
+      name,
+      slug,
+      address,
+      city,
+      province
+    ),
+    quotation:quotations (
+      id,
+      quote_number,
+      total_amount
+    )
+  `;
+
+  if (isUuid) {
+    const { data } = await supabase
+      .from("admin_letters")
+      .select(selectFields)
+      .eq("id", trimmed)
+      .maybeSingle();
+
+    if (data) {
+      return data as unknown as AdminLetterRecord;
+    }
   }
 
-  return data as unknown as AdminLetterRecord;
+  // Lookup by reference number (or fallback)
+  const { data: byRef } = await supabase
+    .from("admin_letters")
+    .select(selectFields)
+    .eq("reference_number", trimmed)
+    .maybeSingle();
+
+  if (byRef) {
+    return byRef as unknown as AdminLetterRecord;
+  }
+
+  // Fallback: check if id matches without strict uuid format
+  if (!isUuid) {
+    const { data: byId } = await supabase
+      .from("admin_letters")
+      .select(selectFields)
+      .eq("id", trimmed)
+      .maybeSingle();
+
+    if (byId) {
+      return byId as unknown as AdminLetterRecord;
+    }
+  }
+
+  return null;
 }
+
+export const getLetterByReference = getLetterById;
+
 
 export interface SaveLetterInput {
   id?: string;

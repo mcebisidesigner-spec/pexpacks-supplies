@@ -132,6 +132,9 @@ export async function sendLetterEmailAction({
         .eq("id", letter.id);
 
       revalidatePath("/admin/letters");
+      if (letter.reference_number) {
+        revalidatePath(`/admin/letters/${letter.reference_number}`);
+      }
       revalidatePath(`/admin/letters/${letter.id}`);
       return {
         ok: true,
@@ -223,6 +226,9 @@ export async function sendLetterEmailAction({
       .eq("id", letter.id);
 
     revalidatePath("/admin/letters");
+    if (letter.reference_number) {
+      revalidatePath(`/admin/letters/${letter.reference_number}`);
+    }
     revalidatePath(`/admin/letters/${letter.id}`);
 
     return {

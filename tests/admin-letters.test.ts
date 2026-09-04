@@ -172,4 +172,70 @@ We remain committed to supporting educational excellence at Greenwood Ridge Coll
     const header = documentBuffer.slice(0, 5).toString("utf-8");
     expect(header.startsWith("%PDF")).toBe(true);
   }, 15000);
+
+  it("verifies 'New Letter' is the first preset pill and presents a blank letterhead template", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const editorCode = fs.readFileSync(
+      path.join(process.cwd(), "components/admin/letters/LetterEditor.tsx"),
+      "utf8",
+    );
+
+    // Verify 'new_letter' is the first entry in PRESET_TEMPLATES
+    const presetMatch = editorCode.match(/const PRESET_TEMPLATES = \[\s*\{([^}]+)\}/);
+    expect(presetMatch).not.toBeNull();
+    expect(presetMatch![1]).toContain('id: "new_letter"');
+    expect(presetMatch![1]).toContain('name: "New Letter"');
+    expect(presetMatch![1]).toContain('subject: ""');
+    expect(presetMatch![1]).toContain('content: ""');
+
+    // Verify initial state defaults to blank for new letter
+    expect(editorCode).toContain('initialLetter ? "" : "new_letter"');
+    expect(editorCode).toContain('initialLetter?.subject || ""');
+    expect(editorCode).toContain('initialLetter?.body_markdown || ""');
+  });
+
+  it("verifies canonical letterReference URL and anchored workbench at bottom of /admin/letters", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+
+    // 1. Verify [letterReference] route exists and canonicalizes URLs
+    const routeCode = fs.readFileSync(
+      path.join(
+        process.cwd(),
+        "app/admin/letters/[letterReference]/page.tsx",
+      ),
+      "utf8",
+    );
+    expect(routeCode).toContain("letterReference");
+    expect(routeCode).toContain("getLetterById(letterReference)");
+    expect(routeCode).toContain("redirect(`/admin/letters/${encodeURIComponent(letter.reference_number)}`)");
+
+    // 2. Verify LettersListView uses reference URLs and anchored workbench
+    const listViewCode = fs.readFileSync(
+      path.join(
+        process.cwd(),
+        "components/admin/letters/LettersListView.tsx",
+      ),
+      "utf8",
+    );
+    expect(listViewCode).toContain("LetterActionWorkbench");
+    expect(listViewCode).toContain("handleOpenWorkbench(row, \"preview\")");
+    expect(listViewCode).toContain("handleOpenWorkbench(row, \"email\")");
+    expect(listViewCode).toContain("letter-workbench");
+    expect(listViewCode).toContain("row.reference_number");
+
+    // 3. Verify LetterActionWorkbench renders anchored workbench section
+    const workbenchCode = fs.readFileSync(
+      path.join(
+        process.cwd(),
+        "components/admin/letters/LetterActionWorkbench.tsx",
+      ),
+      "utf8",
+    );
+    expect(workbenchCode).toContain('id="letter-workbench"');
+    expect(workbenchCode).toContain("Official Letter Workbench");
+    expect(workbenchCode).toContain("sendLetterEmailAction");
+  });
 });
+
