@@ -90,6 +90,13 @@ export const ADMIN_NAV: AdminNavGroup[] = [
         ready: true,
       },
       {
+        label: "Official Letters",
+        href: "/admin/letters",
+        icon: "documents",
+        permission: "orders.view",
+        ready: true,
+      },
+      {
         label: "Payments",
         href: "/admin/payments",
         icon: "payments",

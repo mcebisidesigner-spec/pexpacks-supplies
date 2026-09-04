@@ -21,3 +21,5 @@ export function createSupabaseAdminClient() {
 
   return adminClient;
 }
+
+export const createAdminClient = createSupabaseAdminClient;

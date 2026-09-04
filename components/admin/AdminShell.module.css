@@ -151,6 +151,75 @@
   color: var(--a-text-4);
 }
 
+.navItemChevron {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--a-text-4);
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+.navItemChevronOpen {
+  transform: rotate(180deg);
+  color: var(--a-accent);
+}
+
+.navSubmenu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 20px;
+  padding-left: 8px;
+  border-left: 1px solid var(--a-border);
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.navSubItem {
+  position: relative;
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  border-radius: var(--a-radius-sm);
+  color: var(--a-text-3);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all var(--a-transition);
+}
+
+.navSubItem svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--a-text-3);
+  transition: color var(--a-transition);
+}
+
+.navSubItem:hover {
+  background: var(--a-surface-2);
+  color: var(--a-text);
+}
+
+.navSubItem:hover svg {
+  color: var(--a-text);
+}
+
+.navSubItemActive {
+  background: var(--a-accent-subtle) !important;
+  color: var(--a-accent) !important;
+  font-weight: 600;
+  border-left: 2px solid var(--a-accent) !important;
+}
+
+.navSubItemActive svg {
+  color: var(--a-accent) !important;
+}
+
 /* ===================================================
    PROFILE DROPDOWN
    =================================================== */

@@ -7,23 +7,11 @@ import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import {
   Bell,
-  Boxes,
-  Briefcase,
-  CheckSquare,
-  CreditCard,
-  FileSpreadsheet,
-  FileText,
+  ChevronDown,
   LogOut,
   Menu,
   MessageSquare,
-  Package,
-  PackageCheck,
-  School,
   Search,
-  Settings,
-  ShoppingCart,
-  TrendingUp,
-  Users,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -84,7 +72,8 @@ export function AdminShell({
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [notificationOpen, setNotificationOpen] = useState(false);
-  const [notificationCounts, setNotificationCounts] = useState<NotificationCounts>(EMPTY_NOTIFICATION_COUNTS);
+  const [notificationCounts, setNotificationCounts] =
+    useState<NotificationCounts>(EMPTY_NOTIFICATION_COUNTS);
   const [signingOut, setSigningOut] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);
@@ -100,6 +89,33 @@ export function AdminShell({
     userEmail.toLowerCase() === "mcebisimhayise@gmail.com" ||
     userEmail.toLowerCase() === "pexpacks@gmail.com";
 
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
+    () => {
+      const isDocActive =
+        pathname.startsWith("/admin/documents") ||
+        pathname.startsWith("/admin/quotations") ||
+        pathname.startsWith("/admin/letters");
+      return { Documents: isDocActive };
+    },
+  );
+
+  useEffect(() => {
+    if (
+      pathname.startsWith("/admin/documents") ||
+      pathname.startsWith("/admin/quotations") ||
+      pathname.startsWith("/admin/letters")
+    ) {
+      setExpandedGroups((prev) => ({ ...prev, Documents: true }));
+    }
+  }, [pathname]);
+
+  const toggleGroup = (groupLabel: string) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [groupLabel]: !prev[groupLabel],
+    }));
+  };
+
   const visibleNavItems = useMemo(() => {
     return ORDERED_NAV_ITEMS.filter((item) => {
       if (item.href === "/admin/settings") {
@@ -108,20 +124,69 @@ export function AdminShell({
       return true;
     });
   }, [isSuperUser]);
-  const notificationItems = useMemo(() => [
-    { label: "Orders today", value: notificationCounts.orders_today, href: "/admin/orders" },
-    { label: "Pending payments", value: notificationCounts.pending_payments, href: "/admin/payments" },
-    { label: "Failed payments", value: notificationCounts.failed_payments, href: "/admin/payments" },
-    { label: "Awaiting fulfilment", value: notificationCounts.awaiting_fulfilment, href: "/admin/fulfilment" },
-    { label: "Pending schools", value: notificationCounts.pending_schools, href: "/admin/schools" },
-    { label: "Procurement outstanding", value: notificationCounts.procurement_outstanding, href: "/admin/procurement" },
-    { label: "Open tasks", value: notificationCounts.open_tasks, href: "/admin/tasks" },
-  ].filter((item) => item.value > 0), [notificationCounts]);
+  const notificationItems = useMemo(
+    () =>
+      [
+        {
+          label: "Orders today",
+          value: notificationCounts.orders_today,
+          href: "/admin/orders",
+        },
+        {
+          label: "Pending payments",
+          value: notificationCounts.pending_payments,
+          href: "/admin/payments",
+        },
+        {
+          label: "Failed payments",
+          value: notificationCounts.failed_payments,
+          href: "/admin/payments",
+        },
+        {
+          label: "Awaiting fulfilment",
+          value: notificationCounts.awaiting_fulfilment,
+          href: "/admin/fulfilment",
+        },
+        {
+          label: "Pending schools",
+          value: notificationCounts.pending_schools,
+          href: "/admin/schools",
+        },
+        {
+          label: "Procurement outstanding",
+          value: notificationCounts.procurement_outstanding,
+          href: "/admin/procurement",
+        },
+        {
+          label: "Open tasks",
+          value: notificationCounts.open_tasks,
+          href: "/admin/tasks",
+        },
+      ].filter((item) => item.value > 0),
+    [notificationCounts],
+  );
 
-  const notificationTotal = notificationItems.reduce((sum, item) => sum + item.value, 0);
-  // Search items
+  const notificationTotal = notificationItems.reduce(
+    (sum, item) => sum + item.value,
+    0,
+  );
+  // Search items flattened across top-level and children
   const searchableNav = useMemo(() => {
-    return visibleNavItems.filter((item) =>
+    const flatItems: Array<{ label: string; href: string; icon: LucideIcon }> =
+      [];
+    for (const item of visibleNavItems) {
+      flatItems.push({ label: item.label, href: item.href, icon: item.icon });
+      if (item.children) {
+        for (const child of item.children) {
+          flatItems.push({
+            label: child.label,
+            href: child.href,
+            icon: child.icon,
+          });
+        }
+      }
+    }
+    return flatItems.filter((item) =>
       item.label.toLowerCase().includes(searchQuery.toLowerCase()),
     );
   }, [visibleNavItems, searchQuery]);
@@ -147,9 +212,12 @@ export function AdminShell({
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
       const target = event.target as Node;
-      if (profileRef.current && !profileRef.current.contains(target)) setProfileOpen(false);
-      if (searchRef.current && !searchRef.current.contains(target)) setSearchOpen(false);
-      if (notificationRef.current && !notificationRef.current.contains(target)) setNotificationOpen(false);
+      if (profileRef.current && !profileRef.current.contains(target))
+        setProfileOpen(false);
+      if (searchRef.current && !searchRef.current.contains(target))
+        setSearchOpen(false);
+      if (notificationRef.current && !notificationRef.current.contains(target))
+        setNotificationOpen(false);
     }
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
@@ -168,9 +236,11 @@ export function AdminShell({
 
     async function loadNotifications() {
       try {
-        const response = await fetch("/api/admin/notifications", { cache: "no-store" });
+        const response = await fetch("/api/admin/notifications", {
+          cache: "no-store",
+        });
         if (!response.ok) return;
-        const data = await response.json() as Partial<NotificationCounts>;
+        const data = (await response.json()) as Partial<NotificationCounts>;
         if (!cancelled) {
           setNotificationCounts({
             orders_today: Number(data.orders_today ?? 0),
@@ -232,7 +302,13 @@ export function AdminShell({
             onClick={() => setProfileOpen((prev) => !prev)}
           >
             <span className={styles.brandTextGroup}>
-              <Image src="/images/logo.svg" alt="Pexpacks" width={140} height={32} className={styles.brandLogoImage} />
+              <Image
+                src="/images/logo.svg"
+                alt="Pexpacks"
+                width={140}
+                height={32}
+                className={styles.brandLogoImage}
+              />
             </span>
           </button>
 
@@ -247,7 +323,9 @@ export function AdminShell({
                   )}
                 </div>
                 <div className={`${styles.minW0} ${styles.flex1}`}>
-                  <strong className={styles.profileDropdownName}>{displayName}</strong>
+                  <strong className={styles.profileDropdownName}>
+                    {displayName}
+                  </strong>
                   <div className={styles.profileDropdownEmail}>{userEmail}</div>
                 </div>
               </div>
@@ -267,12 +345,77 @@ export function AdminShell({
         {/* 2. Navigation Items */}
         <nav className={styles.nav}>
           {visibleNavItems.map((item) => {
-            const active = isActiveRoute(item.href, pathname, item.exact);
             const NavIcon = item.icon;
+            const hasChildren = item.children && item.children.length > 0;
+            const isChildActive = hasChildren
+              ? item.children!.some((child) =>
+                  isActiveRoute(child.href, pathname, child.exact),
+                )
+              : false;
+            const active =
+              isActiveRoute(item.href, pathname, item.exact) || isChildActive;
+            const isExpanded = expandedGroups[item.label] ?? false;
+
+            if (hasChildren) {
+              return (
+                <div key={item.label} className={styles.navGroup}>
+                  <button
+                    type="button"
+                    onClick={() => toggleGroup(item.label)}
+                    className={clsx(
+                      styles.navItem,
+                      (active || isExpanded) && styles.navItemActive,
+                    )}
+                    aria-expanded={isExpanded}
+                  >
+                    <NavIcon aria-hidden="true" />
+                    <span>{item.label}</span>
+                    <span
+                      className={clsx(
+                        styles.navItemChevron,
+                        isExpanded && styles.navItemChevronOpen,
+                      )}
+                    >
+                      <ChevronDown size={14} />
+                    </span>
+                  </button>
+
+                  {isExpanded && (
+                    <div className={styles.navSubmenu}>
+                      {item.children!.map((subItem) => {
+                        const SubIcon = subItem.icon;
+                        const subActive = isActiveRoute(
+                          subItem.href,
+                          pathname,
+                          subItem.exact,
+                        );
+                        return (
+                          <Link
+                            key={subItem.href}
+                            href={subItem.href}
+                            onClick={() => setOpen(false)}
+                            className={clsx(
+                              styles.navSubItem,
+                              subActive && styles.navSubItemActive,
+                            )}
+                            aria-current={subActive ? "page" : undefined}
+                          >
+                            <SubIcon aria-hidden="true" />
+                            <span>{subItem.label}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setOpen(false)}
                 className={clsx(styles.navItem, active && styles.navItemActive)}
                 aria-current={active ? "page" : undefined}
               >
@@ -282,7 +425,6 @@ export function AdminShell({
             );
           })}
         </nav>
-
       </aside>
 
       {/* ===================================================
@@ -338,9 +480,7 @@ export function AdminShell({
                     );
                   })
                 ) : (
-                  <p className={styles.noResultsText}>
-                    No matching pages
-                  </p>
+                  <p className={styles.noResultsText}>No matching pages</p>
                 )}
               </div>
             )}
@@ -358,16 +498,24 @@ export function AdminShell({
               >
                 <Bell size={16} />
                 {notificationTotal > 0 && (
-                  <span className={styles.utilityBadge}>{notificationTotal > 99 ? "99+" : notificationTotal}</span>
+                  <span className={styles.utilityBadge}>
+                    {notificationTotal > 99 ? "99+" : notificationTotal}
+                  </span>
                 )}
               </button>
 
               {notificationOpen && (
                 <div className={styles.notificationDropdown} role="menu">
-                  <strong className={styles.notificationTitle}>Operational alerts</strong>
+                  <strong className={styles.notificationTitle}>
+                    Operational alerts
+                  </strong>
                   {notificationItems.length ? (
                     notificationItems.map((item) => (
-                      <Link key={item.label} href={item.href} className={styles.notificationItem}>
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        className={styles.notificationItem}
+                      >
                         <span>{item.label}</span>
                         <strong>{item.value}</strong>
                       </Link>

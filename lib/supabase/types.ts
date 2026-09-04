@@ -9,6 +9,81 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      admin_letters: {
+        Row: {
+          id: string;
+          reference_number: string;
+          school_id: string | null;
+          quotation_id: string | null;
+          recipient_type: "registered_school" | "private_client";
+          recipient_organization: string;
+          recipient_title: string | null;
+          recipient_name: string;
+          recipient_email: string;
+          recipient_country: string | null;
+          recipient_address: string | null;
+          subject: string;
+          body_markdown: string;
+          include_quotation: boolean;
+          quotation_data: Json;
+          signatory_name: string;
+          signatory_title: string;
+          status: "draft" | "generated" | "emailed" | "archived";
+          last_emailed_at: string | null;
+          pdf_storage_path: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          reference_number: string;
+          school_id?: string | null;
+          quotation_id?: string | null;
+          recipient_type: "registered_school" | "private_client";
+          recipient_organization: string;
+          recipient_title?: string | null;
+          recipient_name: string;
+          recipient_email: string;
+          recipient_country?: string | null;
+          recipient_address?: string | null;
+          subject: string;
+          body_markdown: string;
+          include_quotation?: boolean;
+          quotation_data?: Json;
+          signatory_name?: string;
+          signatory_title?: string;
+          status?: "draft" | "generated" | "emailed" | "archived";
+          last_emailed_at?: string | null;
+          pdf_storage_path?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          reference_number?: string;
+          school_id?: string | null;
+          quotation_id?: string | null;
+          recipient_type?: "registered_school" | "private_client";
+          recipient_organization?: string;
+          recipient_title?: string | null;
+          recipient_name?: string;
+          recipient_email?: string;
+          recipient_country?: string | null;
+          recipient_address?: string | null;
+          subject?: string;
+          body_markdown?: string;
+          include_quotation?: boolean;
+          quotation_data?: Json;
+          signatory_name?: string;
+          signatory_title?: string;
+          status?: "draft" | "generated" | "emailed" | "archived";
+          last_emailed_at?: string | null;
+          pdf_storage_path?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       cms_announcements: {
         Row: {
           id: string;
