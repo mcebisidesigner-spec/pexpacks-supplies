@@ -181,9 +181,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
   );
 
   // Document Fields
-  const [subject, setSubject] = useState<string>(
-    initialLetter?.subject || "",
-  );
+  const [subject, setSubject] = useState<string>(initialLetter?.subject || "");
   const [content, setContent] = useState<string>(
     initialLetter?.body_markdown || "",
   );
@@ -626,7 +624,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                     />
                     {showSchoolDropdown && filteredSchools.length > 0 && (
                       <div className={styles.searchResultsDropdown}>
-                        {filteredSchools.slice(0, 8).map((school) => (
+                        {filteredSchools.slice(0, 50).map((school) => (
                           <button
                             key={school.id}
                             type="button"

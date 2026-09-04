@@ -257,12 +257,11 @@ export async function searchSchoolsForLetterAction(query: string) {
       .select(
         "id, name, slug, address, city, province, principal, email, telephone",
       )
-      .order("name", { ascending: true })
-      .limit(30);
+      .order("name", { ascending: true });
 
     if (query && query.trim()) {
       const q = query.trim();
-      dbQuery = dbQuery.or(`name.ilike.%${q}%,city.ilike.%${q}%`);
+      dbQuery = dbQuery.or(`name.ilike.%${q}%,city.ilike.%${q}%`).limit(50);
     }
 
     const { data, error } = await dbQuery;
